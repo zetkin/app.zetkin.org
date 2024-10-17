@@ -7,6 +7,8 @@ import {
   Button,
   Divider,
   IconButton,
+  MenuItem,
+  Select,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -27,9 +29,10 @@ import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
-import getVisitState, { VisitState } from '../utils/getVisitState';
+import getVisitState, { ProgressState } from '../utils/getVisitState';
 import MarkerIcon from '../utils/MarkerIcon';
 import { ZetkinCanvassAssignment } from '../types';
+import getDoneState from '../utils/getDoneState';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -60,6 +63,14 @@ const useStyles = makeStyles((theme) => ({
     transition: 'opacity 0.1s',
     zIndex: 1200,
   },
+  filterControls: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: 10,
+    position: 'absolute',
+    right: 10,
+    zIndex: 1000,
+  },
   ghostMarker: {
     animationDirection: 'alternate',
     animationDuration: '0.4s',
@@ -83,10 +94,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     display: 'flex',
     flexDirection: 'row',
-    marginTop: 10,
-    position: 'absolute',
-    right: 10,
-    zIndex: 1000,
   },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
@@ -126,11 +133,12 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [placeFilters, setPlaceFilters] = useState<VisitState[]>([
-    'done',
-    'pending',
-    'started',
+  const [placeFilters, setPlaceFilters] = useState<ProgressState[]>([
+    'all',
+    'none',
+    'some',
   ]);
+  const [dataToShow, setDataToShow] = useState<'visited' | 'done'>('visited');
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -245,9 +253,20 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
     }
   }, [areas, map]);
 
+  const metricThatDefinesDone = assignment.metrics.find(
+    (metric) => metric.definesDone
+  );
+
   const filteredPlaces = places.filter((place) => {
-    const visitState = getVisitState(place.households, assignment.id);
-    return placeFilters.includes(visitState);
+    const state =
+      dataToShow == 'visited'
+        ? getVisitState(place.households, assignment.id)
+        : getDoneState(
+            place.households,
+            assignment.id,
+            metricThatDefinesDone?.id || ''
+          );
+    return placeFilters.includes(state);
   });
 
   return (
@@ -261,23 +280,39 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
           <Remove />
         </IconButton>
       </Box>
-      <Box className={classes.markerFilterButtons}>
+      <Box className={classes.filterControls}>
         <ToggleButtonGroup
-          onChange={(ev, newValue: VisitState[]) => {
+          className={classes.markerFilterButtons}
+          onChange={(ev, newValue: ProgressState[]) => {
             setPlaceFilters(newValue);
           }}
           value={placeFilters}
         >
-          <ToggleButton value="pending">
-            <MarkerIcon selected={false} visitState="pending" />
+          <ToggleButton value="none">
+            <MarkerIcon dataToShow={dataToShow} selected={false} state="none" />
           </ToggleButton>
-          <ToggleButton value="started">
-            <MarkerIcon selected={false} visitState="started" />
+          <ToggleButton value="some">
+            <MarkerIcon dataToShow={dataToShow} selected={false} state="some" />
           </ToggleButton>
-          <ToggleButton value="done">
-            <MarkerIcon selected={false} visitState="done" />
+          <ToggleButton value="all">
+            <MarkerIcon dataToShow={dataToShow} selected={false} state="all" />
           </ToggleButton>
         </ToggleButtonGroup>
+        {!!assignment.metrics.find((metric) => metric.definesDone) && (
+          <Select
+            onChange={(ev) => {
+              const value = ev.target.value;
+              if (value == 'done' || value == 'visited') {
+                setDataToShow(value);
+              }
+            }}
+            sx={{ backgroundColor: 'white' }}
+            value={dataToShow}
+          >
+            <MenuItem value="visited">Visited</MenuItem>
+            <MenuItem value="done">Done</MenuItem>
+          </Select>
+        )}
       </Box>
       <Box position="relative">
         <Box
@@ -363,7 +398,14 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
         </FeatureGroup>
         <>
           {filteredPlaces.map((place) => {
-            const visitState = getVisitState(place.households, assignment.id);
+            const state =
+              dataToShow == 'visited'
+                ? getVisitState(place.households, assignment.id)
+                : getDoneState(
+                    place.households,
+                    assignment.id,
+                    metricThatDefinesDone?.id || ''
+                  );
 
             const selected = place.id == selectedPlaceId;
             const key = `marker-${place.id}-${selected.toString()}`;
@@ -382,7 +424,11 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
                   lng: place.position.lng,
                 }}
               >
-                <MarkerIcon selected={selected} visitState={visitState} />
+                <MarkerIcon
+                  dataToShow={dataToShow}
+                  selected={selected}
+                  state={state}
+                />
               </DivIconMarker>
             );
           })}
