@@ -1,10 +1,13 @@
+import dayjs from 'dayjs';
+
 import useCanvassAssignment from './useCanvassAssignment';
 
 export enum CanvassAssignmentState {
   CLOSED = 'closed',
+  DRAFT = 'draft',
   OPEN = 'open',
   SCHEDULED = 'scheduled',
-  UNKNOWN = 'unkown',
+  UNKNOWN = 'unknown',
 }
 
 export default function useCanvassAssignmentStatus(
@@ -17,25 +20,33 @@ export default function useCanvassAssignmentStatus(
     return CanvassAssignmentState.UNKNOWN;
   }
 
-  if (canvassAssignment.start_date) {
-    const startDate = new Date(canvassAssignment.start_date);
-    const now = new Date();
+  const now = dayjs();
 
-    if (startDate > now) {
-      return CanvassAssignmentState.SCHEDULED;
+  if (!canvassAssignment.start_date) {
+    return CanvassAssignmentState.DRAFT;
+  }
+
+  const startDate = dayjs(canvassAssignment.start_date);
+
+  if (startDate.isAfter(now)) {
+    return CanvassAssignmentState.SCHEDULED;
+  }
+
+  if (canvassAssignment.end_date) {
+    const endDate = dayjs(canvassAssignment.end_date);
+
+    if (endDate.isBefore(now)) {
+      return CanvassAssignmentState.CLOSED;
     }
 
-    if (canvassAssignment.end_date) {
-      const endDate = new Date(canvassAssignment.end_date);
-
-      if (endDate < now) {
-        return CanvassAssignmentState.CLOSED;
-      }
-
-      if (startDate <= now && endDate > now) {
-        return CanvassAssignmentState.OPEN;
-      }
+    if (startDate.isBefore(now) || startDate.isSame(now)) {
+      return CanvassAssignmentState.OPEN;
     }
   }
+
+  if (!canvassAssignment.end_date && startDate.isBefore(now)) {
+    return CanvassAssignmentState.OPEN;
+  }
+
   return CanvassAssignmentState.UNKNOWN;
 }

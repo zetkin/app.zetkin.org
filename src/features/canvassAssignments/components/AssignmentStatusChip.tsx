@@ -44,6 +44,7 @@ const AssignmentStatusChip: FC<AssigmentStatusChipProps> = ({ state }) => {
     [CanvassAssignmentState.OPEN]: classes.open,
     [CanvassAssignmentState.SCHEDULED]: classes.scheduled,
     [CanvassAssignmentState.UNKNOWN]: classes.draft,
+    [CanvassAssignmentState.DRAFT]: classes.draft,
   };
 
   const colorClassName = classMap[state];
