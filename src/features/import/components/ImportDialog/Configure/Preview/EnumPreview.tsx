@@ -17,12 +17,8 @@ const EnumPreview = ({ currentSheet, fieldKey, fields }: EnumPreviewProps) => {
   const messages = useMessages(messageIds);
   const { fieldOptions } = useColumn(orgId);
 
-  const hasMapped = currentSheet.columns.some(
-    (column) =>
-      column.kind === ColumnKind.ENUM &&
-      column.field === fieldKey &&
-      column.mapping.length > 0
-  );
+  let hasMapped = false;
+  let enumKey: string | null = null;
 
   let columnHeader = '';
   let enumOptions: EnumChoice[] | undefined = [];
@@ -34,7 +30,22 @@ const EnumPreview = ({ currentSheet, fieldKey, fields }: EnumPreviewProps) => {
   });
 
   const value = fields?.[fieldKey];
-  const option = enumOptions.find((o) => o.key == value);
+  currentSheet.columns.forEach((column) => {
+    if (
+      column.kind === ColumnKind.ENUM &&
+      column.field === fieldKey &&
+      column.mapping.length > 0
+    ) {
+      hasMapped = true;
+      column.mapping.forEach((mappedColumn) => {
+        if (mappedColumn.value === value) {
+          enumKey = mappedColumn.key;
+        }
+      });
+    }
+  });
+
+  const option = enumOptions.find((o) => o.key == enumKey);
 
   return (
     <PreviewGrid
