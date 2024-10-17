@@ -17,7 +17,7 @@ import EditPlace from './EditPlace';
 import Place from './Place';
 import Household from './Household';
 import ZUIFuture from 'zui/ZUIFuture';
-import { PlaceDialogStep } from '../PublicAreaMap';
+import { PlaceDialogStep } from '../CanvassAssignmentMap';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
