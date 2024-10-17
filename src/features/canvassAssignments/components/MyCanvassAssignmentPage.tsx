@@ -20,10 +20,6 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
   const orgFuture = useOrganization(assignment.organization.id);
   const isServer = useServerSide();
 
-  //TODO: Add logic here to check if org has the AREAS feature enabled.
-  //Not possible at the moment of creating this, as the useFeature hook
-  //is not suited for use on the activist facing routes.
-
   if (isServer) {
     return null;
   }
