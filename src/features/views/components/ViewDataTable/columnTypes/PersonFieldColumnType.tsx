@@ -9,8 +9,13 @@ type SimpleData = string | number | boolean | null;
 export default class PersonFieldColumnType
   implements IColumnType<ZetkinViewColumn, SimpleData>
 {
-  cellToString(): string {
-    return '';
+  cellToString(cell: SimpleData): string {
+    if (this.enumChoices) {
+      const choice = this.enumChoices.find((c) => c.key == cell);
+      return choice ? choice.label : '';
+    } else {
+      return cell != null ? cell.toString() : '';
+    }
   }
 
   private enumChoices: EnumChoice[] | null = null;
