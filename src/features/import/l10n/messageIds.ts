@@ -58,6 +58,9 @@ export default makeMessages('feat.import', {
       enum: {
         header: m('Map values to options'),
         none: m('None'),
+        numberOfRows: m<{ numRows: number }>(
+          '{numRows, plural, =1 {1 row} other {# rows}}'
+        ),
         value: m('Value'),
       },
       ids: {

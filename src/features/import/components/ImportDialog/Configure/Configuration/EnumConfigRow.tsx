@@ -87,7 +87,7 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
       </Box>
       <Typography color="secondary">
         <Msg
-          id={messageIds.configuration.configure.tags.numberOfRows}
+          id={messageIds.configuration.configure.enum.numberOfRows}
           values={{ numRows }}
         />
       </Typography>
