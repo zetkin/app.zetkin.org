@@ -1,10 +1,10 @@
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import { useMessages } from 'core/i18n';
-import { EnumChoice } from 'utils/types/zetkin';
 import { CellData, ColumnKind, Sheet } from 'features/import/utils/types';
 import useColumn from 'features/import/hooks/useColumn';
 import { useNumericRouteParams } from 'core/hooks';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
 
 interface EnumPreviewProps {
   currentSheet: Sheet;
@@ -16,18 +16,20 @@ const EnumPreview = ({ currentSheet, fieldKey, fields }: EnumPreviewProps) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const { fieldOptions } = useColumn(orgId);
+  const customFields = useCustomFields(orgId).data ?? [];
 
   let hasMapped = false;
   let enumKey: string | null = null;
 
   let columnHeader = '';
-  let enumOptions: EnumChoice[] | undefined = [];
   fieldOptions.flat().forEach((columnOp) => {
     if (columnOp.value === `enum:${fieldKey}`) {
       columnHeader = columnOp.label;
-      enumOptions = columnOp.enumChoices;
     }
   });
+
+  const field = customFields.find((f) => f.slug === fieldKey);
+  const enumChoices = field?.enum_choices || [];
 
   const value = fields?.[fieldKey];
   currentSheet.columns.forEach((column) => {
@@ -45,7 +47,7 @@ const EnumPreview = ({ currentSheet, fieldKey, fields }: EnumPreviewProps) => {
     }
   });
 
-  const option = enumOptions.find((o) => o.key == enumKey);
+  const option = enumChoices.find((o) => o.key == enumKey);
 
   return (
     <PreviewGrid

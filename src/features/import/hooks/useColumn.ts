@@ -1,5 +1,5 @@
 import { columnUpdate } from '../store';
-import { CUSTOM_FIELD_TYPE, EnumChoice } from 'utils/types/zetkin';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 export interface Option {
   value: string;
   label: string;
-  enumChoices?: EnumChoice[];
 }
 
 export default function useColumn(orgId: number) {
@@ -81,7 +80,6 @@ export default function useColumn(orgId: number) {
       };
     } else if (field.type == CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
       return {
-        enumChoices: field.enum_choices,
         label: field.title,
         value: `enum:${field.slug}`,
       };
