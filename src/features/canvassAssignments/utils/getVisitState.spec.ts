@@ -1,13 +1,13 @@
 import getVisitState from './getVisitState';
 
 describe('getVisitState()', () => {
-  it('returns "pending" when passed an empty array', () => {
+  it('returns "none" when passed an empty array', () => {
     const state = getVisitState([], '123');
 
-    expect(state).toEqual('pending');
+    expect(state).toEqual('none');
   });
 
-  it('returns "pending" when passed an array where no housholds have visits in current assignment', () => {
+  it('returns "none" when passed an array where no housholds have visits in current assignment', () => {
     const state = getVisitState(
       [
         { id: '1', title: 'Door 1', visits: [] },
@@ -28,10 +28,10 @@ describe('getVisitState()', () => {
       '123'
     );
 
-    expect(state).toEqual('pending');
+    expect(state).toEqual('none');
   });
 
-  it('returns "started" when passed an array where only one household has visits in the current assignment', () => {
+  it('returns "some" when passed an array where only one household has visits in the current assignment', () => {
     const state = getVisitState(
       [
         { id: '1', title: 'Door 1', visits: [] },
@@ -52,10 +52,10 @@ describe('getVisitState()', () => {
       '123'
     );
 
-    expect(state).toEqual('started');
+    expect(state).toEqual('some');
   });
 
-  it('returns "done" when passed an array where all households have visits in the current assignment', () => {
+  it('returns "all" when passed an array where all households have visits in the current assignment', () => {
     const state = getVisitState(
       [
         {
@@ -75,6 +75,6 @@ describe('getVisitState()', () => {
       '123'
     );
 
-    expect(state).toEqual('done');
+    expect(state).toEqual('all');
   });
 });
