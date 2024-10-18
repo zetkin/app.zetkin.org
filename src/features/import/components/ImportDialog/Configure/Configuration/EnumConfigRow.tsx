@@ -1,6 +1,7 @@
 import { ArrowForward, Delete } from '@mui/icons-material';
 import {
   Box,
+  Button,
   FormControl,
   IconButton,
   InputLabel,
@@ -8,7 +9,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { EnumChoice } from 'utils/types/zetkin';
@@ -34,6 +35,9 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
   title,
 }) => {
   const messages = useMessages(messageIds);
+  const [mapping, setMapping] = useState(false);
+
+  const showSelect = mapping || selectedOption;
 
   return (
     <Box display="flex" flexDirection="column">
@@ -56,33 +60,48 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
           paddingRight={1}
           width="50%"
         >
-          <FormControl fullWidth size="small">
-            <InputLabel>
-              <Msg id={messageIds.configuration.configure.enum.none} />
-            </InputLabel>
-            <Select
-              label={messages.configuration.configure.enum.none()}
-              onChange={(event) => {
-                if (typeof event.target.value == 'string') {
-                  onSelectOption(event.target.value);
+          {!showSelect && (
+            <Button onClick={() => setMapping(true)}>
+              <Msg
+                id={
+                  messageIds.configuration.configure.ids
+                    .showOrganizationSelectButton
                 }
-              }}
-              value={selectedOption || ''}
-            >
-              {options.map((option) => (
-                <MenuItem key={option.key} value={option.key}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <IconButton
-            onClick={() => {
-              onDeselectOption();
-            }}
-          >
-            <Delete color="secondary" />
-          </IconButton>
+              />
+            </Button>
+          )}
+          {showSelect && (
+            <>
+              <FormControl fullWidth size="small">
+                <InputLabel>
+                  <Msg id={messageIds.configuration.configure.enum.none} />
+                </InputLabel>
+                <Select
+                  label={messages.configuration.configure.enum.none()}
+                  onChange={(event) => {
+                    if (typeof event.target.value == 'string') {
+                      onSelectOption(event.target.value);
+                    }
+                  }}
+                  value={selectedOption || ''}
+                >
+                  {options.map((option) => (
+                    <MenuItem key={option.key} value={option.key}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                onClick={() => {
+                  onDeselectOption();
+                  setMapping(false);
+                }}
+              >
+                <Delete color="secondary" />
+              </IconButton>
+            </>
+          )}
         </Box>
       </Box>
       <Typography color="secondary">
