@@ -54,7 +54,11 @@ export default function useColumn(orgId: number) {
         return column.field == value.slice(6);
       }
 
-      if (column.kind == ColumnKind.DATE || column.kind == ColumnKind.ENUM) {
+      if (column.kind == ColumnKind.DATE) {
+        return column.field == value.slice(5);
+      }
+
+      if (column.kind == ColumnKind.ENUM) {
         return column.field == value.slice(5);
       }
     });
