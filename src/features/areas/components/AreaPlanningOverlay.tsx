@@ -3,8 +3,6 @@ import { Close } from '@mui/icons-material';
 import { Box, Divider, Paper, Typography } from '@mui/material';
 
 import { ZetkinArea } from '../types';
-import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
@@ -22,8 +20,6 @@ const AreaPlanningOverlay: FC<Props> = ({
   onAddAssignee,
   onClose,
 }) => {
-  const messages = useMessages(messageIds);
-
   return (
     <Paper
       sx={{
@@ -40,9 +36,7 @@ const AreaPlanningOverlay: FC<Props> = ({
     >
       <Box padding={2}>
         <Box display="flex" justifyContent="space-between">
-          <Typography variant="h5">
-            {area.title || messages.empty.title()}
-          </Typography>
+          <Typography variant="h5">{area.title || 'Untitled area'}</Typography>
           <Close
             color="secondary"
             onClick={() => {
@@ -61,23 +55,21 @@ const AreaPlanningOverlay: FC<Props> = ({
           >
             {area.description?.trim().length
               ? area.description
-              : messages.empty.description()}
+              : 'Empty description'}
           </Typography>
         </Box>
       </Box>
       <Divider />
       <Box m={1}>
         <Box>
-          <Typography variant="h6">
-            <Msg id={messageIds.planOverlay.assignees} />
-          </Typography>
+          <Typography variant="h6">Assignees </Typography>
           {!assignees.length && (
             <Typography
               color="secondary"
               fontStyle={area.description?.trim().length ? 'inherit' : 'italic'}
               sx={{ overflowWrap: 'anywhere' }}
             >
-              <Msg id={messageIds.planOverlay.noAssignees} />
+              No assignees
             </Typography>
           )}
           {assignees.map((assignee) => (
@@ -90,9 +82,7 @@ const AreaPlanningOverlay: FC<Props> = ({
           ))}
         </Box>
         <Box mt={2}>
-          <Typography variant="h6">
-            <Msg id={messageIds.planOverlay.addAssignee} />
-          </Typography>
+          <Typography variant="h6">Add assignee</Typography>
           <ZUIPersonSelect
             onChange={function (person: ZetkinPerson): void {
               onAddAssignee(person);

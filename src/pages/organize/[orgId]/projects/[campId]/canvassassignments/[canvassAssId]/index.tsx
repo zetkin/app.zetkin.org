@@ -1,21 +1,20 @@
-import { Box, Button, Card, Divider, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, lighten, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { makeStyles, useTheme } from '@mui/styles';
 
-import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
-import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import useCanvassAssignment from 'features/areas/hooks/useCanvassAssignment';
-import { Msg } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
-import ZUIFutures from 'zui/ZUIFutures';
-import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-import useCanvassAssignmentStats from 'features/areas/hooks/useCanvassAssignmentStats';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 import { getContrastColor } from 'utils/colorUtils';
 import { AREAS } from 'utils/featureFlags';
+import { scaffold } from 'utils/next';
+import ZUIFutures from 'zui/ZUIFutures';
+import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
+import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
+import AssignmentMetricsChart from 'features/canvassAssignments/components/AssignmentMetricsChart';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -85,9 +84,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
           <Box display="flex" flexDirection="column" gap={2}>
             <Card>
               <Box display="flex" justifyContent="space-between" p={2}>
-                <Typography variant="h4">
-                  <Msg id={messageIds.canvassAssignment.overview.areas.title} />
-                </Typography>
+                <Typography variant="h4">Areas</Typography>
                 {!!stats.num_areas && (
                   <ZUIAnimatedNumber value={stats.num_areas}>
                     {(animatedValue) => (
@@ -104,19 +101,13 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     startIcon={<Edit />}
                     variant="text"
                   >
-                    <Msg
-                      id={
-                        messageIds.canvassAssignment.overview.areas.editButton
-                      }
-                    />
+                    Edit plan
                   </Button>
                 </Box>
               ) : (
                 <Box p={2}>
                   <Typography>
-                    <Msg
-                      id={messageIds.canvassAssignment.overview.areas.subtitle}
-                    />
+                    This assignment has not been planned yet.
                   </Typography>
                   <Box pt={1}>
                     <Button
@@ -124,16 +115,14 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                       startIcon={<Edit />}
                       variant="text"
                     >
-                      <Msg
-                        id={
-                          messageIds.canvassAssignment.overview.areas
-                            .defineButton
-                        }
-                      />
+                      Plan now
                     </Button>
                   </Box>
                 </Box>
               )}
+            </Card>
+            <Card>
+              {stats.metrics && <AssignmentMetricsChart stats={stats} />}
             </Card>
             <Card>
               <Box padding={2}>
@@ -157,11 +146,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   <ZUIStackedStatusBar
                     values={[
                       {
-                        color: theme.palette.statusColors.green,
+                        color: theme.palette.primary.main,
                         value: stats.num_visited_areas,
                       },
                       {
-                        color: theme.palette.statusColors.orange,
+                        color: lighten(theme.palette.primary.main, 0.6),
                         value: stats.num_areas - stats.num_visited_areas,
                       },
                     ]}
@@ -188,11 +177,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   <ZUIStackedStatusBar
                     values={[
                       {
-                        color: theme.palette.statusColors.green,
+                        color: theme.palette.primary.main,
                         value: stats.num_visited_places,
                       },
                       {
-                        color: theme.palette.statusColors.orange,
+                        color: lighten(theme.palette.primary.main, 0.6),
                         value: stats.num_places - stats.num_visited_places,
                       },
                     ]}
@@ -219,18 +208,24 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   <ZUIStackedStatusBar
                     values={[
                       {
-                        color: theme.palette.statusColors.green,
-                        value: stats.num_visited_households,
+                        color: theme.palette.primary.main,
+                        value: stats.num_successful_visited_households,
                       },
                       {
-                        color: theme.palette.statusColors.orange,
+                        color: lighten(theme.palette.primary.main, 0.5),
+                        value:
+                          stats.num_visited_households -
+                          stats.num_successful_visited_households,
+                      },
+                      {
+                        color: lighten(theme.palette.primary.main, 0.8),
                         value:
                           stats.num_households - stats.num_visited_households,
                       },
                     ]}
                   />
                   <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.num_visited_households} logged`}</Typography>
+                    <Typography>{`${stats.num_successful_visited_households} success of ${stats.num_visited_households} visits`}</Typography>
                   </Box>
                 </Box>
               </Box>

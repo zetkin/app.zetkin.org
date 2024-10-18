@@ -10,10 +10,11 @@ import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 import { useTheme } from '@mui/styles';
 import { Box } from '@mui/material';
 
-import { ZetkinArea, ZetkinCanvassSession } from '../types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import objToLatLng from '../utils/objToLatLng';
+import { ZetkinCanvassSession } from '../types';
+import { ZetkinArea } from 'features/areas/types';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type PlanMapRendererProps = {
   areas: ZetkinArea[];

@@ -1,17 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
-import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
-import { ZetkinCanvassSession } from 'features/areas/types';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { AREAS } from 'utils/featureFlags';
+import { ZetkinCanvassSession } from 'features/canvassAssignments/types';
+import useCanvassSessions from 'features/canvassAssignments/hooks/useCanvassSessions';
+import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -40,7 +38,6 @@ const CanvassAssignmentPage: PageWithLayout<Props> = ({
   orgId,
   canvassAssId,
 }) => {
-  const messages = useMessages(messageIds);
   const allSessions =
     useCanvassSessions(parseInt(orgId), canvassAssId).data || [];
   const sessions = allSessions.filter(
@@ -81,7 +78,7 @@ const CanvassAssignmentPage: PageWithLayout<Props> = ({
     {
       field: 'name',
       flex: 1,
-      headerName: messages.canvassAssignment.canvassers.nameColumn(),
+      headerName: 'Name',
       valueGetter: (params) =>
         `${params.row.person.first_name} ${params.row.person.last_name}`,
     },
@@ -90,7 +87,7 @@ const CanvassAssignmentPage: PageWithLayout<Props> = ({
       field: 'areas',
       flex: 1,
       headerAlign: 'left',
-      headerName: messages.canvassAssignment.canvassers.areasColumn(),
+      headerName: 'Areas',
       type: 'number',
       valueGetter: (params) => params.row.sessions.length,
     },

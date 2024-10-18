@@ -5,16 +5,19 @@ import { GetServerSideProps } from 'next';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import CanvassAssignmentLayout from 'features/areas/layouts/CanvassAssignmentLayout';
+import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
-import useCanvassSessions from 'features/areas/hooks/useCanvassSessions';
+import useCanvassSessions from 'features/canvassAssignments/hooks/useCanvassSessions';
 import ZUIFuture from 'zui/ZUIFuture';
-import useCreateCanvassSession from 'features/areas/hooks/useCreateCanvassSession';
+import useCreateCanvassSession from 'features/canvassAssignments/hooks/useCreateCanvassSession';
 import { AREAS } from 'utils/featureFlags';
 
 const PlanMap = dynamic(
-  () => import('../../../../../../../features/areas/components/PlanMap'),
+  () =>
+    import(
+      '../../../../../../../features/canvassAssignments/components/PlanMap'
+    ),
   { ssr: false }
 );
 

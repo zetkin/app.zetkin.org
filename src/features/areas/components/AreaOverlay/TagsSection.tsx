@@ -1,10 +1,8 @@
 import { FC, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import { Msg } from 'core/i18n';
 import useAreaTagging from 'features/areas/hooks/useAreaTagging';
 import useAreaTags from 'features/areas/hooks/useAreaTags';
-import messageIds from 'features/areas/l10n/messageIds';
 import { ZetkinArea } from 'features/areas/types';
 import TagManager from 'features/tags/components/TagManager';
 import GroupToggle from 'features/tags/components/TagManager/components/GroupToggle';
@@ -33,9 +31,7 @@ const TagsSection: FC<Props> = ({ area }) => {
             mb={2}
             minHeight={38}
           >
-            <Typography variant="h6">
-              <Msg id={messageIds.overlay.tags.header} />
-            </Typography>
+            <Typography variant="h6">Area tags</Typography>
             <Box>
               <GroupToggle
                 checked={grouped}

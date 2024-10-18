@@ -11,13 +11,11 @@ import {
   Typography,
 } from '@mui/material';
 
-import useMyCanvassSessions from 'features/areas/hooks/useMyCanvassSessions';
-import { ZetkinCanvassSession } from '../types';
+import useMyCanvassSessions from '../hooks/useMyCanvassSessions';
 import useCanvassAssignment from '../hooks/useCanvassAssignment';
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinCanvassSession } from '../types';
 
 const CanvassAssignmentCard: FC<{
   areaId: string;
@@ -39,9 +37,7 @@ const CanvassAssignmentCard: FC<{
         <Card>
           <CardContent>
             <Typography variant="h6">
-              {assignment.title || (
-                <Msg id={messageIds.canvassAssignment.empty.title} />
-              )}
+              {assignment.title || 'Untitled assignment'}
             </Typography>
             <Typography>{organization.title}</Typography>
           </CardContent>
@@ -54,7 +50,7 @@ const CanvassAssignmentCard: FC<{
               }
               variant="outlined"
             >
-              <Msg id={messageIds.canvassAssignment.canvassing.goToMapButton} />
+              Go to map
             </Button>
           </CardActions>
         </Card>
@@ -77,9 +73,7 @@ const MyCanvassAssignmentsPage: FC = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2} padding={1}>
-      <Typography variant="h6">
-        <Msg id={messageIds.canvassAssignment.canvassing.title} />
-      </Typography>
+      <Typography variant="h6">Canvassing</Typography>
       {Object.values(sessionsByAssignmentId).map((sessions) => {
         return (
           <CanvassAssignmentCard

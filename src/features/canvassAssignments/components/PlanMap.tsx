@@ -12,12 +12,11 @@ import {
 } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 
-import { ZetkinArea, ZetkinCanvassSession } from '../types';
-import { useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import { ZetkinArea } from '../../areas/types';
 import PlanMapRenderer from './PlanMapRenderer';
-import AreaPlanningOverlay from './AreaPlanningOverlay';
+import AreaPlanningOverlay from '../../areas/components/AreaPlanningOverlay';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinCanvassSession } from '../types';
 
 type PlanMapProps = {
   areas: ZetkinArea[];
@@ -30,7 +29,6 @@ const PlanMap: FC<PlanMapProps> = ({
   onAddAssigneeToArea,
   sessions,
 }) => {
-  const messages = useMessages(messageIds);
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterUnassigned, setFilterUnassigned] = useState(false);
 
@@ -48,8 +46,8 @@ const PlanMap: FC<PlanMapProps> = ({
     }
 
     return areas.filter((area) => {
-      const areaTitle = area.title || messages.empty.title();
-      const areaDesc = area.description || messages.empty.description();
+      const areaTitle = area.title || 'Untitled area';
+      const areaDesc = area.description || 'Empty description';
 
       return (
         areaTitle.toLowerCase().includes(inputValue) ||
@@ -91,12 +89,12 @@ const PlanMap: FC<PlanMapProps> = ({
         <Box alignItems="center" display="flex" gap={1}>
           <Chip
             color={filterAssigned ? 'primary' : 'secondary'}
-            label={messages.canvassAssignment.planFilters.assigned()}
+            label="Assigned"
             onClick={() => setFilterAssigned(!filterAssigned)}
           />
           <Chip
             color={filterUnassigned ? 'primary' : 'secondary'}
-            label={messages.canvassAssignment.planFilters.unassigned()}
+            label="Unassigned"
             onClick={() => setFilterUnassigned(!filterUnassigned)}
           />
           <Autocomplete
@@ -126,9 +124,7 @@ const PlanMap: FC<PlanMapProps> = ({
               />
             )}
             renderOption={(props, area) => (
-              <MenuItem {...props}>
-                {area.title || messages.empty.title()}
-              </MenuItem>
+              <MenuItem {...props}>{area.title || 'Untitled area'}</MenuItem>
             )}
             value={null}
           />

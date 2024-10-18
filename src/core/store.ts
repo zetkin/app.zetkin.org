@@ -49,15 +49,17 @@ import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
-import areasSlice, {
-  AreasStoreSlice,
+import areasSlice, { AreasStoreSlice } from 'features/areas/store';
+import canvassAssignmentSlice, {
   canvassAssignmentCreated,
-} from 'features/areas/store';
+  CanvassAssignmentsStoreSlice,
+} from 'features/canvassAssignments/store';
 
 export interface RootState {
   areas: AreasStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
+  canvassAssignments: CanvassAssignmentsStoreSlice;
   campaigns: CampaignsStoreSlice;
   duplicates: PotentialDuplicatesStoreSlice;
   emails: EmailStoreSlice;
@@ -83,6 +85,7 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  canvassAssignments: canvassAssignmentSlice.reducer,
   duplicates: potentialDuplicatesSlice.reducer,
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,

@@ -18,7 +18,9 @@ export default function useCanvassAssignmentActivities(
 ): IFuture<CampaignActivity[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const list = useAppSelector((state) => state.areas.canvassAssignmentList);
+  const list = useAppSelector(
+    (state) => state.canvassAssignments.canvassAssignmentList
+  );
 
   const hasCanvassing = useFeature(AREAS);
   if (!hasCanvassing) {

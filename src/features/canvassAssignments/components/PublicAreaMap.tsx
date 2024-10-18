@@ -17,16 +17,14 @@ import {
   TileLayer,
 } from 'react-leaflet';
 
-import { ZetkinArea } from '../types';
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
-import { CreatePlaceCard } from './CreatePlaceCard';
+import { ZetkinArea } from '../../areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import PlaceDialog from './PlaceDialog';
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import MarkerIcon from '../utils/markerIcon';
+import PlaceDialog from './PlaceDialog';
+import { CreatePlaceCard } from './CreatePlaceCard';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -87,12 +85,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export type PlaceDialogStep =
+  | 'place'
+  | 'edit'
+  | 'household'
+  | 'wizard'
+  | 'pickHousehold';
+
 type PublicAreaMapProps = {
   area: ZetkinArea;
   canvassAssId: string | null;
 };
 
-const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
+const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
   const theme = useTheme();
   const classes = useStyles();
   const places = usePlaces(area.organization.id).data || [];
@@ -100,9 +105,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<'place' | 'edit' | 'household'>(
-    'place'
-  );
+  const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -254,7 +257,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
         {showViewPlaceButton && (
           <Box className={classes.infoButtons}>
             <Typography sx={{ paddingBottom: 1 }}>
-              {selectedPlace.title || <Msg id={messageIds.place.empty.title} />}
+              {selectedPlace.title || 'Untitled place'}
             </Typography>
             <Button
               fullWidth
@@ -264,13 +267,13 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
               }}
               variant="outlined"
             >
-              <Msg id={messageIds.viewPlaceButton} />
+              View place
             </Button>
           </Box>
         )}
         {!selectedPlace && !isCreating && (
           <Button onClick={() => setIsCreating(true)} variant="contained">
-            <Msg id={messageIds.addNewPlaceButton} />
+            Add new place
           </Button>
         )}
       </Box>
@@ -313,7 +316,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
           })}
         </>
       </MapContainer>
-      {selectedPlace && (
+      {selectedPlace && canvassAssId && (
         <PlaceDialog
           canvassAssId={canvassAssId}
           dialogStep={dialogStep}
@@ -322,8 +325,10 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
             setSelectedPlaceId(null);
           }}
           onEdit={() => setDialogStep('edit')}
+          onPickHousehold={() => setDialogStep('pickHousehold')}
           onSelectHousehold={() => setDialogStep('household')}
           onUpdateDone={() => setDialogStep('place')}
+          onWizard={() => setDialogStep('wizard')}
           open={!!anchorEl}
           orgId={area.organization.id}
           place={selectedPlace}
@@ -334,7 +339,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
           onClose={() => {
             setIsCreating(false);
           }}
-          onCreate={(title, type) => {
+          onCreate={(title) => {
             const crosshair = crosshairRef.current;
 
             if (crosshair && map) {
@@ -348,7 +353,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ area, canvassAssId }) => {
                 createPlace({
                   position: point,
                   title,
-                  type: type === 'address' ? 'address' : 'misc',
                 });
               }
             }

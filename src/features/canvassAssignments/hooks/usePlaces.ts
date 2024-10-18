@@ -6,7 +6,9 @@ import { placesLoad, placesLoaded } from '../store';
 export default function usePlaces(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const placeList = useAppSelector((state) => state.areas.placeList);
+  const placeList = useAppSelector(
+    (state) => state.canvassAssignments.placeList
+  );
 
   return loadListIfNecessary(placeList, dispatch, {
     actionOnLoad: () => placesLoad(),

@@ -15,8 +15,6 @@ import useAreaMutations from '../../hooks/useAreaMutations';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
-import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../../l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
@@ -45,7 +43,6 @@ const AreaOverlay: FC<Props> = ({
     area.organization.id,
     area.id
   );
-  const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const handleDescriptionTextAreaRef = useCallback(
@@ -116,7 +113,7 @@ const AreaOverlay: FC<Props> = ({
               )}
               renderPreview={() => (
                 <Typography variant="h5">
-                  {area.title || messages.empty.title()}
+                  {area.title || 'Untitled area'}
                 </Typography>
               )}
               value={area.title || ''}
@@ -165,7 +162,7 @@ const AreaOverlay: FC<Props> = ({
                 >
                   {area.description?.trim().length
                     ? area.description
-                    : messages.empty.description()}
+                    : 'Empty description'}
                 </Typography>
               </Box>
             )}
@@ -189,22 +186,22 @@ const AreaOverlay: FC<Props> = ({
               }}
               variant="contained"
             >
-              <Msg id={messageIds.overlay.buttons.save} />
+              Save
             </Button>
             <Button onClick={() => onCancelEdit()} variant="outlined">
-              <Msg id={messageIds.overlay.buttons.cancel} />
+              Cancel
             </Button>
           </>
         )}
         {!editing && (
           <>
             <Button onClick={() => onBeginEdit()} variant="outlined">
-              <Msg id={messageIds.overlay.buttons.edit} />
+              Edit
             </Button>
             <ZUIEllipsisMenu
               items={[
                 {
-                  label: messages.overlay.buttons.delete(),
+                  label: 'Delete',
                   onSelect: () => {
                     showConfirmDialog({
                       onSubmit: () => {

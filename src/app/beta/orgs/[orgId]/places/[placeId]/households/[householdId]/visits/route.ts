@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { PlaceModel } from 'features/areas/models';
+import { PlaceModel } from 'features/canvassAssignments/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 
 type RouteMeta = {
@@ -30,8 +30,11 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           $push: {
             'households.$[elem].visits': {
               canvassAssId: payload.canvassAssId,
+              doorWasOpened: payload.doorWasOpened,
               id: new mongoose.Types.ObjectId().toString(),
-              rating: payload.rating,
+              missionAccomplished: payload.missionAccomplished,
+              noteToOfficial: payload.noteToOfficial,
+              responses: payload.responses || [],
               timestamp: payload.timestamp,
             },
           },
@@ -56,7 +59,6 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           orgId: orgId,
           position: model.position,
           title: model.title,
-          type: model.type,
         },
       });
     }

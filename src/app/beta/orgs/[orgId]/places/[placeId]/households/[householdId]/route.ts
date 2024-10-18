@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { PlaceModel } from 'features/areas/models';
+import { PlaceModel } from 'features/canvassAssignments/models';
 
 type RouteMeta = {
   params: {
@@ -47,7 +47,6 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           orgId: orgId,
           position: model.position,
           title: model.title,
-          type: model.type,
         },
       });
     }

@@ -10,7 +10,7 @@ export default function useCanvassAssignment(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const canvassAssignmenList = useAppSelector(
-    (state) => state.areas.canvassAssignmentList.items
+    (state) => state.canvassAssignments.canvassAssignmentList.items
   );
   const canvassAssignmentItem = canvassAssignmenList.find(
     (item) => item.id == canvassAssId
