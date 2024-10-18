@@ -25,7 +25,7 @@ export default function mockState(overrides?: RootState) {
     canvassAssignments: {
       assigneesByCanvassAssignmentId: {},
       canvassAssignmentList: remoteList(),
-      mySessionsList: remoteList(),
+      myAssignmentsWithAreasList: remoteList(),
       placeList: remoteList(),
       sessionsByAssignmentId: {},
       statsByCanvassAssId: {},

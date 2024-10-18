@@ -1,10 +1,4 @@
-import {
-  ArrowBackIos,
-  Check,
-  Close,
-  Edit,
-  MoreVert,
-} from '@mui/icons-material';
+import { ArrowBackIos, Close, Edit, MoreVert } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import {
   Box,
@@ -22,12 +16,12 @@ import VisitWizard from './VisitWizard';
 import EditPlace from './EditPlace';
 import Place from './Place';
 import Household from './Household';
-import { isWithinLast24Hours } from 'features/canvassAssignments/utils/isWithinLast24Hours';
 import ZUIFuture from 'zui/ZUIFuture';
-import { PlaceDialogStep } from '../PublicAreaMap';
+import { PlaceDialogStep } from '../CanvassAssignmentMap';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type PlaceDialogProps = {
   canvassAssId: string;
@@ -135,7 +129,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     >
                       <ArrowBackIos />
                     </IconButton>
-                    <Typography variant="h6">Log visit</Typography>
+                    <Typography variant="h6">Pick household</Typography>
                   </Box>
                   <IconButton onClick={onClose}>
                     <Close />
@@ -206,38 +200,61 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 />
               )}
               {dialogStep == 'pickHousehold' && (
-                <Box>
-                  <Typography variant="h6">Choose household</Typography>
-                  {place.households.map((household) => {
-                    const visitedRecently = isWithinLast24Hours(
-                      household.visits.map((t) => t.timestamp)
-                    );
-                    return (
-                      <Box
-                        key={household.id}
-                        alignItems="center"
-                        display="flex"
-                        mb={1}
-                        mt={1}
-                        onClick={() => {
-                          if (!visitedRecently) {
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flexGrow={2}
+                  gap={1}
+                  overflow="hidden"
+                  paddingTop={1}
+                >
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={2}
+                    sx={{ overflowY: 'auto' }}
+                  >
+                    {place.households.map((household) => {
+                      const sortedVisits = household.visits.toSorted((a, b) => {
+                        const dateA = new Date(a.timestamp);
+                        const dateB = new Date(b.timestamp);
+                        if (dateA > dateB) {
+                          return -1;
+                        } else if (dateB > dateA) {
+                          return 1;
+                        } else {
+                          return 0;
+                        }
+                      });
+
+                      const mostRecentVisit =
+                        sortedVisits.length > 0 ? sortedVisits[0] : null;
+
+                      return (
+                        <Box
+                          key={household.id}
+                          alignItems="center"
+                          display="flex"
+                          onClick={() => {
                             setSelectedHouseholdId(household.id);
                             onWizard();
-                          }
-                        }}
-                        width="100%"
-                      >
-                        <Box flexGrow={1}>
-                          <Typography
-                            color={visitedRecently ? 'secondary' : ''}
-                          >
-                            {household.title || 'Untitled household'}
-                          </Typography>
+                          }}
+                          width="100%"
+                        >
+                          <Box flexGrow={1}>
+                            <Typography>
+                              {household.title || 'Untitled household'}
+                            </Typography>
+                          </Box>
+                          {mostRecentVisit && (
+                            <ZUIRelativeTime
+                              datetime={mostRecentVisit.timestamp}
+                            />
+                          )}
                         </Box>
-                        {visitedRecently ? <Check color="secondary" /> : ''}
-                      </Box>
-                    );
-                  })}
+                      );
+                    })}
+                  </Box>
                 </Box>
               )}
               {dialogStep === 'edit' && (
@@ -266,8 +283,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   onWizardStart={() => {
                     onWizard();
                   }}
-                  visitedRecently={isWithinLast24Hours(
-                    selectedHousehold.visits.map((t) => t.timestamp)
+                  visitedInThisAssignment={selectedHousehold.visits.some(
+                    (visit) => visit.canvassAssId == canvassAssId
                   )}
                 />
               )}

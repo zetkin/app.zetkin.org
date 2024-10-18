@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { LatLng, latLngBounds, Map } from 'leaflet';
+import { LatLng, Map, FeatureGroup as FeatureGroupType } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
 import {
@@ -7,11 +7,16 @@ import {
   Button,
   Divider,
   IconButton,
+  MenuItem,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
   useTheme,
 } from '@mui/material';
 import {
   AttributionControl,
+  FeatureGroup,
   MapContainer,
   Polygon,
   TileLayer,
@@ -22,9 +27,12 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import MarkerIcon from '../utils/markerIcon';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
+import getVisitState, { ProgressState } from '../utils/getVisitState';
+import MarkerIcon from '../utils/MarkerIcon';
+import { ZetkinCanvassAssignment } from '../types';
+import getDoneState from '../utils/getDoneState';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -55,6 +63,14 @@ const useStyles = makeStyles((theme) => ({
     transition: 'opacity 0.1s',
     zIndex: 1200,
   },
+  filterControls: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: 10,
+    position: 'absolute',
+    right: 10,
+    zIndex: 1000,
+  },
   ghostMarker: {
     animationDirection: 'alternate',
     animationDuration: '0.4s',
@@ -72,6 +88,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     padding: '8px',
     width: '90%',
+  },
+  markerFilterButtons: {
+    backgroundColor: theme.palette.common.white,
+    borderRadius: 4,
+    display: 'flex',
+    flexDirection: 'row',
   },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
@@ -92,26 +114,38 @@ export type PlaceDialogStep =
   | 'wizard'
   | 'pickHousehold';
 
-type PublicAreaMapProps = {
-  area: ZetkinArea;
-  canvassAssId: string | null;
+type CanvassAssignmentMapProps = {
+  areas: ZetkinArea[];
+  assignment: ZetkinCanvassAssignment;
 };
 
-const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
+const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
+  areas,
+  assignment,
+}) => {
   const theme = useTheme();
   const classes = useStyles();
-  const places = usePlaces(area.organization.id).data || [];
-  const createPlace = useCreatePlace(area.organization.id);
+  const places = usePlaces(assignment.organization.id).data || [];
+  const createPlace = useCreatePlace(assignment.organization.id);
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [placeFilters, setPlaceFilters] = useState<ProgressState[]>([
+    'all',
+    'none',
+    'some',
+  ]);
+  const [dataToShow, setDataToShow] = useState<'visited' | 'done'>('visited');
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const standingStillTimerRef = useRef(0);
+  const reactFGref = useRef<FeatureGroupType | null>(null);
+
+  const [zoomed, setZoomed] = useState(false);
 
   const selectedPlace = places.find((place) => place.id == selectedPlaceId);
   const showViewPlaceButton = !!selectedPlace && !anchorEl;
@@ -209,6 +243,32 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
     updateSelection();
   }, [places]);
 
+  useEffect(() => {
+    if (map && !zoomed) {
+      const bounds = reactFGref.current?.getBounds();
+      if (bounds?.isValid()) {
+        map.fitBounds(bounds);
+        setZoomed(true);
+      }
+    }
+  }, [areas, map]);
+
+  const metricThatDefinesDone = assignment.metrics.find(
+    (metric) => metric.definesDone
+  );
+
+  const filteredPlaces = places.filter((place) => {
+    const state =
+      dataToShow == 'visited'
+        ? getVisitState(place.households, assignment.id)
+        : getDoneState(
+            place.households,
+            assignment.id,
+            metricThatDefinesDone?.id || ''
+          );
+    return placeFilters.includes(state);
+  });
+
   return (
     <>
       <Box className={classes.zoomControls}>
@@ -219,6 +279,40 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
         <IconButton onClick={() => map?.zoomOut()}>
           <Remove />
         </IconButton>
+      </Box>
+      <Box className={classes.filterControls}>
+        <ToggleButtonGroup
+          className={classes.markerFilterButtons}
+          onChange={(ev, newValue: ProgressState[]) => {
+            setPlaceFilters(newValue);
+          }}
+          value={placeFilters}
+        >
+          <ToggleButton value="none">
+            <MarkerIcon dataToShow={dataToShow} selected={false} state="none" />
+          </ToggleButton>
+          <ToggleButton value="some">
+            <MarkerIcon dataToShow={dataToShow} selected={false} state="some" />
+          </ToggleButton>
+          <ToggleButton value="all">
+            <MarkerIcon dataToShow={dataToShow} selected={false} state="all" />
+          </ToggleButton>
+        </ToggleButtonGroup>
+        {!!assignment.metrics.find((metric) => metric.definesDone) && (
+          <Select
+            onChange={(ev) => {
+              const value = ev.target.value;
+              if (value == 'done' || value == 'visited') {
+                setDataToShow(value);
+              }
+            }}
+            sx={{ backgroundColor: 'white' }}
+            value={dataToShow}
+          >
+            <MenuItem value="visited">Visited</MenuItem>
+            <MenuItem value="done">Done</MenuItem>
+          </Select>
+        )}
       </Box>
       <Box position="relative">
         <Box
@@ -280,7 +374,6 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
       <MapContainer
         ref={(map) => setMap(map)}
         attributionControl={false}
-        bounds={latLngBounds(area.points)}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}
         zoomControl={false}
@@ -290,9 +383,30 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
           attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Polygon color={theme.palette.primary.main} positions={area.points} />
+        <FeatureGroup
+          ref={(fgRef) => {
+            reactFGref.current = fgRef;
+          }}
+        >
+          {areas.map((area) => (
+            <Polygon
+              key={area.id}
+              color={theme.palette.primary.main}
+              positions={area.points}
+            />
+          ))}
+        </FeatureGroup>
         <>
-          {places.map((place) => {
+          {filteredPlaces.map((place) => {
+            const state =
+              dataToShow == 'visited'
+                ? getVisitState(place.households, assignment.id)
+                : getDoneState(
+                    place.households,
+                    assignment.id,
+                    metricThatDefinesDone?.id || ''
+                  );
+
             const selected = place.id == selectedPlaceId;
             const key = `marker-${place.id}-${selected.toString()}`;
 
@@ -310,15 +424,19 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
                   lng: place.position.lng,
                 }}
               >
-                <MarkerIcon selected={selected} />
+                <MarkerIcon
+                  dataToShow={dataToShow}
+                  selected={selected}
+                  state={state}
+                />
               </DivIconMarker>
             );
           })}
         </>
       </MapContainer>
-      {selectedPlace && canvassAssId && (
+      {selectedPlace && (
         <PlaceDialog
-          canvassAssId={canvassAssId}
+          canvassAssId={assignment.id}
           dialogStep={dialogStep}
           onClose={() => {
             setAnchorEl(null);
@@ -330,7 +448,7 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
           onUpdateDone={() => setDialogStep('place')}
           onWizard={() => setDialogStep('wizard')}
           open={!!anchorEl}
-          orgId={area.organization.id}
+          orgId={assignment.organization.id}
           place={selectedPlace}
         />
       )}
@@ -363,4 +481,4 @@ const PublicAreaMap: FC<PublicAreaMapProps> = ({ canvassAssId, area }) => {
   );
 };
 
-export default PublicAreaMap;
+export default CanvassAssignmentMap;
