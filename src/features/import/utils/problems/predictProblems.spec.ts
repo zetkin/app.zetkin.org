@@ -18,6 +18,16 @@ function makeFullField(
 ): ZetkinCustomField {
   return {
     description: '',
+    enum_choices: [
+      {
+        key: 'first',
+        label: 'First',
+      },
+      {
+        key: 'second',
+        label: 'Second',
+      },
+    ],
     id: 1001,
     organization: {
       id: 1,

@@ -28,6 +28,7 @@ const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
     ColumnKind.ORGANIZATION,
     ColumnKind.TAG,
     ColumnKind.DATE,
+    ColumnKind.ENUM,
   ].includes(column.kind);
 };
 

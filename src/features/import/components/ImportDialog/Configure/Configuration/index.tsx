@@ -8,6 +8,7 @@ import TagConfig from './TagConfig';
 import {
   ColumnKind,
   DateColumn,
+  EnumColumn,
   IDFieldColumn,
   OrgColumn,
   TagColumn,
@@ -15,6 +16,7 @@ import {
 import useUIDataColumn, {
   UIDataColumn,
 } from 'features/import/hooks/useUIDataColumn';
+import EnumConfig from './EnumConfig';
 
 interface ConfigurationProps {
   columnIndexBeingConfigured: number;
@@ -49,6 +51,9 @@ const Configuration: FC<ConfigurationProps> = ({
         )}
       {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.DATE && (
         <DateConfig uiDataColumn={uiDataColumn as UIDataColumn<DateColumn>} />
+      )}
+      {uiDataColumn && uiDataColumn.originalColumn.kind == ColumnKind.ENUM && (
+        <EnumConfig uiDataColumn={uiDataColumn as UIDataColumn<EnumColumn>} />
       )}
     </Box>
   );

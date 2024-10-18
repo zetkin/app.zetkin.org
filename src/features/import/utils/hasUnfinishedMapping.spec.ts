@@ -50,4 +50,15 @@ describe('hasUnfinishedMapping()', () => {
 
     expect(unfinishedMapping).toBe(true);
   });
+
+  it('returns true if columnKind is ENUM and mapping length is 0', () => {
+    const unfinishedMapping = hasUnfinishedMapping({
+      field: 'enum:dummyField',
+      kind: ColumnKind.ENUM,
+      mapping: [],
+      selected: true,
+    });
+
+    expect(unfinishedMapping).toBe(true);
+  });
 });
