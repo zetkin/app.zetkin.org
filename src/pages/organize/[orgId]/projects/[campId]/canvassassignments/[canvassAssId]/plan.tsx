@@ -12,6 +12,7 @@ import useCanvassSessions from 'features/canvassAssignments/hooks/useCanvassSess
 import ZUIFuture from 'zui/ZUIFuture';
 import useCreateCanvassSession from 'features/canvassAssignments/hooks/useCreateCanvassSession';
 import { AREAS } from 'utils/featureFlags';
+import usePlaces from 'features/canvassAssignments/hooks/usePlaces';
 
 const PlanMap = dynamic(
   () =>
@@ -40,6 +41,7 @@ interface PlanPageProps {
 
 const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
+  const places = usePlaces(parseInt(orgId)).data || [];
   const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
   const createCanvassSession = useCreateCanvassSession(
     parseInt(orgId),
@@ -63,6 +65,7 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
                 personId: person.id,
               });
             }}
+            places={places}
             sessions={sessions}
           />
         )}
