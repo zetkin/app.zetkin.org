@@ -106,3 +106,13 @@ export type ZetkinCanvassAssignmentStats = {
   num_visited_places: number;
   num_visited_places_outside_areas: number;
 };
+
+export type ZetkinAssignmentAreaStatsItem = {
+  areaId: string;
+  num_households: number;
+  num_visits: number;
+};
+
+export type ZetkinAssignmentAreaStats = {
+  stats: ZetkinAssignmentAreaStatsItem[];
+};

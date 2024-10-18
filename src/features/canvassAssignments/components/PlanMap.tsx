@@ -16,9 +16,14 @@ import { ZetkinArea } from '../../areas/types';
 import PlanMapRenderer from './PlanMapRenderer';
 import AreaPlanningOverlay from '../../areas/components/AreaPlanningOverlay';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import { ZetkinCanvassSession, ZetkinPlace } from '../types';
+import {
+  ZetkinAssignmentAreaStats,
+  ZetkinCanvassSession,
+  ZetkinPlace,
+} from '../types';
 
 type PlanMapProps = {
+  areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
   places: ZetkinPlace[];
@@ -27,6 +32,7 @@ type PlanMapProps = {
 
 const PlanMap: FC<PlanMapProps> = ({
   areas,
+  areaStats,
   onAddAssigneeToArea,
   places,
   sessions,
@@ -156,6 +162,7 @@ const PlanMap: FC<PlanMapProps> = ({
         >
           <PlanMapRenderer
             areas={areas}
+            areaStats={areaStats}
             filterAssigned={filterAssigned}
             filterUnassigned={filterUnassigned}
             onSelectedIdChange={(newId) => setSelectedId(newId)}

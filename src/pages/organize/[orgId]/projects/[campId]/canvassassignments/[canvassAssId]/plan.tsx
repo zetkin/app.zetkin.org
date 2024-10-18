@@ -9,10 +9,11 @@ import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/Canvass
 import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
 import useCanvassSessions from 'features/canvassAssignments/hooks/useCanvassSessions';
-import ZUIFuture from 'zui/ZUIFuture';
 import useCreateCanvassSession from 'features/canvassAssignments/hooks/useCreateCanvassSession';
 import { AREAS } from 'utils/featureFlags';
 import usePlaces from 'features/canvassAssignments/hooks/usePlaces';
+import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
+import ZUIFutures from 'zui/ZUIFutures';
 
 const PlanMap = dynamic(
   () =>
@@ -42,6 +43,7 @@ interface PlanPageProps {
 const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
   const places = usePlaces(parseInt(orgId)).data || [];
+  const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), canvassAssId);
   const sessionsFuture = useCanvassSessions(parseInt(orgId), canvassAssId);
   const createCanvassSession = useCreateCanvassSession(
     parseInt(orgId),
@@ -55,10 +57,13 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
 
   return (
     <Box height="100%">
-      <ZUIFuture future={sessionsFuture}>
-        {(sessions) => (
+      <ZUIFutures
+        futures={{ areaStats: areaStatsFuture, sessions: sessionsFuture }}
+      >
+        {({ data: { areaStats, sessions } }) => (
           <PlanMap
             areas={areas}
+            areaStats={areaStats}
             onAddAssigneeToArea={(area, person) => {
               createCanvassSession({
                 areaId: area.id,
@@ -69,7 +74,7 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
             sessions={sessions}
           />
         )}
-      </ZUIFuture>
+      </ZUIFutures>
     </Box>
   );
 };

@@ -12,11 +12,17 @@ import { Box } from '@mui/material';
 
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { ZetkinCanvassSession, ZetkinPlace } from '../types';
+import {
+  ZetkinAssignmentAreaStats,
+  ZetkinCanvassSession,
+  ZetkinPlace,
+} from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type PlanMapRendererProps = {
+  //eslint-disable-next-line
+  areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   filterAssigned: boolean;
   filterUnassigned: boolean;

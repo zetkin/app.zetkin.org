@@ -7,6 +7,7 @@ import {
   PlaceModel,
 } from 'features/canvassAssignments/models';
 import {
+  ZetkinAssignmentAreaStatsItem,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from 'features/canvassAssignments/types';
@@ -90,12 +91,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         ...new Map(areas.map((area) => [area['id'], area])).values(),
       ];
 
-      type AreaStats = {
-        areaId: string;
-        num_households: number;
-        num_visits: number;
-      };
-
       //Get all places
       const allPlaceModels = await PlaceModel.find({ orgId });
 
@@ -108,7 +103,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         title: model.title,
       }));
 
-      const statsByAreaId: Record<string, AreaStats> = {};
+      const statsByAreaId: Record<string, ZetkinAssignmentAreaStatsItem> = {};
 
       uniqueAreas.forEach((area) => {
         allPlaces.forEach((place) => {

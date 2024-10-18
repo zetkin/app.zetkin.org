@@ -14,9 +14,14 @@ import {
   ZetkinCanvassSession,
   ZetkinPlace,
   AssignmentWithAreas,
+  ZetkinAssignmentAreaStats,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
+  areaStatsByAssignmentId: Record<
+    string,
+    RemoteItem<ZetkinAssignmentAreaStats & { id: string }>
+  >;
   canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
   sessionsByAssignmentId: Record<
     string,
@@ -35,6 +40,7 @@ export interface CanvassAssignmentsStoreSlice {
 }
 
 const initialState: CanvassAssignmentsStoreSlice = {
+  areaStatsByAssignmentId: {},
   assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
   myAssignmentsWithAreasList: remoteList(),
@@ -47,6 +53,32 @@ const canvassAssignmentSlice = createSlice({
   initialState: initialState,
   name: 'canvassAssignments',
   reducers: {
+    areaStatsLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+
+      if (!state.areaStatsByAssignmentId[canvassAssId]) {
+        state.areaStatsByAssignmentId[canvassAssId] = remoteItem(canvassAssId);
+      }
+      const statsItem = state.areaStatsByAssignmentId[canvassAssId];
+
+      state.areaStatsByAssignmentId[canvassAssId] = remoteItem(canvassAssId, {
+        data: statsItem?.data || null,
+        isLoading: true,
+      });
+    },
+    areaStatsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinAssignmentAreaStats]>
+    ) => {
+      const [canvassAssId, stats] = action.payload;
+
+      state.areaStatsByAssignmentId[canvassAssId] = remoteItem(canvassAssId, {
+        data: { id: canvassAssId, ...stats },
+        isLoading: false,
+        isStale: false,
+        loaded: new Date().toISOString(),
+      });
+    },
     assigneeAdd: (state, action: PayloadAction<[string, number]>) => {
       const [canvassAssId, assigneeId] = action.payload;
 
@@ -264,6 +296,10 @@ const canvassAssignmentSlice = createSlice({
     },
     statsLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
+
+      if (!state.statsByCanvassAssId[canvassAssId]) {
+        state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId);
+      }
       const statsItem = state.statsByCanvassAssId[canvassAssId];
 
       state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
@@ -289,6 +325,8 @@ const canvassAssignmentSlice = createSlice({
 
 export default canvassAssignmentSlice;
 export const {
+  areaStatsLoad,
+  areaStatsLoaded,
   assigneeAdd,
   assigneeAdded,
   assigneeUpdated,
