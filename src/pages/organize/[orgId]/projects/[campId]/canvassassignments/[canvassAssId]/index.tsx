@@ -1,20 +1,19 @@
-import { Box, Button, Card, Divider, lighten, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
-import { makeStyles, useTheme } from '@mui/styles';
 
-import { PageWithLayout } from 'utils/types';
-import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
-import { getContrastColor } from 'utils/colorUtils';
 import { AREAS } from 'utils/featureFlags';
+import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
+import { getContrastColor } from 'utils/colorUtils';
+import { PageWithLayout } from 'utils/types';
+import NumberCard from 'features/canvassAssignments/components/NumberCard';
 import { scaffold } from 'utils/next';
-import ZUIFutures from 'zui/ZUIFutures';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
-import AssignmentMetricsChart from 'features/canvassAssignments/components/AssignmentMetricsChart';
+import ZUIFutures from 'zui/ZUIFutures';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -62,7 +61,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
 }) => {
-  const theme = useTheme();
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
   const classes = useStyles();
@@ -121,126 +119,28 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Box>
               )}
             </Card>
-            <Card>
-              {stats.metrics && <AssignmentMetricsChart stats={stats} />}
-            </Card>
-            <Card>
-              <Box padding={2}>
-                <Typography variant="h4">Progress</Typography>
-              </Box>
-              <Box display="flex" flexDirection="column">
-                <Box display="flex" flexDirection="column" gap={1} padding={2}>
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    <Typography variant="h5">Areas</Typography>
-                    <ZUIAnimatedNumber value={stats.num_areas}>
-                      {(animatedValue) => (
-                        <Box className={classes.statsChip}>{animatedValue}</Box>
-                      )}
-                    </ZUIAnimatedNumber>
-                  </Box>
-                  <ZUIStackedStatusBar
-                    values={[
-                      {
-                        color: theme.palette.primary.main,
-                        value: stats.num_visited_areas,
-                      },
-                      {
-                        color: lighten(theme.palette.primary.main, 0.6),
-                        value: stats.num_areas - stats.num_visited_areas,
-                      },
-                    ]}
-                  />
-                  <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.num_visited_areas} logged`}</Typography>
-                  </Box>
-                </Box>
-                <Divider />
-                <Box display="flex" flexDirection="column" gap={1} padding={2}>
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    <Typography variant="h5">Places</Typography>
-                    <ZUIAnimatedNumber value={stats.num_places}>
-                      {(animatedValue) => (
-                        <Box className={classes.statsChip}>{animatedValue}</Box>
-                      )}
-                    </ZUIAnimatedNumber>
-                  </Box>
-                  <ZUIStackedStatusBar
-                    values={[
-                      {
-                        color: theme.palette.primary.main,
-                        value: stats.num_visited_places,
-                      },
-                      {
-                        color: lighten(theme.palette.primary.main, 0.6),
-                        value: stats.num_places - stats.num_visited_places,
-                      },
-                    ]}
-                  />
-                  <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.num_visited_places} logged`}</Typography>
-                  </Box>
-                </Box>
-                <Divider />
-                <Box display="flex" flexDirection="column" gap={1} padding={2}>
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    <Typography variant="h5">Households</Typography>
-                    <ZUIAnimatedNumber value={stats.num_households}>
-                      {(animatedValue) => (
-                        <Box className={classes.statsChip}>{animatedValue}</Box>
-                      )}
-                    </ZUIAnimatedNumber>
-                  </Box>
-                  <ZUIStackedStatusBar
-                    values={[
-                      {
-                        color: theme.palette.primary.main,
-                        value: stats.num_successful_visited_households,
-                      },
-                      {
-                        color: lighten(theme.palette.primary.main, 0.5),
-                        value:
-                          stats.num_visited_households -
-                          stats.num_successful_visited_households,
-                      },
-                      {
-                        color: lighten(theme.palette.primary.main, 0.8),
-                        value:
-                          stats.num_households - stats.num_visited_households,
-                      },
-                    ]}
-                  />
-                  <Box display="flex" justifyContent="center" width="100%">
-                    <Typography>{`${stats.num_successful_visited_households} success of ${stats.num_visited_households} visits`}</Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </Card>
-            <Card>
-              <Box display="flex" flexDirection="column" padding={2}>
-                <Typography variant="h5">Rogue visits</Typography>
-                <Typography>
-                  {`Number of visited places outside the assigned areas: ${stats.num_visited_places_outside_areas}`}
-                </Typography>
-                <Typography>
-                  {`Number of visited households outside the assigned areas: ${stats.num_visited_households_outside_areas}`}
-                </Typography>
-              </Box>
-            </Card>
+            <Box display="flex" justifyContent="space-between" width="100%">
+              <NumberCard
+                firstNumber={stats.num_visited_households}
+                message={'Households visited'}
+                secondNumber={stats.num_households}
+              />
+              <NumberCard
+                firstNumber={stats.num_successful_visited_households}
+                message={'Succesful visits'}
+                secondNumber={stats.num_visited_households}
+              />
+              <NumberCard
+                firstNumber={stats.num_visited_places}
+                message={'Places visited'}
+                secondNumber={stats.num_places}
+              />
+              <NumberCard
+                firstNumber={stats.num_visited_areas}
+                message={'Areas visited'}
+                secondNumber={stats.num_areas}
+              />
+            </Box>
           </Box>
         );
       }}
