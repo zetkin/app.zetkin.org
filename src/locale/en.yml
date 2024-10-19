@@ -363,6 +363,14 @@ feat:
       viewArchive: View archive
     assigneeActions: Assignee actions
     calendarView: See all in calendar
+    createButton:
+      createActivity: Create
+      createCallAssignment: Call assignment
+      createCanvassAssignment: Canvass assignment
+      createEmail: Email
+      createEvent: Event
+      createSurvey: Survey
+      createTask: Task
     events: Events
     feedback:
       copy: Collecting feedback (during phonebanks or standalone) can help you work
@@ -415,13 +423,13 @@ feat:
       insights: Insights
       overview: Overview
     linkGroup:
-      createActivity: Create activity
-      createCallAssignment: Create call assignment
-      createCanvassAssignment: Create canvass assignment
-      createEmail: Create email
-      createEvent: Create event
-      createSurvey: Create survey
-      createTask: Create task
+      createActivity: Create
+      createCallAssignment: Call assignment
+      createCanvassAssignment: Canvass assignment
+      createEmail: Email
+      createEvent: Event
+      createSurvey: Survey
+      createTask: Task
       public: Public Page
       settings: Edit Settings
     mobilization:
@@ -469,9 +477,6 @@ feat:
           o: Other
         noValue: No value
         title: Data to merge
-      infoMessage: All activity history and tags from all people being merged will
-        carry over and will be visible on the merged person.
-      infoTitle: No data will be lost
       isDuplicateButton: Include
       mergeButton: Merge
       notDuplicateButton: Exclude
@@ -482,6 +487,11 @@ feat:
         name: Name
         phone: Phone
       title: Merge duplicates
+      warningMessage: All data related to any of the person records will transfer to
+        the merged person. This includes event participation, survey
+        submissions, tags etc. But the values you discard in the fields above
+        will be lost.
+      warningTitle: Risk of data loss
     page:
       dismiss: Dismiss
       noDuplicates: No duplicates
