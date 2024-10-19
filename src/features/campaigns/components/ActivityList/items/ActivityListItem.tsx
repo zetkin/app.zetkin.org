@@ -27,6 +27,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     height: '10px',
     marginLeft: '0.5em',
     marginRight: '0.5em',
+    marginTop: '0.2em',
     width: '10px',
   },
   endNumber: {
@@ -111,25 +112,22 @@ const ActivityListItem = ({
           }
         }}
       >
-        <Box>
-          <Box className={classes.left}>
-            <PrimaryIcon className={classes.primaryIcon} />
-            <Box>
+        <Box className={classes.left}>
+          <Box>
+            <Box className={classes.left}>
+              <PrimaryIcon className={classes.primaryIcon} />
               <Typography color={theme.palette.text.primary}>
                 {title}
               </Typography>
             </Box>
-          </Box>
-          <Box className={classes.left}>
-            <Tooltip title={getStatusDotLabel({ color })}>
-              <Box className={classes.dot} />
-            </Tooltip>
-            <Box>
+            <Box className={classes.left}>
+              <Tooltip title={getStatusDotLabel({ color })}>
+                <Box className={classes.dot} />
+              </Tooltip>
               <Typography color={theme.palette.grey[500]} variant="body2">
                 {getSubtitles(subtitle, startDate, endDate)}
               </Typography>
             </Box>
-            <Box />
           </Box>
         </Box>
         <Box className={classes.meta}>{meta}</Box>

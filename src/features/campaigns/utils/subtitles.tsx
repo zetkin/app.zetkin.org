@@ -4,8 +4,9 @@ import validator from 'validator';
 import messageIds from '../l10n/messageIds';
 import { Msg } from '../../../core/i18n';
 import ZUIRelativeTime from '../../../zui/ZUIRelativeTime';
-import { isSameDate } from '../../../utils/dateUtils';
+import { dateIsAfter, isSameDate } from '../../../utils/dateUtils';
 import isAfter = validator.isAfter;
+import isBefore = validator.isBefore;
 
 export function getEmailSubtitle(published: string | null) {
   if (published === null) {
@@ -57,6 +58,15 @@ export function getStartsLabel(startDate: Date) {
         }}
       />
     );
+  } else if (startDate && dateIsAfter(startDate, now)) {
+    return (
+      <Msg
+        id={messageIds.activitiesOverview.subtitles.startedBefore}
+        values={{
+          relative: <ZUIRelativeTime datetime={startDate.toISOString()} />,
+        }}
+      />
+    );
   }
 
   return null;
@@ -77,5 +87,8 @@ export function getSubtitles(
   }
   if (endDate && isAfter(endDate, now)) {
     return getEndsLabel(new Date(endDate));
+  }
+  if (startDate && isBefore(startDate, now)) {
+    return getStartsLabel(new Date(startDate));
   }
 }
