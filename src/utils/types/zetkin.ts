@@ -192,6 +192,8 @@ export interface ZetkinCustomField {
   type: CUSTOM_FIELD_TYPE;
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   enum_choices?: EnumChoice[] | null;
+  org_read: 'sameorg' | 'suborgs';
+  org_write: 'sameorg' | 'suborgs';
 }
 
 export interface ZetkinSession {

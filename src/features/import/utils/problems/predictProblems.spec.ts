@@ -19,6 +19,8 @@ function makeFullField(
   return {
     description: '',
     id: 1001,
+    org_read: 'sameorg',
+    org_write: 'sameorg',
     organization: {
       id: 1,
       title: 'KPD',

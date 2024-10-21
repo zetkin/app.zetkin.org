@@ -10,6 +10,7 @@ import {
 } from 'utils/types/zetkin';
 
 interface PersonFieldInputProps {
+  disabled?: boolean;
   field: keyof ZetkinCreatePerson;
   label?: string;
   onChange: (field: string, newValue: string) => void;
@@ -21,6 +22,7 @@ interface PersonFieldInputProps {
   value?: string;
 }
 const PersonFieldInput: FC<PersonFieldInputProps> = ({
+  disabled = false,
   field,
   label,
   onChange,
@@ -35,6 +37,7 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
 
   return (
     <TextField
+      disabled={disabled}
       error={error}
       fullWidth
       helperText={
