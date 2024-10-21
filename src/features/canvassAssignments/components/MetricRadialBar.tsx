@@ -54,12 +54,12 @@ const MetricRadialBar: FC<Props> = ({
           justifyContent: 'center',
           left: '30%',
           position: 'absolute',
-          top: '30%',
+          top: '35%',
           width: '40%',
         }}
       >
         <Typography color="primary" variant="h4">
-          {percentage + '%'}
+          {isNaN(percentage) ? '0%' : percentage + '%'}
         </Typography>
         <Typography color="secondary">
           {rawYes}/{mainTotal}

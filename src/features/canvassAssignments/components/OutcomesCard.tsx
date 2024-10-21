@@ -34,61 +34,76 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
         <Typography variant="h4">Outcomes</Typography>
       </Box>
       <Divider sx={{ marginBottom: 2, marginTop: 2 }} />
-
-      {stats.metrics.map((metric) => {
-        return metric.metric.kind === 'boolean' ? (
-          <>
-            <Box mt={2}>
-              <Box width="20%">
-                <MetricRadialBar
-                  mainTotal={metric.values[0] + metric.values[1]}
-                  mainValue={metric.values[0]}
-                  rawYes={metric.values[0]}
-                  title={metric.metric.question}
-                />
-              </Box>
-            </Box>
-            <Divider sx={{ margin: 2 }} />
-          </>
-        ) : (
-          <Box>
-            <Typography>
-              <Typography mb={2}>{metric.metric.question}</Typography>
-            </Typography>
-            <div style={{ height: 300, width: '100%' }}>
-              <ResponsiveBar
-                animate={true}
-                axisBottom={{
-                  tickPadding: 5,
-                  tickRotation: 0,
-                  tickSize: 5,
-                }}
-                axisLeft={null}
-                axisRight={null}
-                axisTop={null}
-                colors={[
-                  lighten(theme.palette.primary.main, 0.15),
-                  lighten(theme.palette.primary.main, 0.3),
-                  lighten(theme.palette.primary.main, 0.45),
-                  lighten(theme.palette.primary.main, 0.6),
-                  lighten(theme.palette.primary.main, 0.75),
-                ]}
-                data={metricBars}
-                enableGridX={false}
-                enableGridY={false}
-                indexBy="rating"
-                keys={['count']}
-                labelSkipHeight={12}
-                labelSkipWidth={12}
-                labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-                margin={{ bottom: 40, left: 40, right: 20, top: 20 }}
-                padding={0.3}
+      <Box
+        sx={{
+          display: 'grid',
+          gap: '16px',
+          gridAutoFlow: 'row',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+        }}
+      >
+        {stats.metrics.map((metric) => {
+          return metric.metric.kind === 'boolean' ? (
+            <Box
+              key={metric.metric.id}
+              sx={{
+                gridColumn: 'span 1',
+              }}
+            >
+              <MetricRadialBar
+                mainTotal={metric.values[0] + metric.values[1]}
+                mainValue={metric.values[0]}
+                rawYes={metric.values[0]}
+                title={metric.metric.question}
               />
-            </div>
-            <Divider />
-          </Box>
-        );
-      })}
+            </Box>
+          ) : (
+            <Box
+              key={metric.metric.id}
+              sx={{
+                gridColumn: 'span 2',
+              }}
+            >
+              <Typography>
+                <Typography mb={2}>{metric.metric.question}</Typography>
+              </Typography>
+              <div style={{ height: 300, width: '100%' }}>
+                <ResponsiveBar
+                  animate={true}
+                  axisBottom={{
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    tickSize: 5,
+                  }}
+                  axisLeft={null}
+                  axisRight={null}
+                  axisTop={null}
+                  colors={[
+                    lighten(theme.palette.primary.main, 0.15),
+                    lighten(theme.palette.primary.main, 0.3),
+                    lighten(theme.palette.primary.main, 0.45),
+                    lighten(theme.palette.primary.main, 0.6),
+                    lighten(theme.palette.primary.main, 0.75),
+                  ]}
+                  data={metricBars}
+                  enableGridX={false}
+                  enableGridY={false}
+                  indexBy="rating"
+                  keys={['count']}
+                  labelSkipHeight={12}
+                  labelSkipWidth={12}
+                  labelTextColor={{
+                    from: 'color',
+                    modifiers: [['darker', 1.6]],
+                  }}
+                  margin={{ bottom: 40, left: 40, right: 20, top: 20 }}
+                  padding={0.3}
+                />
+              </div>
+            </Box>
+          );
+        })}
+      </Box>
     </Card>
   );
 };
