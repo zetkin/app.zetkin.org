@@ -191,7 +191,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field.organization.id !== orgId &&
             field.org_write !== 'suborgs'
           ) {
-            // Don't show fields that cannot be written from ancestor orgs
+            // Don't show read-only fields from ancestor orgs
             return;
           }
           if (field.type === 'json') {
