@@ -22,7 +22,7 @@ export const viewQuickSearch = (
 
   return rows.filter((row) => {
     const searchStrings = columns.flatMap((col, idx) => {
-      return columnTypes[col.type].getSearchableStrings(row.content[idx]);
+      return columnTypes[col.type].getSearchableStrings(row.content[idx], col);
     });
 
     const lowerCaseQuickSearch = quickSearch.toLowerCase();

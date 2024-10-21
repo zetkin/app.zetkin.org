@@ -35,7 +35,7 @@ enum GENDERS {
 interface EditPersonFieldsProps {
   fieldsToUpdate: ZetkinCreatePerson;
   invalidFields: string[];
-  onChange: (field: string, newValue: string) => void;
+  onChange: (field: string, newValue: string | null) => void;
   onReset: (field: string) => void;
   orgId: number;
   fieldValues: ZetkinPerson;
@@ -220,6 +220,38 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               onReset={() => onReset(field.slug)}
               value={fieldValues[field.slug]?.toString() ?? ''}
             />
+          );
+        } else if (
+          field.type === CUSTOM_FIELD_TYPE.ENUM &&
+          field.enum_choices
+        ) {
+          return (
+            <Box alignItems="flex-start" display="flex" flex={1}>
+              <FormControl fullWidth>
+                <InputLabel>{field.title}</InputLabel>
+                <Select
+                  fullWidth
+                  label={field.title}
+                  onChange={(ev) => {
+                    let value: string | null = ev.target.value;
+                    if (value === '') {
+                      value = null;
+                    }
+                    onChange(field.slug, value);
+                  }}
+                  value={fieldValues[field.slug]?.toString() ?? ''}
+                >
+                  <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
+                    <Msg id={messageIds.createPerson.enumFields.noneOption} />
+                  </MenuItem>
+                  {field.enum_choices.map((c) => (
+                    <MenuItem key={c.key} value={c.key}>
+                      {c.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
           );
         } else {
           return (

@@ -1,6 +1,6 @@
 import { ZetkinPersonImportOp } from './prepareImportOperations';
 
-export type CellData = string | number | null;
+export type CellData = string | number | null | undefined;
 
 export type ImportedFile = {
   selectedSheetIndex: number;
@@ -25,6 +25,7 @@ export enum ColumnKind {
   ID_FIELD = 'id',
   TAG = 'tag',
   ORGANIZATION = 'org',
+  ENUM = 'enum',
   UNKNOWN = 'unknown',
 }
 
@@ -45,6 +46,15 @@ export type DateColumn = BaseColumn & {
   dateFormat: string | null;
   field: string;
   kind: ColumnKind.DATE;
+};
+
+export type EnumColumn = BaseColumn & {
+  field: string;
+  kind: ColumnKind.ENUM;
+  mapping: {
+    key: string;
+    value: CellData;
+  }[];
 };
 
 export type IDFieldColumn = BaseColumn & {
@@ -72,7 +82,8 @@ export type ConfigurableColumn =
   | DateColumn
   | IDFieldColumn
   | TagColumn
-  | OrgColumn;
+  | OrgColumn
+  | EnumColumn;
 
 export type Column = UnknownColumn | FieldColumn | ConfigurableColumn;
 

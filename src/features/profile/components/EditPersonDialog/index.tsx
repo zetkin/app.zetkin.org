@@ -92,11 +92,11 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
             fieldValues={fieldValues}
             invalidFields={invalidFields}
             onChange={(field, newValue) => {
-              onFieldValueChange(field, newValue.trim());
+              onFieldValueChange(field, newValue?.trim() ?? null);
               setFieldValues({ ...fieldValues, [field]: newValue });
             }}
             onReset={(field) => {
-              onFieldValueChange(field, person[field]?.toString() ?? '');
+              onFieldValueChange(field, person[field]?.toString() ?? null);
               setFieldValues({ ...fieldValues, [field]: person[field] });
             }}
             orgId={orgId}
