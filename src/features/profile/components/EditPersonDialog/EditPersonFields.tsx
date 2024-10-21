@@ -241,8 +241,8 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
                   }}
                   value={fieldValues[field.slug]?.toString() ?? ''}
                 >
-                  <MenuItem key="" value="">
-                    <em>None</em>
+                  <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
+                    <Msg id={messageIds.createPerson.enumFields.noneOption} />
                   </MenuItem>
                   {field.enum_choices.map((c) => (
                     <MenuItem key={c.key} value={c.key}>
