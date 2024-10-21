@@ -88,8 +88,8 @@ const PlaceMarker: FC<{
 };
 
 type PlanMapRendererProps = {
-  areaColor: 'households' | 'progress' | 'hide';
   areaStats: ZetkinAssignmentAreaStats;
+  areaStyle: 'households' | 'progress' | 'hide' | 'default';
   areas: ZetkinArea[];
   canvassAssId: string;
   filterAssigned: boolean;
@@ -105,7 +105,7 @@ type PlanMapRendererProps = {
 const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   areas,
   areaStats,
-  areaColor,
+  areaStyle,
   canvassAssId,
   filterAssigned,
   filterUnassigned,
@@ -150,11 +150,17 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     householdColorPercent: number,
     visitsColorPercent: number
   ) => {
+    if (areaStyle == 'default') {
+      return hasPeople
+        ? theme.palette.primary.main
+        : theme.palette.secondary.main;
+    }
+
     if (!hasPeople) {
       return 'grey';
     }
 
-    return areaColor == 'households'
+    return areaStyle == 'households'
       ? //TODO: Use theme colors for these
         `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`
       : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`;
@@ -246,7 +252,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
             const key =
               area.id +
               (selected ? '-selected' : '-default') +
-              (areaColor == 'progress' ? '-progress' : '-households') +
+              `-${areaStyle}` +
               (hasPeople ? '-assigned' : '');
 
             const stats = areaStats.stats.find(
@@ -359,7 +365,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                     )}
                   </DivIconMarker>
                 )}
-                {areaColor != 'hide' && (
+                {areaStyle != 'hide' && (
                   <Polygon
                     key={key}
                     color={getAreaBackgroundColor(

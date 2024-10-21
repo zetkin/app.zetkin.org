@@ -47,9 +47,9 @@ const PlanMap: FC<PlanMapProps> = ({
   const [placeStyle, setPlaceStyle] = useState<
     'dot' | 'households' | 'progress' | 'hide'
   >('dot');
-  const [areaColor, setAreaColor] = useState<
-    'households' | 'progress' | 'hide'
-  >('households');
+  const [areaStyle, setAreaStyle] = useState<
+    'households' | 'progress' | 'hide' | 'default'
+  >('default');
   const [overlayStyle, setOverlayStyle] = useState<
     'assignees' | 'households' | 'progress' | 'hide'
   >('assignees');
@@ -110,7 +110,7 @@ const PlanMap: FC<PlanMapProps> = ({
         </Box>
         <Box alignItems="center" display="flex" gap={1}>
           <FormControl variant="outlined">
-            <InputLabel id="place-style-label">Place style</InputLabel>
+            <InputLabel id="place-style-label">Place</InputLabel>
             <Select
               label="Place style"
               labelId="place-style-label"
@@ -137,7 +137,7 @@ const PlanMap: FC<PlanMapProps> = ({
             </Select>
           </FormControl>
           <FormControl variant="outlined">
-            <InputLabel id="area-style-label">Area color</InputLabel>
+            <InputLabel id="area-style-label">Area</InputLabel>
             <Select
               label="Area color"
               labelId="area-style-color"
@@ -146,14 +146,16 @@ const PlanMap: FC<PlanMapProps> = ({
                 if (
                   newValue == 'households' ||
                   newValue == 'progress' ||
-                  newValue == 'hide'
+                  newValue == 'hide' ||
+                  newValue == 'default'
                 ) {
-                  setAreaColor(newValue);
+                  setAreaStyle(newValue);
                 }
               }}
               sx={{ backgroundColor: 'white', width: '10rem' }}
-              value={areaColor}
+              value={areaStyle}
             >
+              <MenuItem value="default">Default</MenuItem>
               <MenuItem value="households">Number of households</MenuItem>
               <MenuItem value="progress">
                 Progress (visited in this assignment)
@@ -162,7 +164,7 @@ const PlanMap: FC<PlanMapProps> = ({
             </Select>
           </FormControl>
           <FormControl variant="outlined">
-            <InputLabel id="overlay-style-label">Overlay style</InputLabel>
+            <InputLabel id="overlay-style-label">Overlay</InputLabel>
             <Select
               label="Overlay style"
               labelId="overlay-style-label"
@@ -254,9 +256,9 @@ const PlanMap: FC<PlanMapProps> = ({
           zoomControl={false}
         >
           <PlanMapRenderer
-            areaColor={areaColor}
             areas={areas}
             areaStats={areaStats}
+            areaStyle={areaStyle}
             canvassAssId={canvassAssId}
             filterAssigned={filterAssigned}
             filterUnassigned={filterUnassigned}
