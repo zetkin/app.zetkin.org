@@ -124,11 +124,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             statsByAreaId[area.id].num_households += place.households.length;
 
             place.households.forEach((household) => {
-              household.visits.forEach((visit) => {
-                if (visit.canvassAssId == params.canvassAssId) {
-                  statsByAreaId[area.id].num_visits++;
-                }
-              });
+              const hasVisitInThisAssignment = household.visits.find(
+                (visit) => visit.canvassAssId == params.canvassAssId
+              );
+
+              if (hasVisitInThisAssignment) {
+                statsByAreaId[area.id].num_visits++;
+              }
             });
           }
         });
