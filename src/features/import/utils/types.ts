@@ -1,6 +1,6 @@
 import { ZetkinPersonImportOp } from './prepareImportOperations';
 
-export type CellData = string | number | null;
+export type CellData = string | number | null | undefined;
 
 export type ImportedFile = {
   selectedSheetIndex: number;

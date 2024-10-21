@@ -133,11 +133,12 @@ describe('createPreviewData()', () => {
           selected: true,
         },
         {
-          kind: ColumnKind.ENUM,
           field: 'enum_field',
+          kind: ColumnKind.ENUM,
           mapping: [
             { key: 'first', value: 'Dummy value' },
             { key: 'second', value: 'Second dummy value' },
+            { key: 'third', value: null },
           ],
           selected: true,
         },
@@ -151,7 +152,7 @@ describe('createPreviewData()', () => {
           data: ['124', 'Linköping', 'Second dummy value'],
         },
         {
-          data: ['125', 'Linköping', 'Third dummy value'],
+          data: ['125', 'Linköping', null],
         },
       ],
       title: 'My sheet',
@@ -160,8 +161,17 @@ describe('createPreviewData()', () => {
     expect(result0).toEqual({
       data: {
         city: 'Malmö',
-        id: '123',
         enum_field: 'first',
+        id: '123',
+      },
+    });
+
+    const result1 = createPreviewData(configData, 1);
+    expect(result1).toEqual({
+      data: {
+        city: 'Linköping',
+        enum_field: 'second',
+        id: '124',
       },
     });
 
@@ -169,6 +179,7 @@ describe('createPreviewData()', () => {
     expect(result2).toEqual({
       data: {
         city: 'Linköping',
+        enum_field: 'third',
         id: '125',
       },
     });
