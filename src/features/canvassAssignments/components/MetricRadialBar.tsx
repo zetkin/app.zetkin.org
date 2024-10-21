@@ -5,6 +5,7 @@ import { FC } from 'react';
 type Props = {
   mainTotal: number;
   mainValue: number;
+  rawNo: number;
   rawYes: number;
   title: string;
 };
@@ -12,6 +13,7 @@ type Props = {
 const MetricRadialBar: FC<Props> = ({
   mainTotal,
   mainValue,
+  rawNo,
   rawYes,
   title,
 }) => {
@@ -44,7 +46,7 @@ const MetricRadialBar: FC<Props> = ({
         width: '100%',
       }}
     >
-      <Typography>{title}</Typography>
+      <Typography textAlign="center">{title}</Typography>
       <Box
         sx={{
           alignItems: 'center',
@@ -61,14 +63,11 @@ const MetricRadialBar: FC<Props> = ({
         <Typography color="primary" variant="h4">
           {isNaN(percentage) ? '0%' : percentage + '%'}
         </Typography>
-        <Typography color="secondary">
-          {rawYes}/{mainTotal}
-        </Typography>
       </Box>
       <Box sx={{ height: '100%', width: '100%' }}>
         <ResponsiveRadialBar
           circularAxisOuter={null}
-          colors={[theme.palette.primary.main, theme.palette.grey[100]]}
+          colors={[theme.palette.primary.main, theme.palette.grey[300]]}
           cornerRadius={2}
           data={data}
           enableCircularGrid={false}
@@ -94,6 +93,37 @@ const MetricRadialBar: FC<Props> = ({
           }}
           valueFormat=">-.2f"
         />
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="center"
+          marginTop={1}
+        >
+          <Box
+            component="span"
+            sx={{
+              bgcolor: theme.palette.primary.main,
+              borderRadius: '50%',
+              display: 'inline-block',
+              height: '10px',
+              margin: 1,
+              width: '10px',
+            }}
+          />
+          <Typography>Yes ({rawYes})</Typography>
+          <Box
+            component="span"
+            sx={{
+              bgcolor: theme.palette.grey[300],
+              borderRadius: '50%',
+              display: 'inline-block',
+              height: '10px',
+              margin: 1,
+              width: '10px',
+            }}
+          />
+          <Typography>No ({rawNo})</Typography>
+        </Box>
       </Box>
     </Box>
   );

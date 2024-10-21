@@ -29,9 +29,11 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
   });
 
   return (
-    <Card sx={{ padding: '16px' }}>
+    <Card sx={{ height: 'auto' }}>
       <Box display="flex">
-        <Typography variant="h4">Outcomes</Typography>
+        <Typography padding={2} variant="h4">
+          Outcomes
+        </Typography>
       </Box>
       <Divider sx={{ marginBottom: 2, marginTop: 2 }} />
       <Box
@@ -40,6 +42,7 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
           gap: '16px',
           gridAutoFlow: 'row',
           gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          margin: 1,
         }}
       >
         {stats.metrics.map((metric) => {
@@ -50,12 +53,15 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
                 gridColumn: 'span 1',
               }}
             >
-              <MetricRadialBar
-                mainTotal={metric.values[0] + metric.values[1]}
-                mainValue={metric.values[0]}
-                rawYes={metric.values[0]}
-                title={metric.metric.question}
-              />
+              <div style={{ height: 300, width: '100%' }}>
+                <MetricRadialBar
+                  mainTotal={metric.values[0] + metric.values[1]}
+                  mainValue={metric.values[0]}
+                  rawNo={metric.values[1]}
+                  rawYes={metric.values[0]}
+                  title={metric.metric.question}
+                />
+              </div>
             </Box>
           ) : (
             <Box
@@ -64,8 +70,8 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
                 gridColumn: 'span 2',
               }}
             >
-              <Typography>
-                <Typography mb={2}>{metric.metric.question}</Typography>
+              <Typography mb={2} textAlign="center">
+                {metric.metric.question}
               </Typography>
               <div style={{ height: 300, width: '100%' }}>
                 <ResponsiveBar
