@@ -13,7 +13,7 @@ import { FC, useState } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { EnumChoice } from 'utils/types/zetkin';
-import { Msg, useMessages } from 'core/i18n';
+import { Msg } from 'core/i18n';
 
 interface EnumConfigRowProps {
   italic?: boolean;
@@ -22,6 +22,7 @@ interface EnumConfigRowProps {
   onDeselectOption: () => void;
   options: EnumChoice[];
   selectedOption: string | null;
+  value: string;
   title: string;
 }
 
@@ -32,9 +33,9 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
   onDeselectOption,
   options,
   selectedOption,
+  value,
   title,
 }) => {
-  const messages = useMessages(messageIds);
   const [mapping, setMapping] = useState(false);
 
   const showSelect = mapping || selectedOption;
@@ -50,7 +51,7 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
           width="50%"
         >
           <Box display="flex" sx={{ wordBreak: 'break-all' }} width="100%">
-            <Typography fontStyle={italic ? 'italic' : ''}>{title}</Typography>
+            <Typography fontStyle={italic ? 'italic' : ''}>{value}</Typography>
           </Box>
           <ArrowForward color="secondary" sx={{ marginRight: 1 }} />
         </Box>
@@ -73,11 +74,9 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
           {showSelect && (
             <>
               <FormControl fullWidth size="small">
-                <InputLabel>
-                  <Msg id={messageIds.configuration.configure.enum.none} />
-                </InputLabel>
+                <InputLabel>{title}</InputLabel>
                 <Select
-                  label={messages.configuration.configure.enum.none()}
+                  label={title}
                   onChange={(event) => {
                     if (typeof event.target.value == 'string') {
                       onSelectOption(event.target.value);

@@ -51,13 +51,11 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
       <Box alignItems="center" display="flex" paddingY={2}>
         <Box width="50%">
           <Typography variant="body2">
-            {messages.configuration.configure.enum.value().toLocaleUpperCase()}
+            {uiDataColumn.title.toLocaleUpperCase()}
           </Typography>
         </Box>
         <Box width="50%">
-          <Typography variant="body2">
-            {messages.configuration.configure.enum.none().toLocaleUpperCase()}
-          </Typography>
+          <Typography variant="body2">{field.title}</Typography>
         </Box>
       </Box>
       {uiDataColumn.uniqueValues.map((uniqueValue, index) => (
@@ -69,7 +67,8 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
             onSelectOption={(key) => selectOption(key, uniqueValue)}
             options={options}
             selectedOption={getSelectedOption(uniqueValue)}
-            title={uniqueValue.toString()}
+            title={field.title}
+            value={uniqueValue.toString()}
           />
         </Box>
       ))}
@@ -83,7 +82,8 @@ const EnumConfig: FC<EnumConfigProps> = ({ uiDataColumn }) => {
             onSelectOption={(key) => selectOption(key, null)}
             options={options}
             selectedOption={getSelectedOption(null)}
-            title={messages.configuration.configure.tags.empty()}
+            title={field.title}
+            value={messages.configuration.configure.tags.empty()}
           />
         </>
       )}
