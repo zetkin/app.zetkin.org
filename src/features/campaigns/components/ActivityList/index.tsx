@@ -43,6 +43,8 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
               <CanvassAssignmentListItem
                 caId={activity.data.id}
                 orgId={orgId}
+                visibleFrom={activity.visibleFrom}
+                visibleUntil={activity.visibleUntil}
               />
             </Box>
           );
@@ -68,7 +70,12 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
           return (
             <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <TaskListItem orgId={orgId} taskId={activity.data.id} />
+              <TaskListItem
+                orgId={orgId}
+                taskId={activity.data.id}
+                visibleFrom={activity.data.published}
+                visibleUntil={activity.data.expires || activity.data.deadline}
+              />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.EMAIL) {
