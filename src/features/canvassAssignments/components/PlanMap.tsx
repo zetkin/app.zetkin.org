@@ -47,6 +47,9 @@ const PlanMap: FC<PlanMapProps> = ({
   const [placeStyle, setPlaceStyle] = useState<
     'dot' | 'households' | 'progress' | 'hide'
   >('dot');
+  const [areaColor, setAreaColor] = useState<
+    'households' | 'progress' | 'hide'
+  >('households');
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -130,6 +133,31 @@ const PlanMap: FC<PlanMapProps> = ({
               <MenuItem value="hide">Hide</MenuItem>
             </Select>
           </FormControl>
+          <FormControl variant="outlined">
+            <InputLabel id="area-style-label">Area color</InputLabel>
+            <Select
+              label="Area color"
+              labelId="area-style-color"
+              onChange={(ev) => {
+                const newValue = ev.target.value;
+                if (
+                  newValue == 'households' ||
+                  newValue == 'progress' ||
+                  newValue == 'hide'
+                ) {
+                  setAreaColor(newValue);
+                }
+              }}
+              sx={{ backgroundColor: 'white', width: '10rem' }}
+              value={areaColor}
+            >
+              <MenuItem value="households">Number of households</MenuItem>
+              <MenuItem value="progress">
+                Progress (visited in this assignment)
+              </MenuItem>
+              <MenuItem value="hide">Hide</MenuItem>
+            </Select>
+          </FormControl>
           <Chip
             color={filterAssigned ? 'primary' : 'secondary'}
             label="Assigned"
@@ -196,6 +224,7 @@ const PlanMap: FC<PlanMapProps> = ({
           zoomControl={false}
         >
           <PlanMapRenderer
+            areaColor={areaColor}
             areas={areas}
             areaStats={areaStats}
             canvassAssId={canvassAssId}
