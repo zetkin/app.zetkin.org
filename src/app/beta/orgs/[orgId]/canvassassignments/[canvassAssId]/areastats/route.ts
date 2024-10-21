@@ -119,17 +119,17 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 num_households: 0,
                 num_visits: 0,
               };
-
-              statsByAreaId[area.id].num_households += place.households.length;
-
-              place.households.forEach((household) => {
-                household.visits.forEach((visit) => {
-                  if (visit.canvassAssId == params.canvassAssId) {
-                    statsByAreaId[area.id].num_visits++;
-                  }
-                });
-              });
             }
+
+            statsByAreaId[area.id].num_households += place.households.length;
+
+            place.households.forEach((household) => {
+              household.visits.forEach((visit) => {
+                if (visit.canvassAssId == params.canvassAssId) {
+                  statsByAreaId[area.id].num_visits++;
+                }
+              });
+            });
           }
         });
       });
