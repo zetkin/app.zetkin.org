@@ -134,7 +134,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             kind: metric.kind,
             question: metric.question,
           },
-          values: metric.kind == 'boolean' ? [0] : [0, 0, 0, 0, 0],
+          values: metric.kind == 'boolean' ? [0, 0] : [0, 0, 0, 0, 0],
         }));
 
       allPlaces.forEach((place) => {
@@ -151,9 +151,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 );
 
                 if (accumulatedMetric && configuredMetric) {
-                  if (response.response == 'yes') {
-                    accumulatedMetric.values[0]++;
-                  } else if (configuredMetric.kind == 'scale5') {
+                  if (configuredMetric.kind === 'boolean') {
+                    if (response.response === 'yes') {
+                      accumulatedMetric.values[0]++;
+                    } else if (response.response === 'no') {
+                      accumulatedMetric.values[1]++;
+                    }
+                  } else if (configuredMetric.kind === 'scale5') {
                     const rating = parseInt(response.response);
                     const index = rating - 1;
                     accumulatedMetric.values[index]++;
