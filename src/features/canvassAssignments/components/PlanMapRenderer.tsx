@@ -20,6 +20,73 @@ import {
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 
+const PlaceMarker: FC<{
+  canvassAssId: string;
+  largestNumberOfHouseholds: number;
+  place: ZetkinPlace;
+  placeStyle: 'dot' | 'households' | 'progress';
+}> = ({ canvassAssId, largestNumberOfHouseholds, place, placeStyle }) => {
+  if (placeStyle == 'dot') {
+    return (
+      <Box
+        sx={(theme) => ({
+          backgroundColor: theme.palette.text.primary,
+          borderRadius: '2em',
+          height: 5,
+          width: 5,
+        })}
+      />
+    );
+  } else if (placeStyle == 'households') {
+    const householdColorPercent =
+      (place.households.length / largestNumberOfHouseholds) * 100;
+    return (
+      <Box
+        sx={{
+          alignItems: 'center',
+          backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
+          borderRadius: '2em',
+          color: 'white',
+          display: 'flex',
+          flexDirection: 'row',
+          height: '20px',
+          justifyContent: 'center',
+          width: '20px',
+        }}
+      >
+        {place.households.length}
+      </Box>
+    );
+  } else {
+    //placeStyle is 'progress'
+    let visits = 0;
+    place.households.forEach((household) => {
+      const visitInThisAssignment = household.visits.find(
+        (visit) => visit.canvassAssId == canvassAssId
+      );
+      if (visitInThisAssignment) {
+        visits++;
+      }
+    });
+
+    const visitsColorPercent = (visits / place.households.length) * 100;
+
+    return (
+      <div
+        style={{
+          alignItems: 'center',
+          backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+          borderRadius: '2em',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '30px',
+        }}
+      >{`${visits}/${place.households.length}`}</div>
+    );
+  }
+};
+
 type PlanMapRendererProps = {
   areaColor: 'households' | 'progress' | 'hide';
   areaStats: ZetkinAssignmentAreaStats;
@@ -28,6 +95,7 @@ type PlanMapRendererProps = {
   filterAssigned: boolean;
   filterUnassigned: boolean;
   onSelectedIdChange: (newId: string) => void;
+  overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
   placeStyle: 'dot' | 'households' | 'progress' | 'hide';
   places: ZetkinPlace[];
   selectedId: string;
@@ -44,6 +112,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   selectedId,
   sessions,
   onSelectedIdChange,
+  overlayStyle,
   placeStyle,
   places,
 }) => {
@@ -72,52 +141,9 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
   const showAll = !filterAssigned && !filterUnassigned;
 
-  const getPlaceMarker = (place: ZetkinPlace) => {
-    if (placeStyle == 'dot') {
-      return (
-        <div
-          style={{
-            backgroundColor: 'black',
-            height: '5px',
-            width: '5px',
-          }}
-        />
-      );
-    } else if (placeStyle == 'households') {
-      return (
-        <div
-          style={{
-            backgroundColor: 'white',
-          }}
-        >
-          {place.households.length}
-        </div>
-      );
-    } else if (placeStyle == 'progress') {
-      let visits = 0;
-      place.households.forEach((household) => {
-        const visitInThisAssignment = household.visits.find(
-          (visit) => visit.canvassAssId == canvassAssId
-        );
-        if (visitInThisAssignment) {
-          visits++;
-        }
-      });
-      return (
-        <div
-          style={{
-            backgroundColor: 'lightyellow',
-            display: 'flex',
-            flexDirection: 'row',
-            width: '20px',
-          }}
-        >{`${visits}/${place.households.length}`}</div>
-      );
-    } else {
-      //Place style is 'hide'
-      return;
-    }
-  };
+  const largestNumberOfHouseholds = Math.max(
+    ...places.map((place) => place.households.length)
+  );
 
   return (
     <>
@@ -131,162 +157,192 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
           reactFGref.current = fgRef;
         }}
       >
-        {areaColor != 'hide' &&
-          areas
-            .sort((a0, a1) => {
-              // Always render selected last, so that it gets
-              // rendered on top of the unselected ones in case
-              // there are overlaps.
-              if (a0.id == selectedId) {
-                return 1;
-              } else if (a1.id == selectedId) {
-                return -1;
-              } else {
-                // When  none of the two areas are selected, sort them
-                // by size, so that big ones are underneith and the
-                // smaller ones can be clicked.
-                const bounds0 = latLngBounds(a0.points.map(objToLatLng));
-                const bounds1 = latLngBounds(a1.points.map(objToLatLng));
+        {areas
+          .sort((a0, a1) => {
+            // Always render selected last, so that it gets
+            // rendered on top of the unselected ones in case
+            // there are overlaps.
+            if (a0.id == selectedId) {
+              return 1;
+            } else if (a1.id == selectedId) {
+              return -1;
+            } else {
+              // When  none of the two areas are selected, sort them
+              // by size, so that big ones are underneith and the
+              // smaller ones can be clicked.
+              const bounds0 = latLngBounds(a0.points.map(objToLatLng));
+              const bounds1 = latLngBounds(a1.points.map(objToLatLng));
 
-                const dimensions0 = {
-                  x: bounds0.getEast() - bounds0.getWest(),
-                  y: bounds0.getNorth() - bounds0.getSouth(),
-                };
-                const dimensions1 = {
-                  x: bounds1.getEast() - bounds1.getWest(),
-                  y: bounds1.getNorth() - bounds1.getSouth(),
-                };
+              const dimensions0 = {
+                x: bounds0.getEast() - bounds0.getWest(),
+                y: bounds0.getNorth() - bounds0.getSouth(),
+              };
+              const dimensions1 = {
+                x: bounds1.getEast() - bounds1.getWest(),
+                y: bounds1.getNorth() - bounds1.getSouth(),
+              };
 
-                const size0 = dimensions0.x * dimensions0.y;
-                const size1 = dimensions1.x * dimensions1.y;
+              const size0 = dimensions0.x * dimensions0.y;
+              const size1 = dimensions1.x * dimensions1.y;
 
-                return size1 - size0;
+              return size1 - size0;
+            }
+          })
+          .map((area) => {
+            const selected = selectedId == area.id;
+
+            const mid: [number, number] = [0, 0];
+            if (area.points.length) {
+              area.points
+                .map((input) => {
+                  if ('lat' in input && 'lng' in input) {
+                    return [input.lat as number, input.lng as number];
+                  } else {
+                    return input;
+                  }
+                })
+                .forEach((point) => {
+                  mid[0] += point[0];
+                  mid[1] += point[1];
+                });
+
+              mid[0] /= area.points.length;
+              mid[1] /= area.points.length;
+            }
+
+            const detailed = zoom >= 15;
+
+            const people = sessions
+              .filter((session) => session.area.id == area.id)
+              .map((session) => session.assignee);
+
+            const hasPeople = !!people.length;
+
+            if (!showAll) {
+              if (hasPeople && !filterAssigned) {
+                return null;
+              } else if (!hasPeople && !filterUnassigned) {
+                return null;
               }
-            })
-            .map((area) => {
-              const selected = selectedId == area.id;
+            }
 
-              const mid: [number, number] = [0, 0];
-              if (area.points.length) {
-                area.points
-                  .map((input) => {
-                    if ('lat' in input && 'lng' in input) {
-                      return [input.lat as number, input.lng as number];
-                    } else {
-                      return input;
-                    }
-                  })
-                  .forEach((point) => {
-                    mid[0] += point[0];
-                    mid[1] += point[1];
-                  });
+            // The key changes when selected, to force redraw of polygon
+            // to reflect new state through visual style
+            const key =
+              area.id +
+              (selected ? '-selected' : '-default') +
+              (areaColor == 'progress' ? '-progress' : '-households') +
+              (hasPeople ? '-assigned' : '');
 
-                mid[0] /= area.points.length;
-                mid[1] /= area.points.length;
+            const stats = areaStats.stats.find(
+              (stat) => stat.areaId == area.id
+            );
+
+            let highestHousholds = 0;
+            areaStats.stats.forEach((stat) => {
+              if (stat.num_households > highestHousholds) {
+                highestHousholds = stat.num_households;
               }
+            });
 
-              const detailed = zoom >= 15;
+            const householdColorPercent = stats
+              ? (stats.num_households / highestHousholds) * 100
+              : 0;
 
-              const people = sessions
-                .filter((session) => session.area.id == area.id)
-                .map((session) => session.assignee);
+            const visitsColorPercent = stats
+              ? (stats.num_visits / stats.num_households) * 100
+              : 0;
 
-              const hasPeople = !!people.length;
-
-              if (!showAll) {
-                if (hasPeople && !filterAssigned) {
-                  return null;
-                } else if (!hasPeople && !filterUnassigned) {
-                  return null;
-                }
-              }
-
-              // The key changes when selected, to force redraw of polygon
-              // to reflect new state through visual style
-              const key =
-                area.id +
-                (selected ? '-selected' : '-default') +
-                (areaColor == 'progress' ? '-progress' : '-households') +
-                (hasPeople ? '-assigned' : '');
-
-              const stats = areaStats.stats.find(
-                (stat) => stat.areaId == area.id
-              );
-
-              let highestHousholds = 0;
-              areaStats.stats.forEach((stat) => {
-                if (stat.num_households > highestHousholds) {
-                  highestHousholds = stat.num_households;
-                }
-              });
-
-              let highestVisits = 0;
-              areaStats.stats.forEach((stat) => {
-                if (stat.num_visits > highestVisits) {
-                  highestVisits = stat.num_visits;
-                }
-              });
-
-              const householdColorPercent = stats
-                ? (stats.num_households / highestHousholds) * 100
-                : 0;
-
-              const visitsColorPercent = stats
-                ? (stats.num_visits / highestVisits) * 100
-                : 0;
-
-              return (
-                <>
-                  {hasPeople && (
-                    <DivIconMarker position={mid}>
-                      {detailed && (
-                        <Box display="flex" sx={{ pointerEvents: 'none' }}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              gap: '1px',
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          >
-                            {people.map((person) => (
-                              <Box
-                                key={person.id}
-                                sx={{
-                                  borderRadius: '50%',
-                                  boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                                }}
-                              >
-                                <ZUIAvatar
-                                  size={zoom >= 16 ? 'sm' : 'xs'}
-                                  url={`/api/orgs/1/people/${person.id}/avatar`}
-                                />
-                              </Box>
-                            ))}
-                          </Box>
-                        </Box>
-                      )}
-                      {!detailed && (
+            return (
+              <>
+                {overlayStyle == 'households' && stats && (
+                  <DivIconMarker position={mid}>
+                    <div
+                      style={{
+                        alignItems: 'center',
+                        backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
+                        border: '2px solid black',
+                        color: 'white',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        height: '20px',
+                        justifyContent: 'center',
+                        width: '20px',
+                      }}
+                    >
+                      {stats.num_households}
+                    </div>
+                  </DivIconMarker>
+                )}
+                {overlayStyle == 'progress' && stats && (
+                  <DivIconMarker position={mid}>
+                    <div
+                      style={{
+                        alignItems: 'center',
+                        backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+                        color: 'white',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        height: '20px',
+                        justifyContent: 'center',
+                        width: '40px',
+                      }}
+                    >
+                      {`${stats.num_visits}/${stats.num_households}`}
+                    </div>
+                  </DivIconMarker>
+                )}
+                {overlayStyle == 'assignees' && hasPeople && (
+                  <DivIconMarker position={mid}>
+                    {detailed && (
+                      <Box display="flex" sx={{ pointerEvents: 'none' }}>
                         <Box
                           sx={{
-                            alignItems: 'center',
-                            backgroundColor: theme.palette.primary.main,
-                            borderRadius: 10,
-                            boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                            color: theme.palette.primary.contrastText,
                             display: 'flex',
-                            fontWeight: 'bold',
-                            height: 30,
-                            justifyContent: 'center',
-                            pointerEvents: 'none',
+                            gap: '1px',
                             transform: 'translate(-50%, -50%)',
-                            width: 30,
                           }}
                         >
-                          <Box>{people.length}</Box>
+                          {people.map((person) => (
+                            <Box
+                              key={person.id}
+                              sx={{
+                                borderRadius: '50%',
+                                boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+                              }}
+                            >
+                              <ZUIAvatar
+                                size={zoom >= 16 ? 'sm' : 'xs'}
+                                url={`/api/orgs/1/people/${person.id}/avatar`}
+                              />
+                            </Box>
+                          ))}
                         </Box>
-                      )}
-                    </DivIconMarker>
-                  )}
+                      </Box>
+                    )}
+                    {overlayStyle == 'assignees' && !detailed && (
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          backgroundColor: theme.palette.primary.main,
+                          borderRadius: 10,
+                          boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+                          color: theme.palette.primary.contrastText,
+                          display: 'flex',
+                          fontWeight: 'bold',
+                          height: 30,
+                          justifyContent: 'center',
+                          pointerEvents: 'none',
+                          transform: 'translate(-50%, -50%)',
+                          width: 30,
+                        }}
+                      >
+                        <Box>{people.length}</Box>
+                      </Box>
+                    )}
+                  </DivIconMarker>
+                )}
+                {areaColor != 'hide' && (
                   <Polygon
                     key={key}
                     color={
@@ -303,21 +359,28 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                     positions={area.points}
                     weight={selected ? 5 : 2}
                   />
-                </>
-              );
-            })}
+                )}
+              </>
+            );
+          })}
       </FeatureGroup>
-      {places.map((place) => (
-        <DivIconMarker
-          key={place.id}
-          position={{
-            lat: place.position.lat,
-            lng: place.position.lng,
-          }}
-        >
-          {getPlaceMarker(place)}
-        </DivIconMarker>
-      ))}
+      {placeStyle != 'hide' &&
+        places.map((place) => (
+          <DivIconMarker
+            key={place.id}
+            position={{
+              lat: place.position.lat,
+              lng: place.position.lng,
+            }}
+          >
+            <PlaceMarker
+              canvassAssId={canvassAssId}
+              largestNumberOfHouseholds={largestNumberOfHouseholds}
+              place={place}
+              placeStyle={placeStyle}
+            />
+          </DivIconMarker>
+        ))}
     </>
   );
 };

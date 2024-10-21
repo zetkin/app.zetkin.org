@@ -50,6 +50,9 @@ const PlanMap: FC<PlanMapProps> = ({
   const [areaColor, setAreaColor] = useState<
     'households' | 'progress' | 'hide'
   >('households');
+  const [overlayStyle, setOverlayStyle] = useState<
+    'assignees' | 'households' | 'progress' | 'hide'
+  >('assignees');
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -158,6 +161,33 @@ const PlanMap: FC<PlanMapProps> = ({
               <MenuItem value="hide">Hide</MenuItem>
             </Select>
           </FormControl>
+          <FormControl variant="outlined">
+            <InputLabel id="overlay-style-label">Overlay style</InputLabel>
+            <Select
+              label="Overlay style"
+              labelId="overlay-style-label"
+              onChange={(ev) => {
+                const newValue = ev.target.value;
+                if (
+                  newValue == 'assignees' ||
+                  newValue == 'households' ||
+                  newValue == 'progress' ||
+                  newValue == 'hide'
+                ) {
+                  setOverlayStyle(newValue);
+                }
+              }}
+              sx={{ backgroundColor: 'white', width: '10rem' }}
+              value={overlayStyle}
+            >
+              <MenuItem value="assignees">Assignees</MenuItem>
+              <MenuItem value="households">Number of households</MenuItem>
+              <MenuItem value="progress">
+                Progress (visited in this assignment)
+              </MenuItem>
+              <MenuItem value="hide">Hide</MenuItem>
+            </Select>
+          </FormControl>
           <Chip
             color={filterAssigned ? 'primary' : 'secondary'}
             label="Assigned"
@@ -231,6 +261,7 @@ const PlanMap: FC<PlanMapProps> = ({
             filterAssigned={filterAssigned}
             filterUnassigned={filterUnassigned}
             onSelectedIdChange={(newId) => setSelectedId(newId)}
+            overlayStyle={overlayStyle}
             places={places}
             placeStyle={placeStyle}
             selectedId={selectedId}
