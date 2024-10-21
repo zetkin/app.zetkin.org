@@ -9,6 +9,7 @@ import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/Canvass
 import { getContrastColor } from 'utils/colorUtils';
 import { PageWithLayout } from 'utils/types';
 import NumberCard from 'features/canvassAssignments/components/NumberCard';
+import OutcomesCard from 'features/canvassAssignments/components/OutcomesCard';
 import { scaffold } from 'utils/next';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
@@ -80,67 +81,75 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
 
         return (
           <Box display="flex" flexDirection="column" gap={2}>
-            <Card>
-              <Box display="flex" justifyContent="space-between" p={2}>
-                <Typography variant="h4">Areas</Typography>
-                {!!stats.num_areas && (
-                  <ZUIAnimatedNumber value={stats.num_areas}>
-                    {(animatedValue) => (
-                      <Box className={classes.chip}>{animatedValue}</Box>
-                    )}
-                  </ZUIAnimatedNumber>
-                )}
-              </Box>
-              <Divider />
-              {stats.num_areas > 0 ? (
-                <Box p={2}>
-                  <Button
-                    onClick={() => router.push(planUrl)}
-                    startIcon={<Edit />}
-                    variant="text"
-                  >
-                    Edit plan
-                  </Button>
-                </Box>
-              ) : (
-                <Box p={2}>
+            {stats.num_areas == 0 && (
+              <Card>
+                <Box p={10} sx={{ textAlign: ' center' }}>
                   <Typography>
                     This assignment has not been planned yet.
                   </Typography>
-                  <Box pt={1}>
+                  <Box pt={4}>
                     <Button
                       onClick={() => router.push(planUrl)}
                       startIcon={<Edit />}
-                      variant="text"
+                      variant="contained"
                     >
                       Plan now
                     </Button>
                   </Box>
                 </Box>
-              )}
-            </Card>
-            <Box display="flex" justifyContent="space-between" width="100%">
-              <NumberCard
-                firstNumber={stats.num_visited_households}
-                message={'Households visited'}
-                secondNumber={stats.num_households}
-              />
-              <NumberCard
-                firstNumber={stats.num_successful_visited_households}
-                message={'Succesful visits'}
-                secondNumber={stats.num_visited_households}
-              />
-              <NumberCard
-                firstNumber={stats.num_visited_places}
-                message={'Places visited'}
-                secondNumber={stats.num_places}
-              />
-              <NumberCard
-                firstNumber={stats.num_visited_areas}
-                message={'Areas visited'}
-                secondNumber={stats.num_areas}
-              />
-            </Box>
+              </Card>
+            )}
+            {stats.num_areas > 0 && (
+              <>
+                <Card>
+                  <Box display="flex" justifyContent="space-between" p={2}>
+                    <Typography variant="h4">Areas</Typography>
+                    {!!stats.num_areas && (
+                      <ZUIAnimatedNumber value={stats.num_areas}>
+                        {(animatedValue) => (
+                          <Box className={classes.chip}>{animatedValue}</Box>
+                        )}
+                      </ZUIAnimatedNumber>
+                    )}
+                  </Box>
+                  <Divider />
+
+                  <Box p={2}>
+                    <Button
+                      onClick={() => router.push(planUrl)}
+                      startIcon={<Edit />}
+                      variant="text"
+                    >
+                      Edit plan
+                    </Button>
+                  </Box>
+                </Card>
+
+                <Box display="flex" justifyContent="space-between" width="100%">
+                  <NumberCard
+                    firstNumber={stats.num_visited_households}
+                    message={'Households visited'}
+                    secondNumber={stats.num_households}
+                  />
+                  <NumberCard
+                    firstNumber={stats.num_successful_visited_households}
+                    message={'Succesful visits'}
+                    secondNumber={stats.num_visited_households}
+                  />
+                  <NumberCard
+                    firstNumber={stats.num_visited_places}
+                    message={'Places visited'}
+                    secondNumber={stats.num_places}
+                  />
+                  <NumberCard
+                    firstNumber={stats.num_visited_areas}
+                    message={'Areas visited'}
+                    secondNumber={stats.num_areas}
+                  />
+                </Box>
+                <OutcomesCard stats={stats} />
+              </>
+            )}
           </Box>
         );
       }}
