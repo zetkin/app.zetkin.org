@@ -31,7 +31,7 @@ export interface IColumnType<
     dispatch?: AppDispatch,
     orgId?: number
   ): Omit<GridColDef, 'field'>;
-  getSearchableStrings(cell: CellType): string[];
+  getSearchableStrings(cell: CellType, column: ColumnType): string[];
   handleKeyDown?(
     viewGrid: UseViewGridReturn,
     column: ColumnType,

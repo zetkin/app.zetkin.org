@@ -6,16 +6,20 @@ import { EnumChoice } from 'utils/types/zetkin';
 
 type SimpleData = string | number | boolean | null;
 
+const getValue = (cell: SimpleData, column: PersonFieldViewColumn) => {
+  if (column.config.enum_choices) {
+    const choice = column.config.enum_choices.find((c) => c.key == cell);
+    return choice?.label ?? '';
+  } else {
+    return cell != null ? cell.toString() : '';
+  }
+};
+
 export default class PersonFieldColumnType
   implements IColumnType<ZetkinViewColumn, SimpleData>
 {
-  cellToString(cell: SimpleData): string {
-    if (this.enumChoices) {
-      const choice = this.enumChoices.find((c) => c.key == cell);
-      return choice ? choice.label : '';
-    } else {
-      return cell != null ? cell.toString() : '';
-    }
+  cellToString(cell: SimpleData, column: PersonFieldViewColumn): string {
+    return getValue(cell, column);
   }
 
   private enumChoices: EnumChoice[] | null = null;
@@ -25,23 +29,15 @@ export default class PersonFieldColumnType
       filterable: true,
       valueGetter: (params) => {
         const cell = params.row[params.field];
-        if (column.config.enum_choices) {
-          this.enumChoices = column.config.enum_choices;
-          const choice = column.config.enum_choices.find((c) => c.key == cell);
-          return choice?.label ?? '';
-        } else {
-          return cell ? cell.toString() : '';
-        }
+        return getValue(cell, column);
       },
     };
   }
 
-  getSearchableStrings(cell: SimpleData): string[] {
-    if (this.enumChoices) {
-      const choice = this.enumChoices.find((c) => c.key == cell);
-      return choice ? [choice.label] : [];
-    } else {
-      return cell && cell !== true ? [cell.toString()] : [];
-    }
+  getSearchableStrings(
+    cell: SimpleData,
+    column: PersonFieldViewColumn
+  ): string[] {
+    return [getValue(cell, column)];
   }
 }
