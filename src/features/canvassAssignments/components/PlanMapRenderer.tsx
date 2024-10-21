@@ -145,6 +145,21 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     ...places.map((place) => place.households.length)
   );
 
+  const getAreaBackgroundColor = (
+    hasPeople: boolean,
+    householdColorPercent: number,
+    visitsColorPercent: number
+  ) => {
+    if (!hasPeople) {
+      return 'grey';
+    }
+
+    return areaColor == 'households'
+      ? //TODO: Use theme colors for these
+        `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`
+      : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`;
+  };
+
   return (
     <>
       <AttributionControl position="bottomright" prefix={false} />
@@ -256,18 +271,19 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && stats && (
-                  <DivIconMarker position={mid}>
+                  <DivIconMarker iconAnchor={[11, 11]} position={mid}>
                     <div
                       style={{
                         alignItems: 'center',
                         backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
-                        border: '2px solid black',
+                        border: '2px solid white',
                         color: 'white',
                         display: 'flex',
                         flexDirection: 'row',
-                        height: '20px',
+                        height: '21px',
                         justifyContent: 'center',
-                        width: '20px',
+                        padding: '0.75rem',
+                        width: '21px',
                       }}
                     >
                       {stats.num_households}
@@ -275,11 +291,12 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker position={mid}>
+                  <DivIconMarker iconAnchor={[20, 10]} position={mid}>
                     <div
                       style={{
                         alignItems: 'center',
                         backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+                        borderRadius: '2rem',
                         color: 'white',
                         display: 'flex',
                         flexDirection: 'row',
@@ -345,12 +362,11 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                 {areaColor != 'hide' && (
                   <Polygon
                     key={key}
-                    color={
-                      areaColor == 'households'
-                        ? //TODO: Use theme colors for these
-                          `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`
-                        : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`
-                    }
+                    color={getAreaBackgroundColor(
+                      hasPeople,
+                      householdColorPercent,
+                      visitsColorPercent
+                    )}
                     eventHandlers={{
                       click: () => {
                         onSelectedIdChange(area.id);
