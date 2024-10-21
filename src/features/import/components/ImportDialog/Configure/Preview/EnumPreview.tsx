@@ -18,8 +18,9 @@ const EnumPreview = ({ currentSheet, fieldKey, fields }: EnumPreviewProps) => {
   const { fieldOptions } = useColumn(orgId);
   const customFields = useCustomFields(orgId).data ?? [];
 
-  let hasMapped = false;
-  let enumKey: string | null = null;
+  const hasMapped = currentSheet.columns.some(
+    (column) => column.kind === ColumnKind.ENUM && column.mapping.length > 0
+  );
 
   let columnHeader = '';
   fieldOptions.flat().forEach((columnOp) => {
@@ -31,23 +32,9 @@ const EnumPreview = ({ currentSheet, fieldKey, fields }: EnumPreviewProps) => {
   const field = customFields.find((f) => f.slug === fieldKey);
   const enumChoices = field?.enum_choices || [];
 
-  const value = fields?.[fieldKey];
-  currentSheet.columns.forEach((column) => {
-    if (
-      column.kind === ColumnKind.ENUM &&
-      column.field === fieldKey &&
-      column.mapping.length > 0
-    ) {
-      hasMapped = true;
-      column.mapping.forEach((mappedColumn) => {
-        if (mappedColumn.value === value) {
-          enumKey = mappedColumn.key;
-        }
-      });
-    }
-  });
+  const enumKey = fields?.[fieldKey];
 
-  const option = enumChoices.find((o) => o.key == enumKey);
+  const option = enumChoices.find((o) => o.key === enumKey);
 
   return (
     <PreviewGrid

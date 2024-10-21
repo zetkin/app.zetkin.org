@@ -123,6 +123,57 @@ describe('createPreviewData()', () => {
     });
   });
 
+  it('converts enum data to preview object', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ENUM,
+          field: 'enum_field',
+          mapping: [
+            { key: 'first', value: 'Dummy value' },
+            { key: 'second', value: 'Second dummy value' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', 'Dummy value'],
+        },
+        {
+          data: ['124', 'Linköping', 'Second dummy value'],
+        },
+        {
+          data: ['125', 'Linköping', 'Third dummy value'],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result0 = createPreviewData(configData, 0);
+    expect(result0).toEqual({
+      data: {
+        city: 'Malmö',
+        id: '123',
+        enum_field: 'first',
+      },
+    });
+
+    const result2 = createPreviewData(configData, 2);
+    expect(result2).toEqual({
+      data: {
+        city: 'Linköping',
+        id: '125',
+      },
+    });
+  });
+
   it('returns empty obejct when there are no values', () => {
     const configData: Sheet = {
       columns: [

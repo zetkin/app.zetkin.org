@@ -59,7 +59,7 @@ export default function createPreviewData(
           if (mappedColumn.value === row[colIdx]) {
             personPreviewOp.data = {
               ...personPreviewOp.data,
-              [`${column.field}`]: row[colIdx],
+              [`${column.field}`]: mappedColumn.key,
             };
           }
         });
