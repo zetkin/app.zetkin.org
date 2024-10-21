@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, lighten } from '@mui/material';
 
 import theme from 'theme';
+import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 type NumberCardProps = {
   firstNumber: number;
@@ -39,8 +40,21 @@ const NumberCard: FC<NumberCardProps> = ({
             /{secondNumber}
           </Typography>
         </Box>
+        <ZUIStackedStatusBar
+          values={[
+            {
+              color: theme.palette.primary.main,
+              value: firstNumber,
+            },
+            {
+              color: lighten(theme.palette.primary.main, 0.6),
+              value: secondNumber - firstNumber,
+            },
+          ]}
+        />
+
         <Box>
-          <Typography>{message}</Typography>
+          <Typography mt={2}>{message}</Typography>
         </Box>
       </CardContent>
     </Card>
