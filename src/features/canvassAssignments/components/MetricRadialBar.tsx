@@ -41,7 +41,7 @@ const MetricRadialBar: FC<Props> = ({
     <Box
       sx={{
         aspectRatio: '1/1',
-        height: 'auto',
+        height: 350,
         position: 'relative',
         width: '100%',
       }}

@@ -1,6 +1,6 @@
 import { ResponsiveBar } from '@nivo/bar';
 import { FC } from 'react';
-import { Box, Card, Divider, Typography, lighten } from '@mui/material';
+import { Box, Card, Divider, Grid, Typography, lighten } from '@mui/material';
 
 import theme from 'theme';
 import { ZetkinCanvassAssignmentStats } from '../types';
@@ -36,44 +36,24 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
         </Typography>
       </Box>
       <Divider sx={{ marginBottom: 2, marginTop: 2 }} />
-      <Box
-        sx={{
-          display: 'grid',
-          gap: '16px',
-          gridAutoFlow: 'row',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          margin: 1,
-        }}
-      >
+      <Grid container rowSpacing={6} spacing={2}>
         {stats.metrics.map((metric) => {
           return metric.metric.kind === 'boolean' ? (
-            <Box
-              key={metric.metric.id}
-              sx={{
-                gridColumn: 'span 1',
-              }}
-            >
-              <div style={{ height: 300, width: '100%' }}>
-                <MetricRadialBar
-                  mainTotal={metric.values[0] + metric.values[1]}
-                  mainValue={metric.values[0]}
-                  rawNo={metric.values[1]}
-                  rawYes={metric.values[0]}
-                  title={metric.metric.question}
-                />
-              </div>
-            </Box>
+            <Grid item md={3} sm={6} xs={12}>
+              <MetricRadialBar
+                mainTotal={metric.values[0] + metric.values[1]}
+                mainValue={metric.values[0]}
+                rawNo={metric.values[1]}
+                rawYes={metric.values[0]}
+                title={metric.metric.question}
+              />
+            </Grid>
           ) : (
-            <Box
-              key={metric.metric.id}
-              sx={{
-                gridColumn: 'span 2',
-              }}
-            >
+            <Grid item md={3} sm={6} xs={12}>
               <Typography mb={2} textAlign="center">
                 {metric.metric.question}
               </Typography>
-              <div style={{ height: 300, width: '100%' }}>
+              <div style={{ height: 400, width: '100%' }}>
                 <ResponsiveBar
                   animate={true}
                   axisBottom={{
@@ -106,10 +86,10 @@ const OutcomesCard: FC<OutcomesCardProps> = ({ stats }) => {
                   padding={0.3}
                 />
               </div>
-            </Box>
+            </Grid>
           );
         })}
-      </Box>
+      </Grid>
     </Card>
   );
 };

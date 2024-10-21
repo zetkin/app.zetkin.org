@@ -1,4 +1,4 @@
-import { Box, Button, Card, Divider, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Grid, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
@@ -125,28 +125,36 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                   </Box>
                 </Card>
 
-                <Box display="flex" justifyContent="space-between" width="100%">
-                  <NumberCard
-                    firstNumber={stats.num_visited_households}
-                    message={'Households visited'}
-                    secondNumber={stats.num_households}
-                  />
-                  <NumberCard
-                    firstNumber={stats.num_successful_visited_households}
-                    message={'Succesful visits'}
-                    secondNumber={stats.num_visited_households}
-                  />
-                  <NumberCard
-                    firstNumber={stats.num_visited_places}
-                    message={'Places visited'}
-                    secondNumber={stats.num_places}
-                  />
-                  <NumberCard
-                    firstNumber={stats.num_visited_areas}
-                    message={'Areas visited'}
-                    secondNumber={stats.num_areas}
-                  />
-                </Box>
+                <Grid container spacing={2}>
+                  <Grid item md={3} sm={6} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_visited_households}
+                      message={'Households visited'}
+                      secondNumber={stats.num_households}
+                    />
+                  </Grid>
+                  <Grid item md={3} sm={6} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_successful_visited_households}
+                      message={'Successful visits'}
+                      secondNumber={stats.num_visited_households}
+                    />
+                  </Grid>
+                  <Grid item md={3} sm={6} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_visited_places}
+                      message={'Places visited'}
+                      secondNumber={stats.num_places}
+                    />
+                  </Grid>
+                  <Grid item md={3} sm={6} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_visited_areas}
+                      message={'Areas visited'}
+                      secondNumber={stats.num_areas}
+                    />
+                  </Grid>
+                </Grid>
                 <OutcomesCard stats={stats} />
               </>
             )}

@@ -18,8 +18,6 @@ const NumberCard: FC<NumberCardProps> = ({
   return (
     <Card
       sx={{
-        flexGrow: 1,
-        marginRight: 1,
         padding: '16px',
         textAlign: 'center',
       }}
