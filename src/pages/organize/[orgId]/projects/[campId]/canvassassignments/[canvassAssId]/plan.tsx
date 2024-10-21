@@ -64,6 +64,7 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
           <PlanMap
             areas={areas}
             areaStats={areaStats}
+            canvassAssId={canvassAssId}
             onAddAssigneeToArea={(area, person) => {
               createCanvassSession({
                 areaId: area.id,

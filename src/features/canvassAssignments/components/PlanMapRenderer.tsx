@@ -24,9 +24,11 @@ type PlanMapRendererProps = {
   //eslint-disable-next-line
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
+  canvassAssId: string;
   filterAssigned: boolean;
   filterUnassigned: boolean;
   onSelectedIdChange: (newId: string) => void;
+  placeStyle: 'dot' | 'households' | 'progress' | 'hide';
   places: ZetkinPlace[];
   selectedId: string;
   sessions: ZetkinCanvassSession[];
@@ -34,11 +36,13 @@ type PlanMapRendererProps = {
 
 const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   areas,
+  canvassAssId,
   filterAssigned,
   filterUnassigned,
   selectedId,
   sessions,
   onSelectedIdChange,
+  placeStyle,
   places,
 }) => {
   const theme = useTheme();
@@ -65,6 +69,53 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   }, [areas, map]);
 
   const showAll = !filterAssigned && !filterUnassigned;
+
+  const getPlaceMarker = (place: ZetkinPlace) => {
+    if (placeStyle == 'dot') {
+      return (
+        <div
+          style={{
+            backgroundColor: 'black',
+            height: '5px',
+            width: '5px',
+          }}
+        />
+      );
+    } else if (placeStyle == 'households') {
+      return (
+        <div
+          style={{
+            backgroundColor: 'white',
+          }}
+        >
+          {place.households.length}
+        </div>
+      );
+    } else if (placeStyle == 'progress') {
+      let visits = 0;
+      place.households.forEach((household) => {
+        const visitInThisAssignment = household.visits.find(
+          (visit) => visit.canvassAssId == canvassAssId
+        );
+        if (visitInThisAssignment) {
+          visits++;
+        }
+      });
+      return (
+        <div
+          style={{
+            backgroundColor: 'lightyellow',
+            display: 'flex',
+            flexDirection: 'row',
+            width: '20px',
+          }}
+        >{`${visits}/${place.households.length}`}</div>
+      );
+    } else {
+      //Place style is 'hide'
+      return;
+    }
+  };
 
   return (
     <>
@@ -233,13 +284,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
             lng: place.position.lng,
           }}
         >
-          <div
-            style={{
-              backgroundColor: 'black',
-              height: '5px',
-              width: '5px',
-            }}
-          />
+          {getPlaceMarker(place)}
         </DivIconMarker>
       ))}
     </>

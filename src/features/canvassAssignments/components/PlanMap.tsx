@@ -7,7 +7,10 @@ import {
   Button,
   ButtonGroup,
   Chip,
+  FormControl,
+  InputLabel,
   MenuItem,
+  Select,
   TextField,
 } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
@@ -25,6 +28,7 @@ import {
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
+  canvassAssId: string;
   onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
   places: ZetkinPlace[];
   sessions: ZetkinCanvassSession[];
@@ -33,12 +37,16 @@ type PlanMapProps = {
 const PlanMap: FC<PlanMapProps> = ({
   areas,
   areaStats,
+  canvassAssId,
   onAddAssigneeToArea,
   places,
   sessions,
 }) => {
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterUnassigned, setFilterUnassigned] = useState(false);
+  const [placeStyle, setPlaceStyle] = useState<
+    'dot' | 'households' | 'progress' | 'hide'
+  >('dot');
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -95,6 +103,33 @@ const PlanMap: FC<PlanMapProps> = ({
           </ButtonGroup>
         </Box>
         <Box alignItems="center" display="flex" gap={1}>
+          <FormControl variant="outlined">
+            <InputLabel id="place-style-label">Place style</InputLabel>
+            <Select
+              label="Place style"
+              labelId="place-style-label"
+              onChange={(ev) => {
+                const newValue = ev.target.value;
+                if (
+                  newValue == 'dot' ||
+                  newValue == 'households' ||
+                  newValue == 'progress' ||
+                  newValue == 'hide'
+                ) {
+                  setPlaceStyle(newValue);
+                }
+              }}
+              sx={{ backgroundColor: 'white', width: '10rem' }}
+              value={placeStyle}
+            >
+              <MenuItem value="dot">Dot</MenuItem>
+              <MenuItem value="households">Number of households</MenuItem>
+              <MenuItem value="progress">
+                Progress (visited in this assignment)
+              </MenuItem>
+              <MenuItem value="hide">Hide</MenuItem>
+            </Select>
+          </FormControl>
           <Chip
             color={filterAssigned ? 'primary' : 'secondary'}
             label="Assigned"
@@ -163,10 +198,12 @@ const PlanMap: FC<PlanMapProps> = ({
           <PlanMapRenderer
             areas={areas}
             areaStats={areaStats}
+            canvassAssId={canvassAssId}
             filterAssigned={filterAssigned}
             filterUnassigned={filterUnassigned}
             onSelectedIdChange={(newId) => setSelectedId(newId)}
             places={places}
+            placeStyle={placeStyle}
             selectedId={selectedId}
             sessions={sessions}
           />
