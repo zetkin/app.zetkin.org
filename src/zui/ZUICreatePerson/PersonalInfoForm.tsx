@@ -187,6 +187,13 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       )}
       {!!showAllClickedType &&
         customFields.map((field) => {
+          if (
+            field.organization.id !== orgId &&
+            field.org_write !== 'suborgs'
+          ) {
+            // Don't show fields that cannot be written from ancestor orgs
+            return;
+          }
           if (field.type === 'json') {
             return;
           } else if (field.type === 'date') {
