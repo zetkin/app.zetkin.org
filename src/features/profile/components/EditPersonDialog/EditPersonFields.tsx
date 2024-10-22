@@ -91,7 +91,6 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         value={fieldValues.phone ?? ''}
       />
       <EditPersonField
-        error={invalidFields.includes(NATIVE_PERSON_FIELDS.ALT_PHONE)}
         field={NATIVE_PERSON_FIELDS.ALT_PHONE}
         hasChanges={NATIVE_PERSON_FIELDS.ALT_PHONE in fieldsToUpdate}
         onChange={(field, newValue) =>
@@ -175,6 +174,8 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         value={fieldValues.ext_id ? fieldValues.ext_id : ''}
       />
       {customFields.map((field) => {
+        const fieldWritable =
+          field.organization.id == orgId || field.org_write == 'suborgs';
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
@@ -182,6 +183,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
             <Box display="flex">
               <DatePicker
                 key={field.slug}
+                disabled={!fieldWritable}
                 format="DD-MM-YYYY"
                 label={field.title}
                 onChange={(date: Dayjs | null) => {
@@ -208,6 +210,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return (
             <EditPersonField
               key={field.slug}
+              disabled={!fieldWritable}
               error={invalidFields.includes(field.slug)}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
@@ -230,6 +233,8 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               <FormControl fullWidth>
                 <InputLabel>{field.title}</InputLabel>
                 <Select
+                  key={field.slug}
+                  disabled={!fieldWritable}
                   fullWidth
                   label={field.title}
                   onChange={(ev) => {
@@ -257,6 +262,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return (
             <EditPersonField
               key={field.slug}
+              disabled={!fieldWritable}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
               label={field.title}
