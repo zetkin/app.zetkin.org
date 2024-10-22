@@ -2,7 +2,6 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import { PersonFieldViewColumn, ZetkinViewColumn } from '../../types';
-import { EnumChoice } from 'utils/types/zetkin';
 
 type SimpleData = string | number | boolean | null;
 
@@ -21,8 +20,6 @@ export default class PersonFieldColumnType
   cellToString(cell: SimpleData, column: PersonFieldViewColumn): string {
     return getValue(cell, column);
   }
-
-  private enumChoices: EnumChoice[] | null = null;
 
   getColDef(column: PersonFieldViewColumn): Omit<GridColDef, 'field'> {
     return {
