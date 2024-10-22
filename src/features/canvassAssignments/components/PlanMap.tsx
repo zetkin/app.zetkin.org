@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Chip,
   CircularProgress,
   Divider,
   FormControl,
@@ -27,9 +26,10 @@ import {
   ZetkinPlace,
 } from '../types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
-import AreaFilterButton from 'features/areas/components/AreaFilters/AreaFilterButton';
-import AreaFilters from 'features/areas/components/AreaFilters';
 import objToLatLng from 'features/areas/utils/objToLatLng';
+import AssigneeFilterProvider from './PlanMapFilters/AssigneeFilterContext';
+import PlanMapFilters from './PlanMapFilters';
+import PlanMapFilterButton from './PlanMapFilters/PlanMapFilterButton';
 
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -48,8 +48,6 @@ const PlanMap: FC<PlanMapProps> = ({
   places,
   sessions,
 }) => {
-  const [filterAssigned, setFilterAssigned] = useState(false);
-  const [filterUnassigned, setFilterUnassigned] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [placeStyle, setPlaceStyle] = useState<
@@ -97,278 +95,266 @@ const PlanMap: FC<PlanMapProps> = ({
 
   return (
     <AreaFilterProvider>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          width: '100%',
-        }}
-      >
+      <AssigneeFilterProvider>
         <Box
-          alignItems="center"
-          display="flex"
-          gap={1}
-          justifyContent="flex-end"
-          paddingX={2}
-          paddingY={1}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%',
+          }}
         >
-          <FormControl variant="outlined">
-            <InputLabel id="place-style-label">Place</InputLabel>
-            <Select
-              label="Place style"
-              labelId="place-style-label"
-              onChange={(ev) => {
-                const newValue = ev.target.value;
-                if (
-                  newValue == 'dot' ||
-                  newValue == 'households' ||
-                  newValue == 'progress' ||
-                  newValue == 'hide'
-                ) {
-                  setPlaceStyle(newValue);
-                }
-              }}
-              sx={{ backgroundColor: 'white', width: '10rem' }}
-              value={placeStyle}
-            >
-              <MenuItem value="dot">Dot</MenuItem>
-              <MenuItem value="households">Number of households</MenuItem>
-              <MenuItem value="progress">
-                Progress (visited in this assignment)
-              </MenuItem>
-              <MenuItem value="hide">Hide</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl variant="outlined">
-            <InputLabel id="area-style-label">Area</InputLabel>
-            <Select
-              label="Area color"
-              labelId="area-style-color"
-              onChange={(ev) => {
-                const newValue = ev.target.value;
-                if (
-                  newValue == 'households' ||
-                  newValue == 'progress' ||
-                  newValue == 'hide' ||
-                  newValue == 'default'
-                ) {
-                  setAreaStyle(newValue);
-                }
-              }}
-              sx={{ backgroundColor: 'white', width: '10rem' }}
-              value={areaStyle}
-            >
-              <MenuItem value="default">Default</MenuItem>
-              <MenuItem value="households">Number of households</MenuItem>
-              <MenuItem value="progress">
-                Progress (visited in this assignment)
-              </MenuItem>
-              <MenuItem value="hide">Hide</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl variant="outlined">
-            <InputLabel id="overlay-style-label">Overlay</InputLabel>
-            <Select
-              label="Overlay style"
-              labelId="overlay-style-label"
-              onChange={(ev) => {
-                const newValue = ev.target.value;
-                if (
-                  newValue == 'assignees' ||
-                  newValue == 'households' ||
-                  newValue == 'progress' ||
-                  newValue == 'hide'
-                ) {
-                  setOverlayStyle(newValue);
-                }
-              }}
-              sx={{ backgroundColor: 'white', width: '10rem' }}
-              value={overlayStyle}
-            >
-              <MenuItem value="assignees">Assignees</MenuItem>
-              <MenuItem value="households">Number of households</MenuItem>
-              <MenuItem value="progress">
-                Progress (visited in this assignment)
-              </MenuItem>
-              <MenuItem value="hide">Hide</MenuItem>
-            </Select>
-          </FormControl>
-          <Box alignItems="center" display="flex" gap={1}>
-            <Chip
-              color={filterAssigned ? 'primary' : 'secondary'}
-              label="Assigned"
-              onClick={() => setFilterAssigned(!filterAssigned)}
-            />
-            <Chip
-              color={filterUnassigned ? 'primary' : 'secondary'}
-              label="Unassigned"
-              onClick={() => setFilterUnassigned(!filterUnassigned)}
-            />
-          </Box>
-          <AreaFilterButton
-            onToggle={() => setFiltersOpen((current) => !current)}
-          />
-          <Autocomplete
-            filterOptions={(options, state) =>
-              filterAreas(options, state.inputValue)
-            }
-            getOptionLabel={(option) => option.id}
-            inputValue={filterText}
-            onChange={(ev, area) => {
-              if (area) {
-                setSelectedId(area.id);
-                setFilterText('');
-              }
-            }}
-            onInputChange={(ev, value, reason) => {
-              if (reason == 'input') {
-                setFilterText(value);
-              }
-            }}
-            options={areas}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                size="small"
-                sx={{ backgroundColor: 'white', width: '16rem' }}
-                variant="outlined"
-              />
-            )}
-            renderOption={(props, area) => (
-              <MenuItem {...props}>{area.title || 'Untitled area'}</MenuItem>
-            )}
-            value={null}
-          />
-        </Box>
-        {filtersOpen && (
-          <Box>
-            <Divider />
-            <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
-              <AreaFilters
-                areas={areas}
-                onFilteredIdsChange={(areaIds) => {
-                  setFilteredAreaIds(areaIds);
-                }}
-              />
-            </Box>
-          </Box>
-        )}
-        <Box flexGrow={1} position="relative">
           <Box
-            sx={{
-              left: 16,
-              position: 'absolute',
-              top: 16,
-              zIndex: 999,
-            }}
+            alignItems="center"
+            display="flex"
+            gap={1}
+            justifyContent="flex-end"
+            paddingX={2}
+            paddingY={1}
           >
-            <ButtonGroup orientation="vertical" variant="contained">
-              <Button onClick={() => mapRef.current?.zoomIn()}>
-                <Add />
-              </Button>
-              <Button onClick={() => mapRef.current?.zoomOut()}>
-                <Remove />
-              </Button>
-              <Button
-                onClick={() => {
-                  const map = mapRef.current;
-                  if (map) {
-                    if (areas.length) {
-                      // Start with first area
-                      const totalBounds = latLngBounds(
-                        areas[0].points.map((p) => objToLatLng(p))
-                      );
-
-                      // Extend with all areas
-                      areas.forEach((area) => {
-                        const areaBounds = latLngBounds(
-                          area.points.map((p) => objToLatLng(p))
-                        );
-                        totalBounds.extend(areaBounds);
-                      });
-
-                      if (totalBounds) {
-                        map.fitBounds(totalBounds, { animate: true });
-                      }
-                    }
+            <FormControl variant="outlined">
+              <InputLabel id="place-style-label">Place</InputLabel>
+              <Select
+                label="Place"
+                labelId="place-style-label"
+                onChange={(ev) => {
+                  const newValue = ev.target.value;
+                  if (
+                    newValue == 'dot' ||
+                    newValue == 'households' ||
+                    newValue == 'progress' ||
+                    newValue == 'hide'
+                  ) {
+                    setPlaceStyle(newValue);
                   }
                 }}
+                sx={{ backgroundColor: 'white', width: '10rem' }}
+                value={placeStyle}
               >
-                <Home />
-              </Button>
-              <Button
-                onClick={() => {
-                  setLocating(true);
-                  navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                      setLocating(false);
-
-                      const zoom = 16;
-                      const latLng = {
-                        lat: pos.coords.latitude,
-                        lng: pos.coords.longitude,
-                      };
-
-                      mapRef.current?.flyTo(latLng, zoom, {
-                        animate: true,
-                        duration: 0.8,
-                      });
-                    },
-                    () => {
-                      // When an error occurs just stop the loading indicator
-                      setLocating(false);
-                    },
-                    { enableHighAccuracy: true, timeout: 5000 }
-                  );
+                <MenuItem value="dot">Dot</MenuItem>
+                <MenuItem value="households">Number of households</MenuItem>
+                <MenuItem value="progress">
+                  Progress (visited in this assignment)
+                </MenuItem>
+                <MenuItem value="hide">Hide</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl variant="outlined">
+              <InputLabel id="area-style-label">Area</InputLabel>
+              <Select
+                label="Area"
+                labelId="area-style-color"
+                onChange={(ev) => {
+                  const newValue = ev.target.value;
+                  if (
+                    newValue == 'households' ||
+                    newValue == 'progress' ||
+                    newValue == 'hide' ||
+                    newValue == 'default'
+                  ) {
+                    setAreaStyle(newValue);
+                  }
                 }}
+                sx={{ backgroundColor: 'white', width: '10rem' }}
+                value={areaStyle}
               >
-                {locating ? (
-                  <CircularProgress color="inherit" size={24} />
-                ) : (
-                  <GpsFixed />
-                )}
-              </Button>
-            </ButtonGroup>
-          </Box>
-          {selectedArea && (
-            <AreaPlanningOverlay
-              key={selectedArea.id}
-              area={selectedArea}
-              assignees={sessions
-                .filter((session) => session.area.id == selectedArea.id)
-                .map((session) => session.assignee)}
-              onAddAssignee={(person) => {
-                onAddAssigneeToArea(selectedArea, person);
+                <MenuItem value="default">Default</MenuItem>
+                <MenuItem value="households">Number of households</MenuItem>
+                <MenuItem value="progress">
+                  Progress (visited in this assignment)
+                </MenuItem>
+                <MenuItem value="hide">Hide</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl variant="outlined">
+              <InputLabel id="overlay-style-label">Overlay</InputLabel>
+              <Select
+                label="Overlay"
+                labelId="overlay-style-label"
+                onChange={(ev) => {
+                  const newValue = ev.target.value;
+                  if (
+                    newValue == 'assignees' ||
+                    newValue == 'households' ||
+                    newValue == 'progress' ||
+                    newValue == 'hide'
+                  ) {
+                    setOverlayStyle(newValue);
+                  }
+                }}
+                sx={{ backgroundColor: 'white', width: '10rem' }}
+                value={overlayStyle}
+              >
+                <MenuItem value="assignees">Assignees</MenuItem>
+                <MenuItem value="households">Number of households</MenuItem>
+                <MenuItem value="progress">
+                  Progress (visited in this assignment)
+                </MenuItem>
+                <MenuItem value="hide">Hide</MenuItem>
+              </Select>
+            </FormControl>
+            <PlanMapFilterButton
+              onToggle={() => setFiltersOpen((current) => !current)}
+            />
+            <Autocomplete
+              filterOptions={(options, state) =>
+                filterAreas(options, state.inputValue)
+              }
+              getOptionLabel={(option) => option.id}
+              inputValue={filterText}
+              onChange={(ev, area) => {
+                if (area) {
+                  setSelectedId(area.id);
+                  setFilterText('');
+                }
               }}
-              onClose={() => setSelectedId('')}
+              onInputChange={(ev, value, reason) => {
+                if (reason == 'input') {
+                  setFilterText(value);
+                }
+              }}
+              options={areas}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  size="small"
+                  sx={{ backgroundColor: 'white', width: '16rem' }}
+                  variant="outlined"
+                />
+              )}
+              renderOption={(props, area) => (
+                <MenuItem {...props}>{area.title || 'Untitled area'}</MenuItem>
+              )}
+              value={null}
             />
+          </Box>
+          {filtersOpen && (
+            <Box>
+              <Divider />
+              <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
+                <PlanMapFilters
+                  areas={areas}
+                  onFilteredIdsChange={(areaIds) => {
+                    setFilteredAreaIds(areaIds);
+                  }}
+                />
+              </Box>
+            </Box>
           )}
-          <MapContainer
-            ref={mapRef}
-            attributionControl={false}
-            center={[0, 0]}
-            style={{ height: '100%', width: '100%' }}
-            zoom={2}
-            zoomControl={false}
-          >
-            <PlanMapRenderer
-              areas={filteredAreas}
-              areaStats={areaStats}
-              areaStyle={areaStyle}
-              canvassAssId={canvassAssId}
-              filterAssigned={filterAssigned}
-              filterUnassigned={filterUnassigned}
-              onSelectedIdChange={(newId) => setSelectedId(newId)}
-              overlayStyle={overlayStyle}
-              places={places}
-              placeStyle={placeStyle}
-              selectedId={selectedId}
-              sessions={sessions}
-            />
-          </MapContainer>
+          <Box flexGrow={1} position="relative">
+            <Box
+              sx={{
+                left: 16,
+                position: 'absolute',
+                top: 16,
+                zIndex: 999,
+              }}
+            >
+              <ButtonGroup orientation="vertical" variant="contained">
+                <Button onClick={() => mapRef.current?.zoomIn()}>
+                  <Add />
+                </Button>
+                <Button onClick={() => mapRef.current?.zoomOut()}>
+                  <Remove />
+                </Button>
+                <Button
+                  onClick={() => {
+                    const map = mapRef.current;
+                    if (map) {
+                      if (areas.length) {
+                        // Start with first area
+                        const totalBounds = latLngBounds(
+                          areas[0].points.map((p) => objToLatLng(p))
+                        );
+
+                        // Extend with all areas
+                        areas.forEach((area) => {
+                          const areaBounds = latLngBounds(
+                            area.points.map((p) => objToLatLng(p))
+                          );
+                          totalBounds.extend(areaBounds);
+                        });
+
+                        if (totalBounds) {
+                          map.fitBounds(totalBounds, { animate: true });
+                        }
+                      }
+                    }
+                  }}
+                >
+                  <Home />
+                </Button>
+                <Button
+                  onClick={() => {
+                    setLocating(true);
+                    navigator.geolocation.getCurrentPosition(
+                      (pos) => {
+                        setLocating(false);
+
+                        const zoom = 16;
+                        const latLng = {
+                          lat: pos.coords.latitude,
+                          lng: pos.coords.longitude,
+                        };
+
+                        mapRef.current?.flyTo(latLng, zoom, {
+                          animate: true,
+                          duration: 0.8,
+                        });
+                      },
+                      () => {
+                        // When an error occurs just stop the loading indicator
+                        setLocating(false);
+                      },
+                      { enableHighAccuracy: true, timeout: 5000 }
+                    );
+                  }}
+                >
+                  {locating ? (
+                    <CircularProgress color="inherit" size={24} />
+                  ) : (
+                    <GpsFixed />
+                  )}
+                </Button>
+              </ButtonGroup>
+            </Box>
+            {selectedArea && (
+              <AreaPlanningOverlay
+                key={selectedArea.id}
+                area={selectedArea}
+                assignees={sessions
+                  .filter((session) => session.area.id == selectedArea.id)
+                  .map((session) => session.assignee)}
+                onAddAssignee={(person) => {
+                  onAddAssigneeToArea(selectedArea, person);
+                }}
+                onClose={() => setSelectedId('')}
+              />
+            )}
+            <MapContainer
+              ref={mapRef}
+              attributionControl={false}
+              center={[0, 0]}
+              style={{ height: '100%', width: '100%' }}
+              zoom={2}
+              zoomControl={false}
+            >
+              <PlanMapRenderer
+                areas={filteredAreas}
+                areaStats={areaStats}
+                areaStyle={areaStyle}
+                canvassAssId={canvassAssId}
+                onSelectedIdChange={(newId) => setSelectedId(newId)}
+                overlayStyle={overlayStyle}
+                places={places}
+                placeStyle={placeStyle}
+                selectedId={selectedId}
+                sessions={sessions}
+              />
+            </MapContainer>
+          </Box>
         </Box>
-      </Box>
+      </AssigneeFilterProvider>
     </AreaFilterProvider>
   );
 };

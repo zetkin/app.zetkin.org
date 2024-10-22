@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import {
   AttributionControl,
   FeatureGroup,
@@ -19,6 +19,7 @@ import {
 } from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
+import { assigneesFilterContext } from './PlanMapFilters/AssigneeFilterContext';
 
 const PlaceMarker: FC<{
   canvassAssId: string;
@@ -92,8 +93,6 @@ type PlanMapRendererProps = {
   areaStyle: 'households' | 'progress' | 'hide' | 'default';
   areas: ZetkinArea[];
   canvassAssId: string;
-  filterAssigned: boolean;
-  filterUnassigned: boolean;
   onSelectedIdChange: (newId: string) => void;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
   placeStyle: 'dot' | 'households' | 'progress' | 'hide';
@@ -107,8 +106,6 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   areaStats,
   areaStyle,
   canvassAssId,
-  filterAssigned,
-  filterUnassigned,
   selectedId,
   sessions,
   onSelectedIdChange,
@@ -139,7 +136,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     }
   }, [areas, map]);
 
-  const showAll = !filterAssigned && !filterUnassigned;
+  const { assigneesFilter } = useContext(assigneesFilterContext);
 
   const largestNumberOfHouseholds = Math.max(
     ...places.map((place) => place.households.length)
@@ -239,10 +236,10 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
             const hasPeople = !!people.length;
 
-            if (!showAll) {
-              if (hasPeople && !filterAssigned) {
+            if (assigneesFilter != 'all') {
+              if (hasPeople && assigneesFilter == 'unassigned') {
                 return null;
-              } else if (!hasPeople && !filterUnassigned) {
+              } else if (!hasPeople && assigneesFilter == 'assigned') {
                 return null;
               }
             }
