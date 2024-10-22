@@ -7,7 +7,7 @@ import EmptyPreview from './EmptyPreview';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import OrgPreview from './OrgPreview';
+import OrgsPreview from './OrgsPreview';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
@@ -21,7 +21,7 @@ const Preview = () => {
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
   const { orgId } = useNumericRouteParams();
-  const { fields, org, tags } = usePersonPreview(
+  const { fields, orgs, tags } = usePersonPreview(
     currentSheet,
     firstRowIsHeaders ? personIndex + 1 : personIndex,
     orgId
@@ -33,6 +33,10 @@ const Preview = () => {
 
   const tagColumnSelected = currentSheet.columns.some(
     (column) => column.kind === ColumnKind.TAG && column.selected
+  );
+
+  const orgColumnSelected = currentSheet.columns.some(
+    (column) => column.kind === ColumnKind.ORGANIZATION && column.selected
   );
 
   useEffect(() => {
@@ -130,16 +134,6 @@ const Preview = () => {
                   );
                 }
 
-                if (column.kind === ColumnKind.ORGANIZATION) {
-                  return (
-                    <OrgPreview
-                      key={columnIdx}
-                      currentSheet={currentSheet}
-                      org={org}
-                    />
-                  );
-                }
-
                 if (column.kind === ColumnKind.DATE) {
                   return (
                     <DatePreview
@@ -163,6 +157,9 @@ const Preview = () => {
                 }
               }
             })}
+            {orgColumnSelected && (
+              <OrgsPreview currentSheet={currentSheet} orgs={orgs} />
+            )}
             {tagColumnSelected && (
               <TagsPreview currentSheet={currentSheet} tags={tags} />
             )}
