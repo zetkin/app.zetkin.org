@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from 'react';
-import { Map as MapType } from 'leaflet';
+import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import {
   Autocomplete,
@@ -7,13 +7,15 @@ import {
   Button,
   ButtonGroup,
   Chip,
+  CircularProgress,
+  Divider,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   TextField,
 } from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
+import { Add, GpsFixed, Home, Remove } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import PlanMapRenderer from './PlanMapRenderer';
@@ -24,6 +26,10 @@ import {
   ZetkinCanvassSession,
   ZetkinPlace,
 } from '../types';
+import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
+import AreaFilterButton from 'features/areas/components/AreaFilters/AreaFilterButton';
+import AreaFilters from 'features/areas/components/AreaFilters';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -44,6 +50,8 @@ const PlanMap: FC<PlanMapProps> = ({
 }) => {
   const [filterAssigned, setFilterAssigned] = useState(false);
   const [filterUnassigned, setFilterUnassigned] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [placeStyle, setPlaceStyle] = useState<
     'dot' | 'households' | 'progress' | 'hide'
   >('dot');
@@ -53,62 +61,58 @@ const PlanMap: FC<PlanMapProps> = ({
   const [overlayStyle, setOverlayStyle] = useState<
     'assignees' | 'households' | 'progress' | 'hide'
   >('assignees');
-
-  const mapRef = useRef<MapType | null>(null);
-
+  const [locating, setLocating] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
+
+  const mapRef = useRef<MapType | null>(null);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 
   function filterAreas(areas: ZetkinArea[], matchString: string) {
     const inputValue = matchString.trim().toLowerCase();
-    if (inputValue.length == 0) {
-      return areas.concat();
-    }
 
-    return areas.filter((area) => {
-      const areaTitle = area.title || 'Untitled area';
-      const areaDesc = area.description || 'Empty description';
+    const afterTextFilter =
+      inputValue.length == 0
+        ? areas.concat()
+        : areas.filter((area) => {
+            const areaTitle = area.title || 'Untitled area';
+            const areaDesc = area.description || 'Empty description';
 
-      return (
-        areaTitle.toLowerCase().includes(inputValue) ||
-        areaDesc.toLowerCase().includes(inputValue)
-      );
-    });
+            return (
+              areaTitle.toLowerCase().includes(inputValue) ||
+              areaDesc.toLowerCase().includes(inputValue)
+            );
+          });
+
+    const afterComplexFilter =
+      filteredAreaIds == null
+        ? afterTextFilter
+        : afterTextFilter.filter((area) => filteredAreaIds.includes(area.id));
+
+    return afterComplexFilter;
   }
 
+  const filteredAreas = filterAreas(areas, filterText);
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        width: '100%',
-      }}
-    >
+    <AreaFilterProvider>
       <Box
-        display="flex"
-        justifyContent="space-between"
         sx={{
-          left: '1rem',
-          position: 'absolute',
-          right: '1rem',
-          top: '1rem',
-          zIndex: 999,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
         }}
       >
-        <Box alignItems="center" display="flex" gap={1}>
-          <ButtonGroup variant="contained">
-            <Button onClick={() => mapRef.current?.zoomIn()}>
-              <Add />
-            </Button>
-            <Button onClick={() => mapRef.current?.zoomOut()}>
-              <Remove />
-            </Button>
-          </ButtonGroup>
-        </Box>
-        <Box alignItems="center" display="flex" gap={1}>
+        <Box
+          alignItems="center"
+          display="flex"
+          gap={1}
+          justifyContent="flex-end"
+          paddingX={2}
+          paddingY={1}
+        >
           <FormControl variant="outlined">
             <InputLabel id="place-style-label">Place</InputLabel>
             <Select
@@ -190,15 +194,20 @@ const PlanMap: FC<PlanMapProps> = ({
               <MenuItem value="hide">Hide</MenuItem>
             </Select>
           </FormControl>
-          <Chip
-            color={filterAssigned ? 'primary' : 'secondary'}
-            label="Assigned"
-            onClick={() => setFilterAssigned(!filterAssigned)}
-          />
-          <Chip
-            color={filterUnassigned ? 'primary' : 'secondary'}
-            label="Unassigned"
-            onClick={() => setFilterUnassigned(!filterUnassigned)}
+          <Box alignItems="center" display="flex" gap={1}>
+            <Chip
+              color={filterAssigned ? 'primary' : 'secondary'}
+              label="Assigned"
+              onClick={() => setFilterAssigned(!filterAssigned)}
+            />
+            <Chip
+              color={filterUnassigned ? 'primary' : 'secondary'}
+              label="Unassigned"
+              onClick={() => setFilterUnassigned(!filterUnassigned)}
+            />
+          </Box>
+          <AreaFilterButton
+            onToggle={() => setFiltersOpen((current) => !current)}
           />
           <Autocomplete
             filterOptions={(options, state) =>
@@ -232,46 +241,135 @@ const PlanMap: FC<PlanMapProps> = ({
             value={null}
           />
         </Box>
-      </Box>
-      <Box flexGrow={1} position="relative">
-        {selectedArea && (
-          <AreaPlanningOverlay
-            key={selectedArea.id}
-            area={selectedArea}
-            assignees={sessions
-              .filter((session) => session.area.id == selectedArea.id)
-              .map((session) => session.assignee)}
-            onAddAssignee={(person) => {
-              onAddAssigneeToArea(selectedArea, person);
-            }}
-            onClose={() => setSelectedId('')}
-          />
+        {filtersOpen && (
+          <Box>
+            <Divider />
+            <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
+              <AreaFilters
+                areas={areas}
+                onFilteredIdsChange={(areaIds) => {
+                  setFilteredAreaIds(areaIds);
+                }}
+              />
+            </Box>
+          </Box>
         )}
-        <MapContainer
-          ref={mapRef}
-          attributionControl={false}
-          center={[0, 0]}
-          style={{ height: '100%', width: '100%' }}
-          zoom={2}
-          zoomControl={false}
-        >
-          <PlanMapRenderer
-            areas={areas}
-            areaStats={areaStats}
-            areaStyle={areaStyle}
-            canvassAssId={canvassAssId}
-            filterAssigned={filterAssigned}
-            filterUnassigned={filterUnassigned}
-            onSelectedIdChange={(newId) => setSelectedId(newId)}
-            overlayStyle={overlayStyle}
-            places={places}
-            placeStyle={placeStyle}
-            selectedId={selectedId}
-            sessions={sessions}
-          />
-        </MapContainer>
+        <Box flexGrow={1} position="relative">
+          <Box
+            sx={{
+              left: 16,
+              position: 'absolute',
+              top: 16,
+              zIndex: 999,
+            }}
+          >
+            <ButtonGroup orientation="vertical" variant="contained">
+              <Button onClick={() => mapRef.current?.zoomIn()}>
+                <Add />
+              </Button>
+              <Button onClick={() => mapRef.current?.zoomOut()}>
+                <Remove />
+              </Button>
+              <Button
+                onClick={() => {
+                  const map = mapRef.current;
+                  if (map) {
+                    if (areas.length) {
+                      // Start with first area
+                      const totalBounds = latLngBounds(
+                        areas[0].points.map((p) => objToLatLng(p))
+                      );
+
+                      // Extend with all areas
+                      areas.forEach((area) => {
+                        const areaBounds = latLngBounds(
+                          area.points.map((p) => objToLatLng(p))
+                        );
+                        totalBounds.extend(areaBounds);
+                      });
+
+                      if (totalBounds) {
+                        map.fitBounds(totalBounds, { animate: true });
+                      }
+                    }
+                  }
+                }}
+              >
+                <Home />
+              </Button>
+              <Button
+                onClick={() => {
+                  setLocating(true);
+                  navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                      setLocating(false);
+
+                      const zoom = 16;
+                      const latLng = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                      };
+
+                      mapRef.current?.flyTo(latLng, zoom, {
+                        animate: true,
+                        duration: 0.8,
+                      });
+                    },
+                    () => {
+                      // When an error occurs just stop the loading indicator
+                      setLocating(false);
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                  );
+                }}
+              >
+                {locating ? (
+                  <CircularProgress color="inherit" size={24} />
+                ) : (
+                  <GpsFixed />
+                )}
+              </Button>
+            </ButtonGroup>
+          </Box>
+          {selectedArea && (
+            <AreaPlanningOverlay
+              key={selectedArea.id}
+              area={selectedArea}
+              assignees={sessions
+                .filter((session) => session.area.id == selectedArea.id)
+                .map((session) => session.assignee)}
+              onAddAssignee={(person) => {
+                onAddAssigneeToArea(selectedArea, person);
+              }}
+              onClose={() => setSelectedId('')}
+            />
+          )}
+          <MapContainer
+            ref={mapRef}
+            attributionControl={false}
+            center={[0, 0]}
+            style={{ height: '100%', width: '100%' }}
+            zoom={2}
+            zoomControl={false}
+          >
+            <PlanMapRenderer
+              areas={filteredAreas}
+              areaStats={areaStats}
+              areaStyle={areaStyle}
+              canvassAssId={canvassAssId}
+              filterAssigned={filterAssigned}
+              filterUnassigned={filterUnassigned}
+              onSelectedIdChange={(newId) => setSelectedId(newId)}
+              overlayStyle={overlayStyle}
+              places={places}
+              placeStyle={placeStyle}
+              selectedId={selectedId}
+              sessions={sessions}
+            />
+          </MapContainer>
+        </Box>
       </Box>
-    </Box>
+    </AreaFilterProvider>
   );
 };
 
