@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { Close } from '@mui/icons-material';
 import { Box, Divider, Paper, Typography } from '@mui/material';
 
-import { ZetkinArea } from '../types';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
+import { ZetkinArea } from 'features/areas/types';
 
 type Props = {
   area: ZetkinArea;
@@ -14,7 +14,7 @@ type Props = {
   onClose: () => void;
 };
 
-const AreaPlanningOverlay: FC<Props> = ({
+const PlanMapAreaOverlay: FC<Props> = ({
   area,
   assignees,
   onAddAssignee,
@@ -95,4 +95,4 @@ const AreaPlanningOverlay: FC<Props> = ({
   );
 };
 
-export default AreaPlanningOverlay;
+export default PlanMapAreaOverlay;

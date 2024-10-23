@@ -18,7 +18,6 @@ import { Add, GpsFixed, Home, Remove } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import PlanMapRenderer from './PlanMapRenderer';
-import AreaPlanningOverlay from '../../areas/components/AreaPlanningOverlay';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
@@ -30,6 +29,7 @@ import objToLatLng from 'features/areas/utils/objToLatLng';
 import AssigneeFilterProvider from './PlanMapFilters/AssigneeFilterContext';
 import PlanMapFilters from './PlanMapFilters';
 import PlanMapFilterButton from './PlanMapFilters/PlanMapFilterButton';
+import PlanMapAreaOverlay from './PlanMapAreaOverlay';
 
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -319,7 +319,7 @@ const PlanMap: FC<PlanMapProps> = ({
               </ButtonGroup>
             </Box>
             {selectedArea && (
-              <AreaPlanningOverlay
+              <PlanMapAreaOverlay
                 key={selectedArea.id}
                 area={selectedArea}
                 assignees={sessions
