@@ -1,8 +1,14 @@
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-import { createElement } from 'react';
+import { createElement, CSSProperties } from 'react';
 import { createTheme } from '@mui/material/styles';
+import { Figtree } from 'next/font/google';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
 import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro';
+
+import { themePalette } from 'themePalette';
+
+//Font family
+const figtree = Figtree({ subsets: ['latin-ext'] });
 
 interface PaletteIntensityOptions {
   disabled?: string;
@@ -16,9 +22,156 @@ interface FilterCategoryColors {
   strong: string;
 }
 
+// Update the Typography's variant prop options
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    bodyMdRegular: true;
+    bodyMdSemiBold: true;
+    bodySmRegular: true;
+    bodySmSemiBold: true;
+    headingLg: true;
+    headingMd: true;
+    headingSm: true;
+    labelMdMedium: true;
+    labelMdRegular: true;
+    linkMd: true;
+    linkSm: true;
+    labelXlMedium: true;
+    labelLgSemiBold: true;
+    labelLgMedium: true;
+    labelMdSemiBold: true;
+    labelSmSemiBold: true;
+    labelSmMedium: true;
+    //TO-DO: set following to 'false' once the old theme is removed
+    h1: true;
+    h3: true;
+    h2: true;
+    h4: true;
+    h5: true;
+    h6: true;
+    subtitle1: true;
+    subtitle2: true;
+    body1: true;
+    body2: true;
+    caption: true;
+    button: true;
+    overline: true;
+  }
+}
+
+declare module '@mui/material/styles' {
+  interface Theme {
+    elevation: {
+      bottom: {
+        big: {
+          light: string;
+          medium: string;
+        };
+        small: {
+          light: string;
+          medium: string;
+        };
+      };
+      top: {
+        big: {
+          light: string;
+          medium: string;
+        };
+        small: {
+          light: string;
+          medium: string;
+        };
+      };
+    };
+  }
+
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    elevation?: {
+      bottom?: {
+        big?: {
+          light?: string;
+          medium?: string;
+        };
+        small?: {
+          light?: string;
+          medium?: string;
+        };
+      };
+      top?: {
+        big?: {
+          light?: string;
+          medium?: string;
+        };
+        small?: {
+          light?: string;
+          medium?: string;
+        };
+      };
+    };
+  }
+
+  interface TypographyVariants {
+    bodyMdRegular: CSSProperties;
+    bodyMdSemiBold: CSSProperties;
+    bodySmRegular: CSSProperties;
+    bodySmSemiBold: CSSProperties;
+    headingLg: CSSProperties;
+    headingMd: CSSProperties;
+    headingSm: CSSProperties;
+    labelMdMedium: CSSProperties;
+    labelMdRegular: CSSProperties;
+    linkMd: CSSProperties;
+    linkSm: CSSProperties;
+    labelXlMedium: CSSProperties;
+    labelLgSemiBold: CSSProperties;
+    labelLgMedium: CSSProperties;
+    labelMdSemiBold: CSSProperties;
+    labelSmSemiBold: CSSProperties;
+    labelSmMedium: CSSProperties;
+  }
+
+  interface TypographyVariantsOptions {
+    bodyMdRegular?: CSSProperties;
+    bodyMdSemiBold?: CSSProperties;
+    bodySmRegular?: CSSProperties;
+    bodySmSemiBold?: CSSProperties;
+    headingLg?: CSSProperties;
+    headingMd?: CSSProperties;
+    headingSm?: CSSProperties;
+    labelMdMedium?: CSSProperties;
+    labelMdRegular?: CSSProperties;
+    linkMd?: CSSProperties;
+    linkSm?: CSSProperties;
+    labelXlMedium?: CSSProperties;
+    labelLgSemiBold?: CSSProperties;
+    labelLgMedium?: CSSProperties;
+    labelMdSemiBold?: CSSProperties;
+    labelSmSemiBold?: CSSProperties;
+    labelSmMedium?: CSSProperties;
+  }
+}
+
+interface DataColor {
+  [100]: string;
+  [300]: string;
+  [500]: string;
+  [700]: string;
+  [900]: string;
+}
+
 declare module '@mui/material/styles/createPalette' {
+  interface PaletteColor {
+    focus?: string;
+    focusVisible?: string;
+    hover?: string;
+    outlinedBorder?: string;
+    selected?: string;
+  }
   interface Palette {
+    //TO-DO remove property once the old Palette is removed
     onSurface: Required<PaletteIntensityOptions>;
+    //TO-DO remove property once the old Palette is removed
     outline: PaletteIntensityOptions;
     filterCategoryColors: {
       darkBlue: FilterCategoryColors;
@@ -31,6 +184,20 @@ declare module '@mui/material/styles/createPalette' {
       teal: FilterCategoryColors;
       yellow: FilterCategoryColors;
     };
+    data: DataColor;
+    dividers: {
+      lighter: string;
+      main: string;
+    };
+    activityStatusColors: {
+      cancelled: string;
+      closed: string;
+      draft: string;
+      ended: string;
+      published: string;
+      scheduled: string;
+    };
+    //TO-DO remove property once the old Palette is removed
     statusColors: {
       blue: string;
       gray: string;
@@ -38,9 +205,11 @@ declare module '@mui/material/styles/createPalette' {
       orange: string;
       red: string;
     };
+    //TO-DO remove property once the old Palette is removed
     transparentGrey: {
       light: string;
     };
+    //TO-DO remove property once the old Palette is removed
     viewColumnGallery: {
       blue: string;
       purple: string;
@@ -48,12 +217,22 @@ declare module '@mui/material/styles/createPalette' {
     };
   }
   interface PaletteOptions {
+    data?: DataColor;
+    //TO-DO remove property
     onSurface: PaletteIntensityOptions;
+    //TO-DO remove property
     outline: PaletteIntensityOptions;
+  }
+  interface SimplePaletteColorOptions {
+    focus?: string;
+    focusVisible?: string;
+    hover?: string;
+    outlinedBorder?: string;
+    selected?: string;
   }
 }
 
-const themePalette = {
+const oldThemePalette = {
   background: {
     default: '#F9F9F9',
   },
@@ -219,7 +398,7 @@ const theme = createTheme({
       },
     },
   },
-  palette: themePalette,
+  palette: oldThemePalette,
   typography: {
     fontFamily: 'azo-sans-web, sans-serif',
     h2: {
@@ -240,6 +419,224 @@ const theme = createTheme({
     subtitle2: {
       fontWeight: 600,
     },
+  },
+});
+
+// The new theme.
+export const newTheme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-disabled': {
+            '&.MuiButton-containedError': {
+              backgroundColor: '#EE7B7B',
+            },
+            '&.MuiButton-containedPrimary': {
+              backgroundColor: '#5D5D5D',
+              color: '#B0B0B0',
+            },
+            '&.MuiButton-containedWarning': {
+              backgroundColor: '#FAED8E',
+            },
+            '&.MuiButton-outlinedPrimary': {
+              borderColor: '#B0B0B0',
+              color: '#888888',
+            },
+            '&.MuiButton-textPrimary': {
+              color: '#888888',
+            },
+          },
+          ':hover': {
+            boxShadow: 'none',
+          },
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiButtonGroup: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          color: '#B0B0B0',
+        },
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '0.625rem',
+          fontWeight: 600,
+          lineHeight: '0.875rem',
+        },
+      },
+    },
+  },
+  elevation: {
+    bottom: {
+      big: {
+        light: '0rem 0.25rem 2.5rem 0rem #00000014',
+        medium: '0rem 0.25rem 2.5rem 0rem #0000001F',
+      },
+      small: {
+        light: '0rem 0.25rem 1.25rem 0rem #00000014',
+        medium: '0rem 0.25rem 1.25rem 0rem #0000001F',
+      },
+    },
+    top: {
+      big: {
+        light: '0.rem -0.25rem 2.25rem 0rem #00000014',
+        medium: '0rem -0.25rem 2.25rem 0rem #0000001F',
+      },
+      small: {
+        light: '0rem -0.25rem 1.25rem 0rem #00000014',
+        medium: '0rem -0.25rem 1.25rem 0rem #0000001F',
+      },
+    },
+  },
+  palette: themePalette,
+  typography: {
+    body1: undefined,
+    body2: undefined,
+    bodyMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 300,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodyMdSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 500,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodySmRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
+    bodySmSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
+    button: {
+      fontWeight: 600,
+      textTransform: 'none',
+    },
+    caption: undefined,
+    fontFamily: figtree.style.fontFamily,
+    fontSize: 16,
+    h1: undefined,
+    h2: undefined,
+    h3: undefined,
+    h4: undefined,
+    h5: undefined,
+    h6: undefined,
+    headingLg: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.375rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.788rem',
+    },
+    headingMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.125rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.463rem',
+    },
+    headingSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.3rem',
+    },
+    labelLgMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.938rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.406rem',
+    },
+    labelLgSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.938rem',
+      fontWeight: 500,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.406rem',
+    },
+    labelMdMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelMdSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelSmMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.813rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.219rem',
+    },
+    labelSmSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.813rem',
+      fontWeight: 500,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.219rem',
+    },
+    labelXlMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.5rem',
+    },
+    linkMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 300,
+      lineHeight: '1.5rem',
+    },
+    linkSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      lineHeight: '1.313rem',
+    },
+    overline: undefined,
+    subtitle1: undefined,
+    subtitle2: undefined,
   },
 });
 

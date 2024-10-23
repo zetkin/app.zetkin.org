@@ -10,7 +10,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import theme from '../src/theme';
+import { newTheme } from '../src/theme';
 import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
@@ -61,11 +61,7 @@ class MockApiClient extends FetchApiClient {
 }
 
 export const decorators = [
-  (Story) => (
-    <ThemeProvider theme={theme}>
-      <Story />
-    </ThemeProvider>
-  ),
+  (story) => <ThemeProvider theme={newTheme}>{story()}</ThemeProvider>,
   (story) => {
     const store = createStore();
     const router = useRouter();
