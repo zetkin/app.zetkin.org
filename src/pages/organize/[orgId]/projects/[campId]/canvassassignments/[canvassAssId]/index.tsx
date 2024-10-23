@@ -9,7 +9,6 @@ import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/Canvass
 import { getContrastColor } from 'utils/colorUtils';
 import { PageWithLayout } from 'utils/types';
 import NumberCard from 'features/canvassAssignments/components/NumberCard';
-import OutcomesCard from 'features/canvassAssignments/components/OutcomesCard';
 import { scaffold } from 'utils/next';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
@@ -100,63 +99,53 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               </Card>
             )}
             {stats.num_areas > 0 && (
-              <>
-                <Card>
-                  <Box display="flex" justifyContent="space-between" p={2}>
-                    <Typography variant="h4">Areas</Typography>
-                    {!!stats.num_areas && (
-                      <ZUIAnimatedNumber value={stats.num_areas}>
-                        {(animatedValue) => (
-                          <Box className={classes.chip}>{animatedValue}</Box>
-                        )}
-                      </ZUIAnimatedNumber>
-                    )}
-                  </Box>
-                  <Divider />
-
-                  <Box p={2}>
-                    <Button
-                      onClick={() => router.push(planUrl)}
-                      startIcon={<Edit />}
-                      variant="text"
-                    >
-                      Edit plan
-                    </Button>
-                  </Box>
-                </Card>
-
-                <Grid container spacing={2}>
-                  <Grid item md={3} sm={6} xs={12}>
-                    <NumberCard
-                      firstNumber={stats.num_visited_households}
-                      message={'Households visited'}
-                      secondNumber={stats.num_households}
-                    />
-                  </Grid>
-                  <Grid item md={3} sm={6} xs={12}>
-                    <NumberCard
-                      firstNumber={stats.num_successful_visited_households}
-                      message={'Successful visits'}
-                      secondNumber={stats.num_visited_households}
-                    />
-                  </Grid>
-                  <Grid item md={3} sm={6} xs={12}>
-                    <NumberCard
-                      firstNumber={stats.num_visited_places}
-                      message={'Places visited'}
-                      secondNumber={stats.num_places}
-                    />
-                  </Grid>
-                  <Grid item md={3} sm={6} xs={12}>
-                    <NumberCard
-                      firstNumber={stats.num_visited_areas}
-                      message={'Areas visited'}
-                      secondNumber={stats.num_areas}
-                    />
-                  </Grid>
+              <Grid container spacing={2}>
+                <Grid item md={6} sm={12} xs={12}>
+                  <Card>
+                    <Box display="flex" justifyContent="space-between" p={2}>
+                      <Typography variant="h4">Areas</Typography>
+                      {!!stats.num_areas && (
+                        <ZUIAnimatedNumber value={stats.num_areas}>
+                          {(animatedValue) => (
+                            <Box className={classes.chip}>{animatedValue}</Box>
+                          )}
+                        </ZUIAnimatedNumber>
+                      )}
+                    </Box>
+                    <Divider />
+                    <Box mb={0.5} p={2}>
+                      <Button
+                        onClick={() => router.push(planUrl)}
+                        startIcon={<Edit />}
+                        variant="text"
+                      >
+                        Edit plan
+                      </Button>
+                    </Box>
+                  </Card>
                 </Grid>
-                <OutcomesCard stats={stats} />
-              </>
+                <Grid item md={2} sm={4} xs={12}>
+                  <NumberCard
+                    firstNumber={stats.num_successful_visited_households}
+                    message={'Successful visits'}
+                    secondNumber={stats.num_visited_households}
+                  />
+                </Grid>
+                <Grid item md={2} sm={4} xs={12}>
+                  <NumberCard
+                    firstNumber={stats.num_visited_households}
+                    message={'Households visited'}
+                    secondNumber={stats.num_households}
+                  />
+                </Grid>
+                <Grid item md={2} sm={4} xs={12}>
+                  <NumberCard
+                    firstNumber={stats.num_visited_places}
+                    message={'Places visited'}
+                    secondNumber={stats.num_places}
+                  />
+                </Grid>
+              </Grid>
             )}
           </Box>
         );
