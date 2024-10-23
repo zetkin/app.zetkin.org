@@ -321,9 +321,11 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                             transform: 'translate(-50%, -50%)',
                           }}
                         >
-                          {people.map((person) => (
+                          {people.map((person, index) => (
                             <Box
-                              key={person.id}
+                              //TODO: only use person id once we have logic preventing
+                              //assigning the same person to an area more than once
+                              key={`${person.id}-${index}`}
                               sx={{
                                 borderRadius: '50%',
                                 boxShadow: '0 0 8px rgba(0,0,0,0.3)',
