@@ -236,12 +236,10 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
             const hasPeople = !!people.length;
 
-            if (assigneesFilter != 'all') {
-              if (hasPeople && assigneesFilter == 'unassigned') {
-                return null;
-              } else if (!hasPeople && assigneesFilter == 'assigned') {
-                return null;
-              }
+            if (hasPeople && assigneesFilter == 'unassigned') {
+              return null;
+            } else if (!hasPeople && assigneesFilter == 'assigned') {
+              return null;
             }
 
             // The key changes when selected, to force redraw of polygon

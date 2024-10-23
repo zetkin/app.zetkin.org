@@ -1,13 +1,5 @@
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
-import {
-  Box,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
+import { Box, Checkbox, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
 import { ZetkinArea } from 'features/areas/types';
@@ -27,6 +19,7 @@ const PlanMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   const [openTagsDropdown, setOpenTagsDropdown] = useState<
     'add' | number | null
   >(null);
+  const [openAssigneesDropdown, setOpenAssigneesDropdown] = useState(false);
 
   const {
     activeGroupIds,
@@ -87,29 +80,62 @@ const PlanMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
 
   return (
     <Box alignItems="center" display="flex" gap={1}>
-      <FormControl>
-        <InputLabel id="assignee-filter-label">Area assignee status</InputLabel>
-        <Select
-          label="Area assignee status"
-          labelId="assignee-filter-label"
-          onChange={(ev) => {
-            const newValue = ev.target.value;
-
-            if (
-              newValue == 'all' ||
-              newValue == 'assigned' ||
-              newValue == 'unassigned'
-            ) {
-              onAssigneesFilterChange(newValue);
-            }
-          }}
-          value={assigneesFilter}
-        >
-          <MenuItem value="all">Both assigned and unassigned areas</MenuItem>
-          <MenuItem value="assigned">Only assigned areas</MenuItem>
-          <MenuItem value="unassigned">Only unassigned areas</MenuItem>
-        </Select>
-      </FormControl>
+      <FilterDropDown
+        items={[
+          {
+            icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
+            label: 'Only assigned areas',
+            onClick: () => {
+              if (!assigneesFilter || assigneesFilter == 'unassigned') {
+                onAssigneesFilterChange('assigned');
+              } else {
+                onAssigneesFilterChange(null);
+              }
+            },
+          },
+          {
+            icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
+            label: 'Only unassigned areas',
+            onClick: () => {
+              if (!assigneesFilter || assigneesFilter == 'assigned') {
+                onAssigneesFilterChange('unassigned');
+              } else {
+                onAssigneesFilterChange(null);
+              }
+            },
+          },
+        ]}
+        label="Assignees"
+        onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
+        open={openAssigneesDropdown}
+        startIcon={
+          assigneesFilter ? (
+            <Box
+              sx={{
+                // TODO: Use ZUI for this
+                alignItems: 'center',
+                aspectRatio: '1/1',
+                backgroundColor: theme.palette.primary.light,
+                borderRadius: '50%',
+                color: theme.palette.primary.contrastText,
+                display: 'flex',
+                height: '1.2em',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.75rem',
+                  margin: 0,
+                }}
+              >
+                {1}
+              </Typography>
+            </Box>
+          ) : null
+        }
+        variant="outlined"
+      />
       {activeGroupIds.map((groupId) => {
         const info = groupsById[groupId];
         const currentIds = activeTagIdsByGroup[groupId] || [];

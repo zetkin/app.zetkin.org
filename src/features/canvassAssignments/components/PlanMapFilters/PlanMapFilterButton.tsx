@@ -13,10 +13,13 @@ const PlanMapFilterButton: FC<Props> = ({ onToggle }) => {
   const { activeTagIdsByGroup } = useContext(areaFilterContext);
   const { assigneesFilter } = useContext(assigneesFilterContext);
 
-  const numActiveGroups = Object.values(activeTagIdsByGroup).length;
+  const numActiveGroups = Object.values(activeTagIdsByGroup).filter(
+    (tagIds) => !!tagIds.length
+  ).length;
 
-  const numTotalFilters =
-    assigneesFilter == 'all' ? numActiveGroups : numActiveGroups + 1;
+  const numTotalFilters = assigneesFilter
+    ? numActiveGroups + 1
+    : numActiveGroups;
 
   return (
     <Button
