@@ -4,6 +4,7 @@ import { Edit } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 
+import AreaCard from 'features/canvassAssignments/components/AreaCard';
 import { AREAS } from 'utils/featureFlags';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 import { getContrastColor } from 'utils/colorUtils';
@@ -14,6 +15,8 @@ import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAs
 import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIFutures from 'zui/ZUIFutures';
+import useCanvassSessions from 'features/canvassAssignments/hooks/useCanvassSessions';
+import { ZetkinArea } from 'features/areas/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -63,6 +66,10 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
 }) => {
   const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
+  const sessions = useCanvassSessions(parseInt(orgId), canvassAssId);
+  const areas: ZetkinArea[] = (sessions.data ?? [])
+    .map((session) => session.area)
+    .filter((area) => area !== undefined);
   const classes = useStyles();
   const router = useRouter();
 
@@ -99,53 +106,60 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
               </Card>
             )}
             {stats.num_areas > 0 && (
-              <Grid container spacing={2}>
-                <Grid item md={6} sm={12} xs={12}>
-                  <Card>
-                    <Box display="flex" justifyContent="space-between" p={2}>
-                      <Typography variant="h4">Areas</Typography>
-                      {!!stats.num_areas && (
-                        <ZUIAnimatedNumber value={stats.num_areas}>
-                          {(animatedValue) => (
-                            <Box className={classes.chip}>{animatedValue}</Box>
-                          )}
-                        </ZUIAnimatedNumber>
-                      )}
-                    </Box>
-                    <Divider />
-                    <Box mb={0.5} p={2}>
-                      <Button
-                        onClick={() => router.push(planUrl)}
-                        startIcon={<Edit />}
-                        variant="text"
-                      >
-                        Edit plan
-                      </Button>
-                    </Box>
-                  </Card>
+              <>
+                <Grid container spacing={2}>
+                  <Grid item md={6} sm={12} xs={12}>
+                    <Card>
+                      <Box display="flex" justifyContent="space-between" p={2}>
+                        <Typography variant="h4">Areas</Typography>
+                        {!!stats.num_areas && (
+                          <ZUIAnimatedNumber value={stats.num_areas}>
+                            {(animatedValue) => (
+                              <Box className={classes.chip}>
+                                {animatedValue}
+                              </Box>
+                            )}
+                          </ZUIAnimatedNumber>
+                        )}
+                      </Box>
+                      <Divider />
+                      <Box mb={0.5} p={2}>
+                        <Button
+                          onClick={() => router.push(planUrl)}
+                          startIcon={<Edit />}
+                          variant="text"
+                        >
+                          Edit plan
+                        </Button>
+                      </Box>
+                    </Card>
+                  </Grid>
+                  <Grid item md={2} sm={4} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_successful_visited_households}
+                      message={'Successful visits'}
+                      secondNumber={stats.num_visited_households}
+                    />
+                  </Grid>
+                  <Grid item md={2} sm={4} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_visited_households}
+                      message={'Households visited'}
+                      secondNumber={stats.num_households}
+                    />
+                  </Grid>
+                  <Grid item md={2} sm={4} xs={12}>
+                    <NumberCard
+                      firstNumber={stats.num_visited_places}
+                      message={'Places visited'}
+                      secondNumber={stats.num_places}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item md={2} sm={4} xs={12}>
-                  <NumberCard
-                    firstNumber={stats.num_successful_visited_households}
-                    message={'Successful visits'}
-                    secondNumber={stats.num_visited_households}
-                  />
+                <Grid container spacing={2}>
+                  <AreaCard areas={areas} />
                 </Grid>
-                <Grid item md={2} sm={4} xs={12}>
-                  <NumberCard
-                    firstNumber={stats.num_visited_households}
-                    message={'Households visited'}
-                    secondNumber={stats.num_households}
-                  />
-                </Grid>
-                <Grid item md={2} sm={4} xs={12}>
-                  <NumberCard
-                    firstNumber={stats.num_visited_places}
-                    message={'Places visited'}
-                    secondNumber={stats.num_places}
-                  />
-                </Grid>
-              </Grid>
+              </>
             )}
           </Box>
         );
