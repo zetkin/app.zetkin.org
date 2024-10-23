@@ -1,8 +1,8 @@
 import { Box } from '@mui/system';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
-import { FC, ReactNode } from 'react';
-import { Pentagon, People } from '@mui/icons-material';
+import { FC, ReactNode, useContext } from 'react';
+import { Delete, Pentagon, People } from '@mui/icons-material';
 
 import AssignmentStatusChip from '../components/AssignmentStatusChip';
 import getCanvassers from '../utils/getCanvassers';
@@ -18,6 +18,8 @@ import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import useCanvassAssignmentStatus, {
   CanvassAssignmentState,
 } from '../hooks/useCanvassAssignmentStatus';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 type CanvassAssignmentLayoutProps = {
   campId: number;
@@ -34,10 +36,8 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
 }) => {
   const path = useRouter().pathname;
   const canvassAssignment = useCanvassAssignment(orgId, canvassAssId).data;
-  const updateCanvassAssignment = useCanvassAssignmentMutations(
-    orgId,
-    canvassAssId
-  );
+  const { deleteCanvassAssignment, updateCanvassAssignment } =
+    useCanvassAssignmentMutations(orgId, canvassAssId);
 
   const allSessions = useCanvassSessions(orgId, canvassAssId).data || [];
   const sessions = allSessions.filter(
@@ -50,6 +50,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
     orgId,
     canvassAssId
   );
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const canvassers = getCanvassers(sessions);
 
@@ -59,18 +60,42 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
     return null;
   }
 
+  const handleDelete = () => {
+    deleteCanvassAssignment();
+    router.push(
+      `/organize/${orgId}/projects/${canvassAssignment.campaign.id || ''} `
+    );
+  };
+
   return (
     <TabbedLayout
       actionButtons={
-        state == CanvassAssignmentState.OPEN ? (
-          <Button onClick={endAssignment} variant="outlined">
-            {'End Assignment'}
-          </Button>
-        ) : (
-          <Button onClick={startAssignment} variant="contained">
-            {'Start Assignment'}
-          </Button>
-        )
+        <Box>
+          {state == CanvassAssignmentState.OPEN ? (
+            <Button onClick={endAssignment} variant="outlined">
+              {'End Assignment'}
+            </Button>
+          ) : (
+            <Button onClick={startAssignment} variant="contained">
+              {'Start Assignment'}
+            </Button>
+          )}
+          <ZUIEllipsisMenu
+            items={[
+              {
+                label: 'Delete',
+                onSelect: () => {
+                  showConfirmDialog({
+                    onSubmit: handleDelete,
+                    title: 'Delete',
+                    warningText: `Are you sure you want to delete ${canvassAssignment.title}?`,
+                  });
+                },
+                startIcon: <Delete />,
+              },
+            ]}
+          />
+        </Box>
       }
       baseHref={`/organize/${orgId}/projects/${campId}/canvassassignments/${canvassAssId}`}
       belowActionButtons={

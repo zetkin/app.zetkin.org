@@ -130,6 +130,26 @@ const canvassAssignmentSlice = createSlice({
 
       state.canvassAssignmentList.items.push(item);
     },
+    canvassAssignmentDeleted: (state, action: PayloadAction<number>) => {
+      const canvassId = action.payload;
+      const canvassAssignmentItem = state.canvassAssignmentList.items.find(
+        (item) => item.id === canvassId
+      );
+
+      if (canvassAssignmentItem) {
+        canvassAssignmentItem.deleted = true;
+      }
+
+      /*       for (const session in state.sessionsByAssignmentId) {
+        const item = state.sessionsByAssignmentId[session].items.find(
+          (item) => item.id === canvassId
+        );
+
+        if (item) {
+          item.deleted = true;
+        }
+      } */
+    },
     canvassAssignmentLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
       const item = state.canvassAssignmentList.items.find(
@@ -299,6 +319,7 @@ export const {
   myAssignmentsLoad,
   myAssignmentsLoaded,
   canvassAssignmentCreated,
+  canvassAssignmentDeleted,
   canvassAssignmentLoad,
   canvassAssignmentLoaded,
   canvassAssignmentUpdated,

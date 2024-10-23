@@ -42,7 +42,7 @@ interface CanvassAssignmentOutcomesProps {
 const CanvassAssignmentOutcomesPage: PageWithLayout<
   CanvassAssignmentOutcomesProps
 > = ({ orgId, canvassAssId }) => {
-  const updateCanvassAssignment = useCanvassAssignmentMutations(
+  const { updateCanvassAssignment } = useCanvassAssignmentMutations(
     parseInt(orgId),
     canvassAssId
   );

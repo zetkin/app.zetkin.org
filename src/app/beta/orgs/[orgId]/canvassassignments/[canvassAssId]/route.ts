@@ -172,3 +172,27 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
     }
   );
 }
+
+export async function DELETE(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const result = await CanvassAssignmentModel.findOneAndDelete({
+        _id: params.canvassAssId,
+        orgId: orgId,
+      });
+
+      if (!result) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      return new NextResponse(null, { status: 204 });
+    }
+  );
+}

@@ -8,7 +8,7 @@ export default function useStartEndAssignment(
   canvassAssId: string
 ) {
   const canvassAssignment = useCanvassAssignment(orgId, canvassAssId);
-  const updateCanvassAssignment = useCanvassAssignmentMutations(
+  const { updateCanvassAssignment } = useCanvassAssignmentMutations(
     orgId,
     canvassAssId
   );
