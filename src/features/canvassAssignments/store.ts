@@ -139,16 +139,6 @@ const canvassAssignmentSlice = createSlice({
       if (canvassAssignmentItem) {
         canvassAssignmentItem.deleted = true;
       }
-
-      /*       for (const session in state.sessionsByAssignmentId) {
-        const item = state.sessionsByAssignmentId[session].items.find(
-          (item) => item.id === canvassId
-        );
-
-        if (item) {
-          item.deleted = true;
-        }
-      } */
     },
     canvassAssignmentLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
