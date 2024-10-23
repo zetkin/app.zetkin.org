@@ -760,7 +760,7 @@ feat:
     libraryDialog:
       preview:
         backButton: Tillbaka till bibliotek
-        useButton: Använda
+        useButton: Använd
       title: Bibliotek
     searching:
       label: Sök

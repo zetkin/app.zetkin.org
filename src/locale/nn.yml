@@ -152,7 +152,7 @@ feat:
         placeholder: Legg til ringer
       customize:
         exclude:
-          h: Utelukkede tags
+          h: Utelukkede etiketter
           intro: Aldri ring folk med disse etikettene.
         prioritize:
           h: Prioriterte etiketter

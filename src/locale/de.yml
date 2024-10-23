@@ -31,7 +31,7 @@ feat:
       incoming: Eingang
       insights: Statistiken
       instances: Instanz
-      joinforms: Beitrittsformular
+      joinforms: Zetkin-Beitrittsformular
       journeys: Journeys
       manage: Verwalten
       milestones: Meilensteine
@@ -820,6 +820,11 @@ feat:
               label: Schwedische Personnummer
           wrongDateFormatWarning: Einige Werte in dieser Spalte können nicht in Daten
             übertragen werden, wenn dieses Format benutzt wird.
+        enum:
+          header: Werte den Optionen zuordnen
+          none: Keine
+          numberOfRows: '{numRows, plural, =1 {1 Reihe} other {# Reihen}}'
+          value: Wert
         ids:
           configExplanation: Importieren mit IDs erlaubt Zetkin (jetzt oder in der
             Zukunft) existierende Personen in der Datenbank zu aktualisieren, ohne
@@ -878,6 +883,7 @@ feat:
         tags: Schlagworte
         unfinished:
           date: Du musst ein Datumsformat konfigurieren.
+          enum: Du musst die Werte zuordnen
           id: Du musst die IDs konfigurieren.
           org: Du musst die Werte zuordnen
           tag: Du musst die Werte zuordnen.
@@ -1516,6 +1522,7 @@ feat:
           sub: Entfernen
         edit:
           date: '{fieldSelect} ist {timeFrame}'
+          enum: '{fieldSelect} ist "{selectInput}"'
           none: Diese Organisation hat bisher keine benutzerdefinierten Felder.
           text: '{fieldSelect} entspricht "{freeTextInput}"'
           url: '{fieldSelect} entspricht "{freeTextInput}"'
@@ -1524,6 +1531,7 @@ feat:
         inputString: '{addRemoveSelect} jede Person, deren {field}.'
         preview:
           date: '{fieldName} ist {timeFrame}'
+          enum: '{fieldName} ist "{searchTerm}"'
           text: '{fieldName} entspricht "{searchTerm}"'
           url: '{fieldName} entspricht "{searchTerm}"'
       personTags:
@@ -2172,7 +2180,7 @@ feat:
       tabs:
         duplicates: Duplikate
         incoming: Eingehend
-        joinForms: Beitrittsformular
+        joinForms: Zetkin-Beitrittsformular
         views: Listen
       title: Personen
     cells:
@@ -2498,6 +2506,8 @@ zui:
     cancel: Abbrechen
     createBtn: Erstellen
     defaultitle: Erstelle Person
+    enumFields:
+      noneOption: Keine
     genders:
       f: Weiblich
       m: Männlich
