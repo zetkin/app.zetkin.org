@@ -160,7 +160,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
         `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`
-      : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`;
+      : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent || 1}%)`;
   };
 
   return (
