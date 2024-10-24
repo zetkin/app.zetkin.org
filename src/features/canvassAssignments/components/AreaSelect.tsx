@@ -91,17 +91,30 @@ const AreaSelect: FC<Props> = ({
       </Box>
       <Divider />
       {!selectedArea && (
-        <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          overflow="hidden"
+          paddingTop={1}
+        >
           <TextField
             InputProps={{
               endAdornment: <Search color="secondary" />,
             }}
             onChange={(evt) => onFilterTextChange(evt.target.value)}
             placeholder="Filter"
+            sx={{ paddingRight: 2 }}
             value={filterText}
             variant="outlined"
           />
-          <Box display="flex" flexDirection="column" gap={1}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={1}
+            paddingRight={2}
+            sx={{ overflowY: 'auto' }}
+          >
             {filterAreas(areas, filterText).map((area, index) => {
               const assignees = sessions
                 .filter((session) => session.area.id == area.id)

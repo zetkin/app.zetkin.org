@@ -7,12 +7,8 @@ import {
   ButtonGroup,
   CircularProgress,
   Divider,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -41,6 +37,7 @@ import AssigneeFilterProvider from './PlanMapFilters/AssigneeFilterContext';
 import PlanMapFilters from './PlanMapFilters';
 import PlanMapFilterBadge from './PlanMapFilters/PlanMapFilterButton';
 import AreaSelect from './AreaSelect';
+import LayerSettings from './LayerSettings';
 
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -67,8 +64,8 @@ const PlanMap: FC<PlanMapProps> = ({
     'dot' | 'households' | 'progress' | 'hide'
   >('dot');
   const [areaStyle, setAreaStyle] = useState<
-    'households' | 'progress' | 'hide' | 'default'
-  >('default');
+    'households' | 'progress' | 'hide' | 'assignees'
+  >('assignees');
   const [overlayStyle, setOverlayStyle] = useState<
     'assignees' | 'households' | 'progress' | 'hide'
   >('assignees');
@@ -229,7 +226,7 @@ const PlanMap: FC<PlanMapProps> = ({
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>
-            {(settingsOpen == 'select' || selectedArea) && (
+            {settingsOpen && (
               <Paper
                 sx={{
                   bottom: '1rem',
@@ -245,191 +242,71 @@ const PlanMap: FC<PlanMapProps> = ({
                   zIndex: 1000,
                 }}
               >
-                <AreaSelect
-                  key={selectedArea?.id}
-                  areas={areas}
-                  filterAreas={filterAreas}
-                  filterText={filterText}
-                  onAddAssignee={(person) => {
-                    if (selectedArea) {
-                      onAddAssigneeToArea(selectedArea, person);
-                    }
-                  }}
-                  onClose={() => {
-                    setSelectedId('');
-                    setSettingsOpen(null);
-                  }}
-                  onFilterTextChange={(newValue) => setFilterText(newValue)}
-                  onSelectArea={(newValue) => setSelectedId(newValue)}
-                  places={places}
-                  selectedArea={selectedArea}
-                  selectedAreaStats={areaStats.stats.find(
-                    (stat) => stat.areaId == selectedArea?.id
-                  )}
-                  sessions={sessions}
-                />
-              </Paper>
-            )}
-            {settingsOpen == 'layers' && !selectedArea && (
-              <Paper
-                sx={{
-                  bottom: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  maxWidth: 400,
-                  minWidth: 400,
-                  overflow: 'hidden',
-                  padding: 2,
-                  position: 'absolute',
-                  right: '1rem',
-                  top: '1rem',
-                  zIndex: 1000,
-                }}
-              >
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  justifyContent="space-between"
-                  paddingBottom={1}
-                >
-                  <Typography variant="h5">Layers</Typography>
-                  <IconButton onClick={() => setSettingsOpen(null)}>
-                    <Close />
-                  </IconButton>
-                </Box>
-                <Divider />
-                Map layers
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  gap={2}
-                  paddingTop={1}
-                >
-                  <FormControl variant="outlined">
-                    <InputLabel id="place-style-label">Place</InputLabel>
-                    <Select
-                      label="Place"
-                      labelId="place-style-label"
-                      onChange={(ev) => {
-                        const newValue = ev.target.value;
-                        if (
-                          newValue == 'dot' ||
-                          newValue == 'households' ||
-                          newValue == 'progress' ||
-                          newValue == 'hide'
-                        ) {
-                          setPlaceStyle(newValue);
-                        }
-                      }}
-                      sx={{ backgroundColor: 'white', width: '10rem' }}
-                      value={placeStyle}
+                {settingsOpen == 'select' && (
+                  <AreaSelect
+                    key={selectedArea?.id}
+                    areas={areas}
+                    filterAreas={filterAreas}
+                    filterText={filterText}
+                    onAddAssignee={(person) => {
+                      if (selectedArea) {
+                        onAddAssigneeToArea(selectedArea, person);
+                      }
+                    }}
+                    onClose={() => {
+                      setSelectedId('');
+                      setSettingsOpen(null);
+                    }}
+                    onFilterTextChange={(newValue) => setFilterText(newValue)}
+                    onSelectArea={(newValue) => setSelectedId(newValue)}
+                    places={places}
+                    selectedArea={selectedArea}
+                    selectedAreaStats={areaStats.stats.find(
+                      (stat) => stat.areaId == selectedArea?.id
+                    )}
+                    sessions={sessions}
+                  />
+                )}
+                {settingsOpen != 'select' && (
+                  <>
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="space-between"
+                      paddingBottom={1}
                     >
-                      <MenuItem value="dot">Dot</MenuItem>
-                      <MenuItem value="households">
-                        Number of households
-                      </MenuItem>
-                      <MenuItem value="progress">
-                        Progress (visited in this assignment)
-                      </MenuItem>
-                      <MenuItem value="hide">Hide</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl variant="outlined">
-                    <InputLabel id="area-style-label">Area</InputLabel>
-                    <Select
-                      label="Area"
-                      labelId="area-style-color"
-                      onChange={(ev) => {
-                        const newValue = ev.target.value;
-                        if (
-                          newValue == 'households' ||
-                          newValue == 'progress' ||
-                          newValue == 'hide' ||
-                          newValue == 'default'
-                        ) {
-                          setAreaStyle(newValue);
+                      <Typography variant="h5">
+                        {settingsOpen == 'filters' ? 'Filters' : 'Layers'}
+                      </Typography>
+                      <IconButton onClick={() => setSettingsOpen(null)}>
+                        <Close />
+                      </IconButton>
+                    </Box>
+                    <Divider />
+                    {settingsOpen == 'layers' && !selectedArea && (
+                      <LayerSettings
+                        areaStyle={areaStyle}
+                        onAreaStyleChange={(newValue) => setAreaStyle(newValue)}
+                        onOverlayStyleChange={(newValue) =>
+                          setOverlayStyle(newValue)
                         }
-                      }}
-                      sx={{ backgroundColor: 'white', width: '10rem' }}
-                      value={areaStyle}
-                    >
-                      <MenuItem value="default">Default</MenuItem>
-                      <MenuItem value="households">
-                        Number of households
-                      </MenuItem>
-                      <MenuItem value="progress">
-                        Progress (visited in this assignment)
-                      </MenuItem>
-                      <MenuItem value="hide">Hide</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl variant="outlined">
-                    <InputLabel id="overlay-style-label">Overlay</InputLabel>
-                    <Select
-                      label="Overlay"
-                      labelId="overlay-style-label"
-                      onChange={(ev) => {
-                        const newValue = ev.target.value;
-                        if (
-                          newValue == 'assignees' ||
-                          newValue == 'households' ||
-                          newValue == 'progress' ||
-                          newValue == 'hide'
-                        ) {
-                          setOverlayStyle(newValue);
+                        onPlaceStyleChange={(newValue) =>
+                          setPlaceStyle(newValue)
                         }
-                      }}
-                      sx={{ backgroundColor: 'white', width: '10rem' }}
-                      value={overlayStyle}
-                    >
-                      <MenuItem value="assignees">Assignees</MenuItem>
-                      <MenuItem value="households">
-                        Number of households
-                      </MenuItem>
-                      <MenuItem value="progress">
-                        Progress (visited in this assignment)
-                      </MenuItem>
-                      <MenuItem value="hide">Hide</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-              </Paper>
-            )}
-            {settingsOpen == 'filters' && !selectedArea && (
-              <Paper
-                sx={{
-                  bottom: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  maxWidth: 400,
-                  minWidth: 400,
-                  overflow: 'hidden',
-                  padding: 2,
-                  position: 'absolute',
-                  right: '1rem',
-                  top: '1rem',
-                  zIndex: 1000,
-                }}
-              >
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  justifyContent="space-between"
-                  paddingBottom={1}
-                >
-                  <Typography variant="h5">Filters</Typography>
-                  <IconButton onClick={() => setSettingsOpen(null)}>
-                    <Close />
-                  </IconButton>
-                </Box>
-                <Divider />
-                Filters
-                <PlanMapFilters
-                  areas={areas}
-                  onFilteredIdsChange={(areaIds) => {
-                    setFilteredAreaIds(areaIds);
-                  }}
-                />
+                        overlayStyle={overlayStyle}
+                        placeStyle={placeStyle}
+                      />
+                    )}
+                    {settingsOpen == 'filters' && !selectedArea && (
+                      <PlanMapFilters
+                        areas={areas}
+                        onFilteredIdsChange={(areaIds) => {
+                          setFilteredAreaIds(areaIds);
+                        }}
+                      />
+                    )}
+                  </>
+                )}
               </Paper>
             )}
             <MapContainer

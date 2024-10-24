@@ -90,7 +90,7 @@ const PlaceMarker: FC<{
 
 type PlanMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
-  areaStyle: 'households' | 'progress' | 'hide' | 'default';
+  areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
   areas: ZetkinArea[];
   canvassAssId: string;
   onSelectedIdChange: (newId: string) => void;
@@ -147,7 +147,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     householdColorPercent: number,
     visitsColorPercent: number
   ) => {
-    if (areaStyle == 'default') {
+    if (areaStyle == 'assignees') {
       return hasPeople
         ? theme.palette.primary.main
         : theme.palette.secondary.main;
