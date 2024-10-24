@@ -10,7 +10,7 @@ type HouseholdProps = {
   onHouseholdTitleChange: (newTitle: string) => void;
   onHouseholdUpdate: (data: HouseholdPatchBody) => void;
   onWizardStart: () => void;
-  visitedRecently: boolean;
+  visitedInThisAssignment: boolean;
 };
 
 const Household: FC<HouseholdProps> = ({
@@ -20,7 +20,7 @@ const Household: FC<HouseholdProps> = ({
   onEditHouseholdTitleEnd,
   onHouseholdUpdate,
   onWizardStart,
-  visitedRecently,
+  visitedInThisAssignment,
 }) => {
   return (
     <Box
@@ -60,13 +60,9 @@ const Household: FC<HouseholdProps> = ({
         justifyContent="flex-end"
         overflow="hidden"
       >
-        {visitedRecently &&
-          'This household has been visted within the past 24 hours.'}
-        <Button
-          disabled={visitedRecently}
-          onClick={onWizardStart}
-          variant="contained"
-        >
+        {visitedInThisAssignment &&
+          'This household has been visted in this assignment.'}
+        <Button onClick={onWizardStart} variant="contained">
           Log visit
         </Button>
 

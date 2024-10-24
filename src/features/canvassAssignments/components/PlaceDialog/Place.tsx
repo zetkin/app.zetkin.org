@@ -1,9 +1,8 @@
-import { Check } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 import { FC } from 'react';
 
-import { isWithinLast24Hours } from 'features/canvassAssignments/utils/isWithinLast24Hours';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type PlaceProps = {
   onSelectHousehold: (householdId: string) => void;
@@ -36,32 +35,33 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
           {`${place.households.length} household/s`}
         </Typography>
         <Divider />
-        <Box display="flex" flexDirection="column" sx={{ overflowY: 'auto' }}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          sx={{ overflowY: 'auto' }}
+        >
           {place.households.map((household) => {
-            const visitedRecently = isWithinLast24Hours(
-              household.visits.map((t) => t.timestamp)
-            );
-            /*const mostRecentVisit = household.visits.toSorted(
-          (a, b) => {
-            const dateA = new Date(a.timestamp);
-            const dateB = new Date(b.timestamp);
-            if (dateA > dateB) {
-              return -1;
-            } else if (dateB > dateA) {
-              return 1;
-            } else {
-              return 0;
-            }
-          }
-        )[0];*/
+            const sortedVisits = household.visits.toSorted((a, b) => {
+              const dateA = new Date(a.timestamp);
+              const dateB = new Date(b.timestamp);
+              if (dateA > dateB) {
+                return -1;
+              } else if (dateB > dateA) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+
+            const mostRecentVisit =
+              sortedVisits.length > 0 ? sortedVisits[0] : null;
 
             return (
               <Box
                 key={household.id}
                 alignItems="center"
                 display="flex"
-                mb={1}
-                mt={1}
                 onClick={() => {
                   onSelectHousehold(household.id);
                 }}
@@ -70,7 +70,9 @@ const Place: FC<PlaceProps> = ({ onSelectHousehold, place }) => {
                 <Box flexGrow={1}>
                   {household.title || 'Untitled household'}
                 </Box>
-                {visitedRecently ? <Check color="secondary" /> : ''}
+                {mostRecentVisit && (
+                  <ZUIRelativeTime datetime={mostRecentVisit.timestamp} />
+                )}
               </Box>
             );
           })}

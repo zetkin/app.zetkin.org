@@ -13,9 +13,15 @@ import {
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
+  AssignmentWithAreas,
+  ZetkinAssignmentAreaStats,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
+  areaStatsByAssignmentId: Record<
+    string,
+    RemoteItem<ZetkinAssignmentAreaStats & { id: string }>
+  >;
   canvassAssignmentList: RemoteList<ZetkinCanvassAssignment>;
   sessionsByAssignmentId: Record<
     string,
@@ -25,7 +31,7 @@ export interface CanvassAssignmentsStoreSlice {
     string,
     RemoteList<ZetkinCanvassAssignee>
   >;
-  mySessionsList: RemoteList<ZetkinCanvassSession & { id: string }>;
+  myAssignmentsWithAreasList: RemoteList<AssignmentWithAreas>;
   placeList: RemoteList<ZetkinPlace>;
   statsByCanvassAssId: Record<
     string,
@@ -34,9 +40,10 @@ export interface CanvassAssignmentsStoreSlice {
 }
 
 const initialState: CanvassAssignmentsStoreSlice = {
+  areaStatsByAssignmentId: {},
   assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
-  mySessionsList: remoteList(),
+  myAssignmentsWithAreasList: remoteList(),
   placeList: remoteList(),
   sessionsByAssignmentId: {},
   statsByCanvassAssId: {},
@@ -46,6 +53,32 @@ const canvassAssignmentSlice = createSlice({
   initialState: initialState,
   name: 'canvassAssignments',
   reducers: {
+    areaStatsLoad: (state, action: PayloadAction<string>) => {
+      const canvassAssId = action.payload;
+
+      if (!state.areaStatsByAssignmentId[canvassAssId]) {
+        state.areaStatsByAssignmentId[canvassAssId] = remoteItem(canvassAssId);
+      }
+      const statsItem = state.areaStatsByAssignmentId[canvassAssId];
+
+      state.areaStatsByAssignmentId[canvassAssId] = remoteItem(canvassAssId, {
+        data: statsItem?.data || null,
+        isLoading: true,
+      });
+    },
+    areaStatsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinAssignmentAreaStats]>
+    ) => {
+      const [canvassAssId, stats] = action.payload;
+
+      state.areaStatsByAssignmentId[canvassAssId] = remoteItem(canvassAssId, {
+        data: { id: canvassAssId, ...stats },
+        isLoading: false,
+        isStale: false,
+        loaded: new Date().toISOString(),
+      });
+    },
     assigneeAdd: (state, action: PayloadAction<[string, number]>) => {
       const [canvassAssId, assigneeId] = action.payload;
 
@@ -230,23 +263,20 @@ const canvassAssignmentSlice = createSlice({
         new Date().toISOString();
     },
     myAssignmentsLoad: (state) => {
-      state.mySessionsList.isLoading = true;
+      state.myAssignmentsWithAreasList.isLoading = true;
     },
     myAssignmentsLoaded: (
       state,
-      action: PayloadAction<ZetkinCanvassSession[]>
+      action: PayloadAction<AssignmentWithAreas[]>
     ) => {
-      const sessions = action.payload;
+      const assignments = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.mySessionsList = remoteList(
-        sessions.map((session) => ({
-          ...session,
-          id: `${session.assignment.id} ${session.assignee.id}`,
-        }))
+      state.myAssignmentsWithAreasList = remoteList(assignments);
+      state.myAssignmentsWithAreasList.loaded = timestamp;
+      state.myAssignmentsWithAreasList.items.forEach(
+        (item) => (item.loaded = timestamp)
       );
-      state.mySessionsList.loaded = timestamp;
-      state.mySessionsList.items.forEach((item) => (item.loaded = timestamp));
     },
     placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;
@@ -276,6 +306,10 @@ const canvassAssignmentSlice = createSlice({
     },
     statsLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
+
+      if (!state.statsByCanvassAssId[canvassAssId]) {
+        state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId);
+      }
       const statsItem = state.statsByCanvassAssId[canvassAssId];
 
       state.statsByCanvassAssId[canvassAssId] = remoteItem(canvassAssId, {
@@ -301,6 +335,8 @@ const canvassAssignmentSlice = createSlice({
 
 export default canvassAssignmentSlice;
 export const {
+  areaStatsLoad,
+  areaStatsLoaded,
   assigneeAdd,
   assigneeAdded,
   assigneeUpdated,

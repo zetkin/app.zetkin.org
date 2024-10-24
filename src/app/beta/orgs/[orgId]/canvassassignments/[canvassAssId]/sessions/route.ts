@@ -56,7 +56,22 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             },
             assignee: person,
             assignment: {
+              campaign: {
+                id: model.campId,
+              },
+              end_date: model.end_date,
               id: model._id.toString(),
+              metrics: model.metrics.map((m) => ({
+                definesDone: m.definesDone,
+                description: m.description,
+                id: m._id,
+                kind: m.kind,
+                question: m.question,
+              })),
+              organization: {
+                id: model.orgId,
+              },
+              start_date: model.start_date,
               title: model.title,
             },
           });

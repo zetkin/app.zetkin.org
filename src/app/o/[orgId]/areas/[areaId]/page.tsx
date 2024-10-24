@@ -1,7 +1,7 @@
+import { Box } from '@mui/system';
 import 'leaflet/dist/leaflet.css';
 import { notFound } from 'next/navigation';
 
-import PublicAreaPage from 'features/canvassAssignments/components/PublicAreaPage';
 import { AREAS, hasFeature } from 'utils/featureFlags';
 
 interface PageProps {
@@ -12,12 +12,12 @@ interface PageProps {
 }
 
 export default function Page({ params }: PageProps) {
-  const { orgId, areaId } = params;
+  const { orgId } = params;
   const hasAreas = hasFeature(AREAS, parseInt(orgId), process.env);
 
   if (!hasAreas) {
     return notFound();
   }
 
-  return <PublicAreaPage areaId={areaId} orgId={parseInt(orgId)} />;
+  return <Box />;
 }

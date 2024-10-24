@@ -12,15 +12,22 @@ import { Box } from '@mui/material';
 
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import { ZetkinCanvassSession } from '../types';
+import {
+  ZetkinAssignmentAreaStats,
+  ZetkinCanvassSession,
+  ZetkinPlace,
+} from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type PlanMapRendererProps = {
+  //eslint-disable-next-line
+  areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   filterAssigned: boolean;
   filterUnassigned: boolean;
   onSelectedIdChange: (newId: string) => void;
+  places: ZetkinPlace[];
   selectedId: string;
   sessions: ZetkinCanvassSession[];
 };
@@ -32,6 +39,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   selectedId,
   sessions,
   onSelectedIdChange,
+  places,
 }) => {
   const theme = useTheme();
   const reactFGref = useRef<FeatureGroupType | null>(null);
@@ -217,6 +225,23 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
             );
           })}
       </FeatureGroup>
+      {places.map((place) => (
+        <DivIconMarker
+          key={place.id}
+          position={{
+            lat: place.position.lat,
+            lng: place.position.lng,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'black',
+              height: '5px',
+              width: '5px',
+            }}
+          />
+        </DivIconMarker>
+      ))}
     </>
   );
 };

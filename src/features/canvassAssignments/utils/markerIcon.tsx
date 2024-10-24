@@ -1,24 +1,56 @@
+import { FC } from 'react';
+import { useTheme } from '@mui/styles';
+import { lighten } from '@mui/system';
+
+import { ProgressState } from './getVisitState';
+
 interface MarkerIconProps {
+  dataToShow?: 'done' | 'visited';
+  state?: ProgressState;
   selected: boolean;
 }
 
-const MarkerIcon: React.FC<MarkerIconProps> = ({ selected }) => (
-  <svg fill="none" height="35" viewBox="0 0 30 40" width="25">
-    <path
-      d="M14 38.479C13.6358 38.0533 13.1535 37.4795
-        12.589 36.7839C11.2893 35.1826 9.55816 32.9411
-        7.82896 30.3782C6.09785 27.8124 4.38106 24.9426
-        3.1001 22.0833C1.81327 19.211 1 16.4227 1 14C1
-        6.81228 6.81228 1 14 1C21.1877 1 27 6.81228 27 14C27
-        16.4227 26.1867 19.211 24.8999 22.0833C23.6189 24.9426
-        21.9022 27.8124 20.171 30.3782C18.4418 32.9411 16.7107
-        35.1826 15.411 36.7839C14.8465 37.4795 14.3642
-        38.0533 14 38.479Z"
-      fill={selected ? '#ED1C55' : 'white'}
-      stroke={'#ED1C55'}
-      strokeWidth="2"
-    />
-  </svg>
-);
+const MarkerIcon: FC<MarkerIconProps> = ({
+  dataToShow = 'visited',
+  state = 'none',
+  selected,
+}) => {
+  const theme = useTheme();
+
+  const circleColors: Record<ProgressState, string> = {
+    all:
+      dataToShow == 'visited'
+        ? theme.palette.primary.main
+        : theme.palette.success.main,
+    none: theme.palette.grey[400],
+    some:
+      dataToShow == 'visited'
+        ? lighten(theme.palette.primary.main, 0.5)
+        : lighten(theme.palette.success.main, 0.5),
+  };
+
+  return (
+    <svg
+      fill="none"
+      height="30"
+      viewBox="0 0 21 30"
+      width="21"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10.5 0C4.695 0 0 4.695 0 10.5C0 18.375 10.5 30 10.5 30C10.5 30 21 18.375 21 10.5C21 4.695 16.305 0 10.5 0Z"
+        fill={selected ? '#ED1C55' : '#848484'}
+      />
+      <circle className="hole" cx="10.5" cy="10.5" fill="white" r="8.5" />
+      <circle
+        className="state-dot"
+        cx="10.5"
+        cy="10.5"
+        fill={circleColors[state]}
+        r="6.5"
+      />
+    </svg>
+  );
+};
 
 export default MarkerIcon;
