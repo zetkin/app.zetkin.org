@@ -372,7 +372,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                     )}
                     eventHandlers={{
                       click: () => {
-                        onSelectedIdChange(area.id);
+                        onSelectedIdChange(selected ? '' : area.id);
                       },
                     }}
                     positions={area.points}
