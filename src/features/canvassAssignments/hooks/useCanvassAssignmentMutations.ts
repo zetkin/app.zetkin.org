@@ -3,7 +3,7 @@ import {
   ZetkinCanvassAssignment,
   ZetkinCanvassAssignmentPatchbody,
 } from '../types';
-import { canvassAssignmentUpdated } from '../store';
+import { canvassAssignmentDeleted, canvassAssignmentUpdated } from '../store';
 
 export default function useCanvassAssignmentMutations(
   orgId: number,
@@ -12,12 +12,20 @@ export default function useCanvassAssignmentMutations(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return async (data: ZetkinCanvassAssignmentPatchbody) => {
-    const updated = await apiClient.patch<
-      ZetkinCanvassAssignment,
-      ZetkinCanvassAssignmentPatchbody
-    >(`/beta/orgs/${orgId}/canvassassignments/${canvassAssId}`, data);
+  return {
+    deleteCanvassAssignment: async () => {
+      await apiClient.delete(
+        `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}`
+      );
+      dispatch(canvassAssignmentDeleted(parseInt(canvassAssId)));
+    },
+    updateCanvassAssignment: async (data: ZetkinCanvassAssignmentPatchbody) => {
+      const updated = await apiClient.patch<
+        ZetkinCanvassAssignment,
+        ZetkinCanvassAssignmentPatchbody
+      >(`/beta/orgs/${orgId}/canvassassignments/${canvassAssId}`, data);
 
-    dispatch(canvassAssignmentUpdated(updated));
+      dispatch(canvassAssignmentUpdated(updated));
+    },
   };
 }

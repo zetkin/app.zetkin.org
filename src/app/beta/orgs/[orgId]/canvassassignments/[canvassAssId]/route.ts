@@ -36,6 +36,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const canvassAssignment: ZetkinCanvassAssignment = {
         campaign: { id: canvassAssignmentModel.campId },
+        end_date: canvassAssignmentModel.end_date,
         id: canvassAssignmentModel._id.toString(),
         metrics: (canvassAssignmentModel.metrics || []).map((metric) => ({
           definesDone: metric.definesDone || false,
@@ -45,6 +46,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           question: metric.question,
         })),
         organization: { id: orgId },
+        start_date: canvassAssignmentModel.start_date,
         title: canvassAssignmentModel.title,
       };
 
@@ -64,7 +66,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const payload = await request.json();
-      const { metrics: newMetrics, title } = payload;
+      const { metrics: newMetrics, title, start_date, end_date } = payload;
 
       if (newMetrics) {
         // Find existing metrics to remove
@@ -118,11 +120,30 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           }
         }
       }
+      type UpdateFieldsType = Partial<
+        Pick<ZetkinCanvassAssignment, 'title' | 'start_date' | 'end_date'>
+      >;
 
-      await CanvassAssignmentModel.updateOne(
-        { _id: params.canvassAssId },
-        { title }
-      );
+      const updateFields: UpdateFieldsType = {};
+
+      if (title !== null) {
+        updateFields.title = title;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(payload, 'start_date')) {
+        updateFields.start_date = start_date;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(payload, 'end_date')) {
+        updateFields.end_date = end_date;
+      }
+
+      if (Object.keys(updateFields).length > 0) {
+        await CanvassAssignmentModel.updateOne(
+          { _id: params.canvassAssId },
+          { $set: updateFields }
+        );
+      }
       const model = await CanvassAssignmentModel.findById(
         params.canvassAssId
       ).populate('metrics');
@@ -134,6 +155,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           campaign: { id: model.campId },
+          end_date: model.end_date,
           id: model._id.toString(),
           metrics: (model.metrics || []).map((metric) => ({
             definesDone: metric.definesDone || false,
@@ -143,9 +165,34 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
             question: metric.question,
           })),
           organization: { id: orgId },
+          start_date: model.start_date,
           title: model.title,
         },
       });
+    }
+  );
+}
+
+export async function DELETE(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const result = await CanvassAssignmentModel.findOneAndDelete({
+        _id: params.canvassAssId,
+        orgId: orgId,
+      });
+
+      if (!result) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      return new NextResponse(null, { status: 204 });
     }
   );
 }
