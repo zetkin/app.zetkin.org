@@ -325,8 +325,13 @@ const PlanMap: FC<PlanMapProps> = ({
                 areaStyle={areaStyle}
                 canvassAssId={canvassAssId}
                 onSelectedIdChange={(newId) => {
-                  setSettingsOpen('select');
                   setSelectedId(newId);
+
+                  if (!newId) {
+                    setSettingsOpen(null);
+                  } else {
+                    setSettingsOpen('select');
+                  }
                 }}
                 overlayStyle={overlayStyle}
                 places={places}
