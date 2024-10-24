@@ -31,12 +31,44 @@ const LayerSettings: FC<LayerSettingsProps> = ({
   overlayStyle,
   placeStyle,
 }) => {
-  const [showCustomControls, setShowCustomControls] = useState(false);
+  const hasAssigneesPreset =
+    overlayStyle == 'assignees' &&
+    areaStyle == 'assignees' &&
+    placeStyle == 'dot';
+
+  const hasHouseholdsPreset =
+    overlayStyle == 'households' &&
+    placeStyle == 'households' &&
+    areaStyle == 'households';
+
+  const hasProgressPreset =
+    overlayStyle == 'assignees' &&
+    placeStyle == 'progress' &&
+    areaStyle == 'progress';
+
+  const isCustom =
+    !hasHouseholdsPreset && !hasProgressPreset && !hasAssigneesPreset;
+
+  const [showCustomControls, setShowCustomControls] = useState(isCustom);
 
   return (
     <Box alignItems="flex-start" display="flex" flexDirection="column" gap={1}>
       Pick a style for your map layers
       <Box
+        bgcolor={hasAssigneesPreset ? 'lightblue' : ''}
+        border={1}
+        onClick={() => {
+          onOverlayStyleChange('assignees');
+          onAreaStyleChange('assignees');
+          onPlaceStyleChange('dot');
+        }}
+        padding={1}
+        sx={{ cursor: 'pointer' }}
+      >
+        <Typography>Assigned areas</Typography>
+      </Box>
+      <Box
+        bgcolor={hasHouseholdsPreset ? 'lightblue' : ''}
         border={1}
         onClick={() => {
           onOverlayStyleChange('households');
@@ -49,6 +81,7 @@ const LayerSettings: FC<LayerSettingsProps> = ({
         <Typography>Number of households</Typography>
       </Box>
       <Box
+        bgcolor={hasProgressPreset ? 'lightblue' : ''}
         border={1}
         onClick={() => {
           onOverlayStyleChange('assignees');
@@ -61,8 +94,9 @@ const LayerSettings: FC<LayerSettingsProps> = ({
         <Typography>Canvasser progress</Typography>
       </Box>
       <Box
+        bgcolor={isCustom ? 'lightblue' : ''}
         border={1}
-        onClick={() => setShowCustomControls(true)}
+        onClick={() => setShowCustomControls(!showCustomControls)}
         padding={1}
         sx={{ cursor: 'pointer' }}
       >
@@ -114,7 +148,7 @@ const LayerSettings: FC<LayerSettingsProps> = ({
               }}
               value={areaStyle}
             >
-              <MenuItem value="default">Assignees</MenuItem>
+              <MenuItem value="assignees">Assignees</MenuItem>
               <MenuItem value="households">Number of households</MenuItem>
               <MenuItem value="progress">
                 Progress (visited in this assignment)
