@@ -119,19 +119,24 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               statsByAreaId[area.id] = {
                 areaId: area.id,
                 num_households: 0,
+                num_places: 0,
                 num_visits: 0,
               };
-
-              statsByAreaId[area.id].num_households += place.households.length;
-
-              place.households.forEach((household) => {
-                household.visits.forEach((visit) => {
-                  if (visit.canvassAssId == params.canvassAssId) {
-                    statsByAreaId[area.id].num_visits++;
-                  }
-                });
-              });
             }
+
+            statsByAreaId[area.id].num_places++;
+
+            statsByAreaId[area.id].num_households += place.households.length;
+
+            place.households.forEach((household) => {
+              const hasVisitInThisAssignment = household.visits.find(
+                (visit) => visit.canvassAssId == params.canvassAssId
+              );
+
+              if (hasVisitInThisAssignment) {
+                statsByAreaId[area.id].num_visits++;
+              }
+            });
           }
         });
       });
