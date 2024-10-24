@@ -196,8 +196,7 @@ const PlanMap: FC<PlanMapProps> = ({
                 position: 'absolute',
                 right: 16,
                 top: 16,
-                transform:
-                  settingsOpen || selectedArea ? 'translate(-408px)' : '',
+                transform: settingsOpen ? 'translate(-408px)' : '',
                 zIndex: 999,
               }}
             >
@@ -205,6 +204,10 @@ const PlanMap: FC<PlanMapProps> = ({
                 exclusive
                 onChange={(ev, newValue) => {
                   setSettingsOpen(newValue);
+
+                  if (!newValue) {
+                    setSelectedId('');
+                  }
                 }}
                 orientation="vertical"
                 sx={(theme) => ({
