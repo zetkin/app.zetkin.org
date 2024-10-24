@@ -85,12 +85,6 @@ export type ZetkinCanvassSessionPostBody = {
   personId: number;
 };
 
-export type ZetkinCanvassAssignee = {
-  canvassAssId: string;
-  id: number;
-};
-export type ZetkinCanvassAssigneePatchBody = Partial<ZetkinCanvassAssignee>;
-
 export type ZetkinCanvassAssignmentStats = {
   metrics: {
     metric: ZetkinMetric;
