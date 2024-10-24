@@ -205,9 +205,6 @@ const PlanMap: FC<PlanMapProps> = ({
                 exclusive
                 onChange={(ev, newValue) => {
                   setSettingsOpen(newValue);
-                  if (selectedArea) {
-                    setSelectedId('');
-                  }
                 }}
                 orientation="vertical"
                 sx={(theme) => ({
@@ -278,12 +275,17 @@ const PlanMap: FC<PlanMapProps> = ({
                       <Typography variant="h5">
                         {settingsOpen == 'filters' ? 'Filters' : 'Layers'}
                       </Typography>
-                      <IconButton onClick={() => setSettingsOpen(null)}>
+                      <IconButton
+                        onClick={() => {
+                          setSettingsOpen(null);
+                          setSelectedId('');
+                        }}
+                      >
                         <Close />
                       </IconButton>
                     </Box>
                     <Divider />
-                    {settingsOpen == 'layers' && !selectedArea && (
+                    {settingsOpen == 'layers' && (
                       <LayerSettings
                         areaStyle={areaStyle}
                         onAreaStyleChange={(newValue) => setAreaStyle(newValue)}
@@ -297,7 +299,7 @@ const PlanMap: FC<PlanMapProps> = ({
                         placeStyle={placeStyle}
                       />
                     )}
-                    {settingsOpen == 'filters' && !selectedArea && (
+                    {settingsOpen == 'filters' && (
                       <PlanMapFilters
                         areas={areas}
                         onFilteredIdsChange={(areaIds) => {
