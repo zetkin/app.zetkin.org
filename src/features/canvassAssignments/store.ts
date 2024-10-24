@@ -151,6 +151,14 @@ const canvassAssignmentSlice = createSlice({
       });
 
       state.sessionsByAssignmentId[session.assignment.id].items.push(item);
+
+      const hasStatsItem = !!state.areaStatsByAssignmentId[
+        session.assignment.id
+      ].data?.stats.find((statsItem) => statsItem.areaId == session.area.id);
+
+      if (!hasStatsItem) {
+        state.areaStatsByAssignmentId[session.assignment.id].isStale = true;
+      }
     },
     canvassSessionsLoad: (state, action: PayloadAction<string>) => {
       const assignmentId = action.payload;
