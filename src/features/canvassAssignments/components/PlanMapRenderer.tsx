@@ -296,7 +296,9 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                     <div
                       style={{
                         alignItems: 'center',
-                        backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+                        backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${
+                          visitsColorPercent || 1
+                        }%)`,
                         borderRadius: '2rem',
                         color: 'white',
                         display: 'flex',
