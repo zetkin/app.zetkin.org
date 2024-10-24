@@ -1,0 +1,152 @@
+import { FC } from 'react';
+import { ChevronLeft, Close, Search } from '@mui/icons-material';
+import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
+
+import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIPerson from 'zui/ZUIPerson';
+import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
+import { ZetkinArea } from 'features/areas/types';
+import { ZetkinCanvassSession } from '../types';
+import ZUIAvatar from 'zui/ZUIAvatar';
+
+type Props = {
+  areas: ZetkinArea[];
+  filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
+  filterText: string;
+  onAddAssignee: (person: ZetkinPerson) => void;
+  onClose: () => void;
+  onFilterTextChange: (newValue: string) => void;
+  onSelectArea: (selectedId: string) => void;
+  selectedArea?: ZetkinArea | null;
+  sessions: ZetkinCanvassSession[];
+};
+
+const AreaSelect: FC<Props> = ({
+  selectedArea,
+  areas,
+  filterAreas,
+  filterText,
+  onAddAssignee,
+  onClose,
+  onFilterTextChange,
+  onSelectArea,
+  sessions,
+}) => {
+  const selectedAreaAssignees = sessions
+    .filter((session) => session.area.id == selectedArea?.id)
+    .map((session) => session.assignee);
+
+  return (
+    <>
+      <Box paddingBottom={1}>
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          <Box alignItems="center" display="flex">
+            {selectedArea && (
+              <IconButton onClick={() => onSelectArea('')}>
+                <ChevronLeft />
+              </IconButton>
+            )}
+            <Typography variant="h5">
+              {selectedArea
+                ? selectedArea?.title || 'Untitled area'
+                : 'Find area'}
+            </Typography>
+          </Box>
+          <IconButton onClick={() => onClose()}>
+            <Close />
+          </IconButton>
+        </Box>
+      </Box>
+      <Divider />
+      {!selectedArea && (
+        <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
+          <TextField
+            InputProps={{
+              endAdornment: <Search color="secondary" />,
+            }}
+            onChange={(evt) => onFilterTextChange(evt.target.value)}
+            placeholder="Filter"
+            value={filterText}
+            variant="outlined"
+          />
+          <Box display="flex" flexDirection="column" gap={1}>
+            {filterAreas(areas, filterText).map((area, index) => {
+              const assignees = sessions
+                .filter((session) => session.area.id == area.id)
+                .map((session) => session.assignee);
+              return (
+                <>
+                  {index != 0 && <Divider />}
+                  <Box
+                    key={area.id}
+                    display="flex"
+                    justifyContent="space-between"
+                    onClick={() => onSelectArea(area.id)}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <Typography>{area.title || 'Untitled area'}</Typography>
+                    <Box display="flex">
+                      {assignees.map((assignee) => (
+                        <ZUIAvatar
+                          key={assignee.id}
+                          size="sm"
+                          url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                </>
+              );
+            })}
+          </Box>
+        </Box>
+      )}
+      {selectedArea && (
+        <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
+          <Typography
+            fontStyle={
+              selectedArea?.description?.trim().length ? 'inherit' : 'italic'
+            }
+            sx={{ overflowWrap: 'anywhere' }}
+          >
+            {selectedArea &&
+              (selectedArea?.description?.trim() || 'Empty description')}
+          </Typography>
+          <Box>
+            <Typography variant="h6">Assignees </Typography>
+            {!selectedAreaAssignees.length && (
+              <Typography
+                color="secondary"
+                fontStyle={
+                  selectedArea.description?.trim().length ? 'inherit' : 'italic'
+                }
+                sx={{ overflowWrap: 'anywhere' }}
+              >
+                No assignees
+              </Typography>
+            )}
+            {selectedAreaAssignees.map((assignee) => (
+              <Box key={assignee.id} my={1}>
+                <ZUIPerson
+                  id={assignee.id}
+                  name={`${assignee.first_name} ${assignee.last_name}`}
+                />
+              </Box>
+            ))}
+          </Box>
+          <Box mt={2}>
+            <Typography variant="h6">Add assignee</Typography>
+            <ZUIPersonSelect
+              onChange={function (person: ZetkinPerson): void {
+                onAddAssignee(person);
+              }}
+              selectedPerson={null}
+            />
+          </Box>
+        </Box>
+      )}
+    </>
+  );
+};
+
+export default AreaSelect;

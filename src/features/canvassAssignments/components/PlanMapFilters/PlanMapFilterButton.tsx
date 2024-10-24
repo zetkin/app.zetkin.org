@@ -1,15 +1,11 @@
 import { FC, useContext } from 'react';
-import { Badge, Button } from '@mui/material';
+import { Badge } from '@mui/material';
 import { FilterList } from '@mui/icons-material';
 
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
 import { assigneesFilterContext } from './AssigneeFilterContext';
 
-type Props = {
-  onToggle: () => void;
-};
-
-const PlanMapFilterButton: FC<Props> = ({ onToggle }) => {
+const PlanMapFilterBadge: FC = () => {
   const { activeTagIdsByGroup } = useContext(areaFilterContext);
   const { assigneesFilter } = useContext(assigneesFilterContext);
 
@@ -21,21 +17,12 @@ const PlanMapFilterButton: FC<Props> = ({ onToggle }) => {
     ? numActiveGroups + 1
     : numActiveGroups;
 
-  return (
-    <Button
-      onClick={() => onToggle()}
-      startIcon={
-        numTotalFilters > 0 ? (
-          <Badge badgeContent={numTotalFilters} color="primary">
-            <FilterList />
-          </Badge>
-        ) : (
-          <FilterList />
-        )
-      }
-    >
-      Filter
-    </Button>
+  return numTotalFilters > 0 ? (
+    <Badge badgeContent={numTotalFilters} sx={{ color: 'white' }}>
+      <FilterList sx={{ color: 'white' }} />
+    </Badge>
+  ) : (
+    <FilterList sx={{ color: 'white' }} />
   );
 };
-export default PlanMapFilterButton;
+export default PlanMapFilterBadge;

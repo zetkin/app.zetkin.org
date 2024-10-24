@@ -2,19 +2,30 @@ import { FC, useRef, useState } from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import {
-  Autocomplete,
   Box,
   Button,
   ButtonGroup,
   CircularProgress,
   Divider,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
-  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
 } from '@mui/material';
-import { Add, GpsFixed, Home, Remove } from '@mui/icons-material';
+import {
+  Add,
+  Close,
+  GpsFixed,
+  Home,
+  Layers,
+  Remove,
+  Search,
+} from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import PlanMapRenderer from './PlanMapRenderer';
@@ -28,8 +39,8 @@ import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilter
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import AssigneeFilterProvider from './PlanMapFilters/AssigneeFilterContext';
 import PlanMapFilters from './PlanMapFilters';
-import PlanMapFilterButton from './PlanMapFilters/PlanMapFilterButton';
-import PlanMapAreaOverlay from './PlanMapAreaOverlay';
+import PlanMapFilterBadge from './PlanMapFilters/PlanMapFilterButton';
+import AreaSelect from './AreaSelect';
 
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -48,7 +59,9 @@ const PlanMap: FC<PlanMapProps> = ({
   places,
   sessions,
 }) => {
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState<
+    ('layers' | 'filters' | 'select') | null
+  >(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [placeStyle, setPlaceStyle] = useState<
     'dot' | 'households' | 'progress' | 'hide'
@@ -104,143 +117,6 @@ const PlanMap: FC<PlanMapProps> = ({
             width: '100%',
           }}
         >
-          <Box
-            alignItems="center"
-            display="flex"
-            gap={1}
-            justifyContent="flex-end"
-            paddingX={2}
-            paddingY={1}
-          >
-            <FormControl variant="outlined">
-              <InputLabel id="place-style-label">Place</InputLabel>
-              <Select
-                label="Place"
-                labelId="place-style-label"
-                onChange={(ev) => {
-                  const newValue = ev.target.value;
-                  if (
-                    newValue == 'dot' ||
-                    newValue == 'households' ||
-                    newValue == 'progress' ||
-                    newValue == 'hide'
-                  ) {
-                    setPlaceStyle(newValue);
-                  }
-                }}
-                sx={{ backgroundColor: 'white', width: '10rem' }}
-                value={placeStyle}
-              >
-                <MenuItem value="dot">Dot</MenuItem>
-                <MenuItem value="households">Number of households</MenuItem>
-                <MenuItem value="progress">
-                  Progress (visited in this assignment)
-                </MenuItem>
-                <MenuItem value="hide">Hide</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined">
-              <InputLabel id="area-style-label">Area</InputLabel>
-              <Select
-                label="Area"
-                labelId="area-style-color"
-                onChange={(ev) => {
-                  const newValue = ev.target.value;
-                  if (
-                    newValue == 'households' ||
-                    newValue == 'progress' ||
-                    newValue == 'hide' ||
-                    newValue == 'default'
-                  ) {
-                    setAreaStyle(newValue);
-                  }
-                }}
-                sx={{ backgroundColor: 'white', width: '10rem' }}
-                value={areaStyle}
-              >
-                <MenuItem value="default">Default</MenuItem>
-                <MenuItem value="households">Number of households</MenuItem>
-                <MenuItem value="progress">
-                  Progress (visited in this assignment)
-                </MenuItem>
-                <MenuItem value="hide">Hide</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined">
-              <InputLabel id="overlay-style-label">Overlay</InputLabel>
-              <Select
-                label="Overlay"
-                labelId="overlay-style-label"
-                onChange={(ev) => {
-                  const newValue = ev.target.value;
-                  if (
-                    newValue == 'assignees' ||
-                    newValue == 'households' ||
-                    newValue == 'progress' ||
-                    newValue == 'hide'
-                  ) {
-                    setOverlayStyle(newValue);
-                  }
-                }}
-                sx={{ backgroundColor: 'white', width: '10rem' }}
-                value={overlayStyle}
-              >
-                <MenuItem value="assignees">Assignees</MenuItem>
-                <MenuItem value="households">Number of households</MenuItem>
-                <MenuItem value="progress">
-                  Progress (visited in this assignment)
-                </MenuItem>
-                <MenuItem value="hide">Hide</MenuItem>
-              </Select>
-            </FormControl>
-            <PlanMapFilterButton
-              onToggle={() => setFiltersOpen((current) => !current)}
-            />
-            <Autocomplete
-              filterOptions={(options, state) =>
-                filterAreas(options, state.inputValue)
-              }
-              getOptionLabel={(option) => option.id}
-              inputValue={filterText}
-              onChange={(ev, area) => {
-                if (area) {
-                  setSelectedId(area.id);
-                  setFilterText('');
-                }
-              }}
-              onInputChange={(ev, value, reason) => {
-                if (reason == 'input') {
-                  setFilterText(value);
-                }
-              }}
-              options={areas}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  size="small"
-                  sx={{ backgroundColor: 'white', width: '16rem' }}
-                  variant="outlined"
-                />
-              )}
-              renderOption={(props, area) => (
-                <MenuItem {...props}>{area.title || 'Untitled area'}</MenuItem>
-              )}
-              value={null}
-            />
-          </Box>
-          {filtersOpen && (
-            <Box>
-              <Divider />
-              <Box display="flex" gap={1} justifyContent="start" px={2} py={1}>
-                <PlanMapFilters
-                  areas={areas}
-                  onFilteredIdsChange={(areaIds) => {
-                    setFilteredAreaIds(areaIds);
-                  }}
-                />
-              </Box>
-            </Box>
-          )}
           <Box flexGrow={1} position="relative">
             <Box
               sx={{
@@ -318,18 +194,239 @@ const PlanMap: FC<PlanMapProps> = ({
                 </Button>
               </ButtonGroup>
             </Box>
-            {selectedArea && (
-              <PlanMapAreaOverlay
-                key={selectedArea.id}
-                area={selectedArea}
-                assignees={sessions
-                  .filter((session) => session.area.id == selectedArea.id)
-                  .map((session) => session.assignee)}
-                onAddAssignee={(person) => {
-                  onAddAssigneeToArea(selectedArea, person);
+            <Box
+              sx={{
+                position: 'absolute',
+                right: 16,
+                top: 16,
+                transform:
+                  settingsOpen || selectedArea ? 'translate(-408px)' : '',
+                zIndex: 999,
+              }}
+            >
+              <ToggleButtonGroup
+                exclusive
+                onChange={(ev, newValue) => {
+                  setSettingsOpen(newValue);
+                  if (selectedArea) {
+                    setSelectedId('');
+                  }
                 }}
-                onClose={() => setSelectedId('')}
-              />
+                orientation="vertical"
+                sx={(theme) => ({
+                  backgroundColor: theme.palette.primary.main,
+                })}
+                value={settingsOpen}
+              >
+                <ToggleButton value="filters">
+                  <PlanMapFilterBadge />
+                </ToggleButton>
+                <ToggleButton value="layers">
+                  <Layers sx={{ color: 'white' }} />
+                </ToggleButton>
+                <ToggleButton value="select">
+                  <Search sx={{ color: 'white' }} />
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+            {(settingsOpen == 'select' || selectedArea) && (
+              <Paper
+                sx={{
+                  bottom: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  maxWidth: 400,
+                  minWidth: 400,
+                  overflow: 'hidden',
+                  padding: 2,
+                  position: 'absolute',
+                  right: '1rem',
+                  top: '1rem',
+                  zIndex: 1000,
+                }}
+              >
+                <AreaSelect
+                  key={selectedArea?.id}
+                  areas={areas}
+                  filterAreas={filterAreas}
+                  filterText={filterText}
+                  onAddAssignee={(person) => {
+                    if (selectedArea) {
+                      onAddAssigneeToArea(selectedArea, person);
+                    }
+                  }}
+                  onClose={() => {
+                    setSelectedId('');
+                    setSettingsOpen(null);
+                  }}
+                  onFilterTextChange={(newValue) => setFilterText(newValue)}
+                  onSelectArea={(newValue) => setSelectedId(newValue)}
+                  selectedArea={selectedArea}
+                  sessions={sessions}
+                />
+              </Paper>
+            )}
+            {settingsOpen == 'layers' && !selectedArea && (
+              <Paper
+                sx={{
+                  bottom: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  maxWidth: 400,
+                  minWidth: 400,
+                  overflow: 'hidden',
+                  padding: 2,
+                  position: 'absolute',
+                  right: '1rem',
+                  top: '1rem',
+                  zIndex: 1000,
+                }}
+              >
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  justifyContent="space-between"
+                  paddingBottom={1}
+                >
+                  <Typography variant="h5">Layers</Typography>
+                  <IconButton onClick={() => setSettingsOpen(null)}>
+                    <Close />
+                  </IconButton>
+                </Box>
+                <Divider />
+                Map layers
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap={2}
+                  paddingTop={1}
+                >
+                  <FormControl variant="outlined">
+                    <InputLabel id="place-style-label">Place</InputLabel>
+                    <Select
+                      label="Place"
+                      labelId="place-style-label"
+                      onChange={(ev) => {
+                        const newValue = ev.target.value;
+                        if (
+                          newValue == 'dot' ||
+                          newValue == 'households' ||
+                          newValue == 'progress' ||
+                          newValue == 'hide'
+                        ) {
+                          setPlaceStyle(newValue);
+                        }
+                      }}
+                      sx={{ backgroundColor: 'white', width: '10rem' }}
+                      value={placeStyle}
+                    >
+                      <MenuItem value="dot">Dot</MenuItem>
+                      <MenuItem value="households">
+                        Number of households
+                      </MenuItem>
+                      <MenuItem value="progress">
+                        Progress (visited in this assignment)
+                      </MenuItem>
+                      <MenuItem value="hide">Hide</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl variant="outlined">
+                    <InputLabel id="area-style-label">Area</InputLabel>
+                    <Select
+                      label="Area"
+                      labelId="area-style-color"
+                      onChange={(ev) => {
+                        const newValue = ev.target.value;
+                        if (
+                          newValue == 'households' ||
+                          newValue == 'progress' ||
+                          newValue == 'hide' ||
+                          newValue == 'default'
+                        ) {
+                          setAreaStyle(newValue);
+                        }
+                      }}
+                      sx={{ backgroundColor: 'white', width: '10rem' }}
+                      value={areaStyle}
+                    >
+                      <MenuItem value="default">Default</MenuItem>
+                      <MenuItem value="households">
+                        Number of households
+                      </MenuItem>
+                      <MenuItem value="progress">
+                        Progress (visited in this assignment)
+                      </MenuItem>
+                      <MenuItem value="hide">Hide</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl variant="outlined">
+                    <InputLabel id="overlay-style-label">Overlay</InputLabel>
+                    <Select
+                      label="Overlay"
+                      labelId="overlay-style-label"
+                      onChange={(ev) => {
+                        const newValue = ev.target.value;
+                        if (
+                          newValue == 'assignees' ||
+                          newValue == 'households' ||
+                          newValue == 'progress' ||
+                          newValue == 'hide'
+                        ) {
+                          setOverlayStyle(newValue);
+                        }
+                      }}
+                      sx={{ backgroundColor: 'white', width: '10rem' }}
+                      value={overlayStyle}
+                    >
+                      <MenuItem value="assignees">Assignees</MenuItem>
+                      <MenuItem value="households">
+                        Number of households
+                      </MenuItem>
+                      <MenuItem value="progress">
+                        Progress (visited in this assignment)
+                      </MenuItem>
+                      <MenuItem value="hide">Hide</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Paper>
+            )}
+            {settingsOpen == 'filters' && !selectedArea && (
+              <Paper
+                sx={{
+                  bottom: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  maxWidth: 400,
+                  minWidth: 400,
+                  overflow: 'hidden',
+                  padding: 2,
+                  position: 'absolute',
+                  right: '1rem',
+                  top: '1rem',
+                  zIndex: 1000,
+                }}
+              >
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  justifyContent="space-between"
+                  paddingBottom={1}
+                >
+                  <Typography variant="h5">Filters</Typography>
+                  <IconButton onClick={() => setSettingsOpen(null)}>
+                    <Close />
+                  </IconButton>
+                </Box>
+                <Divider />
+                Filters
+                <PlanMapFilters
+                  areas={areas}
+                  onFilteredIdsChange={(areaIds) => {
+                    setFilteredAreaIds(areaIds);
+                  }}
+                />
+              </Paper>
             )}
             <MapContainer
               ref={mapRef}
@@ -344,7 +441,10 @@ const PlanMap: FC<PlanMapProps> = ({
                 areaStats={areaStats}
                 areaStyle={areaStyle}
                 canvassAssId={canvassAssId}
-                onSelectedIdChange={(newId) => setSelectedId(newId)}
+                onSelectedIdChange={(newId) => {
+                  setSettingsOpen('select');
+                  setSelectedId(newId);
+                }}
                 overlayStyle={overlayStyle}
                 places={places}
                 placeStyle={placeStyle}

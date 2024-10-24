@@ -79,7 +79,7 @@ const PlanMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   }, [activeGroupIds, activeTagIdsByGroup]);
 
   return (
-    <Box alignItems="center" display="flex" gap={1}>
+    <Box alignItems="center" display="flex" flexWrap="wrap" gap={1}>
       <FilterDropDown
         items={[
           {
