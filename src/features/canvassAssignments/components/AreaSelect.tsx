@@ -1,13 +1,24 @@
 import { FC } from 'react';
-import { ChevronLeft, Close, Search } from '@mui/icons-material';
+import {
+  ChevronLeft,
+  Close,
+  DoorFront,
+  EmojiPeople,
+  Search,
+} from '@mui/icons-material';
 import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { ZetkinArea } from 'features/areas/types';
-import { ZetkinCanvassSession } from '../types';
+import {
+  ZetkinAssignmentAreaStatsItem,
+  ZetkinCanvassSession,
+  ZetkinPlace,
+} from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 type Props = {
   areas: ZetkinArea[];
@@ -17,12 +28,13 @@ type Props = {
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
   onSelectArea: (selectedId: string) => void;
+  places: ZetkinPlace[];
   selectedArea?: ZetkinArea | null;
+  selectedAreaStats?: ZetkinAssignmentAreaStatsItem;
   sessions: ZetkinCanvassSession[];
 };
 
 const AreaSelect: FC<Props> = ({
-  selectedArea,
   areas,
   filterAreas,
   filterText,
@@ -30,11 +42,31 @@ const AreaSelect: FC<Props> = ({
   onClose,
   onFilterTextChange,
   onSelectArea,
+  places,
+  selectedArea,
+  selectedAreaStats,
   sessions,
 }) => {
   const selectedAreaAssignees = sessions
     .filter((session) => session.area.id == selectedArea?.id)
     .map((session) => session.assignee);
+
+  const placesInSelectedArea: ZetkinPlace[] = [];
+  if (selectedArea) {
+    places.map((place) => {
+      const isInsideArea = isPointInsidePolygon(
+        place.position,
+        selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
+      );
+      if (isInsideArea) {
+        placesInSelectedArea.push(place);
+      }
+    });
+  }
+
+  const numberOfHouseholdsInSelectedArea = placesInSelectedArea
+    .map((place) => place.households.length)
+    .reduce((prev, curr) => prev + curr, 0);
 
   return (
     <>
@@ -103,6 +135,18 @@ const AreaSelect: FC<Props> = ({
       )}
       {selectedArea && (
         <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
+          <Box display="flex" justifyContent="space-evenly">
+            <Box alignItems="center" display="flex">
+              <DoorFront />
+              {numberOfHouseholdsInSelectedArea}
+            </Box>
+            {selectedAreaStats && (
+              <Box alignItems="center" display="flex">
+                <EmojiPeople />
+                {selectedAreaStats?.num_visits}
+              </Box>
+            )}
+          </Box>
           <Typography
             fontStyle={
               selectedArea?.description?.trim().length ? 'inherit' : 'italic'
@@ -133,15 +177,15 @@ const AreaSelect: FC<Props> = ({
                 />
               </Box>
             ))}
-          </Box>
-          <Box mt={2}>
-            <Typography variant="h6">Add assignee</Typography>
-            <ZUIPersonSelect
-              onChange={function (person: ZetkinPerson): void {
-                onAddAssignee(person);
-              }}
-              selectedPerson={null}
-            />
+            <Box mt={2}>
+              <Typography variant="h6">Add assignee</Typography>
+              <ZUIPersonSelect
+                onChange={function (person: ZetkinPerson): void {
+                  onAddAssignee(person);
+                }}
+                selectedPerson={null}
+              />
+            </Box>
           </Box>
         </Box>
       )}

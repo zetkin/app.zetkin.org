@@ -261,7 +261,11 @@ const PlanMap: FC<PlanMapProps> = ({
                   }}
                   onFilterTextChange={(newValue) => setFilterText(newValue)}
                   onSelectArea={(newValue) => setSelectedId(newValue)}
+                  places={places}
                   selectedArea={selectedArea}
+                  selectedAreaStats={areaStats.stats.find(
+                    (stat) => stat.areaId == selectedArea?.id
+                  )}
                   sessions={sessions}
                 />
               </Paper>
