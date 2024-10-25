@@ -20,6 +20,7 @@ import {
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import { assigneesFilterContext } from './PlanMapFilters/AssigneeFilterContext';
+import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 const PlaceMarker: FC<{
   canvassAssId: string;
@@ -169,8 +170,8 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
         : theme.palette.secondary.main;
     }
 
-    if (!hasPeople) {
-      return 'grey';
+    if (areaStyle == 'progress' && !hasPeople) {
+      return theme.palette.secondary.main;
     }
 
     return areaStyle == 'households'
@@ -277,8 +278,26 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
               }
             });
 
+            const placesInArea: ZetkinPlace[] = [];
+            places.map((place) => {
+              const isInsideArea = isPointInsidePolygon(
+                place.position,
+                area.points.map((point) => ({
+                  lat: point[0],
+                  lng: point[1],
+                }))
+              );
+              if (isInsideArea) {
+                placesInArea.push(place);
+              }
+            });
+
+            const numberOfHouseholdsInArea = placesInArea
+              .map((place) => place.households.length)
+              .reduce((prev, curr) => prev + curr, 0);
+
             const householdColorPercent = stats
-              ? (stats.num_households / highestHousholds) * 100
+              ? (numberOfHouseholdsInArea / highestHousholds) * 100
               : 0;
 
             const visitsColorPercent = stats
@@ -287,7 +306,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
             return (
               <>
-                {overlayStyle == 'households' && stats && (
+                {overlayStyle == 'households' && (
                   <DivIconMarker iconAnchor={[11, 11]} position={mid}>
                     <div
                       style={{
@@ -303,7 +322,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                         width: '21px',
                       }}
                     >
-                      {stats.num_households}
+                      {numberOfHouseholdsInArea}
                     </div>
                   </DivIconMarker>
                 )}
