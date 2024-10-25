@@ -968,6 +968,11 @@ feat:
               label: Swedish Personnummer
           wrongDateFormatWarning: Some of the values in this column can not be parsed into
             dates using this format.
+        enum:
+          header: Map values to options
+          none: None
+          numberOfRows: "{numRows, plural, =1 {1 row} other {# rows}}"
+          value: Value
         ids:
           configExplanation: Importing with IDs allows Zetkin (now or in the future) to
             update existing people in the database instead of creating
@@ -1034,6 +1039,7 @@ feat:
         tags: Tags
         unfinished:
           date: You need to configure date format
+          enum: You need to map values
           id: You need to configure the IDs
           org: You need to map values
           tag: You need to map values
@@ -1655,6 +1661,7 @@ feat:
       personField:
         edit:
           date: "{fieldSelect} is {timeFrame}"
+          enum: '{fieldSelect} is "{selectInput}"'
           none: This organization doesn't have any custom fields yet.
           text: '{fieldSelect} matches "{freeTextInput}"'
           url: '{fieldSelect} matches "{freeTextInput}"'
@@ -1663,6 +1670,7 @@ feat:
         inputString: "{addRemoveSelect} any person whose {field}."
         preview:
           date: "{fieldName} is {timeFrame}"
+          enum: '{fieldName} is "{searchTerm}"'
           text: '{fieldName} matches "{searchTerm}"'
           url: '{fieldName} matches "{searchTerm}"'
       personTags:
@@ -2659,6 +2667,8 @@ zui:
     cancel: Cancel
     createBtn: Create
     defaultitle: Create person
+    enumFields:
+      noneOption: None
     genders:
       f: Female
       m: Male

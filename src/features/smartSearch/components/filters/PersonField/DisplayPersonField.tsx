@@ -11,6 +11,7 @@ import UnderlinedMsg from '../../UnderlinedMsg';
 import UnderlinedText from '../../UnderlinedText';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -34,34 +35,64 @@ const DisplayPersonField = ({
   const field = getField(slug);
 
   const fieldType = field?.type || '';
-  if (fieldType != 'date' && fieldType != 'text' && fieldType != 'url') {
+  if (
+    fieldType != CUSTOM_FIELD_TYPE.DATE &&
+    fieldType != CUSTOM_FIELD_TYPE.TEXT &&
+    fieldType != CUSTOM_FIELD_TYPE.URL &&
+    fieldType != CUSTOM_FIELD_TYPE.ENUM
+  ) {
     // TODO:
     return null;
   }
-
+  let fieldMessage;
+  if (fieldType == CUSTOM_FIELD_TYPE.DATE) {
+    fieldMessage = (
+      <Msg
+        id={localMessageIds.preview.date}
+        values={{
+          fieldName: <UnderlinedText text={field?.title ?? ''} />,
+          timeFrame: <DisplayTimeFrame config={timeFrame} />,
+        }}
+      />
+    );
+  } else if (
+    fieldType == CUSTOM_FIELD_TYPE.ENUM &&
+    field?.enum_choices &&
+    search !== undefined
+  ) {
+    fieldMessage = (
+      <Msg
+        id={localMessageIds.preview[fieldType]}
+        values={{
+          fieldName: <UnderlinedText text={field?.title ?? ''} />,
+          searchTerm: (
+            <UnderlinedText
+              text={
+                field?.enum_choices.find((c) => c.key == search)?.label ||
+                search
+              }
+            />
+          ),
+        }}
+      />
+    );
+  } else {
+    fieldMessage = (
+      <Msg
+        id={localMessageIds.preview[fieldType]}
+        values={{
+          fieldName: <UnderlinedText text={field?.title ?? ''} />,
+          searchTerm: <UnderlinedText text={search || ''} />,
+        }}
+      />
+    );
+  }
   return (
     <Msg
       id={localMessageIds.inputString}
       values={{
         addRemoveSelect: <UnderlinedMsg id={messageIds.operators[op]} />,
-        field:
-          fieldType == 'date' ? (
-            <Msg
-              id={localMessageIds.preview.date}
-              values={{
-                fieldName: <UnderlinedText text={field?.title ?? ''} />,
-                timeFrame: <DisplayTimeFrame config={timeFrame} />,
-              }}
-            />
-          ) : (
-            <Msg
-              id={localMessageIds.preview[fieldType]}
-              values={{
-                fieldName: <UnderlinedText text={field?.title ?? ''} />,
-                searchTerm: <UnderlinedText text={search || ''} />,
-              }}
-            />
-          ),
+        field: fieldMessage,
       }}
     />
   );

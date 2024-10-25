@@ -402,6 +402,10 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
         ),
+        enum: m<{
+          fieldSelect: ReactElement;
+          selectInput: ReactElement;
+        }>('{fieldSelect} is "{selectInput}"'),
         none: m("This organization doesn't have any custom fields yet."),
         text: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
           '{fieldSelect} matches "{freeTextInput}"'
@@ -420,6 +424,10 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldName: ReactElement | string; timeFrame: ReactElement }>(
           '{fieldName} is {timeFrame}'
         ),
+        enum: m<{
+          fieldName: ReactElement | string;
+          searchTerm: ReactElement | string;
+        }>('{fieldName} is "{searchTerm}"'),
         text: m<{
           fieldName: ReactElement | string;
           searchTerm: ReactElement | string;
