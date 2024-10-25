@@ -17,6 +17,7 @@ const NumberCard: FC<NumberCardProps> = ({
   return (
     <Card
       sx={{
+        flex: 1,
         textAlign: 'center',
       }}
     >

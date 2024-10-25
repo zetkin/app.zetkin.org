@@ -23,6 +23,7 @@ export default function mockState(overrides?: RootState) {
       recentlyCreatedCampaign: null,
     },
     canvassAssignments: {
+      areaGraphByAssignmentId: {},
       areaStatsByAssignmentId: {},
       assigneesByCanvassAssignmentId: {},
       canvassAssignmentList: remoteList(),
