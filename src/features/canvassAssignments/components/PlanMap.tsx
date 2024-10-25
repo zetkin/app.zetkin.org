@@ -38,6 +38,7 @@ import PlanMapFilters from './PlanMapFilters';
 import PlanMapFilterBadge from './PlanMapFilters/PlanMapFilterButton';
 import AreaSelect from './AreaSelect';
 import LayerSettings from './LayerSettings';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 type PlanMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -48,6 +49,12 @@ type PlanMapProps = {
   sessions: ZetkinCanvassSession[];
 };
 
+export type MapStyle = {
+  area: 'households' | 'progress' | 'hide' | 'assignees';
+  overlay: 'assignees' | 'households' | 'progress' | 'hide';
+  place: 'dot' | 'households' | 'progress' | 'hide';
+};
+
 const PlanMap: FC<PlanMapProps> = ({
   areas,
   areaStats,
@@ -56,19 +63,19 @@ const PlanMap: FC<PlanMapProps> = ({
   places,
   sessions,
 }) => {
+  const [mapStyle, setMapStyle] = useLocalStorage<MapStyle>(
+    `mapStyle-${canvassAssId}`,
+    {
+      area: 'assignees',
+      overlay: 'assignees',
+      place: 'dot',
+    }
+  );
+
   const [settingsOpen, setSettingsOpen] = useState<
     ('layers' | 'filters' | 'select') | null
   >(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
-  const [placeStyle, setPlaceStyle] = useState<
-    'dot' | 'households' | 'progress' | 'hide'
-  >('dot');
-  const [areaStyle, setAreaStyle] = useState<
-    'households' | 'progress' | 'hide' | 'assignees'
-  >('assignees');
-  const [overlayStyle, setOverlayStyle] = useState<
-    'assignees' | 'households' | 'progress' | 'hide'
-  >('assignees');
   const [locating, setLocating] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
@@ -290,16 +297,10 @@ const PlanMap: FC<PlanMapProps> = ({
                     <Divider />
                     {settingsOpen == 'layers' && (
                       <LayerSettings
-                        areaStyle={areaStyle}
-                        onAreaStyleChange={(newValue) => setAreaStyle(newValue)}
-                        onOverlayStyleChange={(newValue) =>
-                          setOverlayStyle(newValue)
+                        mapStyle={mapStyle}
+                        onMapStyleChange={(newMapStyle) =>
+                          setMapStyle(newMapStyle)
                         }
-                        onPlaceStyleChange={(newValue) =>
-                          setPlaceStyle(newValue)
-                        }
-                        overlayStyle={overlayStyle}
-                        placeStyle={placeStyle}
                       />
                     )}
                     {settingsOpen == 'filters' && (
@@ -325,7 +326,7 @@ const PlanMap: FC<PlanMapProps> = ({
               <PlanMapRenderer
                 areas={filteredAreas}
                 areaStats={areaStats}
-                areaStyle={areaStyle}
+                areaStyle={mapStyle.area}
                 canvassAssId={canvassAssId}
                 onSelectedIdChange={(newId) => {
                   setSelectedId(newId);
@@ -336,9 +337,9 @@ const PlanMap: FC<PlanMapProps> = ({
                     setSettingsOpen('select');
                   }
                 }}
-                overlayStyle={overlayStyle}
+                overlayStyle={mapStyle.overlay}
                 places={places}
-                placeStyle={placeStyle}
+                placeStyle={mapStyle.place}
                 selectedId={selectedId}
                 sessions={sessions}
               />

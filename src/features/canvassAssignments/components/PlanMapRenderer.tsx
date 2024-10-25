@@ -142,11 +142,27 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     ...places.map((place) => place.households.length)
   );
 
-  const getAreaBackgroundColor = (
+  const getAreaStrokeColor = (hasPeople: boolean) => {
+    if (areaStyle == 'hide') {
+      return 'transparent';
+    }
+
+    if (hasPeople) {
+      return theme.palette.primary.main;
+    } else {
+      return theme.palette.secondary.main;
+    }
+  };
+
+  const getAreaFillColor = (
     hasPeople: boolean,
     householdColorPercent: number,
     visitsColorPercent: number
   ) => {
+    if (areaStyle == 'hide') {
+      return 'transparent';
+    }
+
     if (areaStyle == 'assignees') {
       return hasPeople
         ? theme.palette.primary.main
@@ -364,23 +380,23 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                     )}
                   </DivIconMarker>
                 )}
-                {areaStyle != 'hide' && (
-                  <Polygon
-                    key={key}
-                    color={getAreaBackgroundColor(
-                      hasPeople,
-                      householdColorPercent,
-                      visitsColorPercent
-                    )}
-                    eventHandlers={{
-                      click: () => {
-                        onSelectedIdChange(selected ? '' : area.id);
-                      },
-                    }}
-                    positions={area.points}
-                    weight={selected ? 5 : 2}
-                  />
-                )}
+                <Polygon
+                  key={key}
+                  color={getAreaStrokeColor(hasPeople)}
+                  eventHandlers={{
+                    click: () => {
+                      onSelectedIdChange(selected ? '' : area.id);
+                    },
+                  }}
+                  fillColor={getAreaFillColor(
+                    hasPeople,
+                    householdColorPercent,
+                    visitsColorPercent
+                  )}
+                  interactive={areaStyle != 'hide' ? true : false}
+                  positions={area.points}
+                  weight={selected ? 5 : 2}
+                />
               </>
             );
           })}

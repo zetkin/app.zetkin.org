@@ -6,107 +6,121 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
+
+import { MapStyle } from './PlanMap';
 
 type LayerSettingsProps = {
-  areaStyle: 'assignees' | 'households' | 'progress' | 'hide';
-  onAreaStyleChange: (
-    newValue: 'assignees' | 'households' | 'progress' | 'hide'
-  ) => void;
-  onOverlayStyleChange: (
-    newValue: 'assignees' | 'households' | 'progress' | 'hide'
-  ) => void;
-  onPlaceStyleChange: (
-    newValue: 'dot' | 'households' | 'progress' | 'hide'
-  ) => void;
-  overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
-  placeStyle: 'dot' | 'households' | 'progress' | 'hide';
+  mapStyle: MapStyle;
+  onMapStyleChange: (newMapStyle: MapStyle) => void;
 };
 
 const LayerSettings: FC<LayerSettingsProps> = ({
-  areaStyle,
-  onAreaStyleChange,
-  onOverlayStyleChange,
-  onPlaceStyleChange,
-  overlayStyle,
-  placeStyle,
+  mapStyle,
+  onMapStyleChange,
 }) => {
-  const hasAssigneesPreset =
-    overlayStyle == 'assignees' &&
-    areaStyle == 'assignees' &&
-    placeStyle == 'dot';
+  const planPreset: MapStyle = {
+    area: 'assignees',
+    overlay: 'assignees',
+    place: 'dot',
+  };
+  const isPlanPreset =
+    mapStyle.area == planPreset.area &&
+    mapStyle.overlay == planPreset.overlay &&
+    mapStyle.place == planPreset.place;
 
-  const hasHouseholdsPreset =
-    overlayStyle == 'households' &&
-    placeStyle == 'households' &&
-    areaStyle == 'households';
+  const executePreset: MapStyle = {
+    area: 'households',
+    overlay: 'households',
+    place: 'households',
+  };
+  const isExecutePreset =
+    mapStyle.area == executePreset.area &&
+    mapStyle.overlay == executePreset.overlay &&
+    mapStyle.place == executePreset.place;
 
-  const hasProgressPreset =
-    overlayStyle == 'assignees' &&
-    placeStyle == 'progress' &&
-    areaStyle == 'progress';
+  const evaluatePreset: MapStyle = {
+    area: 'progress',
+    overlay: 'assignees',
+    place: 'progress',
+  };
+  const isEvaluatePreset =
+    mapStyle.area == evaluatePreset.area &&
+    mapStyle.overlay == evaluatePreset.overlay &&
+    mapStyle.place == evaluatePreset.place;
 
-  const isCustom =
-    !hasHouseholdsPreset && !hasProgressPreset && !hasAssigneesPreset;
+  const isPreset = isPlanPreset || isEvaluatePreset || isExecutePreset;
 
-  const [showCustomControls, setShowCustomControls] = useState(isCustom);
+  const [showCustomControls, setShowCustomControls] = useState(!isPreset);
+  const customSettingsRef = useRef<MapStyle>({
+    area: 'hide',
+    overlay: 'hide',
+    place: 'hide',
+  });
 
   return (
     <Box alignItems="flex-start" display="flex" flexDirection="column" gap={1}>
-      Pick a style for your map layers
+      The style of your map layers
       <Box
-        bgcolor={hasAssigneesPreset ? 'lightblue' : ''}
+        bgcolor={isPlanPreset && !showCustomControls ? 'lightblue' : ''}
         border={1}
         onClick={() => {
-          onOverlayStyleChange('assignees');
-          onAreaStyleChange('assignees');
-          onPlaceStyleChange('dot');
+          setShowCustomControls(false);
+          onMapStyleChange(planPreset);
         }}
         padding={1}
         sx={{ cursor: 'pointer' }}
       >
-        <Typography>Assigned areas</Typography>
+        <Typography>Plan</Typography>
       </Box>
       <Box
-        bgcolor={hasHouseholdsPreset ? 'lightblue' : ''}
+        bgcolor={isExecutePreset && !showCustomControls ? 'lightblue' : ''}
         border={1}
         onClick={() => {
-          onOverlayStyleChange('households');
-          onAreaStyleChange('households');
-          onPlaceStyleChange('households');
+          setShowCustomControls(false);
+          onMapStyleChange(executePreset);
         }}
         padding={1}
         sx={{ cursor: 'pointer' }}
       >
-        <Typography>Number of households</Typography>
+        <Typography>Execute</Typography>
       </Box>
       <Box
-        bgcolor={hasProgressPreset ? 'lightblue' : ''}
+        bgcolor={isEvaluatePreset && !showCustomControls ? 'lightblue' : ''}
         border={1}
         onClick={() => {
-          onOverlayStyleChange('assignees');
-          onAreaStyleChange('progress');
-          onPlaceStyleChange('progress');
+          setShowCustomControls(false);
+          onMapStyleChange(evaluatePreset);
         }}
         padding={1}
         sx={{ cursor: 'pointer' }}
       >
-        <Typography>Canvasser progress</Typography>
+        <Typography>Evaluate</Typography>
       </Box>
       <Box
-        bgcolor={isCustom ? 'lightblue' : ''}
+        bgcolor={!isPreset || showCustomControls ? 'lightblue' : ''}
         border={1}
-        onClick={() => setShowCustomControls(!showCustomControls)}
+        onClick={() => {
+          setShowCustomControls(true);
+          onMapStyleChange(customSettingsRef.current);
+        }}
         padding={1}
         sx={{ cursor: 'pointer' }}
       >
         <Typography>Custom</Typography>
       </Box>
       {showCustomControls && (
-        <Box display="flex" flexDirection="column" gap={2} paddingTop={1}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          paddingTop={1}
+          width="100%"
+        >
           <FormControl variant="outlined">
             <InputLabel id="place-style-label">Place</InputLabel>
             <Select
+              fullWidth
               label="Place"
               labelId="place-style-label"
               onChange={(ev) => {
@@ -117,10 +131,11 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                   newValue == 'progress' ||
                   newValue == 'hide'
                 ) {
-                  onPlaceStyleChange(newValue);
+                  onMapStyleChange({ ...mapStyle, place: newValue });
+                  customSettingsRef.current = { ...mapStyle, place: newValue };
                 }
               }}
-              value={placeStyle}
+              value={mapStyle.place}
             >
               <MenuItem value="dot">Dot</MenuItem>
               <MenuItem value="households">Number of households</MenuItem>
@@ -133,6 +148,7 @@ const LayerSettings: FC<LayerSettingsProps> = ({
           <FormControl variant="outlined">
             <InputLabel id="area-style-label">Area</InputLabel>
             <Select
+              fullWidth
               label="Area"
               labelId="area-style-color"
               onChange={(ev) => {
@@ -143,10 +159,11 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                   newValue == 'hide' ||
                   newValue == 'assignees'
                 ) {
-                  onAreaStyleChange(newValue);
+                  onMapStyleChange({ ...mapStyle, area: newValue });
+                  customSettingsRef.current = { ...mapStyle, area: newValue };
                 }
               }}
-              value={areaStyle}
+              value={mapStyle.area}
             >
               <MenuItem value="assignees">Assignees</MenuItem>
               <MenuItem value="households">Number of households</MenuItem>
@@ -159,6 +176,7 @@ const LayerSettings: FC<LayerSettingsProps> = ({
           <FormControl variant="outlined">
             <InputLabel id="overlay-style-label">Overlay</InputLabel>
             <Select
+              fullWidth
               label="Overlay"
               labelId="overlay-style-label"
               onChange={(ev) => {
@@ -169,10 +187,14 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                   newValue == 'progress' ||
                   newValue == 'hide'
                 ) {
-                  onOverlayStyleChange(newValue);
+                  onMapStyleChange({ ...mapStyle, overlay: newValue });
+                  customSettingsRef.current = {
+                    ...mapStyle,
+                    overlay: newValue,
+                  };
                 }
               }}
-              value={overlayStyle}
+              value={mapStyle.overlay}
             >
               <MenuItem value="assignees">Assignees</MenuItem>
               <MenuItem value="households">Number of households</MenuItem>
