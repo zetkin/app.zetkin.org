@@ -114,19 +114,28 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             area.points.map((point) => ({ lat: point[0], lng: point[1] }))
           );
 
+          const configuredMetrics = assignmentModel.metrics;
+          const idOfMetricThatDefinesDone = configuredMetrics.find(
+            (metric) => metric.definesDone
+          )?._id;
+
           if (placeIsInArea) {
             if (!statsByAreaId[area.id]) {
               statsByAreaId[area.id] = {
                 areaId: area.id,
                 num_households: 0,
                 num_places: 0,
+                num_successful_visited_households: 0,
+                num_visited_households: 0,
+                num_visited_places: 0,
                 num_visits: 0,
               };
             }
 
             statsByAreaId[area.id].num_places++;
-
             statsByAreaId[area.id].num_households += place.households.length;
+
+            let placeVisited = false;
 
             place.households.forEach((household) => {
               const hasVisitInThisAssignment = household.visits.find(
@@ -135,7 +144,26 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
               if (hasVisitInThisAssignment) {
                 statsByAreaId[area.id].num_visits++;
+                statsByAreaId[area.id].num_visited_households++;
+
+                if (!placeVisited) {
+                  statsByAreaId[area.id].num_visited_places++;
+                  placeVisited = true;
+                }
               }
+
+              household.visits.forEach((visit) => {
+                if (visit.canvassAssId == params.canvassAssId) {
+                  visit.responses.forEach((response) => {
+                    if (response.metricId == idOfMetricThatDefinesDone) {
+                      if (response.response == 'yes') {
+                        statsByAreaId[area.id]
+                          .num_successful_visited_households++;
+                      }
+                    }
+                  });
+                }
+              });
             });
           }
         });

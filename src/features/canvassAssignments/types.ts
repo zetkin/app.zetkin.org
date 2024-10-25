@@ -119,6 +119,9 @@ export type ZetkinAssignmentAreaStatsItem = {
   areaId: string;
   num_households: number;
   num_places: number;
+  num_successful_visited_households: number;
+  num_visited_households: number;
+  num_visited_places: number;
   num_visits: number;
 };
 
