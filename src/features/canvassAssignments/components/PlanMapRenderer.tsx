@@ -416,27 +416,27 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
+                {placeStyle != 'hide' &&
+                  placesInArea.map((place) => (
+                    <DivIconMarker
+                      key={place.id}
+                      position={{
+                        lat: place.position.lat,
+                        lng: place.position.lng,
+                      }}
+                    >
+                      <PlaceMarker
+                        canvassAssId={canvassAssId}
+                        largestNumberOfHouseholds={largestNumberOfHouseholds}
+                        place={place}
+                        placeStyle={placeStyle}
+                      />
+                    </DivIconMarker>
+                  ))}
               </>
             );
           })}
       </FeatureGroup>
-      {placeStyle != 'hide' &&
-        places.map((place) => (
-          <DivIconMarker
-            key={place.id}
-            position={{
-              lat: place.position.lat,
-              lng: place.position.lng,
-            }}
-          >
-            <PlaceMarker
-              canvassAssId={canvassAssId}
-              largestNumberOfHouseholds={largestNumberOfHouseholds}
-              place={place}
-              placeStyle={placeStyle}
-            />
-          </DivIconMarker>
-        ))}
     </>
   );
 };
