@@ -3,11 +3,11 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import messageIds from 'features/organizations/l10n/messageIds';
-import NoMenuLayout from 'utils/layout/NoMenuLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import UserOrganizations from 'features/organizations/components/OrganizationsList';
+import ZUILogo from 'zui/ZUILogo';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -27,7 +27,10 @@ const OrganizePage: PageWithLayout = () => {
       <Head>
         <title>{messages.page.title()}</title>
       </Head>
-      <Box m={2} maxWidth={800}>
+      <Box maxWidth={800} mx="auto" my={2}>
+        <Box textAlign="center">
+          <ZUILogo htmlColor="black" size={100} />
+        </Box>
         <UserOrganizations />
       </Box>
     </>
@@ -35,7 +38,7 @@ const OrganizePage: PageWithLayout = () => {
 };
 
 OrganizePage.getLayout = function getLayout(page) {
-  return <NoMenuLayout>{page}</NoMenuLayout>;
+  return page;
 };
 
 export default OrganizePage;
