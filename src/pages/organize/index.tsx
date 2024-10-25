@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
@@ -26,7 +27,9 @@ const OrganizePage: PageWithLayout = () => {
       <Head>
         <title>{messages.page.title()}</title>
       </Head>
-      <UserOrganizations />
+      <Box m={2} maxWidth={800}>
+        <UserOrganizations />
+      </Box>
     </>
   );
 };
