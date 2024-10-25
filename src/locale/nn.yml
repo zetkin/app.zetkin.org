@@ -54,6 +54,8 @@ feat:
     createMenu:
       shiftEvent: Opprett flere arrangementer som blir til skift
       singleEvent: Nytt arrangement
+    dstEnds: Vintertid
+    dstStarts: Sommertid
     event:
       differentLocations: '{numLocations} ulike steder'
       events: Arrangementer
@@ -103,6 +105,7 @@ feat:
       copy: Kopier
       deselect: Ikke velg
       editEvents: Rediger arrangementer
+      editParticipants: Behandle deltakere
       ellipsisMenu:
         cancel: Avlys
         cancelWarning: Hvis ja, husk å varsle alle deltakere om at arrangementet er
@@ -152,7 +155,7 @@ feat:
         placeholder: Legg til ringer
       customize:
         exclude:
-          h: Utelukkede tags
+          h: Utelukkede etiketter
           intro: Aldri ring folk med disse etikettene.
         prioritize:
           h: Prioriterte etiketter
@@ -273,6 +276,13 @@ feat:
       viewArchive: Vis arkiv
     assigneeActions: Klikk i appen
     calendarView: Se alle i kalender
+    createButton:
+      createActivity: Opprett
+      createCallAssignment: Ringeoppdrag
+      createEmail: E-post
+      createEvent: Arrangement
+      createSurvey: Spørreundersøkelse
+      createTask: App-innhold
     events: Arrangementer
     feedback:
       copy: Innsamling av tilbakemeldinger kan hjelpe deg å arbeide mer effektivt.
@@ -392,6 +402,11 @@ feat:
         name: Navn
         phone: Telefonnummer
       title: Slå sammen duplikater
+      warningMessage: Alle opplysninger knytta til personenen blir overført til den
+        sammenslåtte personen, dette inkluderer deltakelse på arrangementer, besvarte
+        spørreundersøkelser, etiketter, etc. Informasjonene i feltene du forkaster
+        blir slettet.
+      warningTitle: Risiko for tap av informasjon
     page:
       dismiss: Se bort fra
       noDuplicates: Ingen duplikater
@@ -418,6 +433,7 @@ feat:
       targetsNotLocked: Målgruppa er ikke låst. Gå til Klar i Oversikt for å låse.
     deliveryStatus:
       notLocked: Ikke låst, ikke planlagt
+      notProcessed: Planlagt sendt så raskt som mulig
       notScheduled: Ikke planlagt
       wasSent: Sendt {datetime}
       willSend: Sendes {datetime}
@@ -489,6 +505,41 @@ feat:
     emailFeatureIsBlocked:
       errorMessage: Organisasjonen din har ikke tilgang til å sende e-post.
       goBackButton: Gå tilbake
+    insights:
+      clicked:
+        descriptions:
+          ctor: Klikk til åpningsrate (CTOR - click-to-open-rate) er andelen av de
+            som åpnet e-posten som også klikket på en lenke i den. En høy klikk til
+            åpningsrate er et tegn på en smart definert målgruppe og god tekst.
+          ctr: Klikkfrekvens (CTR - clickthrough rate) er den andelen av mottakerne
+            som både åpnet e-posten og klikket på en av lenkene i den. En høy klikkfrekvens
+            er et tegn på en smart definert målgruppe og god tekst.
+        gauge:
+          headers:
+            ctor: CTOR
+            ctr: CTR
+        header: Klikket
+        metrics:
+          ctor: CTOR
+          ctr: CTR
+      comparison:
+        label: Sammenlign med
+      opened:
+        chart:
+          afterSend: Etter den ble sendt
+          opened: '{count} åpnet'
+          spans:
+            allTime: All tid
+            first24: Første 24 timer
+            first48: Første 48 timer
+            firstMonth: Første 30 dager
+            firstWeek: Første 7 dager
+        description: Åpningsrate er prosentandelen av mottakerne som åpnet e-posten.
+          En høy rate betyr ofte at målgruppa er riktig og at emnefeltet i e-posten
+          var godt skrevet.
+        gauge:
+          header: Åpningsrate
+        header: Åpnet
     ready:
       loading: Laster...
       lockButton: Lås for levering
@@ -514,6 +565,7 @@ feat:
         {# mottakere}}'
     tabs:
       compose: Utforming
+      insights: Innsikt
       overview: Oversikt
     targets:
       defineButton: Velg målgruppe
@@ -553,12 +605,18 @@ feat:
       cancel: Avlys
       delete: Slett
       duplicate: Kopier
+      move: Flytt
       publish: Publiser
       restore: Gjenopprett
       unpublish: Avpubliser
       warning: '"{eventTitle}" vil bli slettet.'
       warningCancel: '"{eventTitle}" vil bli avlyst.'
       warningRestore: '"{eventTitle}" vil bli gjenopprettet.'
+    eventChangeCampaignDialog:
+      dialogTitle: Flytt arrangement
+      error: 'Feil: Kunne ikke flytte arrangementet til det valgte prosjektet'
+      moveButtonLabel: Flytt
+      success: Arrangementet ble flyttet til "{campaignTitle}"
     eventContactCard:
       header: Kontakt
       noContact: Ingen kontaktperson tildelt!
@@ -733,6 +791,33 @@ feat:
       remindButtondisabledTooltip: Du må velge en kontaktperson før du sender varsler
       reqParticipantsHelperText: Minimum antall deltakere som trengs
       reqParticipantsLabel: Deltakere
+    participantsModal:
+      affected:
+        empty: Du har ikke gjort noen endringer. Velg et arrangement for å flytte
+          deltakere.
+        header: Påvirkede folk
+      discardButton: Forkast endringer
+      emptyStates:
+        booked: Ingen har blitt registrert på dette arrangementet. Du kan legge til
+          deltakere fra de som er tilgjengelige.
+        pending: Det er ingen tilgjengelige deltakere. Flytt deltakere fra et arrangement
+          for å gjøre dem tilgjengelige.
+      participants:
+        buttons:
+          addBack: Flytt tilbake
+          addHere: Legg til her
+          move: Flytt
+          undo: Angre
+        headers:
+          booked: Dette arrangementet
+          pending: Folk som kan bli lagt til
+        states:
+          added: Blir lagt til dette arrangementet
+          pending: Tilgjengelig
+          removed: Flyttes bort fra dette arrangementet
+      statusText: '{personCount, plural, =1 {En person} other {# folk}} blir flyttet'
+      submitButton: Utfør
+      title: Behandle deltakere
     search: Søk
     state:
       cancelled: Avlyst
@@ -1027,6 +1112,12 @@ feat:
           {# folk}}.
   joinForms:
     defaultTitle: Skjema uten tittel
+    embedding:
+      copyLink: Kopier innbyggingslenke
+      formSubmitted: Skjema sendt inn
+      linkCopied: Innbyggingslenke kopiert
+      openLink: Besøk nå
+      submitButton: Send inn
     formPane:
       labels:
         addField: Legg til felt
@@ -1262,6 +1353,9 @@ feat:
         demote: Nedgrader
         promote: Oppgrader
         remove: Fjern
+      urlCard:
+        linkToPub: Lenke til organisasjonen
+        subTitle: Brukere må koble til organisasjonen for å kunne logge inn som tillitsvalgt
       you: Du
   smartSearch:
     buttonLabels:
@@ -1406,13 +1500,17 @@ feat:
           none: Denne organisasjonen har ingen ringeoppdrag, ennå!
         callSelect:
           called: har blitt ringt
+          notreached: har ikke blitt nådd
           reached: har blitt nådd
         examples:
           one: Legg til folk som har blitt nådd minst 2 ganger i et hvilket som helst
             ringeoppdrag når som helst.
           two: Fjern folk som har blitt ringt minst en gang i ringeoppdraget "Valgkamp
             2023" de siste 30 dagene.
+        inputString: '{addRemoveSelect} folk som {callSelect} {minTimes} i {assignmentSelect}
+          {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {ganger}}'
+        minTimesInput: minst {input} {minTimes, plural, one {time} other {times}}
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
@@ -1554,11 +1652,13 @@ feat:
             any: en av
             minMatching: minst
             none: ingen
+            some: minst
           preview:
             all: alle
             any: en av
             minMatching: minst {minMatching}
             none: ingen
+            some: minst {minMatching}
         examples:
           one: 'Legg til folk med minst 1 av følgende: ''Medlem'', ''Aktivist'''
           two: 'Fjern folk med alle av følgende: ''Styremedlem'''
@@ -1627,6 +1727,7 @@ feat:
           all: alle
           any: noen
           none: ingen
+          some: noen
         examples:
           one: 'Fjern folk som har valgt alle de følgende alternativene i spørreundersøkelsen
             ''Medlemsundersøkelse'' (spørsmålet ''Hvordan er du interessert i å bidra?''):
@@ -1739,6 +1840,9 @@ feat:
         once: minst en gang
     misc:
       noOptions: Ingen like tags
+      noOptionsEmailNotSent: E-post ikke sendt. Lenker som er lagt til i e-posten
+        blir lagt til etter den blir sendt.
+      noOptionsInvalidEmail: Ugyldig e-post, velg en e-post.
       noOptionsLinks: Ingen lenker som passer
     operators:
       add: Legg til
@@ -1922,6 +2026,34 @@ feat:
       personRecordColumn: Innsender
       suggestedPeople: Foreslåtte folk
       unlink: Fjern kobling
+    surveyForm:
+      accept: Jeg aksepterer vilkårene under
+      error: Noe gikk galt med å sende inn svarene, forsøk igjen senere.
+      policy:
+        text: Klikk for å lese hele personvernerklæringen til Zetkin
+      required: påkrevd
+      sign:
+        anonymous: Signer anonymt
+        nameAndEmail: Signer med navn og e-post
+      submit: Send inn
+      terms:
+        description: Når du sender inn denne undersøkelsen blir svarene oppbevart
+          og brukt i Zetkin av {organization} for å organisere aktivisme og annen
+          aktivitet. Behandlingen følger Zetkins personvernerklæring.
+        title: Personvernerklæring
+    surveyFormSubmitted:
+      text: Dine svar på "{title}" har blitt sendt inn.
+      title: Undersøkelse sendt inn
+    surveySignature:
+      email:
+        email: E-post
+        firstName: Fornavn
+        lastName: Etternavn
+      title: Velg hvordan du vil signere
+      type:
+        anonymous: Signer anonymt
+        email: Signer med navn og e-post
+        user: Signer som {person} med e-posten {email}
     tabs:
       overview: Oversikt
       questions: Spørsmål
@@ -1971,6 +2103,7 @@ feat:
       types:
         none: Vanlig
         text: Med tekst
+      updateTagButton: Oppdater
     manager:
       addTag: Legg til etikett
       addValue: Legg til tekst for "{tag}"
@@ -2162,6 +2295,7 @@ feat:
           warning: Er du sikker på at du vil slette lista? Dette kan ikke angres.
       menu:
         delete: Slett
+        move: Flytt
         rename: Gi nytt navn
       moveToFolder: Flytt til {folder}
       moveToRoot: Flytt til forsiden for lister
@@ -2379,6 +2513,10 @@ feat:
     footer:
       addPlaceholder: Begynn å skrive for å legge til en person i lista
       alreadyInView: Finnes i lista fra før
+    moveViewDialog:
+      cancel: Avbryt
+      emptyFolder: Tom mappe
+      moveHere: Flytt hit
     newFolderTitle: Ny mappe
     newViewFields:
       title: Ny liste
@@ -2505,6 +2643,7 @@ zui:
     title:
       addToJourney: Opprett person og legg til i {journey}
       addToList: Opprett person og legg til i {list}
+      assignToCanvassAssignment: Opprett person og meld på {canvassAss}
       assignToJourney: Opprett person og tildel til {journey}
       caller: Opprett person og legg til som ringer
       contact: Opprett person og legg til som kontaktperson
@@ -2542,6 +2681,8 @@ zui:
     tooltip:
       edit: Klikk for å redigere
       noEmpty: Dette feltet kan ikke være tomt
+  editableImage:
+    add: Klikk for å legge til bilde
   futures:
     errorLoading: Kunne ikke laste dataen
   header:
@@ -2611,6 +2752,7 @@ zui:
         from: Fra
         to: Til
     expand: vis hele tidslinja
+    fileUploadErrorMessage: Kunne ikke legge til notat, det er kanskje for langt.
     filter:
       byType:
         all: Alle
