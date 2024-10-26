@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.main,
     },
     '& .MuiToggleButton-root.Mui-selected': {
+      '&:hover': {
+        color: theme.palette.primary.main,
+      },
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
     },
