@@ -4,7 +4,7 @@ import ZUIEmptyState from '.';
 
 export default {
   component: ZUIEmptyState,
-  title: 'ZUIEmptyState',
+  title: 'Old/ZUIEmptyState',
 } as Meta<typeof ZUIEmptyState>;
 
 const Template: StoryFn<typeof ZUIEmptyState> = (args) => {

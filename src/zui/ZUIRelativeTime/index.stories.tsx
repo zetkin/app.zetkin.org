@@ -4,7 +4,7 @@ import ZUIRelativeTime from '.';
 
 export default {
   component: ZUIRelativeTime,
-  title: 'Atoms/ZUIRelativeTime',
+  title: 'Old/ZUIRelativeTime',
 } as Meta<typeof ZUIRelativeTime>;
 
 const Template: StoryFn<typeof ZUIRelativeTime> = (args) => (

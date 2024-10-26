@@ -9,7 +9,7 @@ import { UPDATE_TYPES } from 'zui/ZUITimeline/types';
 
 export default {
   component: TimelineTags,
-  title: 'Organisms/Timeline/Updates/TimelineTags',
+  title: 'Old/ZUITimeline/Updates/TimelineTags',
 } as Meta<typeof TimelineTags>;
 
 const Template: StoryFn<typeof TimelineTags> = (args) => (

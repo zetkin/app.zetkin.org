@@ -4,7 +4,7 @@ import ZUIDuration from '.';
 
 export default {
   component: ZUIDuration,
-  title: 'Atoms/ZUIDuration',
+  title: 'Old/ZUIDuration',
 } as Meta<typeof ZUIDuration>;
 
 export const Basic: StoryObj<typeof ZUIDuration> = {

@@ -4,7 +4,7 @@ import ZUITimeSpan from '.';
 
 export default {
   component: ZUITimeSpan,
-  title: 'ZUITimeSpan',
+  title: 'Old/ZUITimeSpan',
 } as Meta<typeof ZUITimeSpan>;
 
 const Template: StoryFn<typeof ZUITimeSpan> = (args) => {

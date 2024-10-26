@@ -5,7 +5,7 @@ import ZUIPerson from '.';
 
 export default {
   component: ZUIPerson,
-  title: 'Atoms/ZUIPerson',
+  title: 'Old/ZUIPerson',
 } as Meta<typeof ZUIPerson>;
 
 const Template: StoryFn<typeof ZUIPerson> = (args) => (

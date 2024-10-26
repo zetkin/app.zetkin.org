@@ -15,6 +15,7 @@ import ZUIText from 'zui/ZUIText';
 
 const meta: Meta<typeof RightSide> = {
   component: RightSide,
+  title: 'New Design System/ZUIHeader',
 };
 export default meta;
 

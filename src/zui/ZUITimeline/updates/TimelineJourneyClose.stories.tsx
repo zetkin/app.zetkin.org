@@ -7,7 +7,7 @@ import { UPDATE_TYPES } from 'zui/ZUITimeline/types';
 
 export default {
   component: TimelineJourneyClose,
-  title: 'Organisms/Timeline/Updates/TimelineJourneyClose',
+  title: 'Old/ZUITimeline/Updates/TimelineJourneyClose',
 } as Meta<typeof TimelineJourneyClose>;
 
 const Template: StoryFn<typeof TimelineJourneyClose> = (args) => (

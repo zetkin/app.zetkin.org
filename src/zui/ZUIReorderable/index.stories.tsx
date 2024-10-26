@@ -6,7 +6,7 @@ import ZUIReorderable from '.';
 
 export default {
   component: ZUIReorderable,
-  title: 'Atoms/ZUIReorderable',
+  title: 'Old/ZUIReorderable',
 } as Meta<typeof ZUIReorderable>;
 
 const Template: StoryFn<typeof ZUIReorderable> = (args) => {

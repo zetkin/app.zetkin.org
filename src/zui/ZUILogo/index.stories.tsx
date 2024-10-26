@@ -4,7 +4,7 @@ import ZUILogo from '.';
 
 export default {
   component: ZUILogo,
-  title: 'Atoms/ZUILogo',
+  title: 'Old/ZUILogo',
 } as Meta<typeof ZUILogo>;
 
 const Template: StoryFn<typeof ZUILogo> = (args) => (

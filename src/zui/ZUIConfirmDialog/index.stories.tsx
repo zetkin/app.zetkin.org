@@ -4,7 +4,7 @@ import ZUIConfirmDialog from '.';
 
 export default {
   component: ZUIConfirmDialog,
-  title: 'Atoms/ZetkinConfirmDialog',
+  title: 'Old/ZUIConfirmDialog',
 } as Meta<typeof ZUIConfirmDialog>;
 
 const Template: StoryFn<typeof ZUIConfirmDialog> = (args) => (

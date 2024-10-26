@@ -4,6 +4,7 @@ import ZUIBarDiagram from './index';
 
 const meta: Meta<typeof ZUIBarDiagram> = {
   component: ZUIBarDiagram,
+  title: 'Old/ZUIBarDiagram',
 };
 export default meta;
 

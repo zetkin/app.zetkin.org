@@ -5,7 +5,7 @@ import ZUICheckbox from '.';
 
 export default {
   component: ZUICheckbox,
-  title: 'ZUICheckbox',
+  title: 'New Design System/ZUICheckbox',
 } as Meta<typeof ZUICheckbox>;
 
 type Story = StoryObj<typeof ZUICheckbox>;

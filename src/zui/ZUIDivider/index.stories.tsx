@@ -7,6 +7,7 @@ import ZUIText from 'zui/ZUIText';
 
 const meta: Meta<typeof ZUIDivider> = {
   component: ZUIDivider,
+  title: 'New Design System/ZUIDivider',
 };
 export default meta;
 type Story = StoryObj<typeof ZUIDivider>;

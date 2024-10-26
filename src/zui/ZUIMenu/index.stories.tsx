@@ -7,6 +7,7 @@ import ZUIMenu from './index';
 
 const meta: Meta<typeof ZUIMenu> = {
   component: ZUIMenu,
+  title: 'New Design System/ZUIMenu',
 };
 export default meta;
 

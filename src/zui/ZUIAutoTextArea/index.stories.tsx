@@ -4,7 +4,7 @@ import ZUIAutoTextArea from '.';
 
 export default {
   component: ZUIAutoTextArea,
-  title: 'Atoms/ZUIAutoTextArea',
+  title: 'Old/ZUIAutoTextArea',
 } as Meta<typeof ZUIAutoTextArea>;
 
 const Template: StoryFn<typeof ZUIAutoTextArea> = (args) => (

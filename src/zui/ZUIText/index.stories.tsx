@@ -4,6 +4,7 @@ import ZUIText from './index';
 
 const meta: Meta<typeof ZUIText> = {
   component: ZUIText,
+  title: 'New Design System/ZUIText',
 };
 export default meta;
 

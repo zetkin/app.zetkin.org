@@ -5,6 +5,7 @@ import ZUITooltip from './index';
 
 const meta: Meta<typeof ZUITooltip> = {
   component: ZUITooltip,
+  title: 'New Design System/ZUITooltip',
 };
 export default meta;
 

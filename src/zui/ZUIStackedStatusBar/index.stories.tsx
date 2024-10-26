@@ -6,7 +6,7 @@ import ZUIStackedStatusBar from '.';
 
 export default {
   component: ZUIStackedStatusBar,
-  title: 'ZUIStackedStatusBar',
+  title: 'Old/ZUIStackedStatusBar',
 } as Meta<typeof ZUIStackedStatusBar>;
 
 const Template: StoryFn<typeof ZUIStackedStatusBar> = (args) => {

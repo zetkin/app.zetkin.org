@@ -5,6 +5,7 @@ import ZUICheckboxGroup from './index';
 
 const meta: Meta<typeof ZUICheckboxGroup> = {
   component: ZUICheckboxGroup,
+  title: 'New Design System/ZUICheckboxGroup',
 };
 export default meta;
 

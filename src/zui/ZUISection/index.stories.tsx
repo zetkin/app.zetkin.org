@@ -5,7 +5,7 @@ import ZUISection from '.';
 
 export default {
   component: ZUISection,
-  title: 'Atoms/ZUISection',
+  title: 'Old/ZUISection',
 } as Meta<typeof ZUISection>;
 
 const Template: StoryFn<typeof ZUISection> = (args) => (

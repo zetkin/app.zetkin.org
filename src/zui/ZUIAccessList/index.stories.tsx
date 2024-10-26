@@ -4,7 +4,7 @@ import ZUIAccessList from '.';
 
 export default {
   component: ZUIAccessList,
-  title: 'Molecules/ZUIAccessList',
+  title: 'Old/ZUIAccessList',
 } as Meta<typeof ZUIAccessList>;
 
 const Template: StoryFn<typeof ZUIAccessList> = (args) => {

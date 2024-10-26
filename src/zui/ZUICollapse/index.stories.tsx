@@ -4,7 +4,7 @@ import ZUICollapse from '.';
 
 export default {
   component: ZUICollapse,
-  title: 'Atoms/ZUICollapse',
+  title: 'Old/ZUICollapse',
 } as Meta<typeof ZUICollapse>;
 
 const Template: StoryFn<typeof ZUICollapse> = (args) => (
