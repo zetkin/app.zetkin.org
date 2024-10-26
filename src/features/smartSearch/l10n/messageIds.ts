@@ -166,7 +166,7 @@ export default makeMessages('feat.smartSearch', {
       },
       callSelect: {
         called: m('have been called'),
-        notreached: m('have been unsuccessfully tried'),
+        notreached: m('have not been reached'),
         reached: m('have been successfully reached'),
       },
       examples: {
@@ -181,10 +181,10 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
         callSelect: ReactElement;
-        minTimes: ReactElement | number;
+        minTimes: ReactElement | number | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {callSelect} at least {minTimes} in {assignmentSelect} {timeFrame}.'
+        '{addRemoveSelect} people who {callSelect} {minTimes} in {assignmentSelect} {timeFrame}.'
       ),
       minTimes: m<{ minTimes: number }>(
         '{minTimes, plural, one {once} other {# times}}'
@@ -192,7 +192,7 @@ export default makeMessages('feat.smartSearch', {
       minTimesInput: m<{
         input: ReactElement;
         minTimes: number;
-      }>('{input} {minTimes, plural, one {time} other {times}}'),
+      }>('at least {input} {minTimes, plural, one {time} other {times}}'),
     },
     campaignParticipation: {
       activitySelect: {
@@ -402,6 +402,10 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
         ),
+        enum: m<{
+          fieldSelect: ReactElement;
+          selectInput: ReactElement;
+        }>('{fieldSelect} is "{selectInput}"'),
         none: m("This organization doesn't have any custom fields yet."),
         text: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
           '{fieldSelect} matches "{freeTextInput}"'
@@ -420,6 +424,10 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldName: ReactElement | string; timeFrame: ReactElement }>(
           '{fieldName} is {timeFrame}'
         ),
+        enum: m<{
+          fieldName: ReactElement | string;
+          searchTerm: ReactElement | string;
+        }>('{fieldName} is "{searchTerm}"'),
         text: m<{
           fieldName: ReactElement | string;
           searchTerm: ReactElement | string;
@@ -435,23 +443,23 @@ export default makeMessages('feat.smartSearch', {
         conditionSelect: {
           all: m('all'),
           any: m('any'),
-          minMatching: m('at least'),
           none: m('none'),
+          some: m('at least'),
         },
         edit: {
           all: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
           any: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          minMatching: m<{
+          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          some: m<{
             conditionSelect: ReactElement;
             minMatchingInput: ReactElement;
           }>('{conditionSelect} {minMatchingInput}'),
-          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
         },
         preview: {
           all: m('all'),
           any: m('any'),
-          minMatching: m<{ minMatching: number }>('at least {minMatching}'),
           none: m('none'),
+          some: m<{ minMatching: number }>('at least {minMatching}'),
         },
       },
       examples: {
@@ -573,6 +581,7 @@ export default makeMessages('feat.smartSearch', {
         all: m('all'),
         any: m('any'),
         none: m('none'),
+        some: m('some'),
       },
       examples: {
         one: m(
@@ -775,6 +784,10 @@ export default makeMessages('feat.smartSearch', {
   },
   misc: {
     noOptions: m('No matching tags'),
+    noOptionsEmailNotSent: m(
+      'Email not sent. Links included in the email are added after it has been sent.'
+    ),
+    noOptionsInvalidEmail: m('Invalid email. Select an email first.'),
     noOptionsLinks: m('No matching links'),
   },
   operators: {

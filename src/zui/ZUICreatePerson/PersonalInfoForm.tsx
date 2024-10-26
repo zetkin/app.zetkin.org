@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
+import { CountryCode } from 'libphonenumber-js';
 
 import checkInvalidFields from './checkInvalidFields';
 import formatUrl from 'utils/formatUrl';
@@ -23,7 +24,12 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  ZetkinCreatePerson,
+  ZetkinTag,
+} from 'utils/types/zetkin';
+import useOrganization from '../../features/organizations/hooks/useOrganization';
 
 dayjs.extend(utc);
 
@@ -35,6 +41,7 @@ interface PersonalInfoFormProps {
   personalInfo: ZetkinCreatePerson;
   tags: number[];
 }
+
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   onChange,
   personalInfo,
@@ -44,6 +51,8 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
+  const organization = useOrganization(orgId).data;
+  const countryCode = organization?.country as CountryCode;
   const [showAllClickedType, setShowAllClickedType] =
     useState<ShowAllTriggeredType>(null);
 
@@ -66,7 +75,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       inputRef.current?.focus();
     }
   }, [showAllClickedType]);
-  const invalidFields = checkInvalidFields(customFields, personalInfo);
+  const invalidFields = checkInvalidFields(
+    customFields,
+    personalInfo,
+    countryCode
+  );
 
   return (
     <Box
@@ -174,6 +187,13 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       )}
       {!!showAllClickedType &&
         customFields.map((field) => {
+          if (
+            field.organization.id !== orgId &&
+            field.org_write !== 'suborgs'
+          ) {
+            // Don't show read-only fields from ancestor orgs
+            return;
+          }
           if (field.type === 'json') {
             return;
           } else if (field.type === 'date') {
@@ -204,6 +224,39 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                   onChange(field, formattedUrl ?? value);
                 }}
               />
+            );
+          } else if (
+            field.type === CUSTOM_FIELD_TYPE.ENUM &&
+            field.enum_choices
+          ) {
+            return (
+              <Box alignItems="flex-start" display="flex" flex={1}>
+                <FormControl fullWidth>
+                  <InputLabel>{field.title}</InputLabel>
+                  <Select
+                    fullWidth
+                    label={field.title}
+                    onChange={(ev) => {
+                      let value: string | null = ev.target.value as
+                        | string
+                        | null;
+                      if (value === '') {
+                        value = null;
+                      }
+                      onChange(field.slug, value);
+                    }}
+                  >
+                    <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
+                      <Msg id={messageIds.createPerson.enumFields.noneOption} />
+                    </MenuItem>
+                    {field.enum_choices.map((c) => (
+                      <MenuItem key={c.key} value={c.key}>
+                        {c.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
             );
           } else {
             return (

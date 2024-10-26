@@ -3,17 +3,10 @@ import { useState } from 'react';
 import { columnUpdate } from '../store';
 import { DateColumn } from '../utils/types';
 import parseDate from '../utils/parseDate';
-import useOrganization from 'features/organizations/hooks/useOrganization';
-import {
-  useAppDispatch,
-  useAppSelector,
-  useNumericRouteParams,
-} from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
-  const { orgId } = useNumericRouteParams();
-  const organization = useOrganization(orgId).data;
 
   const selectedSheetIndex = useAppSelector(
     (state) => state.import.pendingFile.selectedSheetIndex
@@ -52,15 +45,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
 
   type PersonNumberFormat = 'se' | 'dk' | 'no';
 
-  const personNumberFormats: PersonNumberFormat[] = [];
-
-  if (organization) {
-    personNumberFormats.push(
-      organization.country.toLowerCase() as PersonNumberFormat
-    );
-  } else {
-    personNumberFormats.push('se', 'dk', 'no');
-  }
+  const personNumberFormats: PersonNumberFormat[] = ['se', 'dk', 'no'];
 
   const dateFormats = {
     ['MM-DD-YYYY']: '10-06-2024',

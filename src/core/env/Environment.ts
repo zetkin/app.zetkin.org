@@ -1,31 +1,28 @@
 import IApiClient from 'core/api/client/IApiClient';
-import { Store } from '../store';
 
 type EnvVars = {
+  FEAT_AREAS?: string | null;
   MUIX_LICENSE_KEY: string | null;
   ZETKIN_APP_DOMAIN: string | null;
+  ZETKIN_GEN2_ORGANIZE_URL?: string | null;
 };
 
 export default class Environment {
   private _apiClient: IApiClient;
-  private _store: Store;
   private _vars: EnvVars;
 
   get apiClient() {
     return this._apiClient;
   }
 
-  constructor(store: Store, apiClient: IApiClient, envVars?: EnvVars) {
+  constructor(apiClient: IApiClient, envVars?: EnvVars) {
     this._apiClient = apiClient;
-    this._store = store;
     this._vars = envVars || {
+      FEAT_AREAS: null,
       MUIX_LICENSE_KEY: null,
       ZETKIN_APP_DOMAIN: null,
+      ZETKIN_GEN2_ORGANIZE_URL: null,
     };
-  }
-
-  get store() {
-    return this._store;
   }
 
   get vars() {

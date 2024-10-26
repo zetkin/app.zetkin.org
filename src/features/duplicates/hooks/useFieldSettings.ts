@@ -39,5 +39,13 @@ export default function useFieldSettings(duplicates: ZetkinPerson[]) {
     }
   });
 
-  return { fieldValues, initialOverrides };
+  function entryContainsOneValue(entry: Array<string | string[]>) {
+    return entry[1].length < 2;
+  }
+
+  const hasConflictingValues = !Object.entries(fieldValues).every(
+    entryContainsOneValue
+  );
+
+  return { fieldValues, hasConflictingValues, initialOverrides };
 }

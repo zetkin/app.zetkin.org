@@ -38,6 +38,7 @@ export default class EmailMJMLConverter {
           tagName: 'mj-button',
           attributes: {
             ...frame?.block_attributes?.button,
+            'css-class': `email-link-${block.data.tag}`,
             href: block.data.href,
           },
           content: block.data.text,
@@ -113,7 +114,7 @@ function inlineNodesToPlainHTML(nodes: EmailContentInlineNode[]): string {
       output += `<i>${htmlContent}</i>`;
     } else if (node.kind == 'link') {
       const htmlContent = inlineNodesToPlainHTML(node.content);
-      output += `<a href="${node.href}">${htmlContent}</a>`;
+      output += `<a class="email-link-${node.tag}" href="${node.href}">${htmlContent}</a>`;
     } else if (node.kind == 'lineBreak') {
       output += '<br>';
     }

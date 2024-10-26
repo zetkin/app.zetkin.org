@@ -278,3 +278,20 @@ export const getActivitiesByDay = (
 
   return dateHashmap;
 };
+
+export type DSTChange = 'summertime' | 'wintertime';
+export function getDstChangeAtDate(date: dayjs.Dayjs): DSTChange | undefined {
+  const change =
+    getTimezoneAtDate(date.startOf('day')) -
+    getTimezoneAtDate(date.endOf('day'));
+  if (change === 0) {
+    return undefined;
+  }
+  return change > 0 ? 'wintertime' : 'summertime';
+}
+
+export function getTimezoneAtDate(date: dayjs.Dayjs): number {
+  const jan = new Date(date.get('year'), 0, 1).getTimezoneOffset();
+  const jul = new Date(date.get('year'), 6, 1).getTimezoneOffset();
+  return (date.utcOffset() - Math.max(jan, jul)) / 60;
+}

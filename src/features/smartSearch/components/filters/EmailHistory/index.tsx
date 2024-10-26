@@ -177,11 +177,16 @@ const EmailHistory = ({
                 onChange={(e) => setValueToKey('operator', e.target.value)}
                 value={filter.config.operator}
               >
-                {Object.values(MESSAGE_KEY_BY_OP).map((operator) => (
-                  <MenuItem key={operator} value={operator}>
-                    <Msg id={localMessageIds.operatorSelect[operator]} />
-                  </MenuItem>
-                ))}
+                {Object.keys(MESSAGE_KEY_BY_OP).map((operator) => {
+                  const opKey = operator as keyof typeof MESSAGE_KEY_BY_OP;
+                  const messageKey = MESSAGE_KEY_BY_OP[opKey];
+
+                  return (
+                    <MenuItem key={operator} value={operator}>
+                      <Msg id={localMessageIds.operatorSelect[messageKey]} />
+                    </MenuItem>
+                  );
+                })}
               </StyledSelect>
             ),
             projectSelect:

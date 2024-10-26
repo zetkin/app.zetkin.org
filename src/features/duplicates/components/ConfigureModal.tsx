@@ -50,7 +50,8 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
     (person) => !selectedIds.includes(person.id)
   );
 
-  const { fieldValues, initialOverrides } = useFieldSettings(peopleToMerge);
+  const { hasConflictingValues, fieldValues, initialOverrides } =
+    useFieldSettings(peopleToMerge);
   const [overrides, setOverrides] = useState(initialOverrides);
 
   useEffect(() => {
@@ -89,16 +90,19 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
           width="50%"
         >
           <FieldSettings
+            duplicates={peopleToMerge}
             fieldValues={fieldValues}
             onChange={(field, value) => {
               setOverrides({ ...overrides, [`${field}`]: value });
             }}
           />
           <Box marginBottom={2} />
-          <Alert severity="info">
-            <AlertTitle>{messages.modal.infoTitle()}</AlertTitle>
-            {messages.modal.infoMessage()}
-          </Alert>
+          {hasConflictingValues && (
+            <Alert severity="warning">
+              <AlertTitle>{messages.modal.warningTitle()}</AlertTitle>
+              {messages.modal.warningMessage()}
+            </Alert>
+          )}
         </Box>
       </Box>
       <DialogActions sx={{ p: 2 }}>

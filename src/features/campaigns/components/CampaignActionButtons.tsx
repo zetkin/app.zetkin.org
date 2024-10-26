@@ -7,6 +7,7 @@ import {
   EmailOutlined,
   Event,
   HeadsetMic,
+  Map,
   OpenInNew,
   Settings,
 } from '@mui/icons-material';
@@ -28,6 +29,9 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
+import useCreateCanvassAssignment from 'features/areas/hooks/useCreateCanvassAssignment';
+import useFeature from 'utils/featureFlags/useFeature';
+import { AREAS } from 'utils/featureFlags';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -45,12 +49,14 @@ const CampaignActionButtons: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
   const organization = useOrganization(orgId).data;
+  const hasCanvassing = useFeature(AREAS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
+  const createCanvassAssignment = useCreateCanvassAssignment(orgId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -86,12 +92,12 @@ const CampaignActionButtons: React.FunctionComponent<
   const menuItems = [
     {
       icon: <Event />,
-      label: messages.linkGroup.createEvent(),
+      label: messages.createButton.createEvent(),
       onClick: handleCreateEvent,
     },
     {
       icon: <HeadsetMic />,
-      label: messages.linkGroup.createCallAssignment(),
+      label: messages.createButton.createCallAssignment(),
       onClick: () =>
         createCallAssignment({
           title: messages.form.createCallAssignment.newCallAssignment(),
@@ -99,7 +105,7 @@ const CampaignActionButtons: React.FunctionComponent<
     },
     {
       icon: <AssignmentOutlined />,
-      label: messages.linkGroup.createSurvey(),
+      label: messages.createButton.createSurvey(),
       onClick: () =>
         createSurvey({
           signature: 'require_signature',
@@ -108,15 +114,27 @@ const CampaignActionButtons: React.FunctionComponent<
     },
     {
       icon: <CheckBoxOutlined />,
-      label: messages.linkGroup.createTask(),
+      label: messages.createButton.createTask(),
       onClick: () => setCreateTaskDialogOpen(true),
     },
   ];
 
+  if (hasCanvassing) {
+    menuItems.push({
+      icon: <Map />,
+      label: messages.createButton.createCanvassAssignment(),
+      onClick: () =>
+        createCanvassAssignment({
+          campaign_id: campaign.id,
+          title: null,
+        }),
+    });
+  }
+
   if (organization.email && themes.length > 0) {
     menuItems.push({
       icon: <EmailOutlined />,
-      label: messages.linkGroup.createEmail(),
+      label: messages.createButton.createEmail(),
       onClick: () =>
         createEmail({
           campaign_id: campId,
@@ -131,7 +149,7 @@ const CampaignActionButtons: React.FunctionComponent<
       <Box>
         <ZUIButtonMenu
           items={menuItems}
-          label={messages.linkGroup.createActivity()}
+          label={messages.createButton.createActivity()}
         />
       </Box>
       <Box>

@@ -36,21 +36,33 @@ const EmailActionButtons = ({
         <CancelButton onClick={() => updateEmail({ published: null })} />
       )}
       {state === EmailState.DRAFT && <DeliveryButton email={email} />}
-      {email.published && state === EmailState.SENT && (
-        <Box alignItems="center" display="flex">
-          <Send color="secondary" sx={{ mr: 1 }} />
-          <Typography color="secondary">
-            <Msg
-              id={messageIds.deliveryStatus.wasSent}
-              values={{
-                datetime: (
-                  <ZUIDateTime convertToLocal datetime={email.published} />
-                ),
-              }}
-            />
-          </Typography>
-        </Box>
-      )}
+      {email.published &&
+        state === EmailState.SENT &&
+        email.processed !== null && (
+          <Box alignItems="center" display="flex">
+            <Send color="secondary" sx={{ mr: 1 }} />
+            <Typography color="secondary">
+              <Msg
+                id={messageIds.deliveryStatus.wasSent}
+                values={{
+                  datetime: (
+                    <ZUIDateTime convertToLocal datetime={email.published} />
+                  ),
+                }}
+              />
+            </Typography>
+          </Box>
+        )}
+      {email.published &&
+        state === EmailState.SENT &&
+        email.processed === null && (
+          <Box alignItems="center" display="flex">
+            <Send color="secondary" sx={{ mr: 1 }} />
+            <Typography color="secondary">
+              <Msg id={messageIds.deliveryStatus.notProcessed} />
+            </Typography>
+          </Box>
+        )}
       <ZUIEllipsisMenu
         items={[
           {
