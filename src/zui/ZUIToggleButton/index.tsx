@@ -6,7 +6,11 @@ import { FC } from 'react';
 const useStyles = makeStyles((theme) => ({
   toggleButtonGroup: {
     '& .MuiToggleButton-root': {
-      borderColor: theme.palette.primary.light,
+      '&:hover': {
+        backgroundColor: theme.palette.grey[100],
+        color: theme.palette.primary.main,
+      },
+      border: `1px solid ${theme.palette.primary.light}`,
       color: theme.palette.primary.main,
     },
     '& .MuiToggleButton-root.Mui-selected': {
@@ -42,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1.25rem',
       },
       padding: '0.313rem',
+    },
+    '& .MuiToggleButtonGroup-grouped:not(:first-of-type)': {
+      '&:hover': {
+        border: `1px solid ${theme.palette.primary.light}`,
+      },
     },
   },
 }));
