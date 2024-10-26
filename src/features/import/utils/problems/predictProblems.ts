@@ -73,9 +73,8 @@ export function predictProblems(
       return;
     }
 
+    let missingFirstOrLastName = false;
     let rowHasId = false;
-    let rowHasFirstName = false;
-    let rowHasLastName = false;
 
     sheet.columns.forEach((column, colIndex) => {
       if (column.selected) {
@@ -92,10 +91,6 @@ export function predictProblems(
               if (!valid) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
-            } else if (column.field == 'first_name') {
-              rowHasFirstName = true;
-            } else if (column.field == 'last_name') {
-              rowHasLastName = true;
             } else if (
               column.field == 'email' &&
               !isEmail(value.toString().trim())
@@ -128,25 +123,37 @@ export function predictProblems(
             column.kind == ColumnKind.FIELD &&
             (column.field == 'first_name' || column.field == 'last_name')
           ) {
+            missingFirstOrLastName = true;
             missingValueInName = true;
           }
         }
       }
     });
 
-    if (sheetHasFirstName && sheetHasLastName) {
-      if (!rowHasId && (!rowHasFirstName || !rowHasLastName)) {
-        if (!rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME]) {
-          rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME] = {
-            indices: [],
-            kind: ImportProblemKind.MISSING_ID_AND_NAME,
-          };
-        }
+    // When id is missing and first and last name columns configured but it is missing name value or
+    // when id is missing and one of name column configured
+    const problemWithIdColumn =
+      sheetHasId &&
+      !rowHasId &&
+      (sheetHasFirstName || sheetHasLastName) &&
+      (missingFirstOrLastName || !sheetHasFirstName || !sheetHasLastName);
 
-        rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME].indices.push(
-          rowIndex
-        );
+    // When there is no id column and first and last name columns are configured but missing name value
+    const problemWithNoIdColumn =
+      !sheetHasId &&
+      sheetHasFirstName &&
+      sheetHasLastName &&
+      missingFirstOrLastName;
+
+    if (problemWithIdColumn || problemWithNoIdColumn) {
+      const problemKey = ImportProblemKind.MISSING_ID_AND_NAME;
+      if (!rowProblemByKind[problemKey]) {
+        rowProblemByKind[problemKey] = {
+          indices: [],
+          kind: problemKey,
+        };
       }
+      rowProblemByKind[problemKey].indices.push(rowIndex);
     }
   });
 

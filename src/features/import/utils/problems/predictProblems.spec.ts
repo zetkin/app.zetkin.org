@@ -412,7 +412,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'first_name',
+          field: 'last_name',
           kind: ColumnKind.FIELD,
           selected: true,
         },
@@ -422,6 +422,32 @@ describe('predictProblem()', () => {
 
     const problems = predictProblems(sheet, 'SE', []);
     expect(problems).toEqual([]);
+  });
+
+  it('returns problem when ID is missing and only one of name column is configured', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      rows: [{ data: [null, 'Clara'] }],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        indices: [0],
+        kind: ImportProblemKind.MISSING_ID_AND_NAME,
+      },
+    ]);
   });
 
   it('returns problem when ID and name are configured but missing on a row', () => {
