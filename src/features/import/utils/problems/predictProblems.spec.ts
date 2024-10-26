@@ -519,6 +519,31 @@ describe('predictProblem()', () => {
     ]);
   });
 
+  it('returns correct problem when column is not configured', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          kind: ColumnKind.UNKNOWN,
+          selected: false,
+        },
+      ],
+      rows: [
+        { data: ['Clara', 'Zetkin', 'zetkin@example.com'] },
+        { data: ['John', '', 'john@example.com'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
+      },
+      {
+        kind: 'NO_IMPACT',
+      },
+    ]);
+  });
+
   it('returns no problems when date column is configured and all cells have a value', () => {
     const sheet = makeFullSheet({
       columns: [
