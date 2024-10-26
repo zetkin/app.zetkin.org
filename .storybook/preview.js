@@ -61,7 +61,11 @@ class MockApiClient extends FetchApiClient {
 }
 
 export const decorators = [
-  (story) => <ThemeProvider theme={newTheme}>{story()}</ThemeProvider>,
+  (Story) => (
+    <ThemeProvider theme={newTheme}>
+      <Story />
+    </ThemeProvider>
+  ),
   (Story) => {
     const store = createStore();
     const router = useRouter();
