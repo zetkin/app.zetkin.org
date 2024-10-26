@@ -4,8 +4,10 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.callAssignments', {
   actions: {
+    delete: m('Delete'),
     end: m('End assignment'),
     start: m('Start assignment'),
+    warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
   },
   blocked: {
     callBackLater: m('Asked us to call back later'),

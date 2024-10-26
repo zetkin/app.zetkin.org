@@ -1,5 +1,7 @@
+import React, { useContext } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { Headset, People } from '@mui/icons-material';
+import { Delete, Headset, People } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import getCallAssignmentUrl from '../utils/getCallAssignmentUrl';
@@ -16,6 +18,7 @@ import { Msg, useMessages } from 'core/i18n';
 import useCallAssignmentState, {
   CallAssignmentState,
 } from '../hooks/useCallAssignmentState';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -26,16 +29,26 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const { orgId, callAssId } = useNumericRouteParams();
+  const router = useRouter();
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const {
     data: callAssignment,
     end,
     start,
     updateCallAssignment,
+    deleteAssignment,
   } = useCallAssignment(orgId, callAssId);
   const { statsFuture } = useCallAssignmentStats(orgId, callAssId);
   const { filteredCallersFuture } = useCallers(orgId, callAssId);
   const state = useCallAssignmentState(orgId, callAssId);
+
+  const handleDelete = () => {
+    deleteAssignment();
+    router.push(
+      `/organize/${orgId}/projects/${callAssignment?.campaign?.id || ''} `
+    );
+  };
 
   if (!callAssignment) {
     return null;
@@ -55,6 +68,21 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Button>
         )
       }
+      ellipsisMenuItems={[
+        {
+          label: messages.actions.delete(),
+          onSelect: () => {
+            showConfirmDialog({
+              onSubmit: handleDelete,
+              title: messages.actions.delete(),
+              warningText: messages.actions.warning({
+                eventTitle: callAssignment.title,
+              }),
+            });
+          },
+          startIcon: <Delete />,
+        },
+      ]}
       baseHref={getCallAssignmentUrl(callAssignment)}
       belowActionButtons={
         <ZUIDateRangePicker
