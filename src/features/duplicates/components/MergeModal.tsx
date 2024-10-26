@@ -29,14 +29,16 @@ type Props = {
 const MergeModal: FC<Props> = ({ open, onClose, onMerge, persons }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
+  const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
     persons.map((person) => person.id) ?? []
   );
 
-  const peopleToMerge = persons.filter((person) =>
-    selectedIds.includes(person.id)
-  );
+  const peopleToMerge = [
+    ...persons.filter((person) => selectedIds.includes(person.id)),
+    ...additionalPeople,
+  ];
 
   const peopleNotToMerge = persons.filter(
     (person) => !selectedIds.includes(person.id)
@@ -59,14 +61,32 @@ const MergeModal: FC<Props> = ({ open, onClose, onMerge, persons }) => {
         <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
           <PotentialDuplicatesLists
             onDeselect={(person: ZetkinPerson) => {
-              const filteredIds = selectedIds.filter(
-                (item) => item !== person.id
+              const isPredefined = persons.some(
+                (predefinedPerson) => predefinedPerson.id == person.id
               );
-              setSelectedIds(filteredIds);
+
+              if (isPredefined) {
+                const filteredIds = selectedIds.filter(
+                  (item) => item !== person.id
+                );
+                setSelectedIds(filteredIds);
+              } else {
+                const filteredAdditionals = additionalPeople.filter(
+                  (item) => item.id != person.id
+                );
+                setAdditionalPeople(filteredAdditionals);
+              }
             }}
             onSelect={(person: ZetkinPerson) => {
-              const selectedIdsUpdated = [...selectedIds, person.id];
-              setSelectedIds(selectedIdsUpdated);
+              const isPredefined = persons.some(
+                (predefinedPerson) => predefinedPerson.id == person.id
+              );
+              if (isPredefined) {
+                const selectedIdsUpdated = [...selectedIds, person.id];
+                setSelectedIds(selectedIdsUpdated);
+              } else {
+                setAdditionalPeople([...additionalPeople, person]);
+              }
             }}
             peopleNotToMerge={peopleNotToMerge}
             peopleToMerge={peopleToMerge}
