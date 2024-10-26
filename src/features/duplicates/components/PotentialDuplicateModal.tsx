@@ -22,13 +22,13 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
-interface ConfigureModalProps {
+interface Props {
   potentialDuplicate: PotentialDuplicate;
   onClose: () => void;
   open: boolean;
 }
 
-const ConfigureModal: FC<ConfigureModalProps> = ({
+const PotentialDuplicateModal: FC<Props> = ({
   potentialDuplicate,
   open,
   onClose,
@@ -123,4 +123,4 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   );
 };
 
-export default ConfigureModal;
+export default PotentialDuplicateModal;
