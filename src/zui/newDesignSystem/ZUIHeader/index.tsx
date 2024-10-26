@@ -14,15 +14,17 @@ import {
 import { ExpandMore, MoreVert } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
-import { ZUIButtonProps } from 'zui/ZUIButton';
-import ZUIButtonGroup from 'zui/ZUIButtonGroup';
-import ZUIMenu, { MenuItem as MenuItemType } from 'zui/ZUIMenu';
+import { ZUIButtonProps } from 'zui/newDesignSystem/ZUIButton';
+import ZUIButtonGroup from 'zui/newDesignSystem/ZUIButtonGroup';
+import ZUIMenu, { MenuItem as MenuItemType } from 'zui/newDesignSystem/ZUIMenu';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
-import ZUIBreadcrumbs, { BreadcrumbTreeItem } from 'zui/ZUIBreadcrumbs';
+import ZUIBreadcrumbs, {
+  BreadcrumbTreeItem,
+} from 'zui/newDesignSystem/ZUIBreadcrumbs';
 import { WithRequired } from 'utils/types';
-import { ZUIIconButtonProps } from 'zui/ZUIIconButton';
-import ZUIText from 'zui/ZUIText';
-import ZUILabel from 'zui/ZUILabel';
+import { ZUIIconButtonProps } from 'zui/newDesignSystem/ZUIIconButton';
+import ZUIText from 'zui/newDesignSystem/ZUIText';
+import ZUILabel from 'zui/newDesignSystem/ZUILabel';
 
 interface ZUIHeaderProps {
   /**

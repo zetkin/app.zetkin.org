@@ -5,7 +5,7 @@ import { ResponsiveLine } from '@nivo/line';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 
 import useSurveyStats from '../hooks/useSurveyStats';
-import ZUICard from 'zui/ZUICard';
+import ZUICard from 'zui/newDesignSystem/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';

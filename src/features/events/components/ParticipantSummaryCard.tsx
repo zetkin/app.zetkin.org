@@ -19,7 +19,7 @@ import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import useParticipantStatus from '../hooks/useParticipantsStatus';
-import ZUICard from 'zui/ZUICard';
+import ZUICard from 'zui/newDesignSystem/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
 

@@ -11,7 +11,7 @@ import isEventCluster from 'features/campaigns/utils/isEventCluster';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyOverviewListItem from './items/SurveyOverviewListItem';
 import TaskOverviewListItem from './items/TaskOverviewListItem';
-import ZUICard from 'zui/ZUICard';
+import ZUICard from 'zui/newDesignSystem/ZUICard';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import { Msg, useMessages } from 'core/i18n';

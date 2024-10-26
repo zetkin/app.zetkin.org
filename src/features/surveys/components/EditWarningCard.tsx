@@ -4,7 +4,7 @@ import { Lock, LockOpen, ThumbDown, ThumbUp } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import ZUICard from 'zui/ZUICard';
+import ZUICard from 'zui/newDesignSystem/ZUICard';
 
 type EditWarningCardProps = {
   editing: boolean;

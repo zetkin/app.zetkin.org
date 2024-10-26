@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { CatchingPokemon, Surfing } from '@mui/icons-material';
 
 import ZUIDivider from '.';
-import ZUIText from 'zui/ZUIText';
+import ZUIText from 'zui/newDesignSystem/ZUIText';
 
 const meta: Meta<typeof ZUIDivider> = {
   component: ZUIDivider,

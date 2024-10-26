@@ -2,8 +2,13 @@ import { ButtonGroup } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 
-import ZUIButton, { getVariant, ZUIButtonProps } from 'zui/ZUIButton';
-import ZUIIconButton, { ZUIIconButtonProps } from 'zui/ZUIIconButton';
+import ZUIButton, {
+  getVariant,
+  ZUIButtonProps,
+} from 'zui/newDesignSystem/ZUIButton';
+import ZUIIconButton, {
+  ZUIIconButtonProps,
+} from 'zui/newDesignSystem/ZUIIconButton';
 
 const useStyles = makeStyles({
   buttonGroup: {

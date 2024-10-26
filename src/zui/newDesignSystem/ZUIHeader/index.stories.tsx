@@ -10,8 +10,8 @@ import {
 import { Meta, StoryObj } from '@storybook/react';
 
 import RightSide from './index';
-import ZUIButton from 'zui/ZUIButton';
-import ZUIText from 'zui/ZUIText';
+import ZUIButton from 'zui/newDesignSystem/ZUIButton';
+import ZUIText from 'zui/newDesignSystem/ZUIText';
 
 const meta: Meta<typeof RightSide> = {
   component: RightSide,

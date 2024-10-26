@@ -5,7 +5,7 @@ import { FC, useState } from 'react';
 import { Box, MenuItem, TextField, Typography, useTheme } from '@mui/material';
 
 import { Msg, useMessages } from 'core/i18n';
-import ZUICard from 'zui/ZUICard';
+import ZUICard from 'zui/newDesignSystem/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import messageIds from '../l10n/messageIds';
 import ZUIFutures from 'zui/ZUIFutures';

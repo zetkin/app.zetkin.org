@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import ZUICard from 'zui/ZUICard';
+import ZUICard from 'zui/newDesignSystem/ZUICard';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import EmailKPIChart from './EmailKPIChart';
