@@ -9,6 +9,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 
 interface PotentialDuplicatesListsProps {
+  initiallyShowManualSearch: boolean;
   onDeselect: (person: ZetkinPerson) => void;
   onSelect: (person: ZetkinPerson) => void;
   peopleNotToMerge: ZetkinPerson[];
@@ -16,13 +17,16 @@ interface PotentialDuplicatesListsProps {
 }
 
 const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
+  initiallyShowManualSearch,
   onDeselect,
   onSelect,
   peopleNotToMerge,
   peopleToMerge,
 }) => {
   const messages = useMessages(messageIds);
-  const [addingManually, setAddingManually] = useState(false);
+  const [addingManually, setAddingManually] = useState(
+    initiallyShowManualSearch
+  );
 
   return (
     <>

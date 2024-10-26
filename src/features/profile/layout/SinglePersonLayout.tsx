@@ -6,6 +6,7 @@ import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useNumericRouteParams } from 'core/hooks';
 import usePerson from '../hooks/usePerson';
 import { Msg, useMessages } from 'core/i18n';
+import PersonActionButtons from '../components/PersonActionButtons';
 
 interface SinglePersonLayoutProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
 
   return (
     <TabbedLayout
+      actionButtons={<PersonActionButtons person={person} />}
       avatar={`/api/orgs/${orgId}/people/${personId}/avatar`}
       baseHref={`/organize/${orgId}/people/${personId}`}
       defaultTab="/"

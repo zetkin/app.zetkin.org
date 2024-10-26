@@ -20,13 +20,20 @@ import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 type Props = {
+  initiallyShowManualSearch?: boolean;
   onClose: () => void;
   onMerge: (personIds: number[], overrides: Partial<ZetkinPerson>) => void;
   open: boolean;
   persons: ZetkinPerson[];
 };
 
-const MergeModal: FC<Props> = ({ open, onClose, onMerge, persons }) => {
+const MergeModal: FC<Props> = ({
+  initiallyShowManualSearch = false,
+  open,
+  onClose,
+  onMerge,
+  persons,
+}) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
   const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
@@ -60,6 +67,7 @@ const MergeModal: FC<Props> = ({ open, onClose, onMerge, persons }) => {
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
           <PotentialDuplicatesLists
+            initiallyShowManualSearch={initiallyShowManualSearch}
             onDeselect={(person: ZetkinPerson) => {
               const isPredefined = persons.some(
                 (predefinedPerson) => predefinedPerson.id == person.id
@@ -116,12 +124,27 @@ const MergeModal: FC<Props> = ({ open, onClose, onMerge, persons }) => {
         </Box>
       </Box>
       <DialogActions sx={{ p: 2 }}>
-        <Button onClick={() => onClose()} variant="text">
+        <Button
+          onClick={() => {
+            setAdditionalPeople([]);
+            onClose();
+          }}
+          variant="text"
+        >
           {messages.modal.cancelButton()}
         </Button>
         <Button
-          disabled={selectedIds.length > 1 ? false : true}
-          onClick={() => onMerge(selectedIds, overrides)}
+          disabled={
+            additionalPeople.length + selectedIds.length > 1 ? false : true
+          }
+          onClick={() => {
+            const idSet = new Set([
+              ...selectedIds,
+              ...additionalPeople.map((person) => person.id),
+            ]);
+            onMerge(Array.from(idSet), overrides);
+            setAdditionalPeople([]);
+          }}
           variant="contained"
         >
           {messages.modal.mergeButton()}
