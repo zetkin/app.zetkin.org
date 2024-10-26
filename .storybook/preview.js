@@ -62,17 +62,23 @@ class MockApiClient extends FetchApiClient {
 
 export const decorators = [
   (story) => <ThemeProvider theme={newTheme}>{story()}</ThemeProvider>,
-  (story) => {
+  (Story) => {
     const store = createStore();
     const router = useRouter();
     const env = new Environment(store, new MockApiClient(), router);
     return (
       <ReduxProvider store={store}>
-        <EnvProvider env={env}>{story()}</EnvProvider>
+        <EnvProvider env={env}>
+          <Story />
+        </EnvProvider>
       </ReduxProvider>
     );
   },
-  (story) => <I18nProvider>{story()}</I18nProvider>,
+  (Story) => (
+    <I18nProvider>
+      <Story />
+    </I18nProvider>
+  ),
 ];
 
 export const parameters = {

@@ -24,7 +24,11 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinCreatePerson, ZetkinTag } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  ZetkinCreatePerson,
+  ZetkinTag,
+} from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
 
 dayjs.extend(utc);
@@ -183,6 +187,13 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       )}
       {!!showAllClickedType &&
         customFields.map((field) => {
+          if (
+            field.organization.id !== orgId &&
+            field.org_write !== 'suborgs'
+          ) {
+            // Don't show read-only fields from ancestor orgs
+            return;
+          }
           if (field.type === 'json') {
             return;
           } else if (field.type === 'date') {
@@ -213,6 +224,39 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                   onChange(field, formattedUrl ?? value);
                 }}
               />
+            );
+          } else if (
+            field.type === CUSTOM_FIELD_TYPE.ENUM &&
+            field.enum_choices
+          ) {
+            return (
+              <Box alignItems="flex-start" display="flex" flex={1}>
+                <FormControl fullWidth>
+                  <InputLabel>{field.title}</InputLabel>
+                  <Select
+                    fullWidth
+                    label={field.title}
+                    onChange={(ev) => {
+                      let value: string | null = ev.target.value as
+                        | string
+                        | null;
+                      if (value === '') {
+                        value = null;
+                      }
+                      onChange(field.slug, value);
+                    }}
+                  >
+                    <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
+                      <Msg id={messageIds.createPerson.enumFields.noneOption} />
+                    </MenuItem>
+                    {field.enum_choices.map((c) => (
+                      <MenuItem key={c.key} value={c.key}>
+                        {c.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
             );
           } else {
             return (

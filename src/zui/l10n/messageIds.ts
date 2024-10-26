@@ -32,6 +32,9 @@ export default makeMessages('zui', {
     cancel: m('Cancel'),
     createBtn: m('Create'),
     defaultitle: m('Create person'),
+    enumFields: {
+      noneOption: m('None'),
+    },
     genders: {
       f: m('Female'),
       m: m('Male'),

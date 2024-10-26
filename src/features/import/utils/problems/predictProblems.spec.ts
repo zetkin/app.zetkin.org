@@ -19,6 +19,8 @@ function makeFullField(
   return {
     description: '',
     id: 1001,
+    org_read: 'sameorg',
+    org_write: 'sameorg',
     organization: {
       id: 1,
       title: 'KPD',
@@ -111,8 +113,19 @@ describe('predictProblem()', () => {
           kind: ColumnKind.FIELD,
           selected: true,
         },
+        {
+          field: 'enum',
+          kind: ColumnKind.ENUM,
+          mapping: [
+            {
+              key: 'first',
+              value: 'Dummy value',
+            },
+          ],
+          selected: true,
+        },
       ],
-      rows: [{ data: [1, 'a', 'Clara', 'clara@example.com'] }],
+      rows: [{ data: [1, 'a', 'Clara', 'clara@example.com', 'Dummy value'] }],
     });
 
     const problems = predictProblems(sheet, 'SE', []);
