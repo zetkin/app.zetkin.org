@@ -68,6 +68,17 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Button>
         )
       }
+      baseHref={getCallAssignmentUrl(callAssignment)}
+      belowActionButtons={
+        <ZUIDateRangePicker
+          endDate={callAssignment.end_date || null}
+          onChange={(startDate, endDate) => {
+            updateCallAssignment({ end_date: endDate, start_date: startDate });
+          }}
+          startDate={callAssignment.start_date || null}
+        />
+      }
+      defaultTab="/"
       ellipsisMenuItems={[
         {
           label: messages.actions.delete(),
@@ -83,17 +94,6 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           startIcon: <Delete />,
         },
       ]}
-      baseHref={getCallAssignmentUrl(callAssignment)}
-      belowActionButtons={
-        <ZUIDateRangePicker
-          endDate={callAssignment.end_date || null}
-          onChange={(startDate, endDate) => {
-            updateCallAssignment({ end_date: endDate, start_date: startDate });
-          }}
-          startDate={callAssignment.start_date || null}
-        />
-      }
-      defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
