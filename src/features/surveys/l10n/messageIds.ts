@@ -110,8 +110,10 @@ export default makeMessages('feat.surveys', {
   },
   layout: {
     actions: {
+      delete: m('Delete survey'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
+      warning: m<{ surveyTitle: string }>('"{surveyTitle}" will be deleted.'),
     },
     stats: {
       questions: m<{ numQuestions: number }>(
@@ -121,6 +123,7 @@ export default makeMessages('feat.surveys', {
         '{numSubmissions, plural, one {1 submission} other {# submissions}}'
       ),
     },
+    unknownTitle: m('Untitled survey'),
   },
   optionCollapse: {
     collapse: m('Collapse'),
