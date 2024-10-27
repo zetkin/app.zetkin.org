@@ -48,6 +48,10 @@ const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
       {addingManually && (
         <Box my={1}>
           <MUIOnlyPersonSelect
+            getOptionDisabled={(option) =>
+              peopleToMerge.some((person) => person.id == option.id) ||
+              peopleNotToMerge.some((person) => person.id == option.id)
+            }
             onChange={function (person: ZetkinPerson): void {
               onSelect(person);
             }}
