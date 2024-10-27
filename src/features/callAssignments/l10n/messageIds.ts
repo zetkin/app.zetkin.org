@@ -7,7 +7,7 @@ export default makeMessages('feat.callAssignments', {
     delete: m('Delete'),
     end: m('End assignment'),
     start: m('Start assignment'),
-    warning: m<{ eventTitle: string }>('"{eventTitle}" will be deleted.'),
+    warning: m<{ title: string }>('"{title}" will be deleted.'),
   },
   blocked: {
     callBackLater: m('Asked us to call back later'),

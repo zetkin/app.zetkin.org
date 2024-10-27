@@ -87,7 +87,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
               onSubmit: handleDelete,
               title: messages.actions.delete(),
               warningText: messages.actions.warning({
-                eventTitle: callAssignment.title,
+                title: callAssignment.title,
               }),
             });
           },
