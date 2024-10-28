@@ -139,18 +139,50 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Card>
 
                 <Grid container spacing={2}>
-                  <ZUIFutures futures={{ areasStats, dataGraph }}>
-                    {({ data: { areasStats, dataGraph } }) => {
-                      return (
-                        <AreaCard
-                          areas={areasStats.stats}
-                          assignment={assignment}
-                          data={dataGraph}
-                        />
-                      );
-                    }}
-                  </ZUIFutures>
+                  {assignment.start_date && (
+                    <ZUIFutures futures={{ areasStats, dataGraph }}>
+                      {({ data: { areasStats, dataGraph } }) => {
+                        // Sort areas based on successful visits only
+                        const sortedAreas = areasStats.stats
+                          .map((area) => {
+                            const successfulVisitsTotal =
+                              dataGraph
+                                .find((graph) => graph.areaId === area.areaId)
+                                ?.successfulVisits.reduce(
+                                  (sum, item) => sum + item.accumulatedVisits,
+                                  0
+                                ) || 0;
+
+                            return {
+                              area,
+                              successfulVisitsTotal,
+                            };
+                          })
+                          .sort(
+                            (a, b) =>
+                              b.successfulVisitsTotal - a.successfulVisitsTotal
+                          )
+                          .map(({ area }) => area);
+                        return (
+                          <AreaCard
+                            areas={sortedAreas}
+                            assignment={assignment}
+                            data={dataGraph}
+                          />
+                        );
+                      }}
+                    </ZUIFutures>
+                  )}
                 </Grid>
+                {!assignment.start_date && (
+                  <Card>
+                    <Box p={10} sx={{ textAlign: ' center' }}>
+                      <Typography variant="h5">
+                        Start the assignment to view area-specific statistics.
+                      </Typography>
+                    </Box>
+                  </Card>
+                )}
               </>
             )}
           </Box>
