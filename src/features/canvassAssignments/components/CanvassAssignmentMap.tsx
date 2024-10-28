@@ -30,7 +30,7 @@ import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
 import getVisitState, { ProgressState } from '../utils/getVisitState';
-import MarkerIcon from '../utils/MarkerIcon';
+import MarkerIcon from '../utils/markerIcon';
 import { ZetkinCanvassAssignment } from '../types';
 import getDoneState from '../utils/getDoneState';
 

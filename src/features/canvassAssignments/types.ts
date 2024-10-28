@@ -1,6 +1,12 @@
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
+export type CanvasserInfo = {
+  id: number;
+  person: ZetkinPerson;
+  sessions: ZetkinCanvassSession[];
+};
+
 export type ZetkinMetric = {
   definesDone: boolean;
   description: string;
@@ -13,11 +19,13 @@ export type ZetkinCanvassAssignment = {
   campaign: {
     id: number;
   };
+  end_date: string | null;
   id: string;
   metrics: ZetkinMetric[];
   organization: {
     id: number;
   };
+  start_date: string | null;
   title: string | null;
 };
 
@@ -104,9 +112,20 @@ export type ZetkinCanvassAssignmentStats = {
 export type ZetkinAssignmentAreaStatsItem = {
   areaId: string;
   num_households: number;
+  num_places: number;
+  num_successful_visited_households: number;
+  num_visited_households: number;
+  num_visited_places: number;
   num_visits: number;
 };
 
 export type ZetkinAssignmentAreaStats = {
   stats: ZetkinAssignmentAreaStatsItem[];
+};
+
+export type GraphDataItem = { accumulatedVisits: number; date: string };
+export type GraphData = {
+  areaId: string;
+  householdsVisited: GraphDataItem[];
+  successfulVisits: GraphDataItem[];
 };

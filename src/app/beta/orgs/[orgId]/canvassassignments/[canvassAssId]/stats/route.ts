@@ -71,6 +71,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               campaign: {
                 id: assignmentModel.campId,
               },
+              end_date: assignmentModel.end_date,
               id: assignmentModel._id.toString(),
               metrics: assignmentModel.metrics.map((m) => ({
                 definesDone: m.definesDone,
@@ -82,6 +83,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               organization: {
                 id: assignmentModel.orgId,
               },
+              start_date: assignmentModel.start_date,
               title: assignmentModel.title,
             },
           });
@@ -147,7 +149,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             kind: metric.kind,
             question: metric.question,
           },
-          values: metric.kind == 'boolean' ? [0] : [0, 0, 0, 0, 0],
+          values: metric.kind == 'boolean' ? [0, 0] : [0, 0, 0, 0, 0],
         }));
 
       allPlaces.forEach((place) => {
@@ -164,9 +166,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                 );
 
                 if (accumulatedMetric && configuredMetric) {
-                  if (response.response == 'yes') {
-                    accumulatedMetric.values[0]++;
-                  } else if (configuredMetric.kind == 'scale5') {
+                  if (configuredMetric.kind === 'boolean') {
+                    if (response.response === 'yes') {
+                      accumulatedMetric.values[0]++;
+                    } else if (response.response === 'no') {
+                      accumulatedMetric.values[1]++;
+                    }
+                  } else if (configuredMetric.kind === 'scale5') {
                     const rating = parseInt(response.response);
                     const index = rating - 1;
                     accumulatedMetric.values[index]++;

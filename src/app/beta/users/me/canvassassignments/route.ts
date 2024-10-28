@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
         campaign: {
           id: assignment.campId,
         },
+        end_date: assignment.end_date,
         id: assignment._id.toString(),
         metrics: assignment.metrics.map((m) => ({
           definesDone: m.definesDone,
@@ -75,6 +76,7 @@ export async function GET(request: NextRequest) {
         organization: {
           id: assignment.orgId,
         },
+        start_date: assignment.start_date,
         title: assignment.title,
       });
     }

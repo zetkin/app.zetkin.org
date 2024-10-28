@@ -59,6 +59,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               campaign: {
                 id: model.campId,
               },
+              end_date: model.end_date,
               id: model._id.toString(),
               metrics: model.metrics.map((m) => ({
                 definesDone: m.definesDone,
@@ -70,6 +71,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               organization: {
                 id: model.orgId,
               },
+              start_date: model.start_date,
               title: model.title,
             },
           });

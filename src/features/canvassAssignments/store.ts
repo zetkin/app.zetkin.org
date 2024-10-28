@@ -14,9 +14,14 @@ import {
   ZetkinPlace,
   AssignmentWithAreas,
   ZetkinAssignmentAreaStats,
+  GraphData,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
+  areaGraphByAssignmentId: Record<
+    string,
+    RemoteList<GraphData & { id: string }>
+  >;
   areaStatsByAssignmentId: Record<
     string,
     RemoteItem<ZetkinAssignmentAreaStats & { id: string }>
@@ -35,6 +40,7 @@ export interface CanvassAssignmentsStoreSlice {
 }
 
 const initialState: CanvassAssignmentsStoreSlice = {
+  areaGraphByAssignmentId: {},
   areaStatsByAssignmentId: {},
   canvassAssignmentList: remoteList(),
   myAssignmentsWithAreasList: remoteList(),
@@ -47,6 +53,34 @@ const canvassAssignmentSlice = createSlice({
   initialState: initialState,
   name: 'canvassAssignments',
   reducers: {
+    areaGraphLoad: (state, action: PayloadAction<string>) => {
+      const assignmentId = action.payload;
+
+      if (!state.areaGraphByAssignmentId[assignmentId]) {
+        state.areaGraphByAssignmentId[assignmentId] = remoteList();
+      }
+
+      state.areaGraphByAssignmentId[assignmentId].isLoading = true;
+    },
+    areaGraphLoaded: (state, action: PayloadAction<[string, GraphData[]]>) => {
+      /*const [canvassAssId, statsArray] = action.payload;
+
+      state.areaGraphByAssignmentId[canvassAssId] = remoteItem(canvassAssId, {
+        data: statsArray.map((stats) => ({ id: canvassAssId, ...stats })),
+        isLoading: false,
+        isStale: false,
+        loaded: new Date().toISOString(),
+      });*/
+
+      const [assignmentId, graphData] = action.payload;
+
+      state.areaGraphByAssignmentId[assignmentId] = remoteList(
+        graphData.map((data) => ({ ...data, id: data.areaId }))
+      );
+
+      state.areaGraphByAssignmentId[assignmentId].loaded =
+        new Date().toISOString();
+    },
     areaStatsLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
 
@@ -84,6 +118,16 @@ const canvassAssignmentSlice = createSlice({
       });
 
       state.canvassAssignmentList.items.push(item);
+    },
+    canvassAssignmentDeleted: (state, action: PayloadAction<number>) => {
+      const canvassId = action.payload;
+      const canvassAssignmentItem = state.canvassAssignmentList.items.find(
+        (item) => item.id === canvassId
+      );
+
+      if (canvassAssignmentItem) {
+        canvassAssignmentItem.deleted = true;
+      }
     },
     canvassAssignmentLoad: (state, action: PayloadAction<string>) => {
       const canvassAssId = action.payload;
@@ -255,11 +299,14 @@ const canvassAssignmentSlice = createSlice({
 
 export default canvassAssignmentSlice;
 export const {
+  areaGraphLoad,
+  areaGraphLoaded,
   areaStatsLoad,
   areaStatsLoaded,
   myAssignmentsLoad,
   myAssignmentsLoaded,
   canvassAssignmentCreated,
+  canvassAssignmentDeleted,
   canvassAssignmentLoad,
   canvassAssignmentLoaded,
   canvassAssignmentUpdated,
