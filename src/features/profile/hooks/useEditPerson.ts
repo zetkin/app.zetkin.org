@@ -22,11 +22,12 @@ export default function useEditPerson(
 
   const onFieldValueChange = (
     field: keyof ZetkinUpdatePerson,
-    newValue: string
+    newValue: string | null
   ) => {
-    const isEmptyStringValue = !initialValues[field] && newValue === '';
+    const isEmptyValue =
+      !initialValues[field] && (newValue === '' || newValue === null);
 
-    if (isEmptyStringValue || newValue === initialValues[field]?.toString()) {
+    if (isEmptyValue || newValue === initialValues[field]?.toString()) {
       const copied = { ...fieldsToUpdate };
       delete copied[field];
       setFieldsToUpdate(copied);

@@ -11,6 +11,25 @@ core:
     info: Du nutzt eine vorläufige Version von Zetkin, in der diese Funktion nicht
       verfügbar ist. Deswegen wirst du nun zur Vorgängerversion weitergeleitet.
 feat:
+  areas:
+    addNewPlaceButton: Einen neuen Ort hinzufügen.
+    empty:
+      description: fehlende Beschreibung
+      title: Unbenanntes Gebiet
+    filters:
+      addFilterButton: Filter hinzufügen
+      filterButton: Filter
+      tagsWithoutGroup: ungruppierte Schlagworte
+    overlay:
+      buttons:
+        cancel: Abbrechen
+        delete: Löschen
+        edit: Bearbeiten
+        save: Speichern
+      tags:
+        header: Schlagworte
+    place:
+      activityHeader: Aktivität
   breadcrumbs:
     elements:
       activities: Aktivitäten
@@ -31,7 +50,7 @@ feat:
       incoming: Eingang
       insights: Statistiken
       instances: Instanz
-      joinforms: Beitrittsformular
+      joinforms: Zetkin-Beitrittsformular
       journeys: Journeys
       manage: Verwalten
       milestones: Meilensteine
@@ -39,6 +58,7 @@ feat:
       organize: Organize
       participants: Teilnehmende
       people: Personen
+      plan: Planen
       projects: Projekte
       questions: Fragen
       settings: Einstellungen
@@ -53,6 +73,8 @@ feat:
     createMenu:
       shiftEvent: Erstelle mehrere Aktionen als Schichten
       singleEvent: Erstelle einzelne Aktion
+    dstEnds: Winterzeit
+    dstStarts: Sommerzeit
     event:
       differentLocations: '{numLocations} verschiedene Orte'
       events: Aktionen
@@ -102,6 +124,7 @@ feat:
       copy: Kopieren
       deselect: Auswahl aufheben
       editEvents: Aktionen bearbeiten
+      editParticipants: Teilnehmende verwalten
       ellipsisMenu:
         cancel: Absagen
         cancelWarning: Wenn du diese Aktivität löscht, informiere bitte alle Teilnehmenden
@@ -421,6 +444,7 @@ feat:
         in der Registerkarte Übersicht um das zu erledigen.
     deliveryStatus:
       notLocked: Nicht gespeichert, nicht geplant
+      notProcessed: Geplant für den baldigen Versand.
       notScheduled: nicht geplant
       wasSent: Wurde gesendet um {datetime}
       willSend: Wird gesendet um {datetime}
@@ -492,6 +516,42 @@ feat:
     emailFeatureIsBlocked:
       errorMessage: Deine Organisation hat momentan keinen Zugang zur E-Mail Funktionalität.
       goBackButton: Gehe zurück
+    insights:
+      clicked:
+        descriptions:
+          ctor: Klick-zu-Öffnungsrate (CTOR) ist der Anteil derjenigen, die die E-Mail
+            geöffnet haben und auch auf einen der Links geklickt haben. Eine hohe
+            Quote ist ein Indikator für eine gezielte E-Mail mit überzeugendem Text.
+          ctr: Die Durchklickrate (CTR) ist der Prozentsatz der Empfänger, die die
+            E-Mail nicht nur geöffnet, sondern auch auf einen der Links geklickt haben.
+            Eine hohe Rate ist ein Indikator für eine gezielte E-Mail mit überzeugendem
+            Text.
+        gauge:
+          headers:
+            ctor: CTOR
+            ctr: CTR
+        header: Angeklickt
+        metrics:
+          ctor: CTOR
+          ctr: CTR
+      comparison:
+        label: Vergleiche mit
+      opened:
+        chart:
+          afterSend: Nachdem es gesendet wurde
+          opened: '{count} geöffnet'
+          spans:
+            allTime: Gesamtzeit
+            first24: Erste 24 Stunden
+            first48: Erste 48 Stunden
+            firstMonth: Erste 30 Tage
+            firstWeek: Erste 7 Tage
+        description: Die Öffnungsrate ist der Prozentsatz der Empfänger, die die E-Mail
+          geöffnet haben. Eine hohe Quote ist ein Indikator für eine gute Zielgruppenansprache
+          und eine ansprechende Betreffzeile.
+        gauge:
+          header: Öffnungsrate
+        header: Geöffnet
     ready:
       loading: Laden...
       lockButton: Sperren für den Versand
@@ -516,6 +576,7 @@ feat:
       targets: '{numTargets, plural, =0 {No targets} one {1 target} other {# targets}}'
     tabs:
       compose: Verfassen
+      insights: Einblicke
       overview: Übersicht
     targets:
       defineButton: Definiere die Zielgruppe
@@ -555,12 +616,18 @@ feat:
       cancel: Abbrechen
       delete: Löschen
       duplicate: Kopieren
+      move: Verschieben
       publish: Veröffentlichen
       restore: Zurücksetzen
       unpublish: Verstecken
       warning: '"{eventTitle}" wird gelöscht.'
       warningCancel: '"{eventTitle}" wird abgesagt.'
       warningRestore: '"{eventTitle}" wird wiederhergestellt.'
+    eventChangeCampaignDialog:
+      dialogTitle: Aktivitäten verschieben.
+      error: 'Fehler: Konnte die Aktivität nicht in das ausgewählte Projekt verschieben.'
+      moveButtonLabel: Verschieben
+      success: Aktivität wurde zu "{campaignTitle}" verschoben.
     eventContactCard:
       header: Kontakt
       noContact: Kein Kontakt hinzugefügt!
@@ -820,6 +887,11 @@ feat:
               label: Schwedische Personnummer
           wrongDateFormatWarning: Einige Werte in dieser Spalte können nicht in Daten
             übertragen werden, wenn dieses Format benutzt wird.
+        enum:
+          header: Werte den Optionen zuordnen
+          none: Keine
+          numberOfRows: '{numRows, plural, =1 {1 Reihe} other {# Reihen}}'
+          value: Wert
         ids:
           configExplanation: Importieren mit IDs erlaubt Zetkin (jetzt oder in der
             Zukunft) existierende Personen in der Datenbank zu aktualisieren, ohne
@@ -878,6 +950,7 @@ feat:
         tags: Schlagworte
         unfinished:
           date: Du musst ein Datumsformat konfigurieren.
+          enum: Du musst die Werte zuordnen
           id: Du musst die IDs konfigurieren.
           org: Du musst die Werte zuordnen
           tag: Du musst die Werte zuordnen.
@@ -1023,6 +1096,12 @@ feat:
           aktualisieren.
   joinForms:
     defaultTitle: Unbenanntes Formular
+    embedding:
+      copyLink: Kopiere die einzubettende URL
+      formSubmitted: Formular wurde übermittelt.
+      linkCopied: Die einzubettende URL wurde kopiert.
+      openLink: Link-Adresse aufrufen.
+      submitButton: Übermitteln
     formPane:
       labels:
         addField: Feld hinzufügen
@@ -1516,6 +1595,7 @@ feat:
           sub: Entfernen
         edit:
           date: '{fieldSelect} ist {timeFrame}'
+          enum: '{fieldSelect} ist "{selectInput}"'
           none: Diese Organisation hat bisher keine benutzerdefinierten Felder.
           text: '{fieldSelect} entspricht "{freeTextInput}"'
           url: '{fieldSelect} entspricht "{freeTextInput}"'
@@ -1524,6 +1604,7 @@ feat:
         inputString: '{addRemoveSelect} jede Person, deren {field}.'
         preview:
           date: '{fieldName} ist {timeFrame}'
+          enum: '{fieldName} ist "{searchTerm}"'
           text: '{fieldName} entspricht "{searchTerm}"'
           url: '{fieldName} entspricht "{searchTerm}"'
       personTags:
@@ -1915,6 +1996,36 @@ feat:
       personRecordColumn: Befragte*r
       suggestedPeople: Vorgeschlagene Personen
       unlink: Link entfernen
+    surveyForm:
+      accept: Ich akzeptiere die unten aufgeführten Bedingungen.
+      error: Beim Absenden Ihrer Antworten ist ein Fehler aufgetreten. Bitte versuche
+        es später noch einmal.
+      policy:
+        text: Klicke hier, um die vollständige Zetkin-Datenschutzhinweise zu lesen.
+      required: erforderlich
+      sign:
+        anonymous: anonym unterschreiben
+        nameAndEmail: Mit Name und E-Mail-Adresse bestätigen.
+      submit: Übermitteln
+      terms:
+        description: Wenn Du diese Umfrage abschicken, werden die von Dir zur Verfügung
+          gestellten Informationen in Zetkin von {Organisation} gespeichert und verarbeitet,
+          um in Übereinstimmung mit den Zetkin-Datenschutzhinweisen Aktivitäten der
+          Partei Die Linke zu organisieren.
+        title: Datenschutzhinweise
+    surveyFormSubmitted:
+      text: Deine Antworten zu „{Titel}“ wurden übermittelt.
+      title: Antworten übermittelt
+    surveySignature:
+      email:
+        email: E-Mail
+        firstName: Vorname
+        lastName: Nachname
+      title: Die Antworten bestätigen.
+      type:
+        anonymous: anonym einreichen
+        email: Mit Name und E-Mail-Adresse bestätigen.
+        user: Bestätige als {person} mit E-Mail-Adresse {email}
     tabs:
       overview: Überblick
       questions: Fragen
@@ -2172,7 +2283,7 @@ feat:
       tabs:
         duplicates: Duplikate
         incoming: Eingehend
-        joinForms: Beitrittsformular
+        joinForms: Zetkin-Beitrittsformular
         views: Listen
       title: Personen
     cells:
@@ -2498,6 +2609,8 @@ zui:
     cancel: Abbrechen
     createBtn: Erstellen
     defaultitle: Erstelle Person
+    enumFields:
+      noneOption: Keine
     genders:
       f: Weiblich
       m: Männlich

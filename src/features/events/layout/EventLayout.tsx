@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
+import Head from 'next/head';
 import { useState } from 'react';
 
 import TabbedLayout from 'utils/layout/TabbedLayout';
@@ -49,115 +50,124 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   }
 
   return (
-    <TabbedLayout
-      actionButtons={
-        <ZUIFuture future={eventFuture}>
-          {(data) => {
-            return <EventActionButtons event={data} />;
-          }}
-        </ZUIFuture>
-      }
-      baseHref={getEventUrl(eventFuture.data)}
-      defaultTab="/"
-      subtitle={
-        <Box alignItems="center" display="flex">
-          <Box marginRight={1}>
-            <EventStatusChip state={eventState} />
-          </Box>
-          <ZUIFutures
-            futures={{
-              currentEvent: eventFuture,
-              types: eventTypes,
+    <>
+      <Head>
+        <title>
+          {eventFuture.data?.title ||
+            eventFuture.data?.activity?.title ||
+            messages.common.noTitle()}
+        </title>
+      </Head>
+      <TabbedLayout
+        actionButtons={
+          <ZUIFuture future={eventFuture}>
+            {(data) => {
+              return <EventActionButtons event={data} />;
             }}
-          >
-            {({ data: { types, currentEvent } }) => {
+          </ZUIFuture>
+        }
+        baseHref={getEventUrl(eventFuture.data)}
+        defaultTab="/"
+        subtitle={
+          <Box alignItems="center" display="flex">
+            <Box marginRight={1}>
+              <EventStatusChip state={eventState} />
+            </Box>
+            <ZUIFutures
+              futures={{
+                currentEvent: eventFuture,
+                types: eventTypes,
+              }}
+            >
+              {({ data: { types, currentEvent } }) => {
+                return (
+                  <EventTypeAutocomplete
+                    onBlur={() => setEditingTypeOrTitle(false)}
+                    onChange={(newValue) => {
+                      setType(newValue ? newValue.id : newValue);
+                      setEditingTypeOrTitle(false);
+                    }}
+                    onChangeNewOption={(newValueId) => setType(newValueId)}
+                    onFocus={() => setEditingTypeOrTitle(true)}
+                    orgId={currentEvent.organization.id}
+                    showBorder={editingTypeOrTitle}
+                    types={types}
+                    value={currentEvent.activity}
+                  />
+                );
+              }}
+            </ZUIFutures>
+            <Box marginX={1}>
+              <ZUIFuture future={eventFuture}>
+                {(data) => {
+                  const startDate = new Date(removeOffset(data.start_time));
+                  const endDate = new Date(removeOffset(data.end_time));
+
+                  const labels: ZUIIconLabelProps[] = [];
+
+                  if (startDate && endDate) {
+                    labels.push({
+                      icon: <EventIcon />,
+                      label: <ZUITimeSpan end={endDate} start={startDate} />,
+                    });
+                    if (data.num_participants_available) {
+                      labels.push({
+                        icon: <PeopleIcon />,
+                        label: (
+                          <Msg
+                            id={messageIds.stats.participants}
+                            values={{
+                              participants: data.num_participants_available,
+                            }}
+                          />
+                        ),
+                      });
+                    }
+                  }
+                  return <ZUIIconLabelRow iconLabels={labels} />;
+                }}
+              </ZUIFuture>
+            </Box>
+          </Box>
+        }
+        tabs={[
+          { href: '/', label: messages.tabs.overview() },
+          {
+            href: '/participants',
+            label: messages.tabs.participants(),
+          },
+        ]}
+        title={
+          <ZUIFuture future={eventFuture}>
+            {(data) => {
               return (
-                <EventTypeAutocomplete
-                  onBlur={() => setEditingTypeOrTitle(false)}
-                  onChange={(newValue) => {
-                    setType(newValue ? newValue.id : newValue);
+                <ZUIEditTextinPlace
+                  allowEmpty={true}
+                  onBlur={() => {
                     setEditingTypeOrTitle(false);
                   }}
-                  onChangeNewOption={(newValueId) => setType(newValueId)}
+                  onChange={(val) => {
+                    setEditingTypeOrTitle(false);
+                    setTitle(val);
+                  }}
                   onFocus={() => setEditingTypeOrTitle(true)}
-                  orgId={currentEvent.organization.id}
+                  placeholder={
+                    data.title ||
+                    data.activity?.title ||
+                    messages.common.noTitle()
+                  }
                   showBorder={editingTypeOrTitle}
-                  types={types}
-                  value={currentEvent.activity}
+                  tooltipContent={messages.tooltipContent()}
+                  value={data.title || ''}
                 />
               );
             }}
-          </ZUIFutures>
-          <Box marginX={1}>
-            <ZUIFuture future={eventFuture}>
-              {(data) => {
-                const startDate = new Date(removeOffset(data.start_time));
-                const endDate = new Date(removeOffset(data.end_time));
-
-                const labels: ZUIIconLabelProps[] = [];
-
-                if (startDate && endDate) {
-                  labels.push({
-                    icon: <EventIcon />,
-                    label: <ZUITimeSpan end={endDate} start={startDate} />,
-                  });
-                  if (data.num_participants_available) {
-                    labels.push({
-                      icon: <PeopleIcon />,
-                      label: (
-                        <Msg
-                          id={messageIds.stats.participants}
-                          values={{
-                            participants: data.num_participants_available,
-                          }}
-                        />
-                      ),
-                    });
-                  }
-                }
-                return <ZUIIconLabelRow iconLabels={labels} />;
-              }}
-            </ZUIFuture>
-          </Box>
-        </Box>
-      }
-      tabs={[
-        { href: '/', label: messages.tabs.overview() },
-        {
-          href: '/participants',
-          label: messages.tabs.participants(),
-        },
-      ]}
-      title={
-        <ZUIFuture future={eventFuture}>
-          {(data) => {
-            return (
-              <ZUIEditTextinPlace
-                allowEmpty={true}
-                onBlur={() => {
-                  setEditingTypeOrTitle(false);
-                }}
-                onChange={(val) => {
-                  setEditingTypeOrTitle(false);
-                  setTitle(val);
-                }}
-                onFocus={() => setEditingTypeOrTitle(true)}
-                placeholder={
-                  data.title ||
-                  data.activity?.title ||
-                  messages.common.noTitle()
-                }
-                showBorder={editingTypeOrTitle}
-                tooltipContent={messages.tooltipContent()}
-                value={data.title || ''}
-              />
-            );
-          }}
-        </ZUIFuture>
-      }
-    >
-      {children}
-    </TabbedLayout>
+          </ZUIFuture>
+        }
+      >
+        {children}
+      </TabbedLayout>
+    </>
   );
 };
 

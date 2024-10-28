@@ -1,4 +1,4 @@
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import { EnumChoice, ZetkinOrganization } from 'utils/types/zetkin';
 import {
   AnyFilterConfig,
   ZetkinQuery,
@@ -93,6 +93,7 @@ export interface OrganizerActionViewColumn extends ZetkinViewColumnBase {
 export interface PersonFieldViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.PERSON_FIELD;
   config: {
+    enum_choices?: EnumChoice[];
     field: string;
   };
 }

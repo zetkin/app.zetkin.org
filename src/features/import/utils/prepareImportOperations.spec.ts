@@ -352,6 +352,78 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
+    it('converts ID, data and enum field', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'first_name',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            field: 'last_name',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            field: 'enum_field',
+            kind: ColumnKind.ENUM,
+            mapping: [
+              { key: 'first', value: 'Dummy value' },
+              { key: 'second', value: null },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: true,
+        rows: [
+          {
+            data: ['ID', 'First name', 'Last Name', 'Enum', 'Org'],
+          },
+          {
+            data: ['123', 'Jane', 'Doe', 'Dummy value', 1],
+          },
+          {
+            data: ['124', 'John', 'Doe', null, 2],
+          },
+          {
+            data: ['125', 'John', 'Doe', undefined, 2],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperations(configData, countryCode);
+      expect(result).toEqual([
+        {
+          data: {
+            enum_field: 'first',
+            ext_id: '123',
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+        },
+        {
+          data: {
+            enum_field: 'second',
+            ext_id: '124',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+        },
+        {
+          data: {
+            enum_field: 'second',
+            ext_id: '125',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+        },
+      ]);
+    });
     it('converts other columns when ID column is not chosen', () => {
       const configData: Sheet = {
         columns: [

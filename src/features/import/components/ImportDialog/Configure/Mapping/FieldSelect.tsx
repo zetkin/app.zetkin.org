@@ -35,6 +35,10 @@ const FieldSelect: FC<FieldSelectProps> = ({
       return `date:${column.originalColumn.field}`;
     }
 
+    if (column.originalColumn.kind == ColumnKind.ENUM) {
+      return `enum:${column.originalColumn.field}`;
+    }
+
     if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
       return column.originalColumn.kind.toString();
     }
@@ -97,6 +101,14 @@ const FieldSelect: FC<FieldSelectProps> = ({
             dateFormat: 'YYYY-MM-DD',
             field: event.target.value.slice(5),
             kind: ColumnKind.DATE,
+            selected: true,
+          });
+          onConfigureStart();
+        } else if (event.target.value.startsWith('enum')) {
+          onChange({
+            field: event.target.value.slice(5),
+            kind: ColumnKind.ENUM,
+            mapping: [],
             selected: true,
           });
           onConfigureStart();
