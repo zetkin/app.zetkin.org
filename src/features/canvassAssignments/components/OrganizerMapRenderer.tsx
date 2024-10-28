@@ -24,29 +24,27 @@ import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 const PlaceMarker: FC<{
   canvassAssId: string;
-  largestNumberOfHouseholds: number;
   place: ZetkinPlace;
   placeStyle: 'dot' | 'households' | 'progress';
-}> = ({ canvassAssId, largestNumberOfHouseholds, place, placeStyle }) => {
+}> = ({ canvassAssId, place, placeStyle }) => {
+  const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
       <Box
-        sx={(theme) => ({
+        sx={{
           backgroundColor: theme.palette.text.primary,
           borderRadius: '2em',
           height: 5,
           width: 5,
-        })}
+        }}
       />
     );
   } else if (placeStyle == 'households') {
-    const householdColorPercent =
-      (place.households.length / largestNumberOfHouseholds) * 100;
     return (
       <Box
         sx={{
           alignItems: 'center',
-          backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
+          backgroundColor: theme.palette.primary.main,
           borderRadius: '2em',
           color: 'white',
           display: 'flex',
@@ -138,10 +136,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   }, [areas, map]);
 
   const { assigneesFilter } = useContext(assigneesFilterContext);
-
-  const largestNumberOfHouseholds = Math.max(
-    ...places.map((place) => place.households.length)
-  );
 
   const getAreaColor = (
     hasPeople: boolean,
@@ -415,7 +409,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                     >
                       <PlaceMarker
                         canvassAssId={canvassAssId}
-                        largestNumberOfHouseholds={largestNumberOfHouseholds}
                         place={place}
                         placeStyle={placeStyle}
                       />
