@@ -75,14 +75,30 @@ const PlaceMarker: FC<{
       <div
         style={{
           alignItems: 'center',
-          backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+          background: `conic-gradient(${theme.palette.primary.main} ${visitsColorPercent}%, white ${visitsColorPercent}%)`,
           borderRadius: '2em',
           display: 'flex',
           flexDirection: 'row',
+          height: '25px',
           justifyContent: 'center',
-          width: '30px',
+          width: '25px',
         }}
-      >{`${visits}/${place.households.length}`}</div>
+      >
+        <div
+          style={{
+            alignItems: 'center',
+            backgroundColor: 'white',
+            borderRadius: '2em',
+            display: 'flex',
+            flexDirection: 'row',
+            height: '15px',
+            justifyContent: 'center',
+            width: '15px',
+          }}
+        >
+          {visits}
+        </div>
+      </div>
     );
   }
 };
