@@ -13,7 +13,7 @@ import {
 import { Close, Layers, Search } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
-import PlanMapRenderer from './PlanMapRenderer';
+import OrganizerMapRenderer from './OrganizerMapRenderer';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
@@ -22,15 +22,15 @@ import {
 } from '../types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import AssigneeFilterProvider from './PlanMapFilters/AssigneeFilterContext';
-import PlanMapFilters from './PlanMapFilters';
-import PlanMapFilterBadge from './PlanMapFilters/PlanMapFilterButton';
+import AssigneeFilterProvider from './OrganizerMapFilters/AssigneeFilterContext';
+import OrganizerMapFilters from './OrganizerMapFilters';
+import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
 import LayerSettings from './LayerSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 
-type PlanMapProps = {
+type OrganizerMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   canvassAssId: string;
@@ -45,7 +45,7 @@ export type MapStyle = {
   place: 'dot' | 'households' | 'progress' | 'hide';
 };
 
-const PlanMap: FC<PlanMapProps> = ({
+const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
   canvassAssId,
@@ -167,7 +167,7 @@ const PlanMap: FC<PlanMapProps> = ({
                 value={settingsOpen}
               >
                 <ToggleButton value="filters">
-                  <PlanMapFilterBadge />
+                  <OrganizerMapFilterBadge />
                 </ToggleButton>
                 <ToggleButton value="layers">
                   <Layers sx={{ color: 'white' }} />
@@ -248,7 +248,7 @@ const PlanMap: FC<PlanMapProps> = ({
                       />
                     )}
                     {settingsOpen == 'filters' && (
-                      <PlanMapFilters
+                      <OrganizerMapFilters
                         areas={areas}
                         onFilteredIdsChange={(areaIds) => {
                           setFilteredAreaIds(areaIds);
@@ -267,7 +267,7 @@ const PlanMap: FC<PlanMapProps> = ({
               zoom={2}
               zoomControl={false}
             >
-              <PlanMapRenderer
+              <OrganizerMapRenderer
                 areas={filteredAreas}
                 areaStats={areaStats}
                 areaStyle={mapStyle.area}
@@ -295,4 +295,4 @@ const PlanMap: FC<PlanMapProps> = ({
   );
 };
 
-export default PlanMap;
+export default OrganizerMap;

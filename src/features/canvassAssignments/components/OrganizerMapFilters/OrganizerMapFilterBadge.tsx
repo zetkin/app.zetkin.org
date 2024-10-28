@@ -5,7 +5,7 @@ import { FilterList } from '@mui/icons-material';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
 import { assigneesFilterContext } from './AssigneeFilterContext';
 
-const PlanMapFilterBadge: FC = () => {
+const OrganizerMapFilterBadge: FC = () => {
   const { activeTagIdsByGroup } = useContext(areaFilterContext);
   const { assigneesFilter } = useContext(assigneesFilterContext);
 
@@ -25,4 +25,4 @@ const PlanMapFilterBadge: FC = () => {
     <FilterList sx={{ color: 'white' }} />
   );
 };
-export default PlanMapFilterBadge;
+export default OrganizerMapFilterBadge;

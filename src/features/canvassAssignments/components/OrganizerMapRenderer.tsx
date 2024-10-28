@@ -19,7 +19,7 @@ import {
 } from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import { assigneesFilterContext } from './PlanMapFilters/AssigneeFilterContext';
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 const PlaceMarker: FC<{
@@ -89,7 +89,7 @@ const PlaceMarker: FC<{
   }
 };
 
-type PlanMapRendererProps = {
+type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
   areas: ZetkinArea[];
@@ -102,7 +102,7 @@ type PlanMapRendererProps = {
   sessions: ZetkinCanvassSession[];
 };
 
-const PlanMapRenderer: FC<PlanMapRendererProps> = ({
+const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
@@ -429,4 +429,4 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   );
 };
 
-export default PlanMapRenderer;
+export default OrganizerMapRenderer;

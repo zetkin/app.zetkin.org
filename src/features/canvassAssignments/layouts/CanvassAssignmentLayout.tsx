@@ -54,7 +54,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
 
   const canvassers = getCanvassers(sessions);
 
-  const isPlanTab = path.endsWith('/plan');
+  const isMapTab = path.endsWith('/map');
 
   if (!canvassAssignment) {
     return null;
@@ -111,7 +111,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
         />
       }
       defaultTab="/"
-      fixedHeight={isPlanTab}
+      fixedHeight={isMapTab}
       subtitle={
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
@@ -135,7 +135,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
       }
       tabs={[
         { href: '/', label: 'Overview' },
-        { href: '/plan', label: 'Plan' },
+        { href: '/map', label: 'Map' },
         { href: '/canvassers', label: 'Canvassers' },
         { href: '/outcomes', label: 'Outcomes' },
       ]}
