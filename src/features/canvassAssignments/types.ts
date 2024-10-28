@@ -116,7 +116,6 @@ export type ZetkinAssignmentAreaStatsItem = {
   num_successful_visited_households: number;
   num_visited_households: number;
   num_visited_places: number;
-  num_visits: number;
 };
 
 export type ZetkinAssignmentAreaStats = {

@@ -115,7 +115,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           num_successful_visited_households: 0,
           num_visited_households: 0,
           num_visited_places: 0,
-          num_visits: 0,
         };
         allPlaces.forEach((place) => {
           const placeIsInArea = isPointInsidePolygon(
@@ -140,7 +139,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               );
 
               if (hasVisitInThisAssignment) {
-                statsByAreaId[area.id].num_visits++;
                 statsByAreaId[area.id].num_visited_households++;
 
                 if (!placeVisited) {
