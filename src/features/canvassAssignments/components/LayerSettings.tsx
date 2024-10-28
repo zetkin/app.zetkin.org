@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { FC, useRef, useState } from 'react';
 
-import { MapStyle } from './PlanMap';
+import { MapStyle } from './OrganizerMap';
 
 type LayerSettingsProps = {
   mapStyle: MapStyle;

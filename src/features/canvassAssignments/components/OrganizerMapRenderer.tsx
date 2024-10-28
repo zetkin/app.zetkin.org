@@ -19,34 +19,32 @@ import {
 } from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import { assigneesFilterContext } from './PlanMapFilters/AssigneeFilterContext';
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 const PlaceMarker: FC<{
   canvassAssId: string;
-  largestNumberOfHouseholds: number;
   place: ZetkinPlace;
   placeStyle: 'dot' | 'households' | 'progress';
-}> = ({ canvassAssId, largestNumberOfHouseholds, place, placeStyle }) => {
+}> = ({ canvassAssId, place, placeStyle }) => {
+  const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
       <Box
-        sx={(theme) => ({
+        sx={{
           backgroundColor: theme.palette.text.primary,
           borderRadius: '2em',
           height: 5,
           width: 5,
-        })}
+        }}
       />
     );
   } else if (placeStyle == 'households') {
-    const householdColorPercent =
-      (place.households.length / largestNumberOfHouseholds) * 100;
     return (
       <Box
         sx={{
           alignItems: 'center',
-          backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
+          backgroundColor: theme.palette.primary.main,
           borderRadius: '2em',
           color: 'white',
           display: 'flex',
@@ -77,19 +75,35 @@ const PlaceMarker: FC<{
       <div
         style={{
           alignItems: 'center',
-          backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+          background: `conic-gradient(${theme.palette.primary.main} ${visitsColorPercent}%, white ${visitsColorPercent}%)`,
           borderRadius: '2em',
           display: 'flex',
           flexDirection: 'row',
+          height: '25px',
           justifyContent: 'center',
-          width: '30px',
+          width: '25px',
         }}
-      >{`${visits}/${place.households.length}`}</div>
+      >
+        <div
+          style={{
+            alignItems: 'center',
+            backgroundColor: 'white',
+            borderRadius: '2em',
+            display: 'flex',
+            flexDirection: 'row',
+            height: '15px',
+            justifyContent: 'center',
+            width: '15px',
+          }}
+        >
+          {visits}
+        </div>
+      </div>
     );
   }
 };
 
-type PlanMapRendererProps = {
+type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
   areas: ZetkinArea[];
@@ -102,7 +116,7 @@ type PlanMapRendererProps = {
   sessions: ZetkinCanvassSession[];
 };
 
-const PlanMapRenderer: FC<PlanMapRendererProps> = ({
+const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
@@ -139,23 +153,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
   const { assigneesFilter } = useContext(assigneesFilterContext);
 
-  const largestNumberOfHouseholds = Math.max(
-    ...places.map((place) => place.households.length)
-  );
-
-  const getAreaStrokeColor = (hasPeople: boolean) => {
-    if (areaStyle == 'hide') {
-      return 'transparent';
-    }
-
-    if (hasPeople) {
-      return theme.palette.primary.main;
-    } else {
-      return theme.palette.secondary.main;
-    }
-  };
-
-  const getAreaFillColor = (
+  const getAreaColor = (
     hasPeople: boolean,
     householdColorPercent: number,
     visitsColorPercent: number
@@ -301,7 +299,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
               : 0;
 
             const visitsColorPercent = stats
-              ? (stats.num_visits / stats.num_households) * 100
+              ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
 
             return (
@@ -343,7 +341,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                         width: '40px',
                       }}
                     >
-                      {`${stats.num_visits}/${stats.num_households}`}
+                      {`${stats.num_visited_households}/${stats.num_households}`}
                     </div>
                   </DivIconMarker>
                 )}
@@ -401,17 +399,17 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                 )}
                 <Polygon
                   key={key}
-                  color={getAreaStrokeColor(hasPeople)}
+                  color={getAreaColor(
+                    hasPeople,
+                    householdColorPercent,
+                    visitsColorPercent
+                  )}
+                  dashArray={!hasPeople ? '5px 5px' : ''}
                   eventHandlers={{
                     click: () => {
                       onSelectedIdChange(selected ? '' : area.id);
                     },
                   }}
-                  fillColor={getAreaFillColor(
-                    hasPeople,
-                    householdColorPercent,
-                    visitsColorPercent
-                  )}
                   interactive={areaStyle != 'hide' ? true : false}
                   positions={area.points}
                   weight={selected ? 5 : 2}
@@ -427,7 +425,6 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                     >
                       <PlaceMarker
                         canvassAssId={canvassAssId}
-                        largestNumberOfHouseholds={largestNumberOfHouseholds}
                         place={place}
                         placeStyle={placeStyle}
                       />
@@ -441,4 +438,4 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   );
 };
 
-export default PlanMapRenderer;
+export default OrganizerMapRenderer;

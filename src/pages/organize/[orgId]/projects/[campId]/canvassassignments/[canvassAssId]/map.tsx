@@ -18,7 +18,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 const PlanMap = dynamic(
   () =>
     import(
-      '../../../../../../../features/canvassAssignments/components/PlanMap'
+      '../../../../../../../features/canvassAssignments/components/OrganizerMap'
     ),
   { ssr: false }
 );

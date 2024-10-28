@@ -3,9 +3,6 @@ import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import {
   Box,
-  Button,
-  ButtonGroup,
-  CircularProgress,
   Divider,
   IconButton,
   Paper,
@@ -13,18 +10,10 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import {
-  Add,
-  Close,
-  GpsFixed,
-  Home,
-  Layers,
-  Remove,
-  Search,
-} from '@mui/icons-material';
+import { Close, Layers, Search } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
-import PlanMapRenderer from './PlanMapRenderer';
+import OrganizerMapRenderer from './OrganizerMapRenderer';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
@@ -33,14 +22,15 @@ import {
 } from '../types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import AssigneeFilterProvider from './PlanMapFilters/AssigneeFilterContext';
-import PlanMapFilters from './PlanMapFilters';
-import PlanMapFilterBadge from './PlanMapFilters/PlanMapFilterButton';
+import AssigneeFilterProvider from './OrganizerMapFilters/AssigneeFilterContext';
+import OrganizerMapFilters from './OrganizerMapFilters';
+import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
 import LayerSettings from './LayerSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import MapControls from './MapControls';
 
-type PlanMapProps = {
+type OrganizerMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   canvassAssId: string;
@@ -55,7 +45,7 @@ export type MapStyle = {
   place: 'dot' | 'households' | 'progress' | 'hide';
 };
 
-const PlanMap: FC<PlanMapProps> = ({
+const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
   canvassAssId,
@@ -122,82 +112,36 @@ const PlanMap: FC<PlanMapProps> = ({
           }}
         >
           <Box flexGrow={1} position="relative">
-            <Box
-              sx={{
-                left: 16,
-                position: 'absolute',
-                top: 16,
-                zIndex: 999,
-              }}
-            >
-              <ButtonGroup orientation="vertical" variant="contained">
-                <Button onClick={() => mapRef.current?.zoomIn()}>
-                  <Add />
-                </Button>
-                <Button onClick={() => mapRef.current?.zoomOut()}>
-                  <Remove />
-                </Button>
-                <Button
-                  onClick={() => {
-                    const map = mapRef.current;
-                    if (map) {
-                      if (areas.length) {
-                        // Start with first area
-                        const totalBounds = latLngBounds(
-                          areas[0].points.map((p) => objToLatLng(p))
-                        );
-
-                        // Extend with all areas
-                        areas.forEach((area) => {
-                          const areaBounds = latLngBounds(
-                            area.points.map((p) => objToLatLng(p))
-                          );
-                          totalBounds.extend(areaBounds);
-                        });
-
-                        if (totalBounds) {
-                          map.fitBounds(totalBounds, { animate: true });
-                        }
-                      }
-                    }
-                  }}
-                >
-                  <Home />
-                </Button>
-                <Button
-                  onClick={() => {
-                    setLocating(true);
-                    navigator.geolocation.getCurrentPosition(
-                      (pos) => {
-                        setLocating(false);
-
-                        const zoom = 16;
-                        const latLng = {
-                          lat: pos.coords.latitude,
-                          lng: pos.coords.longitude,
-                        };
-
-                        mapRef.current?.flyTo(latLng, zoom, {
-                          animate: true,
-                          duration: 0.8,
-                        });
-                      },
-                      () => {
-                        // When an error occurs just stop the loading indicator
-                        setLocating(false);
-                      },
-                      { enableHighAccuracy: true, timeout: 5000 }
+            <MapControls
+              mapRef={mapRef}
+              onFitBounds={() => {
+                const map = mapRef.current;
+                if (map) {
+                  if (areas.length) {
+                    // Start with first area
+                    const totalBounds = latLngBounds(
+                      areas[0].points.map((p) => objToLatLng(p))
                     );
-                  }}
-                >
-                  {locating ? (
-                    <CircularProgress color="inherit" size={24} />
-                  ) : (
-                    <GpsFixed />
-                  )}
-                </Button>
-              </ButtonGroup>
-            </Box>
+
+                    // Extend with all areas
+                    areas.forEach((area) => {
+                      const areaBounds = latLngBounds(
+                        area.points.map((p) => objToLatLng(p))
+                      );
+                      totalBounds.extend(areaBounds);
+                    });
+
+                    if (totalBounds) {
+                      map.fitBounds(totalBounds, { animate: true });
+                    }
+                  }
+                }
+              }}
+              onLocate={() => ({
+                locating,
+                setLocating,
+              })}
+            />
             <Box
               sx={{
                 position: 'absolute',
@@ -223,7 +167,7 @@ const PlanMap: FC<PlanMapProps> = ({
                 value={settingsOpen}
               >
                 <ToggleButton value="filters">
-                  <PlanMapFilterBadge />
+                  <OrganizerMapFilterBadge />
                 </ToggleButton>
                 <ToggleButton value="layers">
                   <Layers sx={{ color: 'white' }} />
@@ -304,7 +248,7 @@ const PlanMap: FC<PlanMapProps> = ({
                       />
                     )}
                     {settingsOpen == 'filters' && (
-                      <PlanMapFilters
+                      <OrganizerMapFilters
                         areas={areas}
                         onFilteredIdsChange={(areaIds) => {
                           setFilteredAreaIds(areaIds);
@@ -323,7 +267,7 @@ const PlanMap: FC<PlanMapProps> = ({
               zoom={2}
               zoomControl={false}
             >
-              <PlanMapRenderer
+              <OrganizerMapRenderer
                 areas={filteredAreas}
                 areaStats={areaStats}
                 areaStyle={mapStyle.area}
@@ -351,4 +295,4 @@ const PlanMap: FC<PlanMapProps> = ({
   );
 };
 
-export default PlanMap;
+export default OrganizerMap;
