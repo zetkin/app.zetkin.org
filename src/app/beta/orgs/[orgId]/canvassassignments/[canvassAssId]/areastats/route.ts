@@ -108,6 +108,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const statsByAreaId: Record<string, ZetkinAssignmentAreaStatsItem> = {};
 
       uniqueAreas.forEach((area) => {
+        statsByAreaId[area.id] = {
+          areaId: area.id,
+          num_households: 0,
+          num_places: 0,
+          num_successful_visited_households: 0,
+          num_visited_households: 0,
+          num_visited_places: 0,
+          num_visits: 0,
+        };
         allPlaces.forEach((place) => {
           const placeIsInArea = isPointInsidePolygon(
             { lat: place.position.lat, lng: place.position.lng },
@@ -120,18 +129,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           )?._id;
 
           if (placeIsInArea) {
-            if (!statsByAreaId[area.id]) {
-              statsByAreaId[area.id] = {
-                areaId: area.id,
-                num_households: 0,
-                num_places: 0,
-                num_successful_visited_households: 0,
-                num_visited_households: 0,
-                num_visited_places: 0,
-                num_visits: 0,
-              };
-            }
-
             statsByAreaId[area.id].num_places++;
             statsByAreaId[area.id].num_households += place.households.length;
 

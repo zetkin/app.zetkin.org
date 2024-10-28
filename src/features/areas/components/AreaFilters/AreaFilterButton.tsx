@@ -10,7 +10,9 @@ type Props = {
 
 const AreaFilterButton: FC<Props> = ({ onToggle }) => {
   const { activeTagIdsByGroup } = useContext(areaFilterContext);
-  const numActiveGroups = Object.values(activeTagIdsByGroup).length;
+  const numActiveGroups = Object.values(activeTagIdsByGroup).filter(
+    (tagIds) => !!tagIds.length
+  ).length;
 
   return (
     <Button

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import {
   AttributionControl,
   FeatureGroup,
@@ -19,14 +19,84 @@ import {
 } from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
+import { assigneesFilterContext } from './PlanMapFilters/AssigneeFilterContext';
+import isPointInsidePolygon from '../utils/isPointInsidePolygon';
+
+const PlaceMarker: FC<{
+  canvassAssId: string;
+  largestNumberOfHouseholds: number;
+  place: ZetkinPlace;
+  placeStyle: 'dot' | 'households' | 'progress';
+}> = ({ canvassAssId, largestNumberOfHouseholds, place, placeStyle }) => {
+  if (placeStyle == 'dot') {
+    return (
+      <Box
+        sx={(theme) => ({
+          backgroundColor: theme.palette.text.primary,
+          borderRadius: '2em',
+          height: 5,
+          width: 5,
+        })}
+      />
+    );
+  } else if (placeStyle == 'households') {
+    const householdColorPercent =
+      (place.households.length / largestNumberOfHouseholds) * 100;
+    return (
+      <Box
+        sx={{
+          alignItems: 'center',
+          backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
+          borderRadius: '2em',
+          color: 'white',
+          display: 'flex',
+          flexDirection: 'row',
+          height: '20px',
+          justifyContent: 'center',
+          width: '20px',
+        }}
+      >
+        {place.households.length}
+      </Box>
+    );
+  } else {
+    //placeStyle is 'progress'
+    let visits = 0;
+    place.households.forEach((household) => {
+      const visitInThisAssignment = household.visits.find(
+        (visit) => visit.canvassAssId == canvassAssId
+      );
+      if (visitInThisAssignment) {
+        visits++;
+      }
+    });
+
+    const visitsColorPercent = (visits / place.households.length) * 100;
+
+    return (
+      <div
+        style={{
+          alignItems: 'center',
+          backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
+          borderRadius: '2em',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '30px',
+        }}
+      >{`${visits}/${place.households.length}`}</div>
+    );
+  }
+};
 
 type PlanMapRendererProps = {
-  //eslint-disable-next-line
   areaStats: ZetkinAssignmentAreaStats;
+  areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
   areas: ZetkinArea[];
-  filterAssigned: boolean;
-  filterUnassigned: boolean;
+  canvassAssId: string;
   onSelectedIdChange: (newId: string) => void;
+  overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
+  placeStyle: 'dot' | 'households' | 'progress' | 'hide';
   places: ZetkinPlace[];
   selectedId: string;
   sessions: ZetkinCanvassSession[];
@@ -34,11 +104,14 @@ type PlanMapRendererProps = {
 
 const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   areas,
-  filterAssigned,
-  filterUnassigned,
+  areaStats,
+  areaStyle,
+  canvassAssId,
   selectedId,
   sessions,
   onSelectedIdChange,
+  overlayStyle,
+  placeStyle,
   places,
 }) => {
   const theme = useTheme();
@@ -64,7 +137,48 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     }
   }, [areas, map]);
 
-  const showAll = !filterAssigned && !filterUnassigned;
+  const { assigneesFilter } = useContext(assigneesFilterContext);
+
+  const largestNumberOfHouseholds = Math.max(
+    ...places.map((place) => place.households.length)
+  );
+
+  const getAreaStrokeColor = (hasPeople: boolean) => {
+    if (areaStyle == 'hide') {
+      return 'transparent';
+    }
+
+    if (hasPeople) {
+      return theme.palette.primary.main;
+    } else {
+      return theme.palette.secondary.main;
+    }
+  };
+
+  const getAreaFillColor = (
+    hasPeople: boolean,
+    householdColorPercent: number,
+    visitsColorPercent: number
+  ) => {
+    if (areaStyle == 'hide') {
+      return 'transparent';
+    }
+
+    if (areaStyle == 'assignees') {
+      return hasPeople
+        ? theme.palette.primary.main
+        : theme.palette.secondary.main;
+    }
+
+    if (areaStyle == 'progress' && !hasPeople) {
+      return theme.palette.secondary.main;
+    }
+
+    return areaStyle == 'households'
+      ? //TODO: Use theme colors for these
+        `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`
+      : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent || 1}%)`;
+  };
 
   return (
     <>
@@ -139,12 +253,10 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
             const hasPeople = !!people.length;
 
-            if (!showAll) {
-              if (hasPeople && !filterAssigned) {
-                return null;
-              } else if (!hasPeople && !filterUnassigned) {
-                return null;
-              }
+            if (hasPeople && assigneesFilter == 'unassigned') {
+              return null;
+            } else if (!hasPeople && assigneesFilter == 'assigned') {
+              return null;
             }
 
             // The key changes when selected, to force redraw of polygon
@@ -152,11 +264,90 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
             const key =
               area.id +
               (selected ? '-selected' : '-default') +
+              `-${areaStyle}` +
               (hasPeople ? '-assigned' : '');
+
+            const stats = areaStats.stats.find(
+              (stat) => stat.areaId == area.id
+            );
+
+            let highestHousholds = 0;
+            areaStats.stats.forEach((stat) => {
+              if (stat.num_households > highestHousholds) {
+                highestHousholds = stat.num_households;
+              }
+            });
+
+            const placesInArea: ZetkinPlace[] = [];
+            places.map((place) => {
+              const isInsideArea = isPointInsidePolygon(
+                place.position,
+                area.points.map((point) => ({
+                  lat: point[0],
+                  lng: point[1],
+                }))
+              );
+              if (isInsideArea) {
+                placesInArea.push(place);
+              }
+            });
+
+            const numberOfHouseholdsInArea = placesInArea
+              .map((place) => place.households.length)
+              .reduce((prev, curr) => prev + curr, 0);
+
+            const householdColorPercent = stats
+              ? (numberOfHouseholdsInArea / highestHousholds) * 100
+              : 0;
+
+            const visitsColorPercent = stats
+              ? (stats.num_visits / stats.num_households) * 100
+              : 0;
 
             return (
               <>
-                {hasPeople && (
+                {overlayStyle == 'households' && (
+                  <DivIconMarker iconAnchor={[11, 11]} position={mid}>
+                    <div
+                      style={{
+                        alignItems: 'center',
+                        backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
+                        border: '2px solid white',
+                        color: 'white',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        height: '21px',
+                        justifyContent: 'center',
+                        padding: '0.75rem',
+                        width: '21px',
+                      }}
+                    >
+                      {numberOfHouseholdsInArea}
+                    </div>
+                  </DivIconMarker>
+                )}
+                {overlayStyle == 'progress' && stats && (
+                  <DivIconMarker iconAnchor={[20, 10]} position={mid}>
+                    <div
+                      style={{
+                        alignItems: 'center',
+                        backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${
+                          visitsColorPercent || 1
+                        }%)`,
+                        borderRadius: '2rem',
+                        color: 'white',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        height: '20px',
+                        justifyContent: 'center',
+                        width: '40px',
+                      }}
+                    >
+                      {`${stats.num_visits}/${stats.num_households}`}
+                    </div>
+                  </DivIconMarker>
+                )}
+                {overlayStyle == 'assignees' && hasPeople && (
                   <DivIconMarker position={mid}>
                     {detailed && (
                       <Box display="flex" sx={{ pointerEvents: 'none' }}>
@@ -167,9 +358,11 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                             transform: 'translate(-50%, -50%)',
                           }}
                         >
-                          {people.map((person) => (
+                          {people.map((person, index) => (
                             <Box
-                              key={person.id}
+                              //TODO: only use person id once we have logic preventing
+                              //assigning the same person to an area more than once
+                              key={`${person.id}-${index}`}
                               sx={{
                                 borderRadius: '50%',
                                 boxShadow: '0 0 8px rgba(0,0,0,0.3)',
@@ -184,7 +377,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                         </Box>
                       </Box>
                     )}
-                    {!detailed && (
+                    {overlayStyle == 'assignees' && !detailed && (
                       <Box
                         sx={{
                           alignItems: 'center',
@@ -208,40 +401,42 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                 )}
                 <Polygon
                   key={key}
-                  color={
-                    hasPeople
-                      ? theme.palette.primary.main
-                      : theme.palette.secondary.main
-                  }
+                  color={getAreaStrokeColor(hasPeople)}
                   eventHandlers={{
                     click: () => {
-                      onSelectedIdChange(area.id);
+                      onSelectedIdChange(selected ? '' : area.id);
                     },
                   }}
+                  fillColor={getAreaFillColor(
+                    hasPeople,
+                    householdColorPercent,
+                    visitsColorPercent
+                  )}
+                  interactive={areaStyle != 'hide' ? true : false}
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
+                {placeStyle != 'hide' &&
+                  placesInArea.map((place) => (
+                    <DivIconMarker
+                      key={place.id}
+                      position={{
+                        lat: place.position.lat,
+                        lng: place.position.lng,
+                      }}
+                    >
+                      <PlaceMarker
+                        canvassAssId={canvassAssId}
+                        largestNumberOfHouseholds={largestNumberOfHouseholds}
+                        place={place}
+                        placeStyle={placeStyle}
+                      />
+                    </DivIconMarker>
+                  ))}
               </>
             );
           })}
       </FeatureGroup>
-      {places.map((place) => (
-        <DivIconMarker
-          key={place.id}
-          position={{
-            lat: place.position.lat,
-            lng: place.position.lng,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: 'black',
-              height: '5px',
-              width: '5px',
-            }}
-          />
-        </DivIconMarker>
-      ))}
     </>
   );
 };
