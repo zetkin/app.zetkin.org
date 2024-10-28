@@ -13,6 +13,7 @@ import {
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
+  AssignmentWithAreas,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
@@ -25,7 +26,7 @@ export interface CanvassAssignmentsStoreSlice {
     string,
     RemoteList<ZetkinCanvassAssignee>
   >;
-  mySessionsList: RemoteList<ZetkinCanvassSession & { id: string }>;
+  myAssignmentsWithAreasList: RemoteList<AssignmentWithAreas>;
   placeList: RemoteList<ZetkinPlace>;
   statsByCanvassAssId: Record<
     string,
@@ -36,7 +37,7 @@ export interface CanvassAssignmentsStoreSlice {
 const initialState: CanvassAssignmentsStoreSlice = {
   assigneesByCanvassAssignmentId: {},
   canvassAssignmentList: remoteList(),
-  mySessionsList: remoteList(),
+  myAssignmentsWithAreasList: remoteList(),
   placeList: remoteList(),
   sessionsByAssignmentId: {},
   statsByCanvassAssId: {},
@@ -220,23 +221,20 @@ const canvassAssignmentSlice = createSlice({
         new Date().toISOString();
     },
     myAssignmentsLoad: (state) => {
-      state.mySessionsList.isLoading = true;
+      state.myAssignmentsWithAreasList.isLoading = true;
     },
     myAssignmentsLoaded: (
       state,
-      action: PayloadAction<ZetkinCanvassSession[]>
+      action: PayloadAction<AssignmentWithAreas[]>
     ) => {
-      const sessions = action.payload;
+      const assignments = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.mySessionsList = remoteList(
-        sessions.map((session) => ({
-          ...session,
-          id: `${session.assignment.id} ${session.assignee.id}`,
-        }))
+      state.myAssignmentsWithAreasList = remoteList(assignments);
+      state.myAssignmentsWithAreasList.loaded = timestamp;
+      state.myAssignmentsWithAreasList.items.forEach(
+        (item) => (item.loaded = timestamp)
       );
-      state.mySessionsList.loaded = timestamp;
-      state.mySessionsList.items.forEach((item) => (item.loaded = timestamp));
     },
     placeCreated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;

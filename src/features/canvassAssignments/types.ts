@@ -21,6 +21,10 @@ export type ZetkinCanvassAssignment = {
   title: string | null;
 };
 
+export type AssignmentWithAreas = ZetkinCanvassAssignment & {
+  areas: ZetkinArea[];
+};
+
 export type ZetkinCanvassAssignmentPostBody = Partial<
   Omit<ZetkinCanvassAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
 > & {
@@ -73,10 +77,7 @@ export type ZetkinPlacePatchBody = Partial<
 export type ZetkinCanvassSession = {
   area: ZetkinArea;
   assignee: ZetkinPerson;
-  assignment: {
-    id: string;
-    title: string | null;
-  };
+  assignment: ZetkinCanvassAssignment;
 };
 
 export type ZetkinCanvassSessionPostBody = {
