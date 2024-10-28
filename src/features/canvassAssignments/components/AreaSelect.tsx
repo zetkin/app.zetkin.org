@@ -146,17 +146,17 @@ const AreaSelect: FC<Props> = ({
         <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
           <Box display="flex" justifyContent="space-evenly">
             <Box alignItems="center" display="flex">
-              <DoorFront />
+              <DoorFront color="secondary" fontSize="large" />
               {numberOfHouseholdsInSelectedArea}
             </Box>
             {selectedAreaStats && (
               <>
                 <Box alignItems="center" display="flex">
-                  <CanvassVisit />
+                  <CanvassVisit color="secondary" fontSize="large" />
                   {selectedAreaStats.num_visited_households}
                 </Box>
                 <Box alignItems="center" display="flex">
-                  <CanvassVisitSuccessful />
+                  <CanvassVisitSuccessful color="secondary" fontSize="large" />
                   {selectedAreaStats.num_successful_visited_households}
                 </Box>
               </>
