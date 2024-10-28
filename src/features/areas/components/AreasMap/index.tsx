@@ -100,14 +100,6 @@ const Map: FC<MapProps> = ({ areas }) => {
 
   const filteredAreas = filterAreas(areas, filterText);
 
-  const zoomIn = () => {
-    mapRef.current?.zoomIn();
-  };
-
-  const zoomOut = () => {
-    mapRef.current?.zoomOut();
-  };
-
   const fitBounds = () => {
     const map = mapRef.current;
     if (map) {
@@ -237,8 +229,6 @@ const Map: FC<MapProps> = ({ areas }) => {
             mapRef={mapRef}
             onFitBounds={fitBounds}
             onLocate={onLocate}
-            onZoomIn={zoomIn}
-            onZoomOut={zoomOut}
           />
           {selectedArea && (
             <AreaOverlay
