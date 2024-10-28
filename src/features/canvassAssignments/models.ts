@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { ZetkinCanvassAssignee, ZetkinMetric, ZetkinPlace } from './types';
+import { ZetkinMetric, ZetkinPlace } from './types';
 
 type ZetkinCanvassAssignmentModelType = {
   campId: number;
@@ -67,11 +67,6 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   title: String,
 });
 
-const canvassAssigneeSchema = new mongoose.Schema<ZetkinCanvassAssignee>({
-  canvassAssId: String,
-  id: { required: true, type: Number },
-});
-
 export const CanvassAssignmentModel: mongoose.Model<ZetkinCanvassAssignmentModelType> =
   mongoose.models.CanvassAssignment ||
   mongoose.model<ZetkinCanvassAssignmentModelType>(
@@ -81,10 +76,3 @@ export const CanvassAssignmentModel: mongoose.Model<ZetkinCanvassAssignmentModel
 export const PlaceModel: mongoose.Model<ZetkinPlaceModelType> =
   mongoose.models.Place ||
   mongoose.model<ZetkinPlaceModelType>('Place', placeSchema);
-
-export const CanvassAssigneeModel: mongoose.Model<ZetkinCanvassAssignee> =
-  mongoose.models.CanvassAssignee ||
-  mongoose.model<ZetkinCanvassAssignee>(
-    'CanvassAssignee',
-    canvassAssigneeSchema
-  );
