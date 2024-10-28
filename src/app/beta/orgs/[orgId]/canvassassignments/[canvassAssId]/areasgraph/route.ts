@@ -32,13 +32,19 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
-      // Find the canvass assignment model
       const assignmentModel = await CanvassAssignmentModel.findOne({
         _id: params.canvassAssId,
       });
 
       if (!assignmentModel) {
         return new NextResponse(null, { status: 404 });
+      }
+
+      const startDate = assignmentModel.start_date;
+
+      // No need to move forward if startDate is null
+      if (!startDate) {
+        return new NextResponse(null, { status: 200 });
       }
 
       const sessions: ZetkinCanvassSession[] = [];
@@ -117,31 +123,57 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             }
 
             const areaData = areasData[area.id];
+            // check if startDate is within the last 24 hours
+            const isWithinLast24Hours =
+              startDate &&
+              new Date(startDate) >= new Date(Date.now() - 24 * 60 * 60 * 1000);
 
             place.households.forEach((household) => {
               const hasVisitInThisAssignment = household.visits.find(
                 (visit) => visit.canvassAssId == params.canvassAssId
               );
 
-              //logic for households
+              // logic for households
               if (hasVisitInThisAssignment) {
                 household.visits.forEach((visit) => {
                   if (visit.canvassAssId == params.canvassAssId) {
-                    const date = new Date(visit.timestamp)
-                      .toISOString()
-                      .split('T')[0];
-                    let householdsVisitedItem = areaData.householdsVisited.find(
-                      (item) => item.date === date
-                    );
+                    if (isWithinLast24Hours) {
+                      // Get data per hour
+                      const date = new Date(visit.timestamp)
+                        .toISOString()
+                        .slice(0, 13); // Format as "YYYY-MM-DDTHH"
+                      let householdsVisitedItem =
+                        areaData.householdsVisited.find(
+                          (item) => item.date === date
+                        );
 
-                    if (!householdsVisitedItem) {
-                      householdsVisitedItem = {
-                        accumulatedVisits: 1,
-                        date,
-                      };
-                      areaData.householdsVisited.push(householdsVisitedItem);
+                      if (!householdsVisitedItem) {
+                        householdsVisitedItem = {
+                          accumulatedVisits: 1,
+                          date,
+                        };
+                        areaData.householdsVisited.push(householdsVisitedItem);
+                      }
+                      householdsVisitedItem.accumulatedVisits++;
+                    } else {
+                      //get data  per day
+                      const date = new Date(visit.timestamp)
+                        .toISOString()
+                        .split('T')[0];
+                      let householdsVisitedItem =
+                        areaData.householdsVisited.find(
+                          (item) => item.date === date
+                        );
+
+                      if (!householdsVisitedItem) {
+                        householdsVisitedItem = {
+                          accumulatedVisits: 1,
+                          date,
+                        };
+                        areaData.householdsVisited.push(householdsVisitedItem);
+                      }
+                      householdsVisitedItem.accumulatedVisits++;
                     }
-                    householdsVisitedItem.accumulatedVisits++;
                   }
                 });
               }
@@ -152,23 +184,50 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                   visit.responses.forEach((response) => {
                     if (response.metricId == idOfMetricThatDefinesDone) {
                       if (response.response == 'yes') {
-                        const date = new Date(visit.timestamp)
-                          .toISOString()
-                          .split('T')[0];
-                        let successfulVisitsItem =
-                          areaData.successfulVisits.find(
-                            (item) => item.date === date
-                          );
+                        if (isWithinLast24Hours) {
+                          // Get data per hour
+                          const date = new Date(visit.timestamp)
+                            .toISOString()
+                            .slice(0, 13); // Format as "YYYY-MM-DDTHH"
 
-                        if (!successfulVisitsItem) {
-                          successfulVisitsItem = {
-                            accumulatedVisits: 1,
-                            date,
-                          };
+                          let successfulVisitsItem =
+                            areaData.successfulVisits.find(
+                              (item) => item.date === date
+                            );
 
-                          areaData.successfulVisits.push(successfulVisitsItem);
+                          if (!successfulVisitsItem) {
+                            successfulVisitsItem = {
+                              accumulatedVisits: 1,
+                              date,
+                            };
+
+                            areaData.successfulVisits.push(
+                              successfulVisitsItem
+                            );
+                          }
+                          successfulVisitsItem.accumulatedVisits++;
+                        } else {
+                          //get data  per day
+                          const date = new Date(visit.timestamp)
+                            .toISOString()
+                            .split('T')[0];
+                          let successfulVisitsItem =
+                            areaData.successfulVisits.find(
+                              (item) => item.date === date
+                            );
+
+                          if (!successfulVisitsItem) {
+                            successfulVisitsItem = {
+                              accumulatedVisits: 1,
+                              date,
+                            };
+
+                            areaData.successfulVisits.push(
+                              successfulVisitsItem
+                            );
+                          }
+                          successfulVisitsItem.accumulatedVisits++;
                         }
-                        successfulVisitsItem.accumulatedVisits++;
                       }
                     }
                   });
