@@ -143,19 +143,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     ...places.map((place) => place.households.length)
   );
 
-  const getAreaStrokeColor = (hasPeople: boolean) => {
-    if (areaStyle == 'hide') {
-      return 'transparent';
-    }
-
-    if (hasPeople) {
-      return theme.palette.primary.main;
-    } else {
-      return theme.palette.secondary.main;
-    }
-  };
-
-  const getAreaFillColor = (
+  const getAreaColor = (
     hasPeople: boolean,
     householdColorPercent: number,
     visitsColorPercent: number
@@ -301,7 +289,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
               : 0;
 
             const visitsColorPercent = stats
-              ? (stats.num_visits / stats.num_households) * 100
+              ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
 
             return (
@@ -343,7 +331,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                         width: '40px',
                       }}
                     >
-                      {`${stats.num_visits}/${stats.num_households}`}
+                      {`${stats.num_visited_households}/${stats.num_households}`}
                     </div>
                   </DivIconMarker>
                 )}
@@ -401,17 +389,17 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                 )}
                 <Polygon
                   key={key}
-                  color={getAreaStrokeColor(hasPeople)}
+                  color={getAreaColor(
+                    hasPeople,
+                    householdColorPercent,
+                    visitsColorPercent
+                  )}
+                  dashArray={!hasPeople ? '5px 5px' : ''}
                   eventHandlers={{
                     click: () => {
                       onSelectedIdChange(selected ? '' : area.id);
                     },
                   }}
-                  fillColor={getAreaFillColor(
-                    hasPeople,
-                    householdColorPercent,
-                    visitsColorPercent
-                  )}
                   interactive={areaStyle != 'hide' ? true : false}
                   positions={area.points}
                   weight={selected ? 5 : 2}
