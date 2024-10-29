@@ -178,6 +178,36 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
       : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent || 1}%)`;
   };
 
+  const placesByAreaId: Record<string, ZetkinPlace[]> = {};
+  areas.forEach((area) => {
+    placesByAreaId[area.id] = [];
+
+    places.map((place) => {
+      const isInsideArea = isPointInsidePolygon(
+        place.position,
+        area.points.map((point) => ({
+          lat: point[0],
+          lng: point[1],
+        }))
+      );
+      if (isInsideArea) {
+        placesByAreaId[area.id].push(place);
+      }
+    });
+  });
+
+  let highestHousholds = 0;
+  Object.keys(placesByAreaId).forEach((id) => {
+    let numberOfHouseholdsInArea = 0;
+    placesByAreaId[id].forEach((place) => {
+      numberOfHouseholdsInArea += place.households.length;
+    });
+
+    if (numberOfHouseholdsInArea > highestHousholds) {
+      highestHousholds = numberOfHouseholdsInArea;
+    }
+  });
+
   return (
     <>
       <AttributionControl position="bottomright" prefix={false} />
@@ -269,38 +299,22 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               (stat) => stat.areaId == area.id
             );
 
-            let highestHousholds = 0;
-            areaStats.stats.forEach((stat) => {
-              if (stat.num_households > highestHousholds) {
-                highestHousholds = stat.num_households;
-              }
-            });
-
-            const placesInArea: ZetkinPlace[] = [];
-            places.map((place) => {
-              const isInsideArea = isPointInsidePolygon(
-                place.position,
-                area.points.map((point) => ({
-                  lat: point[0],
-                  lng: point[1],
-                }))
-              );
-              if (isInsideArea) {
-                placesInArea.push(place);
-              }
-            });
-
+            const placesInArea = placesByAreaId[area.id];
             const numberOfHouseholdsInArea = placesInArea
               .map((place) => place.households.length)
               .reduce((prev, curr) => prev + curr, 0);
 
-            const householdColorPercent = stats
-              ? (numberOfHouseholdsInArea / highestHousholds) * 100
-              : 0;
+            const householdColorPercent =
+              (numberOfHouseholdsInArea / highestHousholds) * 100 || 0;
 
             const visitsColorPercent = stats
               ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
+
+            const showPlaces =
+              placeStyle == 'dot' ||
+              placeStyle == 'households' ||
+              (placeStyle == 'progress' && hasPeople);
 
             return (
               <>
@@ -404,7 +418,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                     householdColorPercent,
                     visitsColorPercent
                   )}
-                  dashArray={!hasPeople ? '5px 5px' : ''}
+                  dashArray={!hasPeople ? '5px 7px' : ''}
                   eventHandlers={{
                     click: () => {
                       onSelectedIdChange(selected ? '' : area.id);
@@ -414,7 +428,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
-                {placeStyle != 'hide' &&
+                {showPlaces &&
                   placesInArea.map((place) => (
                     <DivIconMarker
                       key={place.id}
