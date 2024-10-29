@@ -14,8 +14,9 @@ import { AREAS } from 'utils/featureFlags';
 import usePlaces from 'features/canvassAssignments/hooks/usePlaces';
 import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
+import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 
-const PlanMap = dynamic(
+const OrganizerMap = dynamic(
   () =>
     import(
       '../../../../../../../features/canvassAssignments/components/OrganizerMap'
@@ -49,6 +50,7 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
     parseInt(orgId),
     canvassAssId
   );
+  const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
 
   const isServer = useServerSide();
   if (isServer) {
@@ -58,12 +60,17 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   return (
     <Box height="100%">
       <ZUIFutures
-        futures={{ areaStats: areaStatsFuture, sessions: sessionsFuture }}
+        futures={{
+          areaStats: areaStatsFuture,
+          assignment: assignmentFuture,
+          sessions: sessionsFuture,
+        }}
       >
-        {({ data: { areaStats, sessions } }) => (
-          <PlanMap
+        {({ data: { areaStats, assignment, sessions } }) => (
+          <OrganizerMap
             areas={areas}
             areaStats={areaStats}
+            assignment={assignment}
             canvassAssId={canvassAssId}
             onAddAssigneeToArea={(area, person) => {
               createCanvassSession({

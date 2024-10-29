@@ -8,12 +8,14 @@ import {
 } from 'react-leaflet';
 import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 import { useTheme } from '@mui/styles';
-import { Box } from '@mui/material';
+import { Box, lighten } from '@mui/material';
 
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
+  ZetkinAssignmentAreaStatsItem,
+  ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from '../types';
@@ -24,9 +26,17 @@ import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 const PlaceMarker: FC<{
   canvassAssId: string;
+  idOfMetricThatDefinesDone: string;
   place: ZetkinPlace;
   placeStyle: 'dot' | 'households' | 'progress';
-}> = ({ canvassAssId, place, placeStyle }) => {
+  statsItem?: ZetkinAssignmentAreaStatsItem;
+}> = ({
+  canvassAssId,
+  idOfMetricThatDefinesDone,
+  place,
+  placeStyle,
+  statsItem,
+}) => {
   const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
@@ -58,48 +68,69 @@ const PlaceMarker: FC<{
       </Box>
     );
   } else {
-    //placeStyle is 'progress'
-    let visits = 0;
-    place.households.forEach((household) => {
-      const visitInThisAssignment = household.visits.find(
-        (visit) => visit.canvassAssId == canvassAssId
-      );
-      if (visitInThisAssignment) {
-        visits++;
-      }
-    });
+    if (statsItem) {
+      let visits = 0;
+      let successfulVisits = 0;
+      place.households.forEach((household) => {
+        const visitInThisAssignment = household.visits.find(
+          (visit) => visit.canvassAssId == canvassAssId
+        );
+        if (visitInThisAssignment) {
+          visits++;
 
-    const visitsColorPercent = (visits / place.households.length) * 100;
+          const responseToMetricThatDefinesDone =
+            visitInThisAssignment.responses.find(
+              (response) => response.metricId == idOfMetricThatDefinesDone
+            );
 
-    return (
-      <div
-        style={{
-          alignItems: 'center',
-          background: `conic-gradient(${theme.palette.primary.main} ${visitsColorPercent}%, white ${visitsColorPercent}%)`,
-          borderRadius: '2em',
-          display: 'flex',
-          flexDirection: 'row',
-          height: '25px',
-          justifyContent: 'center',
-          width: '25px',
-        }}
-      >
+          if (responseToMetricThatDefinesDone?.response == 'yes') {
+            successfulVisits++;
+          }
+        }
+      });
+
+      const successfulVisitsColorPercent =
+        (successfulVisits / place.households.length) * 100;
+      const visitsColorPercent = (visits / place.households.length) * 100;
+
+      return (
         <div
           style={{
             alignItems: 'center',
-            backgroundColor: 'white',
+            background: `conic-gradient(${
+              theme.palette.primary.main
+            } ${successfulVisitsColorPercent}%, ${lighten(
+              theme.palette.primary.main,
+              0.6
+            )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, white ${visitsColorPercent}%)`,
             borderRadius: '2em',
             display: 'flex',
             flexDirection: 'row',
-            height: '15px',
+            height: '25px',
             justifyContent: 'center',
-            width: '15px',
+            width: '25px',
           }}
         >
-          {visits}
+          <div
+            style={{
+              alignItems: 'center',
+              backgroundColor: 'white',
+              borderRadius: '2em',
+              display: 'flex',
+              flexDirection: 'row',
+              fontSize: '10px',
+              height: '15px',
+              justifyContent: 'center',
+              width: '15px',
+            }}
+          >
+            {visits}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return null;
+    }
   }
 };
 
@@ -107,6 +138,7 @@ type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
   areas: ZetkinArea[];
+  assignment: ZetkinCanvassAssignment;
   canvassAssId: string;
   onSelectedIdChange: (newId: string) => void;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
@@ -120,6 +152,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
+  assignment,
   canvassAssId,
   selectedId,
   sessions,
@@ -439,8 +472,14 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                     >
                       <PlaceMarker
                         canvassAssId={canvassAssId}
+                        idOfMetricThatDefinesDone={
+                          assignment.metrics.find(
+                            (metric) => metric.definesDone
+                          )?.id || ''
+                        }
                         place={place}
                         placeStyle={placeStyle}
+                        statsItem={stats}
                       />
                     </DivIconMarker>
                   ))}

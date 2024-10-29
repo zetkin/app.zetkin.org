@@ -17,6 +17,7 @@ import OrganizerMapRenderer from './OrganizerMapRenderer';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
+  ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from '../types';
@@ -33,6 +34,7 @@ import MapControls from './MapControls';
 type OrganizerMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
+  assignment: ZetkinCanvassAssignment;
   canvassAssId: string;
   onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
   places: ZetkinPlace[];
@@ -48,6 +50,7 @@ export type MapStyle = {
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
+  assignment,
   canvassAssId,
   onAddAssigneeToArea,
   places,
@@ -271,6 +274,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 areas={filteredAreas}
                 areaStats={areaStats}
                 areaStyle={mapStyle.area}
+                assignment={assignment}
                 canvassAssId={canvassAssId}
                 onSelectedIdChange={(newId) => {
                   setSelectedId(newId);
