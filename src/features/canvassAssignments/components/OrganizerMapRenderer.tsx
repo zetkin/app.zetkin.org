@@ -182,7 +182,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas.forEach((area) => {
     placesByAreaId[area.id] = [];
 
-    places.map((place) => {
+    places.forEach((place) => {
       const isInsideArea = isPointInsidePolygon(
         place.position,
         area.points.map((point) => ({
