@@ -4,7 +4,7 @@ import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurvey from '../hooks/useSurvey';
 import useSurveyMutations from '../hooks/useSurveyMutations';
-import ZUICard from 'zui/newDesignSystem/ZUICard';
+import ZUICard from 'zui/ZUICard';
 
 const SurveySuborgsCard = ({
   orgId,

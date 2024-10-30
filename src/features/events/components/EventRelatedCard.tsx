@@ -6,7 +6,7 @@ import RelatedEvent from './RelatedEvent';
 import { useMessages } from 'core/i18n';
 import useRelatedEvents from '../hooks/useRelatedEvents';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import ZUICard from 'zui/newDesignSystem/ZUICard';
+import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface EventRelatedCardProps {

@@ -2,7 +2,7 @@ import { Surfing } from '@mui/icons-material';
 import { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 
-import ZUIButton from 'zui/newDesignSystem/ZUIButton';
+import ZUIButton from 'zui/components/ZUIButton';
 import ZUIMenu from './index';
 
 const meta: Meta<typeof ZUIMenu> = {

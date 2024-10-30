@@ -11,7 +11,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
-import ZUIText from 'zui/newDesignSystem/ZUIText';
+import ZUIText from 'zui/components/ZUIText';
 
 const useStyles = makeStyles((theme) => ({
   leftSide: {

@@ -12,7 +12,7 @@ import { useEnv } from 'core/hooks';
 import useNumericRouteParams from 'core/hooks/useNumericRouteParams';
 import useOfficialMemberships from 'features/settings/hooks/useOfficialMemberships';
 import useServerSide from 'core/useServerSide';
-import ZUICard from 'zui/newDesignSystem/ZUICard';
+import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
 

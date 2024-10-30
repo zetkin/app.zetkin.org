@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Button, SvgIconTypeMap } from '@mui/material';
 
-import { getVariant, ZUIButtonProps } from 'zui/newDesignSystem/ZUIButton';
+import { getVariant, ZUIButtonProps } from 'zui/components/ZUIButton';
 
 export type ZUIIconButtonProps = Omit<
   ZUIButtonProps,

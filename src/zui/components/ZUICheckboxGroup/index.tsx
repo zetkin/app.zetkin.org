@@ -1,13 +1,13 @@
 import { FormControl, FormGroup, FormLabel, Typography } from '@mui/material';
 import { FC, useId } from 'react';
 
-import ZUISwitch, { ZUISwitchProps } from 'zui/newDesignSystem/ZUISwitch';
+import ZUICheckbox, { ZUICheckboxProps } from 'zui/components/ZUICheckbox';
 
-type ZUISwitchGroupProps = {
+type ZUICheckboxGroupProps = {
   /**
    * This controls if the whole group is disabled.
    *
-   * If you want to disable a single switch, do that in the options array.
+   * If you want to disable a single checkbox, do that in the options array.
    */
   disabled?: boolean;
 
@@ -18,17 +18,20 @@ type ZUISwitchGroupProps = {
   label: string;
 
   /**
-   * A list of props for switches.
+   * A list of props for checkboxes.
    */
-  options: ZUISwitchProps[];
+  options: ZUICheckboxProps[];
 };
 
-const ZUISwitchGroup: FC<ZUISwitchGroupProps> = ({
-  disabled,
-  error,
+/**
+ * This component is used to group ZUICheckbox and ZUISwitch controls.
+ */
+const ZUICheckboxGroup: FC<ZUICheckboxGroupProps> = ({
+  options,
+  disabled = false,
+  error = false,
   helperText,
   label,
-  options,
 }) => {
   const labelId = useId();
   const helperTextId = useId();
@@ -59,7 +62,7 @@ const ZUISwitchGroup: FC<ZUISwitchGroupProps> = ({
       </FormLabel>
       <FormGroup aria-describedby={helperTextId} aria-labelledby={labelId}>
         {options.map((option) => (
-          <ZUISwitch key={option.label} {...option} disabled={disabled} />
+          <ZUICheckbox key={option.label} {...option} disabled={disabled} />
         ))}
       </FormGroup>
       {helperText && (
@@ -89,4 +92,4 @@ const ZUISwitchGroup: FC<ZUISwitchGroupProps> = ({
   );
 };
 
-export default ZUISwitchGroup;
+export default ZUICheckboxGroup;

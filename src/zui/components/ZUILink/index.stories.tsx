@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUILink from './index';
-import ZUIText from 'zui/newDesignSystem/ZUIText';
+import ZUIText from 'zui/components/ZUIText';
 
 const meta: Meta<typeof ZUILink> = {
   component: ZUILink,

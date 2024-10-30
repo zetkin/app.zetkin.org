@@ -11,7 +11,7 @@ import useEvent from '../hooks/useEvent';
 import useEventContact from '../hooks/useEventContact';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import ZUICard from 'zui/newDesignSystem/ZUICard';
+import ZUICard from 'zui/ZUICard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import zuiMessageIds from 'zui/l10n/messageIds';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';

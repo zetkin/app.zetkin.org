@@ -5,10 +5,10 @@ import { FC } from 'react';
 import ZUIButton, {
   getVariant,
   ZUIButtonProps,
-} from 'zui/newDesignSystem/ZUIButton';
+} from 'zui/components/ZUIButton';
 import ZUIIconButton, {
   ZUIIconButtonProps,
-} from 'zui/newDesignSystem/ZUIIconButton';
+} from 'zui/components/ZUIIconButton';
 
 const useStyles = makeStyles({
   buttonGroup: {
