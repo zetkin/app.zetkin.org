@@ -5,7 +5,7 @@ import ZUIPreviewableInput, { ZUIPreviewableMode } from '.';
 
 export default {
   component: ZUIPreviewableInput,
-  title: 'Old/ZUIPreviewableInput',
+  title: 'Other/ZUIPreviewableInput',
 } as Meta<typeof ZUIPreviewableInput>;
 
 const Template: StoryFn<typeof ZUIPreviewableInput> = (args) => {

@@ -4,7 +4,7 @@ import ZUIDatePicker from '.';
 
 export default {
   component: ZUIDatePicker,
-  title: 'Old/ZUIDatePicker',
+  title: 'Other/ZUIDatePicker',
 } as Meta<typeof ZUIDatePicker>;
 
 const Template: StoryFn<typeof ZUIDatePicker> = () => (

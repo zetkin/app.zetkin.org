@@ -6,7 +6,7 @@ import ZUIJourneyInstanceItem from '.';
 
 export default {
   component: ZUIJourneyInstanceItem,
-  title: 'Old/ZUIJourneyInstanceItem',
+  title: 'Other/ZUIJourneyInstanceItem',
 } as Meta<typeof ZUIJourneyInstanceItem>;
 
 const Template: StoryFn<typeof ZUIJourneyInstanceItem> = (args) => (

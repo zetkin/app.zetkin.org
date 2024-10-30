@@ -10,7 +10,7 @@ import PrettyEmail from './PrettyEmail';
 
 export default {
   component: PrettyEmail,
-  title: 'Old/ZUITimeline/Updates/PrettyEmail',
+  title: 'Other/ZUITimeline/Updates/PrettyEmail',
 } as Meta<typeof PrettyEmail>;
 
 const Template: StoryFn<typeof PrettyEmail> = (args) => (

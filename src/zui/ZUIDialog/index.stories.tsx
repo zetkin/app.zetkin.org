@@ -5,7 +5,7 @@ import ZUIDialog from '.';
 
 export default {
   component: ZUIDialog,
-  title: 'Old/ZUIDialog',
+  title: 'Other/ZUIDialog',
 } as Meta<typeof ZUIDialog>;
 
 const Template: StoryFn<typeof ZUIDialog> = (args) => (

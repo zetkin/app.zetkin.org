@@ -4,7 +4,7 @@ import ZUIRadioGroup from './index';
 
 const meta: Meta<typeof ZUIRadioGroup> = {
   component: ZUIRadioGroup,
-  title: 'New Design System/ZUIRadioGroup',
+  title: 'Components/ZUIRadioGroup',
 };
 export default meta;
 

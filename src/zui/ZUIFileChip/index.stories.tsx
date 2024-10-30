@@ -5,7 +5,7 @@ import ZUIFileChip from '.';
 
 export default {
   component: ZUIFileChip,
-  title: 'Old/ZUIFileChip',
+  title: 'Other/ZUIFileChip',
 } as Meta<typeof ZUIFileChip>;
 
 const Template: StoryFn<typeof ZUIFileChip> = (args) => (

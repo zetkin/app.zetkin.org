@@ -4,7 +4,7 @@ import ZUIStatusChip from './index';
 
 const meta: Meta<typeof ZUIStatusChip> = {
   component: ZUIStatusChip,
-  title: 'New Design System/ZUIStatusChip',
+  title: 'Components/ZUIStatusChip',
 };
 export default meta;
 

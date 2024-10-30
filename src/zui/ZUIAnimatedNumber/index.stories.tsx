@@ -4,7 +4,7 @@ import ZUIAnimatedNumber from '.';
 
 export default {
   component: ZUIAnimatedNumber,
-  title: 'Old/ZUIAnimatedNumber',
+  title: 'Other/ZUIAnimatedNumber',
 } as Meta<typeof ZUIAnimatedNumber>;
 
 const Template: StoryFn<typeof ZUIAnimatedNumber> = (args) => {

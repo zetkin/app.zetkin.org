@@ -5,7 +5,7 @@ import ZUIText from 'zui/components/ZUIText';
 
 const meta: Meta<typeof ZUILink> = {
   component: ZUILink,
-  title: 'New Design System/ZUILink',
+  title: 'Components/ZUILink',
 };
 export default meta;
 

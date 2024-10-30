@@ -4,7 +4,7 @@ import ZUILabel from '.';
 
 const meta: Meta<typeof ZUILabel> = {
   component: ZUILabel,
-  title: 'New Design System/ZUILabel',
+  title: 'Components/ZUILabel',
 };
 export default meta;
 

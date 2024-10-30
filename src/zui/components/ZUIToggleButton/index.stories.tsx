@@ -10,7 +10,7 @@ import ZUIToggleButton from './index';
 
 const meta: Meta<typeof ZUIToggleButton> = {
   component: ZUIToggleButton,
-  title: 'New Design System/ZUIToggleButton',
+  title: 'Components/ZUIToggleButton',
 };
 export default meta;
 

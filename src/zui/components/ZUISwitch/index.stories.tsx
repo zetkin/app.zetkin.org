@@ -5,7 +5,7 @@ import ZUISwitch from './index';
 
 const meta: Meta<typeof ZUISwitch> = {
   component: ZUISwitch,
-  title: 'New Design System/ZUISwitch',
+  title: 'Components/ZUISwitch',
 };
 export default meta;
 

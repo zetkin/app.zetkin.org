@@ -4,7 +4,7 @@ import ZUIDateRangePicker from '.';
 
 export default {
   component: ZUIDateRangePicker,
-  title: 'Old/ZUIDateRangePicker',
+  title: 'Other/ZUIDateRangePicker',
 } as Meta<typeof ZUIDateRangePicker>;
 
 const Template: StoryFn<typeof ZUIDateRangePicker> = () => (

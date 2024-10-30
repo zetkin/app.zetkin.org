@@ -5,7 +5,7 @@ import ZUIList from '.';
 
 export default {
   component: ZUIList,
-  title: 'Old/ZUIList',
+  title: 'Other/ZUIList',
 } as Meta<typeof ZUIList>;
 
 const Template: StoryFn<typeof ZUIList> = (args) => (
