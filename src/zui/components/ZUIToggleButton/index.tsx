@@ -1,11 +1,16 @@
-import { SvgIconTypeMap, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import {
+  SvgIconTypeMap,
+  Theme,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 
 import { ZUIOrientation, ZUISize } from '../types';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   toggleButtonGroup: {
     '& .MuiToggleButton-root': {
       '&:hover': {

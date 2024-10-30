@@ -1,6 +1,13 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { Box, Link, Menu, SvgIconTypeMap, useTheme } from '@mui/material';
+import {
+  Box,
+  Link,
+  Menu,
+  SvgIconTypeMap,
+  Theme,
+  useTheme,
+} from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import {
   MoreHoriz,
@@ -13,7 +20,7 @@ import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   leftSide: {
     alignItems: 'center',
     backgroundColor: theme.palette.grey[50],

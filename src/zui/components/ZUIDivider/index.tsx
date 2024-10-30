@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import { Divider, DividerProps } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Divider, DividerProps, useTheme } from '@mui/material';
 
 type ZUIDividerProps = Partial<
   Pick<DividerProps, 'flexItem' | 'orientation'>

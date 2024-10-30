@@ -1,11 +1,11 @@
-import { Link } from '@mui/material';
+import { Link, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { FC } from 'react';
 
 import { ZUISize } from '../types';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   link: {
     '&:hover': {
       textDecorationColor: 'primary',
