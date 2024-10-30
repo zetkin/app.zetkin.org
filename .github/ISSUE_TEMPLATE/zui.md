@@ -35,4 +35,4 @@ When you have checked out the branch `undocumented/new-design-system` (and, as a
 
 ### Files
 
-Create a folder in `src/zui/newDesignSystem` and give it a name for your component, like `ZUIButton`. Inside that folder, create one file `index.tsx` (this is where you write your component) and one `index.stories.tsx` (this is where you write your Storybook stories). Look at the components in `src/zui/newDesignSystem` for inspiration/reference!
+Create a folder in `src/zui/components` and give it a name for your component, like `ZUIButton`. Inside that folder, create one file `index.tsx` (this is where you write your component) and one `index.stories.tsx` (this is where you write your Storybook stories). Look at the components in `src/zui/components` for inspiration/reference! Note that there are lots of components with names that start with "ZUI" outside the `src/zui/components` folder, but only the ones in `src/zui/components` are relevant as reference/inspiration for the work you will be doing.
