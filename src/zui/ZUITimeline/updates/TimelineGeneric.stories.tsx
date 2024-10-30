@@ -7,7 +7,7 @@ import { UPDATE_TYPES } from 'zui/ZUITimeline/types';
 
 export default {
   component: TimelineGeneric,
-  title: 'Old/ZUITimeline/Updates/TimelineGeneric',
+  title: 'Other/ZUITimeline/Updates/TimelineGeneric',
 } as Meta<typeof TimelineGeneric>;
 
 const Template: StoryFn<typeof TimelineGeneric> = (args) => (

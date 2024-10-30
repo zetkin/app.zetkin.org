@@ -8,7 +8,7 @@ export default {
     backgroundColor: { control: 'color' },
   },
   component: ZUITextEditor,
-  title: 'Old/ZUITextEditor',
+  title: 'Other/ZUITextEditor',
 } as Meta<typeof ZUITextEditor>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args

@@ -5,7 +5,7 @@ import ZUIEllipsisMenu from '.';
 
 export default {
   component: ZUIEllipsisMenu,
-  title: 'Old/ZUIEllipsisMenu',
+  title: 'Other/ZUIEllipsisMenu',
 } as Meta<typeof ZUIEllipsisMenu>;
 
 const Template: StoryFn<typeof ZUIEllipsisMenu> = (args) => (

@@ -4,7 +4,7 @@ import ZUIDateTime from '.';
 
 export default {
   component: ZUIDateTime,
-  title: 'Old/ZUIDateTime',
+  title: 'Other/ZUIDateTime',
 } as Meta<typeof ZUIDateTime>;
 
 const Template: StoryFn<typeof ZUIDateTime> = (args) => (

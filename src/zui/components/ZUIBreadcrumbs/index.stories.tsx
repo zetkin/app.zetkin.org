@@ -11,7 +11,7 @@ import ZUIBreadcrumbs from './index';
 
 const meta: Meta<typeof ZUIBreadcrumbs> = {
   component: ZUIBreadcrumbs,
-  title: 'New Design System/ZUIBreadcrumbs',
+  title: 'Components/ZUIBreadcrumbs',
 };
 export default meta;
 

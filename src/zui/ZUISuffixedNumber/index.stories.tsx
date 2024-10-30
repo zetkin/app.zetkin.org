@@ -4,7 +4,7 @@ import ZUISuffixedNumber from '.';
 
 export default {
   component: ZUISuffixedNumber,
-  title: 'Old/ZUISuffixedNumber',
+  title: 'Other/ZUISuffixedNumber',
 } as Meta<typeof ZUISuffixedNumber>;
 
 const Template: StoryFn<typeof ZUISuffixedNumber> = (args) => {

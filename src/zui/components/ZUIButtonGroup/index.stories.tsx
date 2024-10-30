@@ -5,7 +5,7 @@ import ZUIButtonGroup from './index';
 
 const meta: Meta<typeof ZUIButtonGroup> = {
   component: ZUIButtonGroup,
-  title: 'New Design System/ZUIButtonGroup',
+  title: 'Components/ZUIButtonGroup',
 };
 export default meta;
 

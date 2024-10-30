@@ -5,7 +5,7 @@ import ZUISwitchGroup from './index';
 
 const meta: Meta<typeof ZUISwitchGroup> = {
   component: ZUISwitchGroup,
-  title: 'New Design System/ZUISwitchGroup',
+  title: 'Components/ZUISwitchGroup',
 };
 export default meta;
 

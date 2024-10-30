@@ -4,7 +4,7 @@ import ZUIUserAvatar from '.';
 
 export default {
   component: ZUIUserAvatar,
-  title: 'Old/ZUIUserAvatar',
+  title: 'Other/ZUIUserAvatar',
 } as Meta<typeof ZUIUserAvatar>;
 
 const Template: StoryFn<typeof ZUIUserAvatar> = (args) => {
