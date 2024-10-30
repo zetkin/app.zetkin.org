@@ -15,7 +15,7 @@ export const LinkMd: Story = {
   args: {
     href: 'http://www.katt.org',
     message: 'a medium size link',
-    size: 'md',
+    size: 'medium',
   },
   render: function Render(args) {
     return (
@@ -30,7 +30,7 @@ export const LinkSm: Story = {
   args: {
     href: 'http://www.zetkin.org',
     message: 'a small size link',
-    size: 'sm',
+    size: 'small',
   },
   render: function Render(args) {
     return (

@@ -6,13 +6,9 @@ import {
   MouseEventHandler,
 } from 'react';
 
-type ZUIButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'destructive'
-  | 'warning'
-  | 'loading';
+import { ZUISize, ZUIVariant } from '../types';
+
+type ZUIButtonVariant = ZUIVariant | 'destructive' | 'warning' | 'loading';
 
 export interface ZUIButtonProps {
   actionType?: 'button' | 'reset' | 'submit';
@@ -22,7 +18,7 @@ export interface ZUIButtonProps {
   label: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
-  size?: 'large' | 'medium' | 'small';
+  size?: ZUISize;
   startIcon?: JSX.Element;
   variant?: ZUIButtonVariant;
 }
@@ -47,9 +43,7 @@ const getColor = (variant: ZUIButtonVariant = 'secondary') => {
   }
 };
 
-const getLoadingIndicatorPadding = (
-  size: 'large' | 'medium' | 'small' = 'medium'
-) => {
+const getLoadingIndicatorPadding = (size: ZUISize = 'medium') => {
   if (size == 'large') {
     return '0.183rem 1.375rem 0.183rem 1.375rem';
   } else if (size == 'medium') {
@@ -60,7 +54,7 @@ const getLoadingIndicatorPadding = (
 };
 
 const getTextPadding = (
-  size: 'large' | 'medium' | 'small' = 'medium',
+  size: ZUISize = 'medium',
   variant: ZUIButtonVariant = 'secondary'
 ) => {
   if (size === 'large') {

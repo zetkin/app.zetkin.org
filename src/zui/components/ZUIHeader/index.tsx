@@ -25,6 +25,7 @@ import { WithRequired } from 'utils/types';
 import { ZUIIconButtonProps } from 'zui/components/ZUIIconButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILabel from 'zui/components/ZUILabel';
+import { ZUIPrimary, ZUISecondary } from '../types';
 
 interface ZUIHeaderProps {
   /**
@@ -43,7 +44,7 @@ interface ZUIHeaderProps {
   /**
    * Variant of actionbutton. Defaults to 'secondary'
    */
-  actionButtonVariant?: 'primary' | 'secondary';
+  actionButtonVariant?: ZUIPrimary | ZUISecondary;
 
   /**The href to an avatar */
   avatar?: string;

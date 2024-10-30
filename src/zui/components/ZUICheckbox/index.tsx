@@ -2,9 +2,9 @@ import { FormControlLabel, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import { FC } from 'react';
 
-type Sizes = 'small' | 'medium' | 'large';
+import { ZUIPlacement, ZUISize } from '../types';
 
-const sizes: Record<Sizes, string> = {
+const sizes: Record<ZUISize, string> = {
   large: '1.75rem',
   medium: '1.5rem',
   small: '1.25rem',
@@ -24,7 +24,7 @@ export type ZUICheckboxProps = {
   /**
    * The placement of the label. Defaults to 'end'.
    */
-  labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
+  labelPlacement?: ZUIPlacement;
 
   onChange: (newCheckedState: boolean) => void;
 
@@ -32,7 +32,7 @@ export type ZUICheckboxProps = {
    * The size of the checkbox. Defaults to 'medium'.
    * This does not affect the size of the label text.
    */
-  size?: Sizes;
+  size?: ZUISize;
 };
 
 const ZUICheckbox: FC<ZUICheckboxProps> = ({

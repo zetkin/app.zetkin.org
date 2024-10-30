@@ -1,6 +1,8 @@
 import { Tooltip } from '@mui/material';
 import { FC, ReactElement } from 'react';
 
+import { ZUIPlacement } from '../types';
+
 type ZUITooltipProps = {
   /**
    * If the tooltip should have a small arrow or not. Defaults to 'true'
@@ -24,7 +26,7 @@ type ZUITooltipProps = {
    * to either the top of the screen or an ancestor with hidden overflow,
    * the tooltip will instead render below the child element.
    */
-  placement: 'top' | 'bottom' | 'left' | 'right';
+  placement: ZUIPlacement;
 };
 
 const ZUITooltip: FC<ZUITooltipProps> = ({
@@ -33,8 +35,18 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
   placement,
   label,
 }) => {
+  const getPlacement = () => {
+    if (placement == 'end') {
+      return 'right';
+    } else if (placement == 'start') {
+      return 'left';
+    } else {
+      return placement;
+    }
+  };
+
   return (
-    <Tooltip arrow={arrow} placement={placement} title={label}>
+    <Tooltip arrow={arrow} placement={getPlacement()} title={label}>
       {children}
     </Tooltip>
   );
