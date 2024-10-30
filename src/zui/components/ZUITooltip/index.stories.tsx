@@ -64,7 +64,7 @@ export const Left: Story = {
     arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
-    placement: 'left',
+    placement: 'start',
   },
   render: Base.render,
 };
@@ -74,7 +74,7 @@ export const Right: Story = {
     arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
-    placement: 'right',
+    placement: 'end',
   },
   render: Base.render,
 };

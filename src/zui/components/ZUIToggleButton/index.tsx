@@ -3,6 +3,8 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 
+import { ZUIOrientation, ZUISize } from '../types';
+
 const useStyles = makeStyles((theme) => ({
   toggleButtonGroup: {
     '& .MuiToggleButton-root': {
@@ -80,13 +82,13 @@ interface ZUIToggleButtonProps {
    * The orientation of the row of buttons.
    * Defaults to 'horizontal'.
    */
-  orientation?: 'vertical' | 'horizontal';
+  orientation?: ZUIOrientation;
 
   /**
    * The size of the buttons.
    * Defaults to 'medium'.
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: ZUISize;
 }
 
 const isTextOption = (

@@ -12,7 +12,6 @@ type Story = StoryObj<typeof ZUIRadioGroup>;
 
 export const Primary: Story = {
   args: {
-    direction: 'column',
     helperText: 'Helper text',
     label: 'Example Form',
     labelPlacement: 'end',
@@ -28,7 +27,6 @@ export const Primary: Story = {
 
 export const Disabled: Story = {
   args: {
-    direction: 'column',
     disabled: true,
     helperText: 'Helper text',
     label: 'Example Form',
@@ -45,7 +43,6 @@ export const Disabled: Story = {
 
 export const OneDisabledOption: Story = {
   args: {
-    direction: 'column',
     label: 'Example Form',
     labelPlacement: 'end',
     options: [

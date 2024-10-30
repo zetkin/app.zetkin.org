@@ -1,6 +1,8 @@
 import { FormControlLabel, Switch, Typography } from '@mui/material';
 import { FC } from 'react';
 
+import { ZUIMedium, ZUIPlacement, ZUISmall } from '../types';
+
 export type ZUISwitchProps = {
   checked: boolean;
 
@@ -14,7 +16,7 @@ export type ZUISwitchProps = {
   /**
    * Placement of the label. Defaults to 'end'.
    */
-  labelPlacement?: 'bottom' | 'end' | 'start' | 'top';
+  labelPlacement?: ZUIPlacement;
 
   onChange: (newCheckedState: boolean) => void;
 
@@ -23,7 +25,7 @@ export type ZUISwitchProps = {
    *
    * This does not affect the label size.
    */
-  size?: 'small' | 'medium';
+  size?: ZUISmall | ZUIMedium;
 };
 
 const ZUISwitch: FC<ZUISwitchProps> = ({

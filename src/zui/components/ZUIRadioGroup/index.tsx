@@ -8,24 +8,22 @@ import {
 } from '@mui/material';
 import { useId } from 'react';
 
+import { ZUIOrientation, ZUIPlacement, ZUISize } from '../types';
+
 type Option = {
   disabled?: boolean;
   label: string;
   value: string;
 };
 
-type LabelPlacement = 'start' | 'end' | 'top' | 'bottom';
-type Direction = 'row' | 'column';
-type Sizes = 'small' | 'medium' | 'large';
-
-const sizes: Record<Sizes, string> = {
+const sizes: Record<ZUISize, string> = {
   large: '1.75rem',
   medium: '1.5rem',
   small: '1.25rem',
 };
 
 interface ZUIRadioButtonProps {
-  direction?: Direction;
+  orientation?: ZUIOrientation;
 
   /**
    * Set this to true if you want to disable the whole
@@ -39,7 +37,7 @@ interface ZUIRadioButtonProps {
 
   helperText?: string;
 
-  labelPlacement?: LabelPlacement;
+  labelPlacement?: ZUIPlacement;
 
   /**
    * Fires when a radio is selected.
@@ -56,7 +54,7 @@ interface ZUIRadioButtonProps {
   /**
    * Small, medium or large. Only affects the size of the radios.
    */
-  size?: Sizes;
+  size?: ZUISize;
 
   /**
    * The selected radio option.
@@ -66,7 +64,7 @@ interface ZUIRadioButtonProps {
 }
 
 const ZUIRadioGroup = ({
-  direction = 'column',
+  orientation = 'vertical',
   disabled,
   label,
   helperText,
@@ -99,7 +97,7 @@ const ZUIRadioGroup = ({
         onChange={(e) => {
           onChange(e.target.value);
         }}
-        row={direction === 'row'}
+        row={orientation === 'horizontal'}
         value={value}
       >
         {options.map((option) => {

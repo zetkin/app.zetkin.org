@@ -9,6 +9,7 @@ import ZUIButton, {
 import ZUIIconButton, {
   ZUIIconButtonProps,
 } from 'zui/components/ZUIIconButton';
+import { ZUIOrientation, ZUISize, ZUIVariant } from '../types';
 
 const useStyles = makeStyles({
   buttonGroup: {
@@ -49,9 +50,9 @@ const useStyles = makeStyles({
 
 interface ZUIButtonGroupProps {
   buttons: (ZUIButtonProps | ZUIIconButtonProps)[];
-  orientation?: 'horizontal' | 'vertical';
-  size?: 'large' | 'medium' | 'small';
-  variant?: 'primary' | 'secondary' | 'tertiary';
+  orientation?: ZUIOrientation;
+  size?: ZUISize;
+  variant?: ZUIVariant;
 }
 
 const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({

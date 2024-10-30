@@ -3,6 +3,8 @@ import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { FC } from 'react';
 
+import { ZUISize } from '../types';
+
 const useStyles = makeStyles((theme) => ({
   link: {
     '&:hover': {
@@ -16,14 +18,14 @@ type ZUILinkProps = {
   href: string;
   message: string;
   openInNewTab?: boolean;
-  size?: 'sm' | 'md';
+  size?: ZUISize;
 };
 
 const ZUILink: FC<ZUILinkProps> = ({
   href,
   message,
   openInNewTab = false,
-  size = 'sm',
+  size = 'small',
 }) => {
   const classes = useStyles();
 
@@ -34,7 +36,7 @@ const ZUILink: FC<ZUILinkProps> = ({
       href={href}
       rel={openInNewTab ? 'noopener' : ''}
       target={openInNewTab ? '_blank' : ''}
-      variant={size == 'sm' ? 'linkSm' : 'linkMd'}
+      variant={size == 'small' ? 'linkSm' : 'linkMd'}
     >
       {message}
     </Link>

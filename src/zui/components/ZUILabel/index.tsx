@@ -1,9 +1,11 @@
 import { FC, ReactNode } from 'react';
 import { BoxProps, Typography } from '@mui/material';
 
+import { ZUIPrimary, ZUISecondary } from '../types';
+
 type ZUILabelProps = {
   children: ReactNode;
-  color?: 'primary' | 'secondary';
+  color?: ZUIPrimary | ZUISecondary;
   component?: 'div' | 'p' | 'span';
   gutterBottom?: boolean;
   noWrap?: boolean;
