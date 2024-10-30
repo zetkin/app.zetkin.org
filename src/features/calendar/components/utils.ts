@@ -287,7 +287,7 @@ export function getDstChangeAtDate(date: dayjs.Dayjs): DSTChange | undefined {
   if (change === 0) {
     return undefined;
   }
-  return change > 0 ? 'summertime' : 'wintertime';
+  return change > 0 ? 'wintertime' : 'summertime';
 }
 
 export function getTimezoneAtDate(date: dayjs.Dayjs): number {
