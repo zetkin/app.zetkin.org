@@ -129,3 +129,9 @@ export type GraphData = {
   householdsVisited: GraphDataItem[];
   successfulVisits: GraphDataItem[];
 };
+
+export type AreaGraphData = {
+  date: string;
+  householdVisits: number;
+  successfulVisits: number;
+};
