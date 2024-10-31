@@ -593,4 +593,63 @@ describe('getAreasData()', () => {
       },
     ]);
   });
+  it('returns correct numbers for visits that occurs in the hours range across different months', () => {
+    const idOfMetricThatDefinesDone = '1';
+    const households: Household[] = [
+      {
+        id: '1',
+        title: 'household 1',
+        visits: [
+          {
+            canvassAssId: '1',
+            id: '2',
+            noteToOfficial: null,
+            responses: [{ metricId: '1', response: 'yes' }],
+            timestamp: '2024-10-31T23:10:00.000Z',
+          },
+          {
+            canvassAssId: '1',
+            id: '2',
+            noteToOfficial: null,
+            responses: [{ metricId: '1', response: 'yes' }],
+            timestamp: '2024-11-01T00:20:00.000Z',
+          },
+        ],
+      },
+    ];
+    const endDate = new Date('2024-11-01T02:00:00.000Z');
+    const startDate = new Date('2024-10-31T23:00:00.000Z');
+    const output = getAreasData(
+      endDate,
+      households,
+      startDate,
+      idOfMetricThatDefinesDone
+    );
+    expect(output).toEqual([
+      {
+        date: '2024-10-31',
+        hour: '23:00',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+      {
+        date: '2024-11-01',
+        hour: '00:00',
+        householdVisits: 2,
+        successfulVisits: 2,
+      },
+      {
+        date: '2024-11-01',
+        hour: '01:00',
+        householdVisits: 2,
+        successfulVisits: 2,
+      },
+      {
+        date: '2024-11-01',
+        hour: '02:00',
+        householdVisits: 2,
+        successfulVisits: 2,
+      },
+    ]);
+  });
 });
