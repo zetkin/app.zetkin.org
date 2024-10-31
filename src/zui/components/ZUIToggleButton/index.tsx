@@ -17,7 +17,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
         backgroundColor: theme.palette.grey[100],
         color: theme.palette.primary.main,
       },
-      border: `1px solid ${theme.palette.primary.light}`,
+      border: `1px solid ${theme.palette.grey[600]}`,
       color: theme.palette.primary.main,
     },
     '& .MuiToggleButton-root.Mui-selected': {
@@ -56,7 +56,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
     },
     '& .MuiToggleButtonGroup-grouped:not(:first-of-type)': {
       '&:hover': {
-        border: `1px solid ${theme.palette.primary.light}`,
+        border: `1px solid ${theme.palette.grey[600]}`,
       },
     },
   },
