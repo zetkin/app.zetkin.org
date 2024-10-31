@@ -1,12 +1,46 @@
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Theme } from '@mui/material';
 import {
   CSSProperties,
   FC,
   KeyboardEventHandler,
   MouseEventHandler,
 } from 'react';
+import { makeStyles } from '@mui/styles';
 
 import { ZUISize, ZUIVariant } from '../types';
+
+const useStyles = makeStyles<Theme>((theme) => ({
+  button: {
+    '& >.MuiCircularProgress-root': {
+      color: theme.palette.grey[300],
+    },
+    '&.Mui-disabled': {
+      '&.MuiButton-containedError': {
+        backgroundColor: theme.palette.swatches.red[400],
+        color: theme.palette.swatches.red[100],
+      },
+      '&.MuiButton-containedPrimary': {
+        backgroundColor: theme.palette.grey[600],
+        color: theme.palette.grey[300],
+      },
+      '&.MuiButton-containedWarning': {
+        backgroundColor: theme.palette.swatches.yellow[200],
+        color: theme.palette.swatches.yellow[600],
+      },
+      '&.MuiButton-outlinedPrimary': {
+        borderColor: theme.palette.grey[300],
+        color: theme.palette.grey[400],
+      },
+      '&.MuiButton-textPrimary': {
+        color: theme.palette.grey[400],
+      },
+    },
+    '&:hover': {
+      boxShadow: 'none',
+    },
+    boxShadow: 'none',
+  },
+}));
 
 type ZUIButtonVariant = ZUIVariant | 'destructive' | 'warning' | 'loading';
 
@@ -90,9 +124,11 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   startIcon,
   variant,
 }) => {
+  const classes = useStyles();
   const isLoading = variant === 'loading';
   return (
     <Button
+      className={classes.button}
       color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
       endIcon={endIcon}
