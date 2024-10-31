@@ -46,7 +46,26 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
   };
 
   return (
-    <Tooltip arrow={arrow} placement={getPlacement()} title={label}>
+    <Tooltip
+      arrow={arrow}
+      componentsProps={{
+        arrow: {
+          sx: {
+            color: '#616161E5',
+          },
+        },
+        tooltip: {
+          sx: {
+            backgroundColor: '#616161E5',
+            fontSize: '0.625rem',
+            fontWeight: 600,
+            lineHeight: '0.875rem',
+          },
+        },
+      }}
+      placement={getPlacement()}
+      title={label}
+    >
       {children}
     </Tooltip>
   );
