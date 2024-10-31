@@ -1,13 +1,9 @@
 import { AreaGraphData, Household } from '../types';
 
 function isWithin24Hours(startDate: Date, endDate: Date) {
-  // Calculate the difference in milliseconds
   const timeDifference = endDate.getTime() - startDate.getTime();
-
-  // Convert 24 hours to milliseconds
   const hours24InMilliseconds = 24 * 60 * 60 * 1000;
 
-  // Check if the difference is within 24 hours
   return timeDifference <= hours24InMilliseconds;
 }
 
@@ -32,7 +28,6 @@ export default function getAreasData(
   if (sortedHouseholds.length) {
     const firstVisitDate = new Date(startDate);
     const lastVisitDate = new Date(endDate);
-
     const curDate = new Date(firstVisitDate);
 
     let cumulativeHouseholdVisits = 0;
@@ -52,14 +47,11 @@ export default function getAreasData(
       current.setUTCMinutes(0, 0, 0);
 
       if (showHours) {
-        // Iterate over each hour of the current day
-        while (
-          current.getUTCHours() <= endDate.getUTCHours() &&
-          current.toISOString().startsWith(dateStr)
-        ) {
-          // Get the hour in local time (or use `getUTCHours` for UTC)
-          const hour = current.getUTCHours();
-          const hourStr = hour.toString().padStart(2, '0') + ':00';
+        while (current <= lastVisitDate) {
+          // Update `dateStr` and `hourStr` at each iteration to reflect current hour and date
+          const dateStr = current.toISOString().slice(0, 10);
+          const hourStr = current.toISOString().slice(11, 13) + ':00';
+          const currentHour = current.getUTCHours();
 
           let totalHouseholdVisits = 0;
           let totalSuccessfulVisits = 0;
@@ -67,11 +59,10 @@ export default function getAreasData(
           householdsOnDate.forEach((household) => {
             household.visits.forEach((visit) => {
               const visitDate = new Date(visit.timestamp);
-              const visitHour = visitDate.getUTCHours();
 
               if (
                 visitDate.toISOString().startsWith(dateStr) &&
-                visitHour === hour
+                visitDate.getUTCHours() === currentHour
               ) {
                 totalHouseholdVisits++;
 
@@ -98,8 +89,23 @@ export default function getAreasData(
             successfulVisits: cumulativeSuccessfulVisits,
           });
 
-          // Move to the next hour
           current.setUTCHours(current.getUTCHours() + 1);
+
+          // Check if we crossed into the next day
+          if (current.getUTCHours() === 0) {
+            const nextDateStr = current.toISOString().slice(0, 10);
+            const nextHouseholdsOnDate = sortedHouseholds.filter((household) =>
+              household.visits.some((visit) =>
+                visit.timestamp.startsWith(nextDateStr)
+              )
+            );
+
+            // Update the householdsOnDate for the next hour
+            if (nextHouseholdsOnDate.length > 0) {
+              householdsOnDate.length = 0;
+              householdsOnDate.push(...nextHouseholdsOnDate);
+            }
+          }
         }
       } else {
         // Aggregate data for the day if not showing hours
