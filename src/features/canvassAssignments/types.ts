@@ -132,6 +132,7 @@ export type GraphData = {
 
 export type AreaGraphData = {
   date: string;
+  hour: string;
   householdVisits: number;
   successfulVisits: number;
 };

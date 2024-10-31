@@ -1,5 +1,4 @@
-import { m } from 'core/i18n';
-import { GraphData, Household } from '../types';
+import { Household } from '../types';
 import getAreasData from './getAreaData';
 
 describe('getAreasData()', () => {
@@ -16,6 +15,80 @@ describe('getAreasData()', () => {
     );
 
     expect(output).toEqual([]);
+  });
+  it('returns an empty array if startDate is after endDate', () => {
+    const endDate = new Date('2024-10-14T13:00:00.000Z');
+    const idOfMetricThatDefinesDone = '2';
+    const households: Household[] = [
+      {
+        id: '1',
+        title: 'household 1',
+        visits: [
+          {
+            canvassAssId: '1',
+            id: '1',
+            noteToOfficial: null,
+            responses: [{ metricId: '11', response: 'no' }],
+            timestamp: '2024-10-14T12:00:00.000Z',
+          },
+        ],
+      },
+    ];
+    const startDate = new Date();
+    const output = getAreasData(
+      endDate,
+      households,
+      startDate,
+      idOfMetricThatDefinesDone
+    );
+
+    expect(output).toEqual([]);
+  });
+  it('returns correct numbers for 1 household', () => {
+    const idOfMetricThatDefinesDone = '2';
+    const households: Household[] = [
+      {
+        id: '1',
+        title: 'household 1',
+        visits: [
+          {
+            canvassAssId: '1',
+            id: '1',
+            noteToOfficial: null,
+            responses: [{ metricId: '11', response: 'no' }],
+            timestamp: '2024-10-14T12:00:00.000Z',
+          },
+        ],
+      },
+    ];
+    const startDate = new Date('2024-10-14T11:00:00.000Z');
+    const endDate = new Date('2024-10-14T13:00:00.000Z');
+    const output = getAreasData(
+      endDate,
+      households,
+      startDate,
+      idOfMetricThatDefinesDone
+    );
+    expect(output).toEqual([
+      {
+        date: '2024-10-14',
+        hour: '11:00',
+        householdVisits: 0,
+        successfulVisits: 0,
+      },
+      {
+        date: '2024-10-14',
+        hour: '12:00',
+        householdVisits: 1,
+        successfulVisits: 0,
+      },
+      {
+        date: '2024-10-14',
+        hour: '13:00',
+        householdVisits: 1,
+        successfulVisits: 0,
+      },
+    ]);
   });
   it('returns correct numbers for 1 household with 1 non-succesful visit', () => {
     const idOfMetricThatDefinesDone = '2';
@@ -43,9 +116,15 @@ describe('getAreasData()', () => {
       idOfMetricThatDefinesDone
     );
     expect(output).toEqual([
-      { date: '2024-10-13', householdVisits: 0, successfulVisits: 0 },
+      {
+        date: '2024-10-13',
+        hour: '0',
+        householdVisits: 0,
+        successfulVisits: 0,
+      },
       {
         date: '2024-10-14',
+        hour: '0',
         householdVisits: 1,
         successfulVisits: 0,
       },
@@ -78,9 +157,15 @@ describe('getAreasData()', () => {
     );
 
     expect(output).toEqual([
-      { date: '2024-10-13', householdVisits: 0, successfulVisits: 0 },
+      {
+        date: '2024-10-13',
+        hour: '0',
+        householdVisits: 0,
+        successfulVisits: 0,
+      },
       {
         date: '2024-10-14',
+        hour: '0',
         householdVisits: 1,
         successfulVisits: 1,
       },
@@ -128,16 +213,19 @@ describe('getAreasData()', () => {
     expect(output).toEqual([
       {
         date: '2024-10-11',
+        hour: '0',
         householdVisits: 1,
         successfulVisits: 1,
       },
       {
         date: '2024-10-12',
+        hour: '0',
         householdVisits: 1,
         successfulVisits: 1,
       },
       {
         date: '2024-10-13',
+        hour: '0',
         householdVisits: 2,
         successfulVisits: 2,
       },
@@ -199,27 +287,31 @@ describe('getAreasData()', () => {
     expect(output).toEqual([
       {
         date: '2024-10-11',
+        hour: '0',
         householdVisits: 2,
         successfulVisits: 2,
       },
       {
         date: '2024-10-12',
+        hour: '0',
         householdVisits: 2,
         successfulVisits: 2,
       },
       {
         date: '2024-10-13',
+        hour: '0',
         householdVisits: 3,
         successfulVisits: 2,
       },
       {
         date: '2024-10-14',
+        hour: '0',
         householdVisits: 4,
         successfulVisits: 3,
       },
     ]);
   });
-  it('returns correct numbers for 2 successful visits in the 24h first hours of the assignment', () => {
+  it('returns value 0 for hour if startDate and endDate are not in the range of 24 hours', () => {
     const idOfMetricThatDefinesDone = '1';
     const households: Household[] = [
       {
@@ -228,46 +320,16 @@ describe('getAreasData()', () => {
         visits: [
           {
             canvassAssId: '1',
-            id: '1',
-            noteToOfficial: null,
-            responses: [{ metricId: '1', response: 'no' }],
-            timestamp: '2024-10-11T13:00:00.000Z',
-          },
-          {
-            canvassAssId: '1',
             id: '2',
             noteToOfficial: null,
             responses: [{ metricId: '1', response: 'yes' }],
-            timestamp: '2024-10-11T11:00:00.000Z',
-          },
-          {
-            canvassAssId: '1',
-            id: '3',
-            noteToOfficial: null,
-            responses: [{ metricId: '1', response: 'yes' }],
-            timestamp: '2024-10-11T13:00:00.000Z',
-          },
-        ],
-      },
-      {
-        id: '2',
-        title: 'household 2',
-        visits: [
-          {
-            canvassAssId: '1',
-            id: '4',
-            noteToOfficial: null,
-            responses: [{ metricId: '1', response: 'yes' }],
-            timestamp: '2024-10-11T12:00:00.000Z',
+            timestamp: '2024-10-13T11:00:00.000Z',
           },
         ],
       },
     ];
-    //end date is the last visit of all areas?
-    //24h last hours of the assignment? of the first visit?
-    const endDate = new Date('2024-10-14T13:00:00.000Z');
-
-    const startDate = new Date('2024-10-11T10:00:00.000Z');
+    const endDate = new Date('2024-10-15T08:00:00.000Z');
+    const startDate = new Date('2024-10-13T10:00:00.000Z');
     const output = getAreasData(
       endDate,
       households,
@@ -276,24 +338,139 @@ describe('getAreasData()', () => {
     );
     expect(output).toEqual([
       {
-        date: '10:00',
-        householdVisits: 0,
-        successfulVisits: 0,
-      },
-      {
-        date: '11:00',
+        date: '2024-10-13',
+        hour: '0',
         householdVisits: 1,
         successfulVisits: 1,
       },
       {
-        date: '12:00',
-        householdVisits: 2,
-        successfulVisits: 2,
+        date: '2024-10-14',
+        hour: '0',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+    ]);
+  });
+  it('returns correct numbers for 1 household with 1 successful visits in the range of 24h first hours ', () => {
+    const idOfMetricThatDefinesDone = '1';
+    const households: Household[] = [
+      {
+        id: '1',
+        title: 'household 1',
+        visits: [
+          {
+            canvassAssId: '1',
+            id: '2',
+            noteToOfficial: null,
+            responses: [{ metricId: '1', response: 'yes' }],
+            timestamp: '2024-10-13T12:00:00.000Z',
+          },
+        ],
+      },
+    ];
+    const endDate = new Date('2024-10-13T13:00:00.000Z');
+    const startDate = new Date('2024-10-13T10:00:00.000Z');
+    const output = getAreasData(
+      endDate,
+      households,
+      startDate,
+      idOfMetricThatDefinesDone
+    );
+    expect(output).toEqual([
+      {
+        date: '2024-10-13',
+        hour: '10:00',
+        householdVisits: 0,
+        successfulVisits: 0,
       },
       {
-        date: '13:00',
-        householdVisits: 4,
-        successfulVisits: 3,
+        date: '2024-10-13',
+        hour: '11:00',
+        householdVisits: 0,
+        successfulVisits: 0,
+      },
+      {
+        date: '2024-10-13',
+        hour: '12:00',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+      {
+        date: '2024-10-13',
+        hour: '13:00',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+    ]);
+  });
+  it('returns correct numbers if there are only some visits every hour in the 24h first hours ', () => {
+    const idOfMetricThatDefinesDone = '1';
+    const households: Household[] = [
+      {
+        id: '1',
+        title: 'household 1',
+        visits: [
+          {
+            canvassAssId: '1',
+            id: '2',
+            noteToOfficial: null,
+            responses: [{ metricId: '1', response: 'yes' }],
+            timestamp: '2024-10-13T12:00:00.000Z',
+          },
+          {
+            canvassAssId: '1',
+            id: '2',
+            noteToOfficial: null,
+            responses: [{ metricId: '1', response: 'yes' }],
+            timestamp: '2024-10-13T15:00:00.000Z',
+          },
+        ],
+      },
+    ];
+    const endDate = new Date('2024-10-13T15:00:00.000Z');
+    const startDate = new Date('2024-10-13T10:00:00.000Z');
+    const output = getAreasData(
+      endDate,
+      households,
+      startDate,
+      idOfMetricThatDefinesDone
+    );
+    expect(output).toEqual([
+      {
+        date: '2024-10-13',
+        hour: '10:00',
+        householdVisits: 0,
+        successfulVisits: 0,
+      },
+      {
+        date: '2024-10-13',
+        hour: '11:00',
+        householdVisits: 0,
+        successfulVisits: 0,
+      },
+      {
+        date: '2024-10-13',
+        hour: '12:00',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+      {
+        date: '2024-10-13',
+        hour: '13:00',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+      {
+        date: '2024-10-13',
+        hour: '14:00',
+        householdVisits: 1,
+        successfulVisits: 1,
+      },
+      {
+        date: '2024-10-13',
+        hour: '15:00',
+        householdVisits: 2,
+        successfulVisits: 2,
       },
     ]);
   });
