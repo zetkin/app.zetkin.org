@@ -60,7 +60,7 @@ const MergeModal: FC<Props> = ({
   }, [open]);
 
   return (
-    <Dialog fullScreen={fullScreen} maxWidth={'lg'} open={open}>
+    <Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={open}>
       <DialogTitle sx={{ paddingLeft: 2 }} variant="h5">
         {messages.modal.title()}
       </DialogTitle>
