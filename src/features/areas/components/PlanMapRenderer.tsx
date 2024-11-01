@@ -6,14 +6,14 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { bounds, FeatureGroup as FeatureGroupType } from 'leaflet';
+import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 import { useTheme } from '@mui/styles';
 import { Box } from '@mui/material';
 
 import { ZetkinArea, ZetkinCanvassSession } from '../types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import objToPoint from '../utils/objToPoint';
+import objToLatLng from '../utils/objToLatLng';
 
 type PlanMapRendererProps = {
   areas: ZetkinArea[];
@@ -82,11 +82,17 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
               // When  none of the two areas are selected, sort them
               // by size, so that big ones are underneith and the
               // smaller ones can be clicked.
-              const bounds0 = bounds(a0.points.map(objToPoint));
-              const bounds1 = bounds(a1.points.map(objToPoint));
+              const bounds0 = latLngBounds(a0.points.map(objToLatLng));
+              const bounds1 = latLngBounds(a1.points.map(objToLatLng));
 
-              const dimensions0 = bounds0.getSize();
-              const dimensions1 = bounds1.getSize();
+              const dimensions0 = {
+                x: bounds0.getEast() - bounds0.getWest(),
+                y: bounds0.getNorth() - bounds0.getSouth(),
+              };
+              const dimensions1 = {
+                x: bounds1.getEast() - bounds1.getWest(),
+                y: bounds1.getNorth() - bounds1.getSouth(),
+              };
 
               const size0 = dimensions0.x * dimensions0.y;
               const size1 = dimensions1.x * dimensions1.y;

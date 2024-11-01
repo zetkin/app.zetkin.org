@@ -252,6 +252,13 @@ const surveysSlice = createSlice({
         );
       }
     },
+    surveyDeleted: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.surveyList.items.find((item) => item.id == id);
+      if (item) {
+        item.deleted = true;
+      }
+    },
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.surveyList.items.find((item) => item.id == id);
@@ -419,6 +426,7 @@ export const {
   statsLoaded,
   surveyCreate,
   surveyCreated,
+  surveyDeleted,
   surveyLoad,
   surveyLoaded,
   surveySubmissionUpdate,

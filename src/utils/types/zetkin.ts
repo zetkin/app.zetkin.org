@@ -179,6 +179,11 @@ export interface ZetkinPersonNativeFields {
 export type ZetkinPerson = ZetkinPersonNativeFields &
   Record<string, string | number | boolean | Record<string, unknown> | null>;
 
+export interface EnumChoice {
+  key: string;
+  label: string;
+}
+
 export interface ZetkinCustomField {
   id: number;
   title: string;
@@ -186,6 +191,9 @@ export interface ZetkinCustomField {
   description: string | null;
   type: CUSTOM_FIELD_TYPE;
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
+  enum_choices?: EnumChoice[] | null;
+  org_read: 'sameorg' | 'suborgs';
+  org_write: 'sameorg' | 'suborgs';
 }
 
 export interface ZetkinSession {
@@ -448,6 +456,7 @@ export enum CUSTOM_FIELD_TYPE {
   DATE = 'date',
   TEXT = 'text',
   JSON = 'json',
+  ENUM = 'enum',
 }
 
 export interface ZetkinJourney {

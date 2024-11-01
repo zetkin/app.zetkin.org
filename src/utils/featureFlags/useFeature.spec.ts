@@ -24,6 +24,15 @@ function getOptsWithEnvVars(vars?: Partial<Environment['vars']>) {
   };
 }
 
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    query: {
+      orgId: 123,
+    },
+    route: '/organize/123',
+  }),
+}));
+
 describe('useFeature()', () => {
   it('returns false for empty vars', () => {
     const opts = getOptsWithEnvVars();
@@ -53,6 +62,14 @@ describe('useFeature()', () => {
     });
     const { result } = renderHook(() => useFeature('FEAT_AREAS', 4), opts);
     expect(result.current).toBeFalsy();
+  });
+
+  it('defaults to using orgId from router', () => {
+    const opts = getOptsWithEnvVars({
+      FEAT_AREAS: '123', // orgId from mocked router
+    });
+    const { result } = renderHook(() => useFeature('FEAT_AREAS'), opts);
+    expect(result.current).toBeTruthy();
   });
 
   it.each([1, 2, 34, 567])(

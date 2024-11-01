@@ -1,21 +1,27 @@
 import mongoose from 'mongoose';
 
-import { ZetkinArea, ZetkinCanvassAssignee, ZetkinPlace } from './types';
+import {
+  Household,
+  ZetkinArea,
+  ZetkinCanvassAssignee,
+  ZetkinPlace,
+} from './types';
 
 type ZetkinAreaModelType = {
   description: string | null;
   orgId: number;
   points: ZetkinArea['points'];
+  tags: { id: number; value?: string }[];
   title: string | null;
 };
 
 type ZetkinPlaceModelType = {
   description: string | null;
+  households: Household[];
   orgId: number;
   position: ZetkinPlace['position'];
   title: string | null;
   type: 'address' | 'misc';
-  visits: ZetkinPlace['visits'];
 };
 
 type ZetkinCanvassAssignmentModelType = {
@@ -35,16 +41,32 @@ const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
   description: String,
   orgId: { required: true, type: Number },
   points: Array,
+  tags: Array,
   title: String,
 });
 
 const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   description: String,
+  households: [
+    {
+      _id: false,
+      id: String,
+      title: String,
+      visits: [
+        {
+          _id: false,
+          canvassAssId: String,
+          id: String,
+          rating: String,
+          timestamp: String,
+        },
+      ],
+    },
+  ],
   orgId: { required: true, type: Number },
   position: Object,
   title: String,
   type: String,
-  visits: Array,
 });
 
 const canvassAssignmentSchema =

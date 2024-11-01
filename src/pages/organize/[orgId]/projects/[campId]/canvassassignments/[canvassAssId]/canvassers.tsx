@@ -11,9 +11,11 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import { AREAS } from 'utils/featureFlags';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
+  featuresRequired: [AREAS],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

@@ -38,6 +38,12 @@ export default makeMessages('feat.areas', {
     description: m('Empty description'),
     title: m('Untitled area'),
   },
+  filters: {
+    addFilterButton: m('Add filter'),
+    filterButton: m('Filters'),
+    tagGroup: m<{ label: string }>('{label} (tag group)'),
+    tagsWithoutGroup: m('Tags without group'),
+  },
   overlay: {
     buttons: {
       cancel: m('Cancel'),
@@ -45,25 +51,45 @@ export default makeMessages('feat.areas', {
       edit: m('Edit'),
       save: m('Save'),
     },
+    tags: {
+      header: m('Tags'),
+    },
   },
   place: {
     activityHeader: m('Activity'),
+    addHouseholdButton: m('Add household'),
+    backButton: m('Back'),
+    badRatingLog: m('Bad rating'),
     cancelButton: m('Cancel'),
     closeButton: m('Close'),
     description: m('Description'),
     editButton: m('Edit'),
     editDescription: m('Place description'),
-    editPlace: m('Edit place'),
+    editPlace: m<{ placeName: string }>('Edit {placeName}'),
     editTitle: m('Place title'),
     empty: {
       description: m('Empty description'),
       title: m('Untitled place'),
     },
+    goodRatingLog: m('Good rating'),
+    household: {
+      empty: {
+        title: m('Untitled household'),
+      },
+    },
+    householdsHeader: m<{ numberOfHouseholds: number }>(
+      '{numberOfHouseholds, plural, =0 {No households} =1 {Household 1} other {Households #}}'
+    ),
     logActivityButton: m('Log activity'),
     logActivityHeader: m<{ title: string }>('Log activity at {title}'),
+    logList: m('Log'),
     noActivity: m('No visits have been recorded at this place.'),
+    notePlaceholder: m('Note'),
     saveButton: m('Save'),
     selectType: m('Place type'),
+    visitButton: m('Log visit'),
+    visitLog: m('Visited'),
+    visitedButton: m('Visited'),
   },
   placeCard: {
     address: m('Address'),

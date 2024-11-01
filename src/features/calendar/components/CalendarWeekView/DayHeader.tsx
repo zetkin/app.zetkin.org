@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import theme from 'theme';
-import { getDSTOffset } from '../utils';
+import { getDstChangeAtDate } from '../utils';
 import { Msg } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
 
@@ -15,12 +15,7 @@ export interface DayHeaderProps {
 }
 
 const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
-  const dstChangeAmount: number = useMemo(
-    () =>
-      getDSTOffset(dayjs(date).startOf('day').toDate()) -
-      getDSTOffset(dayjs(date).endOf('day').toDate()),
-    [date]
-  );
+  const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
 
   return (
     <Box
@@ -61,11 +56,16 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       </Box>
       {/* Empty */}
       <Box />
-      {dstChangeAmount !== 0 && (
+      {dstChange !== undefined && (
         <Box gridColumn={'1 / span 3'} gridRow={2}>
           <Typography color={theme.palette.grey[500]} variant="body2">
-            {dstChangeAmount > 0 && <Msg id={messageIds.dstStarts} />}
-            {dstChangeAmount < 0 && <Msg id={messageIds.dstEnds} />}
+            <Msg
+              id={
+                dstChange === 'summertime'
+                  ? messageIds.dstStarts
+                  : messageIds.dstEnds
+              }
+            />
           </Typography>
         </Box>
       )}

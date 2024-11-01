@@ -21,6 +21,10 @@ export default function hasUnfinishedMapping(column: Column) {
     return column.dateFormat === null;
   }
 
+  if (column.kind === ColumnKind.ENUM) {
+    return column.mapping.length === 0;
+  }
+
   //Column kind must be ORGANIZATION
   return column.mapping.length === 0;
 }

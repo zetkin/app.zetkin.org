@@ -13,6 +13,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
+import EnumPreview from './EnumPreview';
 
 const Preview = () => {
   const theme = useTheme();
@@ -140,6 +141,17 @@ const Preview = () => {
                       fieldKey={column.field}
                       fields={fields}
                       orgId={orgId}
+                    />
+                  );
+                }
+
+                if (column.kind === ColumnKind.ENUM) {
+                  return (
+                    <EnumPreview
+                      key={columnIdx}
+                      currentSheet={currentSheet}
+                      fieldKey={column.field}
+                      fields={fields}
                     />
                   );
                 }

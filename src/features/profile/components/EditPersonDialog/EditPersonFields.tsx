@@ -35,7 +35,7 @@ enum GENDERS {
 interface EditPersonFieldsProps {
   fieldsToUpdate: ZetkinCreatePerson;
   invalidFields: string[];
-  onChange: (field: string, newValue: string) => void;
+  onChange: (field: string, newValue: string | null) => void;
   onReset: (field: string) => void;
   orgId: number;
   fieldValues: ZetkinPerson;
@@ -91,7 +91,6 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         value={fieldValues.phone ?? ''}
       />
       <EditPersonField
-        error={invalidFields.includes(NATIVE_PERSON_FIELDS.ALT_PHONE)}
         field={NATIVE_PERSON_FIELDS.ALT_PHONE}
         hasChanges={NATIVE_PERSON_FIELDS.ALT_PHONE in fieldsToUpdate}
         onChange={(field, newValue) =>
@@ -175,6 +174,8 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
         value={fieldValues.ext_id ? fieldValues.ext_id : ''}
       />
       {customFields.map((field) => {
+        const fieldWritable =
+          field.organization.id == orgId || field.org_write == 'suborgs';
         if (field.type === CUSTOM_FIELD_TYPE.JSON) {
           return;
         } else if (field.type === CUSTOM_FIELD_TYPE.DATE) {
@@ -182,6 +183,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
             <Box display="flex">
               <DatePicker
                 key={field.slug}
+                disabled={!fieldWritable}
                 format="DD-MM-YYYY"
                 label={field.title}
                 onChange={(date: Dayjs | null) => {
@@ -208,6 +210,7 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
           return (
             <EditPersonField
               key={field.slug}
+              disabled={!fieldWritable}
               error={invalidFields.includes(field.slug)}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
@@ -221,10 +224,45 @@ const EditPersonFields: FC<EditPersonFieldsProps> = ({
               value={fieldValues[field.slug]?.toString() ?? ''}
             />
           );
+        } else if (
+          field.type === CUSTOM_FIELD_TYPE.ENUM &&
+          field.enum_choices
+        ) {
+          return (
+            <Box alignItems="flex-start" display="flex" flex={1}>
+              <FormControl fullWidth>
+                <InputLabel>{field.title}</InputLabel>
+                <Select
+                  key={field.slug}
+                  disabled={!fieldWritable}
+                  fullWidth
+                  label={field.title}
+                  onChange={(ev) => {
+                    let value: string | null = ev.target.value;
+                    if (value === '') {
+                      value = null;
+                    }
+                    onChange(field.slug, value);
+                  }}
+                  value={fieldValues[field.slug]?.toString() ?? ''}
+                >
+                  <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
+                    <Msg id={messageIds.createPerson.enumFields.noneOption} />
+                  </MenuItem>
+                  {field.enum_choices.map((c) => (
+                    <MenuItem key={c.key} value={c.key}>
+                      {c.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          );
         } else {
           return (
             <EditPersonField
               key={field.slug}
+              disabled={!fieldWritable}
               field={field.slug}
               hasChanges={field.slug in fieldsToUpdate}
               label={field.title}

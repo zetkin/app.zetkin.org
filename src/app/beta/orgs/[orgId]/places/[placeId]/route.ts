@@ -27,10 +27,10 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         { _id: params.placeId, orgId },
         {
           description: payload.description,
+          households: payload.households,
           position: payload.position,
           title: payload.title,
           type: payload.type,
-          visits: payload.visits,
         },
         { new: true }
       );
@@ -42,12 +42,12 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           description: model.description,
+          households: model.households,
           id: model._id.toString(),
           orgId: orgId,
           position: model.position,
           title: model.title,
           type: model.type,
-          visits: model.visits,
         },
       });
     }

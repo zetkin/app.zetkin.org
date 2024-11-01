@@ -5,6 +5,7 @@ import { Box, IconButton } from '@mui/material';
 import PersonFieldInput from 'zui/ZUICreatePerson/PersonFieldInput';
 
 interface EditPersonFieldProps {
+  disabled?: boolean;
   error?: boolean;
   field: string;
   hasChanges: boolean;
@@ -16,6 +17,7 @@ interface EditPersonFieldProps {
   value: string;
 }
 const EditPersonField: FC<EditPersonFieldProps> = ({
+  disabled = false,
   error,
   field,
   hasChanges,
@@ -29,6 +31,7 @@ const EditPersonField: FC<EditPersonFieldProps> = ({
   return (
     <Box alignItems="flex-start" display="flex" flex={1}>
       <PersonFieldInput
+        disabled={disabled}
         error={error}
         field={field}
         isURLField={isURLField}
