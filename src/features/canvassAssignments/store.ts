@@ -8,19 +8,19 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import {
+  AreaCardData,
   ZetkinCanvassAssignmentStats,
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
   AssignmentWithAreas,
   ZetkinAssignmentAreaStats,
-  GraphData,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
     string,
-    RemoteList<GraphData & { id: string }>
+    RemoteList<AreaCardData & { id: string }>
   >;
   areaStatsByAssignmentId: Record<
     string,
@@ -62,20 +62,14 @@ const canvassAssignmentSlice = createSlice({
 
       state.areaGraphByAssignmentId[assignmentId].isLoading = true;
     },
-    areaGraphLoaded: (state, action: PayloadAction<[string, GraphData[]]>) => {
-      /*const [canvassAssId, statsArray] = action.payload;
-
-      state.areaGraphByAssignmentId[canvassAssId] = remoteItem(canvassAssId, {
-        data: statsArray.map((stats) => ({ id: canvassAssId, ...stats })),
-        isLoading: false,
-        isStale: false,
-        loaded: new Date().toISOString(),
-      });*/
-
+    areaGraphLoaded: (
+      state,
+      action: PayloadAction<[string, AreaCardData[]]>
+    ) => {
       const [assignmentId, graphData] = action.payload;
 
       state.areaGraphByAssignmentId[assignmentId] = remoteList(
-        graphData.map((data) => ({ ...data, id: data.areaId }))
+        graphData.map((data) => ({ ...data, id: data.area.id }))
       );
 
       state.areaGraphByAssignmentId[assignmentId].loaded =

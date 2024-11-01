@@ -7,10 +7,14 @@ import {
   PlaceModel,
 } from 'features/canvassAssignments/models';
 import {
-  GraphData,
+  AreaCardData,
+  AreaGraphData,
+  Household,
+  Visit,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from 'features/canvassAssignments/types';
+import getAreaData from 'features/canvassAssignments/utils/getAreaData';
 import isPointInsidePolygon from 'features/canvassAssignments/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
@@ -38,13 +42,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       if (!assignmentModel) {
         return new NextResponse(null, { status: 404 });
-      }
-
-      const startDate = assignmentModel.start_date;
-
-      // No need to move forward if startDate is null
-      if (!startDate) {
-        return new NextResponse(null, { status: 200 });
       }
 
       const sessions: ZetkinCanvassSession[] = [];
@@ -100,11 +97,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         title: model.title,
       }));
 
-      const areasData: Record<string, GraphData> = {};
-
-      const idOfMetricThatDefinesDone = assignmentModel.metrics.find(
+      const metricThatDefinesDone = assignmentModel.metrics.find(
         (metric) => metric.definesDone
       )?._id;
+
+      const filteredVisitsInAllAreas: Visit[] = [];
+      let firstVisit: Date;
+      let lastVisit: Date;
 
       uniqueAreas.forEach((area) => {
         allPlaces.forEach((place) => {
@@ -114,131 +113,74 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           );
 
           if (placeIsInArea) {
-            if (!areasData[area.id]) {
-              areasData[area.id] = {
-                areaId: area.id,
-                householdsVisited: [],
-                successfulVisits: [],
-              };
-            }
+            // Extract all visits from households in this place that belong to the canvass assignment
+            const placeVisits = place.households
+              .flatMap((household) => household.visits)
+              .filter((visit) => visit.canvassAssId === params.canvassAssId);
 
-            const areaData = areasData[area.id];
-            // check if startDate is within the last 24 hours
-            const isWithinLast24Hours =
-              startDate &&
-              new Date(startDate) >= new Date(Date.now() - 24 * 60 * 60 * 1000);
-
-            place.households.forEach((household) => {
-              const hasVisitInThisAssignment = household.visits.find(
-                (visit) => visit.canvassAssId == params.canvassAssId
-              );
-
-              // logic for households
-              if (hasVisitInThisAssignment) {
-                household.visits.forEach((visit) => {
-                  if (visit.canvassAssId == params.canvassAssId) {
-                    if (isWithinLast24Hours) {
-                      // Get data per hour
-                      const date = new Date(visit.timestamp)
-                        .toISOString()
-                        .slice(0, 13); // Format as "YYYY-MM-DDTHH"
-                      let householdsVisitedItem =
-                        areaData.householdsVisited.find(
-                          (item) => item.date === date
-                        );
-
-                      if (!householdsVisitedItem) {
-                        householdsVisitedItem = {
-                          accumulatedVisits: 1,
-                          date,
-                        };
-                        areaData.householdsVisited.push(householdsVisitedItem);
-                      }
-                      householdsVisitedItem.accumulatedVisits++;
-                    } else {
-                      //get data  per day
-                      const date = new Date(visit.timestamp)
-                        .toISOString()
-                        .split('T')[0];
-                      let householdsVisitedItem =
-                        areaData.householdsVisited.find(
-                          (item) => item.date === date
-                        );
-
-                      if (!householdsVisitedItem) {
-                        householdsVisitedItem = {
-                          accumulatedVisits: 1,
-                          date,
-                        };
-                        areaData.householdsVisited.push(householdsVisitedItem);
-                      }
-                      householdsVisitedItem.accumulatedVisits++;
-                    }
-                  }
-                });
-              }
-
-              //logic for successful visits
-              household.visits.forEach((visit) => {
-                if (visit.canvassAssId == params.canvassAssId) {
-                  visit.responses.forEach((response) => {
-                    if (response.metricId == idOfMetricThatDefinesDone) {
-                      if (response.response == 'yes') {
-                        if (isWithinLast24Hours) {
-                          // Get data per hour
-                          const date = new Date(visit.timestamp)
-                            .toISOString()
-                            .slice(0, 13); // Format as "YYYY-MM-DDTHH"
-
-                          let successfulVisitsItem =
-                            areaData.successfulVisits.find(
-                              (item) => item.date === date
-                            );
-
-                          if (!successfulVisitsItem) {
-                            successfulVisitsItem = {
-                              accumulatedVisits: 1,
-                              date,
-                            };
-
-                            areaData.successfulVisits.push(
-                              successfulVisitsItem
-                            );
-                          }
-                          successfulVisitsItem.accumulatedVisits++;
-                        } else {
-                          //get data  per day
-                          const date = new Date(visit.timestamp)
-                            .toISOString()
-                            .split('T')[0];
-                          let successfulVisitsItem =
-                            areaData.successfulVisits.find(
-                              (item) => item.date === date
-                            );
-
-                          if (!successfulVisitsItem) {
-                            successfulVisitsItem = {
-                              accumulatedVisits: 1,
-                              date,
-                            };
-
-                            areaData.successfulVisits.push(
-                              successfulVisitsItem
-                            );
-                          }
-                          successfulVisitsItem.accumulatedVisits++;
-                        }
-                      }
-                    }
-                  });
-                }
-              });
-            });
+            filteredVisitsInAllAreas.push(...placeVisits);
           }
         });
       });
 
-      const areasDataArray = Object.values(areasData);
+      if (filteredVisitsInAllAreas.length > 0) {
+        // Sort filtered visits by timestamp
+        const sortedVisits = filteredVisitsInAllAreas.sort(
+          (a, b) =>
+            new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        );
+
+        firstVisit = new Date(sortedVisits[0].timestamp);
+        lastVisit = new Date(sortedVisits[sortedVisits.length - 1].timestamp);
+      }
+
+      const areaData: Record<
+        string,
+        { area: { id: string; title: string | null }; data: AreaGraphData[] }
+      > = {};
+
+      const areasDataList: AreaCardData[] = [];
+
+      const addedAreaIds = new Set<string>();
+      let householdList: Household[] = [];
+
+      uniqueAreas.forEach((area) => {
+        if (!areaData[area.id]) {
+          areaData[area.id] = {
+            area: { id: area.id, title: area.title },
+            data: [],
+          };
+        }
+        allPlaces.forEach((place) => {
+          const placeIsInArea = isPointInsidePolygon(
+            { lat: place.position.lat, lng: place.position.lng },
+            area.points.map((point) => ({ lat: point[0], lng: point[1] }))
+          );
+
+          if (placeIsInArea) {
+            householdList = place.households.filter((household) => {
+              return household.visits.some(
+                (visit) => visit.canvassAssId === params.canvassAssId
+              );
+            });
+          }
+        });
+        const areaVisitsData = getAreaData(
+          lastVisit,
+          householdList,
+          firstVisit,
+          metricThatDefinesDone || ''
+        );
+
+        areaData[area.id].data.push(...areaVisitsData);
+
+        if (!addedAreaIds.has(area.id)) {
+          areasDataList.push(areaData[area.id]);
+          addedAreaIds.add(area.id);
+        }
+      });
+
+      const areasDataArray: AreaCardData[] = Object.values(areasDataList);
 
       return NextResponse.json({
         data: areasDataArray,

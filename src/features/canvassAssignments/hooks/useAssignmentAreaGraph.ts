@@ -1,7 +1,7 @@
+import { AreaCardData } from '../types';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { areaGraphLoad, areaGraphLoaded } from '../store';
-import { GraphData } from '../types';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useAssignmentAreaStats(
   orgId: number,
@@ -17,7 +17,7 @@ export default function useAssignmentAreaStats(
     actionOnLoad: () => areaGraphLoad(canvassAssId),
     actionOnSuccess: (data) => areaGraphLoaded([canvassAssId, data]),
     loader: () =>
-      apiClient.get<GraphData[]>(
+      apiClient.get<AreaCardData[]>(
         `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/areasgraph`
       ),
   });

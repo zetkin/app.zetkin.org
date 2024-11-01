@@ -130,6 +130,14 @@ export type GraphData = {
   successfulVisits: GraphDataItem[];
 };
 
+export type AreaCardData = {
+  area: {
+    id: string;
+    title: string | null;
+  };
+  data: AreaGraphData[];
+};
+
 export type AreaGraphData = {
   date: string;
   hour: string;
