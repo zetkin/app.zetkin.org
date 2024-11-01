@@ -142,7 +142,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const areasDataList: AreaCardData[] = [];
 
       const addedAreaIds = new Set<string>();
-      let householdList: Household[] = [];
 
       uniqueAreas.forEach((area) => {
         if (!areaData[area.id]) {
@@ -151,6 +150,10 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             data: [],
           };
         }
+
+        const areaVisitsData: AreaGraphData[] = [];
+        const householdList: Household[] = [];
+
         allPlaces.forEach((place) => {
           const placeIsInArea = isPointInsidePolygon(
             { lat: place.position.lat, lng: place.position.lng },
@@ -158,19 +161,22 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           );
 
           if (placeIsInArea) {
-            householdList = place.households.filter((household) => {
+            const filteredHouseholds = place.households.filter((household) => {
               return household.visits.some(
                 (visit) => visit.canvassAssId === params.canvassAssId
               );
             });
+            householdList.push(...filteredHouseholds);
           }
         });
-        const areaVisitsData = getAreaData(
+
+        const visitsData = getAreaData(
           lastVisit,
           householdList,
           firstVisit,
           metricThatDefinesDone || ''
         );
+        areaVisitsData.push(...visitsData);
 
         areaData[area.id].data.push(...areaVisitsData);
 
