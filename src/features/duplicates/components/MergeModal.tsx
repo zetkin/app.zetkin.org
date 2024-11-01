@@ -14,39 +14,40 @@ import React, { useEffect } from 'react';
 import theme from 'theme';
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
-import { PotentialDuplicate } from '../store';
 import PotentialDuplicatesLists from './PotentialDuplicatesLists';
-import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
 import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
-import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
-interface ConfigureModalProps {
-  potentialDuplicate: PotentialDuplicate;
+type Props = {
+  initiallyShowManualSearch?: boolean;
   onClose: () => void;
+  onMerge: (personIds: number[], overrides: Partial<ZetkinPerson>) => void;
   open: boolean;
-}
+  persons: ZetkinPerson[];
+};
 
-const ConfigureModal: FC<ConfigureModalProps> = ({
-  potentialDuplicate,
+const MergeModal: FC<Props> = ({
+  initiallyShowManualSearch = false,
   open,
   onClose,
+  onMerge,
+  persons,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
-  const { mergeDuplicate } = useDuplicatesMutations(orgId);
+  const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
-    potentialDuplicate?.duplicates.map((person) => person.id) ?? []
+    persons.map((person) => person.id) ?? []
   );
 
-  const peopleToMerge = potentialDuplicate?.duplicates.filter((person) =>
-    selectedIds.includes(person.id)
-  );
+  const peopleToMerge = [
+    ...persons.filter((person) => selectedIds.includes(person.id)),
+    ...additionalPeople,
+  ];
 
-  const peopleNotToMerge = potentialDuplicate?.duplicates.filter(
+  const peopleNotToMerge = persons.filter(
     (person) => !selectedIds.includes(person.id)
   );
 
@@ -55,28 +56,45 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   const [overrides, setOverrides] = useState(initialOverrides);
 
   useEffect(() => {
-    setSelectedIds(
-      potentialDuplicate?.duplicates.map((person) => person.id) ?? []
-    );
+    setSelectedIds(persons.map((person) => person.id) ?? []);
   }, [open]);
 
   return (
-    <Dialog fullScreen={fullScreen} maxWidth={'lg'} open={open}>
+    <Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={open}>
       <DialogTitle sx={{ paddingLeft: 2 }} variant="h5">
         {messages.modal.title()}
       </DialogTitle>
       <Box display="flex" flexGrow={1} overflow="hidden">
         <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
           <PotentialDuplicatesLists
+            initiallyShowManualSearch={initiallyShowManualSearch}
             onDeselect={(person: ZetkinPerson) => {
-              const filteredIds = selectedIds.filter(
-                (item) => item !== person.id
+              const isPredefined = persons.some(
+                (predefinedPerson) => predefinedPerson.id == person.id
               );
-              setSelectedIds(filteredIds);
+
+              if (isPredefined) {
+                const filteredIds = selectedIds.filter(
+                  (item) => item !== person.id
+                );
+                setSelectedIds(filteredIds);
+              } else {
+                const filteredAdditionals = additionalPeople.filter(
+                  (item) => item.id != person.id
+                );
+                setAdditionalPeople(filteredAdditionals);
+              }
             }}
             onSelect={(person: ZetkinPerson) => {
-              const selectedIdsUpdated = [...selectedIds, person.id];
-              setSelectedIds(selectedIdsUpdated);
+              const isPredefined = persons.some(
+                (predefinedPerson) => predefinedPerson.id == person.id
+              );
+              if (isPredefined) {
+                const selectedIdsUpdated = [...selectedIds, person.id];
+                setSelectedIds(selectedIdsUpdated);
+              } else {
+                setAdditionalPeople([...additionalPeople, person]);
+              }
             }}
             peopleNotToMerge={peopleNotToMerge}
             peopleToMerge={peopleToMerge}
@@ -106,14 +124,27 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
         </Box>
       </Box>
       <DialogActions sx={{ p: 2 }}>
-        <Button onClick={() => onClose()} variant="text">
+        <Button
+          onClick={() => {
+            setAdditionalPeople([]);
+            onClose();
+          }}
+          variant="text"
+        >
           {messages.modal.cancelButton()}
         </Button>
         <Button
-          disabled={selectedIds.length > 1 ? false : true}
-          onClick={() =>
-            mergeDuplicate(potentialDuplicate.id, selectedIds, overrides)
+          disabled={
+            additionalPeople.length + selectedIds.length > 1 ? false : true
           }
+          onClick={() => {
+            const idSet = new Set([
+              ...selectedIds,
+              ...additionalPeople.map((person) => person.id),
+            ]);
+            onMerge(Array.from(idSet), overrides);
+            setAdditionalPeople([]);
+          }}
           variant="contained"
         >
           {messages.modal.mergeButton()}
@@ -123,4 +154,4 @@ const ConfigureModal: FC<ConfigureModalProps> = ({
   );
 };
 
-export default ConfigureModal;
+export default MergeModal;
