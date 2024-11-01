@@ -16,6 +16,9 @@ export default makeMessages('feat.profile', {
   editButtonClose: m<{ title: string }>('Stop editing {title}'),
   editButtonLabel: m('Edit Details'),
   editPersonHeader: m<{ person: string }>('Edit {person}'),
+  ellipsisMenu: {
+    merge: m('Merge with...'),
+  },
   genders: {
     f: m('Female'),
     m: m('Male'),

@@ -4,6 +4,7 @@ import { CallAssignmentData } from '../apiTypes';
 import { futureToObject } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import {
+  callAssignmentDeleted,
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdate,
@@ -23,6 +24,7 @@ interface UseCallAssignmentReturn {
   updateTargets: (query: Partial<ZetkinQuery>) => void;
   start: () => void;
   updateCallAssignment: (data: Partial<ZetkinCallAssignment>) => void;
+  deleteAssignment: () => void;
 }
 
 export default function useCallAssignment(
@@ -186,8 +188,16 @@ export default function useCallAssignment(
     });
   };
 
+  const deleteAssignment = async () => {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/call_assignments/${assignmentId}`
+    );
+    dispatch(callAssignmentDeleted(assignmentId));
+  };
+
   return {
     ...futureToObject(callAssignmentFuture),
+    deleteAssignment,
     end,
     isTargeted,
     start,
