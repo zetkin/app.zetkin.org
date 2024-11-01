@@ -97,9 +97,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         title: model.title,
       }));
 
-      const metricThatDefinesDone = assignmentModel.metrics.find(
-        (metric) => metric.definesDone
-      )?._id;
+      const metricThatDefinesDone = assignmentModel.metrics
+        .find((metric) => metric.definesDone)
+        ?._id.toString();
 
       const filteredVisitsInAllAreas: Visit[] = [];
       let firstVisit: Date;
