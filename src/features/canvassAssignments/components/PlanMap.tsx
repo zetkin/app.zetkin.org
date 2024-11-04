@@ -1,4 +1,5 @@
-import { FC, useRef, useState } from 'react';
+import router from 'next/router';
+import { FC, useEffect, useRef, useState } from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import {
@@ -79,6 +80,7 @@ const PlanMap: FC<PlanMapProps> = ({
   const [locating, setLocating] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
+  const { navigateToAreaId } = router.query;
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -109,6 +111,13 @@ const PlanMap: FC<PlanMapProps> = ({
   }
 
   const filteredAreas = filterAreas(areas, filterText);
+
+  useEffect(() => {
+    if (navigateToAreaId !== undefined && !Array.isArray(navigateToAreaId)) {
+      setSelectedId(navigateToAreaId);
+      setSettingsOpen('select');
+    }
+  }, [navigateToAreaId]);
 
   return (
     <AreaFilterProvider>
@@ -328,6 +337,11 @@ const PlanMap: FC<PlanMapProps> = ({
                 areaStats={areaStats}
                 areaStyle={mapStyle.area}
                 canvassAssId={canvassAssId}
+                navigateToAreaId={
+                  typeof navigateToAreaId === 'string'
+                    ? navigateToAreaId
+                    : undefined
+                }
                 onSelectedIdChange={(newId) => {
                   setSelectedId(newId);
 

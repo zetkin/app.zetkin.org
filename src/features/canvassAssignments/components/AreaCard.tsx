@@ -61,6 +61,19 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
     return [householdVisitsSeries, successfulVisitsSeries];
   };
 
+  const navigateToArea = (areaId: string) => {
+    router.replace(
+      {
+        pathname: `/organize/${orgId}/projects/${
+          assignment.campaign.id || ''
+        }/canvassassignments/${assignment.id}/plan`,
+        query: { navigateToAreaId: areaId },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
   return (
     <>
       {areas.map((area) => {
@@ -90,11 +103,7 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                 </Box>
                 <IconButton
                   onClick={() =>
-                    router.push(
-                      `/organize/${orgId}/projects/${
-                        assignment.campaign.id || ''
-                      }/canvassassignments/${assignment.id}/plan`
-                    )
+                    areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
                   }
                   sx={{ marginRight: 2 }}
                 >
@@ -177,13 +186,15 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                 sx={{ margin: 2 }}
               >
                 <Box textAlign="start">
-                  <Typography>Households visited</Typography>
+                  <Typography sx={{ fontSize: 14 }}>
+                    Households visited
+                  </Typography>
                   <Typography color={theme.palette.primary.main} variant="h6">
                     {area.num_visited_households}
                   </Typography>
                 </Box>
                 <Box textAlign="start">
-                  <Typography>Places visited</Typography>
+                  <Typography sx={{ fontSize: 14 }}>Places visited</Typography>
                   <Typography
                     color={theme.palette.secondary.light}
                     variant="h6"
