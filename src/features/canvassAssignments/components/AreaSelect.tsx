@@ -1,5 +1,11 @@
 import { FC } from 'react';
-import { ChevronLeft, Close, DoorFront, Search } from '@mui/icons-material';
+import {
+  ChevronLeft,
+  Close,
+  DoorFront,
+  Place,
+  Search,
+} from '@mui/icons-material';
 import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
@@ -145,6 +151,10 @@ const AreaSelect: FC<Props> = ({
       {selectedArea && (
         <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
           <Box display="flex" justifyContent="space-evenly">
+            <Box alignItems="center" display="flex">
+              <Place color="secondary" fontSize="large" />
+              {placesInSelectedArea.length}
+            </Box>
             <Box alignItems="center" display="flex">
               <DoorFront color="secondary" fontSize="large" />
               {numberOfHouseholdsInSelectedArea}
