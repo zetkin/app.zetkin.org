@@ -139,40 +139,38 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Card>
 
                 <Grid container spacing={2}>
-                  {assignment.start_date && (
-                    <ZUIFutures futures={{ areasStats, dataGraph }}>
-                      {({ data: { areasStats, dataGraph } }) => {
-                        // Sort areas based on successful visits only
-                        const sortedAreas = areasStats.stats
-                          .map((area) => {
-                            const successfulVisitsTotal =
-                              dataGraph
-                                .find((graph) => graph.areaId === area.areaId)
-                                ?.successfulVisits.reduce(
-                                  (sum, item) => sum + item.accumulatedVisits,
-                                  0
-                                ) || 0;
+                  <ZUIFutures futures={{ areasStats, dataGraph }}>
+                    {({ data: { areasStats, dataGraph } }) => {
+                      // Sort areas based on successful visits only
+                      const sortedAreas = areasStats.stats
+                        .map((area) => {
+                          const successfulVisitsTotal =
+                            dataGraph
+                              .find((graph) => graph.area.id === area.areaId)
+                              ?.data.reduce(
+                                (sum, item) => sum + item.successfulVisits,
+                                0
+                              ) || 0;
 
-                            return {
-                              area,
-                              successfulVisitsTotal,
-                            };
-                          })
-                          .sort(
-                            (a, b) =>
-                              b.successfulVisitsTotal - a.successfulVisitsTotal
-                          )
-                          .map(({ area }) => area);
-                        return (
-                          <AreaCard
-                            areas={sortedAreas}
-                            assignment={assignment}
-                            data={dataGraph}
-                          />
-                        );
-                      }}
-                    </ZUIFutures>
-                  )}
+                          return {
+                            area,
+                            successfulVisitsTotal,
+                          };
+                        })
+                        .sort(
+                          (a, b) =>
+                            b.successfulVisitsTotal - a.successfulVisitsTotal
+                        )
+                        .map(({ area }) => area);
+                      return (
+                        <AreaCard
+                          areas={sortedAreas}
+                          assignment={assignment}
+                          data={dataGraph}
+                        />
+                      );
+                    }}
+                  </ZUIFutures>
                 </Grid>
                 {!assignment.start_date && (
                   <Card>

@@ -123,13 +123,6 @@ export type ZetkinAssignmentAreaStats = {
   stats: ZetkinAssignmentAreaStatsItem[];
 };
 
-export type GraphDataItem = { accumulatedVisits: number; date: string };
-export type GraphData = {
-  areaId: string;
-  householdsVisited: GraphDataItem[];
-  successfulVisits: GraphDataItem[];
-};
-
 export type AreaCardData = {
   area: {
     id: string;
