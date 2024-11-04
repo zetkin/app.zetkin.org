@@ -227,6 +227,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   setFilteredAreaIds(null);
                   setActiveGroupIds([]);
                   setActiveTagIdsByGroup({});
+                  setFilterText('');
                 }}
                 onFilterTextChange={(newValue) => setFilterText(newValue)}
                 onSelectArea={(newValue) => setSelectedId(newValue)}
@@ -257,6 +258,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                       setFilteredAreaIds(null);
                       setActiveGroupIds([]);
                       setActiveTagIdsByGroup({});
+                      setFilterText('');
                     }}
                   >
                     <Close />
@@ -290,7 +292,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           zoomControl={false}
         >
           <OrganizerMapRenderer
-            areas={filteredAreas}
+            areas={selectedId ? areas : filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
             assignment={assignment}
