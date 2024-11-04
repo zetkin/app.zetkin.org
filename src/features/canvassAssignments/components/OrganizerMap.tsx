@@ -1,13 +1,13 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import {
   Box,
+  Button,
+  ButtonGroup,
   Divider,
   IconButton,
   Paper,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import { Close, Layers, Search } from '@mui/icons-material';
@@ -21,15 +21,15 @@ import {
   ZetkinCanvassSession,
   ZetkinPlace,
 } from '../types';
-import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import AssigneeFilterProvider from './OrganizerMapFilters/AssigneeFilterContext';
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
 import LayerSettings from './LayerSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
+import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
 
 type OrganizerMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -72,6 +72,9 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const [locating, setLocating] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
+  const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
+  const { setActiveGroupIds, setActiveTagIdsByGroup } =
+    useContext(areaFilterContext);
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -104,198 +107,212 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const filteredAreas = filterAreas(areas, filterText);
 
   return (
-    <AreaFilterProvider>
-      <AssigneeFilterProvider>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <Box flexGrow={1} position="relative">
+        <MapControls
+          mapRef={mapRef}
+          onFitBounds={() => {
+            const map = mapRef.current;
+            if (map) {
+              if (areas.length) {
+                // Start with first area
+                const totalBounds = latLngBounds(
+                  areas[0].points.map((p) => objToLatLng(p))
+                );
+
+                // Extend with all areas
+                areas.forEach((area) => {
+                  const areaBounds = latLngBounds(
+                    area.points.map((p) => objToLatLng(p))
+                  );
+                  totalBounds.extend(areaBounds);
+                });
+
+                if (totalBounds) {
+                  map.fitBounds(totalBounds, { animate: true });
+                }
+              }
+            }
+          }}
+          onLocate={() => ({
+            locating,
+            setLocating,
+          })}
+        />
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            width: '100%',
+            position: 'absolute',
+            right: 16,
+            top: 16,
+            transform: settingsOpen ? 'translate(-408px)' : '',
+            zIndex: 999,
           }}
         >
-          <Box flexGrow={1} position="relative">
-            <MapControls
-              mapRef={mapRef}
-              onFitBounds={() => {
-                const map = mapRef.current;
-                if (map) {
-                  if (areas.length) {
-                    // Start with first area
-                    const totalBounds = latLngBounds(
-                      areas[0].points.map((p) => objToLatLng(p))
-                    );
-
-                    // Extend with all areas
-                    areas.forEach((area) => {
-                      const areaBounds = latLngBounds(
-                        area.points.map((p) => objToLatLng(p))
-                      );
-                      totalBounds.extend(areaBounds);
-                    });
-
-                    if (totalBounds) {
-                      map.fitBounds(totalBounds, { animate: true });
-                    }
-                  }
+          <ButtonGroup orientation="vertical" variant="contained">
+            <Button
+              onClick={() => {
+                if (settingsOpen == 'filters') {
+                  setSettingsOpen(null);
+                } else {
+                  setSettingsOpen('filters');
                 }
               }}
-              onLocate={() => ({
-                locating,
-                setLocating,
-              })}
-            />
-            <Box
-              sx={{
-                position: 'absolute',
-                right: 16,
-                top: 16,
-                transform: settingsOpen ? 'translate(-408px)' : '',
-                zIndex: 999,
+            >
+              <OrganizerMapFilterBadge />
+            </Button>
+            <Button
+              onClick={() => {
+                if (settingsOpen == 'layers') {
+                  setSettingsOpen(null);
+                } else {
+                  setSettingsOpen('layers');
+                }
               }}
             >
-              <ToggleButtonGroup
-                exclusive
-                onChange={(ev, newValue) => {
-                  setSettingsOpen(newValue);
-
-                  if (!newValue) {
-                    setSelectedId('');
-                  }
-                }}
-                orientation="vertical"
-                sx={(theme) => ({
-                  backgroundColor: theme.palette.primary.main,
-                })}
-                value={settingsOpen}
-              >
-                <ToggleButton value="filters">
-                  <OrganizerMapFilterBadge />
-                </ToggleButton>
-                <ToggleButton value="layers">
-                  <Layers sx={{ color: 'white' }} />
-                </ToggleButton>
-                <ToggleButton value="select">
-                  <Search sx={{ color: 'white' }} />
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
-            {settingsOpen && (
-              <Paper
-                sx={{
-                  bottom: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  maxWidth: 400,
-                  minWidth: 400,
-                  overflow: 'hidden',
-                  padding: 2,
-                  position: 'absolute',
-                  right: '1rem',
-                  top: '1rem',
-                  zIndex: 1000,
-                }}
-              >
-                {settingsOpen == 'select' && (
-                  <AreaSelect
-                    key={selectedArea?.id}
-                    areas={areas}
-                    filterAreas={filterAreas}
-                    filterText={filterText}
-                    onAddAssignee={(person) => {
-                      if (selectedArea) {
-                        onAddAssigneeToArea(selectedArea, person);
-                      }
-                    }}
-                    onClose={() => {
-                      setSelectedId('');
-                      setSettingsOpen(null);
-                    }}
-                    onFilterTextChange={(newValue) => setFilterText(newValue)}
-                    onSelectArea={(newValue) => setSelectedId(newValue)}
-                    places={places}
-                    selectedArea={selectedArea}
-                    selectedAreaStats={areaStats.stats.find(
-                      (stat) => stat.areaId == selectedArea?.id
-                    )}
-                    sessions={sessions}
-                  />
-                )}
-                {settingsOpen != 'select' && (
-                  <>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      justifyContent="space-between"
-                      paddingBottom={1}
-                    >
-                      <Typography variant="h5">
-                        {settingsOpen == 'filters' ? 'Filters' : 'Layers'}
-                      </Typography>
-                      <IconButton
-                        onClick={() => {
-                          setSettingsOpen(null);
-                          setSelectedId('');
-                        }}
-                      >
-                        <Close />
-                      </IconButton>
-                    </Box>
-                    <Divider />
-                    {settingsOpen == 'layers' && (
-                      <LayerSettings
-                        mapStyle={mapStyle}
-                        onMapStyleChange={(newMapStyle) =>
-                          setMapStyle(newMapStyle)
-                        }
-                      />
-                    )}
-                    {settingsOpen == 'filters' && (
-                      <OrganizerMapFilters
-                        areas={areas}
-                        onFilteredIdsChange={(areaIds) => {
-                          setFilteredAreaIds(areaIds);
-                        }}
-                      />
-                    )}
-                  </>
-                )}
-              </Paper>
-            )}
-            <MapContainer
-              ref={mapRef}
-              attributionControl={false}
-              center={[0, 0]}
-              style={{ height: '100%', width: '100%' }}
-              zoom={2}
-              zoomControl={false}
+              <Layers />
+            </Button>
+            <Button
+              onClick={() => {
+                if (settingsOpen == 'select' && !selectedId) {
+                  setSettingsOpen(null);
+                } else if (settingsOpen == 'select' && selectedId) {
+                  setSelectedId('');
+                } else {
+                  setSettingsOpen('select');
+                }
+              }}
             >
-              <OrganizerMapRenderer
-                areas={filteredAreas}
-                areaStats={areaStats}
-                areaStyle={mapStyle.area}
-                assignment={assignment}
-                canvassAssId={canvassAssId}
-                onSelectedIdChange={(newId) => {
-                  setSelectedId(newId);
-
-                  if (!newId) {
-                    setSettingsOpen(null);
-                  } else {
-                    setSettingsOpen('select');
+              <Search />
+            </Button>
+          </ButtonGroup>
+        </Box>
+        {settingsOpen && (
+          <Paper
+            sx={{
+              bottom: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              maxWidth: 400,
+              minWidth: 400,
+              overflow: 'hidden',
+              padding: 2,
+              position: 'absolute',
+              right: '1rem',
+              top: '1rem',
+              zIndex: 1000,
+            }}
+          >
+            {settingsOpen == 'select' && (
+              <AreaSelect
+                key={selectedArea?.id}
+                areas={areas}
+                filterAreas={filterAreas}
+                filterText={filterText}
+                onAddAssignee={(person) => {
+                  if (selectedArea) {
+                    onAddAssigneeToArea(selectedArea, person);
                   }
                 }}
-                overlayStyle={mapStyle.overlay}
+                onClose={() => {
+                  setSelectedId('');
+                  setSettingsOpen(null);
+                  onAssigneesFilterChange(null);
+                  setFilteredAreaIds(null);
+                  setActiveGroupIds([]);
+                  setActiveTagIdsByGroup({});
+                }}
+                onFilterTextChange={(newValue) => setFilterText(newValue)}
+                onSelectArea={(newValue) => setSelectedId(newValue)}
                 places={places}
-                placeStyle={mapStyle.place}
-                selectedId={selectedId}
+                selectedArea={selectedArea}
+                selectedAreaStats={areaStats.stats.find(
+                  (stat) => stat.areaId == selectedArea?.id
+                )}
                 sessions={sessions}
               />
-            </MapContainer>
-          </Box>
-        </Box>
-      </AssigneeFilterProvider>
-    </AreaFilterProvider>
+            )}
+            {settingsOpen != 'select' && (
+              <>
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  justifyContent="space-between"
+                  paddingBottom={1}
+                >
+                  <Typography variant="h5">
+                    {settingsOpen == 'filters' ? 'Filters' : 'Layers'}
+                  </Typography>
+                  <IconButton
+                    onClick={() => {
+                      setSettingsOpen(null);
+                      setSelectedId('');
+                      onAssigneesFilterChange(null);
+                      setFilteredAreaIds(null);
+                      setActiveGroupIds([]);
+                      setActiveTagIdsByGroup({});
+                    }}
+                  >
+                    <Close />
+                  </IconButton>
+                </Box>
+                <Divider />
+                {settingsOpen == 'layers' && (
+                  <LayerSettings
+                    mapStyle={mapStyle}
+                    onMapStyleChange={(newMapStyle) => setMapStyle(newMapStyle)}
+                  />
+                )}
+                {settingsOpen == 'filters' && (
+                  <OrganizerMapFilters
+                    areas={areas}
+                    onFilteredIdsChange={(areaIds) => {
+                      setFilteredAreaIds(areaIds);
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </Paper>
+        )}
+        <MapContainer
+          ref={mapRef}
+          attributionControl={false}
+          center={[0, 0]}
+          style={{ height: '100%', width: '100%' }}
+          zoom={2}
+          zoomControl={false}
+        >
+          <OrganizerMapRenderer
+            areas={filteredAreas}
+            areaStats={areaStats}
+            areaStyle={mapStyle.area}
+            assignment={assignment}
+            canvassAssId={canvassAssId}
+            onSelectedIdChange={(newId) => {
+              setSelectedId(newId);
+
+              if (!newId) {
+                setSettingsOpen(null);
+              } else {
+                setSettingsOpen('select');
+              }
+            }}
+            overlayStyle={mapStyle.overlay}
+            places={places}
+            placeStyle={mapStyle.place}
+            selectedId={selectedId}
+            sessions={sessions}
+          />
+        </MapContainer>
+      </Box>
+    </Box>
   );
 };
 

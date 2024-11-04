@@ -15,6 +15,8 @@ import usePlaces from 'features/canvassAssignments/hooks/usePlaces';
 import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
+import AssigneeFilterProvider from 'features/canvassAssignments/components/OrganizerMapFilters/AssigneeFilterContext';
 
 const OrganizerMap = dynamic(
   () =>
@@ -67,20 +69,24 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
         }}
       >
         {({ data: { areaStats, assignment, sessions } }) => (
-          <OrganizerMap
-            areas={areas}
-            areaStats={areaStats}
-            assignment={assignment}
-            canvassAssId={canvassAssId}
-            onAddAssigneeToArea={(area, person) => {
-              createCanvassSession({
-                areaId: area.id,
-                personId: person.id,
-              });
-            }}
-            places={places}
-            sessions={sessions}
-          />
+          <AreaFilterProvider>
+            <AssigneeFilterProvider>
+              <OrganizerMap
+                areas={areas}
+                areaStats={areaStats}
+                assignment={assignment}
+                canvassAssId={canvassAssId}
+                onAddAssigneeToArea={(area, person) => {
+                  createCanvassSession({
+                    areaId: area.id,
+                    personId: person.id,
+                  });
+                }}
+                places={places}
+                sessions={sessions}
+              />
+            </AssigneeFilterProvider>
+          </AreaFilterProvider>
         )}
       </ZUIFutures>
     </Box>
