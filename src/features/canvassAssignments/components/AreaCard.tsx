@@ -82,15 +82,25 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
         );
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
-          <Grid key={area.areaId} item md={2} sm={4} xs={12}>
-            <Card key={area.areaId} sx={{ height: 'auto', marginBottom: 2 }}>
+          <Grid key={area.areaId} item lg={2} md={3} sm={6} xs={12}>
+            <Card key={area.areaId} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
                 display="flex"
                 justifyContent="space-between"
+                width="100%"
               >
-                <Box alignItems="center" display="flex">
-                  <Typography padding={2} variant="h5">
+                <Box alignItems="center" display="flex" width="70%">
+                  <Typography
+                    padding={2}
+                    sx={{
+                      maxWidth: '70%',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                    variant="h6"
+                  >
                     {areaData?.area.title || 'Untitled area'}
                   </Typography>
                   <Divider
@@ -105,7 +115,7 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                   onClick={() =>
                     areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
                   }
-                  sx={{ marginRight: 2 }}
+                  sx={{ marginRight: 0 }}
                 >
                   <MapIcon />
                 </IconButton>
@@ -113,7 +123,7 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
               <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
               <Box>
                 {transformedData.length > 0 && (
-                  <div style={{ height: '200px' }}>
+                  <div style={{ height: '150px' }}>
                     <ResponsiveLine
                       animate={false}
                       axisBottom={null}
@@ -140,7 +150,7 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                       enableSlices="x"
                       isInteractive={true}
                       lineWidth={3}
-                      margin={{ bottom: 20, left: 20, right: 20, top: 20 }}
+                      margin={{ bottom: 10, left: 15, right: 15, top: 10 }}
                       sliceTooltip={(props) => {
                         return (
                           <Paper
@@ -180,12 +190,8 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                   </div>
                 )}
               </Box>
-              <Box
-                display="flex"
-                justifyContent="space-evenly"
-                sx={{ margin: 2 }}
-              >
-                <Box textAlign="start">
+              <Box display="flex" justifyContent="start" sx={{ margin: 1 }}>
+                <Box marginLeft={1} marginRight={2} textAlign="start">
                   <Typography sx={{ fontSize: 14 }}>
                     Households visited
                   </Typography>
