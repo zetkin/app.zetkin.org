@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '1em',
     color: theme.palette.text.secondary,
     display: 'flex',
-    fontSize: '1.8em',
+    fontSize: '1em',
     lineHeight: 'normal',
     marginRight: '0.1em',
     overflow: 'hidden',
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '1em',
     color: getContrastColor(theme.palette.statusColors.blue),
     display: 'flex',
-    fontSize: '1rem',
+    fontSize: '0.5rem',
     lineHeight: 'normal',
     marginRight: '0.1em',
     overflow: 'hidden',
@@ -82,7 +82,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
         const planUrl = `/organize/${orgId}/projects/${
           assignment.campaign.id || 'standalone'
         }/canvassassignments/${assignment.id}/plan`;
-
         return (
           <Box display="flex" flexDirection="column" gap={2}>
             {stats.num_areas == 0 && (
@@ -106,8 +105,14 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
             {stats.num_areas > 0 && (
               <>
                 <Card>
-                  <Box display="flex" justifyContent="space-between" p={2}>
-                    <Typography variant="h4">Areas</Typography>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    marginLeft={1}
+                    maxHeight={40}
+                    p={1}
+                  >
+                    <Typography variant="h5">Areas</Typography>
                     {!!stats.num_areas && (
                       <ZUIAnimatedNumber value={stats.num_areas}>
                         {(animatedValue) => (
@@ -172,15 +177,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     }}
                   </ZUIFutures>
                 </Grid>
-                {!assignment.start_date && (
-                  <Card>
-                    <Box p={10} sx={{ textAlign: ' center' }}>
-                      <Typography variant="h5">
-                        Start the assignment to view area-specific statistics.
-                      </Typography>
-                    </Box>
-                  </Card>
-                )}
               </>
             )}
           </Box>
