@@ -248,7 +248,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   paddingBottom={1}
                 >
                   <Typography variant="h5">
-                    {settingsOpen == 'filters' ? 'Filters' : 'Layers'}
+                    {settingsOpen == 'filters' ? 'Filters' : 'Map style'}
                   </Typography>
                   <IconButton
                     onClick={() => {
