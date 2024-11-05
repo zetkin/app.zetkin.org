@@ -42,7 +42,7 @@ type OrganizerMapProps = {
 };
 
 export type MapStyle = {
-  area: 'households' | 'progress' | 'hide' | 'assignees';
+  area: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   overlay: 'assignees' | 'households' | 'progress' | 'hide';
   place: 'dot' | 'households' | 'progress' | 'hide';
 };

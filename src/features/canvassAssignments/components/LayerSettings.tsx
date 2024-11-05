@@ -73,7 +73,7 @@ const LayerSettings: FC<LayerSettingsProps> = ({
               Number of households at the location
             </MenuItem>
             <MenuItem value="progress">Progress in this assignment</MenuItem>
-            <MenuItem value="hide">Hide</MenuItem>
+            <MenuItem value="hide">Hidden</MenuItem>
           </Select>
         </FormControl>
         <Box display="flex" gap={1}>
@@ -94,7 +94,8 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                 newValue == 'households' ||
                 newValue == 'progress' ||
                 newValue == 'hide' ||
-                newValue == 'assignees'
+                newValue == 'assignees' ||
+                newValue == 'outlined'
               ) {
                 onMapStyleChange({ ...mapStyle, area: newValue });
                 customSettingsRef.current = { ...mapStyle, area: newValue };
@@ -105,7 +106,8 @@ const LayerSettings: FC<LayerSettingsProps> = ({
             <MenuItem value="assignees">If there are assignees</MenuItem>
             <MenuItem value="households">Number of households</MenuItem>
             <MenuItem value="progress">Progress in this assignment</MenuItem>
-            <MenuItem value="hide">Transparent</MenuItem>
+            <MenuItem value="outlined">Outlined</MenuItem>
+            <MenuItem value="hide">Hidden</MenuItem>
           </Select>
         </FormControl>
         <Box display="flex" gap={1}>
@@ -144,7 +146,7 @@ const LayerSettings: FC<LayerSettingsProps> = ({
             <MenuItem value="progress">
               Progress for the area in this assignment
             </MenuItem>
-            <MenuItem value="hide">Hide</MenuItem>
+            <MenuItem value="hide">Hidden</MenuItem>
           </Select>
         </FormControl>
       </Box>

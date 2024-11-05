@@ -160,7 +160,7 @@ const PlaceMarker: FC<{
 
 type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
-  areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
+  areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
   assignment: ZetkinCanvassAssignment;
   canvassAssId: string;
@@ -223,7 +223,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     householdColorPercent: number,
     visitsColorPercent: number
   ) => {
-    if (areaStyle == 'hide') {
+    if (areaStyle == 'hide' || areaStyle == 'outlined') {
       return 'transparent';
     }
 
@@ -492,7 +492,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 )}
                 <Polygon
                   key={key}
-                  color="black"
+                  color={areaStyle == 'hide' ? '' : 'black'}
                   dashArray={!hasPeople ? '5px 7px' : ''}
                   eventHandlers={{
                     click: () => {
