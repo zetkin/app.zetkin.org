@@ -15,7 +15,6 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
-  ZetkinAssignmentAreaStatsItem,
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
@@ -30,14 +29,7 @@ const PlaceMarker: FC<{
   idOfMetricThatDefinesDone: string;
   place: ZetkinPlace;
   placeStyle: 'dot' | 'households' | 'progress';
-  statsItem?: ZetkinAssignmentAreaStatsItem;
-}> = ({
-  canvassAssId,
-  idOfMetricThatDefinesDone,
-  place,
-  placeStyle,
-  statsItem,
-}) => {
+}> = ({ canvassAssId, idOfMetricThatDefinesDone, place, placeStyle }) => {
   const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
@@ -88,75 +80,71 @@ const PlaceMarker: FC<{
       </DivIconMarker>
     );
   } else {
-    if (statsItem) {
-      let visits = 0;
-      let successfulVisits = 0;
-      place.households.forEach((household) => {
-        const visitInThisAssignment = household.visits.find(
-          (visit) => visit.canvassAssId == canvassAssId
-        );
-        if (visitInThisAssignment) {
-          visits++;
+    let visits = 0;
+    let successfulVisits = 0;
+    place.households.forEach((household) => {
+      const visitInThisAssignment = household.visits.find(
+        (visit) => visit.canvassAssId == canvassAssId
+      );
+      if (visitInThisAssignment) {
+        visits++;
 
-          const responseToMetricThatDefinesDone =
-            visitInThisAssignment.responses.find(
-              (response) => response.metricId == idOfMetricThatDefinesDone
-            );
+        const responseToMetricThatDefinesDone =
+          visitInThisAssignment.responses.find(
+            (response) => response.metricId == idOfMetricThatDefinesDone
+          );
 
-          if (responseToMetricThatDefinesDone?.response == 'yes') {
-            successfulVisits++;
-          }
+        if (responseToMetricThatDefinesDone?.response == 'yes') {
+          successfulVisits++;
         }
-      });
+      }
+    });
 
-      const successfulVisitsColorPercent =
-        (successfulVisits / place.households.length) * 100;
-      const visitsColorPercent = (visits / place.households.length) * 100;
+    const successfulVisitsColorPercent =
+      (successfulVisits / place.households.length) * 100;
+    const visitsColorPercent = (visits / place.households.length) * 100;
 
-      return (
-        <DivIconMarker iconAnchor={[6, 24]} position={place.position}>
-          <Box alignItems="center" display="flex" flexDirection="column">
-            <Box
-              alignItems="center"
-              bgcolor="white"
-              borderRadius={1}
-              boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
-              color={theme.palette.text.secondary}
-              display="inline-flex"
-              flexDirection="column"
-              fontSize="12px"
-              justifyContent="center"
-              padding="2px"
-            >
-              <div
-                style={{
-                  alignItems: 'center',
-                  background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
-                  borderRadius: '2em',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  height: '16px',
-                  justifyContent: 'center',
-                  width: '16px',
-                }}
-              />
-            </Box>
+    return (
+      <DivIconMarker iconAnchor={[6, 24]} position={place.position}>
+        <Box alignItems="center" display="flex" flexDirection="column">
+          <Box
+            alignItems="center"
+            bgcolor="white"
+            borderRadius={1}
+            boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
+            color={theme.palette.text.secondary}
+            display="inline-flex"
+            flexDirection="column"
+            fontSize="12px"
+            justifyContent="center"
+            padding="2px"
+          >
             <div
               style={{
-                borderLeft: '4px solid transparent',
-                borderRight: '4px solid transparent',
-                borderTop: '4px solid white',
-                boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
-                height: 0,
-                width: 0,
+                alignItems: 'center',
+                background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                borderRadius: '2em',
+                display: 'flex',
+                flexDirection: 'row',
+                height: '16px',
+                justifyContent: 'center',
+                width: '16px',
               }}
             />
           </Box>
-        </DivIconMarker>
-      );
-    } else {
-      return null;
-    }
+          <div
+            style={{
+              borderLeft: '4px solid transparent',
+              borderRight: '4px solid transparent',
+              borderTop: '4px solid white',
+              boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
+              height: 0,
+              width: 0,
+            }}
+          />
+        </Box>
+      </DivIconMarker>
+    );
   }
 };
 
@@ -377,11 +365,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
 
-            const showPlaces =
-              placeStyle == 'dot' ||
-              placeStyle == 'households' ||
-              (placeStyle == 'progress' && hasPeople);
-
             const successfulVisitsColorPercent = stats?.num_households
               ? (stats.num_successful_visited_households /
                   stats.num_households) *
@@ -513,7 +496,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
-                {showPlaces &&
+                {/* {showPlaces &&
                   placesByAreaId[area.id].map((place) => (
                     <PlaceMarker
                       key={place.id}
@@ -526,8 +509,75 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       placeStyle={placeStyle}
                       statsItem={stats}
                     />
-                  ))}
+                  ))} */}
               </>
+            );
+          })}
+        {placeStyle != 'hide' &&
+          places.map((place) => {
+            //Find ids of area/s that the place is in
+            const areaIds: string[] = [];
+            areas.forEach((area) => {
+              const isInsideArea = isPointInsidePolygon(
+                place.position,
+                area.points.map((point) => ({
+                  lat: point[0],
+                  lng: point[1],
+                }))
+              );
+
+              if (isInsideArea) {
+                areaIds.push(area.id);
+              }
+            });
+
+            //See if any of those areas have assignees in this assignment
+            let idOfAreaInThisAssignment = '';
+            for (let i = 0; i < areaIds.length; i++) {
+              const id = areaIds[i];
+              const people = sessions
+                .filter((session) => session.area.id == id)
+                .map((session) => session.assignee);
+
+              const hasPeople = !!people.length;
+
+              if (hasPeople) {
+                idOfAreaInThisAssignment = id;
+                break;
+              }
+            }
+
+            //Check if the place has housholds with visits in this assignment
+            const hasVisitsInThisAssignment = place.households.some(
+              (household) =>
+                !!household.visits.find(
+                  (visit) => visit.canvassAssId == canvassAssId
+                )
+            );
+
+            //If user wants to see progress of places,
+            //don't show places outside of assigned areas
+            //unless they have visits in this assignment
+            const hideFromProgressView =
+              placeStyle == 'progress' &&
+              !idOfAreaInThisAssignment &&
+              !hasVisitsInThisAssignment;
+
+            if (hideFromProgressView) {
+              return null;
+            }
+
+            return (
+              <PlaceMarker
+                key={place.id}
+                canvassAssId={canvassAssId}
+                idOfMetricThatDefinesDone={
+                  assignment.metrics.find((metric) => metric.definesDone)?.id ||
+                  ''
+                }
+                place={place}
+                placeStyle={placeStyle}
+              />
             );
           })}
       </FeatureGroup>
