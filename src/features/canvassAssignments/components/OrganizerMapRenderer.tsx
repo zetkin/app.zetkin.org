@@ -43,12 +43,10 @@ const PlaceMarker: FC<{
     return (
       <DivIconMarker iconAnchor={[2, 2]} position={place.position}>
         <Box
-          sx={{
-            backgroundColor: theme.palette.text.primary,
-            borderRadius: '2em',
-            height: 4,
-            width: 4,
-          }}
+          bgcolor={theme.palette.text.primary}
+          borderRadius="2em"
+          height={4}
+          width={4}
         />
       </DivIconMarker>
     );
@@ -65,6 +63,7 @@ const PlaceMarker: FC<{
             alignItems="center"
             bgcolor="white"
             borderRadius={1}
+            boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
             color={theme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
@@ -80,6 +79,7 @@ const PlaceMarker: FC<{
               borderLeft: '4px solid transparent',
               borderRight: '4px solid transparent',
               borderTop: '4px solid white',
+              boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
               height: 0,
               width: 0,
             }}
@@ -120,6 +120,7 @@ const PlaceMarker: FC<{
               alignItems="center"
               bgcolor="white"
               borderRadius={1}
+              boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
               color={theme.palette.text.secondary}
               display="inline-flex"
               flexDirection="column"
@@ -145,6 +146,7 @@ const PlaceMarker: FC<{
                 borderLeft: '4px solid transparent',
                 borderRight: '4px solid transparent',
                 borderTop: '4px solid white',
+                boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
                 height: 0,
                 width: 0,
               }}
@@ -393,6 +395,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                     <Box
                       bgcolor="white"
                       borderRadius={1}
+                      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
                       padding={0.5}
@@ -419,6 +422,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                     <Box
                       bgcolor="white"
                       borderRadius={1}
+                      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
                       padding={0.5}
