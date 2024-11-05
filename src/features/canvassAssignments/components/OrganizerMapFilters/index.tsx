@@ -80,142 +80,155 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
-      <FilterDropDown
-        items={[
-          {
-            icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
-            label: 'Only assigned areas',
-            onClick: () => {
-              if (!assigneesFilter || assigneesFilter == 'unassigned') {
-                onAssigneesFilterChange('assigned');
-              } else {
-                onAssigneesFilterChange(null);
-              }
-            },
-          },
-          {
-            icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
-            label: 'Only unassigned areas',
-            onClick: () => {
-              if (!assigneesFilter || assigneesFilter == 'assigned') {
-                onAssigneesFilterChange('unassigned');
-              } else {
-                onAssigneesFilterChange(null);
-              }
-            },
-          },
-        ]}
-        label="Assignees"
-        onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
-        open={openAssigneesDropdown}
-        startIcon={
-          assigneesFilter ? (
-            <Box
-              sx={{
-                // TODO: Use ZUI for this
-                alignItems: 'center',
-                aspectRatio: '1/1',
-                backgroundColor: theme.palette.primary.light,
-                borderRadius: '50%',
-                color: theme.palette.primary.contrastText,
-                display: 'flex',
-                height: '1.2em',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.75rem',
-                  margin: 0,
-                }}
-              >
-                {1}
-              </Typography>
-            </Box>
-          ) : null
-        }
-        variant="outlined"
-      />
-      {activeGroupIds.map((groupId) => {
-        const info = groupsById[groupId];
-        const currentIds = activeTagIdsByGroup[groupId] || [];
-        if (info) {
-          return (
-            <FilterDropDown
-              items={info.tags.map((tag) => {
-                const selected = currentIds.includes(tag.id) ?? false;
-
-                return {
-                  icon: <Checkbox checked={selected} />,
-                  label: tag.title,
-                  onClick: () => {
-                    setActiveTagIdsByGroup({
-                      ...activeTagIdsByGroup,
-                      [groupId]: selected
-                        ? currentIds.filter((id) => tag.id != id)
-                        : [...currentIds, tag.id],
-                    });
-                  },
-                };
-              })}
-              label={info.group ? info.group.title : 'Ungrouped tags'}
-              onToggle={(open) => setOpenTagsDropdown(open ? groupId : null)}
-              open={openTagsDropdown == groupId}
-              startIcon={
-                currentIds.length > 0 ? (
-                  <Box
+      <Box paddingTop={1}>
+        <Typography>
+          Add filters to decide what areas you see on the map.
+        </Typography>
+      </Box>
+      <Box display="flex" justifyContent="space-between">
+        <Box display="flex" flexDirection="column" gap={1}>
+          <FilterDropDown
+            items={[
+              {
+                icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
+                label: 'Only assigned areas',
+                onClick: () => {
+                  if (!assigneesFilter || assigneesFilter == 'unassigned') {
+                    onAssigneesFilterChange('assigned');
+                  } else {
+                    onAssigneesFilterChange(null);
+                  }
+                },
+              },
+              {
+                icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
+                label: 'Only unassigned areas',
+                onClick: () => {
+                  if (!assigneesFilter || assigneesFilter == 'assigned') {
+                    onAssigneesFilterChange('unassigned');
+                  } else {
+                    onAssigneesFilterChange(null);
+                  }
+                },
+              },
+            ]}
+            label="Assignees"
+            onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
+            open={openAssigneesDropdown}
+            startIcon={
+              assigneesFilter ? (
+                <Box
+                  sx={{
+                    // TODO: Use ZUI for this
+                    alignItems: 'center',
+                    aspectRatio: '1/1',
+                    backgroundColor: theme.palette.primary.light,
+                    borderRadius: '50%',
+                    color: theme.palette.primary.contrastText,
+                    display: 'flex',
+                    height: '1.2em',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography
                     sx={{
-                      // TODO: Use ZUI for this
-                      alignItems: 'center',
-                      aspectRatio: '1/1',
-                      backgroundColor: theme.palette.primary.light,
-                      borderRadius: '50%',
-                      color: theme.palette.primary.contrastText,
-                      display: 'flex',
-                      height: '1.2em',
-                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      margin: 0,
                     }}
                   >
-                    <Typography
-                      sx={{
-                        fontSize: '0.75rem',
-                        margin: 0,
-                      }}
-                    >
-                      {currentIds.length}
-                    </Typography>
-                  </Box>
-                ) : null
-              }
-              variant="outlined"
-            />
-          );
-        }
-      })}
-      <AddFilterButton
-        items={Object.values(groupsById).map((item) => {
-          const groupId = item.group?.id ?? 0;
-          const selected = activeGroupIds.includes(groupId);
+                    {1}
+                  </Typography>
+                </Box>
+              ) : null
+            }
+            variant="outlined"
+          />
+          {activeGroupIds.map((groupId) => {
+            const info = groupsById[groupId];
+            const currentIds = activeTagIdsByGroup[groupId] || [];
+            if (info) {
+              return (
+                <FilterDropDown
+                  items={info.tags.map((tag) => {
+                    const selected = currentIds.includes(tag.id) ?? false;
 
-          return {
-            icon: <Checkbox checked={selected} />,
-            label: item.group ? item.group.title : 'Ungrouped tags',
-            onClick: () => {
-              if (selected) {
-                setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));
-                const newValue = { ...activeTagIdsByGroup };
-                delete newValue[groupId];
-                setActiveTagIdsByGroup(newValue);
-              } else {
-                setActiveGroupIds([...activeGroupIds, groupId]);
-                setOpenTagsDropdown(groupId);
-              }
-            },
-          };
-        })}
-        onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
-        open={openTagsDropdown == 'add'}
-      />
+                    return {
+                      icon: <Checkbox checked={selected} />,
+                      label: tag.title,
+                      onClick: () => {
+                        setActiveTagIdsByGroup({
+                          ...activeTagIdsByGroup,
+                          [groupId]: selected
+                            ? currentIds.filter((id) => tag.id != id)
+                            : [...currentIds, tag.id],
+                        });
+                      },
+                    };
+                  })}
+                  label={info.group ? info.group.title : 'Ungrouped tags'}
+                  onToggle={(open) =>
+                    setOpenTagsDropdown(open ? groupId : null)
+                  }
+                  open={openTagsDropdown == groupId}
+                  startIcon={
+                    currentIds.length > 0 ? (
+                      <Box
+                        sx={{
+                          // TODO: Use ZUI for this
+                          alignItems: 'center',
+                          aspectRatio: '1/1',
+                          backgroundColor: theme.palette.primary.light,
+                          borderRadius: '50%',
+                          color: theme.palette.primary.contrastText,
+                          display: 'flex',
+                          height: '1.2em',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: '0.75rem',
+                            margin: 0,
+                          }}
+                        >
+                          {currentIds.length}
+                        </Typography>
+                      </Box>
+                    ) : null
+                  }
+                  variant="outlined"
+                />
+              );
+            }
+          })}
+        </Box>
+        <AddFilterButton
+          items={Object.values(groupsById).map((item) => {
+            const groupId = item.group?.id ?? 0;
+            const selected = activeGroupIds.includes(groupId);
+
+            return {
+              icon: <Checkbox checked={selected} />,
+              label: item.group ? item.group.title : 'Ungrouped tags',
+              onClick: () => {
+                if (selected) {
+                  setActiveGroupIds(
+                    activeGroupIds.filter((id) => groupId != id)
+                  );
+                  const newValue = { ...activeTagIdsByGroup };
+                  delete newValue[groupId];
+                  setActiveTagIdsByGroup(newValue);
+                } else {
+                  setActiveGroupIds([...activeGroupIds, groupId]);
+                  setOpenTagsDropdown(groupId);
+                }
+              },
+            };
+          })}
+          onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
+          open={openTagsDropdown == 'add'}
+        />
+      </Box>
     </Box>
   );
 };
