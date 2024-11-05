@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { linearGradientDef } from '@nivo/core';
 import MapIcon from '@mui/icons-material/Map';
-import { QuestionMark } from '@mui/icons-material';
+import { InfoOutlined, QuestionMark } from '@mui/icons-material';
 import { ResponsiveLine } from '@nivo/line';
 import router from 'next/router';
 import {
@@ -118,7 +118,14 @@ const AreaCard: FC<AreaCardProps> = ({
                     orientation="vertical"
                     sx={{ height: '30px', marginRight: 1 }}
                   />
-                  <Typography color={theme.palette.primary.main} variant="h6">
+                  <Typography
+                    color={
+                      areaData?.area.id !== 'noArea'
+                        ? theme.palette.primary.light
+                        : theme.palette.grey[400]
+                    }
+                    variant="h6"
+                  >
                     {area.num_successful_visited_households}
                   </Typography>
                 </Box>
@@ -132,9 +139,12 @@ const AreaCard: FC<AreaCardProps> = ({
                   </IconButton>
                 ) : (
                   <Tooltip title="This graph gather the visits made outside the assigned areas">
-                    <IconButton>
-                      <QuestionMark />
-                    </IconButton>
+                    <InfoOutlined
+                      sx={{
+                        color: theme.palette.secondary.main,
+                        marginRight: 1,
+                      }}
+                    />
                   </Tooltip>
                 )}
               </Box>
@@ -235,7 +245,14 @@ const AreaCard: FC<AreaCardProps> = ({
                   <Typography sx={{ fontSize: 14 }}>
                     Households visited
                   </Typography>
-                  <Typography color={theme.palette.primary.main} variant="h6">
+                  <Typography
+                    color={
+                      areaData?.area.id !== 'noArea'
+                        ? theme.palette.primary.dark
+                        : theme.palette.grey[900]
+                    }
+                    variant="h6"
+                  >
                     {area.num_visited_households}
                   </Typography>
                 </Box>
@@ -245,7 +262,11 @@ const AreaCard: FC<AreaCardProps> = ({
                       Places visited
                     </Typography>
                     <Typography
-                      color={theme.palette.secondary.light}
+                      color={
+                        areaData?.area.id !== 'noArea'
+                          ? theme.palette.secondary.light
+                          : theme.palette.grey[300]
+                      }
                       variant="h6"
                     >
                       {area.num_visited_places}
