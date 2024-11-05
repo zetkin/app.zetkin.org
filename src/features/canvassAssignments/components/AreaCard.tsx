@@ -27,6 +27,7 @@ type AreaCardProps = {
   areas: ZetkinAssignmentAreaStatsItem[];
   assignment: ZetkinCanvassAssignment;
   data: AreaCardData[];
+  maxVisitedHouseholds: number;
 };
 
 type NivoDataPoint = {
@@ -40,7 +41,12 @@ type NivoSeries = {
   id: string;
 };
 
-const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
+const AreaCard: FC<AreaCardProps> = ({
+  areas,
+  assignment,
+  data,
+  maxVisitedHouseholds,
+}) => {
   const { orgId } = useNumericRouteParams();
 
   const transformToNivoData = (areaData: AreaCardData): NivoSeries[] => {
@@ -211,6 +217,15 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                           </Paper>
                         );
                       }}
+                      {...(areaData?.area.id !== 'noArea'
+                        ? {
+                            yScale: {
+                              max: maxVisitedHouseholds,
+                              min: 0,
+                              type: 'linear',
+                            },
+                          }
+                        : null)}
                     />
                   </div>
                 )}
