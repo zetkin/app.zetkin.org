@@ -1,6 +1,7 @@
-import MapIcon from '@mui/icons-material/Map';
 import { FC } from 'react';
 import { linearGradientDef } from '@nivo/core';
+import MapIcon from '@mui/icons-material/Map';
+import { QuestionMark } from '@mui/icons-material';
 import { ResponsiveLine } from '@nivo/line';
 import router from 'next/router';
 import {
@@ -10,6 +11,7 @@ import {
   Grid,
   IconButton,
   Paper,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
@@ -81,7 +83,6 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
           (graphData) =>
             graphData.area.id === area.areaId || graphData.area.id === 'noArea'
         );
-
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
           <Grid key={area.areaId} item lg={3} md={4} sm={6} xs={12}>
@@ -105,7 +106,7 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                   >
                     {areaData?.area.id !== 'noArea'
                       ? areaData?.area.title || 'Untitled area'
-                      : 'Visists outside areas'}
+                      : 'Unassigned visits'}
                   </Typography>
                   <Divider
                     orientation="vertical"
@@ -115,15 +116,20 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                     {area.num_successful_visited_households}
                   </Typography>
                 </Box>
-                {area.areaId !== 'noArea' && (
+                {area.areaId !== 'noArea' ? (
                   <IconButton
                     onClick={() =>
                       areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
                     }
-                    sx={{ marginRight: 0 }}
                   >
                     <MapIcon />
                   </IconButton>
+                ) : (
+                  <Tooltip title="This graph gather the visits made outside the assigned areas">
+                    <IconButton>
+                      <QuestionMark />
+                    </IconButton>
+                  </Tooltip>
                 )}
               </Box>
               <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
@@ -134,10 +140,14 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                       animate={false}
                       axisBottom={null}
                       axisLeft={null}
-                      colors={[
-                        theme.palette.primary.light,
-                        theme.palette.primary.dark,
-                      ]}
+                      colors={
+                        areaData?.area.id !== 'noArea'
+                          ? [
+                              theme.palette.primary.light,
+                              theme.palette.primary.dark,
+                            ]
+                          : [theme.palette.grey[400], theme.palette.grey[900]]
+                      }
                       data={transformedData}
                       defs={[
                         linearGradientDef('Households visited', [
@@ -173,10 +183,19 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                               <Box key={index}>
                                 <Box
                                   sx={{
-                                    backgroundColor:
-                                      dataPoint.serieId === 'Household Visits'
-                                        ? theme.palette.primary.light
-                                        : theme.palette.primary.dark,
+                                    backgroundColor: (() => {
+                                      if (areaData?.area.id !== 'noArea') {
+                                        return dataPoint.serieId ===
+                                          'Household Visits'
+                                          ? theme.palette.primary.light
+                                          : theme.palette.primary.dark;
+                                      } else {
+                                        return dataPoint.serieId ===
+                                          'Household Visits'
+                                          ? theme.palette.grey[300]
+                                          : theme.palette.grey[900];
+                                      }
+                                    })(),
                                     borderRadius: '50%',
                                     display: 'inline-block',
                                     height: '8px',
