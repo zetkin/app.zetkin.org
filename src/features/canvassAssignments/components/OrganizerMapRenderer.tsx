@@ -239,8 +239,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, #E4CCF8, #7800DC ${householdColorPercent}%)`
-      : `color-mix(in hsl, #E4CCF8, #7800DC ${visitsColorPercent || 1}%)`;
+        `color-mix(in hsl, ${theme.palette.grey[200]}, black ${householdColorPercent}%)`
+      : `color-mix(in hsl,  #E4CCF8, #7800DC ${visitsColorPercent || 1}%)`;
   };
 
   const placesByAreaId: Record<string, ZetkinPlace[]> = {};
