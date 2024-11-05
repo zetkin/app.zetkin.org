@@ -198,7 +198,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                           num_successful_visited_households,
                           num_visited_households,
                           num_visited_places: 0,
-                          num_visits: 0,
                         };
                         sortedAreas.push(noArea);
                       }

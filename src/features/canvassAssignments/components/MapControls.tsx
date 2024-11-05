@@ -8,16 +8,12 @@ type MapControlsProps = {
   mapRef: MutableRefObject<Map | null>;
   onFitBounds: () => void;
   onLocate: () => { locating: boolean; setLocating: (value: boolean) => void };
-  onZoomIn: () => void;
-  onZoomOut: () => void;
 };
 
 const MapControls: React.FC<MapControlsProps> = ({
   mapRef,
   onFitBounds,
   onLocate,
-  onZoomIn,
-  onZoomOut,
 }) => {
   const { locating, setLocating } = onLocate();
 
@@ -31,10 +27,10 @@ const MapControls: React.FC<MapControlsProps> = ({
       }}
     >
       <ButtonGroup orientation="vertical" variant="contained">
-        <Button onClick={onZoomIn}>
+        <Button onClick={() => mapRef.current?.zoomIn()}>
           <Add />
         </Button>
-        <Button onClick={onZoomOut}>
+        <Button onClick={() => mapRef.current?.zoomOut()}>
           <Remove />
         </Button>
         <Button onClick={onFitBounds}>

@@ -3,7 +3,7 @@ import {
   ChevronLeft,
   Close,
   DoorFront,
-  EmojiPeople,
+  Place,
   Search,
 } from '@mui/icons-material';
 import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
@@ -19,6 +19,8 @@ import {
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
+import CanvassVisit from 'zui/icons/CanvassVisit';
+import CanvassVisitSuccessful from 'zui/icons/CanvassVisitSuccessful';
 
 type Props = {
   areas: ZetkinArea[];
@@ -150,14 +152,24 @@ const AreaSelect: FC<Props> = ({
         <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
           <Box display="flex" justifyContent="space-evenly">
             <Box alignItems="center" display="flex">
-              <DoorFront />
+              <Place color="secondary" fontSize="large" />
+              {placesInSelectedArea.length}
+            </Box>
+            <Box alignItems="center" display="flex">
+              <DoorFront color="secondary" fontSize="large" />
               {numberOfHouseholdsInSelectedArea}
             </Box>
             {selectedAreaStats && (
-              <Box alignItems="center" display="flex">
-                <EmojiPeople />
-                {selectedAreaStats?.num_visits}
-              </Box>
+              <>
+                <Box alignItems="center" display="flex">
+                  <CanvassVisit color="secondary" fontSize="large" />
+                  {selectedAreaStats.num_visited_households}
+                </Box>
+                <Box alignItems="center" display="flex">
+                  <CanvassVisitSuccessful color="secondary" fontSize="large" />
+                  {selectedAreaStats.num_successful_visited_households}
+                </Box>
+              </>
             )}
           </Box>
           <Typography

@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { useTheme } from '@mui/styles';
 import {
   AttributionControl,
   FeatureGroup,
@@ -6,93 +6,163 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
-import { useTheme } from '@mui/styles';
 import { Box } from '@mui/material';
+import { DoorFront, Place } from '@mui/icons-material';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
+  ZetkinAssignmentAreaStatsItem,
+  ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
 } from '../types';
 import { ZetkinArea } from 'features/areas/types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import { assigneesFilterContext } from './PlanMapFilters/AssigneeFilterContext';
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
 const PlaceMarker: FC<{
   canvassAssId: string;
-  largestNumberOfHouseholds: number;
+  idOfMetricThatDefinesDone: string;
   place: ZetkinPlace;
   placeStyle: 'dot' | 'households' | 'progress';
-}> = ({ canvassAssId, largestNumberOfHouseholds, place, placeStyle }) => {
+  statsItem?: ZetkinAssignmentAreaStatsItem;
+}> = ({
+  canvassAssId,
+  idOfMetricThatDefinesDone,
+  place,
+  placeStyle,
+  statsItem,
+}) => {
+  const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
-      <Box
-        sx={(theme) => ({
-          backgroundColor: theme.palette.text.primary,
-          borderRadius: '2em',
-          height: 5,
-          width: 5,
-        })}
-      />
+      <DivIconMarker iconAnchor={[2, 2]} position={place.position}>
+        <Box
+          sx={{
+            backgroundColor: theme.palette.text.primary,
+            borderRadius: '2em',
+            height: 4,
+            width: 4,
+          }}
+        />
+      </DivIconMarker>
     );
   } else if (placeStyle == 'households') {
-    const householdColorPercent =
-      (place.households.length / largestNumberOfHouseholds) * 100;
     return (
-      <Box
-        sx={{
-          alignItems: 'center',
-          backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
-          borderRadius: '2em',
-          color: 'white',
-          display: 'flex',
-          flexDirection: 'row',
-          height: '20px',
-          justifyContent: 'center',
-          width: '20px',
-        }}
-      >
-        {place.households.length}
-      </Box>
+      <DivIconMarker iconAnchor={[6, 22]} position={place.position}>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          minWidth="15px"
+        >
+          <Box
+            alignItems="center"
+            bgcolor="white"
+            borderRadius={1}
+            color={theme.palette.text.secondary}
+            display="inline-flex"
+            flexDirection="column"
+            fontSize="12px"
+            justifyContent="center"
+            paddingX="2px"
+            width="100%"
+          >
+            {place.households.length}
+          </Box>
+          <div
+            style={{
+              borderLeft: '4px solid transparent',
+              borderRight: '4px solid transparent',
+              borderTop: '4px solid white',
+              height: 0,
+              width: 0,
+            }}
+          />
+        </Box>
+      </DivIconMarker>
     );
   } else {
-    //placeStyle is 'progress'
-    let visits = 0;
-    place.households.forEach((household) => {
-      const visitInThisAssignment = household.visits.find(
-        (visit) => visit.canvassAssId == canvassAssId
+    if (statsItem) {
+      let visits = 0;
+      let successfulVisits = 0;
+      place.households.forEach((household) => {
+        const visitInThisAssignment = household.visits.find(
+          (visit) => visit.canvassAssId == canvassAssId
+        );
+        if (visitInThisAssignment) {
+          visits++;
+
+          const responseToMetricThatDefinesDone =
+            visitInThisAssignment.responses.find(
+              (response) => response.metricId == idOfMetricThatDefinesDone
+            );
+
+          if (responseToMetricThatDefinesDone?.response == 'yes') {
+            successfulVisits++;
+          }
+        }
+      });
+
+      const successfulVisitsColorPercent =
+        (successfulVisits / place.households.length) * 100;
+      const visitsColorPercent = (visits / place.households.length) * 100;
+
+      return (
+        <DivIconMarker iconAnchor={[6, 24]} position={place.position}>
+          <Box alignItems="center" display="flex" flexDirection="column">
+            <Box
+              alignItems="center"
+              bgcolor="white"
+              borderRadius={1}
+              color={theme.palette.text.secondary}
+              display="inline-flex"
+              flexDirection="column"
+              fontSize="12px"
+              justifyContent="center"
+              padding="2px"
+            >
+              <div
+                style={{
+                  alignItems: 'center',
+                  background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                  borderRadius: '2em',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  height: '16px',
+                  justifyContent: 'center',
+                  width: '16px',
+                }}
+              />
+            </Box>
+            <div
+              style={{
+                borderLeft: '4px solid transparent',
+                borderRight: '4px solid transparent',
+                borderTop: '4px solid white',
+                height: 0,
+                width: 0,
+              }}
+            />
+          </Box>
+        </DivIconMarker>
       );
-      if (visitInThisAssignment) {
-        visits++;
-      }
-    });
-
-    const visitsColorPercent = (visits / place.households.length) * 100;
-
-    return (
-      <div
-        style={{
-          alignItems: 'center',
-          backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent}%)`,
-          borderRadius: '2em',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          width: '30px',
-        }}
-      >{`${visits}/${place.households.length}`}</div>
-    );
+    } else {
+      return null;
+    }
   }
 };
 
-type PlanMapRendererProps = {
+type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
   areas: ZetkinArea[];
+  assignment: ZetkinCanvassAssignment;
   canvassAssId: string;
   navigateToAreaId?: string;
   onSelectedIdChange: (newId: string) => void;
@@ -103,10 +173,11 @@ type PlanMapRendererProps = {
   sessions: ZetkinCanvassSession[];
 };
 
-const PlanMapRenderer: FC<PlanMapRendererProps> = ({
+const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
+  assignment,
   canvassAssId,
   selectedId,
   sessions,
@@ -128,6 +199,14 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
       setZoomed(true);
     },
   });
+
+  //Get the group element that groups all the area svg:s
+  //and lower its collective opacity, to avoid misleading
+  //data colors on stacked areas.
+  const gElement = map.getPanes().overlayPane.querySelector('g');
+  if (gElement) {
+    gElement.style.opacity = '0.6';
+  }
 
   useEffect(() => {
     if (map && !zoomed) {
@@ -151,23 +230,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
   const { assigneesFilter } = useContext(assigneesFilterContext);
 
-  const largestNumberOfHouseholds = Math.max(
-    ...places.map((place) => place.households.length)
-  );
-
-  const getAreaStrokeColor = (hasPeople: boolean) => {
-    if (areaStyle == 'hide') {
-      return 'transparent';
-    }
-
-    if (hasPeople) {
-      return theme.palette.primary.main;
-    } else {
-      return theme.palette.secondary.main;
-    }
-  };
-
-  const getAreaFillColor = (
+  const getAreaColor = (
     hasPeople: boolean,
     householdColorPercent: number,
     visitsColorPercent: number
@@ -177,9 +240,7 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
     }
 
     if (areaStyle == 'assignees') {
-      return hasPeople
-        ? theme.palette.primary.main
-        : theme.palette.secondary.main;
+      return hasPeople ? '#7800DC' : theme.palette.secondary.main;
     }
 
     if (areaStyle == 'progress' && !hasPeople) {
@@ -188,9 +249,39 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`
-      : `color-mix(in hsl, #F1A8A8, #DC2626 ${visitsColorPercent || 1}%)`;
+        `color-mix(in hsl, #E4CCF8, #7800DC ${householdColorPercent}%)`
+      : `color-mix(in hsl, #E4CCF8, #7800DC ${visitsColorPercent || 1}%)`;
   };
+
+  const placesByAreaId: Record<string, ZetkinPlace[]> = {};
+  areas.forEach((area) => {
+    placesByAreaId[area.id] = [];
+
+    places.forEach((place) => {
+      const isInsideArea = isPointInsidePolygon(
+        place.position,
+        area.points.map((point) => ({
+          lat: point[0],
+          lng: point[1],
+        }))
+      );
+      if (isInsideArea) {
+        placesByAreaId[area.id].push(place);
+      }
+    });
+  });
+
+  let highestHousholds = 0;
+  Object.keys(placesByAreaId).forEach((id) => {
+    let numberOfHouseholdsInArea = 0;
+    placesByAreaId[id].forEach((place) => {
+      numberOfHouseholdsInArea += place.households.length;
+    });
+
+    if (numberOfHouseholdsInArea > highestHousholds) {
+      highestHousholds = numberOfHouseholdsInArea;
+    }
+  });
 
   return (
     <>
@@ -283,80 +374,80 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
               (stat) => stat.areaId == area.id
             );
 
-            let highestHousholds = 0;
-            areaStats.stats.forEach((stat) => {
-              if (stat.num_households > highestHousholds) {
-                highestHousholds = stat.num_households;
-              }
-            });
+            let numberOfHouseholds = 0;
+            placesByAreaId[area.id].forEach(
+              (place) => (numberOfHouseholds += place.households.length)
+            );
+            const numberOfPlaces = placesByAreaId[area.id].length;
 
-            const placesInArea: ZetkinPlace[] = [];
-            places.map((place) => {
-              const isInsideArea = isPointInsidePolygon(
-                place.position,
-                area.points.map((point) => ({
-                  lat: point[0],
-                  lng: point[1],
-                }))
-              );
-              if (isInsideArea) {
-                placesInArea.push(place);
-              }
-            });
+            const householdColorPercent =
+              (numberOfHouseholds / highestHousholds) * 100;
 
-            const numberOfHouseholdsInArea = placesInArea
-              .map((place) => place.households.length)
-              .reduce((prev, curr) => prev + curr, 0);
-
-            const householdColorPercent = stats
-              ? (numberOfHouseholdsInArea / highestHousholds) * 100
+            const visitsColorPercent = stats?.num_households
+              ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
 
-            const visitsColorPercent = stats
-              ? (stats.num_visits / stats.num_households) * 100
+            const showPlaces =
+              placeStyle == 'dot' ||
+              placeStyle == 'households' ||
+              (placeStyle == 'progress' && hasPeople);
+
+            const successfulVisitsColorPercent = stats?.num_households
+              ? (stats.num_successful_visited_households /
+                  stats.num_households) *
+                100
               : 0;
 
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[11, 11]} position={mid}>
-                    <div
-                      style={{
-                        alignItems: 'center',
-                        backgroundColor: `color-mix(in hsl, #A0C6F0, #9D46E6 ${householdColorPercent}%)`,
-                        border: '2px solid white',
-                        color: 'white',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        height: '21px',
-                        justifyContent: 'center',
-                        padding: '0.75rem',
-                        width: '21px',
-                      }}
+                  <DivIconMarker iconAnchor={[21, 21]} position={mid}>
+                    <Box
+                      bgcolor="white"
+                      borderRadius={1}
+                      display="inline-flex"
+                      flexDirection="column"
+                      padding={0.5}
                     >
-                      {numberOfHouseholdsInArea}
-                    </div>
+                      <Box alignItems="center" display="flex">
+                        <Place
+                          color="secondary"
+                          sx={{ fontSize: '16px', marginRight: '4px' }}
+                        />
+                        {numberOfPlaces}
+                      </Box>
+                      <Box alignItems="center" display="flex">
+                        <DoorFront
+                          color="secondary"
+                          sx={{ fontSize: '16px', marginRight: '4px' }}
+                        />
+                        {numberOfHouseholds}
+                      </Box>
+                    </Box>
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[20, 10]} position={mid}>
-                    <div
-                      style={{
-                        alignItems: 'center',
-                        backgroundColor: `color-mix(in hsl, #F1A8A8, #DC2626 ${
-                          visitsColorPercent || 1
-                        }%)`,
-                        borderRadius: '2rem',
-                        color: 'white',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        height: '20px',
-                        justifyContent: 'center',
-                        width: '40px',
-                      }}
+                  <DivIconMarker iconAnchor={[10, 10]} position={mid}>
+                    <Box
+                      bgcolor="white"
+                      borderRadius={1}
+                      display="inline-flex"
+                      flexDirection="column"
+                      padding={0.5}
                     >
-                      {`${stats.num_visits}/${stats.num_households}`}
-                    </div>
+                      <div
+                        style={{
+                          alignItems: 'center',
+                          background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                          borderRadius: '2em',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          height: '20px',
+                          justifyContent: 'center',
+                          width: '20px',
+                        }}
+                      />
+                    </Box>
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
@@ -413,37 +504,36 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
                 )}
                 <Polygon
                   key={key}
-                  color={getAreaStrokeColor(hasPeople)}
+                  color="black"
+                  dashArray={!hasPeople ? '5px 7px' : ''}
                   eventHandlers={{
                     click: () => {
                       onSelectedIdChange(selected ? '' : area.id);
                     },
                   }}
-                  fillColor={getAreaFillColor(
+                  fillColor={getAreaColor(
                     hasPeople,
                     householdColorPercent,
                     visitsColorPercent
                   )}
-                  interactive={areaStyle != 'hide' ? true : false}
+                  fillOpacity={1}
+                  interactive={areaStyle != 'hide'}
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
-                {placeStyle != 'hide' &&
-                  placesInArea.map((place) => (
-                    <DivIconMarker
+                {showPlaces &&
+                  placesByAreaId[area.id].map((place) => (
+                    <PlaceMarker
                       key={place.id}
-                      position={{
-                        lat: place.position.lat,
-                        lng: place.position.lng,
-                      }}
-                    >
-                      <PlaceMarker
-                        canvassAssId={canvassAssId}
-                        largestNumberOfHouseholds={largestNumberOfHouseholds}
-                        place={place}
-                        placeStyle={placeStyle}
-                      />
-                    </DivIconMarker>
+                      canvassAssId={canvassAssId}
+                      idOfMetricThatDefinesDone={
+                        assignment.metrics.find((metric) => metric.definesDone)
+                          ?.id || ''
+                      }
+                      place={place}
+                      placeStyle={placeStyle}
+                      statsItem={stats}
+                    />
                   ))}
               </>
             );
@@ -453,4 +543,4 @@ const PlanMapRenderer: FC<PlanMapRendererProps> = ({
   );
 };
 
-export default PlanMapRenderer;
+export default OrganizerMapRenderer;

@@ -14,7 +14,7 @@ type Props = {
   onFilteredIdsChange: (areaIds: string[]) => void;
 };
 
-const PlanMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
+const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   const theme = useTheme();
   const [openTagsDropdown, setOpenTagsDropdown] = useState<
     'add' | number | null
@@ -220,4 +220,4 @@ const PlanMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   );
 };
 
-export default PlanMapFilters;
+export default OrganizerMapFilters;

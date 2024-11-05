@@ -14,11 +14,14 @@ import { AREAS } from 'utils/featureFlags';
 import usePlaces from 'features/canvassAssignments/hooks/usePlaces';
 import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
+import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
+import AssigneeFilterProvider from 'features/canvassAssignments/components/OrganizerMapFilters/AssigneeFilterContext';
 
-const PlanMap = dynamic(
+const OrganizerMap = dynamic(
   () =>
     import(
-      '../../../../../../../features/canvassAssignments/components/PlanMap'
+      '../../../../../../../features/canvassAssignments/components/OrganizerMap'
     ),
   { ssr: false }
 );
@@ -49,6 +52,7 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
     parseInt(orgId),
     canvassAssId
   );
+  const assignmentFuture = useCanvassAssignment(parseInt(orgId), canvassAssId);
 
   const isServer = useServerSide();
   if (isServer) {
@@ -58,22 +62,31 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ canvassAssId, orgId }) => {
   return (
     <Box height="100%">
       <ZUIFutures
-        futures={{ areaStats: areaStatsFuture, sessions: sessionsFuture }}
+        futures={{
+          areaStats: areaStatsFuture,
+          assignment: assignmentFuture,
+          sessions: sessionsFuture,
+        }}
       >
-        {({ data: { areaStats, sessions } }) => (
-          <PlanMap
-            areas={areas}
-            areaStats={areaStats}
-            canvassAssId={canvassAssId}
-            onAddAssigneeToArea={(area, person) => {
-              createCanvassSession({
-                areaId: area.id,
-                personId: person.id,
-              });
-            }}
-            places={places}
-            sessions={sessions}
-          />
+        {({ data: { areaStats, assignment, sessions } }) => (
+          <AreaFilterProvider>
+            <AssigneeFilterProvider>
+              <OrganizerMap
+                areas={areas}
+                areaStats={areaStats}
+                assignment={assignment}
+                canvassAssId={canvassAssId}
+                onAddAssigneeToArea={(area, person) => {
+                  createCanvassSession({
+                    areaId: area.id,
+                    personId: person.id,
+                  });
+                }}
+                places={places}
+                sessions={sessions}
+              />
+            </AssigneeFilterProvider>
+          </AreaFilterProvider>
         )}
       </ZUIFutures>
     </Box>
