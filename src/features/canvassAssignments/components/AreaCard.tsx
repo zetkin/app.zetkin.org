@@ -75,7 +75,7 @@ const AreaCard: FC<AreaCardProps> = ({
       {
         pathname: `/organize/${orgId}/projects/${
           assignment.campaign.id || ''
-        }/canvassassignments/${assignment.id}/plan`,
+        }/canvassassignments/${assignment.id}/map`,
         query: { navigateToAreaId: areaId },
       },
       undefined,
