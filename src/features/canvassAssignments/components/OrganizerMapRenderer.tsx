@@ -496,20 +496,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
-                {/* {showPlaces &&
-                  placesByAreaId[area.id].map((place) => (
-                    <PlaceMarker
-                      key={place.id}
-                      canvassAssId={canvassAssId}
-                      idOfMetricThatDefinesDone={
-                        assignment.metrics.find((metric) => metric.definesDone)
-                          ?.id || ''
-                      }
-                      place={place}
-                      placeStyle={placeStyle}
-                      statsItem={stats}
-                    />
-                  ))} */}
               </>
             );
           })}
