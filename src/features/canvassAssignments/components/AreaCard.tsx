@@ -1,9 +1,9 @@
 import { FC } from 'react';
+import { InfoOutlined } from '@mui/icons-material';
 import { linearGradientDef } from '@nivo/core';
 import MapIcon from '@mui/icons-material/Map';
-import { InfoOutlined, QuestionMark } from '@mui/icons-material';
 import { ResponsiveLine } from '@nivo/line';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import {
   Box,
   Card,
@@ -48,6 +48,7 @@ const AreaCard: FC<AreaCardProps> = ({
   maxVisitedHouseholds,
 }) => {
   const { orgId } = useNumericRouteParams();
+  const router = useRouter();
 
   const transformToNivoData = (areaData: AreaCardData): NivoSeries[] => {
     const householdVisitsSeries: NivoSeries = {

@@ -18,6 +18,7 @@ import getAreaData from 'features/canvassAssignments/utils/getAreaData';
 import isPointInsidePolygon from 'features/canvassAssignments/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -97,6 +98,23 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         title: model.title,
       }));
 
+      type PlaceWithAreaId = ZetkinPlace & { areaId: ZetkinArea['id'] };
+
+      //Find places in the given areas
+      const placesInAreas: PlaceWithAreaId[] = [];
+      uniqueAreas.forEach((area) => {
+        allPlaces.forEach((place) => {
+          const placeIsInArea = isPointInsidePolygon(
+            { lat: place.position.lat, lng: place.position.lng },
+            area.points.map((point) => ({ lat: point[0], lng: point[1] }))
+          );
+
+          if (placeIsInArea) {
+            placesInAreas.push({ ...place, areaId: area.id });
+          }
+        });
+      });
+
       const metricThatDefinesDone = assignmentModel.metrics
         .find((metric) => metric.definesDone)
         ?._id.toString();
@@ -153,22 +171,11 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
           if (placeIsInArea) {
             const filteredHouseholds = place.households.filter((household) => {
-              return household.visits.some(
+              return household.visits.filter(
                 (visit) => visit.canvassAssId === params.canvassAssId
               );
             });
             householdList.push(...filteredHouseholds);
-          } else {
-            //if place is not in area check if there are rogue visits
-            const householdsOutsideAreas = place.households.filter(
-              (household) => {
-                return household.visits.some(
-                  (visit) => visit.canvassAssId === params.canvassAssId
-                );
-              }
-            );
-
-            householdsOutsideAreasList.push(...householdsOutsideAreas);
           }
         });
 
@@ -186,6 +193,24 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           areasDataList.push(areaData[area.id]);
           addedAreaIds.add(area.id);
         }
+      });
+
+      //rogue visits logic
+      const idsOfPlacesInAreas = new Set(
+        placesInAreas.map((place) => place.id)
+      );
+      const placesOutsideAreas = allPlaces.filter(
+        (place) => !idsOfPlacesInAreas.has(place.id)
+      );
+
+      placesOutsideAreas.forEach((place) => {
+        place.households.forEach((household) => {
+          household.visits.forEach((visit) => {
+            if (visit.canvassAssId == params.canvassAssId) {
+              householdsOutsideAreasList.push(household);
+            }
+          });
+        });
       });
 
       if (householdsOutsideAreasList.length > 0) {
