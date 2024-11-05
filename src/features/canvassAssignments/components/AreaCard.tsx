@@ -78,11 +78,13 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
     <>
       {areas.map((area) => {
         const areaData = data.find(
-          (graphData) => graphData.area.id === area.areaId
+          (graphData) =>
+            graphData.area.id === area.areaId || graphData.area.id === 'noArea'
         );
+
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
-          <Grid key={area.areaId} item lg={2} md={3} sm={6} xs={12}>
+          <Grid key={area.areaId} item lg={3} md={4} sm={6} xs={12}>
             <Card key={area.areaId} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
@@ -101,7 +103,9 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                     }}
                     variant="h6"
                   >
-                    {areaData?.area.title || 'Untitled area'}
+                    {areaData?.area.id !== 'noArea'
+                      ? areaData?.area.title || 'Untitled area'
+                      : 'Visists outside areas'}
                   </Typography>
                   <Divider
                     orientation="vertical"
@@ -111,14 +115,16 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                     {area.num_successful_visited_households}
                   </Typography>
                 </Box>
-                <IconButton
-                  onClick={() =>
-                    areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
-                  }
-                  sx={{ marginRight: 0 }}
-                >
-                  <MapIcon />
-                </IconButton>
+                {area.areaId !== 'noArea' && (
+                  <IconButton
+                    onClick={() =>
+                      areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
+                    }
+                    sx={{ marginRight: 0 }}
+                  >
+                    <MapIcon />
+                  </IconButton>
+                )}
               </Box>
               <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
               <Box>
@@ -199,15 +205,19 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                     {area.num_visited_households}
                   </Typography>
                 </Box>
-                <Box textAlign="start">
-                  <Typography sx={{ fontSize: 14 }}>Places visited</Typography>
-                  <Typography
-                    color={theme.palette.secondary.light}
-                    variant="h6"
-                  >
-                    {area.num_visited_places}
-                  </Typography>
-                </Box>
+                {area.areaId !== 'noArea' && (
+                  <Box textAlign="start">
+                    <Typography sx={{ fontSize: 14 }}>
+                      Places visited
+                    </Typography>
+                    <Typography
+                      color={theme.palette.secondary.light}
+                      variant="h6"
+                    >
+                      {area.num_visited_places}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             </Card>
           </Grid>

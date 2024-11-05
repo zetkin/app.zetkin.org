@@ -102,25 +102,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         ?._id.toString();
 
       const filteredVisitsInAllAreas: Visit[] = [];
-      let firstVisit: Date;
-      let lastVisit: Date;
+      let firstVisit: Date = new Date();
+      let lastVisit: Date = new Date();
 
-      uniqueAreas.forEach((area) => {
-        allPlaces.forEach((place) => {
-          const placeIsInArea = isPointInsidePolygon(
-            { lat: place.position.lat, lng: place.position.lng },
-            area.points.map((point) => ({ lat: point[0], lng: point[1] }))
-          );
+      allPlaces.forEach((place) => {
+        const placeVisits = place.households
+          .flatMap((household) => household.visits)
+          .filter((visit) => visit.canvassAssId === params.canvassAssId);
 
-          if (placeIsInArea) {
-            // Extract all visits from households in this place that belong to the canvass assignment
-            const placeVisits = place.households
-              .flatMap((household) => household.visits)
-              .filter((visit) => visit.canvassAssId === params.canvassAssId);
-
-            filteredVisitsInAllAreas.push(...placeVisits);
-          }
-        });
+        filteredVisitsInAllAreas.push(...placeVisits);
       });
 
       if (filteredVisitsInAllAreas.length > 0) {
@@ -142,6 +132,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const areasDataList: AreaCardData[] = [];
 
       const addedAreaIds = new Set<string>();
+      const householdsOutsideAreasList: Household[] = [];
 
       uniqueAreas.forEach((area) => {
         if (!areaData[area.id]) {
@@ -167,6 +158,17 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               );
             });
             householdList.push(...filteredHouseholds);
+          } else {
+            //if place is not in area check if there are rogue visits
+            const householdsOutsideAreas = place.households.filter(
+              (household) => {
+                return household.visits.some(
+                  (visit) => visit.canvassAssId === params.canvassAssId
+                );
+              }
+            );
+
+            householdsOutsideAreasList.push(...householdsOutsideAreas);
           }
         });
 
@@ -185,6 +187,21 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           addedAreaIds.add(area.id);
         }
       });
+
+      if (householdsOutsideAreasList.length > 0) {
+        const visitsData = getAreaData(
+          lastVisit,
+          householdsOutsideAreasList,
+          firstVisit,
+          metricThatDefinesDone || ''
+        );
+        const noAreaData = (areaData['noArea'] = {
+          area: { id: 'noArea', title: 'noArea' },
+          data: visitsData,
+        });
+
+        areasDataList.push(noAreaData);
+      }
 
       const areasDataArray: AreaCardData[] = Object.values(areasDataList);
 

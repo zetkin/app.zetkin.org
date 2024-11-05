@@ -17,6 +17,7 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
 import useAssignmentAreaGraph from 'features/canvassAssignments/hooks/useAssignmentAreaGraph';
+import { ZetkinAssignmentAreaStatsItem } from 'features/canvassAssignments/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -167,6 +168,35 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                             b.successfulVisitsTotal - a.successfulVisitsTotal
                         )
                         .map(({ area }) => area);
+
+                      const noAreaData = dataGraph.find(
+                        (graph) => graph.area.id === 'noArea'
+                      );
+                      if (noAreaData && noAreaData.data.length > 0) {
+                        const latestEntry = [...noAreaData.data].sort(
+                          (a, b) =>
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
+                        )[0];
+
+                        const num_successful_visited_households =
+                          latestEntry.successfulVisits;
+
+                        const num_visited_households =
+                          latestEntry.householdVisits;
+
+                        const noArea: ZetkinAssignmentAreaStatsItem = {
+                          areaId: 'noArea',
+                          num_households: 0,
+                          num_places: 0,
+                          num_successful_visited_households,
+                          num_visited_households,
+                          num_visited_places: 0,
+                          num_visits: 0,
+                        };
+                        sortedAreas.push(noArea);
+                      }
+
                       return (
                         <AreaCard
                           areas={sortedAreas}
