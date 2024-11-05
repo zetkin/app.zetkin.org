@@ -45,6 +45,7 @@ const useStyles = makeStyles({
         },
       },
     },
+    boxShadow: 'none',
   },
 });
 

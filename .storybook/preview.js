@@ -10,7 +10,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { newTheme } from '../src/theme';
+import newTheme from '../src/zui/theme';
 import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
