@@ -386,16 +386,16 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[21, 21]} position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
                       bgcolor="white"
-                      border={`1px solid ${theme.palette.grey[400]}`}
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
-                      gap="4px"
-                      padding="2px 4px 2px 4px"
+                      gap="2px"
+                      padding="2px 6px"
+                      sx={{ translate: '-50% -50%' }}
                     >
                       <Typography fontSize="11px">{numberOfPlaces}</Typography>
                       <Divider />
@@ -406,15 +406,15 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[10, 10]} position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
                       bgcolor="white"
-                      border={`1px solid ${theme.palette.grey[400]}`}
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
                       padding={0.5}
+                      sx={{ translate: '-50% -50%' }}
                     >
                       <div
                         style={{
