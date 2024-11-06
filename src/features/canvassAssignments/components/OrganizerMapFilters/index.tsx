@@ -113,71 +113,62 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
           open={openTagsDropdown == 'add'}
         />
-        <Box alignItems="center" display="flex">
-          <FilterDropDown
-            items={[
-              {
-                icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
-                label: 'Only assigned areas',
-                onClick: () => {
-                  if (!assigneesFilter || assigneesFilter == 'unassigned') {
-                    onAssigneesFilterChange('assigned');
-                  } else {
-                    onAssigneesFilterChange(null);
-                  }
-                },
+        <FilterDropDown
+          items={[
+            {
+              icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
+              label: 'Only assigned areas',
+              onClick: () => {
+                if (!assigneesFilter || assigneesFilter == 'unassigned') {
+                  onAssigneesFilterChange('assigned');
+                } else {
+                  onAssigneesFilterChange(null);
+                }
               },
-              {
-                icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
-                label: 'Only unassigned areas',
-                onClick: () => {
-                  if (!assigneesFilter || assigneesFilter == 'assigned') {
-                    onAssigneesFilterChange('unassigned');
-                  } else {
-                    onAssigneesFilterChange(null);
-                  }
-                },
+            },
+            {
+              icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
+              label: 'Only unassigned areas',
+              onClick: () => {
+                if (!assigneesFilter || assigneesFilter == 'assigned') {
+                  onAssigneesFilterChange('unassigned');
+                } else {
+                  onAssigneesFilterChange(null);
+                }
               },
-            ]}
-            label="Assignees"
-            onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
-            open={openAssigneesDropdown}
-            startIcon={
-              assigneesFilter ? (
-                <Box
+            },
+          ]}
+          label="Assignees"
+          onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
+          open={openAssigneesDropdown}
+          startIcon={
+            assigneesFilter ? (
+              <Box
+                sx={{
+                  // TODO: Use ZUI for this
+                  alignItems: 'center',
+                  aspectRatio: '1/1',
+                  backgroundColor: theme.palette.primary.light,
+                  borderRadius: '50%',
+                  color: theme.palette.primary.contrastText,
+                  display: 'flex',
+                  height: '1.2em',
+                  justifyContent: 'center',
+                }}
+              >
+                <Typography
                   sx={{
-                    // TODO: Use ZUI for this
-                    alignItems: 'center',
-                    aspectRatio: '1/1',
-                    backgroundColor: theme.palette.primary.light,
-                    borderRadius: '50%',
-                    color: theme.palette.primary.contrastText,
-                    display: 'flex',
-                    height: '1.2em',
-                    justifyContent: 'center',
+                    fontSize: '0.75rem',
+                    margin: 0,
                   }}
                 >
-                  <Typography
-                    sx={{
-                      fontSize: '0.75rem',
-                      margin: 0,
-                    }}
-                  >
-                    {1}
-                  </Typography>
-                </Box>
-              ) : null
-            }
-            variant="outlined"
-          />
-          <IconButton
-            onClick={() => {
-              onAssigneesFilterChange(null);
-            }}
-          >
-            <Close />
-          </IconButton>
-        </Box>
+                  {1}
+                </Typography>
+              </Box>
+            ) : null
+          }
+          variant="outlined"
+        />
         {activeGroupIds.map((groupId) => {
           const info = groupsById[groupId];
           const currentIds = activeTagIdsByGroup[groupId] || [];
