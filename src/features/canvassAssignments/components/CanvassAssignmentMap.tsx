@@ -7,7 +7,7 @@ import {
 } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { GpsNotFixed } from '@mui/icons-material';
-import { Box, Button, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import {
   AttributionControl,
   FeatureGroup,
@@ -21,15 +21,14 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import PlaceDialog from './PlaceDialog';
-import { CreatePlaceCard } from './CreatePlaceCard';
 import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
 import { ZetkinCanvassAssignment } from '../types';
 import MapControls from './MapControls';
 import objToLatLng from 'features/areas/utils/objToLatLng';
+import CanvassAssignmentMapOverlays from './CanvassAssignmentMapOverlays';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
     '0%': {
       top: -20,
@@ -39,16 +38,6 @@ const useStyles = makeStyles((theme) => ({
       top: -40,
       transform: 'scale(0.9, 1)',
     },
-  },
-  actionAreaContainer: {
-    bottom: 15,
-    display: 'flex',
-    gap: 8,
-    justifyContent: 'center',
-    padding: 8,
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1000,
   },
   crosshair: {
     left: '50%',
@@ -67,23 +56,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     zIndex: 1000,
   },
-  infoButtons: {
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.grey[300]}`,
-    borderRadius: '4px',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '8px',
-    width: '90%',
-  },
 }));
-
-export type PlaceDialogStep =
-  | 'place'
-  | 'edit'
-  | 'household'
-  | 'wizard'
-  | 'pickHousehold';
 
 type CanvassAssignmentMapProps = {
   areas: ZetkinArea[];
@@ -100,8 +73,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const createPlace = useCreatePlace(assignment.organization.id);
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [isCreating, setIsCreating] = useState(false);
 
   const [map, setMap] = useState<Map | null>(null);
@@ -111,7 +82,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const [zoomed, setZoomed] = useState(false);
 
   const selectedPlace = places.find((place) => place.id == selectedPlaceId);
-  const showViewPlaceButton = !!selectedPlace && !anchorEl;
 
   const updateSelection = useCallback(() => {
     let nearestPlace: string | null = null;
@@ -255,30 +225,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
           <GpsNotFixed />
         </Box>
       </Box>
-      <Box className={classes.actionAreaContainer}>
-        {showViewPlaceButton && (
-          <Box className={classes.infoButtons}>
-            <Typography sx={{ paddingBottom: 1 }}>
-              {selectedPlace.title || 'Untitled place'}
-            </Typography>
-            <Button
-              fullWidth
-              onClick={(ev) => {
-                setAnchorEl(ev.currentTarget);
-                setDialogStep('place');
-              }}
-              variant="outlined"
-            >
-              View place
-            </Button>
-          </Box>
-        )}
-        {!selectedPlace && !isCreating && (
-          <Button onClick={() => setIsCreating(true)} variant="contained">
-            Add new place
-          </Button>
-        )}
-      </Box>
       <MapContainer
         ref={(map) => setMap(map)}
         attributionControl={false}
@@ -335,49 +281,31 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
           })}
         </>
       </MapContainer>
-      {selectedPlace && (
-        <PlaceDialog
-          canvassAssId={assignment.id}
-          dialogStep={dialogStep}
-          onClose={() => {
-            setAnchorEl(null);
-            setSelectedPlaceId(null);
-          }}
-          onEdit={() => setDialogStep('edit')}
-          onPickHousehold={() => setDialogStep('pickHousehold')}
-          onSelectHousehold={() => setDialogStep('household')}
-          onUpdateDone={() => setDialogStep('place')}
-          onWizard={() => setDialogStep('wizard')}
-          open={!!anchorEl}
-          orgId={assignment.organization.id}
-          place={selectedPlace}
-        />
-      )}
-      {isCreating && (
-        <CreatePlaceCard
-          onClose={() => {
-            setIsCreating(false);
-          }}
-          onCreate={(title) => {
-            const crosshair = crosshairRef.current;
+      <CanvassAssignmentMapOverlays
+        assignment={assignment}
+        isCreating={isCreating}
+        onCreate={(title) => {
+          const crosshair = crosshairRef.current;
 
-            if (crosshair && map) {
-              const markerPos = getCrosshairPositionOnMap(map, crosshair);
+          if (crosshair && map) {
+            const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-              const point = map?.containerPointToLatLng([
-                markerPos.markerX,
-                markerPos.markerY,
-              ]);
-              if (point) {
-                createPlace({
-                  position: point,
-                  title,
-                });
-              }
+            const point = map?.containerPointToLatLng([
+              markerPos.markerX,
+              markerPos.markerY,
+            ]);
+            if (point) {
+              createPlace({
+                position: point,
+                title,
+              });
             }
-          }}
-        />
-      )}
+          }
+        }}
+        onDeselect={() => setSelectedPlaceId(null)}
+        onToggleCreating={(creating) => setIsCreating(creating)}
+        selectedPlace={selectedPlace || null}
+      />
     </>
   );
 };
