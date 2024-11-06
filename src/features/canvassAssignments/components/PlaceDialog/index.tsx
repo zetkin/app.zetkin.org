@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Dialog,
   Divider,
   IconButton,
   Menu,
@@ -32,7 +31,6 @@ type PlaceDialogProps = {
   onSelectHousehold: () => void;
   onUpdateDone: () => void;
   onWizard: () => void;
-  open: boolean;
   orgId: number;
   place: ZetkinPlace;
 };
@@ -46,7 +44,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   onUpdateDone,
   onSelectHousehold,
   onWizard,
-  open,
   orgId,
   place,
 }) => {
@@ -92,10 +89,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const showWizard = selectedHousehold && dialogStep == 'wizard';
 
   return (
-    <Dialog fullWidth maxWidth="xl" onClose={onClose} open={open}>
+    <Box>
       <ZUIFuture future={assignmentFuture}>
         {(assignment) => (
-          <Box display="flex" flexDirection="column" height="90vh" padding={2}>
+          <Box display="flex" flexDirection="column">
             <Box
               paddingBottom={1}
               sx={{
@@ -401,7 +398,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           </Box>
         )}
       </ZUIFuture>
-    </Dialog>
+    </Box>
   );
 };
 

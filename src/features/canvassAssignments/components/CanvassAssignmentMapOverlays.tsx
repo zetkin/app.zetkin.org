@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
 import { ZetkinCanvassAssignment, ZetkinPlace } from '../types';
@@ -15,7 +15,7 @@ type Props = {
   selectedPlace: ZetkinPlace | null;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   actionAreaContainer: {
     bottom: 15,
     display: 'flex',
@@ -25,15 +25,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     width: '100%',
     zIndex: 1000,
-  },
-  infoButtons: {
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.grey[300]}`,
-    borderRadius: '4px',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '8px',
-    width: '90%',
   },
 }));
 
@@ -52,24 +43,59 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
   onToggleCreating,
   selectedPlace,
 }) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [expanded, setExpanded] = useState(false);
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const classes = useStyles();
 
-  const showViewPlaceButton = !!selectedPlace && !anchorEl;
+  const showViewPlaceButton = !!selectedPlace && !expanded;
+
+  let drawerTop = '100vh';
+  if (selectedPlace) {
+    if (expanded) {
+      drawerTop = '20vh';
+    } else {
+      drawerTop = 'calc(100vh - 6rem)';
+    }
+  }
+
+  useEffect(() => {
+    if (!selectedPlace && expanded) {
+      setExpanded(false);
+    }
+  }, [selectedPlace]);
 
   return (
     <>
-      <Box className={classes.actionAreaContainer}>
+      {!selectedPlace && !isCreating && (
+        <Box className={classes.actionAreaContainer}>
+          <Button onClick={() => onToggleCreating(true)} variant="contained">
+            Add new place
+          </Button>
+        </Box>
+      )}
+      <Box
+        sx={(theme) => ({
+          bgcolor: 'white',
+          bottom: 0,
+          boxShadow: theme.shadows[20],
+          left: 0,
+          padding: 2,
+          position: 'fixed',
+          right: 0,
+          top: drawerTop,
+          transition: 'top 0.2s',
+          zIndex: 10001,
+        })}
+      >
         {showViewPlaceButton && (
-          <Box className={classes.infoButtons}>
+          <Box>
             <Typography sx={{ paddingBottom: 1 }}>
               {selectedPlace.title || 'Untitled place'}
             </Typography>
             <Button
               fullWidth
-              onClick={(ev) => {
-                setAnchorEl(ev.currentTarget);
+              onClick={() => {
+                setExpanded(true);
                 setDialogStep('place');
               }}
               variant="outlined"
@@ -78,40 +104,34 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
             </Button>
           </Box>
         )}
-        {!selectedPlace && !isCreating && (
-          <Button onClick={() => onToggleCreating(true)} variant="contained">
-            Add new place
-          </Button>
+        {selectedPlace && expanded && (
+          <PlaceDialog
+            canvassAssId={assignment.id}
+            dialogStep={dialogStep}
+            onClose={() => {
+              setExpanded(false);
+              onDeselect();
+            }}
+            onEdit={() => setDialogStep('edit')}
+            onPickHousehold={() => setDialogStep('pickHousehold')}
+            onSelectHousehold={() => setDialogStep('household')}
+            onUpdateDone={() => setDialogStep('place')}
+            onWizard={() => setDialogStep('wizard')}
+            orgId={assignment.organization.id}
+            place={selectedPlace}
+          />
+        )}
+        {isCreating && (
+          <CreatePlaceCard
+            onClose={() => {
+              onToggleCreating(false);
+            }}
+            onCreate={(title) => {
+              onCreate(title);
+            }}
+          />
         )}
       </Box>
-      {selectedPlace && (
-        <PlaceDialog
-          canvassAssId={assignment.id}
-          dialogStep={dialogStep}
-          onClose={() => {
-            setAnchorEl(null);
-            onDeselect();
-          }}
-          onEdit={() => setDialogStep('edit')}
-          onPickHousehold={() => setDialogStep('pickHousehold')}
-          onSelectHousehold={() => setDialogStep('household')}
-          onUpdateDone={() => setDialogStep('place')}
-          onWizard={() => setDialogStep('wizard')}
-          open={!!anchorEl}
-          orgId={assignment.organization.id}
-          place={selectedPlace}
-        />
-      )}
-      {isCreating && (
-        <CreatePlaceCard
-          onClose={() => {
-            onToggleCreating(false);
-          }}
-          onCreate={(title) => {
-            onCreate(title);
-          }}
-        />
-      )}
     </>
   );
 };
