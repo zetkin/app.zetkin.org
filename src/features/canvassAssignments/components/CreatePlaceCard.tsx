@@ -32,7 +32,8 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
     <Box className={classes.card}>
       <Card sx={{ p: 1, width: '90%' }}>
         <form
-          onSubmit={() => {
+          onSubmit={(ev) => {
+            ev.preventDefault();
             onCreate(title);
             onClose();
           }}
