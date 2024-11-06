@@ -156,28 +156,32 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
 
     const crosshair = crosshairRef.current;
 
-    if (map && crosshair) {
-      const markerPos = getCrosshairPositionOnMap(map, crosshair);
+    try {
+      if (map && crosshair) {
+        const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-      places.forEach((place) => {
-        const screenPos = map.latLngToContainerPoint(place.position);
-        const dx = screenPos.x - markerPos.markerX;
-        const dy = screenPos.y - markerPos.markerY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        places.forEach((place) => {
+          const screenPos = map.latLngToContainerPoint(place.position);
+          const dx = screenPos.x - markerPos.markerX;
+          const dy = screenPos.y - markerPos.markerY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < nearestDistance) {
-          nearestDistance = dist;
-          nearestPlace = place.id;
+          if (dist < nearestDistance) {
+            nearestDistance = dist;
+            nearestPlace = place.id;
+          }
+        });
+
+        if (nearestDistance < 20) {
+          if (nearestPlace != selectedPlace) {
+            setSelectedPlaceId(nearestPlace);
+          }
+        } else {
+          setSelectedPlaceId(null);
         }
-      });
-
-      if (nearestDistance < 20) {
-        if (nearestPlace != selectedPlace) {
-          setSelectedPlaceId(nearestPlace);
-        }
-      } else {
-        setSelectedPlaceId(null);
       }
+    } catch (err) {
+      // Do nothing for now
     }
   }, [map, selectedPlaceId, places]);
 
