@@ -120,12 +120,10 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
-  const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
-  const standingStillTimerRef = useRef(0);
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
   const [zoomed, setZoomed] = useState(false);
@@ -197,25 +195,8 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
         panTo(evt.latlng);
       });
 
-      map.on('movestart', () => {
-        window.clearTimeout(standingStillTimerRef.current);
-        setStandingStill(false);
-      });
-
       map.on('move', () => {
         updateSelection();
-      });
-
-      map.on('moveend', () => {
-        // When the map contains no places, show the bouncy marker
-        // quickly, but once there are places, wait longer before
-        // showing the bouncy marker.
-        const delay = places.length ? 10000 : 1300;
-
-        standingStillTimerRef.current = window.setTimeout(
-          () => setStandingStill(true),
-          delay
-        );
       });
 
       return () => {
@@ -259,17 +240,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
             opacity: !selectedPlaceId ? 1 : 0.3,
           }}
         >
-          {!selectedPlaceId && !isCreating && (
-            <Box
-              className={classes.ghostMarker}
-              sx={{
-                opacity: standingStill ? 1 : 0,
-                transition: `opacity ${standingStill ? 0.8 : 0.2}s`,
-              }}
-            >
-              <MarkerIcon selected={true} />
-            </Box>
-          )}
           {!selectedPlaceId && isCreating && (
             <Box
               className={classes.ghostMarker}
