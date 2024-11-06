@@ -1,12 +1,13 @@
 import { FC } from 'react';
+import { ChevronLeft, Close, Search } from '@mui/icons-material';
 import {
-  ChevronLeft,
-  Close,
-  DoorFront,
-  Place,
-  Search,
-} from '@mui/icons-material';
-import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
+  Box,
+  Divider,
+  IconButton,
+  lighten,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -19,8 +20,6 @@ import {
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
-import CanvassVisit from 'zui/icons/CanvassVisit';
-import CanvassVisitSuccessful from 'zui/icons/CanvassVisitSuccessful';
 
 type Props = {
   areas: ZetkinArea[];
@@ -150,27 +149,43 @@ const AreaSelect: FC<Props> = ({
       )}
       {selectedArea && (
         <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
-          <Box display="flex" justifyContent="space-evenly">
-            <Box alignItems="center" display="flex">
-              <Place color="secondary" fontSize="large" />
-              {placesInSelectedArea.length}
-            </Box>
-            <Box alignItems="center" display="flex">
-              <DoorFront color="secondary" fontSize="large" />
-              {numberOfHouseholdsInSelectedArea}
-            </Box>
+          <Box display="flex" gap={2} justifyContent="flex-end">
             {selectedAreaStats && (
               <>
-                <Box alignItems="center" display="flex">
-                  <CanvassVisit color="secondary" fontSize="large" />
-                  {selectedAreaStats.num_visited_households}
+                <Box alignItems="center" display="flex" flexDirection="column">
+                  <Typography
+                    sx={(theme) => ({ color: theme.palette.primary.main })}
+                    variant="h5"
+                  >
+                    {selectedAreaStats.num_successful_visited_households}
+                  </Typography>
+                  <Typography textAlign="center">Successful visits</Typography>
                 </Box>
-                <Box alignItems="center" display="flex">
-                  <CanvassVisitSuccessful color="secondary" fontSize="large" />
-                  {selectedAreaStats.num_successful_visited_households}
+                <Box alignItems="center" display="flex" flexDirection="column">
+                  <Typography
+                    sx={(theme) => ({
+                      color: lighten(theme.palette.primary.main, 0.5),
+                    })}
+                    variant="h5"
+                  >
+                    {selectedAreaStats.num_visited_households}
+                  </Typography>
+                  <Typography textAlign="center">Visited households</Typography>
                 </Box>
               </>
             )}
+            <Box alignItems="center" display="flex" flexDirection="column">
+              <Typography color="secondary" variant="h5">
+                {numberOfHouseholdsInSelectedArea}
+              </Typography>
+              <Typography textAlign="center">Households</Typography>
+            </Box>
+            <Box alignItems="center" display="flex" flexDirection="column">
+              <Typography color="secondary" variant="h5">
+                {placesInSelectedArea.length}
+              </Typography>
+              <Typography textAlign="center">Places</Typography>
+            </Box>
           </Box>
           <Typography
             fontStyle={
