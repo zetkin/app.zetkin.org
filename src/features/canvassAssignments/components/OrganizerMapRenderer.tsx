@@ -439,36 +439,37 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
-                  <DivIconMarker position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     {detailed && (
-                      <Box display="flex" sx={{ pointerEvents: 'none' }}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            gap: '1px',
-                            transform: 'translate(-50%, -50%)',
-                          }}
-                        >
-                          {people.map((person, index) => (
-                            <Box
-                              //TODO: only use person id once we have logic preventing
-                              //assigning the same person to an area more than once
-                              key={`${person.id}-${index}`}
-                              sx={{
-                                borderRadius: '50%',
-                                boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                              }}
-                            >
-                              <ZUIAvatar
-                                size={zoom >= 16 ? 'sm' : 'xs'}
-                                url={`/api/orgs/1/people/${person.id}/avatar`}
-                              />
-                            </Box>
-                          ))}
-                        </Box>
+                      <Box
+                        display="inline-flex"
+                        flexWrap="wrap"
+                        justifyContent="center"
+                        sx={{
+                          pointerEvents: 'none',
+                          transform: 'translate(-50%, -50%)',
+                        }}
+                        width={zoom >= 16 ? '91px' : '61px'}
+                      >
+                        {people.map((person, index) => (
+                          <Box
+                            //TODO: only use person id once we have logic preventing
+                            //assigning the same person to an area more than once
+                            key={`${person.id}-${index}`}
+                            sx={{
+                              borderRadius: '50%',
+                              boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+                            }}
+                          >
+                            <ZUIAvatar
+                              size={zoom >= 16 ? 'sm' : 'xs'}
+                              url={`/api/orgs/1/people/${person.id}/avatar`}
+                            />
+                          </Box>
+                        ))}
                       </Box>
                     )}
-                    {overlayStyle == 'assignees' && !detailed && (
+                    {!detailed && (
                       <Box
                         sx={{
                           alignItems: 'center',
