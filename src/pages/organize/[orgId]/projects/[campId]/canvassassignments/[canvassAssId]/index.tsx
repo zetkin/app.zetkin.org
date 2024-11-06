@@ -1,19 +1,16 @@
 import { Box, Button, Card, Divider, Grid, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 
 import AreaCard from 'features/canvassAssignments/components/AreaCard';
 import { AREAS } from 'utils/featureFlags';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
-import { getContrastColor } from 'utils/colorUtils';
 import { PageWithLayout } from 'utils/types';
 import NumberCard from 'features/canvassAssignments/components/NumberCard';
 import { scaffold } from 'utils/next';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
-import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
 import useAssignmentAreaGraph from 'features/canvassAssignments/hooks/useAssignmentAreaGraph';
@@ -36,31 +33,6 @@ interface CanvassAssignmentPageProps {
   canvassAssId: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  chip: {
-    backgroundColor: theme.palette.statusColors.gray,
-    borderRadius: '1em',
-    color: theme.palette.text.secondary,
-    display: 'flex',
-    fontSize: '1em',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-  statsChip: {
-    backgroundColor: theme.palette.statusColors.blue,
-    borderRadius: '1em',
-    color: getContrastColor(theme.palette.statusColors.blue),
-    display: 'flex',
-    fontSize: '0.5rem',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-}));
-
 const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
@@ -69,7 +41,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
   const areasStats = useAssignmentAreaStats(parseInt(orgId), canvassAssId);
   const dataGraph = useAssignmentAreaGraph(parseInt(orgId), canvassAssId);
-  const classes = useStyles();
   const router = useRouter();
 
   return (
@@ -113,14 +84,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     maxHeight={40}
                     p={1}
                   >
-                    <Typography variant="h5">Areas</Typography>
-                    {!!stats.num_areas && (
-                      <ZUIAnimatedNumber value={stats.num_areas}>
-                        {(animatedValue) => (
-                          <Box className={classes.chip}>{animatedValue}</Box>
-                        )}
-                      </ZUIAnimatedNumber>
-                    )}
+                    <Typography variant="h5">Progress</Typography>
                   </Box>
                   <Divider />
                   <Box display="flex">
