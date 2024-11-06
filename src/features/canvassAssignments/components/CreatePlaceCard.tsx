@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  FormControl,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Card, FormControl, TextField } from '@mui/material';
 import { FC, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
@@ -38,32 +30,48 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
 
   return (
     <Box className={classes.card}>
-      <Card sx={{ width: '90%' }}>
-        <CardContent>
+      <Card sx={{ p: 1, width: '90%' }}>
+        <form
+          onSubmit={() => {
+            onCreate(title);
+            onClose();
+          }}
+        >
           <FormControl fullWidth>
             <TextField
               fullWidth
               onChange={(ev) => setTitle(ev.target.value)}
-              placeholder="title"
+              placeholder="Type a name for the place"
               sx={{ paddingTop: 1 }}
             />
           </FormControl>
-        </CardContent>
-        <CardActions sx={{ justifyContent: 'center' }}>
-          <Button onClick={onClose} size="small" variant="outlined">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              onCreate(title);
-              onClose();
-            }}
-            size="small"
-            variant="contained"
-          >
-            Create place
-          </Button>
-        </CardActions>
+          <Box display="flex" gap={1} mt={1}>
+            <Box flexBasis={1} flexGrow={1} flexShrink={1}>
+              <Button
+                fullWidth
+                onClick={onClose}
+                size="small"
+                variant="outlined"
+              >
+                Cancel
+              </Button>
+            </Box>
+            <Box flexBasis={1} flexGrow={1} flexShrink={1}>
+              <Button
+                fullWidth
+                onClick={() => {
+                  onCreate(title);
+                  onClose();
+                }}
+                size="small"
+                type="submit"
+                variant="contained"
+              >
+                Create place
+              </Button>
+            </Box>
+          </Box>
+        </form>
       </Card>
     </Box>
   );
