@@ -1,5 +1,6 @@
+import { Close } from '@mui/icons-material';
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Checkbox, Typography } from '@mui/material';
+import { Box, Checkbox, IconButton, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
 import { ZetkinArea } from 'features/areas/types';
@@ -85,8 +86,34 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           Add filters to decide what areas you see on the map.
         </Typography>
       </Box>
-      <Box display="flex" justifyContent="space-between">
-        <Box display="flex" flexDirection="column" gap={1}>
+      <Box display="flex" flexDirection="column" flexGrow={1} gap={1}>
+        <AddFilterButton
+          items={Object.values(groupsById).map((item) => {
+            const groupId = item.group?.id ?? 0;
+            const selected = activeGroupIds.includes(groupId);
+
+            return {
+              icon: <Checkbox checked={selected} />,
+              label: item.group ? item.group.title : 'Ungrouped tags',
+              onClick: () => {
+                if (selected) {
+                  setActiveGroupIds(
+                    activeGroupIds.filter((id) => groupId != id)
+                  );
+                  const newValue = { ...activeTagIdsByGroup };
+                  delete newValue[groupId];
+                  setActiveTagIdsByGroup(newValue);
+                } else {
+                  setActiveGroupIds([...activeGroupIds, groupId]);
+                  setOpenTagsDropdown(groupId);
+                }
+              },
+            };
+          })}
+          onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
+          open={openTagsDropdown == 'add'}
+        />
+        <Box alignItems="center" display="flex">
           <FilterDropDown
             items={[
               {
@@ -143,11 +170,20 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
             }
             variant="outlined"
           />
-          {activeGroupIds.map((groupId) => {
-            const info = groupsById[groupId];
-            const currentIds = activeTagIdsByGroup[groupId] || [];
-            if (info) {
-              return (
+          <IconButton
+            onClick={() => {
+              onAssigneesFilterChange(null);
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+        {activeGroupIds.map((groupId) => {
+          const info = groupsById[groupId];
+          const currentIds = activeTagIdsByGroup[groupId] || [];
+          if (info) {
+            return (
+              <Box key={groupId} alignItems="center" display="flex">
                 <FilterDropDown
                   items={info.tags.map((tag) => {
                     const selected = currentIds.includes(tag.id) ?? false;
@@ -198,36 +234,22 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   }
                   variant="outlined"
                 />
-              );
-            }
-          })}
-        </Box>
-        <AddFilterButton
-          items={Object.values(groupsById).map((item) => {
-            const groupId = item.group?.id ?? 0;
-            const selected = activeGroupIds.includes(groupId);
-
-            return {
-              icon: <Checkbox checked={selected} />,
-              label: item.group ? item.group.title : 'Ungrouped tags',
-              onClick: () => {
-                if (selected) {
-                  setActiveGroupIds(
-                    activeGroupIds.filter((id) => groupId != id)
-                  );
-                  const newValue = { ...activeTagIdsByGroup };
-                  delete newValue[groupId];
-                  setActiveTagIdsByGroup(newValue);
-                } else {
-                  setActiveGroupIds([...activeGroupIds, groupId]);
-                  setOpenTagsDropdown(groupId);
-                }
-              },
-            };
-          })}
-          onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
-          open={openTagsDropdown == 'add'}
-        />
+                <IconButton
+                  onClick={() => {
+                    setActiveGroupIds(
+                      activeGroupIds.filter((id) => groupId != id)
+                    );
+                    const newValue = { ...activeTagIdsByGroup };
+                    delete newValue[groupId];
+                    setActiveTagIdsByGroup(newValue);
+                  }}
+                >
+                  <Close />
+                </IconButton>
+              </Box>
+            );
+          }
+        })}
       </Box>
     </Box>
   );
