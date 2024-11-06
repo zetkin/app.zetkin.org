@@ -6,7 +6,7 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { Box, Typography } from '@mui/material';
+import { Box, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 
@@ -121,7 +121,14 @@ const PlaceMarker: FC<{
             <div
               style={{
                 alignItems: 'center',
-                background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                background: `conic-gradient(${
+                  theme.palette.primary.main
+                } ${successfulVisitsColorPercent}%, ${lighten(
+                  theme.palette.primary.main,
+                  0.7
+                )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
+                  theme.palette.grey[400]
+                } ${visitsColorPercent}%)`,
                 borderRadius: '2em',
                 display: 'flex',
                 flexDirection: 'row',
@@ -217,7 +224,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     }
 
     if (areaStyle == 'assignees') {
-      return hasPeople ? '#7800DC' : theme.palette.secondary.main;
+      return hasPeople
+        ? theme.palette.primary.main
+        : theme.palette.secondary.main;
     }
 
     if (areaStyle == 'progress' && !hasPeople) {
@@ -226,8 +235,12 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, ${theme.palette.grey[200]}, black ${householdColorPercent}%)`
-      : `color-mix(in hsl,  #E4CCF8, #7800DC ${visitsColorPercent || 1}%)`;
+        `color-mix(in hsl, ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
+        } ${householdColorPercent}%)`
+      : `color-mix(in hsl,  ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
+        } ${visitsColorPercent || 1}%)`;
   };
 
   const placesByAreaId: Record<string, ZetkinPlace[]> = {};
@@ -399,7 +412,14 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       <div
                         style={{
                           alignItems: 'center',
-                          background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                          background: `conic-gradient(${
+                            theme.palette.primary.main
+                          } ${successfulVisitsColorPercent}%, ${lighten(
+                            theme.palette.primary.main,
+                            0.7
+                          )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
+                            theme.palette.grey[400]
+                          } ${visitsColorPercent}%)`,
                           borderRadius: '2em',
                           display: 'flex',
                           flexDirection: 'row',
