@@ -6,7 +6,7 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { Box, lighten, Typography } from '@mui/material';
+import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 
@@ -389,13 +389,19 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   <DivIconMarker iconAnchor={[21, 21]} position={mid}>
                     <Box
                       bgcolor="white"
+                      border={`1px solid ${theme.palette.grey[400]}`}
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
-                      padding={0.5}
+                      gap="4px"
+                      padding="2px 4px 2px 4px"
                     >
-                      <Typography>{`${numberOfPlaces}/${numberOfHouseholds}`}</Typography>
+                      <Typography fontSize="11px">{numberOfPlaces}</Typography>
+                      <Divider />
+                      <Typography fontSize="11px">
+                        {numberOfHouseholds}
+                      </Typography>
                     </Box>
                   </DivIconMarker>
                 )}
@@ -403,6 +409,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   <DivIconMarker iconAnchor={[10, 10]} position={mid}>
                     <Box
                       bgcolor="white"
+                      border={`1px solid ${theme.palette.grey[400]}`}
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
