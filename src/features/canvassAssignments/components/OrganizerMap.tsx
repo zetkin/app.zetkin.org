@@ -292,9 +292,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           zoomControl={false}
         >
           <OrganizerMapRenderer
-            areas={
-              selectedId && settingsOpen == 'select' ? areas : filteredAreas
-            }
+            areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
             assignment={assignment}
