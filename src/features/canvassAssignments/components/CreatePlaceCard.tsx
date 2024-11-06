@@ -34,8 +34,10 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
         <form
           onSubmit={(ev) => {
             ev.preventDefault();
-            onCreate(title);
-            onClose();
+            if (title) {
+              onCreate(title);
+              onClose();
+            }
           }}
         >
           <FormControl fullWidth>
@@ -59,6 +61,7 @@ export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
             </Box>
             <Box flexBasis={1} flexGrow={1} flexShrink={1}>
               <Button
+                disabled={!title}
                 fullWidth
                 onClick={() => {
                   onCreate(title);
