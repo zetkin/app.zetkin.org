@@ -122,8 +122,8 @@ const AreaCard: FC<AreaCardProps> = ({
                   <Typography
                     color={
                       areaData?.area.id !== 'noArea'
-                        ? theme.palette.primary.light
-                        : theme.palette.grey[400]
+                        ? theme.palette.primary.dark
+                        : theme.palette.grey[900]
                     }
                     variant="h6"
                   >
@@ -209,7 +209,7 @@ const AreaCard: FC<AreaCardProps> = ({
                                       } else {
                                         return dataPoint.serieId ===
                                           'Household Visits'
-                                          ? theme.palette.grey[300]
+                                          ? theme.palette.grey[400]
                                           : theme.palette.grey[900];
                                       }
                                     })(),
@@ -249,8 +249,8 @@ const AreaCard: FC<AreaCardProps> = ({
                   <Typography
                     color={
                       areaData?.area.id !== 'noArea'
-                        ? theme.palette.primary.dark
-                        : theme.palette.grey[900]
+                        ? theme.palette.primary.light
+                        : theme.palette.grey[400]
                     }
                     variant="h6"
                   >
@@ -266,7 +266,7 @@ const AreaCard: FC<AreaCardProps> = ({
                       color={
                         areaData?.area.id !== 'noArea'
                           ? theme.palette.secondary.light
-                          : theme.palette.grey[300]
+                          : theme.palette.grey[900]
                       }
                       variant="h6"
                     >
