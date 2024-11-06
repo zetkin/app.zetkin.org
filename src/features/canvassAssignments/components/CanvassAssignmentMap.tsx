@@ -1,15 +1,13 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { LatLng, Map, FeatureGroup as FeatureGroupType } from 'leaflet';
-import { makeStyles } from '@mui/styles';
-import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
 import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Typography,
-  useTheme,
-} from '@mui/material';
+  LatLng,
+  Map,
+  FeatureGroup as FeatureGroupType,
+  latLngBounds,
+} from 'leaflet';
+import { makeStyles } from '@mui/styles';
+import { GpsNotFixed } from '@mui/icons-material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 import {
   AttributionControl,
   FeatureGroup,
@@ -28,6 +26,8 @@ import { CreatePlaceCard } from './CreatePlaceCard';
 import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
 import { ZetkinCanvassAssignment } from '../types';
+import MapControls from './MapControls';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -58,14 +58,6 @@ const useStyles = makeStyles((theme) => ({
     transition: 'opacity 0.1s',
     zIndex: 1200,
   },
-  filterControls: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: 10,
-    position: 'absolute',
-    right: 10,
-    zIndex: 1000,
-  },
   ghostMarker: {
     animationDirection: 'alternate',
     animationDuration: '0.4s',
@@ -83,16 +75,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     padding: '8px',
     width: '90%',
-  },
-  zoomControls: {
-    backgroundColor: theme.palette.common.white,
-    borderRadius: 2,
-    display: 'flex',
-    flexDirection: 'column',
-    left: 10,
-    marginTop: 10,
-    position: 'absolute',
-    zIndex: 1000,
   },
 }));
 
@@ -223,16 +205,35 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
 
   return (
     <>
-      <Box className={classes.zoomControls}>
-        <IconButton onClick={() => map?.zoomIn()}>
-          <Add />
-        </IconButton>
-        <Divider flexItem variant="fullWidth" />
-        <IconButton onClick={() => map?.zoomOut()}>
-          <Remove />
-        </IconButton>
-      </Box>
       <Box position="relative">
+        <MapControls
+          map={map}
+          onFitBounds={() => {
+            if (map) {
+              if (areas.length) {
+                // Start with first area
+                const totalBounds = latLngBounds(
+                  areas[0].points.map((p) => objToLatLng(p))
+                );
+
+                // Extend with all areas
+                areas.forEach((area) => {
+                  const areaBounds = latLngBounds(
+                    area.points.map((p) => objToLatLng(p))
+                  );
+                  totalBounds.extend(areaBounds);
+                });
+
+                if (totalBounds) {
+                  map.flyToBounds(totalBounds, {
+                    animate: true,
+                    duration: 0.8,
+                  });
+                }
+              }
+            }
+          }}
+        />
         <Box
           ref={crosshairRef}
           className={classes.crosshair}
