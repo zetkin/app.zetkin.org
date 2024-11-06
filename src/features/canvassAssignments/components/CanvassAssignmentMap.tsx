@@ -7,10 +7,6 @@ import {
   Button,
   Divider,
   IconButton,
-  MenuItem,
-  Select,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -29,10 +25,9 @@ import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
-import getVisitState, { ProgressState } from '../utils/getVisitState';
+import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
 import { ZetkinCanvassAssignment } from '../types';
-import getDoneState from '../utils/getDoneState';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes ghostMarkerBounce': {
@@ -89,12 +84,6 @@ const useStyles = makeStyles((theme) => ({
     padding: '8px',
     width: '90%',
   },
-  markerFilterButtons: {
-    backgroundColor: theme.palette.common.white,
-    borderRadius: 4,
-    display: 'flex',
-    flexDirection: 'row',
-  },
   zoomControls: {
     backgroundColor: theme.palette.common.white,
     borderRadius: 2,
@@ -133,12 +122,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [placeFilters, setPlaceFilters] = useState<ProgressState[]>([
-    'all',
-    'none',
-    'some',
-  ]);
-  const [dataToShow, setDataToShow] = useState<'visited' | 'done'>('visited');
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -257,22 +240,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
     }
   }, [areas, map]);
 
-  const metricThatDefinesDone = assignment.metrics.find(
-    (metric) => metric.definesDone
-  );
-
-  const filteredPlaces = places.filter((place) => {
-    const state =
-      dataToShow == 'visited'
-        ? getVisitState(place.households, assignment.id)
-        : getDoneState(
-            place.households,
-            assignment.id,
-            metricThatDefinesDone?.id || ''
-          );
-    return placeFilters.includes(state);
-  });
-
   return (
     <>
       <Box className={classes.zoomControls}>
@@ -283,40 +250,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
         <IconButton onClick={() => map?.zoomOut()}>
           <Remove />
         </IconButton>
-      </Box>
-      <Box className={classes.filterControls}>
-        <ToggleButtonGroup
-          className={classes.markerFilterButtons}
-          onChange={(ev, newValue: ProgressState[]) => {
-            setPlaceFilters(newValue);
-          }}
-          value={placeFilters}
-        >
-          <ToggleButton value="none">
-            <MarkerIcon dataToShow={dataToShow} selected={false} state="none" />
-          </ToggleButton>
-          <ToggleButton value="some">
-            <MarkerIcon dataToShow={dataToShow} selected={false} state="some" />
-          </ToggleButton>
-          <ToggleButton value="all">
-            <MarkerIcon dataToShow={dataToShow} selected={false} state="all" />
-          </ToggleButton>
-        </ToggleButtonGroup>
-        {!!assignment.metrics.find((metric) => metric.definesDone) && (
-          <Select
-            onChange={(ev) => {
-              const value = ev.target.value;
-              if (value == 'done' || value == 'visited') {
-                setDataToShow(value);
-              }
-            }}
-            sx={{ backgroundColor: 'white' }}
-            value={dataToShow}
-          >
-            <MenuItem value="visited">Visited</MenuItem>
-            <MenuItem value="done">Done</MenuItem>
-          </Select>
-        )}
       </Box>
       <Box position="relative">
         <Box
@@ -401,15 +334,8 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
           ))}
         </FeatureGroup>
         <>
-          {filteredPlaces.map((place) => {
-            const state =
-              dataToShow == 'visited'
-                ? getVisitState(place.households, assignment.id)
-                : getDoneState(
-                    place.households,
-                    assignment.id,
-                    metricThatDefinesDone?.id || ''
-                  );
+          {places.map((place) => {
+            const state = getVisitState(place.households, assignment.id);
 
             const selected = place.id == selectedPlaceId;
             const key = `marker-${place.id}-${selected.toString()}`;
@@ -429,7 +355,7 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
                 }}
               >
                 <MarkerIcon
-                  dataToShow={dataToShow}
+                  dataToShow="visited"
                   selected={selected}
                   state={state}
                 />
