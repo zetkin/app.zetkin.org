@@ -213,6 +213,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               <AreaSelect
                 key={selectedArea?.id}
                 areas={areas}
+                canvassId={canvassAssId}
                 filterAreas={filterAreas}
                 filterText={filterText}
                 onAddAssignee={(person) => {
