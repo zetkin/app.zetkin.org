@@ -44,15 +44,15 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
 
   const showViewPlaceButton = !!selectedPlace && !expanded;
 
-  let drawerTop = '100vh';
+  let drawerTop = '100dvh';
   if (selectedPlace) {
     if (expanded) {
-      drawerTop = '20vh';
+      drawerTop = '6rem';
     } else {
-      drawerTop = 'calc(100vh - 5rem)';
+      drawerTop = 'calc(100dvh - 5rem)';
     }
   } else if (isCreating) {
-    drawerTop = 'calc(100vh - 9rem)';
+    drawerTop = 'calc(100dvh - 9rem)';
   }
 
   useEffect(() => {
