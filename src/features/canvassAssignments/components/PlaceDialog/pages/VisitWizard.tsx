@@ -18,6 +18,24 @@ import PageBase from './PageBase';
 
 const Question: FC<{
   metric: ZetkinMetric;
+}> = ({ metric }) => {
+  return (
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      flexGrow={1}
+      gap={1}
+      justifyContent="center"
+    >
+      <Typography variant="h5">{metric.question}</Typography>
+      <Typography variant="body2">{metric.description}</Typography>
+    </Box>
+  );
+};
+
+const QuestionButtons: FC<{
+  metric: ZetkinMetric;
   onChange: (newValue: string | null) => void;
   value?: string;
 }> = ({ onChange, metric, value }) => {
@@ -36,18 +54,12 @@ const Question: FC<{
         ];
 
   return (
-    <>
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="column"
-        flexGrow={1}
-        gap={1}
-        justifyContent="center"
-      >
-        <Typography>{metric.question}</Typography>
-        <Typography variant="body2">{metric.description}</Typography>
-      </Box>
+    <Box
+      alignItems="stretch"
+      display="flex"
+      flexDirection="column"
+      width="100%"
+    >
       {!metric.definesDone && (
         <Button onClick={() => onChange('')}>Skip this question</Button>
       )}
@@ -65,7 +77,7 @@ const Question: FC<{
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
-    </>
+    </Box>
   );
 };
 
@@ -126,109 +138,120 @@ const VisitWizard: FC<VisitWizardProps> = ({
   const [step, setStep] = useState(0);
   const [noteToOfficial, setNoteToOfficial] = useState('');
 
+  const metricIndex = step;
+  const currentMetric = metrics[metricIndex];
+
   return (
     <PageBase
+      actions={
+        currentMetric ? (
+          <QuestionButtons
+            key={currentMetric.id}
+            metric={currentMetric}
+            onChange={(newValue) => {
+              if (newValue == null) {
+                //User is returning and selects the same response
+                setStep(step + 1);
+              } else {
+                if (responses[metricIndex]) {
+                  //User is returning and selects new response
+                  setResponses([
+                    ...responses.slice(
+                      0,
+                      responses.indexOf(responses[metricIndex])
+                    ),
+                    {
+                      ...responses[metricIndex],
+                      response: newValue.toString(),
+                    },
+                  ]);
+                } else {
+                  //User is responding to this question for the first time
+                  setResponses([
+                    ...responses,
+                    {
+                      metricId: currentMetric.id,
+                      response: newValue.toString(),
+                    },
+                  ]);
+                }
+                setStep(step + 1);
+              }
+            }}
+            value={responses[metricIndex]?.response}
+          />
+        ) : null
+      }
       onBack={onBack}
       title={`${household.title || 'Unititled household'}: Log visit`}
     >
-      {metrics.map((metric, index) => {
-        if (index < step) {
-          return (
-            <>
-              <PreviousMessage
-                key={metric.id}
-                onClick={() => {
-                  setStep(index);
-                  setResponses(responses.slice(0, index + 1));
-                }}
-                question={metric.question}
-                response={responses[index].response}
-              />
-              {index == metrics.length - 1 && (
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  flexGrow={1}
-                  justifyContent="flex-end"
-                >
+      <Box display="flex" flexDirection="column" height="100%">
+        {metrics.map((metric, index) => {
+          if (index < step) {
+            return (
+              <>
+                <PreviousMessage
+                  key={metric.id}
+                  onClick={() => {
+                    setStep(index);
+                    setResponses(responses.slice(0, index + 1));
+                  }}
+                  question={metric.question}
+                  response={responses[index].response}
+                />
+                {index == metrics.length - 1 && (
                   <Box
                     display="flex"
                     flexDirection="column"
                     flexGrow={1}
-                    justifyContent="center"
+                    justifyContent="flex-end"
                   >
-                    <Typography>
-                      Did anything happen that an official needs to know about?
-                    </Typography>
-                    <TextField
-                      onChange={(ev) => setNoteToOfficial(ev.target.value)}
-                      value={noteToOfficial}
-                    />
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      flexGrow={1}
+                      justifyContent="center"
+                    >
+                      <Typography>
+                        Did anything happen that an official needs to know
+                        about?
+                      </Typography>
+                      <TextField
+                        onChange={(ev) => setNoteToOfficial(ev.target.value)}
+                        value={noteToOfficial}
+                      />
+                    </Box>
+                    <Button
+                      fullWidth
+                      onClick={() => {
+                        const filteredResponses = responses.filter(
+                          (response) => !!response.response
+                        );
+                        onLogVisit(filteredResponses, noteToOfficial);
+                      }}
+                      variant="contained"
+                    >
+                      {noteToOfficial ? 'Save with note' : 'Save without note'}
+                    </Button>
                   </Box>
-                  <Button
-                    fullWidth
-                    onClick={() => {
-                      const filteredResponses = responses.filter(
-                        (response) => !!response.response
-                      );
-                      onLogVisit(filteredResponses, noteToOfficial);
-                    }}
-                    variant="contained"
-                  >
-                    {noteToOfficial ? 'Save with note' : 'Save without note'}
-                  </Button>
-                </Box>
-              )}
-            </>
-          );
-        }
+                )}
+              </>
+            );
+          }
 
-        if (index == step) {
-          return (
-            <Box display="flex" flexDirection="column" flexGrow={1}>
-              <Question
-                key={metric.id}
-                metric={metric}
-                onChange={(newValue) => {
-                  if (newValue == null) {
-                    //User is returning and selects the same response
-                    setStep(step + 1);
-                  } else {
-                    if (responses[index]) {
-                      //User is returning and selects new response
-                      setResponses([
-                        ...responses.slice(
-                          0,
-                          responses.indexOf(responses[index])
-                        ),
-                        {
-                          ...responses[index],
-                          response: newValue.toString(),
-                        },
-                      ]);
-                    } else {
-                      //User is responding to this question for the first time
-                      setResponses([
-                        ...responses,
-                        {
-                          metricId: metric.id,
-                          response: newValue.toString(),
-                        },
-                      ]);
-                    }
-                    setStep(step + 1);
-                  }
-                }}
-                value={responses[index]?.response}
-              />
-            </Box>
-          );
-        }
+          if (index == step) {
+            return (
+              <Box display="flex" flexDirection="column" flexGrow={1}>
+                <Question key={metric.id} metric={metric} />
+              </Box>
+            );
+          }
 
-        if (index > step) {
-          return null;
-        }
-      })}
+          if (index > step) {
+            return null;
+          }
+        })}
+      </Box>
     </PageBase>
   );
 };
