@@ -74,6 +74,7 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [created, setCreated] = useState(false);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
@@ -140,6 +141,12 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
     },
     [map, crosshairRef.current]
   );
+
+  useEffect(() => {
+    if (created) {
+      updateSelection();
+    }
+  }, [created, places]);
 
   useEffect(() => {
     if (map) {
@@ -289,6 +296,7 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
               markerPos.markerY,
             ]);
             if (point) {
+              setCreated(true);
               createPlace({
                 position: point,
                 title,
