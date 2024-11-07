@@ -35,9 +35,8 @@ export async function DELETE(request: NextRequest, { params }: RouteMeta) {
       }
 
       const filteredSessions = assignmentModel.sessions.filter((session) => {
-        return (
-          session.personId !== params.personId &&
-          session.areaId !== params.areaId
+        return !(
+          session.personId == params.personId && session.areaId == params.areaId
         );
       });
 

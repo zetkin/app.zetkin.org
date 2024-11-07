@@ -272,10 +272,10 @@ const canvassAssignmentSlice = createSlice({
     sessionDeleted: (state, action: PayloadAction<SessionDeletedPayload>) => {
       const { areaId, assignmentId, assigneeId } = action.payload;
 
-      if (state.sessionsByAssignmentId[assignmentId]) {
-        const filteredSessionsByAssignmentId = state.sessionsByAssignmentId[
-          assignmentId
-        ].items.filter(
+      const sessionsList = state.sessionsByAssignmentId[assignmentId];
+
+      if (sessionsList) {
+        const filteredSessions = sessionsList.items.filter(
           (item) =>
             !(
               item.data?.area.id === areaId &&
@@ -283,8 +283,8 @@ const canvassAssignmentSlice = createSlice({
             )
         );
         state.sessionsByAssignmentId[assignmentId] = {
-          ...state.sessionsByAssignmentId[assignmentId],
-          items: filteredSessionsByAssignmentId,
+          ...sessionsList,
+          items: filteredSessions,
         };
       }
     },
