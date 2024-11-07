@@ -442,31 +442,57 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     {detailed && (
                       <Box
+                        alignItems="center"
                         display="inline-flex"
                         flexWrap="wrap"
+                        gap="2px"
                         justifyContent="center"
                         sx={{
                           pointerEvents: 'none',
                           transform: 'translate(-50%, -50%)',
                         }}
-                        width={zoom >= 16 ? '91px' : '61px'}
+                        width={zoom >= 16 ? '95px' : '65px'}
                       >
-                        {people.map((person, index) => (
-                          <Box
-                            //TODO: only use person id once we have logic preventing
-                            //assigning the same person to an area more than once
-                            key={`${person.id}-${index}`}
-                            sx={{
-                              borderRadius: '50%',
-                              boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                            }}
-                          >
-                            <ZUIAvatar
-                              size={zoom >= 16 ? 'sm' : 'xs'}
-                              url={`/api/orgs/1/people/${person.id}/avatar`}
-                            />
-                          </Box>
-                        ))}
+                        {people.map((person, index) => {
+                          if (index <= 4) {
+                            return (
+                              <Box
+                                //TODO: only use person id once we have logic preventing
+                                //assigning the same person to an area more than once
+                                key={`${person.id}-${index}`}
+                                sx={{
+                                  borderRadius: '50%',
+                                  boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+                                }}
+                              >
+                                <ZUIAvatar
+                                  size={zoom >= 16 ? 'sm' : 'xs'}
+                                  url={`/api/orgs/1/people/${person.id}/avatar`}
+                                />
+                              </Box>
+                            );
+                          } else if (index == 5) {
+                            return (
+                              <Box
+                                alignItems="center"
+                                bgcolor="white"
+                                borderRadius="100%"
+                                display="flex"
+                                height={zoom >= 16 ? '30px' : '20px'}
+                                justifyContent="center"
+                                padding={1}
+                                width={zoom >= 16 ? '30px' : '20px'}
+                              >
+                                <Typography
+                                  color="secondary"
+                                  fontSize={zoom >= 16 ? 14 : 11}
+                                >{`+${people.length - 5}`}</Typography>
+                              </Box>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
                       </Box>
                     )}
                     {!detailed && (
