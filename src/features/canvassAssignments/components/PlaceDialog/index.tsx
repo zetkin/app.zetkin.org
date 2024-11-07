@@ -1,19 +1,10 @@
-import { ArrowBackIos, Close, Edit, MoreVert } from '@mui/icons-material';
+import { ArrowBackIos, Close, Edit } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
 
 import VisitWizard from './VisitWizard';
 import EditPlace from './EditPlace';
-import Place from './Place';
+import Place from './pages/Place';
 import Household from './Household';
 import ZUIFuture from 'zui/ZUIFuture';
 import { PlaceDialogStep } from '../CanvassAssignmentMapOverlays';
@@ -47,8 +38,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   orgId,
   place,
 }) => {
-  const { addVisit, addHousehold, updateHousehold, updatePlace } =
-    usePlaceMutations(orgId, place.id);
+  const { addVisit, updateHousehold, updatePlace } = usePlaceMutations(
+    orgId,
+    place.id
+  );
   const assignmentFuture = useCanvassAssignment(orgId, canvassAssId);
 
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
@@ -60,7 +53,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [title, setTitle] = useState<string>(place.title ?? '');
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const selectedHousehold = place.households.find(
     (household) => household.id == selectedHouseholdId
@@ -92,6 +84,33 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     <Box>
       <ZUIFuture future={assignmentFuture}>
         {(assignment) => {
+          if (dialogStep == 'place') {
+            return (
+              <Place
+                onClose={onClose}
+                onCreateHousehold={(household) => {
+                  setSelectedHouseholdId(household.id);
+                  setEditingHouseholdTitle(true);
+                }}
+                onEdit={onEdit}
+                onNavigate={(step) => {
+                  // TODO: Clean this up, no need for separate functions
+                  if (step == 'wizard') {
+                    onWizard();
+                  } else if (step == 'pickHousehold') {
+                    onPickHousehold();
+                  }
+                }}
+                onSelectHousehold={(householdId: string) => {
+                  setSelectedHouseholdId(householdId);
+                  onSelectHousehold();
+                }}
+                orgId={orgId}
+                place={place}
+              />
+            );
+          }
+
           return (
             <Box display="flex" flexDirection="column">
               <Box
@@ -102,21 +121,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   justifyContent: 'space-between',
                 }}
               >
-                {dialogStep == 'place' && (
-                  <>
-                    <Typography alignItems="center" display="flex" variant="h6">
-                      {place?.title || 'Untitled place'}
-                    </Typography>
-                    <Box>
-                      <IconButton onClick={onEdit}>
-                        <Edit />
-                      </IconButton>
-                      <IconButton onClick={onClose}>
-                        <Close />
-                      </IconButton>
-                    </Box>
-                  </>
-                )}
                 {dialogStep == 'pickHousehold' && (
                   <Box
                     display="flex"
@@ -200,15 +204,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               </Box>
               <Divider />
               <Box flexGrow={1} overflow="hidden">
-                {place && dialogStep == 'place' && (
-                  <Place
-                    onSelectHousehold={(householdId: string) => {
-                      setSelectedHouseholdId(householdId);
-                      onSelectHousehold();
-                    }}
-                    place={place}
-                  />
-                )}
                 {dialogStep == 'pickHousehold' && (
                   <Box
                     display="flex"
@@ -321,58 +316,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 justifyContent="center"
                 paddingTop={1}
               >
-                {dialogStep === 'place' && place.households.length == 0 && (
-                  <Button
-                    fullWidth
-                    onClick={async () => {
-                      const newlyAddedHousehold = await addHousehold();
-                      setSelectedHouseholdId(newlyAddedHousehold.id);
-                      onSelectHousehold();
-                      setEditingHouseholdTitle(true);
-                    }}
-                    variant="contained"
-                  >
-                    Add household
-                  </Button>
-                )}
-                {dialogStep == 'place' && place.households.length == 1 && (
-                  <ButtonGroup variant="contained">
-                    <Button
-                      fullWidth
-                      onClick={() => {
-                        setSelectedHouseholdId(place.households[0].id);
-                        onWizard();
-                      }}
-                    >
-                      Log visit
-                    </Button>
-                    <Button
-                      onClick={(ev) => setAnchorEl(ev.currentTarget)}
-                      size="small"
-                    >
-                      <MoreVert />
-                    </Button>
-                  </ButtonGroup>
-                )}
-                {dialogStep == 'place' && place.households.length > 1 && (
-                  <ButtonGroup variant="contained">
-                    <Button
-                      fullWidth
-                      onClick={() => {
-                        onPickHousehold();
-                      }}
-                    >
-                      Log visit
-                    </Button>
-                    <Button
-                      onClick={(ev) => setAnchorEl(ev.currentTarget)}
-                      size="small"
-                    >
-                      <MoreVert />
-                    </Button>
-                  </ButtonGroup>
-                )}
-
                 {dialogStep == 'edit' && (
                   <Button
                     disabled={saveButtonDisabled}
@@ -389,31 +332,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     Save
                   </Button>
                 )}
-                <Menu
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    horizontal: 'left',
-                    vertical: 'top',
-                  }}
-                  onClose={() => setAnchorEl(null)}
-                  open={!!anchorEl}
-                  transformOrigin={{
-                    horizontal: 'center',
-                    vertical: 'bottom',
-                  }}
-                >
-                  <MenuItem
-                    onClick={async () => {
-                      const newlyAddedHousehold = await addHousehold();
-                      setSelectedHouseholdId(newlyAddedHousehold.id);
-                      onSelectHousehold();
-                      setEditingHouseholdTitle(true);
-                      setAnchorEl(null);
-                    }}
-                  >
-                    Add household
-                  </MenuItem>
-                </Menu>
               </Box>
             </Box>
           );
