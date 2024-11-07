@@ -1,6 +1,8 @@
-import { ArrowBackIos, Close, Edit } from '@mui/icons-material';
-import { Box, Divider, IconButton, Typography } from '@mui/material';
+import { Close, Edit } from '@mui/icons-material';
+import { Box, Divider, IconButton } from '@mui/material';
 import { FC, ReactNode } from 'react';
+
+import PageBaseHeader from './PageBaseHeader';
 
 type Props = {
   actions?: ReactNode;
@@ -8,7 +10,7 @@ type Props = {
   onBack?: () => void;
   onClose?: () => void;
   onEdit?: () => void;
-  title: ReactNode;
+  title: string;
 };
 
 const PageBase: FC<Props> = ({
@@ -29,28 +31,24 @@ const PageBase: FC<Props> = ({
           justifyContent: 'space-between',
         }}
       >
-        <Box display="flex" justifyContent="space-between" width="100%">
-          <Box alignItems="center" display="flex">
-            {onBack && (
-              <IconButton onClick={() => onBack()}>
-                <ArrowBackIos />
-              </IconButton>
-            )}
-            <Typography variant="h6">{title}</Typography>
-          </Box>
-          <Box>
-            {onEdit && (
-              <IconButton onClick={onEdit}>
-                <Edit />
-              </IconButton>
-            )}
-            {onClose && (
-              <IconButton onClick={onClose}>
-                <Close />
-              </IconButton>
-            )}
-          </Box>
-        </Box>
+        <PageBaseHeader
+          iconButtons={
+            <>
+              {onEdit && (
+                <IconButton onClick={onEdit}>
+                  <Edit />
+                </IconButton>
+              )}
+              {onClose && (
+                <IconButton onClick={onClose}>
+                  <Close />
+                </IconButton>
+              )}
+            </>
+          }
+          onBack={onBack}
+          title={title}
+        />
       </Box>
       <Divider />
       <Box flexGrow={1} overflow="hidden">
