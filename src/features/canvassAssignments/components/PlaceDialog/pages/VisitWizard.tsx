@@ -9,10 +9,12 @@ import {
 import { FC, useState } from 'react';
 
 import {
+  Household,
   Visit,
   ZetkinCanvassAssignment,
   ZetkinMetric,
 } from 'features/canvassAssignments/types';
+import PageBase from './PageBase';
 
 const Question: FC<{
   metric: ZetkinMetric;
@@ -105,20 +107,30 @@ const PreviousMessage: FC<PreviousMessageProps> = ({
 };
 
 type VisitWizardProps = {
+  household: Household;
   metrics: ZetkinCanvassAssignment['metrics'];
+  onBack: () => void;
   onLogVisit: (
     responses: Visit['responses'],
     noteToOfficial: Visit['noteToOfficial']
   ) => void;
 };
 
-const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
+const VisitWizard: FC<VisitWizardProps> = ({
+  household,
+  metrics,
+  onBack,
+  onLogVisit,
+}) => {
   const [responses, setResponses] = useState<Visit['responses']>([]);
   const [step, setStep] = useState(0);
   const [noteToOfficial, setNoteToOfficial] = useState('');
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <PageBase
+      onBack={onBack}
+      title={`${household.title || 'Unititled household'}: Log visit`}
+    >
       {metrics.map((metric, index) => {
         if (index < step) {
           return (
@@ -217,7 +229,7 @@ const VisitWizard: FC<VisitWizardProps> = ({ metrics, onLogVisit }) => {
           return null;
         }
       })}
-    </Box>
+    </PageBase>
   );
 };
 

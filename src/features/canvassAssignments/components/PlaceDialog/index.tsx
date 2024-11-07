@@ -2,7 +2,7 @@ import { ArrowBackIos, Close } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box, Divider, IconButton, Typography } from '@mui/material';
 
-import VisitWizard from './VisitWizard';
+import VisitWizard from './pages/VisitWizard';
 import EditPlace from './pages/EditPlace';
 import Place from './pages/Place';
 import Household from './pages/Household';
@@ -64,8 +64,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         return 0;
       }
     }) || [];*/
-
-  const showWizard = selectedHousehold && dialogStep == 'wizard';
 
   return (
     <Box>
@@ -131,6 +129,28 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 )}
               />
             );
+          } else if (dialogStep == 'wizard') {
+            if (!selectedHousehold) {
+              // This never seems to happen, which is correct
+              return null;
+            }
+
+            return (
+              <VisitWizard
+                household={selectedHousehold}
+                metrics={assignment.metrics}
+                onBack={() => onSelectHousehold()}
+                onLogVisit={(responses, noteToOfficial) => {
+                  addVisit(selectedHousehold.id, {
+                    canvassAssId: assignment.id,
+                    noteToOfficial,
+                    responses,
+                    timestamp: new Date().toISOString(),
+                  });
+                  onUpdateDone();
+                }}
+              />
+            );
           }
 
           return (
@@ -162,20 +182,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     <IconButton onClick={onClose}>
                       <Close />
                     </IconButton>
-                  </Box>
-                )}
-                {dialogStep == 'wizard' && selectedHousehold && (
-                  <Box alignItems="center" display="flex">
-                    <IconButton
-                      onClick={() => {
-                        onSelectHousehold();
-                      }}
-                    >
-                      <ArrowBackIos />
-                    </IconButton>
-                    <Typography alignItems="center" display="flex" variant="h6">
-                      {selectedHousehold.title || 'Untitled household'}
-                    </Typography>
                   </Box>
                 )}
               </Box>
@@ -240,20 +246,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       })}
                     </Box>
                   </Box>
-                )}
-                {showWizard && (
-                  <VisitWizard
-                    metrics={assignment.metrics}
-                    onLogVisit={(responses, noteToOfficial) => {
-                      addVisit(selectedHousehold.id, {
-                        canvassAssId: assignment.id,
-                        noteToOfficial,
-                        responses,
-                        timestamp: new Date().toISOString(),
-                      });
-                      onUpdateDone();
-                    }}
-                  />
                 )}
               </Box>
             </Box>
