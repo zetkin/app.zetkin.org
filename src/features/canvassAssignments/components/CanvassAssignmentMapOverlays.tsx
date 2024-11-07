@@ -10,7 +10,6 @@ type Props = {
   assignment: ZetkinCanvassAssignment;
   isCreating: boolean;
   onCreate: (title: string) => void;
-  onDeselect: () => void;
   onToggleCreating: (creating: boolean) => void;
   selectedPlace: ZetkinPlace | null;
 };
@@ -39,7 +38,6 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
   assignment,
   isCreating,
   onCreate,
-  onDeselect,
   onToggleCreating,
   selectedPlace,
 }) => {
@@ -110,7 +108,6 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
             dialogStep={dialogStep}
             onClose={() => {
               setExpanded(false);
-              onDeselect();
             }}
             onEdit={() => setDialogStep('edit')}
             onPickHousehold={() => setDialogStep('pickHousehold')}

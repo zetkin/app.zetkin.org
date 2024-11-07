@@ -160,10 +160,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   }, [map, selectedPlaceId, places, panTo, updateSelection]);
 
   useEffect(() => {
-    updateSelection();
-  }, [places]);
-
-  useEffect(() => {
     if (map && !zoomed) {
       const bounds = reactFGref.current?.getBounds();
       if (bounds?.isValid()) {
@@ -302,7 +298,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
             }
           }
         }}
-        onDeselect={() => setSelectedPlaceId(null)}
         onToggleCreating={(creating) => setIsCreating(creating)}
         selectedPlace={selectedPlace || null}
       />
