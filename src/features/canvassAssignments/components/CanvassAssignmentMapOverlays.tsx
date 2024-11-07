@@ -1,7 +1,7 @@
 import { Box, Button, IconButton } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { ArrowUpward } from '@mui/icons-material';
+import { KeyboardArrowUp } from '@mui/icons-material';
 
 import { ZetkinCanvassAssignment, ZetkinPlace } from '../types';
 import PlaceDialog from './PlaceDialog';
@@ -88,11 +88,11 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
         })}
       >
         {showViewPlaceButton && (
-          <Box>
+          <Box onClick={() => setExpanded(true)}>
             <PageBaseHeader
               iconButtons={
                 <IconButton onClick={() => setExpanded(true)}>
-                  <ArrowUpward />
+                  <KeyboardArrowUp />
                 </IconButton>
               }
               title={selectedPlace.title || 'Untitled place'}
