@@ -80,7 +80,13 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
   }, [activeGroupIds, activeTagIdsByGroup]);
 
   return (
-    <Box display="flex" flexDirection="column" gap={1}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap={1}
+      paddingRight={2}
+      sx={{ overflowY: 'auto' }}
+    >
       <Box paddingTop={1}>
         <Typography>
           Add filters to decide what areas you see on the map.

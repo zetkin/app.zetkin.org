@@ -19,7 +19,9 @@ const LayerSettings: FC<LayerSettingsProps> = ({
       display="flex"
       flexDirection="column"
       gap={1}
+      paddingRight={2}
       paddingTop={1}
+      sx={{ overflowY: 'auto' }}
     >
       <Box
         display="flex"

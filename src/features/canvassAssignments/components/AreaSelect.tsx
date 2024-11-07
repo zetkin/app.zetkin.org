@@ -148,7 +148,14 @@ const AreaSelect: FC<Props> = ({
         </Box>
       )}
       {selectedArea && (
-        <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          paddingRight={2}
+          paddingTop={1}
+          sx={{ overflowY: 'auto' }}
+        >
           <Box display="flex" gap={2} justifyContent="flex-end">
             {selectedAreaStats && (
               <>
