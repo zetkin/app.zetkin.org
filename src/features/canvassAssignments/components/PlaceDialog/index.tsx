@@ -55,6 +55,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           if (dialogStep == 'place') {
             return (
               <Place
+                assignment={assignment}
                 onClose={onClose}
                 onCreateHousehold={(household) => {
                   setSelectedHouseholdId(household.id);

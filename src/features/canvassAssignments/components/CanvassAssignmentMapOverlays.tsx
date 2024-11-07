@@ -61,6 +61,11 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
     }
   }, [selectedPlace]);
 
+  const numVisitedHouseholds =
+    selectedPlace?.households.filter((household) =>
+      household.visits.some((visit) => visit.canvassAssId == assignment.id)
+    ).length ?? 0;
+
   return (
     <>
       {!selectedPlace && !isCreating && (
@@ -92,6 +97,7 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
                   <KeyboardArrowUp />
                 </IconButton>
               }
+              subtitle={`${numVisitedHouseholds} / ${selectedPlace.households.length} households visited`}
               title={selectedPlace.title || 'Untitled place'}
             />
           </Box>

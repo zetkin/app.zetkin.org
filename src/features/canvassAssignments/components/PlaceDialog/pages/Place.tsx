@@ -8,12 +8,17 @@ import {
 import { Add, KeyboardArrowRight } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
-import { Household, ZetkinPlace } from 'features/canvassAssignments/types';
+import {
+  Household,
+  ZetkinCanvassAssignment,
+  ZetkinPlace,
+} from 'features/canvassAssignments/types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import PageBase from './PageBase';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 
 type PlaceProps = {
+  assignment: ZetkinCanvassAssignment;
   onClose: () => void;
   onCreateHousehold: (householdId: Household) => void;
   onEdit: () => void;
@@ -23,6 +28,7 @@ type PlaceProps = {
 };
 
 const Place: FC<PlaceProps> = ({
+  assignment,
   onClose,
   onEdit,
   onCreateHousehold,
@@ -33,10 +39,16 @@ const Place: FC<PlaceProps> = ({
   const [adding, setAdding] = useState(false);
   const { addHousehold } = usePlaceMutations(orgId, place.id);
 
+  const numVisitedHouseholds =
+    place?.households.filter((household) =>
+      household.visits.some((visit) => visit.canvassAssId == assignment.id)
+    ).length ?? 0;
+
   return (
     <PageBase
       onClose={onClose}
       onEdit={onEdit}
+      subtitle={`${numVisitedHouseholds} / ${place.households.length} households visited`}
       title={place.title || 'Untitled place'}
     >
       <Box mt={2}>
