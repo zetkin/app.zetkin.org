@@ -481,6 +481,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                                 height={zoom >= 16 ? '30px' : '20px'}
                                 justifyContent="center"
                                 padding={1}
+                                sx={{ boxShadow: '0 0 8px rgba(0,0,0,0.3)' }}
                                 width={zoom >= 16 ? '30px' : '20px'}
                               >
                                 <Typography
