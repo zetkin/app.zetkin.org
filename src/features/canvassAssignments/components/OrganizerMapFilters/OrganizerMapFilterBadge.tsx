@@ -18,7 +18,15 @@ const OrganizerMapFilterBadge: FC = () => {
     : numActiveGroups;
 
   return numTotalFilters > 0 ? (
-    <Badge badgeContent={numTotalFilters} sx={{ color: 'white' }}>
+    <Badge
+      badgeContent={numTotalFilters}
+      sx={(theme) => ({
+        '& .MuiBadge-badge': {
+          backgroundColor: 'white',
+          color: theme.palette.primary.main,
+        },
+      })}
+    >
       <FilterList sx={{ color: 'white' }} />
     </Badge>
   ) : (

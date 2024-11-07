@@ -1,12 +1,5 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
-import { FC, useRef } from 'react';
+import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
+import { FC } from 'react';
 import { Pentagon, Place, SquareRounded } from '@mui/icons-material';
 
 import { MapStyle } from './OrganizerMap';
@@ -20,12 +13,6 @@ const LayerSettings: FC<LayerSettingsProps> = ({
   mapStyle,
   onMapStyleChange,
 }) => {
-  const customSettingsRef = useRef<MapStyle>({
-    area: 'hide',
-    overlay: 'hide',
-    place: 'hide',
-  });
-
   return (
     <Box
       alignItems="flex-start"
@@ -34,7 +21,6 @@ const LayerSettings: FC<LayerSettingsProps> = ({
       gap={1}
       paddingTop={1}
     >
-      Select what info you see on the map.
       <Box
         display="flex"
         flexDirection="column"
@@ -42,17 +28,15 @@ const LayerSettings: FC<LayerSettingsProps> = ({
         paddingTop={1}
         width="100%"
       >
-        <Box display="flex" gap={1}>
-          <Place color="secondary" />
-          <Typography variant="body2">
-            How to display the markers that represent locations on your map
-          </Typography>
-        </Box>
         <FormControl variant="outlined">
-          <InputLabel id="place-style-label">Location marker</InputLabel>
+          <Box display="flex" gap={1} paddingBottom={1}>
+            <Place color="secondary" />
+            <Typography id="place-style-label">
+              What the markers represent.
+            </Typography>
+          </Box>
           <Select
             fullWidth
-            label="Location marker"
             labelId="place-style-label"
             onChange={(ev) => {
               const newValue = ev.target.value;
@@ -63,7 +47,6 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                 newValue == 'hide'
               ) {
                 onMapStyleChange({ ...mapStyle, place: newValue });
-                customSettingsRef.current = { ...mapStyle, place: newValue };
               }
             }}
             value={mapStyle.place}
@@ -76,17 +59,15 @@ const LayerSettings: FC<LayerSettingsProps> = ({
             <MenuItem value="hide">Hidden</MenuItem>
           </Select>
         </FormControl>
-        <Box display="flex" gap={1}>
-          <Pentagon color="secondary" />
-          <Typography variant="body2">
-            What the area color represents.
-          </Typography>
-        </Box>
         <FormControl variant="outlined">
-          <InputLabel id="area-style-label">Area color</InputLabel>
+          <Box display="flex" gap={1} paddingBottom={1}>
+            <Pentagon color="secondary" />
+            <Typography id="area-style-label">
+              What the area color represents.
+            </Typography>
+          </Box>
           <Select
             fullWidth
-            label="Area color"
             labelId="area-style-color"
             onChange={(ev) => {
               const newValue = ev.target.value;
@@ -98,7 +79,6 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                 newValue == 'outlined'
               ) {
                 onMapStyleChange({ ...mapStyle, area: newValue });
-                customSettingsRef.current = { ...mapStyle, area: newValue };
               }
             }}
             value={mapStyle.area}
@@ -110,17 +90,15 @@ const LayerSettings: FC<LayerSettingsProps> = ({
             <MenuItem value="hide">Hidden</MenuItem>
           </Select>
         </FormControl>
-        <Box display="flex" gap={1}>
-          <SquareRounded color="secondary" />
-          <Typography variant="body2">
-            What to show in the center of the areas.
-          </Typography>
-        </Box>
         <FormControl variant="outlined">
-          <InputLabel id="overlay-style-label">Center of area</InputLabel>
+          <Box display="flex" gap={1} paddingBottom={1}>
+            <SquareRounded color="secondary" />
+            <Typography id="overlay-style-label">
+              What to show in the center of the areas.
+            </Typography>
+          </Box>
           <Select
             fullWidth
-            label="Center of area"
             labelId="overlay-style-label"
             onChange={(ev) => {
               const newValue = ev.target.value;
@@ -131,17 +109,13 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                 newValue == 'hide'
               ) {
                 onMapStyleChange({ ...mapStyle, overlay: newValue });
-                customSettingsRef.current = {
-                  ...mapStyle,
-                  overlay: newValue,
-                };
               }
             }}
             value={mapStyle.overlay}
           >
             <MenuItem value="assignees">Assignees</MenuItem>
             <MenuItem value="households">
-              Number of households and places in the area
+              Number of places and households in the area
             </MenuItem>
             <MenuItem value="progress">
               Progress for the area in this assignment

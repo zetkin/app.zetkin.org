@@ -6,8 +6,7 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { Box } from '@mui/material';
-import { DoorFront, Place } from '@mui/icons-material';
+import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 
@@ -122,7 +121,14 @@ const PlaceMarker: FC<{
             <div
               style={{
                 alignItems: 'center',
-                background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                background: `conic-gradient(${
+                  theme.palette.primary.main
+                } ${successfulVisitsColorPercent}%, ${lighten(
+                  theme.palette.primary.main,
+                  0.7
+                )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
+                  theme.palette.grey[400]
+                } ${visitsColorPercent}%)`,
                 borderRadius: '2em',
                 display: 'flex',
                 flexDirection: 'row',
@@ -218,7 +224,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     }
 
     if (areaStyle == 'assignees') {
-      return hasPeople ? '#7800DC' : theme.palette.secondary.main;
+      return hasPeople
+        ? theme.palette.primary.main
+        : theme.palette.secondary.main;
     }
 
     if (areaStyle == 'progress' && !hasPeople) {
@@ -227,8 +235,12 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, ${theme.palette.grey[200]}, black ${householdColorPercent}%)`
-      : `color-mix(in hsl,  #E4CCF8, #7800DC ${visitsColorPercent || 1}%)`;
+        `color-mix(in hsl, ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
+        } ${householdColorPercent}%)`
+      : `color-mix(in hsl,  ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
+        } ${visitsColorPercent || 1}%)`;
   };
 
   const placesByAreaId: Record<string, ZetkinPlace[]> = {};
@@ -374,34 +386,27 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[21, 21]} position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
                       bgcolor="white"
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
-                      padding={0.5}
+                      gap="2px"
+                      padding="2px 6px"
+                      sx={{ translate: '-50% -50%' }}
                     >
-                      <Box alignItems="center" display="flex">
-                        <Place
-                          color="secondary"
-                          sx={{ fontSize: '16px', marginRight: '4px' }}
-                        />
-                        {numberOfPlaces}
-                      </Box>
-                      <Box alignItems="center" display="flex">
-                        <DoorFront
-                          color="secondary"
-                          sx={{ fontSize: '16px', marginRight: '4px' }}
-                        />
+                      <Typography fontSize="11px">{numberOfPlaces}</Typography>
+                      <Divider />
+                      <Typography fontSize="11px">
                         {numberOfHouseholds}
-                      </Box>
+                      </Typography>
                     </Box>
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[10, 10]} position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
                       bgcolor="white"
                       borderRadius={1}
@@ -409,11 +414,19 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       display="inline-flex"
                       flexDirection="column"
                       padding={0.5}
+                      sx={{ translate: '-50% -50%' }}
                     >
                       <div
                         style={{
                           alignItems: 'center',
-                          background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                          background: `conic-gradient(${
+                            theme.palette.primary.main
+                          } ${successfulVisitsColorPercent}%, ${lighten(
+                            theme.palette.primary.main,
+                            0.7
+                          )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
+                            theme.palette.grey[400]
+                          } ${visitsColorPercent}%)`,
                           borderRadius: '2em',
                           display: 'flex',
                           flexDirection: 'row',
@@ -426,36 +439,37 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
-                  <DivIconMarker position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     {detailed && (
-                      <Box display="flex" sx={{ pointerEvents: 'none' }}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            gap: '1px',
-                            transform: 'translate(-50%, -50%)',
-                          }}
-                        >
-                          {people.map((person, index) => (
-                            <Box
-                              //TODO: only use person id once we have logic preventing
-                              //assigning the same person to an area more than once
-                              key={`${person.id}-${index}`}
-                              sx={{
-                                borderRadius: '50%',
-                                boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                              }}
-                            >
-                              <ZUIAvatar
-                                size={zoom >= 16 ? 'sm' : 'xs'}
-                                url={`/api/orgs/1/people/${person.id}/avatar`}
-                              />
-                            </Box>
-                          ))}
-                        </Box>
+                      <Box
+                        display="inline-flex"
+                        flexWrap="wrap"
+                        justifyContent="center"
+                        sx={{
+                          pointerEvents: 'none',
+                          transform: 'translate(-50%, -50%)',
+                        }}
+                        width={zoom >= 16 ? '91px' : '61px'}
+                      >
+                        {people.map((person, index) => (
+                          <Box
+                            //TODO: only use person id once we have logic preventing
+                            //assigning the same person to an area more than once
+                            key={`${person.id}-${index}`}
+                            sx={{
+                              borderRadius: '50%',
+                              boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+                            }}
+                          >
+                            <ZUIAvatar
+                              size={zoom >= 16 ? 'sm' : 'xs'}
+                              url={`/api/orgs/1/people/${person.id}/avatar`}
+                            />
+                          </Box>
+                        ))}
                       </Box>
                     )}
-                    {overlayStyle == 'assignees' && !detailed && (
+                    {!detailed && (
                       <Box
                         sx={{
                           alignItems: 'center',
@@ -496,20 +510,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
-                {/* {showPlaces &&
-                  placesByAreaId[area.id].map((place) => (
-                    <PlaceMarker
-                      key={place.id}
-                      canvassAssId={canvassAssId}
-                      idOfMetricThatDefinesDone={
-                        assignment.metrics.find((metric) => metric.definesDone)
-                          ?.id || ''
-                      }
-                      place={place}
-                      placeStyle={placeStyle}
-                      statsItem={stats}
-                    />
-                  ))} */}
               </>
             );
           })}
