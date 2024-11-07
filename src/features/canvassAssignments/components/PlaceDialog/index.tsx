@@ -1,11 +1,11 @@
-import { ArrowBackIos, Close, Edit } from '@mui/icons-material';
+import { ArrowBackIos, Close } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { Box, Divider, IconButton, Typography } from '@mui/material';
 
 import VisitWizard from './VisitWizard';
 import EditPlace from './pages/EditPlace';
 import Place from './pages/Place';
-import Household from './Household';
+import Household from './pages/Household';
 import ZUIFuture from 'zui/ZUIFuture';
 import { PlaceDialogStep } from '../CanvassAssignmentMapOverlays';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
@@ -47,8 +47,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
     null
   );
-  const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
-  const [householdTitle, setHousholdTitle] = useState('');
 
   const selectedHousehold = place.households.find(
     (household) => household.id == selectedHouseholdId
@@ -79,7 +77,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 onClose={onClose}
                 onCreateHousehold={(household) => {
                   setSelectedHouseholdId(household.id);
-                  setEditingHouseholdTitle(true);
+                  // TODO: Navigate using separate function
+                  onSelectHousehold();
                 }}
                 onEdit={onEdit}
                 onNavigate={(step) => {
@@ -108,6 +107,28 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   onUpdateDone();
                 }}
                 place={place}
+              />
+            );
+          } else if (dialogStep == 'household') {
+            if (!selectedHousehold) {
+              // This never seems to happen, which is correct
+              return null;
+            }
+
+            return (
+              <Household
+                household={selectedHousehold}
+                onBack={onUpdateDone}
+                onClose={onClose}
+                onHouseholdUpdate={(data) =>
+                  updateHousehold(selectedHousehold.id, data)
+                }
+                onWizardStart={() => {
+                  onWizard();
+                }}
+                visitedInThisAssignment={selectedHousehold.visits.some(
+                  (visit) => visit.canvassAssId == canvassAssId
+                )}
               />
             );
           }
@@ -141,41 +162,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     <IconButton onClick={onClose}>
                       <Close />
                     </IconButton>
-                  </Box>
-                )}
-                {dialogStep == 'household' && selectedHousehold && (
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    <Box alignItems="center" display="flex">
-                      <IconButton
-                        onClick={() => {
-                          onUpdateDone();
-                        }}
-                      >
-                        <ArrowBackIos />
-                      </IconButton>
-                      <Typography
-                        alignItems="center"
-                        display="flex"
-                        variant="h6"
-                      >
-                        {selectedHousehold.title || 'Untitled household'}
-                      </Typography>
-                    </Box>
-                    <Box alignItems="center" display="flex">
-                      <IconButton
-                        onClick={() => {
-                          setHousholdTitle(selectedHousehold.title);
-                          setEditingHouseholdTitle(true);
-                        }}
-                        sx={{ marginRight: 1 }}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </Box>
                   </Box>
                 )}
                 {dialogStep == 'wizard' && selectedHousehold && (
@@ -254,27 +240,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       })}
                     </Box>
                   </Box>
-                )}
-                {selectedHousehold && dialogStep == 'household' && (
-                  <Household
-                    editingHouseholdTitle={editingHouseholdTitle}
-                    householdTitle={householdTitle}
-                    onEditHouseholdTitleEnd={() =>
-                      setEditingHouseholdTitle(false)
-                    }
-                    onHouseholdTitleChange={(newTitle) =>
-                      setHousholdTitle(newTitle)
-                    }
-                    onHouseholdUpdate={(data) =>
-                      updateHousehold(selectedHousehold.id, data)
-                    }
-                    onWizardStart={() => {
-                      onWizard();
-                    }}
-                    visitedInThisAssignment={selectedHousehold.visits.some(
-                      (visit) => visit.canvassAssId == canvassAssId
-                    )}
-                  />
                 )}
                 {showWizard && (
                   <VisitWizard
