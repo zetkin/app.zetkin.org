@@ -10,6 +10,7 @@ type Props = {
   onBack?: () => void;
   onClose?: () => void;
   onEdit?: () => void;
+  subtitle?: string;
   title: string;
 };
 
@@ -19,6 +20,7 @@ const PageBase: FC<Props> = ({
   onBack,
   onClose,
   onEdit,
+  subtitle,
   title,
 }) => {
   return (
@@ -47,6 +49,7 @@ const PageBase: FC<Props> = ({
             </>
           }
           onBack={onBack}
+          subtitle={subtitle}
           title={title}
         />
       </Box>

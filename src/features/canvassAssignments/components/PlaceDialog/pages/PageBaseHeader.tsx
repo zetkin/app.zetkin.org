@@ -5,10 +5,16 @@ import { FC, ReactNode } from 'react';
 type Props = {
   iconButtons: ReactNode;
   onBack?: () => void;
+  subtitle?: string;
   title: string;
 };
 
-const PageBaseHeader: FC<Props> = ({ iconButtons, onBack, title }) => {
+const PageBaseHeader: FC<Props> = ({
+  iconButtons,
+  onBack,
+  subtitle,
+  title,
+}) => {
   return (
     <Box display="flex" justifyContent="space-between" width="100%">
       <Box alignItems="center" display="flex">
@@ -17,7 +23,14 @@ const PageBaseHeader: FC<Props> = ({ iconButtons, onBack, title }) => {
             <ArrowBackIos />
           </IconButton>
         )}
-        <Typography variant="h6">{title}</Typography>
+        <Box>
+          <Typography variant="h6">{title}</Typography>
+          {subtitle && (
+            <Typography color="secondary" variant="body2">
+              {subtitle}
+            </Typography>
+          )}
+        </Box>
       </Box>
       <Box>{iconButtons}</Box>
     </Box>
