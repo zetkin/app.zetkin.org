@@ -128,3 +128,9 @@ export type GraphData = {
   householdsVisited: GraphDataItem[];
   successfulVisits: GraphDataItem[];
 };
+
+export type SessionDeletePayload = {
+  areaId: string;
+  assigneeId: number;
+  assignmentId: string;
+};
