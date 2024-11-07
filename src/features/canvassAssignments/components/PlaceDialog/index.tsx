@@ -1,9 +1,9 @@
 import { ArrowBackIos, Close, Edit } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
+import { Box, Divider, IconButton, Typography } from '@mui/material';
 
 import VisitWizard from './VisitWizard';
-import EditPlace from './EditPlace';
+import EditPlace from './pages/EditPlace';
 import Place from './pages/Place';
 import Household from './Household';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -47,10 +47,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
     null
   );
-  const [description, setDescription] = useState<string>(
-    place.description ?? ''
-  );
-  const [title, setTitle] = useState<string>(place.title ?? '');
   const [editingHouseholdTitle, setEditingHouseholdTitle] = useState(false);
   const [householdTitle, setHousholdTitle] = useState('');
 
@@ -70,13 +66,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         return 0;
       }
     }) || [];*/
-
-  const nothingHasBeenEdited =
-    dialogStep == 'edit' &&
-    title == place.title &&
-    (description == place.description || (!description && !place.description));
-
-  const saveButtonDisabled = nothingHasBeenEdited;
 
   const showWizard = selectedHousehold && dialogStep == 'wizard';
 
@@ -106,6 +95,18 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   onSelectHousehold();
                 }}
                 orgId={orgId}
+                place={place}
+              />
+            );
+          } else if (dialogStep == 'edit') {
+            return (
+              <EditPlace
+                onBack={onUpdateDone}
+                onClose={onClose}
+                onSave={async (title, description) => {
+                  await updatePlace({ description, title });
+                  onUpdateDone();
+                }}
                 place={place}
               />
             );
@@ -141,16 +142,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       <Close />
                     </IconButton>
                   </Box>
-                )}
-                {dialogStep == 'edit' && (
-                  <>
-                    <Typography variant="h6">
-                      {`Edit ${place.title || 'Untitled place'}`}
-                    </Typography>
-                    <IconButton onClick={onUpdateDone}>
-                      <Close />
-                    </IconButton>
-                  </>
                 )}
                 {dialogStep == 'household' && selectedHousehold && (
                   <Box
@@ -264,16 +255,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                     </Box>
                   </Box>
                 )}
-                {dialogStep === 'edit' && (
-                  <EditPlace
-                    description={description}
-                    onDescriptionChange={(newDescription) =>
-                      setDescription(newDescription)
-                    }
-                    onTitleChange={(newTitle) => setTitle(newTitle)}
-                    title={title}
-                  />
-                )}
                 {selectedHousehold && dialogStep == 'household' && (
                   <Household
                     editingHouseholdTitle={editingHouseholdTitle}
@@ -308,29 +289,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                       onUpdateDone();
                     }}
                   />
-                )}
-              </Box>
-              <Box
-                display="flex"
-                gap={1}
-                justifyContent="center"
-                paddingTop={1}
-              >
-                {dialogStep == 'edit' && (
-                  <Button
-                    disabled={saveButtonDisabled}
-                    onClick={() => {
-                      if (dialogStep == 'edit') {
-                        updatePlace({
-                          description,
-                          title,
-                        });
-                      }
-                    }}
-                    variant="contained"
-                  >
-                    Save
-                  </Button>
                 )}
               </Box>
             </Box>
