@@ -18,7 +18,6 @@ type PlaceDialogProps = {
   dialogStep: PlaceDialogStep;
   onClose: () => void;
   onEdit: () => void;
-  onPickHousehold: () => void;
   onSelectHousehold: () => void;
   onUpdateDone: () => void;
   onWizard: () => void;
@@ -31,7 +30,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   dialogStep,
   onClose,
   onEdit,
-  onPickHousehold,
   onUpdateDone,
   onSelectHousehold,
   onWizard,
@@ -79,14 +77,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   onSelectHousehold();
                 }}
                 onEdit={onEdit}
-                onNavigate={(step) => {
-                  // TODO: Clean this up, no need for separate functions
-                  if (step == 'wizard') {
-                    onWizard();
-                  } else if (step == 'pickHousehold') {
-                    onPickHousehold();
-                  }
-                }}
                 onSelectHousehold={(householdId: string) => {
                   setSelectedHouseholdId(householdId);
                   onSelectHousehold();

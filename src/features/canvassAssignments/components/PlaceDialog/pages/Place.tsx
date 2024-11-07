@@ -1,26 +1,22 @@
 import {
   Box,
   Button,
-  ButtonGroup,
+  CircularProgress,
   Divider,
-  Menu,
-  MenuItem,
   Typography,
 } from '@mui/material';
-import { MoreVert } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import { Household, ZetkinPlace } from 'features/canvassAssignments/types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import PageBase from './PageBase';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
-import { PlaceDialogStep } from '../../CanvassAssignmentMapOverlays';
 
 type PlaceProps = {
   onClose: () => void;
   onCreateHousehold: (householdId: Household) => void;
   onEdit: () => void;
-  onNavigate: (step: PlaceDialogStep) => void;
   onSelectHousehold: (householdId: string) => void;
   orgId: number;
   place: ZetkinPlace;
@@ -30,95 +26,15 @@ const Place: FC<PlaceProps> = ({
   onClose,
   onEdit,
   onCreateHousehold,
-  onNavigate,
   onSelectHousehold,
   orgId,
   place,
 }) => {
+  const [adding, setAdding] = useState(false);
   const { addHousehold } = usePlaceMutations(orgId, place.id);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   return (
     <PageBase
-      actions={
-        <>
-          {place.households.length == 0 && (
-            <Button
-              fullWidth
-              onClick={async () => {
-                const newlyAddedHousehold = await addHousehold();
-                onCreateHousehold(newlyAddedHousehold);
-              }}
-              variant="contained"
-            >
-              Add household
-            </Button>
-          )}
-          {place.households.length == 1 && (
-            <ButtonGroup variant="contained">
-              <Button
-                fullWidth
-                onClick={() => {
-                  onSelectHousehold(place.households[0].id);
-                  onNavigate('wizard');
-                }}
-              >
-                Log visit
-              </Button>
-              <Button
-                onClick={(ev) => setAnchorEl(ev.currentTarget)}
-                size="small"
-              >
-                <MoreVert />
-              </Button>
-            </ButtonGroup>
-          )}
-          {place.households.length > 1 && (
-            <ButtonGroup variant="contained">
-              <Button
-                fullWidth
-                onClick={() => {
-                  onNavigate('pickHousehold');
-                }}
-              >
-                Log visit
-              </Button>
-              <Button
-                onClick={(ev) => setAnchorEl(ev.currentTarget)}
-                size="small"
-              >
-                <MoreVert />
-              </Button>
-            </ButtonGroup>
-          )}
-          <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              horizontal: 'left',
-              vertical: 'top',
-            }}
-            onClose={() => setAnchorEl(null)}
-            open={!!anchorEl}
-            sx={{
-              zIndex: 99999,
-            }}
-            transformOrigin={{
-              horizontal: 'center',
-              vertical: 'bottom',
-            }}
-          >
-            <MenuItem
-              onClick={async () => {
-                const newlyAddedHousehold = await addHousehold();
-                onCreateHousehold(newlyAddedHousehold);
-                setAnchorEl(null);
-              }}
-            >
-              Add household
-            </MenuItem>
-          </Menu>
-        </>
-      }
       onClose={onClose}
       onEdit={onEdit}
       title={place.title || 'Untitled place'}
@@ -140,6 +56,7 @@ const Place: FC<PlaceProps> = ({
         </Typography>
         <Divider />
         <Box
+          alignItems="center"
           display="flex"
           flexDirection="column"
           gap={2}
@@ -180,6 +97,27 @@ const Place: FC<PlaceProps> = ({
               </Box>
             );
           })}
+          <Box mt={2}>
+            <Button
+              disabled={adding}
+              onClick={async () => {
+                setAdding(true);
+                const newlyAddedHousehold = await addHousehold();
+                setAdding(false);
+                onCreateHousehold(newlyAddedHousehold);
+              }}
+              startIcon={
+                adding ? (
+                  <CircularProgress color="secondary" size="20px" />
+                ) : (
+                  <Add />
+                )
+              }
+              variant="outlined"
+            >
+              Add household
+            </Button>
+          </Box>
         </Box>
       </Box>
     </PageBase>

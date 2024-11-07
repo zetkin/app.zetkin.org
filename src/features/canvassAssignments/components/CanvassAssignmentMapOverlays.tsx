@@ -107,7 +107,6 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
               setExpanded(false);
             }}
             onEdit={() => setDialogStep('edit')}
-            onPickHousehold={() => setDialogStep('pickHousehold')}
             onSelectHousehold={() => setDialogStep('household')}
             onUpdateDone={() => setDialogStep('place')}
             onWizard={() => setDialogStep('wizard')}
