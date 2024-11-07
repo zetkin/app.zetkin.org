@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -136,7 +135,6 @@ const VisitWizard: FC<VisitWizardProps> = ({
 }) => {
   const [responses, setResponses] = useState<Visit['responses']>([]);
   const [step, setStep] = useState(0);
-  const [noteToOfficial, setNoteToOfficial] = useState('');
 
   const metricIndex = step;
   const currentMetric = metrics[metricIndex];
@@ -180,7 +178,20 @@ const VisitWizard: FC<VisitWizardProps> = ({
             }}
             value={responses[metricIndex]?.response}
           />
-        ) : null
+        ) : (
+          <Button
+            fullWidth
+            onClick={() => {
+              const filteredResponses = responses.filter(
+                (response) => !!response.response
+              );
+              onLogVisit(filteredResponses, '');
+            }}
+            variant="contained"
+          >
+            Submit report
+          </Button>
+        )
       }
       onBack={onBack}
       title={`${household.title || 'Unititled household'}: Log visit`}
@@ -189,53 +200,15 @@ const VisitWizard: FC<VisitWizardProps> = ({
         {metrics.map((metric, index) => {
           if (index < step) {
             return (
-              <>
-                <PreviousMessage
-                  key={metric.id}
-                  onClick={() => {
-                    setStep(index);
-                    setResponses(responses.slice(0, index + 1));
-                  }}
-                  question={metric.question}
-                  response={responses[index].response}
-                />
-                {index == metrics.length - 1 && (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    flexGrow={1}
-                    justifyContent="flex-end"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      flexGrow={1}
-                      justifyContent="center"
-                    >
-                      <Typography>
-                        Did anything happen that an official needs to know
-                        about?
-                      </Typography>
-                      <TextField
-                        onChange={(ev) => setNoteToOfficial(ev.target.value)}
-                        value={noteToOfficial}
-                      />
-                    </Box>
-                    <Button
-                      fullWidth
-                      onClick={() => {
-                        const filteredResponses = responses.filter(
-                          (response) => !!response.response
-                        );
-                        onLogVisit(filteredResponses, noteToOfficial);
-                      }}
-                      variant="contained"
-                    >
-                      {noteToOfficial ? 'Save with note' : 'Save without note'}
-                    </Button>
-                  </Box>
-                )}
-              </>
+              <PreviousMessage
+                key={metric.id}
+                onClick={() => {
+                  setStep(index);
+                  setResponses(responses.slice(0, index + 1));
+                }}
+                question={metric.question}
+                response={responses[index].response}
+              />
             );
           }
 
