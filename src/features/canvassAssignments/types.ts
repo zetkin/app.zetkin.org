@@ -129,7 +129,7 @@ export type GraphData = {
   successfulVisits: GraphDataItem[];
 };
 
-export type SessionDeletePayload = {
+export type SessionDeletedPayload = {
   areaId: string;
   assigneeId: number;
   assignmentId: string;

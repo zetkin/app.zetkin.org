@@ -9,7 +9,7 @@ export default function useCanvassSessionMutations(
   const dispatch = useAppDispatch();
 
   return {
-    deleteAssignee: async (areaId: string, personId: number) => {
+    deleteSession: async (areaId: string, personId: number) => {
       await apiClient.delete(
         `/beta/orgs/${orgId}/areaassignment/${canvassAssId}/areas/${areaId}/assignees/${personId}`
       );

@@ -15,7 +15,7 @@ import {
   AssignmentWithAreas,
   ZetkinAssignmentAreaStats,
   GraphData,
-  SessionDeletePayload,
+  SessionDeletedPayload,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
@@ -269,7 +269,7 @@ const canvassAssignmentSlice = createSlice({
       state.placeList.loaded = timestamp;
       state.placeList.items.forEach((item) => (item.loaded = timestamp));
     },
-    sessionDeleted: (state, action: PayloadAction<SessionDeletePayload>) => {
+    sessionDeleted: (state, action: PayloadAction<SessionDeletedPayload>) => {
       const { areaId, assignmentId, assigneeId } = action.payload;
 
       if (state.sessionsByAssignmentId[assignmentId]) {

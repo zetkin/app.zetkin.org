@@ -54,7 +54,7 @@ const AreaSelect: FC<Props> = ({
   sessions,
 }) => {
   const { orgId } = useNumericRouteParams();
-  const { deleteAssignee } = useCanvassSessionMutations(orgId, canvassId);
+  const { deleteSession } = useCanvassSessionMutations(orgId, canvassId);
   const selectedAreaAssignees = sessions
     .filter((session) => session.area.id == selectedArea?.id)
     .map((session) => session.assignee);
@@ -224,7 +224,7 @@ const AreaSelect: FC<Props> = ({
                 />
                 <Button
                   color="secondary"
-                  onClick={() => deleteAssignee(selectedArea.id, assignee.id)}
+                  onClick={() => deleteSession(selectedArea.id, assignee.id)}
                 >
                   <Close />
                 </Button>
