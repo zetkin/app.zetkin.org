@@ -88,6 +88,13 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
     let nearestPlace: string | null = null;
     let nearestDistance = Infinity;
 
+    if (isCreating) {
+      if (selectedPlaceId) {
+        setSelectedPlaceId(null);
+      }
+      return;
+    }
+
     const crosshair = crosshairRef.current;
 
     try {
