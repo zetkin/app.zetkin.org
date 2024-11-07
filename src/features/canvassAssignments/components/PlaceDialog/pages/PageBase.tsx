@@ -22,7 +22,7 @@ const PageBase: FC<Props> = ({
   title,
 }) => {
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" height="100%">
       <Box
         paddingBottom={1}
         sx={{
@@ -51,10 +51,10 @@ const PageBase: FC<Props> = ({
         />
       </Box>
       <Divider />
-      <Box flexGrow={1} overflow="hidden">
+      <Box flexGrow={1} sx={{ overflowY: 'auto' }}>
         {children}
       </Box>
-      <Box display="flex" gap={1} justifyContent="center" paddingTop={1}>
+      <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
         {actions}
       </Box>
     </Box>

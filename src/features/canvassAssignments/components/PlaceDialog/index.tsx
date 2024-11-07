@@ -66,7 +66,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     }) || [];*/
 
   return (
-    <Box>
+    <Box height="100%">
       <ZUIFuture future={assignmentFuture}>
         {(assignment) => {
           if (dialogStep == 'place') {
