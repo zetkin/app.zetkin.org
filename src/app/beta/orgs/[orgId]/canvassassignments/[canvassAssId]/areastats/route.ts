@@ -13,7 +13,8 @@ import {
 } from 'features/canvassAssignments/types';
 import isPointInsidePolygon from 'features/canvassAssignments/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -32,15 +33,22 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
-      //Find all sessions of the assignment
+      //Get all areas
+      const allAreaModels = await AreaModel.find({ orgId });
+
+      //Get all places
+      const allPlaceModels = await PlaceModel.find({ orgId });
+
+      //Get the assignment
       const assignmentModel = await CanvassAssignmentModel.findOne({
         _id: params.canvassAssId,
       });
 
-      if (!assignmentModel) {
+      if (!assignmentModel || !allPlaceModels || !allAreaModels) {
         return new NextResponse(null, { status: 404 });
       }
 
+      //Find all sessions of the assignment
       const sessions: ZetkinCanvassSession[] = [];
 
       for await (const sessionData of assignmentModel.sessions) {
@@ -88,13 +96,12 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       }
 
       //Areas that are parts of the sessions
-      const areas = sessions.map((session) => session.area);
-      const uniqueAreas = [
-        ...new Map(areas.map((area) => [area['id'], area])).values(),
-      ];
+      const areasWithAssignees = sessions.map((session) => session.area);
 
-      //Get all places
-      const allPlaceModels = await PlaceModel.find({ orgId });
+      //Find areas with visits that are not part of the sessions
+      const allTags = await apiClient.get<ZetkinTag[]>(
+        `/api/orgs/${orgId}/people/tags`
+      );
 
       const allPlaces: ZetkinPlace[] = allPlaceModels.map((model) => ({
         description: model.description,
@@ -104,6 +111,73 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         position: model.position,
         title: model.title,
       }));
+
+      const allAreas: ZetkinArea[] = allAreaModels.map((model) => {
+        const tags: ZetkinTag[] = [];
+        (model.tags || []).forEach((item) => {
+          const tag = allTags.find((tag) => tag.id == item.id);
+          if (tag) {
+            tags.push({
+              ...tag,
+              value: item.value,
+            });
+          }
+        });
+        return {
+          description: model.description,
+          id: model._id.toString(),
+          organization: {
+            id: model.orgId,
+          },
+          points: model.points,
+          tags: tags,
+          title: model.title,
+        };
+      });
+
+      const areasWithoutAssignees = allAreas.filter(
+        (area) => !areasWithAssignees.includes(area)
+      );
+
+      const areasWithVisitsButNoAssignees: ZetkinArea[] = [];
+
+      areasWithoutAssignees.forEach((area) => {
+        allPlaces.forEach((place) => {
+          const placeIsInArea = isPointInsidePolygon(
+            { lat: place.position.lat, lng: place.position.lng },
+            area.points.map((point) => ({ lat: point[0], lng: point[1] }))
+          );
+
+          if (placeIsInArea) {
+            let placeHasVisits = false;
+            place.households.forEach((household) => {
+              const hasVisitInThisAssignment = household.visits.find(
+                (visit) => visit.canvassAssId == params.canvassAssId
+              );
+
+              if (hasVisitInThisAssignment && !placeHasVisits) {
+                placeHasVisits = true;
+              }
+            });
+
+            if (placeHasVisits) {
+              areasWithVisitsButNoAssignees.push(area);
+            }
+          }
+        });
+      });
+
+      //Make one array of areas with assignees,
+      // and areas without assignees that have
+      //visits in this assignment
+      const uniqueAreas = [
+        ...new Map(
+          areasWithAssignees.map((area) => [area['id'], area])
+        ).values(),
+        ...new Map(
+          areasWithVisitsButNoAssignees.map((area) => [area['id'], area])
+        ).values(),
+      ];
 
       const statsByAreaId: Record<string, ZetkinAssignmentAreaStatsItem> = {};
 
