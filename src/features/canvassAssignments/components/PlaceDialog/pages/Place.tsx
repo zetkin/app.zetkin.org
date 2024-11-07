@@ -5,7 +5,7 @@ import {
   Divider,
   Typography,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Add, KeyboardArrowRight } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import { Household, ZetkinPlace } from 'features/canvassAssignments/types';
@@ -39,27 +39,36 @@ const Place: FC<PlaceProps> = ({
       onEdit={onEdit}
       title={place.title || 'Untitled place'}
     >
-      <Typography variant="h6">Description</Typography>
-      <Divider />
-      <Typography color="secondary">
-        {place.description || 'Empty description'}
-      </Typography>
+      <Box mt={2}>
+        <Typography
+          color="secondary"
+          sx={{ fontStyle: place.description ? 'normal' : 'italic' }}
+        >
+          {place.description || 'Empty description'}
+        </Typography>
+      </Box>
       <Box
         display="flex"
         flexDirection="column"
         flexGrow={2}
         gap={1}
+        mt={4}
         overflow="hidden"
       >
-        <Typography variant="h6">
-          {`${place.households.length} household/s`}
+        <Typography onClick={onEdit} variant="h6">
+          Households
         </Typography>
-        <Divider />
+        {place.households.length == 0 && (
+          <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
+            This place does not contain data about any households yet.
+          </Typography>
+        )}
         <Box
-          alignItems="center"
+          alignItems="stretch"
           display="flex"
           flexDirection="column"
           gap={2}
+          mt={1}
           sx={{ overflowY: 'auto' }}
         >
           {place.households.map((household) => {
@@ -79,25 +88,31 @@ const Place: FC<PlaceProps> = ({
               sortedVisits.length > 0 ? sortedVisits[0] : null;
 
             return (
-              <Box
-                key={household.id}
-                alignItems="center"
-                display="flex"
-                onClick={() => {
-                  onSelectHousehold(household.id);
-                }}
-                width="100%"
-              >
-                <Box flexGrow={1}>
-                  {household.title || 'Untitled household'}
+              <>
+                <Box
+                  key={household.id}
+                  alignItems="center"
+                  display="flex"
+                  onClick={() => {
+                    onSelectHousehold(household.id);
+                  }}
+                  width="100%"
+                >
+                  <Box flexGrow={1}>
+                    {household.title || 'Untitled household'}
+                  </Box>
+                  {mostRecentVisit && (
+                    <Typography color="secondary">
+                      <ZUIRelativeTime datetime={mostRecentVisit.timestamp} />
+                    </Typography>
+                  )}
+                  <KeyboardArrowRight />
                 </Box>
-                {mostRecentVisit && (
-                  <ZUIRelativeTime datetime={mostRecentVisit.timestamp} />
-                )}
-              </Box>
+                <Divider />
+              </>
             );
           })}
-          <Box mt={2}>
+          <Box display="flex" justifyContent="center" mt={2}>
             <Button
               disabled={adding}
               onClick={async () => {
