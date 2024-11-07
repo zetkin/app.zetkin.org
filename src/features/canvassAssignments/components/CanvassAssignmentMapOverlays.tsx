@@ -1,10 +1,12 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
+import { ArrowUpward } from '@mui/icons-material';
 
 import { ZetkinCanvassAssignment, ZetkinPlace } from '../types';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
+import PageBaseHeader from './PlaceDialog/pages/PageBaseHeader';
 
 type Props = {
   assignment: ZetkinCanvassAssignment;
@@ -52,7 +54,7 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
     if (expanded) {
       drawerTop = '20vh';
     } else {
-      drawerTop = 'calc(100vh - 6rem)';
+      drawerTop = 'calc(100vh - 5rem)';
     }
   }
 
@@ -87,19 +89,14 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
       >
         {showViewPlaceButton && (
           <Box>
-            <Typography sx={{ paddingBottom: 1 }}>
-              {selectedPlace.title || 'Untitled place'}
-            </Typography>
-            <Button
-              fullWidth
-              onClick={() => {
-                setExpanded(true);
-                setDialogStep('place');
-              }}
-              variant="outlined"
-            >
-              View place
-            </Button>
+            <PageBaseHeader
+              iconButtons={
+                <IconButton onClick={() => setExpanded(true)}>
+                  <ArrowUpward />
+                </IconButton>
+              }
+              title={selectedPlace.title || 'Untitled place'}
+            />
           </Box>
         )}
         {selectedPlace && expanded && (
