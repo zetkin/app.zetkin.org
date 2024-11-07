@@ -133,9 +133,11 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                         )
                         .map(({ area }) => area);
 
-                      const maxVisitedHouseholds = Math.max(
-                        ...sortedAreas.map(
-                          (area) => area.num_visited_households
+                      const maxHouseholdVisits = Math.max(
+                        ...dataGraph.flatMap((areaCard) =>
+                          areaCard.data.map(
+                            (graphData) => graphData.householdVisits
+                          )
                         )
                       );
 
@@ -170,7 +172,7 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                           areas={sortedAreas}
                           assignment={assignment}
                           data={dataGraph}
-                          maxVisitedHouseholds={maxVisitedHouseholds}
+                          maxVisitedHouseholds={maxHouseholdVisits}
                         />
                       );
                     }}
