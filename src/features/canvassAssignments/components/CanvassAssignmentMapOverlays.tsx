@@ -51,6 +51,8 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
     } else {
       drawerTop = 'calc(100vh - 5rem)';
     }
+  } else if (isCreating) {
+    drawerTop = 'calc(100vh - 9rem)';
   }
 
   useEffect(() => {
