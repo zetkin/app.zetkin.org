@@ -246,36 +246,34 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
             />
           ))}
         </FeatureGroup>
-        <>
-          {places.map((place) => {
-            const state = getVisitState(place.households, assignment.id);
+        {places.map((place) => {
+          const state = getVisitState(place.households, assignment.id);
 
-            const selected = place.id == selectedPlaceId;
-            const key = `marker-${place.id}-${selected.toString()}`;
+          const selected = place.id == selectedPlaceId;
+          const key = `marker-${place.id}-${selected.toString()}`;
 
-            return (
-              <DivIconMarker
-                key={key}
-                eventHandlers={{
-                  click: (evt) => {
-                    panTo(evt.latlng);
-                  },
-                }}
-                iconAnchor={[11, 33]}
-                position={{
-                  lat: place.position.lat,
-                  lng: place.position.lng,
-                }}
-              >
-                <MarkerIcon
-                  dataToShow="visited"
-                  selected={selected}
-                  state={state}
-                />
-              </DivIconMarker>
-            );
-          })}
-        </>
+          return (
+            <DivIconMarker
+              key={key}
+              eventHandlers={{
+                click: (evt) => {
+                  panTo(evt.latlng);
+                },
+              }}
+              iconAnchor={[11, 33]}
+              position={{
+                lat: place.position.lat,
+                lng: place.position.lng,
+              }}
+            >
+              <MarkerIcon
+                dataToShow="visited"
+                selected={selected}
+                state={state}
+              />
+            </DivIconMarker>
+          );
+        })}
       </MapContainer>
       <CanvassAssignmentMapOverlays
         assignment={assignment}
