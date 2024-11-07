@@ -1,6 +1,5 @@
-import { ArrowBackIos, Close } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import { Box, Divider, IconButton, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import VisitWizard from './pages/VisitWizard';
 import EditPlace from './pages/EditPlace';
@@ -11,7 +10,6 @@ import { PlaceDialogStep } from '../CanvassAssignmentMapOverlays';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type PlaceDialogProps = {
   canvassAssId: string;
@@ -49,19 +47,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   const selectedHousehold = place.households.find(
     (household) => household.id == selectedHouseholdId
   );
-
-  /*const sortedVisits =
-    selectedHousehold?.visits.toSorted((a, b) => {
-      const dateA = new Date(a.timestamp);
-      const dateB = new Date(b.timestamp);
-      if (dateA > dateB) {
-        return -1;
-      } else if (dateB > dateA) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }) || [];*/
 
   return (
     <Box height="100%">
@@ -143,103 +128,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             );
           }
 
-          return (
-            <Box display="flex" flexDirection="column">
-              <Box
-                paddingBottom={1}
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                {dialogStep == 'pickHousehold' && (
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    <Box alignItems="center" display="flex">
-                      <IconButton
-                        onClick={() => {
-                          onUpdateDone();
-                        }}
-                      >
-                        <ArrowBackIos />
-                      </IconButton>
-                      <Typography variant="h6">Pick household</Typography>
-                    </Box>
-                    <IconButton onClick={onClose}>
-                      <Close />
-                    </IconButton>
-                  </Box>
-                )}
-              </Box>
-              <Divider />
-              <Box flexGrow={1} overflow="hidden">
-                {dialogStep == 'pickHousehold' && (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    flexGrow={2}
-                    gap={1}
-                    overflow="hidden"
-                    paddingTop={1}
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      gap={2}
-                      sx={{ overflowY: 'auto' }}
-                    >
-                      {place.households.map((household) => {
-                        const sortedVisits = household.visits.toSorted(
-                          (a, b) => {
-                            const dateA = new Date(a.timestamp);
-                            const dateB = new Date(b.timestamp);
-                            if (dateA > dateB) {
-                              return -1;
-                            } else if (dateB > dateA) {
-                              return 1;
-                            } else {
-                              return 0;
-                            }
-                          }
-                        );
-
-                        const mostRecentVisit =
-                          sortedVisits.length > 0 ? sortedVisits[0] : null;
-
-                        return (
-                          <Box
-                            key={household.id}
-                            alignItems="center"
-                            display="flex"
-                            onClick={() => {
-                              setSelectedHouseholdId(household.id);
-                              onWizard();
-                            }}
-                            width="100%"
-                          >
-                            <Box flexGrow={1}>
-                              <Typography>
-                                {household.title || 'Untitled household'}
-                              </Typography>
-                            </Box>
-                            {mostRecentVisit && (
-                              <ZUIRelativeTime
-                                datetime={mostRecentVisit.timestamp}
-                              />
-                            )}
-                          </Box>
-                        );
-                      })}
-                    </Box>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-          );
+          // Will never be reached, but typescript doesn't understand that
+          return null;
         }}
       </ZUIFuture>
     </Box>

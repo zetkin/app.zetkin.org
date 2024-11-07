@@ -29,12 +29,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export type PlaceDialogStep =
-  | 'place'
-  | 'edit'
-  | 'household'
-  | 'wizard'
-  | 'pickHousehold';
+export type PlaceDialogStep = 'place' | 'edit' | 'household' | 'wizard';
 
 const CanvassAssignmentMapOverlays: FC<Props> = ({
   assignment,
