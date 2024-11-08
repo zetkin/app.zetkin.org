@@ -29,8 +29,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export type PlaceDialogStep = 'place' | 'edit' | 'household' | 'wizard';
-
 const CanvassAssignmentMapOverlays: FC<Props> = ({
   assignment,
   isCreating,
@@ -39,7 +37,6 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
   selectedPlace,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const classes = useStyles();
 
   const showViewPlaceButton = !!selectedPlace && !expanded;
@@ -104,14 +101,9 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
         {selectedPlace && expanded && (
           <PlaceDialog
             canvassAssId={assignment.id}
-            dialogStep={dialogStep}
             onClose={() => {
               setExpanded(false);
             }}
-            onEdit={() => setDialogStep('edit')}
-            onSelectHousehold={() => setDialogStep('household')}
-            onUpdateDone={() => setDialogStep('place')}
-            onWizard={() => setDialogStep('wizard')}
             orgId={assignment.organization.id}
             place={selectedPlace}
           />
