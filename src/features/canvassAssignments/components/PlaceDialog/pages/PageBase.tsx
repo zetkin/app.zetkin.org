@@ -24,7 +24,7 @@ const PageBase: FC<Props> = ({
   title,
 }) => {
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <Box display="flex" flexDirection="column" height="100%" p={2}>
       <Box
         paddingBottom={1}
         sx={{

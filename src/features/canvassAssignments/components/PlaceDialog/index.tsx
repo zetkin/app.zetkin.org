@@ -10,6 +10,7 @@ import { PlaceDialogStep } from '../CanvassAssignmentMapOverlays';
 import { ZetkinPlace } from 'features/canvassAssignments/types';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
+import ZUINavStack from 'zui/ZUINavStack';
 
 type PlaceDialogProps = {
   canvassAssId: string;
@@ -52,9 +53,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     <Box height="100%">
       <ZUIFuture future={assignmentFuture}>
         {(assignment) => {
-          if (dialogStep == 'place') {
-            return (
+          return (
+            <ZUINavStack bgcolor="white" currentPage={dialogStep}>
               <Place
+                key="place"
                 assignment={assignment}
                 onClose={onClose}
                 onCreateHousehold={(household) => {
@@ -70,10 +72,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 orgId={orgId}
                 place={place}
               />
-            );
-          } else if (dialogStep == 'edit') {
-            return (
               <EditPlace
+                key="edit"
                 onBack={onUpdateDone}
                 onClose={onClose}
                 onSave={async (title, description) => {
@@ -82,55 +82,44 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 }}
                 place={place}
               />
-            );
-          } else if (dialogStep == 'household') {
-            if (!selectedHousehold) {
-              // This never seems to happen, which is correct
-              return null;
-            }
-
-            return (
-              <Household
-                household={selectedHousehold}
-                onBack={onUpdateDone}
-                onClose={onClose}
-                onHouseholdUpdate={(data) =>
-                  updateHousehold(selectedHousehold.id, data)
-                }
-                onWizardStart={() => {
-                  onWizard();
-                }}
-                visitedInThisAssignment={selectedHousehold.visits.some(
-                  (visit) => visit.canvassAssId == canvassAssId
+              <Box key="household" height="100%">
+                {selectedHousehold && (
+                  <Household
+                    household={selectedHousehold}
+                    onBack={onUpdateDone}
+                    onClose={onClose}
+                    onHouseholdUpdate={(data) =>
+                      updateHousehold(selectedHousehold.id, data)
+                    }
+                    onWizardStart={() => {
+                      onWizard();
+                    }}
+                    visitedInThisAssignment={selectedHousehold.visits.some(
+                      (visit) => visit.canvassAssId == canvassAssId
+                    )}
+                  />
                 )}
-              />
-            );
-          } else if (dialogStep == 'wizard') {
-            if (!selectedHousehold) {
-              // This never seems to happen, which is correct
-              return null;
-            }
-
-            return (
-              <VisitWizard
-                household={selectedHousehold}
-                metrics={assignment.metrics}
-                onBack={() => onSelectHousehold()}
-                onLogVisit={(responses, noteToOfficial) => {
-                  addVisit(selectedHousehold.id, {
-                    canvassAssId: assignment.id,
-                    noteToOfficial,
-                    responses,
-                    timestamp: new Date().toISOString(),
-                  });
-                  onUpdateDone();
-                }}
-              />
-            );
-          }
-
-          // Will never be reached, but typescript doesn't understand that
-          return null;
+              </Box>
+              <Box key="wizard" height="100%">
+                {selectedHousehold && (
+                  <VisitWizard
+                    household={selectedHousehold}
+                    metrics={assignment.metrics}
+                    onBack={() => onSelectHousehold()}
+                    onLogVisit={(responses, noteToOfficial) => {
+                      addVisit(selectedHousehold.id, {
+                        canvassAssId: assignment.id,
+                        noteToOfficial,
+                        responses,
+                        timestamp: new Date().toISOString(),
+                      });
+                      onUpdateDone();
+                    }}
+                  />
+                )}
+              </Box>
+            </ZUINavStack>
+          );
         }}
       </ZUIFuture>
     </Box>

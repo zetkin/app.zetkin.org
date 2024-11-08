@@ -81,7 +81,6 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
           bottom: 0,
           boxShadow: theme.shadows[20],
           left: 0,
-          padding: 2,
           position: 'fixed',
           right: 0,
           top: drawerTop,
@@ -90,7 +89,7 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
         })}
       >
         {showViewPlaceButton && (
-          <Box onClick={() => setExpanded(true)}>
+          <Box onClick={() => setExpanded(true)} p={2}>
             <PageBaseHeader
               iconButtons={
                 <IconButton onClick={() => setExpanded(true)}>
@@ -118,14 +117,16 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
           />
         )}
         {isCreating && (
-          <CreatePlaceCard
-            onClose={() => {
-              onToggleCreating(false);
-            }}
-            onCreate={(title) => {
-              onCreate(title);
-            }}
-          />
+          <Box p={2}>
+            <CreatePlaceCard
+              onClose={() => {
+                onToggleCreating(false);
+              }}
+              onCreate={(title) => {
+                onCreate(title);
+              }}
+            />
+          </Box>
         )}
       </Box>
     </>
