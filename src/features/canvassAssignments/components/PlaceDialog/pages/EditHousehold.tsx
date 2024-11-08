@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
@@ -43,15 +43,13 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
           onSave(title);
         }}
       >
-        <Box mt={2}>
-          <TextField
-            defaultValue={title}
-            fullWidth
-            label="Edit title"
-            onChange={(ev) => setTitle(ev.target.value)}
-            value={title}
-          />
-        </Box>
+        <TextField
+          defaultValue={title}
+          fullWidth
+          label="Edit title"
+          onChange={(ev) => setTitle(ev.target.value)}
+          value={title}
+        />
       </form>
     </PageBase>
   );

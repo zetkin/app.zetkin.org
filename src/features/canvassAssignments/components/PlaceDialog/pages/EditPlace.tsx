@@ -47,13 +47,7 @@ const EditPlace: FC<EditPlaceProps> = ({ onClose, onBack, onSave, place }) => {
           onSave(title, description);
         }}
       >
-        <Box
-          display="flex"
-          flexDirection="column"
-          gap={2}
-          height="100%"
-          paddingTop={2}
-        >
+        <Box display="flex" flexDirection="column" gap={2} height="100%">
           <TextField
             fullWidth
             label="Edit title"

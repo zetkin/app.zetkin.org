@@ -51,7 +51,7 @@ const Place: FC<PlaceProps> = ({
       subtitle={`${numVisitedHouseholds} / ${place.households.length} households visited`}
       title={place.title || 'Untitled place'}
     >
-      <Box mt={2}>
+      <Box>
         <Typography
           color="secondary"
           sx={{ fontStyle: place.description ? 'normal' : 'italic' }}

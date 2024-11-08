@@ -24,9 +24,10 @@ const PageBase: FC<Props> = ({
   title,
 }) => {
   return (
-    <Box display="flex" flexDirection="column" height="100%" p={2}>
+    <Box display="flex" flexDirection="column" height="100%" pt={2}>
       <Box
         paddingBottom={1}
+        px={2}
         sx={{
           alignItems: 'center',
           display: 'flex',
@@ -54,12 +55,14 @@ const PageBase: FC<Props> = ({
         />
       </Box>
       <Divider />
-      <Box flexGrow={1} sx={{ overflowY: 'auto' }}>
+      <Box flexGrow={1} p={2} sx={{ overflowY: 'auto' }}>
         {children}
       </Box>
-      <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
-        {actions}
-      </Box>
+      {actions && (
+        <Box display="flex" flexDirection="column" gap={1} px={2} py={2}>
+          {actions}
+        </Box>
+      )}
     </Box>
   );
 };
