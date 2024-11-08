@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
 type Sizes = 'small' | 'medium' | 'large';
@@ -24,7 +24,7 @@ interface ZUIBarDiagramProps {
  * remainder of 100 minus the previous segment widths.
  */
 const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
-  const theme = useTheme();
+  const theme = useTheme<Theme>();
   const progressSum = values.reduce((sum, val) => {
     return sum + val;
   });
@@ -41,15 +41,15 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
   const colors =
     values.length == 3
       ? [
-          theme.palette.data[900],
-          theme.palette.data[700],
-          theme.palette.data[300],
-          theme.palette.data[100],
+          theme.palette.data.main,
+          theme.palette.data.mid3,
+          theme.palette.data.mid1,
+          theme.palette.data.final,
         ]
       : [
-          theme.palette.data[900],
-          theme.palette.data[500],
-          theme.palette.data[100],
+          theme.palette.data.main,
+          theme.palette.data.mid2,
+          theme.palette.data.final,
         ];
 
   return (
