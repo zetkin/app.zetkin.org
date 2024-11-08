@@ -485,11 +485,11 @@ const palette: Omit<
     white: uiSwatches.basic.white,
   },
   data: {
-    [100]: uiSwatches.purple[100],
-    [300]: uiSwatches.purple[300],
-    [500]: uiSwatches.purple[500],
-    [700]: uiSwatches.purple[700],
-    [900]: uiSwatches.purple[900],
+    final: uiSwatches.purple[100],
+    main: uiSwatches.purple[900],
+    mid1: uiSwatches.purple[300],
+    mid2: uiSwatches.purple[500],
+    mid3: uiSwatches.purple[700],
   },
   dividers: {
     lighter: uiSwatches.dividers.lighter,
