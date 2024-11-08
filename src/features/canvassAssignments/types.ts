@@ -136,3 +136,9 @@ export type AreaGraphData = {
   householdVisits: number;
   successfulVisits: number;
 };
+
+export type SessionDeletedPayload = {
+  areaId: string;
+  assigneeId: number;
+  assignmentId: string;
+};

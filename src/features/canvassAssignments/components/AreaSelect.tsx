@@ -1,12 +1,14 @@
 import { FC } from 'react';
+import { ChevronLeft, Close, Search } from '@mui/icons-material';
 import {
-  ChevronLeft,
-  Close,
-  DoorFront,
-  Place,
-  Search,
-} from '@mui/icons-material';
-import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  lighten,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -19,11 +21,12 @@ import {
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
-import CanvassVisit from 'zui/icons/CanvassVisit';
-import CanvassVisitSuccessful from 'zui/icons/CanvassVisitSuccessful';
+import useCanvassSessionMutations from '../hooks/useCanvassSessionMutations';
+import { useNumericRouteParams } from 'core/hooks';
 
 type Props = {
   areas: ZetkinArea[];
+  canvassId: string;
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
   onAddAssignee: (person: ZetkinPerson) => void;
@@ -38,6 +41,7 @@ type Props = {
 
 const AreaSelect: FC<Props> = ({
   areas,
+  canvassId,
   filterAreas,
   filterText,
   onAddAssignee,
@@ -49,6 +53,8 @@ const AreaSelect: FC<Props> = ({
   selectedAreaStats,
   sessions,
 }) => {
+  const { orgId } = useNumericRouteParams();
+  const { deleteSession } = useCanvassSessionMutations(orgId, canvassId);
   const selectedAreaAssignees = sessions
     .filter((session) => session.area.id == selectedArea?.id)
     .map((session) => session.assignee);
@@ -149,28 +155,51 @@ const AreaSelect: FC<Props> = ({
         </Box>
       )}
       {selectedArea && (
-        <Box display="flex" flexDirection="column" gap={1} paddingTop={1}>
-          <Box display="flex" justifyContent="space-evenly">
-            <Box alignItems="center" display="flex">
-              <Place color="secondary" fontSize="large" />
-              {placesInSelectedArea.length}
-            </Box>
-            <Box alignItems="center" display="flex">
-              <DoorFront color="secondary" fontSize="large" />
-              {numberOfHouseholdsInSelectedArea}
-            </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          paddingRight={2}
+          paddingTop={1}
+          sx={{ overflowY: 'auto' }}
+        >
+          <Box display="flex" gap={2} justifyContent="flex-end">
             {selectedAreaStats && (
               <>
-                <Box alignItems="center" display="flex">
-                  <CanvassVisit color="secondary" fontSize="large" />
-                  {selectedAreaStats.num_visited_households}
+                <Box alignItems="center" display="flex" flexDirection="column">
+                  <Typography
+                    sx={(theme) => ({ color: theme.palette.primary.main })}
+                    variant="h5"
+                  >
+                    {selectedAreaStats.num_successful_visited_households}
+                  </Typography>
+                  <Typography textAlign="center">Successful visits</Typography>
                 </Box>
-                <Box alignItems="center" display="flex">
-                  <CanvassVisitSuccessful color="secondary" fontSize="large" />
-                  {selectedAreaStats.num_successful_visited_households}
+                <Box alignItems="center" display="flex" flexDirection="column">
+                  <Typography
+                    sx={(theme) => ({
+                      color: lighten(theme.palette.primary.main, 0.5),
+                    })}
+                    variant="h5"
+                  >
+                    {selectedAreaStats.num_visited_households}
+                  </Typography>
+                  <Typography textAlign="center">Visited households</Typography>
                 </Box>
               </>
             )}
+            <Box alignItems="center" display="flex" flexDirection="column">
+              <Typography color="secondary" variant="h5">
+                {numberOfHouseholdsInSelectedArea}
+              </Typography>
+              <Typography textAlign="center">Households</Typography>
+            </Box>
+            <Box alignItems="center" display="flex" flexDirection="column">
+              <Typography color="secondary" variant="h5">
+                {placesInSelectedArea.length}
+              </Typography>
+              <Typography textAlign="center">Places</Typography>
+            </Box>
           </Box>
           <Typography
             fontStyle={
@@ -195,11 +224,17 @@ const AreaSelect: FC<Props> = ({
               </Typography>
             )}
             {selectedAreaAssignees.map((assignee) => (
-              <Box key={assignee.id} my={1}>
+              <Box key={assignee.id} display="flex" my={1}>
                 <ZUIPerson
                   id={assignee.id}
                   name={`${assignee.first_name} ${assignee.last_name}`}
                 />
+                <Button
+                  color="secondary"
+                  onClick={() => deleteSession(selectedArea.id, assignee.id)}
+                >
+                  <Close />
+                </Button>
               </Box>
             ))}
             <Box mt={2}>

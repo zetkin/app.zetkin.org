@@ -43,7 +43,7 @@ type OrganizerMapProps = {
 };
 
 export type MapStyle = {
-  area: 'households' | 'progress' | 'hide' | 'assignees';
+  area: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   overlay: 'assignees' | 'households' | 'progress' | 'hide';
   place: 'dot' | 'households' | 'progress' | 'hide';
 };
@@ -116,6 +116,16 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     }
   }, [navigateToAreaId]);
 
+  const clearAndCloseSettings = () => {
+    setSettingsOpen(null);
+    setSelectedId('');
+    onAssigneesFilterChange(null);
+    setFilteredAreaIds(null);
+    setActiveGroupIds([]);
+    setActiveTagIdsByGroup({});
+    setFilterText('');
+  };
+
   return (
     <Box
       sx={{
@@ -169,7 +179,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             <Button
               onClick={() => {
                 if (settingsOpen == 'filters') {
-                  setSettingsOpen(null);
+                  clearAndCloseSettings();
                 } else {
                   setSettingsOpen('filters');
                 }
@@ -180,7 +190,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             <Button
               onClick={() => {
                 if (settingsOpen == 'layers') {
-                  setSettingsOpen(null);
+                  clearAndCloseSettings();
                 } else {
                   setSettingsOpen('layers');
                 }
@@ -190,10 +200,12 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             </Button>
             <Button
               onClick={() => {
-                if (settingsOpen == 'select' && !selectedId) {
-                  setSettingsOpen(null);
-                } else if (settingsOpen == 'select' && selectedId) {
-                  setSelectedId('');
+                if (settingsOpen == 'select') {
+                  if (selectedId) {
+                    setSelectedId('');
+                  } else {
+                    clearAndCloseSettings();
+                  }
                 } else {
                   setSettingsOpen('select');
                 }
@@ -223,6 +235,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               <AreaSelect
                 key={selectedArea?.id}
                 areas={areas}
+                canvassId={canvassAssId}
                 filterAreas={filterAreas}
                 filterText={filterText}
                 onAddAssignee={(person) => {
@@ -230,15 +243,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     onAddAssigneeToArea(selectedArea, person);
                   }
                 }}
-                onClose={() => {
-                  setSelectedId('');
-                  setSettingsOpen(null);
-                  onAssigneesFilterChange(null);
-                  setFilteredAreaIds(null);
-                  setActiveGroupIds([]);
-                  setActiveTagIdsByGroup({});
-                  setFilterText('');
-                }}
+                onClose={clearAndCloseSettings}
                 onFilterTextChange={(newValue) => setFilterText(newValue)}
                 onSelectArea={(newValue) => setSelectedId(newValue)}
                 places={places}
@@ -260,17 +265,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   <Typography variant="h5">
                     {settingsOpen == 'filters' ? 'Filters' : 'Map style'}
                   </Typography>
-                  <IconButton
-                    onClick={() => {
-                      setSettingsOpen(null);
-                      setSelectedId('');
-                      onAssigneesFilterChange(null);
-                      setFilteredAreaIds(null);
-                      setActiveGroupIds([]);
-                      setActiveTagIdsByGroup({});
-                      setFilterText('');
-                    }}
-                  >
+                  <IconButton onClick={clearAndCloseSettings}>
                     <Close />
                   </IconButton>
                 </Box>
@@ -302,9 +297,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           zoomControl={false}
         >
           <OrganizerMapRenderer
-            areas={
-              selectedId && settingsOpen == 'select' ? areas : filteredAreas
-            }
+            areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
             assignment={assignment}

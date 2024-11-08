@@ -6,8 +6,7 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { Box } from '@mui/material';
-import { DoorFront, Place } from '@mui/icons-material';
+import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 
@@ -15,7 +14,6 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
-  ZetkinAssignmentAreaStatsItem,
   ZetkinCanvassAssignment,
   ZetkinCanvassSession,
   ZetkinPlace,
@@ -30,25 +28,16 @@ const PlaceMarker: FC<{
   idOfMetricThatDefinesDone: string;
   place: ZetkinPlace;
   placeStyle: 'dot' | 'households' | 'progress';
-  statsItem?: ZetkinAssignmentAreaStatsItem;
-}> = ({
-  canvassAssId,
-  idOfMetricThatDefinesDone,
-  place,
-  placeStyle,
-  statsItem,
-}) => {
+}> = ({ canvassAssId, idOfMetricThatDefinesDone, place, placeStyle }) => {
   const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
       <DivIconMarker iconAnchor={[2, 2]} position={place.position}>
         <Box
-          sx={{
-            backgroundColor: theme.palette.text.primary,
-            borderRadius: '2em',
-            height: 4,
-            width: 4,
-          }}
+          bgcolor={theme.palette.text.primary}
+          borderRadius="2em"
+          height={4}
+          width={4}
         />
       </DivIconMarker>
     );
@@ -65,6 +54,7 @@ const PlaceMarker: FC<{
             alignItems="center"
             bgcolor="white"
             borderRadius={1}
+            boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
             color={theme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
@@ -80,6 +70,7 @@ const PlaceMarker: FC<{
               borderLeft: '4px solid transparent',
               borderRight: '4px solid transparent',
               borderTop: '4px solid white',
+              boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
               height: 0,
               width: 0,
             }}
@@ -88,79 +79,84 @@ const PlaceMarker: FC<{
       </DivIconMarker>
     );
   } else {
-    if (statsItem) {
-      let visits = 0;
-      let successfulVisits = 0;
-      place.households.forEach((household) => {
-        const visitInThisAssignment = household.visits.find(
-          (visit) => visit.canvassAssId == canvassAssId
-        );
-        if (visitInThisAssignment) {
-          visits++;
+    let visits = 0;
+    let successfulVisits = 0;
+    place.households.forEach((household) => {
+      const visitInThisAssignment = household.visits.find(
+        (visit) => visit.canvassAssId == canvassAssId
+      );
+      if (visitInThisAssignment) {
+        visits++;
 
-          const responseToMetricThatDefinesDone =
-            visitInThisAssignment.responses.find(
-              (response) => response.metricId == idOfMetricThatDefinesDone
-            );
+        const responseToMetricThatDefinesDone =
+          visitInThisAssignment.responses.find(
+            (response) => response.metricId == idOfMetricThatDefinesDone
+          );
 
-          if (responseToMetricThatDefinesDone?.response == 'yes') {
-            successfulVisits++;
-          }
+        if (responseToMetricThatDefinesDone?.response == 'yes') {
+          successfulVisits++;
         }
-      });
+      }
+    });
 
-      const successfulVisitsColorPercent =
-        (successfulVisits / place.households.length) * 100;
-      const visitsColorPercent = (visits / place.households.length) * 100;
+    const successfulVisitsColorPercent =
+      (successfulVisits / place.households.length) * 100;
+    const visitsColorPercent = (visits / place.households.length) * 100;
 
-      return (
-        <DivIconMarker iconAnchor={[6, 24]} position={place.position}>
-          <Box alignItems="center" display="flex" flexDirection="column">
-            <Box
-              alignItems="center"
-              bgcolor="white"
-              borderRadius={1}
-              color={theme.palette.text.secondary}
-              display="inline-flex"
-              flexDirection="column"
-              fontSize="12px"
-              justifyContent="center"
-              padding="2px"
-            >
-              <div
-                style={{
-                  alignItems: 'center',
-                  background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
-                  borderRadius: '2em',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  height: '16px',
-                  justifyContent: 'center',
-                  width: '16px',
-                }}
-              />
-            </Box>
+    return (
+      <DivIconMarker iconAnchor={[6, 24]} position={place.position}>
+        <Box alignItems="center" display="flex" flexDirection="column">
+          <Box
+            alignItems="center"
+            bgcolor="white"
+            borderRadius={1}
+            boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
+            color={theme.palette.text.secondary}
+            display="inline-flex"
+            flexDirection="column"
+            fontSize="12px"
+            justifyContent="center"
+            padding="2px"
+          >
             <div
               style={{
-                borderLeft: '4px solid transparent',
-                borderRight: '4px solid transparent',
-                borderTop: '4px solid white',
-                height: 0,
-                width: 0,
+                alignItems: 'center',
+                background: `conic-gradient(${
+                  theme.palette.primary.main
+                } ${successfulVisitsColorPercent}%, ${lighten(
+                  theme.palette.primary.main,
+                  0.7
+                )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
+                  theme.palette.grey[400]
+                } ${visitsColorPercent}%)`,
+                borderRadius: '2em',
+                display: 'flex',
+                flexDirection: 'row',
+                height: '16px',
+                justifyContent: 'center',
+                width: '16px',
               }}
             />
           </Box>
-        </DivIconMarker>
-      );
-    } else {
-      return null;
-    }
+          <div
+            style={{
+              borderLeft: '4px solid transparent',
+              borderRight: '4px solid transparent',
+              borderTop: '4px solid white',
+              boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
+              height: 0,
+              width: 0,
+            }}
+          />
+        </Box>
+      </DivIconMarker>
+    );
   }
 };
 
 type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
-  areaStyle: 'households' | 'progress' | 'hide' | 'assignees';
+  areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
   assignment: ZetkinCanvassAssignment;
   canvassAssId: string;
@@ -235,12 +231,14 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     householdColorPercent: number,
     visitsColorPercent: number
   ) => {
-    if (areaStyle == 'hide') {
+    if (areaStyle == 'hide' || areaStyle == 'outlined') {
       return 'transparent';
     }
 
     if (areaStyle == 'assignees') {
-      return hasPeople ? '#7800DC' : theme.palette.secondary.main;
+      return hasPeople
+        ? theme.palette.primary.main
+        : theme.palette.secondary.main;
     }
 
     if (areaStyle == 'progress' && !hasPeople) {
@@ -249,8 +247,12 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, #E4CCF8, #7800DC ${householdColorPercent}%)`
-      : `color-mix(in hsl, #E4CCF8, #7800DC ${visitsColorPercent || 1}%)`;
+        `color-mix(in hsl, ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
+        } ${householdColorPercent}%)`
+      : `color-mix(in hsl,  ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
+        } ${visitsColorPercent || 1}%)`;
   };
 
   const placesByAreaId: Record<string, ZetkinPlace[]> = {};
@@ -387,11 +389,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
 
-            const showPlaces =
-              placeStyle == 'dot' ||
-              placeStyle == 'households' ||
-              (placeStyle == 'progress' && hasPeople);
-
             const successfulVisitsColorPercent = stats?.num_households
               ? (stats.num_successful_visited_households /
                   stats.num_households) *
@@ -401,44 +398,47 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[21, 21]} position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
                       bgcolor="white"
                       borderRadius={1}
+                      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
-                      padding={0.5}
+                      gap="2px"
+                      padding="2px 6px"
+                      sx={{ translate: '-50% -50%' }}
                     >
-                      <Box alignItems="center" display="flex">
-                        <Place
-                          color="secondary"
-                          sx={{ fontSize: '16px', marginRight: '4px' }}
-                        />
-                        {numberOfPlaces}
-                      </Box>
-                      <Box alignItems="center" display="flex">
-                        <DoorFront
-                          color="secondary"
-                          sx={{ fontSize: '16px', marginRight: '4px' }}
-                        />
+                      <Typography fontSize="11px">{numberOfPlaces}</Typography>
+                      <Divider />
+                      <Typography fontSize="11px">
                         {numberOfHouseholds}
-                      </Box>
+                      </Typography>
                     </Box>
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[10, 10]} position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
                       bgcolor="white"
                       borderRadius={1}
+                      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
                       display="inline-flex"
                       flexDirection="column"
                       padding={0.5}
+                      sx={{ translate: '-50% -50%' }}
                     >
                       <div
                         style={{
                           alignItems: 'center',
-                          background: `conic-gradient(#7800DC ${successfulVisitsColorPercent}%, #C189EF ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${theme.palette.grey[400]} ${visitsColorPercent}%)`,
+                          background: `conic-gradient(${
+                            theme.palette.primary.main
+                          } ${successfulVisitsColorPercent}%, ${lighten(
+                            theme.palette.primary.main,
+                            0.7
+                          )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
+                            theme.palette.grey[400]
+                          } ${visitsColorPercent}%)`,
                           borderRadius: '2em',
                           display: 'flex',
                           flexDirection: 'row',
@@ -451,36 +451,64 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
-                  <DivIconMarker position={mid}>
+                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     {detailed && (
-                      <Box display="flex" sx={{ pointerEvents: 'none' }}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            gap: '1px',
-                            transform: 'translate(-50%, -50%)',
-                          }}
-                        >
-                          {people.map((person, index) => (
-                            <Box
-                              //TODO: only use person id once we have logic preventing
-                              //assigning the same person to an area more than once
-                              key={`${person.id}-${index}`}
-                              sx={{
-                                borderRadius: '50%',
-                                boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                              }}
-                            >
-                              <ZUIAvatar
-                                size={zoom >= 16 ? 'sm' : 'xs'}
-                                url={`/api/orgs/1/people/${person.id}/avatar`}
-                              />
-                            </Box>
-                          ))}
-                        </Box>
+                      <Box
+                        alignItems="center"
+                        display="inline-flex"
+                        flexWrap="wrap"
+                        gap="2px"
+                        justifyContent="center"
+                        sx={{
+                          pointerEvents: 'none',
+                          transform: 'translate(-50%, -50%)',
+                        }}
+                        width={zoom >= 16 ? '95px' : '65px'}
+                      >
+                        {people.map((person, index) => {
+                          if (index <= 4) {
+                            return (
+                              <Box
+                                //TODO: only use person id once we have logic preventing
+                                //assigning the same person to an area more than once
+                                key={`${person.id}-${index}`}
+                                sx={{
+                                  borderRadius: '50%',
+                                  boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+                                }}
+                              >
+                                <ZUIAvatar
+                                  size={zoom >= 16 ? 'sm' : 'xs'}
+                                  url={`/api/orgs/1/people/${person.id}/avatar`}
+                                />
+                              </Box>
+                            );
+                          } else if (index == 5) {
+                            return (
+                              <Box
+                                alignItems="center"
+                                bgcolor="white"
+                                borderRadius="100%"
+                                display="flex"
+                                height={zoom >= 16 ? '30px' : '20px'}
+                                justifyContent="center"
+                                padding={1}
+                                sx={{ boxShadow: '0 0 8px rgba(0,0,0,0.3)' }}
+                                width={zoom >= 16 ? '30px' : '20px'}
+                              >
+                                <Typography
+                                  color="secondary"
+                                  fontSize={zoom >= 16 ? 14 : 11}
+                                >{`+${people.length - 5}`}</Typography>
+                              </Box>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
                       </Box>
                     )}
-                    {overlayStyle == 'assignees' && !detailed && (
+                    {!detailed && (
                       <Box
                         sx={{
                           alignItems: 'center',
@@ -504,7 +532,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 )}
                 <Polygon
                   key={key}
-                  color="black"
+                  color={areaStyle == 'hide' ? '' : 'black'}
                   dashArray={!hasPeople ? '5px 7px' : ''}
                   eventHandlers={{
                     click: () => {
@@ -521,21 +549,74 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   positions={area.points}
                   weight={selected ? 5 : 2}
                 />
-                {showPlaces &&
-                  placesByAreaId[area.id].map((place) => (
-                    <PlaceMarker
-                      key={place.id}
-                      canvassAssId={canvassAssId}
-                      idOfMetricThatDefinesDone={
-                        assignment.metrics.find((metric) => metric.definesDone)
-                          ?.id || ''
-                      }
-                      place={place}
-                      placeStyle={placeStyle}
-                      statsItem={stats}
-                    />
-                  ))}
               </>
+            );
+          })}
+        {placeStyle != 'hide' &&
+          places.map((place) => {
+            //Find ids of area/s that the place is in
+            const areaIds: string[] = [];
+            areas.forEach((area) => {
+              const isInsideArea = isPointInsidePolygon(
+                place.position,
+                area.points.map((point) => ({
+                  lat: point[0],
+                  lng: point[1],
+                }))
+              );
+
+              if (isInsideArea) {
+                areaIds.push(area.id);
+              }
+            });
+
+            //See if any of those areas have assignees in this assignment
+            let idOfAreaInThisAssignment = '';
+            for (let i = 0; i < areaIds.length; i++) {
+              const id = areaIds[i];
+              const people = sessions
+                .filter((session) => session.area.id == id)
+                .map((session) => session.assignee);
+
+              const hasPeople = !!people.length;
+
+              if (hasPeople) {
+                idOfAreaInThisAssignment = id;
+                break;
+              }
+            }
+
+            //Check if the place has housholds with visits in this assignment
+            const hasVisitsInThisAssignment = place.households.some(
+              (household) =>
+                !!household.visits.find(
+                  (visit) => visit.canvassAssId == canvassAssId
+                )
+            );
+
+            //If user wants to see progress of places,
+            //don't show places outside of assigned areas
+            //unless they have visits in this assignment
+            const hideFromProgressView =
+              placeStyle == 'progress' &&
+              !idOfAreaInThisAssignment &&
+              !hasVisitsInThisAssignment;
+
+            if (hideFromProgressView) {
+              return null;
+            }
+
+            return (
+              <PlaceMarker
+                key={place.id}
+                canvassAssId={canvassAssId}
+                idOfMetricThatDefinesDone={
+                  assignment.metrics.find((metric) => metric.definesDone)?.id ||
+                  ''
+                }
+                place={place}
+                placeStyle={placeStyle}
+              />
             );
           })}
       </FeatureGroup>
