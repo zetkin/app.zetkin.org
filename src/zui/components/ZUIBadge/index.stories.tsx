@@ -4,7 +4,7 @@ import ZUIBadge from './index';
 
 const meta: Meta<typeof ZUIBadge> = {
   component: ZUIBadge,
-  title: 'Other/ZUIBadge',
+  title: 'Components/ZUIBadge',
 };
 export default meta;
 
