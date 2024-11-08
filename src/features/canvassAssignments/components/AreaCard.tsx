@@ -1,9 +1,9 @@
-import MapIcon from '@mui/icons-material/Map';
 import { FC } from 'react';
-import { FormattedDate } from 'react-intl';
+import { InfoOutlined } from '@mui/icons-material';
 import { linearGradientDef } from '@nivo/core';
+import MapIcon from '@mui/icons-material/Map';
 import { ResponsiveLine } from '@nivo/line';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import {
   Box,
   Card,
@@ -11,13 +11,14 @@ import {
   Grid,
   IconButton,
   Paper,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
 import theme from 'theme';
 import { useNumericRouteParams } from 'core/hooks';
 import {
-  GraphData,
+  AreaCardData,
   ZetkinAssignmentAreaStatsItem,
   ZetkinCanvassAssignment,
 } from '../types';
@@ -25,102 +26,145 @@ import {
 type AreaCardProps = {
   areas: ZetkinAssignmentAreaStatsItem[];
   assignment: ZetkinCanvassAssignment;
-  data: GraphData[];
+  data: AreaCardData[];
+  maxVisitedHouseholds: number;
 };
 
-const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
+type NivoDataPoint = {
+  hour?: string;
+  x: string;
+  y: number;
+};
+
+type NivoSeries = {
+  data: NivoDataPoint[];
+  id: string;
+};
+
+const AreaCard: FC<AreaCardProps> = ({
+  areas,
+  assignment,
+  data,
+  maxVisitedHouseholds,
+}) => {
   const { orgId } = useNumericRouteParams();
+  const router = useRouter();
 
-  const transformToNivoData = (graphDataArray: GraphData[]) => {
-    const householdsVisitedData: { x: string; y: number }[] = [];
-    const successfulVisitsData: { x: string; y: number }[] = [];
+  const transformToNivoData = (areaData: AreaCardData): NivoSeries[] => {
+    const householdVisitsSeries: NivoSeries = {
+      data: areaData.data.map((point) => ({
+        x: point.hour !== '0' ? `${point.date} ${point.hour}` : point.date,
+        y: point.householdVisits,
+      })),
+      id: `Household Visits`,
+    };
 
-    // Iterate through each GraphData object in the array
-    graphDataArray.forEach((graphData) => {
-      graphData.householdsVisited
-        .slice()
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .forEach((item) => {
-          householdsVisitedData.push({
-            x: item.date,
-            y: item.accumulatedVisits,
-          });
-        });
-      graphData.successfulVisits
-        .slice()
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .forEach((item) => {
-          successfulVisitsData.push({
-            x: item.date,
-            y: item.accumulatedVisits,
-          });
-        });
-    });
+    const successfulVisitsSeries: NivoSeries = {
+      data: areaData.data.map((point) => ({
+        x: point.hour !== '0' ? `${point.date} ${point.hour}` : point.date,
+        y: point.successfulVisits,
+      })),
+      id: `Successful Visits`,
+    };
 
-    return [
+    return [householdVisitsSeries, successfulVisitsSeries];
+  };
+
+  const navigateToArea = (areaId: string) => {
+    router.replace(
       {
-        data: householdsVisitedData,
-        id: 'householdsVisited',
+        pathname: `/organize/${orgId}/projects/${
+          assignment.campaign.id || ''
+        }/canvassassignments/${assignment.id}/map`,
+        query: { navigateToAreaId: areaId },
       },
-      {
-        data: successfulVisitsData,
-        id: 'successfulVisits',
-      },
-    ];
+      undefined,
+      { shallow: true }
+    );
   };
 
   return (
     <>
       {areas.map((area) => {
         const areaData = data.find(
-          (graphData) => graphData.areaId === area.areaId
+          (graphData) =>
+            graphData.area.id === area.areaId || graphData.area.id === 'noArea'
         );
-        const transformedData = areaData ? transformToNivoData([areaData]) : [];
+        const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
-          <Grid key={area.areaId} item md={2} sm={4} xs={12}>
-            <Card key={area.areaId} sx={{ height: 'auto', marginBottom: 2 }}>
+          <Grid key={area.areaId} item lg={3} md={4} sm={6} xs={12}>
+            <Card key={area.areaId} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
                 display="flex"
                 justifyContent="space-between"
+                width="100%"
               >
-                <Box alignItems="center" display="flex">
-                  <Typography padding={2} variant="h5">
-                    {'Untitled area'}
+                <Box alignItems="center" display="flex" width="70%">
+                  <Typography
+                    padding={2}
+                    sx={{
+                      maxWidth: '70%',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                    variant="h6"
+                  >
+                    {areaData?.area.id !== 'noArea'
+                      ? areaData?.area.title || 'Untitled area'
+                      : 'Unassigned visits'}
                   </Typography>
                   <Divider
                     orientation="vertical"
                     sx={{ height: '30px', marginRight: 1 }}
                   />
-                  <Typography color={theme.palette.primary.main} variant="h6">
+                  <Typography
+                    color={
+                      areaData?.area.id !== 'noArea'
+                        ? theme.palette.primary.dark
+                        : theme.palette.grey[900]
+                    }
+                    variant="h6"
+                  >
                     {area.num_successful_visited_households}
                   </Typography>
                 </Box>
-                <IconButton
-                  onClick={() =>
-                    router.push(
-                      `/organize/${orgId}/projects/${
-                        assignment.campaign.id || ''
-                      }/canvassassignments/${assignment.id}/plan`
-                    )
-                  }
-                  sx={{ marginRight: 2 }}
-                >
-                  <MapIcon />
-                </IconButton>
+                {area.areaId !== 'noArea' ? (
+                  <IconButton
+                    onClick={() =>
+                      areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
+                    }
+                  >
+                    <MapIcon />
+                  </IconButton>
+                ) : (
+                  <Tooltip title="This graph gather the visits made outside the assigned areas">
+                    <InfoOutlined
+                      sx={{
+                        color: theme.palette.secondary.main,
+                        marginRight: 1,
+                      }}
+                    />
+                  </Tooltip>
+                )}
               </Box>
               <Divider sx={{ marginBottom: 1, marginTop: 1 }} />
               <Box>
                 {transformedData.length > 0 && (
-                  <div style={{ height: '200px' }}>
+                  <div style={{ height: '150px' }}>
                     <ResponsiveLine
                       animate={false}
                       axisBottom={null}
                       axisLeft={null}
-                      colors={[
-                        theme.palette.primary.light,
-                        theme.palette.primary.dark,
-                      ]}
+                      colors={
+                        areaData?.area.id !== 'noArea'
+                          ? [
+                              theme.palette.primary.light,
+                              theme.palette.primary.dark,
+                            ]
+                          : [theme.palette.grey[400], theme.palette.grey[900]]
+                      }
                       data={transformedData}
                       defs={[
                         linearGradientDef('Households visited', [
@@ -139,55 +183,97 @@ const AreaCard: FC<AreaCardProps> = ({ areas, assignment, data }) => {
                       enableSlices="x"
                       isInteractive={true}
                       lineWidth={3}
-                      margin={{ bottom: 20, left: 20, right: 20, top: 20 }}
+                      margin={{ bottom: 10, left: 15, right: 15, top: 10 }}
                       sliceTooltip={(props) => {
-                        const dataPoint = props.slice.points;
-
                         return (
-                          <Paper>
-                            <Box p={1}>
-                              <Typography variant="h6">
-                                <FormattedDate
-                                  value={dataPoint[0].data.xFormatted}
+                          <Paper
+                            style={{
+                              backgroundColor: theme.palette.background.paper,
+                              borderRadius: '3px',
+                              padding: '5px',
+                            }}
+                          >
+                            <Typography variant="h6">
+                              {props.slice.points[0].data.xFormatted.toString()}
+                            </Typography>
+                            {props.slice.points.map((dataPoint, index) => (
+                              <Box key={index}>
+                                <Box
+                                  sx={{
+                                    backgroundColor: (() => {
+                                      if (areaData?.area.id !== 'noArea') {
+                                        return dataPoint.serieId ===
+                                          'Household Visits'
+                                          ? theme.palette.primary.light
+                                          : theme.palette.primary.dark;
+                                      } else {
+                                        return dataPoint.serieId ===
+                                          'Household Visits'
+                                          ? theme.palette.grey[400]
+                                          : theme.palette.grey[900];
+                                      }
+                                    })(),
+                                    borderRadius: '50%',
+                                    display: 'inline-block',
+                                    height: '8px',
+                                    marginRight: 1,
+                                    offset: 0,
+                                    width: '8px',
+                                  }}
                                 />
-                              </Typography>
-                              <Typography variant="body2">
-                                {dataPoint.map((point) => {
-                                  return (
-                                    <Typography key={point.id}>
-                                      {point.serieId} {point.data.y as number}
-                                    </Typography>
-                                  );
-                                })}
-                              </Typography>
-                            </Box>
+                                {dataPoint.serieId}
+                                {':'} {dataPoint.data.yFormatted}
+                              </Box>
+                            ))}
                           </Paper>
                         );
                       }}
+                      {...(areaData?.area.id !== 'noArea'
+                        ? {
+                            yScale: {
+                              max: maxVisitedHouseholds,
+                              min: 0,
+                              type: 'linear',
+                            },
+                          }
+                        : null)}
                     />
                   </div>
                 )}
               </Box>
-              <Box
-                display="flex"
-                justifyContent="space-evenly"
-                sx={{ marginBottom: 2, marginTop: 2 }}
-              >
-                <Box textAlign="start">
-                  <Typography>Households visited</Typography>
-                  <Typography color={theme.palette.primary.main} variant="h6">
+              <Box display="flex" justifyContent="start" sx={{ margin: 1 }}>
+                <Box marginLeft={1} marginRight={2} textAlign="start">
+                  <Typography sx={{ fontSize: 14 }}>
+                    Households visited
+                  </Typography>
+                  <Typography
+                    color={
+                      areaData?.area.id !== 'noArea'
+                        ? theme.palette.primary.light
+                        : theme.palette.grey[400]
+                    }
+                    variant="h6"
+                  >
                     {area.num_visited_households}
                   </Typography>
                 </Box>
-                <Box textAlign="start">
-                  <Typography>Places visited</Typography>
-                  <Typography
-                    color={theme.palette.secondary.light}
-                    variant="h6"
-                  >
-                    {area.num_visited_places}
-                  </Typography>
-                </Box>
+                {area.areaId !== 'noArea' && (
+                  <Box textAlign="start">
+                    <Typography sx={{ fontSize: 14 }}>
+                      Places visited
+                    </Typography>
+                    <Typography
+                      color={
+                        areaData?.area.id !== 'noArea'
+                          ? theme.palette.secondary.light
+                          : theme.palette.grey[900]
+                      }
+                      variant="h6"
+                    >
+                      {area.num_visited_places}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             </Card>
           </Grid>

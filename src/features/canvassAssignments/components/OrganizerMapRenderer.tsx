@@ -160,6 +160,7 @@ type OrganizerMapRendererProps = {
   areas: ZetkinArea[];
   assignment: ZetkinCanvassAssignment;
   canvassAssId: string;
+  navigateToAreaId?: string;
   onSelectedIdChange: (newId: string) => void;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
   placeStyle: 'dot' | 'households' | 'progress' | 'hide';
@@ -176,6 +177,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   canvassAssId,
   selectedId,
   sessions,
+  navigateToAreaId,
   onSelectedIdChange,
   overlayStyle,
   placeStyle,
@@ -204,10 +206,20 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
   useEffect(() => {
     if (map && !zoomed) {
-      const bounds = reactFGref.current?.getBounds();
-      if (bounds?.isValid()) {
-        map.fitBounds(bounds);
-        setZoomed(true);
+      if (navigateToAreaId) {
+        const areaToNavigate = areas.find(
+          (area) => area.id === navigateToAreaId
+        );
+        if (areaToNavigate) {
+          map.fitBounds(areaToNavigate.points);
+          setZoomed(true);
+        }
+      } else {
+        const bounds = reactFGref.current?.getBounds();
+        if (bounds?.isValid()) {
+          map.fitBounds(bounds);
+          setZoomed(true);
+        }
       }
     }
   }, [areas, map]);

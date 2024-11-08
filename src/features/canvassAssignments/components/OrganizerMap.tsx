@@ -1,6 +1,7 @@
-import { FC, useContext, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -75,6 +76,8 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
   const { setActiveGroupIds, setActiveTagIdsByGroup } =
     useContext(areaFilterContext);
+  const router = useRouter();
+  const { navigateToAreaId } = router.query;
 
   const mapRef = useRef<MapType | null>(null);
 
@@ -105,6 +108,13 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   }
 
   const filteredAreas = filterAreas(areas, filterText);
+
+  useEffect(() => {
+    if (navigateToAreaId !== undefined && !Array.isArray(navigateToAreaId)) {
+      setSelectedId(navigateToAreaId);
+      setSettingsOpen('select');
+    }
+  }, [navigateToAreaId]);
 
   const clearAndCloseSettings = () => {
     setSettingsOpen(null);

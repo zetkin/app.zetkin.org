@@ -29,7 +29,7 @@ const NumberCard: FC<NumberCardProps> = ({
 
               marginRight: '2px',
             }}
-            variant="h2"
+            variant="h3"
           >
             {firstNumber}
           </Typography>
@@ -37,7 +37,7 @@ const NumberCard: FC<NumberCardProps> = ({
             /{secondNumber}
           </Typography>
         </Box>
-        <Typography>{message}</Typography>
+        <Typography sx={{ fontSize: 14 }}>{message}</Typography>
       </CardContent>
     </Card>
   );

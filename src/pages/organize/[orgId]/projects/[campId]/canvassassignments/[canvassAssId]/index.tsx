@@ -1,22 +1,20 @@
 import { Box, Button, Card, Divider, Grid, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { Edit } from '@mui/icons-material';
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 
 import AreaCard from 'features/canvassAssignments/components/AreaCard';
 import { AREAS } from 'utils/featureFlags';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
-import { getContrastColor } from 'utils/colorUtils';
 import { PageWithLayout } from 'utils/types';
 import NumberCard from 'features/canvassAssignments/components/NumberCard';
 import { scaffold } from 'utils/next';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 import useCanvassAssignmentStats from 'features/canvassAssignments/hooks/useCanvassAssignmentStats';
-import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAssignmentAreaStats from 'features/canvassAssignments/hooks/useAssignmentAreaStats';
 import useAssignmentAreaGraph from 'features/canvassAssignments/hooks/useAssignmentAreaGraph';
+import { ZetkinAssignmentAreaStatsItem } from 'features/canvassAssignments/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -35,31 +33,6 @@ interface CanvassAssignmentPageProps {
   canvassAssId: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  chip: {
-    backgroundColor: theme.palette.statusColors.gray,
-    borderRadius: '1em',
-    color: theme.palette.text.secondary,
-    display: 'flex',
-    fontSize: '1.8em',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-  statsChip: {
-    backgroundColor: theme.palette.statusColors.blue,
-    borderRadius: '1em',
-    color: getContrastColor(theme.palette.statusColors.blue),
-    display: 'flex',
-    fontSize: '1rem',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-}));
-
 const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   orgId,
   canvassAssId,
@@ -68,7 +41,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
   const statsFuture = useCanvassAssignmentStats(parseInt(orgId), canvassAssId);
   const areasStats = useAssignmentAreaStats(parseInt(orgId), canvassAssId);
   const dataGraph = useAssignmentAreaGraph(parseInt(orgId), canvassAssId);
-  const classes = useStyles();
   const router = useRouter();
 
   return (
@@ -82,7 +54,6 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
         const planUrl = `/organize/${orgId}/projects/${
           assignment.campaign.id || 'standalone'
         }/canvassassignments/${assignment.id}/plan`;
-
         return (
           <Box display="flex" flexDirection="column" gap={2}>
             {stats.num_areas == 0 && (
@@ -106,15 +77,14 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
             {stats.num_areas > 0 && (
               <>
                 <Card>
-                  <Box display="flex" justifyContent="space-between" p={2}>
-                    <Typography variant="h4">Areas</Typography>
-                    {!!stats.num_areas && (
-                      <ZUIAnimatedNumber value={stats.num_areas}>
-                        {(animatedValue) => (
-                          <Box className={classes.chip}>{animatedValue}</Box>
-                        )}
-                      </ZUIAnimatedNumber>
-                    )}
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    marginLeft={1}
+                    maxHeight={40}
+                    p={1}
+                  >
+                    <Typography variant="h5">Progress</Typography>
                   </Box>
                   <Divider />
                   <Box display="flex">
@@ -139,50 +109,75 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 </Card>
 
                 <Grid container spacing={2}>
-                  {assignment.start_date && (
-                    <ZUIFutures futures={{ areasStats, dataGraph }}>
-                      {({ data: { areasStats, dataGraph } }) => {
-                        // Sort areas based on successful visits only
-                        const sortedAreas = areasStats.stats
-                          .map((area) => {
-                            const successfulVisitsTotal =
-                              dataGraph
-                                .find((graph) => graph.areaId === area.areaId)
-                                ?.successfulVisits.reduce(
-                                  (sum, item) => sum + item.accumulatedVisits,
-                                  0
-                                ) || 0;
+                  <ZUIFutures futures={{ areasStats, dataGraph }}>
+                    {({ data: { areasStats, dataGraph } }) => {
+                      // Sort areas based on successful visits only
+                      const sortedAreas = areasStats.stats
+                        .map((area) => {
+                          const successfulVisitsTotal =
+                            dataGraph
+                              .find((graph) => graph.area.id === area.areaId)
+                              ?.data.reduce(
+                                (sum, item) => sum + item.successfulVisits,
+                                0
+                              ) || 0;
 
-                            return {
-                              area,
-                              successfulVisitsTotal,
-                            };
-                          })
-                          .sort(
-                            (a, b) =>
-                              b.successfulVisitsTotal - a.successfulVisitsTotal
+                          return {
+                            area,
+                            successfulVisitsTotal,
+                          };
+                        })
+                        .sort(
+                          (a, b) =>
+                            b.successfulVisitsTotal - a.successfulVisitsTotal
+                        )
+                        .map(({ area }) => area);
+
+                      const maxHouseholdVisits = Math.max(
+                        ...dataGraph.flatMap((areaCard) =>
+                          areaCard.data.map(
+                            (graphData) => graphData.householdVisits
                           )
-                          .map(({ area }) => area);
-                        return (
-                          <AreaCard
-                            areas={sortedAreas}
-                            assignment={assignment}
-                            data={dataGraph}
-                          />
-                        );
-                      }}
-                    </ZUIFutures>
-                  )}
+                        )
+                      );
+
+                      const noAreaData = dataGraph.find(
+                        (graph) => graph.area.id === 'noArea'
+                      );
+                      if (noAreaData && noAreaData.data.length > 0) {
+                        const latestEntry = [...noAreaData.data].sort(
+                          (a, b) =>
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
+                        )[0];
+
+                        const num_successful_visited_households =
+                          latestEntry.successfulVisits;
+
+                        const num_visited_households =
+                          latestEntry.householdVisits;
+
+                        const noArea: ZetkinAssignmentAreaStatsItem = {
+                          areaId: 'noArea',
+                          num_households: 0,
+                          num_places: 0,
+                          num_successful_visited_households,
+                          num_visited_households,
+                          num_visited_places: 0,
+                        };
+                        sortedAreas.push(noArea);
+                      }
+                      return (
+                        <AreaCard
+                          areas={sortedAreas}
+                          assignment={assignment}
+                          data={dataGraph}
+                          maxVisitedHouseholds={maxHouseholdVisits}
+                        />
+                      );
+                    }}
+                  </ZUIFutures>
                 </Grid>
-                {!assignment.start_date && (
-                  <Card>
-                    <Box p={10} sx={{ textAlign: ' center' }}>
-                      <Typography variant="h5">
-                        Start the assignment to view area-specific statistics.
-                      </Typography>
-                    </Box>
-                  </Card>
-                )}
               </>
             )}
           </Box>
