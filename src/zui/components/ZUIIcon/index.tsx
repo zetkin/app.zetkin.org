@@ -14,8 +14,24 @@ type IconColor =
   | 'danger';
 
 type ZUIIconProps = {
+  /**
+   * Color of the icon.
+   * Options: secondary, primary, data, success, info, warning and danger.
+   *
+   * Defaults to secondary.
+   */
   color?: IconColor;
+
+  /**
+   * The MUI icon to be used.
+   *
+   * Pass in reference to the icon, for example: Close, not <Close/>.
+   */
   icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
+
+  /**
+   * Small, medium or large. Defaults to small.
+   */
   size?: ZUISize;
 };
 
