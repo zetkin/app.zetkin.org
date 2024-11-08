@@ -5,7 +5,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import {
   Household,
@@ -135,6 +135,10 @@ const VisitWizard: FC<VisitWizardProps> = ({
 }) => {
   const [responses, setResponses] = useState<Visit['responses']>([]);
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setStep(0);
+  }, [household.id]);
 
   const metricIndex = step;
   const currentMetric = metrics[metricIndex];
