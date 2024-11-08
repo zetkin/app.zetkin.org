@@ -1,19 +1,13 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { LatLng, Map, FeatureGroup as FeatureGroupType } from 'leaflet';
-import { makeStyles } from '@mui/styles';
-import { Add, GpsNotFixed, Remove } from '@mui/icons-material';
 import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  MenuItem,
-  Select,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-  useTheme,
-} from '@mui/material';
+  LatLng,
+  Map,
+  FeatureGroup as FeatureGroupType,
+  latLngBounds,
+} from 'leaflet';
+import { makeStyles } from '@mui/styles';
+import { GpsNotFixed } from '@mui/icons-material';
+import { Box, useTheme } from '@mui/material';
 import {
   AttributionControl,
   FeatureGroup,
@@ -27,14 +21,14 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import PlaceDialog from './PlaceDialog';
-import { CreatePlaceCard } from './CreatePlaceCard';
-import getVisitState, { ProgressState } from '../utils/getVisitState';
+import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
 import { ZetkinCanvassAssignment } from '../types';
-import getDoneState from '../utils/getDoneState';
+import MapControls from './MapControls';
+import objToLatLng from 'features/areas/utils/objToLatLng';
+import CanvassAssignmentMapOverlays from './CanvassAssignmentMapOverlays';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
     '0%': {
       top: -20,
@@ -45,16 +39,6 @@ const useStyles = makeStyles((theme) => ({
       transform: 'scale(0.9, 1)',
     },
   },
-  actionAreaContainer: {
-    bottom: 15,
-    display: 'flex',
-    gap: 8,
-    justifyContent: 'center',
-    padding: 8,
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1000,
-  },
   crosshair: {
     left: '50%',
     position: 'absolute',
@@ -62,14 +46,6 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     transition: 'opacity 0.1s',
     zIndex: 1200,
-  },
-  filterControls: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: 10,
-    position: 'absolute',
-    right: 10,
-    zIndex: 1000,
   },
   ghostMarker: {
     animationDirection: 'alternate',
@@ -80,39 +56,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     zIndex: 1000,
   },
-  infoButtons: {
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.grey[300]}`,
-    borderRadius: '4px',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '8px',
-    width: '90%',
-  },
-  markerFilterButtons: {
-    backgroundColor: theme.palette.common.white,
-    borderRadius: 4,
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  zoomControls: {
-    backgroundColor: theme.palette.common.white,
-    borderRadius: 2,
-    display: 'flex',
-    flexDirection: 'column',
-    left: 10,
-    marginTop: 10,
-    position: 'absolute',
-    zIndex: 1000,
-  },
 }));
-
-export type PlaceDialogStep =
-  | 'place'
-  | 'edit'
-  | 'household'
-  | 'wizard'
-  | 'pickHousehold';
 
 type CanvassAssignmentMapProps = {
   areas: ZetkinArea[];
@@ -129,55 +73,56 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const createPlace = useCreatePlace(assignment.organization.id);
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
-  const [standingStill, setStandingStill] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [placeFilters, setPlaceFilters] = useState<ProgressState[]>([
-    'all',
-    'none',
-    'some',
-  ]);
-  const [dataToShow, setDataToShow] = useState<'visited' | 'done'>('visited');
+  const [created, setCreated] = useState(false);
 
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
-  const standingStillTimerRef = useRef(0);
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
   const [zoomed, setZoomed] = useState(false);
 
   const selectedPlace = places.find((place) => place.id == selectedPlaceId);
-  const showViewPlaceButton = !!selectedPlace && !anchorEl;
 
   const updateSelection = useCallback(() => {
     let nearestPlace: string | null = null;
     let nearestDistance = Infinity;
 
-    const crosshair = crosshairRef.current;
-
-    if (map && crosshair) {
-      const markerPos = getCrosshairPositionOnMap(map, crosshair);
-
-      places.forEach((place) => {
-        const screenPos = map.latLngToContainerPoint(place.position);
-        const dx = screenPos.x - markerPos.markerX;
-        const dy = screenPos.y - markerPos.markerY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < nearestDistance) {
-          nearestDistance = dist;
-          nearestPlace = place.id;
-        }
-      });
-
-      if (nearestDistance < 20) {
-        if (nearestPlace != selectedPlace) {
-          setSelectedPlaceId(nearestPlace);
-        }
-      } else {
+    if (isCreating) {
+      if (selectedPlaceId) {
         setSelectedPlaceId(null);
       }
+      return;
+    }
+
+    const crosshair = crosshairRef.current;
+
+    try {
+      if (map && crosshair) {
+        const markerPos = getCrosshairPositionOnMap(map, crosshair);
+
+        places.forEach((place) => {
+          const screenPos = map.latLngToContainerPoint(place.position);
+          const dx = screenPos.x - markerPos.markerX;
+          const dy = screenPos.y - markerPos.markerY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < nearestDistance) {
+            nearestDistance = dist;
+            nearestPlace = place.id;
+          }
+        });
+
+        if (nearestDistance < 20) {
+          if (nearestPlace != selectedPlace) {
+            setSelectedPlaceId(nearestPlace);
+          }
+        } else {
+          setSelectedPlaceId(null);
+        }
+      }
+    } catch (err) {
+      // Do nothing for now
     }
   }, [map, selectedPlaceId, places]);
 
@@ -205,30 +150,19 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   );
 
   useEffect(() => {
+    if (created) {
+      updateSelection();
+    }
+  }, [created, places]);
+
+  useEffect(() => {
     if (map) {
       map.on('click', (evt) => {
         panTo(evt.latlng);
       });
 
-      map.on('movestart', () => {
-        window.clearTimeout(standingStillTimerRef.current);
-        setStandingStill(false);
-      });
-
       map.on('move', () => {
         updateSelection();
-      });
-
-      map.on('moveend', () => {
-        // When the map contains no places, show the bouncy marker
-        // quickly, but once there are places, wait longer before
-        // showing the bouncy marker.
-        const delay = places.length ? 10000 : 1300;
-
-        standingStillTimerRef.current = window.setTimeout(
-          () => setStandingStill(true),
-          delay
-        );
       });
 
       return () => {
@@ -240,10 +174,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   }, [map, selectedPlaceId, places, panTo, updateSelection]);
 
   useEffect(() => {
-    updateSelection();
-  }, [places]);
-
-  useEffect(() => {
     if (map && !zoomed) {
       const bounds = reactFGref.current?.getBounds();
       if (bounds?.isValid()) {
@@ -253,68 +183,37 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
     }
   }, [areas, map]);
 
-  const metricThatDefinesDone = assignment.metrics.find(
-    (metric) => metric.definesDone
-  );
-
-  const filteredPlaces = places.filter((place) => {
-    const state =
-      dataToShow == 'visited'
-        ? getVisitState(place.households, assignment.id)
-        : getDoneState(
-            place.households,
-            assignment.id,
-            metricThatDefinesDone?.id || ''
-          );
-    return placeFilters.includes(state);
-  });
-
   return (
     <>
-      <Box className={classes.zoomControls}>
-        <IconButton onClick={() => map?.zoomIn()}>
-          <Add />
-        </IconButton>
-        <Divider flexItem variant="fullWidth" />
-        <IconButton onClick={() => map?.zoomOut()}>
-          <Remove />
-        </IconButton>
-      </Box>
-      <Box className={classes.filterControls}>
-        <ToggleButtonGroup
-          className={classes.markerFilterButtons}
-          onChange={(ev, newValue: ProgressState[]) => {
-            setPlaceFilters(newValue);
-          }}
-          value={placeFilters}
-        >
-          <ToggleButton value="none">
-            <MarkerIcon dataToShow={dataToShow} selected={false} state="none" />
-          </ToggleButton>
-          <ToggleButton value="some">
-            <MarkerIcon dataToShow={dataToShow} selected={false} state="some" />
-          </ToggleButton>
-          <ToggleButton value="all">
-            <MarkerIcon dataToShow={dataToShow} selected={false} state="all" />
-          </ToggleButton>
-        </ToggleButtonGroup>
-        {!!assignment.metrics.find((metric) => metric.definesDone) && (
-          <Select
-            onChange={(ev) => {
-              const value = ev.target.value;
-              if (value == 'done' || value == 'visited') {
-                setDataToShow(value);
-              }
-            }}
-            sx={{ backgroundColor: 'white' }}
-            value={dataToShow}
-          >
-            <MenuItem value="visited">Visited</MenuItem>
-            <MenuItem value="done">Done</MenuItem>
-          </Select>
-        )}
-      </Box>
       <Box position="relative">
+        <MapControls
+          map={map}
+          onFitBounds={() => {
+            if (map) {
+              if (areas.length) {
+                // Start with first area
+                const totalBounds = latLngBounds(
+                  areas[0].points.map((p) => objToLatLng(p))
+                );
+
+                // Extend with all areas
+                areas.forEach((area) => {
+                  const areaBounds = latLngBounds(
+                    area.points.map((p) => objToLatLng(p))
+                  );
+                  totalBounds.extend(areaBounds);
+                });
+
+                if (totalBounds) {
+                  map.flyToBounds(totalBounds, {
+                    animate: true,
+                    duration: 0.8,
+                  });
+                }
+              }
+            }
+          }}
+        />
         <Box
           ref={crosshairRef}
           className={classes.crosshair}
@@ -322,17 +221,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
             opacity: !selectedPlaceId ? 1 : 0.3,
           }}
         >
-          {!selectedPlaceId && !isCreating && (
-            <Box
-              className={classes.ghostMarker}
-              sx={{
-                opacity: standingStill ? 1 : 0,
-                transition: `opacity ${standingStill ? 0.8 : 0.2}s`,
-              }}
-            >
-              <MarkerIcon selected={true} />
-            </Box>
-          )}
           {!selectedPlaceId && isCreating && (
             <Box
               className={classes.ghostMarker}
@@ -346,30 +234,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
           )}
           <GpsNotFixed />
         </Box>
-      </Box>
-      <Box className={classes.actionAreaContainer}>
-        {showViewPlaceButton && (
-          <Box className={classes.infoButtons}>
-            <Typography sx={{ paddingBottom: 1 }}>
-              {selectedPlace.title || 'Untitled place'}
-            </Typography>
-            <Button
-              fullWidth
-              onClick={(ev) => {
-                setAnchorEl(ev.currentTarget);
-                setDialogStep('place');
-              }}
-              variant="outlined"
-            >
-              View place
-            </Button>
-          </Box>
-        )}
-        {!selectedPlace && !isCreating && (
-          <Button onClick={() => setIsCreating(true)} variant="contained">
-            Add new place
-          </Button>
-        )}
       </Box>
       <MapContainer
         ref={(map) => setMap(map)}
@@ -396,87 +260,60 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
             />
           ))}
         </FeatureGroup>
-        <>
-          {filteredPlaces.map((place) => {
-            const state =
-              dataToShow == 'visited'
-                ? getVisitState(place.households, assignment.id)
-                : getDoneState(
-                    place.households,
-                    assignment.id,
-                    metricThatDefinesDone?.id || ''
-                  );
+        {places.map((place) => {
+          const state = getVisitState(place.households, assignment.id);
 
-            const selected = place.id == selectedPlaceId;
-            const key = `marker-${place.id}-${selected.toString()}`;
+          const selected = place.id == selectedPlaceId;
+          const key = `marker-${place.id}-${selected.toString()}`;
 
-            return (
-              <DivIconMarker
-                key={key}
-                eventHandlers={{
-                  click: (evt) => {
-                    panTo(evt.latlng);
-                  },
-                }}
-                iconAnchor={[11, 33]}
-                position={{
-                  lat: place.position.lat,
-                  lng: place.position.lng,
-                }}
-              >
-                <MarkerIcon
-                  dataToShow={dataToShow}
-                  selected={selected}
-                  state={state}
-                />
-              </DivIconMarker>
-            );
-          })}
-        </>
+          return (
+            <DivIconMarker
+              key={key}
+              eventHandlers={{
+                click: (evt) => {
+                  panTo(evt.latlng);
+                },
+              }}
+              iconAnchor={[11, 33]}
+              position={{
+                lat: place.position.lat,
+                lng: place.position.lng,
+              }}
+            >
+              <MarkerIcon
+                dataToShow="visited"
+                selected={selected}
+                state={state}
+              />
+            </DivIconMarker>
+          );
+        })}
       </MapContainer>
-      {selectedPlace && (
-        <PlaceDialog
-          canvassAssId={assignment.id}
-          dialogStep={dialogStep}
-          onClose={() => {
-            setAnchorEl(null);
-            setSelectedPlaceId(null);
-          }}
-          onEdit={() => setDialogStep('edit')}
-          onPickHousehold={() => setDialogStep('pickHousehold')}
-          onSelectHousehold={() => setDialogStep('household')}
-          onUpdateDone={() => setDialogStep('place')}
-          onWizard={() => setDialogStep('wizard')}
-          open={!!anchorEl}
-          orgId={assignment.organization.id}
-          place={selectedPlace}
-        />
-      )}
-      {isCreating && (
-        <CreatePlaceCard
-          onClose={() => {
-            setIsCreating(false);
-          }}
-          onCreate={(title) => {
-            const crosshair = crosshairRef.current;
+      <CanvassAssignmentMapOverlays
+        assignment={assignment}
+        isCreating={isCreating}
+        onCreate={(title) => {
+          const crosshair = crosshairRef.current;
 
-            if (crosshair && map) {
-              const markerPos = getCrosshairPositionOnMap(map, crosshair);
+          if (crosshair && map) {
+            const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-              const point = map?.containerPointToLatLng([
-                markerPos.markerX,
-                markerPos.markerY,
-              ]);
-              if (point) {
-                createPlace({
-                  position: point,
-                  title,
-                });
-              }
+            const point = map?.containerPointToLatLng([
+              markerPos.markerX,
+              markerPos.markerY,
+            ]);
+            if (point) {
+              setCreated(true);
+              createPlace({
+                position: point,
+                title,
+              });
             }
-          }}
-        />
-      )}
+          }
+        }}
+        onToggleCreating={(creating) => setIsCreating(creating)}
+        selectedPlace={selectedPlace || null}
+      />
     </>
   );
 };

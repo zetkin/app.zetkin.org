@@ -37,7 +37,6 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [locating, setLocating] = useState(false);
 
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
@@ -121,11 +120,6 @@ const Map: FC<MapProps> = ({ areas }) => {
       }
     }
   };
-
-  const onLocate = () => ({
-    locating,
-    setLocating,
-  });
 
   return (
     <AreaFilterProvider>
@@ -225,11 +219,7 @@ const Map: FC<MapProps> = ({ areas }) => {
         )}
 
         <Box flexGrow={1} position="relative">
-          <MapControls
-            mapRef={mapRef}
-            onFitBounds={fitBounds}
-            onLocate={onLocate}
-          />
+          <MapControls map={mapRef.current} onFitBounds={fitBounds} />
           {selectedArea && (
             <AreaOverlay
               area={editingArea || selectedArea}

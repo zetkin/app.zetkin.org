@@ -1,21 +1,16 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { Map } from 'leaflet';
-import React, { MutableRefObject } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
 
 type MapControlsProps = {
-  mapRef: MutableRefObject<Map | null>;
+  map: Map | null;
   onFitBounds: () => void;
-  onLocate: () => { locating: boolean; setLocating: (value: boolean) => void };
 };
 
-const MapControls: React.FC<MapControlsProps> = ({
-  mapRef,
-  onFitBounds,
-  onLocate,
-}) => {
-  const { locating, setLocating } = onLocate();
+const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
+  const [locating, setLocating] = useState(false);
 
   return (
     <Box
@@ -27,10 +22,10 @@ const MapControls: React.FC<MapControlsProps> = ({
       }}
     >
       <ButtonGroup orientation="vertical" variant="contained">
-        <Button onClick={() => mapRef.current?.zoomIn()}>
+        <Button onClick={() => map?.zoomIn()}>
           <Add />
         </Button>
-        <Button onClick={() => mapRef.current?.zoomOut()}>
+        <Button onClick={() => map?.zoomOut()}>
           <Remove />
         </Button>
         <Button onClick={onFitBounds}>
@@ -49,7 +44,7 @@ const MapControls: React.FC<MapControlsProps> = ({
                   lng: pos.coords.longitude,
                 };
 
-                mapRef.current?.flyTo(latLng, zoom, {
+                map?.flyTo(latLng, zoom, {
                   animate: true,
                   duration: 0.8,
                 });

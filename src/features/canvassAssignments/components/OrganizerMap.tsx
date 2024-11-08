@@ -70,7 +70,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     ('layers' | 'filters' | 'select') | null
   >(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
-  const [locating, setLocating] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
   const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
@@ -137,7 +136,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     >
       <Box flexGrow={1} position="relative">
         <MapControls
-          mapRef={mapRef}
+          map={mapRef.current}
           onFitBounds={() => {
             const map = mapRef.current;
             if (map) {
@@ -161,10 +160,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               }
             }
           }}
-          onLocate={() => ({
-            locating,
-            setLocating,
-          })}
         />
         <Box
           sx={{
