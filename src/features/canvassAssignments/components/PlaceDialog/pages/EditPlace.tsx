@@ -41,28 +41,35 @@ const EditPlace: FC<EditPlaceProps> = ({ onClose, onBack, onSave, place }) => {
       onClose={onClose}
       title={`Edit ${place.title || 'Untitled place'}`}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap={2}
-        height="100%"
-        paddingTop={2}
+      <form
+        onSubmit={(ev) => {
+          ev.preventDefault();
+          onSave(title, description);
+        }}
       >
-        <TextField
-          defaultValue={title}
-          fullWidth
-          label="Edit title"
-          onChange={(ev) => setTitle(ev.target.value)}
-        />
-        <TextField
-          defaultValue={description}
-          fullWidth
-          label="Edit description"
-          multiline
-          onChange={(ev) => setDescription(ev.target.value)}
-          rows={5}
-        />
-      </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          height="100%"
+          paddingTop={2}
+        >
+          <TextField
+            fullWidth
+            label="Edit title"
+            onChange={(ev) => setTitle(ev.target.value)}
+            value={title}
+          />
+          <TextField
+            fullWidth
+            label="Edit description"
+            multiline
+            onChange={(ev) => setDescription(ev.target.value)}
+            rows={5}
+            value={description}
+          />
+        </Box>
+      </form>
     </PageBase>
   );
 };

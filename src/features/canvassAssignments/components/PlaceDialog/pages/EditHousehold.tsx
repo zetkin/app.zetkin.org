@@ -37,20 +37,22 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
       onClose={onClose}
       title={`Edit ${household.title || 'Untitled household'}`}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap={2}
-        height="100%"
-        paddingTop={2}
+      <form
+        onSubmit={(ev) => {
+          ev.preventDefault();
+          onSave(title);
+        }}
       >
-        <TextField
-          defaultValue={title}
-          fullWidth
-          label="Edit title"
-          onChange={(ev) => setTitle(ev.target.value)}
-        />
-      </Box>
+        <Box mt={2}>
+          <TextField
+            defaultValue={title}
+            fullWidth
+            label="Edit title"
+            onChange={(ev) => setTitle(ev.target.value)}
+            value={title}
+          />
+        </Box>
+      </form>
     </PageBase>
   );
 };
