@@ -8,7 +8,6 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import theme from '../src/theme';
 import '../src/styles.css';
@@ -68,8 +67,7 @@ export const decorators = [
   ),
   (Story) => {
     const store = createStore();
-    const router = useRouter();
-    const env = new Environment(store, new MockApiClient(), router);
+    const env = new Environment(new MockApiClient());
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
