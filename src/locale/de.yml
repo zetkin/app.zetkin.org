@@ -295,6 +295,14 @@ feat:
       viewArchive: Archiv anzeigen
     assigneeActions: Aktionen von Beauftragten
     calendarView: Alles einblenden
+    createButton:
+      createActivity: Erstelle
+      createCallAssignment: Telefonaktion
+      createCanvassAssignment: Haustüraktion
+      createEmail: E-Mail
+      createEvent: Veranstaltung
+      createSurvey: Umfrage
+      createTask: Aufgabe
     events: Aktionen
     feedback:
       copy: Feedback einzuholen kann dein Engagement effektiver machen
@@ -350,6 +358,7 @@ feat:
     linkGroup:
       createActivity: Erstelle Aktivität
       createCallAssignment: Erstelle Telefonaktion
+      createCanvassAssignment: Haustüraktion
       createEmail: Erstelle E-Mail
       createEvent: Erstelle Aktion
       createSurvey: Erstelle Umfrage
@@ -734,7 +743,7 @@ feat:
       invalidTime: ungültige Zeit
       link: Link
       location: Ort
-      minutes: '{no, plural, one {1 minute} other {# minutes}}'
+      minutes: '{no, plural, one {1Minute} other {# Minuten}}'
       minutesShort: min
       noEvents: Das wird {no} Veranstaltung erstellen.
       noTitle: Unbenannte Veranstaltung mit mehreren Schichten
@@ -916,7 +925,7 @@ feat:
           empty: Leer
           guess: Vermute Schlagworte
           header: Ordne Werte den Schlagworten zu
-          numberOfRows: '{numRows, plural, =1 {1 row} other {# rows}}'
+          numberOfRows: '{numRows, plural, =1 {1 Reihe} other {# Reihen}}'
           tagsHeader: Schlagworte
       hide: Ausblenden
       mapping:
@@ -927,23 +936,24 @@ feat:
         finishedMappingDates: Zuordnen von {numValues, plural, =1 {1 value} other
           {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian
           fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} in Daten
-        finishedMappingIds: Zuordnen von {numValues, plural, =1 {1 value} other {#
-          values}} to {idField, select, id {Zetkin ID} other {external ID}}
-        finishedMappingOrganizations: '{numPeople, plural, =1 {1 person} other {#
-          people}} mapped to {numMappedTo, plural, =1 {1 organization} other {# organizations}}'
-        finishedMappingTags: Mapping {numRows, plural, =1 {1 row} other {# rows}}
+        finishedMappingIds: Zuordnen von {numValues, plural, =1 {1 Wert} other {#
+          Werte}} to {idField, select, id {Zetkin ID} other {external ID}}
+        finishedMappingOrganizations: '{numPeople, plural, =1 {1 Person} other {#
+          Personen}} mapped to {numMappedTo, plural, =1 {1 Organisation} other {#
+          Organisationen}}'
+        finishedMappingTags: Mapping {numRows, plural, =1 {1 Zeile} other {# Zeilen}}
           to {numMappedTo, plural, =1 {1 tag} other {# tags}}
         header: Zuordnen
         id: ID
         mapValuesButton: Zuordnungswerte
         messages:
           manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
-            plural, =1 {one other value} other {# other values}} and {numEmpty, plural,
-            =1 {one empty row} other {# empty rows}}.'
+            plural, =1 {ein weiterer Wert} other {# weitere Werte}} and {numEmpty,
+            plural, =1 {eine leere Zeile} other {# leere Zeilen}}.'
           manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} and {numMoreValues,
-            plural, =1 {one other value} other {# other values}}.'
-          oneValueAndEmpty: '{firstValue} and {numEmpty, plural, =1 {one empty row}
-            other {# empty rows}}.'
+            plural, =1 {ein weiterer Wert} other {# andere Werte}}.'
+          oneValueAndEmpty: '{firstValue} and {numEmpty, plural, =1 {eine leere Zeile}
+            other {# leere Zeilen}}.'
           oneValueNoEmpty: '{firstValue}.'
         organization: Organisation
         selectZetkinField: Importiere als ...
@@ -985,25 +995,25 @@ feat:
         orgs: '{numPeople} werden einer {org} zugefügt'
         tags: Schlagworte
         tagsDesc: '{numPeople} werden {tags} hinzugefügt.'
-        updated: '{number} {numPeople, plural, =1 {person} other {people}} werden
+        updated: '{number} {numPeople, plural, =1 {Person} other {Personen}} werden
           aktualisiert'
       past:
-        created: '{number} neue {numPeople, plural, =1 {person} other {people}} werden
-          erstellt.'
+        created: '{number} neue {numPeople, plural, =1 {Person} other {Personen}}
+          werden erstellt.'
         defaultDesc: '{numPeople} wurden aktualisiert in {field}'
         organization: Organisation
-        orgs: "{numPeople} wurden hinzugefügt zu \n {org}"
+        orgs: '{numPeople} wurden hinzugefügt zu {org}'
         tags: Schlagworte
         tagsDesc: '{numPeople} wurden {tags} hinzugefügt'
-        updated: '{number} {numPeople, plural, =1 {person} other {people}} wurden
+        updated: '{number} {numPeople, plural, =1 {Person} other {Personen}} wurden
           aktualisiert'
     importStatus:
       completed:
-        desc: Deine Daten wurden zu Zetkin importiert
+        desc: Deine Daten wurden in Zetkin importiert
         title: Import vollständig
       completedChanges: Änderungen abschließen
       error:
-        desc: Keine Daten wurden zu Zetkin importiert.
+        desc: Keine Daten wurden in Zetkin importiert.
         title: Import ist gescheitert
       loadingState: Importieren
       scheduled:
@@ -1331,6 +1341,10 @@ feat:
         demote: Zurückstufen
         promote: Hochstufen
         remove: Entfernen
+      urlCard:
+        linkToPub: Link zur öffentlichen Organisationsseite
+        subTitle: Benutzer*innen müssen sich zuerst mit der Organisation verbinden,
+          um als Administrator*innen Zugang zur Organisation bekommen zu können.
       you: Du
   smartSearch:
     buttonLabels:
@@ -1352,7 +1366,7 @@ feat:
           description: Auswahl auf Grundlage von persönlichen Informationen
           title: Grundlegende Information
         crossReferencing:
-          description: Auswahl auf Grundlage von Listen und Smarten Suchanfragen
+          description: Auswahl auf Grundlage von Listen und dynamischen Suchanfragen
           title: Querverweis
         email:
           description: Finde Personen auf Grundlage der Daten, die durch das Senden
@@ -1361,6 +1375,9 @@ feat:
         events:
           description: Auswahl auf Grundlage von Daten von Veranstaltungen
           title: Veranstaltungen
+        journey:
+          description: Auswahl basierend auf Daten aus den Anfragen
+          title: Anfragen
         misc:
           description: Sonstige Auswahlarten
           title: Sonstiges
@@ -1391,15 +1408,19 @@ feat:
         email_history:
           description: Wem wurde was gesendet, wann?
           title: Auf Grundlage ihres E-Mail-Verlaufs
+        journey_subjects:
+          description: Finde Personen, die Anfragen bearbeiten oder diese abgeschlossen
+            haben.
+          title: Personen aus Anfragen
         person_data:
-          description: Name, Adresse, E-Mail und mehr!
+          description: Name, Adresse, E-Mail und mehr.
           title: Persönliche Informationen
         person_field:
-          description: Wie grundlegende persönliche Informationen, aber Suchfelder,
+          description: Grundlegende persönliche Informationen, aber auch Suchfelder,
             die angepasst sind auf diese Organisation.
-          title: angepasste Felder
+          title: Angepasste Felder
         person_tags:
-          description: Um Personen zu finden mit oder ohne spezifische Schlagworte.
+          description: Zum Auffinden von Peronen mit oder ohne bestimmte Schlagworte.
           title: Schlagworte
         person_view:
           description: Wenn du Personen finden möchtest, die in einer Liste sind oder
@@ -1409,9 +1430,9 @@ feat:
           description: Füge Personen zufällig hinzu oder entferne sie.
           title: Zufällige Auswahl
         sub_query:
-          description: Benutze eine andere Smarte Suche, um diese Smarte Suche zu
-            verfeinern.
-          title: Personen, die einer gespeicherten Smarten Suchanfrage entsprechen.
+          description: Benutze eine andere dynamische Suche, um diese dynamische Suche
+            zu verfeinern.
+          title: Personen, die einer gespeicherten dynamischen Suchanfrage entsprechen.
         survey_option:
           description: 'Benutzer Deine Umfrageergebnisse für ihren eigentlichen Zweck:
             Finde die richtigen Personen!'
@@ -1453,7 +1474,7 @@ feat:
       all:
         inputString: Starte mit {startWithSelect}.
         startWithSelect:
-          'false': leere Liste
+          'false': leerer Liste
           'true': Liste aller Personen in der Organisation
       callBlocked:
         addRemoveSelect:
@@ -1992,7 +2013,7 @@ feat:
       emailColumn: Email
       firstNameColumn: Vorname
       lastNameColumn: Nachname
-      link: Link
+      link: Verbinden
       personRecordColumn: Befragte*r
       suggestedPeople: Vorgeschlagene Personen
       unlink: Link entfernen
@@ -2008,7 +2029,7 @@ feat:
         nameAndEmail: Mit Name und E-Mail-Adresse bestätigen.
       submit: Übermitteln
       terms:
-        description: Wenn Du diese Umfrage abschicken, werden die von Dir zur Verfügung
+        description: Wenn Du diese Umfrage abschickst, werden die von Dir zur Verfügung
           gestellten Informationen in Zetkin von {Organisation} gespeichert und verarbeitet,
           um in Übereinstimmung mit den Zetkin-Datenschutzhinweisen Aktivitäten der
           Partei Die Linke zu organisieren.
@@ -2078,6 +2099,7 @@ feat:
       types:
         none: Einfach (keine Beschreibung)
         text: Beschreibungstext
+      updateTagButton: Aktualisieren
     manager:
       addTag: Schlagwort hinzufügen
       addValue: Füge Zahl hinzu für "{tag}"
@@ -2276,6 +2298,7 @@ feat:
             du fortfahren?
       menu:
         delete: Löschen
+        move: Verschieben
         rename: Umbenennen
       moveToFolder: verschieben zu {folder}
       moveToRoot: Verschieben zu alle Listen
@@ -2309,7 +2332,7 @@ feat:
             oder auf der Grundlage von Daten in Zetkin.
           title: Systematisierung
         crossReferencing:
-          description: Abgleichen mit Daten in Zetkin durch Intelligente Suche
+          description: Abgleichen mit Daten in Zetkin durch intelligente Suche
           title: Datenabgleich
         outreach:
           description: Planen, delegieren und ausführen von Kontaktarbeit sowie Berichterstattung
@@ -2357,7 +2380,7 @@ feat:
           description: Hier kannst du eine beauftragte Person pro Zeile auswählen
           title: Beauftragte Person
         localQuery:
-          columnTitle: Mit Intelligenter Suche?
+          columnTitle: Mit intelligenter Suche?
           description: Prüfen ob eine Person mit einer Suchanfrage übereinstimmt
           title: Datenabgleich anpassen
         localText:
@@ -2477,11 +2500,11 @@ feat:
     empty:
       dynamic:
         configureButton: Erstellen
-        description: Erstelle mit der Intelligenten Suche eine dynamische Liste, in
+        description: Erstelle mit der intelligenten Suche eine dynamische Liste, in
           der Personen automatisch hinzugefügt und gelöscht werden.
-        headline: Erstelle Liste mit Intelligenter Suche
+        headline: Erstelle Liste mit intelligenter Suche
       notice:
-        dynamic: Dies ist eine mit Intelligenter Suche erstellte Liste, die keine
+        dynamic: Dies ist eine mit intelligenter Suche erstellte Liste, die keine
           Treffer ergibt
         static: Du hast noch keine Zeilen hinzugefügt
       static:
@@ -2543,15 +2566,15 @@ feat:
       createFromSelection: Erstelle Liste aus Auswahl
       removeFromSelection: Entferne {numSelected, plural, one {1 Person} other {{numSelected}
         Personen} } von der Liste
-      removeTooltip: In Listen erstellt aus Intelligenter Suche können momentan keine
+      removeTooltip: In Listen erstellt aus intelligenter Suche können momentan keine
         Zeilen gelöscht werden
     viewLayout:
       actions:
         share: Teilen
       ellipsisMenu:
         delete: Liste löschen
-        editQuery: Bearbeite Intelligente Suche
-        makeDynamic: Umwandeln in dynamische Liste (basierend auf Intelligenter Suche)
+        editQuery: Bearbeite intelligente Suche
+        makeDynamic: Umwandeln in dynamische Liste (basierend auf intelligenter Suche)
         makeStatic: Umwandeln in statische Liste
       jumpMenu:
         placeholder: Tippe, um Liste zu finden
@@ -2576,7 +2599,7 @@ glob:
     city: Stadt
     co_address: Adresszusatz
     country: Land
-    email: Email
+    email: E-Mail
     ext_id: Externe ID
     first_name: Vorname
     gender: Geschlechtsidentität
@@ -2600,7 +2623,7 @@ zui:
     button: Bestätigen
     defaultTitle: Bestätigen
     defaultWarningText: Bist du sicher, dass du fortfahren möchtest? Diese Aktion
-      kann nicht rückgängig gemach t werden.
+      kann nicht rückgängig gemacht werden.
   copyToClipboard:
     copied: Kopiert
     copiedValue: '"{value}" kopiert'
@@ -2683,7 +2706,7 @@ zui:
     areas: Bereiche
     filter: Tippe, um zu filtern
     home: Startseite
-    journeys: Mitgliederentwicklung
+    journeys: Anfragenvermittlung
     people: Personen
     projects: Projekte & Aktivitäten
     search: Suche
