@@ -30,6 +30,7 @@ export default makeMessages('feat.views', {
     },
     menu: {
       delete: m('Delete'),
+      duplicate: m('Duplicate'),
       move: m('Move'),
       rename: m('Rename'),
     },
