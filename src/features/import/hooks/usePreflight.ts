@@ -60,10 +60,11 @@ export default function usePreflight(orgId: number) {
   }
 
   const rowModifier = sheet.firstRowIsHeaders ? 2 : 1;
-  problems.map((problem) => {
+  problems.forEach((problem) => {
     if ('indices' in problem) {
       problem.rows = problem.indices.map((index) => index + rowModifier);
     }
+    return problem;
   });
 
   const hasError = problems.some(
