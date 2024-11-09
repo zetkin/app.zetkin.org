@@ -8,6 +8,8 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
+import { FC, PropsWithChildren } from 'react';
+import { StoryFn } from '@storybook/react';
 
 import theme from '../src/theme';
 import '../src/styles.css';
@@ -16,7 +18,7 @@ import createStore from '../src/core/store';
 
 dayjs.extend(isoWeek);
 
-const I18nProvider = (props) => {
+const I18nProvider: FC<PropsWithChildren> = (props) => {
   return (
     <IntlProvider defaultLocale="en" locale="en" messages={{}}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -26,7 +28,7 @@ const I18nProvider = (props) => {
   );
 };
 
-async function mockFetch(path, init) {
+async function mockFetch(path: string, init: any) {
   if (path === '/api/orgs/1/people/1' && init === undefined) {
     return new Response(
       JSON.stringify({
@@ -60,12 +62,12 @@ class MockApiClient extends FetchApiClient {
 }
 
 export const decorators = [
-  (Story) => (
+  (Story: StoryFn) => (
     <ThemeProvider theme={theme}>
       <Story />
     </ThemeProvider>
   ),
-  (Story) => {
+  (Story: StoryFn) => {
     const store = createStore();
     const env = new Environment(new MockApiClient());
     return (
@@ -76,7 +78,7 @@ export const decorators = [
       </ReduxProvider>
     );
   },
-  (Story) => (
+  (Story: StoryFn) => (
     <I18nProvider>
       <Story />
     </I18nProvider>
