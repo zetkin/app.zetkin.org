@@ -31,6 +31,7 @@ export default makeMessages('feat.views', {
     menu: {
       delete: m('Delete'),
       duplicate: m('Duplicate'),
+      folderCopy: m<{ folderName: string }>('{folderName} - copy'),
       move: m('Move'),
       rename: m('Rename'),
     },

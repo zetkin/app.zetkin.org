@@ -197,7 +197,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
                   duplicateView(
                     item.data.id,
                     item.folderId,
-                    item.title + ' - ' + messages.browser.menu.duplicate()
+                    messages.browser.menu.folderCopy({ folderName: item.title })
                   );
                 },
               },
