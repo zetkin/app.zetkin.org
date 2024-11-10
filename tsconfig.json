@@ -1,12 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "es6",
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["es6", "dom", "dom.iterable", "esnext"],
     "downlevelIteration": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -31,9 +26,7 @@
     ]
   },
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ],
+    "require": ["tsconfig-paths/register"],
     "compilerOptions": {
       "jsx": "react-jsx",
       "module": "CommonJS"
@@ -41,13 +34,11 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    //TODO: Revert this!
+    "src/zui/components",
+    //TODO: Revert this!
+    "src/zui/theme",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    ".next",
-    "node_modules",
-    "storybook-static"
-  ]
+  "exclude": [".next", "node_modules", "storybook-static"]
 }
