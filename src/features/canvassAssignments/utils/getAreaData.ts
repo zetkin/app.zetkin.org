@@ -7,7 +7,7 @@ function isWithin24Hours(startDate: Date, endDate: Date) {
   return timeDifference <= hours24InMilliseconds;
 }
 
-export default function getAreasData(
+export default function getAreaData(
   endDate: Date,
   households: Household[],
   startDate: Date,
@@ -15,8 +15,15 @@ export default function getAreasData(
 ): AreaGraphData[] {
   const areaGraphList: AreaGraphData[] = [];
 
-  // Sort household visits per date
-  const sortedHouseholds = households.map((household) => ({
+  // Consolidate households by unique ID, merging visits
+  const householdMap: Record<string, Household> = {};
+  households.forEach((household) => {
+    if (!householdMap[household.id]) {
+      householdMap[household.id] = { ...household, visits: [] };
+    }
+    householdMap[household.id].visits.push(...household.visits);
+  });
+  const uniqueHouseholds = Object.values(householdMap).map((household) => ({
     ...household,
     visits: household.visits.sort((visitA, visitB) => {
       const dateA = new Date(visitA.timestamp);
@@ -25,7 +32,10 @@ export default function getAreasData(
     }),
   }));
 
-  if (sortedHouseholds.length) {
+  const uniqueHouseholdVisits = new Set<string>();
+  const uniqueSuccessfulVisits = new Set<string>();
+
+  if (uniqueHouseholds.length) {
     const firstVisitDate = new Date(startDate);
     const lastVisitDate = new Date(endDate);
     const curDate = new Date(firstVisitDate);
@@ -33,28 +43,28 @@ export default function getAreasData(
     let cumulativeHouseholdVisits = 0;
     let cumulativeSuccessfulVisits = 0;
 
+    const showHours = isWithin24Hours(startDate, endDate);
+
     // Iterate over each day from the start date to the last date
     while (curDate <= lastVisitDate) {
-      const showHours = isWithin24Hours(startDate, endDate);
       const dateStr = curDate.toISOString().slice(0, 10);
 
-      const householdsOnDate = sortedHouseholds.filter((household) =>
+      const householdsOnDate = uniqueHouseholds.filter((household) =>
         household.visits.some((visit) => visit.timestamp.startsWith(dateStr))
       );
 
-      const current = new Date(firstVisitDate);
-      // Reset `current` to start exactly on the hour
-      current.setUTCMinutes(0, 0, 0);
-
       if (showHours) {
+        // Hourly aggregation if the time range is within 24 hours
+        const current = new Date(curDate);
+        current.setUTCMinutes(0, 0, 0);
         while (current <= lastVisitDate) {
-          // Update `dateStr` and `hourStr` at each iteration to reflect current hour and date
           const dateStr = current.toISOString().slice(0, 10);
           const hourStr = current.toISOString().slice(11, 13) + ':00';
           const currentHour = current.getUTCHours();
 
-          let totalHouseholdVisits = 0;
-          let totalSuccessfulVisits = 0;
+          // Temporary sets for tracking unique visits per hour
+          const hourlyHouseholdVisits = new Set<string>();
+          const hourlySuccessfulVisits = new Set<string>();
 
           householdsOnDate.forEach((household) => {
             household.visits.forEach((visit) => {
@@ -64,23 +74,28 @@ export default function getAreasData(
                 visitDate.toISOString().startsWith(dateStr) &&
                 visitDate.getUTCHours() === currentHour
               ) {
-                totalHouseholdVisits++;
+                if (!uniqueHouseholdVisits.has(household.id)) {
+                  uniqueHouseholdVisits.add(household.id);
+                  hourlyHouseholdVisits.add(household.id);
+                }
 
                 if (
                   visit.responses.some(
                     (response) =>
                       response.metricId === idOfMetricThatDefinesDone &&
                       response.response === 'yes'
-                  )
+                  ) &&
+                  !uniqueSuccessfulVisits.has(household.id)
                 ) {
-                  totalSuccessfulVisits++;
+                  uniqueSuccessfulVisits.add(household.id);
+                  hourlySuccessfulVisits.add(household.id);
                 }
               }
             });
           });
 
-          cumulativeHouseholdVisits += totalHouseholdVisits;
-          cumulativeSuccessfulVisits += totalSuccessfulVisits;
+          cumulativeHouseholdVisits += hourlyHouseholdVisits.size;
+          cumulativeSuccessfulVisits += hourlySuccessfulVisits.size;
 
           areaGraphList.push({
             date: dateStr,
@@ -94,7 +109,7 @@ export default function getAreasData(
           // Check if we crossed into the next day
           if (current.getUTCHours() === 0) {
             const nextDateStr = current.toISOString().slice(0, 10);
-            const nextHouseholdsOnDate = sortedHouseholds.filter((household) =>
+            const nextHouseholdsOnDate = uniqueHouseholds.filter((household) =>
               household.visits.some((visit) =>
                 visit.timestamp.startsWith(nextDateStr)
               )
@@ -109,29 +124,34 @@ export default function getAreasData(
         }
       } else {
         // Aggregate data for the day if not showing hours
-        let totalHouseholdVisits = 0;
-        let totalSuccessfulVisits = 0;
+        const dailyHouseholdVisits = new Set<string>();
+        const dailySuccessfulVisits = new Set<string>();
 
         householdsOnDate.forEach((household) => {
           household.visits.forEach((visit) => {
             if (visit.timestamp.startsWith(dateStr)) {
-              totalHouseholdVisits++;
+              if (!uniqueHouseholdVisits.has(household.id)) {
+                uniqueHouseholdVisits.add(household.id);
+                dailyHouseholdVisits.add(household.id);
+              }
 
               if (
                 visit.responses.some(
                   (response) =>
                     response.metricId === idOfMetricThatDefinesDone &&
                     response.response === 'yes'
-                )
+                ) &&
+                !uniqueSuccessfulVisits.has(household.id)
               ) {
-                totalSuccessfulVisits++;
+                uniqueSuccessfulVisits.add(household.id);
+                dailySuccessfulVisits.add(household.id);
               }
             }
           });
         });
 
-        cumulativeHouseholdVisits += totalHouseholdVisits;
-        cumulativeSuccessfulVisits += totalSuccessfulVisits;
+        cumulativeHouseholdVisits += dailyHouseholdVisits.size;
+        cumulativeSuccessfulVisits += dailySuccessfulVisits.size;
 
         areaGraphList.push({
           date: dateStr,
@@ -141,8 +161,9 @@ export default function getAreasData(
         });
       }
 
-      curDate.setDate(curDate.getDate() + 1);
+      curDate.setUTCDate(curDate.getUTCDate() + 1);
     }
   }
+
   return areaGraphList;
 }
