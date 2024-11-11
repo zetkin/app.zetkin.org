@@ -905,8 +905,8 @@ describe('getAreasData()', () => {
       {
         date: '2024-10-31',
         hour: '0',
-        householdVisits: 2,
-        successfulVisits: 2,
+        householdVisits: 1,
+        successfulVisits: 1,
       },
       {
         date: '2024-11-01',
