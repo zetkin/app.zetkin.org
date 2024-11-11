@@ -87,19 +87,19 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     <Typography variant="h5">Progress</Typography>
                   </Box>
                   <Divider />
-                  <Box display="flex">
+                  <Box display="flex" width="100%">
                     <NumberCard
                       firstNumber={stats.num_successful_visited_households}
                       message={'Successful visits'}
                       secondNumber={stats.num_visited_households}
                     />
-
+                    <Divider flexItem orientation="vertical" />
                     <NumberCard
                       firstNumber={stats.num_visited_households}
                       message={'Households visited'}
                       secondNumber={stats.num_households}
                     />
-
+                    <Divider flexItem orientation="vertical" />
                     <NumberCard
                       firstNumber={stats.num_visited_places}
                       message={'Places visited'}
