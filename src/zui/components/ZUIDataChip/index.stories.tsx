@@ -4,6 +4,7 @@ import ZUIDataChip from './index';
 
 const meta: Meta<typeof ZUIDataChip> = {
   component: ZUIDataChip,
+  title: 'Components/ZUIDataChip',
 };
 export default meta;
 

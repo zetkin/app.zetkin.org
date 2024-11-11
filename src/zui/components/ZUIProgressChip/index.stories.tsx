@@ -4,6 +4,7 @@ import ZUIProgressChip from './index';
 
 const meta: Meta<typeof ZUIProgressChip> = {
   component: ZUIProgressChip,
+  title: 'Components/ZUIProgressChip',
 };
 export default meta;
 
