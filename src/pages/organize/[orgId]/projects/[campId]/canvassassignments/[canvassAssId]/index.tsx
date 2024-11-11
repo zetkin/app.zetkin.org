@@ -111,8 +111,15 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 <Grid container spacing={2}>
                   <ZUIFutures futures={{ areasStats, dataGraph }}>
                     {({ data: { areasStats, dataGraph } }) => {
-                      // Sort areas based on successful visits only
-                      const sortedAreas = areasStats.stats
+                      const filteredAreas = dataGraph
+                        .map((area) => {
+                          return areasStats.stats.filter(
+                            (item) => item.areaId === area.area.id
+                          );
+                        })
+                        .flat();
+
+                      const sortedAreas = filteredAreas
                         .map((area) => {
                           const successfulVisitsTotal =
                             dataGraph
