@@ -11,6 +11,7 @@ import { canvassAssignmentsLoad, canvassAssignmentsLoaded } from '../store';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS } from 'utils/featureFlags';
+import { getUTCDateWithoutTime } from '../../../utils/dateUtils';
 
 export default function useCanvassAssignmentActivities(
   orgId: number,
@@ -39,7 +40,6 @@ export default function useCanvassAssignmentActivities(
   if (future.error) {
     return new ErrorFuture(future.error);
   } else if (future.data) {
-    const now = new Date();
     return new ResolvedFuture(
       future.data
         .filter((assignment) => {
@@ -49,8 +49,8 @@ export default function useCanvassAssignmentActivities(
         .map((assignment) => ({
           data: assignment,
           kind: ACTIVITIES.CANVASS_ASSIGNMENT,
-          visibleFrom: now, // TODO: Use data from API
-          visibleUntil: null,
+          visibleFrom: getUTCDateWithoutTime(assignment.start_date),
+          visibleUntil: getUTCDateWithoutTime(assignment.end_date),
         }))
     );
   } else {
