@@ -1,5 +1,10 @@
 import 'leaflet/dist/leaflet.css';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 import MyCanvassAssignmentPage from 'features/canvassAssignments/components/MyCanvassAssignmentPage';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
 interface PageProps {
   params: {
@@ -7,8 +12,18 @@ interface PageProps {
   };
 }
 
-export default function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const { canvassAssId } = params;
+  const headersList = headers();
+  const headersEntries = headersList.entries();
+  const headersObject = Object.fromEntries(headersEntries);
+  const apiClient = new BackendApiClient(headersObject);
 
-  return <MyCanvassAssignmentPage canvassAssId={canvassAssId} />;
+  try {
+    await apiClient.get<ZetkinOrganization>(`/api/users/me`);
+
+    return <MyCanvassAssignmentPage canvassAssId={canvassAssId} />;
+  } catch (err) {
+    return redirect(`/login?redirect=/my/canvassassignments/${canvassAssId}`);
+  }
 }
