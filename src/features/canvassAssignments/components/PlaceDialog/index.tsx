@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 
 import VisitWizard from './pages/VisitWizard';
@@ -39,6 +39,45 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     place.id
   );
 
+  const pushedRef = useRef(false);
+
+  const goto = useCallback(
+    (step: PlaceDialogStep) => {
+      setDialogStep(step);
+      history.pushState({ step: step }, '', `?step=${step}`);
+    },
+    [setDialogStep]
+  );
+
+  const back = useCallback(() => {
+    history.back();
+  }, [setDialogStep]);
+
+  useEffect(() => {
+    function handlePopState(event: PopStateEvent) {
+      if (event.state.step) {
+        setDialogStep(event.state.step);
+      } else {
+        onClose();
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('popstate', handlePopState);
+
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!pushedRef.current) {
+      pushedRef.current = true;
+      goto('place');
+    }
+  }, []);
+
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
     null
   );
@@ -56,23 +95,23 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           onClose={onClose}
           onCreateHousehold={(household) => {
             setSelectedHouseholdId(household.id);
-            setDialogStep('household');
+            goto('household');
           }}
-          onEdit={() => setDialogStep('edit')}
+          onEdit={() => goto('edit')}
           onSelectHousehold={(householdId: string) => {
             setSelectedHouseholdId(householdId);
-            setDialogStep('household');
+            goto('household');
           }}
           orgId={orgId}
           place={place}
         />
         <EditPlace
           key="edit"
-          onBack={() => setDialogStep('place')}
+          onBack={() => back()}
           onClose={onClose}
           onSave={async (title, description) => {
             await updatePlace({ description, title });
-            setDialogStep('place');
+            goto('place');
           }}
           place={place}
         />
@@ -80,11 +119,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           {selectedHousehold && (
             <Household
               household={selectedHousehold}
-              onBack={() => setDialogStep('place')}
+              onBack={() => back()}
               onClose={onClose}
-              onEdit={() => setDialogStep('editHousehold')}
+              onEdit={() => goto('editHousehold')}
               onWizardStart={() => {
-                setDialogStep('wizard');
+                goto('wizard');
               }}
               visitedInThisAssignment={selectedHousehold.visits.some(
                 (visit) => visit.canvassAssId == assignment.id
@@ -96,11 +135,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           {selectedHousehold && (
             <EditHousehold
               household={selectedHousehold}
-              onBack={() => setDialogStep('household')}
+              onBack={() => back()}
               onClose={onClose}
               onSave={async (title) => {
                 await updateHousehold(selectedHousehold.id, { title });
-                setDialogStep('household');
+                goto('household');
               }}
             />
           )}
@@ -110,7 +149,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             <VisitWizard
               household={selectedHousehold}
               metrics={assignment.metrics}
-              onBack={() => setDialogStep('household')}
+              onBack={() => back()}
               onLogVisit={(responses, noteToOfficial) => {
                 addVisit(selectedHousehold.id, {
                   canvassAssId: assignment.id,
@@ -118,7 +157,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   responses,
                   timestamp: new Date().toISOString(),
                 });
-                setDialogStep('place');
+                goto('place');
               }}
             />
           )}
