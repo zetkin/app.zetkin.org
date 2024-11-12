@@ -100,7 +100,7 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
         )}
         {selectedPlace && expanded && (
           <PlaceDialog
-            canvassAssId={assignment.id}
+            assignment={assignment}
             onClose={() => {
               setExpanded(false);
             }}
