@@ -44,7 +44,6 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
         }}
       >
         <TextField
-          defaultValue={title}
           fullWidth
           label="Edit title"
           onChange={(ev) => setTitle(ev.target.value)}

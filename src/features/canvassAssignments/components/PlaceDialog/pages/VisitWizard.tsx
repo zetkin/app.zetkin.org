@@ -218,7 +218,12 @@ const VisitWizard: FC<VisitWizardProps> = ({
 
           if (index == step) {
             return (
-              <Box display="flex" flexDirection="column" flexGrow={1}>
+              <Box
+                key={`${metric.id}-active`}
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+              >
                 <Question key={metric.id} metric={metric} />
               </Box>
             );

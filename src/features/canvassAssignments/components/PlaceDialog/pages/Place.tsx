@@ -100,9 +100,8 @@ const Place: FC<PlaceProps> = ({
               sortedVisits.length > 0 ? sortedVisits[0] : null;
 
             return (
-              <>
+              <Box key={household.id}>
                 <Box
-                  key={household.id}
                   alignItems="center"
                   display="flex"
                   onClick={() => {
@@ -121,7 +120,7 @@ const Place: FC<PlaceProps> = ({
                   <KeyboardArrowRight />
                 </Box>
                 <Divider />
-              </>
+              </Box>
             );
           })}
           <Box display="flex" justifyContent="center" mt={2}>
