@@ -39,7 +39,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const assignmentModel = await CanvassAssignmentModel.findOne({
         _id: params.canvassAssId,
-      });
+      }).lean();
 
       if (!assignmentModel) {
         return new NextResponse(null, { status: 404 });
@@ -51,7 +51,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         const person = await apiClient.get<ZetkinPerson>(
           `/api/orgs/${orgId}/people/${sessionData.personId}`
         );
-        const areaModel = await AreaModel.findOne({ _id: sessionData.areaId });
+        const areaModel = await AreaModel.findOne({
+          _id: sessionData.areaId,
+        }).lean();
 
         if (areaModel && person) {
           sessions.push({
@@ -88,7 +90,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         ...new Map(areas.map((area) => [area.id, area])).values(),
       ];
 
-      const allPlaceModels = await PlaceModel.find({ orgId });
+      const allPlaceModels = await PlaceModel.find({ orgId }).lean();
       const allPlaces: ZetkinPlace[] = allPlaceModels.map((model) => ({
         description: model.description,
         households: model.households,
@@ -195,7 +197,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         }
       });
 
-      //rogue visits logic
+      //Visits outside assigned areas logic
       const idsOfPlacesInAreas = new Set(
         placesInAreas.map((place) => place.id)
       );
@@ -220,12 +222,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           firstVisit,
           metricThatDefinesDone || ''
         );
-        const noAreaData = (areaData['noArea'] = {
-          area: { id: 'noArea', title: 'noArea' },
-          data: visitsData,
-        });
 
-        areasDataList.push(noAreaData);
+        if (!areaData['noArea']) {
+          const noAreaData = (areaData['noArea'] = {
+            area: { id: 'noArea', title: 'noArea' },
+            data: visitsData,
+          });
+
+          areasDataList.push(noAreaData);
+        }
       }
 
       const areasDataArray: AreaCardData[] = Object.values(areasDataList);

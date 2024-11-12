@@ -87,19 +87,19 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                     <Typography variant="h5">Progress</Typography>
                   </Box>
                   <Divider />
-                  <Box display="flex">
+                  <Box display="flex" width="100%">
                     <NumberCard
                       firstNumber={stats.num_successful_visited_households}
                       message={'Successful visits'}
                       secondNumber={stats.num_visited_households}
                     />
-
+                    <Divider flexItem orientation="vertical" />
                     <NumberCard
                       firstNumber={stats.num_visited_households}
                       message={'Households visited'}
                       secondNumber={stats.num_households}
                     />
-
+                    <Divider flexItem orientation="vertical" />
                     <NumberCard
                       firstNumber={stats.num_visited_places}
                       message={'Places visited'}
@@ -111,8 +111,15 @@ const CanvassAssignmentPage: PageWithLayout<CanvassAssignmentPageProps> = ({
                 <Grid container spacing={2}>
                   <ZUIFutures futures={{ areasStats, dataGraph }}>
                     {({ data: { areasStats, dataGraph } }) => {
-                      // Sort areas based on successful visits only
-                      const sortedAreas = areasStats.stats
+                      const filteredAreas = dataGraph
+                        .map((area) => {
+                          return areasStats.stats.filter(
+                            (item) => item.areaId === area.area.id
+                          );
+                        })
+                        .flat();
+
+                      const sortedAreas = filteredAreas
                         .map((area) => {
                           const successfulVisitsTotal =
                             dataGraph
