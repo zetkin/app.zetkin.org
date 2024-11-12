@@ -1,7 +1,14 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import { FC } from 'react';
 
+import { ZUIMedium, ZUISmall } from '../types';
+
 type ZUIProgressChipProps = {
+  /**
+   * The size of the component. Defaults to 'small'.
+   */
+  size?: ZUISmall | ZUIMedium;
+
   /**
    * Values to be displayed in each of the sections of the chip.
    * An array of 2, 3 or 4 numbers.
@@ -12,7 +19,10 @@ type ZUIProgressChipProps = {
     | [number, number, number, number];
 };
 
-const ZUIProgressChip: FC<ZUIProgressChipProps> = ({ values }) => {
+const ZUIProgressChip: FC<ZUIProgressChipProps> = ({
+  size = 'small',
+  values,
+}) => {
   const theme = useTheme();
 
   const colors = [theme.palette.data.main, theme.palette.data.final];
@@ -40,7 +50,7 @@ const ZUIProgressChip: FC<ZUIProgressChipProps> = ({ values }) => {
               index > 0 ? `0.063rem solid ${theme.palette.common.white}` : '',
             paddingLeft: index == 0 ? '0.625rem' : '0.375rem',
             paddingRight: index == values.length - 1 ? '0.625rem' : '0.375rem',
-            paddingY: '0.438rem',
+            paddingY: size == 'small' ? '0.188rem' : '0.438rem',
           }}
         >
           <Typography variant="labelSmMedium">{value}</Typography>
