@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin'],
+      roles: ['admin', 'organizer'],
     },
     async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');

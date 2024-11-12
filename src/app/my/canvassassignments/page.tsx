@@ -1,5 +1,5 @@
 import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import MyCanvassAssignmentsPage from 'features/canvassAssignments/components/MyCanvassAssignmentsPage';
@@ -16,6 +16,6 @@ export default async function Page() {
 
     return <MyCanvassAssignmentsPage />;
   } catch (err) {
-    return notFound();
+    return redirect(`/login?redirect=/my/canvassassignments`);
   }
 }

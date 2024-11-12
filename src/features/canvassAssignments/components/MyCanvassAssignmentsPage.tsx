@@ -12,26 +12,24 @@ import {
 } from '@mui/material';
 
 import useMyCanvassAssignments from '../hooks/useMyCanvassAssignments';
-import useCanvassAssignment from '../hooks/useCanvassAssignment';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinCanvassAssignment } from '../types';
 
 const CanvassAssignmentCard: FC<{
-  assignmentId: string;
+  assignment: ZetkinCanvassAssignment;
   orgId: number;
-}> = ({ orgId, assignmentId }) => {
+}> = ({ orgId, assignment }) => {
   const router = useRouter();
-  const assignmentFuture = useCanvassAssignment(orgId, assignmentId);
   const organizationFuture = useOrganization(orgId);
 
   return (
     <ZUIFutures
       futures={{
-        assignment: assignmentFuture,
         organization: organizationFuture,
       }}
     >
-      {({ data: { assignment, organization } }) => (
+      {({ data: { organization } }) => (
         <Card>
           <CardContent>
             <Typography variant="h6">
@@ -65,7 +63,7 @@ const MyCanvassAssignmentsPage: FC = () => {
         return (
           <CanvassAssignmentCard
             key={assignment.id}
-            assignmentId={assignment.id}
+            assignment={assignment}
             orgId={assignment.organization.id}
           />
         );

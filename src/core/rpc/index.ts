@@ -3,6 +3,7 @@ import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
 import { copyEmailDef } from 'features/emails/rpc/copyEmail';
 import { copyEventsDef } from 'features/events/rpc/copyEvents';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
+import { copyViewRouteDef } from 'features/views/rpc/copy/server';
 import { deleteEventsDef } from 'features/events/rpc/deleteEvents';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
 import { getEventStatsDef } from 'features/events/rpc/getEventStats';
@@ -25,6 +26,7 @@ export function createRPCRouter() {
 
   rpcRouter.register(deleteFolderRouteDef);
   rpcRouter.register(createNewViewRouteDef);
+  rpcRouter.register(copyViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
