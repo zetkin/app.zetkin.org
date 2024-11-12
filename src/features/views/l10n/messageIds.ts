@@ -31,9 +31,9 @@ export default makeMessages('feat.views', {
     menu: {
       delete: m('Delete'),
       duplicate: m('Duplicate'),
-      viewCopy: m<{ viewName: string }>('{viewName} - copy'),
       move: m('Move'),
       rename: m('Rename'),
+      viewCopy: m<{ viewName: string }>('{viewName} - copy'),
     },
     moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
     moveToRoot: m('Move to all lists'),
