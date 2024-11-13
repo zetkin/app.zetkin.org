@@ -19,6 +19,7 @@ import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutatio
 
 type PlaceProps = {
   assignment: ZetkinCanvassAssignment;
+  onBulk: () => void;
   onClose: () => void;
   onCreateHousehold: (householdId: Household) => void;
   onEdit: () => void;
@@ -29,6 +30,7 @@ type PlaceProps = {
 
 const Place: FC<PlaceProps> = ({
   assignment,
+  onBulk,
   onClose,
   onEdit,
   onCreateHousehold,
@@ -142,6 +144,9 @@ const Place: FC<PlaceProps> = ({
               variant="outlined"
             >
               Add household
+            </Button>
+            <Button onClick={onBulk} variant="outlined">
+              Create many households
             </Button>
           </Box>
         </Box>
