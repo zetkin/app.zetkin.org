@@ -81,7 +81,7 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
                   .deadlineUpdate
               }
               values={{
-                datetime: <ZUIRelativeTime datetime={deadlineTo} />,
+                datetime: <ZUIRelativeTime midnightPatch datetime={deadlineTo} />,
               }}
             />
           ) : (
