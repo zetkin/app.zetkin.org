@@ -3,9 +3,17 @@ import { FC } from 'react';
 
 type ZUIDataChipProps = {
   /**
-   * Sets the color of the chip. Defaults to 'none'.
+   * Sets the color of the chip. Defaults to 'grey'.
+   *
+   * Note!
+   * There are 5 purple colors available. They should be used in combos of
+   * 2, 3 or 4 shades, like this:
+   *
+   * - When using 2 purple chips the correct color order is: main, final
+   * - When using 3 purple chips the correct color order is: main, mid2, final
+   * - When using 4 purple chips the correct color order is: main, mid3, mid1, final
    */
-  status: 'none' | 'dark' | 'medium' | 'light';
+  color?: 'grey' | 'main' | 'mid1' | 'mid2' | 'mid3' | 'final';
 
   /**
    * The number value to be displayed in the chip.
@@ -13,25 +21,14 @@ type ZUIDataChipProps = {
   value: number;
 };
 
-const ZUIDataChip: FC<ZUIDataChipProps> = ({ status, value }) => {
+const ZUIDataChip: FC<ZUIDataChipProps> = ({ color = 'grey', value }) => {
   const theme = useTheme();
-
-  const getChipColor = () => {
-    if (status == 'none') {
-      return theme.palette.grey[100];
-    } else if (status == 'dark') {
-      return theme.palette.data.main;
-    } else if (status == 'medium') {
-      return theme.palette.data.mid2;
-    } else {
-      //status is 'light'
-      return theme.palette.data.final;
-    }
-  };
 
   return (
     <Box
-      bgcolor={getChipColor()}
+      bgcolor={
+        color == 'grey' ? theme.palette.grey[100] : theme.palette.data[color]
+      }
       display="inline-flex"
       sx={{
         borderRadius: '2rem',
@@ -42,7 +39,7 @@ const ZUIDataChip: FC<ZUIDataChipProps> = ({ status, value }) => {
       <Typography
         sx={{
           color:
-            status == 'none' || status == 'light'
+            color == 'grey' || color == 'final'
               ? theme.palette.common.black
               : theme.palette.common.white,
         }}
