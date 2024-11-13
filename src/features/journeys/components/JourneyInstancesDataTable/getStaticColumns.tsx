@@ -260,7 +260,7 @@ export const getStaticColumns = (
       field: 'nextMilestoneDeadline',
       renderCell: (params) =>
         params.value ? (
-          <ZUIRelativeTime datetime={params.value as string} />
+          <ZUIRelativeTime datetime={params.value as string} midnightPatch />
         ) : null,
       type: 'date',
       valueFormatter: (params) => new Date(params.value),

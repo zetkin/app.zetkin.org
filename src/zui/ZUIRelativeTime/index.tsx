@@ -9,12 +9,14 @@ interface ZUIRelativeTimeProps {
   convertToLocal?: boolean;
   datetime: string; // iso datetime string
   forcePast?: boolean;
+  midnightPatch?: boolean;
 }
 
 const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
   convertToLocal,
   datetime,
   forcePast,
+  midnightPatch,
 }) => {
   const now = dayjs();
   const absoluteDatetime = dayjs(
@@ -25,7 +27,7 @@ const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
   const difference: number =
     forcePast && absoluteDatetime.unix() - now.unix() > 0
       ? 0
-      : absoluteDatetime.hour() === 0 && absoluteDatetime.minute() === 0 // "Midnight check"
+      : midnightPatch
       ? absoluteDatetime.unix() - now.startOf('day').unix() // Patch for midnight case (00:00). See issue #2199
       : absoluteDatetime.unix() - now.unix();
 
