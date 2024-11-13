@@ -37,11 +37,13 @@ const CreateHouseholdsPage: FC<Props> = ({
           onClick={async () => {
             setCreating(true);
 
-            const indices = range(numTotal);
             await addHouseholds(
-              indices.map((index) => ({
-                title: 'Household ' + (index + 1),
-              }))
+              range(numFloors).flatMap((floorIndex) =>
+                range(numAptsPerFloor).map((aptIndex) => ({
+                  floor: floorIndex + 1,
+                  title: 'Household ' + (aptIndex + 1),
+                }))
+              )
             );
 
             setCreating(false);

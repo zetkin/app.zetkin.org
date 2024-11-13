@@ -6,7 +6,8 @@ import { ZetkinPlace } from '../../types';
 export const paramsSchema = z.object({
   households: z.array(
     z.object({
-      title: z.string(),
+      floor: z.union([z.number(), z.null()]).optional(),
+      title: z.string().optional(),
     })
   ),
   orgId: z.number(),

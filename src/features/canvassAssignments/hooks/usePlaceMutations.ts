@@ -24,7 +24,7 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
       dispatch(placeUpdated(place));
       return place.households[0];
     },
-    addHouseholds: async (households: { title: string }[]) => {
+    addHouseholds: async (households: { floor: number; title: string }[]) => {
       const place = await apiClient.rpc(createHouseholds, {
         households,
         orgId,

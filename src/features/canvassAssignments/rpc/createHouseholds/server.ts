@@ -25,6 +25,7 @@ async function handle(params: Params): Promise<Result> {
       $push: {
         households: {
           $each: households.map((input) => ({
+            floor: input.floor || null,
             id: new mongoose.Types.ObjectId().toString(),
             ratings: [],
             title: input.title,
