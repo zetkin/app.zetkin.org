@@ -479,7 +479,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                               >
                                 <ZUIAvatar
                                   size={zoom >= 16 ? 'sm' : 'xs'}
-                                  url={`/api/orgs/1/people/${person.id}/avatar`}
+                                  url={`/api/orgs/${assignment.organization.id}/people/${person.id}/avatar`}
                                 />
                               </Box>
                             );
