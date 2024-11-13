@@ -148,8 +148,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               household={selectedHousehold}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title) => {
-                await updateHousehold(selectedHousehold.id, { title });
+              onSave={async (title, floor) => {
+                await updateHousehold(selectedHousehold.id, { floor, title });
                 back();
               }}
             />
