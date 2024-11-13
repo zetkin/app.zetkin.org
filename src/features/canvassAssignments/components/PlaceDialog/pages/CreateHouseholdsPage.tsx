@@ -22,7 +22,7 @@ const CreateHouseholdsPage: FC<Props> = ({
   const [numFloors, setNumFloors] = useState(1);
   const [numAptsPerFloor, setNumAptsPerFloor] = useState(1);
   const [creating, setCreating] = useState(false);
-  const { addHousehold } = usePlaceMutations(orgId, placeId);
+  const { addHouseholds } = usePlaceMutations(orgId, placeId);
 
   const numTotal =
     numFloors > 0 && numAptsPerFloor > 0 ? numFloors * numAptsPerFloor : 0;
@@ -36,8 +36,13 @@ const CreateHouseholdsPage: FC<Props> = ({
           disabled={isEmpty || creating}
           onClick={async () => {
             setCreating(true);
+
             const indices = range(numTotal);
-            await Promise.all(indices.map(() => addHousehold()));
+            await addHouseholds(
+              indices.map((index) => ({
+                title: 'Household ' + (index + 1),
+              }))
+            );
 
             setCreating(false);
             onBack();
