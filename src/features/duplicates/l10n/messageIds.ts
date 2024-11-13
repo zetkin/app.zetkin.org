@@ -14,11 +14,12 @@ export default makeMessages('feat.duplicates', {
       noValue: m('No value'),
       title: m('Data to merge'),
     },
-    infoMessage: m(
-      'All activity history and tags from all people being merged will carry over and will be visible on the merged person.'
-    ),
-    infoTitle: m('No data will be lost'),
+    findCandidateManually: m('Type to find a potential duplicate'),
     isDuplicateButton: m('Include'),
+    lists: {
+      hideManual: m('Hide manual search'),
+      showManual: m('Show manual search'),
+    },
     mergeButton: m('Merge'),
     notDuplicateButton: m('Exclude'),
     peopleNotBeingMerged: m('People not being merged'),
@@ -29,6 +30,10 @@ export default makeMessages('feat.duplicates', {
       phone: m('Phone'),
     },
     title: m('Merge duplicates'),
+    warningMessage: m(
+      'All data related to any of the person records will transfer to the merged person. This includes event participation, survey submissions, tags etc. But the values you discard in the fields above will be lost.'
+    ),
+    warningTitle: m('Risk of data loss'),
   },
   page: {
     dismiss: m('Dismiss'),

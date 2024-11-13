@@ -57,6 +57,13 @@ const callAssignmentsSlice = createSlice({
           ]);
       }
     },
+    callAssignmentDeleted: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.assignmentList.items.find((item) => item.id == id);
+      if (item) {
+        item.deleted;
+      }
+    },
     callAssignmentLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.assignmentList.items.find((item) => item.id == id);
@@ -291,6 +298,7 @@ export default callAssignmentsSlice;
 export const {
   callAssignmentCreate,
   callAssignmentCreated,
+  callAssignmentDeleted,
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdate,

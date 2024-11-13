@@ -12,6 +12,7 @@ import { FC, useCallback, useState } from 'react';
 
 import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useServerSide from 'core/useServerSide';
 import SurveyContainer from './SurveyContainer';
 import SurveyOption from './SurveyOption';
 import SurveySubheading from './SurveySubheading';
@@ -39,6 +40,15 @@ const SurveySignature: FC<SurveySignatureProps> = ({ survey, user }) => {
     },
     [setSignatureType]
   );
+
+  const isServer = useServerSide();
+  if (isServer) {
+    return (
+      <FormControl fullWidth>
+        <SurveyContainer paddingX={2}>...</SurveyContainer>
+      </FormControl>
+    );
+  }
 
   return (
     <FormControl fullWidth>

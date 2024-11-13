@@ -10,6 +10,7 @@ import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
+import useTimeScale from '../hooks/useTimeScale';
 
 dayjs.extend(utc);
 
@@ -17,17 +18,6 @@ export enum TimeScale {
   DAY = 'day',
   WEEK = 'week',
   MONTH = 'month',
-}
-
-function getTimeScale(timeScaleStr: string) {
-  let timeScale = TimeScale.MONTH;
-  if (
-    timeScaleStr !== undefined &&
-    Object.values(TimeScale).includes(timeScaleStr as TimeScale)
-  ) {
-    timeScale = timeScaleStr as TimeScale;
-  }
-  return timeScale;
 }
 
 function getDateFromString(focusDateStr: string) {
@@ -51,18 +41,13 @@ const Calendar = () => {
   const [focusDate, setFocusDate] = useState(getDateFromString(focusDateStr));
   const { nextActivityDay, prevActivityDay } = useDayCalendarNav(focusDate);
 
-  const timeScaleStr = router.query.timeScale as string;
-  const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
-    getTimeScale(timeScaleStr)
+  const { setPersistentTimeScale, timeScale } = useTimeScale(
+    router.query.timeScale
   );
 
   useEffect(() => {
     setFocusDate(getDateFromString(focusDateStr));
   }, [focusDateStr]);
-
-  useEffect(() => {
-    setSelectedTimeScale(getTimeScale(timeScaleStr));
-  }, [timeScaleStr]);
 
   useEffect(() => {
     const focusedDate = dayjs.utc(focusDate).format('YYYY-MM-DD');
@@ -73,16 +58,16 @@ const Calendar = () => {
           ...(campId && { campId: campId }),
           focusDate: focusedDate,
           orgId: orgId,
-          timeScale: selectedTimeScale,
+          timeScale: timeScale,
         },
       },
       undefined,
       { shallow: true }
     );
-  }, [focusDate, selectedTimeScale]);
+  }, [focusDate, timeScale]);
 
   function navigateTo(timeScale: TimeScale, date: Date) {
-    setSelectedTimeScale(timeScale);
+    setPersistentTimeScale(timeScale);
     setFocusDate(date);
   }
 
@@ -94,28 +79,26 @@ const Calendar = () => {
           setFocusDate(date);
         }}
         onChangeTimeScale={(timeScale) => {
-          setSelectedTimeScale(timeScale);
+          setPersistentTimeScale(timeScale);
         }}
         onStepBackward={() => {
           // Steps back to the last day with an event on day view
-          if (selectedTimeScale === TimeScale.DAY && prevActivityDay) {
+          if (timeScale === TimeScale.DAY && prevActivityDay) {
             setFocusDate(prevActivityDay[0]);
           } else {
-            setFocusDate(
-              dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-            );
+            setFocusDate(dayjs(focusDate).subtract(1, timeScale).toDate());
           }
         }}
         onStepForward={() => {
           // Steps forward to the next day with an event on day view
-          if (selectedTimeScale === TimeScale.DAY && nextActivityDay) {
+          if (timeScale === TimeScale.DAY && nextActivityDay) {
             setFocusDate(nextActivityDay[0]);
           } else {
-            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+            setFocusDate(dayjs(focusDate).add(1, timeScale).toDate());
           }
         }}
         orgId={parseInt(orgId as string)}
-        timeScale={selectedTimeScale}
+        timeScale={timeScale}
       />
 
       <Box
@@ -126,20 +109,20 @@ const Calendar = () => {
         overflow="auto"
       >
         <Suspense>
-          {selectedTimeScale === TimeScale.DAY && (
+          {timeScale === TimeScale.DAY && (
             <CalendarDayView
               focusDate={focusDate}
               onClickPreviousDay={(date) => setFocusDate(date)}
               previousActivityDay={prevActivityDay}
             />
           )}
-          {selectedTimeScale === TimeScale.WEEK && (
+          {timeScale === TimeScale.WEEK && (
             <CalendarWeekView
               focusDate={focusDate}
               onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
             />
           )}
-          {selectedTimeScale === TimeScale.MONTH && (
+          {timeScale === TimeScale.MONTH && (
             <CalendarMonthView
               focusDate={focusDate}
               onClickDay={(date) => navigateTo(TimeScale.DAY, date)}

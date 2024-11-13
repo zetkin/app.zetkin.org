@@ -6,6 +6,7 @@ import {
   GridFilterItem,
   GridFilterOperator,
 } from '@mui/x-data-grid-pro';
+import { FormattedDate } from 'react-intl';
 
 import FilterValueSelect from './FilterValueSelect';
 import JourneyInstanceTitle from 'features/journeys/components/JourneyInstanceTitle';

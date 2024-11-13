@@ -694,4 +694,40 @@ test.describe('User submitting a survey', () => {
     expect(await textInput.isVisible()).toBeFalsy();
     expect(await checkboxInput.isVisible()).toBeFalsy();
   });
+
+  test('privacy policy link falls back when missing environment variable', async ({
+    appUri,
+    page,
+  }) => {
+    delete process.env.ZETKIN_PRIVACY_POLICY_LINK;
+
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
+    const policyLink = await page.locator(
+      '[aria-labelledby="privacy-policy-label"] a'
+    );
+
+    expect(await policyLink.getAttribute('href')).toEqual(
+      'https://zetkin.org/privacy'
+    );
+  });
+
+  test('privacy policy link picks up environment variable', async ({
+    appUri,
+    page,
+  }) => {
+    process.env.ZETKIN_PRIVACY_POLICY_LINK = 'https://foo.bar';
+
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
+    const policyLink = await page.locator(
+      '[aria-labelledby="privacy-policy-label"] a'
+    );
+
+    expect(await policyLink.getAttribute('href')).toEqual('https://foo.bar');
+  });
 });
