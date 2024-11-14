@@ -31,12 +31,20 @@ const CreateHouseholdsPage: FC<Props> = ({
   const [creating, setCreating] = useState(false);
   const [scale, setScale] = useState(1);
   const { addHouseholds } = usePlaceMutations(orgId, placeId);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   const updateSize = useCallback(
     (newNumFloors: number, newNumAptsPerFloor: number) => {
-      // TODO: Don't hardcode these
-      const maxHeight = 12;
-      const maxWidth = 10;
+      const widthPerHousehold = 32;
+      const heightPerFloor = 42;
+
+      const rect = container?.getBoundingClientRect() ?? {
+        height: heightPerFloor * 5,
+        width: widthPerHousehold * 5,
+      };
+
+      const maxHeight = rect.width / widthPerHousehold - 2;
+      const maxWidth = rect.height / heightPerFloor - 1;
       const scaleX = Math.min(1.0, maxWidth / newNumAptsPerFloor);
       const scaleY = Math.min(1.0, maxHeight / newNumFloors);
       const newScale = Math.min(scaleX, scaleY);
@@ -48,7 +56,7 @@ const CreateHouseholdsPage: FC<Props> = ({
         setScale(newScale);
       }
     },
-    [setNumFloors, setNumAptsPerFloor]
+    [setNumFloors, setNumAptsPerFloor, container]
   );
 
   const numTotal =
@@ -96,6 +104,7 @@ const CreateHouseholdsPage: FC<Props> = ({
         justifyContent="stretch"
       >
         <Box
+          ref={setContainer}
           alignItems="center"
           display="flex"
           flexDirection="column"
