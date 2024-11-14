@@ -9,7 +9,7 @@ import {
   ListSubheader,
   Typography,
 } from '@mui/material';
-import { Add, KeyboardArrowRight } from '@mui/icons-material';
+import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import {
@@ -134,7 +134,13 @@ const Place: FC<PlaceProps> = ({
             );
           })}
         </List>
-        <Box display="flex" justifyContent="center" mt={2}>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          mt={2}
+        >
           <Button
             disabled={adding}
             onClick={async () => {
@@ -152,10 +158,10 @@ const Place: FC<PlaceProps> = ({
             }
             variant="outlined"
           >
-            Add household
+            Add new household
           </Button>
-          <Button onClick={onBulk} variant="outlined">
-            Create many households
+          <Button onClick={onBulk} startIcon={<Apps />} variant="text">
+            Create many
           </Button>
         </Box>
       </Box>
