@@ -6,7 +6,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { Add, DoorFrontOutlined, Remove } from '@mui/icons-material';
 
 import PageBase from './PageBase';
@@ -28,7 +28,27 @@ const CreateHouseholdsPage: FC<Props> = ({
   const [numFloors, setNumFloors] = useState(2);
   const [numAptsPerFloor, setNumAptsPerFloor] = useState(3);
   const [creating, setCreating] = useState(false);
+  const [scale, setScale] = useState(1);
   const { addHouseholds } = usePlaceMutations(orgId, placeId);
+
+  const updateSize = useCallback(
+    (newNumFloors: number, newNumAptsPerFloor: number) => {
+      // TODO: Don't hardcode these
+      const maxHeight = 12;
+      const maxWidth = 10;
+      const scaleX = Math.min(1.0, maxWidth / newNumAptsPerFloor);
+      const scaleY = Math.min(1.0, maxHeight / newNumFloors);
+      const newScale = Math.min(scaleX, scaleY);
+
+      setNumFloors(newNumFloors);
+      setNumAptsPerFloor(newNumAptsPerFloor);
+
+      if (newScale != scale) {
+        setScale(newScale);
+      }
+    },
+    [setNumFloors, setNumAptsPerFloor]
+  );
 
   const numTotal =
     numFloors > 0 && numAptsPerFloor > 0 ? numFloors * numAptsPerFloor : 0;
@@ -70,7 +90,7 @@ const CreateHouseholdsPage: FC<Props> = ({
       <Box
         display="flex"
         flexDirection="column"
-        gap={2}
+        gap={4}
         height="100%"
         justifyContent="stretch"
       >
@@ -113,12 +133,12 @@ const CreateHouseholdsPage: FC<Props> = ({
         <Box display="flex" justifyContent="space-around">
           <Stepper
             label="Number of floors"
-            onChange={(value) => setNumFloors(value)}
+            onChange={(value) => updateSize(value, numAptsPerFloor)}
             value={numFloors}
           />
           <Stepper
             label="Households per floor"
-            onChange={(value) => setNumAptsPerFloor(value)}
+            onChange={(value) => updateSize(numFloors, value)}
             value={numAptsPerFloor}
           />
         </Box>
