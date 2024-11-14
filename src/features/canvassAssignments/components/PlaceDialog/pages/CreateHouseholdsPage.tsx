@@ -1,7 +1,13 @@
 import { range } from 'lodash';
-import { Box, Button, CircularProgress, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { FC, useState } from 'react';
-import { DoorFrontOutlined } from '@mui/icons-material';
+import { Add, DoorFrontOutlined, Remove } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
@@ -19,8 +25,8 @@ const CreateHouseholdsPage: FC<Props> = ({
   orgId,
   placeId,
 }) => {
-  const [numFloors, setNumFloors] = useState(1);
-  const [numAptsPerFloor, setNumAptsPerFloor] = useState(1);
+  const [numFloors, setNumFloors] = useState(2);
+  const [numAptsPerFloor, setNumAptsPerFloor] = useState(3);
   const [creating, setCreating] = useState(false);
   const { addHouseholds } = usePlaceMutations(orgId, placeId);
 
@@ -61,49 +67,86 @@ const CreateHouseholdsPage: FC<Props> = ({
       onClose={onClose}
       title="Create households"
     >
-      <TextField
-        label="Floor count"
-        onChange={(ev) => setNumFloors(parseInt(ev.target.value))}
-        type="number"
-        value={numFloors}
-      />
-      <TextField
-        label="Households per floor"
-        onChange={(ev) => setNumAptsPerFloor(parseInt(ev.target.value))}
-        type="number"
-        value={numAptsPerFloor}
-      />
-      <Box alignItems="center" display="flex" flexDirection="column" my={2}>
-        {!isEmpty && (
-          <Box display="flex" flexDirection="column" gap={1} p={1}>
-            {range(0, numFloors).map((floor) => {
-              return (
-                <Box
-                  key={floor}
-                  borderBottom="2px solid black"
-                  display="flex"
-                  gap={1}
-                >
-                  {range(0, numAptsPerFloor).map((apt) => {
-                    return (
-                      <Box
-                        key={apt}
-                        bottom="-12px"
-                        flexGrow={1}
-                        flexShrink={1}
-                        position="relative"
-                      >
-                        <DoorFrontOutlined />
-                      </Box>
-                    );
-                  })}
-                </Box>
-              );
-            })}
-          </Box>
-        )}
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        height="100%"
+        justifyContent="stretch"
+      >
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          justifyContent="end"
+        >
+          {!isEmpty && (
+            <Box display="flex" flexDirection="column" gap={1} p={1}>
+              {range(0, numFloors).map((floor) => {
+                return (
+                  <Box
+                    key={floor}
+                    borderBottom="2px solid black"
+                    display="flex"
+                    gap={1}
+                  >
+                    {range(0, numAptsPerFloor).map((apt) => {
+                      return (
+                        <Box
+                          key={apt}
+                          bottom="-12px"
+                          flexGrow={1}
+                          flexShrink={1}
+                          position="relative"
+                        >
+                          <DoorFrontOutlined />
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                );
+              })}
+            </Box>
+          )}
+        </Box>
+        <Box display="flex" justifyContent="space-around">
+          <Stepper
+            label="Number of floors"
+            onChange={(value) => setNumFloors(value)}
+            value={numFloors}
+          />
+          <Stepper
+            label="Households per floor"
+            onChange={(value) => setNumAptsPerFloor(value)}
+            value={numAptsPerFloor}
+          />
+        </Box>
       </Box>
     </PageBase>
+  );
+};
+
+const Stepper: FC<{
+  label: string;
+  onChange: (value: number) => void;
+  value: number;
+}> = ({ label, onChange, value }) => {
+  return (
+    <Box alignItems="center" display="flex" flexDirection="column">
+      <Typography color="secondary">{label}</Typography>
+      <Box alignItems="center" display="flex">
+        <IconButton onClick={() => onChange(value - 1)}>
+          <Remove />
+        </IconButton>
+        <Typography minWidth={40} textAlign="center">
+          {value}
+        </Typography>
+        <IconButton onClick={() => onChange(value + 1)}>
+          <Add />
+        </IconButton>
+      </Box>
+    </Box>
   );
 };
 
