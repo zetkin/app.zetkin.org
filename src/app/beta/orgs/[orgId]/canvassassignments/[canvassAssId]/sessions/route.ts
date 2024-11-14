@@ -35,9 +35,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const sessions: ZetkinCanvassSession[] = [];
 
       for await (const sessionData of model.sessions) {
-        const person = await apiClient.get<ZetkinPerson>(
-          `/api/orgs/${orgId}/people/${sessionData.personId}`
-        );
+        let person: ZetkinPerson | null;
+        try {
+          person = await apiClient.get<ZetkinPerson>(
+            `/api/orgs/${orgId}/people/${sessionData.personId}`
+          );
+        } catch (err) {
+          person = null;
+        }
         const area = await AreaModel.findOne({
           _id: sessionData.areaId,
         });
