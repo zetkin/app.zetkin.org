@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  Slide,
   Typography,
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
@@ -99,32 +100,44 @@ const CreateHouseholdsPage: FC<Props> = ({
           display="flex"
           flexDirection="column"
           flexGrow={1}
+          height="calc(100% - 6rem)"
           justifyContent="end"
         >
           {!isEmpty && (
-            <Box display="flex" flexDirection="column" gap={1} p={1}>
+            <Box
+              display="flex"
+              flexDirection="column-reverse"
+              gap={1}
+              sx={{
+                transform: `scale(${scale})`,
+                transformOrigin: 'bottom center',
+                transition: 'transform 0.3s',
+              }}
+            >
               {range(0, numFloors).map((floor) => {
                 return (
-                  <Box
-                    key={floor}
-                    borderBottom="2px solid black"
-                    display="flex"
-                    gap={1}
-                  >
-                    {range(0, numAptsPerFloor).map((apt) => {
-                      return (
-                        <Box
-                          key={apt}
-                          bottom="-12px"
-                          flexGrow={1}
-                          flexShrink={1}
-                          position="relative"
-                        >
-                          <DoorFrontOutlined />
-                        </Box>
-                      );
-                    })}
-                  </Box>
+                  <Slide key={floor} in={true}>
+                    <Box
+                      key={floor}
+                      borderBottom="2px solid black"
+                      display="flex"
+                      gap={1}
+                    >
+                      {range(0, numAptsPerFloor).map((apt) => {
+                        return (
+                          <Box
+                            key={apt}
+                            bottom="-12px"
+                            flexGrow={1}
+                            flexShrink={1}
+                            position="relative"
+                          >
+                            <DoorFrontOutlined />
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                  </Slide>
                 );
               })}
             </Box>
