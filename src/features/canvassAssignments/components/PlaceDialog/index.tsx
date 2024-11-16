@@ -13,6 +13,7 @@ import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutatio
 import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
+import EncouragingSparkle from '../EncouragingSparkle';
 
 type PlaceDialogProps = {
   assignment: ZetkinCanvassAssignment;
@@ -36,6 +37,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   place,
 }) => {
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
+  const [showSparkle, setShowSparkle] = useState(false);
   const { addVisit, updateHousehold, updatePlace } = usePlaceMutations(
     orgId,
     place.id
@@ -90,6 +92,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
 
   return (
     <Box height="100%">
+      {showSparkle && (
+        <EncouragingSparkle onComplete={() => setShowSparkle(false)} />
+      )}
       <ZUINavStack bgcolor="white" currentPage={dialogStep}>
         <Place
           key="place"
@@ -161,13 +166,14 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               household={selectedHousehold}
               metrics={assignment.metrics}
               onBack={() => back()}
-              onLogVisit={(responses, noteToOfficial) => {
-                addVisit(selectedHousehold.id, {
+              onLogVisit={async (responses, noteToOfficial) => {
+                await addVisit(selectedHousehold.id, {
                   canvassAssId: assignment.id,
                   noteToOfficial,
                   responses,
                   timestamp: new Date().toISOString(),
                 });
+                setShowSparkle(true);
                 goto('place');
               }}
             />
