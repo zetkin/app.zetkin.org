@@ -1,14 +1,16 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { FC } from 'react';
-import { Avatar, Box, Typography } from '@mui/material';
+import { FC, useState } from 'react';
+import { Avatar, Box, IconButton, Typography } from '@mui/material';
+import { Menu } from '@mui/icons-material';
 
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import useServerSide from 'core/useServerSide';
 import useMyCanvassAssignments from '../hooks/useMyCanvassAssignments';
 import { AssignmentWithAreas } from '../types';
+import CanvasserSidebar from './CanvasserSidebar';
 
 const CanvassAssignmentMap = dynamic(() => import('./CanvassAssignmentMap'), {
   ssr: false,
@@ -19,6 +21,7 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
 }) => {
   const orgFuture = useOrganization(assignment.organization.id);
   const isServer = useServerSide();
+  const [showMenu, setShowMenu] = useState(false);
 
   if (isServer) {
     return null;
@@ -26,36 +29,90 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
       {({ data: { org } }) => (
-        <>
+        <Box
+          sx={{
+            bottom: 0,
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            top: 0,
+          }}
+        >
           <Box
-            alignItems="center"
-            display="flex"
-            gap={1}
-            justifyContent="space-between"
-            padding={2}
+            sx={{
+              height: '100vh',
+              left: showMenu ? '-90vw' : 0,
+              position: 'absolute',
+              transition: 'left 0.3s',
+              width: '100vw',
+            }}
           >
-            <Box>
-              <Box alignItems="flex-end" display="flex" flexDirection="column">
-                <Typography variant="body1">
-                  {assignment.title ?? 'Untitled canvassassignment'}
-                </Typography>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              justifyContent="space-between"
+              padding={2}
+            >
+              <Box>
+                <Box
+                  alignItems="flex-end"
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography variant="body1">
+                    {assignment.title ?? 'Untitled canvassassignment'}
+                  </Typography>
+                </Box>
+                <Box alignItems="center" display="flex" gap={1}>
+                  <Avatar
+                    src={`/api/orgs/${org.id}/avatar`}
+                    sx={{ height: 24, width: 24 }}
+                  />
+                  <Typography variant="body2">{org.title}</Typography>
+                </Box>
               </Box>
-              <Box alignItems="center" display="flex" gap={1}>
-                <Avatar
-                  src={`/api/orgs/${org.id}/avatar`}
-                  sx={{ height: 24, width: 24 }}
-                />
-                <Typography variant="body2">{org.title}</Typography>
+              <Box>
+                <IconButton onClick={() => setShowMenu(!showMenu)}>
+                  <Menu />
+                </IconButton>
               </Box>
             </Box>
-          </Box>
-          <Box height="90vh">
-            <CanvassAssignmentMap
-              areas={assignment.areas}
-              assignment={assignment}
+            <Box height="90vh">
+              <CanvassAssignmentMap
+                areas={assignment.areas}
+                assignment={assignment}
+              />
+            </Box>
+            <Box
+              onClick={() => setShowMenu(false)}
+              sx={{
+                bgcolor: 'black',
+                bottom: 0,
+                left: 0,
+                opacity: showMenu ? 0.2 : 0,
+                pointerEvents: showMenu ? 'auto' : 'none',
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                transition: 'opacity 0.2s',
+                zIndex: 999999,
+              }}
             />
           </Box>
-        </>
+          <Box
+            sx={{
+              bottom: 0,
+              left: showMenu ? '10vw' : '100vw',
+              position: 'absolute',
+              top: 0,
+              transition: 'left 0.3s',
+              width: '90vw',
+            }}
+          >
+            <CanvasserSidebar assignment={assignment} />
+          </Box>
+        </Box>
       )}
     </ZUIFutures>
   );

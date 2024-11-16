@@ -78,7 +78,7 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
           bottom: 0,
           boxShadow: theme.shadows[20],
           left: 0,
-          position: 'fixed',
+          position: 'absolute',
           right: 0,
           top: drawerTop,
           transition: 'top 0.2s',
