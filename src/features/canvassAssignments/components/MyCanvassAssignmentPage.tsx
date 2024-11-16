@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { FC } from 'react';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, Typography } from '@mui/material';
 
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -31,16 +31,22 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
             alignItems="center"
             display="flex"
             gap={1}
-            height="10vh"
             justifyContent="space-between"
             padding={2}
           >
-            <Box alignItems="center" display="flex" gap={1}>
-              <Avatar src={`/api/orgs/${org.id}/avatar`} />
-              {org.title}
-            </Box>
-            <Box alignItems="flex-end" display="flex" flexDirection="column">
-              {assignment.title ?? 'Untitled canvassassignment'}
+            <Box>
+              <Box alignItems="flex-end" display="flex" flexDirection="column">
+                <Typography variant="body1">
+                  {assignment.title ?? 'Untitled canvassassignment'}
+                </Typography>
+              </Box>
+              <Box alignItems="center" display="flex" gap={1}>
+                <Avatar
+                  src={`/api/orgs/${org.id}/avatar`}
+                  sx={{ height: 24, width: 24 }}
+                />
+                <Typography variant="body2">{org.title}</Typography>
+              </Box>
             </Box>
           </Box>
           <Box height="90vh">
