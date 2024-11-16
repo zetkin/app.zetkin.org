@@ -31,8 +31,9 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
       {({ data: { org } }) => (
         <Box
           sx={{
-            bottom: 0,
+            height: '100dvh',
             left: 0,
+            overflow: 'hidden',
             position: 'absolute',
             right: 0,
             top: 0,
@@ -40,7 +41,9 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
         >
           <Box
             sx={{
-              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100dvh',
               left: showMenu ? '-90vw' : 0,
               position: 'absolute',
               transition: 'left 0.3s',
@@ -78,7 +81,7 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
                 </IconButton>
               </Box>
             </Box>
-            <Box height="90vh">
+            <Box flexGrow={1}>
               <CanvassAssignmentMap
                 areas={assignment.areas}
                 assignment={assignment}
