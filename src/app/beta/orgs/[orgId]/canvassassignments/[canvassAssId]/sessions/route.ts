@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AreaModel, CanvassAssignmentModel } from 'features/areas/models';
-import { ZetkinCanvassSession } from 'features/areas/types';
+import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
+import { ZetkinCanvassSession } from 'features/canvassAssignments/types';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { AreaModel } from 'features/areas/models';
 
 type RouteMeta = {
   params: {
@@ -55,7 +56,22 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             },
             assignee: person,
             assignment: {
+              campaign: {
+                id: model.campId,
+              },
+              end_date: model.end_date,
               id: model._id.toString(),
+              metrics: model.metrics.map((m) => ({
+                definesDone: m.definesDone,
+                description: m.description,
+                id: m._id,
+                kind: m.kind,
+                question: m.question,
+              })),
+              organization: {
+                id: model.orgId,
+              },
+              start_date: model.start_date,
               title: model.title,
             },
           });

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { PlaceModel } from 'features/areas/models';
-import { ZetkinPlace } from 'features/areas/types';
+import { PlaceModel } from 'features/canvassAssignments/models';
+import { ZetkinPlace } from 'features/canvassAssignments/types';
 
 type RouteMeta = {
   params: {
@@ -29,7 +29,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         orgId: orgId,
         position: model.position,
         title: model.title,
-        type: model.type,
       }));
 
       return Response.json({ data: places });
@@ -55,7 +54,6 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         orgId: orgId,
         position: payload.position,
         title: payload.title,
-        type: payload.type,
       });
 
       await model.save();
@@ -68,7 +66,6 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           orgId: orgId,
           position: model.position,
           title: model.title,
-          type: model.type,
         },
       });
     }

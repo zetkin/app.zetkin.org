@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
-import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
+import { ChatBubbleOutline, Delete, QuizOutlined } from '@mui/icons-material';
+import { useContext } from 'react';
 
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
@@ -12,6 +13,7 @@ import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
 import useSurveyStats from '../hooks/useSurveyStats';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -37,9 +39,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const router = useRouter();
   const parsedOrg = parseInt(orgId);
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const statsFuture = useSurveyStats(parsedOrg, parseInt(surveyId));
   const surveyFuture = useSurvey(parsedOrg, parseInt(surveyId));
-  const { publish, unpublish, updateSurvey } = useSurveyMutations(
+  const { publish, unpublish, updateSurvey, deleteSurvey } = useSurveyMutations(
     parsedOrg,
     parseInt(surveyId)
   );
@@ -71,6 +74,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       />
     );
   };
+  const handleDelete = () => {
+    deleteSurvey();
+    router.push(
+      `/organize/${orgId}/projects/${surveyFuture.data?.campaign?.id || ''} `
+    );
+  };
+
   return (
     <TabbedLayout
       actionButtons={
@@ -108,6 +118,22 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         />
       }
       defaultTab="/"
+      ellipsisMenuItems={[
+        {
+          label: messages.layout.actions.delete(),
+          onSelect: () => {
+            showConfirmDialog({
+              onSubmit: handleDelete,
+              title: messages.layout.actions.delete(),
+              warningText: messages.layout.actions.warning({
+                surveyTitle:
+                  surveyFuture.data?.title || messages.layout.unknownTitle(),
+              }),
+            });
+          },
+          startIcon: <Delete />,
+        },
+      ]}
       onClickAlertBtn={() => {
         router.push(
           `/organize/${originalOrgId}/projects/${surveyFuture.data?.campaign?.id}/surveys/${surveyId}`

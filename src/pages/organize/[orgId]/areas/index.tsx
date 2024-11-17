@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 }, scaffoldOptions);
 
 const AreasMap = dynamic(
-  () => import('../../../../features/areas/components/AreasMap'),
+  () => import('../../../../features/areas/components/AreasMap/index'),
   { ssr: false }
 );
 

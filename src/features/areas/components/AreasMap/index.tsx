@@ -1,21 +1,12 @@
 import 'leaflet/dist/leaflet.css';
 import { FC, useEffect, useRef, useState } from 'react';
 import { MapContainer } from 'react-leaflet';
-import {
-  Add,
-  Close,
-  Create,
-  GpsFixed,
-  Home,
-  Remove,
-  Save,
-} from '@mui/icons-material';
+import { Close, Create, Save } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
   Button,
   ButtonGroup,
-  CircularProgress,
   Divider,
   MenuItem,
   TextField,
@@ -24,23 +15,21 @@ import { latLngBounds, Map as MapType } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { useNumericRouteParams } from 'core/hooks';
-import { Msg, useMessages } from 'core/i18n';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import useCreateArea from '../../hooks/useCreateArea';
-import messageIds from '../../l10n/messageIds';
 import { PointData, ZetkinArea } from '../../types';
 import AreaFilters from '../AreaFilters';
 import AreaOverlay from '../AreaOverlay';
 import MapRenderer from './MapRenderer';
 import AreaFilterProvider from '../AreaFilters/AreaFilterContext';
 import AreaFilterButton from '../AreaFilters/AreaFilterButton';
+import MapControls from 'features/canvassAssignments/components/MapControls';
 
 interface MapProps {
   areas: ZetkinArea[];
 }
 
 const Map: FC<MapProps> = ({ areas }) => {
-  const messages = useMessages(messageIds);
   const mapRef = useRef<MapType | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const [selectedId, setSelectedId] = useState('');
@@ -48,7 +37,6 @@ const Map: FC<MapProps> = ({ areas }) => {
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [locating, setLocating] = useState(false);
 
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
@@ -92,8 +80,8 @@ const Map: FC<MapProps> = ({ areas }) => {
       inputValue.length == 0
         ? areas.concat()
         : areas.filter((area) => {
-            const areaTitle = area.title || messages.empty.title();
-            const areaDesc = area.description || messages.empty.description();
+            const areaTitle = area.title || 'Untitled area';
+            const areaDesc = area.description || 'Empty description';
 
             return (
               areaTitle.toLowerCase().includes(inputValue) ||
@@ -110,6 +98,28 @@ const Map: FC<MapProps> = ({ areas }) => {
   }
 
   const filteredAreas = filterAreas(areas, filterText);
+
+  const fitBounds = () => {
+    const map = mapRef.current;
+    if (map) {
+      if (areas.length) {
+        const totalBounds = latLngBounds(
+          areas[0].points.map((p) => objToLatLng(p))
+        );
+
+        areas.forEach((area) => {
+          const areaBounds = latLngBounds(
+            area.points.map((p) => objToLatLng(p))
+          );
+          totalBounds.extend(areaBounds);
+        });
+
+        if (totalBounds) {
+          map.fitBounds(totalBounds, { animate: true });
+        }
+      }
+    }
+  };
 
   return (
     <AreaFilterProvider>
@@ -131,7 +141,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                   }}
                   startIcon={<Create />}
                 >
-                  <Msg id={messageIds.tools.draw} />
+                  Draw
                 </Button>
               )}
               {drawingPoints && (
@@ -141,7 +151,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                   }}
                   startIcon={<Close />}
                 >
-                  <Msg id={messageIds.tools.cancel} />
+                  Cancel
                 </Button>
               )}
               {drawingPoints && drawingPoints.length > 2 && (
@@ -151,7 +161,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                   }}
                   startIcon={<Save />}
                 >
-                  <Msg id={messageIds.tools.save} />
+                  Save
                 </Button>
               )}
             </ButtonGroup>
@@ -188,9 +198,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                 />
               )}
               renderOption={(props, area) => (
-                <MenuItem {...props}>
-                  {area.title || messages.empty.title()}
-                </MenuItem>
+                <MenuItem {...props}>{area.title || 'Untitled area'}</MenuItem>
               )}
               value={null}
             />
@@ -211,82 +219,7 @@ const Map: FC<MapProps> = ({ areas }) => {
         )}
 
         <Box flexGrow={1} position="relative">
-          <Box
-            sx={{
-              left: 16,
-              position: 'absolute',
-              top: 16,
-              zIndex: 999,
-            }}
-          >
-            <ButtonGroup orientation="vertical" variant="contained">
-              <Button onClick={() => mapRef.current?.zoomIn()}>
-                <Add />
-              </Button>
-              <Button onClick={() => mapRef.current?.zoomOut()}>
-                <Remove />
-              </Button>
-              <Button
-                onClick={() => {
-                  const map = mapRef.current;
-                  if (map) {
-                    if (areas.length) {
-                      // Start with first area
-                      const totalBounds = latLngBounds(
-                        areas[0].points.map((p) => objToLatLng(p))
-                      );
-
-                      // Extend with all areas
-                      areas.forEach((area) => {
-                        const areaBounds = latLngBounds(
-                          area.points.map((p) => objToLatLng(p))
-                        );
-                        totalBounds.extend(areaBounds);
-                      });
-
-                      if (totalBounds) {
-                        map.fitBounds(totalBounds, { animate: true });
-                      }
-                    }
-                  }
-                }}
-              >
-                <Home />
-              </Button>
-              <Button
-                onClick={() => {
-                  setLocating(true);
-                  navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                      setLocating(false);
-
-                      const zoom = 16;
-                      const latLng = {
-                        lat: pos.coords.latitude,
-                        lng: pos.coords.longitude,
-                      };
-
-                      mapRef.current?.flyTo(latLng, zoom, {
-                        animate: true,
-                        duration: 0.8,
-                      });
-                    },
-                    () => {
-                      // When an error occurs just stop the loading indicator
-                      setLocating(false);
-                    },
-                    { enableHighAccuracy: true, timeout: 5000 }
-                  );
-                }}
-              >
-                {locating ? (
-                  <CircularProgress color="inherit" size={24} />
-                ) : (
-                  <GpsFixed />
-                )}
-              </Button>
-            </ButtonGroup>
-          </Box>
+          <MapControls map={mapRef.current} onFitBounds={fitBounds} />
           {selectedArea && (
             <AreaOverlay
               area={editingArea || selectedArea}
