@@ -38,7 +38,7 @@
     "src/zui/components",
     //TODO: Revert this!
     "src/zui/theme",
-    ".storybook/preview.tsx",
+    //TODO: uncomment this too ".storybook/preview.tsx",
     ".next/types/**/*.ts"
   ],
   "exclude": [".next", "node_modules", "storybook-static"]
