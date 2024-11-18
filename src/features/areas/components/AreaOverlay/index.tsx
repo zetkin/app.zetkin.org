@@ -106,6 +106,12 @@ const AreaOverlay: FC<Props> = ({
                 <TextField
                   fullWidth
                   inputProps={props}
+                  onBlur={() => {
+                    if (fieldEditing === 'title') {
+                      setFieldEditing(null);
+                      updateArea({ title });
+                    }
+                  }}
                   onChange={(ev) => setTitle(ev.target.value)}
                   sx={{ marginBottom: 2 }}
                   value={title}
@@ -146,6 +152,12 @@ const AreaOverlay: FC<Props> = ({
                 inputRef={handleDescriptionTextAreaRef}
                 maxRows={4}
                 multiline
+                onBlur={() => {
+                  if (fieldEditing === 'description') {
+                    setFieldEditing(null);
+                    updateArea({ description });
+                  }
+                }}
                 onChange={(ev) => setDescription(ev.target.value)}
                 sx={{ marginTop: 2 }}
                 value={description}
