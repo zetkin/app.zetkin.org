@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
@@ -8,17 +8,19 @@ type Props = {
   household: Household;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string) => void;
+  onSave: (title: string, floor: number | null) => void;
 };
 
 const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
   const [title, setTitle] = useState(household.title || '');
+  const [floor, setFloor] = useState(household.floor || NaN);
 
   useEffect(() => {
     setTitle(household.title || '');
   }, [household]);
 
-  const nothingHasBeenEdited = title == household.title;
+  const nothingHasBeenEdited =
+    title == household.title && floor == household.floor;
 
   return (
     <PageBase
@@ -26,7 +28,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
         <Button
           disabled={nothingHasBeenEdited}
           onClick={() => {
-            onSave(title);
+            onSave(title, floor || null);
           }}
           variant="contained"
         >
@@ -40,15 +42,24 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title);
+          onSave(title, floor || null);
         }}
       >
-        <TextField
-          fullWidth
-          label="Edit title"
-          onChange={(ev) => setTitle(ev.target.value)}
-          value={title}
-        />
+        <Box display="flex" flexDirection="column" gap={2}>
+          <TextField
+            fullWidth
+            label="Title"
+            onChange={(ev) => setTitle(ev.target.value)}
+            value={title}
+          />
+          <TextField
+            fullWidth
+            label="Floor"
+            onChange={(ev) => setFloor(parseInt(ev.target.value))}
+            type="number"
+            value={floor}
+          />
+        </Box>
       </form>
     </PageBase>
   );

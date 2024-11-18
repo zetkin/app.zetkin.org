@@ -12,6 +12,7 @@ import {
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
+import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
 
 type PlaceDialogProps = {
   assignment: ZetkinCanvassAssignment;
@@ -23,6 +24,7 @@ type PlaceDialogProps = {
 type PlaceDialogStep =
   | 'place'
   | 'edit'
+  | 'createHouseholds'
   | 'household'
   | 'editHousehold'
   | 'wizard';
@@ -92,6 +94,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         <Place
           key="place"
           assignment={assignment}
+          onBulk={() => goto('createHouseholds')}
           onClose={onClose}
           onCreateHousehold={(household) => {
             setSelectedHouseholdId(household.id);
@@ -131,14 +134,22 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             />
           )}
         </Box>
+        <Box key="createHouseholds" height="100%">
+          <CreateHouseholdsPage
+            onBack={() => back()}
+            onClose={onClose}
+            orgId={orgId}
+            placeId={place.id}
+          />
+        </Box>
         <Box key="editHousehold" height="100%">
           {selectedHousehold && (
             <EditHousehold
               household={selectedHousehold}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title) => {
-                await updateHousehold(selectedHousehold.id, { title });
+              onSave={async (title, floor) => {
+                await updateHousehold(selectedHousehold.id, { floor, title });
                 back();
               }}
             />
