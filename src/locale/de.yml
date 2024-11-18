@@ -2030,7 +2030,7 @@ feat:
       submit: Übermitteln
       terms:
         description: Wenn Du diese Umfrage abschickst, werden die von Dir zur Verfügung
-          gestellten Informationen in Zetkin von {Organisation} gespeichert und verarbeitet,
+          gestellten Informationen in Zetkin von {organization} gespeichert und verarbeitet,
           um in Übereinstimmung mit den Zetkin-Datenschutzhinweisen Aktivitäten der
           Partei Die Linke zu organisieren.
         title: Datenschutzhinweise
