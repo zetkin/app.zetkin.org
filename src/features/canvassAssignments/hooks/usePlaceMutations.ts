@@ -8,6 +8,7 @@ import {
   ZetkinPlacePatchBody,
 } from '../types';
 import { placeUpdated } from '../store';
+import createHouseholds from '../rpc/createHouseholds/client';
 
 export default function usePlaceMutations(orgId: number, placeId: string) {
   const apiClient = useApiClient();
@@ -22,6 +23,14 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
       );
       dispatch(placeUpdated(place));
       return place.households[0];
+    },
+    addHouseholds: async (households: { floor: number; title: string }[]) => {
+      const place = await apiClient.rpc(createHouseholds, {
+        households,
+        orgId,
+        placeId,
+      });
+      dispatch(placeUpdated(place));
     },
     addVisit: async (householdId: string, data: Omit<Visit, 'id'>) => {
       setIsAddVisitLoading(true);

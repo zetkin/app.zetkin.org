@@ -56,7 +56,7 @@ const AreaCard: FC<AreaCardProps> = ({
         x: point.hour !== '0' ? `${point.date} ${point.hour}` : point.date,
         y: point.householdVisits,
       })),
-      id: `Household Visits`,
+      id: `Households Visited`,
     };
 
     const successfulVisitsSeries: NivoSeries = {
@@ -139,7 +139,7 @@ const AreaCard: FC<AreaCardProps> = ({
                     <MapIcon />
                   </IconButton>
                 ) : (
-                  <Tooltip title="This graph gather the visits made outside the assigned areas">
+                  <Tooltip title="This graph gathers the visits made outside the assigned areas">
                     <InfoOutlined
                       sx={{
                         color: theme.palette.secondary.main,

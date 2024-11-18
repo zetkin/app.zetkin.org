@@ -35,6 +35,7 @@ const Household: FC<HouseholdProps> = ({
       onBack={onBack}
       onClose={onClose}
       onEdit={onEdit}
+      subtitle={household.floor ? `Floor ${household.floor}` : 'Unknown floor'}
       title={household.title || 'Untitled household'}
     />
   );

@@ -118,6 +118,25 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       },
     };
 
+    // What this event handler does is prevent the editor.js-window from
+    // hijacking the focus when typing a '/' anywhere else outside of the editor
+    // Unfortunately, this is not an ideal fix, as it prevents any other event
+    // handlers from firing, not just the ones inside the editor.js, unless they
+    // were added before this one.
+    // This seems to be the only viable fix, since there is no way to disable
+    // the event listeners in editor.js, except by making the editor readonly,
+    // which we obviously don't want to do.
+    // This is where the event handlers are attached: https://github.com/codex-team/editor.js/blob/58a7a9eeeadbfaef3c256576c8f37d64cb5d0edf/src/components/modules/ui.ts#L393-L395
+    const keyDownHandler = (e: KeyboardEvent) => {
+      const inside = !!(e.target as HTMLElement).closest?.(
+        '#ClientOnlyEditor-container'
+      );
+      if (!inside) {
+        e.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener('keydown', keyDownHandler, true);
+
     // Create the EditorJS instance
     editorInstance.current = new EditorJS(editorConfig);
 
@@ -129,6 +148,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     setEditorJSApiRef();
 
     return () => {
+      document.removeEventListener('keydown', keyDownHandler, true);
       // Cleanup when the component is unmounted
       if (editorInstance.current) {
         try {

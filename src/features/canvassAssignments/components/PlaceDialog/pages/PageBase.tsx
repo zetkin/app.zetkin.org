@@ -55,7 +55,7 @@ const PageBase: FC<Props> = ({
         />
       </Box>
       <Divider />
-      <Box flexGrow={1} p={2} sx={{ overflowY: 'auto' }}>
+      <Box flexGrow={1} p={2} sx={{ overflowY: 'auto', position: 'relative' }}>
         {children}
       </Box>
       {actions && (
