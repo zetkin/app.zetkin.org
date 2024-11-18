@@ -55,6 +55,7 @@ export type Visit = {
 };
 
 export type Household = {
+  floor?: number | null;
   id: string;
   title: string;
   visits: Visit[];

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 
 import VisitWizard from './pages/VisitWizard';
@@ -12,6 +12,7 @@ import {
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
 import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
+import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
 
 type PlaceDialogProps = {
   assignment: ZetkinCanvassAssignment;
@@ -23,6 +24,7 @@ type PlaceDialogProps = {
 type PlaceDialogStep =
   | 'place'
   | 'edit'
+  | 'createHouseholds'
   | 'household'
   | 'editHousehold'
   | 'wizard';
@@ -39,6 +41,45 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     place.id
   );
 
+  const pushedRef = useRef(false);
+
+  const goto = useCallback(
+    (step: PlaceDialogStep) => {
+      setDialogStep(step);
+      history.pushState({ step: step }, '', `?step=${step}`);
+    },
+    [setDialogStep]
+  );
+
+  const back = useCallback(() => {
+    history.back();
+  }, []);
+
+  useEffect(() => {
+    function handlePopState(event: PopStateEvent) {
+      if (event.state.step) {
+        setDialogStep(event.state.step);
+      } else {
+        onClose();
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('popstate', handlePopState);
+
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!pushedRef.current) {
+      pushedRef.current = true;
+      goto('place');
+    }
+  }, []);
+
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
     null
   );
@@ -53,26 +94,27 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         <Place
           key="place"
           assignment={assignment}
+          onBulk={() => goto('createHouseholds')}
           onClose={onClose}
           onCreateHousehold={(household) => {
             setSelectedHouseholdId(household.id);
-            setDialogStep('household');
+            goto('household');
           }}
-          onEdit={() => setDialogStep('edit')}
+          onEdit={() => goto('edit')}
           onSelectHousehold={(householdId: string) => {
             setSelectedHouseholdId(householdId);
-            setDialogStep('household');
+            goto('household');
           }}
           orgId={orgId}
           place={place}
         />
         <EditPlace
           key="edit"
-          onBack={() => setDialogStep('place')}
+          onBack={() => back()}
           onClose={onClose}
           onSave={async (title, description) => {
             await updatePlace({ description, title });
-            setDialogStep('place');
+            back();
           }}
           place={place}
         />
@@ -80,11 +122,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           {selectedHousehold && (
             <Household
               household={selectedHousehold}
-              onBack={() => setDialogStep('place')}
+              onBack={() => back()}
               onClose={onClose}
-              onEdit={() => setDialogStep('editHousehold')}
+              onEdit={() => goto('editHousehold')}
               onWizardStart={() => {
-                setDialogStep('wizard');
+                goto('wizard');
               }}
               visitedInThisAssignment={selectedHousehold.visits.some(
                 (visit) => visit.canvassAssId == assignment.id
@@ -92,15 +134,23 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             />
           )}
         </Box>
+        <Box key="createHouseholds" height="100%">
+          <CreateHouseholdsPage
+            onBack={() => back()}
+            onClose={onClose}
+            orgId={orgId}
+            placeId={place.id}
+          />
+        </Box>
         <Box key="editHousehold" height="100%">
           {selectedHousehold && (
             <EditHousehold
               household={selectedHousehold}
-              onBack={() => setDialogStep('household')}
+              onBack={() => back()}
               onClose={onClose}
-              onSave={async (title) => {
-                await updateHousehold(selectedHousehold.id, { title });
-                setDialogStep('household');
+              onSave={async (title, floor) => {
+                await updateHousehold(selectedHousehold.id, { floor, title });
+                back();
               }}
             />
           )}
@@ -110,7 +160,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             <VisitWizard
               household={selectedHousehold}
               metrics={assignment.metrics}
-              onBack={() => setDialogStep('household')}
+              onBack={() => back()}
               onLogVisit={(responses, noteToOfficial) => {
                 addVisit(selectedHousehold.id, {
                   canvassAssId: assignment.id,
@@ -118,7 +168,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   responses,
                   timestamp: new Date().toISOString(),
                 });
-                setDialogStep('place');
+                goto('place');
               }}
             />
           )}

@@ -53,6 +53,7 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   households: [
     {
       _id: false,
+      floor: Number,
       id: String,
       title: String,
       visits: [

@@ -26,7 +26,10 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       const model = await PlaceModel.findOneAndUpdate(
         { _id: params.placeId, orgId },
         {
-          $set: { 'households.$[elem].title': payload.title },
+          $set: {
+            'households.$[elem].floor': payload.floor,
+            'households.$[elem].title': payload.title,
+          },
         },
         {
           arrayFilters: [{ 'elem.id': { $eq: params.householdId } }],
