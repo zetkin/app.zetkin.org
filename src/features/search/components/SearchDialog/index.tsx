@@ -35,25 +35,21 @@ const SearchDialog: React.FunctionComponent<{
     setOpen(false);
   };
 
-  // We want this `keydown` event handler to run in the capturing-phase, and
-  // that it is only attached on mount. This is to make sure that this handler
-  // runs before the `keydown` event handler in `EmailEditorFrontend`, which
-  // stops propagation in order to prevent editor.js from hijacking focus.
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (!isUserTyping(e)) {
-        if (e.key === '/') {
-          e.preventDefault();
-          setOpen(true);
-        }
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (!isUserTyping(e)) {
+      if (e.key === '/') {
+        e.preventDefault();
+        setOpen(true);
       }
-    };
+    }
+  };
 
-    document.addEventListener('keydown', handleKeydown, true);
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeydown);
     return () => {
-      document.removeEventListener('keydown', handleKeydown, true);
+      document.removeEventListener('keydown', handleKeydown);
     };
-  }, []);
+  });
 
   useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChange);
