@@ -33,6 +33,8 @@ interface ZUIRadioButtonProps {
    */
   disabled?: boolean;
 
+  error?: boolean;
+
   label: string;
 
   helperText?: string;
@@ -66,6 +68,7 @@ interface ZUIRadioButtonProps {
 const ZUIRadioGroup = ({
   orientation = 'vertical',
   disabled,
+  error,
   label,
   helperText,
   labelPlacement = 'end',
@@ -81,11 +84,21 @@ const ZUIRadioGroup = ({
     <FormControl disabled={disabled}>
       <FormLabel id={labelId}>
         <Typography
-          sx={(theme) => ({
-            color: disabled
-              ? theme.palette.text.disabled
-              : theme.palette.text.primary,
-          })}
+          sx={(theme) => {
+            let color = theme.palette.text.primary;
+
+            if (disabled) {
+              color = theme.palette.text.disabled;
+            }
+
+            if (error) {
+              color = theme.palette.error.main;
+            }
+
+            return {
+              color,
+            };
+          }}
           variant="labelXlMedium"
         >
           {label}
@@ -98,6 +111,41 @@ const ZUIRadioGroup = ({
           onChange(e.target.value);
         }}
         row={orientation === 'horizontal'}
+        sx={{
+          '& > label.MuiFormControlLabel-labelPlacementBottom': {
+            ' :first-child': {
+              marginLeft: 0,
+            },
+            ' :last-child': {
+              marginRight: 0,
+            },
+            marginBottom: '0.5rem',
+            marginTop: '0.5rem',
+          },
+          '& > label.MuiFormControlLabel-labelPlacementEnd': {
+            ' :last-child': {
+              marginRight: 0,
+            },
+          },
+          '& > label.MuiFormControlLabel-labelPlacementStart': {
+            ' :first-child': {
+              marginLeft: 0,
+            },
+            ' :not(:first-child)': {
+              marginLeft: '2rem',
+            },
+          },
+          '& > label.MuiFormControlLabel-labelPlacementTop': {
+            ' :first-child': {
+              marginLeft: 0,
+            },
+            ' :last-child': {
+              marginRight: 0,
+            },
+            marginBottom: '0.5rem',
+            marginTop: '0.5rem',
+          },
+        }}
         value={value}
       >
         {options.map((option) => {
@@ -131,11 +179,21 @@ const ZUIRadioGroup = ({
       {helperText && (
         <Typography
           id={helperTextId}
-          sx={(theme) => ({
-            color: disabled
-              ? theme.palette.text.disabled
-              : theme.palette.text.secondary,
-          })}
+          sx={(theme) => {
+            let color = theme.palette.text.secondary;
+
+            if (disabled) {
+              color = theme.palette.text.disabled;
+            }
+
+            if (error) {
+              color = theme.palette.error.main;
+            }
+
+            return {
+              color,
+            };
+          }}
           variant="labelSmMedium"
         >
           {helperText}

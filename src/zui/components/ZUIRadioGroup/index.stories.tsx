@@ -52,3 +52,18 @@ export const OneDisabledOption: Story = {
     size: 'small',
   },
 };
+
+export const Error: Story = {
+  args: {
+    error: true,
+    helperText: 'You need to pick one option',
+    label: 'Example Form',
+    labelPlacement: 'end',
+    options: [
+      { label: 'Sweden', value: 'swe' },
+      { label: 'Finland', value: 'fin' },
+      { label: 'Norway', value: 'nor' },
+      { label: 'Denmark', value: 'den' },
+    ],
+  },
+};
