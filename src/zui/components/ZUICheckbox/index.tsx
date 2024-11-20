@@ -67,6 +67,17 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
         '& .MuiSvgIcon-root': {
           fontSize: sizes[size],
         },
+        '& .MuiTypography-root': {
+          '-ms-user-select': 'none',
+          '-webkit-user-select': 'none',
+          userSelect: 'none',
+        },
+        marginBottom:
+          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+        marginLeft: labelPlacement != 'end' ? 0 : '',
+        marginRight: labelPlacement != 'start' ? 0 : '',
+        marginTop:
+          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
       }}
     />
   );
