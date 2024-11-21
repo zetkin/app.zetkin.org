@@ -1,15 +1,14 @@
-import { Box, Theme, Typography } from '@mui/material';
+import { Badge, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { getContrastColor } from 'utils/colorUtils';
-import { ActivityStatus } from 'zui/types';
 
 export interface ZUIBadgeProps {
   /**
    * Number to be displayed inside the badge
    */
-  number?: number;
+  number: number;
 
   /** If true, a number over 99 will be displayed in the badge as '99+'.
    * Defaults to false.
@@ -17,36 +16,29 @@ export interface ZUIBadgeProps {
   truncateLargeNumber?: boolean;
 
   /**
-   * Activity status to determine the color of the badge.
+   * Color of the badge
    */
-  status: ActivityStatus;
+  color: 'primary' | 'success' | 'info' | 'data' | 'warning' | 'danger';
+
+  /**
+   * The component that the ZUIBadge will display on top of.
+   * */
+  children: ReactNode;
 }
 
 const useStyles = makeStyles<
   Theme,
-  { number: number | undefined; status: ActivityStatus }
+  {
+    color: 'primary' | 'success' | 'info' | 'data' | 'warning' | 'error';
+    number: number;
+  }
 >((theme) => ({
   badge: {
-    alignItems: 'center',
-    backgroundColor: ({ status }) => theme.palette.activityStatusColors[status],
-    borderRadius: '1.875rem',
-    color: ({ status }) =>
-      getContrastColor(theme.palette.activityStatusColors[status]),
-    display: 'inline-flex',
-    height: '1.375rem',
-    justifyContent: 'center',
-    minWidth: '1.375rem',
-    paddingLeft: ({ number }) =>
-      number && (number > 99 || number < 0) ? '0.375rem' : '',
-    paddingRight: ({ number }) =>
-      number && (number > 99 || number < 0) ? '0.375rem' : '',
-  },
-  dot: {
-    alignItems: 'center',
-    backgroundColor: ({ status }) => theme.palette.activityStatusColors[status],
-    borderRadius: '1rem',
-    height: '1rem',
-    width: '1rem',
+    '& .MuiBadge-badge': {
+      backgroundColor: ({ color }) => theme.palette[color].main,
+      border: `2px solid ${theme.palette.common.white}`,
+      color: ({ color }) => getContrastColor(theme.palette[color].main),
+    },
   },
   text: {
     fontFamily: theme.typography.fontFamily,
@@ -58,22 +50,24 @@ const useStyles = makeStyles<
 
 const ZUIBadge: FC<ZUIBadgeProps> = ({
   number,
-  status,
+  children,
+  color,
   truncateLargeNumber = false,
 }) => {
-  const classes = useStyles({ number, status });
-
-  const showValue = number != undefined;
-  const style = showValue ? 'badge' : 'dot';
+  const classes = useStyles({
+    color: color == 'danger' ? 'error' : color,
+    number,
+  });
 
   return (
-    <Box className={classes[style]}>
-      <Typography className={classes.text}>
-        {showValue && !truncateLargeNumber && number.toString()}
-        {showValue && truncateLargeNumber && number <= 99 && number.toString()}
-        {showValue && truncateLargeNumber && number > 99 && '99+'}
-      </Typography>
-    </Box>
+    <Badge
+      badgeContent={number}
+      className={classes.badge}
+      //
+      max={truncateLargeNumber ? 99 : 999999}
+    >
+      {children}
+    </Badge>
   );
 };
 
