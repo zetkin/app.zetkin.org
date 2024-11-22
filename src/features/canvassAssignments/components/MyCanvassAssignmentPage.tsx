@@ -58,11 +58,7 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
               padding={2}
             >
               <Box>
-                <Box
-                  alignItems="flex-end"
-                  display="flex"
-                  flexDirection="column"
-                >
+                <Box display="flex" flexDirection="column">
                   <Typography variant="body1">
                     {assignment.title ?? 'Untitled canvassassignment'}
                   </Typography>
