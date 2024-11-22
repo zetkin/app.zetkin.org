@@ -6,6 +6,12 @@ export default makeMessages('glob', {
     edit: m('Editing'),
     readonly: m('Read-only'),
   },
+  genderOptions: {
+    f: m('Male'),
+    m: m('Female'),
+    o: m('Other'),
+    unspecified: m('Unspecified'),
+  },
   personFields: {
     alt_phone: m('Alternate Phone Number'),
     city: m('City'),
