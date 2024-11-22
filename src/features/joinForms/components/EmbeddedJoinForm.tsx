@@ -64,7 +64,14 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
                 <label>
                   {label}
                   <div>
-                    {field.s != 'gender' && <input name={field.s} />}
+                    {field.s != 'gender' && (
+                      <input
+                        name={field.s}
+                        required={
+                          field.s == 'first_name' || field.s == 'last_name'
+                        }
+                      />
+                    )}
                     {field.s == 'gender' && (
                       <select name={field.s}>
                         <option value="unspecified">
