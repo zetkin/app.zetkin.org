@@ -14,6 +14,7 @@ import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
 import EncouragingSparkle from '../EncouragingSparkle';
+import PlaceVisitPage from './pages/PlaceVisitPage';
 
 type PlaceDialogProps = {
   assignment: ZetkinCanvassAssignment;
@@ -28,6 +29,7 @@ type PlaceDialogStep =
   | 'createHouseholds'
   | 'household'
   | 'editHousehold'
+  | 'placeVisit'
   | 'wizard';
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
@@ -110,6 +112,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
+          onVisit={() => goto('placeVisit')}
           orgId={orgId}
           place={place}
         />
@@ -159,6 +162,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
               }}
             />
           )}
+        </Box>
+        <Box key="placeVisit" height="100%">
+          <PlaceVisitPage onBack={() => back()} onClose={onClose} />
         </Box>
         <Box key="wizard" height="100%">
           {selectedHousehold && (

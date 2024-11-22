@@ -28,6 +28,7 @@ type PlaceProps = {
   onCreateHousehold: (householdId: Household) => void;
   onEdit: () => void;
   onSelectHousehold: (householdId: string) => void;
+  onVisit: () => void;
   orgId: number;
   place: ZetkinPlace;
 };
@@ -39,6 +40,7 @@ const Place: FC<PlaceProps> = ({
   onEdit,
   onCreateHousehold,
   onSelectHousehold,
+  onVisit,
   orgId,
   place,
 }) => {
@@ -71,6 +73,11 @@ const Place: FC<PlaceProps> = ({
         >
           {place.description || 'Empty description'}
         </Typography>
+      </Box>
+      <Box display="flex" justifyContent="center" m={4}>
+        <Button onClick={onVisit} variant="contained">
+          Report visits here
+        </Button>
       </Box>
       <Box display="flex" flexDirection="column" flexGrow={2} gap={1} mt={4}>
         <Typography onClick={onEdit} variant="h6">
