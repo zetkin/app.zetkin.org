@@ -26,7 +26,7 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
       <LibraryImage
         imageFile={imageFile}
         onLoad={(dimensions) => {
-          setLoading(true);
+          setLoading(false);
           setDimensions(dimensions);
         }}
       />
