@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  findOrAddItem,
+  getOrAddItemToList,
   remoteItem,
   remoteList,
   RemoteList,
@@ -64,7 +64,7 @@ const areasSlice = createSlice({
     },
     areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      const item = findOrAddItem(state.areaList, area.id);
+      const item = getOrAddItemToList(state.areaList, area.id);
 
       item.data = area;
       item.loaded = new Date().toISOString();
@@ -82,7 +82,7 @@ const areasSlice = createSlice({
     tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
-      const tagItem = findOrAddItem(state.tagsByAreaId[areaId], tag.id);
+      const tagItem = getOrAddItemToList(state.tagsByAreaId[areaId], tag.id);
       tagItem.data = tag;
       tagItem.loaded = new Date().toISOString();
 

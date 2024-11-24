@@ -1,4 +1,4 @@
-interface RemoteData {
+export interface RemoteData {
   id: number | string;
 }
 
@@ -49,16 +49,32 @@ export function remoteList<DataType extends RemoteData>(
   };
 }
 
-export function findOrAddItem<DataType extends RemoteData>(
+export function getOrAddItemToList<DataType extends RemoteData>(
   list: RemoteList<DataType>,
   id: number | string
 ): RemoteItem<DataType> {
   const existingItem = list.items.find((item) => item.id == id);
   if (existingItem) {
+    existingItem.loaded = new Date().toISOString();
     return existingItem;
   } else {
     const newItem = remoteItem<DataType>(id);
     list.items.push(newItem);
+    newItem.loaded = new Date().toISOString();
     return newItem;
+  }
+}
+
+export function getOrCreateList<
+  DataType extends RemoteData,
+  T extends string | number | symbol
+>(record: Record<T, RemoteList<DataType>>, key: T): RemoteList<DataType> {
+  const currentList = record[key];
+  if (currentList) {
+    return currentList;
+  } else {
+    const newList = remoteList<DataType>();
+    record[key] = newList;
+    return newList;
   }
 }

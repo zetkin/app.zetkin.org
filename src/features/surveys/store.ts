@@ -12,6 +12,8 @@ import {
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
 import {
+  getOrAddItemToList,
+  getOrCreateList,
   RemoteItem,
   remoteItem,
   remoteList,
@@ -375,34 +377,30 @@ function addSubmissionToState(
   submissions: ZetkinSurveySubmission[]
 ) {
   submissions.forEach((submission) => {
-    const submissionListItem = state.submissionList.items.find(
-      (item) => item.id == submission.id
+    const remoteSubmissionBySubmissionId = getOrAddItemToList(
+      state.submissionList,
+      submission.id
     );
-    const submissionBySurveyId = state.submissionsBySurveyId[
+
+    remoteSubmissionBySubmissionId.data = {
+      ...remoteSubmissionBySubmissionId.data,
+      ...submission,
+    };
+
+    const remoteSubmissionBySurveyIdList = getOrCreateList(
+      state.submissionsBySurveyId,
       submission.survey.id
-    ]?.items.find((item) => item.id == submission.id);
+    );
 
-    if (submissionListItem) {
-      submissionListItem.data = { ...submissionListItem.data, ...submission };
-    } else {
-      state.submissionList.items.push(
-        remoteItem(submission.id, { data: submission })
-      );
-    }
+    const remoteSubmissionBySurveyId = getOrAddItemToList(
+      remoteSubmissionBySurveyIdList,
+      submission.id
+    );
 
-    if (submissionBySurveyId) {
-      submissionBySurveyId.data = {
-        ...submissionBySurveyId.data,
-        ...submission,
-      };
-    } else {
-      if (!state.submissionsBySurveyId[submission.survey.id]) {
-        state.submissionsBySurveyId[submission.survey.id] = remoteList();
-      }
-      state.submissionsBySurveyId[submission.survey.id].items.push(
-        remoteItem(submission.id, { data: submission })
-      );
-    }
+    remoteSubmissionBySurveyId.data = {
+      ...remoteSubmissionBySurveyId.data,
+      ...submission,
+    };
   });
 }
 

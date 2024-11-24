@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  findOrAddItem,
+  getOrAddItemToList,
   RemoteItem,
   remoteItem,
   remoteList,
@@ -161,7 +161,10 @@ const canvassAssignmentSlice = createSlice({
       action: PayloadAction<ZetkinCanvassAssignment>
     ) => {
       const assignment = action.payload;
-      const item = findOrAddItem(state.canvassAssignmentList, assignment.id);
+      const item = getOrAddItemToList(
+        state.canvassAssignmentList,
+        assignment.id
+      );
 
       item.data = assignment;
       item.loaded = new Date().toISOString();
@@ -248,7 +251,7 @@ const canvassAssignmentSlice = createSlice({
     },
     placeUpdated: (state, action: PayloadAction<ZetkinPlace>) => {
       const place = action.payload;
-      const item = findOrAddItem(state.placeList, place.id);
+      const item = getOrAddItemToList(state.placeList, place.id);
 
       item.data = place;
       item.loaded = new Date().toISOString();

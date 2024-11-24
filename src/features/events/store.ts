@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ParticipantOp } from './types';
 import {
+  getOrAddItemToList,
+  getOrCreateList,
   RemoteItem,
   remoteItem,
   remoteList,
@@ -574,17 +576,8 @@ const eventsSlice = createSlice({
 
 function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
   events.forEach((event) => {
-    const eventListItem = state.eventList.items.find(
-      (item) => item.id == event.id
-    );
-
-    if (eventListItem) {
-      eventListItem.data = { ...eventListItem.data, ...event };
-    } else {
-      state.eventList.items.push(
-        remoteItem(event.id, { data: event, loaded: new Date().toISOString() })
-      );
-    }
+    const eventListItem = getOrAddItemToList(state.eventList, event.id);
+    eventListItem.data = { ...eventListItem.data, ...event };
 
     const dateStr = event.start_time.slice(0, 10);
     if (!state.eventsByDate[dateStr]) {
@@ -629,22 +622,14 @@ function addEventToState(state: EventsStoreSlice, events: ZetkinEvent[]) {
 
     const campaign = event.campaign;
     if (campaign) {
-      if (!state.eventsByCampaignId[campaign.id]) {
-        state.eventsByCampaignId[campaign.id] = remoteList();
-      }
+      const remoteEventsById = getOrCreateList(
+        state.eventsByCampaignId,
+        campaign.id.toString()
+      );
 
-      const eventByCampIdItem = state.eventsByCampaignId[
-        campaign.id
-      ].items.find((item) => item.id == event.id);
+      const remoteEvent = getOrAddItemToList(remoteEventsById, event.id);
 
-      if (eventByCampIdItem) {
-        eventByCampIdItem.data = { ...eventByCampIdItem.data, ...event };
-        eventByCampIdItem.mutating = [];
-      } else {
-        state.eventsByCampaignId[campaign.id].items.push(
-          remoteItem(event.id, { data: event })
-        );
-      }
+      remoteEvent.data = { ...remoteEvent.data, ...event };
     }
   });
 }

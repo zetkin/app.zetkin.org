@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  getOrAddItemToList,
+  getOrCreateList,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
 export interface TagsStoreSlice {
@@ -33,20 +39,9 @@ const tagsSlice = createSlice({
     },
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       const [personId, tag] = action.payload;
-      if (!state.tagsByPersonId[personId]) {
-        state.tagsByPersonId[personId] = remoteList();
-      }
-      const item = state.tagsByPersonId[personId].items.find(
-        (item) => item.id == tag.id
-      );
-
-      if (item) {
-        item.data = tag;
-      } else {
-        state.tagsByPersonId[personId].items.push(
-          remoteItem(tag.id, { data: tag })
-        );
-      }
+      const remotePersonTags = getOrCreateList(state.tagsByPersonId, personId);
+      const remoteItem = getOrAddItemToList(remotePersonTags, tag.id);
+      remoteItem.data = tag;
     },
     tagCreate: (state) => {
       state.tagList.isLoading;
