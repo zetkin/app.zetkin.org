@@ -7,8 +7,8 @@ export default makeMessages('glob', {
     readonly: m('Read-only'),
   },
   genderOptions: {
-    f: m('Male'),
-    m: m('Female'),
+    f: m('Female'),
+    m: m('Male'),
     o: m('Other'),
     unspecified: m('Unspecified'),
   },
