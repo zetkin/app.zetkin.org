@@ -79,6 +79,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
               router.push(`/organize/${orgId}/people/joinforms`);
               await createForm({
                 fields: ['first_name', 'last_name', 'email'],
+                requires_email_verification: true,
                 title: joinFormMessages.defaultTitle(),
               });
             },
