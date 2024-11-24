@@ -27,7 +27,6 @@ const LibraryImage: FC<LibraryImageProps> = ({
     if (img.current != null) {
       dimensions = [img.current.naturalWidth, img.current.naturalHeight];
     }
-    return true;
   }
 
   return (
@@ -36,16 +35,18 @@ const LibraryImage: FC<LibraryImageProps> = ({
         ref={img}
         alt={imageFile.original_name}
         height="400"
-        onLoad={() =>
-          onLoad &&
-          updateSize() &&
-          onLoad({ height: dimensions[1], width: dimensions[0] })
-        }
-        onLoadingComplete={() =>
-          onLoadingComplete &&
-          updateSize() &&
-          onLoadingComplete({ height: dimensions[1], width: dimensions[0] })
-        }
+        onLoad={() => {
+          updateSize();
+          if (onLoad) {
+            onLoad({ height: dimensions[1], width: dimensions[0] })
+          }
+        }}
+        onLoadingComplete={() => {
+          updateSize();
+          if (onLoadingComplete) {
+            onLoadingComplete({ height: dimensions[1], width: dimensions[0] })
+          }
+        }}
         src={imageFile.url}
         style={{
           aspectRatio: '1 / 1',
