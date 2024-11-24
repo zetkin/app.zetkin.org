@@ -13,15 +13,15 @@ type Props = {
 
 const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
   const [title, setTitle] = useState(household.title || '');
-  const [floor, setFloor] = useState(household.floor?.toString() || '');
+  const [floor, setFloor] = useState<number | ''>(household.floor ?? '');
 
   useEffect(() => {
     setTitle(household.title || '');
-    setFloor(household.floor?.toString() || '');
+    setFloor(household.floor ?? '');
   }, [household]);
 
   const nothingHasBeenEdited =
-    title == household.title && floor == household.floor?.toString();
+    title == household.title && floor == household.floor;
 
   return (
     <PageBase
@@ -29,7 +29,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
         <Button
           disabled={nothingHasBeenEdited}
           onClick={() => {
-            onSave(title, floor ? parseInt(floor) : null);
+            onSave(title, floor == '' ? null : floor);
           }}
           variant="contained"
         >
@@ -43,7 +43,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title, floor ? parseInt(floor) : null);
+          onSave(title, floor == '' ? null : floor);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>
@@ -56,7 +56,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
           <TextField
             fullWidth
             label="Floor"
-            onChange={(ev) => setFloor(ev.target.value)}
+            onChange={(ev) => setFloor(parseInt(ev.target.value))}
             type="number"
             value={floor}
           />
