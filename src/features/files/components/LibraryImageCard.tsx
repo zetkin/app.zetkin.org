@@ -3,6 +3,8 @@ import { FC, useState } from 'react';
 
 import LibraryImage from './LibraryImage';
 import { ZetkinFile } from 'utils/types/zetkin';
+import messageIds from 'features/files/l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 interface LibraryImageCardProps {
   imageFile: ZetkinFile;
@@ -62,7 +64,10 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
           textOverflow="ellipsis"
           variant="body2"
         >
-          {dimensions.width} &times; {dimensions.height} pixels
+          <Msg
+            id={messageIds.image.dimensions}
+            values={{ height: dimensions.height, width: dimensions.width }}
+          />
         </Typography>
       </Box>
     </Box>

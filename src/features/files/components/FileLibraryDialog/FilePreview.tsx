@@ -51,7 +51,10 @@ const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
           {file.original_name}
         </Typography>
         <Typography color="secondary" mt={1} textAlign="center" variant="body2">
-          {dimensions.width} &times; {dimensions.height} pixels
+          <Msg
+            id={messageIds.image.dimensions}
+            values={{ height: dimensions.height, width: dimensions.width }}
+          />
         </Typography>
       </Box>
       <Box display="flex" gap={1} justifyContent="flex-end">
