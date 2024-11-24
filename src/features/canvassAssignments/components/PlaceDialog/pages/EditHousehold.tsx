@@ -13,10 +13,11 @@ type Props = {
 
 const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
   const [title, setTitle] = useState(household.title || '');
-  const [floor, setFloor] = useState(household.floor || NaN);
+  const [floor, setFloor] = useState(household.floor ?? NaN);
 
   useEffect(() => {
     setTitle(household.title || '');
+    setFloor(household.floor ?? NaN);
   }, [household]);
 
   const nothingHasBeenEdited =
