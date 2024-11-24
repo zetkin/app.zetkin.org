@@ -29,7 +29,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
         <Button
           disabled={nothingHasBeenEdited}
           onClick={() => {
-            onSave(title, Number.isNaN(floor) ? null : floor);
+            onSave(title, floor || null);
           }}
           variant="contained"
         >
@@ -43,7 +43,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title, Number.isNaN(floor) ? null : floor);
+          onSave(title, floor || null);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>
