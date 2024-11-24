@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import Image from 'next/image';
 
 import TransparentGridBackground from './TransparentGridBackground';
@@ -6,8 +6,14 @@ import { ZetkinFile } from 'utils/types/zetkin';
 
 interface LibraryImageProps {
   imageFile: ZetkinFile;
-  onLoad?: () => void;
-  onLoadingComplete?: () => void;
+  onLoad?: ({ height, width }: { height: number; width: number }) => void;
+  onLoadingComplete?: ({
+    height,
+    width,
+  }: {
+    height: number;
+    width: number;
+  }) => void;
 }
 
 const LibraryImage: FC<LibraryImageProps> = ({
@@ -15,13 +21,31 @@ const LibraryImage: FC<LibraryImageProps> = ({
   onLoad,
   onLoadingComplete,
 }) => {
+  const img = useRef<HTMLImageElement>(null);
+  let dimensions = [0, 0];
+  function updateSize() {
+    if (img.current != null) {
+      dimensions = [img.current.naturalWidth, img.current.naturalHeight];
+    }
+    return true;
+  }
+
   return (
     <TransparentGridBackground>
       <Image
+        ref={img}
         alt={imageFile.original_name}
         height="400"
-        onLoad={() => onLoad && onLoad()}
-        onLoadingComplete={() => onLoadingComplete && onLoadingComplete()}
+        onLoad={() =>
+          onLoad &&
+          updateSize() &&
+          onLoad({ height: dimensions[1], width: dimensions[0] })
+        }
+        onLoadingComplete={() =>
+          onLoadingComplete &&
+          updateSize() &&
+          onLoadingComplete({ height: dimensions[1], width: dimensions[0] })
+        }
         src={imageFile.url}
         style={{
           aspectRatio: '1 / 1',
@@ -30,6 +54,7 @@ const LibraryImage: FC<LibraryImageProps> = ({
           objectFit: 'contain',
           width: '100%',
         }}
+        unoptimized
         width="400"
       />
     </TransparentGridBackground>

@@ -14,6 +14,7 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
   onSelectImage,
 }) => {
   const [loading, setLoading] = useState(true);
+  const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
 
   return (
     <Box
@@ -24,10 +25,22 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
     >
       <LibraryImage
         imageFile={imageFile}
-        onLoad={() => setLoading(true)}
-        onLoadingComplete={() => setLoading(false)}
+        onLoad={(dimensions) => {
+          setLoading(true);
+          setDimensions(dimensions);
+        }}
+        onLoadingComplete={(dimensions) => {
+          setLoading(false);
+          setDimensions(dimensions);
+        }}
       />
-      <Box alignItems="center" display="flex" justifyContent="center" mt={1}>
+      <Box
+        alignItems="center"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        mt={1}
+      >
         {loading && (
           <CircularProgress color="primary" size="1em" sx={{ mr: 1 }} />
         )}
@@ -42,6 +55,18 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
           variant="body2"
         >
           {imageFile.original_name}
+        </Typography>
+        <Typography
+          alignSelf="center"
+          color="secondary"
+          component="span"
+          maxWidth="80%"
+          noWrap
+          overflow="hidden"
+          textOverflow="ellipsis"
+          variant="body2"
+        >
+          {dimensions.width} px x {dimensions.height} px
         </Typography>
       </Box>
     </Box>
