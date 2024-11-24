@@ -29,10 +29,6 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
           setLoading(true);
           setDimensions(dimensions);
         }}
-        onLoadingComplete={(dimensions) => {
-          setLoading(false);
-          setDimensions(dimensions);
-        }}
       />
       <Box
         alignItems="center"
@@ -66,7 +62,7 @@ const LibraryImageCard: FC<LibraryImageCardProps> = ({
           textOverflow="ellipsis"
           variant="body2"
         >
-          {dimensions.width} px x {dimensions.height} px
+          {dimensions.width} &times; {dimensions.height} pixels
         </Typography>
       </Box>
     </Box>
