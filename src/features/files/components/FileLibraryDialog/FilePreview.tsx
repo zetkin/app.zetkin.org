@@ -38,12 +38,12 @@ const FilePreview: FC<Props> = ({ file, onBack, onSelect }) => {
               }
             }}
             src={file.url}
-            unoptimized
             style={{
               height: '100%',
               objectFit: 'contain',
               width: '100%',
             }}
+            unoptimized
             width="800"
           />
         </TransparentGridBackground>
