@@ -13,11 +13,11 @@ type Props = {
 
 const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
   const [title, setTitle] = useState(household.title || '');
-  const [floor, setFloor] = useState<number | ''>(household.floor ?? '');
+  const [floor, setFloor] = useState(household.floor ?? NaN);
 
   useEffect(() => {
     setTitle(household.title || '');
-    setFloor(household.floor ?? '');
+    setFloor(household.floor ?? NaN);
   }, [household]);
 
   const nothingHasBeenEdited =
@@ -29,7 +29,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
         <Button
           disabled={nothingHasBeenEdited}
           onClick={() => {
-            onSave(title, floor == '' ? null : floor);
+            onSave(title, Number.isNaN(floor) ? null : floor);
           }}
           variant="contained"
         >
@@ -43,7 +43,7 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title, floor == '' ? null : floor);
+          onSave(title, Number.isNaN(floor) ? null : floor);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>
