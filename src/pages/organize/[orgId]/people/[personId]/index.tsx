@@ -21,6 +21,7 @@ import useTagging from 'features/tags/hooks/useTagging';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -34,7 +35,7 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
 
   try {
     const apiClient = new BackendApiClient(ctx.req.headers);
-    await apiClient.get(`/api/orgs/${orgId}/people/${personId}`);
+    await apiClient.get<ZetkinPerson>(`/api/orgs/${orgId}/people/${personId}`);
     return {
       props: {
         orgId,

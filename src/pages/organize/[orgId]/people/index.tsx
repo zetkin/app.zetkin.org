@@ -9,6 +9,7 @@ import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
+import { ZetkinView } from 'features/views/components/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -19,7 +20,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const views = await apiClient.get(`/api/orgs/${orgId}/people/views`);
+  const views = await apiClient.get<ZetkinView[]>(
+    `/api/orgs/${orgId}/people/views`
+  );
 
   if (views) {
     return {

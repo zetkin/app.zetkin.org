@@ -14,6 +14,7 @@ import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
 import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinView } from 'features/views/components/types';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -63,7 +64,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
 
   try {
-    await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
+    await apiClient.get<ZetkinView>(
+      `/api/orgs/${orgId}/people/views/${viewId}`
+    );
 
     return {
       props: {

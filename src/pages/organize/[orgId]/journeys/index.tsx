@@ -11,7 +11,7 @@ import { scaffold } from 'utils/next';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinJourney } from 'utils/types/zetkin';
+import { ZetkinJourney, ZetkinOrganization } from 'utils/types/zetkin';
 import ZUISection from 'zui/ZUISection';
 
 const scaffoldOptions = {
@@ -23,8 +23,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const journeys = await apiClient.get(`/api/orgs/${orgId}/journeys`);
-  const organization = await apiClient.get(`/api/orgs/${orgId}`);
+  const journeys = await apiClient.get<ZetkinJourney[]>(
+    `/api/orgs/${orgId}/journeys`
+  );
+  const organization = await apiClient.get<ZetkinOrganization>(
+    `/api/orgs/${orgId}`
+  );
 
   if (organization && journeys) {
     return {

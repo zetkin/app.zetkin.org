@@ -12,6 +12,7 @@ import useView from 'features/views/hooks/useView';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinView } from 'features/views/components/types';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -23,7 +24,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, viewId } = ctx.params!;
 
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const view = await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
+  const view = await apiClient.get<ZetkinView>(
+    `/api/orgs/${orgId}/people/views/${viewId}`
+  );
 
   if (view) {
     // Check if user is an official
