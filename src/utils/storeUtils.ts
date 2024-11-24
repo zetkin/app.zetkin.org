@@ -71,10 +71,23 @@ export function getOrCreateList<
 >(record: Record<T, RemoteList<DataType>>, key: T): RemoteList<DataType> {
   const currentList = record[key];
   if (currentList) {
+    currentList.loaded = new Date().toISOString();
     return currentList;
   } else {
     const newList = remoteList<DataType>();
     record[key] = newList;
+    newList.loaded = new Date().toISOString();
     return newList;
   }
+}
+
+export function updateOrAddItemToList<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  id: number | string,
+  data: DataType
+): RemoteItem<DataType> {
+  const remoteItem = getOrAddItemToList(list, id);
+  remoteItem.data = data;
+  remoteItem.loaded = new Date().toISOString();
+  return remoteItem;
 }
