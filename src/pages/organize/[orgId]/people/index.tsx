@@ -19,18 +19,17 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const views = await apiClient.get<ZetkinView[]>(
-    `/api/orgs/${orgId}/people/views`
-  );
-
-  if (views) {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    // Note: We don't actually care for the returned orgnaization, but we still want to perform
+    // the api request to know if this user may access this particular page.
+    await apiClient.get<ZetkinView[]>(`/api/orgs/${orgId}/people/views`);
     return {
       props: {
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };

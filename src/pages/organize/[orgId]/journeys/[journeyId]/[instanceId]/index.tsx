@@ -31,34 +31,31 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
   async (ctx) => {
     const { orgId, instanceId, journeyId } = ctx.params!;
 
-    const apiClient = new BackendApiClient(ctx.req.headers);
-    const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
-      `/api/orgs/${orgId}/journey_instances/${instanceId}`
-    );
-    const organization = await apiClient.get<ZetkinOrganization>(
-      `/api/orgs/${orgId}`
-    );
+    try {
+      const apiClient = new BackendApiClient(ctx.req.headers);
+      const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
+        `/api/orgs/${orgId}/journey_instances/${instanceId}`
+      );
+      // Note: We don't actually care for the returned orgnaization, but we still want to perform
+      // the api request to know if this user may access this particular page.
+      await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
 
-    if (
-      journeyInstance &&
-      journeyInstance.journey.id.toString() !== (journeyId as string)
-    ) {
-      return {
-        redirect: {
-          destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
-          permanent: false,
-        },
-      };
-    }
-
-    if (organization && journeyInstance) {
-      return {
-        props: {
-          instanceId,
-          orgId,
-        },
-      };
-    } else {
+      if (journeyInstance.journey.id.toString() !== (journeyId as string)) {
+        return {
+          redirect: {
+            destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
+            permanent: false,
+          },
+        };
+      } else {
+        return {
+          props: {
+            instanceId,
+            orgId,
+          },
+        };
+      }
+    } catch {
       return {
         notFound: true,
       };
