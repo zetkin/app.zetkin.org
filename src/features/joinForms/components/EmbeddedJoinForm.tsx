@@ -60,7 +60,7 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
               : globalMessages.personFields[field.s]();
 
             return (
-              <div key={field.s}>
+              <div key={field.s} className="zetkin-joinform__field">
                 <label>
                   {label}
                   <div>
@@ -93,7 +93,7 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
               </div>
             );
           })}
-          <button type="submit">
+          <button className="zetkin-joinform__submit-button" type="submit">
             <Msg id={messageIds.embedding.submitButton} />
           </button>
         </form>
