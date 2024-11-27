@@ -282,6 +282,9 @@ export default makeMessages('feat.events', {
   tooltipContent: m('Untitled events will display type as title'),
   type: {
     createType: m<{ type: string }>('Create "{type}"'),
+    deleteMessage: m<{ eventType: string }>(
+      'Are you sure you want to delete the "{eventType}" event type for the whole organization?'
+    ),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
   },

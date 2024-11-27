@@ -541,6 +541,20 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
+    typeDeleted: (state, action: PayloadAction<number>) => {
+      const typeId = action.payload;
+      const typeListItem = state.typeList.items.find(
+        (item) => item.id === typeId
+      );
+
+      if (typeListItem) {
+        typeListItem.deleted = true;
+      }
+
+      state.typeList.items = state.typeList.items.filter(
+        (type) => type.id !== typeId
+      );
+    },
     typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.typeList.items.find((item) => item.id == id);
@@ -728,6 +742,7 @@ export const {
   statsLoaded,
   typeAdd,
   typeAdded,
+  typeDeleted,
   typeLoad,
   typeLoaded,
   typesLoad,
