@@ -1,5 +1,5 @@
-import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
+import { z } from 'zod';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
 import parseDate from '../parseDate';
@@ -109,7 +109,7 @@ export function predictProblems(
               rowHasLastName = true;
             } else if (
               column.field == 'email' &&
-              !isEmail(value.toString().trim())
+              !z.string().email().safeParse(value.toString().trim()).success
             ) {
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
