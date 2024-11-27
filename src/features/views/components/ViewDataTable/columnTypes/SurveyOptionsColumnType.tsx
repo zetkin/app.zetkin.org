@@ -38,7 +38,9 @@ export default class SurveyOptionsColumnType
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
-        return this.cellToString(cell);
+        return cell?.map((response) =>
+          response.selected.map((selected) => selected.text)
+        );
       },
     };
   }
