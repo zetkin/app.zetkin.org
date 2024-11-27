@@ -48,9 +48,12 @@ const journeysSlice = createSlice({
       if (instanceItem) {
         instanceItem.isStale = true;
         if (instanceItem.data) {
-          if (state.timelineUpdatesByInstanceId[instanceItem.data?.id]) {
-            state.timelineUpdatesByInstanceId[instanceItem.data?.id].isStale =
-              true;
+          const { id } = instanceItem.data;
+          if (state.timelineUpdatesByInstanceId[id]) {
+            state.timelineUpdatesByInstanceId[id].isStale = true;
+          }
+          if (state.milestonesByInstanceId[id]) {
+            state.milestonesByInstanceId[id].isStale = true;
           }
         }
       }
