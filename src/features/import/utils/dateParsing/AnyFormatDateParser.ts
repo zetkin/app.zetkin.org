@@ -18,9 +18,7 @@ export function makeDate(format: string, dateParts: DateParts) {
 }
 
 export class AnyFormatDateParser implements IDateParser {
-  constructor(private format: string) {
-    this.format = format;
-  }
+  constructor(private format: string) {}
 
   makeDateParts(value: string): DateParts | null {
     const parsedDate = dayjs(value.toString(), this.format);
