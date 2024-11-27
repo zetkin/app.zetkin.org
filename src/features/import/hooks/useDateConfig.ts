@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { columnUpdate } from '../store';
 import { DateColumn } from '../utils/types';
-import parseDate from '../utils/parseDate';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
+import dateParsingIsValid from '../utils/dateParsing/dateParsingIsValid';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -19,9 +19,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const rows = sheet.rows;
   const cellValues = rows.map((row) => row.data[columnIndex]);
 
-  const [dateFormat, setDateFormat] = useState(
-    column.dateFormat ?? 'YYYY-MM-DD'
-  );
+  const [dateFormat, setDateFormat] = useState(column.dateFormat || null);
 
   const wrongDateFormat = cellValues.some((value, index) => {
     if (index === 0 && firstRowIsHeaders) {
@@ -33,7 +31,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     }
 
     if (column.dateFormat) {
-      return !parseDate(value, column.dateFormat);
+      return !dateParsingIsValid(value, column.dateFormat);
     }
 
     return false;
@@ -69,6 +67,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
+    dateFormat != null &&
     !Object.keys(dateFormats).includes(dateFormat) &&
     !isPersonNumberFormat(dateFormat);
 

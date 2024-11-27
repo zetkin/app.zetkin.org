@@ -944,8 +944,6 @@ feat:
             describe that as YYYY.MM.DD.
           customFormatLabel: Custom date format
           dateInputLabel: Date format
-          description: Select the format of the values in this column so they can be
-            imported correctly.
           dropDownLabel: Select format
           emptyPreview: Could not be parsed
           header: Configure date format
@@ -966,8 +964,6 @@ feat:
               description: The values in this column will be parsed from 10 or 12 digit
                 Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.
               label: Swedish Personnummer
-          wrongDateFormatWarning: Some of the values in this column can not be parsed into
-            dates using this format.
         enum:
           header: Map values to options
           none: None

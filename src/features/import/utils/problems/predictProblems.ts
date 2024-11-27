@@ -2,7 +2,7 @@ import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
-import parseDate from '../parseDate';
+import parseDate from '../dateParsing/parseDate';
 import { ColumnKind, Sheet } from '../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {

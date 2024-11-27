@@ -58,7 +58,12 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
         </InputLabel>
         <Select
           label={messages.configuration.configure.dates.dropDownLabel()}
-          onChange={(event) => onDateFormatChange(event.target.value)}
+          onChange={(event) => {
+            const value = event.target.value;
+            if (value) {
+              onDateFormatChange(value);
+            }
+          }}
           sx={{ minWidth: '200px' }}
           value={isCustomFormat ? 'custom' : dateFormat}
         >
@@ -108,7 +113,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           </MenuItem>
         </Select>
       </FormControl>
-      {!isPersonNumberFormat(dateFormat) && (
+      {dateFormat != null && !isPersonNumberFormat(dateFormat) && (
         <TextField
           label={messages.configuration.configure.dates.dateInputLabel()}
           onChange={(event) => {
@@ -131,7 +136,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           />
         </Typography>
       )}
-      {isPersonNumberFormat(dateFormat) && (
+      {dateFormat && isPersonNumberFormat(dateFormat) && (
         <Typography>
           <Msg
             id={

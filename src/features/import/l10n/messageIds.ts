@@ -21,7 +21,7 @@ export default makeMessages('feat.import', {
         customFormatLabel: m('Custom date format'),
         dateInputLabel: m('Date format'),
         description: m(
-          'Select the format of the values in this column so they can be imported correctly.'
+          'Select the format of the values in this column so they can be imported as correct dates.'
         ),
         dropDownLabel: m('Select format'),
         emptyPreview: m('Could not be parsed'),
@@ -52,7 +52,7 @@ export default makeMessages('feat.import', {
           },
         },
         wrongDateFormatWarning: m(
-          'Some of the values in this column can not be parsed into dates using this format.'
+          "There are values in the column that don't seem to fit this format. Are you sure you have selected the correct format?"
         ),
       },
       enum: {

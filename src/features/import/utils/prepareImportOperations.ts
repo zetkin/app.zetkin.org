@@ -1,7 +1,7 @@
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 import getUniqueTags from './getUniqueTags';
-import parseDate from './parseDate';
+import parseDate from './dateParsing/parseDate';
 import { CellData, ColumnKind, Sheet } from './types';
 
 export type ZetkinPersonImportOp = {

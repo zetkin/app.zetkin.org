@@ -871,8 +871,6 @@ feat:
             1998.03.23 sein soll, würdest du es beschreiben als YYYY.MM.DD.
           customFormatLabel: Eigenes Datumsformat
           dateInputLabel: Datumsformat
-          description: Wähle das Format der Werte in dieser Spalte aus, damit diese
-            richtig importiert werden können.
           dropDownLabel: Format auswählen
           emptyPreview: Konnte nicht verarbeitet werden.
           header: Konfiguriere das Datumsformat
@@ -894,8 +892,6 @@ feat:
                 schwedischen Personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) in Daten
                 übertragen.
               label: Schwedische Personnummer
-          wrongDateFormatWarning: Einige Werte in dieser Spalte können nicht in Daten
-            übertragen werden, wenn dieses Format benutzt wird.
         enum:
           header: Werte den Optionen zuordnen
           none: Keine

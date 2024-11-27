@@ -1,5 +1,5 @@
 import getUniqueTags from './getUniqueTags';
-import parseDate from './parseDate';
+import parseDate from './dateParsing/parseDate';
 import { ZetkinPersonImportOp } from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
 
