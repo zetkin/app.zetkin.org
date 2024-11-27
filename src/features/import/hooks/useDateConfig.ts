@@ -21,6 +21,8 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
 
   const [dateFormat, setDateFormat] = useState(column.dateFormat || null);
 
+  const noCustomFormat = dateFormat == '';
+
   const wrongDateFormat = cellValues.some((value, index) => {
     if (index === 0 && firstRowIsHeaders) {
       return false;
@@ -60,6 +62,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const onDateFormatChange = (newFormat: string) => {
     if (newFormat === 'custom') {
       setDateFormat('');
+      updateDateFormat('');
     } else {
       setDateFormat(newFormat);
       updateDateFormat(newFormat);
@@ -76,6 +79,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     dateFormats,
     isCustomFormat,
     isPersonNumberFormat,
+    noCustomFormat,
     onDateFormatChange,
     personNumberFormats,
     updateDateFormat,

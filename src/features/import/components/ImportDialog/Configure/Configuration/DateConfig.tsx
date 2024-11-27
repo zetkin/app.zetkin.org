@@ -29,6 +29,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
     dateFormats,
     isCustomFormat,
     isPersonNumberFormat,
+    noCustomFormat,
     onDateFormatChange,
     personNumberFormats,
     wrongDateFormat,
@@ -50,7 +51,9 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
         <Msg id={messageIds.configuration.configure.dates.header} />
       </Typography>
       <Typography sx={{ paddingBottom: 2 }}>
-        <Msg id={messageIds.configuration.configure.dates.description} />
+        <Msg
+          id={messageIds.configuration.configure.dates.dateConfigDescription}
+        />
       </Typography>
       <FormControl sx={{ paddingBottom: 2 }}>
         <InputLabel>
@@ -147,10 +150,19 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           />
         </Typography>
       )}
+      {noCustomFormat && (
+        <Alert severity="warning" sx={{ marginTop: 1 }}>
+          <Msg
+            id={messageIds.configuration.configure.dates.noCustomFormatWarning}
+          />
+        </Alert>
+      )}
       {wrongDateFormat && (
         <Alert severity="warning" sx={{ marginTop: 1 }}>
           <Msg
-            id={messageIds.configuration.configure.dates.wrongDateFormatWarning}
+            id={
+              messageIds.configuration.configure.dates.invalidDateFormatWarning
+            }
           />
         </Alert>
       )}
