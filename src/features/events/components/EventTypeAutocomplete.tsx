@@ -1,19 +1,9 @@
 import Fuse from 'fuse.js';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import { Add, Clear, DeleteOutline } from '@mui/icons-material';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  TextField,
-  Theme,
-  Tooltip,
-} from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { Add, DeleteOutline } from '@mui/icons-material';
+import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import theme from 'theme';
@@ -21,6 +11,7 @@ import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import useDeleteType from '../hooks/useDeleteType';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface StyleProps {
   showBorder: boolean | undefined;
@@ -92,15 +83,11 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const [createdType, setCreatedType] = useState<string>('');
   const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
   const [dropdownListWidth, setDropdownListWidth] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [type, setType] = useState<EventTypeOption>();
-
-  const handleDialogOpen = (shouldOpen: boolean) => {
-    setOpen(shouldOpen);
-  };
 
   const spanRef = useRef<HTMLSpanElement>(null);
   const classes = useStyles({ showBorder });
+
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
@@ -140,178 +127,165 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   });
 
   return (
-    <>
-      <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
-        <Autocomplete
-          blurOnSelect
-          classes={{
-            root: classes.inputRoot,
-          }}
-          componentsProps={{
-            popper: {
-              placement: 'bottom-start',
-              style: { maxWidth: 380, minWidth: 180, width: dropdownListWidth },
+    <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
+      <Autocomplete
+        blurOnSelect
+        classes={{
+          root: classes.inputRoot,
+        }}
+        componentsProps={{
+          popper: {
+            placement: 'bottom-start',
+            style: { maxWidth: 380, minWidth: 180, width: dropdownListWidth },
+          },
+        }}
+        disableClearable
+        filterOptions={(options, { inputValue }) => {
+          const searchedResults = fuse.search(inputValue);
+          const inputStartWithCapital = inputValue
+            ? `${inputValue[0].toUpperCase()}${inputValue.substring(
+                1,
+                inputValue.length
+              )}`
+            : '';
+
+          const filteredResult: EventTypeOption[] = [
+            ...searchedResults.map((result) => {
+              return { id: result.item.id, title: result.item.title };
+            }),
+            {
+              id: 'UNCATEGORIZED',
+              title: uncategorizedMsg,
             },
-          }}
-          disableClearable
-          filterOptions={(options, { inputValue }) => {
-            const searchedResults = fuse.search(inputValue);
-            const inputStartWithCapital = inputValue
-              ? `${inputValue[0].toUpperCase()}${inputValue.substring(
-                  1,
-                  inputValue.length
-                )}`
-              : '';
-
-            const filteredResult: EventTypeOption[] = [
-              ...searchedResults.map((result) => {
-                return { id: result.item.id, title: result.item.title };
-              }),
-              {
-                id: 'UNCATEGORIZED',
-                title: uncategorizedMsg,
-              },
-            ];
-            if (
-              filteredResult.find(
-                (item) =>
-                  item.title?.toLocaleLowerCase() ===
-                  inputValue.toLocaleLowerCase()
-              )
-            ) {
-              return filteredResult;
-            }
-
-            filteredResult.push({
-              id: 'CREATE',
-              title: inputStartWithCapital,
-            });
-            return inputValue ? filteredResult : options;
-          }}
-          getOptionLabel={(option) => option.title!}
-          isOptionEqualToValue={(option, value) => option.title === value.title}
-          onBlur={() => {
-            // show 'uncategorized' in textField when blurring
-            if (!value && text !== uncategorizedMsg) {
-              setText(uncategorizedMsg);
-            }
-            //set text to previous input value when clicking away
-            if (value && text !== value.title) {
-              setText(value.title);
-            }
-            onBlur();
-          }}
-          onChange={(_, value) => {
-            setText(value.title);
-            if (value.id == 'CREATE') {
-              createType(value.title!);
-              setCreatedType(value.title!);
-              return;
-            }
-            onChange(
-              value.id == 'UNCATEGORIZED'
-                ? null
-                : {
-                    id: value.id,
-                    title: value.title!,
-                  }
-            );
-          }}
-          onFocus={() => onFocus()}
-          options={allTypes}
-          renderInput={(params) => (
-            <>
-              <span ref={spanRef} className={classes.span}>
-                {text}
-              </span>
-              <TextField
-                {...params}
-                InputLabelProps={{
-                  shrink: false,
-                }}
-                InputProps={{
-                  ...params.InputProps,
-                  style: {
-                    maxWidth: 380,
-                    minWidth: 60,
-                    width: dropdownListWidth + 50,
-                  },
-                }}
-                onChange={(e) => setText(e.target.value)}
-                size="small"
-              />
-            </>
-          )}
-          renderOption={(props, option) => {
-            return (
-              <Box key={option.id}>
-                {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
-                  <li {...props} style={{ justifyContent: 'space-between' }}>
-                    {option.title}
-                    <DeleteOutline
-                      onClick={() => {
-                        handleDialogOpen(true), setType(option);
-                      }}
-                      sx={{
-                        '&:hover': {
-                          color: theme.palette.secondary.main,
-                        },
-                        color: theme.palette.secondary.light,
-                        cursor: 'pointer',
-                        transition: 'color 0.3s ease',
-                      }}
-                    />
-                  </li>
-                )}
-                {option.id == 'UNCATEGORIZED' && (
-                  <li {...props}>
-                    <Clear />
-                    {uncategorizedMsg}
-                  </li>
-                )}
-                {option.id == 'CREATE' && (
-                  <li {...props}>
-                    <Add />
-                    {messages.type.createType({ type: option.title! })}
-                  </li>
-                )}
-              </Box>
-            );
-          }}
-          value={
-            value
-              ? value
-              : {
-                  id: 'UNCATEGORIZED',
-                  title: text,
-                }
+          ];
+          if (
+            filteredResult.find(
+              (item) =>
+                item.title?.toLocaleLowerCase() ===
+                inputValue.toLocaleLowerCase()
+            )
+          ) {
+            return filteredResult;
           }
-        />
-      </Tooltip>
-      {open && type && (
-        <Dialog open={open}>
-          <DialogContent>
-            {messages.type.deleteMessage({ eventType: type.title })}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => handleDialogOpen(false)} variant="outlined">
-              {messages.type.cancelButton()}
-            </Button>
-            <Button
-              onClick={() => {
-                if (typeof type.id === 'number') {
-                  deleteType(type.id);
+
+          filteredResult.push({
+            id: 'CREATE',
+            title: inputStartWithCapital,
+          });
+          return inputValue ? filteredResult : options;
+        }}
+        getOptionLabel={(option) => option.title!}
+        isOptionEqualToValue={(option, value) => option.title === value.title}
+        onBlur={() => {
+          // show 'uncategorized' in textField when blurring
+          if (!value && text !== uncategorizedMsg) {
+            setText(uncategorizedMsg);
+          }
+          //set text to previous input value when clicking away
+          if (value && text !== value.title) {
+            setText(value.title);
+          }
+          onBlur();
+        }}
+        onChange={(_, value) => {
+          setText(value.title);
+          if (value.id == 'CREATE') {
+            createType(value.title!);
+            setCreatedType(value.title!);
+            return;
+          }
+          onChange(
+            value.id == 'UNCATEGORIZED'
+              ? null
+              : {
+                  id: value.id,
+                  title: value.title!,
                 }
-                handleDialogOpen(false);
+          );
+        }}
+        onFocus={() => onFocus()}
+        options={allTypes}
+        renderInput={(params) => (
+          <>
+            <span ref={spanRef} className={classes.span}>
+              {text}
+            </span>
+            <TextField
+              {...params}
+              InputLabelProps={{
+                shrink: false,
               }}
-              variant="contained"
-            >
-              {messages.type.deleteButton()}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-    </>
+              InputProps={{
+                ...params.InputProps,
+                style: {
+                  maxWidth: 380,
+                  minWidth: 60,
+                  width: dropdownListWidth + 50,
+                },
+              }}
+              onChange={(e) => setText(e.target.value)}
+              size="small"
+            />
+          </>
+        )}
+        renderOption={(props, option) => {
+          return (
+            <Box key={option.id}>
+              {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
+                <li {...props} style={{ justifyContent: 'space-between' }}>
+                  {option.title}
+                  <DeleteOutline
+                    onClick={(ev) => {
+                      ev.stopPropagation();
+                      showConfirmDialog({
+                        onSubmit: () => {
+                          if (typeof option.id === 'number') {
+                            deleteType(option.id);
+                            //If the current event has the deleted event type,
+                            //set the current event's type to null
+                            if (value && option.id == value.id) {
+                              onChange(null);
+                            }
+                          }
+                        },
+                        warningText: messages.type.deleteMessage({
+                          eventType: option.title,
+                        }),
+                      });
+                    }}
+                    sx={{
+                      '&:hover': {
+                        color: theme.palette.secondary.main,
+                      },
+                      color: theme.palette.secondary.light,
+                      cursor: 'pointer',
+                      transition: 'color 0.3s ease',
+                    }}
+                  />
+                </li>
+              )}
+              {option.id == 'UNCATEGORIZED' && (
+                <li {...props}>{uncategorizedMsg}</li>
+              )}
+              {option.id == 'CREATE' && (
+                <li {...props}>
+                  <Add sx={{ marginRight: 1 }} />
+                  {messages.type.createType({ type: option.title! })}
+                </li>
+              )}
+            </Box>
+          );
+        }}
+        value={
+          value
+            ? value
+            : {
+                id: 'UNCATEGORIZED',
+                title: text,
+              }
+        }
+      />
+    </Tooltip>
   );
 };
 

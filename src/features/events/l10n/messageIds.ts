@@ -281,11 +281,9 @@ export default makeMessages('feat.events', {
   },
   tooltipContent: m('Untitled events will display type as title'),
   type: {
-    cancelButton: m('Cancel'),
     createType: m<{ type: string }>('Create "{type}"'),
-    deleteButton: m('Delete'),
     deleteMessage: m<{ eventType: string }>(
-      'Are you sure you want to delete "{eventType}" event type for everyone?'
+      'Are you sure you want to delete the "{eventType}" event type for the whole organization?'
     ),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
