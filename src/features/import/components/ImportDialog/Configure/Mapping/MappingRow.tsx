@@ -58,6 +58,16 @@ const MappingRow: FC<MappingRowProps> = ({
     column.uniqueValues
   );
 
+  const getMappingRowButtonMessageId = () => {
+    if (column.originalColumn.kind == ColumnKind.DATE) {
+      return messageIds.configuration.mapping.configButton;
+    } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+      return messageIds.configuration.mapping.infoButton;
+    } else {
+      return messageIds.configuration.mapping.mapValuesButton;
+    }
+  };
+
   return (
     <Box
       bgcolor={isBeingConfigured ? theme.palette.transparentGrey.light : ''}
@@ -163,14 +173,7 @@ const MappingRow: FC<MappingRowProps> = ({
               onClick={() => onConfigureStart()}
               variant="text"
             >
-              <Msg
-                id={
-                  column.originalColumn.kind == ColumnKind.ID_FIELD ||
-                  column.originalColumn.kind == ColumnKind.DATE
-                    ? messageIds.configuration.mapping.configButton
-                    : messageIds.configuration.mapping.mapValuesButton
-                }
-              />
+              <Msg id={getMappingRowButtonMessageId()} />
             </Button>
           </>
         )}

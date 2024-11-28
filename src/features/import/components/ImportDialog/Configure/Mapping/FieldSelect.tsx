@@ -35,6 +35,10 @@ const FieldSelect: FC<FieldSelectProps> = ({
       return `date:${column.originalColumn.field}`;
     }
 
+    if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+      return column.originalColumn.idField || '';
+    }
+
     if (column.originalColumn.kind != ColumnKind.UNKNOWN) {
       return column.originalColumn.kind.toString();
     }
@@ -65,9 +69,16 @@ const FieldSelect: FC<FieldSelectProps> = ({
       label={messages.configuration.mapping.selectZetkinField()}
       onChange={(event) => {
         clearConfiguration();
-        if (event.target.value == 'id') {
+        if (event.target.value == 'ext_id') {
           onChange({
-            idField: null,
+            idField: 'ext_id',
+            kind: ColumnKind.ID_FIELD,
+            selected: true,
+          });
+          onConfigureStart();
+        } else if (event.target.value == 'id') {
+          onChange({
+            idField: 'id',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
@@ -109,8 +120,13 @@ const FieldSelect: FC<FieldSelectProps> = ({
         <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.id} />
       </ListSubheader>
       {listOption({
-        label: messages.configuration.mapping.id(),
+        label: messages.configuration.mapping.zetkinID(),
         value: 'id',
+      })}
+
+      {listOption({
+        label: messages.configuration.mapping.externalID(),
+        value: 'ext_id',
       })}
 
       {fieldOptions.length > 0 && (
