@@ -7,6 +7,12 @@ import { AnyFormatDateParser, makeDate } from './AnyFormatDateParser';
 dayjs.extend(customParseFormat);
 
 export class NorwegianFnrParser implements IDateParser {
+  private _parser: IDateParser;
+
+  constructor() {
+    this._parser = new AnyFormatDateParser('DDMMYY');
+  }
+
   makeDateParts(value: string): DateParts | null {
     let idNumber = '';
     let idNumberSeparator = '';
@@ -37,8 +43,7 @@ export class NorwegianFnrParser implements IDateParser {
   }
 
   parse(value: string): string {
-    const parser = new AnyFormatDateParser('DDMMYY');
-    return parser.parse(value);
+    return this._parser.parse(value);
   }
 
   validate(value: string | number): boolean {

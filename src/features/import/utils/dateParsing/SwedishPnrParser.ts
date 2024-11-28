@@ -8,6 +8,14 @@ import { AnyFormatDateParser, makeDate } from './AnyFormatDateParser';
 dayjs.extend(customParseFormat);
 
 export class SwedishPnrParser implements IDateParser {
+  private _eightDigitParser: IDateParser;
+  private _sixDigitParser: IDateParser;
+
+  constructor() {
+    this._eightDigitParser = new AnyFormatDateParser('YYYYMMDD');
+    this._sixDigitParser = new AnyFormatDateParser('YYMMDD');
+  }
+
   private getFormat(value: string) {
     const datePart = value.toString().replace(/\D/g, '').slice(0, -4);
     return datePart.length > 6 ? 'YYYYMMDD' : 'YYMMDD';
@@ -50,9 +58,10 @@ export class SwedishPnrParser implements IDateParser {
 
   parse(value: string): string {
     const format = this.getFormat(value);
-    const parser = new AnyFormatDateParser(format);
 
-    return parser.parse(value);
+    return format.includes('YYYY')
+      ? this._eightDigitParser.parse(value)
+      : this._sixDigitParser.parse(value);
   }
 
   validate(value: string | number): boolean {
