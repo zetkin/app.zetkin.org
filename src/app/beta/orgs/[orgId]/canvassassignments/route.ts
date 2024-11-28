@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { CanvassAssignmentModel } from 'features/areas/models';
+import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
 
 type RouteMeta = {
   params: {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin'],
+      roles: ['admin', 'organizer'],
     },
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
@@ -27,10 +27,19 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           campaign: {
             id: assignment.campId,
           },
+          end_date: assignment.end_date,
           id: assignment._id.toString(),
+          metrics: (assignment.metrics || []).map((metric) => ({
+            definesDone: metric.definesDone || false,
+            description: metric.description || '',
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          })),
           organization: {
             id: orgId,
           },
+          start_date: assignment.start_date,
           title: assignment.title,
         })),
       });
@@ -52,6 +61,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const model = new CanvassAssignmentModel({
         campId: payload.campaign_id,
+        metrics: payload.metrics || [],
         orgId: orgId,
         title: payload.title,
       });
@@ -61,8 +71,17 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           campaign: { id: model.campId },
+          end_date: model.end_date,
           id: model._id.toString(),
+          metrics: model.metrics.map((metric) => ({
+            definesDone: metric.definesDone || false,
+            description: metric.description || '',
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          })),
           organization: { id: orgId },
+          start_date: model.start_date,
           title: model.title,
         },
       });

@@ -48,8 +48,34 @@ export default function createPreviewData(
       //orgs
       if (column.kind === ColumnKind.ORGANIZATION) {
         column.mapping.forEach((mappedColumn) => {
-          if (mappedColumn.value === row[colIdx]) {
-            personPreviewOp.organizations = [mappedColumn?.orgId as number];
+          if (
+            (!mappedColumn.value && !row[colIdx]) ||
+            mappedColumn.value === row[colIdx]
+          ) {
+            if (!personPreviewOp.organizations) {
+              personPreviewOp.organizations = [];
+            }
+            const allOrgs = personPreviewOp.organizations.concat(
+              mappedColumn?.orgId as number
+            );
+
+            personPreviewOp.organizations = Array.from(
+              new Set<number>(allOrgs)
+            );
+          }
+        });
+      }
+      //enum
+      if (column.kind === ColumnKind.ENUM) {
+        column.mapping.forEach((mappedColumn) => {
+          if (
+            (!mappedColumn.value && !row[colIdx]) ||
+            mappedColumn.value === row[colIdx]
+          ) {
+            personPreviewOp.data = {
+              ...personPreviewOp.data,
+              [`${column.field}`]: mappedColumn.key,
+            };
           }
         });
       }

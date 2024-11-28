@@ -18,7 +18,6 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 interface EmailTargetsReadyProps {
   isLocked: boolean;
   isLoading: boolean;
-  isTargeted: boolean;
   lockedReadyTargets: number | null;
   onToggleLocked: () => void;
   readyTargets: number;
@@ -28,14 +27,13 @@ interface EmailTargetsReadyProps {
 const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
   isLocked,
   isLoading,
-  isTargeted,
   lockedReadyTargets,
   onToggleLocked,
   readyTargets,
   state,
 }) => {
   const theme = useTheme();
-  const showUnlockInfo = isTargeted && state != EmailState.SENT;
+  const showUnlockInfo = state != EmailState.SENT;
 
   return (
     <Card>
@@ -79,19 +77,25 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             {(animatedValue) => (
               <Box
                 sx={{
-                  backgroundColor: theme.palette.statusColors.green,
+                  backgroundColor:
+                    parseInt(animatedValue) > 0
+                      ? theme.palette.statusColors.green
+                      : theme.palette.statusColors.gray,
                   borderRadius: '1em',
-                  color: 'white',
+                  color:
+                    parseInt(animatedValue) > 0
+                      ? 'white'
+                      : theme.palette.text.secondary,
                   display: 'flex',
                   flexShrink: 0,
                   fontSize: '1.8em',
                   lineHeight: 'normal',
                   marginRight: '0.1em',
                   overflow: 'hidden',
-                  padding: parseInt(animatedValue) === 0 ? '' : '0.2em 0.7em',
+                  padding: '0.2em 0.7em',
                 }}
               >
-                {parseInt(animatedValue) > 0 ? animatedValue : ''}
+                {parseInt(animatedValue) > 0 ? animatedValue : 0}
               </Box>
             )}
           </ZUIAnimatedNumber>
@@ -130,7 +134,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
             )}
             {!isLoading && (
               <Button
-                disabled={state === EmailState.SCHEDULED}
+                disabled={readyTargets === 0 || state === EmailState.SCHEDULED}
                 onClick={onToggleLocked}
                 startIcon={isLocked ? <LockOpen /> : <Lock />}
                 variant={isLocked ? 'outlined' : 'contained'}

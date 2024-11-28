@@ -54,6 +54,8 @@ feat:
     createMenu:
       shiftEvent: Skapa flera event som blir till skift
       singleEvent: Skapa ett enskilt event
+    dstEnds: Vintertid
+    dstStarts: Sommartid
     event:
       differentLocations: '{numLocations} olika platser'
       events: Event
@@ -103,6 +105,7 @@ feat:
       copy: Kopiera
       deselect: Avmarkera
       editEvents: Redigera event
+      editParticipants: Hantera deltagare
       ellipsisMenu:
         cancel: Ställ in
         cancelWarning: Om du gör detta, kom ihåg att berätta för deltagarna och anmälda
@@ -272,6 +275,13 @@ feat:
       viewArchive: Visa arkiv
     assigneeActions: Uppgifter för ansvarig
     calendarView: Se alla i kalendern
+    createButton:
+      createActivity: Skapa
+      createCallAssignment: Ringuppdrag
+      createEmail: E-post
+      createEvent: Event
+      createSurvey: Enkät
+      createTask: Uppgift
     events: Event
     feedback:
       copy: Att samla in feedback (vid gemensamma ringningar eller enskilda ringuppdrag)
@@ -393,6 +403,10 @@ feat:
         name: Namn
         phone: Telefon
       title: Slå samman dubletter
+      warningMessage: All relaterad data (exempelvis event-deltagande, inskickade
+        enkäter och etiketter) kommer att föras över till den person som blir kvar
+        efter sammanslagningen. Men de värden du väljer bort ovan kommer att förloras.
+      warningTitle: Viss data kan försvinna
     page:
       dismiss: Avfärda
       noDuplicates: Inga dubletter
@@ -420,6 +434,7 @@ feat:
         Översikt för att låsa mottagarlistan.
     deliveryStatus:
       notLocked: Varken låst eller schemalagd
+      notProcessed: Schemalagd för omedelbar leverans
       notScheduled: Ej schemalagd
       wasSent: Skickades {datetime}
       willSend: Kommer skickas {datetime}
@@ -491,6 +506,40 @@ feat:
     emailFeatureIsBlocked:
       errorMessage: Din organisation har inte tillgång till e-post i Zetkin just nu.
       goBackButton: Tillbaka
+    insights:
+      clicked:
+        descriptions:
+          ctor: '"Click-to-open rate" (CTOR) är andelen av de som öppnat mailet som
+            också klickade på någon av länkarna. En hög CTOR är ett tecken på ett
+            välriktat mail med övertygande text.'
+          ctr: '"Clickthrough rate" (CTR) är andelen av alla mottagare som både öppnat
+            och klickat på någon av länkarna. En hög CTR indikerar ett välriktat mail
+            med övertygande text.'
+        gauge:
+          headers:
+            ctor: CTOR
+            ctr: CTR
+        header: Klick
+        metrics:
+          ctor: CTOR
+          ctr: CTR
+      comparison:
+        label: Jämför med
+      opened:
+        chart:
+          afterSend: Efter att det skickades
+          opened: '{count} öppnade'
+          spans:
+            allTime: Någonsin
+            first24: Första 24 timmarna
+            first48: Första 48 timmarna
+            firstMonth: Första 30 dagarna
+            firstWeek: Första 7 dagarn
+        description: Öppningsfrekvensen är andelen mottagare som öppnat mailet. En
+          hög "open rate" indikerar en välutformad målgrupp och övertygande ämnesrad.
+        gauge:
+          header: Öppningsfrekvens
+        header: Öppnade
     ready:
       loading: Laddar...
       lockButton: Lås för leverans
@@ -515,6 +564,7 @@ feat:
       targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {# personer}}'
     tabs:
       compose: Skapa
+      insights: Statistik
       overview: Översikt
     targets:
       defineButton: Definiera målgrupp
@@ -535,6 +585,8 @@ feat:
     unsubscribedPage:
       h: Avregistrerad!
       info: Du har blivit avregistrerad från massutskick av e-post från {org}
+    varDefaults:
+      target: läsare
   events:
     addPerson:
       addButton: Lägg till en person
@@ -551,12 +603,18 @@ feat:
       cancel: Ställ in
       delete: Radera
       duplicate: Duplicera
+      move: Flytta
       publish: Publicera
       restore: Återställ
       unpublish: Avpublicera
       warning: '"{eventTitle}" kommer tas bort.'
       warningCancel: '"{eventTitle}" kommer ställas in.'
       warningRestore: '"{eventTitle}" kommer återställas.'
+    eventChangeCampaignDialog:
+      dialogTitle: Flytta event
+      error: 'Fel: Eventet kunde inte flyttas till det valda projektet'
+      moveButtonLabel: Flytta
+      success: Eventet flyttades till "{campaignTitle}"
     eventContactCard:
       header: Kontakt
       noContact: Ingen kontakt tilldelad!
@@ -735,6 +793,34 @@ feat:
         ut påminnelser
       reqParticipantsHelperText: Minsta antal deltagare som behövs
       reqParticipantsLabel: Minsta antal deltagare
+    participantsModal:
+      affected:
+        empty: Du har inte gjort några ändringar än. Välj ett event för att flytta
+          deltagare.
+        header: Deltagare som påverkas
+      discardButton: Släng ändringar
+      emptyStates:
+        booked: Ingen har bokats på det här eventet. Du kan lägga till deltagare från
+          poolen.
+        pending: Det finns inga ytterligare deltagare i poolen. Du kan flytta deltagare
+          från ett event till poolen för att sedan lägga till dem här.
+      participants:
+        buttons:
+          addBack: Lägg tillbaka
+          addHere: Lägg till här
+          move: Flytta
+          undo: Ångra
+        headers:
+          booked: Detta event
+          pending: Deltagare att lägga till
+        states:
+          added: Läggs till på detta event
+          pending: I poolen
+          removed: Flyttas från detta event
+      statusText: '{personCount, plural, =1 {En person} other {# personer}} kommer
+        att flyttas'
+      submitButton: Utför
+      title: Hantera deltagare
     search: Sök
     state:
       cancelled: Inställt
@@ -760,7 +846,7 @@ feat:
     libraryDialog:
       preview:
         backButton: Tillbaka till bibliotek
-        useButton: Använda
+        useButton: Använd
       title: Bibliotek
     searching:
       label: Sök
@@ -795,6 +881,7 @@ feat:
           description: Välj format för värdena i den här kolumnen så att de kan importeras
             korrekt
           dropDownLabel: Välj format
+          emptyPreview: Ogiltigt datum
           header: Konfigurera datumformat
           listSubHeaders:
             custom: Anpassad
@@ -814,6 +901,8 @@ feat:
                 eller tolvsiffriga svenska personnummer (ÅÅMMDD-XXXX eller ÅÅÅÅMMDD-XXXX)
                 till datum.
               label: Svenskt personnummer
+          wrongDateFormatWarning: Vissa värden i den här kolumnen kunde inte tolkas
+            som datum med det här formatet.
         ids:
           configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
             uppdatera existerande personer istället för att skapa dubletter.
@@ -845,6 +934,9 @@ feat:
         defaultColumnHeader: Kolumn {columnIndex}
         emptyStateMessage: Börja med att välja vad kolumnerna innehåller
         fileHeader: Fil
+        finishedMappingDates: Översätter {numValues, plural, =1 {ett värde} other
+          {# värden}} från {dateFormat, select, se {svenska personnummer} no {norska
+          födelsenummer} dk {danska CPR-nummer} other {{dateFormat}}} till datum
         finishedMappingIds: Översätter {numValues, plural, =1 {ett värde} other {#
           värden}} till {idField, select, id {Zetkin-ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {en person} other {#
@@ -1022,6 +1114,12 @@ feat:
           other {# personer}}
   joinForms:
     defaultTitle: Formulär utan titel
+    embedding:
+      copyLink: Kopiera länk för inbäddning
+      formSubmitted: Formuläret skickades in
+      linkCopied: Länk för inbäddning kopierades
+      openLink: Besök nu
+      submitButton: Skicka in
     formPane:
       labels:
         addField: Lägg till fält
@@ -1244,6 +1342,7 @@ feat:
         title: Administratörer
       organizers:
         columns:
+          inheritance: Ärvd roll
           name: Namn
         description: Organisatörer kan göra saker som till exempel att skapa kampanjer
           och hantera redan skapade ringuppdrag
@@ -1256,6 +1355,10 @@ feat:
         demote: Nedgradera
         promote: Uppgradera
         remove: Ta bort
+      urlCard:
+        linkToPub: Länk till organisationssida
+        subTitle: Användare måste först ansluta till organisationen innan de kan få
+          åtkomst som funktionärer.
       you: Du
   smartSearch:
     buttonLabels:
@@ -1398,17 +1501,17 @@ feat:
           none: Den här organisationen har inga ringuppdrag än
         callSelect:
           called: har blivit uppringda
-          notreached: har fått ett samtalsförsök
+          notreached: ej blivit nådda
           reached: har blivit nådda
         examples:
           one: Lägg till personer som blivit nådda åtminstone 2 gånger i något uppdrag
             närsomhelst.
           two: Ta bort personer som blivit ringda åtminstone 1 gång i uppdraget 'Aktivera
             gamla medlemmar' under de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som {callSelect} minst {minTimes}
-          i {assignmentSelect} {timeFrame}.'
+        inputString: '{addRemoveSelect} personer som {callSelect} {minTimes} i {assignmentSelect}
+          {timeFrame}'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
-        minTimesInput: '{input} {minTimes, plural, one {gång} other {gånger}}'
+        minTimesInput: minst {input} {minTimes, plural, one {gång} other {gånger}}
       campaignParticipation:
         activitySelect:
           activity: typen "{activity}"
@@ -1550,16 +1653,19 @@ feat:
             any: har någon av
             minMatching: har minst
             none: inte har
+            some: minst
           edit:
             all: '{conditionSelect}'
             any: '{conditionSelect}'
             minMatching: '{conditionSelect} {minMatchingInput}'
             none: '{conditionSelect}'
+            some: '{conditionSelect} {minMatchingInput}'
           preview:
             all: har alla
             any: har någon av
             minMatching: har minst {minMatching} av
             none: inte har
+            some: minst {minMatching}
         examples:
           one: 'Lägg till personer som har minst en av följande etiketter: ''Medlem'',
             ''Aktivist'''
@@ -1635,6 +1741,7 @@ feat:
           all: har valt alla
           any: har valt något
           none: inte har valt något
+          some: några
         examples:
           one: 'Ta bort personer som har valt något av alternativen i enkäten ''Medlemsenkät
             2020'' (frågan ''Fråga ett''): ''Ibland'', ''Aldrig'''
@@ -1747,6 +1854,9 @@ feat:
         once: minst en
     misc:
       noOptions: inga matchande etiketter
+      noOptionsEmailNotSent: Mailet har inte skickats än. Länkar kan väljas efter
+        att mailet skickats.
+      noOptionsInvalidEmail: Ogiltigt mail. Välj ett mail först.
       noOptionsLinks: Inga matchande länkar
     operators:
       add: Lägg till
@@ -1939,6 +2049,35 @@ feat:
       personRecordColumn: Svarande
       suggestedPeople: Föreslagna personer
       unlink: Avlänka
+    surveyForm:
+      accept: Jag accepterar villkoren nedan.
+      error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen senare.
+      policy:
+        link: https://zetkin.org/sv/sekretess
+        text: Klicka för att läsa sekretesspolicyn
+      required: svar krävs
+      sign:
+        anonymous: Skicka in anonymt
+        nameAndEmail: Signera med namn och epost
+      submit: Skicka in
+      terms:
+        description: När du skickar in den här enkäten kommer informationen att hanteras
+          i Zetkin av {organization} i syfte att organisera aktivism, och i enlighet
+          med sekretesspolicyn.
+        title: Sekretesspolicy
+    surveyFormSubmitted:
+      text: Dina svar på "{title}" har skickats in
+      title: Enkäten skickades in
+    surveySignature:
+      email:
+        email: Epost
+        firstName: Förnamn
+        lastName: Efternamn
+      title: Välj hur du vill signera
+      type:
+        anonymous: Skicka in anonymt
+        email: Signera med namn och epost
+        user: Signera som {person} med epostadress {email}
     tabs:
       overview: Översikt
       questions: Frågor
@@ -1990,6 +2129,7 @@ feat:
       types:
         none: Grundläggande (inga värden)
         text: Textvärden
+      updateTagButton: Uppdatera
     manager:
       addTag: Lägg till etikett
       addValue: Skapa värde för "{tag}"
@@ -2185,6 +2325,7 @@ feat:
             att ångra. Är du säker på att du vill fortsätta?
       menu:
         delete: Radera
+        move: Flytta
         rename: Byt namn
       moveToFolder: Flytta till {folder}
       moveToRoot: Flytta till alla listor

@@ -19,12 +19,14 @@ interface MergeCandidateListProps {
   buttonLabel: string;
   onButtonClick: (person: ZetkinPerson) => void;
   rows: ZetkinPerson[];
+  showActionButton?: boolean;
 }
 
 const MergeCandidateList: FC<MergeCandidateListProps> = ({
   buttonLabel,
   onButtonClick,
   rows,
+  showActionButton = true,
 }) => {
   const { orgId } = useNumericRouteParams();
 
@@ -82,16 +84,18 @@ const MergeCandidateList: FC<MergeCandidateListProps> = ({
                   }
                 />
               </ListItem>
-              <Button
-                onClick={() => {
-                  onButtonClick(person);
-                }}
-                size="small"
-                sx={{ marginRight: 2 }}
-                variant="outlined"
-              >
-                {buttonLabel}
-              </Button>
+              {showActionButton && (
+                <Button
+                  onClick={() => {
+                    onButtonClick(person);
+                  }}
+                  size="small"
+                  sx={{ marginRight: 2 }}
+                  variant="outlined"
+                >
+                  {buttonLabel}
+                </Button>
+              )}
             </Box>
           </>
         );

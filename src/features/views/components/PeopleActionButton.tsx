@@ -36,7 +36,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
-  const createView = useCreateView(orgId);
+  const { createView } = useCreateView(orgId);
   const { createFolder } = useFolder(orgId, folderId);
   const { createForm } = useCreateJoinForm(orgId);
 
@@ -78,7 +78,8 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             onClick: async () => {
               router.push(`/organize/${orgId}/people/joinforms`);
               await createForm({
-                fields: ['first_name', 'last_name'],
+                fields: ['first_name', 'last_name', 'email'],
+                requires_email_verification: true,
                 title: joinFormMessages.defaultTitle(),
               });
             },

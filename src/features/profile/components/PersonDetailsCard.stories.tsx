@@ -25,7 +25,10 @@ Primary.args = {
   customFields: [
     {
       description: null,
+      enum_choices: null,
       id: 1,
+      org_read: 'sameorg',
+      org_write: 'sameorg',
       organization: mockOrganization(),
       slug: 'birthday',
       title: 'Birthday',
@@ -33,7 +36,10 @@ Primary.args = {
     },
     {
       description: null,
+      enum_choices: null,
       id: 1,
+      org_read: 'sameorg',
+      org_write: 'sameorg',
       organization: mockOrganization(),
       slug: 'facebook',
       title: 'Facebook Profile',
@@ -41,7 +47,10 @@ Primary.args = {
     },
     {
       description: null,
+      enum_choices: null,
       id: 1,
+      org_read: 'sameorg',
+      org_write: 'sameorg',
       organization: mockOrganization(),
       slug: 'twitter',
       title: 'Twitter Profile',

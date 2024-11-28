@@ -166,7 +166,7 @@ export default makeMessages('feat.smartSearch', {
       },
       callSelect: {
         called: m('have been called'),
-        notreached: m('have been unsuccessfully tried'),
+        notreached: m('have not been reached'),
         reached: m('have been successfully reached'),
       },
       examples: {
@@ -181,10 +181,10 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
         callSelect: ReactElement;
-        minTimes: ReactElement | number;
+        minTimes: ReactElement | number | null;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {callSelect} at least {minTimes} in {assignmentSelect} {timeFrame}.'
+        '{addRemoveSelect} people who {callSelect} {minTimes} in {assignmentSelect} {timeFrame}.'
       ),
       minTimes: m<{ minTimes: number }>(
         '{minTimes, plural, one {once} other {# times}}'
@@ -192,7 +192,7 @@ export default makeMessages('feat.smartSearch', {
       minTimesInput: m<{
         input: ReactElement;
         minTimes: number;
-      }>('{input} {minTimes, plural, one {time} other {times}}'),
+      }>('at least {input} {minTimes, plural, one {time} other {times}}'),
     },
     campaignParticipation: {
       activitySelect: {
@@ -402,6 +402,10 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
         ),
+        enum: m<{
+          fieldSelect: ReactElement;
+          selectInput: ReactElement;
+        }>('{fieldSelect} is "{selectInput}"'),
         none: m("This organization doesn't have any custom fields yet."),
         text: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
           '{fieldSelect} matches "{freeTextInput}"'
@@ -420,6 +424,10 @@ export default makeMessages('feat.smartSearch', {
         date: m<{ fieldName: ReactElement | string; timeFrame: ReactElement }>(
           '{fieldName} is {timeFrame}'
         ),
+        enum: m<{
+          fieldName: ReactElement | string;
+          searchTerm: ReactElement | string;
+        }>('{fieldName} is "{searchTerm}"'),
         text: m<{
           fieldName: ReactElement | string;
           searchTerm: ReactElement | string;

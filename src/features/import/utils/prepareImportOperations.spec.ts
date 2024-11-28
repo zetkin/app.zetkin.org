@@ -352,6 +352,78 @@ describe('prepareImportOperations()', () => {
         },
       ]);
     });
+    it('converts ID, data and enum field', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'first_name',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            field: 'last_name',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            field: 'enum_field',
+            kind: ColumnKind.ENUM,
+            mapping: [
+              { key: 'first', value: 'Dummy value' },
+              { key: 'second', value: null },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: true,
+        rows: [
+          {
+            data: ['ID', 'First name', 'Last Name', 'Enum', 'Org'],
+          },
+          {
+            data: ['123', 'Jane', 'Doe', 'Dummy value', 1],
+          },
+          {
+            data: ['124', 'John', 'Doe', null, 2],
+          },
+          {
+            data: ['125', 'John', 'Doe', undefined, 2],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperations(configData, countryCode);
+      expect(result).toEqual([
+        {
+          data: {
+            enum_field: 'first',
+            ext_id: '123',
+            first_name: 'Jane',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+        },
+        {
+          data: {
+            enum_field: 'second',
+            ext_id: '124',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+        },
+        {
+          data: {
+            enum_field: 'second',
+            ext_id: '125',
+            first_name: 'John',
+            last_name: 'Doe',
+          },
+          op: 'person.import',
+        },
+      ]);
+    });
     it('converts other columns when ID column is not chosen', () => {
       const configData: Sheet = {
         columns: [
@@ -751,6 +823,86 @@ describe('prepareImportOperations()', () => {
       ]);
     });
 
+    it('correctly assigns multiple columns of orgs', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            kind: ColumnKind.TAG,
+            mapping: [
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
+            ],
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 272, value: 1 },
+              { orgId: 273, value: 2 },
+            ],
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 274, value: 3 },
+              { orgId: 275, value: 4 },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: ['123', 'Linköping', 'Frontend', 1, 3],
+          },
+          {
+            data: ['124', 'Linköping', 'Backend', null, 4],
+          },
+          {
+            data: ['125', 'Linköping', 'Backend', 3, 3],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperations(configData, countryCode);
+      expect(result).toEqual([
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '123',
+          },
+          op: 'person.import',
+          organizations: [272, 274],
+          tags: [{ id: 123 }, { id: 100 }],
+        },
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '124',
+          },
+          op: 'person.import',
+          organizations: [275],
+          tags: [{ id: 124 }, { id: 100 }],
+        },
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '125',
+          },
+          op: 'person.import',
+          organizations: [274],
+          tags: [{ id: 124 }, { id: 100 }],
+        },
+      ]);
+    });
+
     it('correctly adds up multiple columns of tags', () => {
       const configData: Sheet = {
         columns: [
@@ -860,6 +1012,85 @@ describe('prepareImportOperations()', () => {
       ]);
     });
 
+    it('correctly de-duplicates multiple columns of orgs', () => {
+      const configData: Sheet = {
+        columns: [
+          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+          {
+            field: 'city',
+            kind: ColumnKind.FIELD,
+            selected: true,
+          },
+          {
+            kind: ColumnKind.TAG,
+            mapping: [
+              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
+              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
+            ],
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 272, value: 1 },
+              { orgId: 273, value: 2 },
+            ],
+            selected: true,
+          },
+          {
+            kind: ColumnKind.ORGANIZATION,
+            mapping: [
+              { orgId: 272, value: 3 },
+              { orgId: 275, value: 4 },
+            ],
+            selected: true,
+          },
+        ],
+        firstRowIsHeaders: false,
+        rows: [
+          {
+            data: ['123', 'Linköping', 'Frontend', 1, 3],
+          },
+          {
+            data: ['124', 'Linköping', 'Backend', null, 4],
+          },
+          {
+            data: ['125', 'Linköping', 'Backend', 3, 3],
+          },
+        ],
+        title: 'My sheet',
+      };
+      const result = prepareImportOperations(configData, countryCode);
+      expect(result).toEqual([
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '123',
+          },
+          op: 'person.import',
+          organizations: [272],
+          tags: [{ id: 123 }, { id: 100 }],
+        },
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '124',
+          },
+          op: 'person.import',
+          organizations: [275],
+          tags: [{ id: 124 }, { id: 100 }],
+        },
+        {
+          data: {
+            city: 'Linköping',
+            ext_id: '125',
+          },
+          op: 'person.import',
+          organizations: [272],
+          tags: [{ id: 124 }, { id: 100 }],
+        },
+      ]);
+    });
     it('remove duplicated tagIds', () => {
       const configData: Sheet = {
         columns: [

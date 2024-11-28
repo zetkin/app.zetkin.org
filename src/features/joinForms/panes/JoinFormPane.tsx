@@ -1,11 +1,11 @@
-import { Delete } from '@mui/icons-material';
-import { FC } from 'react';
+import { FC, HTMLAttributes } from 'react';
 import {
   Autocomplete,
   Box,
-  IconButton,
+  Checkbox,
+  Chip,
+  FormControlLabel,
   TextField,
-  useTheme,
 } from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
@@ -28,18 +28,22 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
-  const theme = useTheme();
+
+  const nativePersonFields = Object.values(NATIVE_PERSON_FIELDS).filter(
+    (field) =>
+      field !== NATIVE_PERSON_FIELDS.EXT_ID && field !== NATIVE_PERSON_FIELDS.ID
+  );
 
   if (!joinForm) {
     return null;
   }
 
   function slugToLabel(slug: string): string {
-    const isNativeField = Object.values(NATIVE_PERSON_FIELDS).some(
+    const isNativeField = nativePersonFields.some(
       (nativeSlug) => nativeSlug == slug
     );
     if (isNativeField) {
-      const typedSlug = slug as NATIVE_PERSON_FIELDS;
+      const typedSlug = slug as typeof nativePersonFields[number];
       return globalMessages.personFields[typedSlug]();
     } else {
       const field = customFields.data?.find((field) => field.slug == slug);
@@ -68,16 +72,28 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
       </Box>
       <Box mb={1}>
         <Autocomplete
+          disableCloseOnSelect
           fullWidth
           getOptionDisabled={(option) => joinForm.fields.includes(option)}
+          // This gets the label for selected options.
           getOptionLabel={slugToLabel}
-          onChange={(ev, value) => {
-            if (value) {
-              updateForm({ fields: [...joinForm.fields, value] });
+          multiple
+          onChange={(ev, values) => {
+            if (values.length > 0) {
+              updateForm({
+                fields: values,
+              });
+            }
+            if (values.length === 0) {
+              updateForm({
+                fields: ['first_name', 'last_name'],
+              });
+            } else {
+              return;
             }
           }}
           options={[
-            ...Object.values(NATIVE_PERSON_FIELDS),
+            ...nativePersonFields,
             ...(customFields.data?.map((field) => field.slug) ?? []),
           ]}
           renderInput={(params) => (
@@ -86,44 +102,63 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
               placeholder={messages.formPane.labels.addField()}
             />
           )}
-          value={null}
+          renderOption={(props, option, { selected }) => {
+            // Type assertion needed due to currently used version of mui/material missing key prop in renderOption.
+            // This is fixed in later versions.
+            // https://github.com/mui/material-ui/issues/39833
+            const { key, ...optionProps } =
+              props as HTMLAttributes<HTMLLIElement> & { key: string };
+            return (
+              <li key={key} {...optionProps}>
+                <Checkbox checked={selected} />
+                {/* This gets the label for options. */}
+                {slugToLabel(option)}
+              </li>
+            );
+          }}
+          renderTags={(tagValue, getTagProps) =>
+            tagValue.map((option, index) => {
+              const { key, ...tagProps } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  label={slugToLabel(option)}
+                  {...tagProps}
+                  disabled={
+                    (joinForm.requires_email_verification &&
+                      option === NATIVE_PERSON_FIELDS.EMAIL) ||
+                    option === NATIVE_PERSON_FIELDS.FIRST_NAME ||
+                    option === NATIVE_PERSON_FIELDS.LAST_NAME
+                  }
+                />
+              );
+            })
+          }
+          value={joinForm.fields}
         />
       </Box>
-      <Box>
-        {joinForm.fields.map((slug) => {
-          return (
-            <Box
-              key={slug}
-              display="flex"
-              justifyContent="space-between"
-              my={1}
-            >
-              <Box
-                sx={{
-                  backgroundColor: theme.palette.grey[200],
-                  borderRadius: 1,
-                  px: 2,
-                  py: 1,
-                }}
-              >
-                {slugToLabel(slug)}
-              </Box>
-              {slug != 'first_name' && slug != 'last_name' && (
-                <IconButton
-                  onClick={() =>
-                    updateForm({
-                      fields: joinForm.fields.filter(
-                        (existingSlug) => existingSlug != slug
-                      ),
-                    })
-                  }
-                >
-                  <Delete />
-                </IconButton>
-              )}
-            </Box>
-          );
-        })}
+      <Box mb={1}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={joinForm.requires_email_verification}
+              onChange={(evt) =>
+                updateForm({
+                  fields:
+                    evt.target.checked &&
+                    !joinForm?.fields.includes(NATIVE_PERSON_FIELDS.EMAIL)
+                      ? [
+                          ...(joinForm?.fields ?? []),
+                          NATIVE_PERSON_FIELDS.EMAIL,
+                        ]
+                      : undefined,
+                  requires_email_verification: evt.target.checked,
+                })
+              }
+            />
+          }
+          label={messages.formPane.labels.requireEmailVerification()}
+        />
       </Box>
     </>
   );

@@ -22,6 +22,9 @@ export type SurveyPrivacyPolicyProps = {
 
 const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({ survey }) => {
   const messages = useMessages(messageIds);
+  const privacyUrl =
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || messages.surveyForm.policy.link();
+
   return (
     <FormControl fullWidth>
       <SurveyContainer paddingX={2}>
@@ -45,11 +48,7 @@ const SurveyPrivacyPolicy: FC<SurveyPrivacyPolicyProps> = ({ survey }) => {
               />
             </Typography>
             <Typography style={{ fontSize: '0.8em', marginBottom: '0.5em' }}>
-              <Link
-                href={messages.surveyForm.policy.link()}
-                rel="noreferrer"
-                target="_blank"
-              >
+              <Link href={privacyUrl} rel="noreferrer" target="_blank">
                 <Msg id={messageIds.surveyForm.policy.text} />
               </Link>
             </Typography>

@@ -1,14 +1,17 @@
 import Fuse from 'fuse.js';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import { Add, Clear } from '@mui/icons-material';
+import { Add, DeleteOutline } from '@mui/icons-material';
 import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
+import useDeleteType from '../hooks/useDeleteType';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface StyleProps {
   showBorder: boolean | undefined;
@@ -74,6 +77,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   value,
 }) => {
   const createType = useCreateType(orgId);
+  const deleteType = useDeleteType(orgId);
   const messages = useMessages(messageIds);
   const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
@@ -83,14 +87,18 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const spanRef = useRef<HTMLSpanElement>(null);
   const classes = useStyles({ showBorder });
 
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
   useEffect(() => {
     //When a user creates a new type, it is missing an event ID.
     //In here, when the length of the type changes,
     //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
       const newEventType = types.find((item) => item.title === createdType);
-      setText(newEventType!.title);
-      onChangeNewOption(newEventType!.id);
+      setText(newEventType ? newEventType!.title : uncategorizedMsg);
+      if (newEventType) {
+        onChangeNewOption(newEventType!.id);
+      }
     }
   }, [types.length]);
 
@@ -224,17 +232,44 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           return (
             <Box key={option.id}>
               {option.id != 'CREATE' && option.id != 'UNCATEGORIZED' && (
-                <li {...props}>{option.title}</li>
+                <li {...props} style={{ justifyContent: 'space-between' }}>
+                  {option.title}
+                  <DeleteOutline
+                    onClick={(ev) => {
+                      ev.stopPropagation();
+                      showConfirmDialog({
+                        onSubmit: () => {
+                          if (typeof option.id === 'number') {
+                            deleteType(option.id);
+                            //If the current event has the deleted event type,
+                            //set the current event's type to null
+                            if (value && option.id == value.id) {
+                              onChange(null);
+                            }
+                          }
+                        },
+                        warningText: messages.type.deleteMessage({
+                          eventType: option.title,
+                        }),
+                      });
+                    }}
+                    sx={{
+                      '&:hover': {
+                        color: theme.palette.secondary.main,
+                      },
+                      color: theme.palette.secondary.light,
+                      cursor: 'pointer',
+                      transition: 'color 0.3s ease',
+                    }}
+                  />
+                </li>
               )}
               {option.id == 'UNCATEGORIZED' && (
-                <li {...props}>
-                  <Clear />
-                  {uncategorizedMsg}
-                </li>
+                <li {...props}>{uncategorizedMsg}</li>
               )}
               {option.id == 'CREATE' && (
                 <li {...props}>
-                  <Add />
+                  <Add sx={{ marginRight: 1 }} />
                   {messages.type.createType({ type: option.title! })}
                 </li>
               )}

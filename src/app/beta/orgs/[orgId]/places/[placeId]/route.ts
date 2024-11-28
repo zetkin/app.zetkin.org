@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { PlaceModel } from 'features/areas/models';
+import { PlaceModel } from 'features/canvassAssignments/models';
+import asCanvasserAuthorized from 'features/canvassAssignments/utils/asCanvasserAuthorized';
 
 type RouteMeta = {
   params: {
@@ -12,11 +12,10 @@ type RouteMeta = {
 };
 
 export async function PATCH(request: NextRequest, { params }: RouteMeta) {
-  return asOrgAuthorized(
+  return asCanvasserAuthorized(
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin'],
     },
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
@@ -27,10 +26,10 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         { _id: params.placeId, orgId },
         {
           description: payload.description,
+          households: payload.households,
           position: payload.position,
           title: payload.title,
           type: payload.type,
-          visits: payload.visits,
         },
         { new: true }
       );
@@ -42,12 +41,11 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           description: model.description,
+          households: model.households,
           id: model._id.toString(),
           orgId: orgId,
           position: model.position,
           title: model.title,
-          type: model.type,
-          visits: model.visits,
         },
       });
     }
