@@ -76,17 +76,19 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           </ZUIAnimatedNumber>
         </Box>
       </Box>
-      <Divider />
-      <Box padding={2}>
-        {missingEmail > 0 && state != EmailState.SENT && (
-          <Typography>
-            <Msg
-              id={messageIds.ready.missingEmailsDescription}
-              values={{ numPeople: missingEmail }}
-            />
-          </Typography>
-        )}
-      </Box>
+      {missingEmail > 0 && state != EmailState.SENT && (
+        <>
+          <Divider />
+          <Box padding={2}>
+            <Typography>
+              <Msg
+                id={messageIds.ready.missingEmailsDescription}
+                values={{ numPeople: missingEmail }}
+              />
+            </Typography>
+          </Box>
+        </>
+      )}
     </Card>
   );
 };
