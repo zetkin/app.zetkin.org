@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { columnUpdate } from '../store';
 import { DateColumn } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import dateParsingIsValid from '../utils/dateParsing/dateParsingIsValid';
+import parserFactory from '../utils/dateParsing/parserFactory';
+import { IDateParser } from '../utils/dateParsing/types';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -23,6 +24,11 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
 
   const noCustomFormat = dateFormat == '';
 
+  let parser: IDateParser | null = null;
+  if (column.dateFormat) {
+    parser = parserFactory(column.dateFormat);
+  }
+
   const wrongDateFormat = cellValues.some((value, index) => {
     if (index === 0 && firstRowIsHeaders) {
       return false;
@@ -32,8 +38,8 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
       return false;
     }
 
-    if (column.dateFormat) {
-      return !dateParsingIsValid(value, column.dateFormat);
+    if (parser && column.dateFormat) {
+      return !parser.validate(value);
     }
 
     return false;

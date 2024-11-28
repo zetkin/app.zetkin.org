@@ -1,7 +1,7 @@
 import getUniqueTags from './getUniqueTags';
-import parseDate from './dateParsing/parseDate';
 import { ZetkinPersonImportOp } from './prepareImportOperations';
 import { ColumnKind, Sheet } from './types';
+import parserFactory from './dateParsing/parserFactory';
 
 export default function createPreviewData(
   configuredSheet: Sheet,
@@ -82,7 +82,8 @@ export default function createPreviewData(
 
       if (column.kind === ColumnKind.DATE) {
         if (row[colIdx] && column.dateFormat) {
-          const date = parseDate(row[colIdx], column.dateFormat);
+          const parser = parserFactory(column.dateFormat);
+          const date = parser.parse(row[colIdx]?.toString() ?? '');
           personPreviewOp.data = {
             ...personPreviewOp.data,
             [`${column.field}`]: date,
