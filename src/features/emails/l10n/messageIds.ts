@@ -171,20 +171,12 @@ export default makeMessages('feat.emails', {
     },
   },
   ready: {
-    loading: m('Loading...'),
-    lockButton: m('Lock for delivery'),
-    lockDescription: m('Lock to enable email delivery'),
-    locked: m('Locked'),
-    scheduledDescription: m(
-      'This email is scheduled for delivery. If you want to unlock the targets, cancel the delivery first.'
+    missingEmailsDescription: m<{ numPeople: number }>(
+      'There {numPeople, plural, one {is a person} other {are people}} with a missing email address in the target group. If you resolve it they will be included in the target group.'
     ),
     sentSubtitle: m('Targets that were available for delivery'),
     subtitle: m('Targets currently available for delivery'),
     title: m('Ready'),
-    unlockButton: m('Unlock'),
-    unlockDescription: m(
-      'Proceed to delivery or unlock recipients to edit targeting. Unlocking may add or remove some targets depending on what results the Smart Search will produce.'
-    ),
   },
   state: {
     draft: m('Draft'),
@@ -207,12 +199,32 @@ export default makeMessages('feat.emails', {
   targets: {
     defineButton: m('Define target group'),
     editButton: m('Edit target group'),
+    loading: m('Loading...'),
+    lockButton: m('Lock for delivery'),
     locked: m('Targets are locked for delivery'),
-    sentSubtitle: m(
-      'You can look at the Smart Search that was used to define the recipients of this email'
-    ),
-    subtitle: m('Use Smart Search to define the recipients of this email.'),
+    lockedChip: m('Locked'),
+    subtitle: {
+      notTargeted: m(
+        'Use Smart Search to define the recipients of this email.'
+      ),
+      scheduled: m(
+        'This email is scheduled for delivery. If you want to unlock the targets to edit the Smart Search, cancel the delivery first.'
+      ),
+      sent: m(
+        'You can look at the Smart Search that was used to define the recipients of this email'
+      ),
+      targetedAndLocked: m(
+        'Proceed to delivery or unlock recipients if you want to edit the Smart Search that is used to define the recipients of this email.'
+      ),
+      targetedNotLocked: m(
+        'Edit the Smart Search that is used to define the recipients of this email, or lock the target group to enable email delivery.'
+      ),
+    },
     title: m('Targets'),
+    unlockAlert: m(
+      'Unlocking may add or remove people from the target group depending on what results the Smart Search will produce.'
+    ),
+    unlockButton: m('Unlock'),
     viewButton: m('View target group'),
   },
   unsubscribePage: {

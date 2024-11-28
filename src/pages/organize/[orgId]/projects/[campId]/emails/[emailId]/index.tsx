@@ -55,8 +55,11 @@ const EmailPage: PageWithLayout = () => {
         <Box display="flex" flexDirection="column">
           <EmailTargets
             email={email}
+            isLoading={mutating.includes('locked')}
             isLocked={isLocked}
             isTargeted={isTargeted}
+            onToggleLocked={() => updateEmail({ locked: !email.locked })}
+            readyTargets={readyTargets}
             state={emailState}
             targets={numTargetMatches}
             updateTargets={updateTargets}
@@ -72,10 +75,8 @@ const EmailPage: PageWithLayout = () => {
             </Box>
             <Box flex={1}>
               <EmailTargetsReady
-                isLoading={mutating.includes('locked')}
-                isLocked={isLocked}
                 lockedReadyTargets={lockedReadyTargets}
-                onToggleLocked={() => updateEmail({ locked: !email.locked })}
+                missingEmail={numBlocked.noEmail}
                 readyTargets={readyTargets}
                 state={emailState}
               />
