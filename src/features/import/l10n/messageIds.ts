@@ -73,7 +73,7 @@ export default makeMessages('feat.import', {
         ),
         zetkinID: m('Zetkin ID'),
         zetkinIDInfo: m(
-          'A Zetkin ID is the ID a person has in Zetkin. You would have it in a file if you exported data from Zetkin.'
+          'A Zetkin ID is the ID of a person already in Zetkin. You would have it in a file if you exported data from Zetkin.'
         ),
       },
       orgs: {
