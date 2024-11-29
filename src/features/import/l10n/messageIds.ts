@@ -66,7 +66,7 @@ export default makeMessages('feat.import', {
       ids: {
         externalID: m('External ID'),
         externalIDInfo: m(
-          'An external ID is an ID that comes from another system than Zetkin - your member system or something of the like. It can be used to find and identify people in Zetkin.'
+          'An external ID is an ID that comes from another system than Zetkin, such as a separate member database. It can be used to find and identify people in Zetkin.'
         ),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
