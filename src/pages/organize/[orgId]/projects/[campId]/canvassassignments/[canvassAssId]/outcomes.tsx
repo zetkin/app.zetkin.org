@@ -9,6 +9,8 @@ import {
   CardContent,
   Dialog,
   IconButton,
+  MenuItem,
+  Select,
   Typography,
 } from '@mui/material';
 
@@ -19,8 +21,12 @@ import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import useCanvassAssignmentMutations from 'features/canvassAssignments/hooks/useCanvassAssignmentMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
-import { ZetkinMetric } from 'features/canvassAssignments/types';
+import {
+  ZetkinCanvassAssignment,
+  ZetkinMetric,
+} from 'features/canvassAssignments/types';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
+import ZUICard from 'zui/ZUICard';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -95,6 +101,25 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
       <ZUIFuture future={canvassAssignmentFuture}>
         {(assignment) => (
           <>
+            <ZUICard header="Reporting level" sx={{ mb: 2 }}>
+              <Typography mb={2}>
+                Decide what level of precision should be used for statistics.
+              </Typography>
+              <Select
+                label="Reporting level"
+                onChange={(ev) => {
+                  const rawValue = ev.target.value;
+                  updateCanvassAssignment({
+                    reporting_level:
+                      rawValue as ZetkinCanvassAssignment['reporting_level'],
+                  });
+                }}
+                value={assignment.reporting_level}
+              >
+                <MenuItem value="household">Household (more precise)</MenuItem>
+                <MenuItem value="place">Place (more privacy)</MenuItem>
+              </Select>
+            </ZUICard>
             <Typography>
               Here you can configure the questions for your canvass assignment
             </Typography>
