@@ -63,6 +63,17 @@ export default makeMessages('feat.import', {
         ),
         value: m('Value'),
       },
+      genders: {
+        gender: m('Gender'),
+        genders: {
+          f: m('female'),
+          m: m('male'),
+          null: m('unspecified'),
+          o: m('other'),
+        },
+        header: m('Gender'),
+        showGenderSelectButton: m('Map to...'),
+      },
       ids: {
         configExplanation: m(
           'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
@@ -184,6 +195,7 @@ export default makeMessages('feat.import', {
       unfinished: {
         date: m('You need to configure date format'),
         enum: m('You need to map values'),
+        gender: m('You need to map values'),
         id: m('You need to configure the IDs'),
         org: m('You need to map values'),
         tag: m('You need to map values'),
@@ -197,8 +209,15 @@ export default makeMessages('feat.import', {
     },
     preview: {
       columnHeader: {
+        gender: m('Gender'),
         org: m('Organization'),
         tags: m('Tags'),
+      },
+      genders: {
+        f: m('female'),
+        m: m('male'),
+        null: m('unspecified'),
+        o: m('other'),
       },
       next: m('Next'),
       noOrg: m('No organization'),
