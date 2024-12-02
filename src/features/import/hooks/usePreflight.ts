@@ -46,7 +46,7 @@ export default function usePreflight(orgId: number) {
 
   const problems = predictProblems(
     sheet,
-    organization.country.toString() as CountryCode,
+    organization.country.toUpperCase() as CountryCode,
     fields
   );
 
