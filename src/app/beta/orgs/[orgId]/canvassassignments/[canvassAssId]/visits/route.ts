@@ -41,6 +41,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         data: visitModels.map((model) => ({
           canvassAssId: model.canvassAssId,
           id: model._id.toString(),
+          placeId: model.placeId,
           responses: model.responses,
           timestamp: model.timestamp,
         })),
@@ -72,6 +73,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const visit = new PlaceVisitModel({
         canvassAssId,
+        placeId: payload.placeId,
         responses: payload.responses,
         timestamp: new Date().toISOString(),
       });
@@ -82,6 +84,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         data: {
           canvassAssId: visit.canvassAssId,
           id: visit._id.toString(),
+          placeId: visit.placeId,
           responses: visit.responses,
           timestamp: visit.timestamp,
         },

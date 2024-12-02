@@ -76,6 +76,7 @@ export type ZetkinPlace = {
 export type ZetkinPlaceVisit = {
   canvassAssId: string;
   id: string;
+  placeId: string;
   responses: {
     metricId: string;
     responseCounts: number[];

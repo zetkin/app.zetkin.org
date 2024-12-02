@@ -179,6 +179,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             onLogVisit={async (responses) => {
               await reportPlaceVisit(assignment.id, {
                 canvassAssId: assignment.id,
+                placeId: place.id,
                 responses,
               });
               setShowSparkle(true);
