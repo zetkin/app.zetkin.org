@@ -25,6 +25,7 @@ export type ZetkinCanvassAssignment = {
   organization: {
     id: number;
   };
+  reporting_level: 'household' | 'place';
   start_date: string | null;
   title: string | null;
 };

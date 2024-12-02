@@ -8,6 +8,7 @@ type ZetkinCanvassAssignmentModelType = {
   id: number;
   metrics: (Omit<ZetkinMetric, 'id'> & { _id: string })[];
   orgId: number;
+  reporting_level: 'household' | 'place' | null;
   sessions: {
     areaId: string;
     personId: number;
@@ -35,6 +36,7 @@ const canvassAssignmentSchema =
       },
     ],
     orgId: { required: true, type: Number },
+    reporting_level: { required: true, type: String },
     sessions: [
       {
         areaId: String,

@@ -71,6 +71,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               organization: {
                 id: model.orgId,
               },
+              reporting_level: model.reporting_level || 'household',
               start_date: model.start_date,
               title: model.title,
             },
