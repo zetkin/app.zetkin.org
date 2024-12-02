@@ -15,6 +15,7 @@ import EditHousehold from './pages/EditHousehold';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
 import EncouragingSparkle from '../EncouragingSparkle';
 import PlaceVisitPage from './pages/PlaceVisitPage';
+import HouseholdsPage from './pages/HouseholdsPage';
 
 type PlaceDialogProps = {
   assignment: ZetkinCanvassAssignment;
@@ -27,6 +28,7 @@ type PlaceDialogStep =
   | 'place'
   | 'edit'
   | 'createHouseholds'
+  | 'households'
   | 'household'
   | 'editHousehold'
   | 'placeVisit'
@@ -101,19 +103,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         <Place
           key="place"
           assignment={assignment}
-          onBulk={() => goto('createHouseholds')}
           onClose={onClose}
-          onCreateHousehold={(household) => {
-            setSelectedHouseholdId(household.id);
-            goto('household');
-          }}
           onEdit={() => goto('edit')}
-          onSelectHousehold={(householdId: string) => {
-            setSelectedHouseholdId(householdId);
-            goto('household');
-          }}
+          onHouseholds={() => goto('households')}
           onVisit={() => goto('placeVisit')}
-          orgId={orgId}
           place={place}
         />
         <EditPlace
@@ -124,6 +117,22 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             await updatePlace({ description, title });
             back();
           }}
+          place={place}
+        />
+        <HouseholdsPage
+          key="households"
+          onBack={() => back()}
+          onBulk={() => goto('createHouseholds')}
+          onClose={onClose}
+          onCreateHousehold={(household) => {
+            setSelectedHouseholdId(household.id);
+            goto('household');
+          }}
+          onSelectHousehold={(householdId: string) => {
+            setSelectedHouseholdId(householdId);
+            goto('household');
+          }}
+          orgId={orgId}
           place={place}
         />
         <Box key="household" height="100%">
