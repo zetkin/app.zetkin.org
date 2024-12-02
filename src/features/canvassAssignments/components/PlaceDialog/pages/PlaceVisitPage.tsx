@@ -3,15 +3,26 @@ import { Box, Button, Typography } from '@mui/material';
 
 import PageBase from './PageBase';
 import Stepper from '../Stepper';
-import { ZetkinCanvassAssignment } from 'features/canvassAssignments/types';
+import {
+  ZetkinCanvassAssignment,
+  ZetkinPlaceVisit,
+} from 'features/canvassAssignments/types';
 
 type Props = {
+  active: boolean;
   assignment: ZetkinCanvassAssignment;
   onBack: () => void;
   onClose: () => void;
+  onLogVisit: (responses: ZetkinPlaceVisit['responses']) => void;
 };
 
-const PlaceVisitPage: FC<Props> = ({ assignment, onBack, onClose }) => {
+const PlaceVisitPage: FC<Props> = ({
+  active,
+  assignment,
+  onBack,
+  onClose,
+  onLogVisit,
+}) => {
   const [numHouseholds, setNumHouseholds] = useState(0);
   const [valuesByMetricId, setValuesByMetricId] = useState<
     Record<string, number[]>
@@ -30,9 +41,31 @@ const PlaceVisitPage: FC<Props> = ({ assignment, onBack, onClose }) => {
     }
   }, [valuesByMetricId]);
 
+  useEffect(() => {
+    if (active) {
+      setNumHouseholds(0);
+      setValuesByMetricId({});
+    }
+  }, [active]);
+
   return (
     <PageBase
-      actions={<Button variant="contained">Submit</Button>}
+      actions={
+        <Button
+          onClick={() => {
+            const metricIds = Object.keys(valuesByMetricId);
+            onLogVisit(
+              metricIds.map((metricId) => ({
+                metricId,
+                responseCounts: valuesByMetricId[metricId],
+              }))
+            );
+          }}
+          variant="contained"
+        >
+          Submit
+        </Button>
+      }
       onBack={onBack}
       onClose={onClose}
       title="Report visits here"

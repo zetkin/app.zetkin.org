@@ -42,10 +42,8 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
 }) => {
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
   const [showSparkle, setShowSparkle] = useState(false);
-  const { addVisit, updateHousehold, updatePlace } = usePlaceMutations(
-    orgId,
-    place.id
-  );
+  const { addVisit, reportPlaceVisit, updateHousehold, updatePlace } =
+    usePlaceMutations(orgId, place.id);
 
   const pushedRef = useRef(false);
 
@@ -174,9 +172,18 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         </Box>
         <Box key="placeVisit" height="100%">
           <PlaceVisitPage
+            active={dialogStep == 'placeVisit'}
             assignment={assignment}
             onBack={() => back()}
             onClose={onClose}
+            onLogVisit={async (responses) => {
+              await reportPlaceVisit(assignment.id, {
+                canvassAssId: assignment.id,
+                responses,
+              });
+              setShowSparkle(true);
+              back();
+            }}
           />
         </Box>
         <Box key="wizard" height="100%">
@@ -193,7 +200,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                   timestamp: new Date().toISOString(),
                 });
                 setShowSparkle(true);
-                goto('place');
+                back();
               }}
             />
           )}
