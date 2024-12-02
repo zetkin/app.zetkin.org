@@ -80,7 +80,7 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   title: String,
 });
 
-type PlaceVisitModelType = {
+export type PlaceVisitModelType = {
   canvassAssId: string;
   placeId: string;
   responses: {
