@@ -73,6 +73,21 @@ export type ZetkinPlace = {
   title: string | null;
 };
 
+export type ZetkinPlaceVisit = {
+  canvassAssId: string;
+  id: string;
+  responses: {
+    metricId: string;
+    responseCounts: number[];
+  }[];
+  timestamp: string;
+};
+
+export type ZetkinPlaceVisitPostBody = Omit<
+  ZetkinPlaceVisit,
+  'id' | 'timestamp'
+>;
+
 export type ZetkinPlacePostBody = Partial<
   Omit<ZetkinPlace, 'id' | 'households'>
 >;

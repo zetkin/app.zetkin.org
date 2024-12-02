@@ -80,12 +80,39 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   title: String,
 });
 
+type PlaceVisitModelType = {
+  canvassAssId: string;
+  placeId: string;
+  responses: {
+    metricId: string;
+    responseCounts: number[];
+  }[];
+  timestamp: string;
+};
+
+const placeVisitSchema = new mongoose.Schema<PlaceVisitModelType>({
+  canvassAssId: String,
+  placeId: String,
+  responses: [
+    {
+      metricId: String,
+      responseCounts: [Number],
+    },
+  ],
+  timestamp: String,
+});
+
 export const CanvassAssignmentModel: mongoose.Model<ZetkinCanvassAssignmentModelType> =
   mongoose.models.CanvassAssignment ||
   mongoose.model<ZetkinCanvassAssignmentModelType>(
     'CanvassAssignment',
     canvassAssignmentSchema
   );
+
 export const PlaceModel: mongoose.Model<ZetkinPlaceModelType> =
   mongoose.models.Place ||
   mongoose.model<ZetkinPlaceModelType>('Place', placeSchema);
+
+export const PlaceVisitModel: mongoose.Model<PlaceVisitModelType> =
+  mongoose.models.PlaceVisit ||
+  mongoose.model<PlaceVisitModelType>('PlaceVisit', placeVisitSchema);
