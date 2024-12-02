@@ -173,7 +173,11 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
           )}
         </Box>
         <Box key="placeVisit" height="100%">
-          <PlaceVisitPage onBack={() => back()} onClose={onClose} />
+          <PlaceVisitPage
+            assignment={assignment}
+            onBack={() => back()}
+            onClose={onClose}
+          />
         </Box>
         <Box key="wizard" height="100%">
           {selectedHousehold && (
