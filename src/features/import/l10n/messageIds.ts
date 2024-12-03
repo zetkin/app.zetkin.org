@@ -19,18 +19,22 @@ export default makeMessages('feat.import', {
           'Describe the format of the values in this column, using the letters Y, M and D and any characters you use to separate them. For example, if your dates are written 1998.03.23, you would describe that as YYYY.MM.DD.'
         ),
         customFormatLabel: m('Custom date format'),
-        dateInputLabel: m('Date format'),
-        description: m(
-          'Select the format of the values in this column so they can be imported correctly.'
+        dateConfigDescription: m(
+          'Select the format of the values in this column so they can be imported as correct dates.'
         ),
+        dateInputLabel: m('Date format'),
         dropDownLabel: m('Select format'),
         emptyPreview: m('Could not be parsed'),
         header: m('Configure date format'),
+        invalidDateFormatWarning: m(
+          "There are values in the column that don't seem to fit this format. Are you sure you have selected the correct format?"
+        ),
         listSubHeaders: {
           custom: m('Custom'),
           dates: m('Date formats'),
           personNumbers: m('Person numbers'),
         },
+        noCustomFormatWarning: m('You have not provided a custom date format.'),
         personNumberFormat: {
           dk: {
             description: m(
@@ -51,9 +55,6 @@ export default makeMessages('feat.import', {
             label: m('Swedish Personnummer'),
           },
         },
-        wrongDateFormatWarning: m(
-          'Some of the values in this column can not be parsed into dates using this format.'
-        ),
       },
       enum: {
         header: m('Map values to options'),

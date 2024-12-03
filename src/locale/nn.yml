@@ -874,8 +874,6 @@ feat:
             skrevet som 1998.03.23, så skal de beskrives med YYYY.MM.DD.
           customFormatLabel: Tilpasset datoformat
           dateInputLabel: Datoformat
-          description: Velg format for verdiene i denne kolonnen så de kan importeres
-            riktig.
           dropDownLabel: Velg format
           emptyPreview: Kunne ikke oversettes
           header: Sett opp datoformat
@@ -896,8 +894,6 @@ feat:
               description: Verdiene i denne kolonnen oversettes fra 10 eller 12 siffers
                 svenske personnummer (YYMMDD-XXXX eller YYYYMMDD-XXXX) til datoer.
               label: Svensk personnummer
-          wrongDateFormatWarning: Noen av verdeiene i denne kolonnen kan ikke oversettes
-            til datoer ved å bruke dette formatet.
         ids:
           configExplanation: Import med medlemsnummer gjør at Zetkin kan oppdatere
             eksisterende folk (nå og senere), heller enn å lage duplikater.

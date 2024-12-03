@@ -109,7 +109,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
           });
         } else if (event.target.value.startsWith('date')) {
           onChange({
-            dateFormat: 'YYYY-MM-DD',
+            dateFormat: null,
             field: event.target.value.slice(5),
             kind: ColumnKind.DATE,
             selected: true,
