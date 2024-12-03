@@ -1270,7 +1270,6 @@ feat:
   profile:
     delete:
       button: Fjern person
-      confirm: Er du sikker på at du vil slette {name}? Dette er permanent.
       title: Slett konto
       warning: Dette kan ikke angres!
     details:
