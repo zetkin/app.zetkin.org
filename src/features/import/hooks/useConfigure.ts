@@ -23,7 +23,7 @@ export default function useConfigure(orgId: number) {
   if (!organization) {
     return;
   }
-  const countryCode = organization.country as CountryCode;
+  const countryCode = organization.country.toUpperCase() as CountryCode;
 
   const emptyStats = {
     person: {
