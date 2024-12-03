@@ -64,27 +64,23 @@ export default makeMessages('feat.import', {
         value: m('Value'),
       },
       ids: {
-        configExplanation: m(
-          'Importing with IDs allows Zetkin (now or in the future) to update existing people in the database instead of creating duplicates.'
-        ),
         externalID: m('External ID'),
-        externalIDExplanation: m(
-          'The values in this column are IDs from our main member system (not Zetkin).'
+        externalIDInfo: m(
+          'An external ID is an ID that comes from another system than Zetkin, such as a separate member database. It can be used to find and identify people in Zetkin.'
         ),
-        header: m('Configure IDs'),
-        showOrganizationSelectButton: m('Map to...'),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
         ),
         zetkinID: m('Zetkin ID'),
-        zetkinIDExplanation: m(
-          'The values in this column are based on an export from Zetkin.'
+        zetkinIDInfo: m(
+          'A Zetkin ID is the ID of a person already in Zetkin. You would have it in a file if you exported data from Zetkin.'
         ),
       },
       orgs: {
         guess: m('Guess organisations'),
         header: m('Map values to organizations'),
         organizations: m('Organization'),
+        showOrganizationSelectButton: m('Map to...'),
         status: m('Status'),
       },
       tags: {
@@ -102,6 +98,7 @@ export default makeMessages('feat.import', {
       configButton: m('Configure'),
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
       emptyStateMessage: m('Start by mapping file columns.'),
+      externalID: m('External ID'),
       fileHeader: m('File'),
       finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
         'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
@@ -125,7 +122,7 @@ export default makeMessages('feat.import', {
         'Mapping {numRows, plural, =1 {1 row} other {# rows}} to {numMappedTo, plural, =1 {1 tag} other {# tags}}'
       ),
       header: m('Mapping'),
-      id: m('ID'),
+      infoButton: m('Info'),
       mapValuesButton: m('Map values'),
       messages: {
         manyValuesAndEmpty: m<{
@@ -194,6 +191,7 @@ export default makeMessages('feat.import', {
         other: m('Other'),
       },
       zetkinHeader: m('Zetkin'),
+      zetkinID: m('Zetkin ID'),
     },
     preview: {
       columnHeader: {
@@ -249,7 +247,7 @@ export default makeMessages('feat.import', {
         '{number} new {numPeople, plural, =1 {person} other {people}} were created'
       ),
       defaultDesc: m<{ field: ReactElement; numPeople: ReactElement }>(
-        '{numPeople} recieved changes to their {field}'
+        '{numPeople} received changes to their {field}'
       ),
       organization: m('Organization'),
       orgs: m<{ numPeople: ReactElement; org: ReactElement }>(

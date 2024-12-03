@@ -1011,7 +1011,7 @@ feat:
       past:
         created: "{number} new {numPeople, plural, =1 {person} other {people}} were
           created"
-        defaultDesc: "{numPeople} recieved changes to their {field}"
+        defaultDesc: "{numPeople} received changes to their {field}"
         organization: Organization
         orgs: "{numPeople} were added to an {org}"
         tags: Tags

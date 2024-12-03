@@ -12,6 +12,7 @@ import { useMessages } from 'core/i18n';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import { PersonImport, ZetkinPersonImportPostBody } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import remapFields from '../utils/remapFields';
 
 export default function usePreflight(orgId: number) {
   const apiClient = useApiClient();
@@ -108,7 +109,7 @@ export default function usePreflight(orgId: number) {
       ops: importOperations,
     });
 
-    dispatch(importResultAdd(importResult));
+    dispatch(importResultAdd(remapFields(importResult) as PersonImport));
     setLoading(false);
   };
 
