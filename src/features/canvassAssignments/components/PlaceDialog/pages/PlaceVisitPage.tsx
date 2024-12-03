@@ -1,5 +1,14 @@
 import { FC, useEffect, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Step,
+  StepButton,
+  StepContent,
+  StepLabel,
+  Stepper,
+  Typography,
+} from '@mui/material';
 
 import PageBase from './PageBase';
 import IntInput from '../IntInput';
@@ -23,6 +32,7 @@ const PlaceVisitPage: FC<Props> = ({
   onClose,
   onLogVisit,
 }) => {
+  const [step, setStep] = useState(0);
   const [numHouseholds, setNumHouseholds] = useState(0);
   const [valuesByMetricId, setValuesByMetricId] = useState<
     Record<string, number[]>
@@ -45,26 +55,29 @@ const PlaceVisitPage: FC<Props> = ({
     if (active) {
       setNumHouseholds(0);
       setValuesByMetricId({});
+      setStep(0);
     }
   }, [active]);
 
   return (
     <PageBase
       actions={
-        <Button
-          onClick={() => {
-            const metricIds = Object.keys(valuesByMetricId);
-            onLogVisit(
-              metricIds.map((metricId) => ({
-                metricId,
-                responseCounts: valuesByMetricId[metricId],
-              }))
-            );
-          }}
-          variant="contained"
-        >
-          Submit
-        </Button>
+        step >= assignment.metrics.length - 1 && (
+          <Button
+            onClick={() => {
+              const metricIds = Object.keys(valuesByMetricId);
+              onLogVisit(
+                metricIds.map((metricId) => ({
+                  metricId,
+                  responseCounts: valuesByMetricId[metricId],
+                }))
+              );
+            }}
+            variant="contained"
+          >
+            Submit
+          </Button>
+        )
       }
       onBack={onBack}
       onClose={onClose}
@@ -76,90 +89,115 @@ const PlaceVisitPage: FC<Props> = ({
         gap={2}
         justifyContent="center"
       >
-        {assignment.metrics.map((metric) => {
-          if (metric.kind == 'boolean') {
-            const values = valuesByMetricId[metric.id] || [0, 0];
-            return (
-              <Box
-                alignItems="center"
-                display="flex"
-                flexDirection="column"
-                gap={1}
-              >
-                <Typography color="secondary" variant="h5">
-                  {metric.question}
-                </Typography>
-                {metric.description && (
-                  <Typography variant="body2">{metric.description}</Typography>
-                )}
-                <Box maxWidth={200} mx="auto" width="70%">
-                  <IntInput
-                    label="Yes"
-                    labelPlacement="horizontal"
-                    onChange={(value) => {
-                      setValuesByMetricId((current) => ({
-                        ...current,
-                        [metric.id]: [value, values[1]],
-                      }));
-                    }}
-                    value={values[0]}
-                  />
-                  <IntInput
-                    label="No"
-                    labelPlacement="horizontal"
-                    onChange={(value) => {
-                      setValuesByMetricId((current) => ({
-                        ...current,
-                        [metric.id]: [values[0], value],
-                      }));
-                    }}
-                    value={values[1]}
-                  />
-                </Box>
-              </Box>
-            );
-          } else if (metric.kind == 'scale5') {
-            const values = valuesByMetricId[metric.id] || [0, 0, 0, 0, 0];
-            return (
-              <Box
-                alignItems="center"
-                display="flex"
-                flexDirection="column"
-                gap={1}
-              >
-                <Typography color="secondary" variant="h5">
-                  {metric.question}
-                </Typography>
-                {metric.description && (
-                  <Typography variant="body2">{metric.description}</Typography>
-                )}
-                <Box maxWidth={200} mx="auto" width="70%">
-                  {values.map((count, index) => {
-                    const ratingValue = index + 1;
-                    return (
-                      <IntInput
-                        key={ratingValue}
-                        label={ratingValue.toString()}
-                        labelPlacement="horizontal"
-                        onChange={(newValue) => {
-                          setValuesByMetricId((current) => ({
-                            ...current,
-                            [metric.id]: [
-                              ...values.slice(0, index),
-                              newValue,
-                              ...values.slice(index + 1),
-                            ],
-                          }));
-                        }}
-                        value={count}
-                      />
-                    );
-                  })}
-                </Box>
-              </Box>
-            );
-          }
-        })}
+        <Stepper activeStep={step} nonLinear orientation="vertical">
+          {assignment.metrics.map((metric, index) => {
+            const completed = !!valuesByMetricId[metric.id];
+            if (metric.kind == 'boolean') {
+              const values = valuesByMetricId[metric.id] || [0, 0];
+              return (
+                <Step
+                  completed={completed}
+                  disabled={index > step && !valuesByMetricId[metric.id]}
+                >
+                  <StepButton onClick={() => setStep(index)}>
+                    {metric.question}
+                  </StepButton>
+                  <StepContent>
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
+                      gap={1}
+                    >
+                      {metric.description && (
+                        <Typography variant="body2">
+                          {metric.description}
+                        </Typography>
+                      )}
+                      <Box maxWidth={200} mx="auto" width="70%">
+                        <IntInput
+                          label="Yes"
+                          labelPlacement="horizontal"
+                          onChange={(value) => {
+                            setValuesByMetricId((current) => ({
+                              ...current,
+                              [metric.id]: [value, values[1]],
+                            }));
+                          }}
+                          value={values[0]}
+                        />
+                        <IntInput
+                          label="No"
+                          labelPlacement="horizontal"
+                          onChange={(value) => {
+                            setValuesByMetricId((current) => ({
+                              ...current,
+                              [metric.id]: [values[0], value],
+                            }));
+                          }}
+                          value={values[1]}
+                        />
+                      </Box>
+                      <Button
+                        onClick={() => setStep((current) => current + 1)}
+                        variant="contained"
+                      >
+                        Proceed
+                      </Button>
+                    </Box>
+                  </StepContent>
+                </Step>
+              );
+            } else if (metric.kind == 'scale5') {
+              const values = valuesByMetricId[metric.id] || [0, 0, 0, 0, 0];
+              return (
+                <Step
+                  completed={completed}
+                  disabled={index > step && !valuesByMetricId[metric.id]}
+                >
+                  <StepLabel>{metric.question}</StepLabel>
+                  <StepContent>
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
+                      gap={1}
+                    >
+                      {metric.description && (
+                        <Typography variant="body2">
+                          {metric.description}
+                        </Typography>
+                      )}
+                      <Box maxWidth={200} mx="auto" width="70%">
+                        {values.map((count, index) => {
+                          const ratingValue = index + 1;
+                          return (
+                            <IntInput
+                              key={ratingValue}
+                              label={ratingValue.toString()}
+                              labelPlacement="horizontal"
+                              onChange={(newValue) => {
+                                setValuesByMetricId((current) => ({
+                                  ...current,
+                                  [metric.id]: [
+                                    ...values.slice(0, index),
+                                    newValue,
+                                    ...values.slice(index + 1),
+                                  ],
+                                }));
+                              }}
+                              value={count}
+                            />
+                          );
+                        })}
+                      </Box>
+                    </Box>
+                  </StepContent>
+                </Step>
+              );
+            }
+          })}
+        </Stepper>
       </Box>
     </PageBase>
   );
