@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 
 import PageBase from './PageBase';
-import Stepper from '../Stepper';
+import IntInput from '../IntInput';
 import {
   ZetkinCanvassAssignment,
   ZetkinPlaceVisit,
@@ -93,7 +93,7 @@ const PlaceVisitPage: FC<Props> = ({
                   <Typography variant="body2">{metric.description}</Typography>
                 )}
                 <Box maxWidth={200} mx="auto" width="70%">
-                  <Stepper
+                  <IntInput
                     label="Yes"
                     labelPlacement="horizontal"
                     onChange={(value) => {
@@ -104,7 +104,7 @@ const PlaceVisitPage: FC<Props> = ({
                     }}
                     value={values[0]}
                   />
-                  <Stepper
+                  <IntInput
                     label="No"
                     labelPlacement="horizontal"
                     onChange={(value) => {
@@ -137,7 +137,7 @@ const PlaceVisitPage: FC<Props> = ({
                   {values.map((count, index) => {
                     const ratingValue = index + 1;
                     return (
-                      <Stepper
+                      <IntInput
                         key={ratingValue}
                         label={ratingValue.toString()}
                         labelPlacement="horizontal"

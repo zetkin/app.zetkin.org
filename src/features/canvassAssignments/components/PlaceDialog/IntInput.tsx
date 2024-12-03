@@ -2,7 +2,7 @@ import { Add, Remove } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
 import { FC } from 'react';
 
-const Stepper: FC<{
+const IntInput: FC<{
   label: string;
   labelPlacement?: 'horizontal' | 'vertical';
   onChange: (value: number) => void;
@@ -32,4 +32,4 @@ const Stepper: FC<{
   );
 };
 
-export default Stepper;
+export default IntInput;

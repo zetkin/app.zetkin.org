@@ -5,7 +5,7 @@ import { DoorFrontOutlined } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
-import Stepper from '../Stepper';
+import IntInput from '../IntInput';
 
 type Props = {
   onBack: () => void;
@@ -147,12 +147,12 @@ const CreateHouseholdsPage: FC<Props> = ({
           )}
         </Box>
         <Box display="flex" justifyContent="space-around">
-          <Stepper
+          <IntInput
             label="Number of floors"
             onChange={(value) => updateSize(value, numAptsPerFloor)}
             value={numFloors}
           />
-          <Stepper
+          <IntInput
             label="Households per floor"
             onChange={(value) => updateSize(numFloors, value)}
             value={numAptsPerFloor}
