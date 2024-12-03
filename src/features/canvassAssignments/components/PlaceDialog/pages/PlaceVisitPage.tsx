@@ -73,15 +73,9 @@ const PlaceVisitPage: FC<Props> = ({
       <Box
         display="flex"
         flexDirection="column"
-        gap={4}
-        height="100%"
+        gap={2}
         justifyContent="center"
       >
-        <Stepper
-          label="Total number of households"
-          onChange={(value) => setNumHouseholds(value)}
-          value={numHouseholds}
-        />
         {assignment.metrics.map((metric) => {
           if (metric.kind == 'boolean') {
             const values = valuesByMetricId[metric.id] || [0, 0];
@@ -92,32 +86,35 @@ const PlaceVisitPage: FC<Props> = ({
                 flexDirection="column"
                 gap={1}
               >
-                <Typography color="secondary">{metric.question}</Typography>
-                <Box display="flex" gap={1}>
-                  <Button
-                    color={values[0] > 0 ? 'primary' : 'secondary'}
-                    onClick={() =>
+                <Typography color="secondary" variant="h5">
+                  {metric.question}
+                </Typography>
+                {metric.description && (
+                  <Typography variant="body2">{metric.description}</Typography>
+                )}
+                <Box maxWidth={200} mx="auto" width="70%">
+                  <Stepper
+                    label="Yes"
+                    labelPlacement="horizontal"
+                    onChange={(value) => {
                       setValuesByMetricId((current) => ({
                         ...current,
-                        [metric.id]: [values[0] + 1, values[1]],
-                      }))
-                    }
-                    variant="outlined"
-                  >
-                    Yes ({values[0]})
-                  </Button>
-                  <Button
-                    color={values[1] > 0 ? 'primary' : 'secondary'}
-                    onClick={() =>
+                        [metric.id]: [value, values[1]],
+                      }));
+                    }}
+                    value={values[0]}
+                  />
+                  <Stepper
+                    label="No"
+                    labelPlacement="horizontal"
+                    onChange={(value) => {
                       setValuesByMetricId((current) => ({
                         ...current,
-                        [metric.id]: [values[0], values[1] + 1],
-                      }))
-                    }
-                    variant="outlined"
-                  >
-                    No ({values[1]})
-                  </Button>
+                        [metric.id]: [values[0], value],
+                      }));
+                    }}
+                    value={values[1]}
+                  />
                 </Box>
               </Box>
             );
@@ -130,27 +127,34 @@ const PlaceVisitPage: FC<Props> = ({
                 flexDirection="column"
                 gap={1}
               >
-                <Typography color="secondary">{metric.question}</Typography>
-                <Box display="flex" gap={1}>
-                  {values.map((count, index) => (
-                    <Button
-                      key={index}
-                      color={count > 0 ? 'primary' : 'secondary'}
-                      onClick={() =>
-                        setValuesByMetricId((current) => ({
-                          ...current,
-                          [metric.id]: [
-                            ...values.slice(0, index),
-                            values[index] + 1,
-                            ...values.slice(index + 1),
-                          ],
-                        }))
-                      }
-                      variant="outlined"
-                    >
-                      {index} ({count})
-                    </Button>
-                  ))}
+                <Typography color="secondary" variant="h5">
+                  {metric.question}
+                </Typography>
+                {metric.description && (
+                  <Typography variant="body2">{metric.description}</Typography>
+                )}
+                <Box maxWidth={200} mx="auto" width="70%">
+                  {values.map((count, index) => {
+                    const ratingValue = index + 1;
+                    return (
+                      <Stepper
+                        key={ratingValue}
+                        label={ratingValue.toString()}
+                        labelPlacement="horizontal"
+                        onChange={(newValue) => {
+                          setValuesByMetricId((current) => ({
+                            ...current,
+                            [metric.id]: [
+                              ...values.slice(0, index),
+                              newValue,
+                              ...values.slice(index + 1),
+                            ],
+                          }));
+                        }}
+                        value={count}
+                      />
+                    );
+                  })}
                 </Box>
               </Box>
             );

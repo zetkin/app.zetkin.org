@@ -4,11 +4,18 @@ import { FC } from 'react';
 
 const Stepper: FC<{
   label: string;
+  labelPlacement?: 'horizontal' | 'vertical';
   onChange: (value: number) => void;
   value: number;
-}> = ({ label, onChange, value }) => {
+}> = ({ label, labelPlacement = 'vertical', onChange, value }) => {
+  const vertical = labelPlacement == 'vertical';
   return (
-    <Box alignItems="center" display="flex" flexDirection="column">
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection={vertical ? 'column' : 'row'}
+      justifyContent="space-between"
+    >
       <Typography color="secondary">{label}</Typography>
       <Box alignItems="center" display="flex">
         <IconButton onClick={() => onChange(value - 1)}>
