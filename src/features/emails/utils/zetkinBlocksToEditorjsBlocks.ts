@@ -8,12 +8,18 @@ export default function zetkinBlocksToEditorjsBlocks(
 ) {
   const editorjsBlocks: OutputBlockData[] = [];
 
+  const buttonTagIds: string[] = [];
+
   zetkinBlocks.forEach((block) => {
     if (block.kind === BlockKind.BUTTON) {
+      const tag = buttonTagIds.includes(block.data.tag)
+        ? Math.random().toString(36).substring(2, 10)
+        : block.data.tag;
+      buttonTagIds.push(tag);
       editorjsBlocks.push({
         data: {
           buttonText: block.data.text,
-          tag: block.data.tag,
+          tag,
           url: block.data.href,
         },
         id: Math.random().toString(36).substring(2, 10),
