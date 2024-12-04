@@ -1,12 +1,11 @@
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { KeyboardArrowUp } from '@mui/icons-material';
 
 import { ZetkinCanvassAssignment, ZetkinPlace } from '../types';
 import PlaceDialog from './PlaceDialog';
 import { CreatePlaceCard } from './CreatePlaceCard';
-import PageBaseHeader from './PlaceDialog/pages/PageBaseHeader';
+import ContractedHeader from './PlaceDialog/ContractedHeader';
 
 type Props = {
   assignment: ZetkinCanvassAssignment;
@@ -58,11 +57,6 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
     }
   }, [selectedPlace]);
 
-  const numVisitedHouseholds =
-    selectedPlace?.households.filter((household) =>
-      household.visits.some((visit) => visit.canvassAssId == assignment.id)
-    ).length ?? 0;
-
   return (
     <>
       {!selectedPlace && !isCreating && (
@@ -87,15 +81,7 @@ const CanvassAssignmentMapOverlays: FC<Props> = ({
       >
         {showViewPlaceButton && (
           <Box onClick={() => setExpanded(true)} p={2}>
-            <PageBaseHeader
-              iconButtons={
-                <IconButton onClick={() => setExpanded(true)}>
-                  <KeyboardArrowUp />
-                </IconButton>
-              }
-              subtitle={`${numVisitedHouseholds} / ${selectedPlace.households.length} households visited`}
-              title={selectedPlace.title || 'Untitled place'}
-            />
+            <ContractedHeader assignment={assignment} place={selectedPlace} />
           </Box>
         )}
         {selectedPlace && expanded && (

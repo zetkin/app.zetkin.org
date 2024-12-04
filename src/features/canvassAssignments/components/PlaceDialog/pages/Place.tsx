@@ -16,6 +16,7 @@ import PageBase from './PageBase';
 import usePlaceVisits from 'features/canvassAssignments/hooks/usePlaceVisits';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import estimateVisitedHouseholds from 'features/canvassAssignments/utils/estimateVisitedHouseholds';
 
 type PlaceProps = {
   assignment: ZetkinCanvassAssignment;
@@ -39,16 +40,27 @@ const Place: FC<PlaceProps> = ({
     assignment.id,
     place.id
   );
-  const numVisitedHouseholds =
+
+  const numHouseholdsVisitedIndividually =
     place?.households.filter((household) =>
       household.visits.some((visit) => visit.canvassAssId == assignment.id)
     ).length ?? 0;
+
+  const numHouseholdsPerPlaceVisit =
+    visitsFuture.data?.map(estimateVisitedHouseholds) ?? [];
+
+  const numVisitedHouseholds = Math.max(
+    numHouseholdsVisitedIndividually,
+    ...numHouseholdsPerPlaceVisit
+  );
+
+  const numHouseholds = Math.max(place.households.length, numVisitedHouseholds);
 
   return (
     <PageBase
       onClose={onClose}
       onEdit={onEdit}
-      subtitle={`${numVisitedHouseholds} / ${place.households.length} households visited`}
+      subtitle={`${numVisitedHouseholds} / ${numHouseholds} households visited`}
       title={place.title || 'Untitled place'}
     >
       <Box>
