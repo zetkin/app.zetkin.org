@@ -41,6 +41,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         data: visitModels.map((model) => ({
           canvassAssId: model.canvassAssId,
           id: model._id.toString(),
+          personId: model.personId,
           placeId: model.placeId,
           responses: model.responses,
           timestamp: model.timestamp,
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       orgId: params.orgId,
       request: request,
     },
-    async ({ orgId }) => {
+    async ({ orgId, personId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const assignmentModel = await CanvassAssignmentModel.find({
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const visit = new PlaceVisitModel({
         canvassAssId,
+        personId: personId,
         placeId: payload.placeId,
         responses: payload.responses,
         timestamp: new Date().toISOString(),
@@ -84,6 +86,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         data: {
           canvassAssId: visit.canvassAssId,
           id: visit._id.toString(),
+          personId: visit.personId,
           placeId: visit.placeId,
           responses: visit.responses,
           timestamp: visit.timestamp,

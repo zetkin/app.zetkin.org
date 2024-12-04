@@ -64,6 +64,7 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
           canvassAssId: String,
           id: String,
           noteToOfficial: String,
+          personId: Number,
           responses: [
             {
               metricId: String,
@@ -82,6 +83,7 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
 
 export type PlaceVisitModelType = {
   canvassAssId: string;
+  personId: number;
   placeId: string;
   responses: {
     metricId: string;
@@ -92,6 +94,7 @@ export type PlaceVisitModelType = {
 
 const placeVisitSchema = new mongoose.Schema<PlaceVisitModelType>({
   canvassAssId: String,
+  personId: Number,
   placeId: String,
   responses: [
     {

@@ -34,9 +34,15 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
       });
       dispatch(placeUpdated(place));
     },
-    addVisit: async (householdId: string, data: Omit<Visit, 'id'>) => {
+    addVisit: async (
+      householdId: string,
+      data: Omit<Visit, 'id' | 'personId'>
+    ) => {
       setIsAddVisitLoading(true);
-      const place = await apiClient.post<ZetkinPlace, Omit<Visit, 'id'>>(
+      const place = await apiClient.post<
+        ZetkinPlace,
+        Omit<Visit, 'id' | 'personId'>
+      >(
         `/beta/orgs/${orgId}/places/${placeId}/households/${householdId}/visits`,
         data
       );

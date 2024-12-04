@@ -48,6 +48,7 @@ export type Visit = {
   canvassAssId: string | null;
   id: string;
   noteToOfficial: string | null;
+  personId: number;
   responses: {
     metricId: string;
     response: string;
@@ -76,6 +77,7 @@ export type ZetkinPlace = {
 export type ZetkinPlaceVisit = {
   canvassAssId: string;
   id: string;
+  personId: number;
   placeId: string;
   responses: {
     metricId: string;
@@ -86,7 +88,7 @@ export type ZetkinPlaceVisit = {
 
 export type ZetkinPlaceVisitPostBody = Omit<
   ZetkinPlaceVisit,
-  'id' | 'timestamp'
+  'id' | 'timestamp' | 'personId'
 >;
 
 export type ZetkinPlacePostBody = Partial<
