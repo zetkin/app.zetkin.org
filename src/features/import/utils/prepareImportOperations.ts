@@ -1,8 +1,8 @@
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
 import getUniqueTags from './getUniqueTags';
-import parseDate from './parseDate';
 import { CellData, ColumnKind, Sheet } from './types';
+import parserFactory from './dateParsing/parserFactory';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
@@ -139,7 +139,8 @@ export default function prepareImportOperations(
             let value = row.data[colIdx];
 
             if (value) {
-              value = parseDate(value, column.dateFormat);
+              const parser = parserFactory(column.dateFormat);
+              value = parser.parse(value.toString());
 
               personImportOps[rowIndex].data = {
                 ...personImportOps[rowIndex].data,

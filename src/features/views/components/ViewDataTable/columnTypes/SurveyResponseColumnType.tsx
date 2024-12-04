@@ -7,6 +7,7 @@ import {
   GridRenderCellParams,
   GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
+import { History } from '@mui/icons-material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
@@ -36,14 +37,14 @@ export default class SurveyResponseColumnType
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return this.cellToString(cell);
+        return cell.map((response) => response.text);
       },
       width: 250,
     };
   }
 
   getSearchableStrings(cell: SurveyResponseViewCell): string[] {
-    return cell.map((sub) => sub.text);
+    return cell.map((response) => response.text);
   }
 }
 
@@ -52,6 +53,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     display: 'flex',
     height: '100%',
+    width: '100%',
   },
   content: {
     '-webkit-box-orient': 'vertical',
@@ -87,7 +89,10 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
         onMouseOut={() => setAnchorEl(null)}
         onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
       >
-        {sorted[0].text}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          {sorted[0].text}
+          {cell.length > 1 && <History color="secondary" />}
+        </Box>
         <ViewSurveySubmissionPreview
           anchorEl={anchorEl}
           onOpenSubmission={(id) => {

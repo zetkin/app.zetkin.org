@@ -35,14 +35,19 @@ export default async function asCanvasserAuthorized(
       `/api/users/me/memberships/${orgId}`
     );
 
-    await mongoose.connect(process.env.MONGODB_URL || '');
-    const assignmentModels = await CanvassAssignmentModel.find({
-      orgId: membership.organization.id,
-      'sessions.personId': { $eq: membership.profile.id },
-    });
+    if (!membership.role) {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+      const assignmentModels = await CanvassAssignmentModel.find({
+        orgId: membership.organization.id,
+        'sessions.personId': { $eq: membership.profile.id },
+      });
 
-    if (!assignmentModels.length) {
-      return new NextResponse(null, { status: 403 });
+      if (!assignmentModels.length) {
+        return NextResponse.json(
+          { error: { title: 'Must be canvasser' } },
+          { status: 403 }
+        );
+      }
     }
 
     return fn({

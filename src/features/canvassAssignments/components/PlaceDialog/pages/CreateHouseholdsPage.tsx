@@ -37,8 +37,8 @@ const CreateHouseholdsPage: FC<Props> = ({
         width: widthPerHousehold * 5,
       };
 
-      const maxHeight = rect.width / widthPerHousehold - 2;
-      const maxWidth = rect.height / heightPerFloor - 1;
+      const maxHeight = rect.height / (heightPerFloor - 1);
+      const maxWidth = rect.width / (widthPerHousehold - 1);
       const scaleX = Math.min(1.0, maxWidth / newNumAptsPerFloor);
       const scaleY = Math.min(1.0, maxHeight / newNumFloors);
       const newScale = Math.min(scaleX, scaleY);

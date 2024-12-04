@@ -57,7 +57,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
 
   const back = useCallback(() => {
     history.back();
-  }, [setDialogStep]);
+  }, []);
 
   useEffect(() => {
     function handlePopState(event: PopStateEvent) {

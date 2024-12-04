@@ -1,14 +1,11 @@
-import { columnUpdate } from '../store';
 import hasWrongIDFormat from '../utils/hasWrongIDFormat';
 import { IDFieldColumn } from '../utils/types';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { useAppSelector } from 'core/hooks';
 
 export default function useIDConfig(
   column: IDFieldColumn,
   columnIndex: number
 ) {
-  const dispatch = useAppDispatch();
-
   const selectedSheetIndex = useAppSelector(
     (state) => state.import.pendingFile.selectedSheetIndex
   );
@@ -22,9 +19,5 @@ export default function useIDConfig(
 
   const wrongIDFormat = hasWrongIDFormat(column, cellValues, firstRowIsHeaders);
 
-  const updateIDField = (idField: 'ext_id' | 'id') => {
-    dispatch(columnUpdate([columnIndex, { ...column, idField: idField }]));
-  };
-
-  return { updateIDField, wrongIDFormat };
+  return { wrongIDFormat };
 }

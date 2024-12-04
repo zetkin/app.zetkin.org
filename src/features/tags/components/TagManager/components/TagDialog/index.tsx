@@ -81,7 +81,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           e.preventDefault();
           e.stopPropagation();
           const tagBody = {
-            ...(color.value && { color: `#${color.value}` }),
+            ...(color.value && { color: `#${color.value}`.toLowerCase() }),
             ...(tag && 'id' in tag && { id: tag.id }),
             ...(type && { value_type: type }),
             title,

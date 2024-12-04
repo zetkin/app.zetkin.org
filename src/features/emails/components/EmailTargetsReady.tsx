@@ -1,14 +1,5 @@
 import { FC } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Divider,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { Lock, LockOpen } from '@mui/icons-material';
+import { Box, Card, Divider, Typography, useTheme } from '@mui/material';
 
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
@@ -16,24 +7,19 @@ import { Msg } from 'core/i18n';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 interface EmailTargetsReadyProps {
-  isLocked: boolean;
-  isLoading: boolean;
   lockedReadyTargets: number | null;
-  onToggleLocked: () => void;
+  missingEmail: number;
   readyTargets: number;
   state: EmailState;
 }
 
 const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
-  isLocked,
-  isLoading,
   lockedReadyTargets,
-  onToggleLocked,
+  missingEmail,
   readyTargets,
   state,
 }) => {
   const theme = useTheme();
-  const showUnlockInfo = state != EmailState.SENT;
 
   return (
     <Card>
@@ -58,17 +44,6 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           </Typography>
         </Box>
         <Box alignItems="center" display="flex" gap={2}>
-          {isLocked && (
-            <Box
-              bgcolor={theme.palette.grey[300]}
-              borderRadius="2em"
-              padding={1}
-            >
-              <Typography variant="body2">
-                <Msg id={messageIds.ready.locked} />
-              </Typography>
-            </Box>
-          )}
           <ZUIAnimatedNumber
             value={
               lockedReadyTargets === null ? readyTargets : lockedReadyTargets
@@ -101,53 +76,16 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
           </ZUIAnimatedNumber>
         </Box>
       </Box>
-      {showUnlockInfo && (
+      {missingEmail > 0 && state != EmailState.SENT && (
         <>
           <Divider />
-          <Box
-            alignItems="flex-start"
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            padding={2}
-          >
+          <Box padding={2}>
             <Typography>
-              {state === EmailState.SCHEDULED ? (
-                <Msg id={messageIds.ready.scheduledDescription} />
-              ) : (
-                <Msg
-                  id={
-                    isLocked
-                      ? messageIds.ready.unlockDescription
-                      : messageIds.ready.lockDescription
-                  }
-                />
-              )}
+              <Msg
+                id={messageIds.ready.missingEmailsDescription}
+                values={{ numPeople: missingEmail }}
+              />
             </Typography>
-            {isLoading && (
-              <Button
-                startIcon={<CircularProgress size="1em" />}
-                variant="outlined"
-              >
-                <Msg id={messageIds.ready.loading} />
-              </Button>
-            )}
-            {!isLoading && (
-              <Button
-                disabled={readyTargets === 0 || state === EmailState.SCHEDULED}
-                onClick={onToggleLocked}
-                startIcon={isLocked ? <LockOpen /> : <Lock />}
-                variant={isLocked ? 'outlined' : 'contained'}
-              >
-                <Msg
-                  id={
-                    isLocked
-                      ? messageIds.ready.unlockButton
-                      : messageIds.ready.lockButton
-                  }
-                />
-              </Button>
-            )}
           </Box>
         </>
       )}

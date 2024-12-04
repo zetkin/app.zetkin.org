@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 
 import theme from 'theme';
 
@@ -15,14 +15,17 @@ const NumberCard: FC<NumberCardProps> = ({
   secondNumber,
 }) => {
   return (
-    <Card
+    <Box
       sx={{
+        display: 'flex',
         flex: 1,
-        textAlign: 'center',
+        flexDirection: 'row',
+        margin: 1,
+        textAlign: 'left',
       }}
     >
-      <CardContent>
-        <Box alignItems="baseline" display="flex" justifyContent="center">
+      <Box sx={{ display: 'flex', flexDirection: 'column', marginRight: 2 }}>
+        <Box alignItems="baseline" display="flex" justifyContent="left">
           <Typography
             sx={{
               color: theme.palette.primary.main,
@@ -37,9 +40,11 @@ const NumberCard: FC<NumberCardProps> = ({
             /{secondNumber}
           </Typography>
         </Box>
-        <Typography sx={{ fontSize: 14 }}>{message}</Typography>
-      </CardContent>
-    </Card>
+        <Box>
+          <Typography sx={{ fontSize: 14 }}>{message}</Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
