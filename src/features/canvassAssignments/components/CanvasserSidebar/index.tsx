@@ -78,18 +78,6 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
         <Box
           sx={{
             alignItems: 'center',
-            bgcolor: '#ddd',
-            display: 'flex',
-            gridColumn: 'span 3',
-            height: '100px',
-            justifyContent: 'center',
-          }}
-        >
-          Chart goes here
-        </Box>
-        <Box
-          sx={{
-            alignItems: 'center',
             display: 'flex',
             gridColumn: 'span 3',
             justifyContent: 'space-between',
