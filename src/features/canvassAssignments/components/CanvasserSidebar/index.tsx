@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
-import { ZetkinCanvassAssignment } from '../types';
+import { ZetkinCanvassAssignment } from '../../types';
 
 type Props = {
   assignment: ZetkinCanvassAssignment;
