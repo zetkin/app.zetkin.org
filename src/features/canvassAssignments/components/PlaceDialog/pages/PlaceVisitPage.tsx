@@ -108,14 +108,21 @@ const PlaceVisitPage: FC<Props> = ({
                       alignItems="center"
                       display="flex"
                       flexDirection="column"
-                      gap={1}
+                      gap={4}
                     >
                       {metric.description && (
                         <Typography variant="body2">
                           {metric.description}
                         </Typography>
                       )}
-                      <Box maxWidth={200} mx="auto" width="70%">
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={2}
+                        maxWidth={200}
+                        mx="auto"
+                        width="70%"
+                      >
                         <IntInput
                           label="Yes"
                           labelPlacement="horizontal"
@@ -163,14 +170,21 @@ const PlaceVisitPage: FC<Props> = ({
                       alignItems="center"
                       display="flex"
                       flexDirection="column"
-                      gap={1}
+                      gap={4}
                     >
                       {metric.description && (
                         <Typography variant="body2">
                           {metric.description}
                         </Typography>
                       )}
-                      <Box maxWidth={200} mx="auto" width="70%">
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={2}
+                        maxWidth={200}
+                        mx="auto"
+                        width="70%"
+                      >
                         {values.map((count, index) => {
                           const ratingValue = index + 1;
                           return (
