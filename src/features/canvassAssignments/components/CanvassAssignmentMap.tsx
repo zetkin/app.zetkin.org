@@ -27,6 +27,7 @@ import { ZetkinCanvassAssignment } from '../types';
 import MapControls from './MapControls';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import CanvassAssignmentMapOverlays from './CanvassAssignmentMapOverlays';
+import useAllPlaceVisits from '../hooks/useAllPlaceVisits';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -71,6 +72,10 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const classes = useStyles();
   const places = usePlaces(assignment.organization.id).data || [];
   const createPlace = useCreatePlace(assignment.organization.id);
+  const placeVisitList = useAllPlaceVisits(
+    assignment.organization.id,
+    assignment.id
+  );
 
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -261,7 +266,12 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
           ))}
         </FeatureGroup>
         {places.map((place) => {
-          const state = getVisitState(place.households, assignment.id);
+          const householdState = getVisitState(place.households, assignment.id);
+          const visited = placeVisitList.data?.some(
+            (visit) => visit.placeId == place.id
+          );
+
+          const state = visited ? 'all' : householdState;
 
           const selected = place.id == selectedPlaceId;
           const key = `marker-${place.id}-${selected.toString()}`;
