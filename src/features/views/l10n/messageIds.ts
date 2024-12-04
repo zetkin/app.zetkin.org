@@ -421,7 +421,7 @@ export default makeMessages('feat.views', {
       makeDynamic: m('Convert to Smart Search list'),
       makeStatic: {
         confirmDialogInfo: m(
-          'If you convert this list to a static list the Smart Search will be removed and the list will be empty, as all the people the Smart Search returned will no longer be there.'
+          'If you convert this list to a static list the Smart Search will be removed and all the people the Smart Search returned will no longer be there.'
         ),
         confirmDialogSubmitLabel: m('Convert'),
         confirmDialogTitle: m('Convert to static list'),
