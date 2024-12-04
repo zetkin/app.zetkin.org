@@ -96,6 +96,7 @@ const PlaceVisitPage: FC<Props> = ({
               const values = valuesByMetricId[metric.id] || [0, 0];
               return (
                 <Step
+                  key={index}
                   completed={completed}
                   disabled={index > step && !valuesByMetricId[metric.id]}
                 >
@@ -152,6 +153,7 @@ const PlaceVisitPage: FC<Props> = ({
               const values = valuesByMetricId[metric.id] || [0, 0, 0, 0, 0];
               return (
                 <Step
+                  key={index}
                   completed={completed}
                   disabled={index > step && !valuesByMetricId[metric.id]}
                 >

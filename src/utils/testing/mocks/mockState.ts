@@ -30,6 +30,7 @@ export default function mockState(overrides?: RootState) {
       placeList: remoteList(),
       sessionsByAssignmentId: {},
       statsByCanvassAssId: {},
+      visitsByAssignmentId: {},
     },
     duplicates: {
       potentialDuplicatesList: remoteList(),

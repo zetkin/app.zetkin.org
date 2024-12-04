@@ -9,7 +9,7 @@ import {
   ZetkinPlaceVisit,
   ZetkinPlaceVisitPostBody,
 } from '../types';
-import { placeUpdated } from '../store';
+import { placeUpdated, visitCreated } from '../store';
 import createHouseholds from '../rpc/createHouseholds/client';
 
 export default function usePlaceMutations(orgId: number, placeId: string) {
@@ -48,10 +48,11 @@ export default function usePlaceMutations(orgId: number, placeId: string) {
       canvassAssId: string,
       data: ZetkinPlaceVisitPostBody
     ) => {
-      await apiClient.post<ZetkinPlaceVisit, ZetkinPlaceVisitPostBody>(
-        `/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/visits`,
-        data
-      );
+      const visit = await apiClient.post<
+        ZetkinPlaceVisit,
+        ZetkinPlaceVisitPostBody
+      >(`/beta/orgs/${orgId}/canvassassignments/${canvassAssId}/visits`, data);
+      dispatch(visitCreated(visit));
     },
     updateHousehold: async (householdId: string, data: HouseholdPatchBody) => {
       const place = await apiClient.patch<ZetkinPlace, HouseholdPatchBody>(

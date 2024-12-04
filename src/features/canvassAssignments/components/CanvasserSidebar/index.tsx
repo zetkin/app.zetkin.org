@@ -2,6 +2,7 @@ import { FC } from 'react';
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   List,
   ListItemButton,
@@ -10,12 +11,19 @@ import {
 } from '@mui/material';
 
 import { ZetkinCanvassAssignment } from '../../types';
+import useSidebarStats from 'features/canvassAssignments/hooks/useSidebarStats';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type Props = {
   assignment: ZetkinCanvassAssignment;
 };
 
 const CanvasserSidebar: FC<Props> = ({ assignment }) => {
+  const { loading, stats, sync, synced } = useSidebarStats(
+    assignment.organization.id,
+    assignment.id
+  );
+
   return (
     <Box
       sx={(theme) => ({
@@ -55,18 +63,18 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
         <Box gridColumn="span 3">Session (today)</Box>
         <Box>You</Box>
         <Box textAlign="right">
-          <Typography variant="h5">12</Typography>
+          <Typography variant="h5">{stats.today.numUserHouseholds}</Typography>
         </Box>
-        <Box textAlign="right">1</Box>
+        <Box textAlign="right">{stats.today.numUserPlaces}</Box>
         <Box>Team</Box>
-        <Box textAlign="right">53</Box>
-        <Box textAlign="right">7</Box>
+        <Box textAlign="right">{stats.today.numHouseholds}</Box>
+        <Box textAlign="right">{stats.today.numPlaces}</Box>
         <Box gridColumn="span 3">
           <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
         </Box>
         <Box>All time</Box>
-        <Box textAlign="right">465</Box>
-        <Box textAlign="right">48</Box>
+        <Box textAlign="right">{stats.allTime.numHouseholds}</Box>
+        <Box textAlign="right">{stats.allTime.numPlaces}</Box>
         <Box
           sx={{
             alignItems: 'center',
@@ -88,10 +96,23 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
           }}
         >
           <Box>
-            <Typography variant="body2">Synced 7 minutes ago.</Typography>
+            <Typography variant="body2">
+              {!loading && synced && (
+                <>
+                  Synced <ZUIRelativeTime datetime={synced} />
+                </>
+              )}
+              {!loading && !synced && `Never synced`}
+            </Typography>
           </Box>
           <Box>
-            <Button>Sync now</Button>
+            <Button
+              disabled={loading}
+              onClick={() => sync()}
+              startIcon={loading ? <CircularProgress size={24} /> : null}
+            >
+              {loading ? 'Syncing' : 'Sync now'}
+            </Button>
           </Box>
         </Box>
         <Box sx={{ gridColumn: 'span 3' }}>
