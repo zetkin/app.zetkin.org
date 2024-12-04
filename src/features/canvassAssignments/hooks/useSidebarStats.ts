@@ -7,6 +7,7 @@ import {
   visitsLoad,
   visitsLoaded,
 } from '../store';
+import useMembership from 'features/organizations/hooks/useMembership';
 
 type UseSidebarReturn = {
   loading: boolean;
@@ -38,6 +39,9 @@ export default function useSidebarStats(
   const visitList = useAppSelector(
     (state) => state.canvassAssignments.visitsByAssignmentId[assignmentId]
   );
+
+  const membershipFuture = useMembership(orgId);
+  const userPersonId = membershipFuture.data?.profile.id;
 
   const placeListFuture = loadListIfNecessary(placeList, dispatch, {
     actionOnLoad: () => placesLoad(),
@@ -87,8 +91,9 @@ export default function useSidebarStats(
             if (visit.timestamp.startsWith(todayStr)) {
               teamHouseholdsToday.add(household.id);
 
-              // TODO: Check user
-              userHouseholdsToday.add(household.id);
+              if (visit.personId == userPersonId) {
+                userHouseholdsToday.add(household.id);
+              }
             }
           }
         });
@@ -114,9 +119,10 @@ export default function useSidebarStats(
         teamPlacesToday.add(visit.placeId);
         stats.today.numHouseholds += numHouseholds;
 
-        // TODO: Check user
-        userPlacesToday.add(visit.placeId);
-        stats.today.numUserHouseholds += numHouseholds;
+        if (visit.personId == userPersonId) {
+          userPlacesToday.add(visit.placeId);
+          stats.today.numUserHouseholds += numHouseholds;
+        }
       }
     });
   }
