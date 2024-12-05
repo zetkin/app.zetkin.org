@@ -215,11 +215,13 @@ const SurveyOption = ({
                 onChange={(e) => handleConditionSelectChange(e.target.value)}
                 value={filter.config.operator}
               >
-                {Object.values(CONDITION_OPERATOR).map((o) => (
-                  <MenuItem key={o} value={o}>
-                    <Msg id={localMessageIds.conditionSelect[o]} />
-                  </MenuItem>
-                ))}
+                {Object.values(CONDITION_OPERATOR)
+                  .filter((o) => o !== CONDITION_OPERATOR.SOME)
+                  .map((o) => (
+                    <MenuItem key={o} value={o}>
+                      <Msg id={localMessageIds.conditionSelect[o]} />
+                    </MenuItem>
+                  ))}
               </StyledSelect>
             ),
             options: (
