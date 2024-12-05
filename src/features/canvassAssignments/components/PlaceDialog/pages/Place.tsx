@@ -72,10 +72,19 @@ const Place: FC<PlaceProps> = ({
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" flexDirection="column" my={3}>
-        <Typography variant="h4">
-          {`${numVisitedHouseholds} of ${numHouseholds}`}
-        </Typography>
-        <Typography variant="body2">households visited</Typography>
+        {!!numHouseholds && (
+          <>
+            <Typography variant="h4">
+              {`${numVisitedHouseholds} of ${numHouseholds}`}
+            </Typography>
+            <Typography variant="body2">households visited</Typography>
+          </>
+        )}
+        {!numHouseholds && (
+          <Typography variant="body2">
+            No households registered here yet
+          </Typography>
+        )}
       </Box>
       <Box display="flex" gap={1} justifyContent="center" m={4}>
         {assignment.reporting_level == 'place' && (
