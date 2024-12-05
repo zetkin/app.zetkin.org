@@ -105,6 +105,7 @@ const PlaceVisitPage: FC<Props> = ({
             const numNo = valuesByMetricId[metric.id]?.[1] ?? 0;
             const numHouseholds = numYes + numNo;
             const stepIsCurrent = index == step;
+            const stepIsLast = index == assignment.metrics.length - 1;
 
             if (metric.kind == 'boolean') {
               const values = valuesByMetricId[metric.id] || [0, 0];
@@ -181,12 +182,14 @@ const PlaceVisitPage: FC<Props> = ({
                           value={values[1]}
                         />
                       </Box>
-                      <Button
-                        onClick={() => setStep((current) => current + 1)}
-                        variant="contained"
-                      >
-                        Proceed
-                      </Button>
+                      {!stepIsLast && (
+                        <Button
+                          onClick={() => setStep((current) => current + 1)}
+                          variant="contained"
+                        >
+                          Proceed
+                        </Button>
+                      )}
                     </Box>
                   </StepContent>
                 </Step>
