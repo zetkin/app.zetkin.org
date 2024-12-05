@@ -10,6 +10,7 @@ import theme from 'theme';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import useDeleteType from '../hooks/useDeleteType';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
@@ -79,6 +80,8 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const createType = useCreateType(orgId);
   const deleteType = useDeleteType(orgId);
   const messages = useMessages(messageIds);
+  const orgTitle = useOrganization(orgId).data?.title;
+  const currentDefaultOrgMsg = messages.type.currentDefaultOrgMsg();
   const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
   const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
@@ -250,6 +253,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                         },
                         warningText: messages.type.deleteMessage({
                           eventType: option.title,
+                          orgTitle: orgTitle ? orgTitle : currentDefaultOrgMsg,
                         }),
                       });
                     }}

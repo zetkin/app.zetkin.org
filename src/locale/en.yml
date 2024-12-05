@@ -826,8 +826,6 @@ feat:
     tooltipContent: Untitled events will display type as title
     type:
       createType: Create "{type}"
-      deleteMessage: Are you sure you want to delete the "{eventType}" event type for
-        the whole organization?
       tooltip: Click to change type
       uncategorized: Uncategorized
   files:
