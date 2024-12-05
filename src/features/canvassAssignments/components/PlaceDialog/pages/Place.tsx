@@ -60,7 +60,6 @@ const Place: FC<PlaceProps> = ({
     <PageBase
       onClose={onClose}
       onEdit={onEdit}
-      subtitle={`${numVisitedHouseholds} / ${numHouseholds} households visited`}
       title={place.title || 'Untitled place'}
     >
       <Box>
@@ -71,6 +70,12 @@ const Place: FC<PlaceProps> = ({
         >
           {place.description || 'Empty description'}
         </Typography>
+      </Box>
+      <Box alignItems="center" display="flex" flexDirection="column" my={3}>
+        <Typography variant="h4">
+          {`${numVisitedHouseholds} of ${numHouseholds}`}
+        </Typography>
+        <Typography variant="body2">households visited</Typography>
       </Box>
       <Box display="flex" gap={1} justifyContent="center" m={4}>
         {assignment.reporting_level == 'place' && (
