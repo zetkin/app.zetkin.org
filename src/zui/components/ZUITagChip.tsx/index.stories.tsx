@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUITagChip from './index';
@@ -26,19 +25,12 @@ export const Basic: Story = {
       value_type: null,
     },
   },
-  render: function Render(args) {
-    return (
-      <Box display="flex">
-        <ZUITagChip {...args} />
-      </Box>
-    );
-  },
 };
 
 export const ValueTag: Story = {
   args: {
     tag: {
-      color: '#829F51',
+      color: '#187F81',
       description: 'The amount this person gets paid',
       group: null,
       hidden: false,
@@ -52,7 +44,6 @@ export const ValueTag: Story = {
       value_type: 'text',
     },
   },
-  render: Basic.render,
 };
 
 export const BasicWithAction: Story = {
@@ -68,7 +59,6 @@ export const ValueTagWithAction: Story = {
     ...ValueTag.args,
     onClick: () => null,
   },
-  render: Basic.render,
 };
 
 export const DeletableBasic: Story = {
@@ -76,7 +66,6 @@ export const DeletableBasic: Story = {
     ...Basic.args,
     onDelete: () => null,
   },
-  render: Basic.render,
 };
 
 export const DeletableValueTag: Story = {
@@ -84,7 +73,6 @@ export const DeletableValueTag: Story = {
     ...ValueTag.args,
     onDelete: () => null,
   },
-  render: Basic.render,
 };
 
 export const Disabled: Story = {
@@ -94,5 +82,4 @@ export const Disabled: Story = {
     onClick: () => null,
     onDelete: () => null,
   },
-  render: Basic.render,
 };
