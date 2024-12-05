@@ -20,7 +20,7 @@ interface GenderConfigRowProps {
   numRows: number;
   onSelectGender: (gender: Gender) => void;
   onDeselectGender: () => void;
-  selectedGender: Gender;
+  selectedGender: Gender | null;
   title: string;
 }
 
@@ -79,11 +79,13 @@ const GenderConfigRow: FC<GenderConfigRowProps> = ({
                   onChange={(event) => {
                     const { value } = event.target;
                     if (value === 'm' || value === 'f' || value === 'o') {
-                      // Just to make TypeScript happy
                       onSelectGender(value);
+                    } else if (value === 'unknown') {
+                      // selecting `unknown` is like deselecting
+                      onDeselectGender();
                     }
                   }}
-                  value={selectedGender || ''}
+                  value={selectedGender || 'unknown'}
                 >
                   {genders.map((key) => (
                     <MenuItem key={key} value={key}>
@@ -96,6 +98,13 @@ const GenderConfigRow: FC<GenderConfigRowProps> = ({
                       />
                     </MenuItem>
                   ))}
+                  <MenuItem value="unknown">
+                    <Msg
+                      id={
+                        messageIds.configuration.configure.genders.genders.null
+                      }
+                    />
+                  </MenuItem>
                 </Select>
               </FormControl>
               <IconButton

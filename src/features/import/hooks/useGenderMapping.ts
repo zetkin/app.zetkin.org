@@ -2,7 +2,7 @@ import { columnUpdate } from '../store';
 import { useAppDispatch } from 'core/hooks';
 import { CellData, Column, ColumnKind } from '../utils/types';
 
-export const genders = ['f', 'm', 'o', 'null'] as const;
+export const genders = ['f', 'm', 'o'] as const;
 export type Gender = typeof genders[keyof typeof genders];
 
 export default function useGenderMapping(column: Column, columnIndex: number) {
@@ -11,9 +11,9 @@ export default function useGenderMapping(column: Column, columnIndex: number) {
   const getSelectedGender = (value: CellData) => {
     if (column.kind == ColumnKind.GENDER) {
       const map = column.mapping.find((m) => m.value === value);
-      return map?.gender || 'null';
+      return map?.gender ?? null;
     }
-    return 'null';
+    return null;
   };
 
   const selectGender = (gender: Gender, value: CellData) => {
