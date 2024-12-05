@@ -419,7 +419,14 @@ export default makeMessages('feat.views', {
       delete: m('Delete list'),
       editQuery: m('Edit Smart Search query'),
       makeDynamic: m('Convert to Smart Search list'),
-      makeStatic: m('Convert to static list'),
+      makeStatic: {
+        confirmDialogInfo: m(
+          'If you convert this list to a static list the Smart Search will be removed and all the people the Smart Search returned will no longer be there.'
+        ),
+        confirmDialogSubmitLabel: m('Convert'),
+        confirmDialogTitle: m('Convert to static list'),
+        label: m('Convert to static list'),
+      },
     },
     jumpMenu: {
       placeholder: m('Start typing to find list'),
