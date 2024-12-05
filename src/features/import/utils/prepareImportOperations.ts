@@ -148,6 +148,18 @@ export default function prepareImportOperations(
             }
           }
         }
+
+        if (column.kind === ColumnKind.GENDER) {
+          const match = column.mapping.find(
+            (c) => c.value === row.data[colIdx]
+          );
+          if (match !== undefined) {
+            personImportOps[rowIndex].data = {
+              ...personImportOps[rowIndex].data,
+              gender: match.gender as string,
+            };
+          }
+        }
       });
     }
   });
