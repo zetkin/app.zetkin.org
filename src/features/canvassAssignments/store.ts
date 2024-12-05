@@ -16,6 +16,7 @@ import {
   AssignmentWithAreas,
   ZetkinAssignmentAreaStats,
   SessionDeletedPayload,
+  ZetkinPlaceVisit,
 } from './types';
 
 export interface CanvassAssignmentsStoreSlice {
@@ -38,6 +39,7 @@ export interface CanvassAssignmentsStoreSlice {
     string,
     RemoteItem<ZetkinCanvassAssignmentStats & { id: string }>
   >;
+  visitsByAssignmentId: Record<string, RemoteList<ZetkinPlaceVisit>>;
 }
 
 const initialState: CanvassAssignmentsStoreSlice = {
@@ -48,6 +50,7 @@ const initialState: CanvassAssignmentsStoreSlice = {
   placeList: remoteList(),
   sessionsByAssignmentId: {},
   statsByCanvassAssId: {},
+  visitsByAssignmentId: {},
 };
 
 const canvassAssignmentSlice = createSlice({
@@ -308,6 +311,34 @@ const canvassAssignmentSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    visitCreated: (state, action: PayloadAction<ZetkinPlaceVisit>) => {
+      const visit = action.payload;
+      const assignmentId = visit.canvassAssId;
+      if (!state.visitsByAssignmentId[assignmentId]) {
+        state.visitsByAssignmentId[assignmentId] = remoteList();
+      }
+
+      state.visitsByAssignmentId[assignmentId].items.push(
+        remoteItem(visit.id, { data: visit })
+      );
+    },
+    visitsInvalidated: (state, action: PayloadAction<string>) => {
+      const assignmentId = action.payload;
+      state.visitsByAssignmentId[assignmentId].isStale = true;
+    },
+    visitsLoad: (state, action: PayloadAction<string>) => {
+      state.visitsByAssignmentId[action.payload] = remoteList();
+      state.visitsByAssignmentId[action.payload].isLoading = true;
+    },
+    visitsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinPlaceVisit[]]>
+    ) => {
+      const [placeId, visits] = action.payload;
+      state.visitsByAssignmentId[placeId] = remoteList(visits);
+      state.visitsByAssignmentId[placeId].isLoading = false;
+      state.visitsByAssignmentId[placeId].loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -336,4 +367,8 @@ export const {
   sessionDeleted,
   statsLoad,
   statsLoaded,
+  visitCreated,
+  visitsInvalidated,
+  visitsLoad,
+  visitsLoaded,
 } = canvassAssignmentSlice.actions;

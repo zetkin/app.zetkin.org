@@ -83,6 +83,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               organization: {
                 id: assignmentModel.orgId,
               },
+              reporting_level: assignmentModel.reporting_level || 'household',
               start_date: assignmentModel.start_date,
               title: assignmentModel.title,
             },

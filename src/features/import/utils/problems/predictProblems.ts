@@ -2,7 +2,6 @@ import isURL from 'validator/lib/isURL';
 import { z } from 'zod';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
-import parseDate from '../parseDate';
 import { ColumnKind, Sheet } from '../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {
@@ -11,6 +10,7 @@ import {
   ImportProblemKind,
   ImportRowProblem,
 } from './types';
+import parserFactory from '../dateParsing/parserFactory';
 
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
@@ -126,7 +126,8 @@ export function predictProblems(
             const validator = VALIDATORS['date'];
 
             if (column.dateFormat) {
-              const date = parseDate(value, column.dateFormat);
+              const parser = parserFactory(column.dateFormat);
+              const date = parser.parse(value.toString());
               const valid = validator(date);
               if (!valid) {
                 accumulateFieldProblem(column.field, rowIndex);

@@ -63,6 +63,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         campId: payload.campaign_id,
         metrics: payload.metrics || [],
         orgId: orgId,
+        reporting_level: payload.reporting_level || 'household',
         title: payload.title,
       });
 
@@ -81,6 +82,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
             question: metric.question,
           })),
           organization: { id: orgId },
+          reporting_level: model.reporting_level || 'household',
           start_date: model.start_date,
           title: model.title,
         },

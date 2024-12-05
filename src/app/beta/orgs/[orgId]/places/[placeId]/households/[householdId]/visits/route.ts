@@ -18,7 +18,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       orgId: params.orgId,
       request: request,
     },
-    async ({ orgId }) => {
+    async ({ orgId, personId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const payload = await request.json();
@@ -33,6 +33,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
               id: new mongoose.Types.ObjectId().toString(),
               missionAccomplished: payload.missionAccomplished,
               noteToOfficial: payload.noteToOfficial,
+              personId: personId,
               responses: payload.responses || [],
               timestamp: payload.timestamp,
             },

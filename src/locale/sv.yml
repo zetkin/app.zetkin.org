@@ -878,8 +878,6 @@ feat:
             som YYYY.MM.DD.
           customFormatLabel: Anpassat datumformat
           dateInputLabel: Datumformat
-          description: Välj format för värdena i den här kolumnen så att de kan importeras
-            korrekt
           dropDownLabel: Välj format
           emptyPreview: Ogiltigt datum
           header: Konfigurera datumformat
@@ -901,8 +899,6 @@ feat:
                 eller tolvsiffriga svenska personnummer (ÅÅMMDD-XXXX eller ÅÅÅÅMMDD-XXXX)
                 till datum.
               label: Svenskt personnummer
-          wrongDateFormatWarning: Vissa värden i den här kolumnen kunde inte tolkas
-            som datum med det här formatet.
         ids:
           configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
             uppdatera existerande personer istället för att skapa dubletter.
@@ -1276,7 +1272,6 @@ feat:
   profile:
     delete:
       button: Ta bort person
-      confirm: Är du säker på att du vill radera {name}? Detta kan inte ångras.
       title: Radera konto
       warning: Detta kan inte ångras!
     details:

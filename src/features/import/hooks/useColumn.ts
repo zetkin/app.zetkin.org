@@ -36,12 +36,6 @@ export default function useColumn(orgId: number) {
       return false;
     }
 
-    if (value == 'id') {
-      return !!allSelectedColumns.find(
-        (column) => column.kind == ColumnKind.ID_FIELD
-      );
-    }
-
     const exists = selectedColumns.find((column) => {
       if (column.kind == ColumnKind.FIELD) {
         return column.field == value.slice(6);

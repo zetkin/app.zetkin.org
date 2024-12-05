@@ -12,6 +12,7 @@ import {
   ZetkinPersonImportPostBody,
 } from '../utils/types';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import remapFields from '../utils/remapFields';
 
 export default function useConfigure(orgId: number) {
   const dispatch = useAppDispatch();
@@ -23,7 +24,7 @@ export default function useConfigure(orgId: number) {
   if (!organization) {
     return;
   }
-  const countryCode = organization.country as CountryCode;
+  const countryCode = organization.country.toUpperCase() as CountryCode;
 
   const emptyStats = {
     person: {
@@ -85,7 +86,7 @@ export default function useConfigure(orgId: number) {
         >(`/api/orgs/${orgId}/bulk/preview`, {
           ops: importOperations,
         });
-        dispatch(importPreviewAdd(previewRes));
+        dispatch(importPreviewAdd(remapFields(previewRes) as ImportPreview));
       } catch (error) {
         addUnexpectedErrorToProblems();
       }

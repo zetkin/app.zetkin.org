@@ -46,6 +46,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           question: metric.question,
         })),
         organization: { id: orgId },
+        reporting_level: canvassAssignmentModel.reporting_level || 'household',
         start_date: canvassAssignmentModel.start_date,
         title: canvassAssignmentModel.title,
       };
@@ -66,7 +67,13 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const payload = await request.json();
-      const { metrics: newMetrics, title, start_date, end_date } = payload;
+      const {
+        metrics: newMetrics,
+        title,
+        start_date,
+        end_date,
+        reporting_level,
+      } = payload;
 
       if (newMetrics) {
         // Find existing metrics to remove
@@ -121,7 +128,10 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         }
       }
       type UpdateFieldsType = Partial<
-        Pick<ZetkinCanvassAssignment, 'title' | 'start_date' | 'end_date'>
+        Pick<
+          ZetkinCanvassAssignment,
+          'title' | 'start_date' | 'end_date' | 'reporting_level'
+        >
       >;
 
       const updateFields: UpdateFieldsType = {};
@@ -132,6 +142,10 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
       if (Object.prototype.hasOwnProperty.call(payload, 'start_date')) {
         updateFields.start_date = start_date;
+      }
+
+      if (reporting_level) {
+        updateFields.reporting_level = reporting_level;
       }
 
       if (Object.prototype.hasOwnProperty.call(payload, 'end_date')) {
@@ -165,6 +179,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
             question: metric.question,
           })),
           organization: { id: orgId },
+          reporting_level: model.reporting_level || 'household',
           start_date: model.start_date,
           title: model.title,
         },

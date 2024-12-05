@@ -25,6 +25,7 @@ export type ZetkinCanvassAssignment = {
   organization: {
     id: number;
   };
+  reporting_level: 'household' | 'place';
   start_date: string | null;
   title: string | null;
 };
@@ -47,6 +48,7 @@ export type Visit = {
   canvassAssId: string | null;
   id: string;
   noteToOfficial: string | null;
+  personId: number;
   responses: {
     metricId: string;
     response: string;
@@ -71,6 +73,23 @@ export type ZetkinPlace = {
   position: { lat: number; lng: number };
   title: string | null;
 };
+
+export type ZetkinPlaceVisit = {
+  canvassAssId: string;
+  id: string;
+  personId: number;
+  placeId: string;
+  responses: {
+    metricId: string;
+    responseCounts: number[];
+  }[];
+  timestamp: string;
+};
+
+export type ZetkinPlaceVisitPostBody = Omit<
+  ZetkinPlaceVisit,
+  'id' | 'timestamp' | 'personId'
+>;
 
 export type ZetkinPlacePostBody = Partial<
   Omit<ZetkinPlace, 'id' | 'households'>
