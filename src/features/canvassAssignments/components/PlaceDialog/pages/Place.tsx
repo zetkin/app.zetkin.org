@@ -92,10 +92,7 @@ const Place: FC<PlaceProps> = ({
               <Typography>History</Typography>
               <List>
                 {visits.map((visit) => {
-                  const householdsPerMetric = visit.responses.map((response) =>
-                    response.responseCounts.reduce((sum, value) => sum + value)
-                  );
-                  const households = Math.max(...householdsPerMetric);
+                  const households = estimateVisitedHouseholds(visit);
                   return (
                     <ListItem key={visit.id}>
                       <Box
