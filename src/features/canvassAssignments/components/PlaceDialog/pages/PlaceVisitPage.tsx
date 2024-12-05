@@ -5,7 +5,6 @@ import {
   Step,
   StepButton,
   StepContent,
-  StepLabel,
   Stepper,
   Typography,
 } from '@mui/material';
@@ -92,6 +91,11 @@ const PlaceVisitPage: FC<Props> = ({
         <Stepper activeStep={step} nonLinear orientation="vertical">
           {assignment.metrics.map((metric, index) => {
             const completed = !!valuesByMetricId[metric.id];
+            const numYes = valuesByMetricId[metric.id]?.[0] ?? 0;
+            const numNo = valuesByMetricId[metric.id]?.[1] ?? 0;
+            const numHouseholds = numYes + numNo;
+            const stepIsCurrent = index == step;
+
             if (metric.kind == 'boolean') {
               const values = valuesByMetricId[metric.id] || [0, 0];
               return (
@@ -100,8 +104,29 @@ const PlaceVisitPage: FC<Props> = ({
                   completed={completed}
                   disabled={index > step && !valuesByMetricId[metric.id]}
                 >
-                  <StepButton onClick={() => setStep(index)}>
-                    {metric.question}
+                  <StepButton
+                    onClick={() => setStep(index)}
+                    sx={{
+                      '& span': {
+                        overflow: 'hidden',
+                      },
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
+                      }}
+                    >
+                      {metric.question}
+                    </Typography>
+
+                    {completed && step != index && (
+                      <Typography variant="body2">
+                        ({numHouseholds} households, {numYes} yes)
+                      </Typography>
+                    )}
                   </StepButton>
                   <StepContent>
                     <Box
@@ -158,13 +183,43 @@ const PlaceVisitPage: FC<Props> = ({
               );
             } else if (metric.kind == 'scale5') {
               const values = valuesByMetricId[metric.id] || [0, 0, 0, 0, 0];
+              const numHouseholds = values.reduce((sum, val) => sum + val, 0);
+              const sumTotal = values.reduce(
+                (sum, count, index) => sum + count * (index + 1)
+              );
+              const avg = sumTotal / numHouseholds;
+              const avgFixed = avg.toFixed(1);
+
               return (
                 <Step
                   key={index}
                   completed={completed}
                   disabled={index > step && !valuesByMetricId[metric.id]}
                 >
-                  <StepLabel>{metric.question}</StepLabel>
+                  <StepButton
+                    onClick={() => setStep(index)}
+                    sx={{
+                      '& span': {
+                        overflow: 'hidden',
+                      },
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
+                      }}
+                    >
+                      {metric.question}
+                    </Typography>
+
+                    {completed && step != index && (
+                      <Typography variant="body2">
+                        ({numHouseholds} households, {avgFixed} average)
+                      </Typography>
+                    )}
+                  </StepButton>
                   <StepContent>
                     <Box
                       alignItems="center"
