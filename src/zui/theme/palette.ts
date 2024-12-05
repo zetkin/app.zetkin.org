@@ -84,7 +84,7 @@ const uiSwatches = {
   },
 } as const;
 
-const funSwatches = {
+export const funSwatches = {
   aqua: {
     dark: {
       color: '#187F81',
