@@ -76,6 +76,7 @@ export async function GET(request: NextRequest) {
         organization: {
           id: assignment.orgId,
         },
+        reporting_level: assignment.reporting_level || 'household',
         start_date: assignment.start_date,
         title: assignment.title,
       });

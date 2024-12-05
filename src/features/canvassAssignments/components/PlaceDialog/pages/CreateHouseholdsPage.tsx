@@ -1,17 +1,11 @@
 import { range } from 'lodash';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  Slide,
-  Typography,
-} from '@mui/material';
+import { Box, Button, CircularProgress, Slide } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
-import { Add, DoorFrontOutlined, Remove } from '@mui/icons-material';
+import { DoorFrontOutlined } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutations';
+import IntInput from '../IntInput';
 
 type Props = {
   onBack: () => void;
@@ -153,12 +147,12 @@ const CreateHouseholdsPage: FC<Props> = ({
           )}
         </Box>
         <Box display="flex" justifyContent="space-around">
-          <Stepper
+          <IntInput
             label="Number of floors"
             onChange={(value) => updateSize(value, numAptsPerFloor)}
             value={numFloors}
           />
-          <Stepper
+          <IntInput
             label="Households per floor"
             onChange={(value) => updateSize(numFloors, value)}
             value={numAptsPerFloor}
@@ -166,29 +160,6 @@ const CreateHouseholdsPage: FC<Props> = ({
         </Box>
       </Box>
     </PageBase>
-  );
-};
-
-const Stepper: FC<{
-  label: string;
-  onChange: (value: number) => void;
-  value: number;
-}> = ({ label, onChange, value }) => {
-  return (
-    <Box alignItems="center" display="flex" flexDirection="column">
-      <Typography color="secondary">{label}</Typography>
-      <Box alignItems="center" display="flex">
-        <IconButton onClick={() => onChange(value - 1)}>
-          <Remove />
-        </IconButton>
-        <Typography minWidth={40} textAlign="center">
-          {value}
-        </Typography>
-        <IconButton onClick={() => onChange(value + 1)}>
-          <Add />
-        </IconButton>
-      </Box>
-    </Box>
   );
 };
 

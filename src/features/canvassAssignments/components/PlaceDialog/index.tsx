@@ -13,6 +13,9 @@ import usePlaceMutations from 'features/canvassAssignments/hooks/usePlaceMutatio
 import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
+import EncouragingSparkle from '../EncouragingSparkle';
+import PlaceVisitPage from './pages/PlaceVisitPage';
+import HouseholdsPage from './pages/HouseholdsPage';
 
 type PlaceDialogProps = {
   assignment: ZetkinCanvassAssignment;
@@ -25,8 +28,10 @@ type PlaceDialogStep =
   | 'place'
   | 'edit'
   | 'createHouseholds'
+  | 'households'
   | 'household'
   | 'editHousehold'
+  | 'placeVisit'
   | 'wizard';
 
 const PlaceDialog: FC<PlaceDialogProps> = ({
@@ -36,10 +41,9 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   place,
 }) => {
   const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
-  const { addVisit, updateHousehold, updatePlace } = usePlaceMutations(
-    orgId,
-    place.id
-  );
+  const [showSparkle, setShowSparkle] = useState(false);
+  const { addVisit, reportPlaceVisit, updateHousehold, updatePlace } =
+    usePlaceMutations(orgId, place.id);
 
   const pushedRef = useRef(false);
 
@@ -90,22 +94,17 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
 
   return (
     <Box height="100%">
+      {showSparkle && (
+        <EncouragingSparkle onComplete={() => setShowSparkle(false)} />
+      )}
       <ZUINavStack bgcolor="white" currentPage={dialogStep}>
         <Place
           key="place"
           assignment={assignment}
-          onBulk={() => goto('createHouseholds')}
           onClose={onClose}
-          onCreateHousehold={(household) => {
-            setSelectedHouseholdId(household.id);
-            goto('household');
-          }}
           onEdit={() => goto('edit')}
-          onSelectHousehold={(householdId: string) => {
-            setSelectedHouseholdId(householdId);
-            goto('household');
-          }}
-          orgId={orgId}
+          onHouseholds={() => goto('households')}
+          onVisit={() => goto('placeVisit')}
           place={place}
         />
         <EditPlace
@@ -116,6 +115,22 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             await updatePlace({ description, title });
             back();
           }}
+          place={place}
+        />
+        <HouseholdsPage
+          key="households"
+          onBack={() => back()}
+          onBulk={() => goto('createHouseholds')}
+          onClose={onClose}
+          onCreateHousehold={(household) => {
+            setSelectedHouseholdId(household.id);
+            goto('household');
+          }}
+          onSelectHousehold={(householdId: string) => {
+            setSelectedHouseholdId(householdId);
+            goto('household');
+          }}
+          orgId={orgId}
           place={place}
         />
         <Box key="household" height="100%">
@@ -155,20 +170,38 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             />
           )}
         </Box>
+        <Box key="placeVisit" height="100%">
+          <PlaceVisitPage
+            active={dialogStep == 'placeVisit'}
+            assignment={assignment}
+            onBack={() => back()}
+            onClose={onClose}
+            onLogVisit={async (responses) => {
+              await reportPlaceVisit(assignment.id, {
+                canvassAssId: assignment.id,
+                placeId: place.id,
+                responses,
+              });
+              setShowSparkle(true);
+              back();
+            }}
+          />
+        </Box>
         <Box key="wizard" height="100%">
           {selectedHousehold && (
             <VisitWizard
               household={selectedHousehold}
               metrics={assignment.metrics}
               onBack={() => back()}
-              onLogVisit={(responses, noteToOfficial) => {
-                addVisit(selectedHousehold.id, {
+              onLogVisit={async (responses, noteToOfficial) => {
+                await addVisit(selectedHousehold.id, {
                   canvassAssId: assignment.id,
                   noteToOfficial,
                   responses,
                   timestamp: new Date().toISOString(),
                 });
-                goto('place');
+                setShowSparkle(true);
+                back();
               }}
             />
           )}

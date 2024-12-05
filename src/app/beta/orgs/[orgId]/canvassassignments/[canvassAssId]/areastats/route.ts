@@ -5,6 +5,8 @@ import { AreaModel } from 'features/areas/models';
 import {
   CanvassAssignmentModel,
   PlaceModel,
+  PlaceVisitModel,
+  PlaceVisitModelType,
 } from 'features/canvassAssignments/models';
 import {
   ZetkinAssignmentAreaStatsItem,
@@ -88,6 +90,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               organization: {
                 id: assignmentModel.orgId,
               },
+              reporting_level: assignmentModel.reporting_level || 'household',
               start_date: assignmentModel.start_date,
               title: assignmentModel.title,
             },
@@ -181,6 +184,19 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const statsByAreaId: Record<string, ZetkinAssignmentAreaStatsItem> = {};
 
+      const allPlaceVisits = await PlaceVisitModel.find({
+        canvassAssId: params.canvassAssId,
+      });
+
+      const visitsByPlaceId: Record<string, PlaceVisitModelType[]> = {};
+      allPlaceVisits.forEach((visit) => {
+        if (!visitsByPlaceId[visit.placeId]) {
+          visitsByPlaceId[visit.placeId] = [];
+        }
+
+        visitsByPlaceId[visit.placeId].push(visit);
+      });
+
       uniqueAreas.forEach((area) => {
         statsByAreaId[area.id] = {
           areaId: area.id,
@@ -233,6 +249,25 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
                   });
                 }
               });
+            });
+
+            const placeVisits = visitsByPlaceId[place.id] || [];
+            placeVisits.forEach((visit) => {
+              const numHouseholds = Math.max(
+                ...visit.responses.map((response) =>
+                  response.responseCounts.reduce((sum, count) => sum + count, 0)
+                )
+              );
+
+              const successfulResponse = visit.responses.find(
+                (response) => response.metricId == idOfMetricThatDefinesDone
+              );
+              const numSuccessful = successfulResponse?.responseCounts[0] || 0;
+
+              statsByAreaId[area.id].num_successful_visited_households +=
+                numSuccessful;
+              statsByAreaId[area.id].num_visited_households += numHouseholds;
+              statsByAreaId[area.id].num_visited_places += 1;
             });
           }
         });

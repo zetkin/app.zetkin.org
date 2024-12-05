@@ -10,6 +10,7 @@ import { CanvassAssignmentModel } from '../models';
 type GuardedFnProps = {
   apiClient: BackendApiClient;
   orgId: number;
+  personId: number;
   role: string | null;
 };
 
@@ -52,6 +53,7 @@ export default async function asCanvasserAuthorized(
     return fn({
       apiClient: apiClient,
       orgId: membership.organization.id,
+      personId: membership.profile.id,
       role: membership.role,
     });
   } catch (err) {
