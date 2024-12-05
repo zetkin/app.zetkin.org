@@ -82,10 +82,35 @@ const VisitWizard: FC<VisitWizardProps> = ({
                   { label: 4, value: '4' },
                   { label: 5, value: '5' },
                 ];
+
+          const stepIsCurrent = index == step;
+          const completed = metric.id in responseByMetricId;
+
           return (
             <Step key={index}>
-              <StepButton onClick={() => setStep(index)}>
-                {metric.question}
+              <StepButton
+                onClick={() => setStep(index)}
+                sx={{
+                  '& span': {
+                    overflow: 'hidden',
+                  },
+                }}
+              >
+                <Typography
+                  sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
+                  }}
+                >
+                  {metric.question}
+                </Typography>
+
+                {completed && step != index && (
+                  <Typography variant="body2">
+                    {responseByMetricId[metric.id]}
+                  </Typography>
+                )}
               </StepButton>
               <StepContent>
                 <Box
