@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  CircularProgress,
   Step,
   StepButton,
   StepContent,
@@ -21,7 +22,7 @@ type Props = {
   assignment: ZetkinCanvassAssignment;
   onBack: () => void;
   onClose: () => void;
-  onLogVisit: (responses: ZetkinPlaceVisit['responses']) => void;
+  onLogVisit: (responses: ZetkinPlaceVisit['responses']) => Promise<void>;
 };
 
 const PlaceVisitPage: FC<Props> = ({
@@ -31,6 +32,7 @@ const PlaceVisitPage: FC<Props> = ({
   onClose,
   onLogVisit,
 }) => {
+  const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState(0);
   const [numHouseholds, setNumHouseholds] = useState(0);
   const [valuesByMetricId, setValuesByMetricId] = useState<
@@ -63,15 +65,23 @@ const PlaceVisitPage: FC<Props> = ({
       actions={
         step >= assignment.metrics.length - 1 && (
           <Button
-            onClick={() => {
+            disabled={submitting}
+            onClick={async () => {
               const metricIds = Object.keys(valuesByMetricId);
-              onLogVisit(
+              setSubmitting(true);
+              await onLogVisit(
                 metricIds.map((metricId) => ({
                   metricId,
                   responseCounts: valuesByMetricId[metricId],
                 }))
               );
+              setSubmitting(false);
             }}
+            startIcon={
+              submitting ? (
+                <CircularProgress color="secondary" size={24} />
+              ) : null
+            }
             variant="contained"
           >
             Submit
