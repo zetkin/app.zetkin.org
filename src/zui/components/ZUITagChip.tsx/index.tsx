@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
+import getTagContrastColor from './getTagContrastColor';
 
 interface StyleProps {
   clickable: boolean;
@@ -26,13 +26,13 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     borderRadius: '1rem',
     cursor: ({ clickable, disabled }) =>
       clickable && !disabled ? 'pointer' : 'default',
-    display: 'flex',
+    display: 'inline-flex',
     marginRight: '0.1em',
     opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),
     overflow: 'hidden',
   },
   deleteButton: {
-    fontSize: '1.1rem',
+    fontSize: '0.875rem',
     padding: '3px',
     position: 'absolute',
     right: '0.12em',
@@ -56,11 +56,12 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     color: ({ tag }) =>
       tag.value_type
         ? 'black'
-        : getContrastColor(tag.color || theme.palette.grey[200]),
+        : getTagContrastColor(tag.color || theme.palette.grey[200]),
   },
   label: {
     backgroundColor: ({ tag }) => tag.color || theme.palette.grey[200],
-    color: ({ tag }) => getContrastColor(tag.color || theme.palette.grey[200]),
+    color: ({ tag }) =>
+      getTagContrastColor(tag.color || theme.palette.grey[200]),
     maxWidth: '100%',
     overflow: 'hidden',
     padding: '0.2em 0.4em 0.2em 1em',
@@ -162,7 +163,7 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
       }}
       tabIndex={-1}
     >
-      <Clear className={classes.deleteIcon} sx={{ fontSize: '0.875rem' }} />
+      <Clear className={classes.deleteIcon} sx={{ fontSize: 'inherit' }} />
     </IconButton>
   ) : null;
 
