@@ -11,7 +11,7 @@ import { scaffold } from 'utils/next';
 import useJourneys from 'features/journeys/hooks/useJourneys';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { ZetkinJourney } from 'utils/types/zetkin';
+import { ZetkinJourney, ZetkinOrganization } from 'utils/types/zetkin';
 import ZUISection from 'zui/ZUISection';
 
 const scaffoldOptions = {
@@ -22,17 +22,19 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const journeys = await apiClient.get(`/api/orgs/${orgId}/journeys`);
-  const organization = await apiClient.get(`/api/orgs/${orgId}`);
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    // Note: We don't actually care for the returned journeys or orgnaization, but we still want to perform
+    // the api request to know if this user may access this particular page.
+    await apiClient.get<ZetkinJourney[]>(`/api/orgs/${orgId}/journeys`);
+    await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
 
-  if (organization && journeys) {
     return {
       props: {
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };

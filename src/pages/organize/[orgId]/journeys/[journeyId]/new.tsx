@@ -19,7 +19,12 @@ import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import {
+  ZetkinJourney,
+  ZetkinOrganization,
+  ZetkinPerson,
+  ZetkinTag,
+} from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -34,20 +39,22 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const journey = await apiClient.get(
-    `/api/orgs/${orgId}/journeys/${journeyId}`
-  );
-  const organization = await apiClient.get(`/api/orgs/${orgId}`);
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    // Note: We don't actually care for the returned journey or orgnaization, but we still want to perform
+    // the api request to know if this user may access this particular page.
+    await apiClient.get<ZetkinJourney>(
+      `/api/orgs/${orgId}/journeys/${journeyId}`
+    );
+    await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
 
-  if (organization && journey) {
     return {
       props: {
         journeyId,
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };
