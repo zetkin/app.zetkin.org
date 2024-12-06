@@ -183,7 +183,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
                 responses,
               });
               setShowSparkle(true);
-              back();
             }}
           />
         </Box>
