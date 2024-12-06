@@ -549,6 +549,7 @@ export type ZetkinEmailConfig = {
 
 export interface ZetkinEmail {
   campaign: { id: number; title: string } | null;
+  config: ZetkinEmailConfig;
   theme: EmailTheme | null;
   id: number;
   locked: string | null;
@@ -572,6 +573,7 @@ export type ZetkinEmailPostBody = Partial<
   Omit<ZetkinEmail, 'id' | 'theme' | 'published' | 'organization' | 'target'>
 > & {
   campaign_id: number | null;
+  config_id: number | null;
   theme_id: number | null;
 };
 
