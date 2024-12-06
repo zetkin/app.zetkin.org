@@ -535,6 +535,18 @@ export type {
   ZetkinViewRow,
 };
 
+export type ZetkinEmailConfig = {
+  config: Record<string, unknown>;
+  id: number;
+  no_reply: boolean;
+  organization: {
+    id: number;
+    title: string;
+  };
+  sender_email: string;
+  sender_name: string;
+};
+
 export interface ZetkinEmail {
   campaign: { id: number; title: string } | null;
   theme: EmailTheme | null;
