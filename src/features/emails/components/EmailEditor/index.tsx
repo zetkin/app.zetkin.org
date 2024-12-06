@@ -9,7 +9,6 @@ import messageIds from 'features/emails/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import zetkinBlocksToEditorjsBlocks from 'features/emails/utils/zetkinBlocksToEditorjsBlocks';
 import { ZetkinEmail } from 'utils/types/zetkin';
-import useEmailSettings from 'features/emails/hooks/useEmailSettings';
 import useDebounce from 'utils/hooks/useDebounce';
 
 const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
@@ -26,9 +25,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   const messages = useMessages(messageIds);
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
-  const { subject, emailAddress, setSubject, orgTitle } = useEmailSettings(
-    email.subject || ''
-  );
+  const [subject, setSubject] = useState(email.subject || '');
 
   const zetkinInitialContent = email.content
     ? JSON.parse(email.content)
@@ -84,7 +81,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
                 fullWidth
                 label={messages.editor.settings.tabs.settings.senderNameInputLabel()}
                 size="small"
-                value={orgTitle}
+                value={email.config.sender_name}
               />
             </FormControl>
             <FormControl fullWidth sx={{ flex: 2 }}>
@@ -93,7 +90,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
                 fullWidth
                 label={messages.editor.settings.tabs.settings.senderAddressInputLabel()}
                 size="small"
-                value={emailAddress}
+                value={email.config.sender_email}
               />
             </FormControl>
             <TextField
