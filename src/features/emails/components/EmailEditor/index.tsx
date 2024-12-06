@@ -1,5 +1,12 @@
 import dynamic from 'next/dynamic';
-import { Alert, Box, FormControl, TextField, useTheme } from '@mui/material';
+import {
+  Alert,
+  Box,
+  FormControl,
+  MenuItem,
+  TextField,
+  useTheme,
+} from '@mui/material';
 import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
@@ -8,8 +15,9 @@ import EmailSettings from './EmailSettings';
 import messageIds from 'features/emails/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import zetkinBlocksToEditorjsBlocks from 'features/emails/utils/zetkinBlocksToEditorjsBlocks';
-import { ZetkinEmail } from 'utils/types/zetkin';
+import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
 import useDebounce from 'utils/hooks/useDebounce';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
   ssr: false,
@@ -17,7 +25,7 @@ const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
 
 interface EmailEditorProps {
   email: ZetkinEmail;
-  onSave: (email: Partial<ZetkinEmail>) => void;
+  onSave: (email: Partial<ZetkinEmailPostBody>) => void;
 }
 
 const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
@@ -26,6 +34,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
   const [subject, setSubject] = useState(email.subject || '');
+  const configs = useEmailConfigs(email.organization.id).data || [email.config];
 
   const zetkinInitialContent = email.content
     ? JSON.parse(email.content)
@@ -77,21 +86,24 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
           <Box display="flex" gap={2} padding={2}>
             <FormControl fullWidth sx={{ flex: 2 }}>
               <TextField
-                disabled
                 fullWidth
-                label={messages.editor.settings.tabs.settings.senderNameInputLabel()}
+                label={messages.editor.settings.tabs.settings.senderInputLabel()}
+                onChange={(ev) => {
+                  const configId = parseInt(ev.target.value);
+                  if (!isNaN(configId)) {
+                    onSave({ config_id: configId });
+                  }
+                }}
+                select
                 size="small"
-                value={email.config.sender_name}
-              />
-            </FormControl>
-            <FormControl fullWidth sx={{ flex: 2 }}>
-              <TextField
-                disabled
-                fullWidth
-                label={messages.editor.settings.tabs.settings.senderAddressInputLabel()}
-                size="small"
-                value={email.config.sender_email}
-              />
+                value={email.config.id}
+              >
+                {configs.map((config) => (
+                  <MenuItem key={config.id} value={config.id}>
+                    {`${config.sender_name} (${config.sender_email})`}
+                  </MenuItem>
+                ))}
+              </TextField>
             </FormControl>
             <TextField
               disabled={readOnly}
