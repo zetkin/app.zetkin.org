@@ -23,6 +23,7 @@ import { ZetkinOrganizerAction } from 'utils/types/zetkin';
 import { ZetkinViewRow } from '../../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import messageIds from 'features/views/l10n/messageIds';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
 
@@ -83,6 +84,10 @@ const Cell: FC<{
   const viewId = parseInt(query.viewId as string);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   const [isRestricted] = useAccessLevel();
   const numUnsolved =
@@ -96,8 +101,8 @@ const Cell: FC<{
     return (
       <Box
         className={styles.organizerActionContainer}
-        onMouseOut={() => setAnchorEl(null)}
-        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+        onMouseOut={closePopper}
+        onMouseOver={openPopper}
       >
         {numUnsolved < 1 ? (
           <Check />

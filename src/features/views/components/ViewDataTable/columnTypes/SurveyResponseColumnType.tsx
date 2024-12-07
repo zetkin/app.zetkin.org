@@ -15,6 +15,7 @@ import { SurveyResponseViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 export type SurveyResponseViewCell = {
   submission_id: number;
@@ -71,6 +72,10 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   if (!cell?.length) {
     return null;
@@ -81,13 +86,12 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
     const d1 = new Date(sub1.submitted);
     return d1.getTime() - d0.getTime();
   });
-
   return (
     <Box className={styles.cell}>
       <Box
         className={styles.content}
-        onMouseOut={() => setAnchorEl(null)}
-        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+        onMouseOut={closePopper}
+        onMouseOver={openPopper}
       >
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {sorted[0].text}
