@@ -1,8 +1,6 @@
 export default class InlineToolBase {
   private static _activeInstance: InlineToolBase | null = null;
 
-  private _handleSelectionChangeBound: () => void = () => undefined;
-
   activate() {
     if (InlineToolBase._activeInstance) {
       InlineToolBase._activeInstance.deactivate();
@@ -10,24 +8,16 @@ export default class InlineToolBase {
     InlineToolBase._activeInstance = this;
   }
 
-  checkState() {
-    return true;
+  checkState(selection: Selection) {
+    this.update(selection.getRangeAt(0));
   }
 
   clear() {
     this.onToolClose();
-    this.destroy();
   }
 
   deactivate() {
     // Called by activate()
-  }
-
-  destroy() {
-    document.removeEventListener(
-      'selectionchange',
-      this._handleSelectionChangeBound
-    );
   }
 
   static get isInline() {
@@ -39,22 +29,6 @@ export default class InlineToolBase {
   }
 
   render() {
-    const handleSelectionChange = () => {
-      const selection = window.getSelection();
-      if (selection?.rangeCount) {
-        const range = window.getSelection()?.getRangeAt(0);
-        if (range) {
-          this.update(range);
-        }
-      }
-    };
-
-    this._handleSelectionChangeBound = handleSelectionChange.bind(this);
-    document.addEventListener(
-      'selectionchange',
-      this._handleSelectionChangeBound
-    );
-
     return this.renderButton();
   }
 
