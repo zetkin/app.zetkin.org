@@ -10,6 +10,7 @@ export default class InlineToolBase {
 
   checkState(selection: Selection) {
     this.update(selection.getRangeAt(0));
+    return true;
   }
 
   clear() {
