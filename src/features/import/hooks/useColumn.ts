@@ -63,27 +63,26 @@ export default function useColumn(orgId: number) {
     }));
 
   const customFieldsOptions: Option[] = customFields.map((field) => {
+    const belongsToCurrentOrg = field.organization.id == orgId;
+    const suborgsCanWrite = field.org_write == 'suborgs';
+    const currentOrgCanWrite = belongsToCurrentOrg || suborgsCanWrite;
+    const readOnly = !currentOrgCanWrite;
+
     if (field.type === CUSTOM_FIELD_TYPE.DATE) {
       return {
-        disabled: !(
-          field.organization.id == orgId || field.org_write == 'suborgs'
-        ),
+        disabled: readOnly,
         label: field.title,
         value: `date:${field.slug}`,
       };
     } else if (field.type == CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
       return {
-        disabled: !(
-          field.organization.id == orgId || field.org_write == 'suborgs'
-        ),
+        disabled: readOnly,
         label: field.title,
         value: `enum:${field.slug}`,
       };
     } else {
       return {
-        disabled: !(
-          field.organization.id == orgId || field.org_write == 'suborgs'
-        ),
+        disabled: readOnly,
         label: field.title,
         value: `field:${field.slug}`,
       };
