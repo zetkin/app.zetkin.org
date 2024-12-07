@@ -1,11 +1,29 @@
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+
+export type ZetkinCanvassAssignmentStats = {
+  num_areas: number;
+  num_households: number;
+  num_places: number;
+  num_visited_areas: number;
+  num_visited_households: number;
+  num_visited_households_outside_areas: number;
+  num_visited_places: number;
+  num_visited_places_outside_areas: number;
+};
 
 export type PointData = [number, number];
 
 export type Visit = {
+  canvassAssId: string | null;
   id: string;
-  note: string;
+  rating?: 'good' | 'bad';
   timestamp: string;
+};
+
+export type Household = {
+  id: string;
+  title: string;
+  visits: Visit[];
 };
 
 export type ZetkinArea = {
@@ -15,17 +33,18 @@ export type ZetkinArea = {
     id: number;
   };
   points: PointData[];
+  tags: ZetkinTag[];
   title: string | null;
 };
 
 export type ZetkinPlace = {
   description: string | null;
+  households: Household[];
   id: string;
   orgId: number;
   position: { lat: number; lng: number };
   title: string | null;
   type: 'address' | 'misc';
-  visits: Visit[];
 };
 
 export type ZetkinCanvassAssignment = {
@@ -54,9 +73,15 @@ export type ZetkinCanvassSessionPostBody = {
 };
 
 export type ZetkinAreaPostBody = Partial<Omit<ZetkinArea, 'id'>>;
-export type ZetkinPlacePostBody = Partial<Omit<ZetkinPlace, 'id'>>;
-export type ZetkinPlacePatchBody = Omit<ZetkinPlacePostBody, 'visits'> & {
-  visits?: Omit<Visit, 'id'>[];
+export type ZetkinPlacePostBody = Partial<
+  Omit<ZetkinPlace, 'id' | 'households'>
+>;
+
+export type ZetkinPlacePatchBody = Partial<
+  Omit<ZetkinPlace, 'id' | 'households'>
+> & {
+  households?: Partial<Omit<Household, 'id' | 'visits'>> &
+    { visits?: Partial<Omit<Visit, 'id'>>[] }[];
 };
 export type ZetkinCanvassAssignmentPostBody = Partial<
   Omit<ZetkinCanvassAssignment, 'id' | 'campaign' | 'organization'>
@@ -72,3 +97,5 @@ export type ZetkinCanvassAssignee = {
   id: number;
 };
 export type ZetkinCanvassAssigneePatchBody = Partial<ZetkinCanvassAssignee>;
+
+export type HouseholdPatchBody = Partial<Omit<Household, 'id'>>;

@@ -13,6 +13,96 @@ core:
       feature you want to use. You are being redirected to the older version of
       Zetkin which supports that feature.
 feat:
+  areas:
+    addNewPlaceButton: Add new place
+    canvassAssignment:
+      addAssignee: Add assignee
+      assigneesTitle: Assignees
+      canvassers:
+        areasColumn: Areas
+        nameColumn: Name
+      canvassing:
+        goToMapButton: Go to map
+        title: Canvassing
+      empty:
+        title: Untitled canvass assignment
+      overview:
+        areas:
+          defineButton: Plan now
+          editButton: Edit plan
+          subtitle: This assignment has not been planned yet.
+          title: Areas
+      planFilters:
+        assigned: Assigned
+        unassigned: Unassigned
+      tabs:
+        canvassers: Canvassers
+        overview: Overview
+        plan: Plan
+    empty:
+      description: Empty description
+      title: Untitled area
+    filters:
+      addFilterButton: Add filter
+      filterButton: Filters
+      tagGroup: "{label} (tag group)"
+      tagsWithoutGroup: Tags without group
+    overlay:
+      buttons:
+        cancel: Cancel
+        delete: Delete
+        edit: Edit
+        save: Save
+      tags:
+        header: Tags
+    place:
+      activityHeader: Activity
+      addHouseholdButton: Add household
+      backButton: Back
+      badRatingLog: Bad rating
+      cancelButton: Cancel
+      closeButton: Close
+      description: Description
+      editButton: Edit
+      editDescription: Place description
+      editPlace: Edit {placeName}
+      editTitle: Place title
+      empty:
+        description: Empty description
+        title: Untitled place
+      goodRatingLog: Good rating
+      household:
+        empty:
+          title: Untitled household
+      householdsHeader: "{numberOfHouseholds, plural, =0 {No households} =1 {Household
+        1} other {Households #}}"
+      logActivityButton: Log activity
+      logActivityHeader: Log activity at {title}
+      logList: Log
+      noActivity: No visits have been recorded at this place.
+      notePlaceholder: Note
+      saveButton: Save
+      selectType: Place type
+      visitButton: Log visit
+      visitLog: Visited
+      visitedButton: Visited
+    placeCard:
+      address: Address
+      cancel: Cancel
+      createPlace: Create place
+      inputLabel: Type of place
+      misc: Misc
+      placeholderAddress: Enter address here
+      placeholderTitle: Enter title here
+    planOverlay:
+      addAssignee: Add assignee
+      assignees: Assignees
+      noAssignees: No assignees
+    tools:
+      cancel: Cancel
+      draw: Draw
+      save: Save
+    viewPlaceButton: View place
   breadcrumbs:
     elements:
       activities: Activities
@@ -23,6 +113,7 @@ feat:
       callassignments: Call assignments
       callers: Callers
       campaigns: Projects
+      canvassassignments: Canvass assignments
       closed: Closed
       compose: Compose
       conversation: Conversation
@@ -41,6 +132,7 @@ feat:
       organize: Organize
       participants: Participants
       people: People
+      plan: Plan
       projects: Projects
       questions: Questions
       settings: Settings
@@ -55,6 +147,8 @@ feat:
     createMenu:
       shiftEvent: Create multiple events that form shifts
       singleEvent: Create single event
+    dstEnds: Winter time
+    dstStarts: Summer time
     event:
       differentLocations: "{numLocations} different locations"
       events: Events
@@ -323,6 +417,7 @@ feat:
     linkGroup:
       createActivity: Create activity
       createCallAssignment: Create call assignment
+      createCanvassAssignment: Create canvass assignment
       createEmail: Create email
       createEvent: Create event
       createSurvey: Create survey
@@ -413,6 +508,7 @@ feat:
         Overview tab to do this.
     deliveryStatus:
       notLocked: Not locked, not scheduled
+      notProcessed: Scheduled to be delivered ASAP
       notScheduled: Not scheduled
       wasSent: Was sent at {datetime}
       willSend: Will send at {datetime}
@@ -484,6 +580,41 @@ feat:
       errorMessage: Your organization does not have access to the email feature at the
         moment.
       goBackButton: Go back
+    insights:
+      clicked:
+        descriptions:
+          ctor: Click-to-open rate (CTOR) is the share of those who have opened the email
+            that also clicked one of the links. A high rate is an indicator of a
+            well-targeted email with convincing copy.
+          ctr: Clickthrough rate (CTR) is the percentage of recipients who not only opened
+            the email but also clicked one of the links. A high rate is an
+            indicator of a well-targeted email with convincing copy.
+        gauge:
+          headers:
+            ctor: CTOR
+            ctr: CTR
+        header: Clicked
+        metrics:
+          ctor: CTOR
+          ctr: CTR
+      comparison:
+        label: Compare with
+      opened:
+        chart:
+          afterSend: After it was sent
+          opened: "{count} opened"
+          spans:
+            allTime: All time
+            first24: First 24 hours
+            first48: First 48 hours
+            firstMonth: First 30 days
+            firstWeek: First 7 days
+        description: Open rate is the percentage of recipients who opened the email. A
+          high rate is an indicator of good targeting and a compelling subject
+          line.
+        gauge:
+          header: Open rate
+        header: Opened
     ready:
       loading: Loading...
       lockButton: Lock for delivery
@@ -508,6 +639,7 @@ feat:
       targets: "{numTargets, plural, =0 {No targets} one {1 target} other {# targets}}"
     tabs:
       compose: Compose
+      insights: Insights
       overview: Overview
     targets:
       defineButton: Define target group
@@ -546,12 +678,18 @@ feat:
       cancel: Cancel
       delete: Delete
       duplicate: Duplicate
+      move: Move
       publish: Publish
       restore: Restore
       unpublish: Unpublish
       warning: '"{eventTitle}" will be deleted.'
       warningCancel: '"{eventTitle}" will be canceled.'
       warningRestore: '"{eventTitle}" will be restored.'
+    eventChangeCampaignDialog:
+      dialogTitle: Move event
+      error: "Error: Could not move the event to the selected project"
+      moveButtonLabel: Move
+      success: Event moved to "{campaignTitle}"
     eventContactCard:
       header: Contact
       noContact: No Contact Assigned!
@@ -1033,6 +1171,12 @@ feat:
           people}}.
   joinForms:
     defaultTitle: Untitled form
+    embedding:
+      copyLink: Copy embed URL
+      formSubmitted: Form submitted
+      linkCopied: Embed URL copied.
+      openLink: Visit now
+      submitButton: Submit
     formPane:
       labels:
         addField: Add field
@@ -1379,13 +1523,17 @@ feat:
           none: This organization doesn't have any call assignments yet
         callSelect:
           called: have been called
+          notreached: have not been reached
           reached: have been successfully reached
         examples:
           one: Add people who have been successfully reached at least 2 times in any
             assignment at any point in time.
           two: Remove people who have been called at least 1 time in assignment 'Activate
             old members' during the last 30 days.
+        inputString: "{addRemoveSelect} people who {callSelect} {minTimes} in
+          {assignmentSelect} {timeFrame}."
         minTimes: "{minTimes, plural, one {once} other {# times}}"
+        minTimesInput: at least {input} {minTimes, plural, one {time} other {times}}
       campaignParticipation:
         activitySelect:
           activity: type "{activity}"
@@ -1512,18 +1660,18 @@ feat:
           conditionSelect:
             all: all
             any: any
-            minMatching: at least
             none: none
+            some: at least
           edit:
             all: "{conditionSelect}"
             any: "{conditionSelect}"
-            minMatching: "{conditionSelect} {minMatchingInput}"
             none: "{conditionSelect}"
+            some: "{conditionSelect} {minMatchingInput}"
           preview:
             all: all
             any: any
-            minMatching: at least {minMatching}
             none: none
+            some: at least {minMatching}
         examples:
           one: "Add people with at least one of the following tags: 'Member', 'Activist'"
           two: "Remove people with all of the following tags: 'Board member'"
@@ -1584,6 +1732,7 @@ feat:
           all: all
           any: any
           none: none
+          some: some
         examples:
           one: "Remove all people who have chosen all of the following options in survey
             'Member survey 2020' (question 'Question one'): 'Sometimes',
@@ -1687,6 +1836,9 @@ feat:
         once: at least once
     misc:
       noOptions: No matching tags
+      noOptionsEmailNotSent: Email not sent. Links included in the email are added
+        after it has been sent.
+      noOptionsInvalidEmail: Invalid email. Select an email first.
       noOptionsLinks: No matching links
     operators:
       add: Add
@@ -1879,12 +2031,42 @@ feat:
       personRecordColumn: Respondent
       suggestedPeople: Suggested people
       unlink: Unlink
+    surveyForm:
+      accept: I accept the terms stated below
+      error: Something went wrong when submitting your answers. Please try again
+        later.
+      policy:
+        link: https://zetkin.org/privacy
+        text: Click to read the full Zetkin Privacy Policy
+      required: required
+      sign:
+        anonymous: Sign anonymously
+        nameAndEmail: Sign with name and e-mail
+      submit: Submit
+      terms:
+        description: When you submit this survey, the information you provide will be
+          stored and processed in Zetkin by {organization} in order to organize
+          activism and in accordance with the Zetkin privacy policy.
+        title: Privacy Policy
+    surveyFormSubmitted:
+      text: Your responses to “{title}” have been submitted.
+      title: Survey Submitted
+    surveySignature:
+      email:
+        email: Email
+        firstName: First name
+        lastName: Last name
+      title: Choose how to sign
+      type:
+        anonymous: Sign anonymously
+        email: Sign with name and email
+        user: Sign as {person} with email {email}
     tabs:
       overview: Overview
       questions: Questions
       submissions: Submissions
     unlinkedCard:
-      description: When someone submits a survey without logging in,that survey will
+      description: When someone submits a survey without logging in, that survey will
         be unlinked. Searching for people in Zetkin based on their survey
         responses will not work on unlinked submissions.
       header: Unlinked submissions
@@ -2127,6 +2309,7 @@ feat:
             sure you want to continue?
       menu:
         delete: Delete
+        move: Move
         rename: Rename
       moveToFolder: Move to {folder}
       moveToRoot: Move to all lists
@@ -2353,6 +2536,10 @@ feat:
     footer:
       addPlaceholder: Start typing to add person to list
       alreadyInView: Already in list
+    moveViewDialog:
+      cancel: Cancel
+      emptyFolder: Empty folder
+      moveHere: Move here
     newFolderTitle: New Folder
     newViewFields:
       title: New list
@@ -2476,6 +2663,7 @@ zui:
     title:
       addToJourney: Create person and add to {journey}
       addToList: Create person and add to {list}
+      assignToCanvassAssignment: Create person and assign to {canvassAss}
       assignToJourney: Create person and assign to {journey}
       caller: Create person and add as caller
       contact: Create person and assign as contact
@@ -2511,6 +2699,12 @@ zui:
     multiDayToday: Today - {endDate}
     singleDay: "{date}"
     singleDayToday: Today
+  duration:
+    days: "{n, plural, =1 {1 day} other {# days}}"
+    h: "{n}h"
+    m: "{n}m"
+    ms: "{n}ms"
+    s: "{n}s"
   editTextInPlace:
     tooltip:
       edit: Click to edit
@@ -2581,6 +2775,7 @@ zui:
         from: From
         to: To
     expand: show full timeline
+    fileUploadErrorMessage: Unable to add note. It might be too long
     filter:
       byType:
         all: All
