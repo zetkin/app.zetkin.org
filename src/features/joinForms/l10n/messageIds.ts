@@ -13,6 +13,7 @@ export default makeMessages('feat.joinForms', {
     labels: {
       addField: m('Add field'),
       description: m('Description'),
+      requireEmailVerification: m('Require e-mail verification'),
       title: m('Title'),
     },
     title: m('Edit form'),

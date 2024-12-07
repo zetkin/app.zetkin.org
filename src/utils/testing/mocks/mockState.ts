@@ -5,12 +5,6 @@ export default function mockState(overrides?: RootState) {
   const emptyState: RootState = {
     areas: {
       areaList: remoteList(),
-      assigneesByCanvassAssignmentId: {},
-      canvassAssignmentList: remoteList(),
-      mySessionsList: remoteList(),
-      placeList: remoteList(),
-      sessionsByAssignmentId: {},
-      statsByCanvassAssId: {},
       tagsByAreaId: {},
     },
     breadcrumbs: {
@@ -27,6 +21,16 @@ export default function mockState(overrides?: RootState) {
       campaignList: remoteList(),
       campaignsByOrgId: {},
       recentlyCreatedCampaign: null,
+    },
+    canvassAssignments: {
+      areaGraphByAssignmentId: {},
+      areaStatsByAssignmentId: {},
+      canvassAssignmentList: remoteList(),
+      myAssignmentsWithAreasList: remoteList(),
+      placeList: remoteList(),
+      sessionsByAssignmentId: {},
+      statsByCanvassAssId: {},
+      visitsByAssignmentId: {},
     },
     duplicates: {
       potentialDuplicatesList: remoteList(),

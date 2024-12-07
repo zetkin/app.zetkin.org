@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AreaModel, CanvassAssignmentModel } from 'features/areas/models';
-import { ZetkinCanvassSession } from 'features/areas/types';
+import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
+import { ZetkinCanvassSession } from 'features/canvassAssignments/types';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { AreaModel } from 'features/areas/models';
 
 type RouteMeta = {
   params: {
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin'],
+      roles: ['admin', 'organizer'],
     },
     async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
@@ -34,9 +35,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const sessions: ZetkinCanvassSession[] = [];
 
       for await (const sessionData of model.sessions) {
-        const person = await apiClient.get<ZetkinPerson>(
-          `/api/orgs/${orgId}/people/${sessionData.personId}`
-        );
+        let person: ZetkinPerson | null;
+        try {
+          person = await apiClient.get<ZetkinPerson>(
+            `/api/orgs/${orgId}/people/${sessionData.personId}`
+          );
+        } catch (err) {
+          person = null;
+        }
         const area = await AreaModel.findOne({
           _id: sessionData.areaId,
         });
@@ -55,7 +61,23 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             },
             assignee: person,
             assignment: {
+              campaign: {
+                id: model.campId,
+              },
+              end_date: model.end_date,
               id: model._id.toString(),
+              metrics: model.metrics.map((m) => ({
+                definesDone: m.definesDone,
+                description: m.description,
+                id: m._id,
+                kind: m.kind,
+                question: m.question,
+              })),
+              organization: {
+                id: model.orgId,
+              },
+              reporting_level: model.reporting_level || 'household',
+              start_date: model.start_date,
               title: model.title,
             },
           });

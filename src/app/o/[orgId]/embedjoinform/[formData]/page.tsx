@@ -31,6 +31,33 @@ export default async function Page({ params, searchParams }: PageProps) {
         {searchParams.stylesheet && (
           <style>{`@import url(${searchParams.stylesheet})`}</style>
         )}
+        {!searchParams.stylesheet && (
+          <style>{`
+            body {
+              padding: 0.5rem;
+            }
+
+            .zetkin-joinform__field {
+              margin-bottom: 1rem;
+            }
+
+            .zetkin-joinform__field input {
+              width: 100%;
+              max-width: 600px;
+              padding: 0.3rem;
+              font-size: 1.5rem;
+            }
+
+            .zetkin-joinform__submit-button {
+              border-width: 0;
+              font-size: 1.5rem;
+              background-color: black;
+              color: white;
+              padding: 0.5rem 1rem;
+              border-radius: 0.2rem;
+            }
+          `}</style>
+        )}
       </div>
     );
   } catch (err) {

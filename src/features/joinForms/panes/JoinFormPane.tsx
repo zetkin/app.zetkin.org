@@ -1,5 +1,12 @@
 import { FC, HTMLAttributes } from 'react';
-import { Autocomplete, Box, Checkbox, Chip, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Checkbox,
+  Chip,
+  FormControlLabel,
+  TextField,
+} from '@mui/material';
 
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
@@ -118,6 +125,8 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
                   label={slugToLabel(option)}
                   {...tagProps}
                   disabled={
+                    (joinForm.requires_email_verification &&
+                      option === NATIVE_PERSON_FIELDS.EMAIL) ||
                     option === NATIVE_PERSON_FIELDS.FIRST_NAME ||
                     option === NATIVE_PERSON_FIELDS.LAST_NAME
                   }
@@ -126,6 +135,29 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
             })
           }
           value={joinForm.fields}
+        />
+      </Box>
+      <Box mb={1}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={joinForm.requires_email_verification}
+              onChange={(evt) =>
+                updateForm({
+                  fields:
+                    evt.target.checked &&
+                    !joinForm?.fields.includes(NATIVE_PERSON_FIELDS.EMAIL)
+                      ? [
+                          ...(joinForm?.fields ?? []),
+                          NATIVE_PERSON_FIELDS.EMAIL,
+                        ]
+                      : undefined,
+                  requires_email_verification: evt.target.checked,
+                })
+              }
+            />
+          }
+          label={messages.formPane.labels.requireEmailVerification()}
         />
       </Box>
     </>

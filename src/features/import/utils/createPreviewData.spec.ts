@@ -123,6 +123,168 @@ describe('createPreviewData()', () => {
     });
   });
 
+  it('converts multiple columns of orgs to preview object', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 1 },
+            { orgId: 333, value: 2 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 222, value: 3 },
+            { orgId: 444, value: 4 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', 1, 3],
+        },
+        {
+          data: ['124', 'Linköping', 2, 1],
+        },
+        {
+          data: ['125', 'Linköping', 1, 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        city: 'Malmö',
+        id: '123',
+      },
+      organizations: [111, 222],
+    });
+  });
+
+  it('converts multiple columns of orgs to preview object without duplication', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 1 },
+            { orgId: 333, value: 2 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 3 },
+            { orgId: 444, value: 4 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', 1, 3],
+        },
+        {
+          data: ['124', 'Linköping', 2, 1],
+        },
+        {
+          data: ['125', 'Linköping', 1, 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        city: 'Malmö',
+        id: '123',
+      },
+      organizations: [111],
+    });
+  });
+
+  it('converts enum data to preview object', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'enum_field',
+          kind: ColumnKind.ENUM,
+          mapping: [
+            { key: 'first', value: 'Dummy value' },
+            { key: 'second', value: 'Second dummy value' },
+            { key: 'third', value: null },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', 'Dummy value'],
+        },
+        {
+          data: ['124', 'Linköping', 'Second dummy value'],
+        },
+        {
+          data: ['125', 'Linköping', null],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result0 = createPreviewData(configData, 0);
+    expect(result0).toEqual({
+      data: {
+        city: 'Malmö',
+        enum_field: 'first',
+        id: '123',
+      },
+    });
+
+    const result1 = createPreviewData(configData, 1);
+    expect(result1).toEqual({
+      data: {
+        city: 'Linköping',
+        enum_field: 'second',
+        id: '124',
+      },
+    });
+
+    const result2 = createPreviewData(configData, 2);
+    expect(result2).toEqual({
+      data: {
+        city: 'Linköping',
+        enum_field: 'third',
+        id: '125',
+      },
+    });
+  });
+
   it('returns empty obejct when there are no values', () => {
     const configData: Sheet = {
       columns: [

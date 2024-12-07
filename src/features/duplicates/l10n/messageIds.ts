@@ -14,7 +14,12 @@ export default makeMessages('feat.duplicates', {
       noValue: m('No value'),
       title: m('Data to merge'),
     },
+    findCandidateManually: m('Type to find a potential duplicate'),
     isDuplicateButton: m('Include'),
+    lists: {
+      hideManual: m('Hide manual search'),
+      showManual: m('Show manual search'),
+    },
     mergeButton: m('Merge'),
     notDuplicateButton: m('Exclude'),
     peopleNotBeingMerged: m('People not being merged'),

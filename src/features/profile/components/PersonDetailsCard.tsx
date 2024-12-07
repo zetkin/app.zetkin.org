@@ -10,7 +10,11 @@ import ZUIDate from 'zui/ZUIDate';
 import ZUIList from 'zui/ZUIList';
 import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  ZetkinCustomField,
+  ZetkinPerson,
+} from 'utils/types/zetkin';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -74,18 +78,27 @@ const PersonDetailsCard: React.FunctionComponent<{
   });
 
   const customFieldsConfig = customFields
-    .filter((field) => field.type !== 'json')
+    .filter((field) => field.type !== CUSTOM_FIELD_TYPE.JSON)
     .map((field) => {
       // Object type is filtered above
       let value: string | React.ReactNode = person[field.slug] as
         | string
         | React.ReactNode;
-      if (value && field.type === 'date') {
+      if (value && field.type === CUSTOM_FIELD_TYPE.DATE) {
         value = <ZUIDate datetime={value as string} />;
-      } else if (value && field.type === 'url') {
+      } else if (value && field.type === CUSTOM_FIELD_TYPE.URL) {
         value = (
           <PersonDetailLink href={value as string}>{value}</PersonDetailLink>
         );
+      } else if (
+        value &&
+        field.type == CUSTOM_FIELD_TYPE.ENUM &&
+        field.enum_choices
+      ) {
+        const enumItem = field.enum_choices.find((c) => c.key == value);
+        if (enumItem) {
+          value = enumItem.label;
+        }
       }
 
       return {

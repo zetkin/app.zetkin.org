@@ -6,6 +6,11 @@ export default makeMessages('feat.files', {
     instructions: m(' or drag and drop'),
     selectClick: m('Click to upload'),
   },
+  image: {
+    dimensions: m<{ height: number; width: number }>(
+      '{width} × {height} pixels'
+    ),
+  },
   libraryDialog: {
     preview: {
       backButton: m('Back to library'),

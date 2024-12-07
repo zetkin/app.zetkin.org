@@ -3,9 +3,11 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { AreaModel, CanvassAssignmentModel } from 'features/areas/models';
-import { ZetkinCanvassSession } from 'features/areas/types';
-import { ZetkinMembership, ZetkinPerson } from 'utils/types/zetkin';
+import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
+import { AssignmentWithAreas } from 'features/canvassAssignments/types';
+import { ZetkinMembership } from 'utils/types/zetkin';
+import { AreaModel } from 'features/areas/models';
+import { ZetkinArea } from 'features/areas/types';
 
 export async function GET(request: NextRequest) {
   const headers: IncomingHttpHeaders = {};
@@ -17,21 +19,70 @@ export async function GET(request: NextRequest) {
     `/api/users/me/memberships`
   );
 
-  const sessions: ZetkinCanvassSession[] = [];
+  const assignmentsWithAreas: AssignmentWithAreas[] = [];
 
+  //för varje organisation personen är medlem i
   for await (const membership of memberships) {
     const { id: personId } = membership.profile;
 
-    const person = await apiClient.get<ZetkinPerson>(
-      `/api/orgs/${membership.organization.id}/people/${personId}`
-    );
-
+    //plocka ut alla assignments som personen har en tilldelning i
     const assignmentModels = await CanvassAssignmentModel.find({
       orgId: membership.organization.id,
       'sessions.personId': { $eq: personId },
     });
 
+    //för varje uppdrag personen har en tilldelning i
     for await (const assignment of assignmentModels) {
+      const areas: ZetkinArea[] = [];
+
+      //för varje session i det uppdraget
+      for await (const session of assignment.sessions) {
+        //om vi är på en session som "tillhör" personen
+        if (session.personId == personId) {
+          //lägg till arean i listan över areas
+          const area = await AreaModel.findOne({
+            _id: session.areaId,
+          });
+
+          if (area) {
+            areas.push({
+              description: area.description,
+              id: area._id.toString(),
+              organization: {
+                id: area.orgId,
+              },
+              points: area.points,
+              tags: [], // TODO: is this necessary here?
+              title: area.title,
+            });
+          }
+        }
+      }
+
+      assignmentsWithAreas.push({
+        areas: areas,
+        campaign: {
+          id: assignment.campId,
+        },
+        end_date: assignment.end_date,
+        id: assignment._id.toString(),
+        metrics: assignment.metrics.map((m) => ({
+          definesDone: m.definesDone,
+          description: m.description,
+          id: m._id.toString(),
+          kind: m.kind,
+          question: m.question,
+        })),
+        organization: {
+          id: assignment.orgId,
+        },
+        reporting_level: assignment.reporting_level || 'household',
+        start_date: assignment.start_date,
+        title: assignment.title,
+      });
+    }
+
+    /* for await (const assignment of assignmentModels) {
       for await (const sessionData of assignment.sessions) {
         if (sessionData.personId == personId) {
           const orgId = assignment.orgId;
@@ -41,7 +92,7 @@ export async function GET(request: NextRequest) {
           });
 
           if (area) {
-            sessions.push({
+            assignmentsWithAreas.push({
               area: {
                 description: area.description,
                 id: area._id.toString(),
@@ -54,17 +105,30 @@ export async function GET(request: NextRequest) {
               },
               assignee: person,
               assignment: {
+                campaign: {
+                  id: assignment.campId,
+                },
                 id: assignment._id.toString(),
+                metrics: assignment.metrics.map((m) => ({
+                  definesDone: m.definesDone,
+                  description: m.description,
+                  id: m._id.toString(),
+                  kind: m.kind,
+                  question: m.question,
+                })),
+                organization: {
+                  id: assignment.orgId,
+                },
                 title: assignment.title,
               },
             });
           }
         }
       }
-    }
+    } */
   }
 
   return NextResponse.json({
-    data: sessions,
+    data: assignmentsWithAreas,
   });
 }

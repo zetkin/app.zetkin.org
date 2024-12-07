@@ -1,21 +1,22 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
+import asOrgAuthorized from 'utils/api/asOrgAuthorized';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import isPointInsidePolygon from 'features/canvassAssignments/utils/isPointInsidePolygon';
 import {
-  AreaModel,
   CanvassAssignmentModel,
   PlaceModel,
-} from 'features/areas/models';
+} from 'features/canvassAssignments/models';
 import {
   Household,
   Visit,
-  ZetkinArea,
+  ZetkinCanvassAssignmentStats,
   ZetkinCanvassSession,
   ZetkinPlace,
-} from 'features/areas/types';
-import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinPerson } from 'utils/types/zetkin';
-import isPointInsidePolygon from 'features/areas/utils/isPointInsidePolygon';
+} from 'features/canvassAssignments/types';
+import { AreaModel } from 'features/areas/models';
+import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
@@ -35,40 +36,56 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       //Find all sessions of the assignment
-      const model = await CanvassAssignmentModel.findOne({
+      const assignmentModel = await CanvassAssignmentModel.findOne({
         _id: params.canvassAssId,
       });
 
-      if (!model) {
+      if (!assignmentModel) {
         return new NextResponse(null, { status: 404 });
       }
 
       const sessions: ZetkinCanvassSession[] = [];
 
-      for await (const sessionData of model.sessions) {
+      for await (const sessionData of assignmentModel.sessions) {
         const person = await apiClient.get<ZetkinPerson>(
           `/api/orgs/${orgId}/people/${sessionData.personId}`
         );
-        const area = await AreaModel.findOne({
+        const areaModel = await AreaModel.findOne({
           _id: sessionData.areaId,
         });
 
-        if (area && person) {
+        if (areaModel && person) {
           sessions.push({
             area: {
-              description: area.description,
-              id: area._id.toString(),
+              description: areaModel.description,
+              id: areaModel._id.toString(),
               organization: {
                 id: orgId,
               },
-              points: area.points,
+              points: areaModel.points,
               tags: [], //TODO: Is this really neccessary here?
-              title: area.title,
+              title: areaModel.title,
             },
             assignee: person,
             assignment: {
-              id: model._id.toString(),
-              title: model.title,
+              campaign: {
+                id: assignmentModel.campId,
+              },
+              end_date: assignmentModel.end_date,
+              id: assignmentModel._id.toString(),
+              metrics: assignmentModel.metrics.map((m) => ({
+                definesDone: m.definesDone,
+                description: m.description,
+                id: m._id,
+                kind: m.kind,
+                question: m.question,
+              })),
+              organization: {
+                id: assignmentModel.orgId,
+              },
+              reporting_level: assignmentModel.reporting_level || 'household',
+              start_date: assignmentModel.start_date,
+              title: assignmentModel.title,
             },
           });
         }
@@ -90,7 +107,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         orgId: orgId,
         position: model.position,
         title: model.title,
-        type: model.type,
       }));
 
       type PlaceWithAreaId = ZetkinPlace & { areaId: ZetkinArea['id'] };
@@ -116,9 +132,58 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       ];
 
       const visitsInAreas: Visit[] = [];
+      const successfulVisitsInAreas: Visit[] = [];
       const visitedPlacesInAreas: string[] = [];
       const visitedAreas: string[] = [];
       const householdsInAreas: Household[] = [];
+
+      const configuredMetrics = assignmentModel.metrics;
+      const idOfMetricThatDefinesDone = configuredMetrics.find(
+        (metric) => metric.definesDone
+      )?._id;
+      const accumulatedMetrics: ZetkinCanvassAssignmentStats['metrics'] =
+        configuredMetrics.map((metric) => ({
+          metric: {
+            definesDone: metric.definesDone,
+            description: metric.description,
+            id: metric._id,
+            kind: metric.kind,
+            question: metric.question,
+          },
+          values: metric.kind == 'boolean' ? [0, 0] : [0, 0, 0, 0, 0],
+        }));
+
+      allPlaces.forEach((place) => {
+        place.households.forEach((household) => {
+          household.visits.forEach((visit) => {
+            if (visit.canvassAssId == params.canvassAssId) {
+              visit.responses.forEach((response) => {
+                const configuredMetric = configuredMetrics.find(
+                  (candidate) => candidate._id == response.metricId
+                );
+
+                const accumulatedMetric = accumulatedMetrics.find(
+                  (accum) => accum.metric.id == response.metricId
+                );
+
+                if (accumulatedMetric && configuredMetric) {
+                  if (configuredMetric.kind === 'boolean') {
+                    if (response.response === 'yes') {
+                      accumulatedMetric.values[0]++;
+                    } else if (response.response === 'no') {
+                      accumulatedMetric.values[1]++;
+                    }
+                  } else if (configuredMetric.kind === 'scale5') {
+                    const rating = parseInt(response.response);
+                    const index = rating - 1;
+                    accumulatedMetric.values[index]++;
+                  }
+                }
+              });
+            }
+          });
+        });
+      });
 
       uniquePlacesInAreas.forEach((place) => {
         householdsInAreas.push(...place.households);
@@ -128,6 +193,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               visitedAreas.push(place.areaId);
               visitedPlacesInAreas.push(place.id);
               visitsInAreas.push(visit);
+
+              visit.responses.forEach((response) => {
+                if (response.metricId == idOfMetricThatDefinesDone) {
+                  if (response.response == 'yes') {
+                    successfulVisitsInAreas.push(visit);
+                  }
+                }
+              });
             }
           });
         });
@@ -156,9 +229,11 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return Response.json({
         data: {
+          metrics: accumulatedMetrics,
           num_areas: uniqueAreas.length,
           num_households: householdsInAreas.length,
           num_places: uniquePlacesInAreas.length,
+          num_successful_visited_households: successfulVisitsInAreas.length,
           num_visited_areas: Array.from(new Set(visitedAreas)).length,
           num_visited_households: visitsInAreas.length,
           num_visited_households_outside_areas: visitsOutsideAreas.length,

@@ -39,19 +39,25 @@ const EmailTargetsBlocked: FC<EmailTargetsBlockedProps> = ({
           {(animatedValue) => (
             <Box
               sx={{
-                backgroundColor: theme.palette.statusColors.orange,
+                backgroundColor:
+                  parseInt(animatedValue) > 0
+                    ? theme.palette.statusColors.orange
+                    : theme.palette.statusColors.gray,
                 borderRadius: '1em',
-                color: 'white',
+                color:
+                  parseInt(animatedValue) > 0
+                    ? 'white'
+                    : theme.palette.text.secondary,
                 display: 'flex',
                 flexShrink: 0,
                 fontSize: '1.8em',
                 lineHeight: 'normal',
                 marginRight: '0.1em',
                 overflow: 'hidden',
-                padding: parseInt(animatedValue) === 0 ? '' : '0.2em 0.7em',
+                padding: '0.2em 0.7em',
               }}
             >
-              {parseInt(animatedValue) > 0 ? animatedValue : ''}
+              {parseInt(animatedValue) > 0 ? animatedValue : 0}
             </Box>
           )}
         </ZUIAnimatedNumber>

@@ -14,6 +14,7 @@ export type ZetkinJoinForm = {
     title: string;
   };
   renderable: boolean;
+  requires_email_verification: boolean;
   submit_token: string;
   tags: {
     id: number;

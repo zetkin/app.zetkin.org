@@ -60,6 +60,15 @@ export default makeMessages('feat.campaigns', {
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
+  createButton: {
+    createActivity: m('Create'),
+    createCallAssignment: m('Call assignment'),
+    createCanvassAssignment: m('Canvass assignment'),
+    createEmail: m('Email'),
+    createEvent: m('Event'),
+    createSurvey: m('Survey'),
+    createTask: m('Task'),
+  },
   events: m('Events'),
   feedback: {
     copy: m(
@@ -76,6 +85,9 @@ export default makeMessages('feat.campaigns', {
       create: m('Create project'),
       error: m('There was an error creating the project'),
       newCampaign: m('My project'),
+    },
+    createCanvassAssignment: {
+      defaultQuestion: m('Did you complete the mission?'),
     },
     createEmail: {
       newEmail: m('Untitled email'),
@@ -128,13 +140,13 @@ export default makeMessages('feat.campaigns', {
     overview: m('Overview'),
   },
   linkGroup: {
-    createActivity: m('Create activity'),
-    createCallAssignment: m('Create call assignment'),
-    createCanvassAssignment: m('Create canvass assignment'),
-    createEmail: m('Create email'),
-    createEvent: m('Create event'),
-    createSurvey: m('Create survey'),
-    createTask: m('Create task'),
+    createActivity: m('Create'),
+    createCallAssignment: m('Call assignment'),
+    createCanvassAssignment: m('Canvass assignment'),
+    createEmail: m('Email'),
+    createEvent: m('Event'),
+    createSurvey: m('Survey'),
+    createTask: m('Task'),
     public: m('Public Page'),
     settings: m('Edit Settings'),
   },

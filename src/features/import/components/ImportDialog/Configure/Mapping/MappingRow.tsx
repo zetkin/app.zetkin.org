@@ -28,6 +28,7 @@ const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
     ColumnKind.ORGANIZATION,
     ColumnKind.TAG,
     ColumnKind.DATE,
+    ColumnKind.ENUM,
   ].includes(column.kind);
 };
 
@@ -57,6 +58,16 @@ const MappingRow: FC<MappingRowProps> = ({
     column.numberOfEmptyRows,
     column.uniqueValues
   );
+
+  const getMappingRowButtonMessageId = () => {
+    if (column.originalColumn.kind == ColumnKind.DATE) {
+      return messageIds.configuration.mapping.configButton;
+    } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
+      return messageIds.configuration.mapping.infoButton;
+    } else {
+      return messageIds.configuration.mapping.mapValuesButton;
+    }
+  };
 
   return (
     <Box
@@ -163,14 +174,7 @@ const MappingRow: FC<MappingRowProps> = ({
               onClick={() => onConfigureStart()}
               variant="text"
             >
-              <Msg
-                id={
-                  column.originalColumn.kind == ColumnKind.ID_FIELD ||
-                  column.originalColumn.kind == ColumnKind.DATE
-                    ? messageIds.configuration.mapping.configButton
-                    : messageIds.configuration.mapping.mapValuesButton
-                }
-              />
+              <Msg id={getMappingRowButtonMessageId()} />
             </Button>
           </>
         )}

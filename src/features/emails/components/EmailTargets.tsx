@@ -1,9 +1,11 @@
 import { makeStyles } from '@mui/styles';
-import { Add, Edit, Visibility } from '@mui/icons-material';
+import { Add, Edit, Lock, LockOpen, Visibility } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Button,
   Card,
+  CircularProgress,
   Divider,
   Typography,
   useTheme,
@@ -34,7 +36,10 @@ const useStyles = makeStyles((theme) => ({
 interface EmailTargetsProps {
   email: ZetkinEmail;
   isTargeted: boolean;
+  isLoading: boolean;
   isLocked: boolean;
+  onToggleLocked: () => void;
+  readyTargets: number;
   state: EmailState;
   targets: number;
   updateTargets: (filter_spec: Pick<ZetkinQuery, 'filter_spec'>) => void;
@@ -43,7 +48,10 @@ interface EmailTargetsProps {
 const EmailTargets: FC<EmailTargetsProps> = ({
   email,
   isTargeted,
+  isLoading,
   isLocked,
+  onToggleLocked,
+  readyTargets,
   state,
   targets,
   updateTargets,
@@ -64,6 +72,23 @@ const EmailTargets: FC<EmailTargetsProps> = ({
   //locked, targeted, published and published is in the past
   const sent = isTargeted && isLocked && state === EmailState.SENT;
 
+  const getSubtitleMessageId = () => {
+    if (notTargeted) {
+      return messageIds.targets.subtitle.notTargeted;
+    } else if (targetedNotLocked) {
+      return messageIds.targets.subtitle.targetedNotLocked;
+    } else if (targetedAndLocked) {
+      if (state == EmailState.SCHEDULED) {
+        return messageIds.targets.subtitle.scheduled;
+      } else {
+        return messageIds.targets.subtitle.targetedAndLocked;
+      }
+    } else {
+      //Must be "sent"
+      return messageIds.targets.subtitle.sent;
+    }
+  };
+
   return (
     <>
       <Card>
@@ -71,25 +96,43 @@ const EmailTargets: FC<EmailTargetsProps> = ({
           <Typography variant="h4">
             <Msg id={messageIds.targets.title} />
           </Typography>
-          <ZUIAnimatedNumber value={targets}>
-            {(animatedValue) => (
-              <Box className={classes.chip}>{animatedValue}</Box>
+          <Box alignItems="center" display="flex" gap={2}>
+            {isLocked && (
+              <Box
+                bgcolor={theme.palette.grey[300]}
+                borderRadius="2em"
+                padding={1}
+              >
+                <Typography variant="body2">
+                  <Msg id={messageIds.targets.lockedChip} />
+                </Typography>
+              </Box>
             )}
-          </ZUIAnimatedNumber>
+            <ZUIAnimatedNumber value={targets}>
+              {(animatedValue) => (
+                <Box className={classes.chip}>{animatedValue}</Box>
+              )}
+            </ZUIAnimatedNumber>
+          </Box>
         </Box>
         <Divider />
         <Box pb={2}>
-          <Box bgcolor="background.secondary" p={2}>
+          <Box
+            alignItems="flex-start"
+            display="flex"
+            flexDirection="column"
+            gap={1}
+            p={2}
+          >
             <Typography>
-              <Msg
-                id={
-                  sent
-                    ? messageIds.targets.sentSubtitle
-                    : messageIds.targets.subtitle
-                }
-              />
+              <Msg id={getSubtitleMessageId()} />
             </Typography>
-            <Box pt={1}>
+            {targetedAndLocked && state != EmailState.SCHEDULED && (
+              <Alert severity="info">
+                <Msg id={messageIds.targets.unlockAlert} />
+              </Alert>
+            )}
+            <Box alignItems="center" display="flex" gap={1} pt={1}>
               {notTargeted && (
                 <Button
                   onClick={() => setQueryDialogOpen(true)}
@@ -111,20 +154,13 @@ const EmailTargets: FC<EmailTargetsProps> = ({
                 </Box>
               )}
               {targetedAndLocked && (
-                <Box alignItems="center" display="flex">
-                  <Button
-                    onClick={() => setQueryDialogOpen(true)}
-                    startIcon={isLocked ? <Visibility /> : <Edit />}
-                    variant="outlined"
-                  >
-                    <Msg id={messageIds.targets.viewButton} />
-                  </Button>
-                  <Typography
-                    sx={{ color: theme.palette.statusColors.orange, ml: 2 }}
-                  >
-                    <Msg id={messageIds.targets.locked} />
-                  </Typography>
-                </Box>
+                <Button
+                  onClick={() => setQueryDialogOpen(true)}
+                  startIcon={isLocked ? <Visibility /> : <Edit />}
+                  variant="outlined"
+                >
+                  <Msg id={messageIds.targets.viewButton} />
+                </Button>
               )}
               {sent && (
                 <Box alignItems="center" display="flex">
@@ -136,6 +172,34 @@ const EmailTargets: FC<EmailTargetsProps> = ({
                     <Msg id={messageIds.targets.viewButton} />
                   </Button>
                 </Box>
+              )}
+              {isLoading && (
+                <Button
+                  startIcon={<CircularProgress size="1em" />}
+                  variant="outlined"
+                >
+                  <Msg id={messageIds.targets.loading} />
+                </Button>
+              )}
+              {!isLoading && (
+                <Button
+                  disabled={
+                    readyTargets === 0 ||
+                    state === EmailState.SCHEDULED ||
+                    state === EmailState.SENT
+                  }
+                  onClick={onToggleLocked}
+                  startIcon={isLocked ? <LockOpen /> : <Lock />}
+                  variant={targetedNotLocked ? 'contained' : 'outlined'}
+                >
+                  <Msg
+                    id={
+                      isLocked
+                        ? messageIds.targets.unlockButton
+                        : messageIds.targets.lockButton
+                    }
+                  />
+                </Button>
               )}
             </Box>
           </Box>

@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Link,
-  Paper,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, Link, Paper, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
 
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -27,9 +19,6 @@ const CallerInstructions = ({
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
   const {
     hasNewText,
     instructions,
@@ -49,14 +38,13 @@ const CallerInstructions = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        maxHeight: isMobile ? '90vh' : 'calc(100vh - 300px)',
-        minHeight: 0,
       }}
     >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          maxHeight: 'calc(max(35ch, 100vh - 300px))',
           minHeight: 0,
           padding: 2,
         }}

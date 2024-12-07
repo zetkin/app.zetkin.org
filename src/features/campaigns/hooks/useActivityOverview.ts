@@ -1,6 +1,6 @@
 import { isSameDate } from 'utils/dateUtils';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
-import useCanvassAssignmentActivities from 'features/areas/hooks/useCanvassAssignmentActivities';
+import useCanvassAssignmentActivities from 'features/canvassAssignments/hooks/useCanvassAssignmentActivities';
 import useEmailActivities from './useEmailActivities';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useSurveyActivities from './useSurveyActivities';
@@ -34,8 +34,10 @@ export default function useActivitiyOverview(
     campId
   );
   const emailActivitiesFuture = useEmailActivities(orgId, campId);
-  const canvassAssignmentAcitivitiesFuture =
-    useCanvassAssignmentActivities(orgId);
+  const canvassAssignmentAcitivitiesFuture = useCanvassAssignmentActivities(
+    orgId,
+    campId
+  );
 
   if (
     callAssignmentActivitiesFuture.isLoading ||

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { PlaceModel } from 'features/areas/models';
-import asOrgAuthorized from 'utils/api/asOrgAuthorized';
+import { PlaceModel } from 'features/canvassAssignments/models';
+import asCanvasserAuthorized from 'features/canvassAssignments/utils/asCanvasserAuthorized';
 
 type RouteMeta = {
   params: {
@@ -13,13 +13,12 @@ type RouteMeta = {
 };
 
 export async function POST(request: NextRequest, { params }: RouteMeta) {
-  return asOrgAuthorized(
+  return asCanvasserAuthorized(
     {
       orgId: params.orgId,
       request: request,
-      roles: ['admin'],
     },
-    async ({ orgId }) => {
+    async ({ orgId, personId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const payload = await request.json();
@@ -30,8 +29,12 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           $push: {
             'households.$[elem].visits': {
               canvassAssId: payload.canvassAssId,
+              doorWasOpened: payload.doorWasOpened,
               id: new mongoose.Types.ObjectId().toString(),
-              rating: payload.rating,
+              missionAccomplished: payload.missionAccomplished,
+              noteToOfficial: payload.noteToOfficial,
+              personId: personId,
+              responses: payload.responses || [],
               timestamp: payload.timestamp,
             },
           },
@@ -56,7 +59,6 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           orgId: orgId,
           position: model.position,
           title: model.title,
-          type: model.type,
         },
       });
     }

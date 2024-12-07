@@ -3,8 +3,8 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.profile', {
   delete: {
     button: m('Remove person'),
-    confirm: m<{ name: string }>(
-      'Are you sure you want to delete {name}? This is a permanent action.'
+    confirm: m<{ name: string; org: string }>(
+      'Are you sure you want to delete {name} from {org}, and all related organizations? This is a permanent action.'
     ),
     title: m('Delete account'),
     warning: m('This cannot be undone!'),
@@ -16,6 +16,9 @@ export default makeMessages('feat.profile', {
   editButtonClose: m<{ title: string }>('Stop editing {title}'),
   editButtonLabel: m('Edit Details'),
   editPersonHeader: m<{ person: string }>('Edit {person}'),
+  ellipsisMenu: {
+    merge: m('Merge with...'),
+  },
   genders: {
     f: m('Female'),
     m: m('Male'),

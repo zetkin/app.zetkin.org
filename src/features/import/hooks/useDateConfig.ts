@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 import { columnUpdate } from '../store';
 import { DateColumn } from '../utils/types';
-import parseDate from '../utils/parseDate';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
+import parserFactory from '../utils/dateParsing/parserFactory';
+import { IDateParser } from '../utils/dateParsing/types';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -19,9 +20,14 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const rows = sheet.rows;
   const cellValues = rows.map((row) => row.data[columnIndex]);
 
-  const [dateFormat, setDateFormat] = useState(
-    column.dateFormat ?? 'YYYY-MM-DD'
-  );
+  const [dateFormat, setDateFormat] = useState(column.dateFormat || null);
+
+  const noCustomFormat = dateFormat == '';
+
+  let parser: IDateParser | null = null;
+  if (column.dateFormat) {
+    parser = parserFactory(column.dateFormat);
+  }
 
   const wrongDateFormat = cellValues.some((value, index) => {
     if (index === 0 && firstRowIsHeaders) {
@@ -32,8 +38,8 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
       return false;
     }
 
-    if (column.dateFormat) {
-      return !parseDate(value, column.dateFormat);
+    if (parser && column.dateFormat) {
+      return !parser.validate(value);
     }
 
     return false;
@@ -62,6 +68,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const onDateFormatChange = (newFormat: string) => {
     if (newFormat === 'custom') {
       setDateFormat('');
+      updateDateFormat('');
     } else {
       setDateFormat(newFormat);
       updateDateFormat(newFormat);
@@ -69,6 +76,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   };
 
   const isCustomFormat =
+    dateFormat != null &&
     !Object.keys(dateFormats).includes(dateFormat) &&
     !isPersonNumberFormat(dateFormat);
 
@@ -77,6 +85,7 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     dateFormats,
     isCustomFormat,
     isPersonNumberFormat,
+    noCustomFormat,
     onDateFormatChange,
     personNumberFormats,
     updateDateFormat,

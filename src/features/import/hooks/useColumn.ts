@@ -36,24 +36,16 @@ export default function useColumn(orgId: number) {
       return false;
     }
 
-    if (value == 'org') {
-      return !!selectedColumns.find(
-        (column) => column.kind == ColumnKind.ORGANIZATION
-      );
-    }
-
-    if (value == 'id') {
-      return !!allSelectedColumns.find(
-        (column) => column.kind == ColumnKind.ID_FIELD
-      );
-    }
-
     const exists = selectedColumns.find((column) => {
       if (column.kind == ColumnKind.FIELD) {
         return column.field == value.slice(6);
       }
 
       if (column.kind == ColumnKind.DATE) {
+        return column.field == value.slice(5);
+      }
+
+      if (column.kind == ColumnKind.ENUM) {
         return column.field == value.slice(5);
       }
     });
@@ -68,19 +60,28 @@ export default function useColumn(orgId: number) {
       value: `field:${fieldSlug}`,
     }));
 
-  const customFieldsOptions: Option[] = customFields.map((field) => {
-    if (field.type === CUSTOM_FIELD_TYPE.DATE) {
-      return {
-        label: field.title,
-        value: `date:${field.slug}`,
-      };
-    } else {
-      return {
-        label: field.title,
-        value: `field:${field.slug}`,
-      };
-    }
-  });
+  const customFieldsOptions: Option[] = customFields
+    .filter(
+      (field) => field.organization.id == orgId || field.org_write == 'suborgs'
+    )
+    .map((field) => {
+      if (field.type === CUSTOM_FIELD_TYPE.DATE) {
+        return {
+          label: field.title,
+          value: `date:${field.slug}`,
+        };
+      } else if (field.type == CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
+        return {
+          label: field.title,
+          value: `enum:${field.slug}`,
+        };
+      } else {
+        return {
+          label: field.title,
+          value: `field:${field.slug}`,
+        };
+      }
+    });
 
   const fieldOptions: Option[] = [
     ...nativeFieldsOptions,

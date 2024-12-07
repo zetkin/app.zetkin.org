@@ -13,96 +13,6 @@ core:
       feature you want to use. You are being redirected to the older version of
       Zetkin which supports that feature.
 feat:
-  areas:
-    addNewPlaceButton: Add new place
-    canvassAssignment:
-      addAssignee: Add assignee
-      assigneesTitle: Assignees
-      canvassers:
-        areasColumn: Areas
-        nameColumn: Name
-      canvassing:
-        goToMapButton: Go to map
-        title: Canvassing
-      empty:
-        title: Untitled canvass assignment
-      overview:
-        areas:
-          defineButton: Plan now
-          editButton: Edit plan
-          subtitle: This assignment has not been planned yet.
-          title: Areas
-      planFilters:
-        assigned: Assigned
-        unassigned: Unassigned
-      tabs:
-        canvassers: Canvassers
-        overview: Overview
-        plan: Plan
-    empty:
-      description: Empty description
-      title: Untitled area
-    filters:
-      addFilterButton: Add filter
-      filterButton: Filters
-      tagGroup: "{label} (tag group)"
-      tagsWithoutGroup: Tags without group
-    overlay:
-      buttons:
-        cancel: Cancel
-        delete: Delete
-        edit: Edit
-        save: Save
-      tags:
-        header: Tags
-    place:
-      activityHeader: Activity
-      addHouseholdButton: Add household
-      backButton: Back
-      badRatingLog: Bad rating
-      cancelButton: Cancel
-      closeButton: Close
-      description: Description
-      editButton: Edit
-      editDescription: Place description
-      editPlace: Edit {placeName}
-      editTitle: Place title
-      empty:
-        description: Empty description
-        title: Untitled place
-      goodRatingLog: Good rating
-      household:
-        empty:
-          title: Untitled household
-      householdsHeader: "{numberOfHouseholds, plural, =0 {No households} =1 {Household
-        1} other {Households #}}"
-      logActivityButton: Log activity
-      logActivityHeader: Log activity at {title}
-      logList: Log
-      noActivity: No visits have been recorded at this place.
-      notePlaceholder: Note
-      saveButton: Save
-      selectType: Place type
-      visitButton: Log visit
-      visitLog: Visited
-      visitedButton: Visited
-    placeCard:
-      address: Address
-      cancel: Cancel
-      createPlace: Create place
-      inputLabel: Type of place
-      misc: Misc
-      placeholderAddress: Enter address here
-      placeholderTitle: Enter title here
-    planOverlay:
-      addAssignee: Add assignee
-      assignees: Assignees
-      noAssignees: No assignees
-    tools:
-      cancel: Cancel
-      draw: Draw
-      save: Save
-    viewPlaceButton: View place
   breadcrumbs:
     elements:
       activities: Activities
@@ -225,8 +135,10 @@ feat:
     today: Today
   callAssignments:
     actions:
+      delete: Delete
       end: End assignment
       start: Start assignment
+      warning: '"{title}" will be deleted.'
     blocked:
       callBackLater: Asked us to call back later
       calledTooRecently: Called too recently
@@ -363,6 +275,14 @@ feat:
       viewArchive: View archive
     assigneeActions: Assignee actions
     calendarView: See all in calendar
+    createButton:
+      createActivity: Create
+      createCallAssignment: Call assignment
+      createCanvassAssignment: Canvass assignment
+      createEmail: Email
+      createEvent: Event
+      createSurvey: Survey
+      createTask: Task
     events: Events
     feedback:
       copy: Collecting feedback (during phonebanks or standalone) can help you work
@@ -376,6 +296,8 @@ feat:
         create: Create project
         error: There was an error creating the project
         newCampaign: My project
+      createCanvassAssignment:
+        defaultQuestion: Did you complete the mission?
       createEmail:
         newEmail: Untitled email
       createSurvey:
@@ -415,13 +337,13 @@ feat:
       insights: Insights
       overview: Overview
     linkGroup:
-      createActivity: Create activity
-      createCallAssignment: Create call assignment
-      createCanvassAssignment: Create canvass assignment
-      createEmail: Create email
-      createEvent: Create event
-      createSurvey: Create survey
-      createTask: Create task
+      createActivity: Create
+      createCallAssignment: Call assignment
+      createCanvassAssignment: Canvass assignment
+      createEmail: Email
+      createEvent: Event
+      createSurvey: Survey
+      createTask: Task
       public: Public Page
       settings: Edit Settings
     mobilization:
@@ -469,10 +391,11 @@ feat:
           o: Other
         noValue: No value
         title: Data to merge
-      infoMessage: All activity history and tags from all people being merged will
-        carry over and will be visible on the merged person.
-      infoTitle: No data will be lost
+      findCandidateManually: Type to find a potential duplicate
       isDuplicateButton: Include
+      lists:
+        hideManual: Hide manual search
+        showManual: Show manual search
       mergeButton: Merge
       notDuplicateButton: Exclude
       peopleNotBeingMerged: People not being merged
@@ -482,6 +405,11 @@ feat:
         name: Name
         phone: Phone
       title: Merge duplicates
+      warningMessage: All data related to any of the person records will transfer to
+        the merged person. This includes event participation, survey
+        submissions, tags etc. But the values you discard in the fields above
+        will be lost.
+      warningTitle: Risk of data loss
     page:
       dismiss: Dismiss
       noDuplicates: No duplicates
@@ -616,19 +544,12 @@ feat:
           header: Open rate
         header: Opened
     ready:
-      loading: Loading...
-      lockButton: Lock for delivery
-      lockDescription: Lock to enable email delivery
-      locked: Locked
-      scheduledDescription: This email is scheduled for delivery. If you want to
-        unlock the targets, cancel the delivery first.
+      missingEmailsDescription: There {numPeople, plural, one {is a person} other {are
+        people}} with a missing email address in the target group. If you
+        resolve it they will be included in the target group.
       sentSubtitle: Targets that were available for delivery
       subtitle: Targets currently available for delivery
       title: Ready
-      unlockButton: Unlock
-      unlockDescription: Proceed to delivery or unlock recipients to edit targeting.
-        Unlocking may add or remove some targets depending on what results the
-        Smart Search will produce.
     state:
       draft: Draft
       scheduled: Scheduled
@@ -644,11 +565,24 @@ feat:
     targets:
       defineButton: Define target group
       editButton: Edit target group
+      loading: Loading...
+      lockButton: Lock for delivery
       locked: Targets are locked for delivery
-      sentSubtitle: You can look at the Smart Search that was used to define the
-        recipients of this email
-      subtitle: Use Smart Search to define the recipients of this email.
+      lockedChip: Locked
+      subtitle:
+        notTargeted: Use Smart Search to define the recipients of this email.
+        scheduled: This email is scheduled for delivery. If you want to unlock the
+          targets to edit the Smart Search, cancel the delivery first.
+        sent: You can look at the Smart Search that was used to define the recipients of
+          this email
+        targetedAndLocked: Proceed to delivery or unlock recipients if you want to edit
+          the Smart Search that is used to define the recipients of this email.
+        targetedNotLocked: Edit the Smart Search that is used to define the recipients
+          of this email, or lock the target group to enable email delivery.
       title: Targets
+      unlockAlert: Unlocking may add or remove people from the target group depending
+        on what results the Smart Search will produce.
+      unlockButton: Unlock
       viewButton: View target group
     unsubscribePage:
       consent: I understand
@@ -892,6 +826,8 @@ feat:
     tooltipContent: Untitled events will display type as title
     type:
       createType: Create "{type}"
+      deleteMessage: Are you sure you want to delete the "{eventType}" event type for
+        the whole organization?
       tooltip: Click to change type
       uncategorized: Uncategorized
   files:
@@ -899,6 +835,8 @@ feat:
       dropToUpload: Drop file here to upload it
       instructions: " or drag and drop"
       selectClick: Click to upload
+    image:
+      dimensions: "{width} × {height} pixels"
     libraryDialog:
       preview:
         backButton: Back to library
@@ -934,8 +872,6 @@ feat:
             describe that as YYYY.MM.DD.
           customFormatLabel: Custom date format
           dateInputLabel: Date format
-          description: Select the format of the values in this column so they can be
-            imported correctly.
           dropDownLabel: Select format
           emptyPreview: Could not be parsed
           header: Configure date format
@@ -956,8 +892,11 @@ feat:
               description: The values in this column will be parsed from 10 or 12 digit
                 Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.
               label: Swedish Personnummer
-          wrongDateFormatWarning: Some of the values in this column can not be parsed into
-            dates using this format.
+        enum:
+          header: Map values to options
+          none: None
+          numberOfRows: "{numRows, plural, =1 {1 row} other {# rows}}"
+          value: Value
         ids:
           configExplanation: Importing with IDs allows Zetkin (now or in the future) to
             update existing people in the database instead of creating
@@ -1024,6 +963,7 @@ feat:
         tags: Tags
         unfinished:
           date: You need to configure date format
+          enum: You need to map values
           id: You need to configure the IDs
           org: You need to map values
           tag: You need to map values
@@ -1067,7 +1007,7 @@ feat:
       past:
         created: "{number} new {numPeople, plural, =1 {person} other {people}} were
           created"
-        defaultDesc: "{numPeople} recieved changes to their {field}"
+        defaultDesc: "{numPeople} received changes to their {field}"
         organization: Organization
         orgs: "{numPeople} were added to an {org}"
         tags: Tags
@@ -1181,6 +1121,7 @@ feat:
       labels:
         addField: Add field
         description: Description
+        requireEmailVerification: Require e-mail verification
         title: Title
       title: Edit form
     forms: Forms
@@ -1319,6 +1260,21 @@ feat:
         timeline: Timeline
       title: Journeys
   organizations:
+    gen3:
+      description: This is the new (generation 3) organizer web app. If you are used
+        to the old one, you will find lots of new features and an improved user
+        interface here. But if you want, you can still use the old organizer app
+        for a while longer.
+      gen2Button: Go to the old interface
+      title: Welcome to the new Zetkin!
+    notOrganizer:
+      description: This part of Zetkin is only available to users who have been
+        granted organizer access by another organization official. You do not
+        currently have the sufficient level of access. If you believe that this
+        is a mistake, please reach out to your local Zetkin officials or to
+        Zetkin Foundation.
+      myPageButton: Go to activist portal
+      title: You do not have organizer access
     page:
       title: "Select organization:"
     sidebar:
@@ -1333,7 +1289,6 @@ feat:
   profile:
     delete:
       button: Remove person
-      confirm: Are you sure you want to delete {name}? This is a permanent action.
       title: Delete account
       warning: This cannot be undone!
     details:
@@ -1342,6 +1297,8 @@ feat:
     editButtonClose: Stop editing {title}
     editButtonLabel: Edit Details
     editPersonHeader: Edit {person}
+    ellipsisMenu:
+      merge: Merge with...
     genders:
       f: Female
       m: Male
@@ -1645,6 +1602,7 @@ feat:
       personField:
         edit:
           date: "{fieldSelect} is {timeFrame}"
+          enum: '{fieldSelect} is "{selectInput}"'
           none: This organization doesn't have any custom fields yet.
           text: '{fieldSelect} matches "{freeTextInput}"'
           url: '{fieldSelect} matches "{freeTextInput}"'
@@ -1653,6 +1611,7 @@ feat:
         inputString: "{addRemoveSelect} any person whose {field}."
         preview:
           date: "{fieldName} is {timeFrame}"
+          enum: '{fieldName} is "{searchTerm}"'
           text: '{fieldName} matches "{searchTerm}"'
           url: '{fieldName} matches "{searchTerm}"'
       personTags:
@@ -1991,11 +1950,14 @@ feat:
         unlockButton: Unlock
     layout:
       actions:
+        delete: Delete survey
         publish: Publish survey
         unpublish: Unpublish survey
+        warning: '"{surveyTitle}" will be deleted.'
       stats:
         questions: "{numQuestions, plural, one {1 question} other {# questions}}"
         submissions: "{numSubmissions, plural, one {1 submission} other {# submissions}}"
+      unknownTitle: Untitled survey
     optionCollapse:
       collapse: Collapse
       more: "{numOfOptions, plural, one {Show 1 more option} other {Show # more
@@ -2309,8 +2271,10 @@ feat:
             sure you want to continue?
       menu:
         delete: Delete
+        duplicate: Duplicate
         move: Move
         rename: Rename
+        viewCopy: "{viewName} - copy"
       moveToFolder: Move to {folder}
       moveToRoot: Move to all lists
     browserLayout:
@@ -2612,6 +2576,11 @@ glob:
     configure: Edit & Configure
     edit: Editing
     readonly: Read-only
+  genderOptions:
+    f: Female
+    m: Male
+    o: Other
+    unspecified: Unspecified
   personFields:
     alt_phone: Alternate Phone Number
     city: City
@@ -2649,6 +2618,8 @@ zui:
     cancel: Cancel
     createBtn: Create
     defaultitle: Create person
+    enumFields:
+      noneOption: None
     genders:
       f: Female
       m: Male
