@@ -8,6 +8,7 @@ import { Column, ColumnKind } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export interface Option {
+  disabled: boolean;
   value: string;
   label: string;
 }
@@ -56,32 +57,38 @@ export default function useColumn(orgId: number) {
   const nativeFieldsOptions: Option[] = Object.values(NATIVE_PERSON_FIELDS)
     .filter((fieldSlug) => fieldSlug != 'id' && fieldSlug != 'ext_id')
     .map((fieldSlug) => ({
+      disabled: false,
       label: globalMessages.personFields[fieldSlug](),
       value: `field:${fieldSlug}`,
     }));
 
-  const customFieldsOptions: Option[] = customFields
-    .filter(
-      (field) => field.organization.id == orgId || field.org_write == 'suborgs'
-    )
-    .map((field) => {
-      if (field.type === CUSTOM_FIELD_TYPE.DATE) {
-        return {
-          label: field.title,
-          value: `date:${field.slug}`,
-        };
-      } else if (field.type == CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
-        return {
-          label: field.title,
-          value: `enum:${field.slug}`,
-        };
-      } else {
-        return {
-          label: field.title,
-          value: `field:${field.slug}`,
-        };
-      }
-    });
+  const customFieldsOptions: Option[] = customFields.map((field) => {
+    if (field.type === CUSTOM_FIELD_TYPE.DATE) {
+      return {
+        disabled: !(
+          field.organization.id == orgId || field.org_write == 'suborgs'
+        ),
+        label: field.title,
+        value: `date:${field.slug}`,
+      };
+    } else if (field.type == CUSTOM_FIELD_TYPE.ENUM && field.enum_choices) {
+      return {
+        disabled: !(
+          field.organization.id == orgId || field.org_write == 'suborgs'
+        ),
+        label: field.title,
+        value: `enum:${field.slug}`,
+      };
+    } else {
+      return {
+        disabled: !(
+          field.organization.id == orgId || field.org_write == 'suborgs'
+        ),
+        label: field.title,
+        value: `field:${field.slug}`,
+      };
+    }
+  });
 
   const fieldOptions: Option[] = [
     ...nativeFieldsOptions,
