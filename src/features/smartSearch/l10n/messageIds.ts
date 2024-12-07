@@ -75,6 +75,10 @@ export default makeMessages('feat.smartSearch', {
         description: m('Who was sent what, when?'),
         title: m('Based on their email history'),
       },
+      joinform: {
+        description: m('Find people who came in through a join form.'),
+        title: m('Based on Join Form source'),
+      },
       journey_subjects: {
         description: m(
           'Find people who are on a journey or finished it already'
@@ -300,6 +304,17 @@ export default makeMessages('feat.smartSearch', {
         opened: m('opened'),
         sent: m('been sent'),
       },
+    },
+    joinForm: {
+      anyForm: m('any join form'),
+      form: m<{ title: string }>('"{title}"'),
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        formSelect: ReactElement;
+        timeFrame: ReactElement;
+      }>(
+        '{addRemoveSelect} people who came in through {formSelect} {timeFrame}'
+      ),
     },
     journey: {
       condition: {

@@ -6,6 +6,7 @@ import {
   Block,
   Call,
   CheckBoxOutlined,
+  DoorFrontOutlined,
   DraftsOutlined,
   Event,
   ExploreOutlined,
@@ -50,6 +51,7 @@ import {
   EmailClickFilterConfig,
   EmailHistoryFilterConfig,
   FILTER_TYPE,
+  JoinFormFilterConfig,
   JourneyFilterConfig,
   MostActiveFilterConfig,
   OPERATION,
@@ -66,6 +68,7 @@ import {
   TaskFilterConfig,
   UserFilterConfig,
 } from 'features/smartSearch/components/types';
+import DisplayJoinForm from '../../filters/JoinForm/DisplayJoinForm';
 
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>
@@ -219,6 +222,13 @@ export default function getFilterComponents(
     filterTypeIcon = (
       <AccountCircleOutlined color="secondary" fontSize="small" />
     );
+  } else if (filter.type == FILTER_TYPE.JOINFORM) {
+    displayFilter = (
+      <DisplayJoinForm
+        filter={filter as SmartSearchFilterWithId<JoinFormFilterConfig>}
+      />
+    );
+    filterTypeIcon = <DoorFrontOutlined color="secondary" fontSize="small" />;
   }
 
   return {

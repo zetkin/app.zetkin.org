@@ -82,6 +82,6 @@ export const GROUPED_FILTERS: {
       pale: filterCategoryColors.red.pale,
       strong: filterCategoryColors.red.strong,
     },
-    filters: [FILTER_TYPE.RANDOM, FILTER_TYPE.USER],
+    filters: [FILTER_TYPE.JOINFORM, FILTER_TYPE.RANDOM, FILTER_TYPE.USER],
   },
 };

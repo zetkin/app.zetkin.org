@@ -20,6 +20,7 @@ export enum FILTER_TYPE {
   EMAIL_BLACKLIST = 'email_blacklist',
   EMAIL_CLICK = 'email_click',
   EMAIL_HISTORY = 'email_history',
+  JOINFORM = 'joinform',
   JOURNEY = 'journey_subjects',
   MOST_ACTIVE = 'most_active',
   PERSON_DATA = 'person_data',
@@ -160,6 +161,15 @@ export interface EmailHistoryFilterConfig {
   email?: number;
   operator: 'sent' | 'not_sent' | 'opened' | 'not_opened';
 }
+
+export interface JoinFormFilterConfig {
+  form?: number;
+  submitted?: {
+    after?: string;
+    before?: string;
+  };
+}
+
 export interface MostActiveFilterConfig {
   after?: string;
   before?: string;
@@ -325,6 +335,7 @@ export type AnyFilterConfig =
   | CampaignParticipationConfig
   | DefaultFilterConfig
   | EmailBlacklistFilterConfig
+  | JoinFormFilterConfig
   | MostActiveFilterConfig
   | PersonDataFilterConfig
   | PersonFieldFilterConfig
