@@ -150,6 +150,7 @@ export default makeMessages('feat.import', {
         onlyEmpty: m<{ numEmpty: number }>(
           '{numEmpty, plural, =1 {one empty row} other {# empty rows}}.'
         ),
+        readOnlyField: m<{ title: string }>('{title} (read only)'),
 
         threeValuesAndEmpty: m<{
           firstValue: string | number;
