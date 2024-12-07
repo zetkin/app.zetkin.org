@@ -200,12 +200,34 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
 
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
+  const [showAddPersonButton, setShowAddPersonButton] = useState(false);
+  const [wasLoading, setWasLoading] = useState(false);
+
+  useEffect(() => {
+    if (autoCompleteProps.isLoading) {
+      // If the autocomplete is loading, we set the wasLoading state to true
+      // This state allows to keep track whether a search in the user database has already happened
+      setWasLoading(true);
+    } else if (wasLoading && !autoCompleteProps.isLoading) {
+      // Finally if the autocomplete is not loading anymore and the wasLoading state is true
+      // we can show the add person button, since the search in the user database has already happened
+      setShowAddPersonButton(true);
+      setWasLoading(false);
+    }
+  }, [autoCompleteProps.isLoading, wasLoading]);
+
   return (
     <>
       <MUIAutocomplete
         {...restProps}
         handleHomeEndKeys={!shiftHeld}
-        onChange={onChange}
+        onChange={(ev, value) => {
+          onChange(ev, value);
+          // If a person is selected, we reset the states to their initial values
+          // A new search has to be done to show the add person button again
+          setShowAddPersonButton(false);
+          setWasLoading(false);
+        }}
         PaperComponent={({ children }) => {
           return (
             <Paper
@@ -215,12 +237,19 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
               }}
             >
               {children}
-              {!disabled && (
+              {!disabled && showAddPersonButton && (
                 <>
                   <Divider sx={{ mt: 1 }} />
                   <Button
                     color="primary"
-                    onClick={() => setCreatePersonOpen(true)}
+                    onClick={() => {
+                      setCreatePersonOpen(true);
+                      // If a person is added, we reset the states to their initial values
+                      // A new search has to be done to show the add person button again
+                      setShowAddPersonButton(false);
+                      setShowAddPersonButton(false);
+                      setWasLoading(false);
+                    }}
                     startIcon={<PersonAdd />}
                     sx={{
                       justifyContent: 'flex-start',
