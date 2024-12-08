@@ -9,9 +9,16 @@ import getCanvassers from 'features/canvassAssignments/utils/getCanvassers';
 type Props = {
   caId: string;
   orgId: number;
+  visibleFrom: Date | null;
+  visibleUntil: Date | null;
 };
 
-const CanvassAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
+const CanvassAssignmentListItem: FC<Props> = ({
+  caId,
+  orgId,
+  visibleFrom,
+  visibleUntil,
+}) => {
   const { data: assignment } = useCanvassAssignment(orgId, caId);
 
   const allSessions = useCanvassSessions(orgId, caId).data || [];
@@ -29,12 +36,14 @@ const CanvassAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
   return (
     <ActivityListItem
       color={color}
+      endDate={visibleUntil ? visibleUntil.toString() : null}
       endNumber={canvassers.length}
       href={`/organize/${orgId}/projects/${
         assignment?.campaign?.id ?? 'standalone'
       }/canvassassignments/${caId}`}
       PrimaryIcon={Map}
       SecondaryIcon={Person}
+      startDate={visibleFrom ? visibleFrom.toString() : null}
       title={assignment?.title || ''}
     />
   );

@@ -6,6 +6,7 @@ import useEmail from 'features/emails/hooks/useEmail';
 import useEmailStats from 'features/emails/hooks/useEmailStats';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import useEmailState, { EmailState } from 'features/emails/hooks/useEmailState';
+import { getEmailSubtitle } from '../../../utils/subtitles';
 
 interface EmailListItemProps {
   emailId: number;
@@ -53,6 +54,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
       statsLoading={statsLoading}
+      subtitle={getEmailSubtitle(email.published)}
       title={email.title || ''}
     />
   ) : (
@@ -64,6 +66,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
       }/emails/${emailId}`}
       PrimaryIcon={EmailOutlined}
       SecondaryIcon={Person}
+      subtitle={getEmailSubtitle(email.published)}
       title={email.title || ''}
     />
   );
