@@ -135,7 +135,7 @@ export default function useSidebarStats(
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
-      dispatch(placesInvalidated);
+      dispatch(placesInvalidated());
     },
     synced: visitList?.loaded || null,
   };
