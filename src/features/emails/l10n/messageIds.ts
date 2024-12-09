@@ -51,7 +51,7 @@ export default makeMessages('feat.emails', {
         },
         settings: {
           senderAddressInputLabel: m('Sender address'),
-          senderNameInputLabel: m('Sender name'),
+          senderInputLabel: m('Sender'),
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
