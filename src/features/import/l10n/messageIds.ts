@@ -66,10 +66,10 @@ export default makeMessages('feat.import', {
       genders: {
         label: m('Gender'),
         selectLabels: {
-          f: m('female'),
-          m: m('male'),
-          o: m('other'),
-          unknown: m('unspecified'),
+          f: m('Female'),
+          m: m('Male'),
+          o: m('Other'),
+          unknown: m('Unknown'),
         },
       },
       ids: {
@@ -212,10 +212,10 @@ export default makeMessages('feat.import', {
         tags: m('Tags'),
       },
       genders: {
-        f: m('female'),
-        m: m('male'),
-        o: m('other'),
-        unknown: m('unspecified'),
+        f: m('Female'),
+        m: m('Male'),
+        o: m('Other'),
+        unknown: m('Unknown'),
       },
       next: m('Next'),
       noOrg: m('No organization'),
