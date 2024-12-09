@@ -64,15 +64,13 @@ export default makeMessages('feat.import', {
         value: m('Value'),
       },
       genders: {
-        gender: m('Gender'),
-        genders: {
+        label: m('Gender'),
+        selectLabels: {
           f: m('female'),
           m: m('male'),
-          null: m('unspecified'),
           o: m('other'),
           unknown: m('unspecified'),
         },
-        header: m('Gender'),
       },
       ids: {
         configExplanation: m(

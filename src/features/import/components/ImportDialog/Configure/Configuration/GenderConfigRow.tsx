@@ -55,10 +55,10 @@ const GenderConfigRow: FC<GenderConfigRowProps> = ({
         >
           <FormControl fullWidth size="small">
             <InputLabel>
-              <Msg id={messageIds.configuration.configure.genders.gender} />
+              <Msg id={messageIds.configuration.configure.genders.label} />
             </InputLabel>
             <Select
-              label={messages.configuration.configure.genders.gender()}
+              label={messages.configuration.configure.genders.label()}
               onChange={(event) => {
                 const { value } = event.target;
                 if (value === 'm' || value === 'f' || value === 'o') {
@@ -72,14 +72,19 @@ const GenderConfigRow: FC<GenderConfigRowProps> = ({
               {genders.map((key) => (
                 <MenuItem key={key} value={key}>
                   <Msg
-                    id={messageIds.configuration.configure.genders.genders[key]}
+                    id={
+                      messageIds.configuration.configure.genders.selectLabels[
+                        key
+                      ]
+                    }
                   />
                 </MenuItem>
               ))}
               <MenuItem value="unknown">
                 <Msg
                   id={
-                    messageIds.configuration.configure.genders.genders.unknown
+                    messageIds.configuration.configure.genders.selectLabels
+                      .unknown
                   }
                 />
               </MenuItem>

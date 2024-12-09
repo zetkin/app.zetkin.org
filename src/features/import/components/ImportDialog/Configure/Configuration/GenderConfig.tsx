@@ -41,7 +41,7 @@ const GenderConfig: FC<GenderConfigProps> = ({ uiDataColumn }) => {
         <Box width="50%">
           <Typography variant="body2">
             {messages.configuration.configure.genders
-              .header()
+              .label()
               .toLocaleUpperCase()}
           </Typography>
         </Box>
