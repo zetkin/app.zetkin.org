@@ -77,7 +77,7 @@ export default makeMessages('feat.smartSearch', {
       },
       joinform: {
         description: m('Find people who came in through a join form.'),
-        title: m('Based on Join Form source'),
+        title: m('Based on join form source'),
       },
       journey_subjects: {
         description: m(
