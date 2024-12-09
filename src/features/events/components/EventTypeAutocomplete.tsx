@@ -80,8 +80,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const createType = useCreateType(orgId);
   const deleteType = useDeleteType(orgId);
   const messages = useMessages(messageIds);
-  const orgTitle = useOrganization(orgId).data?.title;
-  const currentDefaultOrgMsg = messages.type.currentDefaultOrgMsg();
+  const organization = useOrganization(orgId).data;
   const uncategorizedMsg = messages.type.uncategorized();
   const [createdType, setCreatedType] = useState<string>('');
   const [text, setText] = useState<string>(value?.title ?? uncategorizedMsg);
@@ -251,9 +250,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                             }
                           }
                         },
-                        warningText: messages.type.deleteMessage({
+                        warningText: messages.type.deleteWarning({
                           eventType: option.title,
-                          orgTitle: orgTitle ? orgTitle : currentDefaultOrgMsg,
+                          orgTitle: organization?.title || '',
                         }),
                       });
                     }}

@@ -282,8 +282,10 @@ export default makeMessages('feat.events', {
   tooltipContent: m('Untitled events will display type as title'),
   type: {
     createType: m<{ type: string }>('Create "{type}"'),
-    currentDefaultOrgMsg: m('the current organization'),
-    deleteMessage: m<{ eventType: string; orgTitle: string }>(
+    deleteMessage: m<{ eventType: string }>(
+      'Are you sure you want to delete the "{eventType}" event type for the whole organization?'
+    ),
+    deleteWarning: m<{ eventType: string; orgTitle: string }>(
       'Are you sure you want to delete the "{eventType}" event type for all of {orgTitle}?'
     ),
     tooltip: m('Click to change type'),
