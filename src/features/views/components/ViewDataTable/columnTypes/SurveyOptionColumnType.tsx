@@ -12,6 +12,7 @@ import theme from '../../../../../theme';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import messageIds from 'features/views/l10n/messageIds';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 type SurveyOptionViewCell =
   | {
@@ -48,6 +49,10 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
   const { orgId } = useRouter().query;
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   if (!cell?.length) {
     return null;
@@ -75,8 +80,8 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
       display="flex"
       height="100%"
       justifyContent="center"
-      onMouseOut={() => setAnchorEl(null)}
-      onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+      onMouseOut={closePopper}
+      onMouseOver={openPopper}
       width="100%"
     >
       {mostRecent.selected ? (

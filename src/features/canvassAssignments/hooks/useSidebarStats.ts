@@ -1,6 +1,7 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
+  placesInvalidated,
   placesLoad,
   placesLoaded,
   visitsInvalidated,
@@ -8,6 +9,7 @@ import {
   visitsLoaded,
 } from '../store';
 import useMembership from 'features/organizations/hooks/useMembership';
+import estimateVisitedHouseholds from '../utils/estimateVisitedHouseholds';
 
 type UseSidebarReturn = {
   loading: boolean;
@@ -107,10 +109,7 @@ export default function useSidebarStats(
 
   if (visitListFuture.data) {
     visitListFuture.data.forEach((visit) => {
-      const householdsPerMetric = visit.responses.map((response) =>
-        response.responseCounts.reduce((sum, value) => sum + value, 0)
-      );
-      const numHouseholds = Math.max(...householdsPerMetric);
+      const numHouseholds = estimateVisitedHouseholds(visit);
 
       teamPlaces.add(visit.placeId);
       stats.allTime.numHouseholds += numHouseholds;
@@ -136,6 +135,7 @@ export default function useSidebarStats(
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
+      dispatch(placesInvalidated());
     },
     synced: visitList?.loaded || null,
   };

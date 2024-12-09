@@ -6,5 +6,5 @@ export default function estimateVisitedHouseholds(
   const householdsPerMetric = visit.responses.map((response) =>
     response.responseCounts.reduce((sum, value) => sum + value)
   );
-  return Math.max(...householdsPerMetric);
+  return Math.max(0, ...householdsPerMetric);
 }

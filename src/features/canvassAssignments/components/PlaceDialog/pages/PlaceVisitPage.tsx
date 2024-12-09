@@ -76,6 +76,7 @@ const PlaceVisitPage: FC<Props> = ({
                 }))
               );
               setSubmitting(false);
+              onClose();
             }}
             startIcon={
               submitting ? (

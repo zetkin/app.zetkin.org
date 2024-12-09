@@ -4,6 +4,8 @@ import {
   Map,
   FeatureGroup as FeatureGroupType,
   latLngBounds,
+  LatLngBounds,
+  LatLngTuple,
 } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { GpsNotFixed } from '@mui/icons-material';
@@ -28,6 +30,7 @@ import MapControls from './MapControls';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import CanvassAssignmentMapOverlays from './CanvassAssignmentMapOverlays';
 import useAllPlaceVisits from '../hooks/useAllPlaceVisits';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -84,6 +87,21 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
   const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const reactFGref = useRef<FeatureGroupType | null>(null);
+
+  const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
+    [LatLngTuple, LatLngTuple] | null
+  >(`mapBounds-${assignment.id}`, null);
+
+  const saveBounds = () => {
+    const bounds = map?.getBounds();
+
+    if (bounds) {
+      setLocalStorageBounds([
+        [bounds.getSouth(), bounds.getWest()],
+        [bounds.getNorth(), bounds.getEast()],
+      ]);
+    }
+  };
 
   const [zoomed, setZoomed] = useState(false);
 
@@ -170,6 +188,10 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
         updateSelection();
       });
 
+      map.on('moveend', saveBounds);
+
+      map.on('zoomend', () => saveBounds);
+
       return () => {
         map.off('move');
         map.off('moveend');
@@ -180,7 +202,10 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
 
   useEffect(() => {
     if (map && !zoomed) {
-      const bounds = reactFGref.current?.getBounds();
+      const bounds = localStorageBounds
+        ? new LatLngBounds(localStorageBounds)
+        : reactFGref.current?.getBounds();
+
       if (bounds?.isValid()) {
         map.fitBounds(bounds);
         setZoomed(true);
