@@ -256,6 +256,9 @@ const canvassAssignmentSlice = createSlice({
       item.data = place;
       item.loaded = new Date().toISOString();
     },
+    placesInvalidated: (state) => {
+      state.placeList.isStale = true;
+    },
     placesLoad: (state) => {
       state.placeList.isLoading = true;
     },
@@ -361,6 +364,7 @@ export const {
   canvassSessionsLoad,
   canvassSessionsLoaded,
   placeCreated,
+  placesInvalidated,
   placesLoad,
   placesLoaded,
   placeUpdated,
