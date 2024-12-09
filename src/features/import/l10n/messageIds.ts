@@ -64,6 +64,15 @@ export default makeMessages('feat.import', {
         ),
         value: m('Value'),
       },
+      genders: {
+        label: m('Gender'),
+        selectLabels: {
+          f: m('Female'),
+          m: m('Male'),
+          o: m('Other'),
+          unknown: m('Unknown'),
+        },
+      },
       ids: {
         externalID: m('External ID'),
         externalIDInfo: m(
@@ -183,6 +192,7 @@ export default makeMessages('feat.import', {
       unfinished: {
         date: m('You need to configure date format'),
         enum: m('You need to map values'),
+        gender: m('You need to map values'),
         id: m('You need to configure the IDs'),
         org: m('You need to map values'),
         tag: m('You need to map values'),
@@ -197,8 +207,15 @@ export default makeMessages('feat.import', {
     },
     preview: {
       columnHeader: {
+        gender: m('Gender'),
         org: m('Organization'),
         tags: m('Tags'),
+      },
+      genders: {
+        f: m('Female'),
+        m: m('Male'),
+        o: m('Other'),
+        unknown: m('Unknown'),
       },
       next: m('Next'),
       noOrg: m('No organization'),

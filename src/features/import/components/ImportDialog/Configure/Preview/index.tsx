@@ -14,6 +14,7 @@ import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
 import EnumPreview from './EnumPreview';
+import GenderPreview from './GenderPreview';
 
 const Preview = () => {
   const theme = useTheme();
@@ -148,6 +149,16 @@ const Preview = () => {
                 if (column.kind === ColumnKind.ENUM) {
                   return (
                     <EnumPreview
+                      key={columnIdx}
+                      currentSheet={currentSheet}
+                      fieldKey={column.field}
+                      fields={fields}
+                    />
+                  );
+                }
+                if (column.kind === ColumnKind.GENDER) {
+                  return (
+                    <GenderPreview
                       key={columnIdx}
                       currentSheet={currentSheet}
                       fieldKey={column.field}

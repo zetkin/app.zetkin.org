@@ -90,6 +90,20 @@ export default function createPreviewData(
           };
         }
       }
+
+      if (column.kind === ColumnKind.GENDER) {
+        column.mapping.forEach((mappedColumn) => {
+          if (
+            (!mappedColumn.value && !row[colIdx]) ||
+            mappedColumn.value === row[colIdx]
+          ) {
+            personPreviewOp.data = {
+              ...personPreviewOp.data,
+              [column.field]: mappedColumn.gender as string,
+            };
+          }
+        });
+      }
     }
   });
 

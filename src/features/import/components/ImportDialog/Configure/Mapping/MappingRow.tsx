@@ -29,6 +29,7 @@ const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
     ColumnKind.TAG,
     ColumnKind.DATE,
     ColumnKind.ENUM,
+    ColumnKind.GENDER,
   ].includes(column.kind);
 };
 
