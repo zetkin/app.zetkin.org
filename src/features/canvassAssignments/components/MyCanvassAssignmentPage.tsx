@@ -107,7 +107,7 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
               top: 0,
               transition: 'left 0.3s',
               width: '90vw',
-              zIndex: 9999,
+              zIndex: 99999,
             }}
           >
             <CanvasserSidebar assignment={assignment} />
