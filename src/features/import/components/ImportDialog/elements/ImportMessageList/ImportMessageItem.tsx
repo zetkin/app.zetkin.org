@@ -26,7 +26,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
       <ImportMessage
         onCheck={onCheck}
         onClickBack={onClickBack}
-        rowIndices={problem.indices}
+        rowNumbers={problem.rows}
         status="error"
         title={messages.preflight.messages.invalidFormat.title({
           field: getFieldTitle(problem.field),
@@ -52,7 +52,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         description={messages.preflight.messages.missingIdAndName.description()}
         onCheck={onCheck}
         onClickBack={onClickBack}
-        rowIndices={problem.indices}
+        rowNumbers={problem.rows}
         status="error"
         title={messages.preflight.messages.missingIdAndName.title()}
       />
@@ -103,7 +103,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         description={messages.preflight.messages.unknownPerson.description()}
         onCheck={onCheck}
         onClickBack={onClickBack}
-        rowIndices={problem.indices}
+        rowNumbers={problem.rows}
         status="error"
         title={messages.preflight.messages.unknownPerson.title()}
       />
@@ -114,7 +114,7 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         description={messages.preflight.messages.unknownError.description()}
         onCheck={onCheck}
         onClickBack={onClickBack}
-        rowIndices={problem.indices}
+        rowNumbers={problem.rows}
         status="error"
         title={messages.preflight.messages.unknownError.title()}
       />
