@@ -285,6 +285,9 @@ export default makeMessages('feat.events', {
     deleteMessage: m<{ eventType: string }>(
       'Are you sure you want to delete the "{eventType}" event type for the whole organization?'
     ),
+    deleteWarning: m<{ eventType: string; orgTitle: string }>(
+      'Are you sure you want to delete the "{eventType}" event type for all of {orgTitle}?'
+    ),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
   },
