@@ -20,27 +20,35 @@ const GenderPreview = ({
     (column) => column.kind === ColumnKind.GENDER && column.mapping.length > 0
   );
 
-  if (!map || map.kind !== ColumnKind.GENDER) {
+  if (!map) {
     return (
-      <PreviewGrid columnHeader={'Gender'} rowValue={null} unmappedRow={true} />
+      <PreviewGrid
+        columnHeader={messages.configuration.preview.columnHeader.gender()}
+        rowValue={null}
+        unmappedRow={true}
+      />
     );
   }
 
   const value = fields?.[fieldKey];
-  if (value !== 'm' && value !== 'f' && value !== 'o' && value !== 'null') {
+
+  if (value === 'o' || value === 'f' || value === 'm' || value === null) {
+    const key = value === null ? 'unknown' : value;
     return (
       <PreviewGrid
         columnHeader={messages.configuration.preview.columnHeader.gender()}
-        emptyLabel={messages.configuration.preview.noValue()}
-        rowValue={null}
+        rowValue={messages.configuration.preview.genders[key]()}
         unmappedRow={false}
       />
     );
   }
+
+  // This should never happen
   return (
     <PreviewGrid
-      columnHeader={'Gender'}
-      rowValue={messages.configuration.preview.genders[value]()}
+      columnHeader={messages.configuration.preview.columnHeader.gender()}
+      emptyLabel={messages.configuration.preview.noValue()}
+      rowValue={null}
       unmappedRow={false}
     />
   );

@@ -54,7 +54,7 @@ export type GenderColumn = BaseColumn & {
   field: string;
   kind: ColumnKind.GENDER;
   mapping: {
-    gender: Gender;
+    gender: Gender | null;
     value: CellData;
   }[];
 };

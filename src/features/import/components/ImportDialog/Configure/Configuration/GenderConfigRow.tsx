@@ -1,7 +1,6 @@
 import { ArrowForward, Delete } from '@mui/icons-material';
 import {
   Box,
-  Button,
   FormControl,
   IconButton,
   InputLabel,
@@ -9,7 +8,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
@@ -18,9 +17,9 @@ import { Gender, genders } from '../../../../hooks/useGenderMapping';
 interface GenderConfigRowProps {
   italic?: boolean;
   numRows: number;
-  onSelectGender: (gender: Gender) => void;
+  onSelectGender: (gender: Gender | null) => void;
   onDeselectGender: () => void;
-  selectedGender: Gender | null;
+  selectedGender: Gender | 'unknown' | null;
   title: string;
 }
 
@@ -33,10 +32,6 @@ const GenderConfigRow: FC<GenderConfigRowProps> = ({
   title,
 }) => {
   const messages = useMessages(messageIds);
-  const [mapping, setMapping] = useState(false);
-
-  const showSelect = mapping || selectedGender;
-
   return (
     <Box display="flex" flexDirection="column">
       <Box display="flex">
@@ -58,65 +53,45 @@ const GenderConfigRow: FC<GenderConfigRowProps> = ({
           paddingRight={1}
           width="50%"
         >
-          {!showSelect && (
-            <Button onClick={() => setMapping(true)}>
-              <Msg
-                id={
-                  messageIds.configuration.configure.genders
-                    .showGenderSelectButton
+          <FormControl fullWidth size="small">
+            <InputLabel>
+              <Msg id={messageIds.configuration.configure.genders.gender} />
+            </InputLabel>
+            <Select
+              label={messages.configuration.configure.genders.gender()}
+              onChange={(event) => {
+                const { value } = event.target;
+                if (value === 'm' || value === 'f' || value === 'o') {
+                  onSelectGender(value);
+                } else if (value === 'unknown') {
+                  onSelectGender(null);
                 }
-              />
-            </Button>
-          )}
-          {showSelect && (
-            <>
-              <FormControl fullWidth size="small">
-                <InputLabel>
-                  <Msg id={messageIds.configuration.configure.genders.gender} />
-                </InputLabel>
-                <Select
-                  label={messages.configuration.configure.genders.gender()}
-                  onChange={(event) => {
-                    const { value } = event.target;
-                    if (value === 'm' || value === 'f' || value === 'o') {
-                      onSelectGender(value);
-                    } else if (value === 'unknown') {
-                      // selecting `unknown` is like deselecting
-                      onDeselectGender();
-                    }
-                  }}
-                  value={selectedGender || 'unknown'}
-                >
-                  {genders.map((key) => (
-                    <MenuItem key={key} value={key}>
-                      <Msg
-                        id={
-                          messageIds.configuration.configure.genders.genders[
-                            key
-                          ]
-                        }
-                      />
-                    </MenuItem>
-                  ))}
-                  <MenuItem value="unknown">
-                    <Msg
-                      id={
-                        messageIds.configuration.configure.genders.genders.null
-                      }
-                    />
-                  </MenuItem>
-                </Select>
-              </FormControl>
-              <IconButton
-                onClick={() => {
-                  onDeselectGender();
-                  setMapping(false);
-                }}
-              >
-                <Delete color="secondary" />
-              </IconButton>
-            </>
-          )}
+              }}
+              value={selectedGender}
+            >
+              {genders.map((key) => (
+                <MenuItem key={key} value={key}>
+                  <Msg
+                    id={messageIds.configuration.configure.genders.genders[key]}
+                  />
+                </MenuItem>
+              ))}
+              <MenuItem value="unknown">
+                <Msg
+                  id={
+                    messageIds.configuration.configure.genders.genders.unknown
+                  }
+                />
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <IconButton
+            onClick={() => {
+              onDeselectGender();
+            }}
+          >
+            <Delete color="secondary" />
+          </IconButton>
         </Box>
       </Box>
       <Typography color="secondary">

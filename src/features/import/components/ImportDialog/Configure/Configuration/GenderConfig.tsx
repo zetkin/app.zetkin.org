@@ -52,7 +52,7 @@ const GenderConfig: FC<GenderConfigProps> = ({ uiDataColumn }) => {
           <GenderConfigRow
             numRows={uiDataColumn.numRowsByUniqueValue[uniqueValue]}
             onDeselectGender={() => deselectGender(uniqueValue)}
-            onSelectGender={(v) => selectGender(v, uniqueValue)}
+            onSelectGender={(gender) => selectGender(gender, uniqueValue)}
             selectedGender={getSelectedGender(uniqueValue)}
             title={uniqueValue.toString()}
           />

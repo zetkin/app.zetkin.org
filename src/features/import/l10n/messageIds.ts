@@ -70,9 +70,9 @@ export default makeMessages('feat.import', {
           m: m('male'),
           null: m('unspecified'),
           o: m('other'),
+          unknown: m('unspecified'),
         },
         header: m('Gender'),
-        showGenderSelectButton: m('Map to...'),
       },
       ids: {
         configExplanation: m(
@@ -216,8 +216,8 @@ export default makeMessages('feat.import', {
       genders: {
         f: m('female'),
         m: m('male'),
-        null: m('unspecified'),
         o: m('other'),
+        unknown: m('unspecified'),
       },
       next: m('Next'),
       noOrg: m('No organization'),
