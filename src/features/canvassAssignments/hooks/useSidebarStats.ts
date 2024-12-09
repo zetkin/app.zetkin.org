@@ -1,6 +1,7 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
+  placesInvalidated,
   placesLoad,
   placesLoaded,
   visitsInvalidated,
@@ -134,6 +135,7 @@ export default function useSidebarStats(
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
+      dispatch(placesInvalidated);
     },
     synced: visitList?.loaded || null,
   };
