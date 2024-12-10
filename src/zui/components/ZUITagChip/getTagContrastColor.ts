@@ -4,14 +4,13 @@ import { funSwatches } from 'zui/theme/palette';
 export default function getTagContrastColor(color: string) {
   let contrastColor = '';
 
-  Object.keys(funSwatches).forEach((funSwatch) => {
-    const colorObject = funSwatches[funSwatch as keyof typeof funSwatches];
-    if (color == colorObject.dark.color) {
-      contrastColor = colorObject.dark.contrast;
-    } else if (color == colorObject.medium.color) {
-      contrastColor = colorObject.medium.contrast;
-    } else if (color == colorObject.light.color) {
-      contrastColor == colorObject.light.contrast;
+  Object.values(funSwatches).forEach((funSwatch) => {
+    if (color == funSwatch.dark.color) {
+      contrastColor = funSwatch.dark.contrast;
+    } else if (color == funSwatch.medium.color) {
+      contrastColor = funSwatch.medium.contrast;
+    } else if (color == funSwatch.light.color) {
+      contrastColor == funSwatch.light.contrast;
     }
   });
 
