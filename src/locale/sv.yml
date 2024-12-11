@@ -152,7 +152,6 @@ feat:
         remove: Ta bort från uppdraget
       add:
         alreadyAdded: Redan tillagd
-        placeholder: Lägg till ringare
       customize:
         exclude:
           h: Exkluderade etiketter

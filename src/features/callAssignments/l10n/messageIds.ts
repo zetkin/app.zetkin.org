@@ -32,7 +32,7 @@ export default makeMessages('feat.callAssignments', {
     },
     add: {
       alreadyAdded: m('Already added'),
-      placeholder: m('Add caller'),
+      placeholder: m('Start typing to search or add a new caller'),
     },
     customize: {
       exclude: {

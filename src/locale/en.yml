@@ -156,7 +156,6 @@ feat:
         remove: Remove from assignment
       add:
         alreadyAdded: Already added
-        placeholder: Add caller
       customize:
         exclude:
           h: Excluded tags
