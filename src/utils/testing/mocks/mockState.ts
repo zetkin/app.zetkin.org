@@ -16,6 +16,7 @@ export default function mockState(overrides?: RootState) {
       callList: remoteList(),
       callersById: {},
       statsById: {},
+      userAssignmentList: remoteList(),
     },
     campaigns: {
       campaignList: remoteList(),
