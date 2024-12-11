@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import {
   Alert,
   Box,
+  Divider,
   FormControl,
   MenuItem,
   TextField,
@@ -83,40 +84,43 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
       )}
       <Box display="flex" height="100%">
         <Box flex={1} sx={{ overflowY: 'auto' }}>
-          <Box display="flex" gap={2} padding={2}>
-            <FormControl fullWidth sx={{ flex: 2 }}>
+          <Box mx={2}>
+            <Box display="flex" gap={2} py={2}>
+              <FormControl fullWidth sx={{ flex: 2 }}>
+                <TextField
+                  fullWidth
+                  label={messages.editor.settings.tabs.settings.senderInputLabel()}
+                  onChange={(ev) => {
+                    const configId = parseInt(ev.target.value);
+                    if (!isNaN(configId)) {
+                      onSave({ config_id: configId });
+                    }
+                  }}
+                  select
+                  size="small"
+                  value={email.config.id}
+                >
+                  {configs.map((config) => (
+                    <MenuItem key={config.id} value={config.id}>
+                      {`${config.sender_name} (${config.sender_email})`}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </FormControl>
               <TextField
+                disabled={readOnly}
                 fullWidth
-                label={messages.editor.settings.tabs.settings.senderInputLabel()}
-                onChange={(ev) => {
-                  const configId = parseInt(ev.target.value);
-                  if (!isNaN(configId)) {
-                    onSave({ config_id: configId });
-                  }
+                label={messages.editor.settings.tabs.settings.subjectInputLabel()}
+                onChange={(event) => {
+                  setSubject(event.target.value);
+                  debouncedFinishedTyping(event.target.value);
                 }}
-                select
                 size="small"
-                value={email.config.id}
-              >
-                {configs.map((config) => (
-                  <MenuItem key={config.id} value={config.id}>
-                    {`${config.sender_name} (${config.sender_email})`}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </FormControl>
-            <TextField
-              disabled={readOnly}
-              fullWidth
-              label={messages.editor.settings.tabs.settings.subjectInputLabel()}
-              onChange={(event) => {
-                setSubject(event.target.value);
-                debouncedFinishedTyping(event.target.value);
-              }}
-              size="small"
-              sx={{ flex: 3 }}
-              value={subject}
-            />
+                sx={{ flex: 3 }}
+                value={subject}
+              />
+            </Box>
+            <Divider />
           </Box>
           <EmailEditorFrontend
             apiRef={apiRef}
