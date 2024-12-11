@@ -15,10 +15,10 @@ import { EventPopperProvider } from 'features/events/components/EventPopper/Even
 import { MessageList } from 'utils/locale';
 import { Store } from './store';
 import { themeWithLocale } from '../theme';
-import { UserContext } from 'utils/hooks/useFocusDate';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+import { UserProvider } from './env/UserContext';
 
 type ProviderData = {
   env: Environment;
@@ -63,7 +63,7 @@ const Providers: FC<ProvidersProps> = ({
   return (
     <ReduxProvider store={store}>
       <EnvProvider env={env}>
-        <UserContext.Provider value={user}>
+        <UserProvider user={user}>
           <StyledEngineProvider injectFirst>
             <CacheProvider value={cache}>
               <ThemeProvider theme={themeWithLocale(lang)}>
@@ -87,7 +87,7 @@ const Providers: FC<ProvidersProps> = ({
               </ThemeProvider>
             </CacheProvider>
           </StyledEngineProvider>
-        </UserContext.Provider>
+        </UserProvider>
       </EnvProvider>
     </ReduxProvider>
   );
