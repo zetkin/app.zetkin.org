@@ -39,9 +39,7 @@ const CanvassAssignmentCard: FC<{
           </CardContent>
           <CardActions>
             <Button
-              onClick={() =>
-                router.push(`/my/canvassassignments/${assignment.id}`)
-              }
+              onClick={() => router.push(`/canvass/${assignment.id}`)}
               variant="outlined"
             >
               Go to map

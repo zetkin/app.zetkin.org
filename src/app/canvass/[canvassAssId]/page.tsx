@@ -24,6 +24,6 @@ export default async function Page({ params }: PageProps) {
 
     return <MyCanvassAssignmentPage canvassAssId={canvassAssId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/my/canvassassignments/${canvassAssId}`);
+    return redirect(`/login?redirect=/canvass/${canvassAssId}`);
   }
 }
