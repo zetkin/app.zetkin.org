@@ -13,12 +13,14 @@ import { FC } from 'react';
 
 import useMyCanvassAssignments from 'features/canvassAssignments/hooks/useMyCanvassAssignments';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
+import useMyEvents from 'features/events/hooks/useMyEvents';
 
 const HomePage: FC = () => {
   const canvassAssignments = useMyCanvassAssignments();
   const callAssignments = useMyCallAssignments();
+  const events = useMyEvents();
 
-  const allAssignments = [...canvassAssignments, ...callAssignments];
+  const allAssignments = [...canvassAssignments, ...callAssignments, ...events];
 
   return (
     <Box display="flex" flexDirection="column" gap={1} m={1}>
@@ -27,7 +29,7 @@ const HomePage: FC = () => {
           <Card key={assignment.id}>
             <CardContent>
               <Typography variant="h6">
-                {assignment.title || 'Untitled assignment'}
+                {assignment.title || 'Untitled'}
               </Typography>
             </CardContent>
             <CardActions>
