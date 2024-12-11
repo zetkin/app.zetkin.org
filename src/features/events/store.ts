@@ -67,6 +67,7 @@ export interface EventsStoreSlice {
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
+  userEventList: RemoteList<ZetkinEvent>;
 }
 
 const initialState: EventsStoreSlice = {
@@ -87,6 +88,7 @@ const initialState: EventsStoreSlice = {
   selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
+  userEventList: remoteList(),
 };
 
 const eventsSlice = createSlice({
@@ -583,6 +585,13 @@ const eventsSlice = createSlice({
       state.typeList = remoteList(eventTypes);
       state.typeList.loaded = new Date().toISOString();
     },
+    userEventsLoad: (state) => {
+      state.userEventList.isLoading = true;
+    },
+    userEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.userEventList = remoteList(action.payload);
+      state.userEventList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -747,4 +756,6 @@ export const {
   typeLoaded,
   typesLoad,
   typesLoaded,
+  userEventsLoad,
+  userEventsLoaded,
 } = eventsSlice.actions;
