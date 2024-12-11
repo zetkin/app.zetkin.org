@@ -108,7 +108,7 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
         </Box>
       </Box>
       <List>
-        <ListItemButton href="/my/canvassassignments" sx={{ px: 1 }}>
+        <ListItemButton href="/my/home" sx={{ px: 1 }}>
           <ListItemText primary="My assignments" />
         </ListItemButton>
         <ListItemButton href="/logout" sx={{ px: 1 }}>
