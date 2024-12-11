@@ -1,16 +1,15 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import { myAssignmentsLoad, myAssignmentsLoaded } from '../store';
 import { AssignmentWithAreas } from '../types';
+import useRemoteList from 'core/hooks/useRemoteList';
 
 export default function useMyCanvassAssignments() {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
-  const mySessions = useAppSelector(
+  const assignments = useAppSelector(
     (state) => state.canvassAssignments.myAssignmentsWithAreasList
   );
 
-  return loadListIfNecessary(mySessions, dispatch, {
+  return useRemoteList(assignments, {
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
     loader: () =>
