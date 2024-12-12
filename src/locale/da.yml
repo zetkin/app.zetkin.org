@@ -129,7 +129,6 @@ feat:
         remove: Fjern fra opgave
       add:
         alreadyAdded: Allerede tilføjet
-        placeholder: Tilføj ringer
       customize:
         exclude:
           h: Udelukkede etiketter

@@ -152,7 +152,6 @@ feat:
         remove: Fjern fra oppdrag
       add:
         alreadyAdded: Lagt til tidligere
-        placeholder: Legg til ringer
       customize:
         exclude:
           h: Utelukkede etiketter
