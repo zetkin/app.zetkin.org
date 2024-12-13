@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { makeRPCDef } from 'core/rpc/types';
 import { ZetkinEvent, ZetkinMembership } from 'utils/types/zetkin';
 import IApiClient from 'core/api/client/IApiClient';
+import getEventState from '../utils/getEventState';
+import { EventState } from '../hooks/useEventState';
 
 const paramsSchema = z.object({});
 
@@ -32,5 +34,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     events.push(...eventsOfOrg);
   }
 
-  return events;
+  return events.filter((event) => {
+    const state = getEventState(event);
+    return state == EventState.OPEN || state == EventState.SCHEDULED;
+  });
 }
