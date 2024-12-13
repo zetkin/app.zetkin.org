@@ -66,6 +66,7 @@ export async function GET(request: NextRequest) {
         },
         end_date: assignment.end_date,
         id: assignment._id.toString(),
+        instructions: assignment.instructions,
         metrics: assignment.metrics.map((m) => ({
           definesDone: m.definesDone,
           description: m.description,

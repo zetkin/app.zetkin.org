@@ -38,6 +38,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         campaign: { id: canvassAssignmentModel.campId },
         end_date: canvassAssignmentModel.end_date,
         id: canvassAssignmentModel._id.toString(),
+        instructions: canvassAssignmentModel.instructions,
         metrics: (canvassAssignmentModel.metrics || []).map((metric) => ({
           definesDone: metric.definesDone || false,
           description: metric.description || '',
@@ -68,6 +69,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
       const {
+        instructions,
         metrics: newMetrics,
         title,
         start_date,
@@ -130,7 +132,11 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       type UpdateFieldsType = Partial<
         Pick<
           ZetkinCanvassAssignment,
-          'title' | 'start_date' | 'end_date' | 'reporting_level'
+          | 'title'
+          | 'start_date'
+          | 'end_date'
+          | 'reporting_level'
+          | 'instructions'
         >
       >;
 
@@ -152,6 +158,10 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         updateFields.end_date = end_date;
       }
 
+      if (instructions) {
+        updateFields.instructions = instructions;
+      }
+
       if (Object.keys(updateFields).length > 0) {
         await CanvassAssignmentModel.updateOne(
           { _id: params.canvassAssId },
@@ -171,6 +181,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           campaign: { id: model.campId },
           end_date: model.end_date,
           id: model._id.toString(),
+          instructions: model.instructions,
           metrics: (model.metrics || []).map((metric) => ({
             definesDone: metric.definesDone || false,
             description: metric.description || '',
