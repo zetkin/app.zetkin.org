@@ -7,7 +7,7 @@ import {
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
@@ -30,6 +30,15 @@ const SurveySubmissionsList = ({
   const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogPerson, setDialogPerson] = useState<ZetkinPerson>();
+  const [dialogEmail, setDialogEmail] = useState('');
+
+  const handleUpdateEmail = (option: ZetkinPerson, email: string) => {
+    setDialogEmail(email);
+    setDialogPerson(option);
+    setDialogOpen(true);
+  };
 
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
@@ -198,6 +207,12 @@ const SurveySubmissionsList = ({
         id: row.id,
       });
       setRespondentId(person?.id || null);
+
+      const personHasNoEmail = person?.id !== null && person?.email === null;
+      const respondentEmail = row.respondent?.email;
+      if (personHasNoEmail && respondentEmail !== undefined) {
+        handleUpdateEmail(person, respondentEmail);
+      }
     };
 
     return (
