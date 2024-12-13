@@ -44,6 +44,7 @@ export default function mockState(overrides?: RootState) {
       themeList: remoteList(),
     },
     events: {
+      allEventsList: remoteList(),
       eventList: remoteList(),
       eventsByCampaignId: {},
       eventsByDate: {},

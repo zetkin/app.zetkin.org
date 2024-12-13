@@ -1,3 +1,5 @@
+import AllEventsPage from 'features/home/pages/AllEventsPage';
+
 export default async function Page() {
-  return <h1>Feed</h1>;
+  return <AllEventsPage />;
 }
