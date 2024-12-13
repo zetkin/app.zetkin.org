@@ -11,6 +11,8 @@ import {
   Theme,
   ThemeProvider,
 } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
@@ -63,14 +65,16 @@ const ClientContext: FC<ClientContextProps> = ({
           <ThemeProvider theme={themeWithLocale(lang)}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
-                <IntlProvider
-                  defaultLocale="en"
-                  locale={lang}
-                  messages={messages}
-                >
-                  <CssBaseline />
-                  {children}
-                </IntlProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <IntlProvider
+                    defaultLocale="en"
+                    locale={lang}
+                    messages={messages}
+                  >
+                    <CssBaseline />
+                    {children}
+                  </IntlProvider>
+                </LocalizationProvider>
               </UserProvider>
             </EnvProvider>
           </ThemeProvider>
