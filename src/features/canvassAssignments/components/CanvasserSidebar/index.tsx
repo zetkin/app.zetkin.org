@@ -1,14 +1,16 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import {
   Box,
   Button,
   CircularProgress,
+  Collapse,
   Divider,
   List,
   ListItemButton,
   ListItemText,
   Typography,
 } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 import { ZetkinCanvassAssignment } from '../../types';
 import useSidebarStats from 'features/canvassAssignments/hooks/useSidebarStats';
@@ -23,6 +25,12 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
     assignment.organization.id,
     assignment.id
   );
+
+  const [open, setOpen] = useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   return (
     <Box
@@ -111,6 +119,15 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
         <ListItemButton href="/my/canvassassignments" sx={{ px: 1 }}>
           <ListItemText primary="My assignments" />
         </ListItemButton>
+        <ListItemButton onClick={handleClick} sx={{ px: 1 }}>
+          <ListItemText primary="Instructions" />
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <Typography sx={{ pl: 4 }}>{assignment.instructions}</Typography>
+          </List>
+        </Collapse>
         <ListItemButton href="/logout" sx={{ px: 1 }}>
           <ListItemText primary="Log out" />
         </ListItemButton>
