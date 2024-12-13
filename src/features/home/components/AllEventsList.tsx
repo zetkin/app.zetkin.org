@@ -9,7 +9,11 @@ import {
   ListItemText,
   Switch,
 } from '@mui/material';
-import { CalendarMonthOutlined, KeyboardArrowDown } from '@mui/icons-material';
+import {
+  CalendarMonthOutlined,
+  Clear,
+  KeyboardArrowDown,
+} from '@mui/icons-material';
 import { DateRange, DateRangeCalendar } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -74,6 +78,7 @@ const AllEventsList: FC = () => {
     });
 
   const memberOfMoreThanOneOrg = memberships && memberships.length > 1;
+  const showClearFilters = orgIdsToFilterBy.length || datesToFilterBy;
 
   return (
     <Box
@@ -84,6 +89,26 @@ const AllEventsList: FC = () => {
       position="relative"
     >
       <Box alignItems="center" display="flex" gap={1}>
+        {showClearFilters && (
+          <Box
+            onClick={() => {
+              setOrgIdsToFilterBy([]);
+              setDatesToFilterBy(undefined);
+            }}
+            sx={(theme) => ({
+              alignItems: 'center',
+              backgroundColor: theme.palette.primary.main,
+              borderRadius: '100%',
+              color: getContrastColor(theme.palette.primary.main),
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              padding: '2px',
+            })}
+          >
+            <Clear />
+          </Box>
+        )}
         {memberOfMoreThanOneOrg && (
           <Box
             onClick={() => setDrawerContent('orgs')}
@@ -163,6 +188,7 @@ const AllEventsList: FC = () => {
                 alignItems: 'center',
                 bgcolor: theme.palette.common.white,
                 borderRadius: '100%',
+                cursor: 'pointer',
                 display: 'flex',
                 height: '32px',
                 justifyContent: 'center',
