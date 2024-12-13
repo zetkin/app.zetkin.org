@@ -28,20 +28,29 @@ const HomeLayout: FC<Props> = ({ children }) => {
         <Typography>Zetkin</Typography>
         {user && <ZUIAvatar size="sm" url={`/api/users/${user.id}/avatar`} />}
       </Box>
-      <Tabs value={lastSegment}>
-        <Tab
-          component={Link}
-          href="/my/home"
-          label={messages.tabs.home()}
-          value="home"
-        />
-        <Tab
-          component={Link}
-          href="/my/feed"
-          label={messages.tabs.feed()}
-          value="feed"
-        />
-      </Tabs>
+      <Box
+        sx={(theme) => ({
+          bgcolor: theme.palette.background.default,
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+        })}
+      >
+        <Tabs value={lastSegment}>
+          <Tab
+            component={Link}
+            href="/my/home"
+            label={messages.tabs.home()}
+            value="home"
+          />
+          <Tab
+            component={Link}
+            href="/my/feed"
+            label={messages.tabs.feed()}
+            value="feed"
+          />
+        </Tabs>
+      </Box>
       {children}
     </Box>
   );
