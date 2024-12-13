@@ -171,6 +171,14 @@ export default makeMessages('feat.surveys', {
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
+  surveyDialog: {
+    add: m('Add'),
+    cancel: m("Don't add"),
+    description: m(
+      'The person you are about to link does not have an email address while the response does. Would you like to add it to the person?'
+    ),
+    title: m('Add email address'),
+  },
   surveyForm: {
     accept: m('I accept the terms stated below'),
     error: m(
