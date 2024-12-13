@@ -1,59 +1,57 @@
 'use client';
 
 import { FC } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from '@mui/material';
-import Link from 'next/link';
+import { Box } from '@mui/material';
+import { MapsHomeWork, PhoneInTalk } from '@mui/icons-material';
 
-import useMyCanvassAssignments from 'features/canvassAssignments/hooks/useMyCanvassAssignments';
-import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
-import useMyEvents from 'features/events/hooks/useMyEvents';
+import useMyActivities from '../hooks/useMyActivities';
+import MyActivityListItem from './MyActivityListItem';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
+import EventListItem from './EventListItem';
 
 const MyActivitiesList: FC = () => {
-  const canvassAssignments = useMyCanvassAssignments();
-  const callAssignments = useMyCallAssignments();
-  const events = useMyEvents();
-
-  const allAssignments = [...canvassAssignments, ...callAssignments, ...events];
+  const activities = useMyActivities();
+  const messages = useMessages(messageIds);
 
   return (
     <Box display="flex" flexDirection="column" gap={1} m={1}>
-      {allAssignments.map((assignment) => {
-        return (
-          <Card key={assignment.id}>
-            <CardContent>
-              <Typography variant="h6">
-                {assignment.title || 'Untitled'}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              {'cooldown' in assignment && (
-                <Button
-                  href={`/call/${assignment.id}`}
-                  LinkComponent={Link}
-                  variant="outlined"
-                >
-                  Start calling
-                </Button>
-              )}
-              {'areas' in assignment && (
-                <Button
-                  href={`/canvass/${assignment.id}`}
-                  LinkComponent={Link}
-                  variant="outlined"
-                >
-                  Go to map
-                </Button>
-              )}
-            </CardActions>
-          </Card>
-        );
+      {activities.map((activity) => {
+        if (activity.kind == 'call') {
+          const href = `/call/${activity.data.id}`;
+          return (
+            <MyActivityListItem
+              key={href}
+              href={href}
+              Icon={PhoneInTalk}
+              info={[]}
+              title={
+                activity.data.title || messages.defaultTitles.callAssignment()
+              }
+            />
+          );
+        } else if (activity.kind == 'canvass') {
+          const href = `/canvass/${activity.data.id}`;
+          return (
+            <MyActivityListItem
+              key={href}
+              href={href}
+              Icon={MapsHomeWork}
+              info={[]}
+              title={
+                activity.data.title ||
+                messages.defaultTitles.canvassAssignment()
+              }
+            />
+          );
+        } else if (activity.kind == 'event') {
+          return (
+            <EventListItem
+              key={'event-' + activity.data.id}
+              event={activity.data}
+            />
+          );
+        }
       })}
     </Box>
   );

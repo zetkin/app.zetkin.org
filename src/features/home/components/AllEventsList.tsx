@@ -2,14 +2,15 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import useAllEvents from 'features/events/hooks/useAllEvents';
+import EventListItem from './EventListItem';
 
 const AllEventsList: FC = () => {
   const allEvents = useAllEvents();
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" gap={1} m={1}>
       {allEvents.map((event) => (
-        <Box key={event.id}>{event.id}</Box>
+        <EventListItem key={event.id} event={event} />
       ))}
     </Box>
   );
