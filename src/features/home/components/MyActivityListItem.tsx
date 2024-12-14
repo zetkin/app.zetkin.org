@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CardActions,
   CardContent,
   CardMedia,
   SvgIconTypeMap,
@@ -13,6 +14,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 type Props = {
   Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
+  actions?: ReactNode[];
   href?: string;
   image?: string;
   info: {
@@ -22,13 +24,20 @@ type Props = {
   title: string;
 };
 
-const MyActivityListItem: FC<Props> = ({ href, Icon, image, info, title }) => {
+const MyActivityListItem: FC<Props> = ({
+  actions,
+  href,
+  Icon,
+  image,
+  info,
+  title,
+}) => {
   const card = (
     <Card>
       {image && (
         <CardMedia>
           <Box height={100} position="relative" width="100%">
-            <Image alt="" fill objectFit="cover" src={image} />
+            <Image alt="" fill src={image} style={{ objectFit: 'cover' }} />
           </Box>
         </CardMedia>
       )}
@@ -52,7 +61,20 @@ const MyActivityListItem: FC<Props> = ({ href, Icon, image, info, title }) => {
                   return (
                     <Fragment key={index}>
                       {!isFirst && <Typography>•</Typography>}
-                      {label}
+                      {typeof label == 'string' ? (
+                        <Typography
+                          sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                          variant="body2"
+                        >
+                          {label}
+                        </Typography>
+                      ) : (
+                        label
+                      )}
                     </Fragment>
                   );
                 })}
@@ -61,6 +83,11 @@ const MyActivityListItem: FC<Props> = ({ href, Icon, image, info, title }) => {
           })}
         </Box>
       </CardContent>
+      {actions && (
+        <CardActions sx={{ gap: 1, justifyContent: 'end' }}>
+          {actions}
+        </CardActions>
+      )}
     </Card>
   );
 

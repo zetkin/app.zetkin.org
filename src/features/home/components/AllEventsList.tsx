@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Fade,
   List,
   ListItem,
   ListItemAvatar,
@@ -25,6 +26,9 @@ import EventListItem from './EventListItem';
 import useMemberships from 'features/organizations/hooks/useMemberships';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZetkinEventWithStatus } from '../types';
+import ZUIDate from 'zui/ZUIDate';
+import useIncrementalDelay from '../hooks/useIncrementalDelay';
 
 const FilterButton: FC<{
   active: boolean;
@@ -74,6 +78,7 @@ const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
 
 const AllEventsList: FC = () => {
   const allEvents = useAllEvents();
+  const nextDelay = useIncrementalDelay();
   const memberships = useMemberships().data;
 
   const [drawerContent, setDrawerContent] = useState<
@@ -130,6 +135,20 @@ const AllEventsList: FC = () => {
       }
     });
 
+  const eventsByDate = filteredEvents.reduce<
+    Record<string, ZetkinEventWithStatus[]>
+  >((dates, event) => {
+    const eventDate = event.start_time.slice(0, 10);
+    const existingEvents = dates[eventDate] || [];
+
+    return {
+      ...dates,
+      [eventDate]: [...existingEvents, event],
+    };
+  }, {});
+
+  const dates = Object.keys(eventsByDate).sort();
+
   const memberOfMoreThanOneOrg = memberships && memberships.length > 1;
   const showClearFilters = orgIdsToFilterBy.length || datesToFilterBy[0];
 
@@ -184,8 +203,23 @@ const AllEventsList: FC = () => {
           <Typography>No events</Typography>
         </Box>
       )}
-      {filteredEvents.map((event) => (
-        <EventListItem key={event.id} event={event} />
+      {dates.map((date) => (
+        <Box key={date}>
+          <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
+            <div>
+              <Typography my={1} variant="h5">
+                <ZUIDate datetime={date} />
+              </Typography>
+            </div>
+          </Fade>
+          <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
+            <Box display="flex" flexDirection="column" gap={1}>
+              {eventsByDate[date].map((event) => (
+                <EventListItem key={event.id} event={event} />
+              ))}
+            </Box>
+          </Fade>
+        </Box>
       ))}
       {drawerContent && (
         <>
