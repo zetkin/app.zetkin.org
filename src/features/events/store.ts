@@ -15,6 +15,7 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
+import { ZetkinEventWithStatus } from 'features/home/types';
 
 export enum ACTION_FILTER_OPTIONS {
   CONTACT_MISSING = 'missing',
@@ -68,7 +69,7 @@ export interface EventsStoreSlice {
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
-  userEventList: RemoteList<ZetkinEvent>;
+  userEventList: RemoteList<ZetkinEventWithStatus>;
 }
 
 const initialState: EventsStoreSlice = {
@@ -597,7 +598,10 @@ const eventsSlice = createSlice({
     userEventsLoad: (state) => {
       state.userEventList.isLoading = true;
     },
-    userEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+    userEventsLoaded: (
+      state,
+      action: PayloadAction<ZetkinEventWithStatus[]>
+    ) => {
       state.userEventList = remoteList(action.payload);
       state.userEventList.loaded = new Date().toISOString();
     },
