@@ -16,11 +16,30 @@ import {
 } from '@mui/icons-material';
 import { DateRange, DateRangeCalendar } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
+import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
 
 import { getContrastColor } from 'utils/colorUtils';
 import useAllEvents from 'features/events/hooks/useAllEvents';
 import EventListItem from './EventListItem';
 import useMemberships from 'features/organizations/hooks/useMemberships';
+
+const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
+  start,
+  end,
+}) => {
+  if (!end) {
+    return <FormattedDate day="numeric" month="short" value={start.toDate()} />;
+  } else {
+    return (
+      <FormattedDateTimeRange
+        day="numeric"
+        from={start.toDate()}
+        month="short"
+        to={end.toDate()}
+      />
+    );
+  }
+};
 
 const AllEventsList: FC = () => {
   const allEvents = useAllEvents();
@@ -30,7 +49,10 @@ const AllEventsList: FC = () => {
     'orgs' | 'calendar' | null
   >(null);
   const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
-  const [datesToFilterBy, setDatesToFilterBy] = useState<DateRange<Dayjs>>();
+  const [datesToFilterBy, setDatesToFilterBy] = useState<DateRange<Dayjs>>([
+    null,
+    null,
+  ]);
 
   const orgs = [
     ...new Map(
@@ -48,7 +70,7 @@ const AllEventsList: FC = () => {
       return orgIdsToFilterBy.includes(event.organization.id);
     })
     .filter((event) => {
-      if (!datesToFilterBy) {
+      if (!datesToFilterBy[0]) {
         return true;
       }
 
@@ -78,7 +100,7 @@ const AllEventsList: FC = () => {
     });
 
   const memberOfMoreThanOneOrg = memberships && memberships.length > 1;
-  const showClearFilters = orgIdsToFilterBy.length || datesToFilterBy;
+  const showClearFilters = orgIdsToFilterBy.length || datesToFilterBy[0];
 
   return (
     <Box
@@ -93,7 +115,7 @@ const AllEventsList: FC = () => {
           <Box
             onClick={() => {
               setOrgIdsToFilterBy([]);
-              setDatesToFilterBy(undefined);
+              setDatesToFilterBy([null, null]);
             }}
             sx={(theme) => ({
               alignItems: 'center',
@@ -131,12 +153,12 @@ const AllEventsList: FC = () => {
         <Box
           onClick={() => setDrawerContent('calendar')}
           sx={(theme) => ({
-            backgroundColor: datesToFilterBy?.length
+            backgroundColor: datesToFilterBy[0]
               ? theme.palette.primary.main
               : '',
             border: `2px solid ${theme.palette.primary.main}`,
             borderRadius: '2em',
-            color: datesToFilterBy?.length
+            color: datesToFilterBy[0]
               ? getContrastColor(theme.palette.primary.main)
               : theme.palette.text.primary,
             cursor: 'pointer',
@@ -145,7 +167,14 @@ const AllEventsList: FC = () => {
             paddingY: 1,
           })}
         >
-          <CalendarMonthOutlined />
+          {datesToFilterBy[0] ? (
+            <DatesFilteredBy
+              end={datesToFilterBy[1]}
+              start={datesToFilterBy[0]}
+            />
+          ) : (
+            <CalendarMonthOutlined />
+          )}
         </Box>
       </Box>
       {filteredEvents.map((event) => (
@@ -210,8 +239,8 @@ const AllEventsList: FC = () => {
                 padding={1}
               >
                 <Button
-                  disabled={!datesToFilterBy}
-                  onClick={() => setDatesToFilterBy(undefined)}
+                  disabled={!datesToFilterBy[0]}
+                  onClick={() => setDatesToFilterBy([null, null])}
                   variant="outlined"
                 >
                   Clear dates
