@@ -8,6 +8,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Switch,
+  Typography,
 } from '@mui/material';
 import {
   CalendarMonthOutlined,
@@ -22,6 +23,8 @@ import { getContrastColor } from 'utils/colorUtils';
 import useAllEvents from 'features/events/hooks/useAllEvents';
 import EventListItem from './EventListItem';
 import useMemberships from 'features/organizations/hooks/useMemberships';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
   start,
@@ -128,7 +131,7 @@ const AllEventsList: FC = () => {
               padding: '2px',
             })}
           >
-            <Clear />
+            <Clear fontSize="small" />
           </Box>
         )}
         {memberOfMoreThanOneOrg && (
@@ -138,17 +141,25 @@ const AllEventsList: FC = () => {
               backgroundColor: orgIdsToFilterBy.length
                 ? theme.palette.primary.main
                 : '',
-              border: `2px solid ${theme.palette.primary.main}`,
+              border: `1px solid ${theme.palette.primary.main}`,
               borderRadius: '2em',
               color: orgIdsToFilterBy.length
                 ? getContrastColor(theme.palette.primary.main)
                 : theme.palette.text.primary,
               cursor: 'pointer',
               display: 'inline-flex',
-              paddingX: 1,
-              paddingY: 1,
+              fontSize: '13px',
+              paddingX: '10px',
+              paddingY: '3px',
             })}
-          >{`Organization ${orgIdsToFilterBy.length || ''}`}</Box>
+          >
+            <Typography variant="body2">
+              <Msg
+                id={messageIds.feed.filters.organizations}
+                values={{ numOrgs: orgIdsToFilterBy.length }}
+              />
+            </Typography>
+          </Box>
         )}
         <Box
           onClick={() => setDrawerContent('calendar')}
@@ -156,27 +167,35 @@ const AllEventsList: FC = () => {
             backgroundColor: datesToFilterBy[0]
               ? theme.palette.primary.main
               : '',
-            border: `2px solid ${theme.palette.primary.main}`,
+            border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: '2em',
             color: datesToFilterBy[0]
               ? getContrastColor(theme.palette.primary.main)
               : theme.palette.text.primary,
             cursor: 'pointer',
             display: 'inline-flex',
-            paddingX: 2,
-            paddingY: 1,
+            fontSize: '13px',
+            paddingX: '10px',
+            paddingY: '3px',
           })}
         >
           {datesToFilterBy[0] ? (
-            <DatesFilteredBy
-              end={datesToFilterBy[1]}
-              start={datesToFilterBy[0]}
-            />
+            <Typography variant="body2">
+              <DatesFilteredBy
+                end={datesToFilterBy[1]}
+                start={datesToFilterBy[0]}
+              />
+            </Typography>
           ) : (
-            <CalendarMonthOutlined />
+            <CalendarMonthOutlined fontSize="small" />
           )}
         </Box>
       </Box>
+      {filteredEvents.length == 0 && (
+        <Box display="flex" justifyContent="center" padding={2}>
+          <Typography>No events</Typography>
+        </Box>
+      )}
       {filteredEvents.map((event) => (
         <EventListItem key={event.id} event={event} />
       ))}

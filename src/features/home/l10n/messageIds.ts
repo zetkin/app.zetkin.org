@@ -7,6 +7,13 @@ export default makeMessages('feat.home', {
     event: m('Untitled event'),
     noLocation: m('No physical location'),
   },
+  feed: {
+    filters: {
+      organizations: m<{ numOrgs: number }>(
+        '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
+      ),
+    },
+  },
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
