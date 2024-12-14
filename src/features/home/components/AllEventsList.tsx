@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -25,6 +25,34 @@ import EventListItem from './EventListItem';
 import useMemberships from 'features/organizations/hooks/useMemberships';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+
+const FilterButton: FC<{
+  active: boolean;
+  children: ReactNode;
+  onClick: () => void;
+  round?: boolean;
+}> = ({ active, children, onClick, round }) => {
+  return (
+    <Box
+      onClick={onClick}
+      sx={(theme) => ({
+        backgroundColor: active ? theme.palette.primary.main : '',
+        border: `1px solid ${theme.palette.primary.main}`,
+        borderRadius: '2em',
+        color: active
+          ? getContrastColor(theme.palette.primary.main)
+          : theme.palette.text.primary,
+        cursor: 'pointer',
+        display: 'inline-flex',
+        fontSize: '13px',
+        paddingX: round ? '3px' : '10px',
+        paddingY: '3px',
+      })}
+    >
+      {children}
+    </Box>
+  );
+};
 
 const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
   start,
@@ -115,81 +143,41 @@ const AllEventsList: FC = () => {
     >
       <Box alignItems="center" display="flex" gap={1}>
         {showClearFilters && (
-          <Box
+          <FilterButton
+            active={true}
             onClick={() => {
               setOrgIdsToFilterBy([]);
               setDatesToFilterBy([null, null]);
             }}
-            sx={(theme) => ({
-              alignItems: 'center',
-              backgroundColor: theme.palette.primary.main,
-              borderRadius: '100%',
-              color: getContrastColor(theme.palette.primary.main),
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'center',
-              padding: '2px',
-            })}
+            round
           >
             <Clear fontSize="small" />
-          </Box>
+          </FilterButton>
         )}
         {memberOfMoreThanOneOrg && (
-          <Box
+          <FilterButton
+            active={!!orgIdsToFilterBy.length}
             onClick={() => setDrawerContent('orgs')}
-            sx={(theme) => ({
-              backgroundColor: orgIdsToFilterBy.length
-                ? theme.palette.primary.main
-                : '',
-              border: `1px solid ${theme.palette.primary.main}`,
-              borderRadius: '2em',
-              color: orgIdsToFilterBy.length
-                ? getContrastColor(theme.palette.primary.main)
-                : theme.palette.text.primary,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              fontSize: '13px',
-              paddingX: '10px',
-              paddingY: '3px',
-            })}
           >
-            <Typography variant="body2">
-              <Msg
-                id={messageIds.feed.filters.organizations}
-                values={{ numOrgs: orgIdsToFilterBy.length }}
-              />
-            </Typography>
-          </Box>
+            <Msg
+              id={messageIds.feed.filters.organizations}
+              values={{ numOrgs: orgIdsToFilterBy.length }}
+            />
+          </FilterButton>
         )}
-        <Box
+        <FilterButton
+          active={!!datesToFilterBy[0]}
           onClick={() => setDrawerContent('calendar')}
-          sx={(theme) => ({
-            backgroundColor: datesToFilterBy[0]
-              ? theme.palette.primary.main
-              : '',
-            border: `1px solid ${theme.palette.primary.main}`,
-            borderRadius: '2em',
-            color: datesToFilterBy[0]
-              ? getContrastColor(theme.palette.primary.main)
-              : theme.palette.text.primary,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            fontSize: '13px',
-            paddingX: '10px',
-            paddingY: '3px',
-          })}
         >
           {datesToFilterBy[0] ? (
-            <Typography variant="body2">
-              <DatesFilteredBy
-                end={datesToFilterBy[1]}
-                start={datesToFilterBy[0]}
-              />
-            </Typography>
+            <DatesFilteredBy
+              end={datesToFilterBy[1]}
+              start={datesToFilterBy[0]}
+            />
           ) : (
             <CalendarMonthOutlined fontSize="small" />
           )}
-        </Box>
+        </FilterButton>
       </Box>
       {filteredEvents.length == 0 && (
         <Box display="flex" justifyContent="center" padding={2}>
