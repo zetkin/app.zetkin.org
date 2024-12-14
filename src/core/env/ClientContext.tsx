@@ -11,7 +11,7 @@ import {
   Theme,
   ThemeProvider,
 } from '@mui/material/styles';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
@@ -57,6 +57,11 @@ const ClientContext: FC<ClientContextProps> = ({
 
   const env = new Environment(apiClient, envVars);
   const cache = createCache({ key: 'css', prepend: true });
+
+  // MUI-X license
+  if (env.vars.MUIX_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(env.vars.MUIX_LICENSE_KEY);
+  }
 
   return (
     <ReduxProvider store={store}>
