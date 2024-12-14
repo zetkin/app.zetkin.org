@@ -37,7 +37,7 @@ const MyActivityListItem: FC<Props> = ({
       {image && (
         <CardMedia>
           <Box height={100} position="relative" width="100%">
-            <Image alt="" fill objectFit="cover" src={image} />
+            <Image alt="" fill src={image} style={{ objectFit: 'cover' }} />
           </Box>
         </CardMedia>
       )}
