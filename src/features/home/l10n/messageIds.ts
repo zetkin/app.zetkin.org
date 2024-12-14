@@ -1,6 +1,10 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.home', {
+  actions: {
+    call: m('Start calling'),
+    canvass: m('Start canvassing'),
+  },
   defaultTitles: {
     callAssignment: m('Untitled call assignment'),
     canvassAssignment: m('Untitled canvass assignment'),
