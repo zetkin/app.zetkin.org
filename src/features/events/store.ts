@@ -605,6 +605,18 @@ const eventsSlice = createSlice({
       state.userEventList = remoteList(action.payload);
       state.userEventList.loaded = new Date().toISOString();
     },
+    userResponseAdded: (state, action: PayloadAction<ZetkinEvent>) => {
+      const event = action.payload;
+      state.userEventList.items.push(
+        remoteItem(event.id, { data: { ...event, status: 'signedUp' } })
+      );
+    },
+    userResponseDeleted: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.userEventList.items = state.userEventList.items.filter(
+        (item) => item.id != eventId
+      );
+    },
   },
 });
 
@@ -773,4 +785,6 @@ export const {
   typesLoaded,
   userEventsLoad,
   userEventsLoaded,
+  userResponseAdded,
+  userResponseDeleted,
 } = eventsSlice.actions;
