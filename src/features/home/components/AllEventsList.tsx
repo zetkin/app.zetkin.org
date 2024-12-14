@@ -29,6 +29,7 @@ import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
+import ZUIModalBackground from 'zui/ZUIModalBackground';
 
 const FilterButton: FC<{
   active: boolean;
@@ -224,16 +225,16 @@ const AllEventsList: FC = () => {
       {drawerContent && (
         <>
           <Box
-            bgcolor="black"
             bottom={0}
             height="100%"
             left={0}
             onClick={() => setDrawerContent(null)}
             position="fixed"
-            sx={{ opacity: '30%' }}
             width="100%"
             zIndex={9999}
-          />
+          >
+            <ZUIModalBackground height="100%" width="100%" />
+          </Box>
           <Box
             sx={{
               WebkitOverflowScrolling: 'touch',
