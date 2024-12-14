@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { FormattedTime } from 'react-intl';
-import { Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import {
   Event,
   LocationOnOutlined,
@@ -36,10 +36,27 @@ const EventListItem: FC<Props> = ({ event }) => {
         size="small"
         variant="outlined"
       >
-        <Msg id={messageIds.actions.undoSignup} />
+        <Msg id={messageIds.activityList.actions.undoSignup} />
       </Button>
     );
   } else {
+    if (event.num_participants_available < event.num_participants_required) {
+      actions.push(
+        <Box
+          key="needed"
+          sx={{
+            bgcolor: '#FFE5C1',
+            borderRadius: 4,
+            color: '#f40',
+            px: 1,
+            py: 0.3,
+          }}
+        >
+          <Typography variant="body2">You are needed</Typography>
+        </Box>
+      );
+    }
+
     actions.push(
       <Button
         key="action"
@@ -47,7 +64,7 @@ const EventListItem: FC<Props> = ({ event }) => {
         size="small"
         variant="contained"
       >
-        <Msg id={messageIds.actions.signUp} />
+        <Msg id={messageIds.activityList.actions.signUp} />
       </Button>
     );
   }

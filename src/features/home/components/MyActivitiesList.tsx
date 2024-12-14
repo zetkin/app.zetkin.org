@@ -24,7 +24,7 @@ const MyActivitiesList: FC = () => {
               key={href}
               actions={[
                 <Button key="mainAction" size="small" variant="outlined">
-                  <Msg id={messageIds.actions.call} />
+                  <Msg id={messageIds.activityList.actions.call} />
                 </Button>,
               ]}
               href={href}
@@ -42,7 +42,7 @@ const MyActivitiesList: FC = () => {
               key={href}
               actions={[
                 <Button key="mainAction" size="small" variant="outlined">
-                  <Msg id={messageIds.actions.canvass} />
+                  <Msg id={messageIds.activityList.actions.canvass} />
                 </Button>,
               ]}
               href={href}
