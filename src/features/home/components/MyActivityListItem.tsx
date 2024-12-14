@@ -61,7 +61,20 @@ const MyActivityListItem: FC<Props> = ({
                   return (
                     <Fragment key={index}>
                       {!isFirst && <Typography>•</Typography>}
-                      {label}
+                      {typeof label == 'string' ? (
+                        <Typography
+                          sx={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                          variant="body2"
+                        >
+                          {label}
+                        </Typography>
+                      ) : (
+                        label
+                      )}
                     </Fragment>
                   );
                 })}

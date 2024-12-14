@@ -3,6 +3,7 @@ import { FormattedTime } from 'react-intl';
 import { Box, Button, Typography } from '@mui/material';
 import {
   Event,
+  GroupWorkOutlined,
   LocationOnOutlined,
   WatchLaterOutlined,
 } from '@mui/icons-material';
@@ -76,10 +77,18 @@ const EventListItem: FC<Props> = ({ event }) => {
       image={event.cover_file?.url}
       info={[
         {
+          Icon: GroupWorkOutlined,
+          labels: [event.campaign?.title, event.organization.title],
+        },
+        {
           Icon: WatchLaterOutlined,
           labels: [
-            <ZUIDate key="date" datetime={event.start_time} />,
-            <FormattedTime key="time" value={event.start_time} />,
+            <Typography key="date" variant="body2">
+              <ZUIDate datetime={event.start_time} />
+            </Typography>,
+            <Typography key="time" variant="body2">
+              <FormattedTime value={event.start_time} />
+            </Typography>,
           ],
         },
         {

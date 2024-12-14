@@ -2,7 +2,11 @@
 
 import { FC } from 'react';
 import { Box, Button } from '@mui/material';
-import { MapsHomeWork, PhoneInTalk } from '@mui/icons-material';
+import {
+  GroupWorkOutlined,
+  MapsHomeWork,
+  PhoneInTalk,
+} from '@mui/icons-material';
 
 import useMyActivities from '../hooks/useMyActivities';
 import MyActivityListItem from './MyActivityListItem';
@@ -29,7 +33,15 @@ const MyActivitiesList: FC = () => {
               ]}
               href={href}
               Icon={PhoneInTalk}
-              info={[]}
+              info={[
+                {
+                  Icon: GroupWorkOutlined,
+                  labels: [
+                    activity.data.campaign?.title,
+                    activity.data.organization.title,
+                  ],
+                },
+              ]}
               title={
                 activity.data.title || messages.defaultTitles.callAssignment()
               }
