@@ -4,6 +4,8 @@ export default makeMessages('feat.home', {
   actions: {
     call: m('Start calling'),
     canvass: m('Start canvassing'),
+    signUp: m('Sign up'),
+    undoSignup: m('Undo signup'),
   },
   defaultTitles: {
     callAssignment: m('Untitled call assignment'),
