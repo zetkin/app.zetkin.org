@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -20,10 +20,17 @@ const HomeLayout: FC<Props> = ({ children }) => {
   const path = usePathname();
   const lastSegment = path?.split('/').pop() ?? 'home';
 
+  const isMobile = useMediaQuery('(max-width: 640px)');
+
   const user = useUser();
 
   return (
-    <Box>
+    <Box
+      sx={{
+        marginX: 'auto',
+        maxWidth: 640,
+      }}
+    >
       <Box display="flex" justifyContent="space-between" m={2}>
         <Typography>Zetkin</Typography>
         {user && <ZUIAvatar size="sm" url={`/api/users/${user.id}/avatar`} />}
@@ -36,7 +43,7 @@ const HomeLayout: FC<Props> = ({ children }) => {
           zIndex: 1,
         })}
       >
-        <Tabs value={lastSegment}>
+        <Tabs centered={isMobile} value={lastSegment}>
           <Tab
             component={Link}
             href="/my/home"
