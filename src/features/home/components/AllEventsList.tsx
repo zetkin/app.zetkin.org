@@ -23,7 +23,6 @@ import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
 import { getContrastColor } from 'utils/colorUtils';
 import useAllEvents from 'features/events/hooks/useAllEvents';
 import EventListItem from './EventListItem';
-import useMemberships from 'features/organizations/hooks/useMemberships';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
@@ -80,7 +79,6 @@ const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
 const AllEventsList: FC = () => {
   const allEvents = useAllEvents();
   const nextDelay = useIncrementalDelay();
-  const memberships = useMemberships().data;
 
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | null
@@ -150,7 +148,14 @@ const AllEventsList: FC = () => {
 
   const dates = Object.keys(eventsByDate).sort();
 
-  const memberOfMoreThanOneOrg = memberships && memberships.length > 1;
+  const orgIdsWithEvents = allEvents.reduce<number[]>((orgIds, event) => {
+    if (!orgIds.includes(event.organization.id)) {
+      orgIds = [...orgIds, event.organization.id];
+    }
+    return orgIds;
+  }, []);
+
+  const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
   const showClearFilters = orgIdsToFilterBy.length || datesToFilterBy[0];
 
   return (
@@ -174,7 +179,7 @@ const AllEventsList: FC = () => {
             <Clear fontSize="small" />
           </FilterButton>
         )}
-        {memberOfMoreThanOneOrg && (
+        {moreThanOneOrgHasEvents && (
           <FilterButton
             active={!!orgIdsToFilterBy.length}
             onClick={() => setDrawerContent('orgs')}
