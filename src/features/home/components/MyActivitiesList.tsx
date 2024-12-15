@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, Button, Fade } from '@mui/material';
 import {
   GroupWorkOutlined,
@@ -14,15 +14,52 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import EventListItem from './EventListItem';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
+import FilterButton from './FilterButton';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
   const messages = useMessages(messageIds);
+  const [filteredKinds, setFilteredKinds] = useState<string[]>([]);
   const nextDelay = useIncrementalDelay();
+
+  const kinds = Array.from(
+    new Set(activities.map((activity) => activity.kind))
+  );
+
+  const filteredActivities = activities.filter((activity) => {
+    const notFiltering = filteredKinds.length == 0;
+    return notFiltering || filteredKinds.includes(activity.kind);
+  });
 
   return (
     <Box display="flex" flexDirection="column" gap={1} m={1}>
-      {activities.map((activity) => {
+      {kinds.length > 1 && (
+        <Box display="flex" gap={1}>
+          {kinds.map((kind) => {
+            const active = filteredKinds.includes(kind);
+            return (
+              <FilterButton
+                key={kind}
+                active={active}
+                onClick={() => {
+                  const newValue = filteredKinds.filter(
+                    (prevKind) => prevKind != kind
+                  );
+
+                  if (!active) {
+                    newValue.push(kind);
+                  }
+
+                  setFilteredKinds(newValue);
+                }}
+              >
+                <Msg id={messageIds.activityList.filters[kind]} />
+              </FilterButton>
+            );
+          })}
+        </Box>
+      )}
+      {filteredActivities.map((activity) => {
         let elem, href;
 
         if (activity.kind == 'call') {

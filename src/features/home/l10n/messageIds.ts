@@ -8,6 +8,11 @@ export default makeMessages('feat.home', {
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },
+    filters: {
+      call: m('Call'),
+      canvass: m('Canvass'),
+      event: m('Events'),
+    },
     needed: m('You are needed'),
   },
   defaultTitles: {
