@@ -7,9 +7,10 @@ import ZUIModalBackground from 'zui/ZUIModalBackground';
 type Props = {
   children: ReactNode;
   onClose: () => void;
+  open?: boolean;
 };
 
-const DrawerModal: FC<Props> = ({ children, onClose }) => {
+const DrawerModal: FC<Props> = ({ children, onClose, open }) => {
   return (
     <Box
       bottom={0}
@@ -17,10 +18,24 @@ const DrawerModal: FC<Props> = ({ children, onClose }) => {
       left={0}
       onClick={() => onClose()}
       position="fixed"
+      sx={{
+        pointerEvents: open ? 'auto' : 'none',
+      }}
       width="100%"
       zIndex={9999}
     >
-      <ZUIModalBackground height="100%" width="100%" />
+      <Box
+        sx={{
+          height: '100%',
+          opacity: open ? 1 : 0,
+          transitionDelay: '0.2s',
+          transitionDuration: open ? '1s' : '0.5s',
+          transitionProperty: 'opacity',
+          width: '100%',
+        }}
+      >
+        <ZUIModalBackground height="100%" width="100%" />
+      </Box>
       <Box
         sx={{
           WebkitOverflowScrolling: 'touch',
@@ -35,6 +50,8 @@ const DrawerModal: FC<Props> = ({ children, onClose }) => {
           position: 'fixed',
           right: 0,
           top: 'auto',
+          transform: open ? 'translateY(0)' : 'translateY(100%)',
+          transition: 'transform 0.3s',
           width: '100%',
           zIndex: 10000,
         }}
@@ -53,6 +70,7 @@ const DrawerModal: FC<Props> = ({ children, onClose }) => {
             position: 'absolute',
             top: -40,
             transform: 'translateX(-50%)',
+            visibility: open ? 'visible' : 'hidden',
             width: '32px',
           })}
         >

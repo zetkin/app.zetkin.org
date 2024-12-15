@@ -195,59 +195,61 @@ const AllEventsList: FC = () => {
           </Fade>
         </Box>
       ))}
-      {drawerContent == 'calendar' && (
-        <DrawerModal onClose={() => setDrawerContent(null)}>
-          <Box
-            alignItems="center"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            padding={1}
+      <DrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'calendar'}
+      >
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          padding={1}
+        >
+          <Button
+            disabled={!datesToFilterBy[0]}
+            onClick={() => setDatesToFilterBy([null, null])}
+            variant="outlined"
           >
-            <Button
-              disabled={!datesToFilterBy[0]}
-              onClick={() => setDatesToFilterBy([null, null])}
-              variant="outlined"
-            >
-              Clear dates
-            </Button>
-            <DateRangeCalendar
-              calendars={1}
-              disablePast
-              onChange={(newDateRange) => setDatesToFilterBy(newDateRange)}
-              value={datesToFilterBy}
-            />
-          </Box>
-        </DrawerModal>
-      )}
-      {drawerContent == 'orgs' && (
-        <DrawerModal onClose={() => setDrawerContent(null)}>
-          <List>
-            {orgs.map((org) => (
-              <ListItem key={org.id} sx={{ justifyContent: 'space-between' }}>
-                <Box alignItems="center" display="flex">
-                  <ListItemAvatar>
-                    <Avatar alt="icon" src={`/api/orgs/${org.id}/avatar`} />
-                  </ListItemAvatar>
-                  <ListItemText>{org.title}</ListItemText>
-                </Box>
-                <Switch
-                  checked={orgIdsToFilterBy.includes(org.id)}
-                  onChange={(ev, checked) => {
-                    if (checked) {
-                      setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
-                    } else {
-                      setOrgIdsToFilterBy(
-                        orgIdsToFilterBy.filter((id) => id != org.id)
-                      );
-                    }
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </DrawerModal>
-      )}
+            Clear dates
+          </Button>
+          <DateRangeCalendar
+            calendars={1}
+            disablePast
+            onChange={(newDateRange) => setDatesToFilterBy(newDateRange)}
+            value={datesToFilterBy}
+          />
+        </Box>
+      </DrawerModal>
+      <DrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'orgs'}
+      >
+        <List>
+          {orgs.map((org) => (
+            <ListItem key={org.id} sx={{ justifyContent: 'space-between' }}>
+              <Box alignItems="center" display="flex">
+                <ListItemAvatar>
+                  <Avatar alt="icon" src={`/api/orgs/${org.id}/avatar`} />
+                </ListItemAvatar>
+                <ListItemText>{org.title}</ListItemText>
+              </Box>
+              <Switch
+                checked={orgIdsToFilterBy.includes(org.id)}
+                onChange={(ev, checked) => {
+                  if (checked) {
+                    setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
+                  } else {
+                    setOrgIdsToFilterBy(
+                      orgIdsToFilterBy.filter((id) => id != org.id)
+                    );
+                  }
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </DrawerModal>
     </Box>
   );
 };
