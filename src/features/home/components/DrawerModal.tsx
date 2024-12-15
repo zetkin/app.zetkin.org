@@ -16,7 +16,6 @@ const DrawerModal: FC<Props> = ({ children, onClose, open }) => {
       bottom={0}
       height="100%"
       left={0}
-      onClick={() => onClose()}
       position="fixed"
       sx={{
         pointerEvents: open ? 'auto' : 'none',
@@ -25,6 +24,7 @@ const DrawerModal: FC<Props> = ({ children, onClose, open }) => {
       zIndex={9999}
     >
       <Box
+        onClick={() => onClose()}
         sx={{
           height: '100%',
           opacity: open ? 1 : 0,
