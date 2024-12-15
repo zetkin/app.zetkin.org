@@ -11,11 +11,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
-import {
-  CalendarMonthOutlined,
-  Clear,
-  KeyboardArrowDown,
-} from '@mui/icons-material';
+import { CalendarMonthOutlined, Clear } from '@mui/icons-material';
 import { DateRange, DateRangeCalendar } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
@@ -27,8 +23,8 @@ import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
-import ZUIModalBackground from 'zui/ZUIModalBackground';
 import FilterButton from './FilterButton';
+import DrawerModal from './DrawerModal';
 
 const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
   start,
@@ -199,110 +195,58 @@ const AllEventsList: FC = () => {
           </Fade>
         </Box>
       ))}
-      {drawerContent && (
-        <>
+      {drawerContent == 'calendar' && (
+        <DrawerModal onClose={() => setDrawerContent(null)}>
           <Box
-            bottom={0}
-            height="100%"
-            left={0}
-            onClick={() => setDrawerContent(null)}
-            position="fixed"
-            width="100%"
-            zIndex={9999}
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            padding={1}
           >
-            <ZUIModalBackground height="100%" width="100%" />
-          </Box>
-          <Box
-            sx={{
-              WebkitOverflowScrolling: 'touch',
-              bgcolor: 'white',
-              bottom: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 'auto',
-              left: 0,
-              maxHeight: '100%',
-              outline: 0,
-              position: 'fixed',
-              right: 0,
-              top: 'auto',
-              width: '100%',
-              zIndex: 10000,
-            }}
-          >
-            <Box
-              onClick={() => setDrawerContent(null)}
-              sx={(theme) => ({
-                alignItems: 'center',
-                bgcolor: theme.palette.common.white,
-                borderRadius: '100%',
-                cursor: 'pointer',
-                display: 'flex',
-                height: '32px',
-                justifyContent: 'center',
-                left: '50%',
-                position: 'absolute',
-                top: -40,
-                transform: 'translateX(-50%)',
-                width: '32px',
-              })}
+            <Button
+              disabled={!datesToFilterBy[0]}
+              onClick={() => setDatesToFilterBy([null, null])}
+              variant="outlined"
             >
-              <KeyboardArrowDown color="secondary" />
-            </Box>
-            {drawerContent == 'calendar' && (
-              <Box
-                alignItems="center"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                padding={1}
-              >
-                <Button
-                  disabled={!datesToFilterBy[0]}
-                  onClick={() => setDatesToFilterBy([null, null])}
-                  variant="outlined"
-                >
-                  Clear dates
-                </Button>
-                <DateRangeCalendar
-                  calendars={1}
-                  disablePast
-                  onChange={(newDateRange) => setDatesToFilterBy(newDateRange)}
-                  value={datesToFilterBy}
-                />
-              </Box>
-            )}
-            {drawerContent == 'orgs' && (
-              <List>
-                {orgs.map((org) => (
-                  <ListItem
-                    key={org.id}
-                    sx={{ justifyContent: 'space-between' }}
-                  >
-                    <Box alignItems="center" display="flex">
-                      <ListItemAvatar>
-                        <Avatar alt="icon" src={`/api/orgs/${org.id}/avatar`} />
-                      </ListItemAvatar>
-                      <ListItemText>{org.title}</ListItemText>
-                    </Box>
-                    <Switch
-                      checked={orgIdsToFilterBy.includes(org.id)}
-                      onChange={(ev, checked) => {
-                        if (checked) {
-                          setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
-                        } else {
-                          setOrgIdsToFilterBy(
-                            orgIdsToFilterBy.filter((id) => id != org.id)
-                          );
-                        }
-                      }}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            )}
+              Clear dates
+            </Button>
+            <DateRangeCalendar
+              calendars={1}
+              disablePast
+              onChange={(newDateRange) => setDatesToFilterBy(newDateRange)}
+              value={datesToFilterBy}
+            />
           </Box>
-        </>
+        </DrawerModal>
+      )}
+      {drawerContent == 'orgs' && (
+        <DrawerModal onClose={() => setDrawerContent(null)}>
+          <List>
+            {orgs.map((org) => (
+              <ListItem key={org.id} sx={{ justifyContent: 'space-between' }}>
+                <Box alignItems="center" display="flex">
+                  <ListItemAvatar>
+                    <Avatar alt="icon" src={`/api/orgs/${org.id}/avatar`} />
+                  </ListItemAvatar>
+                  <ListItemText>{org.title}</ListItemText>
+                </Box>
+                <Switch
+                  checked={orgIdsToFilterBy.includes(org.id)}
+                  onChange={(ev, checked) => {
+                    if (checked) {
+                      setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
+                    } else {
+                      setOrgIdsToFilterBy(
+                        orgIdsToFilterBy.filter((id) => id != org.id)
+                      );
+                    }
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </DrawerModal>
       )}
     </Box>
   );
