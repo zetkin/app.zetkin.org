@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -20,7 +20,6 @@ import { DateRange, DateRangeCalendar } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
 
-import { getContrastColor } from 'utils/colorUtils';
 import useAllEvents from 'features/events/hooks/useAllEvents';
 import EventListItem from './EventListItem';
 import { Msg } from 'core/i18n';
@@ -29,34 +28,7 @@ import { ZetkinEventWithStatus } from '../types';
 import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import ZUIModalBackground from 'zui/ZUIModalBackground';
-
-const FilterButton: FC<{
-  active: boolean;
-  children: ReactNode;
-  onClick: () => void;
-  round?: boolean;
-}> = ({ active, children, onClick, round }) => {
-  return (
-    <Box
-      onClick={onClick}
-      sx={(theme) => ({
-        backgroundColor: active ? theme.palette.primary.main : '',
-        border: `1px solid ${theme.palette.primary.main}`,
-        borderRadius: '2em',
-        color: active
-          ? getContrastColor(theme.palette.primary.main)
-          : theme.palette.text.primary,
-        cursor: 'pointer',
-        display: 'inline-flex',
-        fontSize: '13px',
-        paddingX: round ? '3px' : '10px',
-        paddingY: '3px',
-      })}
-    >
-      {children}
-    </Box>
-  );
-};
+import FilterButton from './FilterButton';
 
 const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
   start,
