@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const messages = await getServerMessages(lang, messageIds);
 
   return {
+    icons: [{ url: '/logo-zetkin.png' }],
     title: process.env.HOME_TITLE || messages.title(),
   };
 }
