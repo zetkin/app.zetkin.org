@@ -30,9 +30,6 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      height="100dvh"
       sx={{
         marginX: 'auto',
         maxWidth: 640,
@@ -73,7 +70,7 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
           />
         </Tabs>
       </Box>
-      <Box flexGrow={1}>{children}</Box>
+      <Box minHeight="90dvh">{children}</Box>
       <Box
         alignItems="center"
         component="footer"
