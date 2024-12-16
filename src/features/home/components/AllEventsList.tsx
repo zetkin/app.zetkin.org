@@ -139,44 +139,46 @@ const AllEventsList: FC = () => {
       padding={1}
       position="relative"
     >
-      <Box alignItems="center" display="flex" gap={1}>
-        {isFiltered && (
-          <FilterButton
-            active={true}
-            onClick={() => {
-              setOrgIdsToFilterBy([]);
-              setDatesToFilterBy([null, null]);
-            }}
-            round
-          >
-            <Clear fontSize="small" />
-          </FilterButton>
-        )}
-        {moreThanOneOrgHasEvents && (
-          <FilterButton
-            active={!!orgIdsToFilterBy.length}
-            onClick={() => setDrawerContent('orgs')}
-          >
-            <Msg
-              id={messageIds.feed.filters.organizations}
-              values={{ numOrgs: orgIdsToFilterBy.length }}
-            />
-          </FilterButton>
-        )}
-        <FilterButton
-          active={!!datesToFilterBy[0]}
-          onClick={() => setDrawerContent('calendar')}
-        >
-          {datesToFilterBy[0] ? (
-            <DatesFilteredBy
-              end={datesToFilterBy[1]}
-              start={datesToFilterBy[0]}
-            />
-          ) : (
-            <CalendarMonthOutlined fontSize="small" />
+      {allEvents.length != 0 && (
+        <Box alignItems="center" display="flex" gap={1}>
+          {isFiltered && (
+            <FilterButton
+              active={true}
+              onClick={() => {
+                setOrgIdsToFilterBy([]);
+                setDatesToFilterBy([null, null]);
+              }}
+              round
+            >
+              <Clear fontSize="small" />
+            </FilterButton>
           )}
-        </FilterButton>
-      </Box>
+          {moreThanOneOrgHasEvents && (
+            <FilterButton
+              active={!!orgIdsToFilterBy.length}
+              onClick={() => setDrawerContent('orgs')}
+            >
+              <Msg
+                id={messageIds.feed.filters.organizations}
+                values={{ numOrgs: orgIdsToFilterBy.length }}
+              />
+            </FilterButton>
+          )}
+          <FilterButton
+            active={!!datesToFilterBy[0]}
+            onClick={() => setDrawerContent('calendar')}
+          >
+            {datesToFilterBy[0] ? (
+              <DatesFilteredBy
+                end={datesToFilterBy[1]}
+                start={datesToFilterBy[0]}
+              />
+            ) : (
+              <CalendarMonthOutlined fontSize="small" />
+            )}
+          </FilterButton>
+        </Box>
+      )}
       {filteredEvents.length == 0 && (
         <Box
           alignItems="center"
