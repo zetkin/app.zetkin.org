@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { range } from 'lodash';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 type Props = {
   height: number | string;
@@ -48,7 +48,52 @@ function setPixel(image: ImageData, x: number, y: number, argb: number) {
   image.data.set([r, g, b, a], (y * image.width + x) * 4);
 }
 
+type LayerData = {
+  delay: number;
+  duration: number;
+  imageData: ImageData;
+  imageHeight: number;
+  imageWidth: number;
+};
+
 const ZUIModalBackground: FC<Props> = ({ height, width }) => {
+  const [layers, setLayers] = useState<LayerData[]>([]);
+
+  useEffect(() => {
+    const newLayers = range(0, 4).map(() => {
+      const patternIndex = Math.floor(Math.random() * PATTERNS.length);
+      const pattern = PATTERNS[patternIndex];
+      const imageHeight = pattern.length;
+      const imageWidth = pattern[0].length;
+      const randomColors = COLORS.concat().sort(() => Math.random() - 0.5);
+
+      const duration = 23 + Math.random() * 19;
+      const delay = Math.random() * 7;
+
+      const imageData = new ImageData(imageWidth, imageHeight);
+
+      pattern.forEach((row, x) => {
+        row.forEach((colorIndex, y) => {
+          const shouldBeDrawn = colorIndex > 0;
+          if (shouldBeDrawn) {
+            const color = randomColors[colorIndex];
+            setPixel(imageData, x, y, color);
+          }
+        });
+      });
+
+      return {
+        delay,
+        duration,
+        imageData,
+        imageHeight,
+        imageWidth,
+      };
+    });
+
+    setLayers(newLayers);
+  }, []);
+
   return (
     <Box
       sx={{
@@ -86,17 +131,9 @@ const ZUIModalBackground: FC<Props> = ({ height, width }) => {
         width: width,
       }}
     >
-      {range(0, 4).map((index) => {
-        const patternIndex = Math.floor(Math.random() * PATTERNS.length);
-        const pattern = PATTERNS[patternIndex];
-        const height = pattern.length;
-        const width = pattern[0].length;
-        const randomColors = COLORS.concat().sort(() => Math.random() - 0.5);
-
+      {layers.map((layer, index) => {
+        const { imageData, delay, duration, imageWidth, imageHeight } = layer;
         const animName = `canvasAnim${index}`;
-
-        const duration = 23 + Math.random() * 19;
-        const delay = Math.random() * 7;
 
         return (
           <Box
@@ -138,29 +175,16 @@ const ZUIModalBackground: FC<Props> = ({ height, width }) => {
               ref={async (canvas) => {
                 const ctx = canvas?.getContext('2d');
                 if (ctx) {
-                  const image = new ImageData(width, height);
-
-                  pattern.forEach((row, x) => {
-                    row.forEach((colorIndex, y) => {
-                      const shouldBeDrawn = colorIndex > 0;
-                      if (shouldBeDrawn) {
-                        const color = randomColors[colorIndex];
-                        setPixel(image, x, y, color);
-                      }
-                    });
-                  });
-
-                  const bitmap = await createImageBitmap(image);
-
+                  const bitmap = await createImageBitmap(imageData);
                   ctx.drawImage(bitmap, 0, 0);
                 }
               }}
-              height={height}
+              height={imageHeight}
               style={{
                 height: '100%',
                 width: '100%',
               }}
-              width={width}
+              width={imageWidth}
             />
           </Box>
         );
