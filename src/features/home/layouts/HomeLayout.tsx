@@ -49,7 +49,15 @@ const HomeLayout: FC<Props> = ({ children }) => {
           zIndex: 1,
         })}
       >
-        <Tabs centered={isMobile} value={lastSegment}>
+        <Tabs
+          centered={isMobile}
+          sx={{
+            '& .MuiTabs-indicator > span': {
+              backgroundColor: '#252525',
+            },
+          }}
+          value={lastSegment}
+        >
           <Tab
             component={NextLink}
             href="/my/home"
