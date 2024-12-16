@@ -72,7 +72,7 @@ const AllEventsList: FC = () => {
     ).values(),
   ];
 
-  const getDateRangeCalendarValue = (): [Dayjs | null, Dayjs | null] => {
+  const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
     if (!dateFilterState || dateFilterState == 'custom') {
       return customDatesToFilterBy;
@@ -101,11 +101,7 @@ const AllEventsList: FC = () => {
         return true;
       }
 
-      const start =
-        dateFilterState == 'today' ? dayjs() : customDatesToFilterBy[0];
-      const end =
-        dateFilterState == 'today' ? dayjs() : customDatesToFilterBy[1];
-
+      const [start, end] = getDateRange();
       const eventStart = dayjs(event.start_time);
       const eventEnd = dayjs(event.end_time);
 
@@ -352,7 +348,7 @@ const AllEventsList: FC = () => {
                 );
               },
             }}
-            value={getDateRangeCalendarValue()}
+            value={getDateRange()}
           />
         </Box>
       </DrawerModal>
