@@ -61,7 +61,7 @@ const AllEventsList: FC = () => {
     DateRange<Dayjs>
   >([null, null]);
   const [dateFilterState, setDateFilterState] = useState<
-    'today' | 'custom' | null
+    'today' | 'tomorrow' | 'thisWeek' | 'custom' | null
   >(null);
 
   const orgs = [
@@ -71,6 +71,20 @@ const AllEventsList: FC = () => {
         .map((org) => [org['id'], org])
     ).values(),
   ];
+
+  const getDateRangeCalendarValue = (): [Dayjs | null, Dayjs | null] => {
+    const today = dayjs();
+    if (!dateFilterState || dateFilterState == 'custom') {
+      return customDatesToFilterBy;
+    } else if (dateFilterState == 'today') {
+      return [today, null];
+    } else if (dateFilterState == 'tomorrow') {
+      return [today.add(1, 'day'), null];
+    } else {
+      //dateFilterState is 'thisWeek'
+      return [today.startOf('week'), today.endOf('week')];
+    }
+  };
 
   const filteredEvents = allEvents
     .filter((event) => {
@@ -196,6 +210,24 @@ const AllEventsList: FC = () => {
           >
             Today
           </FilterButton>
+          <FilterButton
+            active={dateFilterState == 'tomorrow'}
+            onClick={() => {
+              setCustomDatesToFilterBy([null, null]);
+              setDateFilterState('tomorrow');
+            }}
+          >
+            Tomorrow
+          </FilterButton>
+          <FilterButton
+            active={dateFilterState == 'thisWeek'}
+            onClick={() => {
+              setCustomDatesToFilterBy([null, null]);
+              setDateFilterState('thisWeek');
+            }}
+          >
+            This week
+          </FilterButton>
         </Box>
       )}
       {filteredEvents.length == 0 && (
@@ -311,11 +343,7 @@ const AllEventsList: FC = () => {
                 );
               },
             }}
-            value={
-              dateFilterState == 'today'
-                ? [dayjs(), null]
-                : customDatesToFilterBy
-            }
+            value={getDateRangeCalendarValue()}
           />
         </Box>
       </DrawerModal>
