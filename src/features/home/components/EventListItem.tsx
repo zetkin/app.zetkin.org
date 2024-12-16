@@ -53,7 +53,9 @@ const EventListItem: FC<Props> = ({ event }) => {
             py: 0.3,
           }}
         >
-          <Typography variant="body2">You are needed</Typography>
+          <Typography variant="body2">
+            <Msg id={messageIds.activityList.needed} />
+          </Typography>
         </Box>
       );
     }

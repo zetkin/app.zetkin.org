@@ -23,7 +23,10 @@ export default makeMessages('feat.home', {
     noLocation: m('No physical location'),
   },
   feed: {
-    emptyListMessage: m('Could not find any events'),
+    emptyList: {
+      message: m('Could not find any events'),
+      removeFiltersButton: m('Clear filters'),
+    },
     filters: {
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'

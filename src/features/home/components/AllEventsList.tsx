@@ -190,7 +190,7 @@ const AllEventsList: FC = () => {
           padding={2}
         >
           <Typography color="secondary">
-            <Msg id={messageIds.feed.emptyListMessage} />
+            <Msg id={messageIds.feed.emptyList.message} />
           </Typography>
           <Search color="secondary" fontSize="large" />
           {isFiltered && (
@@ -201,7 +201,7 @@ const AllEventsList: FC = () => {
               }}
               variant="outlined"
             >
-              Clear filters
+              <Msg id={messageIds.feed.emptyList.removeFiltersButton} />
             </Button>
           )}
         </Box>
