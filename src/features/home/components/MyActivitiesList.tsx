@@ -1,9 +1,10 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Box, Button, Fade } from '@mui/material';
+import { Box, Button, Fade, Typography } from '@mui/material';
 import {
   GroupWorkOutlined,
+  Hotel,
   MapsHomeWork,
   PhoneInTalk,
 } from '@mui/icons-material';
@@ -57,6 +58,22 @@ const MyActivitiesList: FC = () => {
               </FilterButton>
             );
           })}
+        </Box>
+      )}
+      {filteredActivities.length == 0 && (
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          justifyContent="center"
+          marginTop={3}
+          padding={2}
+        >
+          <Typography color="secondary">
+            <Msg id={messageIds.activityList.emptyListMessage} />
+          </Typography>
+          <Hotel color="secondary" fontSize="large" />
         </Box>
       )}
       {filteredActivities.map((activity) => {

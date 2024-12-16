@@ -11,7 +11,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
-import { CalendarMonthOutlined, Clear } from '@mui/icons-material';
+import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
 import {
   DateRange,
   DateRangeCalendar,
@@ -178,8 +178,19 @@ const AllEventsList: FC = () => {
         </FilterButton>
       </Box>
       {filteredEvents.length == 0 && (
-        <Box display="flex" justifyContent="center" padding={2}>
-          <Typography>No events</Typography>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          justifyContent="center"
+          marginTop={3}
+          padding={2}
+        >
+          <Typography color="secondary">
+            <Msg id={messageIds.feed.emptyListMessage} />
+          </Typography>
+          <Search color="secondary" fontSize="large" />
         </Box>
       )}
       {dates.map((date) => (

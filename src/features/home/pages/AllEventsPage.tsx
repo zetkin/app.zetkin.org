@@ -14,7 +14,7 @@ const AllEventsPage: FC = () => {
           alignItems="center"
           display="flex"
           flexDirection="column"
-          height="90dvh"
+          height="100%"
           justifyContent="center"
         >
           <ZUILogoLoadingIndicator />

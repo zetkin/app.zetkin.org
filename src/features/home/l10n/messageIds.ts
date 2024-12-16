@@ -8,6 +8,7 @@ export default makeMessages('feat.home', {
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },
+    emptyListMessage: m('You are not signed up for any acitvities'),
     filters: {
       call: m('Call'),
       canvass: m('Canvass'),
@@ -22,6 +23,7 @@ export default makeMessages('feat.home', {
     noLocation: m('No physical location'),
   },
   feed: {
+    emptyListMessage: m('Could not find any events'),
     filters: {
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
