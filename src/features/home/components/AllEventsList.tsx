@@ -12,7 +12,11 @@ import {
   Typography,
 } from '@mui/material';
 import { CalendarMonthOutlined, Clear } from '@mui/icons-material';
-import { DateRange, DateRangeCalendar } from '@mui/x-date-pickers-pro';
+import {
+  DateRange,
+  DateRangeCalendar,
+  DateRangePickerDay,
+} from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
 
@@ -25,6 +29,7 @@ import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import FilterButton from './FilterButton';
 import DrawerModal from './DrawerModal';
+import { getContrastColor } from 'utils/colorUtils';
 
 const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
   start,
@@ -217,6 +222,45 @@ const AllEventsList: FC = () => {
             calendars={1}
             disablePast
             onChange={(newDateRange) => setDatesToFilterBy(newDateRange)}
+            slots={{
+              day: (props) => {
+                const day = props.day;
+
+                const hasEvents = !!allEvents.find((event) => {
+                  const eventStart = dayjs(event.start_time);
+                  const eventEnd = dayjs(event.end_time);
+
+                  const isOngoing =
+                    eventStart.isBefore(day) && eventEnd.isAfter(day);
+                  const startsOnSelectedDay = eventStart.isSame(day, 'day');
+                  const endsOnSelectedDay = eventEnd.isSame(day, 'day');
+                  return isOngoing || startsOnSelectedDay || endsOnSelectedDay;
+                });
+
+                const showHasEvents = hasEvents && !props.outsideCurrentMonth;
+
+                return (
+                  <DateRangePickerDay
+                    {...props}
+                    sx={(theme) => ({
+                      '& .MuiDateRangePickerDay-day::before': showHasEvents
+                        ? {
+                            backgroundColor: props.selected
+                              ? getContrastColor(theme.palette.primary.main)
+                              : theme.palette.primary.main,
+                            borderRadius: '1em',
+                            bottom: 5,
+                            content: '""',
+                            height: '5px',
+                            position: 'absolute',
+                            width: '5px',
+                          }
+                        : '',
+                    })}
+                  />
+                );
+              },
+            }}
             value={datesToFilterBy}
           />
         </Box>
