@@ -14,9 +14,10 @@ import { useEnv } from 'core/hooks';
 
 type Props = {
   children: ReactNode;
+  title?: string;
 };
 
-const HomeLayout: FC<Props> = ({ children }) => {
+const HomeLayout: FC<Props> = ({ children, title }) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
 
@@ -38,7 +39,7 @@ const HomeLayout: FC<Props> = ({ children }) => {
       }}
     >
       <Box display="flex" justifyContent="space-between" m={2}>
-        <Typography>Zetkin</Typography>
+        <Typography>{title || messages.title()}</Typography>
         {user && <ZUIAvatar size="sm" url={`/api/users/${user.id}/avatar`} />}
       </Box>
       <Box

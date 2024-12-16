@@ -8,9 +8,11 @@ type Props = {
 };
 
 const MyHomeLayout: FC<Props> = ({ children }) => {
+  const homeTitle = process.env.HOME_TITLE;
+
   return (
     <HomeThemeProvider>
-      <HomeLayout>{children}</HomeLayout>
+      <HomeLayout title={homeTitle}>{children}</HomeLayout>
     </HomeThemeProvider>
   );
 };

@@ -40,4 +40,5 @@ export default makeMessages('feat.home', {
     feed: m('All events'),
     home: m('My activities'),
   },
+  title: m('My Zetkin'),
 });
