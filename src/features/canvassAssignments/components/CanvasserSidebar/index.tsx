@@ -13,6 +13,7 @@ import {
 
 import { ZetkinCanvassAssignment } from '../../types';
 import useSidebarStats from 'features/canvassAssignments/hooks/useSidebarStats';
+import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type Props = {
@@ -114,7 +115,7 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
             <ListItemText primary="Instructions" sx={{ pb: 2 }} />
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
             <Typography sx={{ pb: 2, pt: 2 }} variant="body2">
-              {assignment.instructions}
+              <ZUIMarkdown markdown={assignment.instructions} />
             </Typography>
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
           </ListItem>
