@@ -10,7 +10,13 @@ const HomePage: FC = () => {
   return (
     <Suspense
       fallback={
-        <Box display="flex" justifyContent="center" my={6}>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          height="90dvh"
+          justifyContent="center"
+        >
           <ZUILogoLoadingIndicator />
         </Box>
       }

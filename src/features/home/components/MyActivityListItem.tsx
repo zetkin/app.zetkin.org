@@ -43,17 +43,21 @@ const MyActivityListItem: FC<Props> = ({
       )}
       <CardContent>
         <Box display="flex" gap={1}>
-          <Box textAlign="center" width="1.5rem">
+          <Box textAlign="center" width="1.4rem">
             <Icon color="secondary" />
           </Box>
           <Typography variant="h6">{title}</Typography>
         </Box>
-        <Box>
+        <Box
+          sx={(theme) => ({
+            color: theme.palette.grey[600],
+          })}
+        >
           {info.map((item, index) => {
             return (
               <Box key={index} display="flex" gap={1}>
-                <Box textAlign="center" width="1.5rem">
-                  <item.Icon color="secondary" fontSize="small" />
+                <Box textAlign="center" width="1.4rem">
+                  <item.Icon color="inherit" fontSize="small" />
                 </Box>
                 {item.labels.map((label, index) => {
                   const isFirst = index == 0;

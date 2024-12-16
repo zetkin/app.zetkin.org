@@ -28,6 +28,9 @@ export default makeMessages('feat.home', {
       ),
     },
   },
+  footer: {
+    privacyPolicy: m('Privacy policy'),
+  },
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
