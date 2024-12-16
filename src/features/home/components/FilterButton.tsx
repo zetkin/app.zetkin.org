@@ -21,6 +21,7 @@ const FilterButton: FC<{
           : theme.palette.text.primary,
         cursor: 'pointer',
         display: 'inline-flex',
+        flexShrink: 0,
         fontSize: '13px',
         paddingX: round ? '3px' : '10px',
         paddingY: '3px',

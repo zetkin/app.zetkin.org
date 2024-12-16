@@ -157,11 +157,18 @@ const AllEventsList: FC = () => {
       display="flex"
       flexDirection="column"
       gap={1}
-      padding={1}
+      overflow="hidden"
       position="relative"
     >
       {allEvents.length != 0 && (
-        <Box alignItems="center" display="flex" gap={1}>
+        <Box
+          alignItems="center"
+          display="flex"
+          gap={1}
+          maxWidth="100%"
+          padding={1}
+          sx={{ overflowX: 'auto' }}
+        >
           {isFiltered && (
             <FilterButton
               active={true}
@@ -261,7 +268,7 @@ const AllEventsList: FC = () => {
         </Box>
       )}
       {dates.map((date) => (
-        <Box key={date}>
+        <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
               <Typography my={1} variant="h5">
