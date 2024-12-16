@@ -181,7 +181,7 @@ const AllEventsList: FC = () => {
               onClick={() => setDrawerContent('orgs')}
             >
               <Msg
-                id={messageIds.feed.filters.organizations}
+                id={messageIds.allEventsList.filterButtonLabels.organizations}
                 values={{ numOrgs: orgIdsToFilterBy.length }}
               />
             </FilterButton>
@@ -208,7 +208,7 @@ const AllEventsList: FC = () => {
               setDateFilterState('today');
             }}
           >
-            Today
+            <Msg id={messageIds.allEventsList.filterButtonLabels.today} />
           </FilterButton>
           <FilterButton
             active={dateFilterState == 'tomorrow'}
@@ -217,7 +217,7 @@ const AllEventsList: FC = () => {
               setDateFilterState('tomorrow');
             }}
           >
-            Tomorrow
+            <Msg id={messageIds.allEventsList.filterButtonLabels.tomorrow} />
           </FilterButton>
           <FilterButton
             active={dateFilterState == 'thisWeek'}
@@ -226,7 +226,7 @@ const AllEventsList: FC = () => {
               setDateFilterState('thisWeek');
             }}
           >
-            This week
+            <Msg id={messageIds.allEventsList.filterButtonLabels.thisWeek} />
           </FilterButton>
         </Box>
       )}
@@ -241,7 +241,7 @@ const AllEventsList: FC = () => {
           padding={2}
         >
           <Typography color="secondary">
-            <Msg id={messageIds.feed.emptyList.message} />
+            <Msg id={messageIds.allEventsList.emptyList.message} />
           </Typography>
           <Search color="secondary" fontSize="large" />
           {isFiltered && (
@@ -253,7 +253,9 @@ const AllEventsList: FC = () => {
               }}
               variant="outlined"
             >
-              <Msg id={messageIds.feed.emptyList.removeFiltersButton} />
+              <Msg
+                id={messageIds.allEventsList.emptyList.removeFiltersButton}
+              />
             </Button>
           )}
         </Box>
