@@ -57,10 +57,12 @@ const AllEventsList: FC = () => {
     'orgs' | 'calendar' | null
   >(null);
   const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
-  const [datesToFilterBy, setDatesToFilterBy] = useState<DateRange<Dayjs>>([
-    null,
-    null,
-  ]);
+  const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
+    DateRange<Dayjs>
+  >([null, null]);
+  const [dateFilterState, setDateFilterState] = useState<
+    'today' | 'custom' | null
+  >(null);
 
   const orgs = [
     ...new Map(
@@ -78,12 +80,17 @@ const AllEventsList: FC = () => {
       return orgIdsToFilterBy.includes(event.organization.id);
     })
     .filter((event) => {
-      if (!datesToFilterBy[0]) {
+      if (
+        !dateFilterState ||
+        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
+      ) {
         return true;
       }
 
-      const start = datesToFilterBy[0];
-      const end = datesToFilterBy[1];
+      const start =
+        dateFilterState == 'today' ? dayjs() : customDatesToFilterBy[0];
+      const end =
+        dateFilterState == 'today' ? dayjs() : customDatesToFilterBy[1];
 
       const eventStart = dayjs(event.start_time);
       const eventEnd = dayjs(event.end_time);
@@ -129,7 +136,7 @@ const AllEventsList: FC = () => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-  const isFiltered = orgIdsToFilterBy.length || datesToFilterBy[0];
+  const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
 
   return (
     <Box
@@ -145,8 +152,9 @@ const AllEventsList: FC = () => {
             <FilterButton
               active={true}
               onClick={() => {
+                setDateFilterState(null);
+                setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
-                setDatesToFilterBy([null, null]);
               }}
               round
             >
@@ -165,17 +173,28 @@ const AllEventsList: FC = () => {
             </FilterButton>
           )}
           <FilterButton
-            active={!!datesToFilterBy[0]}
-            onClick={() => setDrawerContent('calendar')}
+            active={dateFilterState == 'custom'}
+            onClick={() => {
+              setDrawerContent('calendar');
+            }}
           >
-            {datesToFilterBy[0] ? (
+            {dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
               <DatesFilteredBy
-                end={datesToFilterBy[1]}
-                start={datesToFilterBy[0]}
+                end={customDatesToFilterBy[1]}
+                start={customDatesToFilterBy[0]}
               />
             ) : (
               <CalendarMonthOutlined fontSize="small" />
             )}
+          </FilterButton>
+          <FilterButton
+            active={dateFilterState == 'today'}
+            onClick={() => {
+              setCustomDatesToFilterBy([null, null]);
+              setDateFilterState('today');
+            }}
+          >
+            Today
           </FilterButton>
         </Box>
       )}
@@ -196,8 +215,9 @@ const AllEventsList: FC = () => {
           {isFiltered && (
             <Button
               onClick={() => {
-                setDatesToFilterBy([null, null]);
+                setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
+                setDateFilterState(null);
               }}
               variant="outlined"
             >
@@ -236,8 +256,11 @@ const AllEventsList: FC = () => {
           padding={1}
         >
           <Button
-            disabled={!datesToFilterBy[0]}
-            onClick={() => setDatesToFilterBy([null, null])}
+            disabled={!customDatesToFilterBy[0]}
+            onClick={() => {
+              setDateFilterState(null);
+              setCustomDatesToFilterBy([null, null]);
+            }}
             variant="outlined"
           >
             Clear dates
@@ -245,7 +268,10 @@ const AllEventsList: FC = () => {
           <DateRangeCalendar
             calendars={1}
             disablePast
-            onChange={(newDateRange) => setDatesToFilterBy(newDateRange)}
+            onChange={(newDateRange) => {
+              setDateFilterState('custom');
+              setCustomDatesToFilterBy(newDateRange);
+            }}
             slots={{
               day: (props) => {
                 const day = props.day;
@@ -285,7 +311,11 @@ const AllEventsList: FC = () => {
                 );
               },
             }}
-            value={datesToFilterBy}
+            value={
+              dateFilterState == 'today'
+                ? [dayjs(), null]
+                : customDatesToFilterBy
+            }
           />
         </Box>
       </DrawerModal>
