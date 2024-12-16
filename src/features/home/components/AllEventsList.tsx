@@ -129,7 +129,7 @@ const AllEventsList: FC = () => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-  const showClearFilters = orgIdsToFilterBy.length || datesToFilterBy[0];
+  const isFiltered = orgIdsToFilterBy.length || datesToFilterBy[0];
 
   return (
     <Box
@@ -140,7 +140,7 @@ const AllEventsList: FC = () => {
       position="relative"
     >
       <Box alignItems="center" display="flex" gap={1}>
-        {showClearFilters && (
+        {isFiltered && (
           <FilterButton
             active={true}
             onClick={() => {
@@ -191,6 +191,17 @@ const AllEventsList: FC = () => {
             <Msg id={messageIds.feed.emptyListMessage} />
           </Typography>
           <Search color="secondary" fontSize="large" />
+          {isFiltered && (
+            <Button
+              onClick={() => {
+                setDatesToFilterBy([null, null]);
+                setOrgIdsToFilterBy([]);
+              }}
+              variant="outlined"
+            >
+              Clear filters
+            </Button>
+          )}
         </Box>
       )}
       {dates.map((date) => (
