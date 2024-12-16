@@ -110,7 +110,7 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
         </Box>
       </Box>
       <List>
-        {assignment.instructions != '' && (
+        {assignment.instructions && (
           <ListItem sx={{ display: 'block', px: 1 }}>
             <ListItemText primary="Instructions" sx={{ pb: 2 }} />
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
