@@ -130,9 +130,17 @@ const AllEventsList: FC = () => {
     const eventDate = event.start_time.slice(0, 10);
     const existingEvents = dates[eventDate] || [];
 
+    const dateRange = getDateRange();
+    const firstFilterDate = dateRange[0]?.format('YYYY-MM-DD');
+
+    const dateToSortAs =
+      firstFilterDate && eventDate < firstFilterDate
+        ? firstFilterDate
+        : eventDate;
+
     return {
       ...dates,
-      [eventDate]: [...existingEvents, event],
+      [dateToSortAs]: [...existingEvents, event],
     };
   }, {});
 
