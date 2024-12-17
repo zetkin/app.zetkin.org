@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { FormattedTime } from 'react-intl';
 import { Box, Button, Fade, Typography } from '@mui/material';
 import {
   Event,
@@ -9,11 +8,12 @@ import {
 } from '@mui/icons-material';
 
 import MyActivityListItem from './MyActivityListItem';
-import ZUIDate from 'zui/ZUIDate';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import useEventActions from '../hooks/useEventActions';
+import ZUITimeSpan from 'zui/ZUITimeSpan';
+import { removeOffset } from 'utils/dateUtils';
 
 type Props = {
   event: ZetkinEventWithStatus;
@@ -109,11 +109,11 @@ const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
         {
           Icon: WatchLaterOutlined,
           labels: [
-            <Typography key="date" variant="body2">
-              <ZUIDate datetime={event.start_time} />
-            </Typography>,
-            <Typography key="time" variant="body2">
-              <FormattedTime value={event.start_time} />
+            <Typography key={`event-time-${event.id}`} variant="body2">
+              <ZUITimeSpan
+                end={new Date(removeOffset(event.end_time))}
+                start={new Date(removeOffset(event.start_time))}
+              />
             </Typography>,
           ],
         },
