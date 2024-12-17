@@ -59,29 +59,31 @@ const MyActivityListItem: FC<Props> = ({
                 <Box textAlign="center" width="1.4rem">
                   <item.Icon color="inherit" fontSize="small" />
                 </Box>
-                {item.labels.map((label, index) => {
-                  const isFirst = index == 0;
+                {item.labels
+                  .filter((label) => !!label)
+                  .map((label, index) => {
+                    const isFirst = index == 0;
 
-                  return (
-                    <Fragment key={index}>
-                      {!isFirst && <Typography>•</Typography>}
-                      {typeof label == 'string' ? (
-                        <Typography
-                          sx={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}
-                          variant="body2"
-                        >
-                          {label}
-                        </Typography>
-                      ) : (
-                        label
-                      )}
-                    </Fragment>
-                  );
-                })}
+                    return (
+                      <Fragment key={index}>
+                        {!isFirst && <Typography>•</Typography>}
+                        {typeof label == 'string' ? (
+                          <Typography
+                            sx={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                            variant="body2"
+                          >
+                            {label}
+                          </Typography>
+                        ) : (
+                          label
+                        )}
+                      </Fragment>
+                    );
+                  })}
               </Box>
             );
           })}
