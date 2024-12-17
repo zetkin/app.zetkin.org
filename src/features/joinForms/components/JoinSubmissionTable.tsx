@@ -28,7 +28,8 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
   const classes = useStyles();
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const { approveSubmission } = useJoinSubmissionMutations(orgId);
+  const { approveSubmission, deleteSubmission } =
+    useJoinSubmissionMutations(orgId);
 
   return (
     <Box bgcolor={theme.palette.background.paper} m={2}>
@@ -37,7 +38,7 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
           {
             disableColumnMenu: true,
             field: 'state',
-            flex: 1,
+            flex: 2,
             headerName: messages.status(),
             renderCell: (params) => {
               return (
@@ -51,28 +52,28 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
           {
             disableColumnMenu: true,
             field: 'first_name',
-            flex: 1,
+            flex: 2,
             headerName: messages.submissionList.firstName(),
             valueGetter: (params) => params.row.person_data.first_name,
           },
           {
             disableColumnMenu: true,
             field: 'last_name',
-            flex: 1,
+            flex: 2,
             headerName: messages.submissionList.lastName(),
             valueGetter: (params) => params.row.person_data.last_name,
           },
           {
             disableColumnMenu: true,
             field: 'form',
-            flex: 1,
+            flex: 2,
             headerName: messages.submissionList.form(),
             valueGetter: (params) => params.row.form.title,
           },
           {
             disableColumnMenu: true,
             field: 'submitted',
-            flex: 1,
+            flex: 2,
             headerName: messages.submissionList.timestamp(),
             type: 'dateTime',
             valueGetter: (params) => new Date(params.row.submitted),
@@ -81,16 +82,21 @@ const JoinSubmissionTable: FC<Props> = ({ onSelect, orgId, submissions }) => {
             align: 'right',
             disableColumnMenu: true,
             field: 'actions',
-            flex: 1,
+            flex: 3,
             headerName: '',
             renderCell: (params) => {
               if (params.row.state !== 'accepted') {
                 return (
                   <Box display="flex" gap={2}>
-                    {/* TODO: Handle rejectButton click */}
-                    {/* <Button variant="text">
+                    <Button
+                      onClick={(event) => {
+                        deleteSubmission(params.row.id);
+                        event.stopPropagation();
+                      }}
+                      variant="text"
+                    >
                       <Msg id={messageIds.submissionList.rejectButton} />
-                    </Button> */}
+                    </Button>
                     <Button
                       onClick={(event) => {
                         approveSubmission(params.row.id);
