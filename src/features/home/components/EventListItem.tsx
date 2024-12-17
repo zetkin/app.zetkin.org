@@ -41,6 +41,17 @@ const EventListItem: FC<Props> = ({ event }) => {
       </Button>
     );
   } else {
+    actions.push(
+      <Button
+        key="action"
+        onClick={() => signUp()}
+        size="small"
+        variant="contained"
+      >
+        <Msg id={messageIds.activityList.actions.signUp} />
+      </Button>
+    );
+
     if (event.num_participants_available < event.num_participants_required) {
       actions.push(
         <Box
@@ -59,17 +70,6 @@ const EventListItem: FC<Props> = ({ event }) => {
         </Box>
       );
     }
-
-    actions.push(
-      <Button
-        key="action"
-        onClick={() => signUp()}
-        size="small"
-        variant="contained"
-      >
-        <Msg id={messageIds.activityList.actions.signUp} />
-      </Button>
-    );
   }
 
   return (

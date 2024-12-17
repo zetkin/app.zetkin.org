@@ -41,7 +41,7 @@ const MyActivityListItem: FC<Props> = ({
           </Box>
         </CardMedia>
       )}
-      <CardContent>
+      <CardContent sx={{ pb: 0 }}>
         <Box display="flex" gap={1}>
           <Box textAlign="center" width="1.4rem">
             <Icon color="secondary" />
@@ -94,7 +94,7 @@ const MyActivityListItem: FC<Props> = ({
         </Box>
       </CardContent>
       {actions && (
-        <CardActions sx={{ gap: 1, justifyContent: 'end' }}>
+        <CardActions sx={{ gap: 1, justifyContent: 'start', pb: 2, px: 2 }}>
           {actions}
         </CardActions>
       )}
