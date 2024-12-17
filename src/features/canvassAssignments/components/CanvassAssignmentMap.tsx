@@ -6,6 +6,7 @@ import {
   latLngBounds,
   LatLngBounds,
   LatLngTuple,
+  LeafletMouseEvent,
 } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { GpsNotFixed } from '@mui/icons-material';
@@ -178,17 +179,23 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
 
   useEffect(() => {
     if (map) {
-      map.on('click', (evt) => {
+      const handlePan = (evt: LeafletMouseEvent) => {
         panTo(evt.latlng);
-      });
+      };
+      map.on('click', handlePan);
 
-      map.on('move', () => {
-        updateSelection();
-      });
+      map.on('move', updateSelection);
 
       map.on('moveend', saveBounds);
 
-      map.on('zoomend', () => saveBounds);
+      map.on('zoomend', saveBounds);
+
+      return () => {
+        map.off('click', handlePan);
+        map.off('move', updateSelection);
+        map.off('moveend', saveBounds);
+        map.off('zoomend', saveBounds);
+      };
     }
   }, [map, selectedPlaceId, places, panTo, updateSelection]);
 
