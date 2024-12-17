@@ -7,9 +7,10 @@ import {
   RemoteList,
   remoteList,
 } from 'utils/storeUtils';
-import { ZetkinEmail, ZetkinLink } from 'utils/types/zetkin';
+import { ZetkinEmail, ZetkinEmailConfig, ZetkinLink } from 'utils/types/zetkin';
 
 export interface EmailStoreSlice {
+  configList: RemoteList<ZetkinEmailConfig>;
   emailList: RemoteList<ZetkinEmail>;
   themeList: RemoteList<EmailTheme>;
   linksByEmailId: Record<number, RemoteList<ZetkinLink>>;
@@ -18,6 +19,7 @@ export interface EmailStoreSlice {
 }
 
 const initialState: EmailStoreSlice = {
+  configList: remoteList(),
   emailList: remoteList(),
   insightsByEmailId: {},
   linksByEmailId: {},
@@ -29,6 +31,13 @@ const emailsSlice = createSlice({
   initialState,
   name: 'emails',
   reducers: {
+    configsLoad: (state) => {
+      state.configList.isLoading = true;
+    },
+    configsLoaded: (state, action: PayloadAction<ZetkinEmailConfig[]>) => {
+      state.configList = remoteList(action.payload);
+      state.configList.loaded = new Date().toISOString();
+    },
     emailCreate: (state) => {
       state.emailList.isLoading = true;
     },
@@ -184,6 +193,8 @@ const emailsSlice = createSlice({
 
 export default emailsSlice;
 export const {
+  configsLoad,
+  configsLoaded,
   emailCreate,
   emailCreated,
   emailDeleted,

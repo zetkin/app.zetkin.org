@@ -317,6 +317,17 @@ export default function mockEmail(
   return {
     id: 1,
     campaign: null,
+    config: {
+      config: {},
+      id: 1,
+      no_reply: false,
+      organization: {
+        id: 1,
+        title: 'Organization',
+      },
+      sender_email: 'info@example.com',
+      sender_name: 'The Org',
+    },
     content: '{ blocks: [] }',
     theme: null,
     locked: null,

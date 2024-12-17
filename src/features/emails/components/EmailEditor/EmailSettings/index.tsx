@@ -7,26 +7,20 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import BlockListItem from './BlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
 import PreviewTab from './PreviewTab';
-import SettingsTab from './SettingsTab';
 import { useMessages } from 'core/i18n';
-import { ZetkinEmail } from 'utils/types/zetkin';
 
 interface EmailSettingsProps {
   apiRef: MutableRefObject<EditorJS | null>;
   blocks: OutputBlockData[];
-  onSave: (email: Partial<ZetkinEmail>) => void;
   readOnly: boolean;
   selectedBlockIndex: number;
-  subject: string;
 }
 
 const EmailSettings: FC<EmailSettingsProps> = ({
   apiRef,
   blocks,
-  onSave,
   readOnly,
   selectedBlockIndex,
-  subject,
 }) => {
   const messages = useMessages(messageIds);
   const [activeTab, setActiveTab] = useState<
@@ -57,10 +51,6 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             value="content"
           />
           <Tab
-            label={messages.editor.settings.tabs.settings.title()}
-            value="settings"
-          />
-          <Tab
             label={messages.editor.settings.tabs.preview.title()}
             value="preview"
           />
@@ -88,13 +78,6 @@ const EmailSettings: FC<EmailSettingsProps> = ({
               />
             ))}
           </Stack>
-        </TabPanel>
-        <TabPanel sx={{ padding: 0 }} value="settings">
-          <SettingsTab
-            onChange={onSave}
-            readOnly={readOnly}
-            subject={subject}
-          />
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
           <PreviewTab />
