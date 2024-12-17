@@ -13,7 +13,7 @@ import { FC, Fragment, ReactNode } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 type Props = {
-  Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
+  Icon?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>> | null;
   actions?: ReactNode[];
   href?: string;
   image?: string;
@@ -42,10 +42,12 @@ const MyActivityListItem: FC<Props> = ({
         </CardMedia>
       )}
       <CardContent sx={{ pb: 0 }}>
-        <Box display="flex" gap={1}>
-          <Box textAlign="center" width="1.4rem">
-            <Icon color="secondary" />
-          </Box>
+        <Box display="flex" gap={1} pb={0.4}>
+          {Icon && (
+            <Box textAlign="center" width="1.4rem">
+              <Icon color="secondary" />
+            </Box>
+          )}
           <Typography variant="h6">{title}</Typography>
         </Box>
         <Box
@@ -70,7 +72,7 @@ const MyActivityListItem: FC<Props> = ({
 
                     return (
                       <Fragment key={index}>
-                        {!isFirst && <Typography>·</Typography>}
+                        {!isFirst && <Typography variant="body2">·</Typography>}
                         {typeof label == 'string' ? (
                           <Typography
                             sx={{
