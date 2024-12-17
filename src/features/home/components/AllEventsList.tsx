@@ -148,6 +148,75 @@ const AllEventsList: FC = () => {
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
   const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
 
+  const filters = [
+    ...(moreThanOneOrgHasEvents
+      ? [
+          {
+            active: !!orgIdsToFilterBy.length,
+            key: 'orgs',
+            label: (
+              <Msg
+                id={messageIds.allEventsList.filterButtonLabels.organizations}
+                values={{ numOrgs: orgIdsToFilterBy.length }}
+              />
+            ),
+            onClick: () => setDrawerContent('orgs'),
+          },
+        ]
+      : []),
+    {
+      active: dateFilterState == 'custom',
+      key: 'custom',
+      label:
+        dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
+          <DatesFilteredBy
+            end={customDatesToFilterBy[1]}
+            start={customDatesToFilterBy[0]}
+          />
+        ) : (
+          <CalendarMonthOutlined fontSize="small" />
+        ),
+      onClick: () => {
+        setDrawerContent('calendar');
+      },
+    },
+    {
+      active: dateFilterState == 'today',
+      key: 'today',
+      label: <Msg id={messageIds.allEventsList.filterButtonLabels.today} />,
+      onClick: () => {
+        setCustomDatesToFilterBy([null, null]);
+        setDateFilterState('today');
+      },
+    },
+    {
+      active: dateFilterState == 'tomorrow',
+      key: 'tomorrow',
+      label: <Msg id={messageIds.allEventsList.filterButtonLabels.tomorrow} />,
+      onClick: () => {
+        setCustomDatesToFilterBy([null, null]);
+        setDateFilterState('tomorrow');
+      },
+    },
+    {
+      active: dateFilterState == 'thisWeek',
+      key: 'thisWeek',
+      label: <Msg id={messageIds.allEventsList.filterButtonLabels.thisWeek} />,
+      onClick: () => {
+        setCustomDatesToFilterBy([null, null]);
+        setDateFilterState('thisWeek');
+      },
+    },
+  ].sort((a, b) => {
+    if (a.active && !b.active) {
+      return -1;
+    } else if (!a.active && b.active) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
   return (
     <Box
       display="flex"
@@ -178,59 +247,15 @@ const AllEventsList: FC = () => {
               <Clear fontSize="small" />
             </FilterButton>
           )}
-          {moreThanOneOrgHasEvents && (
+          {filters.map((filter) => (
             <FilterButton
-              active={!!orgIdsToFilterBy.length}
-              onClick={() => setDrawerContent('orgs')}
+              key={filter.key}
+              active={filter.active}
+              onClick={filter.onClick}
             >
-              <Msg
-                id={messageIds.allEventsList.filterButtonLabels.organizations}
-                values={{ numOrgs: orgIdsToFilterBy.length }}
-              />
+              {filter.label}
             </FilterButton>
-          )}
-          <FilterButton
-            active={dateFilterState == 'custom'}
-            onClick={() => {
-              setDrawerContent('calendar');
-            }}
-          >
-            {dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
-              <DatesFilteredBy
-                end={customDatesToFilterBy[1]}
-                start={customDatesToFilterBy[0]}
-              />
-            ) : (
-              <CalendarMonthOutlined fontSize="small" />
-            )}
-          </FilterButton>
-          <FilterButton
-            active={dateFilterState == 'today'}
-            onClick={() => {
-              setCustomDatesToFilterBy([null, null]);
-              setDateFilterState('today');
-            }}
-          >
-            <Msg id={messageIds.allEventsList.filterButtonLabels.today} />
-          </FilterButton>
-          <FilterButton
-            active={dateFilterState == 'tomorrow'}
-            onClick={() => {
-              setCustomDatesToFilterBy([null, null]);
-              setDateFilterState('tomorrow');
-            }}
-          >
-            <Msg id={messageIds.allEventsList.filterButtonLabels.tomorrow} />
-          </FilterButton>
-          <FilterButton
-            active={dateFilterState == 'thisWeek'}
-            onClick={() => {
-              setCustomDatesToFilterBy([null, null]);
-              setDateFilterState('thisWeek');
-            }}
-          >
-            <Msg id={messageIds.allEventsList.filterButtonLabels.thisWeek} />
-          </FilterButton>
+          ))}
         </Box>
       )}
       {filteredEvents.length == 0 && (
