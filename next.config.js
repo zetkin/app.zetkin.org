@@ -14,6 +14,11 @@ module.exports = {
   async redirects() {
     return [
       {
+        source: '/my',
+        destination: '/my/home',
+        permanent: false,
+      },
+      {
         source: '/:prevPath*/calendar/events',
         destination: '/:prevPath*/calendar',
         permanent: false,

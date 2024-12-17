@@ -1,19 +1,19 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
-import { myAssignmentsLoad, myAssignmentsLoaded } from '../store';
-import { AssignmentWithAreas } from '../types';
 import useRemoteList from 'core/hooks/useRemoteList';
+import { userAssignmentsLoad, userAssignmentsLoaded } from '../store';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
-export default function useMyCanvassAssignments() {
+export default function useMyCallAssignments() {
   const apiClient = useApiClient();
   const list = useAppSelector(
-    (state) => state.canvassAssignments.myAssignmentsWithAreasList
+    (state) => state.callAssignments.userAssignmentList
   );
 
   const assignments = useRemoteList(list, {
-    actionOnLoad: () => myAssignmentsLoad(),
-    actionOnSuccess: (data) => myAssignmentsLoaded(data),
+    actionOnLoad: () => userAssignmentsLoad(),
+    actionOnSuccess: (data) => userAssignmentsLoaded(data),
     loader: () =>
-      apiClient.get<AssignmentWithAreas[]>('/beta/users/me/canvassassignments'),
+      apiClient.get<ZetkinCallAssignment[]>(`/api/users/me/call_assignments`),
   });
 
   const now = new Date();
