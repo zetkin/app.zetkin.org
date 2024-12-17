@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { FormattedTime } from 'react-intl';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Fade, Typography } from '@mui/material';
 import {
   Event,
   GroupWorkOutlined,
@@ -38,7 +38,23 @@ const EventListItem: FC<Props> = ({ event }) => {
         variant="outlined"
       >
         <Msg id={messageIds.activityList.actions.undoSignup} />
-      </Button>
+      </Button>,
+      <Fade appear in style={{ transitionDelay: '0.3s' }}>
+        <Box
+          key="signedUp"
+          sx={{
+            bgcolor: '#C1EEC1',
+            borderRadius: 4,
+            color: '#080',
+            px: 1,
+            py: 0.3,
+          }}
+        >
+          <Typography variant="body2">
+            <Msg id={messageIds.activityList.signedUp} />
+          </Typography>
+        </Box>
+      </Fade>
     );
   } else {
     actions.push(

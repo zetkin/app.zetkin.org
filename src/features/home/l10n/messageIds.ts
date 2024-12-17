@@ -15,6 +15,7 @@ export default makeMessages('feat.home', {
       event: m('Events'),
     },
     needed: m('You are needed'),
+    signedUp: m('You have signed up'),
   },
   allEventsList: {
     emptyList: {
