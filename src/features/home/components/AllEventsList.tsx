@@ -149,37 +149,6 @@ const AllEventsList: FC = () => {
   const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
 
   const filters = [
-    ...(moreThanOneOrgHasEvents
-      ? [
-          {
-            active: !!orgIdsToFilterBy.length,
-            key: 'orgs',
-            label: (
-              <Msg
-                id={messageIds.allEventsList.filterButtonLabels.organizations}
-                values={{ numOrgs: orgIdsToFilterBy.length }}
-              />
-            ),
-            onClick: () => setDrawerContent('orgs'),
-          },
-        ]
-      : []),
-    {
-      active: dateFilterState == 'custom',
-      key: 'custom',
-      label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
-          <DatesFilteredBy
-            end={customDatesToFilterBy[1]}
-            start={customDatesToFilterBy[0]}
-          />
-        ) : (
-          <CalendarMonthOutlined fontSize="small" />
-        ),
-      onClick: () => {
-        setDrawerContent('calendar');
-      },
-    },
     {
       active: dateFilterState == 'today',
       key: 'today',
@@ -207,6 +176,37 @@ const AllEventsList: FC = () => {
         setDateFilterState('thisWeek');
       },
     },
+    {
+      active: dateFilterState == 'custom',
+      key: 'custom',
+      label:
+        dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
+          <DatesFilteredBy
+            end={customDatesToFilterBy[1]}
+            start={customDatesToFilterBy[0]}
+          />
+        ) : (
+          <CalendarMonthOutlined fontSize="small" />
+        ),
+      onClick: () => {
+        setDrawerContent('calendar');
+      },
+    },
+    ...(moreThanOneOrgHasEvents
+      ? [
+          {
+            active: !!orgIdsToFilterBy.length,
+            key: 'orgs',
+            label: (
+              <Msg
+                id={messageIds.allEventsList.filterButtonLabels.organizations}
+                values={{ numOrgs: orgIdsToFilterBy.length }}
+              />
+            ),
+            onClick: () => setDrawerContent('orgs'),
+          },
+        ]
+      : []),
   ].sort((a, b) => {
     if (a.active && !b.active) {
       return -1;
