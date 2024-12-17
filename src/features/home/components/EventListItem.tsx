@@ -28,7 +28,14 @@ const EventListItem: FC<Props> = ({ event }) => {
 
   const actions: ReactNode[] = [];
   if (event.status == 'booked') {
-    // TODO: Add some kind of instructions on how to cancel
+    actions.push(
+      <Typography key="booked" variant="body2">
+        <Msg
+          id={messageIds.activityList.eventStatus.booked}
+          values={{ org: event.organization.title }}
+        />
+      </Typography>
+    );
   } else if (event.status == 'signedUp') {
     actions.push(
       <Button
@@ -51,7 +58,7 @@ const EventListItem: FC<Props> = ({ event }) => {
           }}
         >
           <Typography variant="body2">
-            <Msg id={messageIds.activityList.signedUp} />
+            <Msg id={messageIds.activityList.eventStatus.signedUp} />
           </Typography>
         </Box>
       </Fade>
@@ -81,7 +88,7 @@ const EventListItem: FC<Props> = ({ event }) => {
           }}
         >
           <Typography variant="body2">
-            <Msg id={messageIds.activityList.needed} />
+            <Msg id={messageIds.activityList.eventStatus.needed} />
           </Typography>
         </Box>
       );

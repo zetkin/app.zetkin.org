@@ -9,13 +9,18 @@ export default makeMessages('feat.home', {
       undoSignup: m('Undo signup'),
     },
     emptyListMessage: m('You are not signed up for any acitvities'),
+    eventStatus: {
+      booked: m<{ org: string }>(
+        'You have been booked for this event and organizers are expecting you. Contact {org} if you need to cancel.'
+      ),
+      needed: m('You are needed'),
+      signedUp: m('You have signed up'),
+    },
     filters: {
       call: m('Call'),
       canvass: m('Canvass'),
       event: m('Events'),
     },
-    needed: m('You are needed'),
-    signedUp: m('You have signed up'),
   },
   allEventsList: {
     emptyList: {
