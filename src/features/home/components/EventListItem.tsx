@@ -17,9 +17,10 @@ import useEventActions from '../hooks/useEventActions';
 
 type Props = {
   event: ZetkinEventWithStatus;
+  showIcon?: boolean;
 };
 
-const EventListItem: FC<Props> = ({ event }) => {
+const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
   const messages = useMessages(messageIds);
   const { signUp, undoSignup } = useEventActions(
     event.organization.id,
@@ -98,7 +99,7 @@ const EventListItem: FC<Props> = ({ event }) => {
   return (
     <MyActivityListItem
       actions={actions}
-      Icon={Event}
+      Icon={showIcon ? Event : null}
       image={event.cover_file?.url}
       info={[
         {

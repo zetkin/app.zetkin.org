@@ -124,7 +124,7 @@ const MyActivitiesList: FC = () => {
           );
         } else if (activity.kind == 'event') {
           href = `/o/${activity.data.organization.id}/events/${activity.data.id}`;
-          elem = <EventListItem event={activity.data} />;
+          elem = <EventListItem event={activity.data} showIcon />;
         }
 
         return (
