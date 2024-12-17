@@ -55,17 +55,20 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
             },
           }}
           value={lastSegment}
+          variant={isMobile ? 'fullWidth' : 'standard'}
         >
           <Tab
             component={NextLink}
             href="/my/home"
             label={messages.tabs.home()}
+            sx={{ textTransform: 'none' }}
             value="home"
           />
           <Tab
             component={NextLink}
             href="/my/feed"
             label={messages.tabs.feed()}
+            sx={{ textTransform: 'none' }}
             value="feed"
           />
         </Tabs>
