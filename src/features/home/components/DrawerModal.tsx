@@ -76,7 +76,9 @@ const DrawerModal: FC<Props> = ({ children, onClose, open }) => {
         >
           <KeyboardArrowDown color="secondary" />
         </Box>
-        <Box>{children}</Box>
+        <Box sx={{ maxHeight: 'calc(100dvh - 60px)', overflowY: 'auto' }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );
