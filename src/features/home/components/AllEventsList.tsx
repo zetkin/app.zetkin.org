@@ -70,7 +70,7 @@ const AllEventsList: FC = () => {
         .map((event) => event.organization)
         .map((org) => [org['id'], org])
     ).values(),
-  ];
+  ].sort((a, b) => a.title.localeCompare(b.title));
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
