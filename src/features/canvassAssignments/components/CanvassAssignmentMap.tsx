@@ -6,6 +6,7 @@ import {
   latLngBounds,
   LatLngBounds,
   LatLngTuple,
+  LeafletMouseEvent,
 } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { GpsNotFixed } from '@mui/icons-material';
@@ -79,18 +80,20 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
     assignment.organization.id,
     assignment.id
   );
+  const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
+    [LatLngTuple, LatLngTuple] | null
+  >(`mapBounds-${assignment.id}`, null);
 
+  const [map, setMap] = useState<Map | null>(null);
+  const [zoomed, setZoomed] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [created, setCreated] = useState(false);
 
-  const [map, setMap] = useState<Map | null>(null);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
-  const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
-    [LatLngTuple, LatLngTuple] | null
-  >(`mapBounds-${assignment.id}`, null);
+  const selectedPlace = places.find((place) => place.id == selectedPlaceId);
 
   const saveBounds = () => {
     const bounds = map?.getBounds();
@@ -102,10 +105,6 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
       ]);
     }
   };
-
-  const [zoomed, setZoomed] = useState(false);
-
-  const selectedPlace = places.find((place) => place.id == selectedPlaceId);
 
   const updateSelection = useCallback(() => {
     let nearestPlace: string | null = null;
@@ -180,22 +179,22 @@ const CanvassAssignmentMap: FC<CanvassAssignmentMapProps> = ({
 
   useEffect(() => {
     if (map) {
-      map.on('click', (evt) => {
+      const handlePan = (evt: LeafletMouseEvent) => {
         panTo(evt.latlng);
-      });
+      };
+      map.on('click', handlePan);
 
-      map.on('move', () => {
-        updateSelection();
-      });
+      map.on('move', updateSelection);
 
       map.on('moveend', saveBounds);
 
-      map.on('zoomend', () => saveBounds);
+      map.on('zoomend', saveBounds);
 
       return () => {
-        map.off('move');
-        map.off('moveend');
-        map.off('movestart');
+        map.off('click', handlePan);
+        map.off('move', updateSelection);
+        map.off('moveend', saveBounds);
+        map.off('zoomend', saveBounds);
       };
     }
   }, [map, selectedPlaceId, places, panTo, updateSelection]);
