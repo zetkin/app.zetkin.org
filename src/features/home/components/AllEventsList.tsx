@@ -313,20 +313,9 @@ const AllEventsList: FC = () => {
         <Box
           alignItems="center"
           display="flex"
-          flexDirection="column"
           justifyContent="center"
           padding={1}
         >
-          <Button
-            disabled={!customDatesToFilterBy[0]}
-            onClick={() => {
-              setDateFilterState(null);
-              setCustomDatesToFilterBy([null, null]);
-            }}
-            variant="outlined"
-          >
-            Clear dates
-          </Button>
           <DateRangeCalendar
             calendars={1}
             disablePast
