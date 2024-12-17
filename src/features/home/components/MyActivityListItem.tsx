@@ -57,7 +57,11 @@ const MyActivityListItem: FC<Props> = ({
             return (
               <Box key={index} display="flex" gap={1}>
                 <Box textAlign="center" width="1.4rem">
-                  <item.Icon color="inherit" fontSize="small" />
+                  <item.Icon
+                    color="inherit"
+                    fontSize="small"
+                    sx={{ opacity: 0.5 }}
+                  />
                 </Box>
                 {item.labels
                   .filter((label) => !!label)
@@ -66,7 +70,7 @@ const MyActivityListItem: FC<Props> = ({
 
                     return (
                       <Fragment key={index}>
-                        {!isFirst && <Typography>•</Typography>}
+                        {!isFirst && <Typography>·</Typography>}
                         {typeof label == 'string' ? (
                           <Typography
                             sx={{
