@@ -22,7 +22,7 @@ export default makeMessages('feat.emails', {
       'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
     ),
     targetsNotLocked: m(
-      'The targets are not locked. Go to the Ready section in the Overview tab to do this.'
+      'The targets are not locked. Go to the Targets section in the Overview tab to do this.'
     ),
   },
   deliveryStatus: {

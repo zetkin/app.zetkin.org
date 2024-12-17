@@ -1,4 +1,5 @@
 import { ZetkinPersonImportOp } from './prepareImportOperations';
+import { Gender } from '../hooks/useGenderMapping';
 
 export type CellData = string | number | null | undefined;
 
@@ -21,6 +22,7 @@ export type Row = {
 
 export enum ColumnKind {
   FIELD = 'field',
+  GENDER = 'gender',
   DATE = 'date',
   ID_FIELD = 'id',
   TAG = 'tag',
@@ -46,6 +48,15 @@ export type DateColumn = BaseColumn & {
   dateFormat: string | null;
   field: string;
   kind: ColumnKind.DATE;
+};
+
+export type GenderColumn = BaseColumn & {
+  field: string;
+  kind: ColumnKind.GENDER;
+  mapping: {
+    gender: Gender | null;
+    value: CellData;
+  }[];
 };
 
 export type EnumColumn = BaseColumn & {
@@ -83,6 +94,7 @@ export type ConfigurableColumn =
   | IDFieldColumn
   | TagColumn
   | OrgColumn
+  | GenderColumn
   | EnumColumn;
 
 export type Column = UnknownColumn | FieldColumn | ConfigurableColumn;

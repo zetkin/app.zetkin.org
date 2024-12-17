@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useUser } from 'utils/hooks/useFocusDate';
+import useUser from 'core/hooks/useUser';
 import { useApiClient, useNumericRouteParams } from 'core/hooks';
 
 export default function useSendTestEmail() {

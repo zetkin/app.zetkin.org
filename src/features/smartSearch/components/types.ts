@@ -43,6 +43,12 @@ export enum CONDITION_OPERATOR {
   SOME = 'some',
 }
 
+export enum SURVEY_CONDITION_OP {
+  ALL = 'all',
+  ANY = 'any',
+  NONE = 'none',
+}
+
 export enum JOURNEY_CONDITION_OP {
   ALL = 'all',
   ANY = 'any',
@@ -227,7 +233,7 @@ export interface SurveyOptionFilterConfig {
   survey: number;
   question: number;
   options: number[] | string[];
-  operator: CONDITION_OPERATOR;
+  operator: SURVEY_CONDITION_OP;
   organizations?: FilterConfigOrgOptions;
 }
 

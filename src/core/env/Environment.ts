@@ -5,6 +5,7 @@ type EnvVars = {
   MUIX_LICENSE_KEY: string | null;
   ZETKIN_APP_DOMAIN: string | null;
   ZETKIN_GEN2_ORGANIZE_URL?: string | null;
+  ZETKIN_PRIVACY_POLICY_LINK?: string | null;
 };
 
 export default class Environment {
@@ -22,6 +23,7 @@ export default class Environment {
       MUIX_LICENSE_KEY: null,
       ZETKIN_APP_DOMAIN: null,
       ZETKIN_GEN2_ORGANIZE_URL: null,
+      ZETKIN_PRIVACY_POLICY_LINK: null,
     };
   }
 

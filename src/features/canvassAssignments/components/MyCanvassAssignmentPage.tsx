@@ -125,7 +125,7 @@ type MyCanvassAssignmentPageProps = {
 const MyCanvassAssignmentPage: FC<MyCanvassAssignmentPageProps> = ({
   canvassAssId,
 }) => {
-  const myAssignments = useMyCanvassAssignments().data || [];
+  const myAssignments = useMyCanvassAssignments();
   const assignment = myAssignments.find(
     (assignment) => assignment.id == canvassAssId
   );

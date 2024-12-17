@@ -170,7 +170,6 @@ feat:
         remove: Von Aufgabe entfernen
       add:
         alreadyAdded: Bereits hinzugefügt
-        placeholder: Telefonierer*in hinzufügen
       customize:
         exclude:
           h: Ausgeschlossene Schlagworte

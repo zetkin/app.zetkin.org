@@ -1,9 +1,14 @@
 import { ZetkinJoinSubmission } from '../types';
-import { submissionUpdate, submissionUpdated } from '../store';
+import {
+  submissionDeleted,
+  submissionUpdate,
+  submissionUpdated,
+} from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 
 interface UseJoinSubmissionMutationsReturn {
   approveSubmission: (submissionId: number) => void;
+  deleteSubmission: (submissionId: number) => void;
 }
 
 export default function useJoinSubmissionMutations(
@@ -23,7 +28,15 @@ export default function useJoinSubmissionMutations(
     dispatch(submissionUpdated(data));
   }
 
+  async function deleteSubmission(submissionId: number) {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/join_submissions/${submissionId}`
+    );
+    dispatch(submissionDeleted(submissionId));
+  }
+
   return {
     approveSubmission,
+    deleteSubmission,
   };
 }

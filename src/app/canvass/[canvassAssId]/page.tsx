@@ -1,11 +1,19 @@
+import 'leaflet/dist/leaflet.css';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import MyCanvassAssignmentPage from 'features/canvassAssignments/components/MyCanvassAssignmentPage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import MyCanvassAssignmentsPage from 'features/canvassAssignments/components/MyCanvassAssignmentsPage';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
-export default async function Page() {
+interface PageProps {
+  params: {
+    canvassAssId: string;
+  };
+}
+
+export default async function Page({ params }: PageProps) {
+  const { canvassAssId } = params;
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -14,8 +22,8 @@ export default async function Page() {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <MyCanvassAssignmentsPage />;
+    return <MyCanvassAssignmentPage canvassAssId={canvassAssId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/my/canvassassignments`);
+    return redirect(`/login?redirect=/canvass/${canvassAssId}`);
   }
 }

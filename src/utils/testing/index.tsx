@@ -18,8 +18,8 @@ import { EnvProvider } from 'core/env/EnvContext';
 import IApiClient from 'core/api/client/IApiClient';
 import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
 import theme from 'theme';
-import { UserContext } from 'utils/hooks/useFocusDate';
 import { Store } from 'core/store';
+import { UserProvider } from 'core/env/UserContext';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -37,7 +37,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   });
 
   return (
-    <UserContext.Provider value={null}>
+    <UserProvider user={null}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -61,7 +61,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
           </LocalizationProvider>
         </ThemeProvider>
       </StyledEngineProvider>
-    </UserContext.Provider>
+    </UserProvider>
   );
 };
 
@@ -112,9 +112,7 @@ export const makeWrapper = (store: Store) =>
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>
-          <UserContext.Provider value={RosaLuxemburgUser}>
-            {children}
-          </UserContext.Provider>
+          <UserProvider user={RosaLuxemburgUser}>{children}</UserProvider>
         </EnvProvider>
       </ReduxProvider>
     );
