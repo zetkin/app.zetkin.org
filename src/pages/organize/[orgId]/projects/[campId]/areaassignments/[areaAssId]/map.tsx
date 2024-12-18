@@ -2,6 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -38,12 +39,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 }, scaffoldOptions);
 
-interface PlanPageProps {
+interface OrganizerMapPageProps {
   orgId: string;
   areaAssId: string;
 }
 
-const PlanPage: PageWithLayout<PlanPageProps> = ({ areaAssId, orgId }) => {
+const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
+  areaAssId,
+  orgId,
+}) => {
   const areas = useAreas(parseInt(orgId)).data || [];
   const places = usePlaces(parseInt(orgId)).data || [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
@@ -60,41 +64,46 @@ const PlanPage: PageWithLayout<PlanPageProps> = ({ areaAssId, orgId }) => {
   }
 
   return (
-    <Box height="100%">
-      <ZUIFutures
-        futures={{
-          areaStats: areaStatsFuture,
-          assignment: assignmentFuture,
-          sessions: sessionsFuture,
-        }}
-      >
-        {({ data: { areaStats, assignment, sessions } }) => (
-          <AreaFilterProvider>
-            <AssigneeFilterProvider>
-              <OrganizerMap
-                areaAssId={areaAssId}
-                areas={areas}
-                areaStats={areaStats}
-                assignment={assignment}
-                onAddAssigneeToArea={(area, person) => {
-                  createAreaAssignmentSession({
-                    areaId: area.id,
-                    personId: person.id,
-                  });
-                }}
-                places={places}
-                sessions={sessions}
-              />
-            </AssigneeFilterProvider>
-          </AreaFilterProvider>
-        )}
-      </ZUIFutures>
-    </Box>
+    <>
+      <Head>
+        <title>{assignmentFuture.data?.title}</title>
+      </Head>
+      <Box height="100%">
+        <ZUIFutures
+          futures={{
+            areaStats: areaStatsFuture,
+            assignment: assignmentFuture,
+            sessions: sessionsFuture,
+          }}
+        >
+          {({ data: { areaStats, assignment, sessions } }) => (
+            <AreaFilterProvider>
+              <AssigneeFilterProvider>
+                <OrganizerMap
+                  areaAssId={areaAssId}
+                  areas={areas}
+                  areaStats={areaStats}
+                  assignment={assignment}
+                  onAddAssigneeToArea={(area, person) => {
+                    createAreaAssignmentSession({
+                      areaId: area.id,
+                      personId: person.id,
+                    });
+                  }}
+                  places={places}
+                  sessions={sessions}
+                />
+              </AssigneeFilterProvider>
+            </AreaFilterProvider>
+          )}
+        </ZUIFutures>
+      </Box>
+    </>
   );
 };
 
-PlanPage.getLayout = function getLayout(page) {
+OrganizerMapPage.getLayout = function getLayout(page) {
   return <AreaAssignmentLayout {...page.props}>{page}</AreaAssignmentLayout>;
 };
 
-export default PlanPage;
+export default OrganizerMapPage;

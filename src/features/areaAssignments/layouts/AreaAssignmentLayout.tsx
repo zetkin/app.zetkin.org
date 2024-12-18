@@ -20,6 +20,8 @@ import useAreaAssignmentStatus, {
 } from '../hooks/useAreaAssignmentStatus';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type AreaAssignmentLayoutProps = {
   areaAssId: string;
@@ -34,6 +36,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
   campId,
   areaAssId,
 }) => {
+  const messages = useMessages(messageIds);
   const path = useRouter().pathname;
   const areaAssignment = useAreaAssignment(orgId, areaAssId).data;
   const { deleteAreaAssignment, updateAreaAssignment } =
@@ -134,10 +137,10 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
         </Box>
       }
       tabs={[
-        { href: '/', label: 'Overview' },
-        { href: '/map', label: 'Map' },
-        { href: '/assignees', label: 'Assignees' },
-        { href: '/report', label: 'Report' },
+        { href: '/', label: messages.tabs.overview() },
+        { href: '/map', label: messages.tabs.map() },
+        { href: '/assignees', label: messages.tabs.assignees() },
+        { href: '/report', label: messages.tabs.report() },
       ]}
       title={
         <ZUIEditTextinPlace

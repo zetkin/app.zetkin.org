@@ -1,6 +1,7 @@
 import { Card } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import Head from 'next/head';
 
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
@@ -11,6 +12,7 @@ import { AreaAssigneeInfo } from 'features/areaAssignments/types';
 import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
+import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -35,7 +37,7 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
   const sessions = allSessions.filter(
     (session) => session.assignment.id === areaAssId
   );
-
+  const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const areaAssignees = getAreaAssignees(sessions);
 
   const columns: GridColDef<AreaAssigneeInfo>[] = [
@@ -72,22 +74,27 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
   ];
 
   return (
-    <Card>
-      <DataGridPro
-        autoHeight
-        columns={columns}
-        disableColumnFilter
-        disableColumnMenu
-        disableColumnReorder
-        disableColumnResize
-        disableRowSelectionOnClick
-        hideFooter
-        rows={areaAssignees}
-        style={{
-          border: 'none',
-        }}
-      />
-    </Card>
+    <>
+      <Head>
+        <title>{areaAssignmentFuture.data?.title}</title>
+      </Head>
+      <Card>
+        <DataGridPro
+          autoHeight
+          columns={columns}
+          disableColumnFilter
+          disableColumnMenu
+          disableColumnReorder
+          disableColumnResize
+          disableRowSelectionOnClick
+          hideFooter
+          rows={areaAssignees}
+          style={{
+            border: 'none',
+          }}
+        />
+      </Card>
+    </>
   );
 };
 
