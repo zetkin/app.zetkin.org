@@ -40,13 +40,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 }, scaffoldOptions);
 
-interface CanvassAssignmentOutcomesProps {
+interface CanvassAssignmentReportProps {
   orgId: string;
   canvassAssId: string;
 }
 
-const CanvassAssignmentOutcomesPage: PageWithLayout<
-  CanvassAssignmentOutcomesProps
+const CanvassAssignmentReportPage: PageWithLayout<
+  CanvassAssignmentReportProps
 > = ({ orgId, canvassAssId }) => {
   const { updateCanvassAssignment } = useCanvassAssignmentMutations(
     parseInt(orgId),
@@ -301,10 +301,10 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
   );
 };
 
-CanvassAssignmentOutcomesPage.getLayout = function getLayout(page) {
+CanvassAssignmentReportPage.getLayout = function getLayout(page) {
   return (
     <CanvassAssignmentLayout {...page.props}>{page}</CanvassAssignmentLayout>
   );
 };
 
-export default CanvassAssignmentOutcomesPage;
+export default CanvassAssignmentReportPage;
