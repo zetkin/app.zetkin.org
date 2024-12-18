@@ -31,6 +31,14 @@ export const getFirstAndLastEvent = (
  *
  * This is needed because event objects send an offset of +00:00 (UTC Time) from the server.
  * It is not needed if the datetime string coming from the server doesn't contain an offset.
+ *
+ * ```typescript
+ * removeOffset("2000-01-01 00:00:00+00:00") // "2000-01-01 00:00:00"
+ * ```
+ *
+ * @category Time
+ * @param {string} datetime ISO datetime string with +00:00 offset
+ * @return {string} ISO datetime string without the +00:00 offset
  */
 export const removeOffset = (datetime: string): string => {
   return datetime.split('+')[0];
