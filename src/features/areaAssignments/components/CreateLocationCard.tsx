@@ -1,12 +1,12 @@
 import { FC, useState } from 'react';
 import { Box, Button, FormControl, TextField } from '@mui/material';
 
-type AddPlaceDialogProps = {
+type CreateLocationCardProps = {
   onClose: () => void;
   onCreate: (title: string) => void;
 };
 
-export const CreatePlaceCard: FC<AddPlaceDialogProps> = ({
+export const CreateLocationCard: FC<CreateLocationCardProps> = ({
   onClose,
   onCreate,
 }) => {

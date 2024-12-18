@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { ZetkinMetric, ZetkinPlace } from './types';
+import { ZetkinMetric, ZetkinLocation } from './types';
 
 type ZetkinAreaAssignmentModelType = {
   campId: number;
@@ -8,7 +8,7 @@ type ZetkinAreaAssignmentModelType = {
   id: number;
   metrics: (Omit<ZetkinMetric, 'id'> & { _id: string })[];
   orgId: number;
-  reporting_level: 'household' | 'place' | null;
+  reporting_level: 'household' | 'location' | null;
   sessions: {
     areaId: string;
     personId: number;
@@ -17,7 +17,7 @@ type ZetkinAreaAssignmentModelType = {
   title: string | null;
 };
 
-type ZetkinPlaceModelType = Omit<ZetkinPlace, '_id'>;
+type ZetkinLocationModelType = Omit<ZetkinLocation, '_id'>;
 
 const areaAssignmentSchema = new mongoose.Schema<ZetkinAreaAssignmentModelType>(
   {
@@ -51,7 +51,7 @@ const areaAssignmentSchema = new mongoose.Schema<ZetkinAreaAssignmentModelType>(
   }
 );
 
-const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
+const locationSchema = new mongoose.Schema<ZetkinLocationModelType>({
   description: String,
   households: [
     {
@@ -82,10 +82,10 @@ const placeSchema = new mongoose.Schema<ZetkinPlaceModelType>({
   title: String,
 });
 
-export type PlaceVisitModelType = {
+export type LocationVisitModelType = {
   areaAssId: string;
+  locationId: string;
   personId: number;
-  placeId: string;
   responses: {
     metricId: string;
     responseCounts: number[];
@@ -93,10 +93,10 @@ export type PlaceVisitModelType = {
   timestamp: string;
 };
 
-const placeVisitSchema = new mongoose.Schema<PlaceVisitModelType>({
+const locationVisitSchema = new mongoose.Schema<LocationVisitModelType>({
   areaAssId: String,
+  locationId: String,
   personId: Number,
-  placeId: String,
   responses: [
     {
       metricId: String,
@@ -113,10 +113,10 @@ export const AreaAssignmentModel: mongoose.Model<ZetkinAreaAssignmentModelType> 
     areaAssignmentSchema
   );
 
-export const PlaceModel: mongoose.Model<ZetkinPlaceModelType> =
-  mongoose.models.Place ||
-  mongoose.model<ZetkinPlaceModelType>('Place', placeSchema);
+export const LocationModel: mongoose.Model<ZetkinLocationModelType> =
+  mongoose.models.Location ||
+  mongoose.model<ZetkinLocationModelType>('Location', locationSchema);
 
-export const PlaceVisitModel: mongoose.Model<PlaceVisitModelType> =
-  mongoose.models.PlaceVisit ||
-  mongoose.model<PlaceVisitModelType>('PlaceVisit', placeVisitSchema);
+export const LocationVisitModel: mongoose.Model<LocationVisitModelType> =
+  mongoose.models.LocationVisit ||
+  mongoose.model<LocationVisitModelType>('LocationVisit', locationVisitSchema);

@@ -2,17 +2,17 @@ import { Box, Button } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
-import { ZetkinAreaAssignment, ZetkinPlace } from '../types';
-import PlaceDialog from './PlaceDialog';
-import { CreatePlaceCard } from './CreatePlaceCard';
-import ContractedHeader from './PlaceDialog/ContractedHeader';
+import { ZetkinAreaAssignment, ZetkinLocation } from '../types';
+import LocationDialog from './LocationDialog';
+import { CreateLocationCard } from './CreateLocationCard';
+import ContractedHeader from './LocationDialog/ContractedHeader';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
   isCreating: boolean;
   onCreate: (title: string) => void;
   onToggleCreating: (creating: boolean) => void;
-  selectedPlace: ZetkinPlace | null;
+  selectedLocation: ZetkinLocation | null;
 };
 
 const useStyles = makeStyles(() => ({
@@ -33,15 +33,15 @@ const AreaAssignmentMapOverlays: FC<Props> = ({
   isCreating,
   onCreate,
   onToggleCreating,
-  selectedPlace,
+  selectedLocation,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
 
-  const showViewPlaceButton = !!selectedPlace && !expanded;
+  const showViewLocationButton = !!selectedLocation && !expanded;
 
   let drawerTop = '100dvh';
-  if (selectedPlace) {
+  if (selectedLocation) {
     if (expanded) {
       drawerTop = '6rem';
     } else {
@@ -52,14 +52,14 @@ const AreaAssignmentMapOverlays: FC<Props> = ({
   }
 
   useEffect(() => {
-    if (!selectedPlace && expanded) {
+    if (!selectedLocation && expanded) {
       setExpanded(false);
     }
-  }, [selectedPlace]);
+  }, [selectedLocation]);
 
   return (
     <>
-      {!selectedPlace && !isCreating && (
+      {!selectedLocation && !isCreating && (
         <Box className={classes.actionAreaContainer}>
           <Button onClick={() => onToggleCreating(true)} variant="contained">
             Add new place
@@ -79,24 +79,27 @@ const AreaAssignmentMapOverlays: FC<Props> = ({
           zIndex: 10001,
         })}
       >
-        {showViewPlaceButton && (
+        {showViewLocationButton && (
           <Box onClick={() => setExpanded(true)} p={2}>
-            <ContractedHeader assignment={assignment} place={selectedPlace} />
+            <ContractedHeader
+              assignment={assignment}
+              location={selectedLocation}
+            />
           </Box>
         )}
-        {selectedPlace && expanded && (
-          <PlaceDialog
+        {selectedLocation && expanded && (
+          <LocationDialog
             assignment={assignment}
+            location={selectedLocation}
             onClose={() => {
               setExpanded(false);
             }}
             orgId={assignment.organization.id}
-            place={selectedPlace}
           />
         )}
         {isCreating && (
           <Box p={2}>
-            <CreatePlaceCard
+            <CreateLocationCard
               onClose={() => {
                 onToggleCreating(false);
               }}

@@ -33,13 +33,13 @@ const LayerSettings: FC<LayerSettingsProps> = ({
         <FormControl variant="outlined">
           <Box display="flex" gap={1} paddingBottom={1}>
             <Place color="secondary" />
-            <Typography id="place-style-label">
+            <Typography id="location-style-label">
               What the markers represent.
             </Typography>
           </Box>
           <Select
             fullWidth
-            labelId="place-style-label"
+            labelId="location-style-label"
             onChange={(ev) => {
               const newValue = ev.target.value;
               if (
@@ -48,10 +48,10 @@ const LayerSettings: FC<LayerSettingsProps> = ({
                 newValue == 'progress' ||
                 newValue == 'hide'
               ) {
-                onMapStyleChange({ ...mapStyle, place: newValue });
+                onMapStyleChange({ ...mapStyle, location: newValue });
               }
             }}
-            value={mapStyle.place}
+            value={mapStyle.location}
           >
             <MenuItem value="dot">Dot</MenuItem>
             <MenuItem value="households">

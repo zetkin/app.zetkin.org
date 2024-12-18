@@ -17,23 +17,25 @@ import { ZetkinArea } from 'features/geography/types';
 import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignmentSession,
-  ZetkinPlace,
+  ZetkinLocation,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 import useAreaAssignmentSessionMutations from '../hooks/useAreaAssingmentSessionMutations';
 import { useNumericRouteParams } from 'core/hooks';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type Props = {
   areaAssId: string;
   areas: ZetkinArea[];
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
+  locations: ZetkinLocation[];
   onAddAssignee: (person: ZetkinPerson) => void;
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
   onSelectArea: (selectedId: string) => void;
-  places: ZetkinPlace[];
   selectedArea?: ZetkinArea | null;
   selectedAreaStats?: ZetkinAssignmentAreaStatsItem;
   sessions: ZetkinAreaAssignmentSession[];
@@ -48,32 +50,33 @@ const AreaSelect: FC<Props> = ({
   onClose,
   onFilterTextChange,
   onSelectArea,
-  places,
+  locations,
   selectedArea,
   selectedAreaStats,
   sessions,
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { deleteSession } = useAreaAssignmentSessionMutations(orgId, areaAssId);
   const selectedAreaAssignees = sessions
     .filter((session) => session.area.id == selectedArea?.id)
     .map((session) => session.assignee);
 
-  const placesInSelectedArea: ZetkinPlace[] = [];
+  const locationsInSelectedArea: ZetkinLocation[] = [];
   if (selectedArea) {
-    places.map((place) => {
+    locations.map((location) => {
       const isInsideArea = isPointInsidePolygon(
-        place.position,
+        location.position,
         selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
       );
       if (isInsideArea) {
-        placesInSelectedArea.push(place);
+        locationsInSelectedArea.push(location);
       }
     });
   }
 
-  const numberOfHouseholdsInSelectedArea = placesInSelectedArea
-    .map((place) => place.households.length)
+  const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
+    .map((location) => location.households.length)
     .reduce((prev, curr) => prev + curr, 0);
 
   return (
@@ -87,9 +90,11 @@ const AreaSelect: FC<Props> = ({
               </IconButton>
             )}
             <Typography variant="h5">
-              {selectedArea
-                ? selectedArea?.title || 'Untitled area'
-                : 'Find area'}
+              {selectedArea ? (
+                selectedArea?.title || <Msg id={messageIds.default.title} />
+              ) : (
+                <Msg id={messageIds.findArea.title} />
+              )}
             </Typography>
           </Box>
           <IconButton onClick={() => onClose()}>
@@ -111,7 +116,7 @@ const AreaSelect: FC<Props> = ({
               endAdornment: <Search color="secondary" />,
             }}
             onChange={(evt) => onFilterTextChange(evt.target.value)}
-            placeholder="Filter"
+            placeholder={messages.findArea.filterPlaceHolder()}
             sx={{ paddingRight: 2 }}
             value={filterText}
             variant="outlined"
@@ -137,7 +142,9 @@ const AreaSelect: FC<Props> = ({
                     onClick={() => onSelectArea(area.id)}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <Typography>{area.title || 'Untitled area'}</Typography>
+                    <Typography>
+                      {area.title || <Msg id={messageIds.default.title} />}
+                    </Typography>
                     <Box display="flex">
                       {assignees.map((assignee) => (
                         <ZUIAvatar
@@ -173,7 +180,9 @@ const AreaSelect: FC<Props> = ({
                   >
                     {selectedAreaStats.num_successful_visited_households}
                   </Typography>
-                  <Typography textAlign="center">Successful visits</Typography>
+                  <Typography textAlign="center">
+                    <Msg id={messageIds.areaInfo.stats.successful} />
+                  </Typography>
                 </Box>
                 <Box alignItems="center" display="flex" flexDirection="column">
                   <Typography
@@ -184,7 +193,9 @@ const AreaSelect: FC<Props> = ({
                   >
                     {selectedAreaStats.num_visited_households}
                   </Typography>
-                  <Typography textAlign="center">Visited households</Typography>
+                  <Typography textAlign="center">
+                    <Msg id={messageIds.areaInfo.stats.visited} />
+                  </Typography>
                 </Box>
               </>
             )}
@@ -192,13 +203,17 @@ const AreaSelect: FC<Props> = ({
               <Typography color="secondary" variant="h5">
                 {numberOfHouseholdsInSelectedArea}
               </Typography>
-              <Typography textAlign="center">Households</Typography>
+              <Typography textAlign="center">
+                <Msg id={messageIds.areaInfo.stats.households} />
+              </Typography>
             </Box>
             <Box alignItems="center" display="flex" flexDirection="column">
               <Typography color="secondary" variant="h5">
-                {placesInSelectedArea.length}
+                {locationsInSelectedArea.length}
               </Typography>
-              <Typography textAlign="center">Places</Typography>
+              <Typography textAlign="center">
+                <Msg id={messageIds.areaInfo.stats.locations} />
+              </Typography>
             </Box>
           </Box>
           <Typography
@@ -208,10 +223,14 @@ const AreaSelect: FC<Props> = ({
             sx={{ overflowWrap: 'anywhere' }}
           >
             {selectedArea &&
-              (selectedArea?.description?.trim() || 'Empty description')}
+              (selectedArea?.description?.trim() || (
+                <Msg id={messageIds.default.description} />
+              ))}
           </Typography>
           <Box>
-            <Typography variant="h6">Assignees </Typography>
+            <Typography variant="h6">
+              <Msg id={messageIds.areaInfo.assignees.title} />
+            </Typography>
             {!selectedAreaAssignees.length && (
               <Typography
                 color="secondary"
@@ -220,7 +239,7 @@ const AreaSelect: FC<Props> = ({
                 }
                 sx={{ overflowWrap: 'anywhere' }}
               >
-                No assignees
+                <Msg id={messageIds.areaInfo.assignees.none} />
               </Typography>
             )}
             {selectedAreaAssignees.map((assignee) => (
@@ -238,7 +257,9 @@ const AreaSelect: FC<Props> = ({
               </Box>
             ))}
             <Box mt={2}>
-              <Typography variant="h6">Add assignee</Typography>
+              <Typography variant="h6">
+                <Msg id={messageIds.areaInfo.assignees.add} />
+              </Typography>
               <ZUIPersonSelect
                 onChange={function (person: ZetkinPerson): void {
                   onAddAssignee(person);

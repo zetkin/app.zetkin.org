@@ -9,6 +9,19 @@ export default makeMessages('feat.areaAssignments', {
     end: m('End assignment'),
     start: m('Start assignment'),
   },
+  areaInfo: {
+    assignees: {
+      add: m('Add assignee'),
+      none: m('No assignees'),
+      title: m('Assignees'),
+    },
+    stats: {
+      households: m('Households'),
+      locations: m('Locations'),
+      successful: m('Successful visits'),
+      visited: m('Visited'),
+    },
+  },
   basicAssignmentStats: {
     areas: m<{ numAreas: number }>(
       '{numAreas, plural, =0 {No areas} one {1 area} other {# areas}}'
@@ -20,6 +33,10 @@ export default makeMessages('feat.areaAssignments', {
   default: {
     description: m('Empty description'),
     title: m('Untitled area'),
+  },
+  findArea: {
+    filterPlaceHolder: m('Filter'),
+    title: m('Find area'),
   },
   tabs: {
     assignees: m('Assignees'),

@@ -120,7 +120,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                   <MenuItem value="household">
                     Household (more precise)
                   </MenuItem>
-                  <MenuItem value="place">Place (more privacy)</MenuItem>
+                  <MenuItem value="location">Place (more privacy)</MenuItem>
                 </Select>
               </ZUICard>
               <Typography>

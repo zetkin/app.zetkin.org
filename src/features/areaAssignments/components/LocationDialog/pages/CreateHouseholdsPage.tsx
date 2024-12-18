@@ -4,27 +4,27 @@ import { FC, useCallback, useState } from 'react';
 import { DoorFrontOutlined } from '@mui/icons-material';
 
 import PageBase from './PageBase';
-import usePlaceMutations from 'features/areaAssignments/hooks/usePlaceMutations';
+import useLocationMutations from 'features/areaAssignments/hooks/useLocationMutations';
 import IntInput from '../IntInput';
 
 type Props = {
+  locationId: string;
   onBack: () => void;
   onClose: () => void;
   orgId: number;
-  placeId: string;
 };
 
 const CreateHouseholdsPage: FC<Props> = ({
   onBack,
   onClose,
   orgId,
-  placeId,
+  locationId,
 }) => {
   const [numFloors, setNumFloors] = useState(2);
   const [numAptsPerFloor, setNumAptsPerFloor] = useState(3);
   const [creating, setCreating] = useState(false);
   const [scale, setScale] = useState(1);
-  const { addHouseholds } = usePlaceMutations(orgId, placeId);
+  const { addHouseholds } = useLocationMutations(orgId, locationId);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   const updateSize = useCallback(

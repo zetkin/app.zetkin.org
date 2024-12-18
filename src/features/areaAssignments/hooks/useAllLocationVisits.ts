@@ -1,12 +1,10 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { visitsLoad, visitsLoaded } from '../store';
-import { ResolvedFuture } from 'core/caching/futures';
 
-export default function usePlaceVisits(
+export default function useAllLocationVisits(
   orgId: number,
-  assignmentId: string,
-  placeId: string
+  assignmentId: string
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -14,7 +12,7 @@ export default function usePlaceVisits(
     (state) => state.areaAssignments.visitsByAssignmentId[assignmentId]
   );
 
-  const future = loadListIfNecessary(visitList, dispatch, {
+  return loadListIfNecessary(visitList, dispatch, {
     actionOnLoad: () => visitsLoad(assignmentId),
     actionOnSuccess: (items) => visitsLoaded([assignmentId, items]),
     loader: () =>
@@ -22,12 +20,4 @@ export default function usePlaceVisits(
         `/beta/orgs/${orgId}/areaassignments/${assignmentId}/visits`
       ),
   });
-
-  if (future.data) {
-    return new ResolvedFuture(
-      future.data.filter((visit) => visit.placeId == placeId)
-    );
-  }
-
-  return future;
 }

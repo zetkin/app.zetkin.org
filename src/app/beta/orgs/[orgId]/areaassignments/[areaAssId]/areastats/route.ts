@@ -4,14 +4,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AreaModel } from 'features/geography/models';
 import {
   AreaAssignmentModel,
-  PlaceModel,
-  PlaceVisitModel,
-  PlaceVisitModelType,
+  LocationModel,
+  LocationVisitModel,
+  LocationVisitModelType,
 } from 'features/areaAssignments/models';
 import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignmentSession,
-  ZetkinPlace,
+  ZetkinLocation,
 } from 'features/areaAssignments/types';
 import isPointInsidePolygon from 'features/areaAssignments/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
@@ -38,15 +38,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       //Get all areas
       const allAreaModels = await AreaModel.find({ orgId });
 
-      //Get all places
-      const allPlaceModels = await PlaceModel.find({ orgId });
+      //Get all locations
+      const allLocaitonModels = await LocationModel.find({ orgId });
 
       //Get the assignment
       const assignmentModel = await AreaAssignmentModel.findOne({
         _id: params.areaAssId,
       });
 
-      if (!assignmentModel || !allPlaceModels || !allAreaModels) {
+      if (!assignmentModel || !allLocaitonModels || !allAreaModels) {
         return new NextResponse(null, { status: 404 });
       }
 
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         `/api/orgs/${orgId}/people/tags`
       );
 
-      const allPlaces: ZetkinPlace[] = allPlaceModels.map((model) => ({
+      const allLocations: ZetkinLocation[] = allLocaitonModels.map((model) => ({
         description: model.description,
         households: model.households,
         id: model._id.toString(),
@@ -145,25 +145,25 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const areasWithVisitsButNoAssignees: ZetkinArea[] = [];
 
       areasWithoutAssignees.forEach((area) => {
-        allPlaces.forEach((place) => {
-          const placeIsInArea = isPointInsidePolygon(
-            { lat: place.position.lat, lng: place.position.lng },
+        allLocations.forEach((location) => {
+          const locationIsInArea = isPointInsidePolygon(
+            { lat: location.position.lat, lng: location.position.lng },
             area.points.map((point) => ({ lat: point[0], lng: point[1] }))
           );
 
-          if (placeIsInArea) {
-            let placeHasVisits = false;
-            place.households.forEach((household) => {
+          if (locationIsInArea) {
+            let locationHasVisits = false;
+            location.households.forEach((household) => {
               const hasVisitInThisAssignment = household.visits.find(
                 (visit) => visit.areaAssId == params.areaAssId
               );
 
-              if (hasVisitInThisAssignment && !placeHasVisits) {
-                placeHasVisits = true;
+              if (hasVisitInThisAssignment && !locationHasVisits) {
+                locationHasVisits = true;
               }
             });
 
-            if (placeHasVisits) {
+            if (locationHasVisits) {
               areasWithVisitsButNoAssignees.push(area);
             }
           }
@@ -184,31 +184,31 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const statsByAreaId: Record<string, ZetkinAssignmentAreaStatsItem> = {};
 
-      const allPlaceVisits = await PlaceVisitModel.find({
+      const allLocationVisits = await LocationVisitModel.find({
         areaAssId: params.areaAssId,
       });
 
-      const visitsByPlaceId: Record<string, PlaceVisitModelType[]> = {};
-      allPlaceVisits.forEach((visit) => {
-        if (!visitsByPlaceId[visit.placeId]) {
-          visitsByPlaceId[visit.placeId] = [];
+      const visitsByLocationId: Record<string, LocationVisitModelType[]> = {};
+      allLocationVisits.forEach((visit) => {
+        if (!visitsByLocationId[visit.locationId]) {
+          visitsByLocationId[visit.locationId] = [];
         }
 
-        visitsByPlaceId[visit.placeId].push(visit);
+        visitsByLocationId[visit.locationId].push(visit);
       });
 
       uniqueAreas.forEach((area) => {
         statsByAreaId[area.id] = {
           areaId: area.id,
           num_households: 0,
-          num_places: 0,
+          num_locations: 0,
           num_successful_visited_households: 0,
           num_visited_households: 0,
-          num_visited_places: 0,
+          num_visited_locations: 0,
         };
-        allPlaces.forEach((place) => {
-          const placeIsInArea = isPointInsidePolygon(
-            { lat: place.position.lat, lng: place.position.lng },
+        allLocations.forEach((location) => {
+          const locationIsInArea = isPointInsidePolygon(
+            { lat: location.position.lat, lng: location.position.lng },
             area.points.map((point) => ({ lat: point[0], lng: point[1] }))
           );
 
@@ -217,13 +217,13 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
             (metric) => metric.definesDone
           )?._id;
 
-          if (placeIsInArea) {
-            statsByAreaId[area.id].num_places++;
-            statsByAreaId[area.id].num_households += place.households.length;
+          if (locationIsInArea) {
+            statsByAreaId[area.id].num_locations++;
+            statsByAreaId[area.id].num_households += location.households.length;
 
-            let placeVisited = false;
+            let locationVisited = false;
 
-            place.households.forEach((household) => {
+            location.households.forEach((household) => {
               const hasVisitInThisAssignment = household.visits.find(
                 (visit) => visit.areaAssId == params.areaAssId
               );
@@ -231,9 +231,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               if (hasVisitInThisAssignment) {
                 statsByAreaId[area.id].num_visited_households++;
 
-                if (!placeVisited) {
-                  statsByAreaId[area.id].num_visited_places++;
-                  placeVisited = true;
+                if (!locationVisited) {
+                  statsByAreaId[area.id].num_visited_locations++;
+                  locationVisited = true;
                 }
               }
 
@@ -251,8 +251,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               });
             });
 
-            const placeVisits = visitsByPlaceId[place.id] || [];
-            placeVisits.forEach((visit) => {
+            const locationVisits = visitsByLocationId[location.id] || [];
+            locationVisits.forEach((visit) => {
               const numHouseholds = Math.max(
                 ...visit.responses.map((response) =>
                   response.responseCounts.reduce((sum, count) => sum + count, 0)
@@ -267,7 +267,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               statsByAreaId[area.id].num_successful_visited_households +=
                 numSuccessful;
               statsByAreaId[area.id].num_visited_households += numHouseholds;
-              statsByAreaId[area.id].num_visited_places += 1;
+              statsByAreaId[area.id].num_visited_locations += 1;
             });
           }
         });

@@ -1,9 +1,9 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
-  placesInvalidated,
-  placesLoad,
-  placesLoaded,
+  locationsInvalidated,
+  locationsLoad,
+  locationsLoaded,
   visitsInvalidated,
   visitsLoad,
   visitsLoaded,
@@ -16,13 +16,13 @@ type UseSidebarReturn = {
   stats: {
     allTime: {
       numHouseholds: number;
-      numPlaces: number;
+      numLocations: number;
     };
     today: {
       numHouseholds: number;
-      numPlaces: number;
+      numLocations: number;
       numUserHouseholds: number;
-      numUserPlaces: number;
+      numUserLocations: number;
     };
   };
   sync: () => void;
@@ -35,7 +35,9 @@ export default function useSidebarStats(
 ): UseSidebarReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const placeList = useAppSelector((state) => state.areaAssignments.placeList);
+  const locationList = useAppSelector(
+    (state) => state.areaAssignments.locationList
+  );
   const visitList = useAppSelector(
     (state) => state.areaAssignments.visitsByAssignmentId[assignmentId]
   );
@@ -43,10 +45,10 @@ export default function useSidebarStats(
   const membershipFuture = useMembership(orgId);
   const userPersonId = membershipFuture.data?.profile.id;
 
-  const placeListFuture = loadListIfNecessary(placeList, dispatch, {
-    actionOnLoad: () => placesLoad(),
-    actionOnSuccess: (items) => placesLoaded(items),
-    loader: () => apiClient.get(`/beta/orgs/${orgId}/places`),
+  const locationListFuture = loadListIfNecessary(locationList, dispatch, {
+    actionOnLoad: () => locationsLoad(),
+    actionOnSuccess: (items) => locationsLoaded(items),
+    loader: () => apiClient.get(`/beta/orgs/${orgId}/locations`),
   });
 
   const visitListFuture = loadListIfNecessary(visitList, dispatch, {
@@ -61,19 +63,19 @@ export default function useSidebarStats(
   const stats = {
     allTime: {
       numHouseholds: 0,
-      numPlaces: 0,
+      numLocations: 0,
     },
     today: {
       numHouseholds: 0,
-      numPlaces: 0,
+      numLocations: 0,
       numUserHouseholds: 0,
-      numUserPlaces: 0,
+      numUserLocations: 0,
     },
   };
 
-  const userPlacesToday = new Set<string>();
-  const teamPlacesToday = new Set<string>();
-  const teamPlaces = new Set<string>();
+  const userLocationsToday = new Set<string>();
+  const teamLocationsToday = new Set<string>();
+  const teamLocations = new Set<string>();
 
   const userHouseholdsToday = new Set<string>();
   const teamHouseholdsToday = new Set<string>();
@@ -81,9 +83,9 @@ export default function useSidebarStats(
 
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  if (placeListFuture.data) {
-    placeListFuture.data.forEach((place) => {
-      place.households.forEach((household) => {
+  if (locationListFuture.data) {
+    locationListFuture.data.forEach((location) => {
+      location.households.forEach((household) => {
         household.visits.forEach((visit) => {
           if (visit.areaAssId == assignmentId) {
             teamHouseholds.add(household.id);
@@ -109,31 +111,31 @@ export default function useSidebarStats(
     visitListFuture.data.forEach((visit) => {
       const numHouseholds = estimateVisitedHouseholds(visit);
 
-      teamPlaces.add(visit.placeId);
+      teamLocations.add(visit.locationId);
       stats.allTime.numHouseholds += numHouseholds;
 
       if (visit.timestamp.startsWith(todayStr)) {
-        teamPlacesToday.add(visit.placeId);
+        teamLocationsToday.add(visit.locationId);
         stats.today.numHouseholds += numHouseholds;
 
         if (visit.personId == userPersonId) {
-          userPlacesToday.add(visit.placeId);
+          userLocationsToday.add(visit.locationId);
           stats.today.numUserHouseholds += numHouseholds;
         }
       }
     });
   }
 
-  stats.allTime.numPlaces = teamPlaces.size;
-  stats.today.numPlaces = teamPlacesToday.size;
-  stats.today.numUserPlaces = userPlacesToday.size;
+  stats.allTime.numLocations = teamLocations.size;
+  stats.today.numLocations = teamLocationsToday.size;
+  stats.today.numUserLocations = userLocationsToday.size;
 
   return {
-    loading: placeListFuture.isLoading || visitListFuture.isLoading,
+    loading: locationListFuture.isLoading || visitListFuture.isLoading,
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
-      dispatch(placesInvalidated());
+      dispatch(locationsInvalidated());
     },
     synced: visitList?.loaded || null,
   };

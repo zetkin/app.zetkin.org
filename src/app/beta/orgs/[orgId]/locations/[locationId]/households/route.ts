@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { PlaceModel } from 'features/areaAssignments/models';
+import { LocationModel } from 'features/areaAssignments/models';
 import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
   params: {
+    locationId: string;
     orgId: string;
-    placeId: string;
   };
 };
 
-export async function PATCH(request: NextRequest, { params }: RouteMeta) {
+export async function POST(request: NextRequest, { params }: RouteMeta) {
   return asAreaAssigneeAuthorized(
     {
       orgId: params.orgId,
@@ -22,14 +22,22 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const model = await PlaceModel.findOneAndUpdate(
-        { _id: params.placeId, orgId },
+      const model = await LocationModel.findOneAndUpdate(
+        { _id: params.locationId, orgId },
         {
-          description: payload.description,
-          households: payload.households,
-          position: payload.position,
-          title: payload.title,
-          type: payload.type,
+          $push: {
+            households: {
+              $each: [
+                {
+                  id: new mongoose.Types.ObjectId().toString(),
+                  ratings: [],
+                  title: payload.title,
+                  visits: [],
+                },
+              ],
+              $position: 0,
+            },
+          },
         },
         { new: true }
       );
@@ -37,6 +45,8 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       if (!model) {
         return new NextResponse(null, { status: 404 });
       }
+
+      await model.save();
 
       return NextResponse.json({
         data: {

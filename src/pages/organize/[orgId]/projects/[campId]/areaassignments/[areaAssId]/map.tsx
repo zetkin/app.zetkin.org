@@ -12,7 +12,7 @@ import useServerSide from 'core/useServerSide';
 import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
 import useCreateAreaAssignmentSession from 'features/areaAssignments/hooks/useCreateAreaAssigneeSession';
 import { AREAS } from 'utils/featureFlags';
-import usePlaces from 'features/areaAssignments/hooks/usePlaces';
+import useLocations from 'features/areaAssignments/hooks/useLocations';
 import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
@@ -49,7 +49,7 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
   orgId,
 }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
-  const places = usePlaces(parseInt(orgId)).data || [];
+  const locations = useLocations(parseInt(orgId)).data || [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const sessionsFuture = useAreaAssignmentSessions(parseInt(orgId), areaAssId);
   const createAreaAssignmentSession = useCreateAreaAssignmentSession(
@@ -84,13 +84,13 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
                   areas={areas}
                   areaStats={areaStats}
                   assignment={assignment}
+                  locations={locations}
                   onAddAssigneeToArea={(area, person) => {
                     createAreaAssignmentSession({
                       areaId: area.id,
                       personId: person.id,
                     });
                   }}
-                  places={places}
                   sessions={sessions}
                 />
               </AssigneeFilterProvider>

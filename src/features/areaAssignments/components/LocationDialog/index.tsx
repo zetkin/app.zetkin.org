@@ -2,53 +2,53 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 
 import VisitWizard from './pages/VisitWizard';
-import EditPlace from './pages/EditPlace';
-import Place from './pages/Place';
+import EditLocation from './pages/EditLocation';
+import Location from './pages/Location';
 import Household from './pages/Household';
 import {
   ZetkinAreaAssignment,
-  ZetkinPlace,
+  ZetkinLocation,
 } from 'features/areaAssignments/types';
-import usePlaceMutations from 'features/areaAssignments/hooks/usePlaceMutations';
+import useLocationMutations from 'features/areaAssignments/hooks/useLocationMutations';
 import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
 import EncouragingSparkle from '../EncouragingSparkle';
-import PlaceVisitPage from './pages/PlaceVisitPage';
+import LocationVisitPage from './pages/LocationVisitPage';
 import HouseholdsPage from './pages/HouseholdsPage';
 
-type PlaceDialogProps = {
+type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
+  location: ZetkinLocation;
   onClose: () => void;
   orgId: number;
-  place: ZetkinPlace;
 };
 
-type PlaceDialogStep =
-  | 'place'
+type LocationDialogStep =
+  | 'location'
   | 'edit'
   | 'createHouseholds'
   | 'households'
   | 'household'
   | 'editHousehold'
-  | 'placeVisit'
+  | 'locationVisit'
   | 'wizard';
 
-const PlaceDialog: FC<PlaceDialogProps> = ({
+const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
   onClose,
   orgId,
-  place,
+  location,
 }) => {
-  const [dialogStep, setDialogStep] = useState<PlaceDialogStep>('place');
+  const [dialogStep, setDialogStep] = useState<LocationDialogStep>('location');
   const [showSparkle, setShowSparkle] = useState(false);
-  const { addVisit, reportPlaceVisit, updateHousehold, updatePlace } =
-    usePlaceMutations(orgId, place.id);
+  const { addVisit, reportLocationVisit, updateHousehold, updateLocation } =
+    useLocationMutations(orgId, location.id);
 
   const pushedRef = useRef(false);
 
   const goto = useCallback(
-    (step: PlaceDialogStep) => {
+    (step: LocationDialogStep) => {
       setDialogStep(step);
       history.pushState({ step: step }, '', `?step=${step}`);
     },
@@ -80,7 +80,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   useEffect(() => {
     if (!pushedRef.current) {
       pushedRef.current = true;
-      goto('place');
+      goto('location');
     }
   }, []);
 
@@ -88,7 +88,7 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
     null
   );
 
-  const selectedHousehold = place.households.find(
+  const selectedHousehold = location.households.find(
     (household) => household.id == selectedHouseholdId
   );
 
@@ -98,27 +98,28 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         <EncouragingSparkle onComplete={() => setShowSparkle(false)} />
       )}
       <ZUINavStack bgcolor="white" currentPage={dialogStep}>
-        <Place
-          key="place"
+        <Location
+          key="location"
           assignment={assignment}
+          location={location}
           onClose={onClose}
           onEdit={() => goto('edit')}
           onHouseholds={() => goto('households')}
-          onVisit={() => goto('placeVisit')}
-          place={place}
+          onVisit={() => goto('locationVisit')}
         />
-        <EditPlace
+        <EditLocation
           key="edit"
+          location={location}
           onBack={() => back()}
           onClose={onClose}
           onSave={async (title, description) => {
-            await updatePlace({ description, title });
+            await updateLocation({ description, title });
             back();
           }}
-          place={place}
         />
         <HouseholdsPage
           key="households"
+          location={location}
           onBack={() => back()}
           onBulk={() => goto('createHouseholds')}
           onClose={onClose}
@@ -131,7 +132,6 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             goto('household');
           }}
           orgId={orgId}
-          place={place}
         />
         <Box key="household" height="100%">
           {selectedHousehold && (
@@ -151,10 +151,10 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
         </Box>
         <Box key="createHouseholds" height="100%">
           <CreateHouseholdsPage
+            locationId={location.id}
             onBack={() => back()}
             onClose={onClose}
             orgId={orgId}
-            placeId={place.id}
           />
         </Box>
         <Box key="editHousehold" height="100%">
@@ -170,16 +170,16 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
             />
           )}
         </Box>
-        <Box key="placeVisit" height="100%">
-          <PlaceVisitPage
-            active={dialogStep == 'placeVisit'}
+        <Box key="locationVisit" height="100%">
+          <LocationVisitPage
+            active={dialogStep == 'locationVisit'}
             assignment={assignment}
             onBack={() => back()}
             onClose={onClose}
             onLogVisit={async (responses) => {
-              await reportPlaceVisit(assignment.id, {
+              await reportLocationVisit(assignment.id, {
                 areaAssId: assignment.id,
-                placeId: place.id,
+                locationId: location.id,
                 responses,
               });
               setShowSparkle(true);
@@ -210,4 +210,4 @@ const PlaceDialog: FC<PlaceDialogProps> = ({
   );
 };
 
-export default PlaceDialog;
+export default LocationDialog;

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import {
   AreaAssignmentModel,
-  PlaceVisitModel,
+  LocationVisitModel,
 } from 'features/areaAssignments/models';
 import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
 
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         return NextResponse.json({ error: {} }, { status: 404 });
       }
 
-      const visitModels = await PlaceVisitModel.find({
+      const visitModels = await LocationVisitModel.find({
         areaAssId: areaAssId,
       });
 
@@ -41,8 +41,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         data: visitModels.map((model) => ({
           areaAssId: model.areaAssId,
           id: model._id.toString(),
+          locationId: model.locationId,
           personId: model.personId,
-          placeId: model.placeId,
           responses: model.responses,
           timestamp: model.timestamp,
         })),
@@ -72,10 +72,10 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const visit = new PlaceVisitModel({
+      const visit = new LocationVisitModel({
         areaAssId,
+        locationId: payload.locationId,
         personId: personId,
-        placeId: payload.placeId,
         responses: payload.responses,
         timestamp: new Date().toISOString(),
       });
@@ -86,8 +86,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         data: {
           areaAssId: visit.areaAssId,
           id: visit._id.toString(),
+          locationId: visit.locationId,
           personId: visit.personId,
-          placeId: visit.placeId,
           responses: visit.responses,
           timestamp: visit.timestamp,
         },

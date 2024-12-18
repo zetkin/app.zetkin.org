@@ -25,7 +25,7 @@ export type ZetkinAreaAssignment = {
   organization: {
     id: number;
   };
-  reporting_level: 'household' | 'place';
+  reporting_level: 'household' | 'location';
   start_date: string | null;
   title: string | null;
 };
@@ -65,7 +65,7 @@ export type Household = {
 
 export type HouseholdPatchBody = Partial<Omit<Household, 'id'>>;
 
-export type ZetkinPlace = {
+export type ZetkinLocation = {
   description: string | null;
   households: Household[];
   id: string;
@@ -74,11 +74,11 @@ export type ZetkinPlace = {
   title: string | null;
 };
 
-export type ZetkinPlaceVisit = {
+export type ZetkinLocationVisit = {
   areaAssId: string;
   id: string;
+  locationId: string;
   personId: number;
-  placeId: string;
   responses: {
     metricId: string;
     responseCounts: number[];
@@ -86,17 +86,17 @@ export type ZetkinPlaceVisit = {
   timestamp: string;
 };
 
-export type ZetkinPlaceVisitPostBody = Omit<
-  ZetkinPlaceVisit,
+export type ZetkinLocationVisitPostBody = Omit<
+  ZetkinLocationVisit,
   'id' | 'timestamp' | 'personId'
 >;
 
-export type ZetkinPlacePostBody = Partial<
-  Omit<ZetkinPlace, 'id' | 'households'>
+export type ZetkinLocationPostBody = Partial<
+  Omit<ZetkinLocation, 'id' | 'households'>
 >;
 
-export type ZetkinPlacePatchBody = Partial<
-  Omit<ZetkinPlace, 'id' | 'households'>
+export type ZetkinLocationPatchBody = Partial<
+  Omit<ZetkinLocation, 'id' | 'households'>
 > & {
   households?: Partial<Omit<Household, 'id' | 'visits'>> &
     { visits?: Partial<Omit<Visit, 'id'>>[] }[];
@@ -120,22 +120,22 @@ export type ZetkinAreaAssignmentStats = {
   }[];
   num_areas: number;
   num_households: number;
-  num_places: number;
+  num_locations: number;
   num_successful_visited_households: number;
   num_visited_areas: number;
   num_visited_households: number;
   num_visited_households_outside_areas: number;
-  num_visited_places: number;
-  num_visited_places_outside_areas: number;
+  num_visited_locations: number;
+  num_visited_locations_outside_areas: number;
 };
 
 export type ZetkinAssignmentAreaStatsItem = {
   areaId: string;
   num_households: number;
-  num_places: number;
+  num_locations: number;
   num_successful_visited_households: number;
   num_visited_households: number;
-  num_visited_places: number;
+  num_visited_locations: number;
 };
 
 export type ZetkinAssignmentAreaStats = {

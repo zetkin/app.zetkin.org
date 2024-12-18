@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { PlaceModel } from 'features/areaAssignments/models';
+import { LocationModel } from 'features/areaAssignments/models';
 import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
   params: {
     householdId: string;
+    locationId: string;
     orgId: string;
-    placeId: string;
   };
 };
 
@@ -23,8 +23,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const model = await PlaceModel.findOneAndUpdate(
-        { _id: params.placeId, orgId },
+      const model = await LocationModel.findOneAndUpdate(
+        { _id: params.locationId, orgId },
         {
           $push: {
             'households.$[elem].visits': {

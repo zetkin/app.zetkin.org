@@ -10,65 +10,68 @@ import { FC } from 'react';
 
 import {
   ZetkinAreaAssignment,
-  ZetkinPlace,
+  ZetkinLocation,
 } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
-import usePlaceVisits from 'features/areaAssignments/hooks/usePlaceVisits';
+import uselocationVisits from 'features/areaAssignments/hooks/useLocationVisits';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import estimateVisitedHouseholds from 'features/areaAssignments/utils/estimateVisitedHouseholds';
 
-type PlaceProps = {
+type LocationProps = {
   assignment: ZetkinAreaAssignment;
+  location: ZetkinLocation;
   onClose: () => void;
   onEdit: () => void;
   onHouseholds: () => void;
   onVisit: () => void;
-  place: ZetkinPlace;
 };
 
-const Place: FC<PlaceProps> = ({
+const Location: FC<LocationProps> = ({
   assignment,
   onClose,
   onEdit,
   onHouseholds,
   onVisit,
-  place,
+  location,
 }) => {
-  const visitsFuture = usePlaceVisits(
+  const visitsFuture = uselocationVisits(
     assignment.organization.id,
     assignment.id,
-    place.id
+    location.id
   );
 
   const numHouseholdsVisitedIndividually =
-    place?.households.filter((household) =>
+    location?.households.filter((household) =>
       household.visits.some((visit) => visit.areaAssId == assignment.id)
     ).length ?? 0;
 
-  const numHouseholdsPerPlaceVisit =
+  const numHouseholdsPerLocationVisit =
     visitsFuture.data?.map(estimateVisitedHouseholds) ?? [];
 
   const numVisitedHouseholds = Math.max(
     numHouseholdsVisitedIndividually,
-    ...numHouseholdsPerPlaceVisit
+    ...numHouseholdsPerLocationVisit
   );
 
-  const numHouseholds = Math.max(place.households.length, numVisitedHouseholds);
+  const numHouseholds = Math.max(
+    location.households.length,
+    numVisitedHouseholds
+  );
 
   return (
     <PageBase
       onClose={onClose}
       onEdit={onEdit}
-      title={place.title || 'Untitled place'}
+      title={location.title || 'Untitled place'}
     >
       <Box>
         <Typography
           color="secondary"
           onClick={onEdit}
-          sx={{ fontStyle: place.description ? 'normal' : 'italic' }}
+          sx={{ fontStyle: location.description ? 'normal' : 'italic' }}
         >
-          {place.description || 'Empty description'}
+          {location.description || 'Empty description'}
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" flexDirection="column" my={3}>
@@ -87,7 +90,7 @@ const Place: FC<PlaceProps> = ({
         )}
       </Box>
       <Box display="flex" gap={1} justifyContent="center" m={4}>
-        {assignment.reporting_level == 'place' && (
+        {assignment.reporting_level == 'location' && (
           <Button onClick={onVisit} variant="contained">
             Quick-report
           </Button>
@@ -130,4 +133,4 @@ const Place: FC<PlaceProps> = ({
   );
 };
 
-export default Place;
+export default Location;

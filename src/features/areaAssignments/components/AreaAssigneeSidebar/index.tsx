@@ -65,16 +65,16 @@ const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
         <Box textAlign="right">
           <Typography variant="h5">{stats.today.numUserHouseholds}</Typography>
         </Box>
-        <Box textAlign="right">{stats.today.numUserPlaces}</Box>
+        <Box textAlign="right">{stats.today.numUserLocations}</Box>
         <Box>Team</Box>
         <Box textAlign="right">{stats.today.numHouseholds}</Box>
-        <Box textAlign="right">{stats.today.numPlaces}</Box>
+        <Box textAlign="right">{stats.today.numLocations}</Box>
         <Box gridColumn="span 3">
           <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
         </Box>
         <Box>All time</Box>
         <Box textAlign="right">{stats.allTime.numHouseholds}</Box>
-        <Box textAlign="right">{stats.allTime.numPlaces}</Box>
+        <Box textAlign="right">{stats.allTime.numLocations}</Box>
         <Box
           sx={{
             alignItems: 'center',

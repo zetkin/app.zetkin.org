@@ -14,7 +14,7 @@ import PageBase from './PageBase';
 import IntInput from '../IntInput';
 import {
   ZetkinAreaAssignment,
-  ZetkinPlaceVisit,
+  ZetkinLocationVisit,
 } from 'features/areaAssignments/types';
 
 type Props = {
@@ -22,10 +22,10 @@ type Props = {
   assignment: ZetkinAreaAssignment;
   onBack: () => void;
   onClose: () => void;
-  onLogVisit: (responses: ZetkinPlaceVisit['responses']) => Promise<void>;
+  onLogVisit: (responses: ZetkinLocationVisit['responses']) => Promise<void>;
 };
 
-const PlaceVisitPage: FC<Props> = ({
+const LocationVisitPage: FC<Props> = ({
   active,
   assignment,
   onBack,
@@ -288,4 +288,4 @@ const PlaceVisitPage: FC<Props> = ({
   );
 };
 
-export default PlaceVisitPage;
+export default LocationVisitPage;

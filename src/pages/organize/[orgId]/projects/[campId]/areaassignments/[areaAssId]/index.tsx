@@ -106,9 +106,9 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                       />
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
-                        firstNumber={stats.num_visited_places}
+                        firstNumber={stats.num_visited_locations}
                         message={'Places visited'}
-                        secondNumber={stats.num_places}
+                        secondNumber={stats.num_locations}
                       />
                     </Box>
                   </Card>
@@ -172,10 +172,10 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                           const noArea: ZetkinAssignmentAreaStatsItem = {
                             areaId: 'noArea',
                             num_households: 0,
-                            num_places: 0,
+                            num_locations: 0,
                             num_successful_visited_households,
                             num_visited_households,
-                            num_visited_places: 0,
+                            num_visited_locations: 0,
                           };
                           sortedAreas.push(noArea);
                         }

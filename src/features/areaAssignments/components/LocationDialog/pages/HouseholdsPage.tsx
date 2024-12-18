@@ -13,18 +13,18 @@ import {
 import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
-import { Household, ZetkinPlace } from 'features/areaAssignments/types';
-import usePlaceMutations from 'features/areaAssignments/hooks/usePlaceMutations';
+import { Household, ZetkinLocation } from 'features/areaAssignments/types';
+import useLocationMutations from 'features/areaAssignments/hooks/useLocationMutations';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type Props = {
+  location: ZetkinLocation;
   onBack: () => void;
   onBulk: () => void;
   onClose: () => void;
   onCreateHousehold: (householdId: Household) => void;
   onSelectHousehold: (householdId: string) => void;
   orgId: number;
-  place: ZetkinPlace;
 };
 
 const HouseholdsPage: FC<Props> = ({
@@ -34,12 +34,12 @@ const HouseholdsPage: FC<Props> = ({
   onCreateHousehold,
   onSelectHousehold,
   orgId,
-  place,
+  location,
 }) => {
   const [adding, setAdding] = useState(false);
-  const { addHousehold } = usePlaceMutations(orgId, place.id);
+  const { addHousehold } = useLocationMutations(orgId, location.id);
 
-  const sortedHouseholds = place.households.concat().sort((h0, h1) => {
+  const sortedHouseholds = location.households.concat().sort((h0, h1) => {
     const floor0 = h0.floor ?? Infinity;
     const floor1 = h1.floor ?? Infinity;
 
@@ -50,11 +50,11 @@ const HouseholdsPage: FC<Props> = ({
     <PageBase
       onBack={onBack}
       onClose={onClose}
-      subtitle={place.title || 'Untitled place'}
+      subtitle={location.title || 'Untitled place'}
       title="Households"
     >
       <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
-        {place.households.length == 0 && (
+        {location.households.length == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             This place does not contain data about any households yet.
           </Typography>

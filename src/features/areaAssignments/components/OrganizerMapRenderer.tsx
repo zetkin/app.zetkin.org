@@ -16,23 +16,23 @@ import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignment,
   ZetkinAreaAssignmentSession,
-  ZetkinPlace,
+  ZetkinLocation,
 } from '../types';
 import { ZetkinArea } from 'features/geography/types';
 import objToLatLng from 'features/geography/utils/objToLatLng';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 
-const PlaceMarker: FC<{
+const LocationMarker: FC<{
   areaAssId: string;
   idOfMetricThatDefinesDone: string;
-  place: ZetkinPlace;
-  placeStyle: 'dot' | 'households' | 'progress';
-}> = ({ areaAssId, idOfMetricThatDefinesDone, place, placeStyle }) => {
+  location: ZetkinLocation;
+  locationStyle: 'dot' | 'households' | 'progress';
+}> = ({ areaAssId, idOfMetricThatDefinesDone, location, locationStyle }) => {
   const theme = useTheme();
-  if (placeStyle == 'dot') {
+  if (locationStyle == 'dot') {
     return (
-      <DivIconMarker iconAnchor={[2, 2]} position={place.position}>
+      <DivIconMarker iconAnchor={[2, 2]} position={location.position}>
         <Box
           bgcolor={theme.palette.text.primary}
           borderRadius="2em"
@@ -41,9 +41,9 @@ const PlaceMarker: FC<{
         />
       </DivIconMarker>
     );
-  } else if (placeStyle == 'households') {
+  } else if (locationStyle == 'households') {
     return (
-      <DivIconMarker iconAnchor={[6, 22]} position={place.position}>
+      <DivIconMarker iconAnchor={[6, 22]} position={location.position}>
         <Box
           alignItems="center"
           display="flex"
@@ -63,7 +63,7 @@ const PlaceMarker: FC<{
             paddingX="2px"
             width="100%"
           >
-            {place.households.length}
+            {location.households.length}
           </Box>
           <div
             style={{
@@ -81,7 +81,7 @@ const PlaceMarker: FC<{
   } else {
     let visits = 0;
     let successfulVisits = 0;
-    place.households.forEach((household) => {
+    location.households.forEach((household) => {
       const visitInThisAssignment = household.visits.find(
         (visit) => visit.areaAssId == areaAssId
       );
@@ -100,11 +100,11 @@ const PlaceMarker: FC<{
     });
 
     const successfulVisitsColorPercent =
-      (successfulVisits / place.households.length) * 100;
-    const visitsColorPercent = (visits / place.households.length) * 100;
+      (successfulVisits / location.households.length) * 100;
+    const visitsColorPercent = (visits / location.households.length) * 100;
 
     return (
-      <DivIconMarker iconAnchor={[6, 24]} position={place.position}>
+      <DivIconMarker iconAnchor={[6, 24]} position={location.position}>
         <Box alignItems="center" display="flex" flexDirection="column">
           <Box
             alignItems="center"
@@ -160,11 +160,11 @@ type OrganizerMapRendererProps = {
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
+  locationStyle: 'dot' | 'households' | 'progress' | 'hide';
+  locations: ZetkinLocation[];
   navigateToAreaId?: string;
   onSelectedIdChange: (newId: string) => void;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
-  placeStyle: 'dot' | 'households' | 'progress' | 'hide';
-  places: ZetkinPlace[];
   selectedId: string;
   sessions: ZetkinAreaAssignmentSession[];
 };
@@ -175,13 +175,13 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areaStyle,
   assignment,
   areaAssId,
+  locations,
   selectedId,
   sessions,
   navigateToAreaId,
   onSelectedIdChange,
   overlayStyle,
-  placeStyle,
-  places,
+  locationStyle,
 }) => {
   const theme = useTheme();
   const reactFGref = useRef<FeatureGroupType | null>(null);
@@ -255,29 +255,29 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
         } ${visitsColorPercent || 1}%)`;
   };
 
-  const placesByAreaId: Record<string, ZetkinPlace[]> = {};
+  const locationsByAreaId: Record<string, ZetkinLocation[]> = {};
   areas.forEach((area) => {
-    placesByAreaId[area.id] = [];
+    locationsByAreaId[area.id] = [];
 
-    places.forEach((place) => {
+    locations.forEach((location) => {
       const isInsideArea = isPointInsidePolygon(
-        place.position,
+        location.position,
         area.points.map((point) => ({
           lat: point[0],
           lng: point[1],
         }))
       );
       if (isInsideArea) {
-        placesByAreaId[area.id].push(place);
+        locationsByAreaId[area.id].push(location);
       }
     });
   });
 
   let highestHousholds = 0;
-  Object.keys(placesByAreaId).forEach((id) => {
+  Object.keys(locationsByAreaId).forEach((id) => {
     let numberOfHouseholdsInArea = 0;
-    placesByAreaId[id].forEach((place) => {
-      numberOfHouseholdsInArea += place.households.length;
+    locationsByAreaId[id].forEach((location) => {
+      numberOfHouseholdsInArea += location.households.length;
     });
 
     if (numberOfHouseholdsInArea > highestHousholds) {
@@ -377,10 +377,10 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             );
 
             let numberOfHouseholds = 0;
-            placesByAreaId[area.id].forEach(
-              (place) => (numberOfHouseholds += place.households.length)
+            locationsByAreaId[area.id].forEach(
+              (location) => (numberOfHouseholds += location.households.length)
             );
-            const numberOfPlaces = placesByAreaId[area.id].length;
+            const numberOfLocations = locationsByAreaId[area.id].length;
 
             const householdColorPercent =
               (numberOfHouseholds / highestHousholds) * 100;
@@ -409,7 +409,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       padding="2px 6px"
                       sx={{ translate: '-50% -50%' }}
                     >
-                      <Typography fontSize="11px">{numberOfPlaces}</Typography>
+                      <Typography fontSize="11px">
+                        {numberOfLocations}
+                      </Typography>
                       <Divider />
                       <Typography fontSize="11px">
                         {numberOfHouseholds}
@@ -552,13 +554,13 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               </>
             );
           })}
-        {placeStyle != 'hide' &&
-          places.map((place) => {
-            //Find ids of area/s that the place is in
+        {locationStyle != 'hide' &&
+          locations.map((location) => {
+            //Find ids of area/s that the location is in
             const areaIds: string[] = [];
             areas.forEach((area) => {
               const isInsideArea = isPointInsidePolygon(
-                place.position,
+                location.position,
                 area.points.map((point) => ({
                   lat: point[0],
                   lng: point[1],
@@ -586,17 +588,17 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               }
             }
 
-            //Check if the place has housholds with visits in this assignment
-            const hasVisitsInThisAssignment = place.households.some(
+            //Check if the location has housholds with visits in this assignment
+            const hasVisitsInThisAssignment = location.households.some(
               (household) =>
                 !!household.visits.find((visit) => visit.areaAssId == areaAssId)
             );
 
-            //If user wants to see progress of places,
-            //don't show places outside of assigned areas
+            //If user wants to see progress of locations,
+            //don't show locations outside of assigned areas
             //unless they have visits in this assignment
             const hideFromProgressView =
-              placeStyle == 'progress' &&
+              locationStyle == 'progress' &&
               !idOfAreaInThisAssignment &&
               !hasVisitsInThisAssignment;
 
@@ -605,15 +607,15 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             }
 
             return (
-              <PlaceMarker
-                key={place.id}
+              <LocationMarker
+                key={location.id}
                 areaAssId={areaAssId}
                 idOfMetricThatDefinesDone={
                   assignment.metrics.find((metric) => metric.definesDone)?.id ||
                   ''
                 }
-                place={place}
-                placeStyle={placeStyle}
+                location={location}
+                locationStyle={locationStyle}
               />
             );
           })}

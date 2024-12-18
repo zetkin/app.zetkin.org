@@ -20,7 +20,7 @@ import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignment,
   ZetkinAreaAssignmentSession,
-  ZetkinPlace,
+  ZetkinLocation,
 } from '../types';
 import objToLatLng from 'features/geography/utils/objToLatLng';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
@@ -31,21 +31,23 @@ import LayerSettings from './LayerSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/geography/components/AreaFilters/AreaFilterContext';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type OrganizerMapProps = {
   areaAssId: string;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
+  locations: ZetkinLocation[];
   onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
-  places: ZetkinPlace[];
   sessions: ZetkinAreaAssignmentSession[];
 };
 
 export type MapStyle = {
   area: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
+  location: 'dot' | 'households' | 'progress' | 'hide';
   overlay: 'assignees' | 'households' | 'progress' | 'hide';
-  place: 'dot' | 'households' | 'progress' | 'hide';
 };
 
 const OrganizerMap: FC<OrganizerMapProps> = ({
@@ -54,15 +56,16 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   assignment,
   areaAssId,
   onAddAssigneeToArea,
-  places,
+  locations,
   sessions,
 }) => {
+  const messages = useMessages(messageIds);
   const [mapStyle, setMapStyle] = useLocalStorage<MapStyle>(
     `mapStyle-${areaAssId}`,
     {
       area: 'assignees',
+      location: 'dot',
       overlay: 'assignees',
-      place: 'dot',
     }
   );
 
@@ -89,8 +92,8 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
       inputValue.length == 0
         ? areas.concat()
         : areas.filter((area) => {
-            const areaTitle = area.title || 'Untitled area';
-            const areaDesc = area.description || 'Empty description';
+            const areaTitle = area.title || messages.default.title();
+            const areaDesc = area.description || messages.default.description();
 
             return (
               areaTitle.toLowerCase().includes(inputValue) ||
@@ -233,6 +236,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 areas={areas}
                 filterAreas={filterAreas}
                 filterText={filterText}
+                locations={locations}
                 onAddAssignee={(person) => {
                   if (selectedArea) {
                     onAddAssigneeToArea(selectedArea, person);
@@ -241,7 +245,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 onClose={clearAndCloseSettings}
                 onFilterTextChange={(newValue) => setFilterText(newValue)}
                 onSelectArea={(newValue) => setSelectedId(newValue)}
-                places={places}
                 selectedArea={selectedArea}
                 selectedAreaStats={areaStats.stats.find(
                   (stat) => stat.areaId == selectedArea?.id
@@ -297,6 +300,8 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             areaStats={areaStats}
             areaStyle={mapStyle.area}
             assignment={assignment}
+            locations={locations}
+            locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {
               setSelectedId(newId);
 
@@ -307,8 +312,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               }
             }}
             overlayStyle={mapStyle.overlay}
-            places={places}
-            placeStyle={mapStyle.place}
             selectedId={selectedId}
             sessions={sessions}
           />

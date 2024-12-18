@@ -270,7 +270,7 @@ const AreaCard: FC<AreaCardProps> = ({
                       }
                       variant="h6"
                     >
-                      {area.num_visited_places}
+                      {area.num_visited_locations}
                     </Typography>
                   </Box>
                 )}

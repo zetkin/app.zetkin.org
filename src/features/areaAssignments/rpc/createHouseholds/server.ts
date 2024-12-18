@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 import { z } from 'zod';
 
 import { paramsSchema } from './client';
-import { ZetkinPlace } from 'features/areaAssignments/types';
-import { PlaceModel } from 'features/areaAssignments/models';
+import { ZetkinLocation } from 'features/areaAssignments/types';
+import { LocationModel } from 'features/areaAssignments/models';
 
 type Params = z.input<typeof paramsSchema>;
-type Result = ZetkinPlace;
+type Result = ZetkinLocation;
 
 export const createHouseholdsDef = {
   handler: handle,
@@ -17,10 +17,10 @@ export const createHouseholdsDef = {
 async function handle(params: Params): Promise<Result> {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
-  const { households, orgId, placeId } = params;
+  const { households, orgId, locationId } = params;
 
-  const model = await PlaceModel.findOneAndUpdate(
-    { _id: placeId, orgId },
+  const model = await LocationModel.findOneAndUpdate(
+    { _id: locationId, orgId },
     {
       $push: {
         households: {
@@ -39,7 +39,7 @@ async function handle(params: Params): Promise<Result> {
   );
 
   if (!model) {
-    throw new Error('Unknown place');
+    throw new Error('Unknown location');
   }
 
   return {

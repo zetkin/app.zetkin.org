@@ -1,7 +1,7 @@
-import { ZetkinPlaceVisit } from '../types';
+import { ZetkinLocationVisit } from '../types';
 
 export default function estimateVisitedHouseholds(
-  visit: ZetkinPlaceVisit
+  visit: ZetkinLocationVisit
 ): number {
   const householdsPerMetric = visit.responses.map((response) =>
     response.responseCounts.reduce((sum, value) => sum + value)

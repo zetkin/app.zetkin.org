@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 
-import { PlaceModel } from 'features/areaAssignments/models';
-import { ZetkinPlace } from 'features/areaAssignments/types';
+import { LocationModel } from 'features/areaAssignments/models';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
@@ -20,8 +20,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
-      const placeModels = await PlaceModel.find({ orgId });
-      const places: ZetkinPlace[] = placeModels.map((model) => ({
+      const locationModels = await LocationModel.find({ orgId });
+      const locations: ZetkinLocation[] = locationModels.map((model) => ({
         description: model.description,
         households: model.households,
         id: model._id.toString(),
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         title: model.title,
       }));
 
-      return Response.json({ data: places });
+      return Response.json({ data: locations });
     }
   );
 }
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const model = new PlaceModel({
+      const model = new LocationModel({
         description: payload.description,
         households: [],
         orgId: orgId,

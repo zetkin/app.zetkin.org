@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AreaModel } from 'features/geography/models';
 import {
   AreaAssignmentModel,
-  PlaceModel,
+  LocationModel,
 } from 'features/areaAssignments/models';
 import {
   AreaCardData,
@@ -12,7 +12,7 @@ import {
   Household,
   Visit,
   ZetkinAreaAssignmentSession,
-  ZetkinPlace,
+  ZetkinLocation,
 } from 'features/areaAssignments/types';
 import getAreaData from 'features/areaAssignments/utils/getAreaData';
 import isPointInsidePolygon from 'features/areaAssignments/utils/isPointInsidePolygon';
@@ -91,8 +91,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         ...new Map(areas.map((area) => [area.id, area])).values(),
       ];
 
-      const allPlaceModels = await PlaceModel.find({ orgId }).lean();
-      const allPlaces: ZetkinPlace[] = allPlaceModels.map((model) => ({
+      const allLocationModels = await LocationModel.find({ orgId }).lean();
+      const allLocations: ZetkinLocation[] = allLocationModels.map((model) => ({
         description: model.description,
         households: model.households,
         id: model._id.toString(),
@@ -101,19 +101,19 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         title: model.title,
       }));
 
-      type PlaceWithAreaId = ZetkinPlace & { areaId: ZetkinArea['id'] };
+      type LocationWithAreaId = ZetkinLocation & { areaId: ZetkinArea['id'] };
 
-      //Find places in the given areas
-      const placesInAreas: PlaceWithAreaId[] = [];
+      //Find locations in the given areas
+      const locationsInAreas: LocationWithAreaId[] = [];
       uniqueAreas.forEach((area) => {
-        allPlaces.forEach((place) => {
-          const placeIsInArea = isPointInsidePolygon(
-            { lat: place.position.lat, lng: place.position.lng },
+        allLocations.forEach((location) => {
+          const locationIsInArea = isPointInsidePolygon(
+            { lat: location.position.lat, lng: location.position.lng },
             area.points.map((point) => ({ lat: point[0], lng: point[1] }))
           );
 
-          if (placeIsInArea) {
-            placesInAreas.push({ ...place, areaId: area.id });
+          if (locationIsInArea) {
+            locationsInAreas.push({ ...location, areaId: area.id });
           }
         });
       });
@@ -126,12 +126,12 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       let firstVisit: Date = new Date();
       let lastVisit: Date = new Date();
 
-      allPlaces.forEach((place) => {
-        const placeVisits = place.households
+      allLocations.forEach((location) => {
+        const locationVisits = location.households
           .flatMap((household) => household.visits)
           .filter((visit) => visit.areaAssId === params.areaAssId);
 
-        filteredVisitsInAllAreas.push(...placeVisits);
+        filteredVisitsInAllAreas.push(...locationVisits);
       });
 
       if (filteredVisitsInAllAreas.length > 0) {
@@ -166,18 +166,20 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         const areaVisitsData: AreaGraphData[] = [];
         const householdList: Household[] = [];
 
-        allPlaces.forEach((place) => {
-          const placeIsInArea = isPointInsidePolygon(
-            { lat: place.position.lat, lng: place.position.lng },
+        allLocations.forEach((location) => {
+          const locationIsInArea = isPointInsidePolygon(
+            { lat: location.position.lat, lng: location.position.lng },
             area.points.map((point) => ({ lat: point[0], lng: point[1] }))
           );
 
-          if (placeIsInArea) {
-            const filteredHouseholds = place.households.filter((household) => {
-              return household.visits.filter(
-                (visit) => visit.areaAssId === params.areaAssId
-              );
-            });
+          if (locationIsInArea) {
+            const filteredHouseholds = location.households.filter(
+              (household) => {
+                return household.visits.filter(
+                  (visit) => visit.areaAssId === params.areaAssId
+                );
+              }
+            );
             householdList.push(...filteredHouseholds);
           }
         });
@@ -199,15 +201,15 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       });
 
       //Visits outside assigned areas logic
-      const idsOfPlacesInAreas = new Set(
-        placesInAreas.map((place) => place.id)
+      const idsOfLocationsInAreas = new Set(
+        locationsInAreas.map((location) => location.id)
       );
-      const placesOutsideAreas = allPlaces.filter(
-        (place) => !idsOfPlacesInAreas.has(place.id)
+      const locationsOutsideAreas = allLocations.filter(
+        (location) => !idsOfLocationsInAreas.has(location.id)
       );
 
-      placesOutsideAreas.forEach((place) => {
-        place.households.forEach((household) => {
+      locationsOutsideAreas.forEach((location) => {
+        location.households.forEach((household) => {
           household.visits.forEach((visit) => {
             if (visit.areaAssId == params.areaAssId) {
               householdsOutsideAreasList.push(household);

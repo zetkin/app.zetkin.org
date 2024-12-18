@@ -2,27 +2,33 @@ import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
-import { ZetkinPlace } from 'features/areaAssignments/types';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
-type EditPlaceProps = {
+type EditLocationProps = {
+  location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
   onSave: (title: string, description: string) => void;
-  place: ZetkinPlace;
 };
 
-const EditPlace: FC<EditPlaceProps> = ({ onClose, onBack, onSave, place }) => {
-  const [title, setTitle] = useState(place.title || '');
-  const [description, setDescription] = useState(place.description || '');
+const EditLocation: FC<EditLocationProps> = ({
+  onClose,
+  onBack,
+  onSave,
+  location,
+}) => {
+  const [title, setTitle] = useState(location.title || '');
+  const [description, setDescription] = useState(location.description || '');
 
   useEffect(() => {
-    setTitle(place.title || '');
-    setDescription(place.description || '');
-  }, [place]);
+    setTitle(location.title || '');
+    setDescription(location.description || '');
+  }, [location]);
 
   const nothingHasBeenEdited =
-    title == place.title &&
-    (description == place.description || (!description && !place.description));
+    title == location.title &&
+    (description == location.description ||
+      (!description && !location.description));
 
   return (
     <PageBase
@@ -39,7 +45,7 @@ const EditPlace: FC<EditPlaceProps> = ({ onClose, onBack, onSave, place }) => {
       }
       onBack={onBack}
       onClose={onClose}
-      title={`Edit ${place.title || 'Untitled place'}`}
+      title={`Edit ${location.title || 'Untitled place'}`}
     >
       <form
         onSubmit={(ev) => {
@@ -68,4 +74,4 @@ const EditPlace: FC<EditPlaceProps> = ({ onClose, onBack, onSave, place }) => {
   );
 };
 
-export default EditPlace;
+export default EditLocation;

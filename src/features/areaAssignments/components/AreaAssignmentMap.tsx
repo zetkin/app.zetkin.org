@@ -21,8 +21,8 @@ import {
 
 import { ZetkinArea } from '../../geography/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import useCreatePlace from '../hooks/useCreatePlace';
-import usePlaces from '../hooks/usePlaces';
+import useCreateLocation from '../hooks/useCreateLocation';
+import useLocations from '../hooks/useLocations';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
@@ -30,7 +30,7 @@ import { ZetkinAreaAssignment } from '../types';
 import MapControls from './MapControls';
 import objToLatLng from 'features/geography/utils/objToLatLng';
 import AreaAssignmentMapOverlays from './AreaAssignmentMapOverlays';
-import useAllPlaceVisits from '../hooks/useAllPlaceVisits';
+import useAllLocationVisits from '../hooks/useAllLocationVisits';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 const useStyles = makeStyles(() => ({
@@ -74,9 +74,9 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
 }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const places = usePlaces(assignment.organization.id).data || [];
-  const createPlace = useCreatePlace(assignment.organization.id);
-  const placeVisitList = useAllPlaceVisits(
+  const locations = useLocations(assignment.organization.id).data || [];
+  const createLocation = useCreateLocation(assignment.organization.id);
+  const locationVisitList = useAllLocationVisits(
     assignment.organization.id,
     assignment.id
   );
@@ -86,14 +86,18 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
 
   const [map, setMap] = useState<Map | null>(null);
   const [zoomed, setZoomed] = useState(false);
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
+    null
+  );
   const [isCreating, setIsCreating] = useState(false);
   const [created, setCreated] = useState(false);
 
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
-  const selectedPlace = places.find((place) => place.id == selectedPlaceId);
+  const selectedLocation = locations.find(
+    (location) => location.id == selectedLocationId
+  );
 
   const saveBounds = () => {
     const bounds = map?.getBounds();
@@ -107,12 +111,12 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
   };
 
   const updateSelection = useCallback(() => {
-    let nearestPlace: string | null = null;
+    let nearestLocation: string | null = null;
     let nearestDistance = Infinity;
 
     if (isCreating) {
-      if (selectedPlaceId) {
-        setSelectedPlaceId(null);
+      if (selectedLocationId) {
+        setSelectedLocationId(null);
       }
       return;
     }
@@ -123,30 +127,30 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
       if (map && crosshair) {
         const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-        places.forEach((place) => {
-          const screenPos = map.latLngToContainerPoint(place.position);
+        locations.forEach((location) => {
+          const screenPos = map.latLngToContainerPoint(location.position);
           const dx = screenPos.x - markerPos.markerX;
           const dy = screenPos.y - markerPos.markerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < nearestDistance) {
             nearestDistance = dist;
-            nearestPlace = place.id;
+            nearestLocation = location.id;
           }
         });
 
         if (nearestDistance < 20) {
-          if (nearestPlace != selectedPlace) {
-            setSelectedPlaceId(nearestPlace);
+          if (nearestLocation != selectedLocation) {
+            setSelectedLocationId(nearestLocation);
           }
         } else {
-          setSelectedPlaceId(null);
+          setSelectedLocationId(null);
         }
       }
     } catch (err) {
       // Do nothing for now
     }
-  }, [map, selectedPlaceId, places]);
+  }, [map, selectedLocationId, locations]);
 
   const panTo = useCallback(
     (pos: LatLng) => {
@@ -175,7 +179,7 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
     if (created) {
       updateSelection();
     }
-  }, [created, places]);
+  }, [created, locations]);
 
   useEffect(() => {
     if (map) {
@@ -197,7 +201,7 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
         map.off('zoomend', saveBounds);
       };
     }
-  }, [map, selectedPlaceId, places, panTo, updateSelection]);
+  }, [map, selectedLocationId, locations, panTo, updateSelection]);
 
   useEffect(() => {
     if (map && !zoomed) {
@@ -247,10 +251,10 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
           ref={crosshairRef}
           className={classes.crosshair}
           sx={{
-            opacity: !selectedPlaceId ? 1 : 0.3,
+            opacity: !selectedLocationId ? 1 : 0.3,
           }}
         >
-          {!selectedPlaceId && isCreating && (
+          {!selectedLocationId && isCreating && (
             <Box
               className={classes.ghostMarker}
               sx={{
@@ -289,16 +293,19 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
             />
           ))}
         </FeatureGroup>
-        {places.map((place) => {
-          const householdState = getVisitState(place.households, assignment.id);
-          const visited = placeVisitList.data?.some(
-            (visit) => visit.placeId == place.id
+        {locations.map((location) => {
+          const householdState = getVisitState(
+            location.households,
+            assignment.id
+          );
+          const visited = locationVisitList.data?.some(
+            (visit) => visit.locationId == location.id
           );
 
           const state = visited ? 'all' : householdState;
 
-          const selected = place.id == selectedPlaceId;
-          const key = `marker-${place.id}-${selected.toString()}`;
+          const selected = location.id == selectedLocationId;
+          const key = `marker-${location.id}-${selected.toString()}`;
 
           return (
             <DivIconMarker
@@ -310,8 +317,8 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
               }}
               iconAnchor={[11, 33]}
               position={{
-                lat: place.position.lat,
-                lng: place.position.lng,
+                lat: location.position.lat,
+                lng: location.position.lng,
               }}
             >
               <MarkerIcon
@@ -338,7 +345,7 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
             ]);
             if (point) {
               setCreated(true);
-              createPlace({
+              createLocation({
                 position: point,
                 title,
               });
@@ -346,7 +353,7 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
           }
         }}
         onToggleCreating={(creating) => setIsCreating(creating)}
-        selectedPlace={selectedPlace || null}
+        selectedLocation={selectedLocation || null}
       />
     </>
   );
