@@ -30,7 +30,7 @@ const FilterActivities = ({
   onSearchStringChange,
 }: FilterActivitiesProps) => {
   const messages = useMessages(messageIds);
-  const hasCanvassing = useFeature(AREAS);
+  const hasAreaAssignments = useFeature(AREAS);
 
   const debouncedFinishedTyping = useDebounce(
     async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -78,19 +78,17 @@ const FilterActivities = ({
             }
             label={messages.all.filter.calls()}
           />
-          {hasCanvassing && (
+          {hasAreaAssignments && (
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={filters.includes(ACTIVITIES.CANVASS_ASSIGNMENT)}
-                  disabled={
-                    !filterTypes.includes(ACTIVITIES.CANVASS_ASSIGNMENT)
-                  }
+                  checked={filters.includes(ACTIVITIES.AREA_ASSIGNMENT)}
+                  disabled={!filterTypes.includes(ACTIVITIES.AREA_ASSIGNMENT)}
                   onChange={onFiltersChange}
-                  value={ACTIVITIES.CANVASS_ASSIGNMENT}
+                  value={ACTIVITIES.AREA_ASSIGNMENT}
                 />
               }
-              label={messages.all.filter.canvasses()}
+              label={messages.all.filter.areaAssignments()}
             />
           )}
           <FormControlLabel

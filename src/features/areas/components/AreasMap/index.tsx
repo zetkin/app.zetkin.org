@@ -23,7 +23,7 @@ import AreaOverlay from '../AreaOverlay';
 import MapRenderer from './MapRenderer';
 import AreaFilterProvider from '../AreaFilters/AreaFilterContext';
 import AreaFilterButton from '../AreaFilters/AreaFilterButton';
-import MapControls from 'features/canvassAssignments/components/MapControls';
+import MapControls from 'features/areaAssignments/components/MapControls';
 
 interface MapProps {
   areas: ZetkinArea[];

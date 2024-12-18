@@ -1,15 +1,15 @@
-import useMyCanvassAssignments from 'features/canvassAssignments/hooks/useMyCanvassAssignments';
+import useMyAreaAssignments from 'features/areaAssignments/hooks/useMyAreaAssignments';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import { MyActivity } from '../types';
 
 export default function useMyActivities() {
-  const canvassAssignments = useMyCanvassAssignments();
+  const areaAssignments = useMyAreaAssignments();
   const callAssignments = useMyCallAssignments();
   const events = useMyEvents();
 
   const activities: MyActivity[] = [
-    ...canvassAssignments.map<MyActivity>((data) => ({
+    ...areaAssignments.map<MyActivity>((data) => ({
       data,
       kind: 'canvass',
       start: new Date(data.start_date || 0),

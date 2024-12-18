@@ -39,8 +39,8 @@ export default makeMessages('feat.campaigns', {
     cardCTA: m('Go to project'),
     create: m('Create new project'),
     filter: {
+      areaAssignments: m('Area assignments'),
       calls: m('Call assignments'),
-      canvasses: m('Canvass assignments'),
       emails: m('Emails'),
       filter: m('Filter results'),
       standalones: m('Standalone events'),
@@ -61,8 +61,8 @@ export default makeMessages('feat.campaigns', {
   calendarView: m('See all in calendar'),
   createButton: {
     createActivity: m('Create'),
+    createAreaAssignment: m('Area assignment'),
     createCallAssignment: m('Call assignment'),
-    createCanvassAssignment: m('Canvass assignment'),
     createEmail: m('Email'),
     createEvent: m('Event'),
     createSurvey: m('Survey'),
@@ -77,6 +77,9 @@ export default makeMessages('feat.campaigns', {
     heading: m('Feedback and Surveys (none configured)'),
   },
   form: {
+    createAreaAssignment: {
+      defaultQuestion: m('Did you complete the mission?'),
+    },
     createCallAssignment: {
       newCallAssignment: m('My call assignment'),
     },
@@ -84,9 +87,6 @@ export default makeMessages('feat.campaigns', {
       create: m('Create project'),
       error: m('There was an error creating the project'),
       newCampaign: m('My project'),
-    },
-    createCanvassAssignment: {
-      defaultQuestion: m('Did you complete the mission?'),
     },
     createEmail: {
       newEmail: m('Untitled email'),
@@ -140,8 +140,8 @@ export default makeMessages('feat.campaigns', {
   },
   linkGroup: {
     createActivity: m('Create'),
+    createAreaAssignment: m('Area assignment'),
     createCallAssignment: m('Call assignment'),
-    createCanvassAssignment: m('Canvass assignment'),
     createEmail: m('Email'),
     createEvent: m('Event'),
     createSurvey: m('Survey'),

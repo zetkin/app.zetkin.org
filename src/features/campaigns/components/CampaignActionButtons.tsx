@@ -29,7 +29,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
-import useCreateCanvassAssignment from 'features/canvassAssignments/hooks/useCreateCanvassAssignment';
+import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS } from 'utils/featureFlags';
 
@@ -49,14 +49,14 @@ const CampaignActionButtons: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
   const organization = useOrganization(orgId).data;
-  const hasCanvassing = useFeature(AREAS);
+  const hasAreaing = useFeature(AREAS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const createCanvassAssignment = useCreateCanvassAssignment(orgId);
+  const createAreaAssignment = useCreateAreaAssignment(orgId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -119,19 +119,19 @@ const CampaignActionButtons: React.FunctionComponent<
     },
   ];
 
-  if (hasCanvassing) {
+  if (hasAreaing) {
     menuItems.push({
       icon: <Map />,
-      label: messages.createButton.createCanvassAssignment(),
+      label: messages.createButton.createAreaAssignment(),
       onClick: () =>
-        createCanvassAssignment({
+        createAreaAssignment({
           campaign_id: campaign.id,
           metrics: [
             {
               definesDone: true,
               description: '',
               kind: 'boolean',
-              question: messages.form.createCanvassAssignment.defaultQuestion(),
+              question: messages.form.createAreaAssignment.defaultQuestion(),
             },
           ],
           title: null,

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 
-import { PlaceModel } from 'features/canvassAssignments/models';
-import { ZetkinPlace } from 'features/canvassAssignments/types';
-import asCanvasserAuthorized from 'features/canvassAssignments/utils/asCanvasserAuthorized';
+import { PlaceModel } from 'features/areaAssignments/models';
+import { ZetkinPlace } from 'features/areaAssignments/types';
+import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
   params: {
@@ -12,7 +12,7 @@ type RouteMeta = {
 };
 
 export async function GET(request: NextRequest, { params }: RouteMeta) {
-  return asCanvasserAuthorized(
+  return asAreaAssigneeAuthorized(
     {
       orgId: params.orgId,
       request: request,
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 }
 
 export async function POST(request: NextRequest, { params }: RouteMeta) {
-  return asCanvasserAuthorized(
+  return asAreaAssigneeAuthorized(
     {
       orgId: params.orgId,
       request: request,

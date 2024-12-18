@@ -50,8 +50,8 @@ export default makeMessages('zui', {
         'Create person and add to {journey}'
       ),
       addToList: m<{ list: string }>('Create person and add to {list}'),
-      assignToCanvassAssignment: m<{ canvassAss: string }>(
-        'Create person and assign to {canvassAss}'
+      assignToAreaAssignment: m<{ areaAss: string }>(
+        'Create person and assign to {areaAss}'
       ),
       assignToJourney: m<{ journey: string }>(
         'Create person and assign to {journey}'
