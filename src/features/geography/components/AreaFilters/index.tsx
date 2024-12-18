@@ -7,6 +7,8 @@ import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';
 import AddFilterButton from './AddFilterButton';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/geography/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   const [openDropdown, setOpenDropdown] = useState<'add' | number | null>(null);
   const {
@@ -93,7 +96,11 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                   },
                 };
               })}
-              label={info.group ? info.group.title : 'Ungrouped tags'}
+              label={
+                info.group
+                  ? info.group.title
+                  : messages.areas.filter.ungroupedTagsLabel()
+              }
               onToggle={(open) => setOpenDropdown(open ? groupId : null)}
               open={openDropdown == groupId}
               startIcon={
@@ -134,7 +141,9 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
 
           return {
             icon: <Checkbox checked={selected} />,
-            label: item.group ? item.group.title : 'Ungrouped tags',
+            label: item.group
+              ? item.group.title
+              : messages.areas.filter.ungroupedTagsLabel(),
             onClick: () => {
               if (selected) {
                 setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));

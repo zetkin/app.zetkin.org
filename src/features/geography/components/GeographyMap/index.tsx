@@ -24,12 +24,15 @@ import MapRenderer from './MapRenderer';
 import AreaFilterProvider from '../AreaFilters/AreaFilterContext';
 import AreaFilterButton from '../AreaFilters/AreaFilterButton';
 import MapControls from 'features/areaAssignments/components/MapControls';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/geography/l10n/messageIds';
 
 interface MapProps {
   areas: ZetkinArea[];
 }
 
 const Map: FC<MapProps> = ({ areas }) => {
+  const messages = useMessages(messageIds);
   const mapRef = useRef<MapType | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
   const [selectedId, setSelectedId] = useState('');
@@ -80,8 +83,9 @@ const Map: FC<MapProps> = ({ areas }) => {
       inputValue.length == 0
         ? areas.concat()
         : areas.filter((area) => {
-            const areaTitle = area.title || 'Untitled area';
-            const areaDesc = area.description || 'Empty description';
+            const areaTitle = area.title || messages.areas.default.title();
+            const areaDesc =
+              area.description || messages.areas.default.description();
 
             return (
               areaTitle.toLowerCase().includes(inputValue) ||
@@ -141,7 +145,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                   }}
                   startIcon={<Create />}
                 >
-                  Draw
+                  <Msg id={messageIds.areas.draw.startButton} />
                 </Button>
               )}
               {drawingPoints && (
@@ -151,7 +155,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                   }}
                   startIcon={<Close />}
                 >
-                  Cancel
+                  <Msg id={messageIds.areas.draw.cancelButton} />
                 </Button>
               )}
               {drawingPoints && drawingPoints.length > 2 && (
@@ -161,7 +165,7 @@ const Map: FC<MapProps> = ({ areas }) => {
                   }}
                   startIcon={<Save />}
                 >
-                  Save
+                  <Msg id={messageIds.areas.draw.saveButton} />
                 </Button>
               )}
             </ButtonGroup>
@@ -198,7 +202,9 @@ const Map: FC<MapProps> = ({ areas }) => {
                 />
               )}
               renderOption={(props, area) => (
-                <MenuItem {...props}>{area.title || 'Untitled area'}</MenuItem>
+                <MenuItem {...props}>
+                  {area.title || <Msg id={messageIds.areas.default.title} />}
+                </MenuItem>
               )}
               value={null}
             />

@@ -7,6 +7,8 @@ import { ZetkinArea } from 'features/geography/types';
 import TagManager from 'features/tags/components/TagManager';
 import GroupToggle from 'features/tags/components/TagManager/components/GroupToggle';
 import ZUIFuture from 'zui/ZUIFuture';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/geography/l10n/messageIds';
 
 type Props = {
   area: ZetkinArea;
@@ -31,7 +33,9 @@ const TagsSection: FC<Props> = ({ area }) => {
             mb={2}
             minHeight={38}
           >
-            <Typography variant="h6">Area tags</Typography>
+            <Typography variant="h6">
+              <Msg id={messageIds.areas.areaSettings.tags.title} />
+            </Typography>
             <Box>
               <GroupToggle
                 checked={grouped}

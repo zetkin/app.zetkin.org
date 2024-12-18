@@ -18,6 +18,8 @@ import ZUIPreviewableInput, {
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/geography/l10n/messageIds';
 
 type Props = {
   area: ZetkinArea;
@@ -119,7 +121,7 @@ const AreaOverlay: FC<Props> = ({
               )}
               renderPreview={() => (
                 <Typography variant="h5">
-                  {area.title || 'Untitled area'}
+                  {area.title || <Msg id={messageIds.areas.default.title} />}
                 </Typography>
               )}
               value={area.title || ''}
@@ -172,9 +174,11 @@ const AreaOverlay: FC<Props> = ({
                   }
                   sx={{ overflowWrap: 'anywhere' }}
                 >
-                  {area.description?.trim().length
-                    ? area.description
-                    : 'Empty description'}
+                  {area.description?.trim().length ? (
+                    area.description
+                  ) : (
+                    <Msg id={messageIds.areas.default.description} />
+                  )}
                 </Typography>
               </Box>
             )}
@@ -198,22 +202,22 @@ const AreaOverlay: FC<Props> = ({
               }}
               variant="contained"
             >
-              Save
+              <Msg id={messageIds.areas.areaSettings.edit.saveButton} />
             </Button>
             <Button onClick={() => onCancelEdit()} variant="outlined">
-              Cancel
+              <Msg id={messageIds.areas.areaSettings.edit.cancelButton} />
             </Button>
           </>
         )}
         {!editing && (
           <>
             <Button onClick={() => onBeginEdit()} variant="outlined">
-              Edit
+              <Msg id={messageIds.areas.areaSettings.edit.editButton} />
             </Button>
             <ZUIEllipsisMenu
               items={[
                 {
-                  label: 'Delete',
+                  label: <Msg id={messageIds.areas.areaSettings.delete} />,
                   onSelect: () => {
                     showConfirmDialog({
                       onSubmit: () => {
