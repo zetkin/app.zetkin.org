@@ -16,7 +16,7 @@ import usePersonMutations from 'features/profile/hooks/usePersonMutations';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 
-const SurveyDialogLink = ({
+const SurveyLinkDialog = ({
   email,
   onClose,
   open,
@@ -63,4 +63,4 @@ const SurveyDialogLink = ({
   );
 };
 
-export default SurveyDialogLink;
+export default SurveyLinkDialog;

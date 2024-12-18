@@ -10,7 +10,7 @@ import {
 import { FC, useEffect, useMemo, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import SurveyDialogLink from './SurveyDialogLink';
+import SurveyLinkDialog from './SurveyLinkDialog';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import { useNumericRouteParams } from 'core/hooks';
 import { usePanes } from 'utils/panes';
@@ -264,7 +264,7 @@ const SurveySubmissionsList = ({
         }}
       />
       {dialogPerson && (
-        <SurveyDialogLink
+        <SurveyLinkDialog
           email={dialogEmail}
           onClose={() => setDialogOpen(false)}
           open={dialogOpen}
