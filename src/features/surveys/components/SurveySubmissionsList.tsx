@@ -31,15 +31,9 @@ const SurveySubmissionsList = ({
   const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogPerson, setDialogPerson] = useState<ZetkinPerson>();
-  const [dialogEmail, setDialogEmail] = useState('');
 
-  const handleUpdateEmail = (option: ZetkinPerson, email: string) => {
-    setDialogEmail(email);
-    setDialogPerson(option);
-    setDialogOpen(true);
-  };
+  const [dialogPerson, setDialogPerson] = useState<ZetkinPerson | null>(null);
+  const [dialogEmail, setDialogEmail] = useState('');
 
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
@@ -209,10 +203,13 @@ const SurveySubmissionsList = ({
       });
       setRespondentId(person?.id || null);
 
-      const personHasNoEmail = person?.id !== null && person?.email === null;
       const respondentEmail = row.respondent?.email;
-      if (personHasNoEmail && respondentEmail !== undefined) {
-        handleUpdateEmail(person, respondentEmail);
+      if (person) {
+        const personHasNoEmail = person.email == null || person.email == '';
+        if (personHasNoEmail && respondentEmail != undefined) {
+          setDialogEmail(respondentEmail);
+          setDialogPerson(person);
+        }
       }
     };
 
@@ -266,8 +263,8 @@ const SurveySubmissionsList = ({
       {dialogPerson && (
         <SurveyLinkDialog
           email={dialogEmail}
-          onClose={() => setDialogOpen(false)}
-          open={dialogOpen}
+          onClose={() => setDialogPerson(null)}
+          open={!!dialogPerson}
           person={dialogPerson}
         />
       )}
