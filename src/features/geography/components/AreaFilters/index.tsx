@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
-import { ZetkinArea } from 'features/areas/types';
+import { ZetkinArea } from 'features/geography/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';

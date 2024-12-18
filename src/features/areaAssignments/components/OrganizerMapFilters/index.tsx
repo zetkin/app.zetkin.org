@@ -3,11 +3,11 @@ import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, IconButton, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
-import { ZetkinArea } from 'features/areas/types';
+import { ZetkinArea } from 'features/geography/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
-import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
-import AddFilterButton from 'features/areas/components/AreaFilters/AddFilterButton';
-import FilterDropDown from 'features/areas/components/FilterDropDown';
+import { areaFilterContext } from 'features/geography/components/AreaFilters/AreaFilterContext';
+import AddFilterButton from 'features/geography/components/AreaFilters/AddFilterButton';
+import FilterDropDown from 'features/geography/components/FilterDropDown';
 import { assigneesFilterContext } from './AssigneeFilterContext';
 
 type Props = {

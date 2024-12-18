@@ -18,8 +18,8 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinPlace,
 } from '../types';
-import { ZetkinArea } from 'features/areas/types';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import { ZetkinArea } from 'features/geography/types';
+import objToLatLng from 'features/geography/utils/objToLatLng';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 

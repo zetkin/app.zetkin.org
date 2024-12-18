@@ -149,8 +149,8 @@ export default makeMessages('zui', {
     },
   },
   organizeSidebar: {
-    areas: m('Areas'),
     filter: m('Type to filter'),
+    geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
     people: m('People'),

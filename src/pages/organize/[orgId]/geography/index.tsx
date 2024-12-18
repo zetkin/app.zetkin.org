@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import useAreas from 'features/areas/hooks/useAreas';
+import useAreas from 'features/geography/hooks/useAreas';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
 import { AREAS } from 'utils/featureFlags';
@@ -21,33 +21,33 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   };
 }, scaffoldOptions);
 
-const AreasMap = dynamic(
-  () => import('../../../../features/areas/components/AreasMap/index'),
+const GeographyMap = dynamic(
+  () => import('../../../../features/geography/components/GeographyMap/index'),
   { ssr: false }
 );
 
-const AreasPage: PageWithLayout = () => {
+const GeographyPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const areasFuture = useAreas(orgId);
 
   return (
     <>
       <Head>
-        <title>Areas</title>
+        <title>Geography</title>
       </Head>
       <ZUIFuture future={areasFuture}>
-        {(areas) => <AreasMap areas={areas} />}
+        {(areas) => <GeographyMap areas={areas} />}
       </ZUIFuture>
     </>
   );
 };
 
-AreasPage.getLayout = function getLayout(page) {
+GeographyPage.getLayout = function getLayout(page) {
   return (
-    <SimpleLayout ellipsisMenuItems={[]} fixedHeight title={'Areas'}>
+    <SimpleLayout ellipsisMenuItems={[]} fixedHeight title="Geography">
       {page}
     </SimpleLayout>
   );
 };
 
-export default AreasPage;
+export default GeographyPage;

@@ -1,4 +1,4 @@
-import { ZetkinArea } from 'features/areas/types';
+import { ZetkinArea } from 'features/geography/types';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 export type AreaAssigneeInfo = {

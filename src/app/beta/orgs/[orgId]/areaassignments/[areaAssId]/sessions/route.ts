@@ -5,7 +5,7 @@ import { AreaAssignmentModel } from 'features/areaAssignments/models';
 import { ZetkinAreaAssignmentSession } from 'features/areaAssignments/types';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import { AreaModel } from 'features/areas/models';
+import { AreaModel } from 'features/geography/models';
 
 type RouteMeta = {
   params: {

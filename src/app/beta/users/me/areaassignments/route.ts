@@ -6,8 +6,8 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { AreaAssignmentModel } from 'features/areaAssignments/models';
 import { AssignmentWithAreas } from 'features/areaAssignments/types';
 import { ZetkinMembership } from 'utils/types/zetkin';
-import { AreaModel } from 'features/areas/models';
-import { ZetkinArea } from 'features/areas/types';
+import { AreaModel } from 'features/geography/models';
+import { ZetkinArea } from 'features/geography/types';
 
 export async function GET(request: NextRequest) {
   const headers: IncomingHttpHeaders = {};

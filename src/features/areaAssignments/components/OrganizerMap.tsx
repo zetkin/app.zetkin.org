@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { Close, Layers, Search } from '@mui/icons-material';
 
-import { ZetkinArea } from '../../areas/types';
+import { ZetkinArea } from '../../geography/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
@@ -22,7 +22,7 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinPlace,
 } from '../types';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import objToLatLng from 'features/geography/utils/objToLatLng';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
@@ -30,7 +30,7 @@ import AreaSelect from './AreaSelect';
 import LayerSettings from './LayerSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
-import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
+import { areaFilterContext } from 'features/geography/components/AreaFilters/AreaFilterContext';
 
 type OrganizerMapProps = {
   areaAssId: string;

@@ -15,7 +15,7 @@ import { latLngBounds, Map as MapType } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { useNumericRouteParams } from 'core/hooks';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import objToLatLng from 'features/geography/utils/objToLatLng';
 import useCreateArea from '../../hooks/useCreateArea';
 import { PointData, ZetkinArea } from '../../types';
 import AreaFilters from '../AreaFilters';

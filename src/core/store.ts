@@ -49,7 +49,7 @@ import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
-import areasSlice, { AreasStoreSlice } from 'features/areas/store';
+import areasSlice, { AreasStoreSlice } from 'features/geography/store';
 import areaAssignmentSlice, {
   areaAssignmentCreated,
   AreaAssignmentsStoreSlice,

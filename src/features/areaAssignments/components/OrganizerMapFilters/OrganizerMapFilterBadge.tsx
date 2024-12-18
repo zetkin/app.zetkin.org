@@ -2,7 +2,7 @@ import { FC, useContext } from 'react';
 import { Badge } from '@mui/material';
 import { FilterList } from '@mui/icons-material';
 
-import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
+import { areaFilterContext } from 'features/geography/components/AreaFilters/AreaFilterContext';
 import { assigneesFilterContext } from './AssigneeFilterContext';
 
 const OrganizerMapFilterBadge: FC = () => {

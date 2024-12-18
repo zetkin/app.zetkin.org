@@ -19,7 +19,7 @@ import {
   TileLayer,
 } from 'react-leaflet';
 
-import { ZetkinArea } from '../../areas/types';
+import { ZetkinArea } from '../../geography/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import useCreatePlace from '../hooks/useCreatePlace';
 import usePlaces from '../hooks/usePlaces';
@@ -28,7 +28,7 @@ import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
 import { ZetkinAreaAssignment } from '../types';
 import MapControls from './MapControls';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import objToLatLng from 'features/geography/utils/objToLatLng';
 import AreaAssignmentMapOverlays from './AreaAssignmentMapOverlays';
 import useAllPlaceVisits from '../hooks/useAllPlaceVisits';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
