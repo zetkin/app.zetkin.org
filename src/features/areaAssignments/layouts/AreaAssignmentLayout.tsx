@@ -20,7 +20,7 @@ import useAreaAssignmentStatus, {
 } from '../hooks/useAreaAssignmentStatus';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 type AreaAssignmentLayoutProps = {
@@ -76,22 +76,24 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
         <Box>
           {state == AreaAssignmentState.OPEN ? (
             <Button onClick={endAssignment} variant="outlined">
-              {'End Assignment'}
+              <Msg id={messageIds.actions.end} />
             </Button>
           ) : (
             <Button onClick={startAssignment} variant="contained">
-              {'Start Assignment'}
+              <Msg id={messageIds.actions.start} />
             </Button>
           )}
           <ZUIEllipsisMenu
             items={[
               {
-                label: 'Delete',
+                label: <Msg id={messageIds.actions.delete} />,
                 onSelect: () => {
                   showConfirmDialog({
                     onSubmit: handleDelete,
-                    title: 'Delete',
-                    warningText: `Are you sure you want to delete ${areaAssignment.title}?`,
+                    title: messages.actions.delete(),
+                    warningText: messages.actions.deleteWarningText({
+                      title: areaAssignment.title || messages.default.title(),
+                    }),
                   });
                 },
                 startIcon: <Delete />,
@@ -124,14 +126,22 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
             {(data) => (
               <Box display="flex" marginX={1}>
                 <Pentagon />
-                <Typography marginLeft={1}>{data.num_areas} Area(s)</Typography>
+                <Typography marginLeft={1}>
+                  <Msg
+                    id={messageIds.basicAssignmentStats.areas}
+                    values={{ numAreas: data.num_areas }}
+                  />
+                </Typography>
               </Box>
             )}
           </ZUIFuture>
           <Box display="flex" marginX={1}>
             <People />
             <Typography marginLeft={1}>
-              {areaAssignees.length} Assignee(s)
+              <Msg
+                id={messageIds.basicAssignmentStats.assignees}
+                values={{ numAssignees: areaAssignees.length }}
+              />
             </Typography>
           </Box>
         </Box>
@@ -145,7 +155,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => updateAreaAssignment({ title: newTitle })}
-          value={areaAssignment.title || 'Untitled area assignment'}
+          value={areaAssignment.title || messages.default.title()}
         />
       }
     >
