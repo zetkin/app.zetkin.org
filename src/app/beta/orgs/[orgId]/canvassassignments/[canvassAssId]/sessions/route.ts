@@ -66,6 +66,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               },
               end_date: model.end_date,
               id: model._id.toString(),
+              instructions: model.instructions,
               metrics: model.metrics.map((m) => ({
                 definesDone: m.definesDone,
                 description: m.description,

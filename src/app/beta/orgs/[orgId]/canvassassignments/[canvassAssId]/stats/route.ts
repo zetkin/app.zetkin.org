@@ -73,6 +73,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
               },
               end_date: assignmentModel.end_date,
               id: assignmentModel._id.toString(),
+              instructions: assignmentModel.instructions,
               metrics: assignmentModel.metrics.map((m) => ({
                 definesDone: m.definesDone,
                 description: m.description,
