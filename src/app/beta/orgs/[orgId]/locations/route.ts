@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import { LocationModel } from 'features/areaAssignments/models';
 import { ZetkinLocation } from 'features/areaAssignments/types';
-import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
+import asAreaAssigneeAuthorized from 'features/canvass/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
   params: {

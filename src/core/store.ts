@@ -54,13 +54,15 @@ import areaAssignmentSlice, {
   areaAssignmentCreated,
   AreaAssignmentsStoreSlice,
 } from 'features/areaAssignments/store';
+import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 
 export interface RootState {
+  areaAssignments: AreaAssignmentsStoreSlice;
   areas: AreasStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
-  areaAssignments: AreaAssignmentsStoreSlice;
   campaigns: CampaignsStoreSlice;
+  canvass: CanvassStoreSlice;
   duplicates: PotentialDuplicatesStoreSlice;
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
@@ -86,6 +88,7 @@ const reducer = {
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
+  canvass: canvassSlice.reducer,
   duplicates: potentialDuplicatesSlice.reducer,
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,

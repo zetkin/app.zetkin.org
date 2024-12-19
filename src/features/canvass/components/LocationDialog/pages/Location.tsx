@@ -13,10 +13,10 @@ import {
   ZetkinLocation,
 } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
-import uselocationVisits from 'features/areaAssignments/hooks/useLocationVisits';
+import uselocationVisits from 'features/canvass/hooks/useLocationVisits';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import estimateVisitedHouseholds from 'features/areaAssignments/utils/estimateVisitedHouseholds';
+import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 
 type LocationProps = {
   assignment: ZetkinAreaAssignment;

@@ -9,7 +9,7 @@ export default function useAllLocationVisits(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const visitList = useAppSelector(
-    (state) => state.areaAssignments.visitsByAssignmentId[assignmentId]
+    (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
   return loadListIfNecessary(visitList, dispatch, {

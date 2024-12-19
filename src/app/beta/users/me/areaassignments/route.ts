@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { AreaAssignmentModel } from 'features/areaAssignments/models';
-import { AssignmentWithAreas } from 'features/areaAssignments/types';
+import { AssignmentWithAreas } from 'features/canvass/types';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { AreaModel } from 'features/geography/models';
 import { ZetkinArea } from 'features/geography/types';

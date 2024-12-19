@@ -6,7 +6,7 @@ import useRemoteList from 'core/hooks/useRemoteList';
 export default function useMyAreaAssignments() {
   const apiClient = useApiClient();
   const list = useAppSelector(
-    (state) => state.areaAssignments.myAssignmentsWithAreasList
+    (state) => state.canvass.myAssignmentsWithAreasList
   );
 
   const assignments = useRemoteList(list, {

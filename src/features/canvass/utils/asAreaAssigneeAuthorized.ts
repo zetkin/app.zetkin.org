@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
-import { AreaAssignmentModel } from '../models';
+import { AreaAssignmentModel } from '../../areaAssignments/models';
 
 type GuardedFnProps = {
   apiClient: BackendApiClient;

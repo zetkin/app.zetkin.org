@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { makeRPCDef } from 'core/rpc/types';
-import { ZetkinLocation } from '../../types';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 export const paramsSchema = z.object({
   households: z.array(

@@ -1,4 +1,4 @@
-import { Household } from '../types';
+import { Household } from '../../areaAssignments/types';
 
 export type ProgressState = 'none' | 'some' | 'all';
 

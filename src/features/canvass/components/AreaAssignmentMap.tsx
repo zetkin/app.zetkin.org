@@ -22,12 +22,12 @@ import {
 import { ZetkinArea } from '../../geography/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import useCreateLocation from '../hooks/useCreateLocation';
-import useLocations from '../hooks/useLocations';
+import useLocations from 'features/areaAssignments/hooks/useLocations';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import getVisitState from '../utils/getVisitState';
 import MarkerIcon from '../utils/markerIcon';
-import { ZetkinAreaAssignment } from '../types';
-import MapControls from './MapControls';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import MapControls from 'features/areaAssignments/components/MapControls';
 import objToLatLng from 'features/geography/utils/objToLatLng';
 import AreaAssignmentMapOverlays from './AreaAssignmentMapOverlays';
 import useAllLocationVisits from '../hooks/useAllLocationVisits';

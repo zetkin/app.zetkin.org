@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import MyAreaAssignmentPage from 'features/areaAssignments/components/MyAreaAssignmentPage';
+import MyAreaAssignmentPage from 'features/canvass/components/MyAreaAssignmentPage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 

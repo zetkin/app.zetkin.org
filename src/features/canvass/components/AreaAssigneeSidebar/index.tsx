@@ -10,8 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { ZetkinAreaAssignment } from '../../types';
-import useSidebarStats from 'features/areaAssignments/hooks/useSidebarStats';
+import { ZetkinAreaAssignment } from '../../../areaAssignments/types';
+import useSidebarStats from 'features/canvass/hooks/useSidebarStats';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type Props = {

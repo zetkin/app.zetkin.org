@@ -1,6 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinLocation, ZetkinLocationPostBody } from '../types';
-import { locationCreated } from '../store';
+import { ZetkinLocation } from '../../areaAssignments/types';
+import { locationCreated } from '../../areaAssignments/store';
+import { ZetkinLocationPostBody } from '../types';
 
 export default function useCreateLocation(orgId: number) {
   const apiClient = useApiClient();

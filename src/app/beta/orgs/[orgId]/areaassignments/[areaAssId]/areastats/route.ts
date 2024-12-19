@@ -13,7 +13,7 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import isPointInsidePolygon from 'features/areaAssignments/utils/isPointInsidePolygon';
+import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 import { ZetkinArea } from 'features/geography/types';

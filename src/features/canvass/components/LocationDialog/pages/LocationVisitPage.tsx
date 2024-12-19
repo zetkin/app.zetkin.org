@@ -12,10 +12,8 @@ import {
 
 import PageBase from './PageBase';
 import IntInput from '../IntInput';
-import {
-  ZetkinAreaAssignment,
-  ZetkinLocationVisit,
-} from 'features/areaAssignments/types';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import { ZetkinLocationVisit } from 'features/canvass/types';
 
 type Props = {
   active: boolean;

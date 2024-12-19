@@ -15,7 +15,7 @@ import {
   ZetkinLocation,
 } from 'features/areaAssignments/types';
 import getAreaData from 'features/areaAssignments/utils/getAreaData';
-import isPointInsidePolygon from 'features/areaAssignments/utils/isPointInsidePolygon';
+import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { ZetkinArea } from 'features/geography/types';

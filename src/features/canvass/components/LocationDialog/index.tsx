@@ -9,13 +9,13 @@ import {
   ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import useLocationMutations from 'features/areaAssignments/hooks/useLocationMutations';
 import ZUINavStack from 'zui/ZUINavStack';
 import EditHousehold from './pages/EditHousehold';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
-import EncouragingSparkle from '../EncouragingSparkle';
 import LocationVisitPage from './pages/LocationVisitPage';
 import HouseholdsPage from './pages/HouseholdsPage';
+import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
+import EncouragingSparkle from '../EncouragingSparkle';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;

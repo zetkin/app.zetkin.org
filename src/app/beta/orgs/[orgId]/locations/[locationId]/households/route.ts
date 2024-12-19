@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { LocationModel } from 'features/areaAssignments/models';
-import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
+import asAreaAssigneeAuthorized from 'features/canvass/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
   params: {

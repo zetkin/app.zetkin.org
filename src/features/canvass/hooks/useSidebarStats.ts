@@ -4,10 +4,8 @@ import {
   locationsInvalidated,
   locationsLoad,
   locationsLoaded,
-  visitsInvalidated,
-  visitsLoad,
-  visitsLoaded,
-} from '../store';
+} from '../../areaAssignments/store';
+import { visitsLoad, visitsLoaded, visitsInvalidated } from '../store';
 import useMembership from 'features/organizations/hooks/useMembership';
 import estimateVisitedHouseholds from '../utils/estimateVisitedHouseholds';
 
@@ -39,7 +37,7 @@ export default function useSidebarStats(
     (state) => state.areaAssignments.locationList
   );
   const visitList = useAppSelector(
-    (state) => state.areaAssignments.visitsByAssignmentId[assignmentId]
+    (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
   const membershipFuture = useMembership(orgId);

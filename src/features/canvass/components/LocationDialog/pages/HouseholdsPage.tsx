@@ -14,8 +14,8 @@ import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import { Household, ZetkinLocation } from 'features/areaAssignments/types';
-import useLocationMutations from 'features/areaAssignments/hooks/useLocationMutations';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 
 type Props = {
   location: ZetkinLocation;

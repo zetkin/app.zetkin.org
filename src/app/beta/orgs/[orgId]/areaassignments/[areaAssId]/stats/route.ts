@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import isPointInsidePolygon from 'features/areaAssignments/utils/isPointInsidePolygon';
+import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
 import {
   AreaAssignmentModel,
   LocationModel,

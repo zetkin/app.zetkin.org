@@ -3,12 +3,12 @@ import { IconButton } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
 
 import PageBaseHeader from './pages/PageBaseHeader';
-import useLocationVisits from 'features/areaAssignments/hooks/useLocationVisits';
+import useLocationVisits from 'features/canvass/hooks/useLocationVisits';
 import {
   ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import estimateVisitedHouseholds from 'features/areaAssignments/utils/estimateVisitedHouseholds';
+import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 
 type Props = {
   assignment: ZetkinAreaAssignment;

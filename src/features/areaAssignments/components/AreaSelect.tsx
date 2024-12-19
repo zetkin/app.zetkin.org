@@ -20,7 +20,7 @@ import {
   ZetkinLocation,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import isPointInsidePolygon from '../utils/isPointInsidePolygon';
+import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import useAreaAssignmentSessionMutations from '../hooks/useAreaAssingmentSessionMutations';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';

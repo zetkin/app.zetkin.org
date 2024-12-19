@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   HouseholdPatchBody,
-  Visit,
-  ZetkinLocation,
   ZetkinLocationPatchBody,
   ZetkinLocationVisit,
   ZetkinLocationVisitPostBody,
 } from '../types';
-import { locationUpdated, visitCreated } from '../store';
+import { visitCreated } from '../store';
+import { locationUpdated } from '../../areaAssignments/store';
 import createHouseholds from '../rpc/createHouseholds/client';
+import { Visit, ZetkinLocation } from 'features/areaAssignments/types';
 
 export default function useLocationMutations(
   orgId: number,

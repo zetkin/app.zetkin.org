@@ -21,7 +21,7 @@ import {
 import { ZetkinArea } from 'features/geography/types';
 import objToLatLng from 'features/geography/utils/objToLatLng';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
-import isPointInsidePolygon from '../utils/isPointInsidePolygon';
+import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 
 const LocationMarker: FC<{
   areaAssId: string;

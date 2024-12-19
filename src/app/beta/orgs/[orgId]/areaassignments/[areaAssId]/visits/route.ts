@@ -5,7 +5,7 @@ import {
   AreaAssignmentModel,
   LocationVisitModel,
 } from 'features/areaAssignments/models';
-import asAreaAssigneeAuthorized from 'features/areaAssignments/utils/asAreaAssigneeAuthorized';
+import asAreaAssigneeAuthorized from 'features/canvass/utils/asAreaAssigneeAuthorized';
 
 type RouteMeta = {
   params: {

@@ -10,11 +10,14 @@ import ZUIFutures from 'zui/ZUIFutures';
 import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
 import { AssignmentWithAreas } from '../types';
-import AreaAssigneeSidebar from './AreaAssigneeSidebar';
+import AreaAssigneeSidebar from '../../canvass/components/AreaAssigneeSidebar';
 
-const AreaAssignmentMap = dynamic(() => import('./AreaAssignmentMap'), {
-  ssr: false,
-});
+const AreaAssignmentMap = dynamic(
+  () => import('../../canvass/components/AreaAssignmentMap'),
+  {
+    ssr: false,
+  }
+);
 
 const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
   assignment,

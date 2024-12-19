@@ -2,7 +2,10 @@ import { Box, Button } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
-import { ZetkinAreaAssignment, ZetkinLocation } from '../types';
+import {
+  ZetkinAreaAssignment,
+  ZetkinLocation,
+} from 'features/areaAssignments/types';
 import LocationDialog from './LocationDialog';
 import { CreateLocationCard } from './CreateLocationCard';
 import ContractedHeader from './LocationDialog/ContractedHeader';

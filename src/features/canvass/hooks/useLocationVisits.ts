@@ -11,7 +11,7 @@ export default function useLocationVisits(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const visitList = useAppSelector(
-    (state) => state.areaAssignments.visitsByAssignmentId[assignmentId]
+    (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
   const future = loadListIfNecessary(visitList, dispatch, {

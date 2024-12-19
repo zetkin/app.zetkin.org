@@ -30,10 +30,6 @@ export type ZetkinAreaAssignment = {
   title: string | null;
 };
 
-export type AssignmentWithAreas = ZetkinAreaAssignment & {
-  areas: ZetkinArea[];
-};
-
 export type ZetkinAreaAssignmentPostBody = Partial<
   Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
 > & {
@@ -63,8 +59,6 @@ export type Household = {
   visits: Visit[];
 };
 
-export type HouseholdPatchBody = Partial<Omit<Household, 'id'>>;
-
 export type ZetkinLocation = {
   description: string | null;
   households: Household[];
@@ -72,34 +66,6 @@ export type ZetkinLocation = {
   orgId: number;
   position: { lat: number; lng: number };
   title: string | null;
-};
-
-export type ZetkinLocationVisit = {
-  areaAssId: string;
-  id: string;
-  locationId: string;
-  personId: number;
-  responses: {
-    metricId: string;
-    responseCounts: number[];
-  }[];
-  timestamp: string;
-};
-
-export type ZetkinLocationVisitPostBody = Omit<
-  ZetkinLocationVisit,
-  'id' | 'timestamp' | 'personId'
->;
-
-export type ZetkinLocationPostBody = Partial<
-  Omit<ZetkinLocation, 'id' | 'households'>
->;
-
-export type ZetkinLocationPatchBody = Partial<
-  Omit<ZetkinLocation, 'id' | 'households'>
-> & {
-  households?: Partial<Omit<Household, 'id' | 'visits'>> &
-    { visits?: Partial<Omit<Visit, 'id'>>[] }[];
 };
 
 export type ZetkinAreaAssignmentSession = {

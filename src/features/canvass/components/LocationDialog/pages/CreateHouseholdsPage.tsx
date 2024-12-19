@@ -4,8 +4,8 @@ import { FC, useCallback, useState } from 'react';
 import { DoorFrontOutlined } from '@mui/icons-material';
 
 import PageBase from './PageBase';
-import useLocationMutations from 'features/areaAssignments/hooks/useLocationMutations';
 import IntInput from '../IntInput';
+import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 
 type Props = {
   locationId: string;
