@@ -6,6 +6,7 @@ type ZetkinCanvassAssignmentModelType = {
   campId: number;
   end_date: string | null;
   id: number;
+  instructions: string;
   metrics: (Omit<ZetkinMetric, 'id'> & { _id: string })[];
   orgId: number;
   reporting_level: 'household' | 'place' | null;
@@ -26,6 +27,7 @@ const canvassAssignmentSchema =
       default: null,
       type: String,
     },
+    instructions: String,
     metrics: [
       {
         definesDone: Boolean,

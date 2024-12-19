@@ -3,8 +3,8 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import MyCanvassInstructionsPage from 'features/canvassAssignments/components/MyCanvassInstructionsPage';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import MyCanvassAssignmentPage from 'features/canvassAssignments/components/MyCanvassAssignmentPage';
 
 interface PageProps {
   params: {
@@ -22,8 +22,8 @@ export default async function Page({ params }: PageProps) {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <MyCanvassInstructionsPage canvassAssId={canvassAssId} />;
+    return <MyCanvassAssignmentPage canvassAssId={canvassAssId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/canvass/${canvassAssId}`);
+    return redirect(`/login?redirect=/canvass/${canvassAssId}/map`);
   }
 }
