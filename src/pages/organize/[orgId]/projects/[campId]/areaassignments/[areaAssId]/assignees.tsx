@@ -13,6 +13,8 @@ import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAss
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -32,6 +34,7 @@ type Props = {
 };
 
 const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
+  const messages = useMessages(messageIds);
   const allSessions =
     useAreaAssignmentSessions(parseInt(orgId), areaAssId).data || [];
   const sessions = allSessions.filter(
@@ -58,7 +61,7 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
     {
       field: 'name',
       flex: 1,
-      headerName: 'Name',
+      headerName: messages.assignees.columns.name(),
       valueGetter: (params) =>
         `${params.row.person.first_name} ${params.row.person.last_name}`,
     },
@@ -67,7 +70,7 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
       field: 'areas',
       flex: 1,
       headerAlign: 'left',
-      headerName: 'Areas',
+      headerName: messages.assignees.columns.areas(),
       type: 'number',
       valueGetter: (params) => params.row.sessions.length,
     },

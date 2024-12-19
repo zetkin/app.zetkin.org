@@ -1,6 +1,12 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.areaAssignments', {
+  assignees: {
+    columns: {
+      areas: m('Areas'),
+      name: m('Name'),
+    },
+  },
   default: {
     description: m('Empty description'),
     title: m('Untitled area'),
