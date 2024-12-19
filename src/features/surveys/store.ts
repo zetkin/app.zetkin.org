@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { personUpdated } from 'features/profile/store';
 import { SurveyStats } from './rpc/getSurveyStats';
 import {
   ELEMENT_TYPE,
@@ -39,6 +40,33 @@ const initialState: SurveysStoreSlice = {
 };
 
 const surveysSlice = createSlice({
+  extraReducers: (builder) =>
+    builder.addCase(personUpdated, (state, action) => {
+      const person = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item?.data?.respondent?.id === person.id
+      );
+
+      if (item?.data?.respondent) {
+        const respondent = item.data.respondent;
+
+        if (person.email) {
+          respondent.email = person.email;
+        }
+        if (person.first_name) {
+          respondent.first_name = person.first_name;
+        }
+        if (person.last_name) {
+          respondent.last_name = person.last_name;
+        }
+      }
+      const submissionsUpdated = state.submissionList.items
+        .map((item) => item.data)
+        .filter((data): data is ZetkinSurveySubmission => data !== null);
+
+      addSubmissionToState(state, submissionsUpdated);
+    }),
+
   initialState,
   name: 'surveys',
   reducers: {
