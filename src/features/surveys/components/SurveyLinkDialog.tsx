@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   Typography,
 } from '@mui/material';
 
@@ -34,13 +35,19 @@ const SurveyLinkDialog = ({
   return (
     <Dialog open={open}>
       <DialogTitle>{messages.surveyDialog.title()}</DialogTitle>
+      <Divider />
       <DialogContent>
-        <Box alignItems="center" display="flex">
+        <Box alignItems="center" display="flex" mb={2}>
           {email}
           <Box alignItems="center" display="flex" ml={2} mr={2}>
-            <ArrowForward />
+            <ArrowForward
+              color="secondary"
+              sx={{
+                opacity: '50%',
+              }}
+            />
           </Box>
-          <ZUIPersonAvatar orgId={orgId} personId={person?.id ?? 0} />
+          <ZUIPersonAvatar orgId={orgId} personId={person?.id ?? 0} size="sm" />
           <Typography ml={2} variant="h6">
             {person?.first_name} {person?.last_name}
           </Typography>
@@ -48,7 +55,9 @@ const SurveyLinkDialog = ({
         {messages.surveyDialog.description()}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>{messages.surveyDialog.cancel()}</Button>
+        <Button onClick={onClose} variant="outlined">
+          {messages.surveyDialog.cancel()}
+        </Button>
         <Button
           onClick={() => {
             updatePerson({ email });
