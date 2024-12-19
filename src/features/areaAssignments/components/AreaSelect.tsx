@@ -181,7 +181,13 @@ const AreaSelect: FC<Props> = ({
                     {selectedAreaStats.num_successful_visited_households}
                   </Typography>
                   <Typography textAlign="center">
-                    <Msg id={messageIds.map.areaInfo.stats.successful} />
+                    <Msg
+                      id={messageIds.map.areaInfo.stats.successful}
+                      values={{
+                        numSuccessfulVisits:
+                          selectedAreaStats.num_successful_visited_households,
+                      }}
+                    />
                   </Typography>
                 </Box>
                 <Box alignItems="center" display="flex" flexDirection="column">
@@ -194,7 +200,12 @@ const AreaSelect: FC<Props> = ({
                     {selectedAreaStats.num_visited_households}
                   </Typography>
                   <Typography textAlign="center">
-                    <Msg id={messageIds.map.areaInfo.stats.visited} />
+                    <Msg
+                      id={messageIds.map.areaInfo.stats.visited}
+                      values={{
+                        numVisited: selectedAreaStats.num_visited_households,
+                      }}
+                    />
                   </Typography>
                 </Box>
               </>
@@ -204,7 +215,10 @@ const AreaSelect: FC<Props> = ({
                 {numberOfHouseholdsInSelectedArea}
               </Typography>
               <Typography textAlign="center">
-                <Msg id={messageIds.map.areaInfo.stats.households} />
+                <Msg
+                  id={messageIds.map.areaInfo.stats.households}
+                  values={{ numHouseholds: numberOfHouseholdsInSelectedArea }}
+                />
               </Typography>
             </Box>
             <Box alignItems="center" display="flex" flexDirection="column">
@@ -212,7 +226,10 @@ const AreaSelect: FC<Props> = ({
                 {locationsInSelectedArea.length}
               </Typography>
               <Typography textAlign="center">
-                <Msg id={messageIds.map.areaInfo.stats.locations} />
+                <Msg
+                  id={messageIds.map.areaInfo.stats.locations}
+                  values={{ numLocations: locationsInSelectedArea.length }}
+                />
               </Typography>
             </Box>
           </Box>

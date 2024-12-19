@@ -37,15 +37,62 @@ export default makeMessages('feat.areaAssignments', {
         title: m('Assignees'),
       },
       stats: {
-        households: m('Households'),
-        locations: m('Locations'),
-        successful: m('Successful visits'),
-        visited: m('Visited'),
+        households: m<{ numHouseholds: number }>(
+          '{numHouseholds, plural, one {Household} other {Households}}'
+        ),
+        locations: m<{ numLocations: number }>(
+          '{numLocations, plural, one {Location} other {Locations}}'
+        ),
+        successful: m<{ numSuccessfulVisits: number }>(
+          '{numSuccessfulVisits, plural, one {Successful visit} other {Successful visits}}'
+        ),
+        visited: m<{ numVisited: number }>(
+          '{numVisited, plural, =0 {Visited} one {Visited} other {Visited}}'
+        ),
       },
+    },
+    filter: {
+      assignees: {
+        assigned: m('Only assigned areas'),
+        label: m('Assignees'),
+        unassigned: m('Only unassigned areas'),
+      },
+      title: m('Add filters to decide what areas you see on the map'),
+      ungroupedTags: m('Ungrouped tags'),
     },
     findArea: {
       filterPlaceHolder: m('Filter'),
       title: m('Find area'),
+    },
+    mapStyle: {
+      area: {
+        label: m('What the area color represents.'),
+        options: {
+          assignees: m('Number of assignees'),
+          hidden: m('Hidden'),
+          households: m('Number of households'),
+          outlined: m('Outlined'),
+          progress: m('Progress in this assignment'),
+        },
+      },
+      center: {
+        label: m('What to show in the center of the area'),
+        options: {
+          assignees: m('Assignees'),
+          hidden: m('Hidden'),
+          households: m('Number of locations and households in the area'),
+          progress: m('Progress in the area in this assignment'),
+        },
+      },
+      markers: {
+        label: m('What the markers represent'),
+        options: {
+          dot: m('Dot'),
+          hidden: m('Hidden'),
+          households: m('Number of households at the location'),
+          progress: m('Progress in this assignment'),
+        },
+      },
     },
   },
   overview: {

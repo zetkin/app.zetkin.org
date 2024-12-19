@@ -9,6 +9,8 @@ import { areaFilterContext } from 'features/geography/components/AreaFilters/Are
 import AddFilterButton from 'features/geography/components/AreaFilters/AddFilterButton';
 import FilterDropDown from 'features/geography/components/FilterDropDown';
 import { assigneesFilterContext } from './AssigneeFilterContext';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
@@ -16,6 +18,7 @@ type Props = {
 };
 
 const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   const [openTagsDropdown, setOpenTagsDropdown] = useState<
     'add' | number | null
@@ -89,7 +92,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     >
       <Box paddingTop={1}>
         <Typography>
-          Add filters to decide what areas you see on the map.
+          <Msg id={messageIds.map.filter.title} />
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" flexGrow={1} gap={1}>
@@ -100,7 +103,9 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
 
             return {
               icon: <Checkbox checked={selected} />,
-              label: item.group ? item.group.title : 'Ungrouped tags',
+              label: item.group
+                ? item.group.title
+                : messages.map.filter.ungroupedTags(),
               onClick: () => {
                 if (selected) {
                   setActiveGroupIds(
@@ -123,7 +128,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           items={[
             {
               icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
-              label: 'Only assigned areas',
+              label: messages.map.filter.assignees.assigned(),
               onClick: () => {
                 if (!assigneesFilter || assigneesFilter == 'unassigned') {
                   onAssigneesFilterChange('assigned');
@@ -134,7 +139,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
             },
             {
               icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
-              label: 'Only unassigned areas',
+              label: messages.map.filter.assignees.unassigned(),
               onClick: () => {
                 if (!assigneesFilter || assigneesFilter == 'assigned') {
                   onAssigneesFilterChange('unassigned');
@@ -144,7 +149,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
               },
             },
           ]}
-          label="Assignees"
+          label={messages.map.filter.assignees.label()}
           onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
           open={openAssigneesDropdown}
           startIcon={
@@ -198,7 +203,11 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
                       },
                     };
                   })}
-                  label={info.group ? info.group.title : 'Ungrouped tags'}
+                  label={
+                    info.group
+                      ? info.group.title
+                      : messages.map.filter.ungroupedTags()
+                  }
                   onToggle={(open) =>
                     setOpenTagsDropdown(open ? groupId : null)
                   }

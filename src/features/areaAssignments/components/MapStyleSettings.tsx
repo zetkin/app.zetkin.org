@@ -3,6 +3,8 @@ import { FC } from 'react';
 import { Pentagon, Place, SquareRounded } from '@mui/icons-material';
 
 import { MapStyle } from './OrganizerMap';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type MapStyleSettingsProps = {
   mapStyle: MapStyle;
@@ -34,7 +36,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
           <Box display="flex" gap={1} paddingBottom={1}>
             <Place color="secondary" />
             <Typography id="location-style-label">
-              What the markers represent.
+              <Msg id={messageIds.map.mapStyle.markers.label} />
             </Typography>
           </Box>
           <Select
@@ -53,19 +55,25 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
             }}
             value={mapStyle.location}
           >
-            <MenuItem value="dot">Dot</MenuItem>
-            <MenuItem value="households">
-              Number of households at the location
+            <MenuItem value="dot">
+              <Msg id={messageIds.map.mapStyle.markers.options.dot} />
             </MenuItem>
-            <MenuItem value="progress">Progress in this assignment</MenuItem>
-            <MenuItem value="hide">Hidden</MenuItem>
+            <MenuItem value="households">
+              <Msg id={messageIds.map.mapStyle.markers.options.households} />
+            </MenuItem>
+            <MenuItem value="progress">
+              <Msg id={messageIds.map.mapStyle.markers.options.progress} />
+            </MenuItem>
+            <MenuItem value="hide">
+              <Msg id={messageIds.map.mapStyle.markers.options.hidden} />
+            </MenuItem>
           </Select>
         </FormControl>
         <FormControl variant="outlined">
           <Box display="flex" gap={1} paddingBottom={1}>
             <Pentagon color="secondary" />
             <Typography id="area-style-label">
-              What the area color represents.
+              <Msg id={messageIds.map.mapStyle.area.label} />
             </Typography>
           </Box>
           <Select
@@ -85,18 +93,28 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
             }}
             value={mapStyle.area}
           >
-            <MenuItem value="assignees">If there are assignees</MenuItem>
-            <MenuItem value="households">Number of households</MenuItem>
-            <MenuItem value="progress">Progress in this assignment</MenuItem>
-            <MenuItem value="outlined">Outlined</MenuItem>
-            <MenuItem value="hide">Hidden</MenuItem>
+            <MenuItem value="assignees">
+              <Msg id={messageIds.map.mapStyle.area.options.assignees} />
+            </MenuItem>
+            <MenuItem value="households">
+              <Msg id={messageIds.map.mapStyle.area.options.households} />
+            </MenuItem>
+            <MenuItem value="progress">
+              <Msg id={messageIds.map.mapStyle.area.options.progress} />
+            </MenuItem>
+            <MenuItem value="outlined">
+              <Msg id={messageIds.map.mapStyle.area.options.outlined} />
+            </MenuItem>
+            <MenuItem value="hide">
+              <Msg id={messageIds.map.mapStyle.area.options.hidden} />
+            </MenuItem>
           </Select>
         </FormControl>
         <FormControl variant="outlined">
           <Box display="flex" gap={1} paddingBottom={1}>
             <SquareRounded color="secondary" />
             <Typography id="overlay-style-label">
-              What to show in the center of the areas.
+              <Msg id={messageIds.map.mapStyle.center.label} />
             </Typography>
           </Box>
           <Select
@@ -115,14 +133,18 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
             }}
             value={mapStyle.overlay}
           >
-            <MenuItem value="assignees">Assignees</MenuItem>
+            <MenuItem value="assignees">
+              <Msg id={messageIds.map.mapStyle.center.options.assignees} />
+            </MenuItem>
             <MenuItem value="households">
-              Number of places and households in the area
+              <Msg id={messageIds.map.mapStyle.center.options.households} />
             </MenuItem>
             <MenuItem value="progress">
-              Progress for the area in this assignment
+              <Msg id={messageIds.map.mapStyle.center.options.progress} />
             </MenuItem>
-            <MenuItem value="hide">Hidden</MenuItem>
+            <MenuItem value="hide">
+              <Msg id={messageIds.map.mapStyle.center.options.hidden} />
+            </MenuItem>
           </Select>
         </FormControl>
       </Box>
