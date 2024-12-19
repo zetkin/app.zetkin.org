@@ -16,6 +16,8 @@ import ZUIFutures from 'zui/ZUIFutures';
 import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
 import useAssignmentAreaGraph from 'features/areaAssignments/hooks/useAssignmentAreaGraph';
 import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -38,6 +40,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   orgId,
   areaAssId,
 }) => {
+  const messages = useMessages(messageIds);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const statsFuture = useAreaAssignmentStats(parseInt(orgId), areaAssId);
   const areasStats = useAssignmentAreaStats(parseInt(orgId), areaAssId);
@@ -65,7 +68,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                 <Card>
                   <Box p={10} sx={{ textAlign: ' center' }}>
                     <Typography>
-                      This assignment has not been planned yet.
+                      <Msg id={messageIds.overview.empty.description} />
                     </Typography>
                     <Box pt={4}>
                       <Button
@@ -73,7 +76,9 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         startIcon={<Edit />}
                         variant="contained"
                       >
-                        Plan now
+                        <Msg
+                          id={messageIds.overview.empty.startPlanningButton}
+                        />
                       </Button>
                     </Box>
                   </Box>
@@ -89,30 +94,31 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                       maxHeight={40}
                       p={1}
                     >
-                      <Typography variant="h5">Progress</Typography>
+                      <Typography variant="h5">
+                        <Msg id={messageIds.overview.progress.statsTitle} />
+                      </Typography>
                     </Box>
                     <Divider />
                     <Box display="flex" width="100%">
                       <NumberCard
                         firstNumber={stats.num_successful_visited_households}
-                        message={'Successful visits'}
+                        message={messages.overview.progress.headers.successful()}
                         secondNumber={stats.num_visited_households}
                       />
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
                         firstNumber={stats.num_visited_households}
-                        message={'Households visited'}
+                        message={messages.overview.progress.headers.households()}
                         secondNumber={stats.num_households}
                       />
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
                         firstNumber={stats.num_visited_locations}
-                        message={'Places visited'}
+                        message={messages.overview.progress.headers.locations()}
                         secondNumber={stats.num_locations}
                       />
                     </Box>
                   </Card>
-
                   <Grid container spacing={2}>
                     <ZUIFutures futures={{ areasStats, dataGraph }}>
                       {({ data: { areasStats, dataGraph } }) => {

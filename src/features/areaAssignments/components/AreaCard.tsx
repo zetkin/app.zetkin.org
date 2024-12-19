@@ -22,6 +22,8 @@ import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignment,
 } from '../types';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type AreaCardProps = {
   areas: ZetkinAssignmentAreaStatsItem[];
@@ -47,6 +49,7 @@ const AreaCard: FC<AreaCardProps> = ({
   data,
   maxVisitedHouseholds,
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const router = useRouter();
 
@@ -56,7 +59,7 @@ const AreaCard: FC<AreaCardProps> = ({
         x: point.hour !== '0' ? `${point.date} ${point.hour}` : point.date,
         y: point.householdVisits,
       })),
-      id: `Households Visited`,
+      id: messages.overview.progress.headers.households(),
     };
 
     const successfulVisitsSeries: NivoSeries = {
@@ -64,7 +67,7 @@ const AreaCard: FC<AreaCardProps> = ({
         x: point.hour !== '0' ? `${point.date} ${point.hour}` : point.date,
         y: point.successfulVisits,
       })),
-      id: `Successful Visits`,
+      id: messages.overview.progress.headers.successful(),
     };
 
     return [householdVisitsSeries, successfulVisitsSeries];
@@ -111,9 +114,15 @@ const AreaCard: FC<AreaCardProps> = ({
                     }}
                     variant="h6"
                   >
-                    {areaData?.area.id !== 'noArea'
-                      ? areaData?.area.title || 'Untitled area'
-                      : 'Unassigned visits'}
+                    {areaData?.area.id !== 'noArea' ? (
+                      areaData?.area.title || (
+                        <Msg id={messageIds.default.title} />
+                      )
+                    ) : (
+                      <Msg
+                        id={messageIds.overview.progress.unassignedVisits.title}
+                      />
+                    )}
                   </Typography>
                   <Divider
                     orientation="vertical"
@@ -139,7 +148,16 @@ const AreaCard: FC<AreaCardProps> = ({
                     <MapIcon />
                   </IconButton>
                 ) : (
-                  <Tooltip title="This graph gathers the visits made outside the assigned areas">
+                  <Tooltip
+                    title={
+                      <Msg
+                        id={
+                          messageIds.overview.progress.unassignedVisits
+                            .description
+                        }
+                      />
+                    }
+                  >
                     <InfoOutlined
                       sx={{
                         color: theme.palette.secondary.main,
@@ -167,14 +185,17 @@ const AreaCard: FC<AreaCardProps> = ({
                       }
                       data={transformedData}
                       defs={[
-                        linearGradientDef('Households visited', [
-                          { color: theme.palette.primary.light, offset: 0 },
-                          {
-                            color: theme.palette.primary.dark,
-                            offset: 100,
-                            opacity: 0,
-                          },
-                        ]),
+                        linearGradientDef(
+                          messages.overview.progress.headers.households(),
+                          [
+                            { color: theme.palette.primary.light, offset: 0 },
+                            {
+                              color: theme.palette.primary.dark,
+                              offset: 100,
+                              opacity: 0,
+                            },
+                          ]
+                        ),
                       ]}
                       enableArea={true}
                       enableGridX={false}
@@ -203,12 +224,12 @@ const AreaCard: FC<AreaCardProps> = ({
                                     backgroundColor: (() => {
                                       if (areaData?.area.id !== 'noArea') {
                                         return dataPoint.serieId ===
-                                          'Household Visits'
+                                          messages.overview.progress.headers.households()
                                           ? theme.palette.primary.light
                                           : theme.palette.primary.dark;
                                       } else {
                                         return dataPoint.serieId ===
-                                          'Household Visits'
+                                          messages.overview.progress.headers.households()
                                           ? theme.palette.grey[400]
                                           : theme.palette.grey[900];
                                       }
@@ -244,7 +265,7 @@ const AreaCard: FC<AreaCardProps> = ({
               <Box display="flex" justifyContent="start" sx={{ margin: 1 }}>
                 <Box marginLeft={1} marginRight={2} textAlign="start">
                   <Typography sx={{ fontSize: 14 }}>
-                    Households visited
+                    <Msg id={messageIds.overview.progress.headers.households} />
                   </Typography>
                   <Typography
                     color={
@@ -260,7 +281,9 @@ const AreaCard: FC<AreaCardProps> = ({
                 {area.areaId !== 'noArea' && (
                   <Box textAlign="start">
                     <Typography sx={{ fontSize: 14 }}>
-                      Places visited
+                      <Msg
+                        id={messageIds.overview.progress.headers.locations}
+                      />
                     </Typography>
                     <Typography
                       color={

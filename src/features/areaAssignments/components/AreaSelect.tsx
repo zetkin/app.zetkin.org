@@ -93,7 +93,7 @@ const AreaSelect: FC<Props> = ({
               {selectedArea ? (
                 selectedArea?.title || <Msg id={messageIds.default.title} />
               ) : (
-                <Msg id={messageIds.findArea.title} />
+                <Msg id={messageIds.map.findArea.title} />
               )}
             </Typography>
           </Box>
@@ -116,7 +116,7 @@ const AreaSelect: FC<Props> = ({
               endAdornment: <Search color="secondary" />,
             }}
             onChange={(evt) => onFilterTextChange(evt.target.value)}
-            placeholder={messages.findArea.filterPlaceHolder()}
+            placeholder={messages.map.findArea.filterPlaceHolder()}
             sx={{ paddingRight: 2 }}
             value={filterText}
             variant="outlined"
@@ -181,7 +181,7 @@ const AreaSelect: FC<Props> = ({
                     {selectedAreaStats.num_successful_visited_households}
                   </Typography>
                   <Typography textAlign="center">
-                    <Msg id={messageIds.areaInfo.stats.successful} />
+                    <Msg id={messageIds.map.areaInfo.stats.successful} />
                   </Typography>
                 </Box>
                 <Box alignItems="center" display="flex" flexDirection="column">
@@ -194,7 +194,7 @@ const AreaSelect: FC<Props> = ({
                     {selectedAreaStats.num_visited_households}
                   </Typography>
                   <Typography textAlign="center">
-                    <Msg id={messageIds.areaInfo.stats.visited} />
+                    <Msg id={messageIds.map.areaInfo.stats.visited} />
                   </Typography>
                 </Box>
               </>
@@ -204,7 +204,7 @@ const AreaSelect: FC<Props> = ({
                 {numberOfHouseholdsInSelectedArea}
               </Typography>
               <Typography textAlign="center">
-                <Msg id={messageIds.areaInfo.stats.households} />
+                <Msg id={messageIds.map.areaInfo.stats.households} />
               </Typography>
             </Box>
             <Box alignItems="center" display="flex" flexDirection="column">
@@ -212,7 +212,7 @@ const AreaSelect: FC<Props> = ({
                 {locationsInSelectedArea.length}
               </Typography>
               <Typography textAlign="center">
-                <Msg id={messageIds.areaInfo.stats.locations} />
+                <Msg id={messageIds.map.areaInfo.stats.locations} />
               </Typography>
             </Box>
           </Box>
@@ -229,7 +229,7 @@ const AreaSelect: FC<Props> = ({
           </Typography>
           <Box>
             <Typography variant="h6">
-              <Msg id={messageIds.areaInfo.assignees.title} />
+              <Msg id={messageIds.map.areaInfo.assignees.title} />
             </Typography>
             {!selectedAreaAssignees.length && (
               <Typography
@@ -239,7 +239,7 @@ const AreaSelect: FC<Props> = ({
                 }
                 sx={{ overflowWrap: 'anywhere' }}
               >
-                <Msg id={messageIds.areaInfo.assignees.none} />
+                <Msg id={messageIds.map.areaInfo.assignees.none} />
               </Typography>
             )}
             {selectedAreaAssignees.map((assignee) => (
@@ -258,7 +258,7 @@ const AreaSelect: FC<Props> = ({
             ))}
             <Box mt={2}>
               <Typography variant="h6">
-                <Msg id={messageIds.areaInfo.assignees.add} />
+                <Msg id={messageIds.map.areaInfo.assignees.add} />
               </Typography>
               <ZUIPersonSelect
                 onChange={function (person: ZetkinPerson): void {

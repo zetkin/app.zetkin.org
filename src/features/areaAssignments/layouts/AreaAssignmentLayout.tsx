@@ -76,22 +76,22 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
         <Box>
           {state == AreaAssignmentState.OPEN ? (
             <Button onClick={endAssignment} variant="outlined">
-              <Msg id={messageIds.actions.end} />
+              <Msg id={messageIds.layout.actions.end} />
             </Button>
           ) : (
             <Button onClick={startAssignment} variant="contained">
-              <Msg id={messageIds.actions.start} />
+              <Msg id={messageIds.layout.actions.start} />
             </Button>
           )}
           <ZUIEllipsisMenu
             items={[
               {
-                label: <Msg id={messageIds.actions.delete} />,
+                label: <Msg id={messageIds.layout.actions.delete} />,
                 onSelect: () => {
                   showConfirmDialog({
                     onSubmit: handleDelete,
-                    title: messages.actions.delete(),
-                    warningText: messages.actions.deleteWarningText({
+                    title: messages.layout.actions.delete(),
+                    warningText: messages.layout.actions.deleteWarningText({
                       title: areaAssignment.title || messages.default.title(),
                     }),
                   });
@@ -128,7 +128,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
                 <Pentagon />
                 <Typography marginLeft={1}>
                   <Msg
-                    id={messageIds.basicAssignmentStats.areas}
+                    id={messageIds.layout.basicAssignmentStats.areas}
                     values={{ numAreas: data.num_areas }}
                   />
                 </Typography>
@@ -139,7 +139,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
             <People />
             <Typography marginLeft={1}>
               <Msg
-                id={messageIds.basicAssignmentStats.assignees}
+                id={messageIds.layout.basicAssignmentStats.assignees}
                 values={{ numAssignees: areaAssignees.length }}
               />
             </Typography>
@@ -147,10 +147,10 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
         </Box>
       }
       tabs={[
-        { href: '/', label: messages.tabs.overview() },
-        { href: '/map', label: messages.tabs.map() },
-        { href: '/assignees', label: messages.tabs.assignees() },
-        { href: '/report', label: messages.tabs.report() },
+        { href: '/', label: messages.layout.tabs.overview() },
+        { href: '/map', label: messages.layout.tabs.map() },
+        { href: '/assignees', label: messages.layout.tabs.assignees() },
+        { href: '/report', label: messages.layout.tabs.report() },
       ]}
       title={
         <ZUIEditTextinPlace
