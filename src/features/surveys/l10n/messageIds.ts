@@ -175,7 +175,7 @@ export default makeMessages('feat.surveys', {
     add: m('Add'),
     cancel: m("Don't add"),
     description: m(
-      'The person you are about to link does not have an email address while the survey response does. Would you like to add the email address to the person?'
+      'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
     ),
     title: m('Add email address'),
   },
