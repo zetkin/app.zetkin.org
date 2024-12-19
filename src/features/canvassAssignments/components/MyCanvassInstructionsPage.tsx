@@ -1,12 +1,14 @@
 'use client';
 
 import { FC } from 'react';
+import { HomeWork } from '@mui/icons-material';
 import {
+  Avatar,
   Box,
   Button,
   Card,
-  CardContent,
-  Grid,
+  CircularProgress,
+  Divider,
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -18,12 +20,19 @@ import useSidebarStats from '../hooks/useSidebarStats';
 import useCanvassSessions from '../hooks/useCanvassSessions';
 import useMembership from 'features/organizations/hooks/useMembership';
 import useCanvassAssignmentStats from '../hooks/useCanvassAssignmentStats';
+import useOrganization from 'features/organizations/hooks/useOrganization';
+import ZUIFutures from 'zui/ZUIFutures';
+import theme from 'theme';
 
 const InstructionsPage: FC<{
   assignment: ZetkinCanvassAssignment;
 }> = ({ assignment }) => {
+  const orgFuture = useOrganization(assignment.organization.id);
   const router = useRouter();
-  const { stats } = useSidebarStats(assignment.organization.id, assignment.id);
+  const { loading, stats } = useSidebarStats(
+    assignment.organization.id,
+    assignment.id
+  );
 
   const { data } = useCanvassAssignmentStats(
     assignment.organization.id,
@@ -45,151 +54,185 @@ const InstructionsPage: FC<{
   const numberOfAreas = areaIds.length;
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} padding={1}>
-      <Typography>{assignment.title}</Typography>
-      <Box display="flex" justifyContent="space-evenly">
-        <Card
-          sx={{ borderRadius: 2, maxWidth: 300, pr: 1, textAlign: 'center' }}
-        >
-          <CardContent>
-            <Typography gutterBottom variant="subtitle2">
-              Saved Locations
-            </Typography>
-            <Grid alignItems="center" container spacing={1}>
-              <Grid item xs={6}>
-                <Box textAlign="center">
-                  <Typography color="secondary" variant="subtitle1">
-                    {data?.num_places}
-                  </Typography>
-                  <Typography color="text.secondary" variant="subtitle2">
-                    Places
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box textAlign="center">
-                  <Typography
-                    color="secondary"
-                    component="div"
-                    variant="subtitle1"
-                  >
-                    {data?.num_households}
-                  </Typography>
-                  <Typography
-                    color="text.secondary"
-                    sx={{ textAlign: 'center' }}
-                    variant="subtitle2"
-                  >
-                    Households
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-        <Card
-          sx={{ borderRadius: 2, maxWidth: 300, pr: 1, textAlign: 'center' }}
-        >
-          <CardContent>
-            <Typography component="div" gutterBottom variant="subtitle2">
-              Locations visited
-            </Typography>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Box textAlign="center">
-                  <Typography
-                    color="secondary"
-                    component="div"
-                    variant="subtitle1"
-                  >
-                    {stats.allTime.numPlaces}
-                  </Typography>
-                  <Typography color="text.secondary" variant="subtitle2">
-                    Places
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box textAlign="center">
-                  <Typography
-                    color="secondary"
-                    component="div"
-                    variant="subtitle1"
-                  >
-                    {stats.allTime.numHouseholds}
-                  </Typography>
-                  <Typography
-                    color="text.secondary"
-                    sx={{ textAlign: 'center' }}
-                    variant="subtitle2"
-                  >
-                    Households
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Box>
-      <Box display="flex" justifyContent="center" textAlign="center">
-        <Card
+    <ZUIFutures futures={{ org: orgFuture }}>
+      {({ data: { org } }) => (
+        <Box
           sx={{
-            borderRadius: 2,
-            justifyContent: 'center',
-            maxWidth: 200,
-            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100dvh',
+            width: '100vw',
           }}
         >
-          <CardContent>
-            <Typography gutterBottom variant="subtitle2">
-              Areas assigned
-            </Typography>
-            <Grid container justifyContent="center" spacing={1}>
-              <Grid item xs={6}>
-                <Box justifyContent="center" textAlign="center">
-                  <Typography color="secondary" variant="subtitle1">
-                    {numberOfAreas}
-                  </Typography>
-                  <Typography color="text.secondary" variant="subtitle2">
+          <Box
+            alignItems="center"
+            bgcolor={theme.palette.background.paper}
+            display="flex"
+            justifyContent="space-between"
+            padding={2}
+          >
+            <Box>
+              <Typography variant="body1">
+                {assignment.title ?? 'Untitled canvassassignment'}
+              </Typography>
+              <Box alignItems="center" display="flex" gap={1}>
+                <Avatar
+                  src={`/api/orgs/${org.id}/avatar`}
+                  sx={{ height: 24, width: 24 }}
+                />
+                <Typography variant="body2">{org.title}</Typography>
+              </Box>
+            </Box>
+          </Box>
+          <Divider />
+          <Box
+            sx={{
+              overflowY: 'auto',
+              padding: 2,
+            }}
+          >
+            {loading ? (
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Card
+                sx={{
+                  mx: 1,
+                }}
+              >
+                <Box alignItems="center" display="flex">
+                  <Typography m={1} p={1}>
                     Areas
                   </Typography>
+                  <Divider orientation="vertical" sx={{ height: '20px' }} />
+                  <Typography color="secondary" ml={2}>
+                    {numberOfAreas}
+                  </Typography>
                 </Box>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Box>
+                <Divider />
+                <Box alignItems="center" display="flex" ml={2}>
+                  <Box
+                    alignItems="flex-start"
+                    flexDirection="column"
+                    mr={2}
+                    pb={2}
+                  >
+                    <Box alignItems="center" display="flex" mt={2}>
+                      <Typography color="primary" sx={{ mr: 0.5 }} variant="h5">
+                        {stats.allTime.numHouseholds}
+                      </Typography>
+                      <Typography
+                        color="textPrimary"
+                        sx={{ mr: 0.5 }}
+                        variant="h5"
+                      >
+                        {' / '}
+                      </Typography>
+                      <Typography color="secondary" sx={{ mr: 1 }} variant="h5">
+                        {data?.num_households}
+                      </Typography>
+                    </Box>
+                    <Typography color="secondary" pb={2} variant="caption">
+                      Households visited
+                    </Typography>
+                  </Box>
+                  <Divider flexItem orientation="vertical" sx={{ mx: 2 }} />
+                  <Box alignItems="flex-start" flexDirection="column" pb={2}>
+                    <Box alignItems="center" display="flex" mt={2}>
+                      <Typography color="primary" sx={{ mr: 0.5 }} variant="h5">
+                        {stats.allTime.numPlaces}
+                      </Typography>
+                      <Typography
+                        color="textPrimary"
+                        sx={{ mr: 0.5 }}
+                        variant="h5"
+                      >
+                        {' / '}
+                      </Typography>
+                      <Typography
+                        color="secondary"
+                        sx={{ mr: 0.5 }}
+                        variant="h5"
+                      >
+                        {data?.num_places}
+                      </Typography>
+                    </Box>
+                    <Typography color="textSecondary" mb={2} variant="caption">
+                      Places visited
+                    </Typography>
+                  </Box>
+                </Box>
+              </Card>
+            )}
 
-      {assignment.instructions && (
-        <Box mx={1}>
-          <ZUIMarkdown markdown={assignment.instructions} />
+            {assignment.instructions ? (
+              <Card sx={{ mt: 2, mx: 1 }}>
+                <Typography m={2}>Instructions</Typography>
+                <Divider />
+                <Box
+                  sx={{
+                    mx: 1,
+                    paddingBottom: 4,
+                  }}
+                >
+                  <ZUIMarkdown markdown={assignment.instructions} />
+                </Box>
+              </Card>
+            ) : (
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  bottom: 80,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  left: 0,
+                  position: 'absolute',
+                  right: 0,
+                }}
+              >
+                <HomeWork
+                  sx={{ color: theme.palette.grey[400], fontSize: 100 }}
+                />
+                <Typography color="secondary" variant="body1">
+                  You are ready to go
+                </Typography>
+              </Box>
+            )}
+          </Box>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="center"
+            sx={{
+              bottom: 16,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+            }}
+          >
+            <Button
+              fullWidth
+              onClick={() =>
+                router.push(`/my/canvassassignments/${assignment.id}/map`)
+              }
+              sx={{
+                width: '50%',
+              }}
+              variant="contained"
+            >
+              Start Canvassing
+            </Button>
+          </Box>
         </Box>
       )}
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="center"
-        sx={{
-          bottom: 16,
-          left: 0,
-          position: 'absolute',
-          right: 0,
-        }}
-      >
-        <Button
-          fullWidth
-          onClick={() =>
-            router.push(`/my/canvassassignments/${assignment.id}/map`)
-          }
-          sx={{
-            width: '90%',
-          }}
-          variant="contained"
-        >
-          Start Canvassing
-        </Button>
-      </Box>
-    </Box>
+    </ZUIFutures>
   );
 };
 
