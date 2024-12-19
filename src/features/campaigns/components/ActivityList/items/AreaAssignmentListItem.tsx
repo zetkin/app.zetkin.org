@@ -5,6 +5,8 @@ import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 type Props = {
   caId: string;
@@ -12,6 +14,7 @@ type Props = {
 };
 
 const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
+  const messages = useMessages(messageIds);
   const { data: assignment } = useAreaAssignment(orgId, caId);
 
   const allSessions = useAreaAssignmentSessions(orgId, caId).data || [];
@@ -35,7 +38,7 @@ const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
       }/areaassignments/${caId}`}
       PrimaryIcon={Map}
       SecondaryIcon={Person}
-      title={assignment?.title || ''}
+      title={assignment?.title || messages.default.title()}
     />
   );
 };
