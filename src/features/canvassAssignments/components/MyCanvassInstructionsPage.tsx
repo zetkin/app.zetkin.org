@@ -89,6 +89,7 @@ const InstructionsPage: FC<{
             sx={{
               overflowY: 'auto',
               padding: 2,
+              paddingBottom: 8,
             }}
           >
             {loading ? (
@@ -179,7 +180,6 @@ const InstructionsPage: FC<{
                 <Box
                   sx={{
                     mx: 1,
-                    paddingBottom: 4,
                   }}
                 >
                   <ZUIMarkdown markdown={assignment.instructions} />
