@@ -120,7 +120,7 @@ const CanvasserSidebar: FC<Props> = ({ assignment }) => {
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
           </ListItem>
         )}
-        <ListItemButton href="/my/canvassassignments" sx={{ px: 1 }}>
+        <ListItemButton href="/my/home" sx={{ px: 1 }}>
           <ListItemText primary="My assignments" />
         </ListItemButton>
         <ListItemButton href="/logout" sx={{ px: 1 }}>

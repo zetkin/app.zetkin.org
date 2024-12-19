@@ -16,6 +16,7 @@ export default function mockState(overrides?: RootState) {
       callList: remoteList(),
       callersById: {},
       statsById: {},
+      userAssignmentList: remoteList(),
     },
     campaigns: {
       campaignList: remoteList(),
@@ -43,6 +44,7 @@ export default function mockState(overrides?: RootState) {
       themeList: remoteList(),
     },
     events: {
+      allEventsList: remoteList(),
       eventList: remoteList(),
       eventsByCampaignId: {},
       eventsByDate: {},
@@ -60,6 +62,7 @@ export default function mockState(overrides?: RootState) {
       selectedEventIds: [],
       statsByEventId: {},
       typeList: remoteList(),
+      userEventList: remoteList(),
     },
     files: {
       fileList: remoteList(),

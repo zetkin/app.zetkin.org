@@ -21,10 +21,12 @@ import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
 import { createHouseholdsDef } from 'features/canvassAssignments/rpc/createHouseholds/server';
+import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
 
+  rpcRouter.register(getAllEventsDef);
   rpcRouter.register(deleteFolderRouteDef);
   rpcRouter.register(createNewViewRouteDef);
   rpcRouter.register(copyViewRouteDef);

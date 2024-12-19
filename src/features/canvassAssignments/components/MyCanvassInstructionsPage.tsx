@@ -219,9 +219,7 @@ const InstructionsPage: FC<{
           >
             <Button
               fullWidth
-              onClick={() =>
-                router.push(`/my/canvassassignments/${assignment.id}/map`)
-              }
+              onClick={() => router.push(`/canvass/${assignment.id}/map`)}
               sx={{
                 width: '50%',
               }}
@@ -243,7 +241,7 @@ type MyCanvassInstructionsPageProps = {
 const MyCanvassInstructionsPage: FC<MyCanvassInstructionsPageProps> = ({
   canvassAssId,
 }) => {
-  const myAssignments = useMyCanvassAssignments().data || [];
+  const myAssignments = useMyCanvassAssignments() || [];
   const assignment = myAssignments.find(
     (assignment) => assignment.id == canvassAssId
   );

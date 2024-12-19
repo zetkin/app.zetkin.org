@@ -10,6 +10,7 @@ import {
   SurveyActivity,
   TaskActivity,
 } from '../types';
+import sortEventsByStartTime from 'features/events/utils/sortEventsByStartTime';
 
 export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
@@ -51,22 +52,7 @@ export function clusterEvents(
 ): ClusteredEvent[] {
   const sortedEvents = eventActivities
     .map((activity) => activity.data)
-    .sort((a, b) => {
-      const aStart = new Date(a.start_time);
-      const bStart = new Date(b.start_time);
-      const diffStart = aStart.getTime() - bStart.getTime();
-
-      // Primarily sort by start time
-      if (diffStart != 0) {
-        return diffStart;
-      }
-
-      // When start times are identical, sort by end time
-      const aEnd = new Date(a.end_time);
-      const bEnd = new Date(b.end_time);
-
-      return aEnd.getTime() - bEnd.getTime();
-    });
+    .sort(sortEventsByStartTime);
 
   let allClusters: ClusteredEvent[] = [];
   let pendingClusters: ClusteredEvent[] = [];
