@@ -4,12 +4,12 @@ import { Pentagon, Place, SquareRounded } from '@mui/icons-material';
 
 import { MapStyle } from './OrganizerMap';
 
-type LayerSettingsProps = {
+type MapStyleSettingsProps = {
   mapStyle: MapStyle;
   onMapStyleChange: (newMapStyle: MapStyle) => void;
 };
 
-const LayerSettings: FC<LayerSettingsProps> = ({
+const MapStyleSettings: FC<MapStyleSettingsProps> = ({
   mapStyle,
   onMapStyleChange,
 }) => {
@@ -130,4 +130,4 @@ const LayerSettings: FC<LayerSettingsProps> = ({
   );
 };
 
-export default LayerSettings;
+export default MapStyleSettings;

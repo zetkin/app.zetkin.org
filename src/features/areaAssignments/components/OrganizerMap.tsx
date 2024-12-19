@@ -27,7 +27,7 @@ import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterCont
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
 import AreaSelect from './AreaSelect';
-import LayerSettings from './LayerSettings';
+import MapStyleSettings from './MapStyleSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/geography/components/AreaFilters/AreaFilterContext';
@@ -269,7 +269,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 </Box>
                 <Divider />
                 {settingsOpen == 'layers' && (
-                  <LayerSettings
+                  <MapStyleSettings
                     mapStyle={mapStyle}
                     onMapStyleChange={(newMapStyle) => setMapStyle(newMapStyle)}
                   />
