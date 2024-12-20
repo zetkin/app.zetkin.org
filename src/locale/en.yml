@@ -156,6 +156,7 @@ feat:
         remove: Remove from assignment
       add:
         alreadyAdded: Already added
+        placeholder: Start typing to search or add a new caller
       customize:
         exclude:
           h: Excluded tags
@@ -431,7 +432,7 @@ feat:
         add one.
       notTargeted: Your email has no targets. Go to the Targets section in the
         Overview tab to create a Smart Search that defines your targets.
-      targetsNotLocked: The targets are not locked. Go to the Ready section in the
+      targetsNotLocked: The targets are not locked. Go to the Targets section in the
         Overview tab to do this.
     deliveryStatus:
       notLocked: Not locked, not scheduled
@@ -825,7 +826,10 @@ feat:
     tooltipContent: Untitled events will display type as title
     type:
       createType: Create "{type}"
-      deleteMessage: Are you sure you want to delete the "{eventType}" event type for the whole organization?
+      deleteMessage: Are you sure you want to delete the "{eventType}" event type for
+        the whole organization?
+      deleteWarning: Are you sure you want to delete the "{eventType}" event type for
+        all of {orgTitle}?
       tooltip: Click to change type
       uncategorized: Uncategorized
   files:
@@ -852,6 +856,44 @@ feat:
       label: Type
       options:
         image: Images
+  home:
+    activityList:
+      actions:
+        call: Start calling
+        canvass: Start canvassing
+        signUp: Sign up
+        undoSignup: Undo signup
+      emptyListMessage: You are not signed up for any acitvities
+      eventStatus:
+        booked: You have been booked for this event and organizers are expecting you.
+          Contact {org} if you need to cancel.
+        needed: You are needed
+        signedUp: You have signed up
+      filters:
+        call: Call
+        canvass: Canvass
+        event: Events
+    allEventsList:
+      emptyList:
+        message: Could not find any events
+        removeFiltersButton: Clear filters
+      filterButtonLabels:
+        organizations: "{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
+          organizations}}"
+        thisWeek: This week
+        today: Today
+        tomorrow: Tomorrow
+    defaultTitles:
+      callAssignment: Untitled call assignment
+      canvassAssignment: Untitled canvass assignment
+      event: Untitled event
+      noLocation: No physical location
+    footer:
+      privacyPolicy: Privacy policy
+    tabs:
+      feed: All events
+      home: My activities
+    title: My Zetkin
   import:
     actionButtons:
       back: Back
@@ -869,14 +911,19 @@ feat:
             For example, if your dates are written 1998.03.23, you would
             describe that as YYYY.MM.DD.
           customFormatLabel: Custom date format
+          dateConfigDescription: Select the format of the values in this column so they
+            can be imported as correct dates.
           dateInputLabel: Date format
           dropDownLabel: Select format
           emptyPreview: Could not be parsed
           header: Configure date format
+          invalidDateFormatWarning: There are values in the column that don't seem to fit
+            this format. Are you sure you have selected the correct format?
           listSubHeaders:
             custom: Custom
             dates: Date formats
             personNumbers: Person numbers
+          noCustomFormatWarning: You have not provided a custom date format.
           personNumberFormat:
             dk:
               description: The values in this column will be parsed from 10 digit Danish
@@ -895,24 +942,29 @@ feat:
           none: None
           numberOfRows: "{numRows, plural, =1 {1 row} other {# rows}}"
           value: Value
+        genders:
+          label: Gender
+          selectLabels:
+            f: Female
+            m: Male
+            o: Other
+            unknown: Unknown
         ids:
-          configExplanation: Importing with IDs allows Zetkin (now or in the future) to
-            update existing people in the database instead of creating
-            duplicates.
           externalID: External ID
-          externalIDExplanation: The values in this column are IDs from our main member
-            system (not Zetkin).
-          header: Configure IDs
-          showOrganizationSelectButton: Map to...
+          externalIDInfo: An external ID is an ID that comes from another system than
+            Zetkin, such as a separate member database. It can be used to find
+            and identify people in Zetkin.
           wrongIDFormatWarning: The values in this column does not look like Zetkin IDs. A
             Zetkin ID only contains numbers. If some cells are empty or contain
             f.x. letters, it can not be used as Zetkin IDs.
           zetkinID: Zetkin ID
-          zetkinIDExplanation: The values in this column are based on an export from Zetkin.
+          zetkinIDInfo: A Zetkin ID is the ID of a person already in Zetkin. You would
+            have it in a file if you exported data from Zetkin.
         orgs:
           guess: Guess organisations
           header: Map values to organizations
           organizations: Organization
+          showOrganizationSelectButton: Map to...
           status: Status
         tags:
           empty: Empty
@@ -925,6 +977,7 @@ feat:
         configButton: Configure
         defaultColumnHeader: Column {columnIndex}
         emptyStateMessage: Start by mapping file columns.
+        externalID: External ID
         fileHeader: File
         finishedMappingDates: Mapping {numValues, plural, =1 {1 value} other {# values}}
           from {dateFormat, select, se {Swedish personnummer} no {Norwegian
@@ -937,7 +990,7 @@ feat:
         finishedMappingTags: Mapping {numRows, plural, =1 {1 row} other {# rows}} to
           {numMappedTo, plural, =1 {1 tag} other {# tags}}
         header: Mapping
-        id: ID
+        infoButton: Info
         mapValuesButton: Map values
         messages:
           manyValuesAndEmpty: "{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
@@ -950,6 +1003,7 @@ feat:
             {# empty rows}}."
           oneValueNoEmpty: "{firstValue}."
           onlyEmpty: "{numEmpty, plural, =1 {one empty row} other {# empty rows}}."
+          readOnlyField: "{title} (read only)"
           threeValuesAndEmpty: "{firstValue}, {secondValue}, {thirdValue} and {numEmpty,
             plural, =1 {one empty row} other {# empty rows}}."
           threeValuesNoEmpty: "{firstValue}, {secondValue} and {thirdValue}."
@@ -962,6 +1016,7 @@ feat:
         unfinished:
           date: You need to configure date format
           enum: You need to map values
+          gender: You need to map values
           id: You need to configure the IDs
           org: You need to map values
           tag: You need to map values
@@ -970,10 +1025,17 @@ feat:
           id: ID
           other: Other
         zetkinHeader: Zetkin
+        zetkinID: Zetkin ID
       preview:
         columnHeader:
+          gender: Gender
           org: Organization
           tags: Tags
+        genders:
+          f: Female
+          m: Male
+          o: Other
+          unknown: Unknown
         next: Next
         noOrg: No organization
         noTags: No tags
@@ -1141,6 +1203,10 @@ feat:
       approveButton: Approve
       form: Form
       rejectButton: Reject
+    submissionVerifiedPage:
+      h: Thank you!
+      info: Your submission has been verified and organizers in {org} will review it
+        shortly.
   journeys:
     instance:
       addAssigneeButton: Add assignee
@@ -1287,6 +1353,8 @@ feat:
   profile:
     delete:
       button: Remove person
+      confirm: Are you sure you want to delete {name} from {org}, and all related
+        organizations? This is a permanent action.
       title: Delete account
       warning: This cannot be undone!
     details:
@@ -1424,6 +1492,9 @@ feat:
         email_history:
           description: Who was sent what, when?
           title: Based on their email history
+        joinform:
+          description: Find people who came in through a join form.
+          title: Based on join form source
         journey_subjects:
           description: Find people who are on a journey or finished it already
           title: People on a journey
@@ -1543,6 +1614,10 @@ feat:
           notSent: not been sent
           opened: opened
           sent: been sent
+      joinForm:
+        anyForm: any join form
+        form: '"{title}"'
+        inputString: "{addRemoveSelect} people who came in through {formSelect} {timeFrame}"
       journey:
         condition:
           conditionSelect:
@@ -1991,6 +2066,12 @@ feat:
       personRecordColumn: Respondent
       suggestedPeople: Suggested people
       unlink: Unlink
+    surveyDialog:
+      add: Add
+      cancel: Don't add
+      description: The person you are about to link does not have an email address
+        while the survey response does. Would you like to add it the person?
+      title: Add email address
     surveyForm:
       accept: I accept the terms stated below
       error: Something went wrong when submitting your answers. Please try again
@@ -2555,7 +2636,13 @@ feat:
         delete: Delete list
         editQuery: Edit Smart Search query
         makeDynamic: Convert to Smart Search list
-        makeStatic: Convert to static list
+        makeStatic:
+          confirmDialogInfo: If you convert this list to a static list the Smart Search
+            will be removed and all the people the Smart Search returned will no
+            longer be there.
+          confirmDialogSubmitLabel: Convert
+          confirmDialogTitle: Convert to static list
+          label: Convert to static list
       jumpMenu:
         placeholder: Start typing to find list
       subtitle:
