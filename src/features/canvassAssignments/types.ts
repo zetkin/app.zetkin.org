@@ -21,6 +21,7 @@ export type ZetkinCanvassAssignment = {
   };
   end_date: string | null;
   id: string;
+  instructions: string;
   metrics: ZetkinMetric[];
   organization: {
     id: number;
