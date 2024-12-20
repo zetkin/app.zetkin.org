@@ -1,4 +1,4 @@
-import useCanvassAssignmentActivities from 'features/canvassAssignments/hooks/useCanvassAssignmentActivities';
+import useAreaAssignmentActivities from 'features/areaAssignments/hooks/useAreaAssignmentActivities';
 import { CampaignActivity } from '../types';
 import useCallAssignmentActivities from './useCallAssignmentActivities';
 import useEmailActivities from './useEmailActivities';
@@ -21,7 +21,7 @@ export default function useActivityList(
     orgId,
     campId
   );
-  const canvassAssignmentActivitiesFuture = useCanvassAssignmentActivities(
+  const areaAssignmentActivitiesFuture = useAreaAssignmentActivities(
     orgId,
     campId
   );
@@ -31,7 +31,7 @@ export default function useActivityList(
 
   if (
     callAssignmentActivitiesFuture.isLoading ||
-    canvassAssignmentActivitiesFuture.isLoading ||
+    areaAssignmentActivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
     taskActivitiesFuture.isLoading ||
     eventActivitiesFuture.isLoading ||
@@ -40,7 +40,7 @@ export default function useActivityList(
     return new LoadingFuture();
   } else if (
     callAssignmentActivitiesFuture.error ||
-    canvassAssignmentActivitiesFuture.error ||
+    areaAssignmentActivitiesFuture.error ||
     surveyActivitiesFuture.error ||
     taskActivitiesFuture.error ||
     eventActivitiesFuture.error ||
@@ -53,7 +53,7 @@ export default function useActivityList(
   activities.push(
     ...(surveyActivitiesFuture.data || []),
     ...(callAssignmentActivitiesFuture.data || []),
-    ...(canvassAssignmentActivitiesFuture.data || []),
+    ...(areaAssignmentActivitiesFuture.data || []),
     ...(taskActivitiesFuture.data || []),
     ...(eventActivitiesFuture.data || []),
     ...(emailActivitiesFuture.data || [])

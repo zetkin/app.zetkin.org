@@ -3,8 +3,8 @@ import { m, makeMessages } from 'core/i18n/messages';
 export default makeMessages('feat.home', {
   activityList: {
     actions: {
+      areaAssignment: m('Start assignment'),
       call: m('Start calling'),
-      canvass: m('Start canvassing'),
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },
@@ -18,7 +18,7 @@ export default makeMessages('feat.home', {
     },
     filters: {
       call: m('Call'),
-      canvass: m('Canvass'),
+      canvass: m('Areas'),
       event: m('Events'),
     },
   },
@@ -37,8 +37,8 @@ export default makeMessages('feat.home', {
     },
   },
   defaultTitles: {
+    areaAssignment: m('Untitled area assignment'),
     callAssignment: m('Untitled call assignment'),
-    canvassAssignment: m('Untitled canvass assignment'),
     event: m('Untitled event'),
     noLocation: m('No physical location'),
   },
