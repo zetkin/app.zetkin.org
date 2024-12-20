@@ -1,14 +1,24 @@
 import dynamic from 'next/dynamic';
-import { Alert, Box, useTheme } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Divider,
+  FormControl,
+  MenuItem,
+  TextField,
+  useTheme,
+} from '@mui/material';
 import EditorJS, { OutputBlockData, OutputData } from '@editorjs/editorjs';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import editorjsBlocksToZetkinBlocks from 'features/emails/utils/editorjsBlocksToZetkinBlocks';
 import EmailSettings from './EmailSettings';
 import messageIds from 'features/emails/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import zetkinBlocksToEditorjsBlocks from 'features/emails/utils/zetkinBlocksToEditorjsBlocks';
-import { ZetkinEmail } from 'utils/types/zetkin';
+import { ZetkinEmail, ZetkinEmailPostBody } from 'utils/types/zetkin';
+import useDebounce from 'utils/hooks/useDebounce';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
   ssr: false,
@@ -16,13 +26,16 @@ const EmailEditorFrontend = dynamic(() => import('./EmailEditorFrontend'), {
 
 interface EmailEditorProps {
   email: ZetkinEmail;
-  onSave: (email: Partial<ZetkinEmail>) => void;
+  onSave: (email: Partial<ZetkinEmailPostBody>) => void;
 }
 
 const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
   const theme = useTheme();
+  const messages = useMessages(messageIds);
   const apiRef = useRef<EditorJS | null>(null);
   const [selectedBlockIndex, setSelectedBlockIndex] = useState(0);
+  const [subject, setSubject] = useState(email.subject || '');
+  const configs = useEmailConfigs(email.organization.id).data || [email.config];
 
   const zetkinInitialContent = email.content
     ? JSON.parse(email.content)
@@ -58,6 +71,10 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
     blocksRef.current = content.blocks;
   }, [content.blocks.length]);
 
+  const debouncedFinishedTyping = useDebounce(async (value: string) => {
+    onSave({ subject: value });
+  }, 400);
+
   return (
     <Box display="flex" flexDirection="column" height="100%">
       {readOnly && (
@@ -67,6 +84,44 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
       )}
       <Box display="flex" height="100%">
         <Box flex={1} sx={{ overflowY: 'auto' }}>
+          <Box mx={2}>
+            <Box display="flex" gap={2} py={2}>
+              <FormControl fullWidth sx={{ flex: 2 }}>
+                <TextField
+                  fullWidth
+                  label={messages.editor.settings.tabs.settings.senderInputLabel()}
+                  onChange={(ev) => {
+                    const configId = parseInt(ev.target.value);
+                    if (!isNaN(configId)) {
+                      onSave({ config_id: configId });
+                    }
+                  }}
+                  select
+                  size="small"
+                  value={email.config.id}
+                >
+                  {configs.map((config) => (
+                    <MenuItem key={config.id} value={config.id}>
+                      {`${config.sender_name} (${config.sender_email})`}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </FormControl>
+              <TextField
+                disabled={readOnly}
+                fullWidth
+                label={messages.editor.settings.tabs.settings.subjectInputLabel()}
+                onChange={(event) => {
+                  setSubject(event.target.value);
+                  debouncedFinishedTyping(event.target.value);
+                }}
+                size="small"
+                sx={{ flex: 3 }}
+                value={subject}
+              />
+            </Box>
+            <Divider />
+          </Box>
           <EmailEditorFrontend
             apiRef={apiRef}
             initialContent={{ blocks: initialContent }}
@@ -95,10 +150,8 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
           <EmailSettings
             apiRef={apiRef}
             blocks={content.blocks}
-            onSave={onSave}
             readOnly={readOnly}
             selectedBlockIndex={selectedBlockIndex}
-            subject={email.subject || ''}
           />
         </Box>
       </Box>

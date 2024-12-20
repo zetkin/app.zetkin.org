@@ -16,7 +16,7 @@ export default makeMessages('feat.emails', {
     ),
     empty: m('Your email is empty. Go to the Compose tab to add some content.'),
     noSubject: m(
-      'Your email has no subject line. Go to Settings in the Compose tab to add one.'
+      'Your email has no subject line. Go to the Compose tab to add one.'
     ),
     notTargeted: m(
       'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
@@ -51,7 +51,7 @@ export default makeMessages('feat.emails', {
         },
         settings: {
           senderAddressInputLabel: m('Sender address'),
-          senderNameInputLabel: m('Sender name'),
+          senderInputLabel: m('Sender'),
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
