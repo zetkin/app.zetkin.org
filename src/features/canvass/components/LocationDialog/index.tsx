@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 
-import VisitWizard from './pages/VisitWizard';
+import HouseholdVisitPage from './pages/HouseholdVisitPage';
 import EditLocation from './pages/EditLocation';
 import Location from './pages/Location';
 import Household from './pages/Household';
@@ -32,7 +32,7 @@ type LocationDialogStep =
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
-  | 'wizard';
+  | 'householdVisit';
 
 const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
@@ -140,8 +140,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onBack={() => back()}
               onClose={onClose}
               onEdit={() => goto('editHousehold')}
-              onWizardStart={() => {
-                goto('wizard');
+              onHouseholdVisitStart={() => {
+                goto('householdVisit');
               }}
               visitedInThisAssignment={selectedHousehold.visits.some(
                 (visit) => visit.areaAssId == assignment.id
@@ -186,9 +186,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
             }}
           />
         </Box>
-        <Box key="wizard" height="100%">
+        <Box key="householdVisit" height="100%">
           {selectedHousehold && (
-            <VisitWizard
+            <HouseholdVisitPage
               household={selectedHousehold}
               metrics={assignment.metrics}
               onBack={() => back()}

@@ -11,7 +11,7 @@ type HouseholdProps = {
   onBack: () => void;
   onClose: () => void;
   onEdit: () => void;
-  onWizardStart: () => void;
+  onHouseholdVisitStart: () => void;
   visitedInThisAssignment: boolean;
 };
 
@@ -20,7 +20,7 @@ const Household: FC<HouseholdProps> = ({
   onBack,
   onClose,
   onEdit,
-  onWizardStart,
+  onHouseholdVisitStart,
   visitedInThisAssignment,
 }) => {
   const messages = useMessages(messageIds);
@@ -33,7 +33,7 @@ const Household: FC<HouseholdProps> = ({
               <Msg id={messageIds.households.single.wasVisited} />
             </Typography>
           )}
-          <Button onClick={onWizardStart} variant="contained">
+          <Button onClick={onHouseholdVisitStart} variant="contained">
             <Msg id={messageIds.households.single.logVisitButtonLabel} />
           </Button>
         </Box>

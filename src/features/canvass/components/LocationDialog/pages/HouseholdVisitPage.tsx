@@ -20,7 +20,7 @@ import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
-type VisitWizardProps = {
+type HouseholdVisitPageProps = {
   household: Household;
   metrics: ZetkinAreaAssignment['metrics'];
   onBack: () => void;
@@ -30,7 +30,7 @@ type VisitWizardProps = {
   ) => void;
 };
 
-const VisitWizard: FC<VisitWizardProps> = ({
+const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   household,
   metrics,
   onBack,
@@ -173,4 +173,4 @@ const VisitWizard: FC<VisitWizardProps> = ({
   );
 };
 
-export default VisitWizard;
+export default HouseholdVisitPage;
