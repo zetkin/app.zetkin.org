@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AreaAssignmentMapOverlays: FC<Props> = ({
+const CanvassMapOverlays: FC<Props> = ({
   assignment,
   isCreating,
   onCreate,
@@ -119,4 +119,4 @@ const AreaAssignmentMapOverlays: FC<Props> = ({
   );
 };
 
-export default AreaAssignmentMapOverlays;
+export default CanvassMapOverlays;

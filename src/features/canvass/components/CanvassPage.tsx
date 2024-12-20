@@ -10,18 +10,15 @@ import ZUIFutures from 'zui/ZUIFutures';
 import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
 import { AssignmentWithAreas } from '../types';
-import AreaAssigneeSidebar from '../../canvass/components/AreaAssigneeSidebar';
+import CanvassSidebar from './CanvassSidebar';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
-const AreaAssignmentMap = dynamic(
-  () => import('../../canvass/components/AreaAssignmentMap'),
-  {
-    ssr: false,
-  }
-);
+const CanvassMap = dynamic(() => import('./CanvassMap'), {
+  ssr: false,
+});
 
-const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
+const CanvassPage: FC<{ assignment: AssignmentWithAreas }> = ({
   assignment,
 }) => {
   const orgFuture = useOrganization(assignment.organization.id);
@@ -85,10 +82,7 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
               </Box>
             </Box>
             <Box flexGrow={1}>
-              <AreaAssignmentMap
-                areas={assignment.areas}
-                assignment={assignment}
-              />
+              <CanvassMap areas={assignment.areas} assignment={assignment} />
             </Box>
             <Box
               onClick={() => setShowMenu(false)}
@@ -117,7 +111,7 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
               zIndex: 99999,
             }}
           >
-            <AreaAssigneeSidebar assignment={assignment} />
+            <CanvassSidebar assignment={assignment} />
           </Box>
         </Box>
       )}
@@ -139,7 +133,7 @@ const MyAreaAssignmentPage: FC<MyAreaAssignmentPageProps> = ({ areaAssId }) => {
     return null;
   }
 
-  return <AssignmentPage assignment={assignment} />;
+  return <CanvassPage assignment={assignment} />;
 };
 
 export default MyAreaAssignmentPage;

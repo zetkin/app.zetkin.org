@@ -29,7 +29,7 @@ import MarkerIcon from '../utils/markerIcon';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import MapControls from 'features/areaAssignments/components/MapControls';
 import objToLatLng from 'features/geography/utils/objToLatLng';
-import AreaAssignmentMapOverlays from './AreaAssignmentMapOverlays';
+import CanvassMapOverlays from './CanvassMapOverlays';
 import useAllLocationVisits from '../hooks/useAllLocationVisits';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 
@@ -63,15 +63,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type AreaAssignmentMapProps = {
+type CanvassMapProps = {
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
 };
 
-const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
-  areas,
-  assignment,
-}) => {
+const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   const theme = useTheme();
   const classes = useStyles();
   const locations = useLocations(assignment.organization.id).data || [];
@@ -330,7 +327,7 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
           );
         })}
       </MapContainer>
-      <AreaAssignmentMapOverlays
+      <CanvassMapOverlays
         assignment={assignment}
         isCreating={isCreating}
         onCreate={(title) => {
@@ -359,4 +356,4 @@ const AreaAssignmentMap: FC<AreaAssignmentMapProps> = ({
   );
 };
 
-export default AreaAssignmentMap;
+export default CanvassMap;

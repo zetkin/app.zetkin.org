@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import MyAreaAssignmentPage from 'features/canvass/components/MyAreaAssignmentPage';
+import CanvassPage from 'features/canvass/components/CanvassPage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -22,7 +22,7 @@ export default async function Page({ params }: PageProps) {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <MyAreaAssignmentPage areaAssId={areaAssId} />;
+    return <CanvassPage areaAssId={areaAssId} />;
   } catch (err) {
     return redirect(`/login?redirect=/canvass/${areaAssId}`);
   }

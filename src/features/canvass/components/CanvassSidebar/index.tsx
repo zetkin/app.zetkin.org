@@ -20,7 +20,7 @@ type Props = {
   assignment: ZetkinAreaAssignment;
 };
 
-const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
+const CanvassSidebar: FC<Props> = ({ assignment }) => {
   const { loading, stats, sync, synced } = useSidebarStats(
     assignment.organization.id,
     assignment.id
@@ -150,4 +150,4 @@ const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
   );
 };
 
-export default AreaAssigneeSidebar;
+export default CanvassSidebar;
