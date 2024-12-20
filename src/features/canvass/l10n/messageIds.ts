@@ -34,7 +34,7 @@ export default makeMessages('feat.canvass', {
     },
     single: {
       logVisitButtonLabel: m('Log visit'),
-      subtitle: m<{ floorTitle: string }>('Floor {floorTitle}'),
+      subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       wasVisited: m('This household has been visited in this assignment'),
     },
   },
@@ -46,7 +46,7 @@ export default makeMessages('feat.canvass', {
       titleLabel: m('Edit title'),
     },
     header: m<{ numHouseholds: number; numVisitedHouseholds: number }>(
-      '{numVisitedHouseholds}/{numHouseholds} {numHouseholds, plural,one {household} other {households} visited}'
+      '{numVisitedHouseholds}/{numHouseholds} {numHouseholds, plural, one {household} other {households}} visited'
     ),
     page: {
       historySectionHeader: m('History'),

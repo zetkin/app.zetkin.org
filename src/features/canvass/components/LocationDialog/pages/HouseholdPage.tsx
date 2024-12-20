@@ -41,9 +41,13 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
       onBack={onBack}
       onClose={onClose}
       onEdit={onEdit}
-      subtitle={messages.households.single.subtitle({
-        floorTitle: household.floor?.toString() || messages.default.floor(),
-      })}
+      subtitle={
+        household.floor
+          ? messages.households.single.subtitle({
+              floorNumber: household.floor,
+            })
+          : messages.default.floor()
+      }
       title={household.title || messages.default.household()}
     />
   );
