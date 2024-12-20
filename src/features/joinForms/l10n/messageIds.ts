@@ -40,4 +40,10 @@ export default makeMessages('feat.joinForms', {
     form: m('Form'),
     rejectButton: m('Reject'),
   },
+  submissionVerifiedPage: {
+    h: m('Thank you!'),
+    info: m<{ org: string }>(
+      'Your submission has been verified and organizers in {org} will review it shortly.'
+    ),
+  },
 });
