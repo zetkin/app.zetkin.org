@@ -16,6 +16,8 @@ import PageBase from './PageBase';
 import { Household, ZetkinLocation } from 'features/areaAssignments/types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
+import messageIds from 'features/canvass/l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 type Props = {
   location: ZetkinLocation;
@@ -36,6 +38,7 @@ const HouseholdsPage: FC<Props> = ({
   orgId,
   location,
 }) => {
+  const messages = useMessages(messageIds);
   const [adding, setAdding] = useState(false);
   const { addHousehold } = useLocationMutations(orgId, location.id);
 
@@ -50,13 +53,13 @@ const HouseholdsPage: FC<Props> = ({
     <PageBase
       onBack={onBack}
       onClose={onClose}
-      subtitle={location.title || 'Untitled place'}
-      title="Households"
+      subtitle={location.title || messages.default.location()}
+      title={messages.households.page.header()}
     >
       <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
         {location.households.length == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
-            This place does not contain data about any households yet.
+            <Msg id={messageIds.households.page.empty} />
           </Typography>
         )}
         <List sx={{ overflowY: 'visible' }}>
@@ -98,7 +101,7 @@ const HouseholdsPage: FC<Props> = ({
                 >
                   <Box flexGrow={1}>
                     <ListItemText>
-                      {household.title || 'Untitled household'}
+                      {household.title || messages.default.household()}
                     </ListItemText>
                   </Box>
                   {mostRecentVisit && (

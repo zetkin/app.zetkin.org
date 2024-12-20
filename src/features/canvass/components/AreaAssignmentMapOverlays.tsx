@@ -9,6 +9,8 @@ import {
 import LocationDialog from './LocationDialog';
 import { CreateLocationCard } from './CreateLocationCard';
 import ContractedHeader from './LocationDialog/ContractedHeader';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -65,7 +67,7 @@ const AreaAssignmentMapOverlays: FC<Props> = ({
       {!selectedLocation && !isCreating && (
         <Box className={classes.actionAreaContainer}>
           <Button onClick={() => onToggleCreating(true)} variant="contained">
-            Add new place
+            <Msg id={messageIds.map.addLocation.add} />
           </Button>
         </Box>
       )}

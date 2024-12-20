@@ -14,6 +14,8 @@ import PageBase from './PageBase';
 import IntInput from '../IntInput';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { ZetkinLocationVisit } from 'features/canvass/types';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type Props = {
   active: boolean;
@@ -30,6 +32,7 @@ const LocationVisitPage: FC<Props> = ({
   onClose,
   onLogVisit,
 }) => {
+  const messages = useMessages(messageIds);
   const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState(0);
   const [numHouseholds, setNumHouseholds] = useState(0);
@@ -83,13 +86,13 @@ const LocationVisitPage: FC<Props> = ({
             }
             variant="contained"
           >
-            Submit
+            <Msg id={messageIds.visit.location.submitButtonLabel} />
           </Button>
         )
       }
       onBack={onBack}
       onClose={onClose}
-      title="Report visits here"
+      title={messages.visit.location.header()}
     >
       <Box
         display="flex"
@@ -134,7 +137,10 @@ const LocationVisitPage: FC<Props> = ({
 
                     {completed && step != index && (
                       <Typography variant="body2">
-                        ({numHouseholds} households, {numYes} yes)
+                        <Msg
+                          id={messageIds.visit.location.completed}
+                          values={{ numHouseholds, numYes }}
+                        />
                       </Typography>
                     )}
                   </StepButton>
@@ -159,7 +165,7 @@ const LocationVisitPage: FC<Props> = ({
                         width="70%"
                       >
                         <IntInput
-                          label="Yes"
+                          label={messages.visit.location.yesInputLabel()}
                           labelPlacement="horizontal"
                           onChange={(value) => {
                             setValuesByMetricId((current) => ({
@@ -170,7 +176,7 @@ const LocationVisitPage: FC<Props> = ({
                           value={values[0]}
                         />
                         <IntInput
-                          label="No"
+                          label={messages.visit.location.noInputLabel()}
                           labelPlacement="horizontal"
                           onChange={(value) => {
                             setValuesByMetricId((current) => ({
@@ -186,7 +192,9 @@ const LocationVisitPage: FC<Props> = ({
                           onClick={() => setStep((current) => current + 1)}
                           variant="contained"
                         >
-                          Proceed
+                          <Msg
+                            id={messageIds.visit.location.proceedButtonLabel}
+                          />
                         </Button>
                       )}
                     </Box>
@@ -228,7 +236,10 @@ const LocationVisitPage: FC<Props> = ({
 
                     {completed && step != index && (
                       <Typography variant="body2">
-                        ({numHouseholds} households, {avgFixed} average)
+                        <Msg
+                          id={messageIds.visit.location.average}
+                          values={{ avgFixed, numHouseholds }}
+                        />
                       </Typography>
                     )}
                   </StepButton>

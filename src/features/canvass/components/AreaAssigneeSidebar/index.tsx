@@ -13,6 +13,8 @@ import {
 import { ZetkinAreaAssignment } from '../../../areaAssignments/types';
 import useSidebarStats from 'features/canvass/hooks/useSidebarStats';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -49,30 +51,44 @@ const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
           <Typography variant="h5">{assignment.title}</Typography>
         </Box>
         <Box>
-          <Typography variant="body1">Progress</Typography>
+          <Typography variant="body1">
+            <Msg id={messageIds.sidebar.progress.header.title} />
+          </Typography>
         </Box>
         <Box textAlign="right">
-          <Typography variant="body2">Households</Typography>
+          <Typography variant="body2">
+            <Msg id={messageIds.sidebar.progress.header.households} />
+          </Typography>
         </Box>
         <Box textAlign="right">
-          <Typography variant="body2">Places</Typography>
+          <Typography variant="body2">
+            <Msg id={messageIds.sidebar.progress.header.locations} />
+          </Typography>
         </Box>
         <Box gridColumn="span 3">
           <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
         </Box>
-        <Box gridColumn="span 3">Session (today)</Box>
-        <Box>You</Box>
+        <Box gridColumn="span 3">
+          <Msg id={messageIds.sidebar.progress.session.title} />
+        </Box>
+        <Box>
+          <Msg id={messageIds.sidebar.progress.session.you} />
+        </Box>
         <Box textAlign="right">
           <Typography variant="h5">{stats.today.numUserHouseholds}</Typography>
         </Box>
         <Box textAlign="right">{stats.today.numUserLocations}</Box>
-        <Box>Team</Box>
+        <Box>
+          <Msg id={messageIds.sidebar.progress.session.team} />
+        </Box>
         <Box textAlign="right">{stats.today.numHouseholds}</Box>
         <Box textAlign="right">{stats.today.numLocations}</Box>
         <Box gridColumn="span 3">
           <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
         </Box>
-        <Box>All time</Box>
+        <Box>
+          <Msg id={messageIds.sidebar.progress.allTime.title} />
+        </Box>
         <Box textAlign="right">{stats.allTime.numHouseholds}</Box>
         <Box textAlign="right">{stats.allTime.numLocations}</Box>
         <Box
@@ -86,11 +102,16 @@ const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
           <Box>
             <Typography variant="body2">
               {!loading && synced && (
-                <>
-                  Synced <ZUIRelativeTime datetime={synced} />
-                </>
+                <Msg
+                  id={messageIds.sidebar.progress.sync.label.hasLoaded}
+                  values={{
+                    timestamp: <ZUIRelativeTime datetime={synced} />,
+                  }}
+                />
               )}
-              {!loading && !synced && `Never synced`}
+              {!loading && !synced && (
+                <Msg id={messageIds.sidebar.progress.sync.label.neverLoaded} />
+              )}
             </Typography>
           </Box>
           <Box>
@@ -99,7 +120,13 @@ const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
               onClick={() => sync()}
               startIcon={loading ? <CircularProgress size={24} /> : null}
             >
-              {loading ? 'Syncing' : 'Sync now'}
+              <Msg
+                id={
+                  loading
+                    ? messageIds.sidebar.progress.sync.syncButton.loading
+                    : messageIds.sidebar.progress.sync.syncButton.label
+                }
+              />
             </Button>
           </Box>
         </Box>
@@ -109,10 +136,14 @@ const AreaAssigneeSidebar: FC<Props> = ({ assignment }) => {
       </Box>
       <List>
         <ListItemButton href="/my/home" sx={{ px: 1 }}>
-          <ListItemText primary="My assignments" />
+          <ListItemText
+            primary={<Msg id={messageIds.sidebar.menuOptions.home} />}
+          />
         </ListItemButton>
         <ListItemButton href="/logout" sx={{ px: 1 }}>
-          <ListItemText primary="Log out" />
+          <ListItemText
+            primary={<Msg id={messageIds.sidebar.menuOptions.logOut} />}
+          />
         </ListItemButton>
       </List>
     </Box>

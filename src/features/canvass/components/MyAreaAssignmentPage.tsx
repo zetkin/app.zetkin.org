@@ -11,6 +11,8 @@ import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
 import { AssignmentWithAreas } from '../types';
 import AreaAssigneeSidebar from '../../canvass/components/AreaAssigneeSidebar';
+import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 const AreaAssignmentMap = dynamic(
   () => import('../../canvass/components/AreaAssignmentMap'),
@@ -63,7 +65,9 @@ const AssignmentPage: FC<{ assignment: AssignmentWithAreas }> = ({
               <Box>
                 <Box display="flex" flexDirection="column">
                   <Typography variant="body1">
-                    {assignment.title ?? 'Untitled areaassignment'}
+                    {assignment.title ?? (
+                      <Msg id={messageIds.default.assignment} />
+                    )}
                   </Typography>
                 </Box>
                 <Box alignItems="center" display="flex" gap={1}>

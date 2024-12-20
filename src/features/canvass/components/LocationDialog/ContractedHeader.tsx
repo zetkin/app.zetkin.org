@@ -9,6 +9,8 @@ import {
   ZetkinLocation,
 } from 'features/areaAssignments/types';
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -16,6 +18,8 @@ type Props = {
 };
 
 const ContractedHeader: FC<Props> = ({ assignment, location }) => {
+  const messages = useMessages(messageIds);
+
   const visitsFuture = useLocationVisits(
     assignment.organization.id,
     assignment.id,
@@ -47,8 +51,11 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
           <KeyboardArrowUp />
         </IconButton>
       }
-      subtitle={`${numVisitedHouseholds} / ${numHouseholds} households visited`}
-      title={location.title || 'Untitled place'}
+      subtitle={messages.location.header({
+        numHouseholds,
+        numVisitedHouseholds,
+      })}
+      title={location.title || messages.default.location()}
     />
   );
 };

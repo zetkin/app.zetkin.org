@@ -1,8 +1,10 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import { Household as ZetkinHousehold } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type HouseholdProps = {
   household: ZetkinHousehold;
@@ -21,22 +23,28 @@ const Household: FC<HouseholdProps> = ({
   onWizardStart,
   visitedInThisAssignment,
 }) => {
+  const messages = useMessages(messageIds);
   return (
     <PageBase
       actions={
         <Box display="flex" flexDirection="column">
-          {visitedInThisAssignment &&
-            'This household has been visted in this assignment.'}
+          {visitedInThisAssignment && (
+            <Typography>
+              <Msg id={messageIds.households.single.wasVisited} />
+            </Typography>
+          )}
           <Button onClick={onWizardStart} variant="contained">
-            Log visit
+            <Msg id={messageIds.households.single.logVisitButtonLabel} />
           </Button>
         </Box>
       }
       onBack={onBack}
       onClose={onClose}
       onEdit={onEdit}
-      subtitle={household.floor ? `Floor ${household.floor}` : 'Unknown floor'}
-      title={household.title || 'Untitled household'}
+      subtitle={messages.households.single.subtitle({
+        floorTitle: household.floor?.toString() || messages.default.floor(),
+      })}
+      title={household.title || messages.default.household()}
     />
   );
 };

@@ -17,6 +17,8 @@ import {
   ZetkinAreaAssignment,
 } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type VisitWizardProps = {
   household: Household;
@@ -34,6 +36,8 @@ const VisitWizard: FC<VisitWizardProps> = ({
   onBack,
   onLogVisit,
 }) => {
+  const messages = useMessages(messageIds);
+
   const [responseByMetricId, setResponseByMetricId] = useState<
     Record<string, string>
   >({});
@@ -60,20 +64,28 @@ const VisitWizard: FC<VisitWizardProps> = ({
             }}
             variant="contained"
           >
-            Submit report
+            <Msg id={messageIds.visit.household.submitReportButtonLabel} />
           </Button>
         )
       }
       onBack={onBack}
-      title={`${household.title || 'Unititled household'}: Log visit`}
+      title={messages.visit.household.header({
+        householdTitle: household.title || messages.default.household(),
+      })}
     >
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
           const options =
             metric.kind == 'boolean'
               ? [
-                  { label: 'Yes', value: 'yes' },
-                  { label: 'No', value: 'no' },
+                  {
+                    label: messages.visit.household.yesButtonLabel(),
+                    value: 'yes',
+                  },
+                  {
+                    label: messages.visit.household.noButtonLabel(),
+                    value: 'no',
+                  },
                 ]
               : [
                   { label: 1, value: '1' },
@@ -148,7 +160,7 @@ const VisitWizard: FC<VisitWizardProps> = ({
                   </ToggleButtonGroup>
                   {!metric.definesDone && (
                     <Button onClick={() => setStep(index + 1)}>
-                      Skip this question
+                      <Msg id={messageIds.visit.household.skipButtonLabel} />
                     </Button>
                   )}
                 </Box>

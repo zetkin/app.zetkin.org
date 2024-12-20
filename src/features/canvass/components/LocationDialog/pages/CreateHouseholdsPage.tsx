@@ -6,6 +6,8 @@ import { DoorFrontOutlined } from '@mui/icons-material';
 import PageBase from './PageBase';
 import IntInput from '../IntInput';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type Props = {
   locationId: string;
@@ -20,6 +22,8 @@ const CreateHouseholdsPage: FC<Props> = ({
   orgId,
   locationId,
 }) => {
+  const messages = useMessages(messageIds);
+
   const [numFloors, setNumFloors] = useState(2);
   const [numAptsPerFloor, setNumAptsPerFloor] = useState(3);
   const [creating, setCreating] = useState(false);
@@ -70,7 +74,10 @@ const CreateHouseholdsPage: FC<Props> = ({
               range(numFloors).flatMap((floorIndex) =>
                 range(numAptsPerFloor).map((aptIndex) => ({
                   floor: floorIndex + 1,
-                  title: 'Household ' + (aptIndex + 1),
+                  title:
+                    messages.households.createMultiple.householdDefaultTitle({
+                      householdNumber: aptIndex + 1,
+                    }),
                 }))
               )
             );
@@ -83,12 +90,15 @@ const CreateHouseholdsPage: FC<Props> = ({
           }
           variant="contained"
         >
-          Create {numTotal} households
+          <Msg
+            id={messageIds.households.createMultiple.createButtonLabel}
+            values={{ numHouseholds: numTotal }}
+          />
         </Button>
       }
       onBack={onBack}
       onClose={onClose}
-      title="Create households"
+      title={messages.households.createMultiple.header()}
     >
       <Box
         display="flex"
@@ -148,12 +158,12 @@ const CreateHouseholdsPage: FC<Props> = ({
         </Box>
         <Box display="flex" justifyContent="space-around">
           <IntInput
-            label="Number of floors"
+            label={messages.households.createMultiple.numberOfFloorsInput()}
             onChange={(value) => updateSize(value, numAptsPerFloor)}
             value={numFloors}
           />
           <IntInput
-            label="Households per floor"
+            label={messages.households.createMultiple.numberOfHouseholdsInput()}
             onChange={(value) => updateSize(numFloors, value)}
             value={numAptsPerFloor}
           />

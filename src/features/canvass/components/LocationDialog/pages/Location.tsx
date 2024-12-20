@@ -17,6 +17,8 @@ import uselocationVisits from 'features/canvass/hooks/useLocationVisits';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 
 type LocationProps = {
   assignment: ZetkinAreaAssignment;
@@ -35,6 +37,7 @@ const Location: FC<LocationProps> = ({
   onVisit,
   location,
 }) => {
+  const messages = useMessages(messageIds);
   const visitsFuture = uselocationVisits(
     assignment.organization.id,
     assignment.id,
@@ -63,7 +66,7 @@ const Location: FC<LocationProps> = ({
     <PageBase
       onClose={onClose}
       onEdit={onEdit}
-      title={location.title || 'Untitled place'}
+      title={location.title || messages.default.location()}
     >
       <Box>
         <Typography
@@ -71,32 +74,37 @@ const Location: FC<LocationProps> = ({
           onClick={onEdit}
           sx={{ fontStyle: location.description ? 'normal' : 'italic' }}
         >
-          {location.description || 'Empty description'}
+          {location.description || messages.default.description()}
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" flexDirection="column" my={3}>
         {!!numHouseholds && (
           <>
             <Typography variant="h4">
-              {`${numVisitedHouseholds} of ${numHouseholds}`}
+              <Msg
+                id={messageIds.location.page.householdsVisitedStat}
+                values={{ numHouseholds, numVisitedHouseholds }}
+              />
             </Typography>
-            <Typography variant="body2">households visited</Typography>
+            <Typography variant="body2">
+              <Msg id={messageIds.location.page.householdVisitedStatLabel} />
+            </Typography>
           </>
         )}
         {!numHouseholds && (
           <Typography variant="body2">
-            No households registered here yet
+            <Msg id={messageIds.location.page.noHouseholds} />
           </Typography>
         )}
       </Box>
       <Box display="flex" gap={1} justifyContent="center" m={4}>
         {assignment.reporting_level == 'location' && (
           <Button onClick={onVisit} variant="contained">
-            Quick-report
+            <Msg id={messageIds.location.page.quickReportButtonLabel} />
           </Button>
         )}
         <Button onClick={onHouseholds} variant="contained">
-          Households
+          <Msg id={messageIds.location.page.householdsButtonLabel} />
         </Button>
       </Box>
       <Box my={2}>
@@ -106,7 +114,9 @@ const Location: FC<LocationProps> = ({
         <ZUIFuture future={visitsFuture}>
           {(visits) => (
             <>
-              <Typography>History</Typography>
+              <Typography>
+                <Msg id={messageIds.location.page.historySectionHeader} />
+              </Typography>
               <List>
                 {visits.map((visit) => {
                   const households = estimateVisitedHouseholds(visit);
@@ -118,7 +128,12 @@ const Location: FC<LocationProps> = ({
                         justifyContent="space-between"
                         width="100%"
                       >
-                        <Typography>{households} households</Typography>
+                        <Typography>
+                          <Msg
+                            id={messageIds.location.page.numberOfHouseholds}
+                            values={{ numHouseholds: households }}
+                          />
+                        </Typography>
                         <ZUIRelativeTime datetime={visit.timestamp} />
                       </Box>
                     </ListItem>
