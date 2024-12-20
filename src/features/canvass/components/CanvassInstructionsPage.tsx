@@ -239,15 +239,15 @@ const Page: FC<{
 };
 
 type CanvassInstructionsPageProps = {
-  canvassAssId: string;
+  areaAssId: string;
 };
 
 const CanvassInstructionsPage: FC<CanvassInstructionsPageProps> = ({
-  canvassAssId,
+  areaAssId,
 }) => {
   const myAssignments = useMyCanvassAssignments() || [];
   const assignment = myAssignments.find(
-    (assignment) => assignment.id == canvassAssId
+    (assignment) => assignment.id == areaAssId
   );
 
   if (!assignment) {

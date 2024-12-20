@@ -22,7 +22,7 @@ export default async function Page({ params }: PageProps) {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <CanvassInstructionsPage canvassAssId={areaAssId} />;
+    return <CanvassInstructionsPage areaAssId={areaAssId} />;
   } catch (err) {
     return redirect(`/login?redirect=/canvass/${areaAssId}`);
   }

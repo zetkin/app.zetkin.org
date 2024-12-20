@@ -18,20 +18,20 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId, campId, canvassAssId } = ctx.params!;
+  const { orgId, campId, areaAssId } = ctx.params!;
   return {
-    props: { campId, canvassAssId, orgId },
+    props: { areaAssId, campId, orgId },
   };
 }, scaffoldOptions);
 
 interface AreaAssignmentInstructionsProps {
   orgId: string;
-  canvassAssId: string;
+  areaAssId: string;
 }
 
 const AreaAssignmentInstructionsPage: PageWithLayout<
   AreaAssignmentInstructionsProps
-> = ({ orgId, canvassAssId }) => {
+> = ({ orgId, areaAssId }) => {
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
@@ -44,7 +44,7 @@ const AreaAssignmentInstructionsPage: PageWithLayout<
     revert,
     save,
     setInstructions,
-  } = useAreaAssignmentInstructions(parseInt(orgId), canvassAssId);
+  } = useAreaAssignmentInstructions(parseInt(orgId), areaAssId);
   const [key, setKey] = useState(1);
 
   return (
