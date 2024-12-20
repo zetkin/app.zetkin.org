@@ -29,6 +29,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           },
           end_date: assignment.end_date,
           id: assignment._id.toString(),
+          instructions: assignment.instructions,
           metrics: (assignment.metrics || []).map((metric) => ({
             definesDone: metric.definesDone || false,
             description: metric.description || '',
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const model = new AreaAssignmentModel({
         campId: payload.campaign_id,
+        instructions: payload.instructions,
         metrics: payload.metrics || [],
         orgId: orgId,
         reporting_level: payload.reporting_level || 'household',
@@ -74,6 +76,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           campaign: { id: model.campId },
           end_date: model.end_date,
           id: model._id.toString(),
+          instructions: model.instructions,
           metrics: model.metrics.map((metric) => ({
             definesDone: metric.definesDone || false,
             description: metric.description || '',

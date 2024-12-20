@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Divider,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Typography,
@@ -12,6 +13,7 @@ import {
 
 import { ZetkinAreaAssignment } from '../../../areaAssignments/types';
 import useSidebarStats from 'features/canvass/hooks/useSidebarStats';
+import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
@@ -135,6 +137,19 @@ const CanvassSidebar: FC<Props> = ({ assignment }) => {
         </Box>
       </Box>
       <List>
+        {assignment.instructions && (
+          <ListItem sx={{ display: 'block', px: 1 }}>
+            <ListItemText
+              primary={<Msg id={messageIds.sidebar.instructions.title} />}
+              sx={{ pb: 2 }}
+            />
+            <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
+            <Typography sx={{ pb: 2, pt: 2 }} variant="body2">
+              <ZUIMarkdown markdown={assignment.instructions} />
+            </Typography>
+            <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
+          </ListItem>
+        )}
         <ListItemButton href="/my/home" sx={{ px: 1 }}>
           <ListItemText
             primary={<Msg id={messageIds.sidebar.menuOptions.home} />}

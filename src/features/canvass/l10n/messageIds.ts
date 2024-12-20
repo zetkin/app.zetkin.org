@@ -38,6 +38,14 @@ export default makeMessages('feat.canvass', {
       wasVisited: m('This household has been visited in this assignment'),
     },
   },
+  instructions: {
+    areas: m('Areas'),
+    instructionsHeader: m('Instructions'),
+    ready: m('You are ready to go'),
+    start: m('Start assignment'),
+    visitedHouseholds: m('Households visited'),
+    visitedLocations: m('Locations visited'),
+  },
   location: {
     edit: {
       descriptionLabel: m('Edit description'),
@@ -72,6 +80,9 @@ export default makeMessages('feat.canvass', {
     },
   },
   sidebar: {
+    instructions: {
+      title: m('Instructions'),
+    },
     menuOptions: {
       home: m('My activities'),
       logOut: m('Log out'),

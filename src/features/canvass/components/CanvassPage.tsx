@@ -18,9 +18,7 @@ const CanvassMap = dynamic(() => import('./CanvassMap'), {
   ssr: false,
 });
 
-const CanvassPage: FC<{ assignment: AssignmentWithAreas }> = ({
-  assignment,
-}) => {
+const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
   const orgFuture = useOrganization(assignment.organization.id);
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
@@ -119,11 +117,11 @@ const CanvassPage: FC<{ assignment: AssignmentWithAreas }> = ({
   );
 };
 
-type MyAreaAssignmentPageProps = {
+type CanvassPageProps = {
   areaAssId: string;
 };
 
-const MyAreaAssignmentPage: FC<MyAreaAssignmentPageProps> = ({ areaAssId }) => {
+const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
   const myAssignments = useMyAreaAssignments();
   const assignment = myAssignments.find(
     (assignment) => assignment.id == areaAssId
@@ -133,7 +131,7 @@ const MyAreaAssignmentPage: FC<MyAreaAssignmentPageProps> = ({ areaAssId }) => {
     return null;
   }
 
-  return <CanvassPage assignment={assignment} />;
+  return <Page assignment={assignment} />;
 };
 
-export default MyAreaAssignmentPage;
+export default CanvassPage;

@@ -11,6 +11,21 @@ export default makeMessages('feat.areaAssignments', {
     description: m('Empty description'),
     title: m('Untitled area'),
   },
+  instructions: {
+    editor: {
+      confirm: m(
+        'Do you want to delete all unsaved changes and go back to saved instructions?'
+      ),
+      editorPlaceholder: m('Add instructions for your callers'),
+      revertLink: m('Revert to saved version?'),
+      saveButton: m('Save'),
+      savedMessage: m('Everything is up to date!'),
+      savingButton: m('Saving...'),
+      title: m('Caller instructions'),
+      unsavedMessage: m('You have unsaved changes.'),
+    },
+    title: m('Assignee instructions'),
+  },
   layout: {
     actions: {
       delete: m('Delete'),
@@ -30,6 +45,7 @@ export default makeMessages('feat.areaAssignments', {
     },
     tabs: {
       assignees: m('Assignees'),
+      instructions: m('Instructions'),
       map: m('Map'),
       overview: m('Overview'),
       report: m('Report'),
@@ -121,5 +137,4 @@ export default makeMessages('feat.areaAssignments', {
       },
     },
   },
-  report: {},
 });

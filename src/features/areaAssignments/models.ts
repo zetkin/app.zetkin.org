@@ -6,6 +6,7 @@ type ZetkinAreaAssignmentModelType = {
   campId: number;
   end_date: string | null;
   id: number;
+  instructions: string;
   metrics: (Omit<ZetkinMetric, 'id'> & { _id: string })[];
   orgId: number;
   reporting_level: 'household' | 'location' | null;
@@ -26,6 +27,7 @@ const areaAssignmentSchema = new mongoose.Schema<ZetkinAreaAssignmentModelType>(
       default: null,
       type: String,
     },
+    instructions: String,
     metrics: [
       {
         definesDone: Boolean,
