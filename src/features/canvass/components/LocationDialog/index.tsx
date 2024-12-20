@@ -2,15 +2,15 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 
 import HouseholdVisitPage from './pages/HouseholdVisitPage';
-import EditLocation from './pages/EditLocation';
-import Location from './pages/Location';
-import Household from './pages/Household';
+import EditLocationPage from './pages/EditLocationPage';
+import LocationPage from './pages/LocationPage';
+import HouseholdPage from './pages/HouseholdPage';
 import {
   ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
 import ZUINavStack from 'zui/ZUINavStack';
-import EditHousehold from './pages/EditHousehold';
+import EditHouseholdPage from './pages/EditHouseholdPage';
 import CreateHouseholdsPage from './pages/CreateHouseholdsPage';
 import LocationVisitPage from './pages/LocationVisitPage';
 import HouseholdsPage from './pages/HouseholdsPage';
@@ -98,7 +98,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         <EncouragingSparkle onComplete={() => setShowSparkle(false)} />
       )}
       <ZUINavStack bgcolor="white" currentPage={dialogStep}>
-        <Location
+        <LocationPage
           key="location"
           assignment={assignment}
           location={location}
@@ -107,7 +107,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onHouseholds={() => goto('households')}
           onVisit={() => goto('locationVisit')}
         />
-        <EditLocation
+        <EditLocationPage
           key="edit"
           location={location}
           onBack={() => back()}
@@ -135,7 +135,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         />
         <Box key="household" height="100%">
           {selectedHousehold && (
-            <Household
+            <HouseholdPage
               household={selectedHousehold}
               onBack={() => back()}
               onClose={onClose}
@@ -159,7 +159,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         </Box>
         <Box key="editHousehold" height="100%">
           {selectedHousehold && (
-            <EditHousehold
+            <EditHouseholdPage
               household={selectedHousehold}
               onBack={() => back()}
               onClose={onClose}

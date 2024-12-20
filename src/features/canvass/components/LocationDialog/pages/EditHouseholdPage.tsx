@@ -13,7 +13,12 @@ type Props = {
   onSave: (title: string, floor: number | null) => void;
 };
 
-const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
+const EditHouseholdPage: FC<Props> = ({
+  onClose,
+  onBack,
+  onSave,
+  household,
+}) => {
   const messages = useMessages(messageIds);
 
   const [title, setTitle] = useState(household.title || '');
@@ -72,4 +77,4 @@ const EditHousehold: FC<Props> = ({ onClose, onBack, onSave, household }) => {
   );
 };
 
-export default EditHousehold;
+export default EditHouseholdPage;

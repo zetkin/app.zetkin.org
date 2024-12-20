@@ -20,7 +20,7 @@ import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHou
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
-type LocationProps = {
+type LocationPageProps = {
   assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onClose: () => void;
@@ -29,7 +29,7 @@ type LocationProps = {
   onVisit: () => void;
 };
 
-const Location: FC<LocationProps> = ({
+const LocationPage: FC<LocationPageProps> = ({
   assignment,
   onClose,
   onEdit,
@@ -148,4 +148,4 @@ const Location: FC<LocationProps> = ({
   );
 };
 
-export default Location;
+export default LocationPage;

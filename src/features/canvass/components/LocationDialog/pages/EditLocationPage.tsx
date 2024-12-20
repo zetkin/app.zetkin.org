@@ -6,14 +6,14 @@ import { ZetkinLocation } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
-type EditLocationProps = {
+type EditLocationPageProps = {
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
   onSave: (title: string, description: string) => void;
 };
 
-const EditLocation: FC<EditLocationProps> = ({
+const EditLocationPage: FC<EditLocationPageProps> = ({
   onClose,
   onBack,
   onSave,
@@ -80,4 +80,4 @@ const EditLocation: FC<EditLocationProps> = ({
   );
 };
 
-export default EditLocation;
+export default EditLocationPage;

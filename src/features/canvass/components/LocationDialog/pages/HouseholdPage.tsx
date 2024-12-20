@@ -6,7 +6,7 @@ import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
-type HouseholdProps = {
+type HouseholdPageProps = {
   household: ZetkinHousehold;
   onBack: () => void;
   onClose: () => void;
@@ -15,7 +15,7 @@ type HouseholdProps = {
   visitedInThisAssignment: boolean;
 };
 
-const Household: FC<HouseholdProps> = ({
+const HouseholdPage: FC<HouseholdPageProps> = ({
   household,
   onBack,
   onClose,
@@ -49,4 +49,4 @@ const Household: FC<HouseholdProps> = ({
   );
 };
 
-export default Household;
+export default HouseholdPage;
