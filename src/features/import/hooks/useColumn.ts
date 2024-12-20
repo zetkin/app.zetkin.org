@@ -44,6 +44,10 @@ export default function useColumn(orgId: number) {
         return column.field == value.slice(6);
       }
 
+      if (column.kind == ColumnKind.GENDER) {
+        return column.field == value;
+      }
+
       if (column.kind == ColumnKind.DATE) {
         return column.field == value.slice(5);
       }
