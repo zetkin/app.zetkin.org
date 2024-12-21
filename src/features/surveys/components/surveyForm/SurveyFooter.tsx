@@ -39,7 +39,7 @@ const SurveyFooter: FC = () => {
         </Box>
         <Box display="flex" justifyContent="center" py={4}>
           <Image
-            alt="Zetkin Foundation"
+            alt=""
             className="Footer-logo"
             height={64}
             src="/logo-zetkin.png"
