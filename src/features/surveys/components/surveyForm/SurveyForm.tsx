@@ -22,6 +22,7 @@ import {
   ZetkinSurveyFormStatus,
   ZetkinUser,
 } from 'utils/types/zetkin';
+import SurveyFooter from './SurveyFooter';
 
 export type SurveyFormProps = {
   survey: ZetkinSurveyExtended;
@@ -58,6 +59,7 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey, user }) => {
             />
             <SurveyPrivacyPolicy survey={survey as ZetkinSurveyExtended} />
             <SurveySubmitButton />
+            <SurveyFooter />
           </Box>
         </form>
       )}
