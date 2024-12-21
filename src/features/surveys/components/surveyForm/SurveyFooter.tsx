@@ -70,6 +70,7 @@ const SurveyFooter: FC = () => {
               <Link
                 href={link.href}
                 style={{ color: theme.palette.secondary.light }}
+                target="_blank"
               >
                 <Msg id={link.text} />
               </Link>
