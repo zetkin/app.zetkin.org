@@ -25,7 +25,7 @@ const links = [
 
 const SurveyFooter: FC = () => {
   return (
-    <Box px={2} py={8}>
+    <Box component="footer" px={2} py={8}>
       <SurveyContainer>
         <Box pb={4}>
           <Typography
