@@ -48,6 +48,7 @@ const SurveyFooter: FC = () => {
         </Box>
         <List
           sx={{
+            columnGap: theme.spacing(1),
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
@@ -58,11 +59,13 @@ const SurveyFooter: FC = () => {
             <ListItem
               key={link.href}
               sx={{
-                '&:not(:last-child)::after': {
-                  color: theme.palette.secondary.light,
-                  content: '"|"',
-                  margin: '0 8px',
+                '&:not(:last-child)': {
+                  borderRightColor: theme.palette.divider,
+                  borderRightStyle: 'solid',
+                  borderRightWidth: 1,
+                  paddingRight: theme.spacing(1),
                 },
+                display: 'block',
                 padding: 0,
                 width: 'inherit',
               }}
