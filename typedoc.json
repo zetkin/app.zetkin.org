@@ -9,6 +9,5 @@
   "sort": ["source-order"],
   "categorizeByGroup": false,
   "navigation": { "includeCategories": true },
-  "plugin": ["typedoc-plugin-mermaid"],
   "projectDocuments": ["docs/*/*.md"]
 }
