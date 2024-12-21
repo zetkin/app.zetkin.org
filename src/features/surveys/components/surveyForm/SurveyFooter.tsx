@@ -65,7 +65,6 @@ const SurveyFooter: FC = () => {
                   borderRightWidth: 1,
                   paddingRight: theme.spacing(1),
                 },
-                display: 'block',
                 padding: 0,
                 width: 'inherit',
               }}
