@@ -1,8 +1,26 @@
 import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
+/**
+ * Encapsulates the state of an asynchronous operation to fetch a piece of data.
+ * Most commonly, this means a network request.
+ *
+ * @category Async
+ */
 export interface IFuture<DataType> {
+  /**
+   * The payload of the asynchronous operation.
+   */
   data: DataType | null;
+
+  /**
+   * General purpose error object where any error that occurs during the
+   * asynchronous operation can be stored.
+   */
   error: unknown | null;
+
+  /**
+   * Denotes whether the operation is currently in progress.
+   */
   isLoading: boolean;
 }
 
