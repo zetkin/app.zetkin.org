@@ -7,9 +7,10 @@ import {
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
+import SurveyLinkDialog from './SurveyLinkDialog';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import { useNumericRouteParams } from 'core/hooks';
 import { usePanes } from 'utils/panes';
@@ -30,6 +31,9 @@ const SurveySubmissionsList = ({
   const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
+
+  const [dialogPerson, setDialogPerson] = useState<ZetkinPerson | null>(null);
+  const [dialogEmail, setDialogEmail] = useState('');
 
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
@@ -198,6 +202,15 @@ const SurveySubmissionsList = ({
         id: row.id,
       });
       setRespondentId(person?.id || null);
+
+      const respondentEmail = row.respondent?.email;
+      if (person) {
+        const personHasNoEmail = person.email == null || person.email == '';
+        if (personHasNoEmail && respondentEmail != undefined) {
+          setDialogEmail(respondentEmail);
+          setDialogPerson(person);
+        }
+      }
     };
 
     return (
@@ -247,6 +260,14 @@ const SurveySubmissionsList = ({
           border: 'none',
         }}
       />
+      {dialogPerson && (
+        <SurveyLinkDialog
+          email={dialogEmail}
+          onClose={() => setDialogPerson(null)}
+          open={!!dialogPerson}
+          person={dialogPerson}
+        />
+      )}
     </Box>
   );
 };

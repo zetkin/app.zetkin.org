@@ -572,7 +572,6 @@ feat:
       locked: Mottakerne er låst for levering
       sentSubtitle: Du kan se smartsøket som ble brukt til å velge mottakerne av denne
         e-posten
-      subtitle: Bruk smarstøk til å velge hvem som skal motta e-posten.
       title: Mottakere
       viewButton: Se målgruppe
     unsubscribePage:
