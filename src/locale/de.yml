@@ -409,10 +409,14 @@ feat:
           o: Divers
         noValue: Kein Datenwert
         title: Zusammenzuführende Daten
+      findCandidateManually: Versuche ein potenzielles Duplikat zu finden
       infoMessage: Alle Aktivitäten und Tags von allen Personen, die zusammengeführt
         werden, werden übertragen und sichtbar sein bei der zusammengeführten Person.
       infoTitle: Keine Daten werden verloren gehen.
       isDuplicateButton: Einbeziehen
+      lists:
+        hideManual: Ausblenden der manuellen Suche
+        showManual: Einblenden der manuellen Suche
       mergeButton: Zusammenführen
       notDuplicateButton: Ausschließen
       peopleNotBeingMerged: Personen, die nicht zusammengeführt werden
@@ -422,6 +426,11 @@ feat:
         name: Name
         phone: Telefon
       title: Duplikate zusammenführen
+      warningMessage: Alle Daten, die mit dem Personendatensatz verbunden sind, werden
+        zu der zusammengeführten Person transferiert. Das beinhaltet die Teilnahme
+        an Veranstaltungen, Mitgliederbefragungen, Schlagworte, usw. Aber die Werte,
+        die du in den obenstehenden Feldern nicht mit übernimmst, sind dann weg.
+      warningTitle: Achtung, Risiko von Datenverlust.
     page:
       dismiss: ablehnen
       noDuplicates: keine Duplikate
@@ -565,6 +574,9 @@ feat:
       lockButton: Sperren für den Versand
       lockDescription: Sperren, um den E-Mail-Versand vorzubereiten.
       locked: Gesperrt
+      missingEmailsDescription: Es gibt {numPeople, plural, one {ist eine Person}
+        other {sind Personen}} mit einer fehlenden E-Mail-Adresse in der Zielgruppe.
+        Wenn du diese fehldenden Adressen ergänzt, werden sie in der Zielgruppe hinzugefügt.
       scheduledDescription: Diese E-Mail ist für den Versand geplant. Wenn du die
         Ziele entsperren willst, musst du erst den Versand abbrechen.
       sentSubtitle: Ziele, die für den Versand zur Verfügung standen.
@@ -589,11 +601,16 @@ feat:
     targets:
       defineButton: Definiere die Zielgruppe
       editButton: Bearbeite die Zielgruppe
+      loading: Laden...
+      lockButton: Sperren, um zu Versenden
       locked: Ziele sind für den Versand gesperrt.
+      lockedChip: Gesperrt
       sentSubtitle: Du kannst dir die Smarte Suche ansehen, die zu Grunde gelegt wurde,
         um die Empfänger dieser E-Mail zu bestimmen.
-      subtitle: Benutze die Smarte Suche, um die Empfänger dieser E-Mail zu bestimmen.
       title: Ziele
+      unlockAlert: Entsperren kann Personen von der Zielgruppe hinzufügen oder entfernen,
+        je nachdem welches Ergebnis die smarte Suche haben wird.
+      unlockButton: Entsperren
       viewButton: Zielgruppe ansehen
     unsubscribePage:
       consent: Ich stimme zu
@@ -813,6 +830,29 @@ feat:
         du Erinnerungen versendest
       reqParticipantsHelperText: Mindestteilnehmendenzahl
       reqParticipantsLabel: Mindestteilnehmendenzahl
+    participantsModal:
+      affected:
+        empty: Du hast noch keine Veränderungen vorgenommen. Wählen eine Veranstaltung,
+          um die Teilnehmer_innen zu verschieben.
+        header: Betroffene Personen
+      discardButton: Änderungen verwerfen
+      emptyStates:
+        booked: Niemand wurde in diese Veranstaltung bisher eingebucht. Du kannst
+          Teilnehmer_innen aus deiner Datenbasis hinzufügen.
+        pending: Es gibt keine weiteren Teilnehmer_innen in der Datenbasis. Du kannst
+          Teilnehmer_innen einer Veranstaltung in diese Datenbasis hinzufügen.
+      participants:
+        buttons:
+          addBack: wieder hinzufügen
+          addHere: hier hinzufügen
+          move: Bewegen
+          undo: Rückgängig machen
+        headers:
+          booked: Diese Veranstaltung
+          pending: Personen können hinzugefügt werden.
+        states:
+          added: werden zu dieser Veranstaltung hinzugefügt
+          pending: In der Datenbasis
     search: Suche
     state:
       cancelled: Abgesagt
@@ -852,6 +892,41 @@ feat:
       label: Typ
       options:
         image: Bilder
+  home:
+    activityList:
+      actions:
+        call: Beginne mit dem Anrufen
+        signUp: Anmelden
+        undoSignup: Abmelden
+      emptyListMessage: Du bist für keine Aktivitäten angemeldet
+      eventStatus:
+        booked: Du bist für diese Veranstaltung gebucht und die Organisator_innen
+          erwarten dich. Kontaktiere {org} wenn du absagen willst.
+        needed: Du wirst gebraucht.
+        signedUp: Du hast dich angemeldet.
+      filters:
+        call: Anrufen
+        event: Veranstaltungen
+    allEventsList:
+      emptyList:
+        message: Es konnten keine Veranstaltungen gefunden werden.
+        removeFiltersButton: Filter zurücksetzen.
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisationen} =1 {1 Organisation} other
+          {# Organisationen}}'
+        thisWeek: Diese Woche
+        today: Heute
+        tomorrow: Morgen
+    defaultTitles:
+      callAssignment: Unbenannte Anruf-Aufgabe
+      event: Unbenannte Veranstaltung
+      noLocation: Kein Ort.
+    footer:
+      privacyPolicy: Datenschutzhinweise
+    tabs:
+      feed: Alle Veranstaltungen
+      home: Meine Aktivitäten
+    title: Mein Zetkin
   import:
     actionButtons:
       back: Zurück
@@ -896,6 +971,13 @@ feat:
           none: Keine
           numberOfRows: '{numRows, plural, =1 {1 Reihe} other {# Reihen}}'
           value: Wert
+        genders:
+          label: Geschlecht
+          selectLabels:
+            f: Weiblich
+            m: Männlich
+            o: Divers
+            unknown: Keine Angabe
         ids:
           configExplanation: Importieren mit IDs erlaubt Zetkin (jetzt oder in der
             Zukunft) existierende Personen in der Datenbank zu aktualisieren, ohne
@@ -1111,6 +1193,7 @@ feat:
       labels:
         addField: Feld hinzufügen
         description: Beschreibung
+        requireEmailVerification: E-Mail-Bestätigung ist notwendig.
         title: Titel
       title: Formular bearbeiten
     forms: Formular
@@ -1132,6 +1215,10 @@ feat:
       approveButton: Bestätigen
       form: Formulare
       rejectButton: Ablehnen
+    submissionVerifiedPage:
+      h: Danke
+      info: Deine Anfrage wurde bestätigt und ein_e Organisator_in wird sie in Kürze
+        bearbeiten.
   journeys:
     instance:
       addAssigneeButton: Beauftragte hinzufügen
@@ -1246,6 +1333,8 @@ feat:
         overview: Übersicht
         timeline: Zeitleiste
   organizations:
+    gen3:
+      title: Willkommen im neuen Zetkin!
     page:
       title: 'Organisation auswählen:'
     sidebar:
@@ -1401,6 +1490,10 @@ feat:
         email_history:
           description: Wem wurde was gesendet, wann?
           title: Auf Grundlage ihres E-Mail-Verlaufs
+        joinform:
+          description: Finde Personen, die über ein Zetkin-Beitrittsformular hinzugekommen
+            sind.
+          title: Hinzugekommen auf Grundlage der Quelle
         journey_subjects:
           description: Finde Personen, die Anfragen bearbeiten oder diese abgeschlossen
             haben.
@@ -1492,7 +1585,10 @@ feat:
             für irgendeine Aufgabe zu irgendeinem Zeitpunkt.
           two: Entferne Personen, die in den letzten 30 Tagen mindestens 1mal angerufen
             wurden für die Aufgabe "langjährige Mitglieder aktivieren".
+        inputString: '{addRemoveSelect} Personen die {callSelect} {minTimes} in {assignmentSelect}
+          {timeFrame}.'
         minTimes: '{minTimesInput} {minTimes, plural, one {mal} other {mal}}'
+        minTimesInput: mindestens {input} {minTimes, plural, one {mal} other {male}}
       campaignParticipation:
         activitySelect:
           activity: Typ "{activity}"

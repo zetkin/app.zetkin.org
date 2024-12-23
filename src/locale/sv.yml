@@ -571,7 +571,6 @@ feat:
       locked: Målgrupp låst för leverans
       sentSubtitle: Du kan titta på den Smarta sökningen som användes för att definiera
         mottagarna av det här utskicket
-      subtitle: Gör en Smart sökning för att definiera mottagarna av det här utskicket.
       title: Målgrupp
       viewButton: Visa målgrupp
     unsubscribePage:
