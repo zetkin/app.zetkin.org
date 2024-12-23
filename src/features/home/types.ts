@@ -1,4 +1,4 @@
-import { ZetkinCanvassAssignment } from 'features/canvassAssignments/types';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 
 type MyEventActivity = {
@@ -13,8 +13,8 @@ type MyCallAssignmentActivity = {
   start: Date;
 };
 
-type MyCanvassAssignmentActivity = {
-  data: ZetkinCanvassAssignment;
+type MyAreaAssignmentActivity = {
+  data: ZetkinAreaAssignment;
   kind: 'canvass';
   start: Date;
 };
@@ -22,7 +22,7 @@ type MyCanvassAssignmentActivity = {
 export type MyActivity =
   | MyEventActivity
   | MyCallAssignmentActivity
-  | MyCanvassAssignmentActivity;
+  | MyAreaAssignmentActivity;
 
 export type ZetkinEventWithStatus = ZetkinEvent & {
   status: 'signedUp' | 'booked' | null;
