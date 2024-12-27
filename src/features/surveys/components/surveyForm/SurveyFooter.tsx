@@ -1,25 +1,32 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Box, List, ListItem, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import messageIds from 'features/surveys/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import SurveyContainer from './SurveyContainer';
 import theme from 'theme';
 
-const links = [
-  {
-    href: 'https://zetkin.org/',
-    text: messageIds.surveyFooter.links.foundation,
-  },
-  {
-    href: 'https://zetkin.org/privacy',
-    text: messageIds.surveyFooter.links.privacy,
-  },
-];
-
 const SurveyFooter: FC = () => {
+  const messages = useMessages(messageIds);
+
+  const links = useMemo(
+    () => [
+      {
+        href: 'https://zetkin.org/',
+        text: messageIds.surveyFooter.links.foundation,
+      },
+      {
+        href:
+          process.env.ZETKIN_PRIVACY_POLICY_LINK ||
+          messages.surveyForm.policy.link(),
+        text: messageIds.surveyFooter.links.privacy,
+      },
+    ],
+    [messages]
+  );
+
   return (
     <Box component="footer" px={2} py={8}>
       <SurveyContainer>
