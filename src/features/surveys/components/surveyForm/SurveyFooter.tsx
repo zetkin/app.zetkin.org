@@ -14,10 +14,6 @@ const links = [
     text: messageIds.surveyFooter.links.foundation,
   },
   {
-    href: 'https://manual.zetkin.org/',
-    text: messageIds.surveyFooter.links.manual,
-  },
-  {
     href: 'https://zetkin.org/privacy',
     text: messageIds.surveyFooter.links.privacy,
   },

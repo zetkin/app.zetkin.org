@@ -182,7 +182,6 @@ export default makeMessages('feat.surveys', {
   surveyFooter: {
     links: {
       foundation: m('Zetkin Foundation'),
-      manual: m('Zetkin Manual'),
       privacy: m('Privacy Policy'),
     },
     text: m(
