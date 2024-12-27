@@ -7,8 +7,10 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import SurveyContainer from './SurveyContainer';
 import theme from 'theme';
+import { useEnv } from 'core/hooks';
 
 const SurveyFooter: FC = () => {
+  const env = useEnv();
   const messages = useMessages(messageIds);
 
   const links = useMemo(
@@ -19,16 +21,17 @@ const SurveyFooter: FC = () => {
       },
       {
         href:
-          process.env.ZETKIN_PRIVACY_POLICY_LINK ||
-          messages.surveyForm.policy.link(),
+          typeof env.vars.ZETKIN_PRIVACY_POLICY_LINK === 'string'
+            ? env.vars.ZETKIN_PRIVACY_POLICY_LINK
+            : messages.surveyForm.policy.link(),
         text: messages.surveyFooter.links.privacy(),
       },
-      ...(typeof process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME === 'string' &&
-      typeof process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME_HREF === 'string'
+      ...(typeof process.env.INSTANCE_OWNER_NAME === 'string' &&
+      typeof process.env.INSTANCE_OWNER_HREF === 'string'
         ? [
             {
-              href: process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME_HREF,
-              text: process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME,
+              href: env.vars.INSTANCE_OWNER_HREF as string,
+              text: env.vars.INSTANCE_OWNER_NAME as string,
             },
           ]
         : []),
@@ -49,7 +52,7 @@ const SurveyFooter: FC = () => {
             <Msg id={messageIds.surveyFooter.text} />
           </Typography>
         </Box>
-        {typeof process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME === 'string' && (
+        {typeof env.vars.INSTANCE_OWNER_NAME === 'string' && (
           <Box pb={4}>
             <Typography
               color={theme.palette.secondary.light}
@@ -60,7 +63,7 @@ const SurveyFooter: FC = () => {
               <Msg
                 id={messageIds.surveyFooter.hostingOrganization}
                 values={{
-                  name: process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME,
+                  name: env.vars.INSTANCE_OWNER_NAME,
                 }}
               />
             </Typography>
