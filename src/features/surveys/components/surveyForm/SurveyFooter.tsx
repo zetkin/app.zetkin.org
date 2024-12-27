@@ -15,14 +15,24 @@ const SurveyFooter: FC = () => {
     () => [
       {
         href: 'https://zetkin.org/',
-        text: messageIds.surveyFooter.links.foundation,
+        text: messages.surveyFooter.links.foundation(),
       },
       {
         href:
           process.env.ZETKIN_PRIVACY_POLICY_LINK ||
           messages.surveyForm.policy.link(),
-        text: messageIds.surveyFooter.links.privacy,
+        text: messages.surveyFooter.links.privacy(),
       },
+      ...(typeof process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME ===
+        'string' &&
+      typeof process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_HREF === 'string'
+        ? [
+            {
+              href: process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_HREF,
+              text: process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME,
+            },
+          ]
+        : []),
     ],
     [messages]
   );
@@ -40,6 +50,24 @@ const SurveyFooter: FC = () => {
             <Msg id={messageIds.surveyFooter.text} />
           </Typography>
         </Box>
+        {typeof process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME ===
+          'string' && (
+          <Box pb={4}>
+            <Typography
+              color={theme.palette.secondary.light}
+              component="p"
+              fontSize="1rem"
+              textAlign="center"
+            >
+              <Msg
+                id={messageIds.surveyFooter.hostingOrganization}
+                values={{
+                  name: process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME,
+                }}
+              />
+            </Typography>
+          </Box>
+        )}
         <Box display="flex" justifyContent="center" py={4}>
           <Image
             alt=""
@@ -77,7 +105,7 @@ const SurveyFooter: FC = () => {
                 style={{ color: theme.palette.secondary.light }}
                 target="_blank"
               >
-                <Msg id={link.text} />
+                {link.text}
               </Link>
             </ListItem>
           ))}
