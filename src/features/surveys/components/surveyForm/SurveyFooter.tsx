@@ -26,8 +26,8 @@ const SurveyFooter: FC = () => {
             : messages.surveyForm.policy.link(),
         text: messages.surveyFooter.links.privacy(),
       },
-      ...(typeof process.env.INSTANCE_OWNER_NAME === 'string' &&
-      typeof process.env.INSTANCE_OWNER_HREF === 'string'
+      ...(typeof env.vars.INSTANCE_OWNER_NAME === 'string' &&
+      typeof env.vars.INSTANCE_OWNER_HREF === 'string'
         ? [
             {
               href: env.vars.INSTANCE_OWNER_HREF as string,
