@@ -63,6 +63,7 @@ export default makeMessages('feat.emails', {
           noButtonText: m('Click to change this text!'),
         },
         settings: {
+          defaultButtonTextWarning: m('This button still has the default text'),
           invalidUrl: m('This is not a valid link'),
           testLink: m('Click to test link'),
           urlLabel: m('Link url'),

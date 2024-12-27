@@ -39,7 +39,11 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
       hasErrors={hasErrors}
       readOnly={readOnly}
       selected={selected}
-      title={messages.editor.tools.button.title()}
+      title={
+        data.buttonText
+          ? messages.editor.tools.button.title()
+          : messages.editor.tools.button.settings.defaultButtonTextWarning()
+      }
     >
       <Box display="flex" flexDirection="column">
         <Box paddingBottom={1} paddingTop={2}>
