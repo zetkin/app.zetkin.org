@@ -23,13 +23,12 @@ const SurveyFooter: FC = () => {
           messages.surveyForm.policy.link(),
         text: messages.surveyFooter.links.privacy(),
       },
-      ...(typeof process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME ===
-        'string' &&
-      typeof process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_HREF === 'string'
+      ...(typeof process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME === 'string' &&
+      typeof process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME_HREF === 'string'
         ? [
             {
-              href: process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_HREF,
-              text: process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME,
+              href: process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME_HREF,
+              text: process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME,
             },
           ]
         : []),
@@ -50,8 +49,7 @@ const SurveyFooter: FC = () => {
             <Msg id={messageIds.surveyFooter.text} />
           </Typography>
         </Box>
-        {typeof process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME ===
-          'string' && (
+        {typeof process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME === 'string' && (
           <Box pb={4}>
             <Typography
               color={theme.palette.secondary.light}
@@ -62,7 +60,7 @@ const SurveyFooter: FC = () => {
               <Msg
                 id={messageIds.surveyFooter.hostingOrganization}
                 values={{
-                  name: process.env.NEXT_PUBLIC_HOSTING_ORGANIZATION_NAME,
+                  name: process.env.NEXT_PUBLIC_INSTANCE_OWNER_NAME,
                 }}
               />
             </Typography>
