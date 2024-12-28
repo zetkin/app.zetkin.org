@@ -38,14 +38,14 @@ declare module '@mui/styles/defaultTheme' {
  *
  * @category Environment Variables
  */
-export type ClientContextEnvVariables = {
+export type ClientContextEnvVars = {
   MUIX_LICENSE_KEY: string | null;
   ZETKIN_APP_DOMAIN: string | null;
 };
 
 type ClientContextProps = {
   children: ReactNode;
-  envVars: ClientContextEnvVariables;
+  envVars: ClientContextEnvVars;
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;

@@ -35,7 +35,7 @@ The `<RootLayout>` component in `src/app/layout.tsx` makes a set of runtime
 environment variables from the Node.js process on the server available to
 client-side code by adding them as values to a `ClientContext` provider.
 
-The [`ClientContextEnvVariables`](../types/ClientContextEnvVariables.html) type alias is a good starting point
+The [`ClientContextEnvVars`](../types/ClientContextEnvVars.html) type alias is a good starting point
 when adding a new runtime environment variable to app router code. Add your
 variable there and then fix any resulting type errors and you'll be up and
 running.
