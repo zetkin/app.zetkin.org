@@ -26,7 +26,25 @@ type RegularProps = {
   [key: string]: any;
 };
 
+/**
+ * Defines the set of runtime environment variables available to [pages
+ * router](https://nextjs.org/docs/pages) code via
+ * [`getServerSideProps`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props).
+ *
+ * Environment variables specified here must be included in the `ScaffoldedProps`
+ * object returned by `scaffold()`.
+ *
+ * @category Environment Variables
+ */
+export type ScaffoldedEnvVars = {
+  FEAT_AREAS: string | null;
+  MUIX_LICENSE_KEY: string | null;
+  ZETKIN_APP_DOMAIN: string | null;
+  ZETKIN_GEN2_ORGANIZE_URL: string | null;
+};
+
 export type ScaffoldedProps = RegularProps & {
+  envVars: ScaffoldedEnvVars;
   lang: string;
   messages: Record<string, string>;
   user: ZetkinUser | null;

@@ -7,3 +7,5 @@ export { default as shouldLoad } from 'core/caching/shouldLoad';
 export { default as ZUIFuture, type ZUIFutureProps } from 'zui/ZUIFuture';
 export { type IFuture } from 'core/caching/futures';
 export { removeOffset } from 'utils/dateUtils';
+export { type ClientContextEnvVariables } from 'core/env/ClientContext';
+export { type ScaffoldedEnvVars } from 'utils/next';

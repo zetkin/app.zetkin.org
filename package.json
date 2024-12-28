@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -p 80",
     "devserver": "next dev -p 3000",
-    "docs:build": "storybook build -o public/storybook && typedoc --out public/docs",
+    "docs:build": "storybook build -o public/storybook && typedoc",
     "lint:eslint": "eslint src integrationTesting",
     "lint:prettier": "prettier --check src integrationTesting",
     "lint:translations": "ts-node src/tools/lint-translations",

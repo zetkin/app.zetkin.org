@@ -29,12 +29,23 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
+/**
+ * Defines the set of runtime environment variables available to [app
+ * router](https://nextjs.org/docs/app) code via `ClientContext`.
+ *
+ * Environment variables specified here must be passed to the `ClientContext`
+ * provider in `<RootLayout>`.
+ *
+ * @category Environment Variables
+ */
+export type ClientContextEnvVariables = {
+  MUIX_LICENSE_KEY: string | null;
+  ZETKIN_APP_DOMAIN: string | null;
+};
+
 type ClientContextProps = {
   children: ReactNode;
-  envVars: {
-    MUIX_LICENSE_KEY: string | null;
-    ZETKIN_APP_DOMAIN: string | null;
-  };
+  envVars: ClientContextEnvVariables;
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;
