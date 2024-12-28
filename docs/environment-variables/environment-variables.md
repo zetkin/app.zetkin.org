@@ -27,7 +27,8 @@ model in its architecture and documentation can easily lead to confusion when
 working on an app like Zetkin with a different deployment model. The fact that
 handling runtime environment variables looks different under the newer app
 router paradigm compared to the older pages router code also adds to the sense
-of complexity here. So here's how
+of complexity here. So here's how Zetkin's runtime environment variables work in
+both Next.js routing paradigms.
 
 ## Runtime Environment Variables In App Router Code
 
