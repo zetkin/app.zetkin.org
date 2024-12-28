@@ -22,7 +22,7 @@ import {
   ZetkinSurveyFormStatus,
   ZetkinUser,
 } from 'utils/types/zetkin';
-import SurveyFooter from './SurveyFooter';
+import ZUIPublicFooter from 'zui/ZUIPublicFooter';
 
 export type SurveyFormProps = {
   survey: ZetkinSurveyExtended;
@@ -62,7 +62,7 @@ const SurveyForm: FC<SurveyFormProps> = ({ survey, user }) => {
               <SurveySubmitButton />
             </Box>
           </form>
-          <SurveyFooter />
+          <ZUIPublicFooter />
         </>
       )}
       {status === 'submitted' && <SurveySuccess survey={survey} />}
