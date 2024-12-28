@@ -43,7 +43,7 @@ running.
 
 ## Runtime Environment Variables In Pages Router Code
 
-Just about every page component in `src/pages/` uses the [`scaffold()`](../functions/scaffold.html) function
+Just about every page component in `src/pages/` uses the `scaffold()` function
 to generate its [`getServerSideProps()`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) function.
 
 The [`ScaffoldedEnvVars`](../types/ScaffoldedEnvVars.html) type alias is the
