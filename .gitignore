@@ -45,5 +45,6 @@ yarn-error.log*
 # typescript
 tsconfig.tsbuildinfo
 
-# typedoc
-/typedoc/
+# generated docs
+public/docs
+public/storybook
