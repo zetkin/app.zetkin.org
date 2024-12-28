@@ -32,6 +32,8 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ClientContext
             envVars={{
+              INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF || null,
+              INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME || null,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
             }}
