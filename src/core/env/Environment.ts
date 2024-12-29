@@ -2,6 +2,8 @@ import IApiClient from 'core/api/client/IApiClient';
 
 type EnvVars = {
   FEAT_AREAS?: string | null;
+  INSTANCE_OWNER_HREF?: string | null;
+  INSTANCE_OWNER_NAME?: string | null;
   MUIX_LICENSE_KEY: string | null;
   ZETKIN_APP_DOMAIN: string | null;
   ZETKIN_GEN2_ORGANIZE_URL?: string | null;

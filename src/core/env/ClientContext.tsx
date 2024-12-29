@@ -31,10 +31,7 @@ declare module '@mui/styles/defaultTheme' {
 
 type ClientContextProps = {
   children: ReactNode;
-  envVars: {
-    MUIX_LICENSE_KEY: string | null;
-    ZETKIN_APP_DOMAIN: string | null;
-  };
+  envVars: Environment['vars'];
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;
