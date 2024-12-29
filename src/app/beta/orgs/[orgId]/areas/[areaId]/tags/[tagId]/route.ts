@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { notFound } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AreaModel } from 'features/areas/models';
+import { AreaModel } from 'features/geography/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinTag } from 'utils/types/zetkin';
 
