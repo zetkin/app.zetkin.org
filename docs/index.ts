@@ -8,4 +8,3 @@ export { default as ZUIFuture, type ZUIFutureProps } from 'zui/ZUIFuture';
 export { type IFuture } from 'core/caching/futures';
 export { removeOffset } from 'utils/dateUtils';
 export { type ClientContextEnvVars } from 'core/env/ClientContext';
-export { type ScaffoldedEnvVars } from 'utils/next';

@@ -16,6 +16,7 @@ import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from './types/zetkin';
 import { hasFeature } from './featureFlags';
+import { ClientContextEnvVars } from 'core/env/ClientContext';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,25 +27,8 @@ type RegularProps = {
   [key: string]: any;
 };
 
-/**
- * Defines the set of runtime environment variables available to [pages
- * router](https://nextjs.org/docs/pages) code via
- * [`getServerSideProps`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props).
- *
- * Environment variables specified here must be included in the `ScaffoldedProps`
- * object returned by `scaffold()`.
- *
- * @category Environment Variables
- */
-export type ScaffoldedEnvVars = {
-  FEAT_AREAS: string | null;
-  MUIX_LICENSE_KEY: string | null;
-  ZETKIN_APP_DOMAIN: string | null;
-  ZETKIN_GEN2_ORGANIZE_URL: string | null;
-};
-
 export type ScaffoldedProps = RegularProps & {
-  envVars: ScaffoldedEnvVars;
+  envVars: ClientContextEnvVars;
   lang: string;
   messages: Record<string, string>;
   user: ZetkinUser | null;
@@ -223,10 +207,13 @@ export const scaffold =
         ...result.props,
         envVars: {
           FEAT_AREAS: process.env.FEAT_AREAS || null,
+          INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF || null,
+          INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME || null,
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
-          ZETKIN_GEN2_ORGANIZE_URL:
-            process.env.ZETKIN_GEN2_ORGANIZE_URL || null,
+          ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL || null,
+          ZETKIN_PRIVACY_POLICY_LINK:
+            process.env.ZETKIN_PRIVACY_POLICY_LINK || null,
         },
         lang,
         messages,

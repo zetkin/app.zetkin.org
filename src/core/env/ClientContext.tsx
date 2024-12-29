@@ -30,17 +30,28 @@ declare module '@mui/styles/defaultTheme' {
 }
 
 /**
- * Defines the set of runtime environment variables available to [app
- * router](https://nextjs.org/docs/app) code via `ClientContext`.
+ * Defines the runtime environment variables available to client-side code.
  *
- * Environment variables specified here must be passed to the `ClientContext`
- * provider in `<RootLayout>`.
+ * These are made available to [app router](https://nextjs.org/docs/app) code
+ * via `ClientContext` and to [pages router](https://nextjs.org/docs/pages) code
+ * via `scaffold()`.
+ *
+ * We use the same type alias for both routers in order to
+ * keep the runtime environment variables aligned across this architectural
+ * boundary. Keeping them aligned in this way is intended to facilitate gradual
+ * adoption of the app router by minimising friction related to environment
+ * variables.
  *
  * @category Environment Variables
  */
 export type ClientContextEnvVars = {
+  FEAT_AREAS: string | null;
+  INSTANCE_OWNER_HREF: string | null;
+  INSTANCE_OWNER_NAME: string | null;
   MUIX_LICENSE_KEY: string | null;
   ZETKIN_APP_DOMAIN: string | null;
+  ZETKIN_GEN2_ORGANIZE_URL: string | null;
+  ZETKIN_PRIVACY_POLICY_LINK: string | null;
 };
 
 type ClientContextProps = {

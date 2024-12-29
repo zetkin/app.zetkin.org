@@ -46,8 +46,8 @@ running.
 Just about every page component in `src/pages/` uses the `scaffold()` function
 to generate its [`getServerSideProps()`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) function.
 
-The [`ScaffoldedEnvVars`](../types/ScaffoldedEnvVars.html) type alias is the
-place to look first when adding a new runtime environment variable to pages
+The [`ClientContextEnvVars`](../types/ScaffoldedEnvVars.html) type alias is also
+the place to look first when adding a new runtime environment variable to pages
 router code.
 
 ## Further Reading
