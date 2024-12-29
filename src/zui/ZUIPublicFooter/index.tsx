@@ -3,7 +3,7 @@ import { Box, List, ListItem, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import messageIds from 'features/surveys/l10n/messageIds';
+import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import theme from 'theme';
 import { useEnv } from 'core/hooks';
@@ -16,14 +16,14 @@ const ZUIPublicFooter: FC = () => {
     () => [
       {
         href: 'https://zetkin.org/',
-        text: messages.surveyFooter.links.foundation(),
+        text: messages.publicFooter.links.foundation(),
       },
       {
         href:
           typeof env.vars.ZETKIN_PRIVACY_POLICY_LINK === 'string'
             ? env.vars.ZETKIN_PRIVACY_POLICY_LINK
-            : messages.surveyForm.policy.link(),
-        text: messages.surveyFooter.links.privacy(),
+            : messages.publicFooter.privacyPolicyLink(),
+        text: messages.publicFooter.links.privacy(),
       },
       ...(typeof env.vars.INSTANCE_OWNER_NAME === 'string' &&
       typeof env.vars.INSTANCE_OWNER_HREF === 'string'
@@ -49,7 +49,7 @@ const ZUIPublicFooter: FC = () => {
               fontSize="1rem"
               textAlign="center"
             >
-              <Msg id={messageIds.surveyFooter.text} />
+              <Msg id={messageIds.publicFooter.text} />
             </Typography>
           </Box>
           {typeof env.vars.INSTANCE_OWNER_NAME === 'string' && (
@@ -61,7 +61,7 @@ const ZUIPublicFooter: FC = () => {
                 textAlign="center"
               >
                 <Msg
-                  id={messageIds.surveyFooter.hostingOrganization}
+                  id={messageIds.publicFooter.hostingOrganization}
                   values={{
                     name: env.vars.INSTANCE_OWNER_NAME,
                   }}

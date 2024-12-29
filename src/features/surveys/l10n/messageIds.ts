@@ -179,18 +179,6 @@ export default makeMessages('feat.surveys', {
     ),
     title: m('Add email address'),
   },
-  surveyFooter: {
-    hostingOrganization: m<{ name: string }>(
-      'This instance of Zetkin is hosted and managed by {name}.'
-    ),
-    links: {
-      foundation: m('Zetkin Foundation'),
-      privacy: m('Privacy Policy'),
-    },
-    text: m(
-      'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
-    ),
-  },
   surveyForm: {
     accept: m('I accept the terms stated below'),
     error: m(
