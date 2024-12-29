@@ -13,6 +13,8 @@ export default function blockProblems(block: OutputBlockData): BlockProblem[] {
 
     if (!block.data.buttonText) {
       blockProblems.push(BlockProblem.DEFAULT_BUTTON_TEXT);
+    } else if (!block.data.buttonText.replaceAll('&nbsp;', '').trim().length) {
+      blockProblems.push(BlockProblem.BUTTON_TEXT_MISSING);
     }
   } else if (block.type === BLOCK_TYPES.PARAGRAPH) {
     const container = document.createElement('div');

@@ -108,6 +108,7 @@ export type EmailContent = {
 export enum BlockProblem {
   INVALID_BUTTON_URL = 'invalidButtonURL',
   DEFAULT_BUTTON_TEXT = 'defaultButtonText',
+  BUTTON_TEXT_MISSING = 'buttonTextMissing',
   INVALID_LINK_URL = 'invalidLinkURL',
 }
 

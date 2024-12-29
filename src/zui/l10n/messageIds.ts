@@ -174,6 +174,19 @@ export default makeMessages('zui', {
     search: m('Type to start searching'),
     searching: m('Searching...'),
   },
+  publicFooter: {
+    hostingOrganization: m<{ name: string }>(
+      'This instance of Zetkin is hosted and managed by {name}.'
+    ),
+    links: {
+      foundation: m('Zetkin Foundation'),
+      privacy: m('Privacy Policy'),
+    },
+    privacyPolicyLink: m('https://zetkin.org/privacy'),
+    text: m(
+      'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
+    ),
+  },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),

@@ -49,6 +49,8 @@
   "exclude": [
     ".next",
     "node_modules",
-    "storybook-static"
+    "storybook-static",
+    "public/storybook",
+    "public/docs"
   ]
 }
