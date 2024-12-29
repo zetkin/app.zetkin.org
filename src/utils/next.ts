@@ -16,6 +16,7 @@ import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from './types/zetkin';
 import { hasFeature } from './featureFlags';
+import { EnvVars } from 'core/env/Environment';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,6 +28,7 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
+  envVars: EnvVars;
   lang: string;
   messages: Record<string, string>;
   user: ZetkinUser | null;
@@ -204,11 +206,13 @@ export const scaffold =
       result.props = {
         ...result.props,
         envVars: {
-          FEAT_AREAS: process.env.FEAT_AREAS || null,
-          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
-          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
-          ZETKIN_GEN2_ORGANIZE_URL:
-            process.env.ZETKIN_GEN2_ORGANIZE_URL || null,
+          FEAT_AREAS: process.env.FEAT_AREAS,
+          INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
+          INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+          MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+          ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+          ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
+          ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
         },
         lang,
         messages,
