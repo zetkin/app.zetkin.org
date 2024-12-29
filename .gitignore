@@ -44,3 +44,7 @@ yarn-error.log*
 
 # typescript
 tsconfig.tsbuildinfo
+
+# generated docs
+public/docs
+public/storybook
