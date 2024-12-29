@@ -15,7 +15,7 @@ import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
-import Environment from 'core/env/Environment';
+import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
 import { store } from 'core/store';
@@ -29,34 +29,9 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
-/**
- * Defines the runtime environment variables available to client-side code.
- *
- * These are made available to [app router](https://nextjs.org/docs/app) code
- * via `ClientContext` and to [pages router](https://nextjs.org/docs/pages) code
- * via `scaffold()`.
- *
- * We use the same type alias for both routers in order to
- * keep the runtime environment variables aligned across this architectural
- * boundary. Keeping them aligned in this way is intended to facilitate gradual
- * adoption of the app router by minimising friction related to environment
- * variables.
- *
- * @category Environment Variables
- */
-export type ClientContextEnvVars = {
-  FEAT_AREAS: string | null;
-  INSTANCE_OWNER_HREF: string | null;
-  INSTANCE_OWNER_NAME: string | null;
-  MUIX_LICENSE_KEY: string | null;
-  ZETKIN_APP_DOMAIN: string | null;
-  ZETKIN_GEN2_ORGANIZE_URL: string | null;
-  ZETKIN_PRIVACY_POLICY_LINK: string | null;
-};
-
 type ClientContextProps = {
   children: ReactNode;
-  envVars: ClientContextEnvVars;
+  envVars: EnvVars;
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;

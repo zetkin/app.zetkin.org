@@ -36,19 +36,31 @@ The `<RootLayout>` component in `src/app/layout.tsx` makes a set of runtime
 environment variables from the Node.js process on the server available to
 client-side code by adding them as values to a `ClientContext` provider.
 
-The [`ClientContextEnvVars`](../types/ClientContextEnvVars.html) type alias is a good starting point
-when adding a new runtime environment variable to app router code. Add your
-variable there and then fix any resulting type errors and you'll be up and
-running.
+The [`EnvVars`](../types/EnvVars.html) type alias is a good starting point when
+adding a new runtime environment variable to app router code. Add your variable
+there and then fix any resulting type errors and you'll be up and running.
 
 ## Runtime Environment Variables In Pages Router Code
 
 Just about every page component in `src/pages/` uses the `scaffold()` function
 to generate its [`getServerSideProps()`](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) function.
 
-The [`ClientContextEnvVars`](../types/ScaffoldedEnvVars.html) type alias is also
-the place to look first when adding a new runtime environment variable to pages
-router code.
+The [`EnvVars`](../types/EnvVars.html) type alias is also the place to look
+first when adding a new runtime environment variable to pages router code.
+
+## Accessing Runtime Environment Variables In Components
+
+The [`useEnv`](../functions/useEnv.html) hook returns an
+[`Environment`](../classes/Environment.html) instance which provides reads access to runtime environment variables via its [`vars` property](../classes/Environment.html#vars).
+
+```typescript
+const Component = () => {
+  const env = useEnv();
+  return (
+    <a href={env.vars.ZETKIN_GEN2_ORGANIZE_URL}>Go to the old interface</a>
+  );
+};
+```
 
 ## Further Reading
 

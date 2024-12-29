@@ -32,7 +32,6 @@ interface ZetkinAppProvidersProps {
 
 const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   const env = new Environment(new BrowserApiClient(), {
-    MUIX_LICENSE_KEY: null,
     ZETKIN_APP_DOMAIN: 'https://app.zetkin.org',
   });
 
