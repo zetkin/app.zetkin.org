@@ -9,6 +9,7 @@ export type ZetkinJoinForm = {
   embeddable: boolean;
   fields: string[];
   id: number;
+  org_access: 'sameorg' | 'suborgs';
   organization: {
     id: number;
     title: string;
