@@ -428,8 +428,7 @@ feat:
       contentError: There are problems in the content of your email. Go to the editor
         in the Compose tab and correct them.
       empty: Your email is empty. Go to the Compose tab to add some content.
-      noSubject: Your email has no subject line. Go to Settings in the Compose tab to
-        add one.
+      noSubject: Your email has no subject line. Go to the Compose tab to add one.
       notTargeted: Your email has no targets. Go to the Targets section in the
         Overview tab to create a Smart Search that defines your targets.
       targetsNotLocked: The targets are not locked. Go to the Targets section in the
@@ -457,7 +456,7 @@ feat:
             title: Preview
           settings:
             senderAddressInputLabel: Sender address
-            senderNameInputLabel: Sender name
+            senderInputLabel: Sender
             subjectInputLabel: Subject
             title: Settings
       tools:
