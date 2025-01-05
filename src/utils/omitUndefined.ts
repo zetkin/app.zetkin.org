@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isUndefined, omitBy } from 'lodash';
 
 /**
  * Omits properties with `undefined` values from an object.
@@ -8,4 +8,4 @@ import _ from 'lodash';
  */
 export const omitUndefined = (
   obj: Record<string, unknown>
-): Record<string, unknown> => _.omitBy(obj, _.isUndefined);
+): Record<string, unknown> => omitBy(obj, isUndefined);
