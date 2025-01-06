@@ -159,6 +159,19 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           }
           label={messages.formPane.labels.requireEmailVerification()}
         />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={joinForm.org_access == 'suborgs'}
+              onChange={(evt) =>
+                updateForm({
+                  org_access: evt.target.checked ? 'suborgs' : 'sameorg',
+                })
+              }
+            />
+          }
+          label={messages.formPane.labels.shareWithSuborgs()}
+        />
       </Box>
     </>
   );
