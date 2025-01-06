@@ -216,6 +216,7 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
           '& .ce-block__content': {
             px: 2,
           },
+          marginLeft: 8,
           minHeight: '100%',
         }}
       />
