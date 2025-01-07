@@ -16,13 +16,13 @@ import 'leaflet/dist/leaflet.css';
 
 import { useNumericRouteParams } from 'core/hooks';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import useCreateArea from '../../hooks/useCreateArea';
-import { PointData, ZetkinArea } from '../../types';
-import AreaFilters from '../AreaFilters';
-import AreaOverlay from '../AreaOverlay';
+import useCreateArea from '../../../areas/hooks/useCreateArea';
+import { PointData, ZetkinArea } from '../../../areas/types';
+import AreaFilters from '../../../areas/components/AreaFilters';
+import AreaOverlay from '../../../areas/components/AreaOverlay';
 import MapRenderer from './MapRenderer';
-import AreaFilterProvider from '../AreaFilters/AreaFilterContext';
-import AreaFilterButton from '../AreaFilters/AreaFilterButton';
+import AreaFilterProvider from '../../../areas/components/AreaFilters/AreaFilterContext';
+import AreaFilterButton from '../../../areas/components/AreaFilters/AreaFilterButton';
 import MapControls from 'features/areaAssignments/components/MapControls';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
@@ -31,7 +31,7 @@ interface MapProps {
   areas: ZetkinArea[];
 }
 
-const Map: FC<MapProps> = ({ areas }) => {
+const GeographyMap: FC<MapProps> = ({ areas }) => {
   const messages = useMessages(messageIds);
   const mapRef = useRef<MapType | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
@@ -259,4 +259,4 @@ const Map: FC<MapProps> = ({ areas }) => {
   );
 };
 
-export default Map;
+export default GeographyMap;

@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 }, scaffoldOptions);
 
 const GeographyMap = dynamic(
-  () => import('../../../../features/areas/components/GeographyMap/index'),
+  () => import('../../../../features/geography/components/GeographyMap/index'),
   { ssr: false }
 );
 
