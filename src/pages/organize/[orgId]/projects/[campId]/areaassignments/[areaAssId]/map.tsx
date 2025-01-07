@@ -7,7 +7,7 @@ import Head from 'next/head';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
-import useAreas from 'features/geography/hooks/useAreas';
+import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
 import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
 import useCreateAreaAssignmentSession from 'features/areaAssignments/hooks/useCreateAreaAssigneeSession';
@@ -16,7 +16,7 @@ import useLocations from 'features/areaAssignments/hooks/useLocations';
 import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
-import AreaFilterProvider from 'features/geography/components/AreaFilters/AreaFilterContext';
+import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import AssigneeFilterProvider from 'features/areaAssignments/components/OrganizerMapFilters/AssigneeFilterContext';
 
 const OrganizerMap = dynamic(

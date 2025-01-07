@@ -15,8 +15,8 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import { AreaModel } from 'features/geography/models';
-import { ZetkinArea } from 'features/geography/types';
+import { AreaModel } from 'features/areas/models';
+import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
   params: {

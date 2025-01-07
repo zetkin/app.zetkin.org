@@ -4,7 +4,7 @@ import {
   ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import { ZetkinArea } from 'features/geography/types';
+import { ZetkinArea } from 'features/areas/types';
 
 export type AssignmentWithAreas = ZetkinAreaAssignment & {
   areas: ZetkinArea[];

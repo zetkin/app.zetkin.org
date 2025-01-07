@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AreaModel } from 'features/geography/models';
-import { ZetkinArea } from 'features/geography/types';
+import { AreaModel } from 'features/areas/models';
+import { ZetkinArea } from 'features/areas/types';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinTag } from 'utils/types/zetkin';
 

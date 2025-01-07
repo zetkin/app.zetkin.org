@@ -9,9 +9,9 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 
-import { PointData, ZetkinArea } from 'features/geography/types';
+import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import objToLatLng from 'features/geography/utils/objToLatLng';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 
 type Props = {
   areas: ZetkinArea[];

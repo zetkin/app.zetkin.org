@@ -1,14 +1,14 @@
 import { FC, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import useAreaTagging from 'features/geography/hooks/useAreaTagging';
-import useAreaTags from 'features/geography/hooks/useAreaTags';
-import { ZetkinArea } from 'features/geography/types';
+import useAreaTagging from 'features/areas/hooks/useAreaTagging';
+import useAreaTags from 'features/areas/hooks/useAreaTags';
+import { ZetkinArea } from 'features/areas/types';
 import TagManager from 'features/tags/components/TagManager';
 import GroupToggle from 'features/tags/components/TagManager/components/GroupToggle';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   area: ZetkinArea;

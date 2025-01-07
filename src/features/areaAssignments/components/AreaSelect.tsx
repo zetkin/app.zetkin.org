@@ -13,7 +13,7 @@ import {
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
-import { ZetkinArea } from 'features/geography/types';
+import { ZetkinArea } from 'features/areas/types';
 import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignmentSession,

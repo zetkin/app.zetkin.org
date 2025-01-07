@@ -7,7 +7,7 @@ import { FC, useState } from 'react';
 
 import theme from 'theme';
 import { Msg } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   items: {

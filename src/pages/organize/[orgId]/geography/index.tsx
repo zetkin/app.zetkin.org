@@ -5,12 +5,12 @@ import dynamic from 'next/dynamic';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
-import useAreas from 'features/geography/hooks/useAreas';
+import useAreas from 'features/areas/hooks/useAreas';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
 import { AREAS } from 'utils/featureFlags';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 }, scaffoldOptions);
 
 const GeographyMap = dynamic(
-  () => import('../../../../features/geography/components/GeographyMap/index'),
+  () => import('../../../../features/areas/components/GeographyMap/index'),
   { ssr: false }
 );
 

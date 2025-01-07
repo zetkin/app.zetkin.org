@@ -15,7 +15,7 @@ import { latLngBounds, Map as MapType } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { useNumericRouteParams } from 'core/hooks';
-import objToLatLng from 'features/geography/utils/objToLatLng';
+import objToLatLng from 'features/areas/utils/objToLatLng';
 import useCreateArea from '../../hooks/useCreateArea';
 import { PointData, ZetkinArea } from '../../types';
 import AreaFilters from '../AreaFilters';
@@ -25,7 +25,7 @@ import AreaFilterProvider from '../AreaFilters/AreaFilterContext';
 import AreaFilterButton from '../AreaFilters/AreaFilterButton';
 import MapControls from 'features/areaAssignments/components/MapControls';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 interface MapProps {
   areas: ZetkinArea[];

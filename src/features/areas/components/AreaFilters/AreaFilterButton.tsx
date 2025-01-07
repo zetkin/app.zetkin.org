@@ -4,7 +4,7 @@ import { FilterList } from '@mui/icons-material';
 
 import { areaFilterContext } from './AreaFilterContext';
 import { Msg } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   onToggle: () => void;

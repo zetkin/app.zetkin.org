@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AreaModel } from 'features/geography/models';
+import { AreaModel } from 'features/areas/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinArea } from 'features/geography/types';
+import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 
 type RouteMeta = {

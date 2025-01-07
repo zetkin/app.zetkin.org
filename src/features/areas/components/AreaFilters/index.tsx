@@ -2,13 +2,13 @@ import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
-import { ZetkinArea } from 'features/geography/types';
+import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';
 import AddFilterButton from './AddFilterButton';
 import { useMessages } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];

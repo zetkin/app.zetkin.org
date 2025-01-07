@@ -19,7 +19,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
 import { Msg } from 'core/i18n';
-import messageIds from 'features/geography/l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   area: ZetkinArea;

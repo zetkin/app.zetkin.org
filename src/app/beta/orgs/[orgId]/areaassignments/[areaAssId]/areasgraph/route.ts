@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AreaModel } from 'features/geography/models';
+import { AreaModel } from 'features/areas/models';
 import {
   AreaAssignmentModel,
   LocationModel,
@@ -18,7 +18,7 @@ import getAreaData from 'features/areaAssignments/utils/getAreaData';
 import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import { ZetkinArea } from 'features/geography/types';
+import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
   params: {
