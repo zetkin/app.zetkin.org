@@ -70,7 +70,11 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
 
   async function finishDrawing() {
     if (drawingPoints && drawingPoints.length > 2) {
-      const area = await createArea({ points: drawingPoints });
+      const area = await createArea({
+        description: '',
+        points: drawingPoints,
+        title: messages.areas.default.title(),
+      });
       setSelectedId(area.id);
     }
     setDrawingPoints(null);
@@ -83,12 +87,11 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
       inputValue.length == 0
         ? areas.concat()
         : areas.filter((area) => {
-            const areaTitle = area.title || messages.areas.default.title();
             const areaDesc =
               area.description || messages.areas.default.description();
 
             return (
-              areaTitle.toLowerCase().includes(inputValue) ||
+              area.title.toLowerCase().includes(inputValue) ||
               areaDesc.toLowerCase().includes(inputValue)
             );
           });
@@ -202,9 +205,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
                 />
               )}
               renderOption={(props, area) => (
-                <MenuItem {...props}>
-                  {area.title || <Msg id={messageIds.areas.default.title} />}
-                </MenuItem>
+                <MenuItem {...props}>{area.title}</MenuItem>
               )}
               value={null}
             />

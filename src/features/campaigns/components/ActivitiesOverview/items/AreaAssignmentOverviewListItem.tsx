@@ -7,8 +7,6 @@ import OverviewListItem from './OverviewListItem';
 import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 import { useNumericRouteParams } from 'core/hooks';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 type Props = {
   activity: AreaAssignmentActivity;
@@ -16,7 +14,6 @@ type Props = {
 };
 
 const AreaAssignmentOverviewListItem: FC<Props> = ({ activity, focusDate }) => {
-  const messages = useMessages(messageIds);
   const assignment = activity.data;
   const { orgId } = useNumericRouteParams();
 
@@ -41,7 +38,7 @@ const AreaAssignmentOverviewListItem: FC<Props> = ({ activity, focusDate }) => {
       SecondaryIcon={Person}
       startDate={activity.visibleFrom}
       statusBar={null}
-      title={assignment.title || messages.default.title()}
+      title={assignment.title}
     />
   );
 };

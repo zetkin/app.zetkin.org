@@ -21,10 +21,10 @@ export default function useLocationMutations(
   const [isAddVisitLoading, setIsAddVisitLoading] = useState<boolean>(false);
 
   return {
-    addHousehold: async () => {
+    addHousehold: async (data: Partial<ZetkinLocation>) => {
       const location = await apiClient.post<ZetkinLocation>(
         `/beta/orgs/${orgId}/locations/${locationId}/households`,
-        {}
+        data
       );
       dispatch(locationUpdated(location));
       return location.households[0];

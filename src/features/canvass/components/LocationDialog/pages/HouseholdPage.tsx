@@ -48,7 +48,7 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
             })
           : messages.default.floor()
       }
-      title={household.title || messages.default.household()}
+      title={household.title}
     />
   );
 };

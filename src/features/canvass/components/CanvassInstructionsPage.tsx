@@ -75,9 +75,7 @@ const Page: FC<{
             padding={2}
           >
             <Box>
-              <Typography variant="body1">
-                {assignment.title ?? <Msg id={messageIds.default.assignment} />}
-              </Typography>
+              <Typography variant="body1">{assignment.title}</Typography>
               <Box alignItems="center" display="flex" gap={1}>
                 <Avatar
                   src={`/api/orgs/${org.id}/avatar`}

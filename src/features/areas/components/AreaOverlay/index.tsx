@@ -120,9 +120,7 @@ const AreaOverlay: FC<Props> = ({
                 />
               )}
               renderPreview={() => (
-                <Typography variant="h5">
-                  {area.title || <Msg id={messageIds.areas.default.title} />}
-                </Typography>
+                <Typography variant="h5">{area.title}</Typography>
               )}
               value={area.title || ''}
             />

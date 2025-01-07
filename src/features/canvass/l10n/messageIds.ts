@@ -4,7 +4,6 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.canvass', {
   default: {
-    assignment: m('Untitled area assignment'),
     description: m('Empty description'),
     floor: m('Unknown floor'),
     household: m('Untitled household'),

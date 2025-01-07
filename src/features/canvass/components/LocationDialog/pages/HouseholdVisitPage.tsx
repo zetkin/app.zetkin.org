@@ -70,7 +70,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       }
       onBack={onBack}
       title={messages.visit.household.header({
-        householdTitle: household.title || messages.default.household(),
+        householdTitle: household.title,
       })}
     >
       <Stepper activeStep={step} orientation="vertical">

@@ -48,7 +48,7 @@ const EditHouseholdPage: FC<Props> = ({
       onBack={onBack}
       onClose={onClose}
       title={messages.households.edit.header({
-        title: household.title || messages.default.household(),
+        title: household.title,
       })}
     >
       <form

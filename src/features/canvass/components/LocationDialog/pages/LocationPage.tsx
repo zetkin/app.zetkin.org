@@ -63,11 +63,7 @@ const LocationPage: FC<LocationPageProps> = ({
   );
 
   return (
-    <PageBase
-      onClose={onClose}
-      onEdit={onEdit}
-      title={location.title || messages.default.location()}
-    >
+    <PageBase onClose={onClose} onEdit={onEdit} title={location.title}>
       <Box>
         <Typography
           color="secondary"

@@ -11,8 +11,6 @@ import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
 import { AssignmentWithAreas } from '../types';
 import CanvassSidebar from './CanvassSidebar';
-import messageIds from '../l10n/messageIds';
-import { Msg } from 'core/i18n';
 
 const CanvassMap = dynamic(() => import('./CanvassMap'), {
   ssr: false,
@@ -59,11 +57,7 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
             >
               <Box>
                 <Box display="flex" flexDirection="column">
-                  <Typography variant="body1">
-                    {assignment.title ?? (
-                      <Msg id={messageIds.default.assignment} />
-                    )}
-                  </Typography>
+                  <Typography variant="body1">{assignment.title}</Typography>
                 </Box>
                 <Box alignItems="center" display="flex" gap={1}>
                   <Avatar

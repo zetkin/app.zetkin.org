@@ -115,9 +115,7 @@ const AreaCard: FC<AreaCardProps> = ({
                     variant="h6"
                   >
                     {areaData?.area.id !== 'noArea' ? (
-                      areaData?.area.title || (
-                        <Msg id={messageIds.default.title} />
-                      )
+                      areaData?.area.title
                     ) : (
                       <Msg
                         id={messageIds.overview.progress.unassignedVisits.title}

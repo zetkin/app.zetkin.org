@@ -55,7 +55,7 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
         numHouseholds,
         numVisitedHouseholds,
       })}
-      title={location.title || messages.default.location()}
+      title={location.title}
     />
   );
 };

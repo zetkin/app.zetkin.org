@@ -1,6 +1,6 @@
 import { m, makeMessages } from 'core/i18n';
 
-export default makeMessages('feat.geography', {
+export default makeMessages('feat.areas', {
   areas: {
     areaSettings: {
       delete: m('Delete'),

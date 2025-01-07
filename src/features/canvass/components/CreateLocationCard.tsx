@@ -20,10 +20,8 @@ export const CreateLocationCard: FC<CreateLocationCardProps> = ({
     <form
       onSubmit={(ev) => {
         ev.preventDefault();
-        if (title) {
-          onCreate(title);
-          onClose();
-        }
+        onCreate(title || messages.default.location());
+        onClose();
       }}
     >
       <FormControl fullWidth>

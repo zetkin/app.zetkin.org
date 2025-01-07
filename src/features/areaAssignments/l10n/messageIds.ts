@@ -8,8 +8,7 @@ export default makeMessages('feat.areaAssignments', {
     },
   },
   default: {
-    description: m('Empty description'),
-    title: m('Untitled area'),
+    title: m('Untitled area assignment'),
   },
   instructions: {
     editor: {

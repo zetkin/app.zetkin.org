@@ -32,7 +32,7 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
 import { useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type OrganizerMapProps = {
   areaAssId: string;
@@ -92,11 +92,11 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
       inputValue.length == 0
         ? areas.concat()
         : areas.filter((area) => {
-            const areaTitle = area.title || messages.default.title();
-            const areaDesc = area.description || messages.default.description();
+            const areaDesc =
+              area.description || messages.areas.default.description();
 
             return (
-              areaTitle.toLowerCase().includes(inputValue) ||
+              area.title.toLowerCase().includes(inputValue) ||
               areaDesc.toLowerCase().includes(inputValue)
             );
           });

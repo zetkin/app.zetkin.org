@@ -92,7 +92,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
                     onSubmit: handleDelete,
                     title: messages.layout.actions.delete(),
                     warningText: messages.layout.actions.deleteWarningText({
-                      title: areaAssignment.title || messages.default.title(),
+                      title: areaAssignment.title,
                     }),
                   });
                 },
@@ -156,7 +156,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => updateAreaAssignment({ title: newTitle })}
-          value={areaAssignment.title || messages.default.title()}
+          value={areaAssignment.title}
         />
       }
     >

@@ -53,7 +53,7 @@ const HouseholdsPage: FC<Props> = ({
     <PageBase
       onBack={onBack}
       onClose={onClose}
-      subtitle={location.title || messages.default.location()}
+      subtitle={location.title}
       title={messages.households.page.header()}
     >
       <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
@@ -100,9 +100,7 @@ const HouseholdsPage: FC<Props> = ({
                   }}
                 >
                   <Box flexGrow={1}>
-                    <ListItemText>
-                      {household.title || messages.default.household()}
-                    </ListItemText>
+                    <ListItemText>{household.title}</ListItemText>
                   </Box>
                   {mostRecentVisit && (
                     <Typography color="secondary">
@@ -126,7 +124,9 @@ const HouseholdsPage: FC<Props> = ({
             disabled={adding}
             onClick={async () => {
               setAdding(true);
-              const newlyAddedHousehold = await addHousehold();
+              const newlyAddedHousehold = await addHousehold({
+                title: messages.default.household(),
+              });
               setAdding(false);
               onCreateHousehold(newlyAddedHousehold);
             }}

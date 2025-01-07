@@ -28,7 +28,7 @@ export type ZetkinAreaAssignment = {
   };
   reporting_level: 'household' | 'location';
   start_date: string | null;
-  title: string | null;
+  title: string;
 };
 
 export type ZetkinAreaAssignmentPostBody = Partial<
@@ -61,12 +61,12 @@ export type Household = {
 };
 
 export type ZetkinLocation = {
-  description: string | null;
+  description: string;
   households: Household[];
   id: string;
   orgId: number;
   position: { lat: number; lng: number };
-  title: string | null;
+  title: string;
 };
 
 export type ZetkinAreaAssignmentSession = {

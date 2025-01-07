@@ -15,7 +15,7 @@ type ZetkinAreaAssignmentModelType = {
     personId: number;
   }[];
   start_date: string | null;
-  title: string | null;
+  title: string;
 };
 
 type ZetkinLocationModelType = Omit<ZetkinLocation, '_id'>;

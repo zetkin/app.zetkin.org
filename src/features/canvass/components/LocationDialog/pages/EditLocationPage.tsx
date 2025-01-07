@@ -50,7 +50,7 @@ const EditLocationPage: FC<EditLocationPageProps> = ({
       onBack={onBack}
       onClose={onClose}
       title={messages.location.edit.header({
-        title: location.title || messages.default.location(),
+        title: location.title,
       })}
     >
       <form
