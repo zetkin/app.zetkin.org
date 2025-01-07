@@ -185,17 +185,14 @@ const AreaCard: FC<AreaCardProps> = ({
                       }
                       data={transformedData}
                       defs={[
-                        linearGradientDef(
-                          messages.overview.progress.headers.households(),
-                          [
-                            { color: theme.palette.primary.light, offset: 0 },
-                            {
-                              color: theme.palette.primary.dark,
-                              offset: 100,
-                              opacity: 0,
-                            },
-                          ]
-                        ),
+                        linearGradientDef('householdsVisited', [
+                          { color: theme.palette.primary.light, offset: 0 },
+                          {
+                            color: theme.palette.primary.dark,
+                            offset: 100,
+                            opacity: 0,
+                          },
+                        ]),
                       ]}
                       enableArea={true}
                       enableGridX={false}
@@ -224,12 +221,12 @@ const AreaCard: FC<AreaCardProps> = ({
                                     backgroundColor: (() => {
                                       if (areaData?.area.id !== 'noArea') {
                                         return dataPoint.serieId ===
-                                          messages.overview.progress.headers.households()
+                                          'householdsVisited'
                                           ? theme.palette.primary.light
                                           : theme.palette.primary.dark;
                                       } else {
                                         return dataPoint.serieId ===
-                                          messages.overview.progress.headers.households()
+                                          'householdsVisited'
                                           ? theme.palette.grey[400]
                                           : theme.palette.grey[900];
                                       }
