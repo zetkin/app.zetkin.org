@@ -78,7 +78,7 @@ export default makeMessages('feat.campaigns', {
   },
   form: {
     createAreaAssignment: {
-      defaultQuestion: m('Did you complete the mission?'),
+      defaultQuestion: m('Did you complete the task?'),
     },
     createCallAssignment: {
       newCallAssignment: m('My call assignment'),
