@@ -22,7 +22,6 @@ import useCreateEmail from 'features/emails/hooks/useCreateEmail';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import { useNumericRouteParams } from 'core/hooks';
-import useOrganization from 'features/organizations/hooks/useOrganization';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -33,6 +32,7 @@ import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAre
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -50,7 +50,6 @@ const CampaignActionButtons: React.FunctionComponent<
   const campaginMessages = useMessages(campaignMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const { orgId, campId } = useNumericRouteParams();
-  const organization = useOrganization(orgId).data;
   const hasAreaAssignments = useFeature(AREAS);
 
   // Dialogs
@@ -67,10 +66,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
   const { createEmail } = useCreateEmail(orgId);
   const themes = useEmailThemes(orgId).data || [];
-
-  if (!organization) {
-    return null;
-  }
+  const configs = useEmailConfigs(orgId).data || [];
 
   const handleCreateEvent = () => {
     const defaultStart = new Date();
@@ -143,13 +139,14 @@ const CampaignActionButtons: React.FunctionComponent<
     });
   }
 
-  if (organization.email && themes.length > 0) {
+  if (configs.length && themes.length > 0) {
     menuItems.push({
       icon: <EmailOutlined />,
       label: campaginMessages.createButton.createEmail(),
       onClick: () =>
         createEmail({
           campaign_id: campId,
+          config_id: configs[0].id,
           theme_id: themes[0].id,
           title: campaginMessages.form.createEmail.newEmail(),
         }),
