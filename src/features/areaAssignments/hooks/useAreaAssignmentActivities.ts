@@ -23,8 +23,8 @@ export default function useAreaAssignmentActivities(
     (state) => state.areaAssignments.areaAssignmentList
   );
 
-  const hasAreaing = useFeature(AREAS);
-  if (!hasAreaing) {
+  const hasAreaAssignments = useFeature(AREAS);
+  if (!hasAreaAssignments) {
     return new ResolvedFuture([]);
   }
 

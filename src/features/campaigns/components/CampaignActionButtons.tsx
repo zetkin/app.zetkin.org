@@ -49,7 +49,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { orgId, campId } = useNumericRouteParams();
   const organization = useOrganization(orgId).data;
-  const hasAreaing = useFeature(AREAS);
+  const hasAreaAssignments = useFeature(AREAS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -119,7 +119,7 @@ const CampaignActionButtons: React.FunctionComponent<
     },
   ];
 
-  if (hasAreaing) {
+  if (hasAreaAssignments) {
     menuItems.push({
       icon: <Map />,
       label: messages.createButton.createAreaAssignment(),
