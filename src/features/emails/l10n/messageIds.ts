@@ -16,7 +16,7 @@ export default makeMessages('feat.emails', {
     ),
     empty: m('Your email is empty. Go to the Compose tab to add some content.'),
     noSubject: m(
-      'Your email has no subject line. Go to Settings in the Compose tab to add one.'
+      'Your email has no subject line. Go to the Compose tab to add one.'
     ),
     notTargeted: m(
       'Your email has no targets. Go to the Targets section in the Overview tab to create a Smart Search that defines your targets.'
@@ -51,7 +51,7 @@ export default makeMessages('feat.emails', {
         },
         settings: {
           senderAddressInputLabel: m('Sender address'),
-          senderNameInputLabel: m('Sender name'),
+          senderInputLabel: m('Sender'),
           subjectInputLabel: m('Subject'),
           title: m('Settings'),
         },
@@ -63,6 +63,7 @@ export default makeMessages('feat.emails', {
           noButtonText: m('Click to change this text!'),
         },
         settings: {
+          buttonTextWarning: m('Make sure to add your text to the button'),
           invalidUrl: m('This is not a valid link'),
           testLink: m('Click to test link'),
           urlLabel: m('Link url'),

@@ -15,7 +15,7 @@ import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
-import Environment from 'core/env/Environment';
+import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
 import { store } from 'core/store';
@@ -31,10 +31,7 @@ declare module '@mui/styles/defaultTheme' {
 
 type ClientContextProps = {
   children: ReactNode;
-  envVars: {
-    MUIX_LICENSE_KEY: string | null;
-    ZETKIN_APP_DOMAIN: string | null;
-  };
+  envVars: EnvVars;
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;
