@@ -10,6 +10,7 @@ import {
   Dialog,
   IconButton,
   MenuItem,
+  Modal,
   Select,
   Typography,
 } from '@mui/material';
@@ -58,6 +59,8 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
     canvassAssId
   );
 
+  const [metricBeingCreated, setMetricBeingCreated] =
+    useState<ZetkinMetric | null>(null);
   const [metricBeingEdited, setMetricBeingEdited] =
     useState<ZetkinMetric | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -74,6 +77,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
       });
     }
     setMetricBeingEdited(null);
+    setMetricBeingCreated(null);
   };
 
   const handleDeleteMetric = async (id: string) => {
@@ -88,7 +92,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
   };
 
   const handleAddNewMetric = (kind: 'boolean' | 'scale5') => {
-    setMetricBeingEdited({
+    setMetricBeingCreated({
       definesDone: false,
       description: '',
       id: '',
@@ -121,26 +125,54 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 <MenuItem value="place">Place (more privacy)</MenuItem>
               </Select>
             </ZUICard>
-
-            {metricBeingEdited && (
+            {metricBeingCreated && (
               <MetricCard
                 hasDefinedDone={assignment.metrics.some(
                   (metric) => metric.definesDone
                 )}
                 isOnlyQuestion={assignment.metrics.length == 1}
-                metric={metricBeingEdited}
-                onClose={() => setMetricBeingEdited(null)}
+                metric={metricBeingCreated}
+                onClose={() => setMetricBeingCreated(null)}
                 onDelete={(target: EventTarget & HTMLButtonElement) => {
-                  if (metricBeingEdited.definesDone) {
-                    setIdOfQuestionBeingDeleted(metricBeingEdited.id);
+                  if (metricBeingCreated.definesDone) {
+                    setIdOfQuestionBeingDeleted(metricBeingCreated.id);
                     setAnchorEl(target);
-                    setMetricBeingEdited(null);
+                    setMetricBeingCreated(null);
                   } else {
-                    handleDeleteMetric(metricBeingEdited.id);
+                    handleDeleteMetric(metricBeingCreated.id);
                   }
                 }}
                 onSave={handleSaveMetric}
               />
+            )}
+            {metricBeingEdited && (
+              <Modal
+                open={metricBeingEdited ? true : false}
+                sx={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                }}
+              >
+                <MetricCard
+                  hasDefinedDone={assignment.metrics.some(
+                    (metric) => metric.definesDone
+                  )}
+                  isOnlyQuestion={assignment.metrics.length == 1}
+                  metric={metricBeingEdited}
+                  onClose={() => setMetricBeingEdited(null)}
+                  onDelete={(target: EventTarget & HTMLButtonElement) => {
+                    if (metricBeingEdited.definesDone) {
+                      setIdOfQuestionBeingDeleted(metricBeingEdited.id);
+                      setAnchorEl(target);
+                      setMetricBeingEdited(null);
+                    } else {
+                      handleDeleteMetric(metricBeingEdited.id);
+                    }
+                  }}
+                  onSave={handleSaveMetric}
+                />
+              </Modal>
             )}
             <Box>
               <Card
@@ -253,7 +285,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                         (metric) => metric.id == idOfMetricBeingDeleted
                       )?.question
                     }" you need to pick another
-                  yes/no-question to be the question that defines if the msision
+                  yes/no-question to be the question that defines if the mision
                   was successful`}
                   </Typography>
                   <Box display="flex" flexDirection="column" gap={1}>

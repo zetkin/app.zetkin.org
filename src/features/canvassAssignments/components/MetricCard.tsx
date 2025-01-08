@@ -50,7 +50,7 @@ const MetricCard: FC<MetricCardProps> = ({
     metric.kind == 'boolean' && (metric.definesDone || !hasDefinedDone);
 
   return (
-    <Card sx={{ marginTop: 2 }}>
+    <Card sx={{ marginTop: 2, minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography gutterBottom variant="h5">
@@ -115,7 +115,7 @@ const MetricCard: FC<MetricCardProps> = ({
               }}
               variant="outlined"
             >
-              {isEditing ? 'Update' : 'Save'}
+              Save
             </Button>
           </Box>
         </Box>
