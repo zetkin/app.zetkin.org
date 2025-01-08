@@ -8,10 +8,14 @@ import {
   CardActions,
   CardContent,
   Dialog,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Grid,
   IconButton,
-  MenuItem,
   Modal,
-  Select,
+  Radio,
+  RadioGroup,
   Typography,
 } from '@mui/material';
 
@@ -22,10 +26,7 @@ import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import useCanvassAssignmentMutations from 'features/canvassAssignments/hooks/useCanvassAssignmentMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
-import {
-  ZetkinCanvassAssignment,
-  ZetkinMetric,
-} from 'features/canvassAssignments/types';
+import { ZetkinMetric } from 'features/canvassAssignments/types';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 import ZUICard from 'zui/ZUICard';
 import theme from 'theme';
@@ -101,44 +102,27 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
   };
 
   return (
-    <Box width="50%">
-      <ZUIFuture future={canvassAssignmentFuture}>
-        {(assignment) => (
-          <>
-            <ZUICard header="Reporting level" sx={{ mb: 2 }}>
-              <Typography mb={2}>
-                Decide what level of precision should be used for statistics.
-              </Typography>
-              <Select
-                label="Reporting level"
-                onChange={(ev) => {
-                  const rawValue = ev.target.value;
-                  updateCanvassAssignment({
-                    reporting_level:
-                      rawValue as ZetkinCanvassAssignment['reporting_level'],
-                  });
-                }}
-                value={assignment.reporting_level}
-              >
-                <MenuItem value="household">Household (more precise)</MenuItem>
-                <MenuItem value="place">Place (more privacy)</MenuItem>
-              </Select>
-            </ZUICard>
+    <ZUIFuture future={canvassAssignmentFuture}>
+      {(assignment) => (
+        <Box display="flex">
+          <Box width="50%">
             {metricBeingCreated && (
-              <MetricCard
-                hasDefinedDone={assignment.metrics.some(
-                  (metric) => metric.definesDone
-                )}
-                isOnlyQuestion={assignment.metrics.length == 1}
-                metric={metricBeingCreated}
-                onClose={() => setMetricBeingCreated(null)}
-                onDelete={(target: EventTarget & HTMLButtonElement) => {
-                  setMetricBeingDeleted(metricBeingCreated);
-                  setAnchorEl(target);
-                  setMetricBeingCreated(null);
-                }}
-                onSave={handleSaveMetric}
-              />
+              <Box mb={2}>
+                <MetricCard
+                  hasDefinedDone={assignment.metrics.some(
+                    (metric) => metric.definesDone
+                  )}
+                  isOnlyQuestion={assignment.metrics.length == 1}
+                  metric={metricBeingCreated}
+                  onClose={() => setMetricBeingCreated(null)}
+                  onDelete={(target: EventTarget & HTMLButtonElement) => {
+                    setMetricBeingDeleted(metricBeingCreated);
+                    setAnchorEl(target);
+                    setMetricBeingCreated(null);
+                  }}
+                  onSave={handleSaveMetric}
+                />
+              </Box>
             )}
             {metricBeingEdited && (
               <Modal
@@ -170,7 +154,6 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 sx={{
                   backgroundColor: theme.palette.grey[200],
                   border: 'none',
-                  marginTop: 2,
                   padding: 2,
                 }}
               >
@@ -360,10 +343,101 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 </Box>
               </Dialog>
             </Box>
-          </>
-        )}
-      </ZUIFuture>
-    </Box>
+          </Box>
+          <Box ml={2} width="50%">
+            <ZUICard header="Data collection" sx={{ mb: 2 }}>
+              <Typography mb={2}>
+                Decide what level of precision should be used for statistics.
+              </Typography>
+              <Divider />
+              <FormControl>
+                <RadioGroup
+                  onChange={(ev) => {
+                    const value = ev.target.value;
+                    if (value === 'household' || value === 'place') {
+                      updateCanvassAssignment({
+                        reporting_level: value,
+                      });
+                    }
+                  }}
+                  value={assignment.reporting_level}
+                >
+                  <Box mt={2}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                        <Card
+                          onClick={() =>
+                            updateCanvassAssignment({
+                              reporting_level: 'household',
+                            })
+                          }
+                          sx={{
+                            border:
+                              assignment.reporting_level === 'household'
+                                ? `1px solid ${theme.palette.primary.main}`
+                                : `1px solid ${theme.palette.grey[300]}`,
+                            cursor: 'pointer',
+                            height: '100%',
+                          }}
+                        >
+                          <Box p={1}>
+                            <FormControlLabel
+                              control={<Radio />}
+                              label={
+                                <Typography variant="h6">Household</Typography>
+                              }
+                              sx={{ pointerEvents: 'none' }}
+                              value="household"
+                            />
+                          </Box>
+                          <Divider />
+                          <Typography p={2}>
+                            Collect the most precise data.
+                          </Typography>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Card
+                          onClick={() =>
+                            updateCanvassAssignment({
+                              reporting_level: 'place',
+                            })
+                          }
+                          sx={{
+                            border:
+                              assignment.reporting_level === 'place'
+                                ? `1px solid ${theme.palette.primary.main}`
+                                : `1px solid ${theme.palette.grey[300]}`,
+                            cursor: 'pointer',
+                            height: '100%',
+                          }}
+                        >
+                          <Box p={1}>
+                            <FormControlLabel
+                              control={<Radio />}
+                              label={
+                                <Typography variant="h6">Place</Typography>
+                              }
+                              sx={{ pointerEvents: 'none' }}
+                              value="place"
+                            />
+                          </Box>
+                          <Divider />
+                          <Typography p={2}>
+                            Collect data only on places, preserving some
+                            privacy.
+                          </Typography>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </RadioGroup>
+              </FormControl>
+            </ZUICard>
+          </Box>
+        </Box>
+      )}
+    </ZUIFuture>
   );
 };
 
