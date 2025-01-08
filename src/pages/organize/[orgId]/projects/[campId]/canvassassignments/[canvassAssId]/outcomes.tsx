@@ -64,9 +64,8 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
   const [metricBeingEdited, setMetricBeingEdited] =
     useState<ZetkinMetric | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [idOfMetricBeingDeleted, setIdOfQuestionBeingDeleted] = useState<
-    string | null
-  >(null);
+  const [metricBeingDeleted, setMetricBeingDeleted] =
+    useState<ZetkinMetric | null>(null);
 
   const handleSaveMetric = async (metric: ZetkinMetric) => {
     if (canvassAssignmentFuture.data) {
@@ -134,13 +133,9 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 metric={metricBeingCreated}
                 onClose={() => setMetricBeingCreated(null)}
                 onDelete={(target: EventTarget & HTMLButtonElement) => {
-                  if (metricBeingCreated.definesDone) {
-                    setIdOfQuestionBeingDeleted(metricBeingCreated.id);
-                    setAnchorEl(target);
-                    setMetricBeingCreated(null);
-                  } else {
-                    handleDeleteMetric(metricBeingCreated.id);
-                  }
+                  setMetricBeingDeleted(metricBeingCreated);
+                  setAnchorEl(target);
+                  setMetricBeingCreated(null);
                 }}
                 onSave={handleSaveMetric}
               />
@@ -149,9 +144,9 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
               <Modal
                 open={metricBeingEdited ? true : false}
                 sx={{
-                  justifyContent: 'center',
                   alignItems: 'center',
                   display: 'flex',
+                  justifyContent: 'center',
                 }}
               >
                 <MetricCard
@@ -162,13 +157,9 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                   metric={metricBeingEdited}
                   onClose={() => setMetricBeingEdited(null)}
                   onDelete={(target: EventTarget & HTMLButtonElement) => {
-                    if (metricBeingEdited.definesDone) {
-                      setIdOfQuestionBeingDeleted(metricBeingEdited.id);
-                      setAnchorEl(target);
-                      setMetricBeingEdited(null);
-                    } else {
-                      handleDeleteMetric(metricBeingEdited.id);
-                    }
+                    setMetricBeingDeleted(metricBeingEdited);
+                    setAnchorEl(target);
+                    setMetricBeingEdited(null);
                   }}
                   onSave={handleSaveMetric}
                 />
@@ -243,12 +234,8 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                       {assignment.metrics.length > 1 && (
                         <Button
                           onClick={(ev) => {
-                            if (metric.definesDone) {
-                              setIdOfQuestionBeingDeleted(metric.id);
-                              setAnchorEl(ev.currentTarget);
-                            } else {
-                              handleDeleteMetric(metric.id);
-                            }
+                            setMetricBeingDeleted(metric);
+                            setAnchorEl(ev.currentTarget);
                           }}
                         >
                           Delete
@@ -267,78 +254,109 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                   >
                     <Typography variant="h6">{`Delete "${
                       assignment.metrics.find(
-                        (metric) => metric.id == idOfMetricBeingDeleted
+                        (metric) => metric.id == metricBeingDeleted?.id
                       )?.question
                     }"`}</Typography>
                     <IconButton
                       onClick={() => {
-                        setIdOfQuestionBeingDeleted(null);
+                        setMetricBeingDeleted(null);
                         setAnchorEl(null);
                       }}
                     >
                       <Close />
                     </IconButton>
                   </Box>
-                  <Typography>
-                    {`If you want to delete "${
-                      assignment.metrics.find(
-                        (metric) => metric.id == idOfMetricBeingDeleted
-                      )?.question
+
+                  {metricBeingDeleted?.definesDone ? (
+                    <Typography>
+                      {`If you want to delete "${metricBeingDeleted.question}
                     }" you need to pick another
                   yes/no-question to be the question that defines if the mision
-                  was successful`}
-                  </Typography>
-                  <Box display="flex" flexDirection="column" gap={1}>
-                    <Typography>Yes/no questions</Typography>
-                    {assignment.metrics
-                      .filter(
-                        (metric) =>
-                          metric.kind == 'boolean' &&
-                          metric.id != idOfMetricBeingDeleted
-                      )
-                      .map((metric) => (
-                        <Box
-                          key={metric.question}
-                          alignItems="center"
-                          display="flex"
-                          gap={1}
-                          justifyContent="space-between"
-                          width="100%"
-                        >
-                          {metric.question}
-                          <Button
-                            onClick={() => {
-                              if (idOfMetricBeingDeleted) {
-                                const filtered = assignment.metrics.filter(
-                                  (metric) =>
-                                    metric.id != idOfMetricBeingDeleted
-                                );
-                                updateCanvassAssignment({
-                                  metrics: [
-                                    ...filtered.slice(
-                                      0,
-                                      filtered.indexOf(metric)
-                                    ),
-                                    {
-                                      ...metric,
-                                      definesDone: true,
-                                    },
-                                    ...filtered.slice(
-                                      filtered.indexOf(metric) + 1
-                                    ),
-                                  ],
-                                });
-                              }
-                              setAnchorEl(null);
-                              setIdOfQuestionBeingDeleted(null);
-                            }}
-                            variant="outlined"
+                  was successful`}{' '}
+                    </Typography>
+                  ) : (
+                    <Typography>
+                      Are you sure you want to delete this question? This action
+                      is permanent and it cannot be undone.
+                    </Typography>
+                  )}
+
+                  {metricBeingDeleted?.definesDone ? (
+                    <Box display="flex" flexDirection="column" gap={1}>
+                      <Typography>Yes/no questions</Typography>
+                      {assignment.metrics
+                        .filter(
+                          (metric) =>
+                            metric.kind == 'boolean' &&
+                            metric.id != metricBeingDeleted?.id
+                        )
+                        .map((metric) => (
+                          <Box
+                            key={metric.question}
+                            alignItems="center"
+                            display="flex"
+                            gap={1}
+                            justifyContent="space-between"
+                            width="100%"
                           >
-                            select
-                          </Button>
-                        </Box>
-                      ))}
-                  </Box>
+                            {metric.question}
+                            <Button
+                              onClick={() => {
+                                if (metricBeingDeleted) {
+                                  const filtered = assignment.metrics.filter(
+                                    (metric) =>
+                                      metric.id != metricBeingDeleted.id
+                                  );
+                                  updateCanvassAssignment({
+                                    metrics: [
+                                      ...filtered.slice(
+                                        0,
+                                        filtered.indexOf(metric)
+                                      ),
+                                      {
+                                        ...metric,
+                                        definesDone: true,
+                                      },
+                                      ...filtered.slice(
+                                        filtered.indexOf(metric) + 1
+                                      ),
+                                    ],
+                                  });
+                                }
+                                setAnchorEl(null);
+                                setMetricBeingDeleted(null);
+                              }}
+                              variant="outlined"
+                            >
+                              select
+                            </Button>
+                          </Box>
+                        ))}
+                    </Box>
+                  ) : (
+                    <Box display="flex" justifyContent="end" p={2}>
+                      <Button
+                        onClick={() => {
+                          setMetricBeingDeleted(null), setAnchorEl(null);
+                        }}
+                        sx={{ marginRight: 2 }}
+                      >
+                        CANCEL
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (metricBeingDeleted !== null) {
+                            handleDeleteMetric(metricBeingDeleted.id);
+                            setAnchorEl(null);
+                            setMetricBeingDeleted(null);
+                          }
+                        }}
+                        variant="contained"
+                      >
+                        CONFIRM
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
               </Dialog>
             </Box>
