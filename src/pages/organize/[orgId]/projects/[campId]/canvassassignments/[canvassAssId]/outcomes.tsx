@@ -27,6 +27,7 @@ import {
 } from 'features/canvassAssignments/types';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 import ZUICard from 'zui/ZUICard';
+import theme from 'theme';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -120,24 +121,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 <MenuItem value="place">Place (more privacy)</MenuItem>
               </Select>
             </ZUICard>
-            <Typography>
-              Here you can configure the questions for your canvass assignment
-            </Typography>
-            <Box alignItems="center" display="flex" mt={2}>
-              <Button
-                onClick={() => handleAddNewMetric('boolean')}
-                sx={{ marginRight: 1 }}
-                variant="contained"
-              >
-                Add yes/no question
-              </Button>
-              <Button
-                onClick={() => handleAddNewMetric('scale5')}
-                variant="contained"
-              >
-                Add scale question
-              </Button>
-            </Box>
+
             {metricBeingEdited && (
               <MetricCard
                 hasDefinedDone={assignment.metrics.some(
@@ -158,142 +142,174 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 onSave={handleSaveMetric}
               />
             )}
-            <Box mt={3}>
-              {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
-              {assignment.metrics.map((metric) => (
-                <Card key={metric.id} sx={{ marginTop: 2 }}>
-                  <CardContent>
-                    <Box display="flex">
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        flexGrow={1}
-                        gap={1}
-                      >
-                        {metric.definesDone && (
-                          <Typography color="error">
-                            This question defines if the mission was successful
-                          </Typography>
-                        )}
-                        <Typography gutterBottom variant="h5">
-                          {metric.question || 'Untitled question'}
-                        </Typography>
-                        <Typography>
-                          {metric.description || 'No description'}
-                        </Typography>
-                      </Box>
-                      <Box display="flex" justifyContent="flex-end">
-                        <Typography color="secondary">
-                          {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                  <CardActions>
-                    <Button onClick={() => setMetricBeingEdited(metric)}>
-                      Edit
-                    </Button>
-
-                    {assignment.metrics.length > 1 && (
-                      <Button
-                        onClick={(ev) => {
-                          if (metric.definesDone) {
-                            setIdOfQuestionBeingDeleted(metric.id);
-                            setAnchorEl(ev.currentTarget);
-                          } else {
-                            handleDeleteMetric(metric.id);
-                          }
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    )}
-                  </CardActions>
-                </Card>
-              ))}
-            </Box>
-            <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
-              <Box display="flex" flexDirection="column" gap={1} padding={2}>
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h6">{`Delete "${
-                    assignment.metrics.find(
-                      (metric) => metric.id == idOfMetricBeingDeleted
-                    )?.question
-                  }"`}</Typography>
-                  <IconButton
-                    onClick={() => {
-                      setIdOfQuestionBeingDeleted(null);
-                      setAnchorEl(null);
-                    }}
+            <Box>
+              <Card
+                sx={{
+                  backgroundColor: theme.palette.grey[200],
+                  border: 'none',
+                  marginTop: 2,
+                  padding: 2,
+                }}
+              >
+                <Typography color="secondary">
+                  Here you can configure the questions for your canvass
+                  assignment
+                </Typography>
+                <Box alignItems="center" display="flex" mt={2}>
+                  <Button
+                    onClick={() => handleAddNewMetric('boolean')}
+                    sx={{ marginRight: 1 }}
+                    variant="outlined"
                   >
-                    <Close />
-                  </IconButton>
+                    Add yes/no question
+                  </Button>
+                  <Button
+                    onClick={() => handleAddNewMetric('scale5')}
+                    variant="outlined"
+                  >
+                    Add scale question
+                  </Button>
                 </Box>
-                <Typography>
-                  {`If you want to delete "${
-                    assignment.metrics.find(
-                      (metric) => metric.id == idOfMetricBeingDeleted
-                    )?.question
-                  }" you need to pick another
+              </Card>
+              <Box mt={3}>
+                {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
+                {assignment.metrics.map((metric) => (
+                  <Card key={metric.id} sx={{ marginTop: 2 }}>
+                    <CardContent>
+                      <Box display="flex">
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          flexGrow={1}
+                          gap={1}
+                        >
+                          {metric.definesDone && (
+                            <Typography color="error">
+                              This question defines if the mission was
+                              successful
+                            </Typography>
+                          )}
+                          <Typography gutterBottom variant="h5">
+                            {metric.question || 'Untitled question'}
+                          </Typography>
+                          <Typography>
+                            {metric.description || 'No description'}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" justifyContent="flex-end">
+                          <Typography color="secondary">
+                            {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                    <CardActions sx={{ justifyContent: 'end' }}>
+                      <Button onClick={() => setMetricBeingEdited(metric)}>
+                        Edit
+                      </Button>
+
+                      {assignment.metrics.length > 1 && (
+                        <Button
+                          onClick={(ev) => {
+                            if (metric.definesDone) {
+                              setIdOfQuestionBeingDeleted(metric.id);
+                              setAnchorEl(ev.currentTarget);
+                            } else {
+                              handleDeleteMetric(metric.id);
+                            }
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Card>
+                ))}
+              </Box>
+              <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
+                <Box display="flex" flexDirection="column" gap={1} padding={2}>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Typography variant="h6">{`Delete "${
+                      assignment.metrics.find(
+                        (metric) => metric.id == idOfMetricBeingDeleted
+                      )?.question
+                    }"`}</Typography>
+                    <IconButton
+                      onClick={() => {
+                        setIdOfQuestionBeingDeleted(null);
+                        setAnchorEl(null);
+                      }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Box>
+                  <Typography>
+                    {`If you want to delete "${
+                      assignment.metrics.find(
+                        (metric) => metric.id == idOfMetricBeingDeleted
+                      )?.question
+                    }" you need to pick another
                   yes/no-question to be the question that defines if the msision
                   was successful`}
-                </Typography>
-                <Box display="flex" flexDirection="column" gap={1}>
-                  <Typography>Yes/no questions</Typography>
-                  {assignment.metrics
-                    .filter(
-                      (metric) =>
-                        metric.kind == 'boolean' &&
-                        metric.id != idOfMetricBeingDeleted
-                    )
-                    .map((metric) => (
-                      <Box
-                        key={metric.question}
-                        alignItems="center"
-                        display="flex"
-                        gap={1}
-                        justifyContent="space-between"
-                        width="100%"
-                      >
-                        {metric.question}
-                        <Button
-                          onClick={() => {
-                            if (idOfMetricBeingDeleted) {
-                              const filtered = assignment.metrics.filter(
-                                (metric) => metric.id != idOfMetricBeingDeleted
-                              );
-                              updateCanvassAssignment({
-                                metrics: [
-                                  ...filtered.slice(
-                                    0,
-                                    filtered.indexOf(metric)
-                                  ),
-                                  {
-                                    ...metric,
-                                    definesDone: true,
-                                  },
-                                  ...filtered.slice(
-                                    filtered.indexOf(metric) + 1
-                                  ),
-                                ],
-                              });
-                            }
-                            setAnchorEl(null);
-                            setIdOfQuestionBeingDeleted(null);
-                          }}
-                          variant="outlined"
+                  </Typography>
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    <Typography>Yes/no questions</Typography>
+                    {assignment.metrics
+                      .filter(
+                        (metric) =>
+                          metric.kind == 'boolean' &&
+                          metric.id != idOfMetricBeingDeleted
+                      )
+                      .map((metric) => (
+                        <Box
+                          key={metric.question}
+                          alignItems="center"
+                          display="flex"
+                          gap={1}
+                          justifyContent="space-between"
+                          width="100%"
                         >
-                          select
-                        </Button>
-                      </Box>
-                    ))}
+                          {metric.question}
+                          <Button
+                            onClick={() => {
+                              if (idOfMetricBeingDeleted) {
+                                const filtered = assignment.metrics.filter(
+                                  (metric) =>
+                                    metric.id != idOfMetricBeingDeleted
+                                );
+                                updateCanvassAssignment({
+                                  metrics: [
+                                    ...filtered.slice(
+                                      0,
+                                      filtered.indexOf(metric)
+                                    ),
+                                    {
+                                      ...metric,
+                                      definesDone: true,
+                                    },
+                                    ...filtered.slice(
+                                      filtered.indexOf(metric) + 1
+                                    ),
+                                  ],
+                                });
+                              }
+                              setAnchorEl(null);
+                              setIdOfQuestionBeingDeleted(null);
+                            }}
+                            variant="outlined"
+                          >
+                            select
+                          </Button>
+                        </Box>
+                      ))}
+                  </Box>
                 </Box>
-              </Box>
-            </Dialog>
+              </Dialog>
+            </Box>
           </>
         )}
       </ZUIFuture>

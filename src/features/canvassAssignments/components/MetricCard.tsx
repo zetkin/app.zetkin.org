@@ -93,7 +93,7 @@ const MetricCard: FC<MetricCardProps> = ({
               </Typography>
             </Box>
           )}
-          <Box display="flex" gap={1} justifyContent="center" width="100%">
+          <Box display="flex" gap={1} justifyContent="right" width="100%">
             {isEditing && !isOnlyQuestion && (
               <Button
                 color="error"
