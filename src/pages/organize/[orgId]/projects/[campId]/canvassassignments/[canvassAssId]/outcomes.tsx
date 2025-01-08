@@ -106,6 +106,56 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
       {(assignment) => (
         <Box display="flex">
           <Box width="50%">
+            <Box>
+              {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
+              {assignment.metrics.map((metric) => (
+                <Card key={metric.id} sx={{ marginTop: 2 }}>
+                  <CardContent>
+                    <Box display="flex">
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        flexGrow={1}
+                        gap={1}
+                      >
+                        {metric.definesDone && (
+                          <Typography color="error">
+                            This question defines if the mission was successful
+                          </Typography>
+                        )}
+                        <Typography gutterBottom variant="h5">
+                          {metric.question || 'Untitled question'}
+                        </Typography>
+                        <Typography>
+                          {metric.description || 'No description'}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="secondary">
+                          {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'end' }}>
+                    <Button onClick={() => setMetricBeingEdited(metric)}>
+                      Edit
+                    </Button>
+
+                    {assignment.metrics.length > 1 && (
+                      <Button
+                        onClick={(ev) => {
+                          setMetricBeingDeleted(metric);
+                          setAnchorEl(ev.currentTarget);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </CardActions>
+                </Card>
+              ))}
+            </Box>
             {metricBeingCreated && (
               <Box mb={2}>
                 <MetricCard
@@ -115,11 +165,6 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                   isOnlyQuestion={assignment.metrics.length == 1}
                   metric={metricBeingCreated}
                   onClose={() => setMetricBeingCreated(null)}
-                  onDelete={(target: EventTarget & HTMLButtonElement) => {
-                    setMetricBeingDeleted(metricBeingCreated);
-                    setAnchorEl(target);
-                    setMetricBeingCreated(null);
-                  }}
                   onSave={handleSaveMetric}
                 />
               </Box>
@@ -140,11 +185,6 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                   isOnlyQuestion={assignment.metrics.length == 1}
                   metric={metricBeingEdited}
                   onClose={() => setMetricBeingEdited(null)}
-                  onDelete={(target: EventTarget & HTMLButtonElement) => {
-                    setMetricBeingDeleted(metricBeingEdited);
-                    setAnchorEl(target);
-                    setMetricBeingEdited(null);
-                  }}
                   onSave={handleSaveMetric}
                 />
               </Modal>
@@ -154,6 +194,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 sx={{
                   backgroundColor: theme.palette.grey[200],
                   border: 'none',
+                  marginTop: 2,
                   padding: 2,
                 }}
               >
@@ -177,57 +218,6 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                   </Button>
                 </Box>
               </Card>
-              <Box mt={3}>
-                {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
-                {assignment.metrics.map((metric) => (
-                  <Card key={metric.id} sx={{ marginTop: 2 }}>
-                    <CardContent>
-                      <Box display="flex">
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          flexGrow={1}
-                          gap={1}
-                        >
-                          {metric.definesDone && (
-                            <Typography color="error">
-                              This question defines if the mission was
-                              successful
-                            </Typography>
-                          )}
-                          <Typography gutterBottom variant="h5">
-                            {metric.question || 'Untitled question'}
-                          </Typography>
-                          <Typography>
-                            {metric.description || 'No description'}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" justifyContent="flex-end">
-                          <Typography color="secondary">
-                            {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                    <CardActions sx={{ justifyContent: 'end' }}>
-                      <Button onClick={() => setMetricBeingEdited(metric)}>
-                        Edit
-                      </Button>
-
-                      {assignment.metrics.length > 1 && (
-                        <Button
-                          onClick={(ev) => {
-                            setMetricBeingDeleted(metric);
-                            setAnchorEl(ev.currentTarget);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      )}
-                    </CardActions>
-                  </Card>
-                ))}
-              </Box>
               <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
                 <Box display="flex" flexDirection="column" gap={1} padding={2}>
                   <Box

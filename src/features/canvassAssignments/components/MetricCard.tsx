@@ -18,7 +18,6 @@ type MetricCardProps = {
   isOnlyQuestion: boolean;
   metric: ZetkinMetric;
   onClose: () => void;
-  onDelete: (target: EventTarget & HTMLButtonElement) => void;
   onSave: (metric: ZetkinMetric) => void;
 };
 
@@ -27,7 +26,6 @@ const MetricCard: FC<MetricCardProps> = ({
   isOnlyQuestion,
   metric,
   onClose,
-  onDelete,
   onSave,
 }) => {
   const [question, setQuestion] = useState<string>(metric.question || '');
@@ -37,8 +35,6 @@ const MetricCard: FC<MetricCardProps> = ({
   const [definesDone, setDefinesDone] = useState<boolean>(
     metric.definesDone || false
   );
-
-  const isEditing = !!metric?.id;
 
   useEffect(() => {
     setQuestion(metric.question || '');
@@ -50,7 +46,7 @@ const MetricCard: FC<MetricCardProps> = ({
     metric.kind == 'boolean' && (metric.definesDone || !hasDefinedDone);
 
   return (
-    <Card sx={{ minWidth: 400 }}>
+    <Card sx={{ marginTop: 2, minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography gutterBottom variant="h5">
@@ -94,15 +90,6 @@ const MetricCard: FC<MetricCardProps> = ({
             </Box>
           )}
           <Box display="flex" gap={1} justifyContent="right" width="100%">
-            {isEditing && !isOnlyQuestion && (
-              <Button
-                color="error"
-                onClick={(ev) => onDelete(ev.currentTarget)}
-                variant="outlined"
-              >
-                Delete
-              </Button>
-            )}
             <Button
               onClick={() => {
                 onSave({
