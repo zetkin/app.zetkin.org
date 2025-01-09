@@ -34,7 +34,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
   }, [metric]);
 
   return (
-    <Card sx={{ marginTop: 2, minWidth: 400 }}>
+    <Card sx={{ minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {metric.kind === 'boolean' ? (

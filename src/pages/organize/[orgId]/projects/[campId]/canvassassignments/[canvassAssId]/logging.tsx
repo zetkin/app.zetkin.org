@@ -22,7 +22,6 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
-  Modal,
   Radio,
   RadioGroup,
   Typography,
@@ -237,7 +236,7 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
               ))}
             </Box>
             {metricBeingCreated && (
-              <Box mb={2}>
+              <Box mb={2} mt={2}>
                 <MetricCard
                   metric={metricBeingCreated}
                   onClose={() => setMetricBeingCreated(null)}
@@ -246,7 +245,7 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
               </Box>
             )}
             {metricBeingEdited && (
-              <Modal
+              <Dialog
                 onClose={() => setMetricBeingEdited(null)}
                 open={metricBeingEdited ? true : false}
                 sx={{
@@ -260,7 +259,7 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
                   onClose={() => setMetricBeingEdited(null)}
                   onSave={handleSaveMetric}
                 />
-              </Modal>
+              </Dialog>
             )}
             <Box>
               <Card
