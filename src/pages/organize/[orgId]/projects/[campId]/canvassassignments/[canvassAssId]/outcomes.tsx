@@ -1,11 +1,18 @@
-import { Close } from '@mui/icons-material';
+import AdsClickIcon from '@mui/icons-material/AdsClick';
+import {
+  Close,
+  Delete,
+  Edit,
+  LinearScale,
+  SwitchLeft,
+} from '@mui/icons-material';
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import {
+  alpha,
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   Dialog,
   Divider,
@@ -19,7 +26,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import ZUIFuture from 'zui/ZUIFuture';
 import MetricCard from 'features/canvassAssignments/components/MetricCard';
 import { AREAS } from 'utils/featureFlags';
 import { scaffold } from 'utils/next';
@@ -30,6 +36,7 @@ import { ZetkinMetric } from 'features/canvassAssignments/types';
 import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
 import ZUICard from 'zui/ZUICard';
 import theme from 'theme';
+import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -118,41 +125,65 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                         flexGrow={1}
                         gap={1}
                       >
-                        {metric.definesDone && (
-                          <Typography color="error">
-                            This question defines if the mission was successful
-                          </Typography>
-                        )}
-                        <Typography gutterBottom variant="h5">
-                          {metric.question || 'Untitled question'}
-                        </Typography>
-                        <Typography>
-                          {metric.description || 'No description'}
-                        </Typography>
-                      </Box>
-                      <Box display="flex" justifyContent="flex-end">
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          justifyContent="space-between"
+                        >
+                          <Box alignItems="center" display="flex">
+                            <Typography gutterBottom mr={1} variant="h5">
+                              {metric.question || 'Untitled question'}
+                            </Typography>
+                            <Typography color="secondary">
+                              {metric.kind == 'boolean' ? (
+                                <SwitchLeft />
+                              ) : (
+                                <LinearScale />
+                              )}
+                            </Typography>
+                          </Box>
+                          <Box alignItems="center" display="flex">
+                            {metric.definesDone ? (
+                              <Box
+                                bgcolor={alpha(
+                                  theme.palette.success.light,
+                                  0.5
+                                )}
+                                borderRadius={2}
+                                display="flex"
+                                p={0.5}
+                              >
+                                <AdsClickIcon />
+                                <Typography ml={1}>Defines success</Typography>
+                              </Box>
+                            ) : (
+                              <AdsClickIcon sx={{ marginRight: 1 }} />
+                            )}
+
+                            <Button
+                              onClick={() => setMetricBeingEdited(metric)}
+                            >
+                              <Edit />
+                            </Button>
+
+                            {assignment.metrics.length > 1 && (
+                              <Button
+                                onClick={(ev) => {
+                                  setMetricBeingDeleted(metric);
+                                  setAnchorEl(ev.currentTarget);
+                                }}
+                              >
+                                <Delete />
+                              </Button>
+                            )}
+                          </Box>
+                        </Box>
                         <Typography color="secondary">
-                          {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
+                          {metric.description || 'No description'}
                         </Typography>
                       </Box>
                     </Box>
                   </CardContent>
-                  <CardActions sx={{ justifyContent: 'end' }}>
-                    <Button onClick={() => setMetricBeingEdited(metric)}>
-                      Edit
-                    </Button>
-
-                    {assignment.metrics.length > 1 && (
-                      <Button
-                        onClick={(ev) => {
-                          setMetricBeingDeleted(metric);
-                          setAnchorEl(ev.currentTarget);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    )}
-                  </CardActions>
                 </Card>
               ))}
             </Box>
@@ -199,22 +230,23 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 }}
               >
                 <Typography color="secondary">
-                  Here you can configure the questions for your canvass
-                  assignment
+                  Add questions for your canvass assignment.
                 </Typography>
                 <Box alignItems="center" display="flex" mt={2}>
                   <Button
                     onClick={() => handleAddNewMetric('boolean')}
+                    startIcon={<SwitchLeft />}
                     sx={{ marginRight: 1 }}
                     variant="outlined"
                   >
-                    Add yes/no question
+                    Choice question
                   </Button>
                   <Button
                     onClick={() => handleAddNewMetric('scale5')}
+                    startIcon={<LinearScale />}
                     variant="outlined"
                   >
-                    Add scale question
+                    Scale question
                   </Button>
                 </Box>
               </Card>

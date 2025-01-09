@@ -1,4 +1,4 @@
-import { Close } from '@mui/icons-material';
+import { Close, LinearScale, SwitchLeft } from '@mui/icons-material';
 import React, { FC, useEffect, useState } from 'react';
 import {
   Card,
@@ -49,16 +49,25 @@ const MetricCard: FC<MetricCardProps> = ({
     <Card sx={{ marginTop: 2, minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          <Typography gutterBottom variant="h5">
-            {metric.kind === 'boolean' ? 'Yes/No Question' : 'Scale Question'}
-          </Typography>
+          {metric.kind === 'boolean' ? (
+            <Typography display="flex" variant="h5">
+              Choice question{' '}
+              <SwitchLeft color="secondary" sx={{ marginLeft: 1 }} />
+            </Typography>
+          ) : (
+            <Typography display="flex" variant="h5">
+              Scale question{' '}
+              <LinearScale color="secondary" sx={{ marginLeft: 1 }} />
+            </Typography>
+          )}
+
           <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
           {metric.kind == 'scale5' && (
-            <Typography fontStyle="italic" mb={1}>
+            <Typography color="secondary" fontStyle="italic" mb={1}>
               The canvasser will respond by giving a rating from 1 to 5
             </Typography>
           )}
