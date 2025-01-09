@@ -38,14 +38,14 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {metric.kind === 'boolean' ? (
-            <Typography display="flex" variant="h6">
-              Choice question{' '}
-              <SwitchLeft color="secondary" sx={{ marginLeft: 1 }} />
+            <Typography alignItems="center" display="flex" variant="h6">
+              <SwitchLeft color="secondary" sx={{ marginRight: 1 }} />
+              Choice question
             </Typography>
           ) : (
-            <Typography display="flex" variant="h6">
-              Scale question{' '}
-              <LinearScale color="secondary" sx={{ marginLeft: 1 }} />
+            <Typography alignItems="center" display="flex" variant="h6">
+              <LinearScale color="secondary" sx={{ marginRight: 1 }} />
+              Scale question
             </Typography>
           )}
 

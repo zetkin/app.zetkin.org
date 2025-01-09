@@ -126,7 +126,9 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
               clicking this symbol.
             </Alert>
             <Box mt={2}>
-              {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
+              {assignment.metrics.length > 0 && (
+                <Typography variant="h4">Log survey</Typography>
+              )}
               {assignment.metrics.map((metric) => (
                 <Card key={metric.id} sx={{ marginTop: 2 }}>
                   <CardContent>
@@ -245,6 +247,7 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
             )}
             {metricBeingEdited && (
               <Modal
+                onClose={() => setMetricBeingEdited(null)}
                 open={metricBeingEdited ? true : false}
                 sx={{
                   alignItems: 'center',
@@ -296,11 +299,13 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
                     display="flex"
                     justifyContent="space-between"
                   >
-                    <Typography variant="h6">{`Delete "${
-                      assignment.metrics.find(
-                        (metric) => metric.id == metricBeingDeleted?.id
-                      )?.question
-                    }"`}</Typography>
+                    <Typography variant="h6">
+                      {`Delete ${
+                        assignment.metrics.find(
+                          (metric) => metric.id === metricBeingDeleted?.id
+                        )?.question || 'Untitled question'
+                      }`}
+                    </Typography>
                     <IconButton
                       onClick={() => {
                         setMetricBeingDeleted(null);
@@ -315,8 +320,8 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
                     <Typography>
                       {`If you want to delete "${metricBeingDeleted.question}
                     }" you need to pick another
-                  yes/no-question to be the question that defines if the mision
-                  was successful`}{' '}
+                  choice question to be the question that defines if the mision
+                  was successful`}
                     </Typography>
                   ) : (
                     <Typography>
@@ -327,7 +332,6 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
 
                   {metricBeingDeleted?.definesDone ? (
                     <Box display="flex" flexDirection="column" gap={1}>
-                      <Typography>Yes/no questions</Typography>
                       {assignment.metrics
                         .filter(
                           (metric) =>
@@ -343,7 +347,7 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
                             justifyContent="space-between"
                             width="100%"
                           >
-                            {metric.question}
+                            {metric.question || 'Untitled question'}
                             <Button
                               onClick={() => {
                                 if (metricBeingDeleted) {
