@@ -56,6 +56,7 @@
     "@remirror/pm": "^3.0.0",
     "@remirror/react": "^3.0.1",
     "@remirror/react-editors": "^2.0.1",
+    "@remirror/react-ui": "^1.0.1",
     "@testing-library/dom": "^10.4.1",
     "@turf/area": "^7.2.0",
     "@turf/distance": "^7.2.0",
