@@ -4580,7 +4580,7 @@
     "@babel/runtime" "^7.22.3"
     "@remirror/core" "3.0.1"
 
-"@remirror/react-ui@1.0.1":
+"@remirror/react-ui@1.0.1", "@remirror/react-ui@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@remirror/react-ui/-/react-ui-1.0.1.tgz#629be8427ca97442c559eda79c4424aa137191a2"
   integrity sha512-T+Q6TZbDNR6lyUTIXVCU3L6l6EgdNzSH+QLaZ/Mr5a2C3IK1J5kCXddvpucdE+XGLYarzHpinrnRmFXsjbn1Ww==

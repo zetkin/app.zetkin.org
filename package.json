@@ -53,6 +53,7 @@
     "@remirror/pm": "^3.0.0",
     "@remirror/react": "^3.0.1",
     "@remirror/react-editors": "^2.0.1",
+    "@remirror/react-ui": "^1.0.1",
     "@types/dompurify": "^2.3.3",
     "@types/mjml": "^4.7.4",
     "copy-to-clipboard": "^3.3.1",
