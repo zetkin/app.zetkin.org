@@ -28,16 +28,16 @@ import {
   Typography,
 } from '@mui/material';
 
-import MetricCard from 'features/canvassAssignments/components/MetricCard';
 import { AREAS } from 'utils/featureFlags';
-import { scaffold } from 'utils/next';
+import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
+import MetricCard from 'features/canvassAssignments/components/MetricCard';
 import { PageWithLayout } from 'utils/types';
+import { scaffold } from 'utils/next';
 import useCanvassAssignmentMutations from 'features/canvassAssignments/hooks/useCanvassAssignmentMutations';
 import useCanvassAssignment from 'features/canvassAssignments/hooks/useCanvassAssignment';
 import { ZetkinMetric } from 'features/canvassAssignments/types';
-import CanvassAssignmentLayout from 'features/canvassAssignments/layouts/CanvassAssignmentLayout';
-import ZUICard from 'zui/ZUICard';
 import theme from 'theme';
+import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 
 const scaffoldOptions = {
@@ -52,13 +52,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 }, scaffoldOptions);
 
-interface CanvassAssignmentOutcomesProps {
+interface CanvassAssignmentLoggingProps {
   orgId: string;
   canvassAssId: string;
 }
 
-const CanvassAssignmentOutcomesPage: PageWithLayout<
-  CanvassAssignmentOutcomesProps
+const CanvassAssignmentLoggingPage: PageWithLayout<
+  CanvassAssignmentLoggingProps
 > = ({ orgId, canvassAssId }) => {
   const { updateCanvassAssignment } = useCanvassAssignmentMutations(
     parseInt(orgId),
@@ -114,7 +114,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
     <ZUIFuture future={canvassAssignmentFuture}>
       {(assignment) => (
         <Box display="flex">
-          <Box width="50%">
+          <Box width="60%">
             <Alert
               iconMapping={{
                 info: <AdsClickIcon fontSize="inherit" />,
@@ -405,7 +405,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
               </Dialog>
             </Box>
           </Box>
-          <Box ml={2} width="50%">
+          <Box ml={2} width="40%">
             <ZUICard header="Data collection" sx={{ mb: 2 }}>
               <Typography mb={2}>
                 Decide what level of precision should be used for statistics.
@@ -502,10 +502,10 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
   );
 };
 
-CanvassAssignmentOutcomesPage.getLayout = function getLayout(page) {
+CanvassAssignmentLoggingPage.getLayout = function getLayout(page) {
   return (
     <CanvassAssignmentLayout {...page.props}>{page}</CanvassAssignmentLayout>
   );
 };
 
-export default CanvassAssignmentOutcomesPage;
+export default CanvassAssignmentLoggingPage;

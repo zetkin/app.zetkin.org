@@ -137,7 +137,7 @@ const CanvassAssignmentLayout: FC<CanvassAssignmentLayoutProps> = ({
         { href: '/', label: 'Overview' },
         { href: '/map', label: 'Map' },
         { href: '/canvassers', label: 'Canvassers' },
-        { href: '/outcomes', label: 'Outcomes' },
+        { href: '/logging', label: 'Logging' },
         { href: '/instructions', label: 'Instructions' },
       ]}
       title={
