@@ -9,6 +9,8 @@ import {
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import {
+  Alert,
+  AlertTitle,
   alpha,
   Box,
   Button,
@@ -113,7 +115,17 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
       {(assignment) => (
         <Box display="flex">
           <Box width="50%">
-            <Box>
+            <Alert
+              iconMapping={{
+                info: <AdsClickIcon fontSize="inherit" />,
+              }}
+              severity="info"
+            >
+              <AlertTitle>Define successful visit</AlertTitle>
+              Decide what metric to use for a visit to count as successful by
+              clicking this symbol.
+            </Alert>
+            <Box mt={2}>
               {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
               {assignment.metrics.map((metric) => (
                 <Card key={metric.id} sx={{ marginTop: 2 }}>
@@ -126,24 +138,31 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                         gap={1}
                       >
                         <Box
-                          alignItems="center"
+                          alignItems="flex-start"
                           display="flex"
                           justifyContent="space-between"
                         >
                           <Box alignItems="center" display="flex">
-                            <Typography gutterBottom mr={1} variant="h5">
-                              {metric.question || 'Untitled question'}
-                            </Typography>
-                            <Typography color="secondary">
+                            <Typography
+                              display="flex"
+                              gutterBottom
+                              mr={1}
+                              variant="h6"
+                            >
                               {metric.kind == 'boolean' ? (
-                                <SwitchLeft />
+                                <Typography color="secondary" mr={1}>
+                                  <SwitchLeft />
+                                </Typography>
                               ) : (
-                                <LinearScale />
+                                <Typography color="secondary" mr={1}>
+                                  <LinearScale />
+                                </Typography>
                               )}
+                              {metric.question || 'Untitled question'}
                             </Typography>
                           </Box>
                           <Box alignItems="center" display="flex">
-                            {metric.definesDone ? (
+                            {metric.definesDone && metric.kind === 'boolean' && (
                               <Box
                                 bgcolor={alpha(
                                   theme.palette.success.light,
@@ -151,13 +170,41 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                                 )}
                                 borderRadius={2}
                                 display="flex"
+                                mr={1}
                                 p={0.5}
                               >
                                 <AdsClickIcon />
                                 <Typography ml={1}>Defines success</Typography>
                               </Box>
-                            ) : (
-                              <AdsClickIcon sx={{ marginRight: 1 }} />
+                            )}
+                            {!metric.definesDone && metric.kind === 'boolean' && (
+                              <Button
+                                onClick={() => {
+                                  const updatedMetrics =
+                                    canvassAssignmentFuture.data?.metrics.map(
+                                      (m) => {
+                                        if (m.id === metric.id) {
+                                          return {
+                                            ...m,
+                                            definesDone: true,
+                                          };
+                                        } else {
+                                          return {
+                                            ...m,
+                                            definesDone: false,
+                                          };
+                                        }
+                                      }
+                                    );
+
+                                  updateCanvassAssignment({
+                                    metrics: updatedMetrics,
+                                  });
+                                }}
+                                sx={{ marginRight: 1 }}
+                              >
+                                <AdsClickIcon />
+                              </Button>
                             )}
 
                             <Button
@@ -178,7 +225,7 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                             )}
                           </Box>
                         </Box>
-                        <Typography color="secondary">
+                        <Typography color="secondary" ml={4}>
                           {metric.description || 'No description'}
                         </Typography>
                       </Box>
@@ -190,10 +237,6 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
             {metricBeingCreated && (
               <Box mb={2}>
                 <MetricCard
-                  hasDefinedDone={assignment.metrics.some(
-                    (metric) => metric.definesDone
-                  )}
-                  isOnlyQuestion={assignment.metrics.length == 1}
                   metric={metricBeingCreated}
                   onClose={() => setMetricBeingCreated(null)}
                   onSave={handleSaveMetric}
@@ -210,10 +253,6 @@ const CanvassAssignmentOutcomesPage: PageWithLayout<
                 }}
               >
                 <MetricCard
-                  hasDefinedDone={assignment.metrics.some(
-                    (metric) => metric.definesDone
-                  )}
-                  isOnlyQuestion={assignment.metrics.length == 1}
                   metric={metricBeingEdited}
                   onClose={() => setMetricBeingEdited(null)}
                   onSave={handleSaveMetric}

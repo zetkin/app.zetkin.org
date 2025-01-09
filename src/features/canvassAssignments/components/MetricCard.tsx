@@ -6,7 +6,6 @@ import {
   Typography,
   Box,
   TextField,
-  Checkbox,
   Button,
   IconButton,
 } from '@mui/material';
@@ -14,20 +13,12 @@ import {
 import { ZetkinMetric } from '../types';
 
 type MetricCardProps = {
-  hasDefinedDone: boolean;
-  isOnlyQuestion: boolean;
   metric: ZetkinMetric;
   onClose: () => void;
   onSave: (metric: ZetkinMetric) => void;
 };
 
-const MetricCard: FC<MetricCardProps> = ({
-  hasDefinedDone,
-  isOnlyQuestion,
-  metric,
-  onClose,
-  onSave,
-}) => {
+const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
   const [question, setQuestion] = useState<string>(metric.question || '');
   const [description, setDescription] = useState<string>(
     metric.description || ''
@@ -42,20 +33,17 @@ const MetricCard: FC<MetricCardProps> = ({
     setDefinesDone(metric.definesDone || false);
   }, [metric]);
 
-  const showDefinesDoneCheckbox =
-    metric.kind == 'boolean' && (metric.definesDone || !hasDefinedDone);
-
   return (
     <Card sx={{ marginTop: 2, minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           {metric.kind === 'boolean' ? (
-            <Typography display="flex" variant="h5">
+            <Typography display="flex" variant="h6">
               Choice question{' '}
               <SwitchLeft color="secondary" sx={{ marginLeft: 1 }} />
             </Typography>
           ) : (
-            <Typography display="flex" variant="h5">
+            <Typography display="flex" variant="h6">
               Scale question{' '}
               <LinearScale color="secondary" sx={{ marginLeft: 1 }} />
             </Typography>
@@ -85,19 +73,6 @@ const MetricCard: FC<MetricCardProps> = ({
             value={description}
             variant="outlined"
           />
-          {showDefinesDoneCheckbox && (
-            <Box alignItems="center" display="flex">
-              <Checkbox
-                checked={definesDone}
-                disabled={definesDone && isOnlyQuestion}
-                onChange={(ev) => setDefinesDone(ev.target.checked)}
-              />
-              <Typography>
-                The answer to this question defines if the mission was
-                successful
-              </Typography>
-            </Box>
-          )}
           <Box display="flex" gap={1} justifyContent="right" width="100%">
             <Button
               onClick={() => {
@@ -109,7 +84,7 @@ const MetricCard: FC<MetricCardProps> = ({
                   question,
                 });
               }}
-              variant="outlined"
+              variant="contained"
             >
               Save
             </Button>
