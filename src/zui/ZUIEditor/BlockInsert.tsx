@@ -13,7 +13,7 @@ const BlockInsert: FC = () => {
   const view = useEditorView();
   const state = useEditorState();
   const [mouseY, setMouseY] = useState(-Infinity);
-  const { insertButton, focus } = useCommands();
+  const { insertParagraph, focus } = useCommands();
 
   useEffect(() => {
     const handleMouseMove = (ev: Event) => {
@@ -80,10 +80,10 @@ const BlockInsert: FC = () => {
             >
               <Paper>
                 <IconButton
-                  disabled={!insertButton.enabled(pos)}
+                  disabled={!insertParagraph.enabled(' ', { selection: pos })}
                   onClick={() => {
-                    insertButton(pos);
-                    focus();
+                    insertParagraph(' ', { selection: pos });
+                    focus(pos);
                   }}
                 >
                   <Add />
