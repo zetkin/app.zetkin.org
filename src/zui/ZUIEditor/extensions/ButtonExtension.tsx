@@ -5,12 +5,10 @@ import {
   CommandFunction,
   extension,
   ExtensionTag,
-  getTextSelection,
   NodeExtension,
   NodeExtensionSpec,
   NodeSpecOverride,
   omitExtraAttributes,
-  PrimitiveSelection,
 } from 'remirror';
 
 type ButtonOptions = {
@@ -63,11 +61,10 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
-  insertButton(selection?: PrimitiveSelection): CommandFunction {
+  insertButton(pos: number): CommandFunction {
     return ({ tr, dispatch }) => {
-      const { from, to } = getTextSelection(selection ?? tr.selection, tr.doc);
       const node = this.type.create(null, this.type.schema.text('Foobar'));
-      dispatch?.(tr.replaceRangeWith(from, to, node));
+      dispatch?.(tr.insert(pos, node));
       return true;
     };
   }
