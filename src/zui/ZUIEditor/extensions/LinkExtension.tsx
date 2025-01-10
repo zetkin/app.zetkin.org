@@ -36,7 +36,10 @@ class LinkExtension extends MarkExtension<LinkOptions> {
   ): MarkExtensionSpec {
     return {
       ...override,
-      attrs: extra.defaults(),
+      attrs: {
+        ...extra.defaults(),
+        href: {},
+      },
       parseDOM: [
         {
           getAttrs: extra.parse,
