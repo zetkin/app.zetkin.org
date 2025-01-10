@@ -2,49 +2,16 @@ import {
   EditorComponent,
   OnChangeJSON,
   Remirror,
-  useActive,
-  useCommands,
   useRemirror,
 } from '@remirror/react';
 import { FC } from 'react';
 import { BoldExtension } from 'remirror/extensions';
-import { Button } from '@mui/material';
+import { Box } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
 import BlockToolbar from './BlockToolbar';
-
-const Menu = () => {
-  const active = useActive();
-  const { insertButton, toggleBold, focus } = useCommands();
-
-  return (
-    <>
-      <Button
-        onClick={() => {
-          toggleBold();
-          focus();
-        }}
-        sx={{
-          color: active.bold() ? 'black' : '',
-        }}
-        variant="outlined"
-      >
-        B
-      </Button>
-      <Button
-        disabled={!insertButton.enabled()}
-        onClick={() => {
-          insertButton();
-          focus();
-        }}
-        variant="outlined"
-      >
-        Add button
-      </Button>
-    </>
-  );
-};
+import BlockInsert from './BlockInsert';
 
 const ZUIEditor: FC = () => {
   const { manager, state } = useRemirror({
@@ -71,17 +38,19 @@ const ZUIEditor: FC = () => {
   });
 
   return (
-    <div style={{ minHeight: '200px' }}>
-      <Remirror initialContent={state} manager={manager}>
-        <BlockToolbar />
-        <EditorComponent />
-        <Menu />
-        <OnChangeJSON
-          // eslint-disable-next-line no-console
-          onChange={(updatedContent) => console.log(updatedContent)}
-        />
-      </Remirror>
-    </div>
+    <Box sx={{ ['[contenteditable="true"] > *']: { my: 2 } }}>
+      <div style={{ minHeight: '200px' }}>
+        <Remirror initialContent={state} manager={manager}>
+          <BlockInsert />
+          <BlockToolbar />
+          <EditorComponent />
+          <OnChangeJSON
+            // eslint-disable-next-line no-console
+            onChange={(updatedContent) => console.log(updatedContent)}
+          />
+        </Remirror>
+      </div>
+    </Box>
   );
 };
 
