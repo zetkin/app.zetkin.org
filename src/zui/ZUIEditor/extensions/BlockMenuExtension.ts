@@ -48,9 +48,8 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
         const factory = this.options.blockFactories[type];
         if (factory) {
           const newNode = factory();
-          if (newNode) {
-            const start = oldNode.start;
-            dispatch?.(tr.delete(start, oldNode.end).insert(start, newNode));
+          if (dispatch && newNode) {
+            dispatch(tr.replaceWith(oldNode.pos, oldNode.end, newNode));
           }
 
           return true;
