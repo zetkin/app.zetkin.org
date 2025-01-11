@@ -15,9 +15,16 @@ import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import BlockMenuExtension from './extensions/BlockMenuExtension';
 import EmptyBlockPlaceholder from './EmptyBlockPlaceholder';
+import ImageExtension from './extensions/ImageExtension';
+import ImageExtensionUI from './ImageExtensionUI';
+import { useNumericRouteParams } from 'core/hooks';
 
 const ZUIEditor: FC = () => {
   const btnExtension = new ButtonExtension();
+  const imgExtension = new ImageExtension({});
+
+  const { orgId } = useNumericRouteParams();
+
   const { manager, state } = useRemirror({
     content: {
       content: [
@@ -36,6 +43,7 @@ const ZUIEditor: FC = () => {
     extensions: () => [
       new BoldExtension({}),
       btnExtension,
+      imgExtension,
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
@@ -44,6 +52,7 @@ const ZUIEditor: FC = () => {
               {},
               btnExtension.type.schema.text('Add button label here')
             ),
+          image: () => imgExtension.type.create(),
         },
       }),
     ],
@@ -53,14 +62,17 @@ const ZUIEditor: FC = () => {
   return (
     <Box
       sx={{
-        ['.zbutton-button']: {
+        '.zbutton-button': {
           bgcolor: 'black',
           color: 'white',
           padding: 1,
         },
-        ['.zbutton-container']: {
+        '.zbutton-container': {
           display: 'flex',
           justifyContent: 'center',
+        },
+        '.zimage-image': {
+          maxWidth: '100%',
         },
         ['[contenteditable="true"]']: {
           padding: 1,
@@ -75,7 +87,13 @@ const ZUIEditor: FC = () => {
           <BlockInsert />
           <BlockToolbar />
           <EmptyBlockPlaceholder placeholder="Type / to insert block or just type some text" />
-          <BlockMenu blocks={[{ id: 'button', label: 'Button' }]} />
+          <BlockMenu
+            blocks={[
+              { id: 'button', label: 'Button' },
+              { id: 'image', label: 'Image' },
+            ]}
+          />
+          <ImageExtensionUI orgId={orgId} />
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
