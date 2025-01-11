@@ -126,6 +126,13 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  editor: {
+    blockLabels: {
+      zbutton: m('Button'),
+      zimage: m('Image'),
+    },
+    placeholder: m('Type / to insert block or just type some text'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
