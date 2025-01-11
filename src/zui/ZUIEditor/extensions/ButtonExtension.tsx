@@ -47,9 +47,15 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
           {
             ...extra.dom(node),
             ...attrs,
-            style: 'border: 1px solid black; padding: 5px;',
+            class: 'zui-editor zbutton-container',
           },
-          0,
+          [
+            'div',
+            {
+              class: 'zui-editor zbutton-button',
+            },
+            0,
+          ],
         ];
       },
     };
