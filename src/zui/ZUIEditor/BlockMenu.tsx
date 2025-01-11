@@ -1,4 +1,4 @@
-import { Box, Menu, MenuItem } from '@mui/material';
+import { Box, MenuItem, Paper } from '@mui/material';
 import {
   useCommands,
   useExtensionEvent,
@@ -23,9 +23,17 @@ const BlockMenu: FC = () => {
     }
   });
 
-  const blocks: MentionExtensionAttributes[] = [
+  const allBlocks: MentionExtensionAttributes[] = [
     { id: 'button', label: 'Button' },
   ];
+
+  const blocks = allBlocks.filter(
+    (block) =>
+      !query ||
+      query == '' ||
+      block.id.toLowerCase().startsWith(query.toLowerCase()) ||
+      block.label.toLowerCase().startsWith(query.toLowerCase())
+  );
 
   const isOpen = query !== null && !ignore;
 
@@ -48,29 +56,31 @@ const BlockMenu: FC = () => {
     <Box position="relative">
       <Box
         ref={positioner.ref}
-        sx={{ left: positioner.x, position: 'absolute', top: positioner.y }}
-      />
-      <Menu
-        open={positioner.active && isOpen}
-        {...menu.getMenuProps()}
-        anchorEl={positioner.element}
-        onClose={() => {
-          setIgnore(true);
+        sx={{
+          left: positioner.x,
+          position: 'absolute',
+          top: positioner.y,
         }}
       >
-        {isOpen &&
-          blocks.map((item, index) => {
-            return (
-              <MenuItem
-                key={item.id}
-                component="a"
-                {...menu.getItemProps({ index, item })}
-              >
-                {item.label}
-              </MenuItem>
-            );
-          })}
-      </Menu>
+        <Box {...menu.getMenuProps()}>
+          <Paper>
+            {isOpen &&
+              blocks.map((item, index) => {
+                const props = menu.getItemProps({ index, item });
+                return (
+                  <MenuItem
+                    key={item.id}
+                    component="a"
+                    selected={!!props['aria-current']}
+                    {...props}
+                  >
+                    {item.label}
+                  </MenuItem>
+                );
+              })}
+          </Paper>
+        </Box>
+      </Box>
     </Box>
   );
 };
