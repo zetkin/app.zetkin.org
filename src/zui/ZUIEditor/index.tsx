@@ -38,7 +38,11 @@ const ZUIEditor: FC = () => {
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
-          button: () => btnExtension.type.create(),
+          button: () =>
+            btnExtension.type.create(
+              {},
+              btnExtension.type.schema.text('Add button label here')
+            ),
         },
       }),
     ],
@@ -46,7 +50,25 @@ const ZUIEditor: FC = () => {
   });
 
   return (
-    <Box sx={{ ['[contenteditable="true"] > *']: { my: 2 } }}>
+    <Box
+      sx={{
+        ['.zbutton-button']: {
+          bgcolor: 'black',
+          color: 'white',
+          padding: 1,
+        },
+        ['.zbutton-container']: {
+          display: 'flex',
+          justifyContent: 'center',
+        },
+        ['[contenteditable="true"]']: {
+          padding: 1,
+        },
+        ['[contenteditable="true"] > *']: {
+          my: 2,
+        },
+      }}
+    >
       <div style={{ minHeight: '200px' }}>
         <Remirror initialContent={state} manager={manager}>
           <BlockInsert />
