@@ -18,10 +18,19 @@ import EmptyBlockPlaceholder from './EmptyBlockPlaceholder';
 import ImageExtension from './extensions/ImageExtension';
 import ImageExtensionUI from './ImageExtensionUI';
 import { useNumericRouteParams } from 'core/hooks';
+import { useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
+
+type ZetkinExtension = ButtonExtension | ImageExtension;
 
 const ZUIEditor: FC = () => {
+  const messages = useMessages(messageIds.editor);
+
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
+
+  const extensions: ZetkinExtension[] = [];
+  extensions.push(btnExtension, imgExtension);
 
   const { orgId } = useNumericRouteParams();
 
@@ -42,17 +51,16 @@ const ZUIEditor: FC = () => {
     },
     extensions: () => [
       new BoldExtension({}),
-      btnExtension,
-      imgExtension,
+      ...extensions,
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
-          button: () =>
+          zbutton: () =>
             btnExtension.type.create(
               {},
               btnExtension.type.schema.text('Add button label here')
             ),
-          image: () => imgExtension.type.create(),
+          zimage: () => imgExtension.type.create(),
         },
       }),
     ],
@@ -86,12 +94,12 @@ const ZUIEditor: FC = () => {
         <Remirror initialContent={state} manager={manager}>
           <BlockInsert />
           <BlockToolbar />
-          <EmptyBlockPlaceholder placeholder="Type / to insert block or just type some text" />
+          <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
           <BlockMenu
-            blocks={[
-              { id: 'button', label: 'Button' },
-              { id: 'image', label: 'Image' },
-            ]}
+            blocks={extensions.map((ext) => ({
+              id: ext.name,
+              label: messages.blockLabels[ext.name](),
+            }))}
           />
           <ImageExtensionUI orgId={orgId} />
           <EditorComponent />
