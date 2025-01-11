@@ -50,8 +50,8 @@ export default class ImageExtension extends NodeExtension {
     };
   }
 
-  get name(): string {
-    return 'zimage';
+  get name() {
+    return 'zimage' as const;
   }
 
   /* eslint-disable @typescript-eslint/ban-ts-comment */
