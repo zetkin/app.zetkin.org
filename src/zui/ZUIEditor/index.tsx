@@ -14,6 +14,7 @@ import BlockToolbar from './BlockToolbar';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import BlockMenuExtension from './extensions/BlockMenuExtension';
+import EmptyBlockPlaceholder from './EmptyBlockPlaceholder';
 
 const ZUIEditor: FC = () => {
   const btnExtension = new ButtonExtension();
@@ -73,6 +74,7 @@ const ZUIEditor: FC = () => {
         <Remirror initialContent={state} manager={manager}>
           <BlockInsert />
           <BlockToolbar />
+          <EmptyBlockPlaceholder placeholder="Type / to insert block or just type some text" />
           <BlockMenu blocks={[{ id: 'button', label: 'Button' }]} />
           <EditorComponent />
           <OnChangeJSON
