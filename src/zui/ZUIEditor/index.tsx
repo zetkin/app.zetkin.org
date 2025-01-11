@@ -12,8 +12,11 @@ import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
 import BlockToolbar from './BlockToolbar';
 import BlockInsert from './BlockInsert';
+import BlockMenu from './BlockMenu';
+import BlockMenuExtension from './extensions/BlockMenuExtension';
 
 const ZUIEditor: FC = () => {
+  const btnExtension = new ButtonExtension();
   const { manager, state } = useRemirror({
     content: {
       content: [
@@ -31,8 +34,13 @@ const ZUIEditor: FC = () => {
     },
     extensions: () => [
       new BoldExtension({}),
-      new ButtonExtension(),
+      btnExtension,
       new LinkExtension(),
+      new BlockMenuExtension({
+        blockFactories: {
+          button: () => btnExtension.type.create(),
+        },
+      }),
     ],
     selection: 'start',
   });
@@ -43,6 +51,7 @@ const ZUIEditor: FC = () => {
         <Remirror initialContent={state} manager={manager}>
           <BlockInsert />
           <BlockToolbar />
+          <BlockMenu />
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
