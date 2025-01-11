@@ -23,14 +23,26 @@ import messageIds from 'zui/l10n/messageIds';
 
 type ZetkinExtension = ButtonExtension | ImageExtension;
 
-const ZUIEditor: FC = () => {
+type Props = {
+  enableButton?: boolean;
+  enableImage?: boolean;
+};
+
+const ZUIEditor: FC<Props> = ({ enableButton, enableImage }) => {
   const messages = useMessages(messageIds.editor);
 
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
 
   const extensions: ZetkinExtension[] = [];
-  extensions.push(btnExtension, imgExtension);
+
+  if (enableButton) {
+    extensions.push(btnExtension);
+  }
+
+  if (enableImage) {
+    extensions.push(imgExtension);
+  }
 
   const { orgId } = useNumericRouteParams();
 
@@ -101,7 +113,7 @@ const ZUIEditor: FC = () => {
               label: messages.blockLabels[ext.name](),
             }))}
           />
-          <ImageExtensionUI orgId={orgId} />
+          {enableImage && <ImageExtensionUI orgId={orgId} />}
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
