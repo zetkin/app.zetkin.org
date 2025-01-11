@@ -6,11 +6,17 @@ import {
   usePositioner,
 } from '@remirror/react';
 import { FC, useState } from 'react';
-import { MentionExtensionAttributes } from 'remirror/extensions';
 
 import BlockMenuExtension from './extensions/BlockMenuExtension';
 
-const BlockMenu: FC = () => {
+type Props = {
+  blocks: {
+    id: string;
+    label: string;
+  }[];
+};
+
+const BlockMenu: FC<Props> = ({ blocks }) => {
   const [query, setQuery] = useState<string | null>(null);
   const [ignore, setIgnore] = useState(false);
   const positioner = usePositioner('cursor');
@@ -23,11 +29,7 @@ const BlockMenu: FC = () => {
     }
   });
 
-  const allBlocks: MentionExtensionAttributes[] = [
-    { id: 'button', label: 'Button' },
-  ];
-
-  const blocks = allBlocks.filter(
+  const filteredBlocks = blocks.filter(
     (block) =>
       !query ||
       query == '' ||
@@ -39,7 +41,7 @@ const BlockMenu: FC = () => {
 
   const menu = useMenuNavigation({
     isOpen: isOpen,
-    items: blocks,
+    items: filteredBlocks,
     onDismiss: () => {
       setQuery(null);
       setIgnore(true);
@@ -65,7 +67,7 @@ const BlockMenu: FC = () => {
         <Box {...menu.getMenuProps()}>
           <Paper>
             {isOpen &&
-              blocks.map((item, index) => {
+              filteredBlocks.map((item, index) => {
                 const props = menu.getItemProps({ index, item });
                 return (
                   <MenuItem

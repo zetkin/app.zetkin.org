@@ -51,7 +51,7 @@ const ZUIEditor: FC = () => {
         <Remirror initialContent={state} manager={manager}>
           <BlockInsert />
           <BlockToolbar />
-          <BlockMenu />
+          <BlockMenu blocks={[{ id: 'button', label: 'Button' }]} />
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
