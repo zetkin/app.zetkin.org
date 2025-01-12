@@ -14,7 +14,7 @@ const BlockToolbar: FC = () => {
   const [curBlockType, setCurBlockType] = useState<string>();
   const view = useEditorView();
   const state = useEditorState();
-  const { setImageFile } = useCommands();
+  const { convertParagraph, setImageFile, toggleHeading } = useCommands();
 
   useEditorEvent('keyup', () => {
     setTyping(true);
@@ -84,7 +84,7 @@ const BlockToolbar: FC = () => {
           opacity: showBar ? 1 : 0,
           pointerEvents: showBar ? 'auto' : 'none',
           position: 'absolute',
-          top: curBlockPos - 32,
+          top: curBlockPos - 50,
           transition: 'opacity 0.5s',
           zIndex: 10000,
         }}
@@ -93,6 +93,14 @@ const BlockToolbar: FC = () => {
           {curBlockType}
           {curBlockType == 'zimage' && (
             <Button onClick={() => setImageFile(null)}>Change image</Button>
+          )}
+          {curBlockType == 'heading' && (
+            <Button onClick={() => convertParagraph()}>
+              Convert to paragraph
+            </Button>
+          )}
+          {curBlockType == 'paragraph' && (
+            <Button onClick={() => toggleHeading()}>Convert to heading</Button>
           )}
         </Paper>
       </Box>
