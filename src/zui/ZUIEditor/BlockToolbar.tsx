@@ -1,21 +1,14 @@
 import { Box, Paper } from '@mui/material';
-import { useEditorEvent, useEditorView, usePositioner } from '@remirror/react';
+import { useEditorEvent, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
+import { findParentNode, isNodeSelection, ProsemirrorNode } from 'remirror';
 
 const BlockToolbar: FC = () => {
   const [typing, setTyping] = useState(false);
-  const [curBlockPos, setCurBlockPos] = useState<[number, number]>([0, 0]);
+  const [curBlockPos, setCurBlockPos] = useState<number>(-1);
   const [curBlockType, setCurBlockType] = useState<string>();
-  const positioner = usePositioner('block');
-  const selectionPositioner = usePositioner('selection');
   const view = useEditorView();
-
-  useEffect(() => {
-    if (positioner.active) {
-      setCurBlockPos([positioner.x, positioner.y]);
-      setCurBlockType(positioner.data.node?.type.name);
-    }
-  }, [positioner.y]);
+  const state = useEditorState();
 
   useEditorEvent('keyup', () => {
     setTyping(true);
@@ -33,21 +26,58 @@ const BlockToolbar: FC = () => {
     }
   }, [view.root]);
 
-  const { ref } = positioner;
-  const [x, y] = curBlockPos;
+  useEffect(() => {
+    let node: ProsemirrorNode | null = null;
+    let nodeElem: HTMLElement | null = null;
+    if (isNodeSelection(state.selection)) {
+      const elem = view.nodeDOM(state.selection.$from.pos);
+      if (elem instanceof HTMLElement) {
+        node = state.selection.node;
+        nodeElem = elem;
+      }
+    } else {
+      const result = findParentNode({
+        predicate: () => true,
+        selection: state.selection,
+      });
 
-  const showBar = (positioner.active || selectionPositioner.active) && !typing;
+      if (result) {
+        node = result.node;
+        let elem = view.nodeDOM(result.start);
+
+        while (
+          elem &&
+          elem.parentNode &&
+          elem.parentElement?.contentEditable != 'true'
+        ) {
+          elem = elem.parentNode;
+        }
+
+        if (elem instanceof HTMLElement) {
+          nodeElem = elem;
+        }
+      }
+    }
+
+    if (node && nodeElem) {
+      const editorRect = view.dom.getBoundingClientRect();
+      const nodeRect = nodeElem.getBoundingClientRect();
+      setCurBlockPos(nodeRect.y - editorRect.y);
+      setCurBlockType(node.type.name);
+    }
+  }, [state.selection]);
+
+  const showBar = curBlockType && curBlockPos >= 0 && !typing;
 
   return (
     <Box position="relative">
       <Box
-        ref={ref}
         sx={{
-          left: x,
+          left: 0,
           opacity: showBar ? 1 : 0,
           pointerEvents: showBar ? 'auto' : 'none',
           position: 'absolute',
-          top: y - 32,
+          top: curBlockPos - 32,
           transition: 'opacity 0.5s',
           zIndex: 10000,
         }}
