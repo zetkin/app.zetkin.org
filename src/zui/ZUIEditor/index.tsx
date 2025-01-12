@@ -5,7 +5,7 @@ import {
   useRemirror,
 } from '@remirror/react';
 import { FC } from 'react';
-import { BoldExtension } from 'remirror/extensions';
+import { BoldExtension, HeadingExtension } from 'remirror/extensions';
 import { Box } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
@@ -21,18 +21,20 @@ import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 
-type ZetkinExtension = ButtonExtension | ImageExtension;
+type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
 
 type Props = {
   enableButton?: boolean;
+  enableHeading?: boolean;
   enableImage?: boolean;
 };
 
-const ZUIEditor: FC<Props> = ({ enableButton, enableImage }) => {
+const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
   const messages = useMessages(messageIds.editor);
 
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
+  const headingExtension = new HeadingExtension({});
 
   const extensions: ZetkinExtension[] = [];
 
@@ -42,6 +44,10 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableImage }) => {
 
   if (enableImage) {
     extensions.push(imgExtension);
+  }
+
+  if (enableHeading) {
+    extensions.push(headingExtension);
   }
 
   const { orgId } = useNumericRouteParams();
@@ -67,6 +73,7 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableImage }) => {
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
+          heading: () => headingExtension.type.create({}),
           zbutton: () =>
             btnExtension.type.create(
               {},
