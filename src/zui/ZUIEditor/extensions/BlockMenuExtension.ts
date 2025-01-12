@@ -1,4 +1,5 @@
 import { Node } from '@remirror/pm/model';
+import { TextSelection } from '@remirror/pm/state';
 import { Suggester } from '@remirror/pm/suggest';
 import {
   legacyCommand as command,
@@ -49,7 +50,15 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
         if (factory) {
           const newNode = factory();
           if (dispatch && newNode) {
-            dispatch(tr.replaceWith(oldNode.pos, oldNode.end, newNode));
+            tr = tr.replaceWith(oldNode.pos, oldNode.end, newNode);
+            tr = tr.setSelection(
+              TextSelection.create(
+                tr.doc,
+                oldNode.pos + 1,
+                oldNode.pos + newNode.nodeSize - 1
+              )
+            );
+            dispatch(tr);
           }
 
           return true;
