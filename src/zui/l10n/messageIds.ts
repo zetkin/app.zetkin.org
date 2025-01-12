@@ -151,6 +151,7 @@ export default makeMessages('zui', {
   },
   editor: {
     blockLabels: {
+      heading: m('Heading'),
       zbutton: m('Button'),
       zimage: m('Image'),
     },
