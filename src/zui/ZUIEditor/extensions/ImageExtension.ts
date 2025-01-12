@@ -3,6 +3,7 @@ import {
   legacyCommand as command,
   CommandFunction,
   extension,
+  Handler,
   NodeExtension,
   NodeExtensionSpec,
   NodeSpecOverride,
@@ -11,8 +12,23 @@ import {
 
 import { ZetkinFile } from 'utils/types/zetkin';
 
-@extension({ defaultOptions: {} })
-export default class ImageExtension extends NodeExtension {
+type ImageOptions = {
+  onCreate?: Handler<() => void>;
+};
+
+@extension({
+  customHandlerKeys: [],
+  defaultOptions: {},
+  handlerKeys: ['onCreate'],
+  staticKeys: [],
+})
+export default class ImageExtension extends NodeExtension<ImageOptions> {
+  createAndPick() {
+    const node = this.type.create();
+    this.options.onCreate();
+    return node;
+  }
+
   createNodeSpec(
     extra: ApplySchemaAttributes,
     override: NodeSpecOverride
