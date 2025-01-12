@@ -1,5 +1,10 @@
-import { Box, Paper } from '@mui/material';
-import { useEditorEvent, useEditorState, useEditorView } from '@remirror/react';
+import { Box, Button, Paper } from '@mui/material';
+import {
+  useCommands,
+  useEditorEvent,
+  useEditorState,
+  useEditorView,
+} from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { findParentNode, isNodeSelection, ProsemirrorNode } from 'remirror';
 
@@ -9,6 +14,7 @@ const BlockToolbar: FC = () => {
   const [curBlockType, setCurBlockType] = useState<string>();
   const view = useEditorView();
   const state = useEditorState();
+  const { setImageFile } = useCommands();
 
   useEditorEvent('keyup', () => {
     setTyping(true);
@@ -67,7 +73,8 @@ const BlockToolbar: FC = () => {
     }
   }, [state.selection]);
 
-  const showBar = curBlockType && curBlockPos >= 0 && !typing;
+  const showBar =
+    curBlockType && curBlockPos >= 0 && view.hasFocus() && !typing;
 
   return (
     <Box position="relative">
@@ -84,6 +91,9 @@ const BlockToolbar: FC = () => {
       >
         <Paper elevation={1} sx={{ p: 1 }}>
           {curBlockType}
+          {curBlockType == 'zimage' && (
+            <Button onClick={() => setImageFile(null)}>Change image</Button>
+          )}
         </Paper>
       </Box>
     </Box>
