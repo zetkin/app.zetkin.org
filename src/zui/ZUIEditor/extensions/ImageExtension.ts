@@ -57,13 +57,13 @@ export default class ImageExtension extends NodeExtension {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
-  setImageFile(file: ZetkinFile): CommandFunction {
+  setImageFile(file: ZetkinFile | null): CommandFunction {
     return (props) => {
       props.dispatch?.(
         props.tr.setNodeAttribute(
           props.state.selection.$from.pos,
           'src',
-          file.url
+          file?.url ?? null
         )
       );
       return true;
