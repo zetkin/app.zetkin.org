@@ -20,6 +20,10 @@ const BlockToolbar: FC = () => {
     setTyping(true);
   });
 
+  useEditorEvent('blur', () => {
+    setCurBlockPos(-1);
+  });
+
   useEffect(() => {
     if (view.root) {
       const handleMove = () => {
