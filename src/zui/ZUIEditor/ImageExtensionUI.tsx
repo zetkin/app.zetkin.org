@@ -1,8 +1,8 @@
-import { useCommands, useEditorState } from '@remirror/react';
-import { FC, useEffect, useState } from 'react';
-import { getActiveNode } from 'remirror';
+import { useCommands, useExtensionEvent } from '@remirror/react';
+import { FC, useState } from 'react';
 
 import FileLibraryDialog from 'features/files/components/FileLibraryDialog';
+import ImageExtension from './extensions/ImageExtension';
 
 type Props = {
   orgId: number;
@@ -12,16 +12,9 @@ const ImageExtensionUI: FC<Props> = ({ orgId }) => {
   const [open, setOpen] = useState(false);
   const { setImageFile } = useCommands();
 
-  const state = useEditorState();
-
-  const nodeResult = getActiveNode({ state, type: 'zimage' });
-  const node = nodeResult?.node;
-
-  useEffect(() => {
-    if (node && !node.attrs.src) {
-      setOpen(true);
-    }
-  }, [node]);
+  useExtensionEvent(ImageExtension, 'onCreate', () => {
+    setOpen(true);
+  });
 
   return (
     <FileLibraryDialog

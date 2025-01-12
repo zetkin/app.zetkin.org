@@ -79,7 +79,7 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
               {},
               btnExtension.type.schema.text('Add button label here')
             ),
-          zimage: () => imgExtension.type.create(),
+          zimage: () => imgExtension.createAndPick(),
         },
       }),
     ],
