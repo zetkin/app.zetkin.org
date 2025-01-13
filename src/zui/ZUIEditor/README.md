@@ -11,6 +11,9 @@ ZUIEditor uses [Remirror](https://www.remirror.io/), which in turn builds on
 (often simultaneously), using Remirror extensions and using React UI components
 that are overlaid on top of the ProseMiror DOM.
 
+The diagram below illustrates the various components of this architecture, and
+which ones interface with eachother (as indicated by `=` / `||`).
+
 ```
 .---------------------------------------------.
 |                  ZUIEditor                  |
@@ -22,16 +25,17 @@ that are overlaid on top of the ProseMiror DOM.
 | |                      =                  | |
 | |----------------------|                  | |
 | |  (ProseMirror DOM)   |    (Remirror)    | |     Items in parentheses
-| |----------------------|                  | |     belong to third-party
+| |- - - - - - - - - - - |                  | |     belong to third-party
 | | (ProseMirror logic)  =                  | |     components.
 | '----------------------'------------------' |
 |_____________________________________________|
 ```
 
 - **Extensions** add functionality to the editor via Remirror, which in turn
-  communicates with ProseMirror
-- **Extensions** and **UI components** communicate in order to update UI or
-  update state when the user interacts with the UI
+  communicates with the ProseMirror API. ProseMirror renders the editor content
+  to the DOM in a `contenteditable` div.
+- **Extensions** and **UI components** communicate in order to re-render the UI
+  or update state when the user interacts with the UI
 - **UI components** read state from Remirror in order to update UI, and
   sometimes trigger updates directly
 
@@ -45,7 +49,38 @@ Components send messages to extensions using commands, that are exposed by the
 editor using the `@command` decorator in the extension.
 
 Example: The `ImageExtensionUI` presents the file picker and updates the image
-block by invoking the `setImageFile()` command exposed by `ImageExtension`.
+block by invoking the `setImageFile()` command.
+
+```tsx
+const { setImageFile } = useCommands();
+
+<FileLibraryDialog
+  onSelectFile={(file) => {
+    setImageFile(file);
+  }}
+  // ...
+/>;
+```
+
+The `setImageFile()` command is exposed by the `ImageExtension` extension class,
+using Remirrors mechanism for creating ProseMirror commands. Read more about it
+[in their tutorial](https://www.remirror.io/docs/getting-started/custom-extension#add-commands).
+
+```ts
+  @command()
+  setImageFile(file: ZetkinFile | null): CommandFunction {
+    return (props) => {
+      props.dispatch?.(
+        props.tr.setNodeAttribute(
+          props.state.selection.$from.pos,
+          'src',
+          file?.url ?? null
+        )
+      );
+      return true;
+    };
+  }
+```
 
 ### Communicating from extension to UI
 
