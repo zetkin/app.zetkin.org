@@ -13,19 +13,25 @@ import {
 import { ZetkinFile } from 'utils/types/zetkin';
 
 type ImageOptions = {
-  onCreate?: Handler<() => void>;
+  onCreate?: Handler<(pos: number) => void>;
+  onPick?: Handler<(pos: number) => void>;
 };
 
 @extension({
   customHandlerKeys: [],
   defaultOptions: {},
-  handlerKeys: ['onCreate'],
+  handlerKeys: ['onCreate', 'onPick'],
   staticKeys: [],
 })
 export default class ImageExtension extends NodeExtension<ImageOptions> {
   createAndPick() {
+    const pos = this.store.getState().selection.$from.pos;
+    const parentOffset = this.store.getState().doc.resolve(pos).parentOffset;
+    const blockLength = 1;
+
     const node = this.type.create();
-    this.options.onCreate();
+    this.options.onCreate(pos - parentOffset - blockLength);
+
     return node;
   }
 
@@ -73,14 +79,20 @@ export default class ImageExtension extends NodeExtension<ImageOptions> {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
-  setImageFile(file: ZetkinFile | null): CommandFunction {
+  pickImage(pos: number): CommandFunction {
+    return () => {
+      this.options.onPick(pos);
+      return true;
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  setImageFile(file: ZetkinFile | null, pos: number): CommandFunction {
     return (props) => {
       props.dispatch?.(
-        props.tr.setNodeAttribute(
-          props.state.selection.$from.pos,
-          'src',
-          file?.url ?? null
-        )
+        props.tr.setNodeAttribute(pos, 'src', file?.url ?? null)
       );
       return true;
     };
