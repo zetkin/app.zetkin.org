@@ -3,6 +3,8 @@ import { Badge, Button } from '@mui/material';
 import { FilterList } from '@mui/icons-material';
 
 import { areaFilterContext } from './AreaFilterContext';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   onToggle: () => void;
@@ -27,7 +29,7 @@ const AreaFilterButton: FC<Props> = ({ onToggle }) => {
         )
       }
     >
-      Filter
+      <Msg id={messageIds.areas.filter.openFiltersButton} />
     </Button>
   );
 };

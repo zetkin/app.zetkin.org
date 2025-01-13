@@ -389,7 +389,7 @@ export interface ZetkinSurveySubmissionPatchBody
   respondent_id: number | null;
 }
 
-export interface ZetkinCanvassAssignment {
+export interface ZetkinAreaAssignment {
   start_data: string;
   end_date: string;
   description: string;

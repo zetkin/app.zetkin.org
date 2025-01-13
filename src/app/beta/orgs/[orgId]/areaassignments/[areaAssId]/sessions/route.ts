@@ -1,0 +1,155 @@
+import mongoose from 'mongoose';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { AreaAssignmentModel } from 'features/areaAssignments/models';
+import { ZetkinAreaAssignmentSession } from 'features/areaAssignments/types';
+import asOrgAuthorized from 'utils/api/asOrgAuthorized';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import { AreaModel } from 'features/areas/models';
+
+type RouteMeta = {
+  params: {
+    areaAssId: string;
+    orgId: string;
+  };
+};
+
+export async function GET(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin', 'organizer'],
+    },
+    async ({ apiClient, orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const model = await AreaAssignmentModel.findOne({
+        _id: params.areaAssId,
+      });
+
+      if (!model) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      const sessions: ZetkinAreaAssignmentSession[] = [];
+
+      for await (const sessionData of model.sessions) {
+        let person: ZetkinPerson | null;
+        try {
+          person = await apiClient.get<ZetkinPerson>(
+            `/api/orgs/${orgId}/people/${sessionData.personId}`
+          );
+        } catch (err) {
+          person = null;
+        }
+        const area = await AreaModel.findOne({
+          _id: sessionData.areaId,
+        });
+
+        if (area && person) {
+          sessions.push({
+            area: {
+              description: area.description,
+              id: area._id.toString(),
+              organization: {
+                id: orgId,
+              },
+              points: area.points,
+              tags: [], // TODO: is this necessary here?
+              title: area.title,
+            },
+            assignee: person,
+            assignment: {
+              campaign: {
+                id: model.campId,
+              },
+              end_date: model.end_date,
+              id: model._id.toString(),
+              instructions: model.instructions,
+              metrics: model.metrics.map((m) => ({
+                definesDone: m.definesDone,
+                description: m.description,
+                id: m._id,
+                kind: m.kind,
+                question: m.question,
+              })),
+              organization: {
+                id: model.orgId,
+              },
+              reporting_level: model.reporting_level || 'household',
+              start_date: model.start_date,
+              title: model.title,
+            },
+          });
+        }
+      }
+
+      return NextResponse.json({
+        data: sessions,
+      });
+    }
+  );
+}
+
+export async function POST(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ apiClient, orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const assignment = await AreaAssignmentModel.findOne({
+        _id: params.areaAssId,
+      });
+
+      if (!assignment) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      const payload = await request.json();
+      const sessionData = {
+        areaId: payload.areaId as string,
+        personId: payload.personId as number,
+      };
+
+      const person = await apiClient.get<ZetkinPerson>(
+        `/api/orgs/${orgId}/people/${sessionData.personId}`
+      );
+
+      const area = await AreaModel.findOne({
+        _id: sessionData.areaId,
+      });
+
+      if (area && person) {
+        assignment.sessions.push(sessionData);
+
+        await assignment.save();
+
+        return NextResponse.json({
+          data: {
+            area: {
+              description: area.description,
+              id: area._id.toString(),
+              organization: {
+                id: orgId,
+              },
+              points: area.points,
+              title: area.title,
+            },
+            assignee: person,
+            assignment: {
+              id: assignment._id.toString(),
+              title: assignment.title,
+            },
+          },
+        });
+      } else {
+        return new NextResponse(null, { status: 404 });
+      }
+    }
+  );
+}
