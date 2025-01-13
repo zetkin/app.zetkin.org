@@ -9,7 +9,15 @@ export const DivIconMarker: FC<{
   eventHandlers?: LeafletEventHandlerFnMap;
   iconAnchor?: [number, number];
   position: LatLngExpression;
-}> = ({ children, draggable, eventHandlers, iconAnchor, position }) => {
+  zIndexOffset?: number;
+}> = ({
+  children,
+  draggable,
+  eventHandlers,
+  iconAnchor,
+  position,
+  zIndexOffset,
+}) => {
   const iconDiv = useMemo(() => document.createElement('div'), []);
   return (
     <>
@@ -22,6 +30,7 @@ export const DivIconMarker: FC<{
           iconAnchor,
         })}
         position={position}
+        zIndexOffset={zIndexOffset}
       />
       {createPortal(children, iconDiv)}
     </>

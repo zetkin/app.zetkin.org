@@ -32,12 +32,16 @@ const PlaceMarker: FC<{
   const theme = useTheme();
   if (placeStyle == 'dot') {
     return (
-      <DivIconMarker iconAnchor={[2, 2]} position={place.position}>
+      <DivIconMarker
+        iconAnchor={[2, 2]}
+        position={place.position}
+        zIndexOffset={-10}
+      >
         <Box
           bgcolor={theme.palette.text.primary}
           borderRadius="2em"
-          height={4}
-          width={4}
+          height={6}
+          width={6}
         />
       </DivIconMarker>
     );
@@ -400,6 +404,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 {overlayStyle == 'households' && (
                   <DivIconMarker iconAnchor={[0, 0]} position={mid}>
                     <Box
+                      alignItems="center"
                       bgcolor="white"
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
