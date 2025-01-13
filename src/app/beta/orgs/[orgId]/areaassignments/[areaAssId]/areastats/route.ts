@@ -39,14 +39,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const allAreaModels = await AreaModel.find({ orgId });
 
       //Get all locations
-      const allLocaitonModels = await LocationModel.find({ orgId });
+      const allLocationModels = await LocationModel.find({ orgId });
 
       //Get the assignment
       const assignmentModel = await AreaAssignmentModel.findOne({
         _id: params.areaAssId,
       });
 
-      if (!assignmentModel || !allLocaitonModels || !allAreaModels) {
+      if (!assignmentModel || !allLocationModels || !allAreaModels) {
         return new NextResponse(null, { status: 404 });
       }
 
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         `/api/orgs/${orgId}/people/tags`
       );
 
-      const allLocations: ZetkinLocation[] = allLocaitonModels.map((model) => ({
+      const allLocations: ZetkinLocation[] = allLocationModels.map((model) => ({
         description: model.description,
         households: model.households,
         id: model._id.toString(),
