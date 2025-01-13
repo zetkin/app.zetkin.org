@@ -84,97 +84,76 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
       display="flex"
       flexDirection="column"
       gap={1}
-      paddingRight={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Box paddingTop={1}>
-        <Typography>
-          Add filters to decide what areas you see on the map.
-        </Typography>
-      </Box>
-      <Box display="flex" flexDirection="column" flexGrow={1} gap={1}>
-        <AddFilterButton
-          items={Object.values(groupsById).map((item) => {
-            const groupId = item.group?.id ?? 0;
-            const selected = activeGroupIds.includes(groupId);
-
-            return {
-              icon: <Checkbox checked={selected} />,
-              label: item.group ? item.group.title : 'Ungrouped tags',
-              onClick: () => {
-                if (selected) {
-                  setActiveGroupIds(
-                    activeGroupIds.filter((id) => groupId != id)
-                  );
-                  const newValue = { ...activeTagIdsByGroup };
-                  delete newValue[groupId];
-                  setActiveTagIdsByGroup(newValue);
-                } else {
-                  setActiveGroupIds([...activeGroupIds, groupId]);
-                  setOpenTagsDropdown(groupId);
-                }
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexGrow={1}
+        gap={1}
+        paddingTop={2}
+      >
+        <Box alignItems="center" display="flex">
+          <FilterDropDown
+            items={[
+              {
+                icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
+                label: 'Only assigned areas',
+                onClick: () => {
+                  if (!assigneesFilter || assigneesFilter == 'unassigned') {
+                    onAssigneesFilterChange('assigned');
+                  } else {
+                    onAssigneesFilterChange(null);
+                  }
+                },
               },
-            };
-          })}
-          onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
-          open={openTagsDropdown == 'add'}
-        />
-        <FilterDropDown
-          items={[
-            {
-              icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
-              label: 'Only assigned areas',
-              onClick: () => {
-                if (!assigneesFilter || assigneesFilter == 'unassigned') {
-                  onAssigneesFilterChange('assigned');
-                } else {
-                  onAssigneesFilterChange(null);
-                }
+              {
+                icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
+                label: 'Only unassigned areas',
+                onClick: () => {
+                  if (!assigneesFilter || assigneesFilter == 'assigned') {
+                    onAssigneesFilterChange('unassigned');
+                  } else {
+                    onAssigneesFilterChange(null);
+                  }
+                },
               },
-            },
-            {
-              icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
-              label: 'Only unassigned areas',
-              onClick: () => {
-                if (!assigneesFilter || assigneesFilter == 'assigned') {
-                  onAssigneesFilterChange('unassigned');
-                } else {
-                  onAssigneesFilterChange(null);
-                }
-              },
-            },
-          ]}
-          label="Assignees"
-          onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
-          open={openAssigneesDropdown}
-          startIcon={
-            assigneesFilter ? (
-              <Box
-                sx={{
-                  // TODO: Use ZUI for this
-                  alignItems: 'center',
-                  aspectRatio: '1/1',
-                  backgroundColor: theme.palette.primary.light,
-                  borderRadius: '50%',
-                  color: theme.palette.primary.contrastText,
-                  display: 'flex',
-                  height: '1.2em',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography
+            ]}
+            label="Assignees"
+            onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
+            open={openAssigneesDropdown}
+            startIcon={
+              assigneesFilter ? (
+                <Box
                   sx={{
-                    fontSize: '0.75rem',
-                    margin: 0,
+                    // TODO: Use ZUI for this
+                    alignItems: 'center',
+                    aspectRatio: '1/1',
+                    backgroundColor: theme.palette.primary.light,
+                    borderRadius: '50%',
+                    color: theme.palette.primary.contrastText,
+                    display: 'flex',
+                    height: '1.2em',
+                    justifyContent: 'center',
                   }}
                 >
-                  {1}
-                </Typography>
-              </Box>
-            ) : null
-          }
-          variant="outlined"
-        />
+                  <Typography
+                    sx={{
+                      fontSize: '0.75rem',
+                      margin: 0,
+                    }}
+                  >
+                    {1}
+                  </Typography>
+                </Box>
+              ) : null
+            }
+            variant="outlined"
+          />
+          <IconButton disabled>
+            <Close />
+          </IconButton>
+        </Box>
         {activeGroupIds.map((groupId) => {
           const info = groupsById[groupId];
           const currentIds = activeTagIdsByGroup[groupId] || [];
@@ -248,6 +227,30 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           }
         })}
       </Box>
+      <AddFilterButton
+        items={Object.values(groupsById).map((item) => {
+          const groupId = item.group?.id ?? 0;
+          const selected = activeGroupIds.includes(groupId);
+
+          return {
+            icon: <Checkbox checked={selected} />,
+            label: item.group ? item.group.title : 'Ungrouped tags',
+            onClick: () => {
+              if (selected) {
+                setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));
+                const newValue = { ...activeTagIdsByGroup };
+                delete newValue[groupId];
+                setActiveTagIdsByGroup(newValue);
+              } else {
+                setActiveGroupIds([...activeGroupIds, groupId]);
+                setOpenTagsDropdown(groupId);
+              }
+            },
+          };
+        })}
+        onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
+        open={openTagsDropdown == 'add'}
+      />
     </Box>
   );
 };

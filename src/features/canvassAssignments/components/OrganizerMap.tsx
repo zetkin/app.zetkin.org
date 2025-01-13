@@ -230,7 +230,8 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               maxWidth: 400,
               minWidth: 400,
               overflow: 'hidden',
-              padding: 2,
+              paddingX: 2,
+              paddingY: 1,
               position: 'absolute',
               right: '1rem',
               top: '1rem',
@@ -266,7 +267,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   alignItems="center"
                   display="flex"
                   justifyContent="space-between"
-                  paddingBottom={1}
                 >
                   <Typography variant="h5">
                     {settingsOpen == 'filters' ? 'Filters' : 'Map style'}
@@ -275,6 +275,11 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     <Close />
                   </IconButton>
                 </Box>
+                {settingsOpen == 'filters' && (
+                  <Typography color="secondary" paddingBottom={1}>
+                    Define what areas you see on the map
+                  </Typography>
+                )}
                 <Divider />
                 {settingsOpen == 'layers' && (
                   <LayerSettings

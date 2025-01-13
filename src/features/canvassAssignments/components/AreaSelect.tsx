@@ -79,7 +79,7 @@ const AreaSelect: FC<Props> = ({
 
   return (
     <>
-      <Box paddingBottom={1}>
+      <Box>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box alignItems="center" display="flex">
             {selectedArea && (
@@ -91,7 +91,7 @@ const AreaSelect: FC<Props> = ({
               <Typography variant="h5">
                 {selectedArea
                   ? selectedArea?.title || 'Untitled area'
-                  : 'Find area'}
+                  : 'Areas'}
               </Typography>
               <Typography
                 fontStyle={
