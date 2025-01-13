@@ -1,10 +1,17 @@
-import { useEditorEvent, useEditorState, useEditorView } from '@remirror/react';
+import {
+  useEditorEvent,
+  useEditorState,
+  useEditorView,
+  usePositioner,
+} from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { findParentNode, isNodeSelection, ProsemirrorNode } from 'remirror';
+import { Box } from '@mui/material';
 
 import BlockToolbar from './BlockToolbar';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
+import useBlockMenu from './useBlockMenu';
 
 export type BlockDividerData = {
   pos: number;
@@ -21,6 +28,8 @@ type Props = {
 const Tools: FC<Props> = ({ blocks }) => {
   const view = useEditorView();
   const state = useEditorState();
+  const positioner = usePositioner('cursor');
+  const { isOpen: showBlockMenu } = useBlockMenu(blocks);
 
   const [typing, setTyping] = useState(false);
   const [curBlockY, setCurBlockY] = useState<number>(-1);
@@ -89,10 +98,6 @@ const Tools: FC<Props> = ({ blocks }) => {
     }
   }, [state.selection]);
 
-  //View.hasFocus() returnerar true om klick kommer från resten av sidan
-  const showBlockToolbar =
-    !!curBlockType && curBlockY >= 0 && view.hasFocus() && !typing;
-
   let pos = 0;
   const blockDividers: BlockDividerData[] = [
     {
@@ -112,6 +117,15 @@ const Tools: FC<Props> = ({ blocks }) => {
     }),
   ];
 
+  const showBlockToolbar =
+    !showBlockMenu &&
+    !!curBlockType &&
+    curBlockY >= 0 &&
+    view.hasFocus() &&
+    !typing;
+
+  const showBlockInsert = !showBlockMenu && !typing;
+
   return (
     <>
       {showBlockToolbar && (
@@ -121,8 +135,21 @@ const Tools: FC<Props> = ({ blocks }) => {
           pos={state.selection.$anchor.pos}
         />
       )}
-      <BlockInsert blockDividers={blockDividers} mouseY={mouseY} />
-      <BlockMenu blocks={blocks} />
+      {showBlockInsert && (
+        <BlockInsert blockDividers={blockDividers} mouseY={mouseY} />
+      )}
+      <Box position="relative">
+        <Box
+          ref={positioner.ref}
+          sx={{
+            left: positioner.x,
+            position: 'absolute',
+            top: positioner.y,
+          }}
+        >
+          {showBlockMenu && <BlockMenu blocks={blocks} />}
+        </Box>
+      </Box>
     </>
   );
 };
