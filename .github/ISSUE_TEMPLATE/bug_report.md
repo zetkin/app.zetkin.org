@@ -6,7 +6,8 @@ labels: bug
 assignees: ''
 ---
 
-**Please be as thorough as possible, but if you can't answer everything, please just submit what you have! Thank you!**
+**Please be as thorough as possible, but if you can't answer everything, please
+just submit what you have! Thank you!**
 
 ## Description
 
@@ -31,4 +32,5 @@ assignees: ''
 
 ## Screenshots
 
-**Provide at least one fullscreen screenshot (preferably including URL bar) for context**
+**Provide at least one fullscreen screenshot (preferably including URL bar) for
+context**
