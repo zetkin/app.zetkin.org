@@ -35,7 +35,7 @@ const PlaceMarker: FC<{
       <DivIconMarker
         iconAnchor={[2, 2]}
         position={place.position}
-        zIndexOffset={-10}
+        zIndexOffset={-1000}
       >
         <Box
           bgcolor={theme.palette.text.primary}
@@ -62,9 +62,9 @@ const PlaceMarker: FC<{
             color={theme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
-            fontSize="12px"
+            fontSize="14px"
             justifyContent="center"
-            paddingX="2px"
+            paddingX="10px"
             width="100%"
           >
             {place.households.length}
@@ -447,9 +447,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                           borderRadius: '2em',
                           display: 'flex',
                           flexDirection: 'row',
-                          height: '20px',
+                          height: '30px',
                           justifyContent: 'center',
-                          width: '20px',
+                          width: '30px',
                         }}
                       />
                     </Box>
