@@ -1,54 +1,18 @@
 import { Add } from '@mui/icons-material';
 import { IconButton, Paper } from '@mui/material';
 import { Box } from '@mui/system';
-import { useCommands, useEditorState, useEditorView } from '@remirror/react';
-import { FC, useEffect, useState } from 'react';
+import { useCommands } from '@remirror/react';
+import { FC } from 'react';
 
-type BlockDividerData = {
-  pos: number;
-  y: number;
+import { BlockDividerData } from './index';
+
+type BlockInsertProps = {
+  blockDividers: BlockDividerData[];
+  mouseY: number;
 };
 
-const BlockInsert: FC = () => {
-  const view = useEditorView();
-  const state = useEditorState();
-  const [mouseY, setMouseY] = useState(-Infinity);
+const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
   const { insertParagraph, focus } = useCommands();
-
-  useEffect(() => {
-    const handleMouseMove = (ev: Event) => {
-      if (ev.type == 'mousemove') {
-        const mouseEvent = ev as MouseEvent;
-        const editorRect = view.dom.getBoundingClientRect();
-        setMouseY(mouseEvent.clientY - editorRect.y);
-      }
-    };
-
-    view.root.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      view.root.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [view.root]);
-
-  let pos = 0;
-  const blockDividers: BlockDividerData[] = [
-    {
-      pos: 0,
-      y: 0,
-    },
-    ...state.doc.children.map((blockNode) => {
-      pos += blockNode.nodeSize;
-      const rect = view.coordsAtPos(pos - 1);
-
-      const containerRect = view.dom.getBoundingClientRect();
-
-      return {
-        pos: pos,
-        y: rect.bottom - containerRect.top,
-      };
-    }),
-  ];
 
   return (
     <Box position="relative">
