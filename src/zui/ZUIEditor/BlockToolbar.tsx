@@ -10,18 +10,14 @@ import { findParentNode, isNodeSelection, ProsemirrorNode } from 'remirror';
 
 const BlockToolbar: FC = () => {
   const [typing, setTyping] = useState(false);
-  const [curBlockPos, setCurBlockPos] = useState<number>(-1);
+  const [curBlockY, setCurBlockY] = useState<number>(-1);
   const [curBlockType, setCurBlockType] = useState<string>();
   const view = useEditorView();
   const state = useEditorState();
-  const { convertParagraph, setImageFile, toggleHeading } = useCommands();
+  const { convertParagraph, toggleHeading, pickImage } = useCommands();
 
   useEditorEvent('keyup', () => {
     setTyping(true);
-  });
-
-  useEditorEvent('blur', () => {
-    setCurBlockPos(-1);
   });
 
   useEffect(() => {
@@ -72,13 +68,12 @@ const BlockToolbar: FC = () => {
     if (node && nodeElem) {
       const editorRect = view.dom.getBoundingClientRect();
       const nodeRect = nodeElem.getBoundingClientRect();
-      setCurBlockPos(nodeRect.y - editorRect.y);
+      setCurBlockY(nodeRect.y - editorRect.y);
       setCurBlockType(node.type.name);
     }
   }, [state.selection]);
 
-  const showBar =
-    curBlockType && curBlockPos >= 0 && view.hasFocus() && !typing;
+  const showBar = curBlockType && curBlockY >= 0 && view.hasFocus() && !typing;
 
   return (
     <Box position="relative">
@@ -88,7 +83,7 @@ const BlockToolbar: FC = () => {
           opacity: showBar ? 1 : 0,
           pointerEvents: showBar ? 'auto' : 'none',
           position: 'absolute',
-          top: curBlockPos - 50,
+          top: curBlockY - 50,
           transition: 'opacity 0.5s',
           zIndex: 10000,
         }}
@@ -96,7 +91,13 @@ const BlockToolbar: FC = () => {
         <Paper elevation={1} sx={{ p: 1 }}>
           {curBlockType}
           {curBlockType == 'zimage' && (
-            <Button onClick={() => setImageFile(null)}>Change image</Button>
+            <Button
+              onClick={() => {
+                pickImage(state.selection.$anchor.pos);
+              }}
+            >
+              Change image
+            </Button>
           )}
           {curBlockType == 'heading' && (
             <Button onClick={() => convertParagraph()}>
