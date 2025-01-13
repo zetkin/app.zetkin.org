@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { ChevronLeft, Close, Search } from '@mui/icons-material';
 import {
   Box,
-  Button,
   Divider,
   IconButton,
   lighten,
@@ -23,6 +22,8 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../utils/isPointInsidePolygon';
 import useCanvassSessionMutations from '../hooks/useCanvassSessionMutations';
 import { useNumericRouteParams } from 'core/hooks';
+import theme from 'theme';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 type Props = {
   areas: ZetkinArea[];
@@ -86,11 +87,24 @@ const AreaSelect: FC<Props> = ({
                 <ChevronLeft />
               </IconButton>
             )}
-            <Typography variant="h5">
-              {selectedArea
-                ? selectedArea?.title || 'Untitled area'
-                : 'Find area'}
-            </Typography>
+            <Box>
+              <Typography variant="h5">
+                {selectedArea
+                  ? selectedArea?.title || 'Untitled area'
+                  : 'Find area'}
+              </Typography>
+              <Typography
+                fontStyle={
+                  selectedArea?.description?.trim().length
+                    ? 'inherit'
+                    : 'italic'
+                }
+                sx={{ overflowWrap: 'anywhere' }}
+              >
+                {selectedArea &&
+                  (selectedArea?.description?.trim() || 'Empty description')}
+              </Typography>
+            </Box>
           </Box>
           <IconButton onClick={() => onClose()}>
             <Close />
@@ -135,16 +149,28 @@ const AreaSelect: FC<Props> = ({
                     display="flex"
                     justifyContent="space-between"
                     onClick={() => onSelectArea(area.id)}
-                    sx={{ cursor: 'pointer' }}
+                    role="button"
+                    sx={{
+                      '&:hover': {
+                        color: theme.palette.primary.main,
+                      },
+                      cursor: 'pointer',
+                      padding: 1,
+                    }}
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>
                     <Box display="flex">
                       {assignees.map((assignee) => (
-                        <ZUIAvatar
+                        <ZUIPersonHoverCard
                           key={assignee.id}
-                          size="sm"
-                          url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
-                        />
+                          personId={assignee.id}
+                        >
+                          <ZUIAvatar
+                            key={assignee.id}
+                            size="sm"
+                            url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
+                          />
+                        </ZUIPersonHoverCard>
                       ))}
                     </Box>
                   </Box>
@@ -182,7 +208,7 @@ const AreaSelect: FC<Props> = ({
                     })}
                     variant="h5"
                   >
-                    {selectedAreaStats.num_visited_households}
+                    {selectedAreaStats.num_visited_households || 0}
                   </Typography>
                   <Typography textAlign="center">Visited households</Typography>
                 </Box>
@@ -201,15 +227,6 @@ const AreaSelect: FC<Props> = ({
               <Typography textAlign="center">Places</Typography>
             </Box>
           </Box>
-          <Typography
-            fontStyle={
-              selectedArea?.description?.trim().length ? 'inherit' : 'italic'
-            }
-            sx={{ overflowWrap: 'anywhere' }}
-          >
-            {selectedArea &&
-              (selectedArea?.description?.trim() || 'Empty description')}
-          </Typography>
           <Box>
             <Typography variant="h6">Assignees </Typography>
             {!selectedAreaAssignees.length && (
@@ -225,21 +242,29 @@ const AreaSelect: FC<Props> = ({
             )}
             {selectedAreaAssignees.map((assignee) => (
               <Box key={assignee.id} display="flex" my={1}>
-                <ZUIPerson
-                  id={assignee.id}
-                  name={`${assignee.first_name} ${assignee.last_name}`}
-                />
-                <Button
+                <ZUIPersonHoverCard personId={assignee.id}>
+                  <ZUIPerson
+                    id={assignee.id}
+                    name={`${assignee.first_name} ${assignee.last_name}`}
+                  />
+                </ZUIPersonHoverCard>
+                <IconButton
                   color="secondary"
                   onClick={() => deleteSession(selectedArea.id, assignee.id)}
                 >
                   <Close />
-                </Button>
+                </IconButton>
               </Box>
             ))}
             <Box mt={2}>
               <Typography variant="h6">Add assignee</Typography>
               <ZUIPersonSelect
+                disabled
+                getOptionDisabled={(person) =>
+                  selectedAreaAssignees.some(
+                    (assignee) => assignee.id == person.id
+                  )
+                }
                 onChange={function (person: ZetkinPerson): void {
                   onAddAssignee(person);
                 }}
