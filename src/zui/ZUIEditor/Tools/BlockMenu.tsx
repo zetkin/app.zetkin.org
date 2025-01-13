@@ -7,7 +7,7 @@ import {
 } from '@remirror/react';
 import { FC, useState } from 'react';
 
-import BlockMenuExtension from './extensions/BlockMenuExtension';
+import BlockMenuExtension from '../extensions/BlockMenuExtension';
 
 type Props = {
   blocks: {
