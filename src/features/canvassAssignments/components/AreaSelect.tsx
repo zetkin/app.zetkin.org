@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ChevronLeft, Close, Search } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
 import {
   Box,
   Divider,
@@ -118,7 +118,7 @@ const AreaSelect: FC<Props> = ({
           flexDirection="column"
           gap={1}
           overflow="hidden"
-          paddingTop={1}
+          paddingTop={2}
         >
           <TextField
             InputProps={{
@@ -126,7 +126,7 @@ const AreaSelect: FC<Props> = ({
             }}
             onChange={(evt) => onFilterTextChange(evt.target.value)}
             placeholder="Filter"
-            sx={{ paddingRight: 2 }}
+            size="small"
             value={filterText}
             variant="outlined"
           />
@@ -134,7 +134,6 @@ const AreaSelect: FC<Props> = ({
             display="flex"
             flexDirection="column"
             gap={1}
-            paddingRight={2}
             sx={{ overflowY: 'auto' }}
           >
             {filterAreas(areas, filterText).map((area, index) => {
@@ -159,19 +158,47 @@ const AreaSelect: FC<Props> = ({
                     }}
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>
-                    <Box display="flex">
-                      {assignees.map((assignee) => (
-                        <ZUIPersonHoverCard
-                          key={assignee.id}
-                          personId={assignee.id}
-                        >
-                          <ZUIAvatar
-                            key={assignee.id}
-                            size="sm"
-                            url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
-                          />
-                        </ZUIPersonHoverCard>
-                      ))}
+                    <Box alignItems="center" display="flex">
+                      {assignees.map((assignee, index) => {
+                        if (index <= 3) {
+                          return (
+                            <Box key={assignee.id} marginX={0.2}>
+                              <ZUIPersonHoverCard
+                                key={assignee.id}
+                                personId={assignee.id}
+                              >
+                                <ZUIAvatar
+                                  key={assignee.id}
+                                  size="sm"
+                                  url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
+                                />
+                              </ZUIPersonHoverCard>
+                            </Box>
+                          );
+                        } else if (index == 4) {
+                          return (
+                            <Box
+                              alignItems="center"
+                              bgcolor={theme.palette.grey[300]}
+                              borderRadius="100%"
+                              display="flex"
+                              height="30px"
+                              justifyContent="center"
+                              padding={1}
+                              width="30px"
+                            >
+                              <Typography color="secondary" fontSize={14}>{`+${
+                                assignees.length - 4
+                              }`}</Typography>
+                            </Box>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                      <Box ml={1}>
+                        <ChevronRight />
+                      </Box>
                     </Box>
                   </Box>
                 </>
