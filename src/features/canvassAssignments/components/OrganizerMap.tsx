@@ -31,6 +31,7 @@ import LayerSettings from './LayerSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
+import theme from 'theme';
 
 type OrganizerMapProps = {
   areaStats: ZetkinAssignmentAreaStats;
@@ -170,7 +171,17 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             zIndex: 999,
           }}
         >
-          <ButtonGroup orientation="vertical" variant="contained">
+          <ButtonGroup
+            orientation="vertical"
+            sx={{
+              '& .MuiButton-root': {
+                height: 40,
+                width: 40,
+              },
+              bgcolor: theme.palette.background.default,
+            }}
+            variant="outlined"
+          >
             <Button
               onClick={() => {
                 if (settingsOpen == 'filters') {

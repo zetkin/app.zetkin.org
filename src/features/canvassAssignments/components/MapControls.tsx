@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
 
+import theme from 'theme';
+
 type MapControlsProps = {
   map: Map | null;
   onFitBounds: () => void;
@@ -21,7 +23,17 @@ const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
         zIndex: 999,
       }}
     >
-      <ButtonGroup orientation="vertical" variant="contained">
+      <ButtonGroup
+        orientation="vertical"
+        sx={{
+          '& .MuiButton-root': {
+            height: 40,
+            width: 40,
+          },
+          bgcolor: theme.palette.background.default,
+        }}
+        variant="outlined"
+      >
         <Button onClick={() => map?.zoomIn()}>
           <Add />
         </Button>
