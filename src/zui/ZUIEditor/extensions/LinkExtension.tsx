@@ -49,7 +49,6 @@ class LinkExtension extends MarkExtension<LinkOptions> {
             };
           },
           tag: 'a',
-          //Sätt href-propertyn till värdet href från options
         } as TagParseRule,
         ...(override.parseDOM ?? []),
       ],
