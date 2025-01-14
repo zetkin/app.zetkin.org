@@ -18,6 +18,11 @@ export type BlockDividerData = {
   y: number;
 };
 
+type BlockData = {
+  rect: DOMRect;
+  type: string;
+};
+
 type Props = {
   blocks: {
     id: string;
@@ -33,10 +38,7 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
 
   const [typing, setTyping] = useState(false);
   const [mouseY, setMouseY] = useState(-Infinity);
-
-  //ett "curBlock"-state
-  const [curBlockRect, setCurBlockRect] = useState<DOMRect | null>(null);
-  const [curBlockType, setCurBlockType] = useState<string>();
+  const [currentBlock, setCurrentBlock] = useState<BlockData | null>(null);
 
   const findSelectedNode = useCallback(() => {
     let node: ProsemirrorNode | null = null;
@@ -76,13 +78,15 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
       const nodeRect = nodeElem.getBoundingClientRect();
       const x = nodeRect.x - editorRect.x;
       const y = nodeRect.y - editorRect.y;
-      setCurBlockType(node.type.name);
-      setCurBlockRect({
-        ...nodeRect.toJSON(),
-        left: x,
-        top: y,
-        x: x,
-        y: y,
+      setCurrentBlock({
+        rect: {
+          ...nodeRect.toJSON(),
+          left: x,
+          top: y,
+          x: x,
+          y: y,
+        },
+        type: node.type.name,
       });
     }
   }, [view, state.selection]);
@@ -141,27 +145,31 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
   ];
 
   const showBlockToolbar =
-    !showBlockMenu && !!curBlockType && view.hasFocus() && !typing;
+    !showBlockMenu && !!currentBlock && view.hasFocus() && !typing;
 
   const showBlockInsert = !showBlockMenu && !typing;
 
+  const showSelectedBlockOutline = !!currentBlock;
+
   return (
     <>
-      <Box position="relative">
-        <Box
-          border={1}
-          height={curBlockRect?.height}
-          left={curBlockRect?.left}
-          position="absolute"
-          sx={{ pointerEvents: 'none' }}
-          top={curBlockRect?.top}
-          width={curBlockRect?.width}
-        />
-      </Box>
+      {showSelectedBlockOutline && (
+        <Box position="relative">
+          <Box
+            border={1}
+            height={currentBlock?.rect.height}
+            left={currentBlock?.rect.left}
+            position="absolute"
+            sx={{ pointerEvents: 'none' }}
+            top={currentBlock?.rect.top}
+            width={currentBlock?.rect.width}
+          />
+        </Box>
+      )}
       {showBlockToolbar && (
         <BlockToolbar
-          curBlockType={curBlockType || ''}
-          curBlockY={curBlockRect?.y ?? 0}
+          curBlockType={currentBlock.type}
+          curBlockY={currentBlock.rect.y}
           pos={state.selection.$anchor.pos}
         />
       )}
