@@ -296,8 +296,6 @@ feat:
         create: Create project
         error: There was an error creating the project
         newCampaign: My project
-      createCanvassAssignment:
-        defaultQuestion: Did you complete the mission?
       createEmail:
         newEmail: Untitled email
       createSurvey:

@@ -115,7 +115,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Architecture />, name: 'projects' },
     { icon: <Explore />, name: 'journeys' },
     { icon: <LocalOffer />, name: 'tags' },
-    { icon: <Map />, name: 'areas' },
+    { icon: <Map />, name: 'geography' },
     { icon: <Settings />, name: 'settings' },
   ] as const;
 
@@ -286,7 +286,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 )}
               />
               {menuItemsMap.map(({ name, icon }) => {
-                if (name == 'areas' && !hasAreas) {
+                if (name == 'geography' && !hasAreas) {
                   return null;
                 }
 
