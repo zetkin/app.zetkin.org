@@ -318,7 +318,7 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
                   {metricBeingDeleted?.definesDone ? (
                     <Typography>
                       {`If you want to delete "${metricBeingDeleted.question}
-                    }" you need to pick another
+                    " you need to pick another
                   choice question to be the question that defines if the mision
                   was successful`}
                     </Typography>
