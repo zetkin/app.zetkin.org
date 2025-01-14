@@ -9,8 +9,6 @@ import {
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import {
-  Alert,
-  AlertTitle,
   alpha,
   Box,
   Button,
@@ -20,7 +18,6 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
-  Grid,
   IconButton,
   Radio,
   RadioGroup,
@@ -28,19 +25,19 @@ import {
 } from '@mui/material';
 
 import { AREAS } from 'utils/featureFlags';
+import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
+import MetricCard from 'features/areaAssignments/components/MetricCard';
+import { PageWithLayout } from 'utils/types';
+import { scaffold } from 'utils/next';
 import theme from 'theme';
+import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
+import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
-import { PageWithLayout } from 'utils/types';
 import {
   ZetkinAreaAssignment,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
-import { scaffold } from 'utils/next';
-import MetricCard from 'features/areaAssignments/components/MetricCard';
-import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
-import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
-import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -115,16 +112,6 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
       {(assignment: ZetkinAreaAssignment) => (
         <Box display="flex">
           <Box width="60%">
-            <Alert
-              iconMapping={{
-                info: <AdsClickIcon fontSize="inherit" />,
-              }}
-              severity="info"
-            >
-              <AlertTitle>Define successful visit</AlertTitle>
-              Decide what metric to use for a visit to count as successful by
-              clicking this symbol.
-            </Alert>
             <Box mt={2}>
               {assignment.metrics.length > 0 && (
                 <Typography variant="h4">Log survey</Typography>
@@ -175,7 +162,6 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
                                 mr={1}
                                 p={0.5}
                               >
-                                <AdsClickIcon />
                                 <Typography ml={1}>Defines success</Typography>
                               </Box>
                             )}
@@ -318,8 +304,7 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
 
                   {metricBeingDeleted?.definesDone ? (
                     <Typography>
-                      {`If you want to delete "${metricBeingDeleted.question}
-                    " you need to pick another
+                      {`If you want to delete "${metricBeingDeleted.question}" you need to pick another
                   choice question to be the question that defines if the mision
                   was successful`}
                     </Typography>
@@ -410,9 +395,11 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
             </Box>
           </Box>
           <Box ml={2} width="40%">
-            <ZUICard header="Data collection" sx={{ mb: 2 }}>
-              <Typography mb={2}>
-                Decide what level of precision should be used for statistics.
+            <ZUICard header="Data precision & privacy" sx={{ mb: 2 }}>
+              <Typography color="secondary" mb={2}>
+                Configuring where to store the data is a matter of striking a
+                balance between precision and privacy that is right for your
+                cause
               </Typography>
               <Divider />
               <FormControl>
@@ -427,75 +414,19 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
                   }}
                   value={assignment.reporting_level}
                 >
-                  <Box mt={2}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6}>
-                        <Card
-                          onClick={() =>
-                            updateAreaAssignment({
-                              reporting_level: 'household',
-                            })
-                          }
-                          sx={{
-                            border:
-                              assignment.reporting_level === 'household'
-                                ? `1px solid ${theme.palette.primary.main}`
-                                : `1px solid ${theme.palette.grey[300]}`,
-                            cursor: 'pointer',
-                            height: '100%',
-                          }}
-                        >
-                          <Box p={1}>
-                            <FormControlLabel
-                              control={<Radio />}
-                              label={
-                                <Typography variant="h6">Household</Typography>
-                              }
-                              sx={{ pointerEvents: 'none' }}
-                              value="household"
-                            />
-                          </Box>
-                          <Divider />
-                          <Typography p={2}>
-                            Collect the most precise data.
-                          </Typography>
-                        </Card>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Card
-                          onClick={() =>
-                            updateAreaAssignment({
-                              reporting_level: 'location',
-                            })
-                          }
-                          sx={{
-                            border:
-                              assignment.reporting_level === 'location'
-                                ? `1px solid ${theme.palette.primary.main}`
-                                : `1px solid ${theme.palette.grey[300]}`,
-                            cursor: 'pointer',
-                            height: '100%',
-                          }}
-                        >
-                          <Box p={1}>
-                            <FormControlLabel
-                              control={<Radio />}
-                              label={
-                                <Typography variant="h6">Location</Typography>
-                              }
-                              sx={{ pointerEvents: 'none' }}
-                              value="place"
-                            />
-                          </Box>
-                          <Divider />
-                          <Typography p={2}>
-                            Collect data only on places, preserving some
-                            privacy.
-                          </Typography>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                  </Box>
+                  <Typography mt={1}>Collect data..</Typography>
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="per household (more precise)"
+                    sx={{ ml: 1 }}
+                    value="household"
+                  />
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="per location (more privacy)"
+                    sx={{ ml: 1 }}
+                    value="location"
+                  />
                 </RadioGroup>
               </FormControl>
             </ZUICard>
