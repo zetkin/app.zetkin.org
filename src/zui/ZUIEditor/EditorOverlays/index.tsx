@@ -4,7 +4,7 @@ import {
   useEditorView,
   usePositioner,
 } from '@remirror/react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { findParentNode, isNodeSelection, ProsemirrorNode } from 'remirror';
 import { Box } from '@mui/material';
 
@@ -25,39 +25,20 @@ type Props = {
   }[];
 };
 
-const Tools: FC<Props> = ({ blocks }) => {
+const EditorOverlays: FC<Props> = ({ blocks }) => {
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
   const { isOpen: showBlockMenu } = useBlockMenu(blocks);
 
   const [typing, setTyping] = useState(false);
-  const [curBlockY, setCurBlockY] = useState<number>(-1);
-  const [curBlockType, setCurBlockType] = useState<string>();
   const [mouseY, setMouseY] = useState(-Infinity);
 
-  useEditorEvent('keyup', () => {
-    setTyping(true);
-  });
+  //ett "curBlock"-state
+  const [curBlockRect, setCurBlockRect] = useState<DOMRect | null>(null);
+  const [curBlockType, setCurBlockType] = useState<string>();
 
-  useEffect(() => {
-    const handleMouseMove = (ev: Event) => {
-      if (ev.type == 'mousemove') {
-        const mouseEvent = ev as MouseEvent;
-        const editorRect = view.dom.getBoundingClientRect();
-        setMouseY(mouseEvent.clientY - editorRect.y);
-      }
-      setTyping(false);
-    };
-
-    view.root.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      view.root.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [view.root]);
-
-  useEffect(() => {
+  const findSelectedNode = useCallback(() => {
     let node: ProsemirrorNode | null = null;
     let nodeElem: HTMLElement | null = null;
     if (isNodeSelection(state.selection)) {
@@ -93,9 +74,51 @@ const Tools: FC<Props> = ({ blocks }) => {
     if (node && nodeElem) {
       const editorRect = view.dom.getBoundingClientRect();
       const nodeRect = nodeElem.getBoundingClientRect();
-      setCurBlockY(nodeRect.y - editorRect.y);
+      const x = nodeRect.x - editorRect.x;
+      const y = nodeRect.y - editorRect.y;
       setCurBlockType(node.type.name);
+      setCurBlockRect({
+        ...nodeRect.toJSON(),
+        left: x,
+        top: y,
+        x: x,
+        y: y,
+      });
     }
+  }, [view, state.selection]);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(findSelectedNode);
+    if (view.dom) {
+      observer.observe(view.dom);
+    }
+
+    return () => observer.disconnect();
+  }, [view.dom, findSelectedNode, state.selection]);
+
+  useEditorEvent('keyup', () => {
+    setTyping(true);
+  });
+
+  useEffect(() => {
+    const handleMouseMove = (ev: Event) => {
+      if (ev.type == 'mousemove') {
+        const mouseEvent = ev as MouseEvent;
+        const editorRect = view.dom.getBoundingClientRect();
+        setMouseY(mouseEvent.clientY - editorRect.y);
+      }
+      setTyping(false);
+    };
+
+    view.root.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      view.root.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [view.root]);
+
+  useEffect(() => {
+    findSelectedNode();
   }, [state.selection]);
 
   let pos = 0;
@@ -118,20 +141,27 @@ const Tools: FC<Props> = ({ blocks }) => {
   ];
 
   const showBlockToolbar =
-    !showBlockMenu &&
-    !!curBlockType &&
-    curBlockY >= 0 &&
-    view.hasFocus() &&
-    !typing;
+    !showBlockMenu && !!curBlockType && view.hasFocus() && !typing;
 
   const showBlockInsert = !showBlockMenu && !typing;
 
   return (
     <>
+      <Box position="relative">
+        <Box
+          border={1}
+          height={curBlockRect?.height}
+          left={curBlockRect?.left}
+          position="absolute"
+          sx={{ pointerEvents: 'none' }}
+          top={curBlockRect?.top}
+          width={curBlockRect?.width}
+        />
+      </Box>
       {showBlockToolbar && (
         <BlockToolbar
           curBlockType={curBlockType || ''}
-          curBlockY={curBlockY}
+          curBlockY={curBlockRect?.y ?? 0}
           pos={state.selection.$anchor.pos}
         />
       )}
@@ -154,4 +184,4 @@ const Tools: FC<Props> = ({ blocks }) => {
   );
 };
 
-export default Tools;
+export default EditorOverlays;

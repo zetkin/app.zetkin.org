@@ -17,7 +17,7 @@ import ImageExtensionUI from './ImageExtensionUI';
 import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
-import Tools from './Tools';
+import EditorOverlays from './EditorOverlays';
 
 type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
 
@@ -109,7 +109,7 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
     >
       <div style={{ minHeight: '200px' }}>
         <Remirror initialContent={state} manager={manager}>
-          <Tools
+          <EditorOverlays
             blocks={extensions.map((ext) => ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
