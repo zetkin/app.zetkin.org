@@ -59,9 +59,10 @@ interface AreaAssignmentLoggingProps {
   areaAssId: string;
 }
 
-const CanvassAssignmentLoggingPage: PageWithLayout<
-  AreaAssignmentLoggingProps
-> = ({ orgId, areaAssId }) => {
+const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
+  orgId,
+  areaAssId,
+}) => {
   const { updateAreaAssignment } = useAreaAssignmentMutations(
     parseInt(orgId),
     areaAssId
@@ -505,6 +506,8 @@ const CanvassAssignmentLoggingPage: PageWithLayout<
   );
 };
 
-CanvassAssignmentLoggingPage.getLayout = function getLayout(page) {
+AreaAssignmentLoggingPage.getLayout = function getLayout(page) {
   return <AreaAssignmentLayout {...page.props}>{page}</AreaAssignmentLayout>;
 };
+
+export default AreaAssignmentLoggingPage;
