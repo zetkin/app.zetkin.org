@@ -6,6 +6,7 @@ import {
 } from '@remirror/react';
 import { FC } from 'react';
 import { BoldExtension, HeadingExtension } from 'remirror/extensions';
+import { PasteRulesExtension } from 'remirror';
 import { Box } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
@@ -66,6 +67,7 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
       type: 'doc',
     },
     extensions: () => [
+      new PasteRulesExtension({}),
       new BoldExtension({}),
       ...extensions,
       new LinkExtension(),
