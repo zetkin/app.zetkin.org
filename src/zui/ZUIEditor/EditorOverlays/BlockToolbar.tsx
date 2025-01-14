@@ -13,7 +13,8 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockY,
   pos,
 }) => {
-  const { convertParagraph, toggleHeading, pickImage } = useCommands();
+  const { convertParagraph, focus, toggleHeading, pickImage, setLink } =
+    useCommands();
 
   return (
     <Box position="relative">
@@ -26,25 +27,39 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
           zIndex: 10000,
         }}
       >
-        <Paper elevation={1} sx={{ p: 1 }}>
-          {curBlockType}
-          {curBlockType == 'zimage' && (
-            <Button
-              onClick={() => {
-                pickImage(pos);
-              }}
-            >
-              Change image
-            </Button>
-          )}
-          {curBlockType == 'heading' && (
-            <Button onClick={() => convertParagraph()}>
-              Convert to paragraph
-            </Button>
-          )}
-          {curBlockType == 'paragraph' && (
-            <Button onClick={() => toggleHeading()}>Convert to heading</Button>
-          )}
+        <Paper elevation={1}>
+          <Box alignItems="center" display="flex" padding={1}>
+            {curBlockType}
+            {curBlockType == 'zimage' && (
+              <Button
+                onClick={() => {
+                  pickImage(pos);
+                }}
+              >
+                Change image
+              </Button>
+            )}
+            {curBlockType == 'heading' && (
+              <Button onClick={() => convertParagraph()}>
+                Convert to paragraph
+              </Button>
+            )}
+            {curBlockType == 'paragraph' && (
+              <>
+                <Button onClick={() => toggleHeading()}>
+                  Convert to heading
+                </Button>
+                <Button
+                  onClick={() => {
+                    setLink();
+                    focus();
+                  }}
+                >
+                  Link
+                </Button>
+              </>
+            )}
+          </Box>
         </Paper>
       </Box>
     </Box>

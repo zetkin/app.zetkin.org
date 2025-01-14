@@ -44,7 +44,6 @@ class LinkExtension extends MarkExtension<LinkOptions> {
         {
           getAttrs: extra.parse,
           tag: 'a',
-          //Sätt href-propertyn till värdet href från options
         } as TagParseRule,
         ...(override.parseDOM ?? []),
       ],
