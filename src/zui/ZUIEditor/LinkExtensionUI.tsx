@@ -1,19 +1,14 @@
 import { Box, Paper } from '@mui/material';
-import {
-  useActive,
-  useEditorState,
-  useEditorView,
-  useExtension,
-} from '@remirror/react';
-import { FC } from 'react';
-
-import LinkExtension from './extensions/LinkExtension';
+import { useEditorState, useEditorView } from '@remirror/react';
+import { FC, useEffect, useState } from 'react';
+import { ProsemirrorNode } from 'remirror';
 
 const LinkExtensionUI: FC = () => {
-  const active = useActive();
   const state = useEditorState();
-  const linkExtension = useExtension(LinkExtension);
   const view = useEditorView();
+
+  const [selectedNodes, setSelectedNodes] = useState<ProsemirrorNode[]>([]);
+  const [selectionHasOtherNodes, setSelectionHasOtherNodes] = useState(false);
 
   const selectionCoords = view.coordsAtPos(state.selection.$from.pos);
   const editorRect = view.dom.getBoundingClientRect();
@@ -21,13 +16,24 @@ const LinkExtensionUI: FC = () => {
   const left = selectionCoords.left - editorRect.left;
   const top = selectionCoords.top - editorRect.top;
 
-  const linkIsSelected = state.doc.rangeHasMark(
-    state.selection.from,
-    state.selection.to,
-    linkExtension.type
-  );
+  useEffect(() => {
+    const linkNodes: ProsemirrorNode[] = [];
+    setSelectedNodes(linkNodes);
+    setSelectionHasOtherNodes(false);
+    state.doc.nodesBetween(state.selection.from, state.selection.to, (node) => {
+      if (node.isText) {
+        if (node.marks.some((mark) => mark.type.name == 'zlink')) {
+          linkNodes.push(node);
+          setSelectedNodes(linkNodes);
+        } else {
+          setSelectionHasOtherNodes(true);
+        }
+      }
+    });
+  }, [state.selection]);
 
-  const showLinkMaker = active.zlink() || linkIsSelected;
+  const showLinkMaker = selectedNodes.length == 1 && !selectionHasOtherNodes;
+  console;
 
   return (
     <Box position="relative">
