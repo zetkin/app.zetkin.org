@@ -52,7 +52,10 @@ export default class ImageExtension extends NodeExtension<ImageOptions> {
       parseDOM: [
         {
           getAttrs: (element) => {
-            return extra.parse(element);
+            return {
+              ...extra.parse(element),
+              src: element.getAttribute('src'),
+            };
           },
           tag: 'img',
         },
