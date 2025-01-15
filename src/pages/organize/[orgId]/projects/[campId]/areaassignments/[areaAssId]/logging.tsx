@@ -1,4 +1,3 @@
-import AdsClickIcon from '@mui/icons-material/AdsClick';
 import {
   Close,
   Delete,
@@ -19,8 +18,12 @@ import {
   FormControl,
   FormControlLabel,
   IconButton,
+  InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 
@@ -112,12 +115,9 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
       {(assignment: ZetkinAreaAssignment) => (
         <Box display="flex">
           <Box width="60%">
-            <Box mt={2}>
-              {assignment.metrics.length > 0 && (
-                <Typography variant="h4">Log survey</Typography>
-              )}
+            <Box>
               {assignment.metrics.map((metric) => (
-                <Card key={metric.id} sx={{ marginTop: 2 }}>
+                <Card key={metric.id} sx={{ mb: 2 }}>
                   <CardContent>
                     <Box display="flex">
                       <Box
@@ -162,39 +162,9 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
                                 mr={1}
                                 p={0.5}
                               >
-                                <Typography ml={1}>Defines success</Typography>
+                                <Typography px={1}>Defines success</Typography>
                               </Box>
                             )}
-                            {!metric.definesDone && metric.kind === 'boolean' && (
-                              <Button
-                                onClick={() => {
-                                  const updatedMetrics =
-                                    areaAssignmentFuture.data?.metrics.map(
-                                      (m: ZetkinMetric) => {
-                                        if (m.id === metric.id) {
-                                          return {
-                                            ...m,
-                                            definesDone: true,
-                                          };
-                                        } else {
-                                          return {
-                                            ...m,
-                                            definesDone: false,
-                                          };
-                                        }
-                                      }
-                                    );
-
-                                  updateAreaAssignment({
-                                    metrics: updatedMetrics,
-                                  });
-                                }}
-                                sx={{ marginRight: 1 }}
-                              >
-                                <AdsClickIcon />
-                              </Button>
-                            )}
-
                             <Button
                               onClick={() => setMetricBeingEdited(metric)}
                             >
@@ -395,12 +365,65 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
             </Box>
           </Box>
           <Box ml={2} width="40%">
-            <ZUICard header="Data precision & privacy" sx={{ mb: 2 }}>
-              <Typography color="secondary" mb={2}>
-                Configuring where to store the data is a matter of striking a
+            <ZUICard
+              header="Successful visit"
+              subheader=" Question to use to count a visit as successful."
+              sx={{ mb: 2 }}
+            >
+              <Divider />
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <InputLabel>Defines success</InputLabel>
+                <Select
+                  disabled={
+                    assignment.metrics.filter(
+                      (metric) => metric.kind === 'boolean'
+                    ).length <= 1
+                  }
+                  label="Defines success"
+                  onChange={(ev: SelectChangeEvent) => {
+                    const updatedMetrics =
+                      areaAssignmentFuture.data?.metrics.map(
+                        (m: ZetkinMetric) => {
+                          if (m.id === ev.target.value) {
+                            return {
+                              ...m,
+                              definesDone: true,
+                            };
+                          } else {
+                            return {
+                              ...m,
+                              definesDone: false,
+                            };
+                          }
+                        }
+                      );
+
+                    updateAreaAssignment({
+                      metrics: updatedMetrics,
+                    });
+                  }}
+                  value={
+                    assignment.metrics.find((metric) => metric.definesDone)
+                      ?.id || ''
+                  }
+                >
+                  {assignment.metrics.map((metric) =>
+                    metric.kind === 'boolean' ? (
+                      <MenuItem key={metric.id} value={metric.id}>
+                        {metric.question}
+                      </MenuItem>
+                    ) : null
+                  )}
+                </Select>
+              </FormControl>
+            </ZUICard>
+            <ZUICard
+              header="Data precision & privacy"
+              subheader="Configuring where to store the data is a matter of striking a
                 balance between precision and privacy that is right for your
-                cause
-              </Typography>
+                cause"
+              sx={{ mb: 2 }}
+            >
               <Divider />
               <FormControl>
                 <RadioGroup
