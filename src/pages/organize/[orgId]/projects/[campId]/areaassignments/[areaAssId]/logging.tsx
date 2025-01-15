@@ -440,13 +440,13 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
                   <Typography mt={1}>Collect data..</Typography>
                   <FormControlLabel
                     control={<Radio />}
-                    label="per household (more precise)"
+                    label="per household (most precise)"
                     sx={{ ml: 1 }}
                     value="household"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    label="per location (more privacy)"
+                    label="per location (less precise, more privacy)"
                     sx={{ ml: 1 }}
                     value="location"
                   />
