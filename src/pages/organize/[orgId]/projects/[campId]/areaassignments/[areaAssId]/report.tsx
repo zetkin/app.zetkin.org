@@ -54,12 +54,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   };
 }, scaffoldOptions);
 
-interface AreaAssignmentLoggingProps {
+interface AreaAssignmentReportProps {
   orgId: string;
   areaAssId: string;
 }
 
-const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
+const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   orgId,
   areaAssId,
 }) => {
@@ -460,8 +460,8 @@ const AreaAssignmentLoggingPage: PageWithLayout<AreaAssignmentLoggingProps> = ({
   );
 };
 
-AreaAssignmentLoggingPage.getLayout = function getLayout(page) {
+AreaAssignmentReportPage.getLayout = function getLayout(page) {
   return <AreaAssignmentLayout {...page.props}>{page}</AreaAssignmentLayout>;
 };
 
-export default AreaAssignmentLoggingPage;
+export default AreaAssignmentReportPage;
