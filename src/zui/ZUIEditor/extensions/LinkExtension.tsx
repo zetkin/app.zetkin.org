@@ -58,7 +58,6 @@ class LinkExtension extends MarkExtension<LinkOptions> {
           {
             ...extra.dom(node),
             href: node.attrs.href,
-            style: 'text-decoration: underline;',
           },
           0,
         ];
@@ -109,13 +108,17 @@ class LinkExtension extends MarkExtension<LinkOptions> {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
-  updateLink(attrs: LinkAttributes, range?: FromToProps): CommandFunction {
+  updateLink(attrs: LinkAttributes, range: FromToProps): CommandFunction {
     return (props) => {
       const { tr } = props;
 
       tr.setMeta(this.name, { attrs, command: 'updateLink', range });
 
-      return updateMark({ attrs, range, type: this.type })(props);
+      return updateMark({
+        attrs,
+        range,
+        type: this.type,
+      })(props);
     };
   }
 }
