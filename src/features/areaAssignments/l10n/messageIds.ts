@@ -59,16 +59,13 @@ export default makeMessages('feat.areaAssignments', {
       },
       stats: {
         households: m<{ numHouseholds: number }>(
-          '{numHouseholds, plural, one {Household} other {Households}}'
+          '{numHouseholds, plural, one {Household visited} other {Households visited}}'
         ),
         locations: m<{ numLocations: number }>(
           '{numLocations, plural, one {Location} other {Locations}}'
         ),
         successful: m<{ numSuccessfulVisits: number }>(
           '{numSuccessfulVisits, plural, one {Successful visit} other {Successful visits}}'
-        ),
-        visited: m<{ numVisited: number }>(
-          '{numVisited, plural, =0 {Visited} one {Visited} other {Visited}}'
         ),
       },
     },
@@ -83,7 +80,7 @@ export default makeMessages('feat.areaAssignments', {
     },
     findArea: {
       filterPlaceHolder: m('Filter'),
-      title: m('Find area'),
+      title: m('Areas'),
     },
     mapStyle: {
       area: {

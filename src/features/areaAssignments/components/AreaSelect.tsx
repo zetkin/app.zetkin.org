@@ -1,13 +1,6 @@
 import { FC } from 'react';
 import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
-import {
-  Box,
-  Divider,
-  IconButton,
-  lighten,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Divider, IconButton, TextField, Typography } from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -83,42 +76,48 @@ const AreaSelect: FC<Props> = ({
     .reduce((prev, curr) => prev + curr, 0);
 
   return (
-    <>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        overflowY: 'auto',
+      }}
+    >
       <Box>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box alignItems="center" display="flex">
             {selectedArea && (
-              <IconButton onClick={() => onSelectArea('')}>
+              <IconButton
+                onClick={() => onSelectArea('')}
+                sx={{ mr: 1, padding: 0 }}
+              >
                 <ChevronLeft />
               </IconButton>
             )}
-            <Box>
-              <Typography variant="h5">
-                {selectedArea ? (
-                  selectedArea?.title || 'Untitled area'
-                ) : (
-                  <Msg id={areaAssignmentMessageIds.map.findArea.title} />
-                )}
-              </Typography>
-              <Typography
-                fontStyle={
-                  selectedArea?.description?.trim().length
-                    ? 'inherit'
-                    : 'italic'
-                }
-                sx={{ overflowWrap: 'anywhere' }}
-              >
-                {selectedArea &&
-                  (selectedArea?.description?.trim() || (
-                    <Msg id={areasMessageIds.areas.default.description} />
-                  ))}
-              </Typography>
-            </Box>
+            <Typography variant="h5">
+              {selectedArea ? (
+                selectedArea?.title || 'Untitled area'
+              ) : (
+                <Msg id={areaAssignmentMessageIds.map.findArea.title} />
+              )}
+            </Typography>
           </Box>
           <IconButton onClick={() => onClose()}>
             <Close />
           </IconButton>
         </Box>
+        {selectedArea && (
+          <Typography
+            color="secondary"
+            mb={1}
+            sx={{ overflowWrap: 'anywhere' }}
+          >
+            {selectedArea.description?.trim() || (
+              <Msg id={areasMessageIds.areas.default.description} />
+            )}
+          </Typography>
+        )}
       </Box>
       <Divider />
       {!selectedArea && (
@@ -136,7 +135,6 @@ const AreaSelect: FC<Props> = ({
             onChange={(evt) => onFilterTextChange(evt.target.value)}
             placeholder={areaAssignmentMessages.map.findArea.filterPlaceHolder()}
             size="small"
-            sx={{ paddingRight: 2 }}
             value={filterText}
             variant="outlined"
           />
@@ -164,7 +162,7 @@ const AreaSelect: FC<Props> = ({
                         color: theme.palette.primary.main,
                       },
                       cursor: 'pointer',
-                      padding: 1,
+                      pt: index == 0 ? 1 : 0,
                     }}
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>
@@ -222,68 +220,73 @@ const AreaSelect: FC<Props> = ({
           display="flex"
           flexDirection="column"
           gap={1}
-          paddingRight={2}
           paddingTop={1}
           sx={{ overflowY: 'auto' }}
         >
-          <Box display="flex" gap={2} justifyContent="flex-end">
+          <Box
+            alignItems="start"
+            display="flex"
+            gap={2}
+            justifyContent={selectedAreaStats ? 'space-between' : 'flex-start'}
+          >
             {selectedAreaStats && (
-              <>
-                <Box alignItems="center" display="flex" flexDirection="column">
-                  <Typography
-                    sx={(theme) => ({ color: theme.palette.primary.main })}
-                    variant="h5"
-                  >
-                    {selectedAreaStats.num_successful_visited_households}
-                  </Typography>
-                  <Typography textAlign="center">
-                    <Msg
-                      id={
-                        areaAssignmentMessageIds.map.areaInfo.stats.successful
-                      }
-                      values={{
-                        numSuccessfulVisits:
-                          selectedAreaStats.num_successful_visited_households,
-                      }}
-                    />
-                  </Typography>
-                </Box>
-                <Box alignItems="center" display="flex" flexDirection="column">
-                  <Typography
-                    sx={(theme) => ({
-                      color: lighten(theme.palette.primary.main, 0.5),
-                    })}
-                    variant="h5"
-                  >
-                    {selectedAreaStats.num_visited_households || 0}
-                  </Typography>
-                  <Typography textAlign="center">
-                    <Msg
-                      id={areaAssignmentMessageIds.map.areaInfo.stats.visited}
-                      values={{
-                        numVisited: selectedAreaStats.num_visited_households,
-                      }}
-                    />
-                  </Typography>
-                </Box>
-              </>
+              <Box alignItems="start" display="flex" flexDirection="column">
+                <Typography
+                  sx={(theme) => ({ color: theme.palette.primary.main })}
+                  variant="h5"
+                >
+                  {selectedAreaStats.num_successful_visited_households}
+                </Typography>
+                <Typography
+                  color="secondary"
+                  textAlign="center"
+                  variant="caption"
+                >
+                  <Msg
+                    id={areaAssignmentMessageIds.map.areaInfo.stats.successful}
+                    values={{
+                      numSuccessfulVisits:
+                        selectedAreaStats.num_successful_visited_households,
+                    }}
+                  />
+                </Typography>
+              </Box>
             )}
-            <Box alignItems="center" display="flex" flexDirection="column">
-              <Typography color="secondary" variant="h5">
-                {numberOfHouseholdsInSelectedArea}
-              </Typography>
-              <Typography textAlign="center">
+            <Box alignItems="start" display="flex" flexDirection="column">
+              <Box display="flex">
+                <Typography
+                  color="secondary"
+                  mr={0.5}
+                  sx={(theme) => ({ color: theme.palette.primary.main })}
+                  variant="h5"
+                >
+                  {selectedAreaStats?.num_visited_households || 0}
+                </Typography>
+                /
+                <Typography color="secondary" ml={0.5} variant="h5">
+                  {numberOfHouseholdsInSelectedArea}
+                </Typography>
+              </Box>
+              <Typography
+                color="secondary"
+                textAlign="center"
+                variant="caption"
+              >
                 <Msg
                   id={areaAssignmentMessageIds.map.areaInfo.stats.households}
                   values={{ numHouseholds: numberOfHouseholdsInSelectedArea }}
                 />
               </Typography>
             </Box>
-            <Box alignItems="center" display="flex" flexDirection="column">
+            <Box alignItems="start" display="flex" flexDirection="column">
               <Typography color="secondary" variant="h5">
                 {locationsInSelectedArea.length}
               </Typography>
-              <Typography textAlign="center">
+              <Typography
+                color="secondary"
+                textAlign="center"
+                variant="caption"
+              >
                 <Msg
                   id={areaAssignmentMessageIds.map.areaInfo.stats.locations}
                   values={{ numLocations: locationsInSelectedArea.length }}
@@ -291,7 +294,8 @@ const AreaSelect: FC<Props> = ({
               </Typography>
             </Box>
           </Box>
-          <Box>
+          <Divider />
+          <Box mt={4}>
             <Typography variant="h6">
               <Msg id={areaAssignmentMessageIds.map.areaInfo.assignees.title} />
             </Typography>
@@ -344,7 +348,7 @@ const AreaSelect: FC<Props> = ({
           </Box>
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 

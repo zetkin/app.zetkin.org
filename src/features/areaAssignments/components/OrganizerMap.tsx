@@ -233,7 +233,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               maxWidth: 400,
               minWidth: 400,
               overflow: 'hidden',
-              paddingX: 2,
+              paddingX: settingsOpen == 'select' ? 0 : 2,
               paddingY: 1,
               position: 'absolute',
               right: '1rem',
@@ -242,27 +242,43 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             }}
           >
             {settingsOpen == 'select' && (
-              <AreaSelect
-                key={selectedArea?.id}
-                areaAssId={areaAssId}
-                areas={areas}
-                filterAreas={filterAreas}
-                filterText={filterText}
-                locations={locations}
-                onAddAssignee={(person) => {
-                  if (selectedArea) {
-                    onAddAssigneeToArea(selectedArea, person);
-                  }
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '80vh',
                 }}
-                onClose={clearAndCloseSettings}
-                onFilterTextChange={(newValue) => setFilterText(newValue)}
-                onSelectArea={(newValue) => setSelectedId(newValue)}
-                selectedArea={selectedArea}
-                selectedAreaStats={areaStats.stats.find(
-                  (stat) => stat.areaId == selectedArea?.id
-                )}
-                sessions={sessions}
-              />
+              >
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    overflowY: 'auto',
+                    paddingX: 2,
+                  }}
+                >
+                  <AreaSelect
+                    key={selectedArea?.id}
+                    areaAssId={areaAssId}
+                    areas={areas}
+                    filterAreas={filterAreas}
+                    filterText={filterText}
+                    locations={locations}
+                    onAddAssignee={(person) => {
+                      if (selectedArea) {
+                        onAddAssigneeToArea(selectedArea, person);
+                      }
+                    }}
+                    onClose={clearAndCloseSettings}
+                    onFilterTextChange={(newValue) => setFilterText(newValue)}
+                    onSelectArea={(newValue) => setSelectedId(newValue)}
+                    selectedArea={selectedArea}
+                    selectedAreaStats={areaStats.stats.find(
+                      (stat) => stat.areaId == selectedArea?.id
+                    )}
+                    sessions={sessions}
+                  />
+                </Box>
+              </Box>
             )}
             {settingsOpen != 'select' && (
               <>
