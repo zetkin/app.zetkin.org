@@ -36,7 +36,7 @@
     "@hapi/iron": "^7.0.1",
     "@messageformat/parser": "^5.1.0",
     "@mui/base": "^5.0.0-alpha.99",
-    "@mui/icons-material": "^6.3.1",
+    "@mui/icons-material": "^5.10.6",
     "@mui/lab": "^5.0.0-alpha.100",
     "@mui/material": "^5.10.7",
     "@mui/material-nextjs": "^5.15.11",
