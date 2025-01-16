@@ -28,15 +28,14 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
     toggleHeading,
     pickImage,
     removeLink,
+    removeAllLinksInRange,
     setLink,
   } = useCommands();
 
   const [selectedNodes, setSelectedNodes] = useState<NodeWithPosition[]>([]);
-  const [selectionHasOtherNodes, setSelectionHasOtherNodes] = useState(false);
 
   useEffect(() => {
     const linkNodes: NodeWithPosition[] = [];
-    let hasOtherNodes = false;
     state.doc.nodesBetween(
       state.selection.from,
       state.selection.to,
@@ -44,14 +43,11 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
         if (node.isText) {
           if (node.marks.some((mark) => mark.type.name == 'zlink')) {
             linkNodes.push({ from: index, node, to: index + node.nodeSize });
-          } else {
-            hasOtherNodes = true;
           }
         }
       }
     );
     setSelectedNodes(linkNodes);
-    setSelectionHasOtherNodes(hasOtherNodes);
   }, [state.selection]);
 
   return (
@@ -93,13 +89,15 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                       setLink();
                       focus();
                     } else {
-                      if (
-                        selectedNodes.length == 1 &&
-                        !selectionHasOtherNodes
-                      ) {
+                      if (selectedNodes.length == 1) {
                         removeLink({
                           from: selectedNodes[0].from,
                           to: selectedNodes[0].to,
+                        });
+                      } else if (selectedNodes.length > 1) {
+                        removeAllLinksInRange({
+                          from: state.selection.from,
+                          to: state.selection.to,
                         });
                       }
                     }
