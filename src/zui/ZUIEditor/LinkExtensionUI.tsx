@@ -3,7 +3,7 @@ import { useCommands, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
 
-type NodeWithPosition = {
+export type NodeWithPosition = {
   from: number;
   node: ProsemirrorNode;
   to: number;
@@ -12,7 +12,8 @@ type NodeWithPosition = {
 const LinkExtensionUI: FC = () => {
   const state = useEditorState();
   const view = useEditorView();
-  const { updateLink, updateLinkText } = useCommands();
+  const { removeLink, removeUnfinishedLinks, updateLink, updateLinkText } =
+    useCommands();
 
   const [selectedNodes, setSelectedNodes] = useState<NodeWithPosition[]>([]);
   const [selectionHasOtherNodes, setSelectionHasOtherNodes] = useState(false);
@@ -24,6 +25,14 @@ const LinkExtensionUI: FC = () => {
 
   const left = selectionCoords.left - editorRect.left;
   const top = selectionCoords.top - editorRect.top;
+
+  const showLinkMaker = selectedNodes.length == 1 && !selectionHasOtherNodes;
+
+  useEffect(() => {
+    if (!showLinkMaker) {
+      removeUnfinishedLinks();
+    }
+  }, [showLinkMaker]);
 
   useEffect(() => {
     const selectedNode = selectedNodes[0]?.node;
@@ -54,8 +63,6 @@ const LinkExtensionUI: FC = () => {
     setSelectionHasOtherNodes(hasOtherNodes);
   }, [state.selection]);
 
-  const showLinkMaker = selectedNodes.length == 1 && !selectionHasOtherNodes;
-
   return (
     <Box position="relative">
       <Box
@@ -76,18 +83,42 @@ const LinkExtensionUI: FC = () => {
                 onChange={(ev) => setLinkHref(ev.target.value)}
                 value={linkHref}
               />
-              <Button
-                onClick={() => {
-                  updateLink({ href: linkHref });
-                  updateLinkText(
-                    { from: selectedNodes[0].from, to: selectedNodes[0].to },
-                    linkText
-                  );
-                }}
-                variant="outlined"
-              >
-                Apply
-              </Button>
+              <Box display="flex">
+                <Button
+                  disabled={!linkHref}
+                  onClick={() => {
+                    updateLink({ href: linkHref });
+                    updateLinkText(
+                      { from: selectedNodes[0].from, to: selectedNodes[0].to },
+                      linkText
+                    );
+                  }}
+                  variant="outlined"
+                >
+                  Apply
+                </Button>
+                <Button
+                  disabled={!linkHref}
+                  onClick={() =>
+                    removeLink({
+                      from: selectedNodes[0].from,
+                      to: selectedNodes[0].to,
+                    })
+                  }
+                  variant="outlined"
+                >
+                  Remove
+                </Button>
+                <Button
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    setSelectedNodes([]);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
           </Paper>
         )}
