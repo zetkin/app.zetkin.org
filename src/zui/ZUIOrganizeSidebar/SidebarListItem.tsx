@@ -16,7 +16,7 @@ export interface SidebarListItemProps {
     | 'people'
     | 'projects'
     | 'journeys'
-    | 'areas'
+    | 'geography'
     | 'search'
     | 'settings'
     | 'tags';

@@ -16,7 +16,7 @@ import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 import useClusteredActivities, {
   CLUSTER_TYPE,
 } from 'features/campaigns/hooks/useClusteredActivities';
-import CanvassAssignmentListItem from './items/CanvassAssignmentListItem';
+import AreaAssignmentListItem from './items/AreaAssignmentListItem';
 import ActivityListItem, { STATUS_COLORS } from './items/ActivityListItem';
 
 interface ActivitiesProps {
@@ -84,16 +84,13 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
               <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
             </LazyActivitiesBox>
           );
-        } else if (activity.kind == ACTIVITIES.CANVASS_ASSIGNMENT) {
+        } else if (activity.kind == ACTIVITIES.AREA_ASSIGNMENT) {
           return (
             <LazyActivitiesBox
-              key={`canvassassignment-${activity.data.id}`}
+              key={`areaassignment-${activity.data.id}`}
               index={index}
             >
-              <CanvassAssignmentListItem
-                caId={activity.data.id}
-                orgId={orgId}
-              />
+              <AreaAssignmentListItem caId={activity.data.id} orgId={orgId} />
             </LazyActivitiesBox>
           );
         } else if (isEventCluster(activity)) {

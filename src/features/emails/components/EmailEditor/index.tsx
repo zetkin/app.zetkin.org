@@ -88,6 +88,7 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave }) => {
             <Box display="flex" gap={2} py={2}>
               <FormControl fullWidth sx={{ flex: 2 }}>
                 <TextField
+                  disabled={readOnly}
                   fullWidth
                   label={messages.editor.settings.tabs.settings.senderInputLabel()}
                   onChange={(ev) => {
