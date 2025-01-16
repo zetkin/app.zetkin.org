@@ -116,6 +116,23 @@ class LinkExtension extends MarkExtension<LinkOptions> {
       })(props);
     };
   }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  updateLinkText(range: FromToProps, linkText: string): CommandFunction {
+    return (props) => {
+      const { tr, dispatch } = props;
+
+      tr.insertText(linkText, range.from, range.to);
+
+      if (dispatch) {
+        dispatch(tr);
+      }
+
+      return true;
+    };
+  }
 }
 
 declare global {

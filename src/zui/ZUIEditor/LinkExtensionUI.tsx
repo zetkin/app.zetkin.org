@@ -3,12 +3,18 @@ import { useCommands, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
 
+type NodeWithPosition = {
+  from: number;
+  node: ProsemirrorNode;
+  to: number;
+};
+
 const LinkExtensionUI: FC = () => {
   const state = useEditorState();
   const view = useEditorView();
-  const { updateLink } = useCommands();
+  const { updateLink, updateLinkText } = useCommands();
 
-  const [selectedNodes, setSelectedNodes] = useState<ProsemirrorNode[]>([]);
+  const [selectedNodes, setSelectedNodes] = useState<NodeWithPosition[]>([]);
   const [selectionHasOtherNodes, setSelectionHasOtherNodes] = useState(false);
   const [linkText, setLinkText] = useState('');
   const [linkHref, setLinkHref] = useState('');
@@ -20,7 +26,7 @@ const LinkExtensionUI: FC = () => {
   const top = selectionCoords.top - editorRect.top;
 
   useEffect(() => {
-    const selectedNode = selectedNodes[0];
+    const selectedNode = selectedNodes[0]?.node;
     if (selectedNode) {
       setLinkText(selectedNode.text || '');
       const mark = selectedNode.marks.find((mark) => mark.type.name == 'zlink');
@@ -29,17 +35,21 @@ const LinkExtensionUI: FC = () => {
   }, [selectedNodes[0]]);
 
   useEffect(() => {
-    const linkNodes: ProsemirrorNode[] = [];
+    const linkNodes: NodeWithPosition[] = [];
     let hasOtherNodes = false;
-    state.doc.nodesBetween(state.selection.from, state.selection.to, (node) => {
-      if (node.isText) {
-        if (node.marks.some((mark) => mark.type.name == 'zlink')) {
-          linkNodes.push(node);
-        } else {
-          hasOtherNodes = true;
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node, index) => {
+        if (node.isText) {
+          if (node.marks.some((mark) => mark.type.name == 'zlink')) {
+            linkNodes.push({ from: index, node, to: index + node.nodeSize });
+          } else {
+            hasOtherNodes = true;
+          }
         }
       }
-    });
+    );
     setSelectedNodes(linkNodes);
     setSelectionHasOtherNodes(hasOtherNodes);
   }, [state.selection]);
@@ -67,7 +77,13 @@ const LinkExtensionUI: FC = () => {
                 value={linkHref}
               />
               <Button
-                onClick={() => updateLink({ href: linkHref })}
+                onClick={() => {
+                  updateLink({ href: linkHref });
+                  updateLinkText(
+                    { from: selectedNodes[0].from, to: selectedNodes[0].to },
+                    linkText
+                  );
+                }}
                 variant="outlined"
               >
                 Apply
