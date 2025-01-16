@@ -8,1308 +8,673 @@ import { ColumnKind, Sheet } from './types';
 const countryCode = mockOrganization.country as CountryCode;
 
 describe('prepareImportOperations()', () => {
-  describe('when first row is header', () => {
-    it('converts Zetkin ID', () => {
-      const configData: Sheet = {
-        columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            id: 123,
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            id: 124,
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-
-    it('converts external ID', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            ext_id: '123',
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            ext_id: '124',
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-
-    it('converts data only', () => {
-      const configData: Sheet = {
-        columns: [
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-    it('converts tags only', () => {
-      const configData: Sheet = {
-        columns: [
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          op: 'person.import',
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-    it('converts simple data with ID', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-    it('converts ID, data, tags and orgs', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 272, value: 2 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-    it('converts ID, data and tags', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-    it('converts ID, data and enum field', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'enum_field',
-            kind: ColumnKind.ENUM,
-            mapping: [
-              { key: 'first', value: 'Dummy value' },
-              { key: 'second', value: null },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'Enum', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Dummy value', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', null, 2],
-          },
-          {
-            data: ['125', 'John', 'Doe', undefined, 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            enum_field: 'first',
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            enum_field: 'second',
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            enum_field: 'second',
-            ext_id: '125',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-    it('converts other columns when ID column is not chosen', () => {
-      const configData: Sheet = {
-        columns: [
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 272, value: 2 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'First name', 'Last Name', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-  });
-
-  describe('when first row is not header', () => {
-    it('converts ID, data, tags and orgs', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'first_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            field: 'last_name',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 272, value: 2 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['123', 'Jane', 'Doe', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'John', 'Doe', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            ext_id: '123',
-            first_name: 'Jane',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            ext_id: '124',
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-  });
-
-  describe('prepareImportOperations excludes mapping rows with empty or null values', () => {
-    it('excludes empty string and null in data', () => {
-      const configData: Sheet = {
-        columns: [
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 273, value: 2 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: true,
-        rows: [
-          {
-            data: ['ID', 'City', 'DevTag', 'Org'],
-          },
-          {
-            data: ['123', null, 'Frontend', 1],
-          },
-          {
-            data: ['124', 'Linköping', 'Backend', 2],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-          },
-          op: 'person.import',
-          organizations: [273],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-
-    it('excludes empty string, null or not matched value tags', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [{ orgId: 272, value: 1 }],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['123', 'Linköping', null, 1],
-          },
-          {
-            data: ['124', 'Linköping', 'Backend', 1],
-          },
-          {
-            data: ['125', 'Linköping', 'Designer', 1],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [272],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '124',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '125',
-          },
-          op: 'person.import',
-          organizations: [272],
-        },
-      ]);
-    });
-
-    it('excludes empty string or null in orgs', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 273, value: 2 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['123', 'Linköping', 'Frontend', 1],
-          },
-          {
-            data: ['124', 'Linköping', 'Backend', null],
-          },
-          {
-            data: ['125', 'Linköping', 'Backend', 3],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '124',
-          },
-          op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '125',
-          },
-          op: 'person.import',
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-
-    it('excludes all rows that has empty string or null', () => {
-      const configData: Sheet = {
-        columns: [
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 273, value: 2 },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['Linköping', '123', 1, ''],
-          },
-          {
-            data: ['', '', 2, 'Backend'],
-          },
-          {
-            data: ['Malmö', '125', null, 'Designer'],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [272],
-        },
-        {
-          op: 'person.import',
-          organizations: [273],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Malmö',
-            ext_id: '125',
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-
-    it('correctly assigns multiple columns of orgs', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 273, value: 2 },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 274, value: 3 },
-              { orgId: 275, value: 4 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['123', 'Linköping', 'Frontend', 1, 3],
-          },
-          {
-            data: ['124', 'Linköping', 'Backend', null, 4],
-          },
-          {
-            data: ['125', 'Linköping', 'Backend', 3, 3],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [272, 274],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '124',
-          },
-          op: 'person.import',
-          organizations: [275],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '125',
-          },
-          op: 'person.import',
-          organizations: [274],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-
-    it('correctly adds up multiple columns of tags', () => {
-      const configData: Sheet = {
-        columns: [
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 273, value: 2 },
-            ],
-            selected: true,
-          },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 111 }, { id: 222 }], value: 'Cat' },
-              { tags: [{ id: 333 }, { id: 444 }], value: 'Dog' },
-            ],
-
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['Linköping', '123', 1, 3, 'Frontend', 'Cat'],
-          },
-          {
-            data: ['Linköping', '125', 2, 4, 'Backend', 'Dog'],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }, { id: 111 }, { id: 222 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '125',
-          },
-          op: 'person.import',
-          organizations: [273],
-          tags: [{ id: 124 }, { id: 100 }, { id: 333 }, { id: 444 }],
-        },
-      ]);
-    });
-
-    it('removes leading/trailing spaces from email addresses', () => {
-      const configData: Sheet = {
-        columns: [
-          {
-            field: 'email',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: [' clara@example.com '],
-          },
-          {
-            data: ['zetkin@example.com'],
-          },
-        ],
-        title: '',
-      };
-
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            email: 'clara@example.com',
-          },
-          op: 'person.import',
-        },
-        {
-          data: {
-            email: 'zetkin@example.com',
-          },
-          op: 'person.import',
-        },
-      ]);
-    });
-
-    it('correctly de-duplicates multiple columns of orgs', () => {
-      const configData: Sheet = {
-        columns: [
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 1 },
-              { orgId: 273, value: 2 },
-            ],
-            selected: true,
-          },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 272, value: 3 },
-              { orgId: 275, value: 4 },
-            ],
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['123', 'Linköping', 'Frontend', 1, 3],
-          },
-          {
-            data: ['124', 'Linköping', 'Backend', null, 4],
-          },
-          {
-            data: ['125', 'Linköping', 'Backend', 3, 3],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 123 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '124',
-          },
-          op: 'person.import',
-          organizations: [275],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '125',
-          },
-          op: 'person.import',
-          organizations: [272],
-          tags: [{ id: 124 }, { id: 100 }],
-        },
-      ]);
-    });
-    it('remove duplicated tagIds', () => {
-      const configData: Sheet = {
-        columns: [
-          {
-            field: 'city',
-            kind: ColumnKind.FIELD,
-            selected: true,
-          },
-          { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-          {
-            kind: ColumnKind.ORGANIZATION,
-            mapping: [
-              { orgId: 111, value: 1 },
-              { orgId: 333, value: 2 },
-            ],
-            selected: true,
-          },
-          { kind: ColumnKind.UNKNOWN, selected: false },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 123 }, { id: 100 }], value: 'Frontend' },
-              { tags: [{ id: 124 }, { id: 100 }], value: 'Backend' },
-            ],
-
-            selected: true,
-          },
-          {
-            kind: ColumnKind.TAG,
-            mapping: [
-              { tags: [{ id: 100 }, { id: 222 }], value: 'Cat' },
-              { tags: [{ id: 333 }, { id: 444 }], value: 'Dog' },
-            ],
-
-            selected: true,
-          },
-        ],
-        firstRowIsHeaders: false,
-        rows: [
-          {
-            data: ['Linköping', '123', 1, 3, 'Frontend', 'Cat'],
-          },
-          {
-            data: ['Linköping', '125', 2, 4, 'Backend', 'Dog'],
-          },
-        ],
-        title: 'My sheet',
-      };
-      const result = prepareImportOperations(configData, countryCode);
-      expect(result).toEqual([
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '123',
-          },
-          op: 'person.import',
-          organizations: [111],
-          tags: [{ id: 123 }, { id: 100 }, { id: 222 }],
-        },
-        {
-          data: {
-            city: 'Linköping',
-            ext_id: '125',
-          },
-          op: 'person.import',
-          organizations: [333],
-          tags: [{ id: 124 }, { id: 100 }, { id: 333 }, { id: 444 }],
-        },
-      ]);
-    });
-  });
-
-  it('correctly parses dates into ISO date strings and ignores empty values', () => {
-    const configData: Sheet = {
-      columns: [
-        {
-          dateFormat: 'se',
-          field: 'birthday',
-          kind: ColumnKind.DATE,
-          selected: true,
-        },
-        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
-      ],
+  it('returns no ops when rows is empty', () => {
+    const sheet: Sheet = {
+      columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
       firstRowIsHeaders: false,
+      rows: [],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([]);
+  });
+
+  it('returns no ops when the only row is headers', () => {
+    const sheet: Sheet = {
+      columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
+      firstRowIsHeaders: true,
       rows: [
         {
-          data: ['19650313-4571', 1],
-        },
-        {
-          data: ['6408120923', 2],
-        },
-        {
-          data: ['', 3],
+          data: ['ID', 'First Name', 'Last Name', 'DevTag', 'Org'],
         },
       ],
       title: 'My sheet',
     };
-    const result = prepareImportOperations(configData, countryCode);
-    expect(result).toEqual([
-      {
-        data: {
-          birthday: '1965-03-13',
-          id: 1,
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([]);
+  });
+
+  it('returns person.get and person.setfields when just fields', () => {
+    const sheet: Sheet = {
+      columns: [
+        { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+        { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
+        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['Clara', 'Zetkin', 'clara@example.com'],
         },
-        op: 'person.import',
-      },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
       {
-        data: {
-          birthday: '1964-08-12',
-          id: 2,
-        },
-        op: 'person.import',
-      },
-      {
-        data: {
-          id: 3,
-        },
-        op: 'person.import',
+        op: 'person.create',
+        ops: [
+          {
+            data: {
+              email: 'clara@example.com',
+              first_name: 'Clara',
+              last_name: 'Zetkin',
+            },
+            op: 'person.setfields',
+          },
+        ],
       },
     ]);
   });
 
-  it('correctly parses and converts phone numbers with obvious formatting errors', () => {
-    const configData: Sheet = {
+  it('ignores unselected columns', () => {
+    const sheet: Sheet = {
       columns: [
-        {
-          field: 'phone',
-          kind: ColumnKind.FIELD,
-          selected: true,
-        },
-        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+        { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
+        { field: 'email', kind: ColumnKind.FIELD, selected: false },
       ],
       firstRowIsHeaders: false,
       rows: [
         {
-          data: ['+46732789887', 1],
-        },
-        {
-          data: ['46732789887', 2],
-        },
-        {
-          data: ['0046732789887', 3],
-        },
-        {
-          data: ['-460732789887', 4],
-        },
-        {
-          data: ['46732-78-98-87', 5],
-        },
-        {
-          data: ['460732789887', 6],
-        },
-        {
-          data: ['0732789887', 7],
-        },
-        {
-          // Phone number contains U202C, a Unicode control character, to validate that it is stripped.
-          data: ['+46 73278 98 87‬', 8],
+          data: ['Clara', 'Zetkin', 'clara@example.com'],
         },
       ],
       title: 'My sheet',
     };
-    const result = prepareImportOperations(configData, countryCode);
-    expect(result).toEqual([
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
       {
-        data: {
-          id: 1,
-          phone: '+46732789887',
+        op: 'person.create',
+        ops: [
+          {
+            data: {
+              first_name: 'Clara',
+              last_name: 'Zetkin',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('uses person.get if there is an external ID configured', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'clara@example.com'],
         },
-        op: 'person.import',
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          ext_id: '123',
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              email: 'clara@example.com',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('uses person.get if there is an ID configured', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'clara@example.com'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              email: 'clara@example.com',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('uses person.get and sets ext_id when both IDs are configured', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', '9999', 'clara@example.com'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              email: 'clara@example.com',
+              ext_id: '9999',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('parses and sets date field', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          dateFormat: 'DD/MM YYYY',
+          field: 'extra_date',
+          kind: ColumnKind.DATE,
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', '05/07 1857'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              extra_date: '1857-07-05',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('parses phone numbers and normalize their format', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'phone', kind: ColumnKind.FIELD, selected: true },
+        { field: 'alt_phone', kind: ColumnKind.FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', '070 123 45 67', '+46 704 123 123'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              alt_phone: '+46704123123',
+              phone: '+46701234567',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('maps and sets gender field', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'gender',
+          kind: ColumnKind.GENDER,
+          mapping: [
+            { gender: 'f', value: 'woman' },
+            { gender: 'm', value: 'man' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'woman'],
+        },
+        {
+          data: ['125', 'man'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              gender: 'f',
+            },
+            op: 'person.setfields',
+          },
+        ],
       },
       {
-        data: {
-          id: 2,
-          phone: '+46732789887',
+        key: {
+          id: 125,
         },
-        op: 'person.import',
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              gender: 'm',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('maps and sets enum field', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'extra_enum',
+          kind: ColumnKind.ENUM,
+          mapping: [
+            { key: 'x_value', value: 'x' },
+            { key: 'y_value', value: 'y' },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'x'],
+        },
+        {
+          data: ['125', 'y'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              extra_enum: 'x_value',
+            },
+            op: 'person.setfields',
+          },
+        ],
       },
       {
-        data: {
-          id: 3,
-          phone: '+46732789887',
+        key: {
+          id: 125,
         },
-        op: 'person.import',
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              extra_enum: 'y_value',
+            },
+            op: 'person.setfields',
+          },
+        ],
       },
-      {
-        data: {
-          id: 4,
-          phone: '+46732789887',
+    ]);
+  });
+
+  it('includes sub-ops to tag person with multiple tags from single mapping', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            {
+              tags: [{ id: 11 }, { id: 22 }],
+              value: 'x',
+            },
+          ],
+          selected: true,
         },
-        op: 'person.import',
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            op: 'person.tag',
+            tag_id: 11,
+          },
+          {
+            op: 'person.tag',
+            tag_id: 22,
+          },
+        ],
       },
-      {
-        data: {
-          id: 5,
-          phone: '+46732789887',
+    ]);
+  });
+
+  it('includes sub-ops to tag person with tags from multiple columns', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            {
+              tags: [{ id: 11 }],
+              value: 'x',
+            },
+          ],
+          selected: true,
         },
-        op: 'person.import',
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            {
+              tags: [{ id: 22 }],
+              value: 'x',
+            },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'x', 'x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            op: 'person.tag',
+            tag_id: 11,
+          },
+          {
+            op: 'person.tag',
+            tag_id: 22,
+          },
+        ],
       },
-      {
-        data: {
-          id: 6,
-          phone: '+46732789887',
+    ]);
+  });
+
+  it('ignores mismatching tag mappings', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            {
+              tags: [{ id: 11 }],
+              value: 'x',
+            },
+          ],
+          selected: true,
         },
-        op: 'person.import',
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'this does not match x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [],
       },
-      {
-        data: {
-          id: 7,
-          phone: '+46732789887',
+    ]);
+  });
+
+  it('includes sub-ops to add person to org based on single mapping', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [{ orgId: 101, value: 'x' }],
+          selected: true,
         },
-        op: 'person.import',
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            op: 'person.addtoorg',
+            org_id: 101,
+          },
+        ],
       },
-      {
-        data: {
-          id: 8,
-          phone: '+46732789887',
+    ]);
+  });
+
+  it('includes sub-ops to add person to org based on multiple mappings', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [{ orgId: 101, value: 'x' }],
+          selected: true,
         },
-        op: 'person.import',
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [{ orgId: 202, value: 'x' }],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'x', 'x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            op: 'person.addtoorg',
+            org_id: 101,
+          },
+          {
+            op: 'person.addtoorg',
+            org_id: 202,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('does nothing when mapping maps value to null org', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [{ orgId: null, value: 'x' }],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [],
+      },
+    ]);
+  });
+
+  it('ignores mismatching organiation mappings', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [{ orgId: 101, value: 'x' }],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'this does not match x'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [],
       },
     ]);
   });
