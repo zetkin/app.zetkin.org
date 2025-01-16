@@ -1,6 +1,8 @@
 import { Box, Button, Paper } from '@mui/material';
-import { useCommands } from '@remirror/react';
-import { FC } from 'react';
+import { useActive, useCommands, useEditorState } from '@remirror/react';
+import { FC, useEffect, useState } from 'react';
+
+import { NodeWithPosition } from '../LinkExtensionUI';
 
 type BlockToolbarProps = {
   curBlockType: string;
@@ -13,8 +15,39 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockY,
   pos,
 }) => {
-  const { convertParagraph, focus, toggleHeading, pickImage, setLink } =
-    useCommands();
+  const active = useActive();
+  const state = useEditorState();
+  const {
+    convertParagraph,
+    focus,
+    toggleHeading,
+    pickImage,
+    removeLink,
+    setLink,
+  } = useCommands();
+
+  const [selectedNodes, setSelectedNodes] = useState<NodeWithPosition[]>([]);
+  const [selectionHasOtherNodes, setSelectionHasOtherNodes] = useState(false);
+
+  useEffect(() => {
+    const linkNodes: NodeWithPosition[] = [];
+    let hasOtherNodes = false;
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node, index) => {
+        if (node.isText) {
+          if (node.marks.some((mark) => mark.type.name == 'zlink')) {
+            linkNodes.push({ from: index, node, to: index + node.nodeSize });
+          } else {
+            hasOtherNodes = true;
+          }
+        }
+      }
+    );
+    setSelectedNodes(linkNodes);
+    setSelectionHasOtherNodes(hasOtherNodes);
+  }, [state.selection]);
 
   return (
     <Box position="relative">
@@ -51,8 +84,20 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                 </Button>
                 <Button
                   onClick={() => {
-                    setLink();
-                    focus();
+                    if (!active.zlink()) {
+                      setLink();
+                      focus();
+                    } else {
+                      if (
+                        selectedNodes.length == 1 &&
+                        !selectionHasOtherNodes
+                      ) {
+                        removeLink({
+                          from: selectedNodes[0].from,
+                          to: selectedNodes[0].to,
+                        });
+                      }
+                    }
                   }}
                 >
                   Link

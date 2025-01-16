@@ -67,15 +67,39 @@ class LinkExtension extends MarkExtension<LinkOptions> {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
-  removeLink(selection?: PrimitiveSelection): CommandFunction {
+  removeLink(range: FromToProps): CommandFunction {
     return ({ tr, dispatch }) => {
-      const { from, to } = getTextSelection(selection ?? tr.selection, tr.doc);
+      const { from, to } = range;
 
       if (!tr.doc.rangeHasMark(from, to, this.type)) {
         return false;
       }
 
       dispatch?.(tr.removeMark(from, to, this.type));
+
+      return true;
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  removeUnfinishedLinks(): CommandFunction {
+    return ({ tr, dispatch }) => {
+      tr.doc.descendants((node, pos) => {
+        if (node.isText) {
+          const linkMark = node.marks.find(
+            (mark) => mark.type.name == this.type.name
+          );
+          if (linkMark) {
+            if (!linkMark.attrs.href) {
+              tr = tr.removeMark(pos, pos + node.nodeSize, this.type);
+            }
+          }
+        }
+      });
+
+      dispatch?.(tr);
 
       return true;
     };
