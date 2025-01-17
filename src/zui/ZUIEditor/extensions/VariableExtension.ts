@@ -8,7 +8,7 @@ import {
   omitExtraAttributes,
 } from 'remirror';
 
-type VariableName = 'first_name' | 'last_name' | 'full_name';
+export type VariableName = 'first_name' | 'last_name' | 'full_name';
 type VariableLabelMap = {
   [name in VariableName]: string;
 };

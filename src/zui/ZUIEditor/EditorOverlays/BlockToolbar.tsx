@@ -2,6 +2,9 @@ import { Box, Button, Paper } from '@mui/material';
 import { useCommands } from '@remirror/react';
 import { FC } from 'react';
 
+import VariableToolButton from './VariableToolButton';
+import { VariableName } from '../extensions/VariableExtension';
+
 type BlockToolbarProps = {
   curBlockType: string;
   curBlockY: number;
@@ -50,14 +53,12 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
           )}
           {enableVariable &&
             (curBlockType == 'paragraph' || curBlockType == 'heading') && (
-              <Button
-                onClick={() => {
-                  insertVariable('first_name');
+              <VariableToolButton
+                onSelect={(varName: VariableName) => {
+                  insertVariable(varName);
                   focus();
                 }}
-              >
-                Insert variable
-              </Button>
+              />
             )}
         </Paper>
       </Box>
