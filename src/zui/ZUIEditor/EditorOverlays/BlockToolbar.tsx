@@ -5,15 +5,18 @@ import { FC } from 'react';
 type BlockToolbarProps = {
   curBlockType: string;
   curBlockY: number;
+  enableVariable: boolean;
   pos: number;
 };
 
 const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockType,
   curBlockY,
+  enableVariable,
   pos,
 }) => {
-  const { convertParagraph, toggleHeading, pickImage } = useCommands();
+  const { convertParagraph, focus, insertVariable, toggleHeading, pickImage } =
+    useCommands();
 
   return (
     <Box position="relative">
@@ -45,6 +48,17 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
           {curBlockType == 'paragraph' && (
             <Button onClick={() => toggleHeading()}>Convert to heading</Button>
           )}
+          {enableVariable &&
+            (curBlockType == 'paragraph' || curBlockType == 'heading') && (
+              <Button
+                onClick={() => {
+                  insertVariable('first_name');
+                  focus();
+                }}
+              >
+                Insert variable
+              </Button>
+            )}
         </Paper>
       </Box>
     </Box>
