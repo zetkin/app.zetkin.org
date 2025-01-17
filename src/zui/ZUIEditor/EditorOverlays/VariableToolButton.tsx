@@ -27,7 +27,12 @@ const VariableToolButton: FC<Props> = ({ onSelect }) => {
       >
         <DataObject />
       </IconButton>
-      <Menu anchorEl={anchorEl} open={!!anchorEl} sx={{ zIndex: 99999 }}>
+      <Menu
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        open={!!anchorEl}
+        sx={{ zIndex: 99999 }}
+      >
         <MenuItem onClick={() => handleSelect('first_name')}>
           <Msg id={messageIds.editor.variables.firstName} />
         </MenuItem>
