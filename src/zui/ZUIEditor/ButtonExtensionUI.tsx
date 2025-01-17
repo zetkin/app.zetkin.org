@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
 
 import TextAndHrefOverlay from './elements/TextAndHrefOverlay';
+import formatUrl from 'utils/formatUrl';
 
 const ButtonExtensionUI: FC = () => {
   const state = useEditorState();
@@ -40,16 +41,22 @@ const ButtonExtensionUI: FC = () => {
   return (
     <TextAndHrefOverlay
       href={href}
+      onCancel={() => {
+        // TODO: Hide somehow
+      }}
       onChangeHref={(href) => setHref(href)}
       onChangeText={(text) => setText(text)}
       onSubmit={() => {
-        setButtonText(state.selection.$head.pos, text);
-        setButtonHref(state.selection.$head.pos, href);
+        const formattedHref = formatUrl(href);
+        if (formattedHref) {
+          setButtonText(state.selection.$head.pos, text);
+          setButtonHref(state.selection.$head.pos, formattedHref);
+        }
       }}
       open={visible}
       text={text}
       x={left}
-      y={top + 20}
+      y={top + 30}
     />
   );
 };

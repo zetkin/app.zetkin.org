@@ -8,8 +8,10 @@ import { Msg, useMessages } from 'core/i18n';
 
 type Props = {
   href: string;
+  onCancel: () => void;
   onChangeHref: (href: string) => void;
   onChangeText: (text: string) => void;
+  onRemove?: () => void;
   onSubmit: () => void;
   open: boolean;
   text: string;
@@ -19,8 +21,10 @@ type Props = {
 
 const TextAndHrefOverlay: FC<Props> = ({
   href,
+  onCancel,
   onChangeHref,
   onChangeText,
+  onRemove,
   onSubmit,
   open,
   text,
@@ -75,28 +79,42 @@ const TextAndHrefOverlay: FC<Props> = ({
                   value={text}
                 />
               </Box>
-              <Box display="flex" gap={1} justifyContent="flex-end">
-                <Button
-                  onClick={(ev) => {
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                    // TODO: Deselect button, or hide?
-                  }}
-                  size="small"
-                >
-                  <Msg id={messageIds.editor.extensions.link.cancel} />
-                </Button>
+              <Box
+                display="flex"
+                justifyContent={onRemove ? 'space-between' : 'flex-end'}
+              >
+                {!!onRemove && (
+                  <Button
+                    onClick={() => {
+                      onRemove();
+                    }}
+                    size="small"
+                    variant="text"
+                  >
+                    <Msg id={messageIds.editor.extensions.link.remove} />
+                  </Button>
+                )}
+                <Box display="flex" gap={1}>
+                  <Button
+                    onClick={() => {
+                      onCancel();
+                    }}
+                    size="small"
+                  >
+                    <Msg id={messageIds.editor.extensions.link.cancel} />
+                  </Button>
 
-                <Button
-                  disabled={!canSubmit}
-                  onClick={() => {
-                    onSubmit();
-                  }}
-                  size="small"
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.editor.extensions.link.apply} />
-                </Button>
+                  <Button
+                    disabled={!canSubmit}
+                    onClick={() => {
+                      onSubmit();
+                    }}
+                    size="small"
+                    variant="outlined"
+                  >
+                    <Msg id={messageIds.editor.extensions.link.apply} />
+                  </Button>
+                </Box>
               </Box>
             </Box>
           </Paper>
