@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
 import { TagParseRule } from '@remirror/pm/model';
+import { TextSelection } from '@remirror/pm/state';
 import {
   ApplySchemaAttributes,
   extension,
@@ -65,6 +66,22 @@ class LinkExtension extends MarkExtension<LinkOptions> {
     };
   }
 
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  insertEmptyLink(): CommandFunction {
+    return ({ dispatch, state, tr }) => {
+      const mark = this.type.create();
+      const node = this.type.schema.text(String.fromCharCode(160), [mark]);
+      const pos = state.selection.$head.pos;
+      tr = tr.insert(pos, node);
+      tr = tr.setSelection(TextSelection.create(tr.doc, pos, pos + 1));
+      dispatch?.(tr);
+
+      return true;
+    };
+  }
+
   get name() {
     return 'zlink' as const;
   }
@@ -121,6 +138,9 @@ class LinkExtension extends MarkExtension<LinkOptions> {
           if (linkMark) {
             if (!linkMark.attrs.href) {
               tr = tr.removeMark(pos, pos + node.nodeSize, this.type);
+              if (node.text == String.fromCharCode(160)) {
+                tr = tr.delete(pos, pos + 1);
+              }
             }
           }
         }

@@ -4,7 +4,7 @@ import { useCommands, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
 
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import formatUrl from 'utils/formatUrl';
 import messageIds from 'zui/l10n/messageIds';
 
@@ -17,6 +17,7 @@ export type NodeWithPosition = {
 const LinkExtensionUI: FC = () => {
   const state = useEditorState();
   const view = useEditorView();
+  const messages = useMessages(messageIds);
   const { removeLink, removeUnfinishedLinks, updateLink, updateLinkText } =
     useCommands();
 
@@ -42,7 +43,14 @@ const LinkExtensionUI: FC = () => {
   useEffect(() => {
     const selectedNode = selectedNodes[0]?.node;
     if (selectedNode) {
-      setLinkText(selectedNode.text || '');
+      const currentText = selectedNode.text;
+
+      const textWithoutPlaceholder = currentText?.replaceAll(
+        String.fromCharCode(160),
+        ''
+      );
+
+      setLinkText(textWithoutPlaceholder || '');
       const mark = selectedNode.marks.find((mark) => mark.type.name == 'zlink');
       setLinkHref(mark?.attrs.href || '');
     }
@@ -69,6 +77,7 @@ const LinkExtensionUI: FC = () => {
   }, [state.selection]);
 
   const formattedHref = formatUrl(linkHref);
+  const canSubmit = !!formattedHref && linkText.length > 0;
 
   return (
     <Box position="relative">
@@ -108,6 +117,7 @@ const LinkExtensionUI: FC = () => {
                 <TextField
                   fullWidth
                   onChange={(ev) => setLinkText(ev.target.value)}
+                  placeholder={messages.editor.extensions.link.textPlaceholder()}
                   size="small"
                   value={linkText}
                 />
@@ -126,7 +136,6 @@ const LinkExtensionUI: FC = () => {
 
                 <Box display="flex" gap={1}>
                   <Button
-                    disabled={!linkHref}
                     onClick={() =>
                       removeLink({
                         from: selectedNodes[0].from,
@@ -139,7 +148,7 @@ const LinkExtensionUI: FC = () => {
                     <Msg id={messageIds.editor.extensions.link.remove} />
                   </Button>
                   <Button
-                    disabled={!formattedHref}
+                    disabled={!canSubmit}
                     onClick={() => {
                       updateLink({ href: formattedHref || '' });
                       updateLinkText(
