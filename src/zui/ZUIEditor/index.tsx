@@ -21,6 +21,7 @@ import messageIds from 'zui/l10n/messageIds';
 import EditorOverlays from './EditorOverlays';
 import LinkExtensionUI from './LinkExtensionUI';
 import VariableExtension from './extensions/VariableExtension';
+import ButtonExtensionUI from './ButtonExtensionUI';
 
 type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
 
@@ -152,6 +153,7 @@ const ZUIEditor: FC<Props> = ({
           />
           <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
           {enableImage && <ImageExtensionUI orgId={orgId} />}
+          <ButtonExtensionUI />
           <LinkExtensionUI />
           <EditorComponent />
           <OnChangeJSON
