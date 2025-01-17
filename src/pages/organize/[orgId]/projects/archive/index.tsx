@@ -36,7 +36,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
-    ACTIVITIES.CANVASS_ASSIGNMENT,
+    ACTIVITIES.AREA_ASSIGNMENT,
     ACTIVITIES.SURVEY,
     ACTIVITIES.TASK,
     ACTIVITIES.EMAIL,

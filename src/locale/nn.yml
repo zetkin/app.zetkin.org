@@ -22,6 +22,7 @@ feat:
       callassignments: Ringeoppdrag
       callers: Ringere
       campaigns: Prosjekter
+      canvassassignments: Dør til dør oppdrag
       closed: Stengt
       compose: Utforming
       conversation: Samtale
@@ -40,6 +41,7 @@ feat:
       organize: Organiser
       participants: Deltakere
       people: Folk
+      plan: Plan
       projects: Prosjekter
       questions: Spørsmål
       settings: Innstillinger
@@ -132,8 +134,10 @@ feat:
     today: I dag
   callAssignments:
     actions:
+      delete: Slett
       end: Avslutt oppdrag
       start: Start oppdrag
+      warning: '"{title}" blit slettet'
     blocked:
       callBackLater: Ba om å bli oppringt senere
       calledTooRecently: Ringt for kort tid siden
@@ -152,6 +156,7 @@ feat:
         remove: Fjern fra oppdrag
       add:
         alreadyAdded: Lagt til tidligere
+        placeholder: Begynn å skrive for å søke eller legge til en ny ringer
       customize:
         exclude:
           h: Utelukkede etiketter
@@ -278,6 +283,7 @@ feat:
     createButton:
       createActivity: Opprett
       createCallAssignment: Ringeoppdrag
+      createCanvassAssignment: Dør til dør oppdrag
       createEmail: E-post
       createEvent: Arrangement
       createSurvey: Spørreundersøkelse
@@ -294,6 +300,8 @@ feat:
         create: Nytt prosjekt
         error: Kunne ikke opprette prosjektet
         newCampaign: Mitt prosjekt
+      createCanvassAssignment:
+        defaultQuestion: Fullførte du oppdraget?
       createEmail:
         newEmail: E-post uten tittel
       createSurvey:
@@ -336,6 +344,7 @@ feat:
     linkGroup:
       createActivity: Ny aktivitet
       createCallAssignment: Nytt ringeoppdrag
+      createCanvassAssignment: Dør til dør oppdrag
       createEmail: Ny e-post
       createEvent: Nytt arrangement
       createSurvey: Ny spørreundersøkelse
@@ -388,10 +397,14 @@ feat:
           o: Annet
         noValue: Ingen
         title: Informasjon som skal slås sammen
+      findCandidateManually: Skriv for å finne mulige duplikater
       infoMessage: All aktivitet og alle etiketter fra personer som slås sammen blir
         bevart og synlig på den sammenslåtte personen
       infoTitle: Ingen informasjon vil gå tapt
       isDuplicateButton: Inkludér
+      lists:
+        hideManual: Skjul manuelt søk
+        showManual: Vis manuelt søk
       mergeButton: Slå sammen
       notDuplicateButton: Utelukk
       peopleNotBeingMerged: Folk som ikke blir slått sammen
@@ -544,6 +557,9 @@ feat:
       lockButton: Lås for levering
       lockDescription: Lås for å gjøre klar til levering
       locked: Låst
+      missingEmailsDescription: Det {numPeople, plural, one {er en person} other {er
+        folk}} som mangler e-postadresse i målgruppa. Hvis du retter det opp vil de
+        bli inkludert i målgruppa.
       scheduledDescription: Denne e-posten er planlagt, hvis du vil låse opp målgruppa
         må du avbryte levering først.
       sentSubtitle: Mottakere som var tilgjengelige for levering
@@ -569,10 +585,16 @@ feat:
     targets:
       defineButton: Velg målgruppe
       editButton: Rediger målgruppe
+      loading: Laster...
+      lockButton: Lås for levering
       locked: Mottakerne er låst for levering
+      lockedChip: Låst
       sentSubtitle: Du kan se smartsøket som ble brukt til å velge mottakerne av denne
         e-posten
       title: Mottakere
+      unlockAlert: Hvis du låser opp kan det bli færre eller flere folk i målgruppa,
+        basert på det dynamiske smartsøket.
+      unlockButton: Lås opp
       viewButton: Se målgruppe
     unsubscribePage:
       consent: Jeg forstår
@@ -831,6 +853,10 @@ feat:
     tooltipContent: Arrangement uten tittel viser type som tittel
     type:
       createType: Ny "{type}"
+      deleteMessage: Er du sikker på at du vil slette "{eventType}"arrangementstypen
+        for hele organisasjonen?
+      deleteWarning: Er du sikker på at du vil slette "{eventType}"arrangementstypen
+        for hele {orgTitle}?
       tooltip: Klikk for å endre type
       uncategorized: Ukategorisert
   files:
@@ -838,6 +864,8 @@ feat:
       dropToUpload: Slipp en fil her for å laste opp
       instructions: eller trekk og slipp
       selectClick: Klikk for å laste opp
+    image:
+      dimensions: '{width} x {height} piksler'
     libraryDialog:
       preview:
         backButton: Tilbake til biblioteket
@@ -855,6 +883,44 @@ feat:
       label: Type
       options:
         image: Bilder
+  home:
+    activityList:
+      actions:
+        call: Begynn å ringe
+        canvass: Begynn å besøke adresser
+        signUp: Meld på
+        undoSignup: Meld av
+      emptyListMessage: Du er ikke påmeldt noen aktiviteter
+      eventStatus:
+        booked: Du har blitt registrert på denne aktiviteten og vi regner med at du
+          skal møte opp. Kontakt {org} hvis du må avlyse.
+        needed: Du trengs
+        signedUp: Du har meldt deg på
+      filters:
+        call: Ring
+        canvass: Dør til dør
+        event: Arrangementer
+    allEventsList:
+      emptyList:
+        message: Finner ingen arrangementer
+        removeFiltersButton: Tøm filtre
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisasjoner} =1 {en organisasjon}
+          other {# organisasjoner}}'
+        thisWeek: Denne uka
+        today: I dag
+        tomorrow: I morgen
+    defaultTitles:
+      callAssignment: Ringeoppdrag uten navn
+      canvassAssignment: Dør til dør oppdrag uten navn
+      event: Arrangement uten navn
+      noLocation: Ingen fysisk plassering
+    footer:
+      privacyPolicy: Personvernerklæring
+    tabs:
+      feed: Alle arrangementer
+      home: Mine aktiviteter
+    title: Min Zetkin
   import:
     actionButtons:
       back: Tilbake
@@ -871,14 +937,19 @@ feat:
             Y, M og D, og tegnene som skiller dem. For eksempel, hvis du har datoer
             skrevet som 1998.03.23, så skal de beskrives med YYYY.MM.DD.
           customFormatLabel: Tilpasset datoformat
+          dateConfigDescription: Velg formatet for verdiene i kolonnen så de kan importeres
+            som riktige datoer
           dateInputLabel: Datoformat
           dropDownLabel: Velg format
           emptyPreview: Kunne ikke oversettes
           header: Sett opp datoformat
+          invalidDateFormatWarning: Det er verdier i kolonnen som ikke passer med
+            dette formatet, er du sikker på at du har valgt riktig format?
           listSubHeaders:
             custom: Tilpasset
             dates: Datoformater
             personNumbers: Personnummer
+          noCustomFormatWarning: Du har ikke valgt et egenvalgt datoformat.
           personNumberFormat:
             dk:
               description: Verdiene i denne kolonnen oversettes fra 10 siffers danske
@@ -892,12 +963,26 @@ feat:
               description: Verdiene i denne kolonnen oversettes fra 10 eller 12 siffers
                 svenske personnummer (YYMMDD-XXXX eller YYYYMMDD-XXXX) til datoer.
               label: Svensk personnummer
+        enum:
+          header: Tildel veriene til alternativer
+          none: Ingen
+          numberOfRows: '{numRows, plural, =1 {en rad} other {# rader}}'
+          value: Verdi
+        genders:
+          label: Kjønn
+          selectLabels:
+            f: Kvinne
+            m: Mann
+            o: Annet
+            unknown: Ukjent
         ids:
           configExplanation: Import med medlemsnummer gjør at Zetkin kan oppdatere
             eksisterende folk (nå og senere), heller enn å lage duplikater.
           externalID: Medlemsnummer
           externalIDExplanation: Tallene i denne kolonnen er medlemsnummer fra Hypersys
             (ikke Zetkin).
+          externalIDInfo: Ekstern ID er et nummer som kommer fra et annet system enn
+            Zetkin, for eksempel medlemsregisteret.
           header: Sett opp ID/Medlemsnummer
           showOrganizationSelectButton: Legg til i...
           wrongIDFormatWarning: Verdiene i denne kolonnen ser ikke ut som Zetkin IDer.
@@ -906,10 +991,13 @@ feat:
           zetkinID: Zetkin ID
           zetkinIDExplanation: Tallene i denne kolonnen er basert på en eksport fra
             Zetkin.
+          zetkinIDInfo: Zetkin ID er et nummer knyttet til en person som finnes i
+            Zetkin fra før. Du finner det i data som er eksportert fra Zetkin.
         orgs:
           guess: Foreslå organisasjoner
           header: Velg organisasjoner
           organizations: Organisasjon
+          showOrganizationSelectButton: Knytt til
           status: Status
         tags:
           empty: Tomt
@@ -922,6 +1010,7 @@ feat:
         configButton: Sett opp
         defaultColumnHeader: Kolonne {coloumnIndex}
         emptyStateMessage: Begynn med å sette opp kolonnene i filen.
+        externalID: Ekstern ID
         fileHeader: Fil
         finishedMappingDates: Oversetter {numValues, plural, =1 {1 verdi} other {#
           verdier}} fra {dateFormat, select, se {Swedish personnummer} no {Norwegian
@@ -935,6 +1024,7 @@ feat:
           to {numMappedTo, plural, =1 {en etikett} other {# etiketter}}
         header: Oppsett
         id: ID
+        infoButton: Info
         mapValuesButton: Sett opp verdier
         messages:
           manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
@@ -946,6 +1036,7 @@ feat:
             {# tomme rader}}.'
           oneValueNoEmpty: '{firstValue}.'
           onlyEmpty: '{numEmpty, plural, =1 {en tom rad} other {# tomme rader}}.'
+          readOnlyField: '{title} (kan ikke redigeres)'
           threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} og {numEmpty,
             plural, =1 {en tom rad} other {# tomme rader}}.'
           threeValuesNoEmpty: '{firstValue}, {secondValue} og {thirdValue}.'
@@ -959,6 +1050,8 @@ feat:
         tags: Etiketter
         unfinished:
           date: Du må sette opp datoformat
+          enum: Du må tildele verdier
+          gender: Du må tildele verdier
           id: Du må sette opp ID
           org: Du må sette opp verdier
           tag: Du må sette opp verdier
@@ -967,10 +1060,17 @@ feat:
           id: ID
           other: Andre
         zetkinHeader: Zetkin
+        zetkinID: Zetkin ID
       preview:
         columnHeader:
+          gender: Kjønn
           org: Organisasjon
           tags: Etiketter
+        genders:
+          f: Kvinne
+          m: Mann
+          o: Annet
+          unknown: Ukjent
         next: Neste
         noOrg: Ingen organisasjon
         noTags: Ingen etiketter
@@ -1116,6 +1216,7 @@ feat:
       labels:
         addField: Legg til felt
         description: Beskrivelse
+        requireEmailVerification: Krev e-postverifisering
         title: Tittel
       title: Rediger skjema
     forms: Skjemaer
@@ -1137,6 +1238,10 @@ feat:
       approveButton: Godkjenn
       form: Skjema
       rejectButton: Avvis
+    submissionVerifiedPage:
+      h: Takk!
+      info: Påmeldingen din er verifisert og tillitsvalgte i {org} vil gå gjennom
+        den.
   journeys:
     instance:
       addAssigneeButton: Legg til kontaktperson
@@ -1254,6 +1359,18 @@ feat:
         timeline: Tidslinje
       title: Planer
   organizations:
+    gen3:
+      description: Dette er den nye (generasjon 3) nettapplikasjonen. Hvis du er kjent
+        med den gamle så vil du finne mange nye funksjoner og forbedret design her.
+        Hvis du vil kan du bruke den gamle versjonen litt til.
+      gen2Button: Gå til gammel versjon
+      title: Velkommen til nye Zetkin!
+    notOrganizer:
+      description: Denne delen av Zetkin er bare tilgjengelige for de som har en administratorrolle.
+        Du har ikke en slik rolle, hvis du skulle hatt det må du kontakte de som er
+        ansvarlige for organisasjonen din.
+      myPageButton: Gå til aktivistportalen
+      title: Du har ikke tilgang som administrator
     page:
       title: Velg organisasjon
     sidebar:
@@ -1268,6 +1385,8 @@ feat:
   profile:
     delete:
       button: Fjern person
+      confirm: Er du sikker på at du vil slette {name} fra {org}, og alle relaterte
+        organisasjoner? Denne handlingen kan ikke angres.
       title: Slett konto
       warning: Dette kan ikke angres!
     details:
@@ -1276,6 +1395,8 @@ feat:
     editButtonClose: Avbryt redigering av {title}
     editButtonLabel: Rediger detaljer
     editPersonHeader: Rediger {person}
+    ellipsisMenu:
+      merge: Slå sammen med...
     genders:
       f: Kvinne
       m: Mann
@@ -1411,6 +1532,9 @@ feat:
         email_history:
           description: Hvem ble tilsendt hva, når?
           title: Basert på eposthistorikk
+        joinform:
+          description: Finn folk som har fyllt ut innmeldingsskjema
+          title: Basert på innmeldingsskjema
         journey_subjects:
           description: Finn folk som har en pågående plan eller har fullført en
           title: Folk som deltar i en plan
@@ -1560,6 +1684,10 @@ feat:
           notSent: ikke blitt tilsendt
           opened: åpnet
           sent: blitt tilsendt
+      joinForm:
+        anyForm: et hvilket som helst innmeldingsskjema
+        form: '"{title}"'
+        inputString: '{addRemoveSelect} folk som fylte ut {formSelect} {timeFrame}'
       journey:
         condition:
           conditionSelect:
@@ -1625,6 +1753,7 @@ feat:
           sub: Fjern
         edit:
           date: '{fieldSelect} er {timeFrame}'
+          enum: '{fieldSelect} er "{selectInput}"'
           none: Organisasjonen har ingen spesialfelter
           text: '{fieldSelect} {freeTextInput}'
           url: '{fieldSelect} {freeTextInput}'
@@ -1633,6 +1762,7 @@ feat:
         inputString: '{addRemoveSelect} folk med {field}.'
         preview:
           date: '{fieldName} {timeFrame}'
+          enum: '{fieldName} er "{searchTerm}"'
           text: '{fieldName} {searchTerm}'
           url: '{fieldName} {searchTerm}'
       personTags:
@@ -1980,11 +2110,14 @@ feat:
         unlockButton: Lås opp
     layout:
       actions:
+        delete: Slett undersøkelse
         publish: Samle svar
         unpublish: Steng
+        warning: '"{surveyTitle}" blir slettet'
       stats:
         questions: '{numQuestions, plural, one {ett spørsmål} other {# spørsmål}}'
         submissions: '{numSubmissions, plural, one {ett svar} other {# svar}}'
+      unknownTitle: Spørreundersøkelse uten navn
     optionCollapse:
       collapse: Skjul
       more: '{numOfOptions, plural, one {Vis ett alternativ til} other {Vis # flere
@@ -2019,6 +2152,12 @@ feat:
       personRecordColumn: Innsender
       suggestedPeople: Foreslåtte folk
       unlink: Fjern kobling
+    surveyDialog:
+      add: Legg til
+      cancel: Ikke legg til
+      description: Personen du skal koble til har ikke e-postadresse, men de har oppgitt
+        en i undersøkelsen, vil du legge adressen til personen i Zetkin?
+      title: Legg til e-postadresse
     surveyForm:
       accept: Jeg aksepterer vilkårene under
       error: Noe gikk galt med å sende inn svarene, forsøk igjen senere.
@@ -2288,8 +2427,10 @@ feat:
           warning: Er du sikker på at du vil slette lista? Dette kan ikke angres.
       menu:
         delete: Slett
+        duplicate: Duplisér
         move: Flytt
         rename: Gi nytt navn
+        viewCopy: '{viewName} - kopi'
       moveToFolder: Flytt til {folder}
       moveToRoot: Flytt til forsiden for lister
     browserLayout:
@@ -2566,7 +2707,12 @@ feat:
         delete: Slett liste
         editQuery: Rediger smartsøk
         makeDynamic: Konverter til smarsøkliste
-        makeStatic: Konverter til statisk liste
+        makeStatic:
+          confirmDialogInfo: Hvis du konverterer denne lista til en statisk liste
+            blir smartsøket fjernet og folkene søket la til forsvinner fra lista.
+          confirmDialogSubmitLabel: Konverter
+          confirmDialogTitle: Konverter til statisk liste
+          label: Konverter til statisk liste
       jumpMenu:
         placeholder: Skriv for å finne liste
       subtitle:
@@ -2584,6 +2730,11 @@ glob:
     configure: Rediger og sett opp
     edit: Redigering
     readonly: Skrivebeskyttet
+  genderOptions:
+    f: Kvinne
+    m: Mann
+    o: Annet
+    unspecified: Uspesifisert
   personFields:
     alt_phone: Alternativt telefonnummer
     city: Poststed
@@ -2622,6 +2773,8 @@ zui:
     cancel: Avbryt
     createBtn: Opprett
     defaultitle: Opprett person
+    enumFields:
+      noneOption: Ingen
     genders:
       f: Kvinne
       m: Mann
@@ -2670,6 +2823,10 @@ zui:
     multiDayEndsToday: '{startDate} - i dag'
     multiDayToday: I dag - {endDate}
     singleDayToday: I dag
+  duration:
+    days: '{n, plural, =1 {en dag} other {# dager}}'
+    h: '{n}t'
+    ms: '{n}m'
   editTextInPlace:
     tooltip:
       edit: Klikk for å redigere

@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 import { ZetkinArea } from './types';
 
 type ZetkinAreaModelType = {
-  description: string | null;
+  description: string;
   orgId: number;
   points: ZetkinArea['points'];
   tags: { id: number; value?: string }[];
-  title: string | null;
+  title: string;
 };
 
 const areaSchema = new mongoose.Schema<ZetkinAreaModelType>({
