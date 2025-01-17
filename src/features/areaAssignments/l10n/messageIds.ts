@@ -121,6 +121,9 @@ export default makeMessages('feat.areaAssignments', {
       description: m('This assignment has not been planned yet'),
       startPlanningButton: m('Plan now'),
     },
+    metrics: {
+      title: m('Total'),
+    },
     progress: {
       headers: {
         households: m('Households visited'),
