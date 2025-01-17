@@ -28,9 +28,10 @@ type Props = {
     id: string;
     label: string;
   }[];
+  enableVariable: boolean;
 };
 
-const EditorOverlays: FC<Props> = ({ blocks }) => {
+const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
@@ -170,6 +171,7 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
         <BlockToolbar
           curBlockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
+          enableVariable={enableVariable}
           pos={state.selection.$anchor.pos}
         />
       )}
