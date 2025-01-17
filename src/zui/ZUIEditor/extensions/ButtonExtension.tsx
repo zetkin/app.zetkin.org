@@ -30,6 +30,9 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
       ...override,
       attrs: {
         ...extra.defaults(),
+        href: {
+          default: null,
+        },
       },
       parseDOM: [
         {
@@ -77,6 +80,33 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
 
   get name() {
     return 'zbutton' as const;
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  setButtonHref(pos: number, href: string): CommandFunction {
+    return ({ dispatch, tr }) => {
+      const resolved = tr.doc.resolve(pos);
+      tr.setNodeAttribute(resolved.before(), 'href', href);
+      dispatch?.(tr);
+      return true;
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  setButtonText(pos: number, text: string): CommandFunction {
+    return ({ dispatch, tr }) => {
+      const newTextNode = this.type.schema.text(text);
+      const resolved = tr.doc.resolve(pos);
+
+      tr.replaceWith(resolved.start(), resolved.end(), newTextNode);
+
+      dispatch?.(tr);
+      return true;
+    };
   }
 }
 
