@@ -137,6 +137,7 @@ export default makeMessages('zui', {
         apply: m('Apply'),
         cancel: m('Cancel'),
         remove: m('Remove'),
+        textPlaceholder: m('Add link text here'),
       },
     },
     placeholder: m('Type / to insert block or just type some text'),

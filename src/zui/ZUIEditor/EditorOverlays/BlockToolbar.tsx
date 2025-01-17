@@ -20,6 +20,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   const {
     convertParagraph,
     focus,
+    insertEmptyLink,
     toggleHeading,
     pickImage,
     removeLink,
@@ -81,8 +82,13 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                 <Button
                   onClick={() => {
                     if (!active.zlink()) {
-                      setLink();
-                      focus();
+                      if (state.selection.empty) {
+                        insertEmptyLink();
+                        focus();
+                      } else {
+                        setLink();
+                        focus();
+                      }
                     } else {
                       if (selectedNodes.length == 1) {
                         removeLink({
