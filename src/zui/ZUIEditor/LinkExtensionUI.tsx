@@ -1,12 +1,9 @@
-import { OpenInNew } from '@mui/icons-material';
-import { Box, Button, IconButton, Paper, TextField } from '@mui/material';
 import { useCommands, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
 
-import { Msg, useMessages } from 'core/i18n';
 import formatUrl from 'utils/formatUrl';
-import messageIds from 'zui/l10n/messageIds';
+import TextAndHrefOverlay from './elements/TextAndHrefOverlay';
 
 export type NodeWithPosition = {
   from: number;
@@ -17,7 +14,6 @@ export type NodeWithPosition = {
 const LinkExtensionUI: FC = () => {
   const state = useEditorState();
   const view = useEditorView();
-  const messages = useMessages(messageIds);
   const { removeLink, removeUnfinishedLinks, updateLink, updateLinkText } =
     useCommands();
 
@@ -77,100 +73,36 @@ const LinkExtensionUI: FC = () => {
   }, [state.selection]);
 
   const formattedHref = formatUrl(linkHref);
-  const canSubmit = !!formattedHref && linkText.length > 0;
 
   return (
-    <Box position="relative">
-      <Box
-        sx={{
-          left: left,
-          minWidth: 300,
-          position: 'absolute',
-          top: top + 20,
-        }}
-      >
-        {showLinkMaker && (
-          <Paper elevation={1}>
-            <Box
-              alignItems="stretch"
-              display="flex"
-              flexDirection="column"
-              gap={1}
-              padding={1}
-            >
-              <Box display="flex">
-                <TextField
-                  fullWidth
-                  onChange={(ev) => setLinkHref(ev.target.value)}
-                  size="small"
-                  value={linkHref}
-                />
-                <IconButton
-                  disabled={!formattedHref}
-                  href={formattedHref || ''}
-                  target="_blank"
-                >
-                  <OpenInNew />
-                </IconButton>
-              </Box>
-              <Box sx={{ display: 'flex', flexGrow: 1 }}>
-                <TextField
-                  fullWidth
-                  onChange={(ev) => setLinkText(ev.target.value)}
-                  placeholder={messages.editor.extensions.link.textPlaceholder()}
-                  size="small"
-                  value={linkText}
-                />
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Button
-                  onClick={(ev) => {
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                    setSelectedNodes([]);
-                  }}
-                  size="small"
-                >
-                  <Msg id={messageIds.editor.extensions.link.cancel} />
-                </Button>
-
-                <Box display="flex" gap={1}>
-                  <Button
-                    onClick={() =>
-                      removeLink({
-                        from: selectedNodes[0].from,
-                        to: selectedNodes[0].to,
-                      })
-                    }
-                    size="small"
-                    variant="text"
-                  >
-                    <Msg id={messageIds.editor.extensions.link.remove} />
-                  </Button>
-                  <Button
-                    disabled={!canSubmit}
-                    onClick={() => {
-                      updateLink({ href: formattedHref || '' });
-                      updateLinkText(
-                        {
-                          from: selectedNodes[0].from,
-                          to: selectedNodes[0].to,
-                        },
-                        linkText
-                      );
-                    }}
-                    size="small"
-                    variant="outlined"
-                  >
-                    <Msg id={messageIds.editor.extensions.link.apply} />
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </Paper>
-        )}
-      </Box>
-    </Box>
+    <TextAndHrefOverlay
+      href={linkHref}
+      onCancel={() => {
+        setSelectedNodes([]);
+      }}
+      onChangeHref={(href) => setLinkHref(href)}
+      onChangeText={(text) => setLinkText(text)}
+      onRemove={() => {
+        removeLink({
+          from: selectedNodes[0].from,
+          to: selectedNodes[0].to,
+        });
+      }}
+      onSubmit={() => {
+        updateLink({ href: formattedHref || '' });
+        updateLinkText(
+          {
+            from: selectedNodes[0].from,
+            to: selectedNodes[0].to,
+          },
+          linkText
+        );
+      }}
+      open={showLinkMaker}
+      text={linkText}
+      x={left}
+      y={top + 20}
+    />
   );
 };
 
