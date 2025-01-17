@@ -144,6 +144,11 @@ export default makeMessages('zui', {
       zimage: m('Image'),
     },
     placeholder: m('Type / to insert block or just type some text'),
+    variables: {
+      firstName: m('First Name'),
+      fullName: m('Full Name'),
+      lastName: m('Last Name'),
+    },
   },
   ellipsisMenu: {
     ariaLabel: m('More options'),

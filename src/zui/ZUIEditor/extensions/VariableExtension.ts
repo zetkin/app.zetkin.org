@@ -9,8 +9,18 @@ import {
 } from 'remirror';
 
 type VariableName = 'first_name' | 'last_name' | 'full_name';
+type VariableLabelMap = {
+  [name in VariableName]: string;
+};
 
 export default class VariableExtension extends NodeExtension {
+  private _varLabels: VariableLabelMap;
+
+  constructor(varLabels: VariableLabelMap) {
+    super();
+    this._varLabels = varLabels;
+  }
+
   createNodeSpec(
     extra: ApplySchemaAttributes,
     override: NodeSpecOverride
@@ -42,7 +52,7 @@ export default class VariableExtension extends NodeExtension {
       ],
       toDOM: (node) => {
         const attrs = omitExtraAttributes(node.attrs, extra);
-        const name = attrs.name as string;
+        const name = attrs.name as VariableName;
         return [
           'span',
           {
@@ -51,7 +61,7 @@ export default class VariableExtension extends NodeExtension {
             class: 'zvariable',
             type: 'variable',
           },
-          name,
+          this._varLabels[name],
         ];
       },
     };

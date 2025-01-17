@@ -41,7 +41,11 @@ const ZUIEditor: FC<Props> = ({
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
   const headingExtension = new HeadingExtension({});
-  const varExtension = new VariableExtension();
+  const varExtension = new VariableExtension({
+    first_name: messages.variables.firstName(),
+    full_name: messages.variables.fullName(),
+    last_name: messages.variables.lastName(),
+  });
 
   const blockExtensions: ZetkinExtension[] = [];
   const otherExtensions: Extension[] = [];
