@@ -145,8 +145,7 @@ const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
     }),
   ];
 
-  const showBlockToolbar =
-    !showBlockMenu && !!currentBlock && view.hasFocus() && !typing;
+  const showBlockToolbar = !showBlockMenu && !!currentBlock && !typing;
 
   const showBlockInsert = !showBlockMenu && !typing;
 
