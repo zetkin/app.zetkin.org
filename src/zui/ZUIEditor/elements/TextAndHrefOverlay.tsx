@@ -1,6 +1,13 @@
 import { OpenInNew } from '@mui/icons-material';
-import { Box, Button, IconButton, Paper, TextField } from '@mui/material';
-import { FC } from 'react';
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Popper,
+  TextField,
+} from '@mui/material';
+import { FC, useState } from 'react';
 
 import formatUrl from 'utils/formatUrl';
 import messageIds from 'zui/l10n/messageIds';
@@ -31,6 +38,7 @@ const TextAndHrefOverlay: FC<Props> = ({
   x,
   y,
 }) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement>();
   const messages = useMessages(messageIds);
 
   const formattedHref = formatUrl(href);
@@ -39,14 +47,14 @@ const TextAndHrefOverlay: FC<Props> = ({
   return (
     <Box position="relative">
       <Box
+        ref={(el: HTMLElement) => setAnchorEl(el)}
         sx={{
           left: x,
-          minWidth: 300,
           position: 'absolute',
           top: y,
         }}
       >
-        {open && (
+        <Popper anchorEl={anchorEl} open={open}>
           <Paper elevation={1}>
             <Box
               alignItems="stretch"
@@ -118,7 +126,7 @@ const TextAndHrefOverlay: FC<Props> = ({
               </Box>
             </Box>
           </Paper>
-        )}
+        </Popper>
       </Box>
     </Box>
   );
