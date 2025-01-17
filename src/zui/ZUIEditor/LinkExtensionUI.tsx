@@ -3,6 +3,8 @@ import { useCommands, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
 
+import formatUrl from 'utils/formatUrl';
+
 export type NodeWithPosition = {
   from: number;
   node: ProsemirrorNode;
@@ -63,6 +65,8 @@ const LinkExtensionUI: FC = () => {
     setSelectionHasOtherNodes(hasOtherNodes);
   }, [state.selection]);
 
+  const formattedHref = formatUrl(linkHref);
+
   return (
     <Box position="relative">
       <Box
@@ -85,9 +89,9 @@ const LinkExtensionUI: FC = () => {
               />
               <Box display="flex">
                 <Button
-                  disabled={!linkHref}
+                  disabled={!formattedHref}
                   onClick={() => {
-                    updateLink({ href: linkHref });
+                    updateLink({ href: formattedHref || '' });
                     updateLinkText(
                       { from: selectedNodes[0].from, to: selectedNodes[0].to },
                       linkText
