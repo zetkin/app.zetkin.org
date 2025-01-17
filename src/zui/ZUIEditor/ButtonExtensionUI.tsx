@@ -42,7 +42,7 @@ const ButtonExtensionUI: FC = () => {
     <TextAndHrefOverlay
       href={href}
       onCancel={() => {
-        // TODO: Hide somehow
+        setVisible(false);
       }}
       onChangeHref={(href) => setHref(href)}
       onChangeText={(text) => setText(text)}
