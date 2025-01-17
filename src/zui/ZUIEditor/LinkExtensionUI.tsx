@@ -1,4 +1,5 @@
-import { Box, Button, Paper, TextField } from '@mui/material';
+import { OpenInNew } from '@mui/icons-material';
+import { Box, Button, IconButton, Paper, TextField } from '@mui/material';
 import { useCommands, useEditorState, useEditorView } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { ProsemirrorNode } from 'remirror';
@@ -79,13 +80,22 @@ const LinkExtensionUI: FC = () => {
         {showLinkMaker && (
           <Paper elevation={1}>
             <Box display="flex" flexDirection="column" gap={1} padding={1}>
+              <Box display="flex">
+                <TextField
+                  onChange={(ev) => setLinkHref(ev.target.value)}
+                  value={linkHref}
+                />
+                <IconButton
+                  disabled={!formattedHref}
+                  href={formattedHref || ''}
+                  target="_blank"
+                >
+                  <OpenInNew />
+                </IconButton>
+              </Box>
               <TextField
                 onChange={(ev) => setLinkText(ev.target.value)}
                 value={linkText}
-              />
-              <TextField
-                onChange={(ev) => setLinkHref(ev.target.value)}
-                value={linkHref}
               />
               <Box display="flex">
                 <Button
