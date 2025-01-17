@@ -9,23 +9,29 @@ type Props = {
 };
 
 const ImageExtensionUI: FC<Props> = ({ orgId }) => {
-  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<number | null>(null);
   const { setImageFile } = useCommands();
 
-  useExtensionEvent(ImageExtension, 'onCreate', () => {
-    setOpen(true);
+  useExtensionEvent(ImageExtension, 'onCreate', (pos) => {
+    setPos(pos);
+  });
+
+  useExtensionEvent(ImageExtension, 'onPick', (newPos) => {
+    setPos(newPos);
   });
 
   return (
     <FileLibraryDialog
       onClose={() => {
-        setOpen(false);
+        setPos(null);
       }}
       onSelectFile={(file) => {
-        setImageFile(file);
-        setOpen(false);
+        if (pos) {
+          setImageFile(file, pos);
+          setPos(null);
+        }
       }}
-      open={open}
+      open={!!pos}
       orgId={orgId}
     />
   );

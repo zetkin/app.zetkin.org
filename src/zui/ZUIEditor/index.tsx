@@ -10,9 +10,6 @@ import { Box } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
-import BlockToolbar from './BlockToolbar';
-import BlockInsert from './BlockInsert';
-import BlockMenu from './BlockMenu';
 import BlockMenuExtension from './extensions/BlockMenuExtension';
 import EmptyBlockPlaceholder from './EmptyBlockPlaceholder';
 import ImageExtension from './extensions/ImageExtension';
@@ -20,6 +17,7 @@ import ImageExtensionUI from './ImageExtensionUI';
 import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import EditorOverlays from './EditorOverlays';
 
 type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
 
@@ -111,15 +109,13 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
     >
       <div style={{ minHeight: '200px' }}>
         <Remirror initialContent={state} manager={manager}>
-          <BlockInsert />
-          <BlockToolbar />
-          <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
-          <BlockMenu
+          <EditorOverlays
             blocks={extensions.map((ext) => ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
           />
+          <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
           {enableImage && <ImageExtensionUI orgId={orgId} />}
           <EditorComponent />
           <OnChangeJSON
