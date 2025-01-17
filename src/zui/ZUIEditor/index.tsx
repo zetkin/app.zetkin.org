@@ -7,7 +7,7 @@ import {
 import { FC } from 'react';
 import { BoldExtension, HeadingExtension } from 'remirror/extensions';
 import { Extension, PasteRulesExtension } from 'remirror';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
@@ -37,6 +37,7 @@ const ZUIEditor: FC<Props> = ({
   enableVariable,
 }) => {
   const messages = useMessages(messageIds.editor);
+  const theme = useTheme();
 
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
@@ -118,6 +119,18 @@ const ZUIEditor: FC<Props> = ({
         },
         '.zimage-image': {
           maxWidth: '100%',
+        },
+        '.zvariable': {
+          '&.ProseMirror-selectednode': {
+            outlineColor: theme.palette.grey[600],
+            outlineStyle: 'solid',
+            outlineWidth: 1,
+          },
+          bgcolor: theme.palette.grey[400],
+          borderRadius: '1em',
+          display: 'inline-block',
+          mx: 0.25,
+          px: 1,
         },
         ['[contenteditable="true"]']: {
           padding: 1,
