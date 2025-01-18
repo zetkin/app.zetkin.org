@@ -141,6 +141,11 @@ export default makeMessages('zui', {
       },
     },
     placeholder: m('Type / to insert block or just type some text'),
+    variables: {
+      firstName: m('First Name'),
+      fullName: m('Full Name'),
+      lastName: m('Last Name'),
+    },
   },
   futures: {
     errorLoading: m('There was an error loading the data.'),

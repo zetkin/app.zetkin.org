@@ -5,7 +5,6 @@ import {
   usePositioner,
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { findParentNode, isNodeSelection, ProsemirrorNode } from 'remirror';
 import { Box } from '@mui/material';
 
 import BlockToolbar from './BlockToolbar';
@@ -28,9 +27,10 @@ type Props = {
     id: string;
     label: string;
   }[];
+  enableVariable: boolean;
 };
 
-const EditorOverlays: FC<Props> = ({ blocks }) => {
+const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
@@ -41,53 +41,29 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
   const [currentBlock, setCurrentBlock] = useState<BlockData | null>(null);
 
   const findSelectedNode = useCallback(() => {
-    let node: ProsemirrorNode | null = null;
-    let nodeElem: HTMLElement | null = null;
-    if (isNodeSelection(state.selection)) {
-      const elem = view.nodeDOM(state.selection.$from.pos);
+    const pos = state.selection.$head.pos;
+    const resolved = state.doc.resolve(pos);
+    const node = resolved.node(1);
+    if (node) {
+      const posBeforeTextContent = resolved.before(1);
+      const elem = view.nodeDOM(posBeforeTextContent);
       if (elem instanceof HTMLElement) {
-        node = state.selection.node;
-        nodeElem = elem;
+        const nodeElem = elem;
+        const editorRect = view.dom.getBoundingClientRect();
+        const nodeRect = nodeElem.getBoundingClientRect();
+        const x = nodeRect.x - editorRect.x;
+        const y = nodeRect.y - editorRect.y;
+        setCurrentBlock({
+          rect: {
+            ...nodeRect.toJSON(),
+            left: x,
+            top: y,
+            x: x,
+            y: y,
+          },
+          type: node.type.name,
+        });
       }
-    } else {
-      const result = findParentNode({
-        predicate: () => true,
-        selection: state.selection,
-      });
-
-      if (result) {
-        node = result.node;
-        let elem = view.nodeDOM(result.start);
-
-        while (
-          elem &&
-          elem.parentNode &&
-          elem.parentElement?.contentEditable != 'true'
-        ) {
-          elem = elem.parentNode;
-        }
-
-        if (elem instanceof HTMLElement) {
-          nodeElem = elem;
-        }
-      }
-    }
-
-    if (node && nodeElem) {
-      const editorRect = view.dom.getBoundingClientRect();
-      const nodeRect = nodeElem.getBoundingClientRect();
-      const x = nodeRect.x - editorRect.x;
-      const y = nodeRect.y - editorRect.y;
-      setCurrentBlock({
-        rect: {
-          ...nodeRect.toJSON(),
-          left: x,
-          top: y,
-          x: x,
-          y: y,
-        },
-        type: node.type.name,
-      });
     }
   }, [view, state.selection]);
 
@@ -144,8 +120,7 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
     }),
   ];
 
-  const showBlockToolbar =
-    !showBlockMenu && !!currentBlock && view.hasFocus() && !typing;
+  const showBlockToolbar = !showBlockMenu && !!currentBlock && !typing;
 
   const showBlockInsert = !showBlockMenu && !typing;
 
@@ -170,6 +145,7 @@ const EditorOverlays: FC<Props> = ({ blocks }) => {
         <BlockToolbar
           curBlockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
+          enableVariable={enableVariable}
           pos={state.selection.$anchor.pos}
         />
       )}

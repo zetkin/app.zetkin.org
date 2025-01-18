@@ -3,16 +3,20 @@ import { useActive, useCommands, useEditorState } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 
 import { NodeWithPosition } from '../LinkExtensionUI';
+import VariableToolButton from './VariableToolButton';
+import { VariableName } from '../extensions/VariableExtension';
 
 type BlockToolbarProps = {
   curBlockType: string;
   curBlockY: number;
+  enableVariable: boolean;
   pos: number;
 };
 
 const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockType,
   curBlockY,
+  enableVariable,
   pos,
 }) => {
   const active = useActive();
@@ -21,6 +25,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
     convertParagraph,
     focus,
     insertEmptyLink,
+    insertVariable,
     toggleHeading,
     pickImage,
     removeLink,
@@ -108,6 +113,15 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                 </Button>
               </>
             )}
+            {enableVariable &&
+              (curBlockType == 'paragraph' || curBlockType == 'heading') && (
+                <VariableToolButton
+                  onSelect={(varName: VariableName) => {
+                    insertVariable(varName);
+                    focus();
+                  }}
+                />
+              )}
           </Box>
         </Paper>
       </Box>

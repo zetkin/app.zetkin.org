@@ -6,8 +6,8 @@ import {
 } from '@remirror/react';
 import { FC } from 'react';
 import { BoldExtension, HeadingExtension } from 'remirror/extensions';
-import { PasteRulesExtension } from 'remirror';
-import { Box } from '@mui/material';
+import { Extension, PasteRulesExtension } from 'remirror';
+import { Box, useTheme } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
@@ -19,6 +19,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import EditorOverlays from './EditorOverlays';
+import VariableExtension from './extensions/VariableExtension';
 import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
 
@@ -28,27 +29,44 @@ type Props = {
   enableButton?: boolean;
   enableHeading?: boolean;
   enableImage?: boolean;
+  enableVariable?: boolean;
 };
 
-const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
+const ZUIEditor: FC<Props> = ({
+  enableButton,
+  enableHeading,
+  enableImage,
+  enableVariable,
+}) => {
   const messages = useMessages(messageIds.editor);
+  const theme = useTheme();
 
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
   const headingExtension = new HeadingExtension({});
+  const varExtension = new VariableExtension({
+    first_name: messages.variables.firstName(),
+    full_name: messages.variables.fullName(),
+    last_name: messages.variables.lastName(),
+  });
 
-  const extensions: ZetkinExtension[] = [];
+  const blockExtensions: ZetkinExtension[] = [];
+  const otherExtensions: Extension[] = [];
 
   if (enableButton) {
-    extensions.push(btnExtension);
+    blockExtensions.push(btnExtension);
   }
 
   if (enableImage) {
-    extensions.push(imgExtension);
+    blockExtensions.push(imgExtension);
   }
 
   if (enableHeading) {
-    extensions.push(headingExtension);
+    blockExtensions.push(headingExtension);
+  }
+
+  if (enableVariable) {
+    otherExtensions.push(varExtension);
   }
 
   const { orgId } = useNumericRouteParams();
@@ -71,7 +89,8 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
     extensions: () => [
       new PasteRulesExtension({}),
       new BoldExtension({}),
-      ...extensions,
+      ...blockExtensions,
+      ...otherExtensions,
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
@@ -103,6 +122,18 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
         '.zimage-image': {
           maxWidth: '100%',
         },
+        '.zvariable': {
+          '&.ProseMirror-selectednode': {
+            outlineColor: theme.palette.grey[600],
+            outlineStyle: 'solid',
+            outlineWidth: 1,
+          },
+          bgcolor: theme.palette.grey[400],
+          borderRadius: '1em',
+          display: 'inline-block',
+          mx: 0.25,
+          px: 1,
+        },
         ['[contenteditable="true"]']: {
           padding: 1,
         },
@@ -114,10 +145,11 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
       <div style={{ minHeight: '200px' }}>
         <Remirror initialContent={state} manager={manager}>
           <EditorOverlays
-            blocks={extensions.map((ext) => ({
+            blocks={blockExtensions.map((ext) => ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
+            enableVariable={!!enableVariable}
           />
           <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
           {enableImage && <ImageExtensionUI orgId={orgId} />}
