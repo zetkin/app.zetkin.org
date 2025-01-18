@@ -8,6 +8,7 @@ import { FC } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
+  HardBreakExtension,
   HeadingExtension,
   OrderedListExtension,
 } from 'remirror/extensions';
@@ -110,6 +111,7 @@ const ZUIEditor: FC<Props> = ({
       new BoldExtension({}),
       ...blockExtensions,
       ...otherExtensions,
+      new HardBreakExtension(),
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
