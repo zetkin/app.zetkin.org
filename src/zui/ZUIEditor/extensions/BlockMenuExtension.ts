@@ -23,11 +23,17 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
     return [
       {
         char: '/',
-        isValidPosition: (range) => range.$from.parentOffset == 0,
+        isValidPosition: (range) => {
+          return range.$from.parentOffset == 0;
+        },
         name: 'slash',
-        onChange: (details) => {
+        onChange: (details, tr) => {
+          const resolved = tr.doc.resolve(details.range.to);
           const exited = !!details.exitReason;
-          this.options.onBlockQuery(exited ? null : details.query.full);
+          const inParagraph = resolved.node(1).type.name == 'paragraph';
+          this.options.onBlockQuery(
+            exited || !inParagraph ? null : details.query.full
+          );
         },
       },
     ];
