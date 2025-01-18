@@ -140,7 +140,12 @@ export default makeMessages('zui', {
         textPlaceholder: m('Add link text here'),
       },
     },
-    placeholder: m('Type / to insert block or just type some text'),
+    placeholder: {
+      label: m<{ link: ReactElement }>(
+        'Type / or {link} to insert block, or just type some text'
+      ),
+      link: m('click here'),
+    },
     variables: {
       firstName: m('First Name'),
       fullName: m('Full Name'),

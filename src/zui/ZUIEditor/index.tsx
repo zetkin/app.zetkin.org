@@ -151,7 +151,7 @@ const ZUIEditor: FC<Props> = ({
             }))}
             enableVariable={!!enableVariable}
           />
-          <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
+          <EmptyBlockPlaceholder />
           {enableImage && <ImageExtensionUI orgId={orgId} />}
           <ButtonExtensionUI />
           <LinkExtensionUI />
