@@ -29,6 +29,7 @@ type Props = {
   }[];
   enableBold: boolean;
   enableItalic: boolean;
+  enableLink: boolean;
   enableVariable: boolean;
 };
 
@@ -36,6 +37,7 @@ const EditorOverlays: FC<Props> = ({
   blocks,
   enableBold,
   enableItalic,
+  enableLink,
   enableVariable,
 }) => {
   const view = useEditorView();
@@ -154,6 +156,7 @@ const EditorOverlays: FC<Props> = ({
           curBlockY={currentBlock.rect.y}
           enableBold={enableBold}
           enableItalic={enableItalic}
+          enableLink={enableLink}
           enableVariable={enableVariable}
           pos={state.selection.$anchor.pos}
         />
