@@ -10,6 +10,7 @@ import {
   BulletListExtension,
   HardBreakExtension,
   HeadingExtension,
+  ItalicExtension,
   OrderedListExtension,
 } from 'remirror/extensions';
 import { Extension, PasteRulesExtension } from 'remirror';
@@ -37,25 +38,31 @@ type BlockExtension =
   | BulletListExtension;
 
 type Props = {
+  enableBold?: boolean;
   enableButton?: boolean;
   enableHeading?: boolean;
   enableImage?: boolean;
+  enableItalic?: boolean;
   enableLists?: boolean;
   enableVariable?: boolean;
 };
 
 const ZUIEditor: FC<Props> = ({
+  enableBold,
   enableButton,
   enableHeading,
   enableImage,
+  enableItalic,
   enableLists,
   enableVariable,
 }) => {
   const messages = useMessages(messageIds.editor);
   const theme = useTheme();
 
+  const boldExtension = new BoldExtension({});
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
+  const italicExtension = new ItalicExtension();
   const olExtension = new OrderedListExtension();
   const ulExtension = new BulletListExtension({});
   const headingExtension = new HeadingExtension({});
@@ -65,15 +72,24 @@ const ZUIEditor: FC<Props> = ({
     last_name: messages.variables.lastName(),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const otherExtensions: Extension<any>[] = [];
   const blockExtensions: BlockExtension[] = [];
-  const otherExtensions: Extension[] = [];
 
   if (enableButton) {
     blockExtensions.push(btnExtension);
   }
 
+  if (enableBold) {
+    otherExtensions.push(boldExtension);
+  }
+
   if (enableImage) {
     blockExtensions.push(imgExtension);
+  }
+
+  if (enableItalic) {
+    otherExtensions.push(italicExtension);
   }
 
   if (enableHeading) {
@@ -108,7 +124,6 @@ const ZUIEditor: FC<Props> = ({
     },
     extensions: () => [
       new PasteRulesExtension({}),
-      new BoldExtension({}),
       ...blockExtensions,
       ...otherExtensions,
       new HardBreakExtension(),
@@ -168,6 +183,8 @@ const ZUIEditor: FC<Props> = ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
+            enableBold={!!enableBold}
+            enableItalic={!!enableItalic}
             enableVariable={!!enableVariable}
           />
           <EmptyBlockPlaceholder placeholder={messages.placeholder()} />

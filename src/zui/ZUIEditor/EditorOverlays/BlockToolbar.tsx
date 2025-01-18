@@ -5,10 +5,14 @@ import { FC, useEffect, useState } from 'react';
 import { NodeWithPosition } from '../LinkExtensionUI';
 import VariableToolButton from './VariableToolButton';
 import { VariableName } from '../extensions/VariableExtension';
+import BoldToolButton from './BoldToolButton';
+import ItalicToolButton from './ItalicToolButton';
 
 type BlockToolbarProps = {
   curBlockType: string;
   curBlockY: number;
+  enableBold: boolean;
+  enableItalic: boolean;
   enableVariable: boolean;
   pos: number;
 };
@@ -16,6 +20,8 @@ type BlockToolbarProps = {
 const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockType,
   curBlockY,
+  enableBold,
+  enableItalic,
   enableVariable,
   pos,
 }) => {
@@ -111,6 +117,8 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                 >
                   Link
                 </Button>
+                {enableBold && <BoldToolButton />}
+                {enableItalic && <ItalicToolButton />}
               </>
             )}
             {enableVariable &&
