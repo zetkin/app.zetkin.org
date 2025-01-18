@@ -5,7 +5,12 @@ import {
   useRemirror,
 } from '@remirror/react';
 import { FC } from 'react';
-import { BoldExtension, HeadingExtension } from 'remirror/extensions';
+import {
+  BoldExtension,
+  BulletListExtension,
+  HeadingExtension,
+  OrderedListExtension,
+} from 'remirror/extensions';
 import { Extension, PasteRulesExtension } from 'remirror';
 import { Box, useTheme } from '@mui/material';
 
@@ -23,12 +28,18 @@ import VariableExtension from './extensions/VariableExtension';
 import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
 
-type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
+type BlockExtension =
+  | ButtonExtension
+  | HeadingExtension
+  | ImageExtension
+  | OrderedListExtension
+  | BulletListExtension;
 
 type Props = {
   enableButton?: boolean;
   enableHeading?: boolean;
   enableImage?: boolean;
+  enableLists?: boolean;
   enableVariable?: boolean;
 };
 
@@ -36,6 +47,7 @@ const ZUIEditor: FC<Props> = ({
   enableButton,
   enableHeading,
   enableImage,
+  enableLists,
   enableVariable,
 }) => {
   const messages = useMessages(messageIds.editor);
@@ -43,6 +55,8 @@ const ZUIEditor: FC<Props> = ({
 
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
+  const olExtension = new OrderedListExtension();
+  const ulExtension = new BulletListExtension({});
   const headingExtension = new HeadingExtension({});
   const varExtension = new VariableExtension({
     first_name: messages.variables.firstName(),
@@ -50,7 +64,7 @@ const ZUIEditor: FC<Props> = ({
     last_name: messages.variables.lastName(),
   });
 
-  const blockExtensions: ZetkinExtension[] = [];
+  const blockExtensions: BlockExtension[] = [];
   const otherExtensions: Extension[] = [];
 
   if (enableButton) {
@@ -63,6 +77,11 @@ const ZUIEditor: FC<Props> = ({
 
   if (enableHeading) {
     blockExtensions.push(headingExtension);
+  }
+
+  if (enableLists) {
+    blockExtensions.push(olExtension);
+    blockExtensions.push(ulExtension);
   }
 
   if (enableVariable) {
@@ -94,7 +113,9 @@ const ZUIEditor: FC<Props> = ({
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
+          bulletList: (props) => ulExtension.toggleBulletList()(props),
           heading: (props) => headingExtension.toggleHeading()(props),
+          orderedList: (props) => olExtension.toggleOrderedList()(props),
           zbutton: (props) => btnExtension.toggleButton()(props),
           zimage: (props) => imgExtension.createAndPick()(props),
         },
