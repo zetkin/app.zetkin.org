@@ -24,15 +24,23 @@ type ImageOptions = {
   staticKeys: [],
 })
 export default class ImageExtension extends NodeExtension<ImageOptions> {
-  createAndPick() {
-    const pos = this.store.getState().selection.$from.pos;
-    const parentOffset = this.store.getState().doc.resolve(pos).parentOffset;
-    const blockLength = 1;
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  createAndPick(): CommandFunction {
+    return ({ dispatch, tr, state }) => {
+      const pos = state.selection.$from.pos;
+      const parentOffset = state.doc.resolve(pos).parentOffset;
+      const blockLength = 1;
 
-    const node = this.type.create();
-    this.options.onCreate(pos - parentOffset - blockLength);
+      const node = this.type.create();
+      tr.insert(pos - parentOffset - blockLength, node);
+      dispatch?.(tr);
 
-    return node;
+      this.options.onCreate(pos - parentOffset - blockLength);
+
+      return true;
+    };
   }
 
   createNodeSpec(
