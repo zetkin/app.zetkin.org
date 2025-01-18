@@ -5,6 +5,7 @@ import {
   usePositioner,
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
+import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
 
 import BlockToolbar from './BlockToolbar';
@@ -18,6 +19,7 @@ export type BlockDividerData = {
 };
 
 type BlockData = {
+  node: ProsemirrorNode;
   rect: DOMRect;
   type: string;
 };
@@ -54,6 +56,7 @@ const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
         const x = nodeRect.x - editorRect.x;
         const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
+          node,
           rect: {
             ...nodeRect.toJSON(),
             left: x,
@@ -129,7 +132,11 @@ const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
     }
   });
 
-  const showBlockToolbar = !showBlockMenu && !!currentBlock && !typing;
+  const isEmptyParagraph =
+    currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
+
+  const showBlockToolbar =
+    !showBlockMenu && !!currentBlock && !typing && !isEmptyParagraph;
 
   const showBlockInsert = !showBlockMenu && !typing;
 
