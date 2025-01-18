@@ -105,20 +105,29 @@ const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
   const blockDividers: BlockDividerData[] = [
     {
       pos: 0,
-      y: 0,
+      y: 20,
     },
-    ...state.doc.children.map((blockNode) => {
-      pos += blockNode.nodeSize;
-      const rect = view.coordsAtPos(pos - 1);
-
-      const containerRect = view.dom.getBoundingClientRect();
-
-      return {
-        pos: pos,
-        y: rect.bottom - containerRect.top,
-      };
-    }),
   ];
+
+  const containerRect = view.dom.getBoundingClientRect();
+  state.doc.children.forEach((blockNode) => {
+    const elem = view.nodeDOM(pos);
+
+    pos += blockNode.nodeSize;
+
+    if (elem instanceof HTMLElement) {
+      if (elem.nodeName == 'P' && elem.textContent?.trim().length == 0) {
+        return;
+      }
+
+      const rect = elem.getBoundingClientRect();
+
+      blockDividers.push({
+        pos,
+        y: rect.bottom - containerRect.top,
+      });
+    }
+  });
 
   const showBlockToolbar = !showBlockMenu && !!currentBlock && !typing;
 
