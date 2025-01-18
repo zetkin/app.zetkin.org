@@ -1,27 +1,50 @@
-import { Box, Typography } from '@mui/material';
-import { usePositioner } from '@remirror/react';
+import { Box, Link, Typography } from '@mui/material';
+import { useCommands, usePositioner } from '@remirror/react';
 import { FC } from 'react';
 
-type Props = {
-  placeholder: string;
-};
+import { Msg } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
-const EmptyBlockPlaceholder: FC<Props> = ({ placeholder }) => {
+const EmptyBlockPlaceholder: FC = () => {
   const positioner = usePositioner('emptyBlockStart');
+  const { focus, insertText } = useCommands();
 
   return (
     <Box ref={positioner.ref} position="relative">
       {positioner.active && (
         <Typography
           sx={{
+            '&:hover': {
+              opacity: 1,
+            },
             left: positioner.x,
             opacity: 0.5,
-            pointerEvents: 'none',
             position: 'absolute',
             top: positioner.y,
+            transition: 'opacity 0.5s',
           }}
         >
-          {placeholder}
+          <Msg
+            id={messageIds.editor.placeholder.label}
+            values={{
+              link: (
+                <Link
+                  onClick={() => {
+                    const pos = positioner.data.pos;
+                    if (pos) {
+                      insertText('/', { from: positioner.data.pos });
+                      focus(pos + 2);
+                    }
+                  }}
+                  sx={{
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Msg id={messageIds.editor.placeholder.link} />
+                </Link>
+              ),
+            }}
+          />
         </Typography>
       )}
     </Box>
