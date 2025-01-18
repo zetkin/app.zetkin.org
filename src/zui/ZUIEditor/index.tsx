@@ -19,6 +19,8 @@ import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import EditorOverlays from './EditorOverlays';
+import LinkExtensionUI from './LinkExtensionUI';
+import ButtonExtensionUI from './ButtonExtensionUI';
 
 type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
 
@@ -119,6 +121,8 @@ const ZUIEditor: FC<Props> = ({ enableButton, enableHeading, enableImage }) => {
           />
           <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
           {enableImage && <ImageExtensionUI orgId={orgId} />}
+          <ButtonExtensionUI />
+          <LinkExtensionUI />
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
