@@ -1,18 +1,19 @@
 import { Box, Button, Paper } from '@mui/material';
-import { useActive, useCommands, useEditorState } from '@remirror/react';
-import { FC, useEffect, useState } from 'react';
+import { useCommands } from '@remirror/react';
+import { FC } from 'react';
 
-import { NodeWithPosition } from '../LinkExtensionUI';
 import VariableToolButton from './VariableToolButton';
 import { VariableName } from '../extensions/VariableExtension';
 import BoldToolButton from './BoldToolButton';
 import ItalicToolButton from './ItalicToolButton';
+import LinkToolButton from './LinkToolButton';
 
 type BlockToolbarProps = {
   curBlockType: string;
   curBlockY: number;
   enableBold: boolean;
   enableItalic: boolean;
+  enableLink: boolean;
   enableVariable: boolean;
   pos: number;
 };
@@ -22,40 +23,12 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockY,
   enableBold,
   enableItalic,
+  enableLink,
   enableVariable,
   pos,
 }) => {
-  const active = useActive();
-  const state = useEditorState();
-  const {
-    convertParagraph,
-    focus,
-    insertEmptyLink,
-    insertVariable,
-    toggleHeading,
-    pickImage,
-    removeLink,
-    removeAllLinksInRange,
-    setLink,
-  } = useCommands();
-
-  const [selectedNodes, setSelectedNodes] = useState<NodeWithPosition[]>([]);
-
-  useEffect(() => {
-    const linkNodes: NodeWithPosition[] = [];
-    state.doc.nodesBetween(
-      state.selection.from,
-      state.selection.to,
-      (node, index) => {
-        if (node.isText) {
-          if (node.marks.some((mark) => mark.type.name == 'zlink')) {
-            linkNodes.push({ from: index, node, to: index + node.nodeSize });
-          }
-        }
-      }
-    );
-    setSelectedNodes(linkNodes);
-  }, [state.selection]);
+  const { convertParagraph, focus, insertVariable, toggleHeading, pickImage } =
+    useCommands();
 
   return (
     <Box position="relative">
@@ -90,33 +63,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                 <Button onClick={() => toggleHeading()}>
                   Convert to heading
                 </Button>
-                <Button
-                  onClick={() => {
-                    if (!active.zlink()) {
-                      if (state.selection.empty) {
-                        insertEmptyLink();
-                        focus();
-                      } else {
-                        setLink();
-                        focus();
-                      }
-                    } else {
-                      if (selectedNodes.length == 1) {
-                        removeLink({
-                          from: selectedNodes[0].from,
-                          to: selectedNodes[0].to,
-                        });
-                      } else if (selectedNodes.length > 1) {
-                        removeAllLinksInRange({
-                          from: state.selection.from,
-                          to: state.selection.to,
-                        });
-                      }
-                    }
-                  }}
-                >
-                  Link
-                </Button>
+                {enableLink && <LinkToolButton />}
                 {enableBold && <BoldToolButton />}
                 {enableItalic && <ItalicToolButton />}
               </>

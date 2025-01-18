@@ -13,7 +13,7 @@ import {
   ItalicExtension,
   OrderedListExtension,
 } from 'remirror/extensions';
-import { Extension, PasteRulesExtension } from 'remirror';
+import { AnyExtension, PasteRulesExtension } from 'remirror';
 import { Box, useTheme } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
@@ -43,6 +43,7 @@ type Props = {
   enableHeading?: boolean;
   enableImage?: boolean;
   enableItalic?: boolean;
+  enableLink?: boolean;
   enableLists?: boolean;
   enableVariable?: boolean;
 };
@@ -53,6 +54,7 @@ const ZUIEditor: FC<Props> = ({
   enableHeading,
   enableImage,
   enableItalic,
+  enableLink,
   enableLists,
   enableVariable,
 }) => {
@@ -63,6 +65,7 @@ const ZUIEditor: FC<Props> = ({
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
   const italicExtension = new ItalicExtension();
+  const linkExtension = new LinkExtension();
   const olExtension = new OrderedListExtension();
   const ulExtension = new BulletListExtension({});
   const headingExtension = new HeadingExtension({});
@@ -72,8 +75,7 @@ const ZUIEditor: FC<Props> = ({
     last_name: messages.variables.lastName(),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const otherExtensions: Extension<any>[] = [];
+  const otherExtensions: AnyExtension[] = [];
   const blockExtensions: BlockExtension[] = [];
 
   if (enableButton) {
@@ -90,6 +92,10 @@ const ZUIEditor: FC<Props> = ({
 
   if (enableItalic) {
     otherExtensions.push(italicExtension);
+  }
+
+  if (enableLink) {
+    otherExtensions.push(linkExtension);
   }
 
   if (enableHeading) {
@@ -127,7 +133,6 @@ const ZUIEditor: FC<Props> = ({
       ...blockExtensions,
       ...otherExtensions,
       new HardBreakExtension(),
-      new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
           bulletList: (props) => ulExtension.toggleBulletList()(props),
@@ -185,6 +190,7 @@ const ZUIEditor: FC<Props> = ({
             }))}
             enableBold={!!enableBold}
             enableItalic={!!enableItalic}
+            enableLink={!!enableLink}
             enableVariable={!!enableVariable}
           />
           <EmptyBlockPlaceholder placeholder={messages.placeholder()} />
