@@ -18,8 +18,8 @@ const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
     <Box position="relative">
       {blockDividers.map(({ pos, y }, index) => {
         const visible = Math.abs(mouseY - y) < 20;
-        const isFirst = index == 0;
-        const offset = isFirst ? -6 : 12;
+        const offset = 8;
+
         return (
           <Box
             key={index}

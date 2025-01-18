@@ -105,7 +105,7 @@ const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
   const blockDividers: BlockDividerData[] = [
     {
       pos: 0,
-      y: 20,
+      y: 8,
     },
   ];
 
@@ -141,12 +141,15 @@ const EditorOverlays: FC<Props> = ({ blocks, enableVariable }) => {
         <Box position="relative">
           <Box
             border={1}
-            height={currentBlock?.rect.height}
-            left={currentBlock?.rect.left}
+            height={currentBlock?.rect.height + 16}
+            left={currentBlock?.rect.left - 8}
             position="absolute"
-            sx={{ pointerEvents: 'none' }}
-            top={currentBlock?.rect.top}
-            width={currentBlock?.rect.width}
+            sx={{
+              opacity: 0.5,
+              pointerEvents: 'none',
+            }}
+            top={currentBlock?.rect.top - 8}
+            width={currentBlock?.rect.width + 16}
           />
         </Box>
       )}
