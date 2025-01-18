@@ -31,6 +31,7 @@ const EmailPage: PageWithLayout = () => {
           enableHeading
           enableImage
           enableItalic
+          enableLink
           enableLists
           enableVariable
         />
