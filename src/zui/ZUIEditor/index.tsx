@@ -94,13 +94,9 @@ const ZUIEditor: FC<Props> = ({
       new LinkExtension(),
       new BlockMenuExtension({
         blockFactories: {
-          heading: () => headingExtension.type.create({}),
-          zbutton: () =>
-            btnExtension.type.create(
-              {},
-              btnExtension.type.schema.text('Add button label here')
-            ),
-          zimage: () => imgExtension.createAndPick(),
+          heading: (props) => headingExtension.toggleHeading()(props),
+          zbutton: (props) => btnExtension.toggleButton()(props),
+          zimage: (props) => imgExtension.createAndPick()(props),
         },
       }),
     ],
