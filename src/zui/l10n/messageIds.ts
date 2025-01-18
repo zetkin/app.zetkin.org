@@ -132,6 +132,14 @@ export default makeMessages('zui', {
       zbutton: m('Button'),
       zimage: m('Image'),
     },
+    extensions: {
+      link: {
+        apply: m('Apply'),
+        cancel: m('Cancel'),
+        remove: m('Remove'),
+        textPlaceholder: m('Add link text here'),
+      },
+    },
     placeholder: m('Type / to insert block or just type some text'),
     variables: {
       firstName: m('First Name'),
