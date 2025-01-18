@@ -9,6 +9,7 @@ import {
   Handler,
   PlainExtension,
 } from 'remirror';
+import { ParagraphExtension } from 'remirror/extensions';
 
 type BlockMenuOptions = {
   blockFactories: Record<string, () => Node>;
@@ -65,6 +66,17 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
         }
       }
       return false;
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  insertEmptyParagraph(pos: number): CommandFunction {
+    return ({ dispatch, tr }) => {
+      const node = this.store.getExtension(ParagraphExtension).type.create();
+      dispatch?.(tr.insert(pos, node));
+      return true;
     };
   }
 
