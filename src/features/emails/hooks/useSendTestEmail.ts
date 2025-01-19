@@ -1,19 +1,12 @@
 import { useState } from 'react';
 
-import useUser from 'core/hooks/useUser';
 import { useApiClient, useNumericRouteParams } from 'core/hooks';
+import { ZetkinUser } from '../../../utils/types/zetkin';
 
 export default function useSendTestEmail() {
   const apiClient = useApiClient();
   const [isLoading, setIsLoading] = useState(false);
   const [emailWasSent, setEmailWasSent] = useState(false);
-
-  // TODO: Get these as props instead
-  const user = useUser();
-  if (!user) {
-    // This should never happen on pages where this hook is used
-    throw new Error('Sending test email only works for signed in users');
-  }
 
   const { emailId, orgId } = useNumericRouteParams();
 
@@ -23,14 +16,14 @@ export default function useSendTestEmail() {
     reset: () => {
       setEmailWasSent(false);
     },
-    sendTestEmail: async () => {
+    sendTestEmail: async (recipient: ZetkinUser) => {
       setIsLoading(true);
       await apiClient.post(`/api/orgs/${orgId}/emails/${emailId}/preview`, {
         recipients: [
           {
-            email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
+            email: recipient.email,
+            first_name: recipient.first_name,
+            last_name: recipient.last_name,
           },
         ],
       });
