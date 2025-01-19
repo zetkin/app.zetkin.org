@@ -213,6 +213,22 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
       <Box
         id="ClientOnlyEditor-container"
         sx={{
+          '& .ce-block--selected .ce-block__content': {
+            // styling for highlighting the selected block
+            '&:before': { // We need the pseudo element to hold the border so that block's height does not change
+              border: "1px solid #9ed5ff",
+              borderRadius: 1,
+              bottom: 0,
+              content: '""',
+              left: 0,
+              pointerEvents: 'none', // We don't want the pseudo element to interfere with the user's interaction
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            },
+            backgroundColor: '#e1f2ff',
+            borderRadius: 1,
+          },
           '& .ce-block__content': {
             px: 2,
           },
