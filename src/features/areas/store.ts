@@ -4,6 +4,7 @@ import {
   remoteItemCreatedWithData,
   remoteItemDeleted,
   remoteItemLoad,
+  remoteItemLoaded,
   remoteItemUpdated,
   remoteList,
   RemoteList,
@@ -39,7 +40,7 @@ const areasSlice = createSlice({
     },
     areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      remoteItemUpdated(state.areaList, area);
+      remoteItemLoaded(state.areaList, area);
     },
     areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
