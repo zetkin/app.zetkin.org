@@ -1,4 +1,4 @@
-interface RemoteData {
+export interface RemoteData {
   id: number | string;
 }
 
@@ -140,7 +140,7 @@ export function remoteList<DataType extends RemoteData>(
   };
 }
 
-export function findOrAddItem<DataType extends RemoteData>(
+export function remoteItemCreated<DataType extends RemoteData>(
   list: RemoteList<DataType>,
   id: number | string
 ): RemoteItem<DataType> {
@@ -150,6 +150,62 @@ export function findOrAddItem<DataType extends RemoteData>(
   } else {
     const newItem = remoteItem<DataType>(id);
     list.items.push(newItem);
+    newItem.loaded = new Date().toISOString();
     return newItem;
   }
+}
+
+export function remoteItemCreatedWithData<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  data: DataType
+): RemoteItem<DataType> {
+  return remoteItemUpdated(list, data);
+}
+
+export function remoteItemUpdate<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  id: number | string,
+  mutating: string[]
+) {
+  const item = remoteItemCreated(list, id);
+  item.mutating = mutating;
+}
+
+export function remoteItemUpdated<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  updatedData: DataType
+) {
+  const item = remoteItemCreated(list, updatedData.id);
+  item.data = updatedData;
+  item.mutating = [];
+  item.isLoading = false;
+  item.loaded = new Date().toISOString();
+  return item;
+}
+
+export function remoteItemLoad<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  id: number | string
+) {
+  const item = remoteItemCreated(list, id);
+  item.isLoading = true;
+}
+
+export function remoteItemLoaded<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  updatedData: DataType
+) {
+  return remoteItemUpdated(list, updatedData);
+}
+
+export function remoteItemDeleted<DataType extends RemoteData>(
+  list: RemoteList<DataType>,
+  deletedId: number | string
+) {
+  const existingItem = list.items.find((item) => item.id == deletedId);
+  if (existingItem) {
+    existingItem.deleted = true;
+  }
+
+  list.items = list.items.filter((item) => item.id != deletedId);
 }
