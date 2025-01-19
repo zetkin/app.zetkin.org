@@ -14,6 +14,7 @@ export type ImportFieldProblem = {
   field: string;
   indices: number[];
   kind: ImportProblemKind.INVALID_FORMAT;
+  rows?: number[];
 };
 
 export type ImportFieldMetaProblem = {
@@ -29,6 +30,7 @@ export type ImportRowProblem = {
     | ImportProblemKind.UNEXPECTED_ERROR
     | ImportProblemKind.UNKNOWN_PERSON
     | ImportProblemKind.UNKNOWN_ERROR;
+  rows?: number[];
 };
 
 export type ImportSheetProblem = {
