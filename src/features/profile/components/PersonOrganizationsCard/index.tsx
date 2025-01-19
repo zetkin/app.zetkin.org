@@ -8,6 +8,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import OrganizationSelect from './OrganizationSelect';
 import { OrganizationsTree } from './OrganizationsTree';
@@ -18,7 +19,6 @@ import usePersonOrgData from 'features/profile/hooks/usePersonOrgData';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import messageIds from 'features/profile/l10n/messageIds';
-import { useRouter } from 'next/router';
 
 interface PersonOrganizationsCardProps {
   orgId: number;
