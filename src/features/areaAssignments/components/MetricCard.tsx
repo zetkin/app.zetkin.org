@@ -10,6 +10,8 @@ import {
   IconButton,
 } from '@mui/material';
 
+import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { ZetkinMetric } from '../types';
 
 type MetricCardProps = {
@@ -40,12 +42,12 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
           {metric.kind === 'boolean' ? (
             <Typography alignItems="center" display="flex" variant="h6">
               <SwitchLeft color="secondary" sx={{ marginRight: 1 }} />
-              Choice question
+              <Msg id={messageIds.report.metricCard.choice} />
             </Typography>
           ) : (
             <Typography alignItems="center" display="flex" variant="h6">
               <LinearScale color="secondary" sx={{ marginRight: 1 }} />
-              Scale question
+              <Msg id={messageIds.report.metricCard.scale} />
             </Typography>
           )}
 
@@ -56,7 +58,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
         <Box display="flex" flexDirection="column" justifyContent="center">
           {metric.kind == 'scale5' && (
             <Typography color="secondary" fontStyle="italic" mb={1}>
-              The areaAssignee will respond by giving a rating from 1 to 5
+              <Msg id={messageIds.report.metricCard.ratingDescription} />
             </Typography>
           )}
           <TextField
@@ -86,7 +88,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
               }}
               variant="contained"
             >
-              Save
+              <Msg id={messageIds.report.metricCard.save} />
             </Button>
           </Box>
         </Box>

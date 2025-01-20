@@ -29,12 +29,14 @@ import {
 
 import { AREAS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
+import messagesIds from 'features/areaAssignments/l10n/messageIds';
 import MetricCard from 'features/areaAssignments/components/MetricCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import theme from 'theme';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
+import { Msg, useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
@@ -68,6 +70,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
     areaAssId
   );
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
+  const messages = useMessages(messagesIds);
 
   const [metricBeingCreated, setMetricBeingCreated] =
     useState<ZetkinMetric | null>(null);
@@ -147,7 +150,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                   <LinearScale />
                                 </Typography>
                               )}
-                              {metric.question || 'Untitled question'}
+                              {metric.question ||
+                                messages.report.card.question()}
                             </Typography>
                           </Box>
                           <Box alignItems="center" display="flex">
@@ -162,7 +166,11 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 mr={1}
                                 p={0.5}
                               >
-                                <Typography px={1}>Defines success</Typography>
+                                <Typography px={1}>
+                                  <Msg
+                                    id={messagesIds.report.card.definesSuccess}
+                                  />
+                                </Typography>
                               </Box>
                             )}
                             <Button
@@ -184,7 +192,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                           </Box>
                         </Box>
                         <Typography color="secondary" ml={4}>
-                          {metric.description || 'No description'}
+                          {metric.description ||
+                            messages.report.card.description()}
                         </Typography>
                       </Box>
                     </Box>
@@ -228,7 +237,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 }}
               >
                 <Typography color="secondary">
-                  Add questions for your canvass assignment.
+                  <Msg id={messagesIds.report.toolBar.title} />
                 </Typography>
                 <Box alignItems="center" display="flex" mt={2}>
                   <Button
@@ -237,14 +246,14 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     sx={{ marginRight: 1 }}
                     variant="outlined"
                   >
-                    Choice question
+                    <Msg id={messagesIds.report.metricCard.choice} />
                   </Button>
                   <Button
                     onClick={() => handleAddNewMetric('scale5')}
                     startIcon={<LinearScale />}
                     variant="outlined"
                   >
-                    Scale question
+                    <Msg id={messagesIds.report.metricCard.scale} />
                   </Button>
                 </Box>
               </Card>
@@ -259,7 +268,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       {`Delete ${
                         assignment.metrics.find(
                           (metric) => metric.id === metricBeingDeleted?.id
-                        )?.question || 'Untitled question'
+                        )?.question || messages.report.card.question()
                       }`}
                     </Typography>
                     <IconButton
@@ -272,21 +281,14 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     </IconButton>
                   </Box>
 
-                  {metricBeingDeleted?.definesDone ? (
-                    <Typography>
-                      {`If you want to delete "${metricBeingDeleted.question}" you need to pick another
-                  choice question to be the question that defines if the mision
-                  was successful`}
-                    </Typography>
-                  ) : (
-                    <Typography>
-                      Are you sure you want to delete this question? This action
-                      is permanent and it cannot be undone.
-                    </Typography>
-                  )}
-
-                  {metricBeingDeleted?.definesDone ? (
+                  {metricBeingDeleted?.definesDone && (
                     <Box display="flex" flexDirection="column" gap={1}>
+                      <Typography>
+                        <Msg
+                          id={messagesIds.report.delete.deleteWarningText}
+                          values={{ title: metricBeingDeleted.question }}
+                        />
+                      </Typography>
                       {assignment.metrics
                         .filter(
                           (metric) =>
@@ -302,7 +304,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                             justifyContent="space-between"
                             width="100%"
                           >
-                            {metric.question || 'Untitled question'}
+                            {metric.question || messages.report.card.question()}
                             <Button
                               onClick={() => {
                                 if (metricBeingDeleted) {
@@ -331,33 +333,40 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                               }}
                               variant="outlined"
                             >
-                              select
+                              <Msg id={messagesIds.report.delete.select} />
                             </Button>
                           </Box>
                         ))}
                     </Box>
-                  ) : (
-                    <Box display="flex" justifyContent="end" p={2}>
-                      <Button
-                        onClick={() => {
-                          setMetricBeingDeleted(null), setAnchorEl(null);
-                        }}
-                        sx={{ marginRight: 2 }}
-                      >
-                        CANCEL
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          if (metricBeingDeleted !== null) {
-                            handleDeleteMetric(metricBeingDeleted.id);
-                            setAnchorEl(null);
-                            setMetricBeingDeleted(null);
-                          }
-                        }}
-                        variant="contained"
-                      >
-                        CONFIRM
-                      </Button>
+                  )}
+
+                  {!metricBeingDeleted?.definesDone && (
+                    <Box>
+                      <Typography>
+                        <Msg id={messagesIds.report.delete.dialog} />
+                      </Typography>
+                      <Box display="flex" justifyContent="end" p={2}>
+                        <Button
+                          onClick={() => {
+                            setMetricBeingDeleted(null), setAnchorEl(null);
+                          }}
+                          sx={{ marginRight: 2 }}
+                        >
+                          <Msg id={messagesIds.report.delete.cancel} />
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            if (metricBeingDeleted !== null) {
+                              handleDeleteMetric(metricBeingDeleted.id);
+                              setAnchorEl(null);
+                              setMetricBeingDeleted(null);
+                            }
+                          }}
+                          variant="contained"
+                        >
+                          <Msg id={messagesIds.report.delete.confirm} />
+                        </Button>
+                      </Box>
                     </Box>
                   )}
                 </Box>
@@ -366,20 +375,20 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
           </Box>
           <Box ml={2} width="40%">
             <ZUICard
-              header="Successful visit"
-              subheader=" Question to use to count a visit as successful."
+              header={messages.report.successCard.header()}
+              subheader={messages.report.successCard.subheader()}
               sx={{ mb: 2 }}
             >
               <Divider />
               <FormControl fullWidth sx={{ mt: 2 }}>
-                <InputLabel>Defines success</InputLabel>
+                <InputLabel>{messages.report.card.definesSuccess()}</InputLabel>
                 <Select
                   disabled={
                     assignment.metrics.filter(
                       (metric) => metric.kind === 'boolean'
                     ).length <= 1
                   }
-                  label="Defines success"
+                  label={messages.report.card.definesSuccess()}
                   onChange={(ev: SelectChangeEvent) => {
                     const updatedMetrics =
                       areaAssignmentFuture.data?.metrics.map(
@@ -418,10 +427,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </FormControl>
             </ZUICard>
             <ZUICard
-              header="Data precision & privacy"
-              subheader="Configuring where to store the data is a matter of striking a
-                balance between precision and privacy that is right for your
-                cause"
+              header={messages.report.dataCard.header()}
+              subheader={messages.report.dataCard.subheader()}
               sx={{ mb: 2 }}
             >
               <Divider />
@@ -437,16 +444,18 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                   }}
                   value={assignment.reporting_level}
                 >
-                  <Typography mt={1}>Collect data..</Typography>
+                  <Typography mt={1}>
+                    <Msg id={messagesIds.report.dataCard.info} />
+                  </Typography>
                   <FormControlLabel
                     control={<Radio />}
-                    label="per household (most precise)"
+                    label={messages.report.dataCard.household()}
                     sx={{ ml: 1 }}
                     value="household"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    label="per location (less precise, more privacy)"
+                    label={messages.report.dataCard.location()}
                     sx={{ ml: 1 }}
                     value="location"
                   />
