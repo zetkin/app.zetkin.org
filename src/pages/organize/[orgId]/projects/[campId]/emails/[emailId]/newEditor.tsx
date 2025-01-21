@@ -26,6 +26,7 @@ const EmailPage: PageWithLayout = () => {
       </Head>
       <Box>
         <ZUIEditor
+          editable={true}
           enableBold
           enableButton
           enableHeading

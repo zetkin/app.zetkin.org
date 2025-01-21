@@ -38,6 +38,7 @@ type BlockExtension =
   | BulletListExtension;
 
 type Props = {
+  editable: boolean;
   enableBold?: boolean;
   enableButton?: boolean;
   enableHeading?: boolean;
@@ -49,6 +50,7 @@ type Props = {
 };
 
 const ZUIEditor: FC<Props> = ({
+  editable,
   enableBold,
   enableButton,
   enableHeading,
@@ -156,7 +158,7 @@ const ZUIEditor: FC<Props> = ({
     selection: 'start',
   });
 
-  const enableBlockMenu = blockExtensions.length > 0;
+  const enableBlockMenu = editable && blockExtensions.length > 0;
 
   return (
     <Box
@@ -194,12 +196,13 @@ const ZUIEditor: FC<Props> = ({
       }}
     >
       <div style={{ minHeight: '200px' }}>
-        <Remirror initialContent={state} manager={manager}>
+        <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
             blocks={blockExtensions.map((ext) => ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
+            editable={editable}
             enableBold={!!enableBold}
             enableHeading={!!enableHeading}
             enableItalic={!!enableItalic}
