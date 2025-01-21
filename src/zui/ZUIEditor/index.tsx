@@ -138,7 +138,10 @@ const ZUIEditor: FC<Props> = ({
           bulletList: (props) => ulExtension.toggleBulletList()(props),
           heading: (props) => headingExtension.toggleHeading()(props),
           orderedList: (props) => olExtension.toggleOrderedList()(props),
-          zbutton: (props) => btnExtension.toggleButton()(props),
+          zbutton: (props) =>
+            btnExtension.insertButton(messages.extensions.button.defaultText())(
+              props
+            ),
           zimage: (props) => imgExtension.createAndPick()(props),
         },
       }),
