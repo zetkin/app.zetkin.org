@@ -4,7 +4,7 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -75,41 +75,48 @@ const ZUIEditor: FC<Props> = ({
     last_name: messages.variables.lastName(),
   });
 
-  const otherExtensions: AnyExtension[] = [];
-  const blockExtensions: BlockExtension[] = [];
+  const blockExtensions = useMemo(() => {
+    const extensions: BlockExtension[] = [];
+    if (enableButton) {
+      extensions.push(btnExtension);
+    }
 
-  if (enableButton) {
-    blockExtensions.push(btnExtension);
-  }
+    if (enableImage) {
+      extensions.push(imgExtension);
+    }
 
-  if (enableBold) {
-    otherExtensions.push(boldExtension);
-  }
+    if (enableHeading) {
+      extensions.push(headingExtension);
+    }
 
-  if (enableImage) {
-    blockExtensions.push(imgExtension);
-  }
+    if (enableLists) {
+      extensions.push(olExtension);
+      extensions.push(ulExtension);
+    }
+    return extensions;
+  }, []);
 
-  if (enableItalic) {
-    otherExtensions.push(italicExtension);
-  }
+  const otherExtensions = useMemo(() => {
+    const extensions: AnyExtension[] = [];
 
-  if (enableLink) {
-    otherExtensions.push(linkExtension);
-  }
+    if (enableBold) {
+      extensions.push(boldExtension);
+    }
 
-  if (enableHeading) {
-    blockExtensions.push(headingExtension);
-  }
+    if (enableItalic) {
+      extensions.push(italicExtension);
+    }
 
-  if (enableLists) {
-    blockExtensions.push(olExtension);
-    blockExtensions.push(ulExtension);
-  }
+    if (enableLink) {
+      extensions.push(linkExtension);
+    }
 
-  if (enableVariable) {
-    otherExtensions.push(varExtension);
-  }
+    if (enableVariable) {
+      extensions.push(varExtension);
+    }
+
+    return extensions;
+  }, []);
 
   const { orgId } = useNumericRouteParams();
 
