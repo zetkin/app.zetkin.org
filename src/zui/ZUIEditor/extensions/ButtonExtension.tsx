@@ -69,6 +69,31 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
     return [ExtensionTag.Block, ExtensionTag.FormattingNode];
   }
 
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  insertButton(text: string): CommandFunction {
+    return (props) => {
+      const { dispatch, state, tr } = props;
+      const newNode = this.type.create(null, this.type.schema.text(text));
+      if (dispatch) {
+        const pos = state.selection.$from.pos;
+        const parentOffset = state.doc.resolve(pos).parentOffset;
+        const blockLength = 1;
+
+        tr.insert(pos - parentOffset - blockLength, newNode);
+
+        const resolved = tr.doc.resolve(pos);
+        tr.setSelection(
+          TextSelection.create(tr.doc, resolved.start(), resolved.end())
+        );
+        dispatch(tr);
+      }
+
+      return true;
+    };
+  }
+
   get name() {
     return 'zbutton' as const;
   }
@@ -96,34 +121,6 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
       tr.replaceWith(resolved.start(), resolved.end(), newTextNode);
 
       dispatch?.(tr);
-      return true;
-    };
-  }
-
-  /* eslint-disable @typescript-eslint/ban-ts-comment */
-  //@ts-ignore
-  @command()
-  toggleButton(): CommandFunction {
-    return (props) => {
-      const { dispatch, state, tr } = props;
-      const newNode = this.type.create(
-        null,
-        this.type.schema.text('Foo button')
-      );
-      if (dispatch) {
-        const pos = state.selection.$from.pos;
-        const parentOffset = state.doc.resolve(pos).parentOffset;
-        const blockLength = 1;
-
-        tr.insert(pos - parentOffset - blockLength, newNode);
-
-        const resolved = tr.doc.resolve(pos);
-        tr.setSelection(
-          TextSelection.create(tr.doc, resolved.start(), resolved.end())
-        );
-        dispatch(tr);
-      }
-
       return true;
     };
   }
