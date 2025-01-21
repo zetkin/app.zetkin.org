@@ -29,6 +29,7 @@ type Props = {
     id: string;
     label: string;
   }[];
+  editable: boolean;
   enableBold: boolean;
   enableHeading: boolean;
   enableItalic: boolean;
@@ -38,6 +39,7 @@ type Props = {
 
 const EditorOverlays: FC<Props> = ({
   blocks,
+  editable,
   enableBold,
   enableHeading,
   enableItalic,
@@ -147,11 +149,16 @@ const EditorOverlays: FC<Props> = ({
     currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
 
   const showBlockToolbar =
-    !showBlockMenu && !!currentBlock && !typing && !isEmptyParagraph;
+    editable &&
+    !showBlockMenu &&
+    !!currentBlock &&
+    !typing &&
+    !isEmptyParagraph;
 
-  const showBlockInsert = blocks.length > 0 && !showBlockMenu && !typing;
+  const showBlockInsert =
+    editable && blocks.length > 0 && !showBlockMenu && !typing;
 
-  const showSelectedBlockOutline = !!currentBlock;
+  const showSelectedBlockOutline = editable && !!currentBlock;
 
   return (
     <>
