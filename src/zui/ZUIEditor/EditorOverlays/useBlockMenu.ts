@@ -25,7 +25,7 @@ export default function useBlockMenu(
     }
   });
 
-  const isOpen = query !== null && !ignore;
+  const isOpen = blocks.length > 0 && query !== null && !ignore;
 
   const filteredBlocks = blocks.filter(
     (block) =>
