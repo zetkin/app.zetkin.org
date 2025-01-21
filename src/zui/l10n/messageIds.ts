@@ -128,11 +128,16 @@ export default makeMessages('zui', {
   },
   editor: {
     blockLabels: {
+      bulletList: m('Bullet list'),
       heading: m('Heading'),
+      orderedList: m('Ordered list'),
       zbutton: m('Button'),
       zimage: m('Image'),
     },
     extensions: {
+      button: {
+        defaultText: m('Button text'),
+      },
       link: {
         apply: m('Apply'),
         cancel: m('Cancel'),

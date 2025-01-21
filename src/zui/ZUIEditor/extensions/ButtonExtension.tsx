@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
+import { TextSelection } from '@remirror/pm/state';
 import {
   ApplySchemaAttributes,
   legacyCommand as command, //Because of NEXTjs, see Remirror docs
@@ -63,6 +64,7 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
       },
     };
   }
+
   createTags() {
     return [ExtensionTag.Block, ExtensionTag.FormattingNode];
   }
@@ -70,10 +72,24 @@ class ButtonExtension extends NodeExtension<ButtonOptions> {
   /* eslint-disable @typescript-eslint/ban-ts-comment */
   //@ts-ignore
   @command()
-  insertButton(pos: number): CommandFunction {
-    return ({ tr, dispatch }) => {
-      const node = this.type.create(null, this.type.schema.text('Foobar'));
-      dispatch?.(tr.insert(pos, node));
+  insertButton(text: string): CommandFunction {
+    return (props) => {
+      const { dispatch, state, tr } = props;
+      const newNode = this.type.create(null, this.type.schema.text(text));
+      if (dispatch) {
+        const pos = state.selection.$from.pos;
+        const parentOffset = state.doc.resolve(pos).parentOffset;
+        const blockLength = 1;
+
+        tr.insert(pos - parentOffset - blockLength, newNode);
+
+        const resolved = tr.doc.resolve(pos);
+        tr.setSelection(
+          TextSelection.create(tr.doc, resolved.start(), resolved.end())
+        );
+        dispatch(tr);
+      }
+
       return true;
     };
   }

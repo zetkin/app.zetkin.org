@@ -25,7 +25,16 @@ const EmailPage: PageWithLayout = () => {
         <title>hejj</title>
       </Head>
       <Box>
-        <ZUIEditor enableButton enableHeading enableImage enableVariable />
+        <ZUIEditor
+          enableBold
+          enableButton
+          enableHeading
+          enableImage
+          enableItalic
+          enableLink
+          enableLists
+          enableVariable
+        />
       </Box>
     </>
   );

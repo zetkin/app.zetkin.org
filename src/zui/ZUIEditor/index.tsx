@@ -5,8 +5,15 @@ import {
   useRemirror,
 } from '@remirror/react';
 import { FC } from 'react';
-import { BoldExtension, HeadingExtension } from 'remirror/extensions';
-import { Extension, PasteRulesExtension } from 'remirror';
+import {
+  BoldExtension,
+  BulletListExtension,
+  HardBreakExtension,
+  HeadingExtension,
+  ItalicExtension,
+  OrderedListExtension,
+} from 'remirror/extensions';
+import { AnyExtension, PasteRulesExtension } from 'remirror';
 import { Box, useTheme } from '@mui/material';
 
 import LinkExtension from './extensions/LinkExtension';
@@ -23,26 +30,44 @@ import VariableExtension from './extensions/VariableExtension';
 import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
 
-type ZetkinExtension = ButtonExtension | HeadingExtension | ImageExtension;
+type BlockExtension =
+  | ButtonExtension
+  | HeadingExtension
+  | ImageExtension
+  | OrderedListExtension
+  | BulletListExtension;
 
 type Props = {
+  enableBold?: boolean;
   enableButton?: boolean;
   enableHeading?: boolean;
   enableImage?: boolean;
+  enableItalic?: boolean;
+  enableLink?: boolean;
+  enableLists?: boolean;
   enableVariable?: boolean;
 };
 
 const ZUIEditor: FC<Props> = ({
+  enableBold,
   enableButton,
   enableHeading,
   enableImage,
+  enableItalic,
+  enableLink,
+  enableLists,
   enableVariable,
 }) => {
   const messages = useMessages(messageIds.editor);
   const theme = useTheme();
 
+  const boldExtension = new BoldExtension({});
   const btnExtension = new ButtonExtension();
   const imgExtension = new ImageExtension({});
+  const italicExtension = new ItalicExtension();
+  const linkExtension = new LinkExtension();
+  const olExtension = new OrderedListExtension();
+  const ulExtension = new BulletListExtension({});
   const headingExtension = new HeadingExtension({});
   const varExtension = new VariableExtension({
     first_name: messages.variables.firstName(),
@@ -50,19 +75,36 @@ const ZUIEditor: FC<Props> = ({
     last_name: messages.variables.lastName(),
   });
 
-  const blockExtensions: ZetkinExtension[] = [];
-  const otherExtensions: Extension[] = [];
+  const otherExtensions: AnyExtension[] = [];
+  const blockExtensions: BlockExtension[] = [];
 
   if (enableButton) {
     blockExtensions.push(btnExtension);
+  }
+
+  if (enableBold) {
+    otherExtensions.push(boldExtension);
   }
 
   if (enableImage) {
     blockExtensions.push(imgExtension);
   }
 
+  if (enableItalic) {
+    otherExtensions.push(italicExtension);
+  }
+
+  if (enableLink) {
+    otherExtensions.push(linkExtension);
+  }
+
   if (enableHeading) {
     blockExtensions.push(headingExtension);
+  }
+
+  if (enableLists) {
+    blockExtensions.push(olExtension);
+    blockExtensions.push(ulExtension);
   }
 
   if (enableVariable) {
@@ -88,19 +130,19 @@ const ZUIEditor: FC<Props> = ({
     },
     extensions: () => [
       new PasteRulesExtension({}),
-      new BoldExtension({}),
       ...blockExtensions,
       ...otherExtensions,
-      new LinkExtension(),
+      new HardBreakExtension(),
       new BlockMenuExtension({
         blockFactories: {
-          heading: () => headingExtension.type.create({}),
-          zbutton: () =>
-            btnExtension.type.create(
-              {},
-              btnExtension.type.schema.text('Add button label here')
+          bulletList: (props) => ulExtension.toggleBulletList()(props),
+          heading: (props) => headingExtension.toggleHeading()(props),
+          orderedList: (props) => olExtension.toggleOrderedList()(props),
+          zbutton: (props) =>
+            btnExtension.insertButton(messages.extensions.button.defaultText())(
+              props
             ),
-          zimage: () => imgExtension.createAndPick(),
+          zimage: (props) => imgExtension.createAndPick()(props),
         },
       }),
     ],
@@ -149,6 +191,9 @@ const ZUIEditor: FC<Props> = ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
+            enableBold={!!enableBold}
+            enableItalic={!!enableItalic}
+            enableLink={!!enableLink}
             enableVariable={!!enableVariable}
           />
           <EmptyBlockPlaceholder placeholder={messages.placeholder()} />

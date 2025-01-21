@@ -1,17 +1,14 @@
-import { Node } from '@remirror/pm/model';
-import { TextSelection } from '@remirror/pm/state';
 import { Suggester } from '@remirror/pm/suggest';
 import {
   legacyCommand as command,
   CommandFunction,
   extension,
-  getActiveNode,
   Handler,
   PlainExtension,
 } from 'remirror';
 
 type BlockMenuOptions = {
-  blockFactories: Record<string, () => Node>;
+  blockFactories: Record<string, CommandFunction>;
   onBlockQuery?: Handler<(query: string | null) => void>;
 };
 
@@ -26,11 +23,17 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
     return [
       {
         char: '/',
-        isValidPosition: (range) => range.$from.parentOffset == 0,
+        isValidPosition: (range) => {
+          return range.$from.parentOffset == 0;
+        },
         name: 'slash',
-        onChange: (details) => {
+        onChange: (details, tr) => {
+          const resolved = tr.doc.resolve(details.range.to);
           const exited = !!details.exitReason;
-          this.options.onBlockQuery(exited ? null : details.query.full);
+          const inParagraph = resolved.node(1).type.name == 'paragraph';
+          this.options.onBlockQuery(
+            exited || !inParagraph ? null : details.query.full
+          );
         },
       },
     ];
@@ -40,31 +43,13 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
   //@ts-ignore
   @command()
   insertBlock(type: string): CommandFunction {
-    return ({ dispatch, state, tr }) => {
-      const oldNode = getActiveNode({
-        state,
-        type: 'paragraph',
-      });
-      if (oldNode) {
-        const factory = this.options.blockFactories[type];
-        if (factory) {
-          const newNode = factory();
-          if (dispatch && newNode) {
-            tr = tr.replaceWith(oldNode.pos, oldNode.end, newNode);
-            tr = tr.setSelection(
-              TextSelection.create(
-                tr.doc,
-                oldNode.pos + 1,
-                oldNode.pos + newNode.nodeSize - 1
-              )
-            );
-            dispatch(tr);
-          }
+    return (props) => {
+      const { state, tr } = props;
+      const resolved = state.doc.resolve(state.selection.$head.pos);
+      tr.deleteRange(resolved.start(), resolved.end());
 
-          return true;
-        }
-      }
-      return false;
+      const factoryCommand = this.options.blockFactories[type];
+      return factoryCommand(props);
     };
   }
 
