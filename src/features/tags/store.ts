@@ -1,6 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  remoteItemCreatedWithData,
+  remoteItemDeleted,
+  remoteItemLoad,
+  remoteItemLoaded,
+  remoteItemUpdate,
+  remoteItemUpdated,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
 export interface TagsStoreSlice {
@@ -36,33 +45,19 @@ const tagsSlice = createSlice({
       if (!state.tagsByPersonId[personId]) {
         state.tagsByPersonId[personId] = remoteList();
       }
-      const item = state.tagsByPersonId[personId].items.find(
-        (item) => item.id == tag.id
-      );
-
-      if (item) {
-        item.data = tag;
-      } else {
-        state.tagsByPersonId[personId].items.push(
-          remoteItem(tag.id, { data: tag })
-        );
-      }
+      remoteItemUpdated(state.tagsByPersonId[personId], tag);
     },
     tagCreate: (state) => {
       state.tagList.isLoading;
     },
     tagCreated: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
-      state.tagList.isLoading = false;
-      state.tagList.items.push(remoteItem(tag.id, { data: tag }));
+      remoteItemCreatedWithData(state.tagList, tag);
     },
     tagDeleted: (state, action: PayloadAction<number>) => {
       const tagId = action.payload;
-      const tagListItem = state.tagList.items.find((item) => item.id === tagId);
 
-      if (tagListItem) {
-        tagListItem.deleted = true;
-      }
+      remoteItemDeleted(state.tagList, tagId);
 
       for (const personId in state.tagsByPersonId) {
         state.tagsByPersonId[personId].items = state.tagsByPersonId[
@@ -75,10 +70,7 @@ const tagsSlice = createSlice({
     },
     tagGroupCreated: (state, action: PayloadAction<ZetkinTagGroup>) => {
       const tagGroup = action.payload;
-      state.tagGroupList.isLoading = false;
-      state.tagGroupList.items.push(
-        remoteItem(tagGroup.id, { data: tagGroup })
-      );
+      remoteItemCreatedWithData(state.tagGroupList, tagGroup);
     },
     tagGroupsLoad: (state) => {
       state.tagGroupList.isLoading = true;
@@ -93,22 +85,11 @@ const tagsSlice = createSlice({
     },
     tagLoad: (state, action: PayloadAction<number>) => {
       const tagId = action.payload;
-      const item = state.tagList.items.find((item) => item.id == tagId);
-      if (item) {
-        item.isLoading = true;
-      } else {
-        state.tagList.items = state.tagList.items.concat([
-          remoteItem(tagId, { isLoading: true }),
-        ]);
-      }
+      remoteItemLoad(state.tagList, tagId);
     },
     tagLoaded: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
-      state.tagList.items = state.tagList.items
-        .filter((item) => item.id != tag.id)
-        .concat([
-          remoteItem(tag.id, { data: tag, loaded: new Date().toISOString() }),
-        ]);
+      remoteItemLoaded(state.tagList, tag);
     },
     tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
       const [personId, tagId] = action.payload;
@@ -118,24 +99,15 @@ const tagsSlice = createSlice({
         return;
       }
 
-      tagsByPersonId.items = state.tagsByPersonId[personId].items.filter(
-        (item) => item.id != tagId
-      );
+      remoteItemDeleted(state.tagsByPersonId[personId], tagId);
     },
     tagUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [tagId, mutating] = action.payload;
-      const item = state.tagList.items.find((tag) => tag.id === tagId);
-      if (item) {
-        item.mutating = mutating;
-      }
+      remoteItemUpdate(state.tagList, tagId, mutating);
     },
     tagUpdated: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
-      const item = state.tagList.items.find((item) => item.id == tag.id);
-      if (item) {
-        item.data = { ...item.data, ...tag };
-        item.mutating = [];
-      }
+      remoteItemUpdated(state.tagList, tag);
 
       // Update tags on people
       Object.values(state.tagsByPersonId).forEach((tagList) => {
