@@ -149,6 +149,8 @@ const ZUIEditor: FC<Props> = ({
     selection: 'start',
   });
 
+  const enableBlockMenu = blockExtensions.length > 0;
+
   return (
     <Box
       sx={{
@@ -192,14 +194,15 @@ const ZUIEditor: FC<Props> = ({
               label: messages.blockLabels[ext.name](),
             }))}
             enableBold={!!enableBold}
+            enableHeading={!!enableHeading}
             enableItalic={!!enableItalic}
             enableLink={!!enableLink}
             enableVariable={!!enableVariable}
           />
-          <EmptyBlockPlaceholder />
-          {enableImage && <ImageExtensionUI orgId={orgId} />}
-          <ButtonExtensionUI />
-          <LinkExtensionUI />
+          {enableBlockMenu && <EmptyBlockPlaceholder />}
+          {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
+          {enableBlockMenu && enableButton && <ButtonExtensionUI />}
+          {enableLink && <LinkExtensionUI />}
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
