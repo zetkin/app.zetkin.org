@@ -146,6 +146,9 @@ export default makeMessages('zui', {
       zimage: m('Image'),
     },
     extensions: {
+      button: {
+        defaultText: m('Button text'),
+      },
       link: {
         apply: m('Apply'),
         cancel: m('Cancel'),
