@@ -5,6 +5,7 @@ import {
   usePositioner,
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
+import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
 
 import BlockToolbar from './BlockToolbar';
@@ -18,6 +19,7 @@ export type BlockDividerData = {
 };
 
 type BlockData = {
+  node: ProsemirrorNode;
   rect: DOMRect;
   type: string;
 };
@@ -63,6 +65,7 @@ const EditorOverlays: FC<Props> = ({
         const x = nodeRect.x - editorRect.x;
         const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
+          node,
           rect: {
             ...nodeRect.toJSON(),
             left: x,
@@ -114,22 +117,35 @@ const EditorOverlays: FC<Props> = ({
   const blockDividers: BlockDividerData[] = [
     {
       pos: 0,
-      y: 0,
+      y: 8,
     },
-    ...state.doc.children.map((blockNode) => {
-      pos += blockNode.nodeSize;
-      const rect = view.coordsAtPos(pos - 1);
-
-      const containerRect = view.dom.getBoundingClientRect();
-
-      return {
-        pos: pos,
-        y: rect.bottom - containerRect.top,
-      };
-    }),
   ];
 
-  const showBlockToolbar = !showBlockMenu && !!currentBlock && !typing;
+  const containerRect = view.dom.getBoundingClientRect();
+  state.doc.children.forEach((blockNode) => {
+    const elem = view.nodeDOM(pos);
+
+    pos += blockNode.nodeSize;
+
+    if (elem instanceof HTMLElement) {
+      if (elem.nodeName == 'P' && elem.textContent?.trim().length == 0) {
+        return;
+      }
+
+      const rect = elem.getBoundingClientRect();
+
+      blockDividers.push({
+        pos,
+        y: rect.bottom - containerRect.top,
+      });
+    }
+  });
+
+  const isEmptyParagraph =
+    currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
+
+  const showBlockToolbar =
+    !showBlockMenu && !!currentBlock && !typing && !isEmptyParagraph;
 
   const showBlockInsert = !showBlockMenu && !typing;
 
@@ -141,12 +157,15 @@ const EditorOverlays: FC<Props> = ({
         <Box position="relative">
           <Box
             border={1}
-            height={currentBlock?.rect.height}
-            left={currentBlock?.rect.left}
+            height={currentBlock?.rect.height + 16}
+            left={currentBlock?.rect.left - 8}
             position="absolute"
-            sx={{ pointerEvents: 'none' }}
-            top={currentBlock?.rect.top}
-            width={currentBlock?.rect.width}
+            sx={{
+              opacity: 0.5,
+              pointerEvents: 'none',
+            }}
+            top={currentBlock?.rect.top - 8}
+            width={currentBlock?.rect.width + 16}
           />
         </Box>
       )}

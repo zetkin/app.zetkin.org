@@ -12,14 +12,14 @@ type BlockInsertProps = {
 };
 
 const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
-  const { insertParagraph, focus } = useCommands();
+  const { insertEmptyParagraph, focus } = useCommands();
 
   return (
     <Box position="relative">
       {blockDividers.map(({ pos, y }, index) => {
         const visible = Math.abs(mouseY - y) < 20;
-        const isFirst = index == 0;
-        const offset = isFirst ? -6 : 12;
+        const offset = 8;
+
         return (
           <Box
             key={index}
@@ -44,9 +44,8 @@ const BlockInsert: FC<BlockInsertProps> = ({ blockDividers, mouseY }) => {
             >
               <Paper>
                 <IconButton
-                  disabled={!insertParagraph.enabled(' ', { selection: pos })}
                   onClick={() => {
-                    insertParagraph(' ', { selection: pos });
+                    insertEmptyParagraph(pos);
                     focus(pos);
                   }}
                 >

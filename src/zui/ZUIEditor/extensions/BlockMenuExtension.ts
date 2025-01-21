@@ -6,6 +6,7 @@ import {
   Handler,
   PlainExtension,
 } from 'remirror';
+import { ParagraphExtension } from 'remirror/extensions';
 
 type BlockMenuOptions = {
   blockFactories: Record<string, CommandFunction>;
@@ -50,6 +51,17 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
 
       const factoryCommand = this.options.blockFactories[type];
       return factoryCommand(props);
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  insertEmptyParagraph(pos: number): CommandFunction {
+    return ({ dispatch, tr }) => {
+      const node = this.store.getExtension(ParagraphExtension).type.create();
+      dispatch?.(tr.insert(pos, node));
+      return true;
     };
   }
 
