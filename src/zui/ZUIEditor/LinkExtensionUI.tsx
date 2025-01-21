@@ -74,6 +74,12 @@ const LinkExtensionUI: FC = () => {
 
   const formattedHref = formatUrl(linkHref);
 
+  const mark = selectedNodes[0]?.node.marks.find(
+    (mark) => mark.type.name == 'zlink'
+  );
+
+  const isEditingExistingLink = !!mark?.attrs.href;
+
   return (
     <TextAndHrefOverlay
       href={linkHref}
@@ -82,12 +88,16 @@ const LinkExtensionUI: FC = () => {
       }}
       onChangeHref={(href) => setLinkHref(href)}
       onChangeText={(text) => setLinkText(text)}
-      onRemove={() => {
-        removeLink({
-          from: selectedNodes[0].from,
-          to: selectedNodes[0].to,
-        });
-      }}
+      onRemove={
+        isEditingExistingLink
+          ? () => {
+              removeLink({
+                from: selectedNodes[0].from,
+                to: selectedNodes[0].to,
+              });
+            }
+          : undefined
+      }
       onSubmit={() => {
         updateLink({ href: formattedHref || '' });
         updateLinkText(
