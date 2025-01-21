@@ -122,6 +122,9 @@ export default makeMessages('feat.areaAssignments', {
       startPlanningButton: m('Plan now'),
     },
     metrics: {
+      filter: {
+        all: m('All metrics'),
+      },
       title: m('Total'),
     },
     progress: {

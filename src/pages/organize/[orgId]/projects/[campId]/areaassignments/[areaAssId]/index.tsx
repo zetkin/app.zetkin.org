@@ -1,13 +1,27 @@
-import { Box, Button, Card, Divider, Grid, Typography } from '@mui/material';
-import { GetServerSideProps } from 'next';
+import {
+  Box,
+  Button,
+  Card,
+  Divider,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from '@mui/material';
 import { Edit } from '@mui/icons-material';
-import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 import AreaCard from 'features/areaAssignments/components/AreaCard';
 import { AREAS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import { PageWithLayout } from 'utils/types';
+import messageIds from 'features/areaAssignments/l10n/messageIds';
+import { MetricsOverviewCard } from 'features/areaAssignments/components/MetricsOverviewCard';
 import NumberCard from 'features/areaAssignments/components/NumberCard';
 import { scaffold } from 'utils/next';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
@@ -17,7 +31,6 @@ import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignment
 import useAssignmentAreaGraph from 'features/areaAssignments/hooks/useAssignmentAreaGraph';
 import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -46,6 +59,15 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   const areasStats = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const dataGraph = useAssignmentAreaGraph(parseInt(orgId), areaAssId);
   const router = useRouter();
+
+  const [selectedMetric, setSelectedMetric] = useState('all');
+
+  const filteredMetrics =
+    selectedMetric === 'all'
+      ? assignmentFuture.data?.metrics
+      : assignmentFuture.data?.metrics.filter(
+          (metric) => metric.id === selectedMetric
+        );
 
   return (
     <>
@@ -196,6 +218,42 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                       }}
                     </ZUIFutures>
                   </Grid>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="flex-end"
+                  >
+                    <FormControl>
+                      <InputLabel id="demo-simple-select-label">
+                        Metric
+                      </InputLabel>
+                      <Select
+                        id="demo-simple-select"
+                        label="Metric"
+                        labelId="demo-simple-select-label"
+                        onChange={(ev) => setSelectedMetric(ev.target.value)}
+                        size="small"
+                        value={selectedMetric}
+                      >
+                        <MenuItem value="all">
+                          {messages.overview.metrics.filter.all()}
+                        </MenuItem>
+                        {assignment.metrics.map((metric) => (
+                          <MenuItem
+                            key={metric.id}
+                            onClick={() => setSelectedMetric(metric.id)}
+                            value={metric.id}
+                          >
+                            {metric.question}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <MetricsOverviewCard
+                    metrics={filteredMetrics || []}
+                    stats={stats}
+                  />
                 </>
               )}
             </Box>
