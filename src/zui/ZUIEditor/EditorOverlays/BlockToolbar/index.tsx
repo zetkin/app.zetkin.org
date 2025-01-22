@@ -1,6 +1,8 @@
-import { Box, Button, Paper } from '@mui/material';
+import { Box, Button, IconButton, Paper } from '@mui/material';
 import { useCommands } from '@remirror/react';
 import { FC } from 'react';
+import { Delete } from '@mui/icons-material';
+import { FromToProps } from 'remirror';
 
 import VariableToolButton from './buttons/VariableToolButton';
 import { VariableName } from './../../extensions/VariableExtension';
@@ -9,6 +11,7 @@ import ItalicToolButton from './buttons/ItalicToolButton';
 import LinkToolButton from './buttons/LinkToolButton';
 
 type BlockToolbarProps = {
+  anchorPos: number;
   curBlockType: string;
   curBlockY: number;
   enableBold: boolean;
@@ -16,7 +19,7 @@ type BlockToolbarProps = {
   enableItalic: boolean;
   enableLink: boolean;
   enableVariable: boolean;
-  pos: number;
+  range: FromToProps;
 };
 
 const BlockToolbar: FC<BlockToolbarProps> = ({
@@ -27,10 +30,17 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   enableItalic,
   enableLink,
   enableVariable,
-  pos,
+  anchorPos,
+  range,
 }) => {
-  const { convertParagraph, focus, insertVariable, toggleHeading, pickImage } =
-    useCommands();
+  const {
+    convertParagraph,
+    delete: deleteRange,
+    focus,
+    insertVariable,
+    toggleHeading,
+    pickImage,
+  } = useCommands();
 
   return (
     <Box position="relative">
@@ -49,7 +59,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
             {curBlockType == 'zimage' && (
               <Button
                 onClick={() => {
-                  pickImage(pos);
+                  pickImage(anchorPos);
                 }}
               >
                 Change image
@@ -81,6 +91,9 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
                   }}
                 />
               )}
+            <IconButton onClick={() => deleteRange(range)}>
+              <Delete />
+            </IconButton>
           </Box>
         </Paper>
       </Box>
