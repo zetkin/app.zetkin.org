@@ -3,7 +3,7 @@ import { useActive, useCommands, useEditorState } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { InsertLink, LinkOff } from '@mui/icons-material';
 
-import { NodeWithPosition } from '../LinkExtensionUI';
+import { NodeWithPosition } from '../../../LinkExtensionUI';
 
 const LinkToolButton: FC = () => {
   const active = useActive();
