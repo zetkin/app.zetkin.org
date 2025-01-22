@@ -2,11 +2,11 @@ import { Box, Button, Paper } from '@mui/material';
 import { useCommands } from '@remirror/react';
 import { FC } from 'react';
 
-import VariableToolButton from './VariableToolButton';
-import { VariableName } from '../extensions/VariableExtension';
-import BoldToolButton from './BoldToolButton';
-import ItalicToolButton from './ItalicToolButton';
-import LinkToolButton from './LinkToolButton';
+import VariableToolButton from './buttons/VariableToolButton';
+import { VariableName } from './../../extensions/VariableExtension';
+import BoldToolButton from './buttons/BoldToolButton';
+import ItalicToolButton from './buttons/ItalicToolButton';
+import LinkToolButton from './buttons/LinkToolButton';
 
 type BlockToolbarProps = {
   curBlockType: string;
