@@ -7,6 +7,7 @@ import {
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
+import { FromToProps } from 'remirror';
 
 import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
@@ -20,6 +21,7 @@ export type BlockDividerData = {
 
 type BlockData = {
   node: ProsemirrorNode;
+  range: FromToProps;
   rect: DOMRect;
   type: string;
 };
@@ -61,6 +63,7 @@ const EditorOverlays: FC<Props> = ({
     const node = resolved.node(1);
     if (node) {
       const posBeforeTextContent = resolved.before(1);
+      const posAfterTextContent = resolved.after(1);
       const elem = view.nodeDOM(posBeforeTextContent);
       if (elem instanceof HTMLElement) {
         const nodeElem = elem;
@@ -70,6 +73,10 @@ const EditorOverlays: FC<Props> = ({
         const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
           node,
+          range: {
+            from: posBeforeTextContent,
+            to: posAfterTextContent,
+          },
           rect: {
             ...nodeRect.toJSON(),
             left: x,
@@ -180,6 +187,7 @@ const EditorOverlays: FC<Props> = ({
       )}
       {showBlockToolbar && (
         <BlockToolbar
+          anchorPos={state.selection.$anchor.pos}
           curBlockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
           enableBold={enableBold}
@@ -187,7 +195,7 @@ const EditorOverlays: FC<Props> = ({
           enableItalic={enableItalic}
           enableLink={enableLink}
           enableVariable={enableVariable}
-          pos={state.selection.$anchor.pos}
+          range={currentBlock.range}
         />
       )}
       {showBlockInsert && (
