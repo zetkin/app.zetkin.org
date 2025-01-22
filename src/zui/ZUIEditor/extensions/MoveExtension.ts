@@ -1,0 +1,29 @@
+import {
+  CommandFunction,
+  extension,
+  legacyCommand as command,
+  PlainExtension,
+  ProsemirrorNode,
+} from 'remirror';
+
+@extension({ customHandlerKeys: [], defaultOptions: {}, staticKeys: [] })
+class MoveExtension extends PlainExtension {
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  moveBlockUp(node: ProsemirrorNode, test: number): CommandFunction {
+    return (props) => {
+      const { dispatch, tr } = props;
+
+      dispatch?.(tr.insert(test, node));
+
+      return true;
+    };
+  }
+
+  get name(): string {
+    return 'zmove';
+  }
+}
+
+export default MoveExtension;
