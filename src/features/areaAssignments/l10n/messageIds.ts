@@ -84,30 +84,30 @@ export default makeMessages('feat.areaAssignments', {
     },
     mapStyle: {
       area: {
-        label: m('What the area color represents.'),
-        options: {
-          assignees: m('Number of assignees'),
-          hidden: m('Hidden'),
-          households: m('Number of households'),
-          outlined: m('Outlined'),
-          progress: m('Progress in this assignment'),
-        },
-      },
-      center: {
-        label: m('What to show in the center of the area'),
+        label: m('Area color'),
         options: {
           assignees: m('Assignees'),
           hidden: m('Hidden'),
-          households: m('Number of locations and households in the area'),
-          progress: m('Progress in the area in this assignment'),
+          households: m('Households'),
+          outlined: m('Outlined'),
+          progress: m('Progress'),
+        },
+      },
+      center: {
+        label: m('Area markers'),
+        options: {
+          assignees: m('Assignees'),
+          hidden: m('Hidden'),
+          households: m('Locations & households'),
+          progress: m('Progress'),
         },
       },
       markers: {
-        label: m('What the markers represent'),
+        label: m('Locations markers'),
         options: {
           dot: m('Dot'),
           hidden: m('Hidden'),
-          households: m('Number of households at the location'),
+          households: m('Households'),
           progress: m('Progress in this assignment'),
         },
       },

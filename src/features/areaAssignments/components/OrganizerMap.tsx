@@ -288,7 +288,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   justifyContent="space-between"
                 >
                   <Typography variant="h5">
-                    {settingsOpen == 'filters' ? 'Filters' : 'Map style'}
+                    {settingsOpen == 'filters' ? 'Filters' : 'Styles'}
                   </Typography>
                   <IconButton onClick={clearAndCloseSettings}>
                     <Close />

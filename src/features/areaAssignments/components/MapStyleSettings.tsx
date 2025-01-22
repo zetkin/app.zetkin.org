@@ -1,6 +1,12 @@
-import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from '@mui/material';
 import { FC } from 'react';
-import { Pentagon, Place, SquareRounded } from '@mui/icons-material';
 
 import { MapStyle } from './OrganizerMap';
 import { Msg } from 'core/i18n';
@@ -15,6 +21,76 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
   mapStyle,
   onMapStyleChange,
 }) => {
+  const locationMarkers = [
+    {
+      image: {
+        alt: 'Dot option',
+        src: '/location-dot.svg',
+      },
+      label: messageIds.map.mapStyle.markers.options.dot,
+      value: 'dot',
+    },
+    {
+      image: {
+        alt: 'Households option',
+        src: '/location-households.svg',
+      },
+      label: messageIds.map.mapStyle.markers.options.households,
+      value: 'households',
+    },
+    {
+      image: {
+        alt: 'Progress option',
+        src: '/location-progress.svg',
+      },
+      label: messageIds.map.mapStyle.markers.options.progress,
+      value: 'progress',
+    },
+    {
+      image: {
+        alt: 'Hide option',
+        src: '/location-hidden.svg',
+      },
+      label: messageIds.map.mapStyle.markers.options.hidden,
+      value: 'hide',
+    },
+  ];
+
+  const areaMarkers = [
+    {
+      image: {
+        alt: 'Center area assignees',
+        src: '/area-marker-assignees.svg',
+      },
+      label: messageIds.map.mapStyle.center.options.assignees,
+      value: 'assignees',
+    },
+    {
+      image: {
+        alt: 'Center area households',
+        src: '/area-marker-locations-households.svg',
+      },
+      label: messageIds.map.mapStyle.center.options.households,
+      value: 'households',
+    },
+    {
+      image: {
+        alt: 'Center area progress',
+        src: '/area-marker-assignment-progress.svg',
+      },
+      label: messageIds.map.mapStyle.center.options.progress,
+      value: 'progress',
+    },
+    {
+      image: {
+        alt: 'Center area hidden',
+        src: '/area-marker-hidden.svg',
+      },
+      label: messageIds.map.mapStyle.center.options.hidden,
+      value: 'hide',
+    },
+  ];
+
   return (
     <Box
       alignItems="flex-start"
@@ -34,118 +110,155 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
       >
         <FormControl variant="outlined">
           <Box display="flex" gap={1} paddingBottom={1}>
-            <Place color="secondary" />
-            <Typography id="location-style-label">
+            <Typography>
               <Msg id={messageIds.map.mapStyle.markers.label} />
             </Typography>
           </Box>
-          <Select
-            fullWidth
-            labelId="location-style-label"
+          <RadioGroup
             onChange={(ev) => {
               const newValue = ev.target.value;
               if (
-                newValue == 'dot' ||
-                newValue == 'households' ||
-                newValue == 'progress' ||
-                newValue == 'hide'
+                newValue === 'dot' ||
+                newValue === 'households' ||
+                newValue === 'progress' ||
+                newValue === 'hide'
               ) {
                 onMapStyleChange({ ...mapStyle, location: newValue });
               }
             }}
+            sx={{ ml: 1 }}
             value={mapStyle.location}
           >
-            <MenuItem value="dot">
-              <Msg id={messageIds.map.mapStyle.markers.options.dot} />
-            </MenuItem>
-            <MenuItem value="households">
-              <Msg id={messageIds.map.mapStyle.markers.options.households} />
-            </MenuItem>
-            <MenuItem value="progress">
-              <Msg id={messageIds.map.mapStyle.markers.options.progress} />
-            </MenuItem>
-            <MenuItem value="hide">
-              <Msg id={messageIds.map.mapStyle.markers.options.hidden} />
-            </MenuItem>
-          </Select>
+            {locationMarkers.map(({ value, label, image }) => (
+              <Box
+                key={value}
+                alignItems="center"
+                display="flex"
+                justifyContent="space-between"
+                pb={1}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  label={<Msg id={label} />}
+                  value={value}
+                />
+                <Box
+                  alt={image.alt}
+                  component="img"
+                  src={image.src}
+                  sx={{
+                    borderRadius: 1,
+                    height: 'auto',
+                    maxWidth: 60,
+                    width: '100%',
+                  }}
+                />
+              </Box>
+            ))}
+          </RadioGroup>
         </FormControl>
-        <FormControl variant="outlined">
+        <FormControl component="fieldset" variant="outlined">
           <Box display="flex" gap={1} paddingBottom={1}>
-            <Pentagon color="secondary" />
-            <Typography id="area-style-label">
-              <Msg id={messageIds.map.mapStyle.area.label} />
-            </Typography>
-          </Box>
-          <Select
-            fullWidth
-            labelId="area-style-color"
-            onChange={(ev) => {
-              const newValue = ev.target.value;
-              if (
-                newValue == 'households' ||
-                newValue == 'progress' ||
-                newValue == 'hide' ||
-                newValue == 'assignees' ||
-                newValue == 'outlined'
-              ) {
-                onMapStyleChange({ ...mapStyle, area: newValue });
-              }
-            }}
-            value={mapStyle.area}
-          >
-            <MenuItem value="assignees">
-              <Msg id={messageIds.map.mapStyle.area.options.assignees} />
-            </MenuItem>
-            <MenuItem value="households">
-              <Msg id={messageIds.map.mapStyle.area.options.households} />
-            </MenuItem>
-            <MenuItem value="progress">
-              <Msg id={messageIds.map.mapStyle.area.options.progress} />
-            </MenuItem>
-            <MenuItem value="outlined">
-              <Msg id={messageIds.map.mapStyle.area.options.outlined} />
-            </MenuItem>
-            <MenuItem value="hide">
-              <Msg id={messageIds.map.mapStyle.area.options.hidden} />
-            </MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined">
-          <Box display="flex" gap={1} paddingBottom={1}>
-            <SquareRounded color="secondary" />
-            <Typography id="overlay-style-label">
+            <Typography>
               <Msg id={messageIds.map.mapStyle.center.label} />
             </Typography>
           </Box>
-          <Select
-            fullWidth
-            labelId="overlay-style-label"
+          <RadioGroup
             onChange={(ev) => {
               const newValue = ev.target.value;
               if (
-                newValue == 'assignees' ||
-                newValue == 'households' ||
-                newValue == 'progress' ||
-                newValue == 'hide'
+                newValue === 'assignees' ||
+                newValue === 'households' ||
+                newValue === 'progress' ||
+                newValue === 'hide'
               ) {
                 onMapStyleChange({ ...mapStyle, overlay: newValue });
               }
             }}
+            sx={{ ml: 1 }}
             value={mapStyle.overlay}
           >
-            <MenuItem value="assignees">
-              <Msg id={messageIds.map.mapStyle.center.options.assignees} />
-            </MenuItem>
-            <MenuItem value="households">
-              <Msg id={messageIds.map.mapStyle.center.options.households} />
-            </MenuItem>
-            <MenuItem value="progress">
-              <Msg id={messageIds.map.mapStyle.center.options.progress} />
-            </MenuItem>
-            <MenuItem value="hide">
-              <Msg id={messageIds.map.mapStyle.center.options.hidden} />
-            </MenuItem>
-          </Select>
+            {areaMarkers.map(({ image, value, label }) => (
+              <Box
+                key={value}
+                alignItems="center"
+                display="flex"
+                justifyContent="space-between"
+                pb={1}
+              >
+                <FormControlLabel
+                  control={<Radio />}
+                  label={<Msg id={label} />}
+                  value={value}
+                />
+                <Box
+                  alt={image.alt}
+                  component="img"
+                  src={image.src}
+                  sx={{
+                    borderRadius: 1,
+                    height: 'auto',
+                    maxWidth: 60,
+                    width: '100%',
+                  }}
+                />
+              </Box>
+            ))}
+          </RadioGroup>
+        </FormControl>
+
+        <FormControl component="fieldset" variant="outlined">
+          <Box display="flex" gap={1} paddingBottom={1}>
+            <Typography>
+              <Msg id={messageIds.map.mapStyle.area.label} />
+            </Typography>
+          </Box>
+          <RadioGroup
+            onChange={(ev) => {
+              const newValue = ev.target.value;
+              if (
+                newValue === 'households' ||
+                newValue === 'assignees' ||
+                newValue === 'progress' ||
+                newValue === 'hide' ||
+                newValue === 'outlined'
+              ) {
+                onMapStyleChange({ ...mapStyle, area: newValue });
+              }
+            }}
+            sx={{ ml: 1 }}
+            value={mapStyle.area}
+          >
+            {[
+              {
+                label: messageIds.map.mapStyle.area.options.assignees,
+                value: 'assignees',
+              },
+              {
+                label: messageIds.map.mapStyle.area.options.households,
+                value: 'households',
+              },
+              {
+                label: messageIds.map.mapStyle.area.options.progress,
+                value: 'progress',
+              },
+              {
+                label: messageIds.map.mapStyle.area.options.outlined,
+                value: 'outlined',
+              },
+              {
+                label: messageIds.map.mapStyle.area.options.hidden,
+                value: 'hide',
+              },
+            ].map(({ value, label }) => (
+              <FormControlLabel
+                key={value}
+                control={<Radio />}
+                label={<Msg id={label} />}
+                value={value}
+              />
+            ))}
+          </RadioGroup>
         </FormControl>
       </Box>
     </Box>
