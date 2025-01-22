@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import { FC, useState } from 'react';
 import { DataObject } from '@mui/icons-material';
 
-import { VariableName } from '../extensions/VariableExtension';
+import { VariableName } from '../../../extensions/VariableExtension';
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 

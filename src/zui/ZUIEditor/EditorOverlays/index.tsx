@@ -8,7 +8,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
 
-import BlockToolbar from './BlockToolbar';
+import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import useBlockMenu from './useBlockMenu';
