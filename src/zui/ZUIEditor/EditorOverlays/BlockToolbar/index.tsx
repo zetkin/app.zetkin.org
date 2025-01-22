@@ -9,6 +9,7 @@ import { VariableName } from './../../extensions/VariableExtension';
 import BoldToolButton from './buttons/BoldToolButton';
 import ItalicToolButton from './buttons/ItalicToolButton';
 import LinkToolButton from './buttons/LinkToolButton';
+import MoveUpButton from './buttons/MoveUpButton';
 
 type BlockToolbarProps = {
   anchorPos: number;
@@ -55,6 +56,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
       >
         <Paper elevation={1}>
           <Box alignItems="center" display="flex" padding={1}>
+            <MoveUpButton />
             {curBlockType}
             {curBlockType == 'zimage' && (
               <Button

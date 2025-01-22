@@ -29,6 +29,7 @@ import EditorOverlays from './EditorOverlays';
 import VariableExtension from './extensions/VariableExtension';
 import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
+import MoveExtension from './extensions/MoveExtension';
 
 type BlockExtension =
   | ButtonExtension
@@ -154,6 +155,7 @@ const ZUIEditor: FC<Props> = ({
           zimage: (props) => imgExtension.createAndPick()(props),
         },
       }),
+      new MoveExtension(),
     ],
     selection: 'start',
   });
