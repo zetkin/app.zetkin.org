@@ -75,6 +75,7 @@ export default makeMessages('feat.areaAssignments', {
         label: m('Assignees'),
         unassigned: m('Only unassigned areas'),
       },
+      header: m('Filters'),
       title: m('Add filters to decide what areas you see on the map'),
       ungroupedTags: m('Ungrouped tags'),
     },
@@ -111,6 +112,7 @@ export default makeMessages('feat.areaAssignments', {
           progress: m('Progress'),
         },
       },
+      title: m('Layers'),
     },
   },
   overview: {

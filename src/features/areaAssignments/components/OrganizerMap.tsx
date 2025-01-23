@@ -32,8 +32,9 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
 import theme from 'theme';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import messageIdsAss from '../l10n/messageIds';
 
 type OrganizerMapProps = {
   areaAssId: string;
@@ -288,7 +289,11 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   justifyContent="space-between"
                 >
                   <Typography variant="h5">
-                    {settingsOpen == 'filters' ? 'Filters' : 'Styles'}
+                    {settingsOpen == 'filters' ? (
+                      <Msg id={messageIdsAss.map.filter.header} />
+                    ) : (
+                      <Msg id={messageIdsAss.map.mapStyle.title} />
+                    )}
                   </Typography>
                   <IconButton onClick={clearAndCloseSettings}>
                     <Close />
