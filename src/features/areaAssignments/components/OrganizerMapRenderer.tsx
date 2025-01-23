@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/styles';
+import { DoorFront, Place } from '@mui/icons-material';
 import {
   AttributionControl,
   FeatureGroup,
@@ -10,7 +11,11 @@ import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
 
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
+import objToLatLng from 'features/areas/utils/objToLatLng';
+import { ZetkinArea } from 'features/areas/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
@@ -18,10 +23,6 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinLocation,
 } from '../types';
-import { ZetkinArea } from 'features/areas/types';
-import objToLatLng from 'features/areas/utils/objToLatLng';
-import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
-import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 
 const LocationMarker: FC<{
   areaAssId: string;
@@ -414,12 +415,33 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       padding="2px 6px"
                       sx={{ translate: '-50% -50%' }}
                     >
-                      <Typography fontSize="11px">
-                        {numberOfLocations}
-                      </Typography>
-                      <Divider />
-                      <Typography fontSize="11px">
+                      <Typography
+                        alignItems="center"
+                        display="flex"
+                        fontSize="14px"
+                      >
+                        <DoorFront
+                          fontSize="small"
+                          sx={{ color: theme.palette.grey[300] }}
+                        />
                         {numberOfHouseholds}
+                      </Typography>
+                      <Divider
+                        sx={{
+                          width: '100%',
+                        }}
+                      />
+                      <Typography
+                        alignItems="center"
+                        display="flex"
+                        fontSize="14px"
+                      >
+                        <Place
+                          fontSize="small"
+                          sx={{ color: theme.palette.grey[300] }}
+                        />
+
+                        {numberOfLocations}
                       </Typography>
                     </Box>
                   </DivIconMarker>

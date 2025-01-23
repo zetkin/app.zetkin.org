@@ -98,7 +98,7 @@ export default makeMessages('feat.areaAssignments', {
         options: {
           assignees: m('Assignees'),
           hidden: m('Hidden'),
-          households: m('Locations & households'),
+          households: m('Households & locations'),
           progress: m('Progress'),
         },
       },
@@ -108,7 +108,7 @@ export default makeMessages('feat.areaAssignments', {
           dot: m('Point'),
           hidden: m('Hidden'),
           households: m('Households'),
-          progress: m('Progress in this assignment'),
+          progress: m('Progress'),
         },
       },
     },

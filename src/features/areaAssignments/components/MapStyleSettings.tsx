@@ -11,6 +11,7 @@ import { FC } from 'react';
 import { MapStyle } from './OrganizerMap';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 
 type MapStyleSettingsProps = {
   mapStyle: MapStyle;
@@ -147,6 +148,8 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
                   component="img"
                   src={image.src}
                   sx={{
+                    border: '1px solid',
+                    borderColor: theme.palette.grey[300],
                     borderRadius: 1,
                     height: 'auto',
                     maxWidth: 60,
@@ -196,6 +199,8 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
                   component="img"
                   src={image.src}
                   sx={{
+                    border: '1px solid',
+                    borderColor: theme.palette.grey[300],
                     borderRadius: 1,
                     height: 'auto',
                     maxWidth: 60,
