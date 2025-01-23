@@ -10,6 +10,7 @@ import BoldToolButton from './buttons/BoldToolButton';
 import ItalicToolButton from './buttons/ItalicToolButton';
 import LinkToolButton from './buttons/LinkToolButton';
 import MoveUpButton from './buttons/MoveUpButton';
+import MoveDownButton from './buttons/MoveDownButton';
 
 type BlockToolbarProps = {
   anchorPos: number;
@@ -56,6 +57,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
       >
         <Paper elevation={1}>
           <Box alignItems="center" display="flex" padding={1}>
+            <MoveDownButton />
             <MoveUpButton />
             {curBlockType}
             {curBlockType == 'zimage' && (
