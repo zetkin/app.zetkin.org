@@ -5,7 +5,7 @@ import { FC } from 'react';
 
 const MoveUpButton: FC = () => {
   const state = useEditorState();
-  const { delete: deleteRange, moveBlockUp } = useCommands();
+  const { delete: deleteRange, moveBlock } = useCommands();
 
   const pos = state.selection.$head.pos;
   const resolved = state.doc.resolve(pos);
@@ -28,7 +28,7 @@ const MoveUpButton: FC = () => {
           );
 
           deleteRange({ from: posBefore, to: posAfter });
-          moveBlockUp(node, blockBeforePos);
+          moveBlock(node, blockBeforePos);
         }
       }}
     >
