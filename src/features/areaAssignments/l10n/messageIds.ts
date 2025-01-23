@@ -105,7 +105,7 @@ export default makeMessages('feat.areaAssignments', {
       markers: {
         label: m('Locations markers'),
         options: {
-          dot: m('Dot'),
+          dot: m('Point'),
           hidden: m('Hidden'),
           households: m('Households'),
           progress: m('Progress in this assignment'),
