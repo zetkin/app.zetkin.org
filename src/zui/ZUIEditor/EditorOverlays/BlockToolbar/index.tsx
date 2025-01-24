@@ -1,48 +1,35 @@
-import { Box, Button, IconButton, Paper } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Paper,
+  SvgIconTypeMap,
+  Typography,
+} from '@mui/material';
 import { useCommands } from '@remirror/react';
 import { FC } from 'react';
 import { Delete } from '@mui/icons-material';
 import { FromToProps } from 'remirror';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 
-import VariableToolButton from './buttons/VariableToolButton';
-import { VariableName } from './../../extensions/VariableExtension';
-import BoldToolButton from './buttons/BoldToolButton';
-import ItalicToolButton from './buttons/ItalicToolButton';
-import LinkToolButton from './buttons/LinkToolButton';
 import MoveUpButton from './buttons/MoveUpButton';
 import MoveDownButton from './buttons/MoveDownButton';
 
 type BlockToolbarProps = {
-  anchorPos: number;
-  curBlockType: string;
   curBlockY: number;
-  enableBold: boolean;
-  enableHeading: boolean;
-  enableItalic: boolean;
-  enableLink: boolean;
-  enableVariable: boolean;
+  icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
   range: FromToProps;
+  title: string;
+  tools: JSX.Element;
 };
 
 const BlockToolbar: FC<BlockToolbarProps> = ({
-  curBlockType,
   curBlockY,
-  enableBold,
-  enableHeading,
-  enableItalic,
-  enableLink,
-  enableVariable,
-  anchorPos,
+  icon: Icon,
   range,
+  title,
+  tools,
 }) => {
-  const {
-    convertParagraph,
-    delete: deleteRange,
-    focus,
-    insertVariable,
-    toggleHeading,
-    pickImage,
-  } = useCommands();
+  const { delete: deleteRange } = useCommands();
 
   return (
     <Box position="relative">
@@ -57,44 +44,13 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
       >
         <Paper elevation={1}>
           <Box alignItems="center" display="flex" padding={1}>
-            <MoveDownButton />
-            <MoveUpButton />
-            {curBlockType}
-            {curBlockType == 'zimage' && (
-              <Button
-                onClick={() => {
-                  pickImage(anchorPos);
-                }}
-              >
-                Change image
-              </Button>
-            )}
-            {curBlockType == 'heading' && (
-              <Button onClick={() => convertParagraph()}>
-                Convert to paragraph
-              </Button>
-            )}
-            {curBlockType == 'paragraph' && (
-              <>
-                {enableHeading && (
-                  <Button onClick={() => toggleHeading()}>
-                    Convert to heading
-                  </Button>
-                )}
-                {enableLink && <LinkToolButton />}
-                {enableBold && <BoldToolButton />}
-                {enableItalic && <ItalicToolButton />}
-              </>
-            )}
-            {enableVariable &&
-              (curBlockType == 'paragraph' || curBlockType == 'heading') && (
-                <VariableToolButton
-                  onSelect={(varName: VariableName) => {
-                    insertVariable(varName);
-                    focus();
-                  }}
-                />
-              )}
+            <Box display="flex" flexDirection="column">
+              <MoveUpButton />
+              <MoveDownButton />
+            </Box>
+            <Icon color="secondary" />
+            <Typography padding={1}>{title}</Typography>
+            {tools}
             <IconButton onClick={() => deleteRange(range)}>
               <Delete />
             </IconButton>

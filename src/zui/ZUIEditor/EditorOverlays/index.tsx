@@ -6,8 +6,9 @@ import {
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { FromToProps } from 'remirror';
+import { Surfing } from '@mui/icons-material';
 
 import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
@@ -32,22 +33,9 @@ type Props = {
     label: string;
   }[];
   editable: boolean;
-  enableBold: boolean;
-  enableHeading: boolean;
-  enableItalic: boolean;
-  enableLink: boolean;
-  enableVariable: boolean;
 };
 
-const EditorOverlays: FC<Props> = ({
-  blocks,
-  editable,
-  enableBold,
-  enableHeading,
-  enableItalic,
-  enableLink,
-  enableVariable,
-}) => {
+const EditorOverlays: FC<Props> = ({ blocks, editable }) => {
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
@@ -187,15 +175,11 @@ const EditorOverlays: FC<Props> = ({
       )}
       {showBlockToolbar && (
         <BlockToolbar
-          anchorPos={state.selection.$anchor.pos}
-          curBlockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
-          enableBold={enableBold}
-          enableHeading={enableHeading}
-          enableItalic={enableItalic}
-          enableLink={enableLink}
-          enableVariable={enableVariable}
+          icon={Surfing}
           range={currentBlock.range}
+          title="Blocktype"
+          tools={<Typography color="secondary">Tools go here</Typography>}
         />
       )}
       {showBlockInsert && (
