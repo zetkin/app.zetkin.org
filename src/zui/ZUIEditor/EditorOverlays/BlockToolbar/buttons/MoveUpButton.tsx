@@ -1,4 +1,4 @@
-import { ArrowUpward } from '@mui/icons-material';
+import { KeyboardArrowUp } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { useCommands } from '@remirror/react';
 import { FC } from 'react';
@@ -15,8 +15,9 @@ const MoveUpButton: FC = () => {
           focus();
         }
       }}
+      size="small"
     >
-      <ArrowUpward />
+      <KeyboardArrowUp fontSize="inherit" />
     </IconButton>
   );
 };
