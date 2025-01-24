@@ -137,7 +137,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
         width: '100%',
       }}
     >
-      <Box flexGrow={1} position="relative">
+      <Box flexGrow={1} position="relative" zIndex={0}>
         <MapControls
           map={mapRef.current}
           onFitBounds={() => {

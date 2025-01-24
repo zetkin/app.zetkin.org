@@ -2,11 +2,12 @@
   "name": "app.zetkin.org",
   "version": "41.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build",
     "start": "next start -p 80",
-    "devserver": "next dev -p 3000",
+    "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
     "docs:build": "storybook build -o public/storybook && typedoc",
     "lint:eslint": "eslint src integrationTesting",
     "lint:prettier": "prettier --check src integrationTesting",
