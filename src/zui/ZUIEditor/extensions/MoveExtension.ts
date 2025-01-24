@@ -45,6 +45,42 @@ class MoveExtension extends PlainExtension {
     };
   }
 
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  moveBlockUp(): CommandFunction {
+    return (props) => {
+      const { dispatch, state, tr } = props;
+
+      const pos = state.selection.$head.pos;
+      const resolved = tr.doc.resolve(pos);
+      const node = resolved.node(1);
+
+      if (node == tr.doc.firstChild) {
+        return false;
+      }
+
+      const posBeforeSelected = resolved.before(1);
+      const posAfterSelected = resolved.after(1);
+
+      const resolvedEndOfPreviousNode = tr.doc.resolve(posBeforeSelected - 1);
+      const posBeforeNodeBefore = resolvedEndOfPreviousNode.before(1);
+
+      tr.delete(posBeforeSelected, posAfterSelected);
+      tr.insert(posBeforeNodeBefore, node);
+
+      const textSelection = TextSelection.create(
+        tr.doc,
+        posBeforeNodeBefore + resolved.parentOffset
+      );
+      tr.setSelection(textSelection);
+
+      dispatch?.(tr);
+
+      return true;
+    };
+  }
+
   get name(): string {
     return 'zmove';
   }
