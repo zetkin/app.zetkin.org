@@ -59,16 +59,13 @@ export default makeMessages('feat.areaAssignments', {
       },
       stats: {
         households: m<{ numHouseholds: number }>(
-          '{numHouseholds, plural, one {Household} other {Households}}'
+          '{numHouseholds, plural, one {Household visited} other {Households visited}}'
         ),
         locations: m<{ numLocations: number }>(
           '{numLocations, plural, one {Location} other {Locations}}'
         ),
         successful: m<{ numSuccessfulVisits: number }>(
           '{numSuccessfulVisits, plural, one {Successful visit} other {Successful visits}}'
-        ),
-        visited: m<{ numVisited: number }>(
-          '{numVisited, plural, =0 {Visited} one {Visited} other {Visited}}'
         ),
       },
     },
@@ -78,42 +75,44 @@ export default makeMessages('feat.areaAssignments', {
         label: m('Assignees'),
         unassigned: m('Only unassigned areas'),
       },
+      header: m('Filters'),
       title: m('Add filters to decide what areas you see on the map'),
       ungroupedTags: m('Ungrouped tags'),
     },
     findArea: {
       filterPlaceHolder: m('Filter'),
-      title: m('Find area'),
+      title: m('Areas'),
     },
     mapStyle: {
       area: {
-        label: m('What the area color represents.'),
-        options: {
-          assignees: m('Number of assignees'),
-          hidden: m('Hidden'),
-          households: m('Number of households'),
-          outlined: m('Outlined'),
-          progress: m('Progress in this assignment'),
-        },
-      },
-      center: {
-        label: m('What to show in the center of the area'),
+        label: m('Area color'),
         options: {
           assignees: m('Assignees'),
           hidden: m('Hidden'),
-          households: m('Number of locations and households in the area'),
-          progress: m('Progress in the area in this assignment'),
+          households: m('Households'),
+          outlined: m('Outlined'),
+          progress: m('Progress'),
+        },
+      },
+      center: {
+        label: m('Area markers'),
+        options: {
+          assignees: m('Assignees'),
+          hidden: m('Hidden'),
+          households: m('Households & locations'),
+          progress: m('Progress'),
         },
       },
       markers: {
-        label: m('What the markers represent'),
+        label: m('Locations markers'),
         options: {
-          dot: m('Dot'),
+          dot: m('Point'),
           hidden: m('Hidden'),
-          households: m('Number of households at the location'),
-          progress: m('Progress in this assignment'),
+          households: m('Households'),
+          progress: m('Progress'),
         },
       },
+      title: m('Layers'),
     },
   },
   overview: {
