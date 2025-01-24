@@ -11,7 +11,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { Close, Pentagon, Search } from '@mui/icons-material';
+import { Close, Layers, Pentagon } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
@@ -206,7 +206,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 }
               }}
             >
-              <Pentagon />
+              <Layers />
             </Button>
             <Button
               onClick={() => {
@@ -221,7 +221,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 }
               }}
             >
-              <Search />
+              <Pentagon />
             </Button>
           </ButtonGroup>
         </Box>
