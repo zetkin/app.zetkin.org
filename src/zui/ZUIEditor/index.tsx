@@ -4,7 +4,7 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -38,6 +38,7 @@ type BlockExtension =
   | BulletListExtension;
 
 type Props = {
+  editable: boolean;
   enableBold?: boolean;
   enableButton?: boolean;
   enableHeading?: boolean;
@@ -49,6 +50,7 @@ type Props = {
 };
 
 const ZUIEditor: FC<Props> = ({
+  editable,
   enableBold,
   enableButton,
   enableHeading,
@@ -75,41 +77,48 @@ const ZUIEditor: FC<Props> = ({
     last_name: messages.variables.lastName(),
   });
 
-  const otherExtensions: AnyExtension[] = [];
-  const blockExtensions: BlockExtension[] = [];
+  const blockExtensions = useMemo(() => {
+    const extensions: BlockExtension[] = [];
+    if (enableButton) {
+      extensions.push(btnExtension);
+    }
 
-  if (enableButton) {
-    blockExtensions.push(btnExtension);
-  }
+    if (enableImage) {
+      extensions.push(imgExtension);
+    }
 
-  if (enableBold) {
-    otherExtensions.push(boldExtension);
-  }
+    if (enableHeading) {
+      extensions.push(headingExtension);
+    }
 
-  if (enableImage) {
-    blockExtensions.push(imgExtension);
-  }
+    if (enableLists) {
+      extensions.push(olExtension);
+      extensions.push(ulExtension);
+    }
+    return extensions;
+  }, []);
 
-  if (enableItalic) {
-    otherExtensions.push(italicExtension);
-  }
+  const otherExtensions = useMemo(() => {
+    const extensions: AnyExtension[] = [];
 
-  if (enableLink) {
-    otherExtensions.push(linkExtension);
-  }
+    if (enableBold) {
+      extensions.push(boldExtension);
+    }
 
-  if (enableHeading) {
-    blockExtensions.push(headingExtension);
-  }
+    if (enableItalic) {
+      extensions.push(italicExtension);
+    }
 
-  if (enableLists) {
-    blockExtensions.push(olExtension);
-    blockExtensions.push(ulExtension);
-  }
+    if (enableLink) {
+      extensions.push(linkExtension);
+    }
 
-  if (enableVariable) {
-    otherExtensions.push(varExtension);
-  }
+    if (enableVariable) {
+      extensions.push(varExtension);
+    }
+
+    return extensions;
+  }, []);
 
   const { orgId } = useNumericRouteParams();
 
@@ -149,6 +158,8 @@ const ZUIEditor: FC<Props> = ({
     selection: 'start',
   });
 
+  const enableBlockMenu = editable && blockExtensions.length > 0;
+
   return (
     <Box
       sx={{
@@ -185,21 +196,23 @@ const ZUIEditor: FC<Props> = ({
       }}
     >
       <div style={{ minHeight: '200px' }}>
-        <Remirror initialContent={state} manager={manager}>
+        <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
             blocks={blockExtensions.map((ext) => ({
               id: ext.name,
               label: messages.blockLabels[ext.name](),
             }))}
+            editable={editable}
             enableBold={!!enableBold}
+            enableHeading={!!enableHeading}
             enableItalic={!!enableItalic}
             enableLink={!!enableLink}
             enableVariable={!!enableVariable}
           />
-          <EmptyBlockPlaceholder />
-          {enableImage && <ImageExtensionUI orgId={orgId} />}
-          <ButtonExtensionUI />
-          <LinkExtensionUI />
+          {enableBlockMenu && <EmptyBlockPlaceholder />}
+          {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
+          {enableBlockMenu && enableButton && <ButtonExtensionUI />}
+          {enableLink && <LinkExtensionUI />}
           <EditorComponent />
           <OnChangeJSON
             // eslint-disable-next-line no-console
