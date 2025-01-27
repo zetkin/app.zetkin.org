@@ -88,7 +88,13 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
                     dots.map((dot, index) => (
                       <circle
                         key={index}
-                        cx={dot.x}
+                        cx={
+                          index === 0
+                            ? dot.x + 4
+                            : index === 4
+                            ? dot.x - 4
+                            : dot.x
+                        }
                         cy={dot.y}
                         fill={theme.palette.primary.main}
                         r={4}
@@ -102,6 +108,7 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
                 display="flex"
                 flexDirection="row"
                 height={stackBarHeight}
+                mt={0.5}
                 overflow="visible"
                 paddingBottom={3.25}
               >
@@ -133,6 +140,36 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
                       >
                         {avg.toFixed(1)}
                       </Typography>
+                    </Box>
+                  )}
+                  {isHovered && (
+                    <Box>
+                      {dots.map((dot, index) => {
+                        const adjustedX = dot.x - 4; // 4 is the radius
+
+                        const finalX =
+                          index === values.length - 1
+                            ? adjustedX - 8
+                            : index === 0
+                            ? adjustedX + 4
+                            : adjustedX;
+
+                        return (
+                          <Box
+                            key={index}
+                            style={{
+                              color: theme.palette.primary.main,
+                              left: `${finalX}px`,
+                              position: 'absolute',
+                              top: `${10}px`,
+                            }}
+                          >
+                            <Typography key={index} variant="h6">
+                              {values[index]}
+                            </Typography>
+                          </Box>
+                        );
+                      })}
                     </Box>
                   )}
                 </Box>

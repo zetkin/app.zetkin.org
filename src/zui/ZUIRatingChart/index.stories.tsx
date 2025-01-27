@@ -22,5 +22,5 @@ export const RatingChartLowNumbers = Template.bind({});
 RatingChartLowNumbers.args = {
   question: 'Low rating question...',
   svgHeight: 50,
-  values: [0, 1, 2, 3, 4],
+  values: [0, 7, 3, 3, 4],
 };
