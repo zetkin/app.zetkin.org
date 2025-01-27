@@ -150,6 +150,12 @@ export default makeMessages('zui', {
       button: {
         defaultText: m('Button text'),
       },
+      heading: {
+        large: m('1 - Large'),
+        level: m('Level'),
+        medium: m('2 - Medium'),
+        small: m('3 - Small'),
+      },
       link: {
         apply: m('Apply'),
         cancel: m('Cancel'),

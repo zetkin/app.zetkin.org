@@ -8,6 +8,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
 import { FromToProps } from 'remirror';
+import { Attrs } from '@remirror/pm/model';
 
 import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
@@ -19,9 +20,10 @@ export type BlockDividerData = {
   y: number;
 };
 
-export type BlockType = 'zbutton' | 'paragraph';
+export type BlockType = 'zbutton' | 'paragraph' | 'heading';
 
 type BlockData = {
+  attributes: Attrs;
   node: ProsemirrorNode;
   range: FromToProps;
   rect: DOMRect;
@@ -72,6 +74,7 @@ const EditorOverlays: FC<Props> = ({
         const x = nodeRect.x - editorRect.x;
         const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
+          attributes: node.attrs,
           node,
           range: {
             from: posBeforeTextContent,
@@ -187,6 +190,7 @@ const EditorOverlays: FC<Props> = ({
       )}
       {showBlockToolbar && (
         <BlockToolbar
+          blockAttributes={currentBlock.attributes}
           blockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
           enableBold={enableBold}

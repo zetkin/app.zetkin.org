@@ -23,6 +23,8 @@ const VariableToolButton: FC = () => {
         onClick={(ev) => {
           setAnchorEl(ev.currentTarget);
         }}
+        size="small"
+        variant="outlined"
       >
         <DataObject />
       </Button>
