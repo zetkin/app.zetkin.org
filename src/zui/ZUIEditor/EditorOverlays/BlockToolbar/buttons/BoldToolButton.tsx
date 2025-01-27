@@ -1,5 +1,5 @@
 import { FormatBold } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import { useActive, useCommands } from '@remirror/react';
 import { FC } from 'react';
 
@@ -8,7 +8,7 @@ const BoldToolButton: FC = () => {
   const { focus, toggleBold } = useCommands();
 
   return (
-    <IconButton
+    <Button
       color={active.bold() ? 'primary' : 'secondary'}
       onClick={() => {
         toggleBold();
@@ -16,7 +16,7 @@ const BoldToolButton: FC = () => {
       }}
     >
       <FormatBold />
-    </IconButton>
+    </Button>
   );
 };
 
