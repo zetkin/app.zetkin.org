@@ -1,10 +1,14 @@
 import { FC } from 'react';
 import { FromToProps } from 'remirror';
 import { Attrs } from '@remirror/pm/model';
+import { CheckBoxOutlineBlank } from '@mui/icons-material';
 
 import { BlockType } from '..';
 import ParagraphToolbar from './toolbars/ParagraphToolbar';
 import HeadingToolbar from './toolbars/HeadingToolbar';
+import BlockToolbarBase from './toolbars/BlockToolbarBase';
+import { useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 type BlockToolbarProps = {
   blockAttributes: Attrs;
@@ -27,6 +31,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   enableBold,
   range,
 }) => {
+  const messages = useMessages(messageIds);
   if (blockType == 'paragraph') {
     return (
       <ParagraphToolbar
@@ -45,6 +50,15 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
         enableVariable={enableVariable}
         headingLevel={blockAttributes.level}
         range={range}
+      />
+    );
+  } else if (blockType == 'zbutton') {
+    return (
+      <BlockToolbarBase
+        curBlockY={curBlockY}
+        icon={<CheckBoxOutlineBlank />}
+        range={range}
+        title={messages.editor.blockLabels.zbutton()}
       />
     );
   } else {
