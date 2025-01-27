@@ -53,7 +53,7 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
             display="flex"
             justifyContent="space-between"
           >
-            <Box alignItems="center" display="flex">
+            <Box alignItems="center" display="flex" paddingRight={10}>
               <Box display="flex" flexDirection="column">
                 <MoveUpButton />
                 <MoveDownButton />

@@ -1,5 +1,5 @@
 import { FormatItalic } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import { useActive, useCommands } from '@remirror/react';
 import { FC } from 'react';
 
@@ -8,7 +8,7 @@ const ItalicToolButton: FC = () => {
   const { focus, toggleItalic } = useCommands();
 
   return (
-    <IconButton
+    <Button
       color={active.italic() ? 'primary' : 'secondary'}
       onClick={() => {
         toggleItalic();
@@ -16,7 +16,7 @@ const ItalicToolButton: FC = () => {
       }}
     >
       <FormatItalic />
-    </IconButton>
+    </Button>
   );
 };
 

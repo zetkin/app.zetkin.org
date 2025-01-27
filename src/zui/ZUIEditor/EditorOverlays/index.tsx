@@ -6,9 +6,8 @@ import {
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { FromToProps } from 'remirror';
-import { Surfing } from '@mui/icons-material';
 
 import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
@@ -20,11 +19,13 @@ export type BlockDividerData = {
   y: number;
 };
 
+export type BlockType = 'zbutton' | 'paragraph';
+
 type BlockData = {
   node: ProsemirrorNode;
   range: FromToProps;
   rect: DOMRect;
-  type: string;
+  type: BlockType;
 };
 
 type Props = {
@@ -33,9 +34,20 @@ type Props = {
     label: string;
   }[];
   editable: boolean;
+  enableBold: boolean;
+  enableItalic: boolean;
+  enableLink: boolean;
+  enableVariable: boolean;
 };
 
-const EditorOverlays: FC<Props> = ({ blocks, editable }) => {
+const EditorOverlays: FC<Props> = ({
+  blocks,
+  editable,
+  enableBold,
+  enableItalic,
+  enableLink,
+  enableVariable,
+}) => {
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
@@ -72,7 +84,7 @@ const EditorOverlays: FC<Props> = ({ blocks, editable }) => {
             x: x,
             y: y,
           },
-          type: node.type.name,
+          type: node.type.name as BlockType,
         });
       }
     }
@@ -175,11 +187,13 @@ const EditorOverlays: FC<Props> = ({ blocks, editable }) => {
       )}
       {showBlockToolbar && (
         <BlockToolbar
+          blockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
-          icon={Surfing}
+          enableBold={enableBold}
+          enableItalic={enableItalic}
+          enableLink={enableLink}
+          enableVariable={enableVariable}
           range={currentBlock.range}
-          title="Blocktype"
-          tools={<Typography color="secondary">Tools go here</Typography>}
         />
       )}
       {showBlockInsert && (
