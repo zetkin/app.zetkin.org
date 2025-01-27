@@ -145,11 +145,11 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
                   {isHovered && (
                     <Box>
                       {dots.map((dot, index) => {
-                        const adjustedX = dot.x - 4; // 4 is the radius
+                        const adjustedX = dot.x;
 
                         const finalX =
                           index === values.length - 1
-                            ? adjustedX - 8
+                            ? adjustedX - 4
                             : index === 0
                             ? adjustedX + 4
                             : adjustedX;
@@ -161,7 +161,8 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
                               color: theme.palette.primary.main,
                               left: `${finalX}px`,
                               position: 'absolute',
-                              top: `${10}px`,
+                              top: `${40}px`,
+                              transform: 'translate(-50%, -100%)',
                             }}
                           >
                             <Typography key={index} variant="h6">
