@@ -1,10 +1,13 @@
 import { FC } from 'react';
 import { FromToProps } from 'remirror';
+import { Attrs } from '@remirror/pm/model';
 
 import { BlockType } from '..';
 import ParagraphToolbar from './toolbars/ParagraphToolbar';
+import HeadingToolbar from './toolbars/HeadingToolbar';
 
 type BlockToolbarProps = {
+  blockAttributes: Attrs;
   blockType: BlockType;
   curBlockY: number;
   enableBold: boolean;
@@ -15,6 +18,7 @@ type BlockToolbarProps = {
 };
 
 const BlockToolbar: FC<BlockToolbarProps> = ({
+  blockAttributes,
   blockType,
   curBlockY,
   enableLink,
@@ -31,6 +35,15 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
         enableItalic={enableItalic}
         enableLink={enableLink}
         enableVariable={enableVariable}
+        range={range}
+      />
+    );
+  } else if (blockType == 'heading') {
+    return (
+      <HeadingToolbar
+        curBlockY={curBlockY}
+        enableVariable={enableVariable}
+        headingLevel={blockAttributes.level}
         range={range}
       />
     );
