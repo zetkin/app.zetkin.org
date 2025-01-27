@@ -20,7 +20,7 @@ export type BlockDividerData = {
   y: number;
 };
 
-export type BlockType = 'zbutton' | 'paragraph' | 'heading';
+export type BlockType = 'zbutton' | 'paragraph' | 'heading' | 'zimage';
 
 type BlockData = {
   attributes: Attrs;

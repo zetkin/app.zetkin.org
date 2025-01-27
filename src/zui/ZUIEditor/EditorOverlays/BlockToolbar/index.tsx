@@ -9,6 +9,7 @@ import HeadingToolbar from './toolbars/HeadingToolbar';
 import BlockToolbarBase from './toolbars/BlockToolbarBase';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import ImageToolbar from './toolbars/ImageToolbar';
 
 type BlockToolbarProps = {
   blockAttributes: Attrs;
@@ -59,6 +60,14 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
         icon={<CheckBoxOutlineBlank />}
         range={range}
         title={messages.editor.blockLabels.zbutton()}
+      />
+    );
+  } else if (blockType == 'zimage') {
+    return (
+      <ImageToolbar
+        curBlockY={curBlockY}
+        range={range}
+        src={blockAttributes.src}
       />
     );
   } else {
