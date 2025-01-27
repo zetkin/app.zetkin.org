@@ -154,6 +154,7 @@ export default makeMessages('zui', {
       bulletList: m('Bullet list'),
       heading: m('Heading'),
       orderedList: m('Ordered list'),
+      paragraph: m('Text'),
       zbutton: m('Button'),
       zimage: m('Image'),
     },

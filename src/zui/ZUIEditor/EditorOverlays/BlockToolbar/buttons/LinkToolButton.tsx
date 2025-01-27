@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import { useActive, useCommands, useEditorState } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { InsertLink, LinkOff } from '@mui/icons-material';
@@ -30,7 +30,7 @@ const LinkToolButton: FC = () => {
   }, [state.selection]);
 
   return (
-    <IconButton
+    <Button
       onClick={() => {
         if (!active.zlink()) {
           if (state.selection.empty) {
@@ -56,7 +56,7 @@ const LinkToolButton: FC = () => {
       }}
     >
       {active.zlink() ? <LinkOff /> : <InsertLink />}
-    </IconButton>
+    </Button>
   );
 };
 

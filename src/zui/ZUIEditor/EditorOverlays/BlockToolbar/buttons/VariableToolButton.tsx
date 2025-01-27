@@ -1,32 +1,31 @@
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { FC, useState } from 'react';
 import { DataObject } from '@mui/icons-material';
+import { useCommands } from '@remirror/react';
 
 import { VariableName } from '../../../extensions/VariableExtension';
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 
-type Props = {
-  onSelect: (varName: VariableName) => void;
-};
+const VariableToolButton: FC = () => {
+  const { insertVariable } = useCommands();
 
-const VariableToolButton: FC<Props> = ({ onSelect }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleSelect = (varName: VariableName) => {
-    onSelect(varName);
+    insertVariable(varName);
     setAnchorEl(null);
   };
 
   return (
     <>
-      <IconButton
+      <Button
         onClick={(ev) => {
           setAnchorEl(ev.currentTarget);
         }}
       >
         <DataObject />
-      </IconButton>
+      </Button>
       <Menu
         anchorEl={anchorEl}
         onClose={() => setAnchorEl(null)}

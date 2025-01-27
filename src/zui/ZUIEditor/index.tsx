@@ -205,6 +205,10 @@ const ZUIEditor: FC<Props> = ({
               label: messages.blockLabels[ext.name](),
             }))}
             editable={editable}
+            enableBold={!!enableBold}
+            enableItalic={!!enableItalic}
+            enableLink={!!enableLink}
+            enableVariable={!!enableVariable}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
