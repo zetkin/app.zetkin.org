@@ -10,6 +10,8 @@ import BlockToolbarBase from './toolbars/BlockToolbarBase';
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import ImageToolbar from './toolbars/ImageToolbar';
+import OrderedListToolbar from './toolbars/OrderedListToolbar';
+import BulletListToolbar from './toolbars/BulletListToolbar';
 
 type BlockToolbarProps = {
   blockAttributes: Attrs;
@@ -70,6 +72,10 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
         src={blockAttributes.src}
       />
     );
+  } else if (blockType == 'orderedList') {
+    return <OrderedListToolbar curBlockY={curBlockY} range={range} />;
+  } else if (blockType == 'bulletList') {
+    return <BulletListToolbar curBlockY={curBlockY} range={range} />;
   } else {
     return <> </>;
   }
