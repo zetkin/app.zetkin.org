@@ -30,6 +30,7 @@ import LinkExtensionUI from './LinkExtensionUI';
 import VariableExtension from './extensions/VariableExtension';
 import ButtonExtensionUI from './ButtonExtensionUI';
 import MoveExtension from './extensions/MoveExtension';
+import IndentDedentExtension from './extensions/IndentDedentExtension';
 
 type BlockExtension =
   | ButtonExtension
@@ -156,6 +157,7 @@ const ZUIEditor: FC<Props> = ({
         },
       }),
       new MoveExtension(),
+      new IndentDedentExtension(),
     ],
     selection: 'start',
   });
