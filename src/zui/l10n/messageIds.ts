@@ -158,6 +158,15 @@ export default makeMessages('zui', {
       ),
       link: m('click here'),
     },
+    toolbar: {
+      conversions: {
+        bulletList: m('Convert to bullet list'),
+        heading: m('Convert to heading'),
+        orderedList: m('Convert to ordered list'),
+        paragraph: m('Convert to paragraph'),
+      },
+      delete: m('Delete block'),
+    },
     variables: {
       firstName: m('First Name'),
       fullName: m('Full Name'),
