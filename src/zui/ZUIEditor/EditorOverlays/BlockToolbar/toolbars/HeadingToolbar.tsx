@@ -31,7 +31,7 @@ const HeadingToolbar: FC<HeadingToolbarProps> = ({
     <BlockToolbarBase
       conversions={[
         {
-          label: messages.editor.blockLabels.paragraph(),
+          label: messages.editor.toolbar.conversions.paragraph(),
           onClick: () => convertParagraph(),
         },
       ]}

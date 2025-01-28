@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -9,11 +8,13 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 import { FromToProps } from 'remirror';
-import { Delete, KeyboardArrowDown } from '@mui/icons-material';
+import { MoreVert } from '@mui/icons-material';
 import { useCommands } from '@remirror/react';
 
 import MoveUpButton from '../buttons/MoveUpButton';
 import MoveDownButton from '../buttons/MoveDownButton';
+import { Msg } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 type BlockToolbarBaseProps = {
   conversions?: { label: string; onClick: () => void }[];
@@ -58,50 +59,37 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
                 <MoveUpButton />
                 <MoveDownButton />
               </Box>
-              {!conversions && (
-                <Box alignItems="center" display="flex" gap={1} marginX={0.5}>
-                  {icon}
-                  <Typography fontSize="14px">
-                    {title.toLocaleUpperCase()}
-                  </Typography>
-                </Box>
-              )}
-              {conversions && (
-                <>
-                  <Button
-                    endIcon={<KeyboardArrowDown />}
-                    onClick={(ev) =>
-                      setAnchorEl(anchorEl ? null : ev.currentTarget)
-                    }
-                    startIcon={icon}
-                  >
-                    {title}
-                  </Button>
-                  <Menu
-                    anchorEl={anchorEl}
-                    onClose={() => setAnchorEl(null)}
-                    open={!!anchorEl}
-                  >
-                    {conversions.map((conversion) => (
-                      <MenuItem
-                        key={conversion.label}
-                        onClick={() => {
-                          conversion.onClick();
-                          setAnchorEl(null);
-                        }}
-                      >
-                        {conversion.label}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </>
-              )}
+              <Box alignItems="center" display="flex" gap={1} marginX={0.5}>
+                {icon}
+                <Typography fontSize="14px">{title}</Typography>
+              </Box>
             </Box>
             <Box alignItems="center" display="flex">
               {tools}
-              <IconButton onClick={() => deleteRange(range)}>
-                <Delete />
+              <IconButton onClick={(ev) => setAnchorEl(ev.currentTarget)}>
+                <MoreVert />
               </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                open={!!anchorEl}
+              >
+                <MenuItem key="delete" onClick={() => deleteRange(range)}>
+                  <Msg id={messageIds.editor.toolbar.delete} />
+                </MenuItem>
+                {conversions &&
+                  conversions.map((conversion) => (
+                    <MenuItem
+                      key={conversion.label}
+                      onClick={() => {
+                        conversion.onClick();
+                        setAnchorEl(null);
+                      }}
+                    >
+                      {conversion.label}
+                    </MenuItem>
+                  ))}
+              </Menu>
             </Box>
           </Box>
         </Paper>
