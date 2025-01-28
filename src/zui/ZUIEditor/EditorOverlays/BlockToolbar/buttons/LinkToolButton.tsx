@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, lighten } from '@mui/material';
 import { useActive, useCommands, useEditorState } from '@remirror/react';
 import { FC, useEffect, useState } from 'react';
 import { InsertLink, LinkOff } from '@mui/icons-material';
@@ -29,8 +29,12 @@ const LinkToolButton: FC = () => {
     setSelectedNodes(linkNodes);
   }, [state.selection]);
 
+  const isLink = active.zlink();
+  const isVariable = active.zvariable();
+
   return (
     <Button
+      disabled={isVariable}
       onClick={() => {
         if (!active.zlink()) {
           if (state.selection.empty) {
@@ -54,8 +58,16 @@ const LinkToolButton: FC = () => {
           }
         }
       }}
+      sx={(theme) => ({
+        '&:hover': {
+          backgroundColor: isLink
+            ? lighten(theme.palette.primary.main, 0.8)
+            : '',
+        },
+        backgroundColor: isLink ? lighten(theme.palette.primary.main, 0.7) : '',
+      })}
     >
-      {active.zlink() ? <LinkOff /> : <InsertLink />}
+      {isLink ? <LinkOff /> : <InsertLink />}
     </Button>
   );
 };
