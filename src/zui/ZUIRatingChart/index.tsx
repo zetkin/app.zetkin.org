@@ -26,30 +26,65 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
   });
 
   const avg = ratingTotals / numRatings;
-  const stackBarHeight = 34;
   const total = 5;
-
-  // Calculate the remaining width
-  const remaining = total - avg;
-
-  // Percentage of the average and remaining space
   const avgWidth = avg / total;
-  const remainingWidth = remaining / total;
 
   return (
-    <Box>
-      <Typography mb={1}>{question}</Typography>
+    <Box
+      id="here"
+      p={2}
+      sx={{
+        '& .average .averageRating': {
+          fill: theme.palette.primary.main,
+          transition: 'fill 0.25s',
+        },
+        '& .average .dot': {
+          fill: theme.palette.primary.main,
+        },
+        '& .data .dot': {
+          fill: lighten(theme.palette.primary.main, 0.4),
+        },
+        '& .dot': {
+          transition: 'fill .25s',
+        },
+        '& .rawNumber, & .indexNumber': {
+          fill: 'transparent',
+          textAnchor: 'middle',
+          transition: 'fill .25s',
+        },
+        '&:hover .average .averageRating': {
+          fill: 'transparent',
+        },
+        '&:hover .average .dot': {
+          fill: lighten(theme.palette.primary.main, 0.4),
+        },
+        '&:hover .data .dot': {
+          fill: theme.palette.primary.main,
+        },
+        '&:hover .indexNumber': {
+          fill: theme.palette.secondary.light,
+        },
+        '&:hover .rawNumber': {
+          fill: theme.palette.primary.main,
+        },
+      }}
+    >
+      <Typography pb={2}>{question}</Typography>
       <ZUIResponsiveContainer ssrWidth={200}>
         {(width: number) => {
+          const baseNumber = 4;
           const highestValue = Math.max(...values, 1);
-          let path = `M 0 ${svgHeight}`;
+          let path = `M ${baseNumber} ${svgHeight}`;
           const dots: { x: number; y: number }[] = [];
+          const graphWidth = width - baseNumber * 2;
 
           path += values
             .map((val, i) => {
-              const x = i * (width / (values.length - 1 || 1));
+              const x =
+                i * (graphWidth / (values.length - 1 || 1)) + baseNumber;
               const y = svgHeight - (val / highestValue) * svgHeight;
-              const prevX = (i - 1) * (width / (values.length - 1 || 1));
+              const prevX =
+                (i - 1) * (graphWidth / (values.length - 1 || 1)) + baseNumber;
               const prevY =
                 svgHeight - (values[i - 1] / highestValue) * svgHeight;
 
@@ -58,130 +93,93 @@ const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
               if (i === 0) {
                 return `L ${x} ${y}`;
               } else {
-                return `C ${prevX + width / 12} ${prevY}, ${
-                  x - width / 12
+                return `C ${prevX + graphWidth / 12} ${prevY}, ${
+                  x - graphWidth / 12
                 } ${y}, ${x} ${y}`;
               }
             })
             .join(' ');
 
-          path += ` L ${width} ${svgHeight} Z`;
+          path += ` L ${graphWidth + baseNumber} ${svgHeight} Z`;
 
           return (
-            <>
-              <svg
-                height={svgHeight + 5}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                style={{ cursor: 'pointer', overflow: 'visible' }}
-                version="1.1"
-                width={width}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g transform="translate(0, 5)">
-                  <path
-                    d={path}
-                    fill={lighten(theme.palette.primary.main, 0.6)}
-                  />
-                  {/* Render the dots */}
-                  {isHovered &&
-                    dots.map((dot, index) => (
-                      <circle
-                        key={index}
-                        cx={
-                          index === 0
-                            ? dot.x + 4
-                            : index === 4
-                            ? dot.x - 4
-                            : dot.x
-                        }
-                        cy={dot.y}
-                        fill={theme.palette.primary.main}
-                        r={4}
-                      />
-                    ))}
-                </g>
-              </svg>
-
-              {/* Progress bar */}
-              <Box
-                display="flex"
-                flexDirection="row"
-                height={stackBarHeight}
-                mt={0.5}
-                overflow="visible"
-                paddingBottom={3.25}
-              >
-                {/* Segment for the average value */}
-                <Box
-                  bgcolor={
-                    isHovered
-                      ? lighten(theme.palette.primary.main, 0.6)
-                      : theme.palette.primary.main
-                  }
-                  borderRadius={'200px 0 0 200px'}
-                  borderRight={'solid 2px white'}
-                  position="relative"
-                  width={`${avgWidth * 100}%`}
-                >
-                  {/* Average number */}
-                  {!isHovered && (
-                    <Box
-                      position="absolute"
-                      right={0}
-                      sx={{
-                        transform: 'translateX(50%)',
-                      }}
-                      top={8}
-                    >
-                      <Typography
-                        color={theme.palette.primary.main}
-                        variant="h6"
-                      >
-                        {avg.toFixed(1)}
-                      </Typography>
-                    </Box>
-                  )}
-                  {isHovered && (
-                    <Box>
-                      {dots.map((dot, index) => {
-                        const adjustedX = dot.x;
-
-                        const finalX =
-                          index === values.length - 1
-                            ? adjustedX - 4
-                            : index === 0
-                            ? adjustedX + 4
-                            : adjustedX;
-
-                        return (
-                          <Box
-                            key={index}
-                            style={{
-                              color: theme.palette.primary.main,
-                              left: `${finalX}px`,
-                              position: 'absolute',
-                              top: `${40}px`,
-                              transform: 'translate(-50%, -100%)',
-                            }}
-                          >
-                            <Typography key={index} variant="h6">
-                              {values[index]}
-                            </Typography>
-                          </Box>
-                        );
-                      })}
-                    </Box>
-                  )}
-                </Box>
-                <Box
-                  bgcolor={lighten(theme.palette.primary.main, 0.6)}
-                  borderRadius={'0 200px 200px 0'}
-                  minWidth={stackBarHeight / 2}
-                  width={`${remainingWidth * 100}%`}
+            <svg
+              height={svgHeight + 5}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              style={{ cursor: 'pointer', overflow: 'visible' }}
+              version="1.1"
+              width={width}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g className="data" transform="translate(0, 5)">
+                <path
+                  d={path}
+                  fill={lighten(theme.palette.primary.main, 0.6)}
                 />
-              </Box>
-            </>
+                {dots.map((dot, index) => (
+                  <>
+                    <circle
+                      key={index}
+                      className="dot"
+                      cx={dot.x}
+                      cy={dot.y}
+                      fill={
+                        isHovered
+                          ? theme.palette.primary.main
+                          : lighten(theme.palette.primary.light, 0.6)
+                      }
+                      r={4}
+                    />
+
+                    <text
+                      className={`rawNumber`}
+                      fill={theme.palette.primary.main}
+                      fontSize="13px"
+                      x={dot.x}
+                      y={dot.y - 10}
+                    >
+                      {values[index]}
+                    </text>
+                  </>
+                ))}
+              </g>
+              <g className="average" transform="translate(0,60)">
+                <rect
+                  fill={lighten(theme.palette.primary.light, 0.6)}
+                  height="8px"
+                  rx={4}
+                  ry={4}
+                  width={width}
+                />
+                <circle
+                  className="dot"
+                  cx={avgWidth * width}
+                  cy={baseNumber}
+                  r={4}
+                />
+                <text
+                  className="averageRating"
+                  fill={theme.palette.primary.main}
+                  fontSize="13"
+                  x={avgWidth * width - 10}
+                  y="25"
+                >
+                  {avg.toFixed(1)}
+                </text>
+                {dots.map((dot, index) => (
+                  <text
+                    key={index}
+                    className={`indexNumber`}
+                    fontSize="13"
+                    x={index == 4 ? dot.x : dot.x}
+                    y="25"
+                  >
+                    {index + 1}
+                  </text>
+                ))}
+              </g>
+            </svg>
           );
         }}
       </ZUIResponsiveContainer>
