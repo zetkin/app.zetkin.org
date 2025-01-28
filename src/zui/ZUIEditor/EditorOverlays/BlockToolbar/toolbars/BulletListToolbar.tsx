@@ -25,7 +25,7 @@ const BulletListToolbar: FC<BulletListToolbarProps> = ({
     <BlockToolbarBase
       conversions={[
         {
-          label: messages.editor.blockLabels.orderedList(),
+          label: messages.editor.toolbar.conversions.orderedList(),
           onClick: () => toggleOrderedList(),
         },
       ]}
