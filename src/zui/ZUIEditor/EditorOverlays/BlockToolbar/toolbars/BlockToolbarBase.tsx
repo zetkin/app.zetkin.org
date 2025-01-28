@@ -40,9 +40,9 @@ const BlockToolbarBase: FC<BlockToolbarBaseProps> = ({
       <Box
         minWidth={280}
         sx={{
-          left: 0,
+          left: 5,
           position: 'absolute',
-          top: curBlockY - 50,
+          top: curBlockY - 60,
           transition: 'opacity 0.5s',
           zIndex: 900,
         }}
