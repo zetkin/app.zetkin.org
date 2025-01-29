@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { FromToProps } from 'remirror';
 import { Attrs } from '@remirror/pm/model';
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
 import { BlockType } from '..';
 import ParagraphToolbar from './toolbars/ParagraphToolbar';
@@ -35,50 +36,49 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   range,
 }) => {
   const messages = useMessages(messageIds);
-  if (blockType == 'paragraph') {
-    return (
-      <ParagraphToolbar
-        curBlockY={curBlockY}
-        enableBold={enableBold}
-        enableItalic={enableItalic}
-        enableLink={enableLink}
-        enableVariable={enableVariable}
-        range={range}
-      />
-    );
-  } else if (blockType == 'heading') {
-    return (
-      <HeadingToolbar
-        curBlockY={curBlockY}
-        enableVariable={enableVariable}
-        headingLevel={blockAttributes.level}
-        range={range}
-      />
-    );
-  } else if (blockType == 'zbutton') {
-    return (
-      <BlockToolbarBase
-        curBlockY={curBlockY}
-        icon={<CheckBoxOutlineBlank />}
-        range={range}
-        title={messages.editor.blockLabels.zbutton()}
-      />
-    );
-  } else if (blockType == 'zimage') {
-    return (
-      <ImageToolbar
-        curBlockY={curBlockY}
-        range={range}
-        src={blockAttributes.src}
-      />
-    );
-  } else if (blockType == 'orderedList') {
-    return <OrderedListToolbar curBlockY={curBlockY} range={range} />;
-  } else if (blockType == 'bulletList') {
-    return <BulletListToolbar curBlockY={curBlockY} range={range} />;
-  } else {
-    return <> </>;
-  }
+  return (
+    <Box position="relative">
+      <Box
+        minWidth={280}
+        sx={{
+          left: 5,
+          position: 'absolute',
+          top: curBlockY - 60,
+          transition: 'opacity 0.5s',
+          zIndex: 900,
+        }}
+      >
+        {blockType == 'paragraph' && (
+          <ParagraphToolbar
+            enableBold={enableBold}
+            enableItalic={enableItalic}
+            enableLink={enableLink}
+            enableVariable={enableVariable}
+            range={range}
+          />
+        )}
+        {blockType == 'heading' && (
+          <HeadingToolbar
+            enableVariable={enableVariable}
+            headingLevel={blockAttributes.level}
+            range={range}
+          />
+        )}
+        {blockType == 'zbutton' && (
+          <BlockToolbarBase
+            icon={<CheckBoxOutlineBlank />}
+            range={range}
+            title={messages.editor.blockLabels.zbutton()}
+          />
+        )}
+        {blockType == 'zimage' && (
+          <ImageToolbar range={range} src={blockAttributes.src} />
+        )}
+        {blockType == 'orderedList' && <OrderedListToolbar range={range} />}
+        {blockType == 'bulletList' && <BulletListToolbar range={range} />}
+      </Box>
+    </Box>
+  );
 };
 
 export default BlockToolbar;
