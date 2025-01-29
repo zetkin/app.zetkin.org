@@ -126,7 +126,7 @@ const AreaSelect: FC<Props> = ({
                 selectedArea.description?.trim() ||
                 areaMessages.areas.default.description()
               }
-              maxVisibleChars={120}
+              maxVisibleChars={110}
             />
           </Typography>
         )}
@@ -374,23 +374,38 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
     : content.slice(0, maxVisibleChars);
 
   const isLongContent = content.length > maxVisibleChars;
-
   return (
-    <Box>
-      <Typography component="span" variant="body1">
+    <Box sx={{ display: 'inline' }}>
+      <Typography
+        component="span"
+        sx={{
+          display: 'inline',
+          verticalAlign: 'baseline',
+        }}
+        variant="body1"
+      >
         {displayedText}
-        {!isExpanded && isLongContent && '...'}
+        {isLongContent && (
+          <>
+            {!isExpanded && <span>...</span>}
+            <Link
+              component="button"
+              onClick={handleToggle}
+              sx={{
+                cursor: 'pointer',
+                display: 'inline',
+                ml: !isExpanded ? 1 : 0,
+                padding: 0,
+                textDecoration: 'underline',
+                verticalAlign: 'baseline',
+              }}
+              variant="body1"
+            >
+              {isExpanded ? 'Show less' : 'Show more'}
+            </Link>
+          </>
+        )}
       </Typography>
-      {isLongContent && (
-        <Link
-          component="button"
-          onClick={handleToggle}
-          sx={{ cursor: 'pointer', textDecoration: 'underline' }}
-          variant="body1"
-        >
-          {isExpanded ? 'Show less' : 'Show more'}
-        </Link>
-      )}
     </Box>
   );
 };
