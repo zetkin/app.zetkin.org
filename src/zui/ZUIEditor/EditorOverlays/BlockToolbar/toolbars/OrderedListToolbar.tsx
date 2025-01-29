@@ -11,14 +11,10 @@ import IndentButton from '../buttons/IndentButton';
 import DedentButton from '../buttons/DedentButton';
 
 type OrderedListToolbarProps = {
-  curBlockY: number;
   range: FromToProps;
 };
 
-const OrderedListToolbar: FC<OrderedListToolbarProps> = ({
-  curBlockY,
-  range,
-}) => {
+const OrderedListToolbar: FC<OrderedListToolbarProps> = ({ range }) => {
   const messages = useMessages(messageIds);
   const { toggleBulletList } = useCommands();
   return (
@@ -29,7 +25,6 @@ const OrderedListToolbar: FC<OrderedListToolbarProps> = ({
           onClick: () => toggleBulletList(),
         },
       ]}
-      curBlockY={curBlockY}
       icon={<FormatListNumberedOutlined />}
       range={range}
       title={messages.editor.blockLabels.orderedList()}

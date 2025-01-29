@@ -13,7 +13,6 @@ import LinkToolButton from '../buttons/LinkToolButton';
 import VariableToolButton from '../buttons/VariableToolButton';
 
 type ParagraphToolbarProps = {
-  curBlockY: number;
   enableBold: boolean;
   enableItalic: boolean;
   enableLink: boolean;
@@ -22,7 +21,6 @@ type ParagraphToolbarProps = {
 };
 
 const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
-  curBlockY,
   enableBold,
   enableItalic,
   enableLink,
@@ -40,7 +38,6 @@ const ParagraphToolbar: FC<ParagraphToolbarProps> = ({
           onClick: () => toggleHeading(),
         },
       ]}
-      curBlockY={curBlockY}
       icon={<Notes />}
       range={range}
       title={messages.editor.blockLabels.paragraph()}

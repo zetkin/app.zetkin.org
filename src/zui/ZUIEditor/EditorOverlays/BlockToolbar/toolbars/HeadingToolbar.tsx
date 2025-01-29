@@ -10,14 +10,12 @@ import VariableToolButton from '../buttons/VariableToolButton';
 import { Msg, useMessages } from 'core/i18n';
 
 type HeadingToolbarProps = {
-  curBlockY: number;
   enableVariable: boolean;
   headingLevel: number;
   range: FromToProps;
 };
 
 const HeadingToolbar: FC<HeadingToolbarProps> = ({
-  curBlockY,
   enableVariable,
   headingLevel,
   range,
@@ -35,7 +33,6 @@ const HeadingToolbar: FC<HeadingToolbarProps> = ({
           onClick: () => convertParagraph(),
         },
       ]}
-      curBlockY={curBlockY}
       icon={<Title />}
       range={range}
       title={messages.editor.blockLabels.heading()}
