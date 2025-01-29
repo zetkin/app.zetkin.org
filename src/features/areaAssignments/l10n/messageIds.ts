@@ -139,6 +139,7 @@ export default makeMessages('feat.areaAssignments', {
   report: {
     card: {
       definesSuccess: m('Defines success'),
+      delete: m('Delete'),
       description: m('No description'),
       question: m('Untitled question'),
     },
@@ -155,7 +156,7 @@ export default makeMessages('feat.areaAssignments', {
       cancel: m('Cancel'),
       confirm: m('Confirm'),
       deleteWarningText: m<{ title: string }>(
-        'If you want to delete {title} you need to pick another choice question to be the question that defines if the mision was successful'
+        'If you want to delete {title} you need to pick another choice question to be the question that defines if the visit was successful'
       ),
       dialog: m(
         'Are you sure you want to delete this question? This action is permanent and it cannot be undone.'

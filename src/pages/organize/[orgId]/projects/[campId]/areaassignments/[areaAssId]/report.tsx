@@ -6,7 +6,7 @@ import {
   SwitchLeft,
 } from '@mui/icons-material';
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   alpha,
   Box,
@@ -43,6 +43,7 @@ import {
   ZetkinAreaAssignment,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -71,6 +72,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   );
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const messages = useMessages(messagesIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const [metricBeingCreated, setMetricBeingCreated] =
     useState<ZetkinMetric | null>(null);
@@ -182,8 +184,29 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                             {assignment.metrics.length > 1 && (
                               <Button
                                 onClick={(ev) => {
-                                  setMetricBeingDeleted(metric);
-                                  setAnchorEl(ev.currentTarget);
+                                  if (metric.definesDone) {
+                                    setMetricBeingDeleted(metric);
+                                    setAnchorEl(ev.currentTarget);
+                                  } else {
+                                    showConfirmDialog({
+                                      onCancel: () => {
+                                        setMetricBeingDeleted(null),
+                                          setAnchorEl(null);
+                                      },
+                                      onSubmit: () => {
+                                        handleDeleteMetric(metric.id);
+                                        setAnchorEl(null);
+                                        setMetricBeingDeleted(null);
+                                      },
+                                      title: `${
+                                        messages.report.card.delete() +
+                                        ' ' +
+                                        metric.question
+                                      }`,
+                                      warningText:
+                                        messages.report.delete.dialog(),
+                                    });
+                                  }
                                 }}
                               >
                                 <Delete />
@@ -265,10 +288,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     justifyContent="space-between"
                   >
                     <Typography variant="h6">
-                      {`Delete ${
-                        assignment.metrics.find(
-                          (metric) => metric.id === metricBeingDeleted?.id
-                        )?.question || messages.report.card.question()
+                      {`${
+                        messages.report.card.delete() +
+                          ' ' +
+                          assignment.metrics.find(
+                            (metric) => metric.id === metricBeingDeleted?.id
+                          )?.question || messages.report.card.question()
                       }`}
                     </Typography>
                     <IconButton
@@ -280,95 +305,65 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       <Close />
                     </IconButton>
                   </Box>
-
-                  {metricBeingDeleted?.definesDone && (
-                    <Box display="flex" flexDirection="column" gap={1}>
-                      <Typography>
-                        <Msg
-                          id={messagesIds.report.delete.deleteWarningText}
-                          values={{ title: metricBeingDeleted.question }}
-                        />
-                      </Typography>
-                      {assignment.metrics
-                        .filter(
-                          (metric) =>
-                            metric.kind == 'boolean' &&
-                            metric.id != metricBeingDeleted?.id
-                        )
-                        .map((metric) => (
-                          <Box
-                            key={metric.question}
-                            alignItems="center"
-                            display="flex"
-                            gap={1}
-                            justifyContent="space-between"
-                            width="100%"
-                          >
-                            {metric.question || messages.report.card.question()}
-                            <Button
-                              onClick={() => {
-                                if (metricBeingDeleted) {
-                                  const filtered = assignment.metrics.filter(
-                                    (metric) =>
-                                      metric.id != metricBeingDeleted.id
-                                  );
-                                  updateAreaAssignment({
-                                    metrics: [
-                                      ...filtered.slice(
-                                        0,
-                                        filtered.indexOf(metric)
-                                      ),
-                                      {
-                                        ...metric,
-                                        definesDone: true,
-                                      },
-                                      ...filtered.slice(
-                                        filtered.indexOf(metric) + 1
-                                      ),
-                                    ],
-                                  });
-                                }
-                                setAnchorEl(null);
-                                setMetricBeingDeleted(null);
-                              }}
-                              variant="outlined"
-                            >
-                              <Msg id={messagesIds.report.delete.select} />
-                            </Button>
-                          </Box>
-                        ))}
-                    </Box>
-                  )}
-
-                  {!metricBeingDeleted?.definesDone && (
-                    <Box>
-                      <Typography>
-                        <Msg id={messagesIds.report.delete.dialog} />
-                      </Typography>
-                      <Box display="flex" justifyContent="end" p={2}>
-                        <Button
-                          onClick={() => {
-                            setMetricBeingDeleted(null), setAnchorEl(null);
-                          }}
-                          sx={{ marginRight: 2 }}
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    <Typography>
+                      <Msg
+                        id={messagesIds.report.delete.deleteWarningText}
+                        values={{
+                          title:
+                            metricBeingDeleted?.question ||
+                            messages.report.card.question(),
+                        }}
+                      />
+                    </Typography>
+                    {assignment.metrics
+                      .filter(
+                        (metric) =>
+                          metric.kind == 'boolean' &&
+                          metric.id != metricBeingDeleted?.id
+                      )
+                      .map((metric) => (
+                        <Box
+                          key={metric.question}
+                          alignItems="center"
+                          display="flex"
+                          gap={1}
+                          justifyContent="space-between"
+                          width="100%"
                         >
-                          <Msg id={messagesIds.report.delete.cancel} />
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            if (metricBeingDeleted !== null) {
-                              handleDeleteMetric(metricBeingDeleted.id);
+                          {metric.question || messages.report.card.question()}
+                          <Button
+                            onClick={() => {
+                              if (metricBeingDeleted?.definesDone) {
+                                const filtered = assignment.metrics.filter(
+                                  (metric) => metric.id != metricBeingDeleted.id
+                                );
+                                updateAreaAssignment({
+                                  metrics: [
+                                    ...filtered.slice(
+                                      0,
+                                      filtered.indexOf(metric)
+                                    ),
+                                    {
+                                      ...metric,
+                                      definesDone: true,
+                                    },
+                                    ...filtered.slice(
+                                      filtered.indexOf(metric) + 1
+                                    ),
+                                  ],
+                                });
+                              }
                               setAnchorEl(null);
                               setMetricBeingDeleted(null);
-                            }
-                          }}
-                          variant="contained"
-                        >
-                          <Msg id={messagesIds.report.delete.confirm} />
-                        </Button>
-                      </Box>
-                    </Box>
-                  )}
+                            }}
+                            variant="outlined"
+                          >
+                            <Msg id={messagesIds.report.delete.select} />
+                          </Button>
+                        </Box>
+                      ))}
+                  </Box>
                 </Box>
               </Dialog>
             </Box>
