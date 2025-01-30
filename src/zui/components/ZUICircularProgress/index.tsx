@@ -1,21 +1,19 @@
 import { CircularProgress } from '@mui/material';
 import { FC } from 'react';
 
+import { ZUISmall, ZUIMedium } from '../types';
+
 interface ZUICircularProgressProps {
-  size?: 'small' | 'medium';
+  /**
+   The size of the componenent. Defaults to "medium".
+   */
+  size?: ZUISmall | ZUIMedium;
 }
 
 const ZUICircularProgress: FC<ZUICircularProgressProps> = ({
   size = 'medium',
 }) => {
-  return (
-    <CircularProgress
-      size={size === 'small' ? 16 : 32}
-      sx={{
-        color: 'text.primary',
-      }}
-    />
-  );
+  return <CircularProgress size={size == 'medium' ? '2rem' : '1rem'} />;
 };
 
 export default ZUICircularProgress;
