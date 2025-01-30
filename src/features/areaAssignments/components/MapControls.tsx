@@ -1,7 +1,7 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { Map } from 'leaflet';
 import React, { useState } from 'react';
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
 import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
 
 type MapControlsProps = {
@@ -10,6 +10,7 @@ type MapControlsProps = {
 };
 
 const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
+  const theme = useTheme();
   const [locating, setLocating] = useState(false);
 
   return (
@@ -21,7 +22,17 @@ const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
         zIndex: 999,
       }}
     >
-      <ButtonGroup orientation="vertical" variant="contained">
+      <ButtonGroup
+        orientation="vertical"
+        sx={{
+          '& .MuiButton-root': {
+            height: 40,
+            width: 40,
+          },
+          bgcolor: theme.palette.background.default,
+        }}
+        variant="outlined"
+      >
         <Button onClick={() => map?.zoomIn()}>
           <Add />
         </Button>
