@@ -1,9 +1,11 @@
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
-import getUniqueTags from './getUniqueTags';
 import { CellData, ColumnKind, Sheet } from './types';
 import parserFactory from './dateParsing/parserFactory';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import { BulkOp, BulkSubOp } from '../types';
 
+// TODO: Get rid of this type and dependencies on it
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
   dateFormat?: string | null; //STÄMMER DETTA?
@@ -13,156 +15,123 @@ export type ZetkinPersonImportOp = {
 };
 
 export default function prepareImportOperations(
-  configuredSheet: Sheet,
+  sheet: Sheet,
   countryCode: CountryCode
-): ZetkinPersonImportOp[] {
-  const personImportOps: ZetkinPersonImportOp[] = [];
+): BulkOp[] {
+  const preparedOps: BulkOp[] = [];
 
-  configuredSheet.columns.forEach((column, colIdx) => {
-    if (column.selected) {
-      configuredSheet.rows.forEach((row, rowIdx) => {
-        if (configuredSheet.firstRowIsHeaders && rowIdx === 0) {
-          return;
-        }
+  sheet.rows.forEach((row, index) => {
+    if (sheet.firstRowIsHeaders && index == 0) {
+      return;
+    }
 
-        const rowIndex = configuredSheet.firstRowIsHeaders
-          ? rowIdx - 1
-          : rowIdx;
+    const subOps: BulkSubOp[] = [];
 
-        if (!personImportOps[rowIndex]) {
-          personImportOps.push({
-            op: 'person.import',
-          });
-        }
+    let zetkinId: number | null = null;
+    let extId: string | null = null;
 
-        if (column.kind === ColumnKind.ID_FIELD) {
-          const fieldKey = column.idField;
-          let value = row.data[colIdx];
+    const fields: Partial<ZetkinPerson> = {};
+    sheet.columns.forEach((col, index) => {
+      if (col.selected) {
+        const value = row.data[index];
 
+        if (col.kind == ColumnKind.FIELD) {
+          const colIsPhoneField =
+            col.field == 'phone' || col.field == 'alt_phone';
+          if (value && colIsPhoneField) {
+            const parsedPhoneNumber = parsePhoneNumber(
+              value.toString(),
+              countryCode
+            );
+            fields[col.field] = parsedPhoneNumber.format('E.164');
+          } else {
+            fields[col.field] = value;
+          }
+        } else if (col.kind == ColumnKind.ID_FIELD) {
           if (value) {
-            if (fieldKey == 'ext_id') {
-              value = value.toString();
+            if (col.idField == 'ext_id') {
+              extId = value.toString();
+            } else if (col.idField == 'id') {
+              zetkinId = parseInt(value.toString());
             }
-
-            if (fieldKey == 'id') {
-              value = parseInt(value.toString());
-            }
-
-            personImportOps[rowIndex].data = {
-              ...personImportOps[rowIndex].data,
-              [`${fieldKey}`]: value,
-            };
           }
-        }
-
-        if (column.kind === ColumnKind.FIELD) {
-          const fieldKey = column.field;
-          let value = row.data[colIdx];
-
-          if (value) {
-            //Parse phone numbers to international format
-            if (fieldKey == 'phone' || fieldKey == 'alt_phone') {
-              const parsedPhoneNumber = parsePhoneNumber(
-                typeof value == 'string' ? value : value.toString(),
-                countryCode
-              );
-              value = parsedPhoneNumber.format('E.164');
-            }
-
-            if (fieldKey == 'email') {
-              value = value.toString().trim();
-            }
-
-            //If they have uppecase letters we parse to lower
-            if (fieldKey == 'gender') {
-              value = value.toString().toLowerCase();
-            }
-
-            personImportOps[rowIndex].data = {
-              ...personImportOps[rowIndex].data,
-              [`${fieldKey}`]: value,
-            };
+        } else if (col.kind == ColumnKind.DATE) {
+          if (col.dateFormat && value) {
+            const parser = parserFactory(col.dateFormat);
+            fields[col.field] = parser.parse(value.toString());
           }
-        }
-
-        if (column.kind === ColumnKind.TAG) {
-          column.mapping.forEach((mappedColumn) => {
-            if (mappedColumn.value === row.data[colIdx]) {
-              if (!personImportOps[rowIndex].tags) {
-                personImportOps[rowIndex].tags = [];
-              }
-              const allTags =
-                personImportOps[rowIndex].tags?.concat(
-                  mappedColumn.tags.map((t) => ({ id: t.id }))
-                ) ?? [];
-
-              personImportOps[rowIndex].tags = getUniqueTags(allTags);
+        } else if (col.kind == ColumnKind.GENDER) {
+          col.mapping.forEach((mapping) => {
+            if (mapping.value == value) {
+              fields.gender = mapping.gender;
+            }
+          });
+        } else if (col.kind == ColumnKind.ENUM) {
+          col.mapping.forEach((mapping) => {
+            if (mapping.value == value) {
+              fields[col.field] = mapping.key;
+            }
+          });
+        } else if (col.kind == ColumnKind.TAG) {
+          col.mapping.forEach((mapping) => {
+            if (value == mapping.value) {
+              mapping.tags.forEach((tag) => {
+                subOps.push({
+                  op: 'person.tag',
+                  tag_id: tag.id,
+                });
+              });
+            }
+          });
+        } else if (col.kind == ColumnKind.ORGANIZATION) {
+          col.mapping.forEach((mapping) => {
+            if (mapping.value == value && mapping.orgId) {
+              subOps.push({
+                op: 'person.addtoorg',
+                org_id: mapping.orgId,
+              });
             }
           });
         }
+      }
+    });
 
-        if (column.kind === ColumnKind.ORGANIZATION) {
-          column.mapping.forEach((mappedColumn) => {
-            if (mappedColumn.value === row.data[colIdx] && mappedColumn.orgId) {
-              if (!personImportOps[rowIndex].organizations) {
-                personImportOps[rowIndex].organizations = [];
-              }
-              const allOrgs =
-                personImportOps[rowIndex]?.organizations?.concat(
-                  mappedColumn.orgId
-                ) ?? [];
-              personImportOps[rowIndex].organizations = Array.from(
-                new Set<number>(allOrgs)
-              );
-            }
-          });
-        }
+    if (extId && zetkinId) {
+      fields.ext_id = extId;
+      extId = null;
+    }
 
-        if (column.kind === ColumnKind.ENUM) {
-          column.mapping.forEach((mappedColumn) => {
-            if (
-              mappedColumn.key &&
-              ((!mappedColumn.value && !row.data[colIdx]) ||
-                mappedColumn.value === row.data[colIdx])
-            ) {
-              personImportOps[rowIndex].data = {
-                ...personImportOps[rowIndex].data,
-                [`${column.field}`]: mappedColumn.key,
-              };
-            }
-          });
-        }
+    const hasFields = Object.keys(fields).length > 0;
+    if (hasFields) {
+      subOps.push({
+        data: fields,
+        op: 'person.setfields',
+      });
+    }
 
-        if (column.kind === ColumnKind.DATE) {
-          if (column.dateFormat) {
-            const fieldKey = column.field;
-            let value = row.data[colIdx];
-
-            if (value) {
-              const parser = parserFactory(column.dateFormat);
-              value = parser.parse(value.toString());
-
-              personImportOps[rowIndex].data = {
-                ...personImportOps[rowIndex].data,
-                [`${fieldKey}`]: value,
-              };
-            }
-          }
-        }
-
-        if (column.kind === ColumnKind.GENDER) {
-          const match = column.mapping.find(
-            (c) => c.value === row.data[colIdx]
-          );
-          if (match !== undefined) {
-            personImportOps[rowIndex].data = {
-              ...personImportOps[rowIndex].data,
-              gender: match.gender as string,
-            };
-          }
-        }
+    if (extId) {
+      preparedOps.push({
+        key: {
+          ext_id: extId,
+        },
+        op: 'person.get',
+        ops: subOps,
+      });
+    } else if (zetkinId) {
+      preparedOps.push({
+        key: {
+          id: zetkinId,
+        },
+        op: 'person.get',
+        ops: subOps,
+      });
+    } else {
+      preparedOps.push({
+        op: 'person.create',
+        ops: subOps,
       });
     }
   });
-  return personImportOps;
+
+  return preparedOps;
 }
