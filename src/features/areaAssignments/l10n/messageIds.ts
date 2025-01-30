@@ -125,7 +125,7 @@ export default makeMessages('feat.areaAssignments', {
           progress: m('Progress'),
         },
       },
-      title: m('Layers'),
+      title: m('Data visualization'),
     },
   },
   overview: {
