@@ -5,13 +5,13 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { FC } from 'react';
 
 import { MapStyle } from './OrganizerMap';
-import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import theme from 'theme';
+import { Msg, useMessages } from 'core/i18n';
 
 type MapStyleSettingsProps = {
   mapStyle: MapStyle;
@@ -22,10 +22,12 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
   mapStyle,
   onMapStyleChange,
 }) => {
+  const messages = useMessages(messageIds);
+  const theme = useTheme();
   const locationMarkers = [
     {
       image: {
-        alt: 'Dot option',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.locationDot(),
         src: '/location-dot.svg',
       },
       label: messageIds.map.mapStyle.markers.options.dot,
@@ -33,7 +35,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
     },
     {
       image: {
-        alt: 'Households option',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.locationHouseholds(),
         src: '/location-households.svg',
       },
       label: messageIds.map.mapStyle.markers.options.households,
@@ -41,7 +43,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
     },
     {
       image: {
-        alt: 'Progress option',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.locationProgress(),
         src: '/location-progress.svg',
       },
       label: messageIds.map.mapStyle.markers.options.progress,
@@ -49,7 +51,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
     },
     {
       image: {
-        alt: 'Hide option',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.locationHidden(),
         src: '/location-hidden.svg',
       },
       label: messageIds.map.mapStyle.markers.options.hidden,
@@ -60,7 +62,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
   const areaMarkers = [
     {
       image: {
-        alt: 'Center area assignees',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.areaMarkerAssignee(),
         src: '/area-marker-assignees.svg',
       },
       label: messageIds.map.mapStyle.center.options.assignees,
@@ -68,7 +70,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
     },
     {
       image: {
-        alt: 'Center area households',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.areaMarkerHouseholds(),
         src: '/area-marker-locations-households.svg',
       },
       label: messageIds.map.mapStyle.center.options.households,
@@ -76,7 +78,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
     },
     {
       image: {
-        alt: 'Center area progress',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.areaMarkerAssignmentProgreess(),
         src: '/area-marker-assignment-progress.svg',
       },
       label: messageIds.map.mapStyle.center.options.progress,
@@ -84,7 +86,7 @@ const MapStyleSettings: FC<MapStyleSettingsProps> = ({
     },
     {
       image: {
-        alt: 'Center area hidden',
+        alt: messages.map.mapStyle.markers.options.altDescriptions.areaMarkerHidden(),
         src: '/area-marker-hidden.svg',
       },
       label: messageIds.map.mapStyle.center.options.hidden,

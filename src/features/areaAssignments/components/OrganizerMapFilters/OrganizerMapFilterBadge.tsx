@@ -27,10 +27,10 @@ const OrganizerMapFilterBadge: FC = () => {
         },
       })}
     >
-      <FilterList sx={{ color: 'primary' }} />
+      <FilterList />
     </Badge>
   ) : (
-    <FilterList sx={{ color: 'primary' }} />
+    <FilterList />
   );
 };
 export default OrganizerMapFilterBadge;

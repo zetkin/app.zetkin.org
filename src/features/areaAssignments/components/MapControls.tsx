@@ -1,10 +1,8 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { Map } from 'leaflet';
 import React, { useState } from 'react';
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
 import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
-
-import theme from 'theme';
 
 type MapControlsProps = {
   map: Map | null;
@@ -12,6 +10,7 @@ type MapControlsProps = {
 };
 
 const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
+  const theme = useTheme();
   const [locating, setLocating] = useState(false);
 
   return (

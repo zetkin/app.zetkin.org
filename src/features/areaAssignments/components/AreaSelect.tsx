@@ -7,6 +7,7 @@ import {
   Link,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 import { ZetkinPerson } from 'utils/types/zetkin';
@@ -22,7 +23,6 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import useAreaAssignmentSessionMutations from '../hooks/useAreaAssingmentSessionMutations';
 import { useNumericRouteParams } from 'core/hooks';
-import theme from 'theme';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
@@ -59,6 +59,7 @@ const AreaSelect: FC<Props> = ({
 }) => {
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const areaMessages = useMessages(areasMessageIds);
+  const theme = useTheme();
 
   const { orgId } = useNumericRouteParams();
   const { deleteSession } = useAreaAssignmentSessionMutations(orgId, areaAssId);
@@ -363,6 +364,7 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
   content,
   maxVisibleChars,
 }) => {
+  const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const handleToggle = () => {
@@ -401,7 +403,9 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
               }}
               variant="body1"
             >
-              {isExpanded ? 'Show less' : 'Show more'}
+              {isExpanded
+                ? areaAssignmentMessages.map.areaInfo.showLess()
+                : areaAssignmentMessages.map.areaInfo.showMore()}
             </Link>
           </>
         )}

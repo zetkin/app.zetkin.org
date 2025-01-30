@@ -10,6 +10,7 @@ import {
   IconButton,
   Paper,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Close, Layers, Pentagon } from '@mui/icons-material';
 
@@ -31,7 +32,6 @@ import MapStyleSettings from './MapStyleSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
-import theme from 'theme';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
@@ -62,6 +62,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   sessions,
 }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
   const [mapStyle, setMapStyle] = useLocalStorage<MapStyle>(
     `mapStyle-${areaAssId}`,
     {
@@ -301,7 +302,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 </Box>
                 {settingsOpen == 'filters' && (
                   <Typography color="secondary" paddingBottom={1}>
-                    Define what areas you see on the map
+                    <Msg id={messageIdsAss.map.filter.description} />
                   </Typography>
                 )}
                 <Divider />
