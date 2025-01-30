@@ -1,8 +1,8 @@
-import { lighten, Box } from '@mui/system';
 import { Typography } from '@mui/material';
-import { useState } from 'react';
+import { makeStyles } from '@mui/styles';
+import { FC, useState } from 'react';
+import { lighten, Box, useTheme } from '@mui/system';
 
-import theme from 'theme';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 
 export interface ZUIRatingChartProps {
@@ -11,64 +11,71 @@ export interface ZUIRatingChartProps {
   values: number[];
 }
 
-const ZUIRatingChart: React.FC<ZUIRatingChartProps> = ({
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .average .averageRating': {
+      fill: theme.palette.primary.main,
+      transition: 'fill 0.25s',
+    },
+    '& .average .dot': {
+      fill: theme.palette.primary.main,
+    },
+    '& .data .dot': {
+      fill: lighten(theme.palette.primary.main, 0.4),
+    },
+    '& .dot': {
+      transition: 'fill .25s',
+    },
+    '& .rawNumber, & .indexNumber': {
+      fill: 'transparent',
+      textAnchor: 'middle',
+      transition: 'fill .25s',
+    },
+    '&:hover .average .averageRating': {
+      fill: 'transparent',
+    },
+    '&:hover .average .dot': {
+      fill: lighten(theme.palette.primary.main, 0.4),
+    },
+    '&:hover .data .dot': {
+      fill: theme.palette.primary.main,
+    },
+    '&:hover .indexNumber': {
+      fill: theme.palette.secondary.light,
+    },
+    '&:hover .rawNumber': {
+      fill: theme.palette.primary.main,
+    },
+  },
+}));
+
+const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
   question,
   svgHeight = 50,
   values,
 }) => {
+  const theme = useTheme();
+  const classes = useStyles();
+
   const [isHovered, setIsHovered] = useState(false);
 
   let ratingTotals = 0;
   let numRatings = 0;
-  values.map((val, i) => {
-    numRatings += val;
-    ratingTotals += val * (i + 1);
-  });
+  if (values.every((val) => val >= 0)) {
+    values.forEach((val, i) => {
+      numRatings += val;
+      ratingTotals += val * (i + 1);
+    });
+  } else {
+    return null;
+  }
 
   const avg = ratingTotals / numRatings;
   const total = 5;
   const avgWidth = avg / total;
 
   return (
-    <Box
-      id="here"
-      p={2}
-      sx={{
-        '& .average .averageRating': {
-          fill: theme.palette.primary.main,
-          transition: 'fill 0.25s',
-        },
-        '& .average .dot': {
-          fill: theme.palette.primary.main,
-        },
-        '& .data .dot': {
-          fill: lighten(theme.palette.primary.main, 0.4),
-        },
-        '& .dot': {
-          transition: 'fill .25s',
-        },
-        '& .rawNumber, & .indexNumber': {
-          fill: 'transparent',
-          textAnchor: 'middle',
-          transition: 'fill .25s',
-        },
-        '&:hover .average .averageRating': {
-          fill: 'transparent',
-        },
-        '&:hover .average .dot': {
-          fill: lighten(theme.palette.primary.main, 0.4),
-        },
-        '&:hover .data .dot': {
-          fill: theme.palette.primary.main,
-        },
-        '&:hover .indexNumber': {
-          fill: theme.palette.secondary.light,
-        },
-        '&:hover .rawNumber': {
-          fill: theme.palette.primary.main,
-        },
-      }}
-    >
+    <Box className={classes.root} p={2}>
       <Typography pb={2}>{question}</Typography>
       <ZUIResponsiveContainer ssrWidth={200}>
         {(width: number) => {
