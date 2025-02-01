@@ -383,7 +383,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     <Box
                       bgcolor="white"
                       borderRadius={1}
@@ -405,7 +409,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     <Box
                       bgcolor="white"
                       borderRadius={1}
@@ -438,7 +446,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     {detailed && (
                       <Box
                         alignItems="center"
