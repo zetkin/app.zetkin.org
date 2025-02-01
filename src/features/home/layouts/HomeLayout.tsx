@@ -81,7 +81,7 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         flexDirection="column"
         mx={1}
         my={2}
-        sx={{ opacity: 0.5 }}
+        sx={{ opacity: 0.75 }}
       >
         <ZUILogo />
         <Typography variant="body2">Zetkin</Typography>
