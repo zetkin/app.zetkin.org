@@ -14,6 +14,11 @@ describe('updateOrCreateItemWithData', () => {
     value: 'Existing data, updated',
   };
 
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.clearAllMocks();
+  });
+
   it('Creates an item with data if none exist', () => {
     const list = remoteList();
     updateOrCreateItemWithData(list, newData);

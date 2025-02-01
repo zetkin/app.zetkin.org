@@ -6,6 +6,11 @@ describe('findOrAddItem', () => {
   const existingData = { id: existingId, value: 'Existing value' };
   const newId = 'new';
 
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.clearAllMocks();
+  });
+
   it('Creates a new item in list if none exist', () => {
     const list = remoteList();
     const result = findOrAddItem(list, newId);
