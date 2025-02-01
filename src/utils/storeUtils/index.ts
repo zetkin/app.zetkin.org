@@ -140,88 +140,16 @@ export function remoteList<DataType extends RemoteData>(
   };
 }
 
-function findOrAddItem<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  id: number | string
-): RemoteItem<DataType> {
-  const existingItem = list.items.find((item) => item.id == id);
-  if (existingItem) {
-    return existingItem;
-  } else {
-    const newItem = remoteItem<DataType>(id);
-    list.items.push(newItem);
-    newItem.loaded = new Date().toISOString();
-    return newItem;
-  }
-}
+export {
+  remoteItemCreated,
+  remoteItemUpdate,
+  remoteItemLoad,
+} from 'utils/storeUtils/findOrAddItem';
 
-function updateOrCreateItemWithData<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  updatedData: DataType
-) {
-  const item = findOrAddItem(list, updatedData.id);
-  item.data = updatedData;
-  item.mutating = [];
-  item.isLoading = false;
-  item.loaded = new Date().toISOString();
-  return item;
-}
+export {
+  remoteItemCreatedWithData,
+  remoteItemUpdated,
+  remoteItemLoaded,
+} from 'utils/storeUtils/updateOrCreateItemWithData';
 
-export function remoteItemCreated<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  id: number | string
-): RemoteItem<DataType> {
-  return findOrAddItem(list, id);
-}
-
-export function remoteItemCreatedWithData<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  data: DataType
-): RemoteItem<DataType> {
-  return updateOrCreateItemWithData(list, data);
-}
-
-export function remoteItemUpdate<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  id: number | string,
-  mutating: string[]
-): RemoteItem<DataType> {
-  const item = findOrAddItem(list, id);
-  item.mutating = mutating;
-  return item;
-}
-
-export function remoteItemUpdated<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  updatedData: DataType
-): RemoteItem<DataType> {
-  return updateOrCreateItemWithData(list, updatedData);
-}
-
-export function remoteItemLoad<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  id: number | string
-): RemoteItem<DataType> {
-  const item = findOrAddItem(list, id);
-  item.isLoading = true;
-  return item;
-}
-
-export function remoteItemLoaded<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  updatedData: DataType
-): RemoteItem<DataType> {
-  return updateOrCreateItemWithData(list, updatedData);
-}
-
-export function remoteItemDeleted<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  deletedId: number | string
-): boolean {
-  const existingItem = list.items.find((item) => item.id == deletedId);
-  if (existingItem) {
-    existingItem.deleted = true;
-    return true;
-  }
-  return false;
-}
+export { remoteItemDeleted } from 'utils/storeUtils/remoteItemDeleted';
