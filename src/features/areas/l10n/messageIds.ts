@@ -13,6 +13,11 @@ export default makeMessages('feat.areas', {
         title: m('Area tags'),
       },
     },
+    controlLabels: {
+      filters: m('Filters'),
+      layers: m('Layers'),
+      select: m('Select'),
+    },
     default: {
       description: m('Empty description'),
       title: m('Untitled area'),
