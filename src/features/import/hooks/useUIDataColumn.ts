@@ -30,7 +30,16 @@ export default function useUIDataColumn(
   const cellValues = rows.map((row) => row.data[columnIndex]);
   const numRowsByUniqueValue = new Map<string | number, number>();
 
-  cellValues.forEach((value, idx) => {
+  let cellValuesSorted = [];
+  if (firstRowIsHeaders) {
+    const headerItem = cellValues[0];
+    const values = cellValues.slice(1);
+    cellValuesSorted = [headerItem, ...values.sort()];
+  } else {
+    cellValuesSorted = cellValues.sort();
+  }
+
+  cellValuesSorted.forEach((value, idx) => {
     if (firstRowIsHeaders && idx == 0) {
       return;
     }
