@@ -1,20 +1,17 @@
 import {
   Box,
   Button,
-  CircularProgress,
   ClickAwayListener,
   Paper,
   Popper,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import { Check, PriorityHigh, Settings } from '@mui/icons-material';
+import { Check, Settings } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
-import { useAppSelector } from 'core/hooks';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
@@ -22,6 +19,7 @@ import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
+import RemindAllToolbox from './RemindAllBox';
 
 type ParticipantSummaryCardProps = {
   eventId: number;
@@ -66,10 +64,6 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
   >(null);
-
-  const isRemindingParticipants = useAppSelector(
-    (state) => state.events.remindingByEventId[eventId]
-  );
 
   if (!event) {
     return null;
@@ -186,48 +180,12 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               </Typography>
               <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${numRemindedParticipants}/${numAvailParticipants}`}</Typography>
-                <Tooltip
-                  arrow
-                  placement="top-start"
-                  title={
-                    contactPerson == null
-                      ? messages.participantSummaryCard.remindButtondisabledTooltip()
-                      : ''
-                  }
-                >
-                  <Box>
-                    <Button
-                      disabled={
-                        contactPerson == null ||
-                        isRemindingParticipants ||
-                        numRemindedParticipants >= numAvailParticipants
-                      }
-                      onClick={() => {
-                        sendReminders(eventId);
-                      }}
-                      size="small"
-                      startIcon={
-                        contactPerson ? (
-                          isRemindingParticipants ? (
-                            <CircularProgress size={20} />
-                          ) : (
-                            <Check />
-                          )
-                        ) : (
-                          <PriorityHigh />
-                        )
-                      }
-                      sx={{
-                        marginLeft: 2,
-                      }}
-                      variant="outlined"
-                    >
-                      <Msg
-                        id={messageIds.participantSummaryCard.remindButton}
-                      />
-                    </Button>
-                  </Box>
-                </Tooltip>
+                <RemindAllToolbox
+                  contactPerson={contactPerson}
+                  eventId={eventId}
+                  orgId={orgId}
+                  sendReminders={sendReminders}
+                />
               </Box>
             </Box>
           ) : (
@@ -248,6 +206,14 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                       noshows: numNoshowParticipants,
                     })}
                   </Typography>
+                )}
+                {new Date(removeOffset(event.end_time)) > new Date() && (
+                  <RemindAllToolbox
+                    contactPerson={contactPerson}
+                    eventId={eventId}
+                    orgId={orgId}
+                    sendReminders={sendReminders}
+                  />
                 )}
                 {!hasRecordedAttendance && (
                   <Box ml={2}>
