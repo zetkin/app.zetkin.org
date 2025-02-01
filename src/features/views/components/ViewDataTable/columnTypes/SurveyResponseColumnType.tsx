@@ -36,6 +36,8 @@ export default class SurveyResponseColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
+      sortComparator: (a: string[], b: string[]) =>
+        (a[a.length - 1] ?? '').localeCompare(b[b.length - 1] ?? ''),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
         return cell.map((response) => response.text);
