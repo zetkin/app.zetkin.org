@@ -120,6 +120,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   } else {
     ellipsisMenu.push({
       label: messages.viewLayout.ellipsisMenu.makeDynamic(),
+      onSelect: () => setQueryDialogOpen(true),
     });
   }
 
