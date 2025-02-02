@@ -417,6 +417,7 @@ export default makeMessages('feat.views', {
     },
     ellipsisMenu: {
       delete: m('Delete list'),
+      duplicate: m('Duplicate'),
       editQuery: m('Edit Smart Search query'),
       makeDynamic: m('Convert to Smart Search list'),
       makeStatic: {
