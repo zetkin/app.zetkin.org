@@ -169,9 +169,11 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
                 <FaceOutlinedIcon
                   onClick={noPropagate(() => setContact(params.row.id))}
                   sx={{
-                    display: 'none',
                     marginLeft: '8px',
-                    opacity: '50%',
+                    opacity: '0%',
+                    transitionDelay: '0',
+                    transitionDuration: '1s',
+                    transitionProperty: 'opacity',
                     verticalAlign: 'bottom',
                   }}
                 />
@@ -414,7 +416,9 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         }
         sx={{
           '& .MuiDataGrid-row:hover': {
-            '&:hover svg': { display: 'inline-block' },
+            '&:hover svg': {
+              opacity: '50%',
+            },
             cursor: 'pointer',
           },
         }}
