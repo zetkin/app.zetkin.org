@@ -24,19 +24,22 @@ type PageProps = {
   orgId: string;
 };
 
-
 const JoinFormsPage: PageWithLayout<PageProps> = ({ orgId }) => {
   const { data: joinForms } = useJoinForms(parseInt(orgId));
   const { recentlyCreatedJoinForm } = useCreateJoinForm(parseInt(orgId));
   const { openPane } = usePanes();
 
   useEffect(() => {
-          openPane({
-          render: () => (recentlyCreatedJoinForm &&
-            <JoinFormPane formId={recentlyCreatedJoinForm.id} orgId={recentlyCreatedJoinForm.organization.id} />
-          ),
-          width: 500,
-        });
+    openPane({
+      render: () =>
+        recentlyCreatedJoinForm && (
+          <JoinFormPane
+            formId={recentlyCreatedJoinForm.id}
+            orgId={recentlyCreatedJoinForm.organization.id}
+          />
+        ),
+      width: 500,
+    });
   }, [recentlyCreatedJoinForm]);
 
   if (!joinForms) {
