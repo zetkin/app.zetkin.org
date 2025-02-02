@@ -29,7 +29,7 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
         },
         name: 'slash',
         onChange: (details, tr) => {
-          const resolved = tr.doc.resolve(details.range.to);
+          const resolved = tr.doc.resolve(details.range.to - 1);
           const exited = !!details.exitReason;
           const inParagraph = resolved.node(1)?.type.name == 'paragraph';
           this.options.onBlockQuery(
