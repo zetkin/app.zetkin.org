@@ -22,6 +22,7 @@ import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCall
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
 import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
+import { deleteJoinFormDataDef } from 'features/joinForms/rpc/deleteJoinForm';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -48,6 +49,7 @@ export function createRPCRouter() {
   rpcRouter.register(renderEmailDef);
   rpcRouter.register(createCallAssignmentDef);
   rpcRouter.register(getJoinFormEmbedDataDef);
+  rpcRouter.register(deleteJoinFormDataDef);
   rpcRouter.register(createHouseholdsDef);
 
   return rpcRouter;

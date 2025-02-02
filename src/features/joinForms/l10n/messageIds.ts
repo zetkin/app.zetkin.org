@@ -4,6 +4,8 @@ export default makeMessages('feat.joinForms', {
   defaultTitle: m('Untitled form'),
   embedding: {
     copyLink: m('Copy embed URL'),
+    delete: m('Delete'),
+    deletedSuccess: m('Join form deleted'),
     formSubmitted: m('Form submitted'),
     linkCopied: m('Embed URL copied.'),
     openLink: m('Visit now'),
