@@ -65,6 +65,23 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
     };
   }
 
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  insertSlash(): CommandFunction {
+    return (props) => {
+      const { dispatch, state, tr } = props;
+
+      const anchor = state.selection.anchor;
+
+      tr.insertText('/', anchor);
+
+      dispatch?.(tr);
+
+      return true;
+    };
+  }
+
   get name(): string {
     return 'zblockmenu';
   }
