@@ -156,12 +156,12 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     label: messages.viewLayout.ellipsisMenu.duplicate(),
     onSelect: async () => {
       if (view != null) {
-        const copy = await duplicateView(
+        const copiedList = await duplicateView(
           viewId,
           view.folder?.id ?? null,
           messages.browser.menu.viewCopy({ viewName: view.title })
         );
-        router.push(`/organize/${orgId}/people/lists/${copy.id}`);
+        router.push(`/organize/${orgId}/people/lists/${copiedList.id}`);
       }
     },
   });
