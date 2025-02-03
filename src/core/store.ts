@@ -50,17 +50,19 @@ import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 import areasSlice, { AreasStoreSlice } from 'features/areas/store';
-import canvassAssignmentSlice, {
-  canvassAssignmentCreated,
-  CanvassAssignmentsStoreSlice,
-} from 'features/canvassAssignments/store';
+import areaAssignmentSlice, {
+  areaAssignmentCreated,
+  AreaAssignmentsStoreSlice,
+} from 'features/areaAssignments/store';
+import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 
 export interface RootState {
+  areaAssignments: AreaAssignmentsStoreSlice;
   areas: AreasStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
   callAssignments: CallAssignmentSlice;
-  canvassAssignments: CanvassAssignmentsStoreSlice;
   campaigns: CampaignsStoreSlice;
+  canvass: CanvassStoreSlice;
   duplicates: PotentialDuplicatesStoreSlice;
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
@@ -81,11 +83,12 @@ export interface RootState {
 }
 
 const reducer = {
+  areaAssignments: areaAssignmentSlice.reducer,
   areas: areasSlice.reducer,
   breadcrumbs: breadcrumbsSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,
-  canvassAssignments: canvassAssignmentSlice.reducer,
+  canvass: canvassSlice.reducer,
   duplicates: potentialDuplicatesSlice.reducer,
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
@@ -108,11 +111,11 @@ const reducer = {
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
-  actionCreator: canvassAssignmentCreated,
+  actionCreator: areaAssignmentCreated,
   effect: (action) => {
-    const canvassAssignment = action.payload;
+    const areaAssignment = action.payload;
     Router.push(
-      `/organize/${canvassAssignment.organization.id}/projects/${canvassAssignment.campaign.id}/canvassassignments/${canvassAssignment.id}`
+      `/organize/${areaAssignment.organization.id}/projects/${areaAssignment.campaign.id}/areaassignments/${areaAssignment.id}`
     );
   },
 });

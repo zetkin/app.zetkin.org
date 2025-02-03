@@ -4,7 +4,7 @@ import {
   ACTIVITIES,
   CallAssignmentActivity,
   CampaignActivity,
-  CanvassAssignmentActivity,
+  AreaAssignmentActivity,
   EmailActivity,
   EventActivity,
   SurveyActivity,
@@ -41,7 +41,7 @@ export type ClusteredEvent =
 
 export type NonEventActivity =
   | CallAssignmentActivity
-  | CanvassAssignmentActivity
+  | AreaAssignmentActivity
   | SurveyActivity
   | TaskActivity
   | EmailActivity;
