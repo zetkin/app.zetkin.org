@@ -12,6 +12,7 @@ type BlockToolbarProps = {
   curBlockType: string;
   curBlockY: number;
   enableBold: boolean;
+  enableHeading: boolean;
   enableItalic: boolean;
   enableLink: boolean;
   enableVariable: boolean;
@@ -22,6 +23,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
   curBlockType,
   curBlockY,
   enableBold,
+  enableHeading,
   enableItalic,
   enableLink,
   enableVariable,
@@ -60,9 +62,11 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
             )}
             {curBlockType == 'paragraph' && (
               <>
-                <Button onClick={() => toggleHeading()}>
-                  Convert to heading
-                </Button>
+                {enableHeading && (
+                  <Button onClick={() => toggleHeading()}>
+                    Convert to heading
+                  </Button>
+                )}
                 {enableLink && <LinkToolButton />}
                 {enableBold && <BoldToolButton />}
                 {enableItalic && <ItalicToolButton />}
