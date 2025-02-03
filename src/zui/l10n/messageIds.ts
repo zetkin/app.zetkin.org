@@ -131,12 +131,19 @@ export default makeMessages('zui', {
       bulletList: m('Bullet list'),
       heading: m('Heading'),
       orderedList: m('Ordered list'),
+      paragraph: m('Paragraph'),
       zbutton: m('Button'),
       zimage: m('Image'),
     },
     extensions: {
       button: {
         defaultText: m('Button text'),
+      },
+      heading: {
+        large: m('1 - Large'),
+        level: m('Level'),
+        medium: m('2 - Medium'),
+        small: m('3 - Small'),
       },
       link: {
         apply: m('Apply'),
@@ -150,6 +157,15 @@ export default makeMessages('zui', {
         'Type / or {link} to insert block, or just type some text'
       ),
       link: m('click here'),
+    },
+    toolbar: {
+      conversions: {
+        bulletList: m('Convert to bullet list'),
+        heading: m('Convert to heading'),
+        orderedList: m('Convert to ordered list'),
+        paragraph: m('Convert to paragraph'),
+      },
+      delete: m('Delete block'),
     },
     variables: {
       firstName: m('First Name'),
