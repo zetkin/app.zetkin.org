@@ -27,6 +27,27 @@ import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
 
+const sortByOa = (
+  v1: ZetkinOrganizerAction[],
+  v2: ZetkinOrganizerAction[]
+): number => {
+  const hasActions = (v: ZetkinOrganizerAction[]): boolean => {
+    return v.length > 0;
+  };
+
+  const getSortValue = (v: ZetkinOrganizerAction[]): number => {
+    if (!hasActions(v)) {
+      return 2;
+    }
+    if (v.every((oan) => oan.organizer_action_taken)) {
+      return 1;
+    }
+    return 0;
+  };
+
+  return getSortValue(v1) - getSortValue(v2);
+};
+
 export default class OrganizerActionColumnType implements IColumnType {
   cellToString(cell: OrganizerActionViewCell): string {
     const requiresAction = cell?.length
@@ -53,6 +74,7 @@ export default class OrganizerActionColumnType implements IColumnType {
           />
         );
       },
+      sortComparator: (v1, v2) => sortByOa(v1, v2),
     };
   }
 
