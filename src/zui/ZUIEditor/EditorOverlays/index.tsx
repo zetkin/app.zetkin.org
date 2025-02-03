@@ -7,7 +7,7 @@ import {
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
-import { FromToProps } from 'remirror';
+import { FromToProps, isNodeSelection } from 'remirror';
 import { Attrs } from '@remirror/pm/model';
 
 import BlockToolbar from './BlockToolbar/index';
@@ -66,13 +66,11 @@ const EditorOverlays: FC<Props> = ({
   const [currentBlock, setCurrentBlock] = useState<BlockData | null>(null);
 
   const findSelectedNode = useCallback(() => {
-    const pos = state.selection.$head.pos;
-    const resolved = state.doc.resolve(pos);
-    const node = resolved.node(1);
-    if (node) {
-      const posBeforeTextContent = resolved.before(1);
-      const posAfterTextContent = resolved.after(1);
-      const elem = view.nodeDOM(posBeforeTextContent);
+    if (isNodeSelection(state.selection)) {
+      const selection = state.selection;
+      const posBefore = selection.$anchor.before(1);
+      const posAfter = selection.$head.after(1);
+      const elem = view.nodeDOM(posBefore);
       if (elem instanceof HTMLElement) {
         const nodeElem = elem;
         const editorRect = view.dom.getBoundingClientRect();
@@ -80,11 +78,11 @@ const EditorOverlays: FC<Props> = ({
         const x = nodeRect.x - editorRect.x;
         const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
-          attributes: node.attrs,
-          node,
+          attributes: selection.node.attrs,
+          node: selection.node,
           range: {
-            from: posBeforeTextContent,
-            to: posAfterTextContent,
+            from: posBefore,
+            to: posAfter,
           },
           rect: {
             ...nodeRect.toJSON(),
@@ -93,8 +91,40 @@ const EditorOverlays: FC<Props> = ({
             x: x,
             y: y,
           },
-          type: node.type.name as BlockType,
+          type: selection.node.type.name as BlockType,
         });
+      }
+    } else {
+      const pos = state.selection.$head.pos;
+      const resolved = state.doc.resolve(pos);
+      const node = resolved.node(1);
+      if (node) {
+        const posBeforeTextContent = resolved.before(1);
+        const posAfterTextContent = resolved.after(1);
+        const elem = view.nodeDOM(posBeforeTextContent);
+        if (elem instanceof HTMLElement) {
+          const nodeElem = elem;
+          const editorRect = view.dom.getBoundingClientRect();
+          const nodeRect = nodeElem.getBoundingClientRect();
+          const x = nodeRect.x - editorRect.x;
+          const y = nodeRect.y - editorRect.y;
+          setCurrentBlock({
+            attributes: node.attrs,
+            node,
+            range: {
+              from: posBeforeTextContent,
+              to: posAfterTextContent,
+            },
+            rect: {
+              ...nodeRect.toJSON(),
+              left: x,
+              top: y,
+              x: x,
+              y: y,
+            },
+            type: node.type.name as BlockType,
+          });
+        }
       }
     }
   }, [view, state.selection]);
