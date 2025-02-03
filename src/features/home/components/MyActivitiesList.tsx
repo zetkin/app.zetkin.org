@@ -110,15 +110,14 @@ const MyActivitiesList: FC = () => {
             <MyActivityListItem
               actions={[
                 <Button key="mainAction" size="small" variant="outlined">
-                  <Msg id={messageIds.activityList.actions.canvass} />
+                  <Msg id={messageIds.activityList.actions.areaAssignment} />
                 </Button>,
               ]}
               href={href}
               Icon={MapsHomeWork}
               info={[]}
               title={
-                activity.data.title ||
-                messages.defaultTitles.canvassAssignment()
+                activity.data.title || messages.defaultTitles.areaAssignment()
               }
             />
           );

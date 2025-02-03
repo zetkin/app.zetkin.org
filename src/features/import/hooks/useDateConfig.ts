@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { columnUpdate } from '../store';
 import { DateColumn } from '../utils/types';
@@ -21,6 +21,10 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const cellValues = rows.map((row) => row.data[columnIndex]);
 
   const [dateFormat, setDateFormat] = useState(column.dateFormat || null);
+
+  useEffect(() => {
+    setDateFormat(column.dateFormat || null);
+  }, [columnIndex]);
 
   const noCustomFormat = dateFormat == '';
 

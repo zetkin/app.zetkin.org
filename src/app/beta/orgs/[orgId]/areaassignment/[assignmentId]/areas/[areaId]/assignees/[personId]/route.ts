@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { CanvassAssignmentModel } from 'features/canvassAssignments/models';
+import { AreaAssignmentModel } from 'features/areaAssignments/models';
 
 type RouteMeta = {
   params: {
@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest, { params }: RouteMeta) {
       apiClient;
       orgId;
 
-      const assignmentModel = await CanvassAssignmentModel.findOne({
+      const assignmentModel = await AreaAssignmentModel.findOne({
         _id: params.assignmentId,
       });
 
