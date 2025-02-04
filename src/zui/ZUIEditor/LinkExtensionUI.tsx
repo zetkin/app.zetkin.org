@@ -14,8 +14,13 @@ export type NodeWithPosition = {
 const LinkExtensionUI: FC = () => {
   const state = useEditorState();
   const view = useEditorView();
-  const { removeLink, removeUnfinishedLinks, updateLink, updateLinkText } =
-    useCommands();
+  const {
+    focus,
+    removeLink,
+    removeUnfinishedLinks,
+    updateLink,
+    updateLinkText,
+  } = useCommands();
 
   const [selectedNodes, setSelectedNodes] = useState<NodeWithPosition[]>([]);
   const [selectionHasOtherNodes, setSelectionHasOtherNodes] = useState(false);
@@ -95,6 +100,7 @@ const LinkExtensionUI: FC = () => {
                 from: selectedNodes[0].from,
                 to: selectedNodes[0].to,
               });
+              focus();
             }
           : undefined
       }
@@ -107,6 +113,7 @@ const LinkExtensionUI: FC = () => {
           },
           linkText
         );
+        focus();
       }}
       open={showLinkMaker}
       text={linkText}

@@ -73,6 +73,11 @@ const TextAndHrefOverlay: FC<Props> = ({
                 <TextField
                   fullWidth
                   onChange={(ev) => onChangeHref(ev.target.value)}
+                  onKeyUp={(ev) => {
+                    if (ev.key == 'Enter' && canSubmit) {
+                      onSubmit();
+                    }
+                  }}
                   size="small"
                   value={href}
                 />
@@ -88,6 +93,11 @@ const TextAndHrefOverlay: FC<Props> = ({
                 <TextField
                   fullWidth
                   onChange={(ev) => onChangeText(ev.target.value)}
+                  onKeyUp={(ev) => {
+                    if (ev.key == 'Enter' && canSubmit) {
+                      onSubmit();
+                    }
+                  }}
                   placeholder={messages.editor.extensions.link.textPlaceholder()}
                   size="small"
                   value={text}
