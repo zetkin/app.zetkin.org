@@ -8,6 +8,8 @@ assignees: ''
 
 ## Description
 
+See the full list of ZUI design system issues tracked here: [#2111](https://github.com/zetkin/app.zetkin.org/pull/2111)
+
 ## Screenshots
 
 ## Figma link
