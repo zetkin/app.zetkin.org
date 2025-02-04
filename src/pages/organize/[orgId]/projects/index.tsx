@@ -16,6 +16,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import { Msg, useMessages } from 'core/i18n';
+import { useRouter } from 'next/router';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -45,8 +46,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 const AllCampaignsSummaryPage: PageWithLayout = () => {
+  const router = useRouter();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
+  if (!orgId) {
+    router.reload();
+  }
   const { data: campaigns } = useCampaigns(orgId);
   campaigns?.reverse();
 
