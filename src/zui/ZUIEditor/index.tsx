@@ -166,6 +166,9 @@ const ZUIEditor: FC<Props> = ({
 
   return (
     <Box
+      display="flex"
+      justifyContent="center"
+      paddingTop={5}
       sx={{
         '.zbutton-button': {
           bgcolor: 'black',
@@ -192,6 +195,7 @@ const ZUIEditor: FC<Props> = ({
           px: 1,
         },
         ['[contenteditable="true"]']: {
+          outline: '0px solid transparent',
           padding: 1,
         },
         ['[contenteditable="true"] > *']: {
@@ -199,7 +203,7 @@ const ZUIEditor: FC<Props> = ({
         },
       }}
     >
-      <div style={{ minHeight: '200px' }}>
+      <div style={{ minHeight: '200px', width: '600px' }}>
         <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
             blocks={blockExtensions.map((ext) => ({

@@ -6,7 +6,7 @@ import {
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { FromToProps, isNodeSelection } from 'remirror';
 import { Attrs } from '@remirror/pm/model';
 
@@ -205,22 +205,24 @@ const EditorOverlays: FC<Props> = ({
     editable && blocks.length > 0 && !showBlockMenu && !typing;
 
   const showSelectedBlockOutline = editable && !!currentBlock;
+  const theme = useTheme();
 
   return (
     <>
       {showSelectedBlockOutline && (
         <Box position="relative">
           <Box
-            border={1}
+            border={`1px solid ${theme.palette.grey[500]}`}
+            borderRadius={1}
             height={currentBlock?.rect.height + 16}
             left={currentBlock?.rect.left - 8}
             position="absolute"
             sx={{
-              opacity: 0.5,
               pointerEvents: 'none',
             }}
             top={currentBlock?.rect.top - 8}
             width={currentBlock?.rect.width + 16}
+            zIndex={-1}
           />
         </Box>
       )}
