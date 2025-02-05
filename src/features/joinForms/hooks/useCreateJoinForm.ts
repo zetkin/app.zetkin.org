@@ -1,12 +1,15 @@
 import { joinFormCreated } from '../store';
-import { useApiClient, useAppDispatch } from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinJoinForm, ZetkinJoinFormPostBody } from '../types';
 
 export default function useCreateJoinForm(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const joinForms = useAppSelector((state) => state.joinForms);
 
-  async function createForm(body: ZetkinJoinFormPostBody) {
+  const createForm = async (
+    body: ZetkinJoinFormPostBody
+  ): Promise<ZetkinJoinForm> => {
     const createdData = await apiClient.post<ZetkinJoinForm>(
       `/api/orgs/${orgId}/join_forms`,
       body
@@ -15,9 +18,12 @@ export default function useCreateJoinForm(orgId: number) {
     dispatch(joinFormCreated(createdData));
 
     return createdData;
-  }
+  };
+
+  const recentlyCreatedJoinForm = joinForms.recentlyCreatedJoinForm;
 
   return {
     createForm,
+    recentlyCreatedJoinForm,
   };
 }
