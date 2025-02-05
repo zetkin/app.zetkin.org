@@ -4,7 +4,7 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -64,6 +64,30 @@ const ZUIEditor: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds.editor);
   const theme = useTheme();
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    const editorContainer = editorContainerRef.current;
+
+    if (editorContainer) {
+      const detectClickOnEditor = (ev: Event) => {
+        const clickedInside = ev.composedPath().includes(editorContainer);
+        if (clickedInside) {
+          setFocused(true);
+        } else {
+          setFocused(false);
+        }
+      };
+
+      document.addEventListener('click', detectClickOnEditor);
+
+      return () => {
+        document.removeEventListener('click', detectClickOnEditor);
+      };
+    }
+  }, [document]);
 
   const boldExtension = new BoldExtension({});
   const btnExtension = new ButtonExtension();
@@ -203,7 +227,10 @@ const ZUIEditor: FC<Props> = ({
         },
       }}
     >
-      <div style={{ minHeight: '200px', width: '600px' }}>
+      <div
+        ref={editorContainerRef}
+        style={{ minHeight: '200px', width: '600px' }}
+      >
         <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
             blocks={blockExtensions.map((ext) => ({
@@ -215,6 +242,7 @@ const ZUIEditor: FC<Props> = ({
             enableItalic={!!enableItalic}
             enableLink={!!enableLink}
             enableVariable={!!enableVariable}
+            focused={focused}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
