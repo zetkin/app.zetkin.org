@@ -46,6 +46,7 @@ type Props = {
   enableItalic: boolean;
   enableLink: boolean;
   enableVariable: boolean;
+  focused: boolean;
 };
 
 const EditorOverlays: FC<Props> = ({
@@ -55,7 +56,9 @@ const EditorOverlays: FC<Props> = ({
   enableItalic,
   enableLink,
   enableVariable,
+  focused,
 }) => {
+  const theme = useTheme();
   const view = useEditorView();
   const state = useEditorState();
   const positioner = usePositioner('cursor');
@@ -195,6 +198,7 @@ const EditorOverlays: FC<Props> = ({
     currentBlock?.type == 'paragraph' && currentBlock?.node.textContent == '';
 
   const showBlockToolbar =
+    focused &&
     editable &&
     !showBlockMenu &&
     !!currentBlock &&
@@ -204,8 +208,7 @@ const EditorOverlays: FC<Props> = ({
   const showBlockInsert =
     editable && blocks.length > 0 && !showBlockMenu && !typing;
 
-  const showSelectedBlockOutline = editable && !!currentBlock;
-  const theme = useTheme();
+  const showSelectedBlockOutline = focused && editable && !!currentBlock;
 
   return (
     <>
