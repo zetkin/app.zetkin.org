@@ -36,6 +36,13 @@ export default class SurveyOptionColumnType
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
+      sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
+        const v1n =
+          v1 == null || v1.length == 0 ? 0 : v1[v1.length - 1].selected ? 0 : 1;
+        const v2n =
+          v2 == null || v2.length == 0 ? 0 : v2[v2.length - 1].selected ? 0 : 1;
+        return v1n - v2n;
+      },
       type: 'boolean',
     };
   }
