@@ -22,6 +22,7 @@ import { ZetkinArea } from 'features/areas/types';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
+import { ZetkinPerson } from '../../../utils/types/zetkin';
 
 const LocationMarker: FC<{
   areaAssId: string;
@@ -168,6 +169,158 @@ type OrganizerMapRendererProps = {
   selectedId: string;
   sessions: ZetkinAreaAssignmentSession[];
 };
+
+function HouseholdOverlayMarker(props: {
+  numberOfHouseholds: number;
+  numberOfLocations: number;
+}) {
+  return (
+    <Box
+      bgcolor="white"
+      borderRadius={1}
+      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
+      display="inline-flex"
+      flexDirection="column"
+      gap="2px"
+      padding="2px 6px"
+      sx={{ translate: '-50% -50%' }}
+    >
+      <Typography fontSize="11px">{props.numberOfLocations}</Typography>
+      <Divider />
+      <Typography fontSize="11px">{props.numberOfHouseholds}</Typography>
+    </Box>
+  );
+}
+
+function ProgressOverlayMarker(props: {
+  successfulVisitsColorPercent: number;
+  visitsColorPercent: number;
+}) {
+  const theme = useTheme();
+
+  return (
+    <Box
+      bgcolor="white"
+      borderRadius={1}
+      boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
+      display="inline-flex"
+      flexDirection="column"
+      padding={0.5}
+      sx={{ translate: '-50% -50%' }}
+    >
+      <div
+        style={{
+          alignItems: 'center',
+          background: `conic-gradient(${theme.palette.primary.main} ${
+            props.successfulVisitsColorPercent
+          }%, ${lighten(theme.palette.primary.main, 0.7)} ${
+            props.successfulVisitsColorPercent
+          }% ${props.visitsColorPercent}%, ${theme.palette.grey[400]} ${
+            props.visitsColorPercent
+          }%)`,
+          borderRadius: '2em',
+          display: 'flex',
+          flexDirection: 'row',
+          height: '20px',
+          justifyContent: 'center',
+          width: '20px',
+        }}
+      />
+    </Box>
+  );
+}
+
+function NumberOverlayMarker(props: { value: number }) {
+  const theme = useTheme();
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        backgroundColor: theme.palette.primary.main,
+        borderRadius: 10,
+        boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+        color: theme.palette.primary.contrastText,
+        display: 'flex',
+        fontWeight: 'bold',
+        height: 30,
+        justifyContent: 'center',
+        pointerEvents: 'none',
+        transform: 'translate(-50%, -50%)',
+        width: 30,
+      }}
+    >
+      <Box>{props.value}</Box>
+    </Box>
+  );
+}
+
+function AssigneeOverlayMarker({
+  organizationID,
+  people,
+  zoom,
+}: {
+  organizationID: number;
+  people: ZetkinPerson[];
+  zoom: number;
+}) {
+  return (
+    <Box
+      alignItems="center"
+      display="inline-flex"
+      flexWrap="wrap"
+      gap="2px"
+      justifyContent="center"
+      sx={{
+        pointerEvents: 'none',
+        transform: 'translate(-50%, -50%)',
+      }}
+      width={zoom >= 16 ? '95px' : '65px'}
+    >
+      {people.map((person, index) => {
+        if (index <= 4) {
+          return (
+            <Box
+              //TODO: only use person id once we have logic preventing
+              //assigning the same person to an area more than once
+              key={`${person.id}-${index}`}
+              sx={{
+                borderRadius: '50%',
+                boxShadow: '0 0 8px rgba(0,0,0,0.3)',
+              }}
+            >
+              <ZUIAvatar
+                size={zoom >= 16 ? 'sm' : 'xs'}
+                url={`/api/orgs/${organizationID}/people/${person.id}/avatar`}
+              />
+            </Box>
+          );
+        } else if (index == 5) {
+          return (
+            <Box
+              alignItems="center"
+              bgcolor="white"
+              borderRadius="100%"
+              display="flex"
+              height={zoom >= 16 ? '30px' : '20px'}
+              justifyContent="center"
+              padding={1}
+              sx={{ boxShadow: '0 0 8px rgba(0,0,0,0.3)' }}
+              width={zoom >= 16 ? '30px' : '20px'}
+            >
+              <Typography
+                color="secondary"
+                fontSize={zoom >= 16 ? 14 : 11}
+              >{`+${people.length - 5}`}</Typography>
+            </Box>
+          );
+        } else {
+          return null;
+        }
+      })}
+    </Box>
+  );
+}
 
 const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
@@ -496,154 +649,51 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               100
             : 0;
 
+          const markerToRender = () => {
+            if (overlayStyle === 'households') {
+              return (
+                <HouseholdOverlayMarker
+                  numberOfHouseholds={numberOfHouseholds}
+                  numberOfLocations={numberOfLocations}
+                />
+              );
+            }
+            if (overlayStyle == 'progress') {
+              return (
+                <ProgressOverlayMarker
+                  successfulVisitsColorPercent={successfulVisitsColorPercent}
+                  visitsColorPercent={visitsColorPercent}
+                />
+              );
+            }
+            if (overlayStyle === 'assignees' && area.hasPeople) {
+              if (detailed) {
+                return (
+                  <AssigneeOverlayMarker
+                    organizationID={assignment.organization.id}
+                    people={people}
+                    zoom={zoom}
+                  />
+                );
+              }
+              return <NumberOverlayMarker value={people.length} />;
+            }
+            return null;
+          };
+
+          const marker = markerToRender();
+          if (marker === null) {
+            return null;
+          }
           return (
-            <>
-              {overlayStyle == 'households' && (
-                <DivIconMarker
-                  iconAnchor={[0, 0]}
-                  position={mid}
-                  zIndexOffset={100}
-                >
-                  <Box
-                    bgcolor="white"
-                    borderRadius={1}
-                    boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
-                    display="inline-flex"
-                    flexDirection="column"
-                    gap="2px"
-                    padding="2px 6px"
-                    sx={{ translate: '-50% -50%' }}
-                  >
-                    <Typography fontSize="11px">{numberOfLocations}</Typography>
-                    <Divider />
-                    <Typography fontSize="11px">
-                      {numberOfHouseholds}
-                    </Typography>
-                  </Box>
-                </DivIconMarker>
-              )}
-              {overlayStyle == 'progress' && stats && (
-                <DivIconMarker
-                  iconAnchor={[0, 0]}
-                  position={mid}
-                  zIndexOffset={100}
-                >
-                  <Box
-                    bgcolor="white"
-                    borderRadius={1}
-                    boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
-                    display="inline-flex"
-                    flexDirection="column"
-                    padding={0.5}
-                    sx={{ translate: '-50% -50%' }}
-                  >
-                    <div
-                      style={{
-                        alignItems: 'center',
-                        background: `conic-gradient(${
-                          theme.palette.primary.main
-                        } ${successfulVisitsColorPercent}%, ${lighten(
-                          theme.palette.primary.main,
-                          0.7
-                        )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
-                          theme.palette.grey[400]
-                        } ${visitsColorPercent}%)`,
-                        borderRadius: '2em',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        height: '20px',
-                        justifyContent: 'center',
-                        width: '20px',
-                      }}
-                    />
-                  </Box>
-                </DivIconMarker>
-              )}
-              {overlayStyle == 'assignees' && area.hasPeople && (
-                <DivIconMarker
-                  iconAnchor={[0, 0]}
-                  position={mid}
-                  zIndexOffset={100}
-                >
-                  {detailed && (
-                    <Box
-                      alignItems="center"
-                      display="inline-flex"
-                      flexWrap="wrap"
-                      gap="2px"
-                      justifyContent="center"
-                      sx={{
-                        pointerEvents: 'none',
-                        transform: 'translate(-50%, -50%)',
-                      }}
-                      width={zoom >= 16 ? '95px' : '65px'}
-                    >
-                      {people.map((person, index) => {
-                        if (index <= 4) {
-                          return (
-                            <Box
-                              //TODO: only use person id once we have logic preventing
-                              //assigning the same person to an area more than once
-                              key={`${person.id}-${index}`}
-                              sx={{
-                                borderRadius: '50%',
-                                boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                              }}
-                            >
-                              <ZUIAvatar
-                                size={zoom >= 16 ? 'sm' : 'xs'}
-                                url={`/api/orgs/${assignment.organization.id}/people/${person.id}/avatar`}
-                              />
-                            </Box>
-                          );
-                        } else if (index == 5) {
-                          return (
-                            <Box
-                              alignItems="center"
-                              bgcolor="white"
-                              borderRadius="100%"
-                              display="flex"
-                              height={zoom >= 16 ? '30px' : '20px'}
-                              justifyContent="center"
-                              padding={1}
-                              sx={{ boxShadow: '0 0 8px rgba(0,0,0,0.3)' }}
-                              width={zoom >= 16 ? '30px' : '20px'}
-                            >
-                              <Typography
-                                color="secondary"
-                                fontSize={zoom >= 16 ? 14 : 11}
-                              >{`+${people.length - 5}`}</Typography>
-                            </Box>
-                          );
-                        } else {
-                          return null;
-                        }
-                      })}
-                    </Box>
-                  )}
-                  {!detailed && (
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        backgroundColor: theme.palette.primary.main,
-                        borderRadius: 10,
-                        boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-                        color: theme.palette.primary.contrastText,
-                        display: 'flex',
-                        fontWeight: 'bold',
-                        height: 30,
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        transform: 'translate(-50%, -50%)',
-                        width: 30,
-                      }}
-                    >
-                      <Box>{people.length}</Box>
-                    </Box>
-                  )}
-                </DivIconMarker>
-              )}
-            </>
+            <DivIconMarker
+              key={area.id}
+              iconAnchor={[0, 0]}
+              position={mid}
+              zIndexOffset={100}
+            >
+              {marker}
+            </DivIconMarker>
           );
         })}
       </FeatureGroup>
