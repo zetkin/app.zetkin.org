@@ -5,6 +5,13 @@ import {
   StringNode,
 } from 'features/emails/types';
 
+export enum RemirrorBlockType {
+  BUTTON = 'zbutton',
+  HEADING = 'heading',
+  IMAGE = 'zimage',
+  PARAGRAPH = 'paragraph',
+}
+
 export enum TextBlockContentType {
   HARD_BREAK = 'hardBreak',
   TEXT = 'text',
