@@ -1,4 +1,4 @@
-import { ObjectMark, RemirrorJSON } from 'remirror';
+import { RemirrorJSON } from 'remirror';
 import crypto from 'crypto';
 
 import {
@@ -11,10 +11,7 @@ import {
 import { MarkNode, MarkType, TextBlockContentType } from '../types';
 import { remirrorVarsToInlineVars } from './variables';
 import { VariableName } from '../extensions/VariableExtension';
-
-const isObjectMark = (mark: string | ObjectMark): mark is ObjectMark => {
-  return typeof mark != 'string';
-};
+import isObjectMark from './isObjectMark';
 
 export default function remirrorToInlineNodes(blockContent: RemirrorJSON[]) {
   const inlineNodes: EmailContentInlineNode[] = [];
