@@ -1,3 +1,4 @@
+import { EmailVariable } from 'zui/ZUIEditor/types';
 import { EmailContentInlineNode, InlineNodeKind } from '../types';
 
 function childNodesToInlineNodes(childNodes: ChildNode[]) {
@@ -35,7 +36,7 @@ function childNodesToInlineNodes(childNodes: ChildNode[]) {
       const span = node as HTMLSpanElement;
       inlineNodes.push({
         kind: InlineNodeKind.VARIABLE,
-        name: span.getAttribute('data-slug') || '',
+        name: (span.getAttribute('data-slug') as EmailVariable) || '',
       });
     }
   });
