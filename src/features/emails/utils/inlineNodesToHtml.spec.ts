@@ -1,3 +1,4 @@
+import { EmailVariable } from 'zui/ZUIEditor/types';
 import { describe, expect, it } from '@jest/globals';
 
 import { InlineNodeKind } from '../types';
@@ -89,7 +90,7 @@ describe('inlineNodesToHtml()', () => {
       },
       {
         kind: InlineNodeKind.VARIABLE,
-        name: 'target.first_name',
+        name: EmailVariable.FIRST_NAME,
       },
       {
         kind: InlineNodeKind.STRING,

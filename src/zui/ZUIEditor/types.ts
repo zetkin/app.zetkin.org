@@ -13,7 +13,7 @@ export enum RemirrorBlockType {
 }
 
 export enum TextBlockContentType {
-  HARD_BREAK = 'hardBreak',
+  LINE_BREAK = 'hardBreak',
   TEXT = 'text',
   VARIABLE = 'zvariable',
 }

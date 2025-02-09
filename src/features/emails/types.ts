@@ -1,5 +1,7 @@
 import { MJMLJsonObject } from 'mjml-core';
 
+import { EmailVariable } from 'zui/ZUIEditor/types';
+
 export enum BLOCK_TYPES {
   BUTTON = 'button',
   HEADER = 'header',
@@ -30,7 +32,7 @@ export type StringNode = {
 
 export type VariableNode = {
   kind: InlineNodeKind.VARIABLE;
-  name: string;
+  name: EmailVariable;
 };
 
 export type LinkNode = {
