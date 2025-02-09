@@ -438,7 +438,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
-      rows: [{ data: [null, 'Clara'] }],
+      rows: [{ data: [null, 'Clara'] }, { data: ['Clara', 'Zetkin'] }],
     });
 
     const problems = predictProblems(sheet, 'SE', []);
@@ -519,12 +519,22 @@ describe('predictProblem()', () => {
     ]);
   });
 
-  it('returns correct problem when column is not configured', () => {
+  it('returns correct problem when one of name column is not configured', () => {
     const sheet = makeFullSheet({
       columns: [
         {
           kind: ColumnKind.UNKNOWN,
           selected: false,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'email',
+          kind: ColumnKind.FIELD,
+          selected: true,
         },
       ],
       rows: [
@@ -537,9 +547,6 @@ describe('predictProblem()', () => {
     expect(problems).toEqual([
       {
         kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
-      },
-      {
-        kind: 'NO_IMPACT',
       },
     ]);
   });

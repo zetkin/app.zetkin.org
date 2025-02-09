@@ -157,14 +157,16 @@ export function predictProblems(
     }
   });
 
-  if (!sheetHasId && !missingValueInName) {
-    if (sheetHasFirstName && sheetHasLastName) {
-      problems.push({
-        kind: ImportProblemKind.UNCONFIGURED_ID,
-      });
-    } else {
+  if (!sheetHasId) {
+    if (!sheetHasFirstName || !sheetHasLastName) {
       problems.push({
         kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
+      });
+    }
+    // there are name columns and no missing value
+    else if (!missingValueInName) {
+      problems.push({
+        kind: ImportProblemKind.UNCONFIGURED_ID,
       });
     }
   }
