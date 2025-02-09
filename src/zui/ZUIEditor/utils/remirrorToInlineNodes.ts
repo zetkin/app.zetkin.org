@@ -9,7 +9,8 @@ import {
   LinkNode,
 } from 'features/emails/types';
 import { MarkNode, MarkType, TextBlockContentType } from '../types';
-import { inlineVariables } from './inlineVariables';
+import { remirrorVarsToInlineVars } from './variables';
+import { VariableName } from '../extensions/VariableExtension';
 
 const isObjectMark = (mark: string | ObjectMark): mark is ObjectMark => {
   return typeof mark != 'string';
@@ -64,14 +65,14 @@ export default function remirrorToInlineNodes(blockContent: RemirrorJSON[]) {
           });
         }
       }
-    } else if (block.type == TextBlockContentType.HARD_BREAK) {
+    } else if (block.type == TextBlockContentType.LINE_BREAK) {
       inlineNodes.push({ kind: InlineNodeKind.LINE_BREAK });
     } else if (block.type == TextBlockContentType.VARIABLE) {
       const name = block.attrs?.name?.toString();
       if (name) {
         inlineNodes.push({
           kind: InlineNodeKind.VARIABLE,
-          name: inlineVariables[name],
+          name: remirrorVarsToInlineVars[name as VariableName],
         });
       }
     }

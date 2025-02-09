@@ -38,7 +38,7 @@ describe('remirrorToInlineNodes()', () => {
         type: TextBlockContentType.TEXT,
       },
       {
-        type: TextBlockContentType.HARD_BREAK,
+        type: TextBlockContentType.LINE_BREAK,
       },
       {
         text: 'It is very short.',
@@ -249,7 +249,7 @@ describe('remirrorToInlineNodes()', () => {
       },
       {
         attrs: { name: 'first_name' },
-        type: 'zvariable',
+        type: TextBlockContentType.VARIABLE,
       },
       {
         text: '. It is very short.',
@@ -264,7 +264,7 @@ describe('remirrorToInlineNodes()', () => {
       },
       {
         kind: InlineNodeKind.VARIABLE,
-        name: 'target.first_name',
+        name: EmailVariable.FIRST_NAME,
       },
       {
         kind: InlineNodeKind.STRING,
