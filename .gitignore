@@ -36,11 +36,18 @@ yarn-error.log*
 # vercel
 .vercel
 
-# vs code
-.vscode/
+# Ignore everything in the .vscode folder
+.vscode/*
+# Except the launch.json file and extensions.json file
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # intellij
 .idea
 
 # typescript
 tsconfig.tsbuildinfo
+
+# generated docs
+public/docs
+public/storybook

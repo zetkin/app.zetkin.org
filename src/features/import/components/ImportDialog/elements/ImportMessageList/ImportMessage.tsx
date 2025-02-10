@@ -12,6 +12,7 @@ import {
 import messageIds from 'features/import/l10n/messageIds';
 import ProblemRowsText from './ProblemRowsText';
 import { useMessages } from 'core/i18n';
+import useSheets from '../../../../hooks/useSheets';
 
 type Props = {
   description?: string;
@@ -32,7 +33,11 @@ const ImportMessage: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
 
-  const rowNumbers = rowIndices?.map((rowIndex) => rowIndex + 1);
+  const { firstRowIsHeaders } = useSheets();
+
+  const rowNumbers = rowIndices?.map((rowIndex) =>
+    firstRowIsHeaders ? rowIndex + 2 : rowIndex + 1
+  );
 
   return (
     <Alert

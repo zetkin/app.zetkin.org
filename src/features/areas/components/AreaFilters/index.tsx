@@ -4,11 +4,11 @@ import { useTheme } from '@mui/styles';
 
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
-import { useMessages } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
 import FilterDropDown from '../FilterDropDown';
 import { areaFilterContext } from './AreaFilterContext';
 import AddFilterButton from './AddFilterButton';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
@@ -16,6 +16,7 @@ type Props = {
 };
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   const [openDropdown, setOpenDropdown] = useState<'add' | number | null>(null);
   const {
@@ -24,7 +25,6 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
     activeTagIdsByGroup,
     setActiveTagIdsByGroup,
   } = useContext(areaFilterContext);
-  const messages = useMessages(messageIds);
 
   const groupsById = useMemo(() => {
     const groupsById: Record<
@@ -99,7 +99,7 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
               label={
                 info.group
                   ? info.group.title
-                  : messages.filters.tagsWithoutGroup()
+                  : messages.areas.filter.ungroupedTagsLabel()
               }
               onToggle={(open) => setOpenDropdown(open ? groupId : null)}
               open={openDropdown == groupId}
@@ -142,8 +142,8 @@ const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           return {
             icon: <Checkbox checked={selected} />,
             label: item.group
-              ? messages.filters.tagGroup({ label: item.group.title })
-              : messages.filters.tagsWithoutGroup(),
+              ? item.group.title
+              : messages.areas.filter.ungroupedTagsLabel(),
             onClick: () => {
               if (selected) {
                 setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));

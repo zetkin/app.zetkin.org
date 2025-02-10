@@ -261,16 +261,12 @@ export const getStaticColumns = (
       field: 'nextMilestoneDeadline',
       renderCell: (params) =>
         params.value ? (
-          <>
-            <ZUIRelativeTime datetime={params.value as string} />
-            &nbsp;(
-            <FormattedDate
-              day="numeric"
-              month="short"
-              value={params.value as string}
-            />
-            )
-          </>
+          <FormattedDate
+            day="numeric"
+            month="long"
+            value={params.value as string}
+            year="numeric"
+          />
         ) : null,
       type: 'date',
       valueFormatter: (params) => new Date(params.value),

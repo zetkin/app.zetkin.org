@@ -123,6 +123,106 @@ describe('createPreviewData()', () => {
     });
   });
 
+  it('converts multiple columns of orgs to preview object', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 1 },
+            { orgId: 333, value: 2 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 222, value: 3 },
+            { orgId: 444, value: 4 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', 1, 3],
+        },
+        {
+          data: ['124', 'Linköping', 2, 1],
+        },
+        {
+          data: ['125', 'Linköping', 1, 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        city: 'Malmö',
+        id: '123',
+      },
+      organizations: [111, 222],
+    });
+  });
+
+  it('converts multiple columns of orgs to preview object without duplication', () => {
+    const configData: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          field: 'city',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 1 },
+            { orgId: 333, value: 2 },
+          ],
+          selected: true,
+        },
+        {
+          kind: ColumnKind.ORGANIZATION,
+          mapping: [
+            { orgId: 111, value: 3 },
+            { orgId: 444, value: 4 },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'Malmö', 1, 3],
+        },
+        {
+          data: ['124', 'Linköping', 2, 1],
+        },
+        {
+          data: ['125', 'Linköping', 1, 2],
+        },
+      ],
+      title: 'My sheet',
+    };
+    const result = createPreviewData(configData, 0);
+    expect(result).toEqual({
+      data: {
+        city: 'Malmö',
+        id: '123',
+      },
+      organizations: [111],
+    });
+  });
+
   it('converts enum data to preview object', () => {
     const configData: Sheet = {
       columns: [

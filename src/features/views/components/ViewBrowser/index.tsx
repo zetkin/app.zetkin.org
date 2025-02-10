@@ -56,7 +56,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
   );
   const gridApiRef = useGridApiRef();
 
-  const { deleteView } = useViewMutations(orgId);
+  const { deleteView, duplicateView } = useViewMutations(orgId);
   const { renameItem } = useViewBrowserMutations(orgId);
   const itemsFuture = useViewBrowserItems(orgId, folderId);
   const { deleteFolder, recentlyCreatedFolder } = useFolder(orgId);
@@ -186,6 +186,19 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
                 onSelect: (e) => {
                   e.stopPropagation();
                   setItemToBeMoved(item);
+                },
+              },
+              {
+                disabled: item.type != 'view',
+                id: 'duplicate-item',
+                label: messages.browser.menu.duplicate(),
+                onSelect: (e) => {
+                  e.stopPropagation();
+                  duplicateView(
+                    item.data.id,
+                    item.folderId,
+                    messages.browser.menu.viewCopy({ viewName: item.title })
+                  );
                 },
               },
             ]}

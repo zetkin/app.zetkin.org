@@ -22,6 +22,18 @@ const userSlice = createSlice({
   initialState: initialState,
   name: 'user',
   reducers: {
+    membershipsLoad: (state) => {
+      state.membershipList.isLoading = true;
+    },
+    membershipsLoaded: (state, action: PayloadAction<ZetkinMembership[]>) => {
+      state.membershipList = remoteList(
+        action.payload.map((membership) => ({
+          ...membership,
+          id: membership.organization.id,
+        }))
+      );
+      state.membershipList.loaded = new Date().toISOString();
+    },
     userLoad: (state) => {
       state.userItem = remoteItem('me');
       state.userItem.isLoading = true;
@@ -36,4 +48,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice;
-export const { userLoad, userLoaded } = userSlice.actions;
+export const { membershipsLoad, membershipsLoaded, userLoad, userLoaded } =
+  userSlice.actions;

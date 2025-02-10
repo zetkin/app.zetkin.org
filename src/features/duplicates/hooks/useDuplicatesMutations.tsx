@@ -5,6 +5,7 @@ import {
   PotentialDuplicate,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
+import useMergePersons from './useMergePersons';
 
 type DuplicatesMutationsReturn = {
   dismissDuplicate: (duplicateId: number) => void;
@@ -20,15 +21,10 @@ export default function useDuplicatesMutations(
 ): DuplicatesMutationsReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const mergePersons = useMergePersons(orgId);
 
   type PotentialDuplicatePatchBody = {
     dismissed?: boolean;
-  };
-
-  type MergePostBody = {
-    objects: number[];
-    override: Partial<ZetkinPerson>;
-    type: 'person';
   };
 
   const dismissDuplicate = async (duplicateId: number) => {
@@ -47,15 +43,8 @@ export default function useDuplicatesMutations(
     duplicatesIds: number[],
     override: Partial<ZetkinPerson>
   ) => {
-    await apiClient
-      .post<ZetkinPerson, MergePostBody>(`/api/orgs/${orgId}/merges`, {
-        objects: duplicatesIds,
-        override,
-        type: 'person',
-      })
-      .then(() => {
-        dispatch(duplicateMerged(potentialDuplicateId));
-      });
+    await mergePersons(duplicatesIds, override);
+    dispatch(duplicateMerged(potentialDuplicateId));
   };
 
   return {

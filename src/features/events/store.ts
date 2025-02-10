@@ -15,6 +15,7 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
+import { ZetkinEventWithStatus } from 'features/home/types';
 
 export enum ACTION_FILTER_OPTIONS {
   CONTACT_MISSING = 'missing',
@@ -50,6 +51,7 @@ export type FilterCategoryType =
   | 'selectedTypes';
 
 export interface EventsStoreSlice {
+  allEventsList: RemoteList<ZetkinEvent>;
   eventList: RemoteList<ZetkinEvent>;
   eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
@@ -67,9 +69,11 @@ export interface EventsStoreSlice {
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
+  userEventList: RemoteList<ZetkinEventWithStatus>;
 }
 
 const initialState: EventsStoreSlice = {
+  allEventsList: remoteList(),
   eventList: remoteList(),
   eventsByCampaignId: {},
   eventsByDate: {},
@@ -87,12 +91,20 @@ const initialState: EventsStoreSlice = {
   selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
+  userEventList: remoteList(),
 };
 
 const eventsSlice = createSlice({
   initialState,
   name: 'events',
   reducers: {
+    allEventsLoad: (state) => {
+      state.allEventsList.isLoading = true;
+    },
+    allEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.allEventsList = remoteList(action.payload);
+      state.allEventsList.loaded = new Date().toISOString();
+    },
     campaignEventsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
@@ -541,6 +553,20 @@ const eventsSlice = createSlice({
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
+    typeDeleted: (state, action: PayloadAction<number>) => {
+      const typeId = action.payload;
+      const typeListItem = state.typeList.items.find(
+        (item) => item.id === typeId
+      );
+
+      if (typeListItem) {
+        typeListItem.deleted = true;
+      }
+
+      state.typeList.items = state.typeList.items.filter(
+        (type) => type.id !== typeId
+      );
+    },
     typeLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.typeList.items.find((item) => item.id == id);
@@ -568,6 +594,28 @@ const eventsSlice = createSlice({
       const [, eventTypes] = action.payload;
       state.typeList = remoteList(eventTypes);
       state.typeList.loaded = new Date().toISOString();
+    },
+    userEventsLoad: (state) => {
+      state.userEventList.isLoading = true;
+    },
+    userEventsLoaded: (
+      state,
+      action: PayloadAction<ZetkinEventWithStatus[]>
+    ) => {
+      state.userEventList = remoteList(action.payload);
+      state.userEventList.loaded = new Date().toISOString();
+    },
+    userResponseAdded: (state, action: PayloadAction<ZetkinEvent>) => {
+      const event = action.payload;
+      state.userEventList.items.push(
+        remoteItem(event.id, { data: { ...event, status: 'signedUp' } })
+      );
+    },
+    userResponseDeleted: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.userEventList.items = state.userEventList.items.filter(
+        (item) => item.id != eventId
+      );
     },
   },
 });
@@ -683,6 +731,8 @@ function updateAvailParticipantToState(
 
 export default eventsSlice;
 export const {
+  allEventsLoad,
+  allEventsLoaded,
   campaignEventsLoad,
   campaignEventsLoaded,
   eventCreate,
@@ -728,8 +778,13 @@ export const {
   statsLoaded,
   typeAdd,
   typeAdded,
+  typeDeleted,
   typeLoad,
   typeLoaded,
   typesLoad,
   typesLoaded,
+  userEventsLoad,
+  userEventsLoaded,
+  userResponseAdded,
+  userResponseDeleted,
 } = eventsSlice.actions;

@@ -1,8 +1,7 @@
-import { OutputData } from '@editorjs/editorjs';
-
 import blockProblems from '../components/EmailEditor/EmailSettings/utils/blockProblems';
-import { DeliveryProblem } from '../types';
+import { DeliveryProblem, EmailContent } from '../types';
 import { ZetkinEmail } from 'utils/types/zetkin';
+import zetkinBlocksToEditorjsBlocks from './zetkinBlocksToEditorjsBlocks';
 
 export default function deliveryProblems(
   email: ZetkinEmail
@@ -12,13 +11,14 @@ export default function deliveryProblems(
   if (!email.content) {
     problems.push(DeliveryProblem.EMPTY);
   } else {
-    const parsedContent: OutputData = JSON.parse(email.content);
+    const parsedContent: EmailContent = JSON.parse(email.content);
 
     if (parsedContent.blocks.length === 0) {
       problems.push(DeliveryProblem.EMPTY);
     }
+    const convertedBlocks = zetkinBlocksToEditorjsBlocks(parsedContent.blocks);
 
-    const hasProblems = parsedContent.blocks.some(
+    const hasProblems = convertedBlocks.some(
       (block) => !!blockProblems(block).length
     );
 

@@ -7,13 +7,14 @@ import EmptyPreview from './EmptyPreview';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import OrgPreview from './OrgPreview';
+import OrgsPreview from './OrgsPreview';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
 import EnumPreview from './EnumPreview';
+import GenderPreview from './GenderPreview';
 
 const Preview = () => {
   const theme = useTheme();
@@ -21,7 +22,7 @@ const Preview = () => {
   const [personIndex, setPersonIndex] = useState(0);
   const currentSheet: Sheet = sheets[selectedSheetIndex];
   const { orgId } = useNumericRouteParams();
-  const { fields, org, tags } = usePersonPreview(
+  const { fields, orgs, tags } = usePersonPreview(
     currentSheet,
     firstRowIsHeaders ? personIndex + 1 : personIndex,
     orgId
@@ -33,6 +34,10 @@ const Preview = () => {
 
   const tagColumnSelected = currentSheet.columns.some(
     (column) => column.kind === ColumnKind.TAG && column.selected
+  );
+
+  const orgColumnSelected = currentSheet.columns.some(
+    (column) => column.kind === ColumnKind.ORGANIZATION && column.selected
   );
 
   useEffect(() => {
@@ -130,16 +135,6 @@ const Preview = () => {
                   );
                 }
 
-                if (column.kind === ColumnKind.ORGANIZATION) {
-                  return (
-                    <OrgPreview
-                      key={columnIdx}
-                      currentSheet={currentSheet}
-                      org={org}
-                    />
-                  );
-                }
-
                 if (column.kind === ColumnKind.DATE) {
                   return (
                     <DatePreview
@@ -161,8 +156,21 @@ const Preview = () => {
                     />
                   );
                 }
+                if (column.kind === ColumnKind.GENDER) {
+                  return (
+                    <GenderPreview
+                      key={columnIdx}
+                      currentSheet={currentSheet}
+                      fieldKey={column.field}
+                      fields={fields}
+                    />
+                  );
+                }
               }
             })}
+            {orgColumnSelected && (
+              <OrgsPreview currentSheet={currentSheet} orgs={orgs} />
+            )}
             {tagColumnSelected && (
               <TagsPreview currentSheet={currentSheet} tags={tags} />
             )}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "alwaysCreateEntryPointModule": false,
+  "basePath": "./",
+  "cleanOutputDir": true,
+  "name": "Zetkin",
+  "entryPoints": ["./docs/index.ts"],
+  "out": "./public/docs",
+  "sort": ["source-order"],
+  "categorizeByGroup": false,
+  "navigation": { "includeCategories": true },
+  "projectDocuments": ["docs/*/*.md"]
+}

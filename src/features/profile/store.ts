@@ -98,6 +98,21 @@ const profilesSlice = createSlice({
         item.mutating = [];
       }
     },
+    personsMerged: (state, action: PayloadAction<number[]>) => {
+      const ids = action.payload;
+
+      // The first one might be stale
+      ids.forEach((id, index) => {
+        const personItem = state.personById[id];
+        if (personItem) {
+          if (index == 0) {
+            personItem.isStale = true;
+          } else {
+            personItem.deleted = true;
+          }
+        }
+      });
+    },
   },
 });
 
@@ -113,4 +128,5 @@ export const {
   personOrgRemoved,
   personUpdate,
   personUpdated,
+  personsMerged,
 } = profilesSlice.actions;
