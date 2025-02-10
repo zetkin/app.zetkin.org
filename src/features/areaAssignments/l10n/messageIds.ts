@@ -142,6 +142,9 @@ export default makeMessages('feat.areaAssignments', {
       delete: m('Delete'),
       description: m('No description'),
       question: m('Untitled question'),
+      tooltip: m(
+        'To delete this, first create a new choice question to define whether the visit was successful.'
+      ),
     },
     dataCard: {
       header: m('Data precision & privacy'),

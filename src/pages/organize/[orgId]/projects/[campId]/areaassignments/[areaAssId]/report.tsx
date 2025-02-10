@@ -24,6 +24,7 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
@@ -180,8 +181,11 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                             >
                               <Edit />
                             </Button>
-
-                            {assignment.metrics.length > 1 && (
+                            {(metric.kind === 'scale5' ||
+                              (metric.kind === 'boolean' &&
+                                assignment.metrics.filter(
+                                  (m) => m.kind === 'boolean'
+                                ).length > 1)) && (
                               <Button
                                 onClick={(ev) => {
                                   if (metric.definesDone) {
@@ -212,6 +216,14 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 <Delete />
                               </Button>
                             )}
+                            {assignment.metrics.filter(
+                              (metric) => metric.kind === 'boolean'
+                            ).length <= 1 &&
+                              metric.kind == 'boolean' && (
+                                <Tooltip title={messages.report.card.tooltip()}>
+                                  <Delete color="disabled" sx={{ mx: 1 }} />
+                                </Tooltip>
+                              )}
                           </Box>
                         </Box>
                         <Typography color="secondary" ml={4}>
