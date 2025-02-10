@@ -8,6 +8,7 @@ import { ZetkinJoinForm } from '../types';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useApiClient } from 'core/hooks';
 import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
+import deleteJoinForm from '../rpc/deleteJoinForm';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -53,9 +54,10 @@ export enum STATUS_COLORS {
 type Props = {
   form: ZetkinJoinForm;
   onClick: () => void;
+  onDeleted: () => void;
 };
 
-const JoinFormListItem = ({ form, onClick }: Props) => {
+const JoinFormListItem = ({ form, onClick, onDeleted }: Props) => {
   const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -117,6 +119,22 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                       <Msg id={messageIds.embedding.openLink} />
                     </Button>
                   </>
+                );
+              },
+            },
+            {
+              label: messages.embedding.delete(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+                await apiClient.rpc(deleteJoinForm, {
+                  formId: form.id,
+                  orgId: form.organization.id,
+                });
+                onDeleted();
+
+                showSnackbar(
+                  'success',
+                  <Msg id={messageIds.embedding.deletedSuccess} />
                 );
               },
             },
