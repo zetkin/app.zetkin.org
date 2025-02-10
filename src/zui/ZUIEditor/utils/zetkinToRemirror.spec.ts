@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { BlockKind, InlineNodeKind } from 'features/emails/types';
 import zetkinToRemirror from './zetkinToRemirror';
 import {
