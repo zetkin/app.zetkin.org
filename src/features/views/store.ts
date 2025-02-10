@@ -389,6 +389,12 @@ const viewsSlice = createSlice({
         viewItem.deleted = true;
       }
     },
+    viewDuplicated: (state, action: PayloadAction<[ZetkinView]>) => {
+      const [view] = action.payload;
+      state.viewList.items.push(
+        remoteItem(view.id, { data: view, loaded: new Date().toISOString() })
+      );
+    },
     viewLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       const item = state.viewList.items.find((item) => item.id == viewId);
@@ -562,4 +568,5 @@ export const {
   viewQueryUpdated,
   viewUpdate,
   viewUpdated,
+  viewDuplicated,
 } = viewsSlice.actions;

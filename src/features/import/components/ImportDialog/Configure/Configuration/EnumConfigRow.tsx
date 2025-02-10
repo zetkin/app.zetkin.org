@@ -65,7 +65,7 @@ const EnumConfigRow: FC<EnumConfigRowProps> = ({
             <Button onClick={() => setMapping(true)}>
               <Msg
                 id={
-                  messageIds.configuration.configure.ids
+                  messageIds.configuration.configure.orgs
                     .showOrganizationSelectButton
                 }
               />

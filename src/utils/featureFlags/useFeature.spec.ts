@@ -3,19 +3,16 @@ import { createElement, PropsWithChildren } from 'react';
 
 import IApiClient from 'core/api/client/IApiClient';
 import { EnvProvider } from 'core/env/EnvContext';
-import Environment from 'core/env/Environment';
+import Environment, { EnvVars } from 'core/env/Environment';
 import useFeature from './useFeature';
 
-function getOptsWithEnvVars(vars?: Partial<Environment['vars']>) {
+function getOptsWithEnvVars(vars?: Partial<EnvVars>) {
   return {
     wrapper: ({ children }: PropsWithChildren) =>
       createElement(
         EnvProvider,
         {
           env: new Environment(null as unknown as IApiClient, {
-            FEAT_AREAS: null,
-            MUIX_LICENSE_KEY: null,
-            ZETKIN_APP_DOMAIN: null,
             ...vars,
           }),
         },

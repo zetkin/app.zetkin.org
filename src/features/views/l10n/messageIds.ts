@@ -30,8 +30,10 @@ export default makeMessages('feat.views', {
     },
     menu: {
       delete: m('Delete'),
+      duplicate: m('Duplicate'),
       move: m('Move'),
       rename: m('Rename'),
+      viewCopy: m<{ viewName: string }>('{viewName} - copy'),
     },
     moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
     moveToRoot: m('Move to all lists'),
@@ -417,7 +419,14 @@ export default makeMessages('feat.views', {
       delete: m('Delete list'),
       editQuery: m('Edit Smart Search query'),
       makeDynamic: m('Convert to Smart Search list'),
-      makeStatic: m('Convert to static list'),
+      makeStatic: {
+        confirmDialogInfo: m(
+          'If you convert this list to a static list the Smart Search will be removed and all the people the Smart Search returned will no longer be there.'
+        ),
+        confirmDialogSubmitLabel: m('Convert'),
+        confirmDialogTitle: m('Convert to static list'),
+        label: m('Convert to static list'),
+      },
     },
     jumpMenu: {
       placeholder: m('Start typing to find list'),

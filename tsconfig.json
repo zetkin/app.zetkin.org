@@ -40,5 +40,11 @@
     "src/zui/theme",
     ".next/types/**/*.ts"
   ],
-  "exclude": [".next", "node_modules", "storybook-static"]
+  "exclude": [
+    ".next",
+    "node_modules",
+    "storybook-static",
+    "public/storybook",
+    "public/docs"
+  ]
 }

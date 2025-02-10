@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIBadge from './index';
@@ -10,45 +11,35 @@ export default meta;
 
 type Story = StoryObj<typeof ZUIBadge>;
 
-export const Published: Story = {
+export const Basic: Story = {
   args: {
-    number: undefined,
-    status: 'published',
-  },
-};
-
-export const Draft: Story = {
-  args: {
+    children: <Box bgcolor="lightblue" height="30px" width="30px" />,
+    color: 'success',
     number: 3,
-    status: 'draft',
   },
 };
 
-export const Scheduled: Story = {
+export const TruncatedNumber: Story = {
   args: {
+    children: <Box bgcolor="lightblue" height="30px" width="30px" />,
+    color: 'info',
     number: 1000,
-    status: 'scheduled',
     truncateLargeNumber: true,
   },
 };
 
-export const Cancelled: Story = {
+export const NegativeNumber: Story = {
   args: {
+    children: <Box bgcolor="lightblue" height="30px" width="30px" />,
+    color: 'danger',
     number: -15,
-    status: 'cancelled',
   },
 };
 
-export const Closed: Story = {
+export const LargeNumber: Story = {
   args: {
-    number: undefined,
-    status: 'closed',
-  },
-};
-
-export const Ended: Story = {
-  args: {
+    children: <Box bgcolor="lightblue" height="30px" width="30px" />,
+    color: 'primary',
     number: 999,
-    status: 'ended',
   },
 };

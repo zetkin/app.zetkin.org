@@ -33,6 +33,9 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
   }, 400);
 
   const error = inputValue.length > 0 && !formatUrl(inputValue);
+  const buttonTextError =
+    !data.buttonText?.replaceAll('&nbsp;', '').trim().length ||
+    !data.buttonText;
   return (
     <BlockListItemBase
       excerpt={data.buttonText}
@@ -41,6 +44,9 @@ const ButtonBlockListItem: FC<ButtonBlockLIstItemProps> = ({
       selected={selected}
       title={messages.editor.tools.button.title()}
     >
+      {buttonTextError && (
+        <Msg id={messageIds.editor.tools.button.settings.buttonTextWarning} />
+      )}
       <Box display="flex" flexDirection="column">
         <Box paddingBottom={1} paddingTop={2}>
           <TextField

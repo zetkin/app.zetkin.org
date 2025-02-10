@@ -11,9 +11,11 @@ import {
   Theme,
   ThemeProvider,
 } from '@mui/material/styles';
+import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
-import Environment from 'core/env/Environment';
+import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
 import { store } from 'core/store';
@@ -29,10 +31,7 @@ declare module '@mui/styles/defaultTheme' {
 
 type ClientContextProps = {
   children: ReactNode;
-  envVars: {
-    MUIX_LICENSE_KEY: string | null;
-    ZETKIN_APP_DOMAIN: string | null;
-  };
+  envVars: EnvVars;
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;
@@ -56,6 +55,11 @@ const ClientContext: FC<ClientContextProps> = ({
   const env = new Environment(apiClient, envVars);
   const cache = createCache({ key: 'css', prepend: true });
 
+  // MUI-X license
+  if (env.vars.MUIX_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(env.vars.MUIX_LICENSE_KEY);
+  }
+
   return (
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>
@@ -63,14 +67,16 @@ const ClientContext: FC<ClientContextProps> = ({
           <ThemeProvider theme={themeWithLocale(lang)}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
-                <IntlProvider
-                  defaultLocale="en"
-                  locale={lang}
-                  messages={messages}
-                >
-                  <CssBaseline />
-                  {children}
-                </IntlProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <IntlProvider
+                    defaultLocale="en"
+                    locale={lang}
+                    messages={messages}
+                  >
+                    <CssBaseline />
+                    {children}
+                  </IntlProvider>
+                </LocalizationProvider>
               </UserProvider>
             </EnvProvider>
           </ThemeProvider>

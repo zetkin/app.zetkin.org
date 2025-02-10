@@ -39,10 +39,10 @@ const getFontSize = (size: ZUISize) => {
   if (size == 'small') {
     return '1rem';
   } else if (size == 'medium') {
-    return '1.188rem';
+    return '1.5rem';
   } else {
     //Size is "large"¨
-    return '1.75rem';
+    return '2.188rem';
   }
 };
 

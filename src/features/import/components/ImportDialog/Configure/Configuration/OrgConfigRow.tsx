@@ -64,7 +64,7 @@ const OrgConfigRow: FC<OrgConfigRowProps> = ({
             <Button onClick={() => setMapping(true)}>
               <Msg
                 id={
-                  messageIds.configuration.configure.ids
+                  messageIds.configuration.configure.orgs
                     .showOrganizationSelectButton
                 }
               />

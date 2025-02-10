@@ -15,11 +15,11 @@ import useAreaMutations from '../../hooks/useAreaMutations';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
-import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../../l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   area: ZetkinArea;
@@ -45,7 +45,6 @@ const AreaOverlay: FC<Props> = ({
     area.organization.id,
     area.id
   );
-  const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const handleDescriptionTextAreaRef = useCallback(
@@ -109,15 +108,19 @@ const AreaOverlay: FC<Props> = ({
                 <TextField
                   fullWidth
                   inputProps={props}
+                  onBlur={() => {
+                    if (fieldEditing === 'title') {
+                      setFieldEditing(null);
+                      updateArea({ title });
+                    }
+                  }}
                   onChange={(ev) => setTitle(ev.target.value)}
                   sx={{ marginBottom: 2 }}
                   value={title}
                 />
               )}
               renderPreview={() => (
-                <Typography variant="h5">
-                  {area.title || messages.empty.title()}
-                </Typography>
+                <Typography variant="h5">{area.title}</Typography>
               )}
               value={area.title || ''}
             />
@@ -149,6 +152,12 @@ const AreaOverlay: FC<Props> = ({
                 inputRef={handleDescriptionTextAreaRef}
                 maxRows={4}
                 multiline
+                onBlur={() => {
+                  if (fieldEditing === 'description') {
+                    setFieldEditing(null);
+                    updateArea({ description });
+                  }
+                }}
                 onChange={(ev) => setDescription(ev.target.value)}
                 sx={{ marginTop: 2 }}
                 value={description}
@@ -163,9 +172,11 @@ const AreaOverlay: FC<Props> = ({
                   }
                   sx={{ overflowWrap: 'anywhere' }}
                 >
-                  {area.description?.trim().length
-                    ? area.description
-                    : messages.empty.description()}
+                  {area.description?.trim().length ? (
+                    area.description
+                  ) : (
+                    <Msg id={messageIds.areas.default.description} />
+                  )}
                 </Typography>
               </Box>
             )}
@@ -189,22 +200,22 @@ const AreaOverlay: FC<Props> = ({
               }}
               variant="contained"
             >
-              <Msg id={messageIds.overlay.buttons.save} />
+              <Msg id={messageIds.areas.areaSettings.edit.saveButton} />
             </Button>
             <Button onClick={() => onCancelEdit()} variant="outlined">
-              <Msg id={messageIds.overlay.buttons.cancel} />
+              <Msg id={messageIds.areas.areaSettings.edit.cancelButton} />
             </Button>
           </>
         )}
         {!editing && (
           <>
             <Button onClick={() => onBeginEdit()} variant="outlined">
-              <Msg id={messageIds.overlay.buttons.edit} />
+              <Msg id={messageIds.areas.areaSettings.edit.editButton} />
             </Button>
             <ZUIEllipsisMenu
               items={[
                 {
-                  label: messages.overlay.buttons.delete(),
+                  label: <Msg id={messageIds.areas.areaSettings.delete} />,
                   onSelect: () => {
                     showConfirmDialog({
                       onSubmit: () => {

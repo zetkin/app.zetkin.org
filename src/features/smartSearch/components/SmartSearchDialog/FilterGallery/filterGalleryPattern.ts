@@ -123,10 +123,10 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern15;
   }
 
-  pattern.background = pattern.background.replaceAll(
-    '$strongColor',
-    colors.strong
-  );
-  pattern.background = pattern.background.replaceAll('$paleColor', colors.pale);
-  return pattern;
+  return {
+    ...pattern,
+    background: pattern.background
+      .replaceAll('$strongColor', colors.strong)
+      .replaceAll('$paleColor', colors.pale),
+  };
 }

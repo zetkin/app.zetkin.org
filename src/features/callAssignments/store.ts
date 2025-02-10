@@ -22,6 +22,7 @@ export interface CallAssignmentSlice {
   callersById: Record<number, RemoteList<CallAssignmentCaller>>;
   callList: RemoteList<Call>;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
+  userAssignmentList: RemoteList<CallAssignmentData>;
 }
 
 const initialState: CallAssignmentSlice = {
@@ -30,6 +31,7 @@ const initialState: CallAssignmentSlice = {
   callList: remoteList(),
   callersById: {},
   statsById: {},
+  userAssignmentList: remoteList(),
 };
 
 const callAssignmentsSlice = createSlice({
@@ -55,6 +57,13 @@ const callAssignmentsSlice = createSlice({
               .items,
             { id: callAssignment.id },
           ]);
+      }
+    },
+    callAssignmentDeleted: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const item = state.assignmentList.items.find((item) => item.id == id);
+      if (item) {
+        item.deleted;
       }
     },
     callAssignmentLoad: (state, action: PayloadAction<number>) => {
@@ -284,6 +293,16 @@ const callAssignmentsSlice = createSlice({
         }
       );
     },
+    userAssignmentsLoad: (state) => {
+      state.userAssignmentList.isLoading = true;
+    },
+    userAssignmentsLoaded: (
+      state,
+      action: PayloadAction<CallAssignmentData[]>
+    ) => {
+      state.userAssignmentList = remoteList(action.payload);
+      state.userAssignmentList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -291,6 +310,7 @@ export default callAssignmentsSlice;
 export const {
   callAssignmentCreate,
   callAssignmentCreated,
+  callAssignmentDeleted,
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdate,
@@ -311,4 +331,6 @@ export const {
   campaignCallAssignmentsLoaded,
   statsLoad,
   statsLoaded,
+  userAssignmentsLoad,
+  userAssignmentsLoaded,
 } = callAssignmentsSlice.actions;

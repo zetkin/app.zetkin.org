@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
+import { Box } from '@mui/system';
 
 import theme from 'theme';
 
@@ -32,15 +33,20 @@ const FilterDropDown: FC<Props> = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Button
         ref={(elem) => setAnchorEl(elem)}
-        endIcon={<ArrowDropDown />}
+        fullWidth
         onClick={() => onToggle(!open)}
-        startIcon={startIcon}
         variant={variant}
       >
-        {label}
+        <Box display="flex" justifyContent="space-between" width="100%">
+          {label}
+          <Box alignItems="center" display="flex">
+            {startIcon}
+            <ArrowDropDown />
+          </Box>
+        </Box>
       </Button>
       <Menu
         anchorEl={anchorEl}

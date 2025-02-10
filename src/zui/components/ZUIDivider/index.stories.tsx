@@ -1,6 +1,7 @@
-import { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
+import { Paper } from '@mui/material';
 import { CatchingPokemon, Surfing } from '@mui/icons-material';
+import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIDivider from '.';
 import ZUIText from 'zui/components/ZUIText';
@@ -18,13 +19,21 @@ export const Horizontal: Story = {
   },
   decorators: [
     () => (
-      <Box display="flex" flexDirection="column" gap={2}>
-        <ZUIText>This is some text above a full width variant divider</ZUIText>
+      <Paper>
+        <Box padding={2}>
+          <ZUIText>
+            This is some text above a full width variant divider
+          </ZUIText>
+        </Box>
         <ZUIDivider />
-        <ZUIText>This is some text in between two dividers</ZUIText>
+        <Box padding={2}>
+          <ZUIText>This is some text in between two dividers</ZUIText>
+        </Box>
         <ZUIDivider variant="middle" />
-        <ZUIText>This is some text below a middle variant divider</ZUIText>
-      </Box>
+        <Box padding={2}>
+          <ZUIText>This is some text below a middle variant divider</ZUIText>
+        </Box>
+      </Paper>
     ),
   ],
 };
@@ -35,15 +44,23 @@ export const Vertical: Story = {
   },
   decorators: [
     () => (
-      <Box alignItems="center" display="flex" gap={1}>
-        <Surfing color="secondary" />
-        <ZUIDivider flexItem orientation="vertical" variant="middle" />
-        <CatchingPokemon color="secondary" />
-        <ZUIDivider flexItem orientation="vertical" />
-        <ZUIText>
-          Two vertical dividers, one middle variant and one full width
-        </ZUIText>
-      </Box>
+      <Paper>
+        <Box alignItems="center" display="flex" gap={1}>
+          <Box padding={1}>
+            <Surfing color="secondary" />
+          </Box>
+          <ZUIDivider flexItem orientation="vertical" variant="middle" />
+          <Box padding={1}>
+            <CatchingPokemon color="secondary" />
+          </Box>
+          <ZUIDivider flexItem orientation="vertical" />
+          <Box padding={1}>
+            <ZUIText>
+              Two vertical dividers, one middle variant and one full width
+            </ZUIText>
+          </Box>
+        </Box>
+      </Paper>
     ),
   ],
 };

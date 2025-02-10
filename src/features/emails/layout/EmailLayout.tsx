@@ -121,7 +121,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
       >
         {children}
       </TabbedLayout>
-      <Dialog open={!organization.email || themes.length == 0}>
+      <Dialog open={themes.length == 0}>
         <Box
           alignItems="center"
           display="flex"

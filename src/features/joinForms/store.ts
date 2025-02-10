@@ -54,6 +54,16 @@ const joinFormsSlice = createSlice({
       state.formList = remoteList(action.payload);
       state.formList.loaded = new Date().toISOString();
     },
+    submissionDeleted: (state, action: PayloadAction<number>) => {
+      const submissionId = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item.id == submissionId
+      );
+
+      if (item) {
+        item.deleted = true;
+      }
+    },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const submissionId = action.payload;
       const item = findOrAddItem(state.submissionList, submissionId);
@@ -100,6 +110,7 @@ export const {
   joinFormUpdated,
   joinFormsLoad,
   joinFormsLoaded,
+  submissionDeleted,
   submissionLoad,
   submissionLoaded,
   submissionUpdate,

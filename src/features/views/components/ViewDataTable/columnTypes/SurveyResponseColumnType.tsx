@@ -7,6 +7,7 @@ import {
   GridRenderCellParams,
   GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
+import { History } from '@mui/icons-material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
@@ -14,6 +15,7 @@ import { SurveyResponseViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 export type SurveyResponseViewCell = {
   submission_id: number;
@@ -36,14 +38,14 @@ export default class SurveyResponseColumnType
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return this.cellToString(cell);
+        return cell.map((response) => response.text);
       },
       width: 250,
     };
   }
 
   getSearchableStrings(cell: SurveyResponseViewCell): string[] {
-    return cell.map((sub) => sub.text);
+    return cell.map((response) => response.text);
   }
 }
 
@@ -52,6 +54,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     display: 'flex',
     height: '100%',
+    width: '100%',
   },
   content: {
     '-webkit-box-orient': 'vertical',
@@ -69,6 +72,10 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   if (!cell?.length) {
     return null;
@@ -79,15 +86,17 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
     const d1 = new Date(sub1.submitted);
     return d1.getTime() - d0.getTime();
   });
-
   return (
     <Box className={styles.cell}>
       <Box
         className={styles.content}
-        onMouseOut={() => setAnchorEl(null)}
-        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+        onMouseOut={closePopper}
+        onMouseOver={openPopper}
       >
-        {sorted[0].text}
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          {sorted[0].text}
+          {cell.length > 1 && <History color="secondary" />}
+        </Box>
         <ViewSurveySubmissionPreview
           anchorEl={anchorEl}
           onOpenSubmission={(id) => {

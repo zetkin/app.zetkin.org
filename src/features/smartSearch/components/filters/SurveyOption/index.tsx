@@ -9,7 +9,7 @@ import StyledSelect from '../../inputs/StyledSelect';
 import { truncateOnMiddle } from 'utils/stringUtils';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
-  CONDITION_OPERATOR,
+  SURVEY_CONDITION_OP,
   FilterConfigOrgOptions,
   NewSmartSearchFilter,
   OPERATION,
@@ -45,7 +45,7 @@ interface SurveyOptionProps {
 interface InternalConfig {
   survey?: number;
   question?: number;
-  operator: CONDITION_OPERATOR;
+  operator: SURVEY_CONDITION_OP;
   options: number[];
   organizations?: FilterConfigOrgOptions;
 }
@@ -62,7 +62,7 @@ const SurveyOption = ({
   const { filter, setConfig, setOp } = useSmartSearchFilter<InternalConfig>(
     initialFilter,
     {
-      operator: CONDITION_OPERATOR.ALL,
+      operator: SURVEY_CONDITION_OP.ALL,
       options: [],
     }
   );
@@ -163,7 +163,7 @@ const SurveyOption = ({
   const handleConditionSelectChange = (conditionValue: string) => {
     setConfig({
       ...filter.config,
-      operator: conditionValue as CONDITION_OPERATOR,
+      operator: conditionValue as SURVEY_CONDITION_OP,
     });
   };
 
@@ -215,7 +215,7 @@ const SurveyOption = ({
                 onChange={(e) => handleConditionSelectChange(e.target.value)}
                 value={filter.config.operator}
               >
-                {Object.values(CONDITION_OPERATOR).map((o) => (
+                {Object.values(SURVEY_CONDITION_OP).map((o) => (
                   <MenuItem key={o} value={o}>
                     <Msg id={localMessageIds.conditionSelect[o]} />
                   </MenuItem>

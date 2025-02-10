@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import messageIds from 'features/duplicates/l10n/messageIds';
@@ -21,18 +21,21 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 const DuplicatesPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
-  const list = useDuplicates(orgId).data ?? [];
+  const list = useDuplicates(orgId);
   const messages = useMessages(messageIds);
 
   if (onServer) {
     return null;
   }
 
-  const filteredList = list.filter((cluster) => !cluster.dismissed);
-
   return (
     <>
-      {filteredList.length === 0 && (
+      {list.isLoading && (
+        <Box display="flex" justifyContent="center" m={2}>
+          <CircularProgress />
+        </Box>
+      )}
+      {!list.isLoading && list.data?.length === 0 && (
         <Box m={2}>
           <Typography variant="overline">
             {messages.page.noDuplicates()}
@@ -42,7 +45,7 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
         </Box>
       )}
-      {filteredList.length > 0 && (
+      {list.data && list.data.length > 0 && (
         <Box p={1.5}>
           <Typography
             color={theme.palette.grey[500]}
@@ -51,7 +54,7 @@ const DuplicatesPage: PageWithLayout = () => {
           >
             {messages.page.possibleDuplicates()}
           </Typography>
-          {filteredList.map((cluster) => (
+          {list.data.map((cluster) => (
             <DuplicateCard key={cluster.id} cluster={cluster} />
           ))}
         </Box>

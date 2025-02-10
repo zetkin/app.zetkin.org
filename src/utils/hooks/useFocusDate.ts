@@ -1,12 +1,4 @@
-import React, { useState } from 'react';
-
-import { ZetkinUser } from '../types/zetkin';
-
-export const UserContext = React.createContext<ZetkinUser | null>(null);
-
-export const useUser = (): ZetkinUser | null => {
-  return React.useContext(UserContext);
-};
+import { useState } from 'react';
 
 type focusDateState = {
   focusDate: Date;
