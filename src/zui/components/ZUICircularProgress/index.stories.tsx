@@ -10,14 +10,14 @@ const meta: Meta<typeof ZUICircularProgress> = {
 export default meta;
 type Story = StoryObj<typeof ZUICircularProgress>;
 
-export const Small: Story = {
-  args: {
-    size: 'small',
-  },
-};
-
 export const Medium: Story = {
   args: {
     size: 'medium',
+  },
+};
+
+export const Small: Story = {
+  args: {
+    size: 'small',
   },
 };
