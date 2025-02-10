@@ -19,6 +19,13 @@ export const Basic: Story = {
   },
 };
 
+export const WithoutNumber: Story = {
+  args: {
+    children: <Box bgcolor="lightblue" height="30px" width="30px" />,
+    color: 'info',
+  },
+};
+
 export const TruncatedNumber: Story = {
   args: {
     children: <Box bgcolor="lightblue" height="30px" width="30px" />,

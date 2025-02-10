@@ -152,7 +152,6 @@ feat:
         remove: Ta bort från uppdraget
       add:
         alreadyAdded: Redan tillagd
-        placeholder: Lägg till ringare
       customize:
         exclude:
           h: Exkluderade etiketter
@@ -572,7 +571,6 @@ feat:
       locked: Målgrupp låst för leverans
       sentSubtitle: Du kan titta på den Smarta sökningen som användes för att definiera
         mottagarna av det här utskicket
-      subtitle: Gör en Smart sökning för att definiera mottagarna av det här utskicket.
       title: Målgrupp
       viewButton: Visa målgrupp
     unsubscribePage:
@@ -878,8 +876,6 @@ feat:
             som YYYY.MM.DD.
           customFormatLabel: Anpassat datumformat
           dateInputLabel: Datumformat
-          description: Välj format för värdena i den här kolumnen så att de kan importeras
-            korrekt
           dropDownLabel: Välj format
           emptyPreview: Ogiltigt datum
           header: Konfigurera datumformat
@@ -901,8 +897,6 @@ feat:
                 eller tolvsiffriga svenska personnummer (ÅÅMMDD-XXXX eller ÅÅÅÅMMDD-XXXX)
                 till datum.
               label: Svenskt personnummer
-          wrongDateFormatWarning: Vissa värden i den här kolumnen kunde inte tolkas
-            som datum med det här formatet.
         ids:
           configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
             uppdatera existerande personer istället för att skapa dubletter.
@@ -1276,7 +1270,6 @@ feat:
   profile:
     delete:
       button: Ta bort person
-      confirm: Är du säker på att du vill radera {name}? Detta kan inte ångras.
       title: Radera konto
       warning: Detta kan inte ångras!
     details:

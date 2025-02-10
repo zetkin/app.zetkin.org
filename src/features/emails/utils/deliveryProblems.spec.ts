@@ -1,17 +1,29 @@
 import deliveryProblems from './deliveryProblems';
 import { ZetkinEmail } from 'utils/types/zetkin';
-import { BLOCK_TYPES, DeliveryProblem } from '../types';
+import { BlockKind, DeliveryProblem, InlineNodeKind } from '../types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 
 const mockEmailContent = JSON.stringify({
   blocks: [
     {
       data: {
+        content: [
+          {
+            kind: InlineNodeKind.STRING,
+            value: 'Hello, ',
+          },
+          {
+            kind: InlineNodeKind.VARIABLE,
+            name: 'target.first_name',
+          },
+          {
+            kind: InlineNodeKind.STRING,
+            value: '!',
+          },
+        ],
         level: 1,
-        text: 'Hello <span contenteditable="false" style="background-color: rgba(0, 0, 0, 0.1); padding: 0.1em 0.5em; border-radius: 1em; display: inline-block;" data-slug="first_name">First name</span>!',
       },
-      id: 'afcJCL8gA8',
-      type: 'header',
+      kind: BlockKind.HEADER,
     },
   ],
 });
@@ -19,6 +31,17 @@ const mockEmailContent = JSON.stringify({
 const mockEmail = (emailOverrides?: Partial<ZetkinEmail>): ZetkinEmail => {
   return {
     campaign: { id: 1, title: 'First project' },
+    config: {
+      config: {},
+      id: 1,
+      no_reply: false,
+      organization: {
+        id: 1,
+        title: 'Organization',
+      },
+      sender_email: 'info@example.com',
+      sender_name: 'The Org',
+    },
     content: mockEmailContent,
     id: 1,
     locked: '2024-02-26T12:27:32.237413',
@@ -57,20 +80,39 @@ describe('deliveryProblems()', () => {
           blocks: [
             {
               data: {
+                //No button text
                 //Invalid url
-                text: `Welcome new member, <a href="blipblop">this is a link with an invalid url</a><br>`,
+                href: 'angela',
+                tag: '21232a5f',
               },
-              id: 'w09wrejf',
-              type: BLOCK_TYPES.PARAGRAPH,
+              kind: BlockKind.BUTTON,
             },
             {
               data: {
-                //No buttonText property
                 //Invalid url
-                url: 'angela',
+                content: [
+                  {
+                    kind: InlineNodeKind.STRING,
+                    value: 'Welcome, new member! ',
+                  },
+                  {
+                    content: [
+                      {
+                        kind: InlineNodeKind.STRING,
+                        value: 'This is a link with an invalid URL.',
+                      },
+                    ],
+                    href: 'blipblop',
+                    kind: InlineNodeKind.LINK,
+                    tag: '24712a5c',
+                  },
+                  {
+                    kind: InlineNodeKind.STRING,
+                    value: 'We look forward to meeting you soon!',
+                  },
+                ],
               },
-              id: 'sldkf8ew98',
-              type: BLOCK_TYPES.BUTTON,
+              kind: BlockKind.PARAGRAPH,
             },
           ],
         }),

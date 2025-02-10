@@ -2,7 +2,7 @@ import { Box, Button, Paper, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 
 import theme from 'theme';
-import ConfigureModal from './ConfigureModal';
+import PotentialDuplicateModal from './PotentialDuplicateModal';
 import messageIds from '../l10n/messageIds';
 import { PotentialDuplicate } from '../store';
 import useDuplicatesMutations from '../hooks/useDuplicatesMutations';
@@ -64,7 +64,7 @@ const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
           </Box>
         </Box>
       </Paper>
-      <ConfigureModal
+      <PotentialDuplicateModal
         onClose={() => setOpenModal(false)}
         open={openModal}
         potentialDuplicate={cluster}

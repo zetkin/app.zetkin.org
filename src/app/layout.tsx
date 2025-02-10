@@ -32,8 +32,14 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ClientContext
             envVars={{
-              MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY || null,
-              ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN || null,
+              FEAT_AREAS: process.env.FEAT_AREAS,
+              INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
+              INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+              MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+              ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+              ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
+              ZETKIN_PRIVACY_POLICY_LINK:
+                process.env.ZETKIN_PRIVACY_POLICY_LINK,
             }}
             headers={headersObject}
             lang={lang}

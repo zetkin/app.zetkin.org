@@ -200,12 +200,27 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
 
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
+  const [wasLoading, setWasLoading] = useState(false);
+
+  useEffect(() => {
+    if (autoCompleteProps.isLoading) {
+      // Set wasLoading to true when the autocomplete is loading
+      // this value stays true even after isLoading is false again
+      setWasLoading(true);
+    }
+  }, [autoCompleteProps.isLoading]);
+
   return (
     <>
       <MUIAutocomplete
         {...restProps}
         handleHomeEndKeys={!shiftHeld}
-        onChange={onChange}
+        onChange={(ev, value) => {
+          onChange(ev, value);
+          // If a person is selected, we reset the wasLoading state to false
+          // A new search has to be done to show the add person button again
+          setWasLoading(false);
+        }}
         PaperComponent={({ children }) => {
           return (
             <Paper
@@ -215,12 +230,17 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
               }}
             >
               {children}
-              {!disabled && (
+              {!disabled && wasLoading && (
                 <>
                   <Divider sx={{ mt: 1 }} />
                   <Button
                     color="primary"
-                    onClick={() => setCreatePersonOpen(true)}
+                    onClick={() => {
+                      setCreatePersonOpen(true);
+                      // If a person is added, we reset the wasLoading state to false
+                      // A new search has to be done to show the add person button again
+                      setWasLoading(false);
+                    }}
                     startIcon={<PersonAdd />}
                     sx={{
                       justifyContent: 'flex-start',

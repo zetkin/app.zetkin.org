@@ -14,6 +14,7 @@ import { usePanes } from 'utils/panes';
 import { IColumnType } from '.';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
+import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 export type SurveyOptionsViewCell =
   | {
@@ -38,7 +39,9 @@ export default class SurveyOptionsColumnType
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
-        return this.cellToString(cell);
+        return cell?.map((response) =>
+          response.selected.map((selected) => selected.text)
+        );
       },
     };
   }
@@ -92,6 +95,10 @@ const Cell: FC<{
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
+  const { open: openPopper, close: closePopper } = useToggleDebounce(
+    (ev) => setAnchorEl(ev.currentTarget),
+    () => setAnchorEl(null)
+  );
 
   if (!cell?.length) {
     return null;
@@ -106,8 +113,8 @@ const Cell: FC<{
   return (
     <Box
       className={styles.cell}
-      onMouseOut={() => setAnchorEl(null)}
-      onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+      onMouseOut={closePopper}
+      onMouseOver={openPopper}
     >
       <Box className={styles.content}>
         {sorted[0].selected.map((s) => (
@@ -137,7 +144,7 @@ const Cell: FC<{
         submissions={cell.map((sub, index) => ({
           id: sub.submission_id,
           matchingContent:
-            index == 0
+            index == cell.length - 1
               ? sub.selected.map((s) => (
                   <Chip
                     key={s.id}

@@ -2,11 +2,13 @@
   "name": "app.zetkin.org",
   "version": "41.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build",
     "start": "next start -p 80",
-    "devserver": "next dev -p 3000",
+    "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
+    "docs:build": "storybook build -o public/storybook",
     "lint:eslint": "eslint src integrationTesting",
     "lint:prettier": "prettier --check src integrationTesting",
     "lint:translations": "ts-node src/tools/lint-translations",
@@ -21,8 +23,7 @@
     "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
     "playwright:ci": "cross-env NODE_ENV=production playwright test",
     "storybook": "storybook dev -p 6006",
-    "make-yaml": "ts-node src/tools/make-yaml.ts",
-    "build-storybook": "storybook build"
+    "make-yaml": "ts-node src/tools/make-yaml.ts"
   },
   "dependencies": {
     "@date-io/date-fns": "1.x",
@@ -101,7 +102,7 @@
     "xlsx-js-style": "^1.2.0",
     "yaml": "^1.10.0",
     "zetkin": "~1.3.1",
-    "zod": "^3.20.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
@@ -156,6 +157,7 @@
     "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typedoc": "^0.26.5",
     "typescript": "^5.4.3"
   },
   "engines": {

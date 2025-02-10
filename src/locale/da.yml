@@ -129,7 +129,6 @@ feat:
         remove: Fjern fra opgave
       add:
         alreadyAdded: Allerede tilføjet
-        placeholder: Tilføj ringer
       customize:
         exclude:
           h: Udelukkede etiketter
@@ -530,7 +529,6 @@ feat:
   profile:
     delete:
       button: Fjern person
-      confirm: Er du sikker på, du vil slette {name}? Denne handling er permanent
       title: Slet profil
       warning: Dette kan ikke gøres om!
     details:

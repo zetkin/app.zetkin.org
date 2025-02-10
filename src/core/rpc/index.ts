@@ -3,6 +3,7 @@ import { addBulkOptionsDef } from 'features/surveys/rpc/addBulkOptions';
 import { copyEmailDef } from 'features/emails/rpc/copyEmail';
 import { copyEventsDef } from 'features/events/rpc/copyEvents';
 import { createNewViewRouteDef } from 'features/views/rpc/createNew/server';
+import { copyViewRouteDef } from 'features/views/rpc/copy/server';
 import { deleteEventsDef } from 'features/events/rpc/deleteEvents';
 import { deleteFolderRouteDef } from 'features/views/rpc/deleteFolder';
 import { getEventStatsDef } from 'features/events/rpc/getEventStats';
@@ -19,12 +20,16 @@ import { getEmailInsightsDef } from 'features/emails/rpc/getEmailInsights';
 import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
+import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
+import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
 
+  rpcRouter.register(getAllEventsDef);
   rpcRouter.register(deleteFolderRouteDef);
   rpcRouter.register(createNewViewRouteDef);
+  rpcRouter.register(copyViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
@@ -43,6 +48,7 @@ export function createRPCRouter() {
   rpcRouter.register(renderEmailDef);
   rpcRouter.register(createCallAssignmentDef);
   rpcRouter.register(getJoinFormEmbedDataDef);
+  rpcRouter.register(createHouseholdsDef);
 
   return rpcRouter;
 }

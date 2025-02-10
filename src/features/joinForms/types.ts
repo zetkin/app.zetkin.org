@@ -9,11 +9,13 @@ export type ZetkinJoinForm = {
   embeddable: boolean;
   fields: string[];
   id: number;
+  org_access: 'sameorg' | 'suborgs';
   organization: {
     id: number;
     title: string;
   };
   renderable: boolean;
+  requires_email_verification: boolean;
   submit_token: string;
   tags: {
     id: number;

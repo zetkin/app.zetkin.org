@@ -54,7 +54,6 @@ export const Bottom: Story = {
     arrow: true,
     children: <Button>Hover me</Button>,
     label: 'A tiny tooltip',
-    placement: 'bottom',
   },
   render: Base.render,
 };

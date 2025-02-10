@@ -8,6 +8,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import OrganizationSelect from './OrganizationSelect';
 import { OrganizationsTree } from './OrganizationsTree';
@@ -34,6 +35,7 @@ const PersonOrganizationsCard: React.FunctionComponent<
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { data, addToOrg, removeFromOrg } = usePersonOrgData(orgId, personId);
+  const router = useRouter();
 
   useEffect(() => {
     if (!editable) {
@@ -63,6 +65,9 @@ const PersonOrganizationsCard: React.FunctionComponent<
         try {
           await removeFromOrg(subOrgId);
           setSelected(undefined);
+          if (orgId == subOrgId) {
+            router.push(`/organize/${orgId}/people`);
+          }
         } catch (err) {
           showSnackbar('error', messages.organizations.removeError());
         }

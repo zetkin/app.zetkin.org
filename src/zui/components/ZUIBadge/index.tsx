@@ -8,7 +8,7 @@ export interface ZUIBadgeProps {
   /**
    * Number to be displayed inside the badge
    */
-  number: number;
+  number?: number;
 
   /** If true, a number over 99 will be displayed in the badge as '99+'.
    * Defaults to false.
@@ -30,21 +30,20 @@ const useStyles = makeStyles<
   Theme,
   {
     color: 'primary' | 'success' | 'info' | 'data' | 'warning' | 'error';
-    number: number;
+    hasNumber: boolean;
   }
 >((theme) => ({
   badge: {
     '& .MuiBadge-badge': {
       backgroundColor: ({ color }) => theme.palette[color].main,
       border: `2px solid ${theme.palette.common.white}`,
+      borderRadius: ({ hasNumber }) => (!hasNumber ? '2rem' : ''),
       color: ({ color }) => getContrastColor(theme.palette[color].main),
+      height: ({ hasNumber }) => (!hasNumber ? '0.625rem' : ''),
+      padding: ({ hasNumber }) =>
+        hasNumber ? '0.188rem 0.438rem 0.188rem 0.438rem' : '',
+      width: ({ hasNumber }) => (!hasNumber ? '0.625rem' : ''),
     },
-  },
-  text: {
-    fontFamily: theme.typography.fontFamily,
-    fontSize: '0.75rem',
-    fontWeight: 600,
-    lineHeight: '0.9rem',
   },
 }));
 
@@ -56,15 +55,15 @@ const ZUIBadge: FC<ZUIBadgeProps> = ({
 }) => {
   const classes = useStyles({
     color: color == 'danger' ? 'error' : color,
-    number,
+    hasNumber: typeof number == 'number',
   });
 
   return (
     <Badge
       badgeContent={number}
       className={classes.badge}
-      //
       max={truncateLargeNumber ? 99 : 999999}
+      variant={typeof number == 'number' ? 'standard' : 'dot'}
     >
       {children}
     </Badge>

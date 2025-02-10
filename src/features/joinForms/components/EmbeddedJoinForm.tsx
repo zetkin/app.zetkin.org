@@ -60,17 +60,40 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
               : globalMessages.personFields[field.s]();
 
             return (
-              <div key={field.s}>
+              <div key={field.s} className="zetkin-joinform__field">
                 <label>
                   {label}
                   <div>
-                    <input name={field.s} />
+                    {field.s != 'gender' && (
+                      <input
+                        name={field.s}
+                        required={
+                          field.s == 'first_name' || field.s == 'last_name'
+                        }
+                      />
+                    )}
+                    {field.s == 'gender' && (
+                      <select name={field.s}>
+                        <option value="unspecified">
+                          {globalMessages.genderOptions.unspecified()}
+                        </option>
+                        <option value="m">
+                          {globalMessages.genderOptions.m()}
+                        </option>
+                        <option value="f">
+                          {globalMessages.genderOptions.f()}
+                        </option>
+                        <option value="o">
+                          {globalMessages.genderOptions.o()}
+                        </option>
+                      </select>
+                    )}
                   </div>
                 </label>
               </div>
             );
           })}
-          <button type="submit">
+          <button className="zetkin-joinform__submit-button" type="submit">
             <Msg id={messageIds.embedding.submitButton} />
           </button>
         </form>
