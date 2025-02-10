@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FC, useState } from 'react';
-import { lighten, Box, useTheme } from '@mui/system';
+import { lighten, Box, useTheme, darken } from '@mui/system';
 
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 
@@ -14,19 +14,19 @@ export interface ZUIRatingChartProps {
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .average .averageRating': {
-      fill: theme.palette.primary.main,
+      fill: darken(theme.palette.primary.main, 0.2),
       transition: 'fill 0.25s',
     },
     '& .average .dot': {
-      fill: theme.palette.primary.main,
+      fill: darken(theme.palette.primary.main, 0.2),
     },
     '& .data .dot': {
-      fill: lighten(theme.palette.primary.main, 0.4),
+      fill: 'transparent',
     },
     '& .dot': {
       transition: 'fill .25s',
     },
-    '& .rawNumber, & .indexNumber': {
+    '& .rawNumber': {
       fill: 'transparent',
       textAnchor: 'middle',
       transition: 'fill .25s',
@@ -37,14 +37,20 @@ const useStyles = makeStyles((theme) => ({
     '&:hover .average .dot': {
       fill: lighten(theme.palette.primary.main, 0.4),
     },
-    '&:hover .data .dot': {
-      fill: theme.palette.primary.main,
+    '&:hover .average rect': {
+      fill: lighten(theme.palette.primary.main, 0.7),
     },
-    '&:hover .indexNumber': {
-      fill: theme.palette.secondary.light,
+    '&:hover .chart': {
+      fill: lighten(theme.palette.primary.main, 0.4),
+    },
+    '&:hover .data': {
+      fill: lighten(theme.palette.primary.main, 0.6),
+    },
+    '&:hover .data .dot': {
+      fill: darken(theme.palette.primary.main, 0.2),
     },
     '&:hover .rawNumber': {
-      fill: theme.palette.primary.main,
+      fill: darken(theme.palette.primary.main, 0.2),
     },
   },
 }));
@@ -121,8 +127,9 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
             >
               <g className="data" transform="translate(0, 5)">
                 <path
+                  className="chart"
                   d={path}
-                  fill={lighten(theme.palette.primary.main, 0.6)}
+                  fill={lighten(theme.palette.primary.main, 0.7)}
                 />
                 {dots.map((dot, index) => (
                   <>
@@ -134,7 +141,7 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                       fill={
                         isHovered
                           ? theme.palette.primary.main
-                          : lighten(theme.palette.primary.light, 0.6)
+                          : lighten(theme.palette.primary.light, 0.3)
                       }
                       r={4}
                     />
@@ -151,9 +158,12 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                   </>
                 ))}
               </g>
-              <g className="average" transform="translate(0,60)">
+              <g
+                className="average"
+                transform={`translate(0, ${svgHeight + 10})`}
+              >
                 <rect
-                  fill={lighten(theme.palette.primary.light, 0.6)}
+                  fill={lighten(theme.palette.primary.main, 0.4)}
                   height="8px"
                   rx={4}
                   ry={4}
@@ -178,7 +188,9 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                   <text
                     key={index}
                     className={`indexNumber`}
+                    fill={theme.palette.secondary.light}
                     fontSize="13"
+                    textAnchor="middle"
                     x={index == 4 ? dot.x : dot.x}
                     y="25"
                   >
