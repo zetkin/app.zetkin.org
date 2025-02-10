@@ -435,9 +435,10 @@ export interface ZetkinTag {
   organization: Pick<ZetkinOrganization, 'id' | 'title'>;
   color: string | null;
   group: ZetkinTagGroup | null;
-  value?: string | number | null;
-  value_type: string | null;
+  value_type: 'text' | null;
 }
+
+export type ZetkinAppliedTag = ZetkinTag & { value?: string | number | null };
 
 export interface ZetkinTagPostBody
   extends Partial<Omit<ZetkinTag, 'id' | 'group' | 'organization'>> {
