@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start -p 80",
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
-    "docs:build": "storybook build -o public/storybook && typedoc",
+    "docs:build": "storybook build -o public/storybook",
     "lint:eslint": "eslint src integrationTesting",
     "lint:prettier": "prettier --check src integrationTesting",
     "lint:translations": "ts-node src/tools/lint-translations",
