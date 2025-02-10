@@ -15,7 +15,7 @@ export default makeMessages('feat.areas', {
     },
     controlLabels: {
       filters: m('Filters'),
-      layers: m('Layers'),
+      layers: m('Data visualization'),
       select: m('Select'),
     },
     default: {
