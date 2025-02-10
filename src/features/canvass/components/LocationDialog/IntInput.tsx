@@ -5,25 +5,20 @@ import { FC } from 'react';
 const IntInput: FC<{
   label: string;
   labelPlacement?: 'horizontal' | 'vertical';
-  maxInt?: number;
-  minInt?: number;
+  max?: number;
+  min?: number;
   onChange: (value: number) => void;
   value: number;
 }> = ({
   label,
   labelPlacement = 'vertical',
-  maxInt,
-  minInt,
+  max = Number.MAX_SAFE_INTEGER,
+  min = Number.MIN_SAFE_INTEGER,
   onChange,
   value,
 }) => {
   const vertical = labelPlacement == 'vertical';
-  if (minInt == undefined) {
-    minInt = Number.MIN_SAFE_INTEGER;
-  }
-  if (maxInt == undefined) {
-    maxInt = Number.MAX_SAFE_INTEGER;
-  }
+
   return (
     <Box
       alignItems="center"
@@ -34,8 +29,8 @@ const IntInput: FC<{
       <Typography color="secondary">{label}</Typography>
       <Box alignItems="center" display="flex">
         <IconButton
-          disabled={value <= minInt}
-          onClick={() => value > minInt && onChange(value - 1)}
+          disabled={value <= min}
+          onClick={() => value > min && onChange(value - 1)}
         >
           <Remove />
         </IconButton>
@@ -43,8 +38,8 @@ const IntInput: FC<{
           {value}
         </Typography>
         <IconButton
-          disabled={value >= maxInt}
-          onClick={() => value < maxInt && onChange(value + 1)}
+          disabled={value >= max}
+          onClick={() => value < max && onChange(value + 1)}
         >
           <Add />
         </IconButton>
