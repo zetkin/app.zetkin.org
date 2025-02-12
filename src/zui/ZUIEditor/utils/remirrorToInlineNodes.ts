@@ -1,5 +1,4 @@
 import { RemirrorJSON } from 'remirror';
-import crypto from 'crypto';
 
 import {
   BoldNode,
@@ -35,7 +34,7 @@ export default function remirrorToInlineNodes(blockContent: RemirrorJSON[]) {
                   content: [inlineNode],
                   href: mark.attrs.href?.toString() || '',
                   kind: InlineNodeKind.LINK,
-                  tag: crypto.randomUUID().slice(0, 8),
+                  tag: Math.random().toString(36).substring(2, 10),
                 };
                 inlineNode = newLinkNode;
               } else if (mark.type == MarkType.BOLD) {
