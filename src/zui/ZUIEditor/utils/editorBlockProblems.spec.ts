@@ -42,17 +42,22 @@ describe('editorBlockProblems()', () => {
       expect(errors[0]).toEqual(BlockProblem.INVALID_BUTTON_URL);
     });
 
-    it('returns an array with a DEFAULT_BUTTON_TEXT error when the button text is missing', () => {
-      const errors = editorBlockProblems(mockButtonBlock({ text: '' }));
-
+    it('returns an array with a DEFAULT_BUTTON_TEXT error when the button text is the default text', () => {
+      const errors = editorBlockProblems(
+        mockButtonBlock({ text: 'Button text' }),
+        'Button text'
+      );
       expect(errors.length).toEqual(1);
       expect(errors[0]).toEqual(BlockProblem.DEFAULT_BUTTON_TEXT);
     });
 
     it('returns an array with BUTTON_TEXT_MISSING error when button text exists but is only spaces or empty', () => {
-      const errors = editorBlockProblems(mockButtonBlock({ text: '&nbsp;' }));
-      expect(errors).toHaveLength(1);
-      expect(errors[0]).toEqual(BlockProblem.BUTTON_TEXT_MISSING);
+      const errors1 = editorBlockProblems(mockButtonBlock({ text: '&nbsp;' }));
+      const errors2 = editorBlockProblems(mockButtonBlock({ text: '' }));
+      expect(errors1).toHaveLength(1);
+      expect(errors2).toHaveLength(1);
+      expect(errors1[0]).toEqual(BlockProblem.BUTTON_TEXT_MISSING);
+      expect(errors2[0]).toEqual(BlockProblem.BUTTON_TEXT_MISSING);
     });
   });
 
