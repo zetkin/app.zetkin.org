@@ -15,9 +15,10 @@ import editorMessageIds from 'zui/l10n/messageIds';
 
 interface BlockListItemProps {
   block: EmailContentBlock;
+  selected: boolean;
 }
 
-const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
+const BlockListItem: FC<BlockListItemProps> = ({ block, selected }) => {
   const emailMessages = useMessages(emailMessageIds);
   const editorMessages = useMessages(editorMessageIds.editor);
 
@@ -42,12 +43,20 @@ const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
       <BlockListItemBase
         hasErrors={hasErrors.length > 0}
         icon={Notes}
+        selected={selected}
         title={title}
       />
     );
   } else if (block.kind === BlockKind.HEADER) {
     const title = makeTitle(block.data.content);
-    return <BlockListItemBase hasErrors={false} icon={Title} title={title} />;
+    return (
+      <BlockListItemBase
+        hasErrors={false}
+        icon={Title}
+        selected={selected}
+        title={title}
+      />
+    );
   } else if (block.kind === BlockKind.BUTTON) {
     const hasErrors = editorBlockProblems(
       block,
@@ -57,6 +66,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
       <BlockListItemBase
         hasErrors={hasErrors.length > 0}
         icon={Crop75}
+        selected={selected}
         title={block.data.text}
       />
     );
@@ -66,6 +76,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
       <BlockListItemBase
         hasErrors={false}
         icon={ImageIcon}
+        selected={selected}
         title={block.data.alt}
       />
     );
