@@ -10,14 +10,16 @@ import {
 import BlockListItemBase from './BlockListItemBase';
 import editorBlockProblems from 'zui/ZUIEditor/utils/editorBlockProblems';
 import { useMessages } from 'core/i18n';
-import messageIds from 'features/emails/l10n/messageIds';
+import emailMessageIds from 'features/emails/l10n/messageIds';
+import editorMessageIds from 'zui/l10n/messageIds';
 
 interface BlockListItemProps {
   block: EmailContentBlock;
 }
 
 const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
-  const messages = useMessages(messageIds);
+  const emailMessages = useMessages(emailMessageIds);
+  const editorMessages = useMessages(editorMessageIds.editor);
 
   const makeTitle = (nodes: EmailContentInlineNode[]): string => {
     let text = '';
@@ -25,7 +27,7 @@ const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
       if (node.kind == InlineNodeKind.STRING) {
         text += node.value;
       } else if (node.kind == InlineNodeKind.VARIABLE) {
-        text += messages.editor.outline.variables[node.name]();
+        text += emailMessages.editor.outline.variables[node.name]();
       } else if ('content' in node) {
         text += makeTitle(node.content);
       }
@@ -47,7 +49,10 @@ const BlockListItem: FC<BlockListItemProps> = ({ block }) => {
     const title = makeTitle(block.data.content);
     return <BlockListItemBase hasErrors={false} icon={Title} title={title} />;
   } else if (block.kind === BlockKind.BUTTON) {
-    const hasErrors = editorBlockProblems(block);
+    const hasErrors = editorBlockProblems(
+      block,
+      editorMessages.extensions.button.defaultText()
+    );
     return (
       <BlockListItemBase
         hasErrors={hasErrors.length > 0}
