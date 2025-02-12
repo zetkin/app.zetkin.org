@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import { RemirrorJSON } from 'remirror';
 
 import { BlockKind, EmailContentBlock } from 'features/emails/types';
@@ -39,11 +38,11 @@ export default function remirrorToZetkin(
         const buttonText = textContent.text;
         const href = attributes.href;
 
-        if (!!buttonText && !!href) {
+        if (buttonText) {
           zetkinBlocks.push({
             data: {
-              href: href as string,
-              tag: crypto.randomUUID().slice(0, 8),
+              href: href ? href.toString() : '',
+              tag: Math.random().toString(36).substring(2, 10),
               text: buttonText,
             },
             kind: BlockKind.BUTTON,
