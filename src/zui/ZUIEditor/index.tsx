@@ -31,6 +31,9 @@ import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
 import MoveExtension from './extensions/MoveExtension';
 import IndentDedentExtension from './extensions/IndentDedentExtension';
+import { EmailContentBlock } from 'features/emails/types';
+import zetkinToRemirror from './utils/zetkinToRemirror';
+import remirrorToZetkin from './utils/remirrorToZetkin';
 
 type BlockExtension =
   | ButtonExtension
@@ -40,6 +43,7 @@ type BlockExtension =
   | BulletListExtension;
 
 type Props = {
+  content: EmailContentBlock[];
   editable: boolean;
   enableBold?: boolean;
   enableButton?: boolean;
@@ -49,9 +53,11 @@ type Props = {
   enableLink?: boolean;
   enableLists?: boolean;
   enableVariable?: boolean;
+  onChange: (newContent: EmailContentBlock[]) => void;
 };
 
 const ZUIEditor: FC<Props> = ({
+  content,
   editable,
   enableBold,
   enableButton,
@@ -61,6 +67,7 @@ const ZUIEditor: FC<Props> = ({
   enableLink,
   enableLists,
   enableVariable,
+  onChange,
 }) => {
   const messages = useMessages(messageIds.editor);
   const theme = useTheme();
@@ -150,17 +157,7 @@ const ZUIEditor: FC<Props> = ({
 
   const { manager, state } = useRemirror({
     content: {
-      content: [
-        {
-          content: [
-            {
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas dictum tempus leo sit amet ornare. Aliquam efficitur arcu id ex efficitur viverra. Morbi malesuada posuere faucibus. Donec tempus ornare interdum. Aliquam ac mattis erat, sed dapibus odio. Sed sollicitudin turpis et diam ultrices, at luctus ex blandit. Sed semper, ligula tempus molestie hendrerit, nisi quam euismod lorem, ac ullamcorper felis lorem sit amet elit. Nullam lacinia tortor ut facilisis cursus. Nullam vel pulvinar magna, semper tristique lacus. Vivamus egestas lorem erat, eget rutrum arcu lobortis et. Quisque placerat nisi a porta dapibus. Donec sed congue risus. Pellentesque condimentum, nibh ac lobortis efficitur, dui dolor molestie tortor, id auctor libero erat eget diam. Fusce rutrum mollis congue. Aliquam erat volutpat. Praesent volutpat, nibh ut cursus dictum, mauris magna pulvinar elit, ut mattis ex felis id nulla.',
-              type: 'text',
-            },
-          ],
-          type: 'paragraph',
-        },
-      ],
+      content: zetkinToRemirror(content),
       type: 'doc',
     },
     extensions: () => [
@@ -250,8 +247,12 @@ const ZUIEditor: FC<Props> = ({
           {enableLink && <LinkExtensionUI />}
           <EditorComponent />
           <OnChangeJSON
-            // eslint-disable-next-line no-console
-            onChange={(updatedContent) => console.log(updatedContent)}
+            onChange={(updatedContent) => {
+              if (updatedContent.content) {
+                const zetkinContent = remirrorToZetkin(updatedContent.content);
+                onChange(zetkinContent);
+              }
+            }}
           />
         </Remirror>
       </div>
