@@ -45,7 +45,7 @@ export default makeMessages('feat.emails', {
     ),
     settings: {
       tabs: {
-        content: m('Content'),
+        outline: m('Outline'),
         preview: {
           confirmation: m('A preview has been sent to your email address.'),
           instructions: m(
