@@ -33,6 +33,13 @@ export default makeMessages('feat.emails', {
     willSend: m<{ datetime: ReactElement }>('Will send at {datetime}'),
   },
   editor: {
+    outline: {
+      variables: {
+        ['target.first_name']: m('First name'),
+        ['target.full_name']: m('Full name'),
+        ['target.last_name']: m('Last name'),
+      },
+    },
     readOnlyModeInfo: m(
       'This email is in read-only mode because it is scheduled for delivery, or has already been sent. If it is scheduled for delivery and you want to make changes, you need to cancel the delivery first.'
     ),
