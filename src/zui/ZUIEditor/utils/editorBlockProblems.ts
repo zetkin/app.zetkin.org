@@ -9,7 +9,10 @@ import {
   LinkNode,
 } from 'features/emails/types';
 
-export default function editorBlockProblems(block: EmailContentBlock) {
+export default function editorBlockProblems(
+  block: EmailContentBlock,
+  defaultButtonText?: string
+) {
   const blockProblems: BlockProblem[] = [];
 
   if (block.kind == BlockKind.BUTTON) {
@@ -21,9 +24,15 @@ export default function editorBlockProblems(block: EmailContentBlock) {
     }
 
     const buttonText = block.data.text;
-    if (!buttonText) {
+
+    const noButtonText =
+      !buttonText || !buttonText.replaceAll('&nbsp;', '').trim().length;
+    const hasDefaultButtonText =
+      defaultButtonText && buttonText && buttonText == defaultButtonText;
+
+    if (hasDefaultButtonText) {
       blockProblems.push(BlockProblem.DEFAULT_BUTTON_TEXT);
-    } else if (!buttonText.replaceAll('&nbsp;', '').trim().length) {
+    } else if (noButtonText) {
       blockProblems.push(BlockProblem.BUTTON_TEXT_MISSING);
     }
   } else if (block.kind == BlockKind.PARAGRAPH) {
