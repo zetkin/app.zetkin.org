@@ -1,31 +1,26 @@
-import EditorJS from '@editorjs/editorjs';
-import { OutputBlockData } from '@editorjs/editorjs';
 import { Box, Divider, Stack, Tab } from '@mui/material';
-import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import BlockListItem from './BlockListItem';
 import messageIds from 'features/emails/l10n/messageIds';
 import PreviewTab from './PreviewTab';
 import { useMessages } from 'core/i18n';
+import BlockListItem from './BlockListItem';
+import { EmailContentBlock } from 'features/emails/types';
 
 interface EmailSettingsProps {
-  apiRef: MutableRefObject<EditorJS | null>;
-  blocks: OutputBlockData[];
+  blocks: EmailContentBlock[];
   readOnly: boolean;
   selectedBlockIndex: number;
 }
 
 const EmailSettings: FC<EmailSettingsProps> = ({
-  apiRef,
   blocks,
   readOnly,
   selectedBlockIndex,
 }) => {
   const messages = useMessages(messageIds);
-  const [activeTab, setActiveTab] = useState<
-    'content' | 'preview' | 'settings'
-  >('content');
+  const [activeTab, setActiveTab] = useState<'outline' | 'preview'>('outline');
   const boxRef = useRef<HTMLElement>();
 
   useEffect(() => {
@@ -46,9 +41,9 @@ const EmailSettings: FC<EmailSettingsProps> = ({
       <TabContext value={activeTab}>
         <TabList onChange={(ev, newValue) => setActiveTab(newValue)}>
           <Tab
-            label={messages.editor.settings.tabs.content()}
+            label={messages.editor.settings.tabs.outline()}
             sx={{ marginLeft: 2 }}
-            value="content"
+            value="outline"
           />
           <Tab
             label={messages.editor.settings.tabs.preview.title()}
@@ -61,20 +56,14 @@ const EmailSettings: FC<EmailSettingsProps> = ({
             overflowY: 'auto',
             padding: 0,
           }}
-          value="content"
+          value="outline"
         >
           <Stack ref={boxRef} divider={<Divider />} sx={{ paddingTop: 1 }}>
             {blocks.map((block, index) => (
               <BlockListItem
-                key={block.id}
+                key={`${block.kind}-${index}`}
                 block={block}
-                onChange={(newData: OutputBlockData['data']) => {
-                  if (block.id) {
-                    apiRef.current?.blocks.update(block.id, newData);
-                  }
-                }}
-                readOnly={readOnly}
-                selected={!readOnly && index === selectedBlockIndex}
+                selected={!readOnly && index == selectedBlockIndex}
               />
             ))}
           </Stack>
