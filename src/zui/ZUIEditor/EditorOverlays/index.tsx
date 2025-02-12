@@ -47,6 +47,7 @@ type Props = {
   enableLink: boolean;
   enableVariable: boolean;
   focused: boolean;
+  onSelectBlock: (selectedBlockIndex: number) => void;
 };
 
 const EditorOverlays: FC<Props> = ({
@@ -57,6 +58,7 @@ const EditorOverlays: FC<Props> = ({
   enableLink,
   enableVariable,
   focused,
+  onSelectBlock,
 }) => {
   const theme = useTheme();
   const view = useEditorView();
@@ -71,6 +73,8 @@ const EditorOverlays: FC<Props> = ({
   const findSelectedNode = useCallback(() => {
     if (isNodeSelection(state.selection)) {
       const selection = state.selection;
+      const index = selection.$anchor.index(0);
+      onSelectBlock(index);
       const posBefore = selection.$anchor.before(1);
       const posAfter = selection.$head.after(1);
       const elem = view.nodeDOM(posBefore);
@@ -111,6 +115,7 @@ const EditorOverlays: FC<Props> = ({
           const nodeRect = nodeElem.getBoundingClientRect();
           const x = nodeRect.x - editorRect.x;
           const y = nodeRect.y - editorRect.y;
+          onSelectBlock(resolved.index(0));
           setCurrentBlock({
             attributes: node.attrs,
             node,

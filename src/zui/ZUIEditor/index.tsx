@@ -13,8 +13,14 @@ import {
   ItalicExtension,
   OrderedListExtension,
 } from 'remirror/extensions';
-import { AnyExtension, PasteRulesExtension } from 'remirror';
+import {
+  AnyExtension,
+  FromToProps,
+  PasteRulesExtension,
+  ProsemirrorNode,
+} from 'remirror';
 import { Box, useTheme } from '@mui/material';
+import { Attrs } from '@remirror/pm/model';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
@@ -42,6 +48,22 @@ type BlockExtension =
   | OrderedListExtension
   | BulletListExtension;
 
+export type BlockType =
+  | 'paragraph'
+  | 'heading'
+  | 'orderedList'
+  | 'bulletList'
+  | 'zimage'
+  | 'zbutton';
+
+export type BlockData = {
+  attributes: Attrs;
+  node: ProsemirrorNode;
+  range: FromToProps;
+  rect: DOMRect;
+  type: BlockType;
+};
+
 type Props = {
   content: EmailContentBlock[];
   editable: boolean;
@@ -54,6 +76,7 @@ type Props = {
   enableLists?: boolean;
   enableVariable?: boolean;
   onChange: (newContent: EmailContentBlock[]) => void;
+  onSelectBlock: (selectedBlockIndex: number) => void;
 };
 
 const ZUIEditor: FC<Props> = ({
@@ -68,6 +91,7 @@ const ZUIEditor: FC<Props> = ({
   enableLists,
   enableVariable,
   onChange,
+  onSelectBlock,
 }) => {
   const messages = useMessages(messageIds.editor);
   const theme = useTheme();
@@ -240,6 +264,7 @@ const ZUIEditor: FC<Props> = ({
             enableLink={!!enableLink}
             enableVariable={!!enableVariable}
             focused={focused}
+            onSelectBlock={(selectedBlock) => onSelectBlock(selectedBlock)}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}

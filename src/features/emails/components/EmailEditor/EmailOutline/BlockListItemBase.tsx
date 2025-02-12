@@ -1,4 +1,4 @@
-import { Box, SvgIconTypeMap, Typography } from '@mui/material';
+import { Box, SvgIconTypeMap, Typography, useTheme } from '@mui/material';
 import { ErrorOutlineOutlined } from '@mui/icons-material';
 import { FC } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
@@ -6,16 +6,24 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 interface BlockListItemBaseProps {
   hasErrors: boolean;
   icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
+  selected: boolean;
   title: string;
 }
 
 const BlockListItemBase: FC<BlockListItemBaseProps> = ({
   hasErrors,
   icon: Icon,
+  selected,
   title,
 }) => {
+  const theme = useTheme();
   return (
-    <Box display="flex" justifyContent="space-between" padding={2}>
+    <Box
+      bgcolor={selected ? theme.palette.grey[300] : ''}
+      display="flex"
+      justifyContent="space-between"
+      padding={2}
+    >
       <Box display="flex" gap={2}>
         <Icon color="secondary" />
         <Typography
