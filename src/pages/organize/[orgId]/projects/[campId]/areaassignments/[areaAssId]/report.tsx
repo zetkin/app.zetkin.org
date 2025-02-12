@@ -1,4 +1,5 @@
 import {
+  Check,
   Close,
   Delete,
   Edit,
@@ -24,8 +25,10 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
+  Switch,
   Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 import { AREAS } from 'utils/featureFlags';
@@ -34,17 +37,18 @@ import messagesIds from 'features/areaAssignments/l10n/messageIds';
 import MetricCard from 'features/areaAssignments/components/MetricCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import theme from 'theme';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
-import { Msg, useMessages } from 'core/i18n';
+import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import ZUICard from 'zui/ZUICard';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIFuture from 'zui/ZUIFuture';
+import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinAreaAssignment,
+  ZetkinAreaAssignmentStats,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
-import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -67,11 +71,16 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   orgId,
   areaAssId,
 }) => {
+  const theme = useTheme();
   const { updateAreaAssignment } = useAreaAssignmentMutations(
     parseInt(orgId),
     areaAssId
   );
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
+  const areaAssignmentStats = useAreaAssignmentStats(
+    parseInt(orgId),
+    areaAssId
+  ).data;
   const messages = useMessages(messagesIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
@@ -115,6 +124,27 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
       question: '',
     });
   };
+
+  const hasVisitedData = (assignment: ZetkinAreaAssignmentStats | null) => {
+    if (!assignment) {
+      return false;
+    }
+    const visitedProperties: (keyof ZetkinAreaAssignmentStats)[] = [
+      'num_visited_areas',
+      'num_visited_households',
+      'num_visited_households_outside_areas',
+      'num_visited_locations',
+      'num_visited_locations_outside_areas',
+    ];
+
+    return visitedProperties.some((prop) => {
+      const value = assignment[prop];
+      return typeof value === 'number' && value > 0;
+    });
+  };
+
+  const blockedInitialState = hasVisitedData(areaAssignmentStats);
+  const [checked, setChecked] = useState(blockedInitialState);
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
@@ -381,6 +411,59 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
             </Box>
           </Box>
           <Box ml={2} width="40%">
+            {assignment.start_date && (
+              <ZUICard
+                header={
+                  <Box
+                    style={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Typography variant="h5">Report Locked</Typography>
+                    <Switch
+                      checked={!checked}
+                      onChange={(event) => setChecked(!event.target.checked)}
+                    />
+                  </Box>
+                }
+                subheader="Protecting report data due to started assignment"
+                sx={{ mb: 2 }}
+              >
+                {checked && (
+                  <Box>
+                    <Divider />
+                    <Typography my={1}>Safe changes</Typography>
+                    <Box alignItems="center" display="flex">
+                      <Check style={{ color: theme.palette.success.main }} />
+                      <Typography ml={1}>Fix spelling</Typography>
+                    </Box>
+                    <Box alignItems="center" display="flex">
+                      <Check style={{ color: theme.palette.success.main }} />
+                      <Typography ml={1}>Reorder questions</Typography>
+                    </Box>
+                    <Box alignItems="center" display="flex">
+                      <Check style={{ color: theme.palette.success.main }} />
+                      <Typography ml={1}>Add questions</Typography>
+                    </Box>
+                    <Typography my={1}>Unsafe changes</Typography>
+                    <Box alignItems="start" display="flex">
+                      <Close color="error" />
+                      <Typography ml={1}>
+                        Rename questions in ways that change their meaning
+                      </Typography>
+                    </Box>
+                    <Box alignItems="start" display="flex">
+                      <Close color="error" />
+                      <Typography ml={1}>
+                        Change question that defines successful visit
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+              </ZUICard>
+            )}
             <ZUICard
               header={messages.report.successCard.header()}
               subheader={messages.report.successCard.subheader()}
