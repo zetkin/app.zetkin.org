@@ -9,7 +9,7 @@ import {
   LinkNode,
 } from 'features/emails/types';
 
-export default function remirrorBlockProblems(block: EmailContentBlock) {
+export default function editorBlockProblems(block: EmailContentBlock) {
   const blockProblems: BlockProblem[] = [];
 
   if (block.kind == BlockKind.BUTTON) {
