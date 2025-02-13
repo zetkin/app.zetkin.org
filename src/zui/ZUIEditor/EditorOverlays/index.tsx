@@ -76,7 +76,10 @@ const EditorOverlays: FC<Props> = ({
   const { isOpen: showBlockMenu } = useBlockMenu(blocks);
 
   const [typing, setTyping] = useState(false);
-  const [mouseY, setMouseY] = useState(-Infinity);
+  const [mousePosition, setMousePosition] = useState({
+    x: -Infinity,
+    y: -Infinity,
+  });
   const [currentBlock, setCurrentBlock] = useState<BlockData | null>(null);
 
   const editorRect = view.dom.getBoundingClientRect();
@@ -203,7 +206,10 @@ const EditorOverlays: FC<Props> = ({
       if (ev.type == 'mousemove') {
         const mouseEvent = ev as MouseEvent;
         const editorRect = view.dom.getBoundingClientRect();
-        setMouseY(mouseEvent.clientY - editorRect.y);
+        setMousePosition({
+          x: mouseEvent.clientX,
+          y: mouseEvent.clientY - editorRect.y,
+        });
       }
       setTyping(false);
     };
@@ -258,8 +264,16 @@ const EditorOverlays: FC<Props> = ({
     !typing &&
     !isEmptyParagraph;
 
+  const test = view.dom.getBoundingClientRect();
+  const mouseIsInsideEditor =
+    mousePosition.x > test.left && mousePosition.x < test.right;
+
   const showBlockInsert =
-    editable && blocks.length > 0 && !showBlockMenu && !typing;
+    editable &&
+    blocks.length > 0 &&
+    !showBlockMenu &&
+    !typing &&
+    mouseIsInsideEditor;
 
   const showSelectedBlockOutline = focused && editable && !!currentBlock;
 
@@ -334,7 +348,7 @@ const EditorOverlays: FC<Props> = ({
         />
       )}
       {showBlockInsert && (
-        <BlockInsert blockDividers={blockDividers} mouseY={mouseY} />
+        <BlockInsert blockDividers={blockDividers} mouseY={mousePosition.y} />
       )}
       <Box position="relative">
         <Box
