@@ -1,4 +1,11 @@
-import { Box, Divider, FormControl, MenuItem, TextField } from '@mui/material';
+import {
+  Box,
+  Divider,
+  FormControl,
+  MenuItem,
+  TextField,
+  useTheme,
+} from '@mui/material';
 import { FC, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
@@ -16,6 +23,7 @@ type EmailEditorProps = {
 };
 
 const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
+  const theme = useTheme();
   const initialContent = email.content
     ? JSON.parse(email.content)
     : [{ blocks: [] }];
@@ -100,7 +108,14 @@ const EmailEditor: FC<EmailEditorProps> = ({ email, onSave, readOnly }) => {
           }}
         />
       </Box>
-      <Box sx={{ maxHeight: '100%', overflowY: 'auto' }} width="30%">
+      <Box
+        sx={{
+          borderLeft: `1px solid ${theme.palette.divider}`,
+          maxHeight: '100%',
+          overflowY: 'auto',
+        }}
+        width="30%"
+      >
         <EmailSettings
           blocks={content}
           readOnly={readOnly}
