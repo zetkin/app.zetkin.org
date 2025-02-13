@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 
 import { m, makeMessages } from 'core/i18n';
+import { BlockProblem } from 'features/emails/types';
 
 export default makeMessages('zui', {
   accessList: {
@@ -134,6 +135,12 @@ export default makeMessages('zui', {
       paragraph: m('Paragraph'),
       zbutton: m('Button'),
       zimage: m('Image'),
+    },
+    blockProblems: {
+      [BlockProblem.BUTTON_TEXT_MISSING]: m('Button text missing'),
+      [BlockProblem.DEFAULT_BUTTON_TEXT]: m('Default button text!'),
+      [BlockProblem.INVALID_BUTTON_URL]: m('Button url is missing!'),
+      [BlockProblem.INVALID_LINK_URL]: m('A link has an invalid url!'),
     },
     extensions: {
       button: {
