@@ -145,7 +145,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   };
 
   const lockState = hasVisitedData(areaAssignmentStats);
-  const [unlocked, setUnlocked] = useState(lockState);
+  const [unlocked, setUnlocked] = useState(
+    areaAssignmentFuture.data?.start_date ? lockState : true
+  );
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
@@ -208,11 +210,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                               </Box>
                             )}
                             {unlocked && (
-                              <Button
+                              <IconButton
+                                color="secondary"
                                 onClick={() => setMetricBeingEdited(metric)}
                               >
                                 <Edit />
-                              </Button>
+                              </IconButton>
                             )}
                             {unlocked &&
                               (metric.kind === 'scale5' ||
@@ -220,7 +223,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                   assignment.metrics.filter(
                                     (m) => m.kind === 'boolean'
                                   ).length > 1)) && (
-                                <Button
+                                <IconButton
+                                  color="secondary"
                                   onClick={(ev) => {
                                     if (metric.definesDone) {
                                       setMetricBeingDeleted(metric);
@@ -248,7 +252,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                   }}
                                 >
                                   <Delete />
-                                </Button>
+                                </IconButton>
                               )}
                             {unlocked &&
                               assignment.metrics.filter(
