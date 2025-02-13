@@ -30,9 +30,13 @@ const JoinFormsPage: PageWithLayout<PageProps> = ({ orgId }) => {
     return null;
   }
 
+  const ownJoinForms = joinForms.filter(
+    (form) => form.organization.id == parseInt(orgId)
+  );
+
   return (
     <JoinFormList
-      forms={joinForms}
+      forms={ownJoinForms}
       onItemClick={(form) => {
         openPane({
           render: () => (

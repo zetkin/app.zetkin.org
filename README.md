@@ -90,6 +90,30 @@ Note: If you are running the backend locally and things like `dev.zetkin.org` re
 then this only works on Linux-based systems, due to the nature of `127.0.0.1` pointing to the host on Linux
 (but not on Windows/Mac, where it points to the container itself).
 
+### Debugging
+
+If you want to debug this applications you can do so through VS Code or JetBrains IDE's (as IntelliJ or WebStorm).
+
+#### VS Code
+
+For VS Code there are 2 debugging configurations within [`./.vscode/launch.json`](./.vscode/launch.json). 
+One for debugging with chrome and one for firefox.
+
+1. Start the devserver via `yarn devserver`
+2. In the sidebar on the left go to `Run and Debug`
+3. Select and run `Next.js: debug client-side (Chrome)` or `Next.js: debug client-side (Firefox)` (note that you need to have the [Debugger for Firefox Extension](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) installed as referenced in [`./.vscode/extensions.json`](./.vscode/extensions.json))
+4. A browser window should open itself. Navigate to the page that you need to debug (don't forget to set your breakpoints first)
+
+#### JetBrains IDE's
+
+For JetBrains IDE's unfortunately there's only a debug configuration for chrome available ([`./.idea/launch.json`](./.idea/launch.json)).
+
+1. Start the devserver via `yarn devserver`
+2. In the top bar select the run configuration `Next.js: debug client-side (Chrome)` 
+3. Run that selected configuration in the debug mode by clicking on the bug icon.
+4. A chrome window should open itself. Navigate to the page that you need to debug (don't forget to set your breakpoints first)
+
+
 ## Development server login credentials
 
 You can log in using the dummy user accounts to access dummy data from the

@@ -9,12 +9,11 @@ import {
 } from 'react-leaflet';
 import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
-import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
+import { FeatureGroup as FeatureGroupType } from 'leaflet';
 
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
-import objToLatLng from 'features/areas/utils/objToLatLng';
 import { ZetkinArea } from 'features/areas/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
@@ -23,6 +22,7 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinLocation,
 } from '../types';
+import { getBoundSize } from '../../canvass/utils/getBoundSize';
 
 const LocationMarker: FC<{
   areaAssId: string;
@@ -313,24 +313,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               return -1;
             } else {
               // When  none of the two areas are selected, sort them
-              // by size, so that big ones are underneith and the
+              // by size, so that big ones are underneath and the
               // smaller ones can be clicked.
-              const bounds0 = latLngBounds(a0.points.map(objToLatLng));
-              const bounds1 = latLngBounds(a1.points.map(objToLatLng));
-
-              const dimensions0 = {
-                x: bounds0.getEast() - bounds0.getWest(),
-                y: bounds0.getNorth() - bounds0.getSouth(),
-              };
-              const dimensions1 = {
-                x: bounds1.getEast() - bounds1.getWest(),
-                y: bounds1.getNorth() - bounds1.getSouth(),
-              };
-
-              const size0 = dimensions0.x * dimensions0.y;
-              const size1 = dimensions1.x * dimensions1.y;
-
-              return size1 - size0;
+              return getBoundSize(a1) - getBoundSize(a0);
             }
           })
           .map((area) => {
@@ -403,7 +388,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     <Box
                       alignItems="center"
                       bgcolor="white"
@@ -447,7 +436,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     <Box
                       bgcolor="white"
                       borderRadius={1}
@@ -480,7 +473,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     {detailed && (
                       <Box
                         alignItems="center"

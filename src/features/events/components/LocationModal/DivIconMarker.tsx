@@ -1,16 +1,16 @@
-import { LatLngExpression, divIcon, LeafletEventHandlerFnMap } from 'leaflet';
-import { FC, ReactNode, useMemo } from 'react';
+import { divIcon } from 'leaflet';
+import { FC, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { Marker } from 'react-leaflet';
+import { Marker, MarkerProps } from 'react-leaflet';
 
-export const DivIconMarker: FC<{
-  children: ReactNode;
-  draggable?: boolean;
-  eventHandlers?: LeafletEventHandlerFnMap;
-  iconAnchor?: [number, number];
-  position: LatLngExpression;
-  zIndexOffset?: number;
-}> = ({
+export const DivIconMarker: FC<
+  {
+    iconAnchor?: [number, number];
+  } & Pick<
+    MarkerProps,
+    'children' | 'draggable' | 'eventHandlers' | 'position' | 'zIndexOffset'
+  >
+> = ({
   children,
   draggable,
   eventHandlers,
