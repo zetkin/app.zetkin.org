@@ -143,8 +143,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
     });
   };
 
-  const blockedInitialState = hasVisitedData(areaAssignmentStats);
-  const [checked, setChecked] = useState(blockedInitialState);
+  const lockState = hasVisitedData(areaAssignmentStats);
+  const [unlocked, setUnlocked] = useState(lockState);
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
@@ -206,46 +206,49 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 </Typography>
                               </Box>
                             )}
-                            <Button
-                              onClick={() => setMetricBeingEdited(metric)}
-                            >
-                              <Edit />
-                            </Button>
-                            {(metric.kind === 'scale5' ||
-                              (metric.kind === 'boolean' &&
-                                assignment.metrics.filter(
-                                  (m) => m.kind === 'boolean'
-                                ).length > 1)) && (
+                            {unlocked && (
                               <Button
-                                onClick={(ev) => {
-                                  if (metric.definesDone) {
-                                    setMetricBeingDeleted(metric);
-                                    setAnchorEl(ev.currentTarget);
-                                  } else {
-                                    showConfirmDialog({
-                                      onCancel: () => {
-                                        setMetricBeingDeleted(null),
-                                          setAnchorEl(null);
-                                      },
-                                      onSubmit: () => {
-                                        handleDeleteMetric(metric.id);
-                                        setAnchorEl(null);
-                                        setMetricBeingDeleted(null);
-                                      },
-                                      title: `${
-                                        messages.report.card.delete() +
-                                        ' ' +
-                                        metric.question
-                                      }`,
-                                      warningText:
-                                        messages.report.delete.dialog(),
-                                    });
-                                  }
-                                }}
+                                onClick={() => setMetricBeingEdited(metric)}
                               >
-                                <Delete />
+                                <Edit />
                               </Button>
                             )}
+                            {unlocked &&
+                              (metric.kind === 'scale5' ||
+                                (metric.kind === 'boolean' &&
+                                  assignment.metrics.filter(
+                                    (m) => m.kind === 'boolean'
+                                  ).length > 1)) && (
+                                <Button
+                                  onClick={(ev) => {
+                                    if (metric.definesDone) {
+                                      setMetricBeingDeleted(metric);
+                                      setAnchorEl(ev.currentTarget);
+                                    } else {
+                                      showConfirmDialog({
+                                        onCancel: () => {
+                                          setMetricBeingDeleted(null),
+                                            setAnchorEl(null);
+                                        },
+                                        onSubmit: () => {
+                                          handleDeleteMetric(metric.id);
+                                          setAnchorEl(null);
+                                          setMetricBeingDeleted(null);
+                                        },
+                                        title: `${
+                                          messages.report.card.delete() +
+                                          ' ' +
+                                          metric.question
+                                        }`,
+                                        warningText:
+                                          messages.report.delete.dialog(),
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <Delete />
+                                </Button>
+                              )}
                             {assignment.metrics.filter(
                               (metric) => metric.kind === 'boolean'
                             ).length <= 1 &&
@@ -293,35 +296,37 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </Dialog>
             )}
             <Box>
-              <Card
-                sx={{
-                  backgroundColor: theme.palette.grey[200],
-                  border: 'none',
-                  marginTop: 2,
-                  padding: 2,
-                }}
-              >
-                <Typography color="secondary">
-                  <Msg id={messagesIds.report.toolBar.title} />
-                </Typography>
-                <Box alignItems="center" display="flex" mt={2}>
-                  <Button
-                    onClick={() => handleAddNewMetric('boolean')}
-                    startIcon={<SwitchLeft />}
-                    sx={{ marginRight: 1 }}
-                    variant="outlined"
-                  >
-                    <Msg id={messagesIds.report.metricCard.choice} />
-                  </Button>
-                  <Button
-                    onClick={() => handleAddNewMetric('scale5')}
-                    startIcon={<LinearScale />}
-                    variant="outlined"
-                  >
-                    <Msg id={messagesIds.report.metricCard.scale} />
-                  </Button>
-                </Box>
-              </Card>
+              {unlocked && (
+                <Card
+                  sx={{
+                    backgroundColor: theme.palette.grey[200],
+                    border: 'none',
+                    marginTop: 2,
+                    padding: 2,
+                  }}
+                >
+                  <Typography color="secondary">
+                    <Msg id={messagesIds.report.toolBar.title} />
+                  </Typography>
+                  <Box alignItems="center" display="flex" mt={2}>
+                    <Button
+                      onClick={() => handleAddNewMetric('boolean')}
+                      startIcon={<SwitchLeft />}
+                      sx={{ marginRight: 1 }}
+                      variant="outlined"
+                    >
+                      <Msg id={messagesIds.report.metricCard.choice} />
+                    </Button>
+                    <Button
+                      onClick={() => handleAddNewMetric('scale5')}
+                      startIcon={<LinearScale />}
+                      variant="outlined"
+                    >
+                      <Msg id={messagesIds.report.metricCard.scale} />
+                    </Button>
+                  </Box>
+                </Card>
+              )}
               <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
                 <Box display="flex" flexDirection="column" gap={1} padding={2}>
                   <Box
@@ -414,7 +419,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
             {assignment.start_date && (
               <ZUICard
                 header={
-                  !checked ? (
+                  !unlocked ? (
                     <Msg id={messagesIds.report.lockCard.header} />
                   ) : (
                     <Msg id={messagesIds.report.lockCard.headerUnlock} />
@@ -422,18 +427,18 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 }
                 status={
                   <Switch
-                    checked={!checked}
-                    onChange={(event) => setChecked(!event.target.checked)}
+                    checked={!unlocked}
+                    onChange={(event) => setUnlocked(!event.target.checked)}
                   />
                 }
                 subheader={
-                  !checked
+                  !unlocked
                     ? messages.report.lockCard.description()
                     : messages.report.lockCard.descriptionUnlock()
                 }
                 sx={{ mb: 2 }}
               >
-                {checked && (
+                {unlocked && (
                   <Box>
                     <Divider />
                     <Typography my={1}>
@@ -486,6 +491,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 <InputLabel>{messages.report.card.definesSuccess()}</InputLabel>
                 <Select
                   disabled={
+                    !unlocked ||
                     assignment.metrics.filter(
                       (metric) => metric.kind === 'boolean'
                     ).length <= 1
@@ -550,13 +556,13 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     <Msg id={messagesIds.report.dataCard.info} />
                   </Typography>
                   <FormControlLabel
-                    control={<Radio />}
+                    control={<Radio disabled={!unlocked} />}
                     label={messages.report.dataCard.household()}
                     sx={{ ml: 1 }}
                     value="household"
                   />
                   <FormControlLabel
-                    control={<Radio />}
+                    control={<Radio disabled={!unlocked} />}
                     label={messages.report.dataCard.location()}
                     sx={{ ml: 1 }}
                     value="location"
