@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
 import { getActivitiesByDay } from '../components/utils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
@@ -45,7 +47,7 @@ export default function useMonthCalendarEvents({
   const curDate = new Date(startDate);
   while (curDate.getTime() <= endDate.getTime()) {
     const activitiesOnCurrentDay =
-      datesWithActivities[curDate.toISOString().slice(0, 10)]?.events || [];
+      datesWithActivities[dayjs(curDate).format('YYYY-MM-DD')]?.events || [];
 
     const clusters: AnyClusteredEvent[] = [
       ...clusterEvents(activitiesOnCurrentDay),

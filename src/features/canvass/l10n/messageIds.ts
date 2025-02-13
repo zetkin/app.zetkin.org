@@ -41,7 +41,7 @@ export default makeMessages('feat.canvass', {
     areas: m('Areas'),
     instructionsHeader: m('Instructions'),
     ready: m('You are ready to go'),
-    start: m('Start assignment'),
+    start: m('Begin assignment'),
     visitedHouseholds: m('Households visited'),
     visitedLocations: m('Locations visited'),
   },

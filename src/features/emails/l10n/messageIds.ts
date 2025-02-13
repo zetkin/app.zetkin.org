@@ -44,6 +44,7 @@ export default makeMessages('feat.emails', {
           instructions: m(
             'Here you can send this email to yourself to preview what it will look like for the recipients. '
           ),
+          invalidEmailAddress: m('This is not a valid email address'),
           okButton: m('OK!'),
           sendButton: m('Send'),
           sendTo: m('The email will be sent to this address:'),
