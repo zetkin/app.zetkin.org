@@ -15,9 +15,11 @@ import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import useBlockMenu from './useBlockMenu';
-import { BlockProblem } from 'features/emails/types';
-import { Msg } from 'core/i18n';
+import { BlockProblem, EmailContentBlock } from 'features/emails/types';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import { RemirrorBlockType } from '../types';
+import editorBlockProblems from '../utils/editorBlockProblems';
 
 export type BlockDividerData = {
   pos: number;
@@ -52,7 +54,7 @@ type Props = {
   enableVariable: boolean;
   focused: boolean;
   onSelectBlock: (selectedBlockIndex: number) => void;
-  problems: (BlockProblem[] | null)[];
+  zetkinContent: EmailContentBlock[];
 };
 
 const EditorOverlays: FC<Props> = ({
@@ -64,8 +66,9 @@ const EditorOverlays: FC<Props> = ({
   enableVariable,
   focused,
   onSelectBlock,
-  problems,
+  zetkinContent,
 }) => {
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   const view = useEditorView();
   const state = useEditorState();
@@ -78,7 +81,46 @@ const EditorOverlays: FC<Props> = ({
 
   const editorRect = view.dom.getBoundingClientRect();
 
+  let zetkinIndex = 0;
+  const problems: (BlockProblem[] | null)[] = [];
+  state.doc.children.forEach((node) => {
+    if (
+      node.type.name == RemirrorBlockType.PARAGRAPH &&
+      node.content.size == 0
+    ) {
+      problems.push(null);
+    } else {
+      if (zetkinIndex < zetkinContent.length) {
+        const zetkinBlock = zetkinContent[zetkinIndex];
+        const blockProblems = editorBlockProblems(
+          zetkinBlock,
+          messages.editor.extensions.button.defaultText()
+        );
+        problems.push(blockProblems.length > 0 ? blockProblems : null);
+        zetkinIndex++;
+      }
+    }
+  });
+
   const allBlockRects: Record<string, DOMRect> = {};
+  state.doc.descendants((node, pos, parent, index) => {
+    const elem = view.nodeDOM(pos);
+    if (elem instanceof HTMLElement) {
+      const nodeRect = elem.getBoundingClientRect();
+      const x = nodeRect.x - editorRect.x;
+      const y = nodeRect.y - editorRect.y;
+
+      const rect = {
+        ...nodeRect.toJSON(),
+        left: x,
+        top: y,
+        x: x,
+        y: y,
+      };
+      allBlockRects[index] = rect;
+    }
+  });
+
   state.doc.descendants((node, pos, parent, index) => {
     const elem = view.nodeDOM(pos);
     if (elem instanceof HTMLElement) {
