@@ -23,18 +23,20 @@ const BlockListItemBase: FC<BlockListItemBaseProps> = ({
       display="flex"
       justifyContent="space-between"
       padding={2}
+      width="100%"
     >
-      <Box display="flex" gap={2}>
+      <Box display="flex" gap={2} width="80%">
         <Icon color="secondary" />
-        <Typography
-          maxWidth="90%"
-          noWrap
-          overflow="hidden"
-          sx={{ cursor: 'default' }}
-          textOverflow="ellipsis"
+        <Box
+          sx={{
+            cursor: 'default',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
         >
-          {title}
-        </Typography>
+          <Typography noWrap>{title}</Typography>
+        </Box>
       </Box>
       {hasErrors && (
         <ErrorOutlineOutlined
