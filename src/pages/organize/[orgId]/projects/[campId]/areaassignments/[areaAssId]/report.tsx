@@ -10,6 +10,7 @@ import { GetServerSideProps } from 'next';
 import { useContext, useState } from 'react';
 import {
   alpha,
+  Badge,
   Box,
   Button,
   Card,
@@ -249,9 +250,10 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                   <Delete />
                                 </Button>
                               )}
-                            {assignment.metrics.filter(
-                              (metric) => metric.kind === 'boolean'
-                            ).length <= 1 &&
+                            {unlocked &&
+                              assignment.metrics.filter(
+                                (metric) => metric.kind === 'boolean'
+                              ).length <= 1 &&
                               metric.kind == 'boolean' && (
                                 <Tooltip title={messages.report.card.tooltip()}>
                                   <Delete color="disabled" sx={{ mx: 1 }} />
@@ -540,7 +542,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               sx={{ mb: 2 }}
             >
               <Divider />
-              <FormControl>
+              <FormControl fullWidth>
                 <RadioGroup
                   onChange={(ev) => {
                     const value = ev.target.value;
@@ -550,23 +552,52 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       });
                     }
                   }}
+                  sx={{ mr: 2 }}
                   value={assignment.reporting_level}
                 >
                   <Typography mt={1}>
                     <Msg id={messagesIds.report.dataCard.info} />
                   </Typography>
-                  <FormControlLabel
-                    control={<Radio disabled={!unlocked} />}
-                    label={messages.report.dataCard.household()}
-                    sx={{ ml: 1 }}
-                    value="household"
-                  />
-                  <FormControlLabel
-                    control={<Radio disabled={!unlocked} />}
-                    label={messages.report.dataCard.location()}
-                    sx={{ ml: 1 }}
-                    value="location"
-                  />
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <FormControlLabel
+                      control={<Radio disabled={!unlocked} />}
+                      label={messages.report.dataCard.household()}
+                      sx={{ ml: 1 }}
+                      value="household"
+                    />
+                    {unlocked && (
+                      <Badge
+                        badgeContent={
+                          areaAssignmentStats?.num_visited_households
+                        }
+                        color="secondary"
+                      />
+                    )}
+                  </Box>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <FormControlLabel
+                      control={<Radio disabled={!unlocked} />}
+                      label={messages.report.dataCard.location()}
+                      sx={{ ml: 1 }}
+                      value="location"
+                    />
+                    {unlocked && (
+                      <Badge
+                        badgeContent={
+                          areaAssignmentStats?.num_visited_locations
+                        }
+                        color="secondary"
+                      />
+                    )}
+                  </Box>
                 </RadioGroup>
               </FormControl>
             </ZUICard>
