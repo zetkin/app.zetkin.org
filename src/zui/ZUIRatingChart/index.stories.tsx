@@ -13,14 +13,15 @@ const Template: StoryFn<typeof ZUIRatingChart> = (args) => (
 
 export const RatingChartBasic = Template.bind({});
 RatingChartBasic.args = {
-  question:
-    'How would you rate the overall experience of the assignment? Scale: 1 (Disappointing) → 5 (Amazing)',
+  description: 'Scale: 1 (Disappointing) → 5 (Amazing)',
+  question: 'How would you rate the overall experience of the assignment? ',
   svgHeight: 50,
   values: [90, 20, 30, 10, 60],
 };
 
 export const RatingChartLowNumbers = Template.bind({});
 RatingChartLowNumbers.args = {
+  description: 'Rate from 1 to 10 being 1 de easiest',
   question: 'How easy was it to use our website?',
   svgHeight: 50,
   values: [0, 7, 3, 3, 4],

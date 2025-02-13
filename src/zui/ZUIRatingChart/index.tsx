@@ -6,6 +6,7 @@ import { lighten, Box, useTheme, darken } from '@mui/system';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 
 export interface ZUIRatingChartProps {
+  description: string | null;
   question: string;
   svgHeight?: number;
   values: number[];
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
+  description,
   question,
   svgHeight = 50,
   values,
@@ -82,7 +84,10 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
 
   return (
     <Box className={classes.root} p={2}>
-      <Typography pb={2}>{question}</Typography>
+      <Typography pb={1}>{question}</Typography>
+      <Typography color="secondary" pb={2}>
+        {description}
+      </Typography>
       <ZUIResponsiveContainer ssrWidth={200}>
         {(width: number) => {
           const baseNumber = 4;
