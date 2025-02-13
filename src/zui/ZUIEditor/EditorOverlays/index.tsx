@@ -6,14 +6,18 @@ import {
 } from '@remirror/react';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
-import { Box, useTheme } from '@mui/material';
+import { Box, lighten, Typography, useTheme } from '@mui/material';
 import { FromToProps, isNodeSelection } from 'remirror';
+import { ErrorOutline } from '@mui/icons-material';
 import { Attrs } from '@remirror/pm/model';
 
 import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import useBlockMenu from './useBlockMenu';
+import { BlockProblem } from 'features/emails/types';
+import { Msg } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 export type BlockDividerData = {
   pos: number;
@@ -48,6 +52,7 @@ type Props = {
   enableVariable: boolean;
   focused: boolean;
   onSelectBlock: (selectedBlockIndex: number) => void;
+  problems: (BlockProblem[] | null)[];
 };
 
 const EditorOverlays: FC<Props> = ({
@@ -59,6 +64,7 @@ const EditorOverlays: FC<Props> = ({
   enableVariable,
   focused,
   onSelectBlock,
+  problems,
 }) => {
   const theme = useTheme();
   const view = useEditorView();
@@ -70,6 +76,27 @@ const EditorOverlays: FC<Props> = ({
   const [mouseY, setMouseY] = useState(-Infinity);
   const [currentBlock, setCurrentBlock] = useState<BlockData | null>(null);
 
+  const editorRect = view.dom.getBoundingClientRect();
+
+  const allBlockRects: Record<string, DOMRect> = {};
+  state.doc.descendants((node, pos, parent, index) => {
+    const elem = view.nodeDOM(pos);
+    if (elem instanceof HTMLElement) {
+      const nodeRect = elem.getBoundingClientRect();
+      const x = nodeRect.x - editorRect.x;
+      const y = nodeRect.y - editorRect.y;
+
+      const rect = {
+        ...nodeRect.toJSON(),
+        left: x,
+        top: y,
+        x: x,
+        y: y,
+      };
+      allBlockRects[index] = rect;
+    }
+  });
+
   const findSelectedNode = useCallback(() => {
     if (isNodeSelection(state.selection)) {
       const selection = state.selection;
@@ -79,11 +106,6 @@ const EditorOverlays: FC<Props> = ({
       const posAfter = selection.$head.after(1);
       const elem = view.nodeDOM(posBefore);
       if (elem instanceof HTMLElement) {
-        const nodeElem = elem;
-        const editorRect = view.dom.getBoundingClientRect();
-        const nodeRect = nodeElem.getBoundingClientRect();
-        const x = nodeRect.x - editorRect.x;
-        const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
           attributes: selection.node.attrs,
           node: selection.node,
@@ -91,13 +113,7 @@ const EditorOverlays: FC<Props> = ({
             from: posBefore,
             to: posAfter,
           },
-          rect: {
-            ...nodeRect.toJSON(),
-            left: x,
-            top: y,
-            x: x,
-            y: y,
-          },
+          rect: allBlockRects[index],
           type: selection.node.type.name as BlockType,
         });
       }
@@ -110,12 +126,8 @@ const EditorOverlays: FC<Props> = ({
         const posAfterTextContent = resolved.after(1);
         const elem = view.nodeDOM(posBeforeTextContent);
         if (elem instanceof HTMLElement) {
-          const nodeElem = elem;
-          const editorRect = view.dom.getBoundingClientRect();
-          const nodeRect = nodeElem.getBoundingClientRect();
-          const x = nodeRect.x - editorRect.x;
-          const y = nodeRect.y - editorRect.y;
-          onSelectBlock(resolved.index(0));
+          const index = resolved.index(0);
+          onSelectBlock(index);
           setCurrentBlock({
             attributes: node.attrs,
             node,
@@ -123,13 +135,7 @@ const EditorOverlays: FC<Props> = ({
               from: posBeforeTextContent,
               to: posAfterTextContent,
             },
-            rect: {
-              ...nodeRect.toJSON(),
-              left: x,
-              top: y,
-              x: x,
-              y: y,
-            },
+            rect: allBlockRects[index],
             type: node.type.name as BlockType,
           });
         }
@@ -217,6 +223,45 @@ const EditorOverlays: FC<Props> = ({
 
   return (
     <>
+      {problems.map((blockProblems, index) => {
+        if (!blockProblems) {
+          return null;
+        }
+        const rect = allBlockRects[index];
+        return (
+          <Box key={index} position="relative">
+            <Box
+              alignItems="cetner"
+              bgcolor={lighten(theme.palette.error.light, 0.5)}
+              borderRadius="0 4px 0 3px"
+              display="flex"
+              gap={0.5}
+              left={1}
+              padding={0.5}
+              position="absolute"
+              top={rect.height + rect.top - 21}
+            >
+              <ErrorOutline color="error" fontSize="small" />
+              <Typography color={theme.palette.error.dark} fontSize="13px">
+                <Msg id={messageIds.editor.blockProblems[blockProblems[0]]} />
+              </Typography>
+            </Box>
+            <Box
+              border={`1px solid ${theme.palette.error.main}`}
+              borderRadius={1}
+              height={rect.height + 16}
+              left={rect.left - 8}
+              position="absolute"
+              sx={{
+                pointerEvents: 'none',
+              }}
+              top={rect.top - 8}
+              width={rect.width + 16}
+              zIndex={-1}
+            />
+          </Box>
+        );
+      })}
       {showSelectedBlockOutline && (
         <Box position="relative">
           <Box

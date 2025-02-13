@@ -40,6 +40,7 @@ import IndentDedentExtension from './extensions/IndentDedentExtension';
 import { EmailContentBlock } from 'features/emails/types';
 import zetkinToRemirror from './utils/zetkinToRemirror';
 import remirrorToZetkin from './utils/remirrorToZetkin';
+import editorBlockProblems from './utils/editorBlockProblems';
 
 type BlockExtension =
   | ButtonExtension
@@ -179,6 +180,14 @@ const ZUIEditor: FC<Props> = ({
 
   const { orgId } = useNumericRouteParams();
 
+  const problems = content.map((block) => {
+    const problems = editorBlockProblems(
+      block,
+      messages.extensions.button.defaultText()
+    );
+    return problems.length > 0 ? problems : null;
+  });
+
   const { manager, state } = useRemirror({
     content: {
       content: zetkinToRemirror(content),
@@ -265,6 +274,7 @@ const ZUIEditor: FC<Props> = ({
             enableVariable={!!enableVariable}
             focused={focused}
             onSelectBlock={(selectedBlock) => onSelectBlock(selectedBlock)}
+            problems={problems}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
