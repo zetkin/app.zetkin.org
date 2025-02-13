@@ -1,33 +1,50 @@
-import { Close } from '@mui/icons-material';
-import { GetServerSideProps } from 'next';
-import { useState } from 'react';
 import {
+  Close,
+  Delete,
+  Edit,
+  LinearScale,
+  SwitchLeft,
+} from '@mui/icons-material';
+import { GetServerSideProps } from 'next';
+import { useContext, useState } from 'react';
+import {
+  alpha,
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   Dialog,
+  Divider,
+  FormControl,
+  FormControlLabel,
   IconButton,
+  InputLabel,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
+  SelectChangeEvent,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import Head from 'next/head';
 
-import ZUIFuture from 'zui/ZUIFuture';
-import MetricCard from 'features/areaAssignments/components/MetricCard';
 import { AREAS } from 'utils/featureFlags';
-import { scaffold } from 'utils/next';
+import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
+import messagesIds from 'features/areaAssignments/l10n/messageIds';
+import MetricCard from 'features/areaAssignments/components/MetricCard';
 import { PageWithLayout } from 'utils/types';
-import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
+import { scaffold } from 'utils/next';
+import theme from 'theme';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
+import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
+import { Msg, useMessages } from 'core/i18n';
+import ZUICard from 'zui/ZUICard';
+import ZUIFuture from 'zui/ZUIFuture';
 import {
   ZetkinAreaAssignment,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
-import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
-import ZUICard from 'zui/ZUICard';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -55,36 +72,42 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
     areaAssId
   );
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
+  const messages = useMessages(messagesIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const [metricBeingCreated, setMetricBeingCreated] =
+    useState<ZetkinMetric | null>(null);
   const [metricBeingEdited, setMetricBeingEdited] =
     useState<ZetkinMetric | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [idOfMetricBeingDeleted, setIdOfQuestionBeingDeleted] = useState<
-    string | null
-  >(null);
+  const [metricBeingDeleted, setMetricBeingDeleted] =
+    useState<ZetkinMetric | null>(null);
 
   const handleSaveMetric = async (metric: ZetkinMetric) => {
     if (areaAssignmentFuture.data) {
       await updateAreaAssignment({
         metrics: areaAssignmentFuture.data.metrics
-          .map((m) => (m.id === metric.id ? metric : m))
+          .map((m: ZetkinMetric) => (m.id === metric.id ? metric : m))
           .concat(metric.id ? [] : [metric]),
       });
     }
     setMetricBeingEdited(null);
+    setMetricBeingCreated(null);
   };
 
   const handleDeleteMetric = async (id: string) => {
     if (areaAssignmentFuture.data) {
       await updateAreaAssignment({
-        metrics: areaAssignmentFuture.data.metrics.filter((m) => m.id !== id),
+        metrics: areaAssignmentFuture.data.metrics.filter(
+          (m: ZetkinMetric) => m.id !== id
+        ),
       });
     }
     setMetricBeingEdited(null);
   };
 
   const handleAddNewMetric = (kind: 'boolean' | 'scale5') => {
-    setMetricBeingEdited({
+    setMetricBeingCreated({
       definesDone: false,
       description: '',
       id: '',
@@ -94,128 +117,181 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   };
 
   return (
-    <>
-      <Head>
-        <title>{areaAssignmentFuture.data?.title}</title>
-      </Head>
-      <Box width="50%">
-        <ZUIFuture future={areaAssignmentFuture}>
-          {(assignment) => (
-            <>
-              <ZUICard header="Reporting level" sx={{ mb: 2 }}>
-                <Typography mb={2}>
-                  Decide what level of precision should be used for statistics.
-                </Typography>
-                <Select
-                  label="Reporting level"
-                  onChange={(ev) => {
-                    const rawValue = ev.target.value;
-                    updateAreaAssignment({
-                      reporting_level:
-                        rawValue as ZetkinAreaAssignment['reporting_level'],
-                    });
-                  }}
-                  value={assignment.reporting_level}
-                >
-                  <MenuItem value="household">
-                    Household (more precise)
-                  </MenuItem>
-                  <MenuItem value="location">Place (more privacy)</MenuItem>
-                </Select>
-              </ZUICard>
-              <Typography>
-                Here you can configure the questions for your area assignment
-              </Typography>
-              <Box alignItems="center" display="flex" mt={2}>
-                <Button
-                  onClick={() => handleAddNewMetric('boolean')}
-                  sx={{ marginRight: 1 }}
-                  variant="contained"
-                >
-                  Add yes/no question
-                </Button>
-                <Button
-                  onClick={() => handleAddNewMetric('scale5')}
-                  variant="contained"
-                >
-                  Add scale question
-                </Button>
-              </Box>
-              {metricBeingEdited && (
+    <ZUIFuture future={areaAssignmentFuture}>
+      {(assignment: ZetkinAreaAssignment) => (
+        <Box display="flex">
+          <Box width="60%">
+            <Box>
+              {assignment.metrics.map((metric) => (
+                <Card key={metric.id} sx={{ mb: 2 }}>
+                  <CardContent>
+                    <Box display="flex">
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        flexGrow={1}
+                        gap={1}
+                      >
+                        <Box
+                          alignItems="flex-start"
+                          display="flex"
+                          justifyContent="space-between"
+                        >
+                          <Box alignItems="center" display="flex">
+                            <Typography
+                              display="flex"
+                              gutterBottom
+                              mr={1}
+                              variant="h6"
+                            >
+                              {metric.kind == 'boolean' ? (
+                                <Typography color="secondary" mr={1}>
+                                  <SwitchLeft />
+                                </Typography>
+                              ) : (
+                                <Typography color="secondary" mr={1}>
+                                  <LinearScale />
+                                </Typography>
+                              )}
+                              {metric.question ||
+                                messages.report.card.question()}
+                            </Typography>
+                          </Box>
+                          <Box alignItems="center" display="flex">
+                            {metric.definesDone && metric.kind === 'boolean' && (
+                              <Box
+                                bgcolor={alpha(
+                                  theme.palette.success.light,
+                                  0.5
+                                )}
+                                borderRadius={2}
+                                display="flex"
+                                mr={1}
+                                p={0.5}
+                              >
+                                <Typography px={1}>
+                                  <Msg
+                                    id={messagesIds.report.card.definesSuccess}
+                                  />
+                                </Typography>
+                              </Box>
+                            )}
+                            <Button
+                              onClick={() => setMetricBeingEdited(metric)}
+                            >
+                              <Edit />
+                            </Button>
+                            {(metric.kind === 'scale5' ||
+                              (metric.kind === 'boolean' &&
+                                assignment.metrics.filter(
+                                  (m) => m.kind === 'boolean'
+                                ).length > 1)) && (
+                              <Button
+                                onClick={(ev) => {
+                                  if (metric.definesDone) {
+                                    setMetricBeingDeleted(metric);
+                                    setAnchorEl(ev.currentTarget);
+                                  } else {
+                                    showConfirmDialog({
+                                      onCancel: () => {
+                                        setMetricBeingDeleted(null),
+                                          setAnchorEl(null);
+                                      },
+                                      onSubmit: () => {
+                                        handleDeleteMetric(metric.id);
+                                        setAnchorEl(null);
+                                        setMetricBeingDeleted(null);
+                                      },
+                                      title: `${
+                                        messages.report.card.delete() +
+                                        ' ' +
+                                        metric.question
+                                      }`,
+                                      warningText:
+                                        messages.report.delete.dialog(),
+                                    });
+                                  }
+                                }}
+                              >
+                                <Delete />
+                              </Button>
+                            )}
+                            {assignment.metrics.filter(
+                              (metric) => metric.kind === 'boolean'
+                            ).length <= 1 &&
+                              metric.kind == 'boolean' && (
+                                <Tooltip title={messages.report.card.tooltip()}>
+                                  <Delete color="disabled" sx={{ mx: 1 }} />
+                                </Tooltip>
+                              )}
+                          </Box>
+                        </Box>
+                        <Typography color="secondary" ml={4}>
+                          {metric.description ||
+                            messages.report.card.description()}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+            {metricBeingCreated && (
+              <Box mb={2} mt={2}>
                 <MetricCard
-                  hasDefinedDone={assignment.metrics.some(
-                    (metric) => metric.definesDone
-                  )}
-                  isOnlyQuestion={assignment.metrics.length == 1}
-                  metric={metricBeingEdited}
-                  onClose={() => setMetricBeingEdited(null)}
-                  onDelete={(target: EventTarget & HTMLButtonElement) => {
-                    if (metricBeingEdited.definesDone) {
-                      setIdOfQuestionBeingDeleted(metricBeingEdited.id);
-                      setAnchorEl(target);
-                      setMetricBeingEdited(null);
-                    } else {
-                      handleDeleteMetric(metricBeingEdited.id);
-                    }
-                  }}
+                  metric={metricBeingCreated}
+                  onClose={() => setMetricBeingCreated(null)}
                   onSave={handleSaveMetric}
                 />
-              )}
-              <Box mt={3}>
-                {assignment.metrics.length > 0 ? 'Your list of questions:' : ''}
-                {assignment.metrics.map((metric) => (
-                  <Card key={metric.id} sx={{ marginTop: 2 }}>
-                    <CardContent>
-                      <Box display="flex">
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          flexGrow={1}
-                          gap={1}
-                        >
-                          {metric.definesDone && (
-                            <Typography color="error">
-                              This question defines if the mission was
-                              successful
-                            </Typography>
-                          )}
-                          <Typography gutterBottom variant="h5">
-                            {metric.question || 'Untitled question'}
-                          </Typography>
-                          <Typography>
-                            {metric.description || 'No description'}
-                          </Typography>
-                        </Box>
-                        <Box display="flex" justifyContent="flex-end">
-                          <Typography color="secondary">
-                            {metric.kind == 'boolean' ? 'Yes/no' : 'Scale'}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                    <CardActions>
-                      <Button onClick={() => setMetricBeingEdited(metric)}>
-                        Edit
-                      </Button>
-
-                      {assignment.metrics.length > 1 && (
-                        <Button
-                          onClick={(ev) => {
-                            if (metric.definesDone) {
-                              setIdOfQuestionBeingDeleted(metric.id);
-                              setAnchorEl(ev.currentTarget);
-                            } else {
-                              handleDeleteMetric(metric.id);
-                            }
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      )}
-                    </CardActions>
-                  </Card>
-                ))}
               </Box>
+            )}
+            {metricBeingEdited && (
+              <Dialog
+                onClose={() => setMetricBeingEdited(null)}
+                open={metricBeingEdited ? true : false}
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <MetricCard
+                  metric={metricBeingEdited}
+                  onClose={() => setMetricBeingEdited(null)}
+                  onSave={handleSaveMetric}
+                />
+              </Dialog>
+            )}
+            <Box>
+              <Card
+                sx={{
+                  backgroundColor: theme.palette.grey[200],
+                  border: 'none',
+                  marginTop: 2,
+                  padding: 2,
+                }}
+              >
+                <Typography color="secondary">
+                  <Msg id={messagesIds.report.toolBar.title} />
+                </Typography>
+                <Box alignItems="center" display="flex" mt={2}>
+                  <Button
+                    onClick={() => handleAddNewMetric('boolean')}
+                    startIcon={<SwitchLeft />}
+                    sx={{ marginRight: 1 }}
+                    variant="outlined"
+                  >
+                    <Msg id={messagesIds.report.metricCard.choice} />
+                  </Button>
+                  <Button
+                    onClick={() => handleAddNewMetric('scale5')}
+                    startIcon={<LinearScale />}
+                    variant="outlined"
+                  >
+                    <Msg id={messagesIds.report.metricCard.scale} />
+                  </Button>
+                </Box>
+              </Card>
               <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
                 <Box display="flex" flexDirection="column" gap={1} padding={2}>
                   <Box
@@ -223,36 +299,40 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     display="flex"
                     justifyContent="space-between"
                   >
-                    <Typography variant="h6">{`Delete "${
-                      assignment.metrics.find(
-                        (metric) => metric.id == idOfMetricBeingDeleted
-                      )?.question
-                    }"`}</Typography>
+                    <Typography variant="h6">
+                      {`${
+                        messages.report.card.delete() +
+                          ' ' +
+                          assignment.metrics.find(
+                            (metric) => metric.id === metricBeingDeleted?.id
+                          )?.question || messages.report.card.question()
+                      }`}
+                    </Typography>
                     <IconButton
                       onClick={() => {
-                        setIdOfQuestionBeingDeleted(null);
+                        setMetricBeingDeleted(null);
                         setAnchorEl(null);
                       }}
                     >
                       <Close />
                     </IconButton>
                   </Box>
-                  <Typography>
-                    {`If you want to delete "${
-                      assignment.metrics.find(
-                        (metric) => metric.id == idOfMetricBeingDeleted
-                      )?.question
-                    }" you need to pick another
-                  yes/no-question to be the question that defines if the msision
-                  was successful`}
-                  </Typography>
                   <Box display="flex" flexDirection="column" gap={1}>
-                    <Typography>Yes/no questions</Typography>
+                    <Typography>
+                      <Msg
+                        id={messagesIds.report.delete.deleteWarningText}
+                        values={{
+                          title:
+                            metricBeingDeleted?.question ||
+                            messages.report.card.question(),
+                        }}
+                      />
+                    </Typography>
                     {assignment.metrics
                       .filter(
                         (metric) =>
                           metric.kind == 'boolean' &&
-                          metric.id != idOfMetricBeingDeleted
+                          metric.id != metricBeingDeleted?.id
                       )
                       .map((metric) => (
                         <Box
@@ -263,13 +343,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                           justifyContent="space-between"
                           width="100%"
                         >
-                          {metric.question}
+                          {metric.question || messages.report.card.question()}
                           <Button
                             onClick={() => {
-                              if (idOfMetricBeingDeleted) {
+                              if (metricBeingDeleted?.definesDone) {
                                 const filtered = assignment.metrics.filter(
-                                  (metric) =>
-                                    metric.id != idOfMetricBeingDeleted
+                                  (metric) => metric.id != metricBeingDeleted.id
                                 );
                                 updateAreaAssignment({
                                   metrics: [
@@ -288,22 +367,112 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 });
                               }
                               setAnchorEl(null);
-                              setIdOfQuestionBeingDeleted(null);
+                              setMetricBeingDeleted(null);
                             }}
                             variant="outlined"
                           >
-                            select
+                            <Msg id={messagesIds.report.delete.select} />
                           </Button>
                         </Box>
                       ))}
                   </Box>
                 </Box>
               </Dialog>
-            </>
-          )}
-        </ZUIFuture>
-      </Box>
-    </>
+            </Box>
+          </Box>
+          <Box ml={2} width="40%">
+            <ZUICard
+              header={messages.report.successCard.header()}
+              subheader={messages.report.successCard.subheader()}
+              sx={{ mb: 2 }}
+            >
+              <Divider />
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <InputLabel>{messages.report.card.definesSuccess()}</InputLabel>
+                <Select
+                  disabled={
+                    assignment.metrics.filter(
+                      (metric) => metric.kind === 'boolean'
+                    ).length <= 1
+                  }
+                  label={messages.report.card.definesSuccess()}
+                  onChange={(ev: SelectChangeEvent) => {
+                    const updatedMetrics =
+                      areaAssignmentFuture.data?.metrics.map(
+                        (m: ZetkinMetric) => {
+                          if (m.id === ev.target.value) {
+                            return {
+                              ...m,
+                              definesDone: true,
+                            };
+                          } else {
+                            return {
+                              ...m,
+                              definesDone: false,
+                            };
+                          }
+                        }
+                      );
+
+                    updateAreaAssignment({
+                      metrics: updatedMetrics,
+                    });
+                  }}
+                  value={
+                    assignment.metrics.find((metric) => metric.definesDone)
+                      ?.id || ''
+                  }
+                >
+                  {assignment.metrics.map((metric) =>
+                    metric.kind === 'boolean' ? (
+                      <MenuItem key={metric.id} value={metric.id}>
+                        {metric.question}
+                      </MenuItem>
+                    ) : null
+                  )}
+                </Select>
+              </FormControl>
+            </ZUICard>
+            <ZUICard
+              header={messages.report.dataCard.header()}
+              subheader={messages.report.dataCard.subheader()}
+              sx={{ mb: 2 }}
+            >
+              <Divider />
+              <FormControl>
+                <RadioGroup
+                  onChange={(ev) => {
+                    const value = ev.target.value;
+                    if (value === 'household' || value === 'location') {
+                      updateAreaAssignment({
+                        reporting_level: value,
+                      });
+                    }
+                  }}
+                  value={assignment.reporting_level}
+                >
+                  <Typography mt={1}>
+                    <Msg id={messagesIds.report.dataCard.info} />
+                  </Typography>
+                  <FormControlLabel
+                    control={<Radio />}
+                    label={messages.report.dataCard.household()}
+                    sx={{ ml: 1 }}
+                    value="household"
+                  />
+                  <FormControlLabel
+                    control={<Radio />}
+                    label={messages.report.dataCard.location()}
+                    sx={{ ml: 1 }}
+                    value="location"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </ZUICard>
+          </Box>
+        </Box>
+      )}
+    </ZUIFuture>
   );
 };
 
