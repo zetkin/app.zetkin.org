@@ -22,15 +22,15 @@ const OrganizerMapFilterBadge: FC = () => {
       badgeContent={numTotalFilters}
       sx={(theme) => ({
         '& .MuiBadge-badge': {
-          backgroundColor: 'white',
-          color: theme.palette.primary.main,
+          backgroundColor: theme.palette.primary.main,
+          color: 'white',
         },
       })}
     >
-      <FilterList sx={{ color: 'white' }} />
+      <FilterList />
     </Badge>
   ) : (
-    <FilterList sx={{ color: 'white' }} />
+    <FilterList />
   );
 };
 export default OrganizerMapFilterBadge;
