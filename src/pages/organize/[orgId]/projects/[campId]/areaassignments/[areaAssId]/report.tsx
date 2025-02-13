@@ -414,50 +414,62 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
             {assignment.start_date && (
               <ZUICard
                 header={
-                  <Box
-                    style={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Typography variant="h5">Report Locked</Typography>
-                    <Switch
-                      checked={!checked}
-                      onChange={(event) => setChecked(!event.target.checked)}
-                    />
-                  </Box>
+                  !checked ? (
+                    <Msg id={messagesIds.report.lockCard.header} />
+                  ) : (
+                    <Msg id={messagesIds.report.lockCard.headerUnlock} />
+                  )
                 }
-                subheader="Protecting report data due to started assignment"
+                status={
+                  <Switch
+                    checked={!checked}
+                    onChange={(event) => setChecked(!event.target.checked)}
+                  />
+                }
+                subheader={
+                  !checked
+                    ? messages.report.lockCard.description()
+                    : messages.report.lockCard.descriptionUnlock()
+                }
                 sx={{ mb: 2 }}
               >
                 {checked && (
                   <Box>
                     <Divider />
-                    <Typography my={1}>Safe changes</Typography>
+                    <Typography my={1}>
+                      <Msg id={messagesIds.report.lockCard.safe} />
+                    </Typography>
                     <Box alignItems="center" display="flex">
                       <Check style={{ color: theme.palette.success.main }} />
-                      <Typography ml={1}>Fix spelling</Typography>
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.fix} />
+                      </Typography>
                     </Box>
                     <Box alignItems="center" display="flex">
                       <Check style={{ color: theme.palette.success.main }} />
-                      <Typography ml={1}>Reorder questions</Typography>
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.reorder} />
+                      </Typography>
                     </Box>
                     <Box alignItems="center" display="flex">
                       <Check style={{ color: theme.palette.success.main }} />
-                      <Typography ml={1}>Add questions</Typography>
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.add} />
+                      </Typography>
                     </Box>
-                    <Typography my={1}>Unsafe changes</Typography>
+                    <Typography my={1}>
+                      <Msg id={messagesIds.report.lockCard.unsafe} />
+                    </Typography>
                     <Box alignItems="start" display="flex">
                       <Close color="error" />
                       <Typography ml={1}>
-                        Rename questions in ways that change their meaning
+                        <Msg id={messagesIds.report.lockCard.rename} />
                       </Typography>
                     </Box>
                     <Box alignItems="start" display="flex">
                       <Close color="error" />
                       <Typography ml={1}>
-                        Change question that defines successful visit
+                        <Msg id={messagesIds.report.lockCard.change} />
                       </Typography>
                     </Box>
                   </Box>

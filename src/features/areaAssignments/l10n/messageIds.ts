@@ -166,6 +166,21 @@ export default makeMessages('feat.areaAssignments', {
       ),
       select: m('Select'),
     },
+    lockCard: {
+      add: m('Add questions'),
+      change: m('Change question that defines successful visit'),
+      description: m('Protecting report data due to started assignment'),
+      descriptionUnlock: m(
+        'Editing questions might cause inconsistent report data'
+      ),
+      fix: m('Fix spelling'),
+      header: m('Report locked'),
+      headerUnlock: m('Report unlocked'),
+      rename: m('Rename questions in ways that change their meaning'),
+      reorder: m('Reorder questions'),
+      safe: m('Safe changes'),
+      unsafe: m('Unsafe questions'),
+    },
     metricCard: {
       choice: m('Choice question'),
       ratingDescription: m(
