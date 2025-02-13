@@ -317,7 +317,7 @@ const EditorOverlays: FC<Props> = ({
             }}
             top={currentBlock?.rect.top - 8}
             width={currentBlock?.rect.width + 16}
-            zIndex={-1}
+            zIndex={-2}
           />
         </Box>
       )}
