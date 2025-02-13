@@ -47,7 +47,6 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinAreaAssignment,
-  ZetkinAreaAssignmentStats,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
 
@@ -126,28 +125,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
     });
   };
 
-  const hasVisitedData = (assignment: ZetkinAreaAssignmentStats | null) => {
-    if (!assignment) {
-      return false;
-    }
-    const visitedProperties: (keyof ZetkinAreaAssignmentStats)[] = [
-      'num_visited_areas',
-      'num_visited_households',
-      'num_visited_households_outside_areas',
-      'num_visited_locations',
-      'num_visited_locations_outside_areas',
-    ];
-
-    return visitedProperties.some((prop) => {
-      const value = assignment[prop];
-      return typeof value === 'number' && value > 0;
-    });
-  };
-
-  const lockState = hasVisitedData(areaAssignmentStats);
-  const [unlocked, setUnlocked] = useState(
-    areaAssignmentFuture.data?.start_date ? lockState : true
-  );
+  const [unlocked, setUnlocked] = useState(false);
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
