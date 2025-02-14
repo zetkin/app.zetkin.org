@@ -61,15 +61,9 @@ const OrganizationsList = () => {
                       src={`/api/orgs/${orgId}/avatar`}
                       style={{ margin: '15px' }}
                     />
-                    <NextLink
-                      href={`/organize/${orgId}`}
-                      legacyBehavior
-                      passHref
-                    >
-                      <Link underline="hover">
-                        {membership.organization.title}
-                      </Link>
-                    </NextLink>
+                    <Link href={`/organize/${orgId}`} underline="hover">
+                      {membership.organization.title}
+                    </Link>
                   </ListItem>
                 );
               })}
