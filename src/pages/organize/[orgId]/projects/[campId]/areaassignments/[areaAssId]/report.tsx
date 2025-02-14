@@ -437,12 +437,6 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     <Box alignItems="center" display="flex">
                       <Check style={{ color: theme.palette.success.main }} />
                       <Typography ml={1}>
-                        <Msg id={messagesIds.report.lockCard.reorder} />
-                      </Typography>
-                    </Box>
-                    <Box alignItems="center" display="flex">
-                      <Check style={{ color: theme.palette.success.main }} />
-                      <Typography ml={1}>
                         <Msg id={messagesIds.report.lockCard.add} />
                       </Typography>
                     </Box>
