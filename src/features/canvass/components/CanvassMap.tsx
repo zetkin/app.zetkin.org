@@ -7,6 +7,7 @@ import {
   LatLngBounds,
   LatLngTuple,
   LeafletMouseEvent,
+  LatLngExpression,
 } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { GpsNotFixed } from '@mui/icons-material';
@@ -213,6 +214,21 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
     }
   }, [areas, map]);
 
+  const outerBounds: [number, number][] = [
+    [90, -180],
+    [90, 180],
+    [-90, 180],
+    [-90, -180],
+  ];
+
+  function getMaskLayer(areas: ZetkinArea[]) {
+    const maskPositions: LatLngExpression[][] = [
+      outerBounds,
+      ...areas.map((area) => area.points as LatLngExpression[]),
+    ];
+    return maskPositions;
+  }
+
   return (
     <>
       <Box position="relative">
@@ -277,6 +293,12 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <Polygon
+          fillColor="black"
+          fillOpacity={0.3}
+          positions={getMaskLayer(areas)}
+          stroke={false}
+        />
         <FeatureGroup
           ref={(fgRef) => {
             reactFGref.current = fgRef;
@@ -286,6 +308,8 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             <Polygon
               key={area.id}
               color={theme.palette.primary.main}
+              fillColor={theme.palette.primary.main}
+              fillOpacity={0}
               positions={area.points}
             />
           ))}
