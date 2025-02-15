@@ -121,6 +121,10 @@ const Map: FC<MapProps> = ({
                     eventHandlers={{
                       click: (evt) => {
                         evt.originalEvent.stopPropagation();
+                        // click runs after dragend, so dont reset position if we were dragging
+                        if (newPosition && isSelectedMarker) {
+                          return;
+                        }
                         setNewPosition(null);
                         map.setView(evt.latlng, 17);
                         onMarkerClick(location.id);
