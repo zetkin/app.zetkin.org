@@ -44,7 +44,7 @@ const PreviewTab: FC = () => {
           }
         />
       </Typography>
-      <Button onClick={() => window.open(previewUrl)} variant="contained">
+      <Button href={previewUrl} target="_blank" variant="contained">
         <Msg id={messageIds.editor.settings.tabs.preview.previewInBrowser} />
       </Button>
       <Typography>
