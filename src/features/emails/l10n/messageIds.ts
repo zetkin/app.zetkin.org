@@ -46,12 +46,12 @@ export default makeMessages('feat.emails', {
           ),
           invalidEmailAddress: m('This is not a valid email address'),
           okButton: m('OK!'),
-          sendButton: m('Send'),
-          sendTo: m('The email will be sent to this address:'),
           previewInBrowser: m('Preview in browser'),
           previewInBrowserInstructions: m(
             'Use the button below to preview the email in your browser.'
           ),
+          sendButton: m('Send'),
+          sendTo: m('The email will be sent to this address:'),
           title: m('Preview'),
         },
         settings: {
