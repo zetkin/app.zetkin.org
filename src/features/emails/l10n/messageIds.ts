@@ -49,6 +49,10 @@ export default makeMessages('feat.emails', {
           sendButton: m('Send'),
           sendTo: m('The email will be sent to this address:'),
           title: m('Preview'),
+          previewInBrowser: m('Preview in browser'),
+          previewInBrowserInstructions: m(
+            'Use the button below to preview the email in your browser.'
+          ),
         },
         settings: {
           senderAddressInputLabel: m('Sender address'),
