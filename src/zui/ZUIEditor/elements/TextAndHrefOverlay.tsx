@@ -54,7 +54,12 @@ const TextAndHrefOverlay: FC<Props> = ({
           top: y,
         }}
       >
-        <Popper anchorEl={anchorEl} open={open}>
+        <Popper
+          anchorEl={anchorEl}
+          disablePortal
+          open={open}
+          sx={{ zIndex: 2 }}
+        >
           <Paper elevation={1}>
             <Box
               alignItems="stretch"
@@ -62,6 +67,7 @@ const TextAndHrefOverlay: FC<Props> = ({
               flexDirection="column"
               gap={1}
               padding={1}
+              sx={{ minWidth: 250 }}
             >
               <Box display="flex">
                 <TextField
