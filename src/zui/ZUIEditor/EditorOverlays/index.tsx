@@ -7,8 +7,10 @@ import {
 import { FC, useCallback, useEffect, useState } from 'react';
 import { ProsemirrorNode } from '@remirror/pm/suggest';
 import { Box } from '@mui/material';
+import { FromToProps } from 'remirror';
+import { Attrs } from '@remirror/pm/model';
 
-import BlockToolbar from './BlockToolbar';
+import BlockToolbar from './BlockToolbar/index';
 import BlockInsert from './BlockInsert';
 import BlockMenu from './BlockMenu';
 import useBlockMenu from './useBlockMenu';
@@ -18,10 +20,20 @@ export type BlockDividerData = {
   y: number;
 };
 
+export type BlockType =
+  | 'paragraph'
+  | 'heading'
+  | 'orderedList'
+  | 'bulletList'
+  | 'zimage'
+  | 'zbutton';
+
 type BlockData = {
+  attributes: Attrs;
   node: ProsemirrorNode;
+  range: FromToProps;
   rect: DOMRect;
-  type: string;
+  type: BlockType;
 };
 
 type Props = {
@@ -31,7 +43,6 @@ type Props = {
   }[];
   editable: boolean;
   enableBold: boolean;
-  enableHeading: boolean;
   enableItalic: boolean;
   enableLink: boolean;
   enableVariable: boolean;
@@ -41,7 +52,6 @@ const EditorOverlays: FC<Props> = ({
   blocks,
   editable,
   enableBold,
-  enableHeading,
   enableItalic,
   enableLink,
   enableVariable,
@@ -61,6 +71,7 @@ const EditorOverlays: FC<Props> = ({
     const node = resolved.node(1);
     if (node) {
       const posBeforeTextContent = resolved.before(1);
+      const posAfterTextContent = resolved.after(1);
       const elem = view.nodeDOM(posBeforeTextContent);
       if (elem instanceof HTMLElement) {
         const nodeElem = elem;
@@ -69,7 +80,12 @@ const EditorOverlays: FC<Props> = ({
         const x = nodeRect.x - editorRect.x;
         const y = nodeRect.y - editorRect.y;
         setCurrentBlock({
+          attributes: node.attrs,
           node,
+          range: {
+            from: posBeforeTextContent,
+            to: posAfterTextContent,
+          },
           rect: {
             ...nodeRect.toJSON(),
             left: x,
@@ -77,7 +93,7 @@ const EditorOverlays: FC<Props> = ({
             x: x,
             y: y,
           },
-          type: node.type.name,
+          type: node.type.name as BlockType,
         });
       }
     }
@@ -180,14 +196,14 @@ const EditorOverlays: FC<Props> = ({
       )}
       {showBlockToolbar && (
         <BlockToolbar
-          curBlockType={currentBlock.type}
+          blockAttributes={currentBlock.attributes}
+          blockType={currentBlock.type}
           curBlockY={currentBlock.rect.y}
           enableBold={enableBold}
-          enableHeading={enableHeading}
           enableItalic={enableItalic}
           enableLink={enableLink}
           enableVariable={enableVariable}
-          pos={state.selection.$anchor.pos}
+          range={currentBlock.range}
         />
       )}
       {showBlockInsert && (

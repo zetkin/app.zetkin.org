@@ -29,6 +29,8 @@ import EditorOverlays from './EditorOverlays';
 import VariableExtension from './extensions/VariableExtension';
 import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
+import MoveExtension from './extensions/MoveExtension';
+import IndentDedentExtension from './extensions/IndentDedentExtension';
 
 type BlockExtension =
   | ButtonExtension
@@ -154,6 +156,8 @@ const ZUIEditor: FC<Props> = ({
           zimage: (props) => imgExtension.createAndPick()(props),
         },
       }),
+      new MoveExtension(),
+      new IndentDedentExtension(),
     ],
     selection: 'start',
   });
@@ -204,7 +208,6 @@ const ZUIEditor: FC<Props> = ({
             }))}
             editable={editable}
             enableBold={!!enableBold}
-            enableHeading={!!enableHeading}
             enableItalic={!!enableItalic}
             enableLink={!!enableLink}
             enableVariable={!!enableVariable}
