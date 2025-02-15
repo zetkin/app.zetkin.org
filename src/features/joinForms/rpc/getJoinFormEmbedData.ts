@@ -7,12 +7,12 @@ import { EmbeddedJoinFormData, ZetkinJoinForm } from '../types';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import { ZetkinCustomField } from 'utils/types/zetkin';
 
-export const paramsSchema = z.object({
+const paramsSchema = z.object({
   formId: z.number(),
   orgId: z.number(),
 });
 
-export type Params = z.input<typeof paramsSchema>;
+type Params = z.input<typeof paramsSchema>;
 type Result = {
   data: string;
 };

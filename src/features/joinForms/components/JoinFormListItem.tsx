@@ -8,10 +8,10 @@ import { ZetkinJoinForm } from '../types';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useApiClient } from 'core/hooks';
 import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
-import deleteJoinForm from '../rpc/deleteJoinForm';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {
@@ -61,7 +61,21 @@ const JoinFormListItem = ({ form, onClick, onDeleted }: Props) => {
   const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
+  async function handleDeleteJoinForm() {
+    const formId = form.id;
+    const orgId = form.organization.id;
+    await apiClient.delete(`/api/orgs/${orgId}/join_forms/${formId}`);
+    onDeleted();
+    showSnackbar(
+      'success',
+      <Msg
+        id={messageIds.deleteJoinForm.success}
+        values={{ title: form.title }}
+      />
+    );
+  }
 
   return (
     <Box
@@ -126,16 +140,13 @@ const JoinFormListItem = ({ form, onClick, onDeleted }: Props) => {
               label: messages.embedding.delete(),
               onSelect: async (ev) => {
                 ev.stopPropagation();
-                await apiClient.rpc(deleteJoinForm, {
-                  formId: form.id,
-                  orgId: form.organization.id,
+                showConfirmDialog({
+                  onSubmit: handleDeleteJoinForm,
+                  title: messages.deleteJoinForm.title(),
+                  warningText: messages.deleteJoinForm.warning({
+                    title: form.title,
+                  }),
                 });
-                onDeleted();
-
-                showSnackbar(
-                  'success',
-                  <Msg id={messageIds.embedding.deletedSuccess} />
-                );
               },
             },
           ]}
