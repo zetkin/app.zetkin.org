@@ -36,7 +36,7 @@ const EditHouseholdPage: FC<Props> = ({
     <PageBase
       actions={
         <Button
-          disabled={nothingHasBeenEdited}
+          disabled={nothingHasBeenEdited || title.length === 0}
           onClick={() => {
             onSave(title, floor || null);
           }}
