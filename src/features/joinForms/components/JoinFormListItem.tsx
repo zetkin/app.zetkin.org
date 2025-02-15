@@ -11,6 +11,7 @@ import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {
@@ -53,13 +54,28 @@ export enum STATUS_COLORS {
 type Props = {
   form: ZetkinJoinForm;
   onClick: () => void;
+  onDeleted: () => void;
 };
 
-const JoinFormListItem = ({ form, onClick }: Props) => {
+const JoinFormListItem = ({ form, onClick, onDeleted }: Props) => {
   const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
+  async function handleDeleteJoinForm() {
+    const formId = form.id;
+    const orgId = form.organization.id;
+    await apiClient.delete(`/api/orgs/${orgId}/join_forms/${formId}`);
+    onDeleted();
+    showSnackbar(
+      'success',
+      <Msg
+        id={messageIds.deleteJoinForm.success}
+        values={{ title: form.title }}
+      />
+    );
+  }
 
   return (
     <Box
@@ -118,6 +134,19 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                     </Button>
                   </>
                 );
+              },
+            },
+            {
+              label: messages.embedding.delete(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+                showConfirmDialog({
+                  onSubmit: handleDeleteJoinForm,
+                  title: messages.deleteJoinForm.title(),
+                  warningText: messages.deleteJoinForm.warning({
+                    title: form.title,
+                  }),
+                });
               },
             },
           ]}
