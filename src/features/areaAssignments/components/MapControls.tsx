@@ -15,9 +15,10 @@ const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
   return (
     <Box
       sx={{
-        left: 16,
+        left: 0,
+        padding: 2, // This padding acts as a deadzone for the map, so that inaccurate taps don't cause the map to pan
         position: 'absolute',
-        top: 16,
+        top: 0,
         zIndex: 999,
       }}
     >
