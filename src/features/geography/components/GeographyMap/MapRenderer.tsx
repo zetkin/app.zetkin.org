@@ -117,10 +117,12 @@ const MapRenderer: FC<Props> = ({
               draggable
               eventHandlers={{
                 dragend: (evt) => {
+                  const latLng = evt.target.getLatLng();
+                  const movedPoint: PointData = [latLng.lat, latLng.lng];
                   onChangeArea({
                     ...editingArea,
                     points: editingArea.points.map((oldPoint, oldIndex) =>
-                      oldIndex == index ? evt.target.getLatLng() : oldPoint
+                      oldIndex == index ? movedPoint : oldPoint
                     ),
                   });
                 },
@@ -168,7 +170,7 @@ const MapRenderer: FC<Props> = ({
               />
             );
           })}
-        {selectedArea && (
+        {selectedArea && !editingArea && (
           <Polygon
             key={`${selectedArea.id}-selected`}
             color={theme.palette.primary.main}
