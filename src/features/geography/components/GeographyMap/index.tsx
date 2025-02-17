@@ -71,8 +71,11 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
   async function finishDrawing() {
     if (drawingPoints && drawingPoints.length > 2) {
       const area = await createArea({
+        boundary: {
+          coordinates: [[...drawingPoints, drawingPoints[0]]],
+          type: 'Polygon',
+        },
         description: '',
-        points: drawingPoints,
         title: messages.areas.default.title(),
       });
       setSelectedId(area.id);

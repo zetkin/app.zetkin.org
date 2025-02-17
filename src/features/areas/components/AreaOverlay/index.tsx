@@ -223,7 +223,10 @@ const AreaOverlay: FC<Props> = ({
             <Button
               onClick={() => {
                 updateArea({
-                  points: area.points,
+                  boundary: {
+                    coordinates: [area.points],
+                    type: 'Polygon',
+                  },
                 });
                 onCancelEdit();
               }}
