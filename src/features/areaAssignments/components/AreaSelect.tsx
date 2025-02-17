@@ -89,7 +89,6 @@ const AreaSelect: FC<Props> = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '130vh',
         overflowY: 'auto',
       }}
     >

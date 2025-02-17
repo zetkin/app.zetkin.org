@@ -264,13 +264,15 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  height: '80vh',
+                  height: '100%',
                 }}
               >
                 <Box
                   sx={{
                     flexGrow: 1,
+                    height: '100%',
                     overflowY: 'auto',
+                    paddingBottom: 4,
                     paddingX: 2,
                   }}
                 >
