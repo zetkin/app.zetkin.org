@@ -20,19 +20,19 @@ import {
   TileLayer,
 } from 'react-leaflet';
 
-import { ZetkinArea } from '../../areas/types';
+import CanvassMapOverlays from './CanvassMapOverlays';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import useCreateLocation from '../hooks/useCreateLocation';
-import useLocations from 'features/areaAssignments/hooks/useLocations';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import getVisitState from '../utils/getVisitState';
-import MarkerIcon from '../utils/markerIcon';
-import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import MapControls from 'features/areaAssignments/components/MapControls';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import CanvassMapOverlays from './CanvassMapOverlays';
 import useAllLocationVisits from '../hooks/useAllLocationVisits';
+import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import useLocations from 'features/areaAssignments/hooks/useLocations';
+import { ZetkinArea } from '../../areas/types';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import MarkerIcon, { getVisitPercentage } from '../utils/markerIcon';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -327,7 +327,10 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
 
           const selected = location.id == selectedLocationId;
           const key = `marker-${location.id}-${selected.toString()}`;
-
+          const percentatge = getVisitPercentage(
+            location.households,
+            assignment.id
+          );
           return (
             <DivIconMarker
               key={key}
@@ -344,8 +347,10 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             >
               <MarkerIcon
                 dataToShow="visited"
+                percentatge={percentatge}
                 selected={selected}
                 state={state}
+                uniqueKey={key}
               />
             </DivIconMarker>
           );
