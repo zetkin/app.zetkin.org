@@ -170,7 +170,7 @@ export default makeMessages('feat.areaAssignments', {
       add: m('Adding questions'),
       change: m('Changing question that defines successful visit'),
       description: m(
-        'This survey has started receiving submissions. Editing the survey now may cause problems with the data. Proceed with caution.'
+        'This assignment has started. Editing the assignment now may cause problems with the data. Proceed with caution.'
       ),
       descriptionUnlock: m(
         'Be careful not to make changes that may cause data to be lost or corrupted.'
