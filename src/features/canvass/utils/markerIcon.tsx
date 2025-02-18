@@ -52,6 +52,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
     <svg
       fill="white"
       height="30"
+      style={{ filter: 'drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.5))' }}
       viewBox="0 0 21 30"
       width="21"
       xmlns="http://www.w3.org/2000/svg"
