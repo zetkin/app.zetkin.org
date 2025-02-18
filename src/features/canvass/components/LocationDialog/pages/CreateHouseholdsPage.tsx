@@ -159,11 +159,13 @@ const CreateHouseholdsPage: FC<Props> = ({
         <Box display="flex" justifyContent="space-around">
           <IntInput
             label={messages.households.createMultiple.numberOfFloorsInput()}
+            min={1}
             onChange={(value) => updateSize(value, numAptsPerFloor)}
             value={numFloors}
           />
           <IntInput
             label={messages.households.createMultiple.numberOfHouseholdsInput()}
+            min={1}
             onChange={(value) => updateSize(numFloors, value)}
             value={numAptsPerFloor}
           />

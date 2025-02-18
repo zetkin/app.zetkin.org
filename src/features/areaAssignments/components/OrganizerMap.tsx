@@ -9,6 +9,7 @@ import {
   Divider,
   IconButton,
   Paper,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Close, Layers, Search } from '@mui/icons-material';
@@ -50,6 +51,8 @@ export type MapStyle = {
   overlay: 'assignees' | 'households' | 'progress' | 'hide';
 };
 
+type SettingName = 'layers' | 'filters' | 'select';
+
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
@@ -69,9 +72,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     }
   );
 
-  const [settingsOpen, setSettingsOpen] = useState<
-    ('layers' | 'filters' | 'select') | null
-  >(null);
+  const [settingsOpen, setSettingsOpen] = useState<SettingName | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
@@ -128,6 +129,14 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     setFilterText('');
   };
 
+  const toggleSettings = (settingName: SettingName) => {
+    if (settingsOpen === settingName) {
+      clearAndCloseSettings();
+    } else {
+      setSettingsOpen(settingName);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -174,43 +183,42 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           }}
         >
           <ButtonGroup orientation="vertical" variant="contained">
-            <Button
-              onClick={() => {
-                if (settingsOpen == 'filters') {
-                  clearAndCloseSettings();
-                } else {
-                  setSettingsOpen('filters');
-                }
-              }}
+            <Tooltip
+              placement="left"
+              title={messages.areas.controlLabels.filters()}
             >
-              <OrganizerMapFilterBadge />
-            </Button>
-            <Button
-              onClick={() => {
-                if (settingsOpen == 'layers') {
-                  clearAndCloseSettings();
-                } else {
-                  setSettingsOpen('layers');
-                }
-              }}
+              <Button onClick={() => toggleSettings('filters')}>
+                <OrganizerMapFilterBadge />
+              </Button>
+            </Tooltip>
+            <Tooltip
+              placement="left"
+              title={messages.areas.controlLabels.layers()}
             >
-              <Layers />
-            </Button>
-            <Button
-              onClick={() => {
-                if (settingsOpen == 'select') {
-                  if (selectedId) {
-                    setSelectedId('');
+              <Button onClick={() => toggleSettings('layers')}>
+                <Layers />
+              </Button>
+            </Tooltip>
+            <Tooltip
+              placement="left"
+              title={messages.areas.controlLabels.select()}
+            >
+              <Button
+                onClick={() => {
+                  if (settingsOpen == 'select') {
+                    if (selectedId) {
+                      setSelectedId('');
+                    } else {
+                      clearAndCloseSettings();
+                    }
                   } else {
-                    clearAndCloseSettings();
+                    setSettingsOpen('select');
                   }
-                } else {
-                  setSettingsOpen('select');
-                }
-              }}
-            >
-              <Search />
-            </Button>
+                }}
+              >
+                <Search />
+              </Button>
+            </Tooltip>
           </ButtonGroup>
         </Box>
         {settingsOpen && (

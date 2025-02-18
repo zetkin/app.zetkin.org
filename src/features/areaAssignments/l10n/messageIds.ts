@@ -136,4 +136,52 @@ export default makeMessages('feat.areaAssignments', {
       },
     },
   },
+  report: {
+    card: {
+      definesSuccess: m('Defines success'),
+      delete: m('Delete'),
+      description: m('No description'),
+      question: m('Untitled question'),
+      tooltip: m(
+        'To delete this, first create a new choice question to define whether the visit was successful.'
+      ),
+    },
+    dataCard: {
+      header: m('Data precision & privacy'),
+      household: m('per household (most precise)'),
+      info: m('Collect data...'),
+      location: m('per location (less precise, more privacy)'),
+      subheader: m(
+        'Configuring where to store the data is a matter of striking a balance between precision and privacy that is right for your cause'
+      ),
+    },
+    delete: {
+      cancel: m('Cancel'),
+      confirm: m('Confirm'),
+      deleteWarningText: m<{ title: string }>(
+        'If you want to delete {title} you need to pick another choice question to be the question that defines if the visit was successful'
+      ),
+      dialog: m(
+        'Are you sure you want to delete this question? This action is permanent and it cannot be undone.'
+      ),
+      select: m('Select'),
+    },
+    metricCard: {
+      choice: m('Choice question'),
+      ratingDescription: m(
+        ' The assignee will respond by giving a rating from 1 to 5'
+      ),
+      save: m('Save'),
+      scale: m('Scale question'),
+    },
+    successCard: {
+      header: m('Successful visit'),
+      subheader: m(
+        'Pick a question to use when counting successful visits. Answering yes to this question will count the visit as successful'
+      ),
+    },
+    toolBar: {
+      title: m('Add questions for your canvass assignment.'),
+    },
+  },
 });
