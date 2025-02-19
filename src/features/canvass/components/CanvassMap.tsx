@@ -23,16 +23,15 @@ import {
 import CanvassMapOverlays from './CanvassMapOverlays';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import getVisitState from '../utils/getVisitState';
+import { getVisitPercentage } from '../utils/getVisitPercentage';
 import MapControls from 'features/areaAssignments/components/MapControls';
+import MarkerIcon from '../utils/markerIcon';
 import objToLatLng from 'features/areas/utils/objToLatLng';
-import useAllLocationVisits from '../hooks/useAllLocationVisits';
 import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { ZetkinArea } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
-import MarkerIcon, { getVisitPercentage } from '../utils/markerIcon';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -74,10 +73,6 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   const classes = useStyles();
   const locations = useLocations(assignment.organization.id).data || [];
   const createLocation = useCreateLocation(assignment.organization.id);
-  const locationVisitList = useAllLocationVisits(
-    assignment.organization.id,
-    assignment.id
-  );
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LatLngTuple, LatLngTuple] | null
   >(`mapBounds-${assignment.id}`, null);
@@ -315,21 +310,12 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           ))}
         </FeatureGroup>
         {locations.map((location) => {
-          const householdState = getVisitState(
-            location.households,
-            assignment.id
-          );
-          const visited = locationVisitList.data?.some(
-            (visit) => visit.locationId == location.id
-          );
-
-          const state = visited ? 'all' : householdState;
-
           const selected = location.id == selectedLocationId;
           const key = `marker-${location.id}-${selected.toString()}`;
-          const percentatge = getVisitPercentage(
+          const percentage = getVisitPercentage(
+            assignment.id,
             location.households,
-            assignment.id
+            assignment.metrics.find((metric) => metric.definesDone)?.id || null
           );
           return (
             <DivIconMarker
@@ -346,10 +332,8 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
               }}
             >
               <MarkerIcon
-                dataToShow="visited"
-                percentatge={percentatge}
+                percentage={percentage}
                 selected={selected}
-                state={state}
                 uniqueKey={key}
               />
             </DivIconMarker>
