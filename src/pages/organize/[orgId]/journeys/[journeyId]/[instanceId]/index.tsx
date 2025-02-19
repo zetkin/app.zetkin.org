@@ -20,7 +20,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUISection from 'zui/ZUISection';
 import ZUITimeline from 'zui/ZUITimeline';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -36,9 +36,6 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
       const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
         `/api/orgs/${orgId}/journey_instances/${instanceId}`
       );
-      // Note: We don't actually care for the returned orgnaization, but we still want to perform
-      // the api request to know if this user may access this particular page.
-      await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
 
       if (journeyInstance.journey.id.toString() !== (journeyId as string)) {
         return {
