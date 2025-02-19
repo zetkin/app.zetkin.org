@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/styles';
+import { DoorFront, Place } from '@mui/icons-material';
 import {
   AttributionControl,
   FeatureGroup,
@@ -10,7 +11,10 @@ import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType } from 'leaflet';
 
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
+import { ZetkinArea } from 'features/areas/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
@@ -18,9 +22,6 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinLocation,
 } from '../types';
-import { ZetkinArea } from 'features/areas/types';
-import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
-import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
 
 const LocationMarker: FC<{
@@ -32,12 +33,16 @@ const LocationMarker: FC<{
   const theme = useTheme();
   if (locationStyle == 'dot') {
     return (
-      <DivIconMarker iconAnchor={[2, 2]} position={location.position}>
+      <DivIconMarker
+        iconAnchor={[2, 2]}
+        position={location.position}
+        zIndexOffset={-1000}
+      >
         <Box
           bgcolor={theme.palette.text.primary}
           borderRadius="2em"
-          height={4}
-          width={4}
+          height={6}
+          width={6}
         />
       </DivIconMarker>
     );
@@ -58,9 +63,9 @@ const LocationMarker: FC<{
             color={theme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
-            fontSize="12px"
+            fontSize="14px"
             justifyContent="center"
-            paddingX="2px"
+            paddingX="10px"
             width="100%"
           >
             {location.households.length}
@@ -389,6 +394,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                     zIndexOffset={100}
                   >
                     <Box
+                      alignItems="center"
                       bgcolor="white"
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
@@ -398,12 +404,33 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       padding="2px 6px"
                       sx={{ translate: '-50% -50%' }}
                     >
-                      <Typography fontSize="11px">
-                        {numberOfLocations}
-                      </Typography>
-                      <Divider />
-                      <Typography fontSize="11px">
+                      <Typography
+                        alignItems="center"
+                        display="flex"
+                        fontSize="14px"
+                      >
+                        <DoorFront
+                          fontSize="small"
+                          sx={{ color: theme.palette.grey[300] }}
+                        />
                         {numberOfHouseholds}
+                      </Typography>
+                      <Divider
+                        sx={{
+                          width: '100%',
+                        }}
+                      />
+                      <Typography
+                        alignItems="center"
+                        display="flex"
+                        fontSize="14px"
+                      >
+                        <Place
+                          fontSize="small"
+                          sx={{ color: theme.palette.grey[300] }}
+                        />
+
+                        {numberOfLocations}
                       </Typography>
                     </Box>
                   </DivIconMarker>
@@ -437,9 +464,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                           borderRadius: '2em',
                           display: 'flex',
                           flexDirection: 'row',
-                          height: '20px',
+                          height: '30px',
                           justifyContent: 'center',
-                          width: '20px',
+                          width: '30px',
                         }}
                       />
                     </Box>
