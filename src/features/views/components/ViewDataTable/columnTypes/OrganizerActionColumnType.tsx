@@ -28,12 +28,8 @@ import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
 
 const sortByOa = (v1: ZetkinOrganizerAction[], v2: ZetkinOrganizerAction[]) => {
-  const hasActions = (v: ZetkinOrganizerAction[]): boolean => {
-    return v.length > 0;
-  };
-
   const getSortValue = (v: ZetkinOrganizerAction[]) => {
-    if (!hasActions(v)) {
+    if (v.length === 0) {
       return 2;
     }
     if (v.every((oan) => oan.organizer_action_taken)) {
