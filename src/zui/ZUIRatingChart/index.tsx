@@ -15,29 +15,32 @@ export interface ZUIRatingChartProps {
 const useStyles = makeStyles((theme) => {
   return {
     root: {
-      '--dataMain': theme.palette.primary.main,
-      '--dataFocus': lighten(theme.palette.primary.main, 0.63),
-      '--dataFaded': lighten(theme.palette.primary.main, 0.83),
-      '& svg': {
-        cursor: 'pointer',
-        overflow: 'visible',
+      '& .average .averageRating': {
+        fill: 'var(--dataMain)',
+        fontSize: 13,
+        transition: 'opacity 0.25s',
+      },
+      '& .average .averageRatingBg': {
+        fill: '#FFFFFF',
+        filter: 'blur(5px)',
+        height: 32,
+        width: 50,
       },
       '& .chart': {
         fill: 'var(--dataFaded)',
       },
-      '&:hover .chart': {
-        fill: 'var(--dataFocus)',
+      '& .data .dot': {
+        opacity: 0,
       },
       '& .dot': {
         fill: 'var(--dataMain)',
         transitionAttribute: 'fill, opacity',
         transitionDuration: '.25s',
       },
-      '& .data .dot': {
-        opacity: 0,
-      },
-      '&:hover .data .dot': {
-        opacity: 1,
+      '& .indexNumber': {
+        fill: theme.palette.secondary.light,
+        fontSize: 13,
+        textAnchor: 'middle',
       },
       '& .ratingCount': {
         fill: 'var(--dataMain)',
@@ -46,37 +49,34 @@ const useStyles = makeStyles((theme) => {
         textAnchor: 'middle',
         transition: 'opacity .25s',
       },
-      '&:hover .ratingCount': {
-        opacity: 1,
-      },
-      '& .indexNumber': {
-        fill: theme.palette.secondary.light,
-        fontSize: 13,
-        textAnchor: 'middle',
-      },
       '& .track': {
         fill: 'var(--dataFocus)',
         transition: 'fill .25s',
       },
-      '&:hover .track': {
-        fill: 'var(--dataFaded)',
+      '& svg': {
+        '--dataFaded': lighten(theme.palette.primary.main, 0.83),
+        '--dataFocus': lighten(theme.palette.primary.main, 0.63),
+        '--dataMain': theme.palette.primary.main,
+        cursor: 'pointer',
+        overflow: 'visible',
+      },
+      '&:hover .average .averageRating': {
+        opacity: 0,
       },
       '&:hover .average .dot': {
         fill: 'var(--dataFocus)',
       },
-      '& .average .averageRating': {
-        fill: 'var(--dataMain)',
-        fontSize: 13,
-        transition: 'opacity 0.25s',
+      '&:hover .chart': {
+        fill: 'var(--dataFocus)',
       },
-      '& .average .averageRatingBg': {
-        width: 50,
-        height: 32,
-        fill: '#FFFFFF',
-        filter: 'blur(5px)',
+      '&:hover .data .dot': {
+        opacity: 1,
       },
-      '&:hover .average .averageRating': {
-        opacity: 0,
+      '&:hover .ratingCount': {
+        opacity: 1,
+      },
+      '&:hover .track': {
+        fill: 'var(--dataFaded)',
       },
     },
   };
@@ -190,7 +190,7 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                   className="averageRating averageRatingBg"
                   x={avgPos * width - 25}
                   y="4"
-                ></rect>
+                />
                 <text className="averageRating" x={avgPos * width - 10} y="25">
                   {avg.toFixed(1)}
                 </text>
