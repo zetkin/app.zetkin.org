@@ -16,6 +16,7 @@ import {
   AttributionControl,
   FeatureGroup,
   MapContainer,
+  Pane,
   Polygon,
   TileLayer,
 } from 'react-leaflet';
@@ -288,6 +289,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <Pane name="blendedPane" style={{ mixBlendMode: 'color-burn' }} />
         <Polygon
           fillColor="black"
           fillOpacity={0.3}
@@ -302,9 +304,15 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           {areas.map((area) => (
             <Polygon
               key={area.id}
-              color={theme.palette.primary.main}
-              fillColor={theme.palette.primary.main}
-              fillOpacity={0}
+              color="#A8A8A8"
+              fillColor="#A8A8A8"
+              fillOpacity={0.5}
+              pane="blendedPane"
+              pathOptions={{
+                color: theme.palette.common.black,
+                opacity: 0.5,
+                weight: 4,
+              }}
               positions={area.points}
             />
           ))}
