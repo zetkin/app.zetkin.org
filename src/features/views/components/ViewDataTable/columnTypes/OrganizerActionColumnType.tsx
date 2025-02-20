@@ -28,7 +28,7 @@ import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
 
 const sortByOa = (v1: ZetkinOrganizerAction[], v2: ZetkinOrganizerAction[]) => {
-  const getSortValue = (v: ZetkinOrganizerAction[]) => {
+  const getPriority = (v: ZetkinOrganizerAction[]) => {
     if (v.length === 0) {
       return 2;
     }
@@ -38,7 +38,7 @@ const sortByOa = (v1: ZetkinOrganizerAction[], v2: ZetkinOrganizerAction[]) => {
     return 0;
   };
 
-  return getSortValue(v1) - getSortValue(v2);
+  return getPriority(v1) - getPriority(v2);
 };
 
 export default class OrganizerActionColumnType implements IColumnType {
