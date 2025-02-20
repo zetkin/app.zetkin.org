@@ -79,18 +79,20 @@ const Map: FC<MapProps> = ({
     >
       <MapWrapper>
         {(map) => {
-          if (selectedLocation) {
-            map.setView(
-              { lat: selectedLocation.lat, lng: selectedLocation.lng },
-              17
-            );
-          }
+          if (!newPosition) {
+            if (selectedLocation) {
+              map.setView(
+                { lat: selectedLocation.lat, lng: selectedLocation.lng },
+                17
+              );
+            }
 
-          if (pendingLocation) {
-            map.setView(
-              { lat: pendingLocation.lat, lng: pendingLocation.lng },
-              17
-            );
+            if (pendingLocation) {
+              map.setView(
+                { lat: pendingLocation.lat, lng: pendingLocation.lng },
+                17
+              );
+            }
           }
 
           map.on('click', (evt) => {
