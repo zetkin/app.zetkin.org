@@ -38,9 +38,17 @@ export default class SurveyOptionColumnType
       },
       sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
         const v1n =
-          v1 == null || v1.length == 0 ? 0 : v1[v1.length - 1].selected ? 0 : 1;
+          v1 == null || v1.length == 0
+            ? 1
+            : v1[v1.length - 1].selected
+            ? -1
+            : 0;
         const v2n =
-          v2 == null || v2.length == 0 ? 0 : v2[v2.length - 1].selected ? 0 : 1;
+          v2 == null || v2.length == 0
+            ? 1
+            : v2[v2.length - 1].selected
+            ? -1
+            : 0;
         return v1n - v2n;
       },
       type: 'boolean',

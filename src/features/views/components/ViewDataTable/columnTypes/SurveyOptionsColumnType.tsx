@@ -39,9 +39,9 @@ export default class SurveyOptionsColumnType
       },
       sortComparator: (v1: string[][], v2: string[][]) => {
         const v1n =
-          v1 == null || v1.length == 0 ? 0 : v1[v1.length - 1]?.length ?? 0;
+          v1 == null || v1.length == 0 ? 0 : -(v1[v1.length - 1]?.length ?? 0);
         const v2n =
-          v2 == null || v2.length == 0 ? 0 : v2[v2.length - 1]?.length ?? 0;
+          v2 == null || v2.length == 0 ? 0 : -(v2[v2.length - 1]?.length ?? 0);
         return v1n - v2n;
       },
       valueGetter: (params: GridValueGetterParams) => {
