@@ -12,6 +12,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import useJoinFormMutations from '../hooks/useJoinFormMutations';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   container: {
@@ -54,20 +55,17 @@ export enum STATUS_COLORS {
 type Props = {
   form: ZetkinJoinForm;
   onClick: () => void;
-  onDeleted: () => void;
 };
 
-const JoinFormListItem = ({ form, onClick, onDeleted }: Props) => {
+const JoinFormListItem = ({ form, onClick }: Props) => {
   const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteForm } = useJoinFormMutations(form.organization.id, form.id);
   const messages = useMessages(messageIds);
   async function handleDeleteJoinForm() {
-    const formId = form.id;
-    const orgId = form.organization.id;
-    await apiClient.delete(`/api/orgs/${orgId}/join_forms/${formId}`);
-    onDeleted();
+    await deleteForm();
     showSnackbar(
       'success',
       <Msg
