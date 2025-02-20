@@ -170,6 +170,7 @@ const AreaOverlay: FC<Props> = ({
                   fontStyle={
                     area.description?.trim().length ? 'inherit' : 'italic'
                   }
+                  maxWidth={300}
                   sx={{ overflowWrap: 'anywhere' }}
                 >
                   {area.description?.trim().length ? (
