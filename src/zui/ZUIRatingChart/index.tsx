@@ -1,76 +1,99 @@
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { FC, useState } from 'react';
-import { lighten, Box, useTheme, darken } from '@mui/system';
+import { FC } from 'react';
+import { lighten, Box } from '@mui/system';
 
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 
 export interface ZUIRatingChartProps {
-  description: string | null;
-  question: string;
-  svgHeight?: number;
-  values: number[];
+  data: number[];
+  description?: string | null;
+  title?: string;
+  visualizationHeight?: number;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& .average .averageRating': {
-      fill: darken(theme.palette.primary.main, 0.2),
-      transition: 'fill 0.25s',
+const useStyles = makeStyles((theme) => {
+  return {
+    root: {
+      '--dataMain': theme.palette.primary.main,
+      '--dataFocus': lighten(theme.palette.primary.main, 0.63),
+      '--dataFaded': lighten(theme.palette.primary.main, 0.83),
+      '& svg': {
+        cursor: 'pointer',
+        overflow: 'visible',
+      },
+      '& .chart': {
+        fill: 'var(--dataFaded)',
+      },
+      '&:hover .chart': {
+        fill: 'var(--dataFocus)',
+      },
+      '& .dot': {
+        fill: 'var(--dataMain)',
+        transitionAttribute: 'fill, opacity',
+        transitionDuration: '.25s',
+      },
+      '& .data .dot': {
+        opacity: 0,
+      },
+      '&:hover .data .dot': {
+        opacity: 1,
+      },
+      '& .ratingCount': {
+        fill: 'var(--dataMain)',
+        fontSize: 13,
+        opacity: 0,
+        textAnchor: 'middle',
+        transition: 'opacity .25s',
+      },
+      '&:hover .ratingCount': {
+        opacity: 1,
+      },
+      '& .indexNumber': {
+        fill: theme.palette.secondary.light,
+        fontSize: 13,
+        textAnchor: 'middle',
+      },
+      '& .track': {
+        fill: 'var(--dataFocus)',
+        transition: 'fill .25s',
+      },
+      '&:hover .track': {
+        fill: 'var(--dataFaded)',
+      },
+      '&:hover .average .dot': {
+        fill: 'var(--dataFocus)',
+      },
+      '& .average .averageRating': {
+        fill: 'var(--dataMain)',
+        fontSize: 13,
+        transition: 'opacity 0.25s',
+      },
+      '& .average .averageRatingBg': {
+        width: 50,
+        height: 32,
+        fill: '#FFFFFF',
+        filter: 'blur(5px)',
+      },
+      '&:hover .average .averageRating': {
+        opacity: 0,
+      },
     },
-    '& .average .dot': {
-      fill: darken(theme.palette.primary.main, 0.2),
-    },
-    '& .data .dot': {
-      fill: 'transparent',
-    },
-    '& .dot': {
-      transition: 'fill .25s',
-    },
-    '& .rawNumber': {
-      fill: 'transparent',
-      textAnchor: 'middle',
-      transition: 'fill .25s',
-    },
-    '&:hover .average .averageRating': {
-      fill: 'transparent',
-    },
-    '&:hover .average .dot': {
-      fill: lighten(theme.palette.primary.main, 0.4),
-    },
-    '&:hover .average rect': {
-      fill: lighten(theme.palette.primary.main, 0.7),
-    },
-    '&:hover .chart': {
-      fill: lighten(theme.palette.primary.main, 0.4),
-    },
-    '&:hover .data': {
-      fill: lighten(theme.palette.primary.main, 0.6),
-    },
-    '&:hover .data .dot': {
-      fill: darken(theme.palette.primary.main, 0.2),
-    },
-    '&:hover .rawNumber': {
-      fill: darken(theme.palette.primary.main, 0.2),
-    },
-  },
-}));
+  };
+});
 
 const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
   description,
-  question,
-  svgHeight = 50,
-  values,
+  title,
+  visualizationHeight = 50,
+  data,
 }) => {
-  const theme = useTheme();
   const classes = useStyles();
-
-  const [isHovered, setIsHovered] = useState(false);
 
   let ratingTotals = 0;
   let numRatings = 0;
-  if (values.every((val) => val >= 0)) {
-    values.forEach((val, i) => {
+  if (data.every((val) => val >= 0)) {
+    data.forEach((val, i) => {
       numRatings += val;
       ratingTotals += val * (i + 1);
     });
@@ -79,32 +102,36 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
   }
 
   const avg = ratingTotals / numRatings;
-  const total = 5;
-  const avgWidth = avg / total;
+  const maxRating = 5;
+  const avgPos = (avg - 1) / (maxRating - 1);
 
   return (
     <Box className={classes.root} p={2}>
-      <Typography pb={1}>{question}</Typography>
-      <Typography color="secondary" pb={2}>
-        {description}
-      </Typography>
+      {title && <Typography pb={1}>{title}</Typography>}
+      {description && (
+        <Typography color="secondary" pb={2}>
+          {description}
+        </Typography>
+      )}
       <ZUIResponsiveContainer ssrWidth={200}>
         {(width: number) => {
           const baseNumber = 4;
-          const highestValue = Math.max(...values, 1);
-          let path = `M ${baseNumber} ${svgHeight}`;
+          const highestValue = Math.max(...data, 1);
+          let path = `M ${baseNumber} ${visualizationHeight}`;
           const dots: { x: number; y: number }[] = [];
           const graphWidth = width - baseNumber * 2;
 
-          path += values
+          path += data
             .map((val, i) => {
-              const x =
-                i * (graphWidth / (values.length - 1 || 1)) + baseNumber;
-              const y = svgHeight - (val / highestValue) * svgHeight;
+              const x = i * (graphWidth / (data.length - 1 || 1)) + baseNumber;
+              const y =
+                visualizationHeight -
+                (val / highestValue) * visualizationHeight;
               const prevX =
-                (i - 1) * (graphWidth / (values.length - 1 || 1)) + baseNumber;
+                (i - 1) * (graphWidth / (data.length - 1 || 1)) + baseNumber;
               const prevY =
-                svgHeight - (values[i - 1] / highestValue) * svgHeight;
+                visualizationHeight -
+                (data[i - 1] / highestValue) * visualizationHeight;
 
               dots.push({ x, y });
 
@@ -118,24 +145,17 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
             })
             .join(' ');
 
-          path += ` L ${graphWidth + baseNumber} ${svgHeight} Z`;
+          path += ` L ${graphWidth + baseNumber} ${visualizationHeight} Z`;
 
           return (
             <svg
-              height={svgHeight + 5}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={{ cursor: 'pointer', overflow: 'visible' }}
+              height={visualizationHeight + 5}
               version="1.1"
               width={width}
               xmlns="http://www.w3.org/2000/svg"
             >
               <g className="data" transform="translate(0, 5)">
-                <path
-                  className="chart"
-                  d={path}
-                  fill={lighten(theme.palette.primary.main, 0.7)}
-                />
+                <path className="chart" d={path} />
                 {dots.map((dot, index) => (
                   <>
                     <circle
@@ -143,32 +163,39 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                       className="dot"
                       cx={dot.x}
                       cy={dot.y}
-                      fill={
-                        isHovered
-                          ? theme.palette.primary.main
-                          : lighten(theme.palette.primary.light, 0.3)
-                      }
                       r={4}
                     />
 
-                    <text
-                      className={`rawNumber`}
-                      fill={theme.palette.primary.main}
-                      fontSize="13px"
-                      x={dot.x}
-                      y={dot.y - 10}
-                    >
-                      {values[index]}
+                    <text className="ratingCount" x={dot.x} y={dot.y - 10}>
+                      {data[index]}
                     </text>
                   </>
                 ))}
               </g>
               <g
                 className="average"
-                transform={`translate(0, ${svgHeight + 10})`}
+                transform={`translate(0, ${visualizationHeight + 10})`}
               >
+                {dots.map((dot, index) => (
+                  <text
+                    key={index}
+                    className="indexNumber"
+                    x={index == 4 ? dot.x : dot.x}
+                    y="25"
+                  >
+                    {index + 1}
+                  </text>
+                ))}
                 <rect
-                  fill={lighten(theme.palette.primary.main, 0.4)}
+                  className="averageRating averageRatingBg"
+                  x={avgPos * width - 25}
+                  y="4"
+                ></rect>
+                <text className="averageRating" x={avgPos * width - 10} y="25">
+                  {avg.toFixed(1)}
+                </text>
+                <rect
+                  className="track"
                   height="8px"
                   rx={4}
                   ry={4}
@@ -176,32 +203,10 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
                 />
                 <circle
                   className="dot"
-                  cx={avgWidth * width}
+                  cx={avgPos * width}
                   cy={baseNumber}
                   r={4}
                 />
-                <text
-                  className="averageRating"
-                  fill={theme.palette.primary.main}
-                  fontSize="13"
-                  x={avgWidth * width - 10}
-                  y="25"
-                >
-                  {avg.toFixed(1)}
-                </text>
-                {dots.map((dot, index) => (
-                  <text
-                    key={index}
-                    className={`indexNumber`}
-                    fill={theme.palette.secondary.light}
-                    fontSize="13"
-                    textAnchor="middle"
-                    x={index == 4 ? dot.x : dot.x}
-                    y="25"
-                  >
-                    {index + 1}
-                  </text>
-                ))}
               </g>
             </svg>
           );

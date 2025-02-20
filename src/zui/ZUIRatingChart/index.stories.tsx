@@ -14,15 +14,22 @@ const Template: StoryFn<typeof ZUIRatingChart> = (args) => (
 export const RatingChartBasic = Template.bind({});
 RatingChartBasic.args = {
   description: 'Scale: 1 (Disappointing) → 5 (Amazing)',
-  question: 'How would you rate the overall experience of the assignment? ',
-  svgHeight: 50,
-  values: [90, 20, 30, 10, 60],
+  title: 'How would you rate the overall experience of the assignment? ',
+  visualizationHeight: 50,
+  data: [90, 20, 30, 10, 60],
 };
 
 export const RatingChartLowNumbers = Template.bind({});
 RatingChartLowNumbers.args = {
   description: 'Rate from 1 to 10 being 1 de easiest',
-  question: 'How easy was it to use our website?',
-  svgHeight: 50,
-  values: [0, 7, 3, 3, 4],
+  title: 'How easy was it to use our website?',
+  visualizationHeight: 50,
+  data: [0, 7, 3, 3, 4],
+};
+
+export const RatingChartAverageFour = Template.bind({});
+RatingChartAverageFour.args = {
+  description: 'The average should be 4',
+  visualizationHeight: 50,
+  data: [0, 8, 12, 34, 28],
 };
