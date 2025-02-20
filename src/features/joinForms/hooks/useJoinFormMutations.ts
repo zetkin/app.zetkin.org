@@ -1,4 +1,4 @@
-import { joinFormUpdate, joinFormUpdated } from '../store';
+import { joinFormUpdate, joinFormUpdated, joinFormDeleted } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinJoinForm, ZetkinJoinFormPatchBody } from '../types';
 
@@ -17,7 +17,13 @@ export default function useJoinFormMutations(orgId: number, formId: number) {
     dispatch(joinFormUpdated(updatedData));
   }
 
+  async function deleteForm() {
+    await apiClient.delete(`/api/orgs/${orgId}/join_forms/${formId}`);
+    dispatch(joinFormDeleted(formId));
+  }
+
   return {
+    deleteForm,
     updateForm,
   };
 }

@@ -23,6 +23,13 @@ const joinFormsSlice = createSlice({
       item.loaded = new Date().toISOString();
       item.data = form;
     },
+    joinFormDeleted: (state, action: PayloadAction<number>) => {
+      const formId = action.payload;
+      const item = state.formList.items.find((item) => item.id == formId);
+      if (item) {
+        item.deleted = true;
+      }
+    },
     joinFormLoad: (state, action: PayloadAction<number>) => {
       const formId = action.payload;
       const item = findOrAddItem(state.formList, formId);
@@ -104,6 +111,7 @@ const joinFormsSlice = createSlice({
 export default joinFormsSlice;
 export const {
   joinFormCreated,
+  joinFormDeleted,
   joinFormLoad,
   joinFormLoaded,
   joinFormUpdate,
