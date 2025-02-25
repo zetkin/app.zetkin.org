@@ -23,6 +23,8 @@ import {
   ZetkinLocation,
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
+import MarkerIcon from 'features/canvass/utils/markerIcon';
+import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
 
 const LocationMarker: FC<{
   areaAssId: string;
@@ -84,76 +86,19 @@ const LocationMarker: FC<{
       </DivIconMarker>
     );
   } else {
-    let visits = 0;
-    let successfulVisits = 0;
-    location.households.forEach((household) => {
-      const visitInThisAssignment = household.visits.find(
-        (visit) => visit.areaAssId == areaAssId
-      );
-      if (visitInThisAssignment) {
-        visits++;
-
-        const responseToMetricThatDefinesDone =
-          visitInThisAssignment.responses.find(
-            (response) => response.metricId == idOfMetricThatDefinesDone
-          );
-
-        if (responseToMetricThatDefinesDone?.response == 'yes') {
-          successfulVisits++;
-        }
-      }
-    });
-
-    const successfulVisitsColorPercent =
-      (successfulVisits / location.households.length) * 100;
-    const visitsColorPercent = (visits / location.households.length) * 100;
+    const percentage = getVisitPercentage(
+      areaAssId,
+      location.households,
+      idOfMetricThatDefinesDone
+    );
 
     return (
       <DivIconMarker iconAnchor={[6, 24]} position={location.position}>
-        <Box alignItems="center" display="flex" flexDirection="column">
-          <Box
-            alignItems="center"
-            bgcolor="white"
-            borderRadius={1}
-            boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
-            color={theme.palette.text.secondary}
-            display="inline-flex"
-            flexDirection="column"
-            fontSize="12px"
-            justifyContent="center"
-            padding="2px"
-          >
-            <div
-              style={{
-                alignItems: 'center',
-                background: `conic-gradient(${
-                  theme.palette.primary.main
-                } ${successfulVisitsColorPercent}%, ${lighten(
-                  theme.palette.primary.main,
-                  0.7
-                )} ${successfulVisitsColorPercent}% ${visitsColorPercent}%, ${
-                  theme.palette.grey[400]
-                } ${visitsColorPercent}%)`,
-                borderRadius: '2em',
-                display: 'flex',
-                flexDirection: 'row',
-                height: '16px',
-                justifyContent: 'center',
-                width: '16px',
-              }}
-            />
-          </Box>
-          <div
-            style={{
-              borderLeft: '4px solid transparent',
-              borderRight: '4px solid transparent',
-              borderTop: '4px solid white',
-              boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.3)',
-              height: 0,
-              width: 0,
-            }}
-          />
-        </Box>
+        <MarkerIcon
+          percentage={percentage}
+          selected={false}
+          uniqueKey={location.id}
+        />
       </DivIconMarker>
     );
   }
