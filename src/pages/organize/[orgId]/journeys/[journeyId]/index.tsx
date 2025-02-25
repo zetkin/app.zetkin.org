@@ -21,16 +21,15 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const journey = await apiClient.get<ZetkinJourney>(
-    `/api/orgs/${orgId}/journeys/${journeyId}`
-  );
-
-  if (journey) {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    await apiClient.get<ZetkinJourney>(
+      `/api/orgs/${orgId}/journeys/${journeyId}`
+    );
     return {
       props: {},
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };
