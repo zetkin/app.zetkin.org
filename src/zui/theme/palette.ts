@@ -84,7 +84,17 @@ const uiSwatches = {
   },
 } as const;
 
-export const funSwatches = {
+type ColorAndContrast = {
+  color: string;
+  contrast: string;
+};
+type FunSwatchNuances = {
+  dark: ColorAndContrast;
+  light: ColorAndContrast;
+  medium: ColorAndContrast;
+};
+
+export const funSwatches: Record<string, FunSwatchNuances> = {
   aqua: {
     dark: {
       color: '#187F81',

@@ -1,7 +1,7 @@
 import { create } from 'random-seed';
 import { FC } from 'react';
 
-import palette from 'zui/theme/palette';
+import { funSwatches } from 'zui/theme/palette';
 import typography from 'zui/theme/typography';
 import { ZUISize } from '../types';
 
@@ -53,33 +53,14 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   const rand = () => seededRand(1000) / 1000;
   const initials = firstName.slice(0, 1) + lastName.slice(0, 1);
 
-  const colors = Object.keys(palette.swatches).reduce((acc, swatch) => {
-    type Palette = {
-      swatches: {
-        [key: string]: {
-          light: { color: string };
-          medium: { color: string };
-        };
-      };
-    };
-    if (
-      typeof (palette as unknown as Palette).swatches[swatch].light !=
-      'undefined'
-    ) {
-      acc.push((palette as unknown as Palette).swatches[swatch].light.color);
-    }
-    if (
-      typeof (palette as unknown as Palette).swatches[swatch].medium !=
-      'undefined'
-    ) {
-      acc.push((palette as unknown as Palette).swatches[swatch].medium.color);
-    }
+  const colors = Object.keys(funSwatches).reduce((acc, swatch) => {
+    acc.push(funSwatches[swatch].light.color);
+    acc.push(funSwatches[swatch].medium.color);
+
     return acc;
   }, [] as string[]);
+
   const getColor = (): string => colors[seededRand(colors.length)];
-  // `hsl(${Math.floor(rand() * 360)}, ${Math.floor(
-  //   rand() * 20 + 40
-  // )}%, ${Math.floor(rand() * 40 + 50)}%)`;
 
   return (
     <svg
