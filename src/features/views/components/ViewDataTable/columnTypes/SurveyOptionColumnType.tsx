@@ -37,17 +37,17 @@ export default class SurveyOptionColumnType
         return <Cell cell={params.value} />;
       },
       sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
-const getPriority = (cell: SurveyOptionViewCell) => {
-    if (cell == null || cell.length == 0) {
-       return 1
-    } else if (cell[cell.length - 1].selected {
-       return -1
-    } else {
-       return 0
-    }
-}
+        const getPriority = (cell: SurveyOptionViewCell) => {
+          if (cell == null || cell.length == 0) {
+            return 1;
+          } else if (cell[cell.length - 1].selected) {
+            return -1;
+          } else {
+            return 0;
+          }
+        };
 
-return getPriority(v1) - getPriority(v2)
+        return getPriority(v1) - getPriority(v2);
       },
       type: 'boolean',
     };
