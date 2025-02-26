@@ -1,12 +1,15 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
 import MergeCandidateList from './MergeCandidateList';
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 
 interface PotentialDuplicatesListsProps {
+  initiallyShowManualSearch: boolean;
   onDeselect: (person: ZetkinPerson) => void;
   onSelect: (person: ZetkinPerson) => void;
   peopleNotToMerge: ZetkinPerson[];
@@ -14,16 +17,49 @@ interface PotentialDuplicatesListsProps {
 }
 
 const PotentialDuplicatesLists: FC<PotentialDuplicatesListsProps> = ({
+  initiallyShowManualSearch,
   onDeselect,
   onSelect,
   peopleNotToMerge,
   peopleToMerge,
 }) => {
   const messages = useMessages(messageIds);
+  const [addingManually, setAddingManually] = useState(
+    initiallyShowManualSearch
+  );
 
   return (
     <>
-      <Typography variant="h6">{messages.modal.peopleToMerge()}</Typography>
+      <Box display="flex" justifyContent="space-between">
+        <Typography variant="h6">{messages.modal.peopleToMerge()}</Typography>
+        <ZUIEllipsisMenu
+          items={[
+            {
+              label: addingManually
+                ? messages.modal.lists.hideManual()
+                : messages.modal.lists.showManual(),
+              onSelect() {
+                setAddingManually(!addingManually);
+              },
+            },
+          ]}
+        />
+      </Box>
+      {addingManually && (
+        <Box my={1}>
+          <MUIOnlyPersonSelect
+            getOptionDisabled={(option) =>
+              peopleToMerge.some((person) => person.id == option.id) ||
+              peopleNotToMerge.some((person) => person.id == option.id)
+            }
+            onChange={function (person: ZetkinPerson): void {
+              onSelect(person);
+            }}
+            placeholder={messages.modal.findCandidateManually()}
+            selectedPerson={null}
+          />
+        </Box>
+      )}
       <MergeCandidateList
         buttonLabel={messages.modal.notDuplicateButton()}
         onButtonClick={onDeselect}

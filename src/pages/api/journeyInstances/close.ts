@@ -40,9 +40,19 @@ const closeJourneyInstance = async (
     if (body.tags) {
       await Promise.all(
         body.tags.map((tag: ZetkinTag) => {
+          const data = tag.value
+            ? JSON.stringify({ value: tag.value })
+            : undefined;
+
           apiFetch(
             `/orgs/${orgId}/journey_instances/${instanceId}/tags/${tag.id}`,
-            { method: 'PUT' }
+            {
+              body: data,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              method: 'PUT',
+            }
           );
         })
       );

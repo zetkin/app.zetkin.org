@@ -110,8 +110,10 @@ export default makeMessages('feat.surveys', {
   },
   layout: {
     actions: {
+      delete: m('Delete survey'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
+      warning: m<{ surveyTitle: string }>('"{surveyTitle}" will be deleted.'),
     },
     stats: {
       questions: m<{ numQuestions: number }>(
@@ -121,6 +123,7 @@ export default makeMessages('feat.surveys', {
         '{numSubmissions, plural, one {1 submission} other {# submissions}}'
       ),
     },
+    unknownTitle: m('Untitled survey'),
   },
   optionCollapse: {
     collapse: m('Collapse'),
@@ -167,6 +170,14 @@ export default makeMessages('feat.surveys', {
     personRecordColumn: m('Respondent'),
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
+  },
+  surveyDialog: {
+    add: m('Add'),
+    cancel: m("Don't add"),
+    description: m(
+      'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
+    ),
+    title: m('Add email address'),
   },
   surveyForm: {
     accept: m('I accept the terms stated below'),

@@ -21,6 +21,7 @@ import {
   elementOptionUpdated,
   elementsReordered,
   elementUpdated,
+  surveyDeleted,
   surveyUpdate,
   surveyUpdated,
 } from '../store';
@@ -84,6 +85,7 @@ type UseSurveyEditingReturn = {
   ) => Promise<void>;
   deleteElement: (elemId: number) => Promise<void>;
   deleteElementOption: (elemId: number, optionId: number) => Promise<void>;
+  deleteSurvey: () => Promise<void>;
   publish: () => Promise<void>;
   unpublish: () => Promise<void>;
   updateElement: (
@@ -179,6 +181,11 @@ export default function useSurveyMutations(
       `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
     );
     dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
+  }
+
+  async function deleteSurvey() {
+    await apiClient.delete(`/api/orgs/${orgId}/surveys/${surveyId}`);
+    dispatch(surveyDeleted(surveyId));
   }
 
   async function publish() {
@@ -302,6 +309,7 @@ export default function useSurveyMutations(
     addElementOptionsFromText,
     deleteElement,
     deleteElementOption,
+    deleteSurvey,
     publish,
     unpublish,
     updateElement,

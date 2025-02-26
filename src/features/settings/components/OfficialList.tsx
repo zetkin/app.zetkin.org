@@ -1,11 +1,11 @@
-import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FC } from 'react';
-import { GridColDef } from '@mui/x-data-grid-pro';
 import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
 import { Button, FormControl, Typography } from '@mui/material';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import useMemberships from 'features/organizations/hooks/useMemberships';
 import { useMessages } from 'core/i18n';
 import useOfficialMutations from '../hooks/useOfficialMutations';
 import useOrganization from 'features/organizations/hooks/useOrganization';
@@ -23,6 +23,7 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
   const { removeAccess, updateRole } = useOfficialMutations(orgId);
   const user = useCurrentUser();
   const parentOrg = useOrganization(orgId);
+  const userMemberships = useMemberships();
   const sortedOfficialList = [...officialList].sort((a, b) => {
     if (a.profile.id === user?.id) {
       return -1;
@@ -86,7 +87,10 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       flex: 1,
       minWidth: 300,
       renderCell: (params) => {
-        if (params.row.profile.id === user?.id) {
+        const matchingMembership = userMemberships.data?.find(
+          (membership) => membership.organization.id === orgId
+        );
+        if (params.row.profile.id === matchingMembership?.profile.id) {
           return <Typography>{messages.officials.you()}</Typography>;
         } else if (params.row.role === 'admin') {
           return (

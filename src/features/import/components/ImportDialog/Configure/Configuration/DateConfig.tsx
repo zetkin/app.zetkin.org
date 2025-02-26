@@ -29,6 +29,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
     dateFormats,
     isCustomFormat,
     isPersonNumberFormat,
+    noCustomFormat,
     onDateFormatChange,
     personNumberFormats,
     wrongDateFormat,
@@ -50,7 +51,9 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
         <Msg id={messageIds.configuration.configure.dates.header} />
       </Typography>
       <Typography sx={{ paddingBottom: 2 }}>
-        <Msg id={messageIds.configuration.configure.dates.description} />
+        <Msg
+          id={messageIds.configuration.configure.dates.dateConfigDescription}
+        />
       </Typography>
       <FormControl sx={{ paddingBottom: 2 }}>
         <InputLabel>
@@ -58,7 +61,12 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
         </InputLabel>
         <Select
           label={messages.configuration.configure.dates.dropDownLabel()}
-          onChange={(event) => onDateFormatChange(event.target.value)}
+          onChange={(event) => {
+            const value = event.target.value;
+            if (value) {
+              onDateFormatChange(value);
+            }
+          }}
           sx={{ minWidth: '200px' }}
           value={isCustomFormat ? 'custom' : dateFormat}
         >
@@ -108,7 +116,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           </MenuItem>
         </Select>
       </FormControl>
-      {!isPersonNumberFormat(dateFormat) && (
+      {dateFormat != null && !isPersonNumberFormat(dateFormat) && (
         <TextField
           label={messages.configuration.configure.dates.dateInputLabel()}
           onChange={(event) => {
@@ -131,7 +139,7 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           />
         </Typography>
       )}
-      {isPersonNumberFormat(dateFormat) && (
+      {dateFormat && isPersonNumberFormat(dateFormat) && (
         <Typography>
           <Msg
             id={
@@ -142,10 +150,19 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
           />
         </Typography>
       )}
+      {noCustomFormat && (
+        <Alert severity="warning" sx={{ marginTop: 1 }}>
+          <Msg
+            id={messageIds.configuration.configure.dates.noCustomFormatWarning}
+          />
+        </Alert>
+      )}
       {wrongDateFormat && (
         <Alert severity="warning" sx={{ marginTop: 1 }}>
           <Msg
-            id={messageIds.configuration.configure.dates.wrongDateFormatWarning}
+            id={
+              messageIds.configuration.configure.dates.invalidDateFormatWarning
+            }
           />
         </Alert>
       )}

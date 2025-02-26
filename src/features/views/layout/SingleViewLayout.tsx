@@ -102,9 +102,15 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       onSelect: () => setQueryDialogOpen(true),
     });
     ellipsisMenu.push({
-      label: messages.viewLayout.ellipsisMenu.makeStatic(),
+      label: messages.viewLayout.ellipsisMenu.makeStatic.label(),
       onSelect: () => {
-        deleteContentQuery();
+        showConfirmDialog({
+          onSubmit: deleteContentQuery,
+          title:
+            messages.viewLayout.ellipsisMenu.makeStatic.confirmDialogTitle(),
+          warningText:
+            messages.viewLayout.ellipsisMenu.makeStatic.confirmDialogInfo(),
+        });
       },
     });
   } else {
