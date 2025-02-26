@@ -1,8 +1,8 @@
 import { create } from 'random-seed';
 import { FC } from 'react';
+import { useTheme } from '@mui/material';
 
 import { funSwatches } from 'zui/theme/palette';
-import typography from 'zui/theme/typography';
 import { ZUISize } from '../types';
 
 interface ZUIAvatarProps {
@@ -39,14 +39,19 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   size = 'medium',
   variant = 'circular',
 }) => {
+  const theme = useTheme();
+
   let avatarSize = 32;
   let fontSize = 16;
+  let letterSpacing = 0.11;
   if (size == 'small') {
     avatarSize = 24;
     fontSize = 12;
+    letterSpacing = 0.08;
   } else if (size == 'large') {
     avatarSize = 48;
     fontSize = 20;
+    letterSpacing = 0.14;
   }
 
   const seededRand = create(id.toString());
@@ -122,9 +127,11 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
         </g>
 
         <text
-          dominantBaseline="middle"
-          fontFamily={typography.bodyMdRegular?.fontFamily}
+          dominantBaseline="central"
+          fontFamily={theme.typography.fontFamily}
           fontSize={fontSize}
+          fontWeight={600}
+          letterSpacing={letterSpacing}
           textAnchor="middle"
           x={avatarSize / 2}
           y={avatarSize / 2}
