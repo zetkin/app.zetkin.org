@@ -36,3 +36,16 @@ BarChartBasic.args = {
     },
   ],
 };
+
+export const BarChartMany = Template.bind({});
+BarChartMany.args = {
+  title: 'Area households',
+  description: 'Number of households in each area',
+  visualizationHeight: 50,
+  data: Array.from({ length: 90 }, (e, i) => {
+    return {
+      label: `Area ${i + 1}`,
+      value: Math.round(Math.random() * 100),
+    };
+  }),
+};

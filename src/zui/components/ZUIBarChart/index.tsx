@@ -86,13 +86,19 @@ const ZUIBarChart: FC<ZUIBarChartProps> = ({
   };
   const itemStyle = {
     alignItems: 'end',
+    containerType: 'inline-size',
     display: 'flex',
     flex: 1,
     height: '100%',
-    paddingInline: 0.5,
+    paddingInline: 0,
     position: 'relative',
     '&:hover .value': {
       opacity: 1,
+    },
+    ['@container (max-width: 4em)']: {
+      '&:not(:hover) .label': {
+        opacity: 0,
+      },
     },
   };
   const labelStyle = {
@@ -124,6 +130,7 @@ const ZUIBarChart: FC<ZUIBarChartProps> = ({
     position: 'relative',
     backgroundColor: 'data.mid1',
     borderRadius: 1,
+    marginInline: `min(${theme.spacing(0.5)}, 10%)`,
     transition: 'background-color 0.3s',
   };
 
