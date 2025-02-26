@@ -43,7 +43,7 @@ export default class SurveyResponseColumnType
         if (b.length == 0 || b[b.length - 1] == '') {
           return -1;
         }
-        return (a[a.length - 1] ?? '').localeCompare(b[b.length - 1] ?? '');
+        return a[a.length - 1].localeCompare(b[b.length - 1]);
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
