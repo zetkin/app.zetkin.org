@@ -10,47 +10,31 @@ const meta: Meta<typeof ZUIAvatar> = {
 export default meta;
 type Story = StoryObj<typeof ZUIAvatar>;
 
-export const Small: Story = {
+export const Medium: Story = {
   args: {
+    firstName: 'Angela',
     id: 1,
-    size: 'small',
-    text: 'Angela Davis',
-    variant: 'circular',
+    lastName: 'Davis',
   },
 };
 
-export const Medium: Story = {
+export const Small: Story = {
   args: {
-    id: 1,
-    size: 'medium',
-    text: 'Angela Davis',
-    variant: 'circular',
+    ...Medium.args,
+    size: 'small',
   },
 };
 
 export const Large: Story = {
   args: {
-    id: 1,
+    ...Medium.args,
     size: 'large',
-    text: 'Angela Davis',
-    variant: 'circular',
   },
 };
 
-export const Circular: Story = {
+export const Square: Story = {
   args: {
-    id: 1,
-    size: 'large',
-    text: 'Angela Davis',
-    variant: 'circular',
-  },
-};
-
-export const Rounded: Story = {
-  args: {
-    id: 1,
-    size: 'large',
-    text: 'Angela Davis',
-    variant: 'rounded',
+    ...Medium.args,
+    variant: 'square',
   },
 };

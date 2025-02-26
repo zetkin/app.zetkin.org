@@ -3,19 +3,41 @@ import { FC } from 'react';
 
 import palette from 'zui/theme/palette';
 import typography from 'zui/theme/typography';
+import { ZUISize } from '../types';
 
 interface ZUIAvatarProps {
-  size?: 'small' | 'medium' | 'large';
-  variant?: 'rounded' | 'circular';
+  /**
+   * First name of the person the avatar represents.
+   */
+  firstName: string;
+
+  /**
+   * Id of the person the avatar represents.
+   */
   id: number;
-  text?: string;
+
+  /**
+   * Last name of the person the avatar represents.
+   */
+  lastName: string;
+
+  /**
+   * The size of the avatar, defaults to 'medium'.
+   */
+  size?: ZUISize;
+
+  /**
+   * The shape of the avatar, defaults to 'circular'.
+   */
+  variant?: 'square' | 'circular';
 }
 
 const ZUIAvatar: FC<ZUIAvatarProps> = ({
+  firstName,
+  id,
+  lastName,
   size = 'medium',
   variant = 'circular',
-  text = '',
-  id,
 }) => {
   const s = size == 'small' ? 24 : size == 'medium' ? 32 : 48;
   const fontSize = size == 'small' ? 12 : size == 'medium' ? 16 : 20;
@@ -24,15 +46,7 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
 
   const seededRand = create(idStr);
   const rand = () => seededRand(1000) / 1000;
-  let shortText = '';
-  const textParts = text.split(' ');
-  if (textParts.length >= 2 && textParts[1].length != 0) {
-    shortText = textParts[0][0] + textParts[1][0];
-  } else {
-    shortText = textParts[0].slice(0, 2);
-  }
-
-  shortText = shortText.toUpperCase();
+  const initials = firstName.slice(0, 1) + lastName.slice(0, 1);
 
   const colors = Object.keys(palette.swatches).reduce((acc, swatch) => {
     type Palette = {
@@ -84,8 +98,8 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
         <clipPath id={size + 'circleClip'}>
           <circle cx={s / 2} cy={s / 2} r={s / 2} />
         </clipPath>
-        <clipPath id={size + 'roundedClip'}>
-          <rect height={s}rx="4" ry="4" width={s}  />
+        <clipPath id={size + 'squareClip'}>
+          <rect height={s} rx="4" ry="4" width={s} />
         </clipPath>
       </defs>
 
@@ -93,7 +107,7 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
         clipPath={
           variant == 'circular'
             ? 'url(#' + size + 'circleClip)'
-            : 'url(#' + size + 'roundedClip)'
+            : 'url(#' + size + 'squareClip)'
         }
         id="content"
       >
@@ -118,7 +132,7 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
           x={s / 2}
           y={s / 2}
         >
-          {shortText}
+          {initials.toUpperCase()}
         </text>
       </g>
     </svg>
