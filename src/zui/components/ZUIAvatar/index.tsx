@@ -39,12 +39,17 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   size = 'medium',
   variant = 'circular',
 }) => {
-  const s = size == 'small' ? 24 : size == 'medium' ? 32 : 48;
-  const fontSize = size == 'small' ? 12 : size == 'medium' ? 16 : 20;
+  let avatarSize = 32;
+  let fontSize = 16;
+  if (size == 'small') {
+    avatarSize = 24;
+    fontSize = 12;
+  } else if (size == 'large') {
+    avatarSize = 48;
+    fontSize = 20;
+  }
 
-  const idStr = '' + id;
-
-  const seededRand = create(idStr);
+  const seededRand = create(id.toString());
   const rand = () => seededRand(1000) / 1000;
   const initials = firstName.slice(0, 1) + lastName.slice(0, 1);
 
@@ -77,7 +82,12 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   // )}%, ${Math.floor(rand() * 40 + 50)}%)`;
 
   return (
-    <svg height={s} version="1.1" width={s} xmlns="http://www.w3.org/2000/svg">
+    <svg
+      height={avatarSize}
+      version="1.1"
+      width={avatarSize}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <defs>
         <linearGradient
           gradientTransform={'rotate(' + rand() * 360 + ')'}
@@ -96,10 +106,10 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
         </filter>
 
         <clipPath id={size + 'circleClip'}>
-          <circle cx={s / 2} cy={s / 2} r={s / 2} />
+          <circle cx={avatarSize / 2} cy={avatarSize / 2} r={avatarSize / 2} />
         </clipPath>
         <clipPath id={size + 'squareClip'}>
-          <rect height={s} rx="4" ry="4" width={s} />
+          <rect height={avatarSize} rx="4" ry="4" width={avatarSize} />
         </clipPath>
       </defs>
 
@@ -111,16 +121,22 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
         }
         id="content"
       >
-        <rect fill="url(#gradient)" height={s} width={s} />
+        <rect fill="url(#gradient)" height={avatarSize} width={avatarSize} />
         <g filter="url(#blurMe)">
-          <rect fill={getColor()} height={s} width={s} x={-s / 2} y={-s / 2} />
+          <rect
+            fill={getColor()}
+            height={avatarSize}
+            width={avatarSize}
+            x={-avatarSize / 2}
+            y={-avatarSize / 2}
+          />
           <line
             stroke={getColor()}
             strokeWidth={15}
-            x1={s * 1.5}
-            x2={s / 2}
-            y1={s * 1.5}
-            y2={s / 3}
+            x1={avatarSize * 1.5}
+            x2={avatarSize / 2}
+            y1={avatarSize * 1.5}
+            y2={avatarSize / 3}
           />
         </g>
 
@@ -129,8 +145,8 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
           fontFamily={typography.bodyMdRegular?.fontFamily}
           fontSize={fontSize}
           textAnchor="middle"
-          x={s / 2}
-          y={s / 2}
+          x={avatarSize / 2}
+          y={avatarSize / 2}
         >
           {initials.toUpperCase()}
         </text>
