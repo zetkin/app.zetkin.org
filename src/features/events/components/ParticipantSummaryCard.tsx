@@ -19,7 +19,7 @@ import useParticipantStatus from '../hooks/useParticipantsStatus';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
-import RemindAllToolbox from './RemindAllBox';
+import RemindAllButton from './RemindAllButton';
 
 type ParticipantSummaryCardProps = {
   eventId: number;
@@ -183,7 +183,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               </Typography>
               <Box alignItems="center" display="flex">
                 <Typography variant="h4">{`${numRemindedParticipants}/${numAvailParticipants}`}</Typography>
-                <RemindAllToolbox
+                <RemindAllButton
                   contactPerson={contactPerson}
                   eventId={eventId}
                   orgId={orgId}
@@ -211,7 +211,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                   </Typography>
                 )}
                 {!eventHasEnded && (
-                  <RemindAllToolbox
+                  <RemindAllButton
                     contactPerson={contactPerson}
                     eventId={eventId}
                     orgId={orgId}

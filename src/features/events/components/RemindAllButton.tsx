@@ -7,14 +7,14 @@ import { useAppSelector } from 'core/hooks';
 import messageIds from 'features/events/l10n/messageIds';
 import useEventParticipants from '../hooks/useEventParticipants';
 
-interface RemindAllToolboxProps {
+interface RemindAllButtonProps {
   contactPerson?: null | { id: number; name: string };
   eventId: number;
   orgId: number;
   sendReminders: (eventId: number) => void;
 }
 
-const RemindAllToolbox: FC<RemindAllToolboxProps> = ({
+const RemindAllButton: FC<RemindAllButtonProps> = ({
   contactPerson,
   eventId,
   orgId,
@@ -72,4 +72,4 @@ const RemindAllToolbox: FC<RemindAllToolboxProps> = ({
     </Tooltip>
   );
 };
-export default RemindAllToolbox;
+export default RemindAllButton;
