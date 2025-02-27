@@ -14,38 +14,38 @@ const Template: StoryFn<typeof ZUIBarChart> = (args) => (
 
 export const BarChartBasic = Template.bind({});
 BarChartBasic.args = {
-  title: 'Area households',
-  description: 'Number of households in each area',
-  visualizationHeight: 50,
   data: [
     {
-      label: 'North',
+      label: 'North part of town',
       value: 50,
     },
     {
-      label: 'East',
+      label: 'East part of town',
       value: 90,
     },
     {
-      label: 'South',
+      label: 'South part of town',
       value: 20,
     },
     {
-      label: 'West',
+      label: 'West part of town',
       value: 60,
     },
   ],
+  description: 'Number of households in each area',
+  title: 'Area households',
+  visualizationHeight: 50,
 };
 
 export const BarChartMany = Template.bind({});
 BarChartMany.args = {
-  title: 'Area households',
-  description: 'Number of households in each area',
-  visualizationHeight: 50,
   data: Array.from({ length: 90 }, (e, i) => {
     return {
-      label: `Area ${i + 1}`,
+      label: `Day ${i + 1}`,
       value: Math.round(Math.random() * 100),
     };
   }),
+  description: 'Households visited each of the first 90 days',
+  title: 'Households visited',
+  visualizationHeight: 50,
 };
