@@ -127,8 +127,8 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
             fill={getColor()}
             height={avatarSize}
             width={avatarSize}
-            x={-avatarSize / 2}
-            y={-avatarSize / 2}
+            x={-seededRand(avatarSize)}
+            y={-seededRand(avatarSize) / 2}
           />
           <line
             stroke={getColor()}
