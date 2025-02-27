@@ -69,6 +69,9 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
     return null;
   }
 
+  const enventHasStarted =
+    new Date(removeOffset(event.start_time)) > new Date();
+  const eventHasEnded = new Date(removeOffset(event.end_time)) < new Date();
   return (
     <Box>
       <ZUICard
@@ -173,7 +176,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
               )}
             </Box>
           </Box>
-          {new Date(removeOffset(event.start_time)) > new Date() ? (
+          {enventHasStarted ? (
             <Box display="flex" flexDirection="column">
               <Typography color={'secondary'}>
                 {messages.participantSummaryCard.booked()}
@@ -207,7 +210,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
                     })}
                   </Typography>
                 )}
-                {new Date(removeOffset(event.end_time)) > new Date() && (
+                {!eventHasEnded && (
                   <RemindAllToolbox
                     contactPerson={contactPerson}
                     eventId={eventId}
