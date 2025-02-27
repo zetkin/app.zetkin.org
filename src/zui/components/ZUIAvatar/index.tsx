@@ -1,5 +1,5 @@
 import { create } from 'random-seed';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useTheme } from '@mui/material';
 
 import { funSwatches } from 'zui/theme/palette';
@@ -55,17 +55,27 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   }
 
   const seededRand = create(id.toString());
-  const rand = () => seededRand(1000) / 1000;
+  const rand = () => seededRand(1000000) / 1000000;
   const initials = firstName.slice(0, 1) + lastName.slice(0, 1);
 
-  const colors = Object.keys(funSwatches).reduce((acc, swatch) => {
-    acc.push(funSwatches[swatch].light.color);
-    acc.push(funSwatches[swatch].medium.color);
+  const colors = useMemo(() => {
+    return Object.keys(funSwatches).reduce((acc, swatch) => {
+      acc.push(funSwatches[swatch].light.color);
+      acc.push(funSwatches[swatch].medium.color);
 
-    return acc;
-  }, [] as string[]);
+      return acc;
+    }, [] as string[]);
+  }, [funSwatches]);
 
-  const getColor = (): string => colors[seededRand(colors.length)];
+  const getColor = (): string => {
+    const index = seededRand(colors.length);
+    const color = colors[index];
+    return color;
+  };
+
+  const uniqueName = (name: string) => {
+    return name + id;
+  };
 
   return (
     <svg
@@ -77,13 +87,13 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
       <defs>
         <linearGradient
           gradientTransform={'rotate(' + rand() * 360 + ')'}
-          id="gradient"
+          id={uniqueName('gradient')}
         >
           <stop offset="5%" stopColor={getColor()} />
           <stop offset="95%" stopColor={getColor()} />
         </linearGradient>
 
-        <filter id="blurMe">
+        <filter id={uniqueName('blurMe')}>
           <feGaussianBlur
             edgeMode="wrap"
             in="SourceGraphic"
@@ -91,10 +101,10 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
           />
         </filter>
 
-        <clipPath id={size + 'circleClip'}>
+        <clipPath id={uniqueName(size + 'circleClip')}>
           <circle cx={avatarSize / 2} cy={avatarSize / 2} r={avatarSize / 2} />
         </clipPath>
-        <clipPath id={size + 'squareClip'}>
+        <clipPath id={uniqueName(size + 'squareClip')}>
           <rect height={avatarSize} rx="4" ry="4" width={avatarSize} />
         </clipPath>
       </defs>
@@ -102,13 +112,17 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
       <g
         clipPath={
           variant == 'circular'
-            ? 'url(#' + size + 'circleClip)'
-            : 'url(#' + size + 'squareClip)'
+            ? `url(#${uniqueName(size + 'circleClip')})`
+            : `url(#${uniqueName(size + 'squareClip')})`
         }
-        id="content"
+        id={'content' + id}
       >
-        <rect fill="url(#gradient)" height={avatarSize} width={avatarSize} />
-        <g filter="url(#blurMe)">
+        <rect
+          fill={`url(#${uniqueName('gradient')})`}
+          height={avatarSize}
+          width={avatarSize}
+        />
+        <g filter={`url(#${uniqueName('blurMe')})`}>
           <rect
             fill={getColor()}
             height={avatarSize}
