@@ -5,13 +5,28 @@ import ZUIAvatar from '../ZUIAvatar';
 import { ZUISize } from '../types';
 
 type ZUIAvatarGroupProps = {
+  /**
+   * List of the people you want to display as avatars.
+   */
   avatars: {
     firstName: string;
     id: number;
     lastName: string;
   }[];
+
+  /**
+   * Maximum number of avatars shown.
+   */
   max?: number;
+
+  /**
+   * The size of the avatars. Defaults to 'medium'.
+   */
   size?: ZUISize;
+
+  /**
+   * The shape of the avatars. Defaults to 'circular.
+   */
   variant?: 'circular' | 'square';
 };
 
