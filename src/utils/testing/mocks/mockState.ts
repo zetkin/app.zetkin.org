@@ -19,6 +19,7 @@ export default function mockState(overrides?: RootState) {
       crumbsByPath: {},
     },
     call: {
+      activeCampaignsList: remoteList(),
       currentCall: remoteItem(0),
     },
     callAssignments: {
