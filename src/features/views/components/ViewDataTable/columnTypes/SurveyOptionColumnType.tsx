@@ -36,7 +36,12 @@ export default class SurveyOptionColumnType
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
-      sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
+      sortComparator: (
+        v1: SurveyOptionViewCell,
+        v2: SurveyOptionViewCell,
+        p1,
+        p2
+      ) => {
         const getPriority = (cell: SurveyOptionViewCell) => {
           if (cell == null || cell.length == 0) {
             return 1;
@@ -47,7 +52,18 @@ export default class SurveyOptionColumnType
           }
         };
 
-        return getPriority(v1) - getPriority(v2);
+        const result = getPriority(v1) - getPriority(v2);
+
+        if (result == 0) {
+          if (typeof p1.id == 'string' && typeof p2.id == 'string') {
+            return p1.id.localeCompare(p2.id);
+          } else if (typeof p1.id == 'number' && typeof p2.id == 'number') {
+            return p1.id - p2.id;
+          }
+          return 0;
+        }
+
+        return result;
       },
       type: 'boolean',
     };
