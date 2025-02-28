@@ -18,6 +18,9 @@ export default function mockState(overrides?: RootState) {
     breadcrumbs: {
       crumbsByPath: {},
     },
+    call: {
+      currentCall: remoteItem(0),
+    },
     callAssignments: {
       assignmentList: remoteList(),
       callAssignmentIdsByCampaignId: {},
