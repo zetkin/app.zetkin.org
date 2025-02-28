@@ -103,29 +103,29 @@ const ZUISelect: FC<ZUISelectProps> = ({
       >
         {items.map((item) => {
           if (isCategoryItem(item)) {
-            return (
-              <>
-                <ListSubheader>{item.title}</ListSubheader>
-                {item.selectItems.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    sx={{ paddingLeft: 4 }}
-                    value={item.value}
+            return [
+              <ListSubheader key={`subheader-${item.title}`}>
+                {item.title}
+              </ListSubheader>,
+              ...item.selectItems.map((item) => (
+                <MenuItem
+                  key={item.value}
+                  sx={{ paddingLeft: '2rem' }}
+                  value={item.value}
+                >
+                  <Typography
+                    sx={{
+                      fontFamily: theme.typography.fontFamily,
+                      fontSize: '1rem',
+                      fontWeight: 400,
+                      letterSpacing: '3%',
+                    }}
                   >
-                    <Typography
-                      sx={{
-                        fontFamily: theme.typography.fontFamily,
-                        fontSize: '1rem',
-                        fontWeight: 400,
-                        letterSpacing: '3%',
-                      }}
-                    >
-                      {item.label}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </>
-            );
+                    {item.label}
+                  </Typography>
+                </MenuItem>
+              )),
+            ];
           } else {
             return (
               <MenuItem key={item.value} value={item.value}>
