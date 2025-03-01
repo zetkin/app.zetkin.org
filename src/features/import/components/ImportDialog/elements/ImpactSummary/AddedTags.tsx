@@ -10,12 +10,14 @@ import { ZetkinTag } from 'utils/types/zetkin';
 interface AddedTagsProps {
   addedTags: ZetkinTag[];
   numPeopleWithTagsAdded: number;
+  peoplePerTag: { [key: number]: number };
   tense: 'past' | 'future';
 }
 
 const AddedTags: FC<AddedTagsProps> = ({
   addedTags,
   numPeopleWithTagsAdded,
+  peoplePerTag,
   tense,
 }) => {
   const theme = useTheme();
@@ -67,9 +69,12 @@ const AddedTags: FC<AddedTagsProps> = ({
           }}
         />
       </Typography>
-      <Box display="flex" flexWrap="wrap" gap={1} paddingTop={1}>
+      <Box display="inline" flexWrap="wrap" gap={1} paddingTop={1}>
         {addedTags.map((tag) => (
-          <TagChip key={tag.id} tag={tag} />
+          <Box key={tag.id} display="flex" paddingTop={1}>
+            <TagChip tag={tag} />
+            <Typography fontWeight="bold"> : {peoplePerTag[tag.id]}</Typography>
+          </Box>
         ))}
       </Box>
     </Box>
