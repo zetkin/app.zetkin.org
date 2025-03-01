@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
 import {
   Box,
@@ -357,16 +357,22 @@ export default AreaSelect;
 interface ExpandableTextProps {
   content: string;
   maxVisibleChars: number;
+  color?: string;
+  fontStyle?: string;
 }
 
 export const ExpandableText: React.FC<ExpandableTextProps> = ({
   content,
   maxVisibleChars,
+  color,
+  fontStyle,
 }) => {
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-  const handleToggle = () => {
+  const handleToggle = (event: MouseEvent) => {
+    // event.preventDefault() to prevent entering edit mode when pressing "show more" in geography view
+    event.stopPropagation();
     setIsExpanded((prev) => !prev);
   };
 
@@ -378,35 +384,42 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
   return (
     <Box sx={{ display: 'inline' }}>
       <Typography
+        color={color}
         component="span"
+        fontStyle={fontStyle}
         sx={{
           display: 'inline',
           verticalAlign: 'baseline',
+          whiteSpace: 'break-spaces',
         }}
         variant="body1"
       >
-        {displayedText}
+        <Typography
+          component="span"
+          sx={{
+            mr: 1,
+          }}
+        >
+          {displayedText}
+          {isLongContent && !isExpanded && <span>...</span>}
+        </Typography>
         {isLongContent && (
-          <>
-            {!isExpanded && <span>...</span>}
-            <Link
-              component="button"
-              onClick={handleToggle}
-              sx={{
-                cursor: 'pointer',
-                display: 'inline',
-                ml: !isExpanded ? 1 : 0,
-                padding: 0,
-                textDecoration: 'underline',
-                verticalAlign: 'baseline',
-              }}
-              variant="body1"
-            >
-              {isExpanded
-                ? areaAssignmentMessages.map.areaInfo.showLess()
-                : areaAssignmentMessages.map.areaInfo.showMore()}
-            </Link>
-          </>
+          <Link
+            component="button"
+            onClick={handleToggle}
+            sx={{
+              cursor: 'pointer',
+              display: 'inline',
+              padding: 0,
+              textDecoration: 'underline',
+              verticalAlign: 'text-bottom',
+            }}
+            variant="body1"
+          >
+            {isExpanded
+              ? areaAssignmentMessages.map.areaInfo.showLess()
+              : areaAssignmentMessages.map.areaInfo.showMore()}
+          </Link>
         )}
       </Typography>
     </Box>
