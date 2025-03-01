@@ -54,16 +54,24 @@ const AreaOverlay: FC<Props> = ({
     area.organization.id,
     area.id
   );
+  const tagsElement = useRef<HTMLElement>();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const enteredEditableMode = useRef(false);
 
   const handleDescriptionTextAreaRef = useCallback(
     (el: HTMLTextAreaElement | null) => {
-      if (el) {
+      if (el && enteredEditableMode.current) {
         // When entering edit mode for desciption, focus the text area and put
         // caret at the end of the text
         el.focus();
         el.setSelectionRange(el.value.length, el.value.length);
-        el.scrollTop = el.scrollHeight;
+        // We want to display the last line of the textarea.
+        // We do this by scrolling the element under the textarea into view.
+        // This way we don't have to keep track of which element contains the scroll
+        setTimeout(() => {
+          tagsElement.current?.scrollIntoView();
+        }, 0);
+        enteredEditableMode.current = false;
       }
     },
     []
@@ -158,6 +166,9 @@ const AreaOverlay: FC<Props> = ({
                 : ZUIPreviewableMode.PREVIEW
             }
             onSwitchMode={(mode) => {
+              if (mode === ZUIPreviewableMode.EDITABLE) {
+                enteredEditableMode.current = true;
+              }
               setFieldEditing(
                 mode === ZUIPreviewableMode.EDITABLE ? 'description' : null
               );
@@ -202,7 +213,7 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
-      <Box flexGrow={1} my={2}>
+      <Box ref={tagsElement} flexGrow={1} my={2}>
         <TagsSection area={area} />
       </Box>
       <Box display="flex" gap={1}>
