@@ -1,4 +1,11 @@
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Close } from '@mui/icons-material';
 import {
   Box,
@@ -20,6 +27,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import { ExpandableText } from 'features/areaAssignments/components/AreaSelect';
 
 type Props = {
   area: ZetkinArea;
@@ -72,7 +80,9 @@ const AreaOverlay: FC<Props> = ({
         bottom: '1rem',
         display: 'flex',
         flexDirection: 'column',
+        maxWidth: 400,
         minWidth: 400,
+        overflow: 'auto',
         padding: 2,
         position: 'absolute',
         right: '1rem',
@@ -157,7 +167,6 @@ const AreaOverlay: FC<Props> = ({
                 fullWidth
                 inputProps={props}
                 inputRef={handleDescriptionTextAreaRef}
-                maxRows={4}
                 multiline
                 onBlur={() => {
                   if (fieldEditing === 'description') {
@@ -166,26 +175,26 @@ const AreaOverlay: FC<Props> = ({
                   }
                 }}
                 onChange={(ev) => setDescription(ev.target.value)}
-                sx={{ marginTop: 2 }}
+                sx={{
+                  marginTop: 2,
+                }}
                 value={description}
               />
             )}
             renderPreview={() => (
               <Box paddingTop={1}>
-                <Typography
+                <ExpandableText
                   color="secondary"
+                  content={
+                    area.description?.trim().length
+                      ? area.description
+                      : messages.areas.default.description()
+                  }
                   fontStyle={
                     area.description?.trim().length ? 'inherit' : 'italic'
                   }
-                  maxWidth={300}
-                  sx={{ overflowWrap: 'anywhere' }}
-                >
-                  {area.description?.trim().length ? (
-                    area.description
-                  ) : (
-                    <Msg id={messageIds.areas.default.description} />
-                  )}
-                </Typography>
+                  maxVisibleChars={110}
+                />
               </Box>
             )}
             value={area.description || ''}
