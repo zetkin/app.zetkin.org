@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
+import messageIds from 'features/import/l10n/messageIds';
 
 type Props = {
   breakpoint?: number;
@@ -18,7 +18,7 @@ const ProblemRowsText: FC<Props> = ({ breakpoint = 8, rows }) => {
         values={{ row: rows[0] }}
       />
     );
-  } else if (rows.length <= breakpoint) {
+  } else if (rows.length <= breakpoint || rows.length - breakpoint == 1) {
     const commaStr = rows.slice(0, -1).join(', ');
     const lastRow = rows[rows.length - 1];
     return (
