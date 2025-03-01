@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/styles';
+import { DoorFront, Place } from '@mui/icons-material';
 import {
   AttributionControl,
   FeatureGroup,
@@ -8,9 +9,12 @@ import {
 } from 'react-leaflet';
 import { Box, Divider, lighten, Typography } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
-import { FeatureGroup as FeatureGroupType, latLngBounds } from 'leaflet';
+import { FeatureGroup as FeatureGroupType } from 'leaflet';
 
+import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
+import { ZetkinArea } from 'features/areas/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
@@ -18,10 +22,7 @@ import {
   ZetkinAreaAssignmentSession,
   ZetkinLocation,
 } from '../types';
-import { ZetkinArea } from 'features/areas/types';
-import objToLatLng from 'features/areas/utils/objToLatLng';
-import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
-import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
+import { getBoundSize } from '../../canvass/utils/getBoundSize';
 
 const LocationMarker: FC<{
   areaAssId: string;
@@ -32,12 +33,16 @@ const LocationMarker: FC<{
   const theme = useTheme();
   if (locationStyle == 'dot') {
     return (
-      <DivIconMarker iconAnchor={[2, 2]} position={location.position}>
+      <DivIconMarker
+        iconAnchor={[2, 2]}
+        position={location.position}
+        zIndexOffset={-1000}
+      >
         <Box
           bgcolor={theme.palette.text.primary}
           borderRadius="2em"
-          height={4}
-          width={4}
+          height={6}
+          width={6}
         />
       </DivIconMarker>
     );
@@ -58,9 +63,9 @@ const LocationMarker: FC<{
             color={theme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
-            fontSize="12px"
+            fontSize="14px"
             justifyContent="center"
-            paddingX="2px"
+            paddingX="10px"
             width="100%"
           >
             {location.households.length}
@@ -308,24 +313,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               return -1;
             } else {
               // When  none of the two areas are selected, sort them
-              // by size, so that big ones are underneith and the
+              // by size, so that big ones are underneath and the
               // smaller ones can be clicked.
-              const bounds0 = latLngBounds(a0.points.map(objToLatLng));
-              const bounds1 = latLngBounds(a1.points.map(objToLatLng));
-
-              const dimensions0 = {
-                x: bounds0.getEast() - bounds0.getWest(),
-                y: bounds0.getNorth() - bounds0.getSouth(),
-              };
-              const dimensions1 = {
-                x: bounds1.getEast() - bounds1.getWest(),
-                y: bounds1.getNorth() - bounds1.getSouth(),
-              };
-
-              const size0 = dimensions0.x * dimensions0.y;
-              const size1 = dimensions1.x * dimensions1.y;
-
-              return size1 - size0;
+              return getBoundSize(a1) - getBoundSize(a0);
             }
           })
           .map((area) => {
@@ -398,8 +388,13 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <>
                 {overlayStyle == 'households' && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     <Box
+                      alignItems="center"
                       bgcolor="white"
                       borderRadius={1}
                       boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
@@ -409,18 +404,43 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                       padding="2px 6px"
                       sx={{ translate: '-50% -50%' }}
                     >
-                      <Typography fontSize="11px">
-                        {numberOfLocations}
-                      </Typography>
-                      <Divider />
-                      <Typography fontSize="11px">
+                      <Typography
+                        alignItems="center"
+                        display="flex"
+                        fontSize="14px"
+                      >
+                        <DoorFront
+                          fontSize="small"
+                          sx={{ color: theme.palette.grey[300] }}
+                        />
                         {numberOfHouseholds}
+                      </Typography>
+                      <Divider
+                        sx={{
+                          width: '100%',
+                        }}
+                      />
+                      <Typography
+                        alignItems="center"
+                        display="flex"
+                        fontSize="14px"
+                      >
+                        <Place
+                          fontSize="small"
+                          sx={{ color: theme.palette.grey[300] }}
+                        />
+
+                        {numberOfLocations}
                       </Typography>
                     </Box>
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'progress' && stats && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     <Box
                       bgcolor="white"
                       borderRadius={1}
@@ -444,16 +464,20 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                           borderRadius: '2em',
                           display: 'flex',
                           flexDirection: 'row',
-                          height: '20px',
+                          height: '30px',
                           justifyContent: 'center',
-                          width: '20px',
+                          width: '30px',
                         }}
                       />
                     </Box>
                   </DivIconMarker>
                 )}
                 {overlayStyle == 'assignees' && hasPeople && (
-                  <DivIconMarker iconAnchor={[0, 0]} position={mid}>
+                  <DivIconMarker
+                    iconAnchor={[0, 0]}
+                    position={mid}
+                    zIndexOffset={100}
+                  >
                     {detailed && (
                       <Box
                         alignItems="center"

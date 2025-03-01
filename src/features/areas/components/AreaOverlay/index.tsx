@@ -18,7 +18,7 @@ import ZUIPreviewableInput, {
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
@@ -36,6 +36,7 @@ const AreaOverlay: FC<Props> = ({
   onCancelEdit,
   onClose,
 }) => {
+  const messages = useMessages(messageIds);
   const [title, setTitle] = useState(area.title);
   const [description, setDescription] = useState(area.description);
   const [fieldEditing, setFieldEditing] = useState<
@@ -84,7 +85,9 @@ const AreaOverlay: FC<Props> = ({
         onClickAway={() => {
           if (fieldEditing === 'title') {
             setFieldEditing(null);
-            updateArea({ title });
+            updateArea({
+              title: title?.trim() || messages.areas.default.title(),
+            });
           } else if (fieldEditing === 'description') {
             setFieldEditing(null);
             updateArea({ description });
@@ -111,7 +114,9 @@ const AreaOverlay: FC<Props> = ({
                   onBlur={() => {
                     if (fieldEditing === 'title') {
                       setFieldEditing(null);
-                      updateArea({ title });
+                      updateArea({
+                        title: title?.trim() || messages.areas.default.title(),
+                      });
                     }
                   }}
                   onChange={(ev) => setTitle(ev.target.value)}
@@ -120,7 +125,9 @@ const AreaOverlay: FC<Props> = ({
                 />
               )}
               renderPreview={() => (
-                <Typography variant="h5">{area.title}</Typography>
+                <Typography variant="h5">
+                  {area.title?.trim() || messages.areas.default.title()}
+                </Typography>
               )}
               value={area.title || ''}
             />
@@ -170,6 +177,7 @@ const AreaOverlay: FC<Props> = ({
                   fontStyle={
                     area.description?.trim().length ? 'inherit' : 'italic'
                   }
+                  maxWidth={300}
                   sx={{ overflowWrap: 'anywhere' }}
                 >
                   {area.description?.trim().length ? (
