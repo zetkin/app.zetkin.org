@@ -1250,6 +1250,10 @@ describe('prepareImportOperations()', () => {
           // Phone number contains U202C, a Unicode control character, to validate that it is stripped.
           data: ['+46 73278 98 87‬', 8],
         },
+        {
+          // Phone number contains 202D, a Unicode control character, to validate that it is stripped.
+          data: ['+‭46704007858', 9],
+        },
       ],
       title: 'My sheet',
     };
@@ -1308,6 +1312,13 @@ describe('prepareImportOperations()', () => {
         data: {
           id: 8,
           phone: '+46732789887',
+        },
+        op: 'person.import',
+      },
+      {
+        data: {
+          id: 9,
+          phone: '+46704007858',
         },
         op: 'person.import',
       },

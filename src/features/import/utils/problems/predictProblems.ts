@@ -11,6 +11,7 @@ import {
   ImportRowProblem,
 } from './types';
 import parserFactory from '../dateParsing/parserFactory';
+import { cleanPhoneNumber } from '../phoneUtils';
 
 const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   date: (value) => {
@@ -113,8 +114,7 @@ export function predictProblems(
             ) {
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
-              const phoneValue = value.toString().replaceAll(/[^+\d]/g, '');
-              if (!isValidPhoneNumber(phoneValue.toString(), country)) {
+              if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
                 accumulateFieldProblem(column.field, rowIndex);
               }
             } else if (column.field == 'gender') {
