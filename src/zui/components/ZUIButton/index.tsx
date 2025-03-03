@@ -122,7 +122,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   onKeyDown,
   size = 'medium',
   startIcon,
-  variant,
+  variant = 'secondary',
 }) => {
   const classes = useStyles();
   const isLoading = variant === 'loading';
@@ -156,7 +156,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         };
       }}
       type={actionType}
-      variant={variant ? getVariant(variant) : undefined}
+      variant={getVariant(variant)}
     >
       {isLoading ? <CircularProgress size={16} /> : label}
     </Button>
