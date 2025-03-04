@@ -6,6 +6,7 @@ import { Add } from '@mui/icons-material';
 import ZUIAutocomplete from './index';
 import ZUIText from '../ZUIText';
 import ZUIButton from '../ZUIButton';
+import ZUIAvatar from '../ZUIAvatar';
 
 const meta: Meta<typeof ZUIAutocomplete> = {
   component: ZUIAutocomplete,
@@ -108,4 +109,33 @@ export const LastItemIsAction: Story = {
 export const Checkboxes: Story = {
   args: { ...Basic.args, checkboxes: true, multiple: true },
   render: Multiple.render,
+};
+
+export const AvatarsAndSubtitles: Story = {
+  args: {
+    ...Basic.args,
+    options: [
+      {
+        label: 'Clara',
+        picture: <ZUIAvatar firstName="Clara" id={12} lastName="Zetkin" />,
+        subtitle: 'Zetkin',
+      },
+      {
+        label: 'Angela',
+        picture: <ZUIAvatar firstName="Angela" id={42} lastName="Davis" />,
+        subtitle: 'Davis',
+      },
+      {
+        label: 'Maya',
+        picture: <ZUIAvatar firstName="Maya" id={5} lastName="Angelou" />,
+        subtitle: 'Angelou',
+      },
+      {
+        label: 'Huey',
+        picture: <ZUIAvatar firstName="Huey" id={98} lastName="Newton" />,
+        subtitle: 'P Newton',
+      },
+    ],
+  },
+  render: Basic.render,
 };

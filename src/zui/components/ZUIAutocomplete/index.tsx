@@ -1,6 +1,7 @@
 import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
 import {
   Autocomplete,
+  Box,
   Checkbox,
   Divider,
   ListItem,
@@ -16,7 +17,20 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { FC, HTMLAttributes } from 'react';
 
 type Option = {
+  /**
+   * The name of the option.
+   */
   label: string;
+
+  /**
+   * Will render to the left of the option label.
+   * Use an icon or a ZUIAvatar for example.
+   */
+  picture?: JSX.Element;
+
+  /**
+   * Subtitle of the option.
+   */
   subtitle?: string;
 };
 
@@ -158,6 +172,18 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
                 checkedIcon={<CheckBox fontSize="small" />}
                 icon={<CheckBoxOutlineBlank fontSize="small" />}
               />
+            )}
+            {option.picture && (
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingRight: '0.5rem',
+                }}
+              >
+                {option.picture}
+              </Box>
             )}
             <ListItemText
               disableTypography
