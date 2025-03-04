@@ -17,6 +17,7 @@ type Story = StoryObj<typeof ZUIAutocomplete>;
 
 export const Basic: Story = {
   args: {
+    label: 'Activists',
     options: [
       { label: 'Clara' },
       { label: 'Angela' },
@@ -61,6 +62,7 @@ export const Multiple: Story = {
 
 export const Subtitles: Story = {
   args: {
+    ...Basic.args,
     options: [
       { label: 'Clara', subtitle: 'Zetkin' },
       { label: 'Angela', subtitle: 'Davis' },

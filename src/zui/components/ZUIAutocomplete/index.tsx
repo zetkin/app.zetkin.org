@@ -36,6 +36,11 @@ type ZUIAutocompleteProps = {
   checkboxes?: boolean;
 
   /**
+   * The label of the autocomplete.
+   */
+  label: string;
+
+  /**
    * If true, user can select multiple options.
    */
   multiple?: boolean;
@@ -63,6 +68,7 @@ type ZUIAutocompleteProps = {
 const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
   action,
   checkboxes,
+  label,
   multiple,
   onChange,
   options,
@@ -110,7 +116,37 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
           </Paper>
         );
       }}
-      renderInput={(params) => <TextField {...params} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          sx={{
+            '& > label': {
+              fontFamily: theme.typography.fontFamily,
+              fontSize: '1rem',
+              fontWeight: '500',
+              letterSpacing: '3%',
+              transform: 'translate(0.875rem, 0.563rem)',
+            },
+            '& > label[data-shrink="true"]': {
+              color: theme.palette.secondary.main,
+              fontSize: '0.813rem',
+              transform: 'translate(0.813rem, -0.625rem)',
+            },
+            '& >.MuiInputBase-root > fieldset > legend > span': {
+              fontFamily: theme.typography.fontFamily,
+              fontSize: '0.813rem',
+              fontWeight: '500',
+              letterSpacing: '3%',
+              paddingLeft: '0.25rem',
+              paddingRight: '0.25rem',
+            },
+            '& >.MuiInputBase-root > input': {
+              paddingY: '0.594rem',
+            },
+          }}
+        />
+      )}
       renderOption={(props, option, { selected }) => {
         const { key, ...optionProps } =
           props as HTMLAttributes<HTMLLIElement> & { key: string };
