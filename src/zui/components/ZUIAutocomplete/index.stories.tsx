@@ -74,7 +74,7 @@ export const Subtitles: Story = {
   render: Basic.render,
 };
 
-export const LastItemIsAction: Story = {
+export const WithAction: Story = {
   args: Basic.args,
   render: function Render(args) {
     const [selection, setSelection] = useState<{ label: string } | null>(null);
