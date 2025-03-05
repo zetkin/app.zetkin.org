@@ -6,6 +6,7 @@ import { Add } from '@mui/icons-material';
 import ZUIAutocomplete from './index';
 import ZUIText from '../ZUIText';
 import ZUIButton from '../ZUIButton';
+import ZUIAvatar from '../ZUIAvatar';
 
 const meta: Meta<typeof ZUIAutocomplete> = {
   component: ZUIAutocomplete,
@@ -17,6 +18,7 @@ type Story = StoryObj<typeof ZUIAutocomplete>;
 
 export const Basic: Story = {
   args: {
+    label: 'Activists',
     options: [
       { label: 'Clara' },
       { label: 'Angela' },
@@ -61,6 +63,7 @@ export const Multiple: Story = {
 
 export const Subtitles: Story = {
   args: {
+    ...Basic.args,
     options: [
       { label: 'Clara', subtitle: 'Zetkin' },
       { label: 'Angela', subtitle: 'Davis' },
@@ -71,7 +74,7 @@ export const Subtitles: Story = {
   render: Basic.render,
 };
 
-export const LastItemIsAction: Story = {
+export const WithAction: Story = {
   args: Basic.args,
   render: function Render(args) {
     const [selection, setSelection] = useState<{ label: string } | null>(null);
@@ -110,4 +113,33 @@ export const LastItemIsAction: Story = {
 export const Checkboxes: Story = {
   args: { ...Basic.args, checkboxes: true, multiple: true },
   render: Multiple.render,
+};
+
+export const AvatarsAndSubtitles: Story = {
+  args: {
+    ...Basic.args,
+    options: [
+      {
+        label: 'Clara',
+        picture: <ZUIAvatar firstName="Clara" id={12} lastName="Zetkin" />,
+        subtitle: 'Zetkin',
+      },
+      {
+        label: 'Angela',
+        picture: <ZUIAvatar firstName="Angela" id={42} lastName="Davis" />,
+        subtitle: 'Davis',
+      },
+      {
+        label: 'Maya',
+        picture: <ZUIAvatar firstName="Maya" id={5} lastName="Angelou" />,
+        subtitle: 'Angelou',
+      },
+      {
+        label: 'Huey',
+        picture: <ZUIAvatar firstName="Huey" id={98} lastName="Newton" />,
+        subtitle: 'P Newton',
+      },
+    ],
+  },
+  render: Basic.render,
 };

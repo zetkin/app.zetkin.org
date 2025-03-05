@@ -24,7 +24,7 @@ export const Basic: Story = {
     label: 'Name',
   },
   render: function Render(args) {
-    const [selection, setSelection] = useState<'m' | 'j' | 'e' | ''>('');
+    const [selection, setSelection] = useState('');
 
     return (
       <ZUISelect
@@ -32,9 +32,7 @@ export const Basic: Story = {
         error={args.error}
         items={args.items}
         label={args.label}
-        onChange={(newSelection) => {
-          setSelection(newSelection as 'm' | 'j' | 'e' | '');
-        }}
+        onChange={(newSelection) => setSelection(newSelection)}
         selectedOption={selection}
         size={args.size}
       />
@@ -75,7 +73,7 @@ export const Subheaders: Story = {
         selectItems: [
           {
             label: 'Junssun',
-            value: 'j',
+            value: 'u',
           },
           { label: 'Kalliope', value: 'k' },
           { label: 'Rask', value: 'r' },

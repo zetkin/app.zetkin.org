@@ -1,9 +1,4 @@
-import {
-  InputAdornment,
-  SvgIconTypeMap,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { InputAdornment, SvgIconTypeMap, TextField } from '@mui/material';
 import { FC } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
@@ -98,7 +93,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     disabled={disabled}
     error={error}
     helperText={helperText}
-    label={<Typography variant="labelSmMedium">{label}</Typography>}
+    label={label}
     maxRows={maxRows}
     multiline={multiline}
     onChange={(ev) => onChange(ev.target.value)}
@@ -133,12 +128,37 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
       },
     }}
     sx={(theme) => ({
+      '& > label': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '1rem',
+        fontWeight: '500',
+        letterSpacing: '3%',
+        transform: `translate(0.875rem, ${
+          size == 'medium' ? '0.563rem' : '1rem'
+        })`,
+      },
+      '& > label[data-shrink="true"]': {
+        color: error ? theme.palette.error.main : theme.palette.secondary.main,
+        fontSize: '0.813rem',
+        transform: 'translate(0.813rem, -0.625rem)',
+      },
       '& >.MuiFormHelperText-root': {
         fontFamily: theme.typography.fontFamily,
         fontSize: '0.813rem',
         fontWeight: 400,
         letterSpacing: '3%',
         lineHeight: '1.219rem',
+      },
+      '& >.MuiInputBase-root > fieldset > legend > span': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '0.813rem',
+        fontWeight: '500',
+        letterSpacing: '3%',
+        paddingLeft: '0.25rem',
+        paddingRight: '0.25rem',
+      },
+      '& >.MuiInputBase-root > input': {
+        paddingY: size == 'medium' ? '0.594rem' : '',
       },
     })}
     value={value}

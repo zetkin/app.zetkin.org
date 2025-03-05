@@ -80,48 +80,71 @@ const ZUISelect: FC<ZUISelectProps> = ({
     disabled={disabled}
     error={error}
     size={size == 'medium' ? 'small' : 'medium'}
-    sx={{
+    sx={(theme) => ({
+      '& > label': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '1rem',
+        fontWeight: '500',
+        letterSpacing: '3%',
+        transform: `translate(0.875rem, ${
+          size == 'medium' ? '0.563rem' : '1rem'
+        })`,
+      },
+      '& > label[data-shrink="true"]': {
+        color: error ? theme.palette.error.main : theme.palette.secondary.main,
+        fontSize: '0.813rem',
+        transform: 'translate(0.813rem, -0.563rem)',
+      },
+      '& >.MuiInputBase-root > fieldset > legend > span': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '0.813rem',
+        fontWeight: '500',
+        letterSpacing: '3%',
+        paddingLeft: '0.25rem',
+        paddingRight: '0.25rem',
+      },
+      color: 'red',
       minWidth: '13.75rem',
-    }}
+    })}
   >
-    <InputLabel id={`${label}-select`}>
-      <Typography variant="labelSmMedium">{label}</Typography>
-    </InputLabel>
+    <InputLabel id={`${label}-select`}>{label}</InputLabel>
     <Select
-      label={<Typography variant="labelSmMedium">{label}</Typography>}
+      label={label}
       labelId={`${label}-select`}
       onChange={(ev) => onChange(ev.target.value)}
       size={size == 'medium' ? 'small' : 'medium'}
       sx={{
-        height: size == 'medium' ? '2.625rem' : '',
+        '& > .MuiSelect-select': {
+          paddingY: size == 'medium' ? '0.594rem' : '',
+        },
       }}
       value={selectedOption}
     >
       {items.map((item) => {
         if (isCategoryItem(item)) {
-          return (
-            <>
-              <ListSubheader>{item.title}</ListSubheader>
-              {item.selectItems.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  sx={{ paddingLeft: 4 }}
-                  value={item.value}
+          return [
+            <ListSubheader key={`subheader-${item.title}`}>
+              {item.title}
+            </ListSubheader>,
+            ...item.selectItems.map((item) => (
+              <MenuItem
+                key={item.value}
+                sx={{ paddingLeft: '2rem' }}
+                value={item.value}
+              >
+                <Typography
+                  sx={(theme) => ({
+                    fontFamily: theme.typography.fontFamily,
+                    fontSize: '1rem',
+                    fontWeight: 400,
+                    letterSpacing: '3%',
+                  })}
                 >
-                  <Typography
-                    sx={(theme) => ({
-                      fontFamily: theme.typography.fontFamily,
-                      fontSize: '1rem',
-                      fontWeight: 400,
-                      letterSpacing: '3%',
-                    })}
-                  >
-                    {item.label}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </>
-          );
+                  {item.label}
+                </Typography>
+              </MenuItem>
+            )),
+          ];
         } else {
           return (
             <MenuItem key={item.value} value={item.value}>
