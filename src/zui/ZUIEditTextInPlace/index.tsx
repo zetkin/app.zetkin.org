@@ -1,4 +1,4 @@
-import { lighten } from '@mui/material/styles';
+import { lighten, useTheme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { FormControl, InputBase, Theme, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
@@ -11,44 +11,47 @@ interface StyleProps {
   readonly: boolean | undefined;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  input: {
-    '&:focus, &:hover': {
-      borderColor: ({ readonly }) =>
-        !readonly ? lighten(theme.palette.primary.main, 0.65) : '',
-      paddingLeft: ({ readonly }) => (!readonly ? 10 : 0),
-      paddingRight: 0,
+const useStyles = makeStyles<Theme, StyleProps>(() => {
+  const theme = useTheme();
+  return {
+    input: {
+      '&:focus, &:hover': {
+        borderColor: ({ readonly }) =>
+          !readonly ? lighten(theme.palette.primary.main, 0.65) : '',
+        paddingLeft: ({ readonly }) => (!readonly ? 10 : 0),
+        paddingRight: 0,
+      },
+      border: '2px dotted transparent',
+      borderColor: ({ showBorder }) =>
+        showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
+      borderRadius: 10,
+      paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
+      paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
+      transition: 'all 0.2s ease',
     },
-    border: '2px dotted transparent',
-    borderColor: ({ showBorder }) =>
-      showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
-    borderRadius: 10,
-    paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
-    paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
-    transition: 'all 0.2s ease',
-  },
-  inputRoot: {
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    fontSize: 'inherit !important',
-    fontWeight: 'inherit',
-  },
-  span: {
-    // Same styles as input
-    '&:focus, &:hover': {
-      borderColor: lighten(theme.palette.primary.main, 0.65),
-      paddingLeft: 10,
-      paddingRight: 0,
+    inputRoot: {
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      fontSize: 'inherit !important',
+      fontWeight: 'inherit',
     },
-    border: '2px dotted transparent',
-    borderRadius: 10,
-    paddingRight: 10,
+    span: {
+      // Same styles as input
+      '&:focus, &:hover': {
+        borderColor: lighten(theme.palette.primary.main, 0.65),
+        paddingLeft: 10,
+        paddingRight: 0,
+      },
+      border: '2px dotted transparent',
+      borderRadius: 10,
+      paddingRight: 10,
 
-    // But invisible and positioned absolutely to not affect flow
-    position: 'absolute',
-    visibility: 'hidden',
-  },
-}));
+      // But invisible and positioned absolutely to not affect flow
+      position: 'absolute',
+      visibility: 'hidden',
+    },
+  };
+});
 
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;

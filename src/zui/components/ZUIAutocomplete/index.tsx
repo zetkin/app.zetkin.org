@@ -10,7 +10,6 @@ import {
   SvgIconTypeMap,
   TextField,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { FC, HTMLAttributes } from 'react';
@@ -67,19 +66,58 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
   onChange,
   options,
   value,
-}) => {
-  const theme = useTheme();
-
-  return (
-    <Autocomplete
-      multiple={multiple}
-      onChange={(ev, newValue) => {
-        if (newValue) {
-          onChange(newValue);
-        }
-      }}
-      options={options}
-      PaperComponent={({ children }) => {
+}) => (
+  <Autocomplete
+    multiple={multiple}
+    onChange={(ev, newValue) => {
+      if (newValue) {
+        onChange(newValue);
+      }
+    }}
+    options={options}
+    renderInput={(params) => <TextField {...params} />}
+    renderOption={(props, option, { selected }) => {
+      const { key, ...optionProps } = props as HTMLAttributes<HTMLLIElement> & {
+        key: string;
+      };
+      return (
+        <ListItem key={key} {...optionProps}>
+          {checkboxes && (
+            <Checkbox
+              checked={selected}
+              checkedIcon={<CheckBox fontSize="small" />}
+              icon={<CheckBoxOutlineBlank fontSize="small" />}
+            />
+          )}
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="labelXlMedium">{option.label}</Typography>
+            }
+            secondary={
+              option.subtitle ? (
+                <Typography
+                  sx={(theme) => ({
+                    color: theme.palette.secondary.main,
+                    fontFamily: theme.typography.fontFamily,
+                    fontSize: '0.875rem',
+                    fontWeight: 400,
+                    letterSpacing: '3%',
+                  })}
+                >
+                  {option.subtitle}
+                </Typography>
+              ) : (
+                ''
+              )
+            }
+          />
+        </ListItem>
+      );
+    }}
+    size="small"
+    slots={{
+      paper: ({ children }) => {
         return (
           <Paper
             onMouseDown={(e) => {
@@ -109,60 +147,25 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
             ]}
           </Paper>
         );
-      }}
-      renderInput={(params) => <TextField {...params} />}
-      renderOption={(props, option, { selected }) => {
-        const { key, ...optionProps } =
-          props as HTMLAttributes<HTMLLIElement> & { key: string };
-        return (
-          <ListItem key={key} {...optionProps}>
-            {checkboxes && (
-              <Checkbox
-                checked={selected}
-                checkedIcon={<CheckBox fontSize="small" />}
-                icon={<CheckBoxOutlineBlank fontSize="small" />}
-              />
-            )}
-            <ListItemText
-              disableTypography
-              primary={
-                <Typography variant="labelXlMedium">{option.label}</Typography>
-              }
-              secondary={
-                option.subtitle ? (
-                  <Typography
-                    color="secondary"
-                    fontFamily={theme.typography.fontFamily}
-                    fontSize="0.875rem"
-                    fontWeight={400}
-                    letterSpacing="3%"
-                  >
-                    {option.subtitle}
-                  </Typography>
-                ) : (
-                  ''
-                )
-              }
-            />
-          </ListItem>
-        );
-      }}
-      size="small"
-      sx={{
-        '& .MuiIconButton-root, .MuiIconButton-root * ': {
-          height: '1.25rem',
-          width: '1.25rem',
-        },
-        '& input': {
-          fontFamily: theme.typography.fontFamily,
-          fontSize: '1rem',
-          fontWeight: 400,
-          letterSpacing: '3%',
-        },
-      }}
-      value={value}
-    />
-  );
-};
+      },
+    }}
+    sx={(theme) => ({
+      '& .MuiChip-root': {
+        color: theme.palette.text.primary,
+      },
+      '& .MuiIconButton-root, .MuiIconButton-root * ': {
+        height: '1.25rem',
+        width: '1.25rem',
+      },
+      '& input': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '1rem',
+        fontWeight: 400,
+        letterSpacing: '3%',
+      },
+    })}
+    value={value}
+  />
+);
 
 export default ZUIAutocomplete;

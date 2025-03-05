@@ -1,46 +1,12 @@
-import { Button, CircularProgress, Theme } from '@mui/material';
+import { Button, CircularProgress, useTheme } from '@mui/material';
 import {
   CSSProperties,
   FC,
   KeyboardEventHandler,
   MouseEventHandler,
 } from 'react';
-import { makeStyles } from '@mui/styles';
 
 import { ZUISize, ZUIVariant } from '../types';
-
-const useStyles = makeStyles<Theme>((theme) => ({
-  button: {
-    '& >.MuiCircularProgress-root': {
-      color: theme.palette.grey[300],
-    },
-    '&.Mui-disabled': {
-      '&.MuiButton-containedError': {
-        backgroundColor: theme.palette.swatches.red[400],
-        color: theme.palette.swatches.red[100],
-      },
-      '&.MuiButton-containedPrimary': {
-        backgroundColor: theme.palette.grey[600],
-        color: theme.palette.grey[300],
-      },
-      '&.MuiButton-containedWarning': {
-        backgroundColor: theme.palette.swatches.yellow[200],
-        color: theme.palette.swatches.yellow[600],
-      },
-      '&.MuiButton-outlinedPrimary': {
-        borderColor: theme.palette.grey[300],
-        color: theme.palette.grey[400],
-      },
-      '&.MuiButton-textPrimary': {
-        color: theme.palette.grey[400],
-      },
-    },
-    '&:hover': {
-      boxShadow: 'none',
-    },
-    boxShadow: 'none',
-  },
-}));
 
 type ZUIButtonVariant = ZUIVariant | 'destructive' | 'warning' | 'loading';
 
@@ -57,7 +23,7 @@ export interface ZUIButtonProps {
   variant?: ZUIButtonVariant;
 }
 
-export const getVariant = (variant: ZUIButtonVariant = 'secondary') => {
+export const getVariant = (variant: ZUIButtonVariant) => {
   if (variant === 'secondary') {
     return 'outlined';
   } else if (variant === 'tertiary') {
@@ -67,7 +33,7 @@ export const getVariant = (variant: ZUIButtonVariant = 'secondary') => {
   }
 };
 
-const getColor = (variant: ZUIButtonVariant = 'secondary') => {
+const getColor = (variant: ZUIButtonVariant) => {
   if (variant === 'destructive') {
     return 'error';
   } else if (variant === 'warning') {
@@ -122,13 +88,12 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   onKeyDown,
   size = 'medium',
   startIcon,
-  variant = 'secondary',
+  variant,
 }) => {
-  const classes = useStyles();
+  const theme = useTheme();
   const isLoading = variant === 'loading';
   return (
     <Button
-      className={classes.button}
       color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
       endIcon={endIcon}
@@ -137,7 +102,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       onKeyDown={onKeyDown}
       size={size}
       startIcon={startIcon}
-      sx={(theme) => {
+      sx={() => {
         let textStyle: CSSProperties;
         if (size === 'small') {
           textStyle = theme.typography.labelSmSemiBold;
@@ -148,7 +113,35 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         }
 
         return {
+          '& >.MuiCircularProgress-root': {
+            color: theme.palette.grey[300],
+          },
+          '&.Mui-disabled': {
+            '&.MuiButton-containedError': {
+              backgroundColor: theme.palette.swatches.red[400],
+              color: theme.palette.swatches.red[100],
+            },
+            '&.MuiButton-containedPrimary': {
+              backgroundColor: theme.palette.grey[600],
+              color: theme.palette.grey[300],
+            },
+            '&.MuiButton-containedWarning': {
+              backgroundColor: theme.palette.swatches.yellow[200],
+              color: theme.palette.swatches.yellow[600],
+            },
+            '&.MuiButton-outlinedPrimary': {
+              borderColor: theme.palette.grey[300],
+              color: theme.palette.grey[400],
+            },
+            '&.MuiButton-textPrimary': {
+              color: theme.palette.grey[400],
+            },
+          },
+          '&:hover': {
+            boxShadow: 'none',
+          },
           ...textStyle,
+          boxShadow: 'none',
           minWidth: '2.188rem',
           padding: isLoading
             ? getLoadingIndicatorPadding(size)
@@ -156,7 +149,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         };
       }}
       type={actionType}
-      variant={getVariant(variant)}
+      variant={variant ? getVariant(variant) : undefined}
     >
       {isLoading ? <CircularProgress size={16} /> : label}
     </Button>

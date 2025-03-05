@@ -3,7 +3,6 @@ import {
   SvgIconTypeMap,
   TextField,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { FC } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
@@ -94,24 +93,29 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   size = 'medium',
   startIcon: StartIcon,
   value,
-}) => {
-  const theme = useTheme();
-
-  return (
-    <TextField
-      disabled={disabled}
-      error={error}
-      helperText={helperText}
-      inputProps={{
-        sx: {
+}) => (
+  <TextField
+    disabled={disabled}
+    error={error}
+    helperText={helperText}
+    label={<Typography variant="labelSmMedium">{label}</Typography>}
+    maxRows={maxRows}
+    multiline={multiline}
+    onChange={(ev) => onChange(ev.target.value)}
+    placeholder={placeholder}
+    rows={maxRows < 5 ? maxRows : 5}
+    size={size == 'medium' ? 'small' : 'medium'}
+    slotProps={{
+      htmlInput: {
+        sx: (theme) => ({
           fontFamily: theme.typography.fontFamily,
           fontSize: '1rem',
           fontWeight: 400,
           letterSpacing: '1%',
           lineHeight: '1.5rem',
-        },
-      }}
-      InputProps={{
+        }),
+      },
+      input: {
         endAdornment: EndIcon ? (
           <InputAdornment position="end">
             <EndIcon fontSize="small" />
@@ -126,27 +130,20 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
         ) : (
           ''
         ),
-      }}
-      label={<Typography variant="labelSmMedium">{label}</Typography>}
-      maxRows={maxRows}
-      multiline={multiline}
-      onChange={(ev) => onChange(ev.target.value)}
-      placeholder={placeholder}
-      rows={maxRows < 5 ? maxRows : 5}
-      size={size == 'medium' ? 'small' : 'medium'}
-      sx={{
-        '& >.MuiFormHelperText-root': {
-          fontFamily: theme.typography.fontFamily,
-          fontSize: '0.813rem',
-          fontWeight: 400,
-          letterSpacing: '3%',
-          lineHeight: '1.219rem',
-        },
-      }}
-      value={value}
-      variant="outlined"
-    />
-  );
-};
+      },
+    }}
+    sx={(theme) => ({
+      '& >.MuiFormHelperText-root': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '0.813rem',
+        fontWeight: 400,
+        letterSpacing: '3%',
+        lineHeight: '1.219rem',
+      },
+    })}
+    value={value}
+    variant="outlined"
+  />
+);
 
 export default ZUITextField;

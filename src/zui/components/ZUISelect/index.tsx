@@ -6,7 +6,6 @@ import {
   MenuItem,
   Select,
   Typography,
-  useTheme,
 } from '@mui/material';
 
 import { ZUILarge, ZUIMedium } from '../types';
@@ -76,76 +75,72 @@ const ZUISelect: FC<ZUISelectProps> = ({
   items,
   size = 'medium',
   selectedOption,
-}) => {
-  const theme = useTheme();
-
-  return (
-    <FormControl
-      disabled={disabled}
-      error={error}
+}) => (
+  <FormControl
+    disabled={disabled}
+    error={error}
+    size={size == 'medium' ? 'small' : 'medium'}
+    sx={{
+      minWidth: '13.75rem',
+    }}
+  >
+    <InputLabel id={`${label}-select`}>
+      <Typography variant="labelSmMedium">{label}</Typography>
+    </InputLabel>
+    <Select
+      label={<Typography variant="labelSmMedium">{label}</Typography>}
+      labelId={`${label}-select`}
+      onChange={(ev) => onChange(ev.target.value)}
       size={size == 'medium' ? 'small' : 'medium'}
       sx={{
-        minWidth: '13.75rem',
+        height: size == 'medium' ? '2.625rem' : '',
       }}
+      value={selectedOption}
     >
-      <InputLabel id={`${label}-select`}>
-        <Typography variant="labelSmMedium">{label}</Typography>
-      </InputLabel>
-      <Select
-        label={<Typography variant="labelSmMedium">{label}</Typography>}
-        labelId={`${label}-select`}
-        onChange={(ev) => onChange(ev.target.value)}
-        size={size == 'medium' ? 'small' : 'medium'}
-        sx={{
-          height: size == 'medium' ? '2.625rem' : '',
-        }}
-        value={selectedOption}
-      >
-        {items.map((item) => {
-          if (isCategoryItem(item)) {
-            return (
-              <>
-                <ListSubheader>{item.title}</ListSubheader>
-                {item.selectItems.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    sx={{ paddingLeft: 4 }}
-                    value={item.value}
-                  >
-                    <Typography
-                      sx={{
-                        fontFamily: theme.typography.fontFamily,
-                        fontSize: '1rem',
-                        fontWeight: 400,
-                        letterSpacing: '3%',
-                      }}
-                    >
-                      {item.label}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </>
-            );
-          } else {
-            return (
-              <MenuItem key={item.value} value={item.value}>
-                <Typography
-                  sx={{
-                    fontFamily: theme.typography.fontFamily,
-                    fontSize: '1rem',
-                    fontWeight: 400,
-                    letterSpacing: '3%',
-                  }}
+      {items.map((item) => {
+        if (isCategoryItem(item)) {
+          return (
+            <>
+              <ListSubheader>{item.title}</ListSubheader>
+              {item.selectItems.map((item) => (
+                <MenuItem
+                  key={item.value}
+                  sx={{ paddingLeft: 4 }}
+                  value={item.value}
                 >
-                  {item.label}
-                </Typography>
-              </MenuItem>
-            );
-          }
-        })}
-      </Select>
-    </FormControl>
-  );
-};
+                  <Typography
+                    sx={(theme) => ({
+                      fontFamily: theme.typography.fontFamily,
+                      fontSize: '1rem',
+                      fontWeight: 400,
+                      letterSpacing: '3%',
+                    })}
+                  >
+                    {item.label}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </>
+          );
+        } else {
+          return (
+            <MenuItem key={item.value} value={item.value}>
+              <Typography
+                sx={(theme) => ({
+                  fontFamily: theme.typography.fontFamily,
+                  fontSize: '1rem',
+                  fontWeight: 400,
+                  letterSpacing: '3%',
+                })}
+              >
+                {item.label}
+              </Typography>
+            </MenuItem>
+          );
+        }
+      })}
+    </Select>
+  </FormControl>
+);
 
 export default ZUISelect;
