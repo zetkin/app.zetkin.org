@@ -147,7 +147,7 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
         const { key, ...optionProps } = props;
         return (
           <ListItem key={key} {...optionProps}>
-            {checkboxes && (
+            {(multiple || checkboxes) && (
               <Checkbox
                 checked={selected}
                 checkedIcon={<CheckBox fontSize="small" />}
