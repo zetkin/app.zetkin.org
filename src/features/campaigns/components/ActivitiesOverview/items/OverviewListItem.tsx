@@ -12,12 +12,13 @@ import theme from 'theme';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
+import theme from 'theme';
 
 interface StyleProps {
   color: STATUS_COLORS;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
     alignItems: 'center',
     display: 'flex',
