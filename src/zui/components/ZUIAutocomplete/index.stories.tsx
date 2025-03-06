@@ -32,7 +32,9 @@ export const Basic: Story = {
       <ZUIAutocomplete
         {...args}
         onChange={(newSelection) => {
-          if ('label' in newSelection) {
+          if (newSelection && !('length' in newSelection)) {
+            setSelection(newSelection);
+          } else if (!newSelection) {
             setSelection(newSelection);
           }
         }}
@@ -51,8 +53,10 @@ export const Multiple: Story = {
         {...args}
         multiple={true}
         onChange={(newSelection) => {
-          if ('length' in newSelection) {
+          if (newSelection && 'length' in newSelection) {
             setSelection(newSelection);
+          } else if (!newSelection) {
+            setSelection([]);
           }
         }}
         value={selection}
@@ -89,7 +93,9 @@ export const WithAction: Story = {
             onClick: () => setDialogOpen(true),
           }}
           onChange={(newSelection) => {
-            if ('label' in newSelection) {
+            if (newSelection && !('length' in newSelection)) {
+              setSelection(newSelection);
+            } else if (!newSelection) {
               setSelection(newSelection);
             }
           }}

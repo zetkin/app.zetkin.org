@@ -72,7 +72,7 @@ type ZUIAutocompleteProps = {
    * If the multiple property is "true" the newValue will be an array,
    * otherwise a single object.
    */
-  onChange: (newValue: Option | Option[]) => void;
+  onChange: (newValue: (Option | Option[]) | null) => void;
 
   /**
    * The options the user can select from.
@@ -106,11 +106,7 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
           {noOptionsText || messages.autocomplete.noOptionsDefaultText()}
         </Typography>
       }
-      onChange={(ev, newValue) => {
-        if (newValue) {
-          onChange(newValue);
-        }
-      }}
+      onChange={(ev, newValue) => onChange(newValue)}
       options={options}
       renderInput={(params) => (
         <TextField
@@ -122,7 +118,6 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
               fontSize: '1rem',
               fontWeight: '500',
               letterSpacing: '3%',
-              transform: 'translate(0.875rem, 0.563rem)',
             },
             '& > label[data-shrink="true"]': {
               color: theme.palette.secondary.main,
