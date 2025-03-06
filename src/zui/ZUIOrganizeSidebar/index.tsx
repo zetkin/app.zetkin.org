@@ -17,7 +17,7 @@ import {
   Map,
   Search,
   Settings,
-} from '@mui/icons-material/';
+} from '@mui/icons-material';
 import {
   Avatar,
   Box,
