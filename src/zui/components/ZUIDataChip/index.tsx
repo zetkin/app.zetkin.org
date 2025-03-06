@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 
 type ZUIDataChipProps = {
@@ -21,34 +21,29 @@ type ZUIDataChipProps = {
   value: number;
 };
 
-const ZUIDataChip: FC<ZUIDataChipProps> = ({ color = 'grey', value }) => {
-  const theme = useTheme();
-
-  return (
-    <Box
-      bgcolor={
-        color == 'grey' ? theme.palette.grey[100] : theme.palette.data[color]
-      }
-      display="inline-flex"
-      sx={{
-        borderRadius: '2rem',
-        overflow: 'hidden',
-        padding: '0.25rem 0.75rem',
-      }}
+const ZUIDataChip: FC<ZUIDataChipProps> = ({ color = 'grey', value }) => (
+  <Box
+    sx={(theme) => ({
+      backgroundColor:
+        color == 'grey' ? theme.palette.grey[100] : theme.palette.data[color],
+      borderRadius: '2rem',
+      display: 'inline-flex',
+      overflow: 'hidden',
+      padding: '0.25rem 0.75rem',
+    })}
+  >
+    <Typography
+      sx={(theme) => ({
+        color:
+          color == 'grey' || color == 'final'
+            ? theme.palette.common.black
+            : theme.palette.common.white,
+      })}
+      variant="headingMd"
     >
-      <Typography
-        sx={{
-          color:
-            color == 'grey' || color == 'final'
-              ? theme.palette.common.black
-              : theme.palette.common.white,
-        }}
-        variant="headingMd"
-      >
-        {value}
-      </Typography>
-    </Box>
-  );
-};
+      {value}
+    </Typography>
+  </Box>
+);
 
 export default ZUIDataChip;

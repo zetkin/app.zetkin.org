@@ -1,19 +1,8 @@
-import { Link, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import { FC } from 'react';
 
 import { ZUISize } from '../types';
-
-const useStyles = makeStyles<Theme>((theme) => ({
-  link: {
-    '&:hover': {
-      textDecorationColor: 'primary',
-    },
-    textDecorationColor: theme.palette.text.primary,
-  },
-}));
-
 type ZUILinkProps = {
   href: string;
   message: string;
@@ -26,21 +15,22 @@ const ZUILink: FC<ZUILinkProps> = ({
   message,
   openInNewTab = false,
   size = 'small',
-}) => {
-  const classes = useStyles();
-
-  return (
-    <Link
-      className={classes.link}
-      component={NextLink}
-      href={href}
-      rel={openInNewTab ? 'noopener' : ''}
-      target={openInNewTab ? '_blank' : ''}
-      variant={size == 'small' ? 'linkSm' : 'linkMd'}
-    >
-      {message}
-    </Link>
-  );
-};
+}) => (
+  <Link
+    component={NextLink}
+    href={href}
+    rel={openInNewTab ? 'noopener' : ''}
+    sx={(theme) => ({
+      '&:hover': {
+        textDecorationColor: theme.palette.text.primary,
+      },
+      textDecorationColor: theme.palette.text.primary,
+    })}
+    target={openInNewTab ? '_blank' : ''}
+    variant={size == 'small' ? 'linkSm' : 'linkMd'}
+  >
+    {message}
+  </Link>
+);
 
 export default ZUILink;

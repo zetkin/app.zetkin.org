@@ -98,7 +98,11 @@ export const WithAction: Story = {
         <Dialog open={dialogOpen}>
           <Box display="flex" flexDirection="column" gap="1rem" padding={2}>
             <ZUIText>Example dialog</ZUIText>
-            <ZUIButton label="Close" onClick={() => setDialogOpen(false)} />
+            <ZUIButton
+              label="Close"
+              onClick={() => setDialogOpen(false)}
+              variant="primary"
+            />
           </Box>
         </Dialog>
       </>

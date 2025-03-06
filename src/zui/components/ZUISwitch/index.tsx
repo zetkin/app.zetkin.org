@@ -57,19 +57,31 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
         </Typography>
       }
       labelPlacement={labelPlacement}
-      sx={{
-        '& .MuiTypography-root': {
-          '-ms-user-select': 'none',
-          '-webkit-user-select': 'none',
-          userSelect: 'none',
+      sx={[
+        {
+          '& .MuiTypography-root': {
+            '-ms-user-select': 'none',
+            '-webkit-user-select': 'none',
+            userSelect: 'none',
+          },
+          marginBottom:
+            labelPlacement == 'top' || labelPlacement == 'bottom'
+              ? '0.5rem'
+              : '',
+          marginRight: 0,
+          marginTop:
+            labelPlacement == 'top' || labelPlacement == 'bottom'
+              ? '0.5rem'
+              : '',
         },
-        marginBottom:
-          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
-        marginLeft: labelPlacement != 'end' ? 0 : '',
-        marginRight: 0,
-        marginTop:
-          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
-      }}
+        labelPlacement != 'end'
+          ? {
+              marginLeft: 0,
+            }
+          : {
+              marginLeft: '',
+            },
+      ]}
     />
   );
 };

@@ -1,82 +1,9 @@
 import { Clear } from '@mui/icons-material';
 import { FC, useState } from 'react';
-import {
-  Box,
-  IconButton,
-  lighten,
-  Theme,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, IconButton, lighten, Tooltip, Typography } from '@mui/material';
 
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import getTagContrastColor from './getTagContrastColor';
-
-interface StyleProps {
-  clickable: boolean;
-  deletable: boolean;
-  disabled: boolean;
-  hover: boolean;
-  tag: ZetkinTag;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  chip: {
-    borderRadius: '1rem',
-    cursor: ({ clickable, disabled }) =>
-      clickable && !disabled ? 'pointer' : 'default',
-    display: 'inline-flex',
-    marginRight: '0.1em',
-    opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),
-    overflow: 'hidden',
-  },
-  deleteButton: {
-    fontSize: '0.875rem',
-    padding: '3px',
-    position: 'absolute',
-    right: '0.12em',
-    transform: ({ deletable, hover }) =>
-      deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
-    transition: ({ deletable, hover }) =>
-      deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
-  },
-  deleteContainer: {
-    padding: ({ deletable, hover }) => {
-      if (deletable) {
-        return hover ? '0.2em 1.5em 0.2em 0.7em' : '0.2em 1em';
-      } else {
-        return '0.2em 0.6em';
-      }
-    },
-    position: 'relative',
-    transition: 'padding 0.1s',
-  },
-  deleteIcon: {
-    color: ({ tag }) =>
-      tag.value_type
-        ? 'black'
-        : getTagContrastColor(tag.color || theme.palette.grey[200]),
-  },
-  label: {
-    backgroundColor: ({ tag }) => tag.color || theme.palette.grey[200],
-    color: ({ tag }) =>
-      getTagContrastColor(tag.color || theme.palette.grey[200]),
-    maxWidth: '100%',
-    overflow: 'hidden',
-    padding: '0.2em 0.4em 0.2em 1em',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  value: {
-    backgroundColor: ({ tag }) =>
-      lighten(tag.color || theme.palette.grey[200], 0.7),
-    maxWidth: '10em',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-}));
 
 const ZUITagTooltip: FC<{
   children: JSX.Element;
@@ -85,7 +12,8 @@ const ZUITagTooltip: FC<{
   return (
     <Tooltip
       arrow
-      componentsProps={{
+      enterDelay={1000}
+      slotProps={{
         arrow: {
           sx: {
             color: '#616161E5',
@@ -100,7 +28,6 @@ const ZUITagTooltip: FC<{
           },
         },
       }}
-      enterDelay={1000}
       title={
         <>
           {tag.title} <br /> {tag.description || ''}
@@ -144,48 +71,85 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
   tag,
 }) => {
   const [hover, setHover] = useState(false);
-  const classes = useStyles({
-    clickable: !!onClick,
-    deletable: !!onDelete && !disabled,
-    disabled,
-    hover,
-    tag,
-  });
+  const deletable = !!onDelete && !disabled;
 
   const deleteButton = onDelete ? (
     <IconButton
-      className={classes.deleteButton}
       data-testid="TagChip-deleteButton"
       onClick={(ev) => {
         // Stop propagation to prevent regular onClick() from being invoked
         ev.stopPropagation();
         onDelete(tag);
       }}
+      sx={{
+        fontSize: '0.875rem',
+        padding: '0.188rem',
+        position: 'absolute',
+        right: '0.12em',
+        transform: deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
+        transition:
+          deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
+      }}
       tabIndex={-1}
     >
-      <Clear className={classes.deleteIcon} sx={{ fontSize: 'inherit' }} />
+      <Clear
+        sx={(theme) => ({
+          color: tag.value_type
+            ? 'black'
+            : getTagContrastColor(tag.color || theme.palette.grey[200]),
+          fontSize: 'inherit',
+        })}
+      />
     </IconButton>
   ) : null;
 
   const hasValue = tag.value_type && 'value' in tag;
 
+  const deleteContainerPadding = () => {
+    if (deletable) {
+      return hover ? '0.2em 1.5em 0.2em 0.7em' : '0.2em 1em';
+    } else {
+      return '0.2em 0.6em';
+    }
+  };
+
   return (
     <Box
-      className={classes.chip}
       onClick={() => !disabled && onClick && onClick(tag)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      sx={{
+        borderRadius: '1rem',
+        cursor: !!onClick && !disabled ? 'pointer' : 'default',
+        display: 'inline-flex',
+        marginRight: '0.1em',
+        opacity: disabled ? 0.5 : 1.0,
+        overflow: 'hidden',
+      }}
     >
       {hasValue && (
         <>
           <ZUITagTooltip tag={tag}>
-            <Box className={classes.label}>
+            <Box
+              sx={(theme) => ({
+                backgroundColor: tag.color || theme.palette.grey[200],
+                color: getTagContrastColor(
+                  tag.color || theme.palette.grey[200]
+                ),
+                maxWidth: '100%',
+                overflow: 'hidden',
+                padding: '0.2em 0.4em 0.2em 1em',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              })}
+            >
               <Typography variant="labelSmMedium">{tag.title}</Typography>
             </Box>
           </ZUITagTooltip>
           <Tooltip
             arrow
-            componentsProps={{
+            enterDelay={1000}
+            slotProps={{
               arrow: {
                 sx: {
                   color: '#616161E5',
@@ -200,12 +164,23 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
                 },
               },
             }}
-            enterDelay={1000}
             title={tag.value || ''}
           >
             <Box
-              className={classes.value + ' ' + classes.deleteContainer}
               data-testid="TagChip-value"
+              sx={(theme) => ({
+                backgroundColor: lighten(
+                  tag.color || theme.palette.grey[200],
+                  0.7
+                ),
+                maxWidth: '10em',
+                overflow: 'hidden',
+                padding: deleteContainerPadding(),
+                position: 'relative',
+                textOverflow: 'ellipsis',
+                transition: 'padding 0.1s',
+                whiteSpace: 'nowrap',
+              })}
             >
               <Typography variant="labelSmMedium">{tag.value}</Typography>
               {deleteButton}
@@ -215,7 +190,19 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
       )}
       {!tag.value_type && (
         <ZUITagTooltip tag={tag}>
-          <Box className={classes.label + ' ' + classes.deleteContainer}>
+          <Box
+            sx={(theme) => ({
+              backgroundColor: tag.color || theme.palette.grey[200],
+              color: getTagContrastColor(tag.color || theme.palette.grey[200]),
+              maxWidth: '100%',
+              overflow: 'hidden',
+              padding: deleteContainerPadding(),
+              position: 'relative',
+              textOverflow: 'ellipsis',
+              transition: 'padding 0.1s',
+              whiteSpace: 'nowrap',
+            })}
+          >
             <Typography variant="labelSmMedium">{tag.title}</Typography>
             {deleteButton}
           </Box>

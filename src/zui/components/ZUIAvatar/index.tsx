@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material';
 import { funSwatches } from 'zui/theme/palette';
 import { ZUISize } from '../types';
 
-interface ZUIAvatarProps {
+export interface ZUIAvatarProps {
   /**
    * First name of the person the avatar represents.
    */

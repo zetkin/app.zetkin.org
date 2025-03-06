@@ -35,19 +35,20 @@ const ZUIProgressChip: FC<ZUIProgressChipProps> = ({
   }
 
   return (
-    <Box display="inline-flex" sx={{ borderRadius: '2em', overflow: 'hidden' }}>
+    <Box
+      sx={{ borderRadius: '2em', display: 'inline-flex', overflow: 'hidden' }}
+    >
       {values.map((value, index) => (
         <Box
           key={`${value}-${index}`}
-          bgcolor={colors[index]}
-          color={
-            index == values.length - 1
-              ? theme.palette.common.black
-              : theme.palette.common.white
-          }
           sx={{
+            backgroundColor: colors[index],
             borderLeft:
               index > 0 ? `0.063rem solid ${theme.palette.common.white}` : '',
+            color:
+              index == values.length - 1
+                ? theme.palette.common.black
+                : theme.palette.common.white,
             paddingLeft: index == 0 ? '0.625rem' : '0.375rem',
             paddingRight: index == values.length - 1 ? '0.625rem' : '0.375rem',
             paddingY: size == 'small' ? '0.188rem' : '0.438rem',

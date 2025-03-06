@@ -4,8 +4,9 @@ import { FunctionComponent, useState } from 'react';
 
 import { PageContainerContext } from 'utils/panes/PageContainerContext';
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   breadcrumbs: {
     [theme.breakpoints.down('sm')]: {
       width: '100%',

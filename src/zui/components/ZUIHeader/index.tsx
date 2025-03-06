@@ -1,6 +1,5 @@
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import {
-  Avatar,
   Box,
   Divider,
   ListItemIcon,
@@ -9,7 +8,6 @@ import {
   Popover,
   SvgIconTypeMap,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { ExpandMore, MoreVert } from '@mui/icons-material';
 import { FC, useState } from 'react';
@@ -26,6 +24,7 @@ import { ZUIIconButtonProps } from 'zui/components/ZUIIconButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILabel from 'zui/components/ZUILabel';
 import { ZUIPrimary, ZUISecondary } from '../types';
+import ZUIAvatar, { ZUIAvatarProps } from '../ZUIAvatar';
 
 interface ZUIHeaderProps {
   /**
@@ -46,8 +45,8 @@ interface ZUIHeaderProps {
    */
   actionButtonVariant?: ZUIPrimary | ZUISecondary;
 
-  /**The href to an avatar */
-  avatar?: string;
+  /**An object of first name, last name and id to render a ZUIAvatar */
+  avatar?: Omit<ZUIAvatarProps, 'variant' | 'size'>;
 
   /**A component to be shown under the action button */
   belowActionButton?: JSX.Element;
@@ -102,7 +101,6 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
   onTitleChange,
   title,
 }) => {
-  const theme = useTheme();
   const [ellipsisMenuAnchorEl, setEllipsisMenuAnchorEl] =
     useState<Element | null>(null);
   const [actionButtonPopoverAnchorEl, setactionButtonPopoverAnchorEl] =
@@ -140,23 +138,28 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
 
   return (
     <Box>
-      <Box alignItems="center" display="flex" justifyContent="space-between">
-        <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ alignItems: 'center', display: 'flex' }}>
             {breadcrumbs && (
-              <Box marginRight={avatar ? '1rem' : '0.75rem'}>
+              <Box sx={{ marginRight: avatar ? '1rem' : '0.75rem' }}>
                 <ZUIBreadcrumbs breadcrumbs={breadcrumbs} />
               </Box>
             )}
             {avatar && (
-              <Avatar
-                src={avatar}
-                sx={{
-                  height: '2rem',
-                  marginRight: '0.75rem',
-                  width: '2rem',
-                }}
-              />
+              <Box sx={{ marginRight: '0.75rem' }}>
+                <ZUIAvatar
+                  firstName={avatar.firstName}
+                  id={avatar.id}
+                  lastName={avatar.lastName}
+                />
+              </Box>
             )}
             <ZUIText component="div" display="flex" noWrap variant="headingLg">
               {onTitleChange ? (
@@ -193,7 +196,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                     setactionButtonPopoverAnchorEl(null)
                   )}
                 {typeof actionButtonPopoverContent !== 'function' && (
-                  <Box minWidth="12.5rem">
+                  <Box sx={{ minWidth: '12.5rem' }}>
                     <MenuList>
                       {actionButtonPopoverContent.map((item, index) => {
                         const Icon = item.startIcon;
@@ -230,9 +233,11 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
         )}
       </Box>
       {showBottomRow && (
-        <Box alignItems="center" display="flex" paddingTop="0.25rem">
+        <Box
+          sx={{ alignItems: 'center', display: 'flex', paddingTop: '0.25rem' }}
+        >
           {(belowTitle || metaData) && (
-            <Box alignItems="center" display="flex">
+            <Box sx={{ alignItems: 'center', display: 'flex' }}>
               {belowTitle && belowTitle}
               {belowTitle && metaData && (
                 <Divider
@@ -243,22 +248,24 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
                 />
               )}
               {metaData && (
-                <Box display="flex" flexShrink={0} gap="0.5rem">
+                <Box sx={{ display: 'flex', flexShrink: 0, gap: '0.5rem' }}>
                   {metaData.map((data) => {
                     const Icon = data.icon;
                     return (
                       <Box
                         key={data.label}
-                        alignItems="center"
-                        display="flex"
-                        flexShrink="0"
-                        gap="0.375rem"
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          flexShrink: '0',
+                          gap: '0.375rem',
+                        }}
                       >
                         <Icon
-                          sx={{
+                          sx={(theme) => ({
                             color: theme.palette.grey[400],
                             fontSize: '1.25rem',
-                          }}
+                          })}
                         />
                         <ZUILabel
                           color="secondary"
@@ -275,7 +282,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
             </Box>
           )}
           {belowActionButton && (
-            <Box marginLeft="auto">{belowActionButton}</Box>
+            <Box sx={{ marginLeft: 'auto' }}>{belowActionButton}</Box>
           )}
         </Box>
       )}

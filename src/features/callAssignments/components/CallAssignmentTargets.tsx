@@ -9,8 +9,9 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     backgroundColor: theme.palette.statusColors.gray,
     borderRadius: '1em',

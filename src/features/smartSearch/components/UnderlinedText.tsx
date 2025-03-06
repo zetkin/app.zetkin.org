@@ -2,7 +2,9 @@ import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-const useStyles = makeStyles((theme) => ({
+import theme from 'theme';
+
+const useStyles = makeStyles(() => ({
   text: {
     display: 'inline',
     textDecoration: 'underline',
