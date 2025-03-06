@@ -140,8 +140,8 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
               paddingLeft: '0.25rem',
               paddingRight: '0.25rem',
             },
-            '& >.MuiInputBase-root > input': {
-              paddingY: '0.594rem',
+            '& >.MuiOutlinedInput-root.MuiInputBase-sizeSmall': {
+              paddingY: '0.438rem',
             },
           })}
         />
