@@ -4,8 +4,9 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   closedChip: {
     backgroundColor: theme.palette.error.main,
     color: 'white',

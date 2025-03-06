@@ -12,8 +12,9 @@ import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   divider: {
     marginLeft: 72,
   },
