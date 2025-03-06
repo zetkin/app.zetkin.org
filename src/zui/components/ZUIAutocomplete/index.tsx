@@ -129,6 +129,9 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
               fontSize: '0.813rem',
               transform: 'translate(0.813rem, -0.625rem)',
             },
+            '& >.MuiInputBase-root > .MuiAutocomplete-endAdornment': {
+              top: multiple ? '1.75rem' : '50%',
+            },
             '& >.MuiInputBase-root > fieldset > legend > span': {
               fontFamily: theme.typography.fontFamily,
               fontSize: '0.813rem',
