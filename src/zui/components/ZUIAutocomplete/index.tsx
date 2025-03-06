@@ -192,7 +192,7 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
           </ListItem>
         );
       }}
-      size="small"
+      size={multiple ? 'medium' : 'small'}
       slots={{
         paper: ({ children }) => {
           return (
