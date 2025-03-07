@@ -36,7 +36,7 @@ type Option = {
   subtitle?: string;
 };
 
-type ZUIAutocompleteProps = {
+type AutocompleteBaseProps = {
   /**
    * This renders an action below the list of options, always visible.
    */
@@ -57,37 +57,38 @@ type ZUIAutocompleteProps = {
   label: string;
 
   /**
-   * If true, user can select multiple options.
-   */
-  multiple?: boolean;
-
-  /**
    * Custom message for the message that shows if the user types in a
    * search that does not match any option.
    */
   noOptionsText?: string;
 
   /**
-   * The function that runs when an option is selected.
-   * If the multiple property is "true" the newValue will be an array,
-   * otherwise a single object.
-   */
-  onChange: (newValue: (Option | Option[]) | null) => void;
-
-  /**
    * The options the user can select from.
    */
   options: Option[];
-
-  /**
-   * The value of the autoselect.
-   * If the multiple property is "true" value should be an array,
-   * otherwise a single object.
-   */
-  value: Option | Option[] | null;
 };
 
-const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
+type ValueProps<TValue, TMultiple> = {
+  /**
+   * If true, value must be an array, and then user can select multiple options.
+   */
+  multiple: TMultiple;
+
+  /**
+   * The function that runs when an option is selected.
+   */
+  onChange: (newValue: TValue) => void;
+
+  /**
+   * The value of the autocomplete.
+   */
+  value: TValue;
+};
+
+type Props = AutocompleteBaseProps &
+  (ValueProps<Option[], true> | ValueProps<Option | null, false>);
+
+const ZUIAutocomplete: FC<Props> = ({
   action,
   checkboxes,
   label,
@@ -106,7 +107,19 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
           {noOptionsText || messages.autocomplete.noOptionsDefaultText()}
         </Typography>
       }
-      onChange={(ev, newValue) => onChange(newValue)}
+      onChange={(ev, newValue) => {
+        if (Array.isArray(newValue) != multiple) {
+          throw new Error(
+            'When "multiple" is true, newValue must be an array.'
+          );
+        }
+
+        if (multiple) {
+          onChange(newValue as Option[]);
+        } else {
+          onChange(newValue as Option | null);
+        }
+      }}
       options={options}
       renderInput={(params) => (
         <TextField
