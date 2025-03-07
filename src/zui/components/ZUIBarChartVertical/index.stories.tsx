@@ -1,15 +1,15 @@
 import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
-import ZUIBarChart from '.';
+import ZUIBarChartVertical from '.';
 
 export default {
-  component: ZUIBarChart,
-  title: 'Components/ZUIBarChart',
-} as Meta<typeof ZUIBarChart>;
+  component: ZUIBarChartVertical,
+  title: 'Components/ZUIBarChartVertical',
+} as Meta<typeof ZUIBarChartVertical>;
 
-const Template: StoryFn<typeof ZUIBarChart> = (args) => (
-  <ZUIBarChart {...args} />
+const Template: StoryFn<typeof ZUIBarChartVertical> = (args) => (
+  <ZUIBarChartVertical {...args} />
 );
 
 export const BarChartBasic = Template.bind({});
@@ -37,15 +37,29 @@ BarChartBasic.args = {
   visualizationHeight: 50,
 };
 
-export const BarChartMany = Template.bind({});
-BarChartMany.args = {
+export const BarChartQuarter = Template.bind({});
+BarChartQuarter.args = {
   data: Array.from({ length: 90 }, (e, i) => {
     return {
       label: `Day ${i + 1}`,
-      value: Math.round(Math.random() * 100),
+      value: Math.round(Math.random() * 10000),
     };
   }),
   description: 'Households visited each of the first 90 days',
   title: 'Households visited',
+  visualizationHeight: 50,
+};
+
+export const BarChartMonths = Template.bind({});
+BarChartMonths.args = {
+  data: Array.from({ length: 12 }, (e, i) => {
+    return {
+      label: `Month of year no ${i + 1}`,
+      value: Math.round(Math.random() * 1000),
+    };
+  }),
+  description: 'Households visited each month',
+  hideScale: true,
+  title: 'Households visited this year',
   visualizationHeight: 50,
 };
