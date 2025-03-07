@@ -3,7 +3,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 export default makeMessages('feat.home', {
   activityList: {
     actions: {
-      areaAssignment: m('Start assignment'),
+      areaAssignment: m('Join'),
       call: m('Start calling'),
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
