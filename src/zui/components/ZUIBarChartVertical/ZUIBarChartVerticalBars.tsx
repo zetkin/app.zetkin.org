@@ -169,6 +169,7 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
                 {row.label}
               </Typography>
               <Box
+                aria-label={row.value.toString()}
                 className="bar"
                 style={{ height: `${(row.value / maxValue) * 100}%` }}
                 sx={[style.bar]}
@@ -181,6 +182,7 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
         <>
           <Typography
             ref={(elem: HTMLDivElement) => setLabelElem(elem)}
+            aria-live="polite"
             className="hoveringLabel"
             component="div"
             sx={style.hoveringLabel}
@@ -190,6 +192,7 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
           </Typography>
           <Typography
             ref={(elem: HTMLDivElement) => setValueElem(elem)}
+            aria-live="polite"
             className="hoveringValue"
             component="div"
             sx={style.hoveringValue}

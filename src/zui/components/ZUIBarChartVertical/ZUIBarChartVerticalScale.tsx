@@ -48,7 +48,7 @@ const ZUIBarChartVerticalScale: FC<ZUIBarChartVerticalScaleProps> = ({
   };
 
   return (
-    <Box className="scaleContainer" sx={style.root}>
+    <Box aria-hidden="true" className="scaleContainer" sx={style.root}>
       <Box className="scale" sx={style.scale}>
         <Box className="numbers" sx={style.numbers}>
           <Typography className="number" variant="labelSmMedium">
