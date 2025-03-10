@@ -67,14 +67,16 @@ const EditTips: FC<{
 }> = ({ bullets, header, icon }) => {
   return (
     <Box display="flex" gap={2} marginTop={1}>
-      <Box>{icon}</Box>
       <Box>
-        <Typography fontWeight="bold">{header}</Typography>
-        <ul style={{ marginTop: 0, paddingLeft: 16 }}>
+        <Typography>{header}</Typography>
+        <Typography style={{ marginTop: 2 }}>
           {bullets.map((bullet) => (
-            <li key={bullet}>{bullet}</li>
+            <Box key={bullet} alignItems="flex-start" display="flex">
+              <Box mr={1}>{icon}</Box>
+              <Typography>{bullet}</Typography>
+            </Box>
           ))}
-        </ul>
+        </Typography>
       </Box>
     </Box>
   );
