@@ -2,31 +2,24 @@ import { Box, Typography } from '@mui/material';
 import React, { FC, useRef, useState } from 'react';
 import { useTheme } from '@mui/system';
 
-export interface ZUIBarChartVerticalBarsProps {
+type ZUIBarChartVerticalBarsProps = {
   data: {
     label: string;
     value: number;
   }[];
   maxValue: number;
   visualizationHeight: number;
-}
-export interface hoveredBarStateProps {
-  bar: HTMLElement;
-  label: string;
-  value: number;
-}
+};
 
 const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
   data,
   maxValue,
   visualizationHeight,
 }) => {
-  const [hoveredBar, setHoveredBar] = useState<hoveredBarStateProps | null>(
-    null
-  );
   const containerRef = useRef<HTMLDivElement>(null);
-  const valueRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
+  const [barIndex, setBarIndex] = useState<number>(-1);
+  const [labelElem, setLabelElem] = useState<HTMLElement>();
+  const [valueElem, setValueElem] = useState<HTMLElement>();
   const theme = useTheme();
   const style = {
     bar: {
@@ -37,7 +30,7 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
       transition: 'background-color 0.3s',
       width: 'auto',
     },
-    bar_container: {
+    barContainer: {
       '&:hover': {
         '--barColor': theme.palette.data.main,
       },
@@ -70,16 +63,23 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
       margin: 0,
       padding: 0,
     },
-    hoverLabel: {
+    hoveringElem: {
       color: 'data.main',
-      paddingInline: 0,
-    },
-    hoverLabelInline: { opacity: 0 },
-    hoverValue: {
       paddingBlock: 0.25,
-      top: 0,
+      pointerEvents: 'none',
+      position: 'absolute',
+      transitionDuration: '.3s',
+      transitionProperty: 'opacity',
+      whiteSpace: 'nowrap',
+      width: 'auto',
     },
-    hoverValueInline: { opacity: 0 },
+    hoveringLabel: {
+      top: '100%',
+    },
+    hoveringValue: {
+      top: 0,
+      translate: `0 -100%`,
+    },
     label: {
       '--translateX': '-50%',
       '--translateY': '0',
@@ -104,90 +104,39 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
       position: 'relative',
       width: '100%',
     },
-    sr_only: {
-      border: 0,
-      clipPath: 'inset(50%)',
-      height: '1px',
-      margin: '-1px',
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      width: '1px',
-      wordWrap: 'normal !important',
-    },
-    value: {
-      '--translateX': '-50%',
-      '--translateY': '-100%',
-      color: 'data.main',
-      left: '50%',
-      opacity: 0,
-      pointerEvents: 'none',
-      position: 'absolute',
-      top: '100%',
-      translate: `var(--translateX) var(--translateY)`,
-    },
   };
 
-  if (hoveredBar) {
+  if (barIndex >= 0) {
+    const hoveredBar = containerRef.current?.querySelector(
+      `li:nth-of-type(${barIndex + 1})`
+    ) as HTMLDivElement;
     const containerWidth = containerRef.current?.clientWidth || 0;
-    const barOffset = hoveredBar.bar.offsetLeft || 0;
-    const barWidth = hoveredBar.bar.clientWidth || 0;
-    const valueWidth = valueRef.current?.clientWidth || 0;
-    const labelWidth = labelRef.current?.clientWidth || 0;
+    const barOffset = hoveredBar?.offsetLeft || 0;
+    const barWidth = hoveredBar?.clientWidth || 0;
+    const valueWidth = valueElem?.clientWidth || 0;
+    const labelWidth = labelElem?.clientWidth || 0;
 
-    const baseStyle = {
-      left: barOffset + barWidth / 2,
-      opacity: 1,
-    };
-    const boundedLeft = {
-      '--translateX': `0`,
-      left: 0,
-    };
-    const boundedRight = {
-      '--translateX': '-100%',
-      left: containerWidth,
-    };
+    const calculatedValuePosX = barOffset + barWidth / 2 - valueWidth / 2;
+    const boundedValuePosX = Math.max(
+      0,
+      Math.min(calculatedValuePosX, containerWidth - valueWidth)
+    );
 
-    let hoveredValue = {
-      ...baseStyle,
-    };
-    let hoveredLabel = {
-      ...baseStyle,
-    };
-    if (valueWidth > barWidth) {
-      if (barOffset + barWidth / 2 <= valueWidth / 2) {
-        hoveredValue = {
-          ...hoveredValue,
-          ...boundedLeft,
-        };
-      } else if (containerWidth <= barOffset + barWidth / 2 + valueWidth / 2) {
-        hoveredValue = {
-          ...hoveredValue,
-          ...boundedRight,
-        };
-      }
-    }
-    if (labelWidth > barWidth) {
-      if (barOffset + barWidth / 2 <= labelWidth / 2) {
-        hoveredLabel = {
-          ...hoveredLabel,
-          ...boundedLeft,
-        };
-      } else if (containerWidth <= barOffset + barWidth / 2 + labelWidth / 2) {
-        hoveredLabel = {
-          ...hoveredLabel,
-          ...boundedRight,
-        };
-      }
-    }
+    const calculatedLabelPosX = barOffset + barWidth / 2 - labelWidth / 2;
+    const boundedLabelPosX = Math.max(
+      0,
+      Math.min(calculatedLabelPosX, containerWidth - labelWidth)
+    );
 
-    style.hoverValue = {
-      ...style.hoverValue,
-      ...hoveredValue,
+    style.hoveringValue = {
+      ...style.hoveringElem,
+      ...style.hoveringValue,
+      ...{ left: boundedValuePosX, opacity: valueWidth > 0 ? 1 : 0 },
     };
-    style.hoverLabel = {
-      ...style.hoverLabel,
-      ...hoveredLabel,
+    style.hoveringLabel = {
+      ...style.hoveringElem,
+      ...style.hoveringLabel,
+      ...{ left: boundedLabelPosX, opacity: valueWidth > 0 ? 1 : 0 },
     };
   }
 
@@ -196,7 +145,7 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
       ref={containerRef}
       className="barsContainer"
       onPointerLeave={() => {
-        setHoveredBar(null);
+        setBarIndex(-1);
       }}
       sx={style.root}
     >
@@ -206,14 +155,10 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
             <Box
               key={index}
               component="li"
-              onPointerEnter={(ev) => {
-                setHoveredBar({
-                  bar: ev.currentTarget,
-                  label: row.label,
-                  value: row.value,
-                });
+              onPointerEnter={() => {
+                setBarIndex(index);
               }}
-              sx={style.bar_container}
+              sx={style.barContainer}
             >
               <Typography
                 className="label"
@@ -222,14 +167,6 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
                 variant="labelSmMedium"
               >
                 {row.label}
-              </Typography>
-              <Typography
-                className="value"
-                component="span"
-                sx={style.sr_only}
-                variant="labelSmMedium"
-              >
-                {row.value}
               </Typography>
               <Box
                 className="bar"
@@ -240,25 +177,25 @@ const ZUIBarChartVerticalBars: FC<ZUIBarChartVerticalBarsProps> = ({
           );
         })}
       </Box>
-      {hoveredBar && (
+      {barIndex >= 0 && (
         <>
           <Typography
-            ref={valueRef}
-            className="hoverValue"
+            ref={(elem: HTMLDivElement) => setLabelElem(elem)}
+            className="hoveringLabel"
             component="div"
-            sx={[style.value, style.hoverValue]}
+            sx={style.hoveringLabel}
             variant="labelSmMedium"
           >
-            {hoveredBar?.value}
+            {data[barIndex].label}
           </Typography>
           <Typography
-            ref={labelRef}
-            className="hoverLabel"
+            ref={(elem: HTMLDivElement) => setValueElem(elem)}
+            className="hoveringValue"
             component="div"
-            sx={[style.label, style.hoverLabel]}
+            sx={style.hoveringValue}
             variant="labelSmMedium"
           >
-            {hoveredBar?.label}
+            {data[barIndex].value}
           </Typography>
         </>
       )}
