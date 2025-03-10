@@ -12,6 +12,7 @@ import {
 import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import { getBoundSize } from '../../../canvass/utils/getBoundSize';
+import { useEnv } from 'core/hooks';
 
 type Props = {
   areas: ZetkinArea[];
@@ -34,6 +35,7 @@ const MapRenderer: FC<Props> = ({
   onSelectArea,
   selectedArea,
 }) => {
+  const env = useEnv();
   const [zoomed, setZoomed] = useState(false);
   const reactFGref = useRef<FeatureGroup | null>(null);
   const theme = useTheme();
@@ -75,7 +77,7 @@ const MapRenderer: FC<Props> = ({
     <>
       <TileLayer
         attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
       />
       <FeatureGroupComponent
         ref={(fgRef) => {
