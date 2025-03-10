@@ -63,12 +63,12 @@ const EventShiftModal: FC<EventShiftModalProps> = ({ close, dates, open }) => {
 
       let startDate: Dayjs = dayjs(eventDate);
       startDate = startDate
-        .set('hour', shift.hour() + 2)
+        .set('hour', shift.hour() + 1)
         .set('minute', shift.minute());
 
       let endDate: Dayjs = dayjs(eventDate);
       endDate = endDate
-        .set('hour', endTime.hour() + 2)
+        .set('hour', endTime.hour() + 1)
         .set('minute', endTime.minute());
 
       const now = dayjs();
