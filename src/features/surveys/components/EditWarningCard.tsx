@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import { Lock, LockOpen, ThumbDown, ThumbUp } from '@mui/icons-material';
+import { Box, Switch, Typography } from '@mui/material';
+import { ThumbDown, ThumbUp } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -21,7 +21,7 @@ const EditWarningCard: FC<EditWarningCardProps> = ({ editing, onToggle }) => {
           ? messages.editWarning.editing.header()
           : messages.editWarning.locked.header()
       }
-      status={editing ? <LockOpen color="warning" /> : <Lock color="success" />}
+      status={<Switch checked={!editing} onChange={() => onToggle(!editing)} />}
       subheader={
         editing
           ? messages.editWarning.editing.subheader()
@@ -29,11 +29,6 @@ const EditWarningCard: FC<EditWarningCardProps> = ({ editing, onToggle }) => {
       }
     >
       <Box>
-        <Button onClick={() => onToggle(!editing)} variant="outlined">
-          {editing
-            ? messages.editWarning.editing.lockButton()
-            : messages.editWarning.locked.unlockButton()}
-        </Button>
         {editing && (
           <Box marginTop={3}>
             <EditTips
