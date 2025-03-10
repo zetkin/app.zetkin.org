@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Box, Switch, Typography } from '@mui/material';
-import { ThumbDown, ThumbUp } from '@mui/icons-material';
+import { Box, Divider, Switch, Typography, useTheme } from '@mui/material';
+import { Check, Close } from '@mui/icons-material';
 
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -13,6 +13,7 @@ type EditWarningCardProps = {
 
 const EditWarningCard: FC<EditWarningCardProps> = ({ editing, onToggle }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
 
   return (
     <ZUICard
@@ -30,26 +31,29 @@ const EditWarningCard: FC<EditWarningCardProps> = ({ editing, onToggle }) => {
     >
       <Box>
         {editing && (
-          <Box marginTop={3}>
-            <EditTips
-              bullets={[
-                messages.editWarning.editing.safe.bullet1(),
-                messages.editWarning.editing.safe.bullet2(),
-                messages.editWarning.editing.safe.bullet3(),
-                messages.editWarning.editing.safe.bullet4(),
-              ]}
-              header={messages.editWarning.editing.safe.header()}
-              icon={<ThumbUp color="success" />}
-            />
-            <EditTips
-              bullets={[
-                messages.editWarning.editing.unsafe.bullet1(),
-                messages.editWarning.editing.unsafe.bullet2(),
-              ]}
-              header={messages.editWarning.editing.unsafe.header()}
-              icon={<ThumbDown color="warning" />}
-            />
-          </Box>
+          <>
+            <Divider />
+            <Box marginTop={3}>
+              <EditTips
+                bullets={[
+                  messages.editWarning.editing.safe.bullet1(),
+                  messages.editWarning.editing.safe.bullet2(),
+                  messages.editWarning.editing.safe.bullet3(),
+                  messages.editWarning.editing.safe.bullet4(),
+                ]}
+                header={messages.editWarning.editing.safe.header()}
+                icon={<Check style={{ color: theme.palette.success.main }} />}
+              />
+              <EditTips
+                bullets={[
+                  messages.editWarning.editing.unsafe.bullet1(),
+                  messages.editWarning.editing.unsafe.bullet2(),
+                ]}
+                header={messages.editWarning.editing.unsafe.header()}
+                icon={<Close color="error" />}
+              />
+            </Box>
+          </>
         )}
       </Box>
     </ZUICard>
