@@ -42,10 +42,10 @@ type ValueProps<TValue, TAllowRangeSelection> = {
   value: TValue;
 };
 
-type Props = DatePickerBaseProps &
+export type ZUIDatePickerProps = DatePickerBaseProps &
   (ValueProps<DateRange<Dayjs>, true> | ValueProps<Dayjs | null, false>);
 
-const ZUIDatePicker: FC<Props> = ({
+const ZUIDatePicker: FC<ZUIDatePickerProps> = ({
   datesToMark = [],
   disablePast = false,
   onChange,
