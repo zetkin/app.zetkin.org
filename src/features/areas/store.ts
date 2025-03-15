@@ -1,10 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  remoteItemCreatedWithData,
   remoteItemDeleted,
   remoteItemLoad,
-  remoteItemLoaded,
   remoteItemUpdated,
   remoteList,
   RemoteList,
@@ -28,7 +26,7 @@ const areasSlice = createSlice({
   reducers: {
     areaCreated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      remoteItemCreatedWithData(state.areaList, area);
+      remoteItemUpdated(state.areaList, area);
     },
     areaDeleted: (state, action: PayloadAction<string>) => {
       const deletedId = action.payload;
@@ -40,7 +38,7 @@ const areasSlice = createSlice({
     },
     areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      remoteItemLoaded(state.areaList, area);
+      remoteItemUpdated(state.areaList, area);
     },
     areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;

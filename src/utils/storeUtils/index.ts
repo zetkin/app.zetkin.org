@@ -146,10 +146,6 @@ export {
   remoteItemLoad,
 } from 'utils/storeUtils/findOrAddItem';
 
-export {
-  remoteItemCreatedWithData,
-  remoteItemUpdated,
-  remoteItemLoaded,
-} from 'utils/storeUtils/updateOrCreateItemWithData';
+export { remoteItemUpdated } from 'utils/storeUtils/remoteItemUpdated';
 
 export { remoteItemDeleted } from 'utils/storeUtils/remoteItemDeleted';

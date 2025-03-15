@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  remoteItemCreatedWithData,
   remoteItemLoad,
-  remoteItemLoaded,
   remoteItemDeleted,
   remoteItemUpdate,
   remoteItemUpdated,
@@ -28,7 +26,7 @@ const joinFormsSlice = createSlice({
   reducers: {
     joinFormCreated: (state, action: PayloadAction<ZetkinJoinForm>) => {
       const form = action.payload;
-      remoteItemCreatedWithData(state.formList, form);
+      remoteItemUpdated(state.formList, form);
     },
     joinFormLoad: (state, action: PayloadAction<number>) => {
       const formId = action.payload;
@@ -36,7 +34,7 @@ const joinFormsSlice = createSlice({
     },
     joinFormLoaded: (state, action: PayloadAction<ZetkinJoinForm>) => {
       const form = action.payload;
-      remoteItemLoaded(state.formList, form);
+      remoteItemUpdated(state.formList, form);
     },
     joinFormUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [formId, mutating] = action.payload;
@@ -63,7 +61,7 @@ const joinFormsSlice = createSlice({
     },
     submissionLoaded: (state, action: PayloadAction<ZetkinJoinSubmission>) => {
       const submission = action.payload;
-      remoteItemLoaded(state.submissionList, submission);
+      remoteItemUpdated(state.submissionList, submission);
     },
     submissionUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [submissionId, mutating] = action.payload;

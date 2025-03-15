@@ -1,10 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  remoteItemCreatedWithData,
   remoteItemDeleted,
   remoteItemLoad,
-  remoteItemLoaded,
   remoteItemUpdate,
   remoteItemUpdated,
   remoteList,
@@ -54,7 +52,7 @@ const tagsSlice = createSlice({
     tagCreated: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
       state.tagList.isLoading = false;
-      remoteItemCreatedWithData(state.tagList, tag);
+      remoteItemUpdated(state.tagList, tag);
     },
     tagDeleted: (state, action: PayloadAction<number>) => {
       const tagId = action.payload;
@@ -74,7 +72,7 @@ const tagsSlice = createSlice({
     tagGroupCreated: (state, action: PayloadAction<ZetkinTagGroup>) => {
       const tagGroup = action.payload;
       state.tagGroupList.isLoading = false;
-      remoteItemCreatedWithData(state.tagGroupList, tagGroup);
+      remoteItemUpdated(state.tagGroupList, tagGroup);
     },
     tagGroupsLoad: (state) => {
       state.tagGroupList.isLoading = true;
@@ -93,7 +91,7 @@ const tagsSlice = createSlice({
     },
     tagLoaded: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
-      remoteItemLoaded(state.tagList, tag);
+      remoteItemUpdated(state.tagList, tag);
     },
     tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
       const [personId, tagId] = action.payload;

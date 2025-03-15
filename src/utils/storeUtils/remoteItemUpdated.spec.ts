@@ -1,8 +1,8 @@
-import { updateOrCreateItemWithData } from 'utils/storeUtils/updateOrCreateItemWithData';
+import { remoteItemUpdated } from 'utils/storeUtils/remoteItemUpdated';
 import { remoteList } from 'utils/storeUtils';
 import { findOrAddItem } from './findOrAddItem';
 
-describe('updateOrCreateItemWithData', () => {
+describe('remoteItemUpdated', () => {
   const newId = 'new';
   const existingId = 'existing';
 
@@ -21,7 +21,7 @@ describe('updateOrCreateItemWithData', () => {
 
   it('Creates an item with data if none exist', () => {
     const list = remoteList();
-    updateOrCreateItemWithData(list, newData);
+    remoteItemUpdated(list, newData);
 
     const foundItemInList = list.items.find((item) => item.id == newId);
 
@@ -33,7 +33,7 @@ describe('updateOrCreateItemWithData', () => {
     const list = remoteList();
     const existingItem = findOrAddItem(list, existingId);
 
-    updateOrCreateItemWithData(list, existingUpdatedData);
+    remoteItemUpdated(list, existingUpdatedData);
 
     expect(existingItem.data).toBe(existingUpdatedData);
   });
@@ -44,10 +44,10 @@ describe('updateOrCreateItemWithData', () => {
     const currentDate = new Date('2020-01-01');
     jest.useFakeTimers().setSystemTime(currentDate);
 
-    const resultNew = updateOrCreateItemWithData(list, newData);
+    const resultNew = remoteItemUpdated(list, newData);
 
     findOrAddItem(list, existingId);
-    const resultUpdated = updateOrCreateItemWithData(list, existingUpdatedData);
+    const resultUpdated = remoteItemUpdated(list, existingUpdatedData);
 
     expect(resultNew.loaded).toBeDefined();
     expect(resultNew.loaded).toBe(currentDate.toISOString());
@@ -63,7 +63,7 @@ describe('updateOrCreateItemWithData', () => {
     existingItem.data = existingData;
     existingItem.mutating = ['ChangedField'];
 
-    const resultUpdated = updateOrCreateItemWithData(list, existingUpdatedData);
+    const resultUpdated = remoteItemUpdated(list, existingUpdatedData);
 
     expect(resultUpdated.mutating.length).toBe(0);
   });
@@ -75,7 +75,7 @@ describe('updateOrCreateItemWithData', () => {
     existingItem.data = existingData;
     existingItem.isLoading = true;
 
-    const resultUpdated = updateOrCreateItemWithData(list, existingUpdatedData);
+    const resultUpdated = remoteItemUpdated(list, existingUpdatedData);
 
     expect(resultUpdated.isLoading).toBeFalsy();
   });
@@ -84,9 +84,9 @@ describe('updateOrCreateItemWithData', () => {
     const list = remoteList();
 
     const existingItem = findOrAddItem(list, existingId);
-    const resultUpdated = updateOrCreateItemWithData(list, existingUpdatedData);
+    const resultUpdated = remoteItemUpdated(list, existingUpdatedData);
 
-    const resultNew = updateOrCreateItemWithData(list, newData);
+    const resultNew = remoteItemUpdated(list, newData);
 
     const foundUpdatedItemInList = list.items.find(
       (item) => item.id == existingId

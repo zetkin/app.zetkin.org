@@ -1,11 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  remoteItemCreatedWithData,
   remoteItemLoad,
-  remoteItemLoaded,
-  remoteItemUpdated,
   remoteItemDeleted,
+  remoteItemUpdated,
   RemoteItem,
   remoteItem,
   remoteList,
@@ -60,7 +58,7 @@ const areaAssignmentSlice = createSlice({
       action: PayloadAction<ZetkinAreaAssignment>
     ) => {
       const areaAssignment = action.payload;
-      remoteItemCreatedWithData(state.areaAssignmentList, areaAssignment);
+      remoteItemUpdated(state.areaAssignmentList, areaAssignment);
     },
     areaAssignmentDeleted: (state, action: PayloadAction<number>) => {
       const areaAssId = action.payload;
@@ -75,7 +73,7 @@ const areaAssignmentSlice = createSlice({
       action: PayloadAction<ZetkinAreaAssignment>
     ) => {
       const areaAssignment = action.payload;
-      remoteItemLoaded(state.areaAssignmentList, areaAssignment);
+      remoteItemUpdated(state.areaAssignmentList, areaAssignment);
     },
     areaAssignmentSessionCreated: (
       state,
@@ -189,7 +187,7 @@ const areaAssignmentSlice = createSlice({
     },
     locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
-      remoteItemCreatedWithData(state.locationList, location);
+      remoteItemUpdated(state.locationList, location);
     },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const updatedLocation = action.payload;
