@@ -6,7 +6,7 @@ export function updateOrCreateItemWithData<DataType extends RemoteData>(
   updatedData: DataType
 ) {
   const item = findOrAddItem(list, updatedData.id);
-  item.data = updatedData; // verify that we get updated data and not remoteItem
+  item.data = updatedData;
   item.mutating = [];
   item.isLoading = false;
   item.loaded = new Date().toISOString();

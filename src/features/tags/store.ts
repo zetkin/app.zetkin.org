@@ -48,10 +48,12 @@ const tagsSlice = createSlice({
       remoteItemUpdated(state.tagsByPersonId[personId], tag);
     },
     tagCreate: (state) => {
+      // TODO: This is inconsistent with other features. The list itself is not truly loading, just some of the contents
       state.tagList.isLoading;
     },
     tagCreated: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
+      state.tagList.isLoading = false;
       remoteItemCreatedWithData(state.tagList, tag);
     },
     tagDeleted: (state, action: PayloadAction<number>) => {
@@ -66,10 +68,12 @@ const tagsSlice = createSlice({
       }
     },
     tagGroupCreate: (state) => {
+      // TODO: This is inconsistent with other features. The list itself is not truly loading, just some of the contents
       state.tagGroupList.isLoading;
     },
     tagGroupCreated: (state, action: PayloadAction<ZetkinTagGroup>) => {
       const tagGroup = action.payload;
+      state.tagGroupList.isLoading = false;
       remoteItemCreatedWithData(state.tagGroupList, tagGroup);
     },
     tagGroupsLoad: (state) => {
