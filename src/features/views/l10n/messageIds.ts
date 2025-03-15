@@ -144,7 +144,7 @@ export default makeMessages('feat.views', {
       },
       localPerson: {
         columnTitle: m('Assignee'),
-        description: m("Let's you pick an assignee on every row"),
+        description: m('Lets you pick an assignee on every row'),
         keywords: m(''),
         title: m('Assigned Person'),
       },
