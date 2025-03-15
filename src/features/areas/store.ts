@@ -6,6 +6,9 @@ import {
   remoteItemUpdated,
   remoteList,
   RemoteList,
+  remoteListCreated,
+  remoteListLoad,
+  remoteListLoaded,
 } from 'utils/storeUtils';
 import { ZetkinArea } from './types';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
@@ -45,19 +48,17 @@ const areasSlice = createSlice({
       remoteItemUpdated(state.areaList, area);
     },
     areasLoad: (state) => {
-      state.areaList.isLoading = true;
+      state.areaList = remoteListLoad(state.areaList);
     },
     areasLoaded: (state, action: PayloadAction<ZetkinArea[]>) => {
-      const timestamp = new Date().toISOString();
-      const areas = action.payload;
-      state.areaList = remoteList(areas);
-      state.areaList.loaded = timestamp;
-      state.areaList.items.forEach((item) => (item.loaded = timestamp));
+      state.areaList = remoteListLoaded(action.payload);
     },
     tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
-      state.tagsByAreaId[areaId] ||= remoteList();
 
+      state.tagsByAreaId[areaId] ||= remoteListCreated(
+        state.tagsByAreaId[areaId]
+      );
       remoteItemUpdated(state.tagsByAreaId[areaId], tag);
 
       const areaItem = state.areaList.items.find((item) => item.id == areaId);
@@ -81,16 +82,14 @@ const areasSlice = createSlice({
     },
     tagsLoad: (state, action: PayloadAction<string>) => {
       const areaId = action.payload;
-      state.tagsByAreaId[areaId] ||= remoteList();
-      state.tagsByAreaId[areaId].isLoading = true;
+      state.tagsByAreaId[areaId] = remoteListLoad(state.tagsByAreaId[areaId]);
     },
     tagsLoaded: (
       state,
       action: PayloadAction<[string, ZetkinAppliedTag[]]>
     ) => {
       const [areaId, tags] = action.payload;
-      state.tagsByAreaId[areaId] = remoteList(tags);
-      state.tagsByAreaId[areaId].loaded = new Date().toISOString();
+      state.tagsByAreaId[areaId] = remoteListLoaded(tags);
     },
   },
 });

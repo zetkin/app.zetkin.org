@@ -9,6 +9,7 @@ export function remoteItemUpdated<DataType extends RemoteData>(
   item.data = updatedData;
   item.mutating = [];
   item.isLoading = false;
+  item.isStale = false;
   item.loaded = new Date().toISOString();
   return item;
 }

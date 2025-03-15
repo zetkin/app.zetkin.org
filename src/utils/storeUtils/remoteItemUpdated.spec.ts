@@ -80,6 +80,18 @@ describe('remoteItemUpdated', () => {
     expect(resultUpdated.isLoading).toBeFalsy();
   });
 
+  it('Sets isStale to false', () => {
+    const list = remoteList();
+
+    const existingItem = findOrAddItem(list, existingId);
+    existingItem.data = existingData;
+    existingItem.isStale = true;
+
+    const resultUpdated = remoteItemUpdated(list, existingUpdatedData);
+
+    expect(resultUpdated.isStale).toBeFalsy();
+  });
+
   it('Returns the updated/fetched item', () => {
     const list = remoteList();
 
