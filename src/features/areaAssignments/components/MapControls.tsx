@@ -45,12 +45,15 @@ const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
         </Button>
         <Button
           onClick={() => {
+            if (locating) {
+              return;
+            }
             setLocating(true);
             navigator.geolocation.getCurrentPosition(
               (pos) => {
                 setLocating(false);
 
-                const zoom = 16;
+                const zoom = undefined; // We do not want to override the user's zoom level
                 const latLng = {
                   lat: pos.coords.latitude,
                   lng: pos.coords.longitude,
