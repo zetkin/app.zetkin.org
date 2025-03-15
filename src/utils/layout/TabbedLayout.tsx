@@ -25,7 +25,7 @@ interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   main: {
-    overflowX: 'hidden',
+    overflow: 'hidden',
     padding: ({ noPad }) => (noPad ? 0 : undefined),
   },
 }));
@@ -122,7 +122,6 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
         display="flex"
         flexDirection="column"
         height={fixedHeight ? 1 : 'auto'}
-        minHeight="100vh"
       >
         <Header
           actionButtons={actionButtons}
