@@ -188,19 +188,39 @@ const ZUIAutocomplete: FC<ZUIAutocompleteProps> = ({
             <ListItemText
               disableTypography
               primary={
-                <Typography variant="labelXlMedium">{option.label}</Typography>
+                <Box
+                  sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <Typography variant="labelXlMedium">
+                    {option.label}
+                  </Typography>
+                </Box>
               }
               secondary={
                 option.subtitle ? (
-                  <Typography
-                    color="secondary"
-                    fontFamily={theme.typography.fontFamily}
-                    fontSize="0.875rem"
-                    fontWeight={400}
-                    letterSpacing="3%"
+                  <Box
+                    sx={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
                   >
-                    {option.subtitle}
-                  </Typography>
+                    <Typography
+                      sx={(theme) => ({
+                        color: theme.palette.secondary.main,
+                        fontFamily: theme.typography.fontFamily,
+                        fontSize: '0.875rem',
+                        fontWeight: 400,
+                        letterSpacing: '3%',
+                      })}
+                    >
+                      {option.subtitle}
+                    </Typography>
+                  </Box>
                 ) : (
                   ''
                 )
