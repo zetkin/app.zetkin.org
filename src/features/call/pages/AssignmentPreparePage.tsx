@@ -17,7 +17,7 @@ type Props = {
 };
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
-  const call = useCallWithTarget(assignment.organization.id, assignment.id);
+  const { call } = useCallWithTarget(assignment.organization.id, assignment.id);
   const surveys = useSurveys(assignment.id).data || [];
   const campaigns = useActiveCampaigns(assignment.organization.id).data || [];
 
@@ -77,9 +77,10 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
                   id={messageIds.prepare.arePreviousActivity}
                   values={{
                     actionTitle:
-                      call.target.past_actions.last_action.activity.title || '',
-                    activities: call.target.past_actions.num_actions,
-                    name: call.target.first_name,
+                      call?.target.past_actions.last_action.activity.title ||
+                      '',
+                    activities: call?.target.past_actions.num_actions,
+                    name: call?.target.first_name,
                   }}
                 />
               </Typography>
