@@ -152,7 +152,10 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           zIndex: 1300,
         }}
       >
-        <UnfinishedCallsDialog orgId={assignment.organization.id} />
+        <UnfinishedCallsDialog
+          assingmentId={assignment.id}
+          orgId={assignment.organization.id}
+        />
       </Box>
     </Box>
   );

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Box,
   Button,
@@ -11,21 +12,26 @@ import {
 } from '@mui/material';
 import { Close, List } from '@mui/icons-material';
 
-import { useAppSelector } from 'core/hooks';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import useCallMutations from '../hooks/useCallMutations';
+import useOutgoingCalls from '../hooks/useOutgoingCalls';
 
 type UnfinishedCallsDialogProps = {
+  assingmentId: number;
   orgId: number;
 };
 
 const UnfinishedCallsDialog: React.FC<UnfinishedCallsDialogProps> = ({
+  assingmentId,
   orgId,
 }) => {
   const [open, setOpen] = useState(false);
-  const callsList = useAppSelector((state) => state.call.unfinishedCalls);
   const theme = useTheme();
   const { deleteCall } = useCallMutations(orgId);
+  const router = useRouter();
+  const outgoingCalls = useOutgoingCalls();
+  const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
+
   return (
     <>
       <IconButton
@@ -61,7 +67,7 @@ const UnfinishedCallsDialog: React.FC<UnfinishedCallsDialogProps> = ({
             calls or abandon them so others can call the same people.
           </Typography>
 
-          {callsList.map((call) => {
+          {unfinishedCallList.map((call) => {
             return (
               <Box key={call.id} sx={{ mb: 2 }}>
                 <Box alignItems="center" display="flex" mb={1}>
@@ -83,7 +89,15 @@ const UnfinishedCallsDialog: React.FC<UnfinishedCallsDialogProps> = ({
                 >
                   Switch to this call
                 </Button>
-                <Button onClick={() => deleteCall(call.id)} variant="outlined">
+                <Button
+                  onClick={() => {
+                    deleteCall(call.id);
+                    if (unfinishedCallList.length <= 1) {
+                      router.push(`/call/${assingmentId}`);
+                    }
+                  }}
+                  variant="outlined"
+                >
                   Abandon call
                 </Button>
               </Box>
