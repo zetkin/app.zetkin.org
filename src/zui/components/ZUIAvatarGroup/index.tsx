@@ -48,7 +48,8 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
     fontSize = '1rem';
   }
 
-  const showOverflowNumber = max && max < avatars.length;
+  const showOverflowNumber = !!max && max < avatars.length;
+
   return (
     <Box display="flex" gap="0.25rem">
       {avatars.map((avatar, index) => {
