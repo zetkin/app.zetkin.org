@@ -31,10 +31,9 @@ export const Basic: Story = {
     return (
       <ZUIAutocomplete
         {...args}
+        multiple={false}
         onChange={(newSelection) => {
-          if ('label' in newSelection) {
-            setSelection(newSelection);
-          }
+          setSelection(newSelection);
         }}
         value={selection}
       />
@@ -88,10 +87,9 @@ export const WithAction: Story = {
             label: 'Add person',
             onClick: () => setDialogOpen(true),
           }}
+          multiple={false}
           onChange={(newSelection) => {
-            if ('label' in newSelection) {
-              setSelection(newSelection);
-            }
+            setSelection(newSelection);
           }}
           value={selection}
         />
@@ -111,8 +109,22 @@ export const WithAction: Story = {
 };
 
 export const Checkboxes: Story = {
-  args: { ...Basic.args, checkboxes: true, multiple: true },
-  render: Multiple.render,
+  args: { ...Basic.args, checkboxes: true },
+  render: function Render(args) {
+    const [selection, setSelection] = useState<{ label: string }[]>([]);
+    return (
+      <ZUIAutocomplete
+        {...args}
+        multiple={true}
+        onChange={(newSelection) => {
+          if ('length' in newSelection) {
+            setSelection(newSelection);
+          }
+        }}
+        value={selection}
+      />
+    );
+  },
 };
 
 export const AvatarsAndSubtitles: Story = {
