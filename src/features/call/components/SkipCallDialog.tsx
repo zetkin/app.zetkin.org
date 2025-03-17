@@ -18,7 +18,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  const deleteCall = useCallMutations(callId, assignment.organization.id);
+  const { deleteCall } = useCallMutations(assignment.organization.id);
 
   const { refreshCall } = useCallWithTarget(
     assignment.organization.id,
@@ -38,7 +38,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
             color="error"
             onClick={() => {
               setOpen(false);
-              deleteCall();
+              deleteCall(callId);
               refreshCall();
             }}
             variant="contained"
