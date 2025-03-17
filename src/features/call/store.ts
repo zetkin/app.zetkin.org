@@ -11,11 +11,13 @@ import {
 export interface CallStoreSlice {
   activeCampaignsList: RemoteList<ZetkinAction>;
   currentCall: RemoteItem<ZetkinCall>;
+  unfinishedCalls: ZetkinCall[];
 }
 
 const initialState: CallStoreSlice = {
   activeCampaignsList: remoteList(),
   currentCall: remoteItem<ZetkinCall>(0, { data: null, isLoading: false }),
+  unfinishedCalls: [],
 };
 
 const CallSlice = createSlice({
@@ -29,8 +31,11 @@ const CallSlice = createSlice({
       state.activeCampaignsList = remoteList(action.payload);
       state.activeCampaignsList.loaded = new Date().toISOString();
     },
-    currentCallDeleted: (state) => {
+    currentCallDeleted: (state, action: PayloadAction<number>) => {
       state.currentCall.deleted = true;
+      state.unfinishedCalls = state.unfinishedCalls.filter(
+        (call) => call.id !== action.payload
+      );
     },
     currentCallLoad: (state) => {
       state.currentCall.isLoading = true;
@@ -42,6 +47,14 @@ const CallSlice = createSlice({
         isStale: false,
         loaded: new Date().toISOString(),
       });
+
+      const callExists = state.unfinishedCalls.some(
+        (call) => call.id === action.payload.id
+      );
+
+      if (!callExists) {
+        state.unfinishedCalls.push(action.payload);
+      }
     },
   },
 });
