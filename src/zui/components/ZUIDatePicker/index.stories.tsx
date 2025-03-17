@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DateRange as DateRangeType } from '@mui/x-date-pickers-pro';
 
 import ZUIDatePicker from './index';
+import LocaleSwitcher from '../utils/LocaleSwitcher';
 
 const meta: Meta<typeof ZUIDatePicker> = {
   component: ZUIDatePicker,
@@ -77,4 +78,21 @@ export const DateRangeWithMarkedDates: Story = {
     ],
   },
   render: DateRange.render,
+};
+
+export const DifferentLocales: Story = {
+  render: function Render(args) {
+    const [date, setDate] = useState<Dayjs | null>(null);
+
+    return (
+      <LocaleSwitcher>
+        <ZUIDatePicker
+          {...args}
+          allowRangeSelection={false}
+          onChange={(newDate) => setDate(newDate)}
+          value={date}
+        />
+      </LocaleSwitcher>
+    );
+  },
 };
