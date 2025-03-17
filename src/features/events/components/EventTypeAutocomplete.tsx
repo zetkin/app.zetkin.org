@@ -18,7 +18,7 @@ interface StyleProps {
   showBorder: boolean | undefined;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   inputRoot: {
     '& fieldset': { border: 'none' },
     '&:focus, &:hover': {

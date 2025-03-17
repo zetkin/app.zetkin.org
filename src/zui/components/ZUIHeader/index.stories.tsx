@@ -23,8 +23,11 @@ type Story = StoryObj<typeof RightSide>;
 
 export const PersonPageHeader: Story = {
   args: {
-    avatar:
-      'https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg',
+    avatar: {
+      firstName: 'Angela',
+      id: 1,
+      lastName: 'Davis',
+    },
     breadcrumbs: [
       {
         children: [
@@ -46,12 +49,12 @@ export const ProjectActivityHeader: Story = {
   args: {
     actionButtonLabel: 'Publication',
     belowActionButton: (
-      <Box bgcolor="lightcoral" padding={1}>
+      <Box sx={{ bgcolor: 'lightcoral', padding: '0.5rem' }}>
         <ZUIText>Component with scheduling and status info here</ZUIText>
       </Box>
     ),
     belowTitle: (
-      <Box bgcolor="lightblue" padding={1}>
+      <Box sx={{ bgcolor: 'lightblue', padding: '0.5rem' }}>
         <ZUIText>Interactive component here</ZUIText>
       </Box>
     ),
@@ -129,11 +132,11 @@ export const ActionWithPopoverContentAndEllipsisMenu: Story = {
   args: {
     actionButtonLabel: 'Schedule',
     actionButtonPopoverContent: (onClose) => (
-      <Box display="flex" flexDirection="column" padding={2}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', padding: '1rem' }}>
         <ZUIText paddingY={2}>
           Hello! This is just a random component with whatever content you want
         </ZUIText>
-        <Box alignSelf="flex-end">
+        <Box sx={{ alignSelf: 'flex-end' }}>
           <ZUIButton label="Close me" onClick={onClose} variant="primary" />
         </Box>
       </Box>

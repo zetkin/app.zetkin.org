@@ -2,6 +2,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import SvgIcon from '@mui/material/SvgIcon';
 import { Box, Typography } from '@mui/material';
 
+import theme from 'theme';
+
 interface ZUILogoProps {
   size?: number;
   color?: 'inherit' | 'disabled' | 'action' | 'secondary' | 'primary' | 'error';
@@ -9,7 +11,7 @@ interface ZUILogoProps {
   beta?: boolean;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   beta: {
     backgroundColor: theme.palette.secondary.main,
     borderRadius: theme.spacing(0.25),

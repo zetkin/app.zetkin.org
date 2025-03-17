@@ -2,11 +2,13 @@ import { Box, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FC, useEffect } from 'react';
 
+import theme from 'theme';
+
 type StyleProps = {
   duration: number;
 };
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   '@keyframes flyToMenu': {
     '0%': {
       left: '50vw',

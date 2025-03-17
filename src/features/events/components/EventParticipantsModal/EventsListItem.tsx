@@ -15,13 +15,14 @@ import { useMessages } from 'core/i18n';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
+import theme from 'theme';
 
 interface StyleProps {
   color: STATUS_COLORS;
   selected: boolean;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
     alignItems: 'center',
     backgroundColor: ({ selected }) =>

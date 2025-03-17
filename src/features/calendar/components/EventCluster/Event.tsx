@@ -8,6 +8,7 @@ import FieldGroup from './FieldGroup';
 import { useAppSelector } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
+import theme from 'theme';
 
 interface StyleProps {
   cancelled: boolean;
@@ -18,7 +19,7 @@ interface StyleProps {
   width: string;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   collapsedContainer: {
     alignItems: 'center',
     borderBottomLeftRadius: 4,

@@ -6,8 +6,9 @@ import { Close, OpenWith } from '@mui/icons-material';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   instructions: {
     alignItems: 'center',
     backgroundColor: lighten(theme.palette.primary.main, 0.8),
