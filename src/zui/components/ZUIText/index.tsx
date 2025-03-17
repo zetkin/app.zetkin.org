@@ -46,10 +46,15 @@ const ZUIText: FC<ZUITextProps> = ({
   return (
     <Typography
       {...boxProps}
-      color={color}
       component={component}
       gutterBottom={gutterBottom}
       noWrap={noWrap}
+      sx={(theme) => ({
+        color:
+          color == 'primary'
+            ? theme.palette.text.primary
+            : theme.palette.text.secondary,
+      })}
       variant={variant}
     >
       {children}

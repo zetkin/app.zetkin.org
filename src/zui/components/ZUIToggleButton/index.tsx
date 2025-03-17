@@ -1,66 +1,8 @@
-import {
-  SvgIconTypeMap,
-  Theme,
-  ToggleButton,
-  ToggleButtonGroup,
-} from '@mui/material';
+import { SvgIconTypeMap, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 
 import { ZUIOrientation, ZUISize } from '../types';
-
-const useStyles = makeStyles<Theme>((theme) => ({
-  toggleButtonGroup: {
-    '& .MuiToggleButton-root': {
-      '&:hover': {
-        backgroundColor: theme.palette.grey[100],
-        color: theme.palette.primary.main,
-      },
-      border: `1px solid ${theme.palette.grey[600]}`,
-      color: theme.palette.primary.main,
-    },
-    '& .MuiToggleButton-root.Mui-selected': {
-      '&:hover': {
-        color: theme.palette.primary.main,
-      },
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
-    },
-    '& .MuiToggleButton-sizeLarge': {
-      padding: '0.5rem 1.375rem',
-    },
-    '& .MuiToggleButton-sizeLarge:has(>svg)': {
-      '& > svg': {
-        fontSize: '1.5rem',
-      },
-      padding: '0.469rem',
-    },
-    '& .MuiToggleButton-sizeMedium': {
-      padding: '0.5rem 1rem',
-    },
-    '& .MuiToggleButton-sizeMedium:has(>svg)': {
-      '& > svg': {
-        fontSize: '1.5rem',
-      },
-      padding: '0.406rem',
-    },
-    '& .MuiToggleButton-sizeSmall': {
-      padding: '0.313rem 0.625rem',
-    },
-    '& .MuiToggleButton-sizeSmall:has(svg)': {
-      '& > svg': {
-        fontSize: '1.25rem',
-      },
-      padding: '0.313rem',
-    },
-    '& .MuiToggleButtonGroup-grouped:not(:first-of-type)': {
-      '&:hover': {
-        border: `1px solid ${theme.palette.grey[600]}`,
-      },
-    },
-  },
-}));
 
 type TextOption = {
   label: string;
@@ -108,35 +50,80 @@ const ZUIToggleButton: FC<ZUIToggleButtonProps> = ({
   value,
   orientation = 'horizontal',
   size = 'medium',
-}) => {
-  const classes = useStyles();
-  return (
-    <ToggleButtonGroup
-      className={classes.toggleButtonGroup}
-      exclusive
-      onChange={(ev, newValue) => onChange(newValue)}
-      orientation={orientation}
-      size={size}
-      value={value}
-    >
-      {options.map((option) => {
-        if (isTextOption(option)) {
-          return (
-            <ToggleButton key={option.value} size={size} value={option.value}>
-              {option.label}
-            </ToggleButton>
-          );
-        } else {
-          const Icon = option.label;
-          return (
-            <ToggleButton key={option.value} value={option.value}>
-              <Icon fontSize={size} />
-            </ToggleButton>
-          );
-        }
-      })}
-    </ToggleButtonGroup>
-  );
-};
+}) => (
+  <ToggleButtonGroup
+    exclusive
+    onChange={(ev, newValue) => onChange(newValue)}
+    orientation={orientation}
+    size={size}
+    sx={(theme) => ({
+      '& .MuiToggleButton-root': {
+        '&:hover': {
+          backgroundColor: theme.palette.grey[100],
+          color: theme.palette.primary.main,
+        },
+        border: `1px solid ${theme.palette.grey[600]}`,
+        color: theme.palette.primary.main,
+      },
+      '& .MuiToggleButton-root.Mui-selected': {
+        '&:hover': {
+          color: theme.palette.primary.main,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+      },
+      '& .MuiToggleButton-sizeLarge': {
+        padding: '0.5rem 1.375rem',
+      },
+      '& .MuiToggleButton-sizeLarge:has(>svg)': {
+        '& > svg': {
+          fontSize: '1.5rem',
+        },
+        padding: '0.469rem',
+      },
+      '& .MuiToggleButton-sizeMedium': {
+        padding: '0.5rem 1rem',
+      },
+      '& .MuiToggleButton-sizeMedium:has(>svg)': {
+        '& > svg': {
+          fontSize: '1.5rem',
+        },
+        padding: '0.406rem',
+      },
+      '& .MuiToggleButton-sizeSmall': {
+        padding: '0.313rem 0.625rem',
+      },
+      '& .MuiToggleButton-sizeSmall:has(svg)': {
+        '& > svg': {
+          fontSize: '1.25rem',
+        },
+        padding: '0.313rem',
+      },
+      '& .MuiToggleButtonGroup-grouped:not(:first-of-type)': {
+        '&:hover': {
+          border: `1px solid ${theme.palette.grey[600]}`,
+        },
+      },
+    })}
+    value={value}
+  >
+    {options.map((option) => {
+      if (isTextOption(option)) {
+        return (
+          <ToggleButton key={option.value} size={size} value={option.value}>
+            {option.label}
+          </ToggleButton>
+        );
+      } else {
+        const Icon = option.label;
+        return (
+          <ToggleButton key={option.value} value={option.value}>
+            <Icon fontSize={size} />
+          </ToggleButton>
+        );
+      }
+    })}
+  </ToggleButtonGroup>
+);
 
 export default ZUIToggleButton;

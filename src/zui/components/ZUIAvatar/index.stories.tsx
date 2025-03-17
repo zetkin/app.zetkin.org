@@ -23,8 +23,15 @@ export const Multiple: Story = {
     const [ids, setIds] = useState<number[]>([1, 2, 3, 4, 5, 6, 7]);
 
     return (
-      <Box alignItems="center" display="flex" flexDirection="column" gap={2}>
-        <Box display="flex" gap={1}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+        }}
+      >
+        <Box sx={{ display: 'flex', gap: '0.5rem' }}>
           <ZUIAvatar firstName="Angela" id={ids[0]} lastName="Davis" />
           <ZUIAvatar firstName="Huey" id={ids[1]} lastName="Newton" />
           <ZUIAvatar firstName="Steve" id={ids[2]} lastName="Carrell" />

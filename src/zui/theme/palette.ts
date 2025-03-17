@@ -531,7 +531,7 @@ const palette: Omit<
     selected: alpha(uiSwatches.grey[950], 0.08),
   },
   secondary: {
-    contrastText: '', // Remove from type?
+    contrastText: uiSwatches.basic.black,
     dark: '', // Remove from type?
     light: uiSwatches.grey[400],
     main: uiSwatches.grey[500],
