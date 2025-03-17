@@ -149,7 +149,7 @@ const ZUIAutocomplete: FC<Props> = ({
               transform: 'translate(0.813rem, -0.625rem)',
             },
             '& >.MuiInputBase-root > .MuiAutocomplete-endAdornment': {
-              top: multiple ? '1.75rem' : '50%',
+              top: multiple ? '1.75rem' : '48%',
             },
             '& >.MuiInputBase-root > fieldset > legend > span': {
               fontFamily: theme.typography.fontFamily,
