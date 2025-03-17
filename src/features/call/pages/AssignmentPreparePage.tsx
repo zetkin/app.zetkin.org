@@ -11,6 +11,7 @@ import useSurveys from 'features/surveys/hooks/useSurveys';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import UnfinishedCallsDialog from '../components/UnfinishedCallsDialog';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -143,6 +144,16 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           </Box>
         </Box>
       </Suspense>
+      <Box
+        sx={{
+          bottom: 16,
+          left: 16,
+          position: 'fixed',
+          zIndex: 1300,
+        }}
+      >
+        <UnfinishedCallsDialog orgId={assignment.organization.id} />
+      </Box>
     </Box>
   );
 };
