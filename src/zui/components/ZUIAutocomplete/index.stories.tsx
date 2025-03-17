@@ -32,9 +32,7 @@ export const Basic: Story = {
       <ZUIAutocomplete
         {...args}
         multiple={false}
-        onChange={(newSelection) => {
-          setSelection(newSelection);
-        }}
+        onChange={(newSelection) => setSelection(newSelection)}
         value={selection}
       />
     );
@@ -49,11 +47,7 @@ export const Multiple: Story = {
       <ZUIAutocomplete
         {...args}
         multiple={true}
-        onChange={(newSelection) => {
-          if ('length' in newSelection) {
-            setSelection(newSelection);
-          }
-        }}
+        onChange={(newSelection) => setSelection(newSelection)}
         value={selection}
       />
     );
@@ -88,9 +82,7 @@ export const WithAction: Story = {
             onClick: () => setDialogOpen(true),
           }}
           multiple={false}
-          onChange={(newSelection) => {
-            setSelection(newSelection);
-          }}
+          onChange={(newSelection) => setSelection(newSelection)}
           value={selection}
         />
         <Dialog open={dialogOpen}>
@@ -116,11 +108,7 @@ export const Checkboxes: Story = {
       <ZUIAutocomplete
         {...args}
         multiple={true}
-        onChange={(newSelection) => {
-          if ('length' in newSelection) {
-            setSelection(newSelection);
-          }
-        }}
+        onChange={(newSelection) => setSelection(newSelection)}
         value={selection}
       />
     );
@@ -154,4 +142,27 @@ export const AvatarsAndSubtitles: Story = {
     ],
   },
   render: Basic.render,
+};
+
+export const WithCustomFilterFunction: Story = {
+  args: Subtitles.args,
+  render: function Render(args) {
+    const [selection, setSelection] = useState<{ label: string } | null>(null);
+    return (
+      <ZUIAutocomplete
+        {...args}
+        filterOptions={(options, { inputValue }) => {
+          const filtered = options.filter(
+            (item) =>
+              item.subtitle?.toLocaleLowerCase().includes(inputValue) ||
+              item.label.toLocaleLowerCase().includes(inputValue)
+          );
+          return filtered || options;
+        }}
+        multiple={false}
+        onChange={(newSelection) => setSelection(newSelection)}
+        value={selection}
+      />
+    );
+  },
 };

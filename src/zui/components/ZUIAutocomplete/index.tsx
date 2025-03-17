@@ -4,6 +4,7 @@ import {
   Box,
   Checkbox,
   Divider,
+  FilterOptionsState,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -52,6 +53,14 @@ type AutocompleteBaseProps = {
   checkboxes?: boolean;
 
   /**
+   * A function that performs custom logic when searching for options.
+   */
+  filterOptions?: (
+    options: Option[],
+    state: FilterOptionsState<Option>
+  ) => Option[];
+
+  /**
    * The label of the autocomplete.
    */
   label: string;
@@ -91,6 +100,7 @@ type Props = AutocompleteBaseProps &
 const ZUIAutocomplete: FC<Props> = ({
   action,
   checkboxes,
+  filterOptions,
   label,
   multiple,
   noOptionsText,
@@ -101,6 +111,7 @@ const ZUIAutocomplete: FC<Props> = ({
   const messages = useMessages(messageIds);
   return (
     <Autocomplete
+      filterOptions={filterOptions}
       multiple={multiple}
       noOptionsText={
         <Typography sx={{ fontStyle: 'italic' }} variant="labelXlMedium">
