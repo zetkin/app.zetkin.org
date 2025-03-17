@@ -29,6 +29,9 @@ const CallSlice = createSlice({
       state.activeCampaignsList = remoteList(action.payload);
       state.activeCampaignsList.loaded = new Date().toISOString();
     },
+    currentCallDeleted: (state) => {
+      state.currentCall.deleted = true;
+    },
     currentCallLoad: (state) => {
       state.currentCall.isLoading = true;
     },
@@ -47,6 +50,7 @@ export default CallSlice;
 export const {
   activeCampaignsLoad,
   activeCampaignsLoaded,
+  currentCallDeleted,
   currentCallLoad,
   currentCallLoaded,
 } = CallSlice.actions;
