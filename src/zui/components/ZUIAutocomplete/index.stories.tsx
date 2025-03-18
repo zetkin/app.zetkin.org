@@ -102,7 +102,17 @@ export const WithAction: Story = {
 
 export const Checkboxes: Story = {
   args: { ...Basic.args, checkboxes: true },
-  render: Basic.render,
+  render: function Render(args) {
+    const [selection, setSelection] = useState<{ label: string }[]>([]);
+    return (
+      <ZUIAutocomplete
+        {...args}
+        multiple={true}
+        onChange={(newSelection) => setSelection(newSelection)}
+        value={selection}
+      />
+    );
+  },
 };
 
 export const AvatarsAndSubtitles: Story = {
@@ -132,4 +142,27 @@ export const AvatarsAndSubtitles: Story = {
     ],
   },
   render: Basic.render,
+};
+
+export const WithCustomFilterFunction: Story = {
+  args: Subtitles.args,
+  render: function Render(args) {
+    const [selection, setSelection] = useState<{ label: string } | null>(null);
+    return (
+      <ZUIAutocomplete
+        {...args}
+        filterOptions={(options, { inputValue }) => {
+          const filtered = options.filter(
+            (item) =>
+              item.subtitle?.toLocaleLowerCase().includes(inputValue) ||
+              item.label.toLocaleLowerCase().includes(inputValue)
+          );
+          return filtered || options;
+        }}
+        multiple={false}
+        onChange={(newSelection) => setSelection(newSelection)}
+        value={selection}
+      />
+    );
+  },
 };
