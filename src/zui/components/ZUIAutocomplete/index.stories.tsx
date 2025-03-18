@@ -166,3 +166,8 @@ export const WithCustomFilterFunction: Story = {
     );
   },
 };
+
+export const MultipleWithAvatarsAndCheckboxesAndSubtitles: Story = {
+  args: AvatarsAndSubtitles.args,
+  render: Multiple.render,
+};
