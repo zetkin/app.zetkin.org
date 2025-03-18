@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ImportantDevices, Visibility } from '@mui/icons-material';
+import { ImportantDevices, Surfing, Visibility } from '@mui/icons-material';
 
 import ZUITextField from './index';
 
@@ -68,5 +68,13 @@ export const MultilineWithCustomMaxRows: Story = {
     ...Basic.args,
     maxRows: 3,
     multiline: true,
+  },
+};
+
+export const WithClickableEndIcon: Story = {
+  args: {
+    ...Basic.args,
+    endIcon: Surfing,
+    onEndIconClick: () => alert('You clicked the end icon!'),
   },
 };
