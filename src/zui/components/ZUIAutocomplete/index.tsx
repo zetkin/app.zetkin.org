@@ -252,6 +252,17 @@ const ZUIAutocomplete: FC<Props> = ({
         '& .MuiChip-root': {
           color: theme.palette.text.primary,
         },
+        '& .MuiFormControl-root.MuiFormControl-fullWidth div.MuiInputBase-root':
+          {
+            paddingRight:
+              (Array.isArray(value) && value.length == 0) || !value
+                ? '2.5rem'
+                : '3.75rem',
+          },
+        '& .MuiFormControl-root.MuiFormControl-fullWidth div.MuiInputBase-root input':
+          {
+            paddingLeft: '0.375rem',
+          },
         '& .MuiIconButton-root, .MuiIconButton-root * ': {
           height: '1.25rem',
           width: '1.25rem',
