@@ -103,11 +103,11 @@ export const WithAction: Story = {
 export const Checkboxes: Story = {
   args: { ...Basic.args, checkboxes: true },
   render: function Render(args) {
-    const [selection, setSelection] = useState<{ label: string }[]>([]);
+    const [selection, setSelection] = useState<{ label: string } | null>(null);
     return (
       <ZUIAutocomplete
         {...args}
-        multiple={true}
+        multiple={false}
         onChange={(newSelection) => setSelection(newSelection)}
         value={selection}
       />
