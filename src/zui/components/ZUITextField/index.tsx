@@ -1,4 +1,9 @@
-import { InputAdornment, SvgIconTypeMap, TextField } from '@mui/material';
+import {
+  IconButton,
+  InputAdornment,
+  SvgIconTypeMap,
+  TextField,
+} from '@mui/material';
 import { FC } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
@@ -53,6 +58,11 @@ type ZUITextFieldProps = {
   onChange: (newValue: string) => void;
 
   /**
+   * Function that runs when clicking the end icon.
+   */
+  onEndIconClick?: () => void;
+
+  /**
    * Text to display inside the textfield when it is empty.
    */
   placeholder?: string;
@@ -84,6 +94,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   maxRows = 5,
   multiline = false,
   onChange,
+  onEndIconClick,
   placeholder,
   size = 'medium',
   startIcon: StartIcon,
@@ -113,7 +124,13 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
       input: {
         endAdornment: EndIcon ? (
           <InputAdornment position="end">
-            <EndIcon fontSize="small" />
+            {onEndIconClick ? (
+              <IconButton onClick={onEndIconClick}>
+                <EndIcon />
+              </IconButton>
+            ) : (
+              <EndIcon fontSize="small" />
+            )}
           </InputAdornment>
         ) : (
           ''
