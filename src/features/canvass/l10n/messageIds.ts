@@ -70,7 +70,7 @@ export default makeMessages('feat.canvass', {
       quickReportButtonLabel: m('Quick report'),
     },
     subheader: m<{ successfulVisits: number }>(
-      '{successfulVisits, plural, one {1 successful visit} other {# sucessful visits}}'
+      '{successfulVisits, plural, one {1 successful visit} other {# successful visits}}'
     ),
   },
   map: {
