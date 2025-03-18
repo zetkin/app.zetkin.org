@@ -44,6 +44,7 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
           <AddedTags
             addedTags={addedTags}
             numPeopleWithTagsAdded={summary.tagged.total}
+            peoplePerTag={summary.tagged.byTag}
             tense={tense}
           />
         )}
