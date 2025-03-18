@@ -32,6 +32,7 @@ import objToLatLng from 'features/areas/utils/objToLatLng';
 import CanvassMapOverlays from './CanvassMapOverlays';
 import useAllLocationVisits from '../hooks/useAllLocationVisits';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import { useEnv } from 'core/hooks';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -69,6 +70,7 @@ type CanvassMapProps = {
 };
 
 const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
+  const env = useEnv();
   const theme = useTheme();
   const classes = useStyles();
   const locations = useLocations(assignment.organization.id).data || [];
@@ -275,7 +277,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         <AttributionControl position="bottomright" prefix={false} />
         <TileLayer
           attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
         />
         <FeatureGroup
           ref={(fgRef) => {
