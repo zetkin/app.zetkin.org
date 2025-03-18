@@ -26,7 +26,7 @@ import { DivIconMarker } from 'features/events/components/LocationModal/DivIconM
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
 import { getVisitPercentage } from '../utils/getVisitPercentage';
 import MapControls from 'features/areaAssignments/components/MapControls';
-import MarkerIcon from '../utils/markerIcon';
+import MarkerIcon from './MarkerIcon';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';

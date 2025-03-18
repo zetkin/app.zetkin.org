@@ -23,7 +23,7 @@ import {
   ZetkinLocation,
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
-import MarkerIcon from 'features/canvass/utils/markerIcon';
+import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
 
 const LocationMarker: FC<{

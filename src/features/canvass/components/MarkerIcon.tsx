@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useTheme } from '@mui/styles';
 import { lighten } from '@mui/system';
 
-import { VisitStats } from './getVisitPercentage';
+import { VisitStats } from '../utils/getVisitPercentage';
 
 interface MarkerIconProps {
   percentage?: VisitStats;
