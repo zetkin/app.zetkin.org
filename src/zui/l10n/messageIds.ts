@@ -241,9 +241,10 @@ export default makeMessages('zui', {
       'Today, {start} - {end}'
     ),
   },
-  timezonePicker: {
+  timeZonePicker: {
     gmt: m('GMT'),
-    placeholder: m('Type to search location'),
-    timezone: m('Timezone'),
+    noOptionsText: m('No location matches your search'),
+    placeholder: m('Type to search for a location'),
+    timeZone: m('Time zone'),
   },
 });
