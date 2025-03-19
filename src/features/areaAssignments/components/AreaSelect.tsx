@@ -1,10 +1,9 @@
-import { FC, MouseEvent, useState } from 'react';
+import { FC } from 'react';
 import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
 import {
   Box,
   Divider,
   IconButton,
-  Link,
   TextField,
   Typography,
   useTheme,
@@ -27,6 +26,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
+import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 
 type Props = {
   areaAssId: string;
@@ -121,7 +121,7 @@ const AreaSelect: FC<Props> = ({
             mb={1}
             sx={{ overflowWrap: 'anywhere' }}
           >
-            <ExpandableText
+            <ZUIExpandableText
               content={
                 selectedArea.description?.trim() ||
                 areaMessages.areas.default.description()
@@ -353,75 +353,3 @@ const AreaSelect: FC<Props> = ({
 };
 
 export default AreaSelect;
-
-interface ExpandableTextProps {
-  content: string;
-  maxVisibleChars: number;
-  color?: string;
-  fontStyle?: string;
-}
-
-export const ExpandableText: React.FC<ExpandableTextProps> = ({
-  content,
-  maxVisibleChars,
-  color,
-  fontStyle,
-}) => {
-  const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-  const handleToggle = (event: MouseEvent) => {
-    // event.preventDefault() to prevent entering edit mode when pressing "show more" in geography view
-    event.stopPropagation();
-    setIsExpanded((prev) => !prev);
-  };
-
-  const displayedText = isExpanded
-    ? content
-    : content.slice(0, maxVisibleChars);
-
-  const isLongContent = content.length > maxVisibleChars;
-  return (
-    <Box sx={{ display: 'inline' }}>
-      <Typography
-        color={color}
-        component="span"
-        fontStyle={fontStyle}
-        sx={{
-          display: 'inline',
-          verticalAlign: 'baseline',
-          whiteSpace: 'break-spaces',
-        }}
-        variant="body1"
-      >
-        <Typography
-          component="span"
-          sx={{
-            mr: 1,
-          }}
-        >
-          {displayedText}
-          {isLongContent && !isExpanded && <span>...</span>}
-        </Typography>
-        {isLongContent && (
-          <Link
-            component="button"
-            onClick={handleToggle}
-            sx={{
-              cursor: 'pointer',
-              display: 'inline',
-              padding: 0,
-              textDecoration: 'underline',
-              verticalAlign: 'text-bottom',
-            }}
-            variant="body1"
-          >
-            {isExpanded
-              ? areaAssignmentMessages.map.areaInfo.showLess()
-              : areaAssignmentMessages.map.areaInfo.showMore()}
-          </Link>
-        )}
-      </Typography>
-    </Box>
-  );
-};

@@ -27,7 +27,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
-import { ExpandableText } from 'features/areaAssignments/components/AreaSelect';
+import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 
 type Props = {
   area: ZetkinArea;
@@ -194,7 +194,7 @@ const AreaOverlay: FC<Props> = ({
             )}
             renderPreview={() => (
               <Box paddingTop={1}>
-                <ExpandableText
+                <ZUIExpandableText
                   color="secondary"
                   content={
                     area.description?.trim().length
