@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import ZUIBarChartVerticalScale from './ZUIBarChartVerticalScale';
-import ZUIBarChartVerticalBars from './ZUIBarChartVerticalBars';
+import ZUIVerticalBarChartBars from './ZUIVerticalBarChartBars';
+import ZUIVerticalBarChartScale from './ZUIVerticalBarChartScale';
 
-export interface ZUIBarChartProps {
+export interface ZUIVerticalBarChartProps {
   data: {
     label: string;
     value: number;
@@ -16,7 +16,7 @@ export interface ZUIBarChartProps {
   visualizationHeight?: number;
 }
 
-const ZUIBarChart: FC<ZUIBarChartProps> = ({
+const ZUIVerticalBarChart: FC<ZUIVerticalBarChartProps> = ({
   data,
   description,
   hideScale = false,
@@ -55,8 +55,8 @@ const ZUIBarChart: FC<ZUIBarChartProps> = ({
         {description}
       </Typography>
       <Box className={`chart`} component="section" sx={style.chart}>
-        {!hideScale && <ZUIBarChartVerticalScale maxValue={localMaxValue} />}
-        <ZUIBarChartVerticalBars
+        {!hideScale && <ZUIVerticalBarChartScale maxValue={localMaxValue} />}
+        <ZUIVerticalBarChartBars
           data={data}
           maxValue={localMaxValue}
           visualizationHeight={visualizationHeight}
@@ -66,4 +66,4 @@ const ZUIBarChart: FC<ZUIBarChartProps> = ({
   );
 };
 
-export default ZUIBarChart;
+export default ZUIVerticalBarChart;
