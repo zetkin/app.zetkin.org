@@ -50,7 +50,8 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
   return (
     <Tooltip
       arrow={arrow}
-      componentsProps={{
+      placement={getPlacement()}
+      slotProps={{
         arrow: {
           sx: {
             color: '#616161E5',
@@ -65,7 +66,6 @@ const ZUITooltip: FC<ZUITooltipProps> = ({
           },
         },
       }}
-      placement={getPlacement()}
       title={label}
     >
       {children}

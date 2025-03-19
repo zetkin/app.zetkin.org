@@ -17,7 +17,7 @@ import {
   Map,
   Search,
   Settings,
-} from '@mui/icons-material/';
+} from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -44,10 +44,11 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS } from 'utils/featureFlags';
+import theme from 'theme';
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   drawer: {
     flexShrink: 0,
     transition: theme.transitions.create('width', {

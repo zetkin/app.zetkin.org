@@ -17,6 +17,7 @@ import ImportHeader from './elements/ImportHeader';
 import messageIds from '../../l10n/messageIds';
 import useFileParsing from '../../hooks/useFileParsing';
 import { useMessages } from 'core/i18n';
+import theme from 'theme';
 
 const sharedProperties: CSSProperties = {
   alignItems: 'center',
@@ -31,7 +32,7 @@ const sharedProperties: CSSProperties = {
   transition: 'height 1s',
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   errorState: {
     backgroundColor: alpha(
       theme.palette.statusColors.red,

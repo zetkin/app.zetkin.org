@@ -9,6 +9,9 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  autocomplete: {
+    noOptionsDefaultText: m('No option matches your search'),
+  },
   breadcrumbs: {
     showMore: m<{ number: number }>('{number} more...'),
   },
