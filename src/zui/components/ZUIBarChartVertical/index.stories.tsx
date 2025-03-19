@@ -63,3 +63,29 @@ BarChartMonths.args = {
   title: 'Households visited this year',
   visualizationHeight: 50,
 };
+
+export const BarChartMaxValue = Template.bind({});
+BarChartMaxValue.args = {
+  data: Array.from({ length: 90 }, (e, i) => {
+    return {
+      label: `Day ${i + 1}`,
+      value: Math.round(Math.random() * 8000),
+    };
+  }),
+  description: 'Households visited each of the first 90 days',
+  maxValue: 10000,
+  title: 'Households visited, normalized',
+  visualizationHeight: 100,
+};
+
+export const BarChartNegativeValues = Template.bind({});
+BarChartNegativeValues.args = {
+  data: Array.from({ length: 90 }, (e, i) => {
+    return {
+      label: `Day ${i + 1}`,
+      value: Math.round(Math.random() * 10) - 5,
+    };
+  }),
+  description: 'Household rating compared to last year',
+  title: 'Rating change',
+};

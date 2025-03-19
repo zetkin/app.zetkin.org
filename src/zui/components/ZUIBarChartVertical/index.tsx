@@ -11,6 +11,7 @@ export interface ZUIBarChartProps {
   }[];
   description: string;
   hideScale?: boolean;
+  maxValue?: number;
   title: string;
   visualizationHeight?: number;
 }
@@ -19,10 +20,14 @@ const ZUIBarChart: FC<ZUIBarChartProps> = ({
   data,
   description,
   hideScale = false,
+  maxValue,
   title,
   visualizationHeight = 50,
 }) => {
-  const maxValue = Math.max(...data.map((row) => row.value));
+  const localMaxValue = Math.max(
+    maxValue || 0,
+    ...data.map((row) => row.value)
+  );
   const style = {
     chart: {
       display: 'flex',
@@ -50,10 +55,10 @@ const ZUIBarChart: FC<ZUIBarChartProps> = ({
         {description}
       </Typography>
       <Box className={`chart`} component="section" sx={style.chart}>
-        {!hideScale && <ZUIBarChartVerticalScale maxValue={maxValue} />}
+        {!hideScale && <ZUIBarChartVerticalScale maxValue={localMaxValue} />}
         <ZUIBarChartVerticalBars
           data={data}
-          maxValue={maxValue}
+          maxValue={localMaxValue}
           visualizationHeight={visualizationHeight}
         />
       </Box>
