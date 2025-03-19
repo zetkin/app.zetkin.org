@@ -27,7 +27,7 @@ const UnfinishedCallsDialog: React.FC<UnfinishedCallsDialogProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const { deleteCall } = useCallMutations(orgId);
+  const { deleteCall, switchCurrentCall } = useCallMutations(orgId);
   const router = useRouter();
   const outgoingCalls = useOutgoingCalls();
   const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
@@ -83,6 +83,7 @@ const UnfinishedCallsDialog: React.FC<UnfinishedCallsDialogProps> = ({
                   color="error"
                   onClick={() => {
                     setOpen(false);
+                    switchCurrentCall(call);
                   }}
                   sx={{ mr: 2 }}
                   variant="outlined"
