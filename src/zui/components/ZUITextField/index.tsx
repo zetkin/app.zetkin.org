@@ -119,6 +119,8 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
           fontWeight: 400,
           letterSpacing: '1%',
           lineHeight: '1.5rem',
+          paddingX: '0.75rem',
+          paddingY: size == 'medium' ? '0.594rem' : '',
         }),
       },
       input: {
@@ -145,19 +147,22 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
       },
     }}
     sx={(theme) => ({
+      '& .MuiFormHelperText-root': {
+        marginX: '0.75rem',
+      },
       '& > label': {
         fontFamily: theme.typography.fontFamily,
         fontSize: '1rem',
         fontWeight: '500',
         letterSpacing: '3%',
-        transform: `translate(0.875rem, ${
+        transform: `translate(0.688rem, ${
           size == 'medium' ? '0.563rem' : '1rem'
         })`,
       },
       '& > label[data-shrink="true"]': {
         color: error ? theme.palette.error.main : theme.palette.secondary.main,
         fontSize: '0.813rem',
-        transform: 'translate(0.813rem, -0.625rem)',
+        transform: 'translate(0.688rem, -0.625rem)',
       },
       '& >.MuiFormHelperText-root': {
         fontFamily: theme.typography.fontFamily,
@@ -174,8 +179,8 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
         paddingLeft: '0.25rem',
         paddingRight: '0.25rem',
       },
-      '& >.MuiInputBase-root > input': {
-        paddingY: size == 'medium' ? '0.594rem' : '',
+      '& fieldset': {
+        paddingLeft: '0.375rem',
       },
     })}
     value={value}
