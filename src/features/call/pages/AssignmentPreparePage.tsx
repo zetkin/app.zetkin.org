@@ -10,8 +10,8 @@ import useSurveys from 'features/surveys/hooks/useSurveys';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import UnfinishedCallsDialog from '../components/UnfinishedCallsDialog';
 import { useAppSelector } from 'core/hooks';
+import CallLog from '../components/CallLog';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -156,7 +156,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           zIndex: 1300,
         }}
       >
-        <UnfinishedCallsDialog
+        <CallLog
           assingmentId={assignment.id}
           orgId={assignment.organization.id}
         />
