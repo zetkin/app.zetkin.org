@@ -6,21 +6,25 @@ import { FC, Suspense } from 'react';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useActiveCampaigns from '../hooks/useActiveCampaigns';
-import useCallWithTarget from '../hooks/useCallWithTarget';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import UnfinishedCallsDialog from '../components/UnfinishedCallsDialog';
+import { useAppSelector } from 'core/hooks';
 
 type Props = {
   assignment: ZetkinCallAssignment;
 };
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
-  const { call } = useCallWithTarget(assignment.organization.id, assignment.id);
+  const call = useAppSelector((state) => state.call.currentCall).data;
   const surveys = useSurveys(assignment.id).data || [];
   const campaigns = useActiveCampaigns(assignment.organization.id).data || [];
+
+  if (!call) {
+    return null;
+  }
 
   return (
     <Box display="flex" gap={2}>
