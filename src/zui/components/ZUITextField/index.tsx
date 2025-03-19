@@ -126,7 +126,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
           <InputAdornment position="end">
             {onEndIconClick ? (
               <IconButton onClick={onEndIconClick}>
-                <EndIcon />
+                <EndIcon fontSize="small" />
               </IconButton>
             ) : (
               <EndIcon fontSize="small" />
