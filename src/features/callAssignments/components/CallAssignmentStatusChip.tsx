@@ -5,12 +5,13 @@ import { Box } from '@mui/material';
 import { CallAssignmentState } from '../hooks/useCallAssignmentState';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 
 interface CallAssignmentStatusChipProps {
   state: CallAssignmentState;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     alignItems: 'center',
     borderRadius: '2em',

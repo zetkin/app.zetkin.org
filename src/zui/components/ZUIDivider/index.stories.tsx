@@ -20,17 +20,17 @@ export const Horizontal: Story = {
   decorators: [
     () => (
       <Paper>
-        <Box padding={2}>
+        <Box sx={{ padding: '1rem' }}>
           <ZUIText>
             This is some text above a full width variant divider
           </ZUIText>
         </Box>
         <ZUIDivider />
-        <Box padding={2}>
+        <Box sx={{ padding: '1rem' }}>
           <ZUIText>This is some text in between two dividers</ZUIText>
         </Box>
         <ZUIDivider variant="middle" />
-        <Box padding={2}>
+        <Box sx={{ padding: '1rem' }}>
           <ZUIText>This is some text below a middle variant divider</ZUIText>
         </Box>
       </Paper>
@@ -45,16 +45,16 @@ export const Vertical: Story = {
   decorators: [
     () => (
       <Paper>
-        <Box alignItems="center" display="flex" gap={1}>
-          <Box padding={1}>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
+          <Box sx={{ padding: '0.5rem' }}>
             <Surfing color="secondary" />
           </Box>
           <ZUIDivider flexItem orientation="vertical" variant="middle" />
-          <Box padding={1}>
+          <Box sx={{ padding: '0.5rem' }}>
             <CatchingPokemon color="secondary" />
           </Box>
           <ZUIDivider flexItem orientation="vertical" />
-          <Box padding={1}>
+          <Box sx={{ padding: '0.5rem' }}>
             <ZUIText>
               Two vertical dividers, one middle variant and one full width
             </ZUIText>

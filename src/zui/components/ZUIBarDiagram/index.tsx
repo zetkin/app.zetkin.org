@@ -1,5 +1,4 @@
-import { Box, Theme } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Box, useTheme } from '@mui/material';
 
 type Sizes = 'small' | 'medium' | 'large';
 
@@ -24,7 +23,7 @@ interface ZUIBarDiagramProps {
  * remainder of 100 minus the previous segment widths.
  */
 const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const progressSum = values.reduce((sum, val) => {
     return sum + val;
   });
@@ -54,11 +53,13 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
 
   return (
     <Box
-      borderRadius="2rem"
-      display="flex"
-      gap={size === 'large' ? '0.25rem' : '0.125rem'}
-      overflow="hidden"
-      width="100%"
+      sx={{
+        borderRadius: '2rem',
+        display: 'flex',
+        gap: size === 'large' ? '0.25rem' : '0.125rem',
+        overflow: 'hidden',
+        width: '100%',
+      }}
     >
       {values.map((segmentWidth, index) => {
         if (!segmentWidth) {
@@ -67,14 +68,18 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
         return (
           <Box
             key={index}
-            bgcolor={colors[index]}
-            height={height}
-            width={`${segmentWidth}%`}
+            sx={{
+              backgroundColor: colors[index],
+              height: height,
+              width: `${segmentWidth}%`,
+            }}
           />
         );
       })}
       {progressSum < 100 && (
-        <Box bgcolor={colors.at(-1)} flexGrow={1} height={height} />
+        <Box
+          sx={{ backgroundColor: colors.at(-1), flexGrow: 1, height: height }}
+        />
       )}
     </Box>
   );

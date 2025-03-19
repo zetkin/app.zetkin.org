@@ -3,8 +3,9 @@ import { FunctionComponent } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 
 import ZUIOrganizeSidebarNoMenu from 'zui/ZUIOrganizeSidebarNoMenu';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   breadcrumbs: {
     [theme.breakpoints.down('sm')]: {
       width: '100%',

@@ -5,12 +5,13 @@ import { makeStyles } from '@mui/styles';
 import { Msg } from 'core/i18n';
 import { EventState } from '../hooks/useEventState';
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 
 interface EventStatusChipProps {
   state: EventState;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   cancelled: {
     backgroundColor: theme.palette.statusColors.orange,
   },

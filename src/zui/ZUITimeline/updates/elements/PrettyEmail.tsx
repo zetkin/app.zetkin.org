@@ -15,6 +15,7 @@ import { Msg } from 'core/i18n';
 import ZUICleanHtml from 'zui/ZUICleanHtml';
 import ZUICollapse from 'zui/ZUICollapse';
 import messageIds from 'zui/ZUITimeline/l10n/messageIds';
+import theme from 'theme';
 
 interface PrettyEmailProps {
   emailStr: string;
@@ -51,7 +52,7 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   }
 };
 
-const useBodyStyles = makeStyles<Theme, { plain: boolean }>((theme) => ({
+const useBodyStyles = makeStyles<Theme, { plain: boolean }>(() => ({
   body: {
     '& blockquote': {
       borderColor: theme.palette.text.disabled,

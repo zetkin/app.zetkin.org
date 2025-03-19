@@ -2,40 +2,40 @@ import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, Theme } from '@mui/material';
 
+import theme from 'theme';
+
 const FONT_SIZES = {
   lg: '1.2em',
   md: '1em',
   sm: '0.9em',
 } as const;
 
-const useStyles = makeStyles<Theme, { size: keyof typeof FONT_SIZES }>(
-  (theme) => ({
-    blue: {
-      borderColor: theme.palette.statusColors.blue,
-      borderStyle: 'solid none solid solid',
-      color: theme.palette.statusColors.blue,
-      padding: '3px 5px',
-    },
-    chip: {
-      borderWidth: '2px',
-      fontSize: ({ size }) => FONT_SIZES[size],
-    },
-    green: {
-      borderColor: theme.palette.statusColors.green,
-      borderRadius: '0 50em 50em 0',
-      borderStyle: 'solid',
-      color: theme.palette.statusColors.green,
-      padding: '3px 7px 3px 5px',
-    },
-    orange: {
-      borderColor: theme.palette.statusColors.orange,
-      borderRadius: '50em 0 0 50em',
-      borderStyle: 'solid none solid solid',
-      color: theme.palette.statusColors.orange,
-      padding: '3px 5px 3px 7px',
-    },
-  })
-);
+const useStyles = makeStyles<Theme, { size: keyof typeof FONT_SIZES }>(() => ({
+  blue: {
+    borderColor: theme.palette.statusColors.blue,
+    borderStyle: 'solid none solid solid',
+    color: theme.palette.statusColors.blue,
+    padding: '3px 5px',
+  },
+  chip: {
+    borderWidth: '2px',
+    fontSize: ({ size }) => FONT_SIZES[size],
+  },
+  green: {
+    borderColor: theme.palette.statusColors.green,
+    borderRadius: '0 50em 50em 0',
+    borderStyle: 'solid',
+    color: theme.palette.statusColors.green,
+    padding: '3px 7px 3px 5px',
+  },
+  orange: {
+    borderColor: theme.palette.statusColors.orange,
+    borderRadius: '50em 0 0 50em',
+    borderStyle: 'solid none solid solid',
+    color: theme.palette.statusColors.orange,
+    padding: '3px 5px 3px 7px',
+  },
+}));
 
 interface ZUIMultiNumberChipProps {
   blueValue: number | string | undefined;

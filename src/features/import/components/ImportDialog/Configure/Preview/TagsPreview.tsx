@@ -8,13 +8,14 @@ import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { ColumnKind, Sheet } from 'features/import/utils/types';
+import theme from 'theme';
 
 interface TagPreviewProps {
   currentSheet: Sheet;
   tags: ZetkinTag[];
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     borderColor: theme.palette.grey[500],
     borderRadius: '1em',
