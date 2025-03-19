@@ -11,6 +11,7 @@ import SkipCallDialog from '../components/SkipCallDialog';
 import { useAppSelector } from 'core/hooks';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import useAllocateCall from '../hooks/useAllocateCall';
+import useCallMutations from '../hooks/useCallMutations';
 
 type Props = {
   children?: ReactNode;
@@ -60,6 +61,7 @@ const CallLayout: FC<Props> = ({ children }) => {
     assignment!.organization.id,
     parseInt(callAssId)
   );
+  const { deleteCall } = useCallMutations(assignment!.organization.id);
 
   return (
     <Box
@@ -75,11 +77,27 @@ const CallLayout: FC<Props> = ({ children }) => {
           p: 2,
         }}
       >
-        <Link href="/my/home" passHref>
-          <Button variant="outlined">
-            <Msg id={messageIds.nav.backToHome} />
-          </Button>
-        </Link>
+        {isDetailsPage && (
+          <Link href="/my/home" passHref>
+            <Button variant="outlined">
+              <Msg id={messageIds.nav.backToHome} />
+            </Button>
+          </Link>
+        )}
+        {isPreparePage && (
+          <Link href="/my/home" passHref>
+            <Button
+              onClick={() => {
+                if (call) {
+                  deleteCall(call.id);
+                }
+              }}
+              variant="outlined"
+            >
+              Stop calling
+            </Button>
+          </Link>
+        )}
         <Box>
           {isPreparePage && call && assignment && (
             <SkipCallDialog
