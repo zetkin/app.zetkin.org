@@ -254,6 +254,7 @@ const ZUIAutocomplete: FC<Props> = ({
         },
         '& .MuiFormControl-root.MuiFormControl-fullWidth div.MuiInputBase-root':
           {
+            paddingLeft: '0.375rem',
             paddingRight:
               (Array.isArray(value) && value.length == 0) || !value
                 ? '2.5rem'
