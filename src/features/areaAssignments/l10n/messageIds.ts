@@ -57,8 +57,6 @@ export default makeMessages('feat.areaAssignments', {
         none: m('No assignees'),
         title: m('Assignees'),
       },
-      showLess: m('Show less'),
-      showMore: m('Show more'),
       stats: {
         households: m<{ numHouseholds: number }>(
           '{numHouseholds, plural, one {Household visited} other {Households visited}}'
