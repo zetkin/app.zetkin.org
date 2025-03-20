@@ -82,3 +82,12 @@ type ZetkinTarget = {
   tags: ZetkinTag[];
   zip_code: string | null;
 };
+
+export type ZetkinCallPatchBody = Pick<
+  ZetkinCall,
+  | 'call_back_after'
+  | 'message_to_organizer'
+  | 'notes'
+  | 'organizer_action_needed'
+  | 'state'
+>;
