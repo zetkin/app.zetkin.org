@@ -54,7 +54,7 @@ const CallLayout: FC<Props> = ({ children }) => {
   const callAssId = getCallIdFromPath(pathname);
 
   const assignment = assignments.find(
-    (assignment) => assignment.id === parseInt(callAssId, 10)
+    (assignment) => assignment.id === parseInt(callAssId)
   );
 
   const { allocateCall } = useAllocateCall(
@@ -108,18 +108,27 @@ const CallLayout: FC<Props> = ({ children }) => {
               }
             />
           )}
-
-          <Button
-            onClick={() => {
-              if (isDetailsPage) {
+          {isDetailsPage && (
+            <Button
+              onClick={() => {
                 router.push(`/call/${callAssId}/prepare`);
                 allocateCall();
-              }
-            }}
-            variant="contained"
-          >
-            <Msg id={messageIds.nav.startCalling} />
-          </Button>
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.nav.startCalling} />
+            </Button>
+          )}
+          {isPreparePage && (
+            <Button
+              onClick={() => {
+                router.push(`/call/${callAssId}/call`);
+              }}
+              variant="contained"
+            >
+              Start Call
+            </Button>
+          )}
         </Box>
       </Box>
       <Box>{children}</Box>
