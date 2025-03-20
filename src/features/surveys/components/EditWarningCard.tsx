@@ -33,7 +33,7 @@ const EditWarningCard: FC<EditWarningCardProps> = ({ editing, onToggle }) => {
         {editing && (
           <>
             <Divider />
-            <Box marginTop={3}>
+            <Box mt={1}>
               <EditTips
                 bullets={[
                   messages.editWarning.editing.safe.bullet1(),
@@ -66,18 +66,14 @@ const EditTips: FC<{
   icon: JSX.Element;
 }> = ({ bullets, header, icon }) => {
   return (
-    <Box display="flex" gap={2} marginTop={1}>
-      <Box>
-        <Typography>{header}</Typography>
-        <Typography style={{ marginTop: 2 }}>
-          {bullets.map((bullet) => (
-            <Box key={bullet} alignItems="flex-start" display="flex">
-              <Box mr={1}>{icon}</Box>
-              <Typography>{bullet}</Typography>
-            </Box>
-          ))}
-        </Typography>
-      </Box>
+    <Box marginTop={1}>
+      <Typography mb={1}>{header}</Typography>
+      {bullets.map((bullet) => (
+        <Box key={bullet} alignItems="flex-start" display="flex">
+          <Box mr={1}>{icon}</Box>
+          <Typography>{bullet}</Typography>
+        </Box>
+      ))}
     </Box>
   );
 };
