@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import React, { FC, useRef, useState } from 'react';
 import { useTheme } from '@mui/system';
 
-type ZUIVerticalBarChartBarsProps = {
+type BarsProps = {
   data: {
     label: string;
     value: number;
@@ -11,11 +11,7 @@ type ZUIVerticalBarChartBarsProps = {
   visualizationHeight: number;
 };
 
-const ZUIVerticalBarChartBars: FC<ZUIVerticalBarChartBarsProps> = ({
-  data,
-  maxValue,
-  visualizationHeight,
-}) => {
+const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [barIndex, setBarIndex] = useState<number>(-1);
   const [labelElem, setLabelElem] = useState<HTMLElement>();
@@ -205,4 +201,4 @@ const ZUIVerticalBarChartBars: FC<ZUIVerticalBarChartBarsProps> = ({
     </Box>
   );
 };
-export default ZUIVerticalBarChartBars;
+export default Bars;

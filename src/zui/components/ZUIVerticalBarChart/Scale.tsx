@@ -2,12 +2,12 @@ import { Box, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { useTheme } from '@mui/system';
 
-export interface ZUIVerticalBarChartScaleProps {
+export interface ScaleProps {
   maxValue: number;
   minValue?: number;
   orientation?: 'horizontal' | 'vertical';
 }
-const ZUIVerticalBarChartScale: FC<ZUIVerticalBarChartScaleProps> = ({
+const Scale: FC<ScaleProps> = ({
   maxValue,
   minValue = 0,
   orientation = 'vertical',
@@ -68,4 +68,4 @@ const ZUIVerticalBarChartScale: FC<ZUIVerticalBarChartScaleProps> = ({
   );
 };
 
-export default ZUIVerticalBarChartScale;
+export default Scale;
