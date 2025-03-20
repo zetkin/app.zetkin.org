@@ -1,15 +1,15 @@
 import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
-import ZUIBarChartVertical from '.';
+import ZUIVerticalBarChart from '.';
 
 export default {
-  component: ZUIBarChartVertical,
-  title: 'Components/ZUIBarChartVertical',
-} as Meta<typeof ZUIBarChartVertical>;
+  component: ZUIVerticalBarChart,
+  title: 'Components/ZUIVerticalBarChart',
+} as Meta<typeof ZUIVerticalBarChart>;
 
-const Template: StoryFn<typeof ZUIBarChartVertical> = (args) => (
-  <ZUIBarChartVertical {...args} />
+const Template: StoryFn<typeof ZUIVerticalBarChart> = (args) => (
+  <ZUIVerticalBarChart {...args} />
 );
 
 export const BarChartBasic = Template.bind({});
@@ -37,8 +37,8 @@ BarChartBasic.args = {
   visualizationHeight: 50,
 };
 
-export const BarChartQuarter = Template.bind({});
-BarChartQuarter.args = {
+export const BarChartNarrowBars = Template.bind({});
+BarChartNarrowBars.args = {
   data: Array.from({ length: 90 }, (e, i) => {
     return {
       label: `Day ${i + 1}`,
@@ -50,15 +50,28 @@ BarChartQuarter.args = {
   visualizationHeight: 50,
 };
 
-export const BarChartMonths = Template.bind({});
-BarChartMonths.args = {
+export const BarChartOverflow = Template.bind({});
+BarChartOverflow.args = {
   data: Array.from({ length: 12 }, (e, i) => {
     return {
       label: `Month of year no ${i + 1}`,
       value: Math.round(Math.random() * 1000),
     };
   }),
-  description: 'Households visited each month',
+  description: 'Households visited each month to show overflowing labels',
+  title: 'Households visited this year',
+  visualizationHeight: 50,
+};
+
+export const BarChartNoScale = Template.bind({});
+BarChartNoScale.args = {
+  data: Array.from({ length: 12 }, (e, i) => {
+    return {
+      label: `Month of year no ${i + 1}`,
+      value: Math.round(Math.random() * 1000),
+    };
+  }),
+  description: 'Households visited each month with hidden scale',
   hideScale: true,
   title: 'Households visited this year',
   visualizationHeight: 50,
@@ -72,20 +85,9 @@ BarChartMaxValue.args = {
       value: Math.round(Math.random() * 8000),
     };
   }),
-  description: 'Households visited each of the first 90 days',
+  description:
+    'Households visited each of the first 90 days using a maxValue of 10000',
   maxValue: 10000,
   title: 'Households visited, normalized',
   visualizationHeight: 100,
-};
-
-export const BarChartNegativeValues = Template.bind({});
-BarChartNegativeValues.args = {
-  data: Array.from({ length: 90 }, (e, i) => {
-    return {
-      label: `Day ${i + 1}`,
-      value: Math.round(Math.random() * 10) - 5,
-    };
-  }),
-  description: 'Household rating compared to last year',
-  title: 'Rating change',
 };
