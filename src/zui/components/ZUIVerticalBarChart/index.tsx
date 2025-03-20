@@ -4,17 +4,41 @@ import { Box, Typography } from '@mui/material';
 import Bars from './Bars';
 import Scale from './Scale';
 
-export interface ZUIVerticalBarChartProps {
+type ZUIVerticalBarChartProps = {
+  /**
+   * An array of data points to be visualized. Every data point should have a
+   * label and a value.
+   */
   data: {
     label: string;
     value: number;
   }[];
+  /**
+   * A string that describes the data being visualized or comments on the data
+   * in some way
+   */
   description: string;
+  /**
+   * If the scale should be hidden or not. Defaults to 'false'
+   */
   hideScale?: boolean;
+  /**
+   * The maximum value in the scale. If not provided, the component will use
+   * the highest value in the data.
+   *
+   * If the provided value is lower than the highest value in the data, the
+   * component will use the highest value in the data.
+   */
   maxValue?: number;
+  /**
+   * The title of the chart
+   */
   title: string;
+  /**
+   * The height of the visualization in pixels. Defaults to 50.
+   */
   visualizationHeight?: number;
-}
+};
 
 const ZUIVerticalBarChart: FC<ZUIVerticalBarChartProps> = ({
   data,

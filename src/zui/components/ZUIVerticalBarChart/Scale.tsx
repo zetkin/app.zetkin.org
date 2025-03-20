@@ -2,16 +2,12 @@ import { Box, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { useTheme } from '@mui/system';
 
-export interface ScaleProps {
+type ScaleProps = {
   maxValue: number;
-  minValue?: number;
-  orientation?: 'horizontal' | 'vertical';
-}
-const Scale: FC<ScaleProps> = ({
-  maxValue,
-  minValue = 0,
-  orientation = 'vertical',
-}) => {
+};
+
+const Scale: FC<ScaleProps> = ({ maxValue }) => {
+  const minValue = 0;
   const theme = useTheme();
   const style = {
     line: {
@@ -43,7 +39,7 @@ const Scale: FC<ScaleProps> = ({
       gap: 0.5,
       height: '100%',
       justifyContent: 'space-between',
-      marginInlineStart: orientation === 'horizontal' ? '20%' : 0,
+      marginInlineStart: '20%',
     },
   };
 
