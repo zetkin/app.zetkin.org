@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IconButton } from '@mui/material';
+import { Box, IconButton, lighten, useTheme } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
 
 import PageBaseHeader from './pages/PageBaseHeader';
@@ -19,6 +19,7 @@ type Props = {
 
 const ContractedHeader: FC<Props> = ({ assignment, location }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
 
   const visitsFuture = useLocationVisits(
     assignment.organization.id,
@@ -44,6 +45,21 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
     numVisitedHouseholds
   );
 
+  const metricDefinesDone =
+    assignment.metrics.find((metric) => metric.definesDone)?.id || null;
+
+  const successfulVisits = location?.households.filter((household) =>
+    household.visits.some(
+      (visit) =>
+        visit.areaAssId === assignment.id &&
+        visit.responses.some(
+          (response) =>
+            response.metricId === metricDefinesDone &&
+            response.response.toLowerCase() === 'yes'
+        )
+    )
+  ).length;
+
   return (
     <PageBaseHeader
       iconButtons={
@@ -51,10 +67,43 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
           <KeyboardArrowUp />
         </IconButton>
       }
-      subtitle={messages.location.header({
-        numHouseholds,
-        numVisitedHouseholds,
-      })}
+      subtitle={
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          {numVisitedHouseholds > 0 && (
+            <Box
+              sx={{
+                backgroundColor: lighten(theme.palette.primary.main, 0.7),
+                borderRadius: '50%',
+                height: 10,
+                mr: 0.5,
+                width: 10,
+              }}
+            />
+          )}
+          {messages.location.header({
+            numHouseholds,
+            numVisitedHouseholds,
+          })}
+
+          {successfulVisits > 0 && (
+            <>
+              <Box
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  borderRadius: '50%',
+                  height: 10,
+                  ml: 1,
+                  mr: 0.5,
+                  width: 10,
+                }}
+              />
+              {messages.location.subheader({
+                successfulVisits,
+              })}
+            </>
+          )}
+        </Box>
+      }
       title={location.title}
     />
   );

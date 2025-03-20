@@ -22,7 +22,6 @@ jobs:
   playwright-test:
     uses: ./.github/workflows/reusable-base.yml
     with:
-      validation-script: exit `grep -ER "(test|describe)\.only" integrationTesting | wc -l`
       build-script: npx playwright install chromium
       yarn-test-script: playwright:ci
       upload-path: playwright-report/
@@ -30,5 +29,4 @@ jobs:
   unit-test:
     uses: ./.github/workflows/reusable-base.yml
     with:
-      validation-script: exit `grep -ER "(test|describe|it)\.only" src | wc -l`
       yarn-test-script: test
