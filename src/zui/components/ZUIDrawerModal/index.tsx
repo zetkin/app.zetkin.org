@@ -1,4 +1,4 @@
-import { KeyboardArrowDown } from '@mui/icons-material';
+import { ChevronRight, KeyboardArrowDown } from '@mui/icons-material';
 import { Box, Fade, IconButton, Modal, Slide, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
@@ -8,6 +8,11 @@ import AvatarBackground from '../ZUIAvatar/AvatarBackground';
 import ZUIButton from '../ZUIButton';
 
 type Props = {
+  /**
+   * An array of strings to be represented as breadcrumbs in the modal header
+   */
+  breadcrumbs?: string[];
+
   /**
    * The content of the modal.
    */
@@ -62,6 +67,7 @@ type Props = {
 };
 
 const ZUIDrawerModal: FC<Props> = ({
+  breadcrumbs,
   children,
   featureName,
   icon: Icon,
@@ -72,6 +78,8 @@ const ZUIDrawerModal: FC<Props> = ({
   subtitle,
   title,
 }) => {
+  const showBreadcrumbs = breadcrumbs && !subtitle;
+  const showSubtitle = !breadcrumbs && subtitle;
   return (
     <Modal
       onClose={onClose}
@@ -176,7 +184,34 @@ const ZUIDrawerModal: FC<Props> = ({
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Typography variant="headingMd">{title}</Typography>
-                  {subtitle && (
+                  {showBreadcrumbs && (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        gap: '0.25rem',
+                      }}
+                    >
+                      {breadcrumbs.map((crumb, index) => (
+                        <Box
+                          key={crumb}
+                          sx={{
+                            alignItems: 'center',
+                            display: 'flex',
+                            gap: '0.25rem',
+                          }}
+                        >
+                          <Typography color="secondary" variant="headingSm">
+                            {crumb.charAt(0).toUpperCase() +
+                              crumb.toLowerCase().slice(1)}
+                          </Typography>
+                          {index != breadcrumbs.length - 1 && (
+                            <ChevronRight color="secondary" fontSize="small" />
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                  {showSubtitle && (
                     <Typography color="secondary" variant="headingSm">
                       {subtitle}
                     </Typography>

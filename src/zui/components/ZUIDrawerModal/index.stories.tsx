@@ -16,20 +16,21 @@ export default meta;
 type Story = StoryObj<typeof ZUIDrawerModal>;
 
 export const Basic: Story = {
-  render: function Render() {
+  args: { subtitle: 'This is a subtitle' },
+  render: function Render(args) {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <ZUIButton label="Open" onClick={() => setDrawerOpen(true)} />
         <ZUIDrawerModal
+          {...args}
           featureName="test"
           icon={Search}
           onClose={() => setDrawerOpen(false)}
           open={drawerOpen}
           primaryButton={{ label: 'Test', onClick: () => null }}
           secondaryButton={{ label: 'Secondary', onClick: () => null }}
-          subtitle="cool cool cool"
           title="Modal title"
         >
           <Box
@@ -49,4 +50,9 @@ export const Basic: Story = {
       </Box>
     );
   },
+};
+
+export const WithBreadcrumbs: Story = {
+  args: { breadcrumbs: ['hej', 'jag', 'är', 'hungrig'] },
+  render: Basic.render,
 };
