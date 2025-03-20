@@ -44,20 +44,20 @@ export default function shouldLoad(
   /**
    * The remote object to check.
    */
-  item: RemoteItem<unknown> | RemoteList<unknown> | undefined
+  item: RemoteItem<unknown> | RemoteList<unknown> | undefined | null
 ): boolean;
 /**
  * @category Cache
  */
 export default function shouldLoad(
-  item: RemoteObjectRecord | undefined,
+  item: RemoteObjectRecord | undefined | null,
   ids: number[]
 ): boolean;
 /**
  * @category Cache
  */
 export default function shouldLoad(
-  item: ObjThatNeedsLoading,
+  item: ObjThatNeedsLoading | null,
   idsOrVoid?: number[]
 ): boolean {
   if (!item) {
