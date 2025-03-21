@@ -130,14 +130,14 @@ const ZUIDrawerModal: FC<Props> = ({
               borderRadius: '100%',
               cursor: 'pointer',
               display: 'flex',
-              height: '32px',
+              height: '2rem',
               justifyContent: 'center',
               left: '50%',
               position: 'absolute',
               top: -40,
               transform: 'translateX(-50%)',
               visibility: open ? 'visible' : 'hidden',
-              width: '32px',
+              width: '2rem',
             })}
             tabIndex={0}
           >
@@ -147,7 +147,7 @@ const ZUIDrawerModal: FC<Props> = ({
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              maxHeight: 'calc(100dvh - 60px)',
+              maxHeight: 'calc(100dvh - 3.75rem)',
               overflowY: 'hidden',
               padding: '1.25rem',
             }}
