@@ -8,6 +8,15 @@ export default makeMessages('feat.organizations', {
     gen2Button: m('Go to the old interface'),
     title: m('Welcome to the new Zetkin!'),
   },
+  home: {
+    footer: {
+      privacyPolicy: m('Privacy policy'),
+    },
+    tabs: {
+      calendar: m('Calendar'),
+      suborgs: m('Sub-organizations'),
+    },
+  },
   notOrganizer: {
     description: m(
       'This part of Zetkin is only available to users who have been granted organizer access by another organization official. You do not currently have the sufficient level of access. If you believe that this is a mistake, please reach out to your local Zetkin officials or to Zetkin Foundation.'
