@@ -16,7 +16,8 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
   children,
   variant,
 }) => {
-  const seededRand = create(seed);
+  const seedWithoutSpaces = seed.replaceAll(' ', '');
+  const seededRand = create(seedWithoutSpaces.replaceAll(' ', ''));
   const rand = () => seededRand(1000000) / 1000000;
 
   const colors = useMemo(() => {
@@ -35,7 +36,7 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
   };
 
   const uniqueName = (name: string) => {
-    return name + seed;
+    return name + seedWithoutSpaces;
   };
 
   return (
@@ -76,7 +77,7 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
             ? `url(#${uniqueName(size + 'circleClip')})`
             : `url(#${uniqueName(size + 'squareClip')})`
         }
-        id={'content' + seed}
+        id={'content' + seedWithoutSpaces}
       >
         <rect
           fill={`url(#${uniqueName('gradient')})`}
