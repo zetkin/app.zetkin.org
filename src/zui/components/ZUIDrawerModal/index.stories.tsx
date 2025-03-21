@@ -19,8 +19,8 @@ export const Basic: Story = {
   args: {
     featureName: 'test',
     icon: Surfing,
-    primaryButton: { label: 'Start over', onClick: () => null },
-    secondaryButton: { label: 'Close', onClick: () => null },
+    primaryButton: { label: 'Go surfing!', onClick: () => null },
+    secondaryButton: { label: 'Start over', onClick: () => null },
     subtitle: 'Hang loose man',
     title: 'Surf the waves',
   },

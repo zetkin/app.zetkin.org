@@ -29,14 +29,13 @@ export const Auto: Story = {
           {...args}
           onClose={() => setOpen(false)}
           open={open}
-          primaryButton={{ label: 'test', onClick: () => null }}
-          secondaryButton={{ label: 'test', onClick: () => null }}
+          primaryButton={{ label: 'Go ahead', onClick: () => null }}
+          secondaryButton={{ label: 'Quit', onClick: () => setOpen(false) }}
           title="Modal title"
         >
           <Box
             sx={{
               backgroundColor: 'peachpuff',
-              border: '2px solid green',
               height: '1000px',
               width: '100%',
             }}
