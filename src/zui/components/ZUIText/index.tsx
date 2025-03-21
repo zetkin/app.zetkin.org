@@ -36,7 +36,7 @@ type ZUITextProps = {
 
 const ZUIText: FC<ZUITextProps> = ({
   children,
-  color,
+  color = 'primary',
   component = 'p',
   gutterBottom,
   noWrap,
