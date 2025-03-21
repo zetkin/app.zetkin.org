@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Box } from '@mui/material';
-import { Search, Surfing } from '@mui/icons-material';
+import { People, Search, Surfing } from '@mui/icons-material';
 
 import ZUIDrawerModal from './index';
 import ZUIText from '../ZUIText';
@@ -19,6 +19,8 @@ export const Basic: Story = {
   args: {
     featureName: 'test',
     icon: Surfing,
+    primaryButton: { label: 'Start over', onClick: () => null },
+    secondaryButton: { label: 'Close', onClick: () => null },
     subtitle: 'Hang loose man',
     title: 'Surf the waves',
   },
@@ -32,8 +34,6 @@ export const Basic: Story = {
           {...args}
           onClose={() => setDrawerOpen(false)}
           open={drawerOpen}
-          primaryButton={{ label: 'Start over', onClick: () => null }}
-          secondaryButton={{ label: 'Close', onClick: () => null }}
         >
           <Box
             sx={{
@@ -59,7 +59,19 @@ export const WithBreadcrumbs: Story = {
     breadcrumbs: ['Overview', 'Select filter', 'Filter settings'],
     featureName: 'Smart search',
     icon: Search,
+    primaryButton: { label: 'Start over', onClick: () => null },
+    secondaryButton: { label: 'Close', onClick: () => null },
     title: 'Smart search',
+  },
+  render: Basic.render,
+};
+
+export const NoButtonsInHeader: Story = {
+  args: {
+    breadcrumbs: ['Upload file', 'Configure', 'Verify'],
+    featureName: 'Import',
+    icon: People,
+    title: 'Import',
   },
   render: Basic.render,
 };
