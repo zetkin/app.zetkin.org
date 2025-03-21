@@ -42,7 +42,7 @@ type Props = {
   /**
    * The primary action button in the modal header.
    */
-  primaryButton: {
+  primaryButton?: {
     label: string;
     onClick: () => void;
   };
@@ -234,11 +234,13 @@ const ZUIDrawerModal: FC<Props> = ({
                     variant="secondary"
                   />
                 )}
-                <ZUIButton
-                  label={primaryButton.label}
-                  onClick={primaryButton.onClick}
-                  variant="primary"
-                />
+                {primaryButton && (
+                  <ZUIButton
+                    label={primaryButton.label}
+                    onClick={primaryButton.onClick}
+                    variant="primary"
+                  />
+                )}
               </Box>
             </Box>
             <Box
