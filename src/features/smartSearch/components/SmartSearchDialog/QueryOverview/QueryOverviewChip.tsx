@@ -2,7 +2,9 @@ import { Box } from '@mui/material';
 import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles((theme) => ({
+import theme from 'theme';
+
+const useStyles = makeStyles(() => ({
   chip: {
     alignItems: 'center',
     backgroundColor: theme.palette.grey[200],

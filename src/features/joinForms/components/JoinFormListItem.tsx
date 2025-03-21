@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
-import { Box, Button, Theme, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 import theme from 'theme';
 import { ZetkinJoinForm } from '../types';
@@ -14,7 +14,7 @@ import messageIds from '../l10n/messageIds';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import useJoinFormMutations from '../hooks/useJoinFormMutations';
 
-const useStyles = makeStyles<Theme>((theme) => ({
+const useStyles = makeStyles({
   container: {
     alignItems: 'center',
     cursor: 'pointer',
@@ -42,7 +42,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
     alignItems: 'center',
     display: 'flex',
   },
-}));
+});
 
 export enum STATUS_COLORS {
   BLUE = 'blue',

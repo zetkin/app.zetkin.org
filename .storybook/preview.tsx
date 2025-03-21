@@ -11,7 +11,7 @@ import { ThemeProvider } from '@mui/material';
 import { FC, PropsWithChildren } from 'react';
 import { StoryFn } from '@storybook/react';
 
-import theme from '../src/theme';
+import newTheme from '../src/zui/theme';
 import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
@@ -62,8 +62,8 @@ class MockApiClient extends FetchApiClient {
 }
 
 export const decorators = [
-  (Story: StoryFn) => (
-    <ThemeProvider theme={theme}>
+  (Story) => (
+    <ThemeProvider theme={newTheme}>
       <Story />
     </ThemeProvider>
   ),
@@ -86,6 +86,11 @@ export const decorators = [
 ];
 
 export const parameters = {
+  options: {
+    storySort: {
+      order: ['Components'],
+    },
+  },
   nextjs: {
     router: {
       query: {
