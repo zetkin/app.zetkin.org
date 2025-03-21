@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Box } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { Search, Surfing } from '@mui/icons-material';
 
 import ZUIDrawerModal from './index';
 import ZUIText from '../ZUIText';
@@ -16,7 +16,12 @@ export default meta;
 type Story = StoryObj<typeof ZUIDrawerModal>;
 
 export const Basic: Story = {
-  args: { subtitle: 'This is a subtitle' },
+  args: {
+    featureName: 'test',
+    icon: Surfing,
+    subtitle: 'Hang loose man',
+    title: 'Surf the waves',
+  },
   render: function Render(args) {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -25,13 +30,10 @@ export const Basic: Story = {
         <ZUIButton label="Open" onClick={() => setDrawerOpen(true)} />
         <ZUIDrawerModal
           {...args}
-          featureName="test"
-          icon={Search}
           onClose={() => setDrawerOpen(false)}
           open={drawerOpen}
-          primaryButton={{ label: 'Test', onClick: () => null }}
-          secondaryButton={{ label: 'Secondary', onClick: () => null }}
-          title="Modal title"
+          primaryButton={{ label: 'Start over', onClick: () => null }}
+          secondaryButton={{ label: 'Close', onClick: () => null }}
         >
           <Box
             sx={{
@@ -53,6 +55,11 @@ export const Basic: Story = {
 };
 
 export const WithBreadcrumbs: Story = {
-  args: { breadcrumbs: ['hej', 'jag', 'är', 'hungrig'] },
+  args: {
+    breadcrumbs: ['Overview', 'Select filter', 'Filter settings'],
+    featureName: 'Smart search',
+    icon: Search,
+    title: 'Smart search',
+  },
   render: Basic.render,
 };
