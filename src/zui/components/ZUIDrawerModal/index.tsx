@@ -82,6 +82,7 @@ const ZUIDrawerModal: FC<Props> = ({
   const showSubtitle = !breadcrumbs && subtitle;
   return (
     <Modal
+      disableRestoreFocus
       onClose={onClose}
       open={open}
       slots={{
@@ -106,7 +107,6 @@ const ZUIDrawerModal: FC<Props> = ({
             left: 0,
             maxHeight: '100%',
             outline: 0,
-            overflow: 'hidden',
             pointerEvents: open ? 'auto' : 'none',
             position: 'fixed',
             right: 0,
@@ -116,6 +116,11 @@ const ZUIDrawerModal: FC<Props> = ({
         >
           <IconButton
             onClick={() => onClose()}
+            onKeyUp={(ev) => {
+              if (ev.key == 'Enter') {
+                onClose();
+              }
+            }}
             sx={(theme) => ({
               '&:hover': {
                 backgroundColor: theme.palette.common.white,
@@ -205,7 +210,10 @@ const ZUIDrawerModal: FC<Props> = ({
                               crumb.toLowerCase().slice(1)}
                           </Typography>
                           {index != breadcrumbs.length - 1 && (
-                            <ChevronRight color="secondary" fontSize="small" />
+                            <ChevronRight
+                              color="secondary"
+                              sx={{ fontSize: '1.25rem' }}
+                            />
                           )}
                         </Box>
                       ))}
