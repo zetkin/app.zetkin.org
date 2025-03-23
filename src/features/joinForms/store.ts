@@ -83,7 +83,8 @@ const joinFormsSlice = createSlice({
       state,
       action: PayloadAction<ZetkinJoinSubmission[]>
     ) => {
-      state.submissionList = remoteListLoaded(action.payload);
+      const submissions = action.payload;
+      state.submissionList = remoteListLoaded(submissions);
     },
   },
 });

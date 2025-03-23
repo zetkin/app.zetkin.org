@@ -103,9 +103,9 @@ const areaAssignmentSlice = createSlice({
     },
     areaAssignmentSessionsLoad: (state, action: PayloadAction<string>) => {
       const assignmentId = action.payload;
-      const areaAssignmentList = state.sessionsByAssignmentId[assignmentId];
-      state.sessionsByAssignmentId[assignmentId] =
-        remoteListLoad(areaAssignmentList);
+      state.sessionsByAssignmentId[assignmentId] = remoteListLoad(
+        state.sessionsByAssignmentId[assignmentId]
+      );
     },
     areaAssignmentSessionsLoaded: (
       state,
@@ -113,13 +113,13 @@ const areaAssignmentSlice = createSlice({
     ) => {
       const [assignmentId, sessions] = action.payload;
 
-      const loadedAreaAssignments = sessions.map((session) => ({
+      const areaAssignmentSessions = sessions.map((session) => ({
         ...session,
         id: session.assignee.id,
       }));
 
       state.sessionsByAssignmentId[assignmentId] = remoteListLoaded(
-        loadedAreaAssignments
+        areaAssignmentSessions
       );
     },
     areaAssignmentUpdated: (

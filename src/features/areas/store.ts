@@ -51,7 +51,8 @@ const areasSlice = createSlice({
       state.areaList = remoteListLoad(state.areaList);
     },
     areasLoaded: (state, action: PayloadAction<ZetkinArea[]>) => {
-      state.areaList = remoteListLoaded(action.payload);
+      const areas = action.payload;
+      state.areaList = remoteListLoaded(areas);
     },
     tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
