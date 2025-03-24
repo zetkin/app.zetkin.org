@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import NextLink from 'next/link';
 import { Box, Button, Grid, Typography } from '@mui/material';
 
@@ -9,8 +9,6 @@ import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ActivityOverview, CampaignActivity } from 'features/campaigns/types';
 import { Msg, useMessages } from 'core/i18n';
-
-import ZUITabView from 'zui/components/ZUITabView';
 
 type ActivitiesOverviewProps = {
   campaignId?: number;
@@ -38,18 +36,9 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
         item.data.organization.id != orgId
     );
   };
-  const [value, setValue] = useState('mjao');
 
   return (
     <>
-      <ZUITabView
-        items={[
-          { content: <div>hallå</div>, label: 'Hej', value: 'goddag' },
-          { content: <div>katt</div>, label: 'Katt', value: 'mjao' },
-        ]}
-        onChange={(newValue) => setValue(newValue)}
-        value={value}
-      />
       <Box
         alignItems="center"
         display="flex"
