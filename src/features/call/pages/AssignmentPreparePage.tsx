@@ -12,6 +12,7 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { useAppSelector } from 'core/hooks';
 import CallLog from '../components/CallLog';
+import SurveyAccordion from '../components/SurveyAccordion';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -19,7 +20,7 @@ type Props = {
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useAppSelector((state) => state.call.currentCall).data;
-  const surveys = useSurveys(assignment.id).data || [];
+  const surveys = useSurveys(assignment.organization.id).data || [];
   const campaigns = useActiveCampaigns(assignment.organization.id).data || [];
 
   if (!call) {
@@ -113,7 +114,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           </Box>
         </Box>
         <Box flex={1} mt={2}>
-          <Typography my={1}>
+          <Typography my={1} variant="h6">
             <Msg id={messageIds.prepare.summary} />
           </Typography>
           <Typography variant="h5">
@@ -133,18 +134,19 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
               );
             })}
           <Box mt={2}>
-            <Typography variant="h5">
-              <Msg id={messageIds.prepare.surveys} />
-            </Typography>
-            {surveys.length == 0 && (
-              <Typography>
-                <Msg id={messageIds.prepare.noSurveys} />
-              </Typography>
+            <Typography variant="h6">Surveys</Typography>
+            {surveys.length === 0 && (
+              <Typography>No surveys available</Typography>
             )}
             {surveys.length > 0 &&
-              surveys.map((survey) => {
-                return <Typography key={survey.id}>{survey.title}</Typography>;
-              })}
+              surveys.map((survey) => (
+                <SurveyAccordion
+                  key={survey.id}
+                  orgId={assignment.organization.id}
+                  survey={survey}
+                  target={call.target}
+                />
+              ))}
           </Box>
         </Box>
       </Suspense>

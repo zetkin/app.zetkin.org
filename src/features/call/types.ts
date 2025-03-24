@@ -53,7 +53,7 @@ export type ZetkinCall = {
   organizer_action_needed: boolean;
   organizer_action_taken: string | null;
   state: number;
-  target: ZetkinTarget;
+  target: ZetkinCallTarget;
   update_time: string;
 };
 
@@ -62,7 +62,7 @@ type ZetkinCaller = {
   name: string;
 };
 
-type ZetkinTarget = {
+export type ZetkinCallTarget = {
   action_responses: [];
   alt_phone: string | null;
   call_log: [];
