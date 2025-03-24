@@ -13,6 +13,7 @@ import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { useAppSelector } from 'core/hooks';
 import CallLog from '../components/CallLog';
 import SurveyAccordion from '../components/SurveyAccordion';
+import TargetEvents from '../components/TargetEvents';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -21,7 +22,7 @@ type Props = {
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useAppSelector((state) => state.call.currentCall).data;
   const surveys = useSurveys(assignment.organization.id).data || [];
-  const campaigns = useActiveCampaigns(assignment.organization.id).data || [];
+  const events = useActiveCampaigns(assignment.organization.id).data || [];
 
   if (!call) {
     return null;
@@ -34,6 +35,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           <Typography>
             <Msg id={messageIds.prepare.title} />
           </Typography>
+          ID -- {call.target.id}
           <ZUIAvatar
             size={'lg'}
             url={`/api/orgs/${assignment.organization.id}/people/${call.target.id}/avatar`}
@@ -83,7 +85,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
                   id={messageIds.prepare.arePreviousActivity}
                   values={{
                     actionTitle:
-                      call?.target.past_actions.last_action.activity.title ||
+                      call?.target.past_actions.last_action.activity?.title ||
                       '',
                     activities: call?.target.past_actions.num_actions,
                     name: call?.target.first_name,
@@ -120,17 +122,19 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           <Typography variant="h5">
             <Msg id={messageIds.prepare.activeCampaigns} />
           </Typography>
-          {campaigns.length == 0 && (
+          {events.length == 0 && (
             <Typography>
               <Msg id={messageIds.prepare.noActiveCampaigns} />
             </Typography>
           )}
-          {campaigns.length > 0 &&
-            campaigns.map((campaign) => {
+          {events.length > 0 &&
+            events.map((event) => {
               return (
-                <Typography key={campaign.id}>
-                  {campaign.campaign.title}
-                </Typography>
+                <TargetEvents
+                  key={event.id}
+                  event={event}
+                  target={call.target}
+                />
               );
             })}
           <Box mt={2}>

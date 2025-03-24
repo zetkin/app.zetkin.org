@@ -12,14 +12,15 @@ import { ExpandMore } from '@mui/icons-material';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { ZetkinCallTarget } from '../types';
-import { ZetkinEventWithStatus } from 'features/home/types';
 import useEventCallActions from '../hooks/useEventCallActions';
 import MyActivityListItem from 'features/home/components/MyActivityListItem';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
+import { ZetkinEvent } from 'utils/types/zetkin';
+import useAllEvents from 'features/events/hooks/useAllEvents';
 
 interface TargetEventsProps {
-  event: ZetkinEventWithStatus;
+  event: ZetkinEvent;
   target: ZetkinCallTarget;
 }
 
@@ -30,14 +31,21 @@ const TargetEvents: FC<TargetEventsProps> = ({ event, target }) => {
     target.id
   );
 
+  const events = useAllEvents();
+  const eventWithStatus = events.find((callEvent) => callEvent.id == event.id);
+
+  if (!eventWithStatus) {
+    return null;
+  }
+
   const actions: ReactNode[] = [];
-  if (event.status == 'booked') {
+  if (eventWithStatus.status == 'booked') {
     actions.push(
       <Typography key="booked" variant="body2">
         Booked
       </Typography>
     );
-  } else if (event.status == 'signedUp') {
+  } else if (eventWithStatus.status == 'signedUp') {
     actions.push(
       <Button
         key="action"
