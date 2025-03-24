@@ -21,6 +21,13 @@ type TabItem = {
 
 type ZUITabViewProps = {
   /**
+   * If true, the tabs take up all the available horizontal space.
+   *
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
    * A list of items that contains data about each tab.
    */
   items: TabItem[];
@@ -36,7 +43,12 @@ type ZUITabViewProps = {
   value: string;
 };
 
-const ZUITabView: FC<ZUITabViewProps> = ({ items, onChange, value }) => {
+const ZUITabView: FC<ZUITabViewProps> = ({
+  fullWidth = false,
+  items,
+  onChange,
+  value,
+}) => {
   return (
     <TabContext value={value}>
       <TabList
@@ -45,6 +57,7 @@ const ZUITabView: FC<ZUITabViewProps> = ({ items, onChange, value }) => {
           borderBottom: `0.063rem solid ${theme.palette.dividers.main}`,
           minHeight: '2.438rem',
         })}
+        variant={fullWidth ? 'fullWidth' : 'standard'}
       >
         {items.map((tab) => (
           <Tab

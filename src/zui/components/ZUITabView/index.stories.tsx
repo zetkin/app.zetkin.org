@@ -47,3 +47,8 @@ export const Basic: Story = {
     );
   },
 };
+
+export const FullWidth: Story = {
+  args: { fullWidth: true },
+  render: Basic.render,
+};
