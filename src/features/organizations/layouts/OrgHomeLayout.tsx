@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Link, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
 
@@ -12,6 +12,7 @@ import useUser from 'core/hooks/useUser';
 import ZUILogo from 'zui/ZUILogo';
 import { useEnv } from 'core/hooks';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
 type Props = {
   children: ReactNode;
@@ -90,7 +91,21 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           </Tabs>
         </Box>
       </Box>
-      <Box minHeight="90dvh">{children}</Box>
+      <Suspense
+        fallback={
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            height="90dvh"
+            justifyContent="center"
+          >
+            <ZUILogoLoadingIndicator />
+          </Box>
+        }
+      >
+        <Box minHeight="90dvh">{children}</Box>
+      </Suspense>
       <Box
         alignItems="center"
         component="footer"

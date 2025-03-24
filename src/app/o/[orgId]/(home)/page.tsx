@@ -2,8 +2,16 @@
 
 import { FC } from 'react';
 
-const Page: FC = () => {
-  return <h1>Calendar</h1>;
+import PublicOrgPage from 'features/organizations/pages/PublicOrgPage';
+
+type Props = {
+  params: {
+    orgId: number;
+  };
+};
+
+const Page: FC<Props> = ({ params }) => {
+  return <PublicOrgPage orgId={params.orgId} />;
 };
 
 export default Page;
