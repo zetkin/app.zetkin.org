@@ -5,8 +5,11 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
   Typography,
 } from '@mui/material';
 import { FC, useState } from 'react';
@@ -36,7 +39,11 @@ const SurveyOptions: FC<OptionsQuestionProps> = ({ element, onChange }) => {
     number[]
   >([]);
 
-  const handleSingleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState<
+    number | undefined
+  >(undefined);
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedOptionId = Number(event.target.value);
     setSelectedValue(selectedOptionId);
     onChange([selectedOptionId]);
@@ -52,21 +59,24 @@ const SurveyOptions: FC<OptionsQuestionProps> = ({ element, onChange }) => {
     });
   };
 
+  const handleDropdownChange = (event: SelectChangeEvent<number>) => {
+    const selectedOptionId = Number(event.target.value);
+    setSelectedDropdownValue(selectedOptionId);
+    onChange([selectedOptionId]);
+  };
+
   return (
     <FormControl fullWidth>
       <SurveyContainer>
         {question.response_config.widget_type === 'checkbox' && (
-          <FormGroup
-            aria-describedby={`description-${element.id}`}
-            aria-labelledby={`label-${element.id}`}
-          >
+          <FormGroup>
             <Box display="flex" flexDirection="column" rowGap={2} width="100%">
               <Box>
-                <FormLabel id={`label-${element.id}`}>
+                <FormLabel>
                   <SurveySubheading>{question.question}</SurveySubheading>
                 </FormLabel>
                 {question.description && (
-                  <SurveyQuestionDescription id={`description-${element.id}`}>
+                  <SurveyQuestionDescription>
                     {question.description}
                   </SurveyQuestionDescription>
                 )}
@@ -93,12 +103,12 @@ const SurveyOptions: FC<OptionsQuestionProps> = ({ element, onChange }) => {
           typeof question.response_config.widget_type === 'undefined') && (
           <RadioGroup
             name={`${element.id}.options`}
-            onChange={handleSingleChange}
+            onChange={handleRadioChange}
             value={selectedValue}
           >
             <Box display="flex" flexDirection="column" rowGap={2}>
               <Box>
-                <FormLabel id={`label-${element.id}`}>
+                <FormLabel>
                   <Typography>
                     {question.question}
                     {question.required
@@ -107,7 +117,7 @@ const SurveyOptions: FC<OptionsQuestionProps> = ({ element, onChange }) => {
                   </Typography>
                 </FormLabel>
                 {question.description && (
-                  <SurveyQuestionDescription id={`description-${element.id}`}>
+                  <SurveyQuestionDescription>
                     {question.description}
                   </SurveyQuestionDescription>
                 )}
@@ -124,6 +134,39 @@ const SurveyOptions: FC<OptionsQuestionProps> = ({ element, onChange }) => {
               </Box>
             </Box>
           </RadioGroup>
+        )}
+
+        {question.response_config.widget_type === 'select' && (
+          <FormGroup>
+            <Box display="flex" flexDirection="column" rowGap={2}>
+              <Box>
+                <FormLabel>
+                  <Typography>
+                    {question.question}
+                    {question.required
+                      ? `(${messages.surveyForm.required()})`
+                      : ''}
+                  </Typography>
+                </FormLabel>
+                {question.description && (
+                  <SurveyQuestionDescription id={`description-${element.id}`}>
+                    {question.description}
+                  </SurveyQuestionDescription>
+                )}
+              </Box>
+              <Select
+                onChange={handleDropdownChange}
+                required={question.required}
+                value={selectedDropdownValue}
+              >
+                {question.options!.map((option: ZetkinSurveyOption) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.text}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+          </FormGroup>
         )}
       </SurveyContainer>
     </FormControl>
