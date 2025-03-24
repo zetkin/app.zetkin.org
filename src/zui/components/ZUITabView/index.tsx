@@ -35,24 +35,24 @@ type ZUITabViewProps = {
   /**
    * Function that runs when user clicks a new tab.
    */
-  onChange: (newValue: string) => void;
+  onSelectTab: (newTab: string) => void;
 
   /**
    * The value of the tab view.
    */
-  value: string;
+  selectedTab: string;
 };
 
 const ZUITabView: FC<ZUITabViewProps> = ({
   fullWidth = false,
   items,
-  onChange,
-  value,
+  onSelectTab,
+  selectedTab,
 }) => {
   return (
-    <TabContext value={value}>
+    <TabContext value={selectedTab}>
       <TabList
-        onChange={(ev, newValue) => onChange(newValue)}
+        onChange={(ev, newTab) => onSelectTab(newTab)}
         sx={(theme) => ({
           borderBottom: `0.063rem solid ${theme.palette.dividers.main}`,
           minHeight: '2.438rem',

@@ -41,8 +41,8 @@ export const Basic: Story = {
             value: 'export',
           },
         ]}
-        onChange={(newValue) => setValue(newValue)}
-        value={value}
+        onSelectTab={(newValue) => setValue(newValue)}
+        selectedTab={value}
       />
     );
   },
