@@ -1,46 +1,4 @@
-import { ZetkinTag } from 'utils/types/zetkin';
-
-export type ZetkinAction = {
-  activity: {
-    id: number;
-    title: string | null;
-  };
-  campaign: {
-    id: number;
-    title: string;
-  };
-  cancelled: string | null;
-  cancelled_by_user: string | null;
-  contact: {
-    id: number;
-    name: string;
-  };
-  cover_file: string | null;
-  end_time: string;
-  id: number;
-  info_text: string;
-  location: {
-    id: number;
-    lat: number;
-    lng: number;
-    title: string;
-  };
-  num_participants_available: number;
-  num_participants_required: number;
-  organization: {
-    id: number;
-    title: string;
-  };
-  published: string;
-  published_by_user: {
-    first_name: string;
-    id: number;
-    last_name: string;
-  };
-  start_time: string;
-  title: string | null;
-  url: string;
-};
+import { ZetkinEvent, ZetkinTag } from 'utils/types/zetkin';
 
 export type ZetkinCall = {
   allocation_time: string;
@@ -75,7 +33,7 @@ export type ZetkinCallTarget = {
   last_name: string;
   name: string;
   past_actions: {
-    last_action: ZetkinAction;
+    last_action: ZetkinEvent;
     num_actions: number;
   };
   phone: string;
