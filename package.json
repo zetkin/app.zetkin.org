@@ -71,7 +71,7 @@
     "mongoose": "^8.6.0",
     "mui-rff": "^6.1.2",
     "negotiator": "^0.6.2",
-    "next": "^14.1.0",
+    "next": "^14.2",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
