@@ -56,11 +56,11 @@ export const Basic: Story = {
 
 export const WithBreadcrumbs: Story = {
   args: {
-    breadcrumbs: ['Overview', 'Select filter', 'Filter settings'],
     featureName: 'Smart search',
     icon: Search,
     primaryButton: { label: 'Start over', onClick: () => null },
     secondaryButton: { label: 'Close', onClick: () => null },
+    subtitle: ['Overview', 'Select filter', 'Filter settings'],
     title: 'Smart search',
   },
   render: Basic.render,
@@ -68,9 +68,9 @@ export const WithBreadcrumbs: Story = {
 
 export const NoButtonsInHeader: Story = {
   args: {
-    breadcrumbs: ['Upload file', 'Configure', 'Verify'],
     featureName: 'Import',
     icon: People,
+    subtitle: ['Upload file', 'Configure', 'Verify'],
     title: 'Import',
   },
   render: Basic.render,
