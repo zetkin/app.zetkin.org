@@ -52,33 +52,20 @@ const ZUIVerticalBarChart: FC<ZUIVerticalBarChartProps> = ({
     maxValue || 0,
     ...data.map((row) => row.value)
   );
-  const style = {
-    chart: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: 0.5,
-      paddingBlock: 2.5,
-    },
-    root: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: 0.5,
-    },
-  };
 
   return (
     <Box>
-      <Typography className="title" component="p" variant="labelLgMedium">
-        {title}
-      </Typography>
-      <Typography
-        className="description"
-        component="p"
-        variant="labelMdRegular"
+      <Typography variant="labelLgMedium">{title}</Typography>
+      <Typography variant="labelMdRegular">{description}</Typography>
+      <Box
+        component="section"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '0.25rem',
+          paddingBlock: '1.25rem',
+        }}
       >
-        {description}
-      </Typography>
-      <Box className={`chart`} component="section" sx={style.chart}>
         {!hideScale && <Scale maxValue={localMaxValue} />}
         <Bars
           data={data}
