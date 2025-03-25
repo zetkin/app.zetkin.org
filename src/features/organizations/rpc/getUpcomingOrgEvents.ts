@@ -22,7 +22,7 @@ export default makeRPCDef<Params, Result>(getUpcomingOrgEventsDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId } = params;
   const campaigns = await apiClient.get<ZetkinCampaign[]>(
-    `/api/orgs/${orgId}/campaigns`
+    `/api/orgs/${orgId}/campaigns?recursive`
   );
 
   const now = new Date().toISOString();
@@ -30,7 +30,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const events: ZetkinEvent[] = [];
   for (const campaign of campaigns) {
     const eventsOfOrg = await apiClient.get<ZetkinEvent[]>(
-      `/api/orgs/${orgId}/campaigns/${campaign.id}/actions?filter=start_time%3E=${now}`
+      `/api/orgs/${campaign.organization.id}/campaigns/${campaign.id}/actions?filter=start_time%3E=${now}`
     );
     events.push(...eventsOfOrg);
   }
