@@ -433,7 +433,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 {unlocked && (
                   <Box>
                     <Divider />
-                    <Typography my={1}>
+                    <Typography my={1} sx={{ fontWeight: 'bold' }}>
                       <Msg id={messagesIds.report.lockCard.safe} />
                     </Typography>
                     <Box alignItems="center" display="flex">
@@ -448,7 +448,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                         <Msg id={messagesIds.report.lockCard.add} />
                       </Typography>
                     </Box>
-                    <Typography my={1}>
+                    <Typography my={1} sx={{ fontWeight: 'bold' }}>
                       <Msg id={messagesIds.report.lockCard.unsafe} />
                     </Typography>
                     <Box alignItems="start" display="flex">

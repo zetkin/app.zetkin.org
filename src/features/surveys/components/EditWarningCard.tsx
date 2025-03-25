@@ -67,7 +67,9 @@ const EditTips: FC<{
 }> = ({ bullets, header, icon }) => {
   return (
     <Box marginTop={1}>
-      <Typography mb={1}>{header}</Typography>
+      <Typography mb={1} sx={{ fontWeight: 'bold' }}>
+        {header}
+      </Typography>
       {bullets.map((bullet) => (
         <Box key={bullet} alignItems="flex-start" display="flex">
           <Box mr={1}>{icon}</Box>

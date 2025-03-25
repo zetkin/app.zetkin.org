@@ -191,8 +191,8 @@ export default makeMessages('feat.areaAssignments', {
       header: m('Report locked'),
       headerUnlock: m('Report unlocked'),
       rename: m('Rephrasing questions in ways that change their meaning'),
-      safe: m('Safe changes'),
-      unsafe: m('Unsafe changes'),
+      safe: m('Safe'),
+      unsafe: m('Unsafe'),
     },
     metricCard: {
       choice: m('Choice question'),
