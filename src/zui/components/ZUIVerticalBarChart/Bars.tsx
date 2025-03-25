@@ -16,56 +16,24 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
   const [labelElem, setLabelElem] = useState<HTMLDivElement | null>(null);
   const [valueElem, setValueElem] = useState<HTMLDivElement | null>(null);
 
-  let hoveringLabelStyle = {
-    top: '100%',
-  };
-  let hoveringValueStyle = {
-    top: 0,
-    translate: `0 -100%`,
-  };
-  const hoveringElBaseStyle = {
-    color: 'data.main',
-    paddingBlock: '0.125rem',
-    pointerEvents: 'none',
-    position: 'absolute',
-    transitionDuration: '.3s',
-    transitionProperty: 'opacity',
-    whiteSpace: 'nowrap',
-    width: 'auto',
-  };
+  function calcHoverXPos(el: HTMLDivElement | null) {
+    if (barIndex >= 0 && containerRef.current && el) {
+      const hoveredBar = containerRef.current.querySelector(
+        `.barContainer:nth-of-type(${barIndex + 1})`
+      ) as HTMLDivElement;
+      const containerWidth = containerRef.current.clientWidth;
+      const barOffset = hoveredBar.offsetLeft;
+      const barWidth = hoveredBar.clientWidth;
+      const elWidth = el.clientWidth;
 
-  if (barIndex >= 0) {
-    const hoveredBar = containerRef.current?.querySelector(
-      `.barContainer:nth-of-type(${barIndex + 1})`
-    ) as HTMLDivElement;
-    const containerWidth = containerRef.current?.clientWidth || 0;
-    const barOffset = hoveredBar?.offsetLeft || 0;
-    const barWidth = hoveredBar?.clientWidth || 0;
-    const valueWidth = valueElem?.clientWidth || 0;
-    const labelWidth = labelElem?.clientWidth || 0;
-
-    const calculatedValuePosX = barOffset + barWidth / 2 - valueWidth / 2;
-    const boundedValuePosX = Math.max(
-      0,
-      Math.min(calculatedValuePosX, containerWidth - valueWidth)
-    );
-
-    const calculatedLabelPosX = barOffset + barWidth / 2 - labelWidth / 2;
-    const boundedLabelPosX = Math.max(
-      0,
-      Math.min(calculatedLabelPosX, containerWidth - labelWidth)
-    );
-
-    hoveringValueStyle = {
-      ...hoveringElBaseStyle,
-      ...hoveringValueStyle,
-      ...{ left: boundedValuePosX, opacity: valueWidth > 0 ? 1 : 0 },
-    };
-    hoveringLabelStyle = {
-      ...hoveringElBaseStyle,
-      ...hoveringLabelStyle,
-      ...{ left: boundedLabelPosX, opacity: valueWidth > 0 ? 1 : 0 },
-    };
+      const calculatedX = barOffset + barWidth / 2 - elWidth / 2;
+      const boundedX = Math.max(
+        0,
+        Math.min(calculatedX, containerWidth - elWidth)
+      );
+      return boundedX;
+    }
+    return 0;
   }
 
   return (
@@ -174,7 +142,19 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
             ref={(elem: HTMLDivElement) => setLabelElem(elem)}
             aria-live="polite"
             component="div"
-            sx={hoveringLabelStyle}
+            sx={{
+              color: 'data.main',
+              left: calcHoverXPos(labelElem),
+              opacity: labelElem ? 1 : 0,
+              paddingBlock: '0.125rem',
+              pointerEvents: 'none',
+              position: 'absolute',
+              top: '100%',
+              transitionDuration: '.3s',
+              transitionProperty: 'opacity',
+              whiteSpace: 'nowrap',
+              width: 'auto',
+            }}
             variant="labelSmMedium"
           >
             {data[barIndex].label}
@@ -183,7 +163,20 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
             ref={(elem: HTMLDivElement) => setValueElem(elem)}
             aria-live="polite"
             component="div"
-            sx={hoveringValueStyle}
+            sx={{
+              color: 'data.main',
+              left: calcHoverXPos(valueElem),
+              opacity: valueElem ? 1 : 0,
+              paddingBlock: '0.125rem',
+              pointerEvents: 'none',
+              position: 'absolute',
+              top: 0,
+              transitionDuration: '.3s',
+              transitionProperty: 'opacity',
+              translate: `0 -100%`,
+              whiteSpace: 'nowrap',
+              width: 'auto',
+            }}
             variant="labelSmMedium"
           >
             {data[barIndex].value}
