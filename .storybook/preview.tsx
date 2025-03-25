@@ -15,6 +15,7 @@ import newTheme from '../src/zui/theme';
 import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
 import createStore from '../src/core/store';
+import { LicenseInfo } from '@mui/x-license';
 
 dayjs.extend(isoWeek);
 
@@ -70,6 +71,12 @@ export const decorators = [
   (Story: StoryFn) => {
     const store = createStore();
     const env = new Environment(new MockApiClient());
+
+    // MUI-X license
+    if (process.env.STORYBOOK_MUIX_LICENSE_KEY) {
+      LicenseInfo.setLicenseKey(process.env.STORYBOOK_MUIX_LICENSE_KEY);
+    }
+
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>

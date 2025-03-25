@@ -1,4 +1,18 @@
 import { createTheme } from '@mui/material';
+import { Localization as DataGridLocalization } from '@mui/x-data-grid/utils/getGridLocalization';
+import {
+  daDK as dataGridDaDK,
+  deDE as dataGridDeDE,
+  nbNO as dataGridNbNO,
+  svSE as dataGridSvSE,
+} from '@mui/x-data-grid-pro';
+import {
+  daDK as pickersDaDK,
+  deDE as pickersDeDE,
+  nbNO as pickersNbNO,
+  svSE as pickersSvSE,
+} from '@mui/x-date-pickers-pro/locales';
+import { daDK, deDE, Localization, nbNO, svSE } from '@mui/material/locale';
 
 import './types';
 import palette from './palette';
@@ -30,5 +44,35 @@ const theme = createTheme({
   palette: palette,
   typography: typography,
 });
+
+//MUI Material localizations
+const coreLocales: Record<string, Localization> = {};
+coreLocales['da'] = daDK;
+coreLocales['de'] = deDE;
+coreLocales['nn'] = nbNO;
+coreLocales['sv'] = svSE;
+
+//MUI Data Grid  localizations
+const dataGridLocales: Record<string, DataGridLocalization> = {};
+dataGridLocales['da'] = dataGridDaDK;
+dataGridLocales['de'] = dataGridDeDE;
+dataGridLocales['nn'] = dataGridNbNO;
+dataGridLocales['sv'] = dataGridSvSE;
+
+//MUI Date Pickers localizations
+const pickersLocales: Record<string, typeof pickersDaDK> = {};
+pickersLocales['da'] = pickersDaDK;
+pickersLocales['de'] = pickersDeDE;
+pickersLocales['nn'] = pickersNbNO;
+pickersLocales['sv'] = pickersSvSE;
+
+export const themeWithLocale = (lang: string) => {
+  return createTheme(
+    theme,
+    coreLocales[lang],
+    dataGridLocales[lang],
+    pickersLocales[lang]
+  );
+};
 
 export default theme;
