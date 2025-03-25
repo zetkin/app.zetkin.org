@@ -29,7 +29,9 @@ import {
   Switch,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
+  Grid,
 } from '@mui/material';
 
 import { AREAS } from 'utils/featureFlags';
@@ -72,6 +74,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   areaAssId,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { updateAreaAssignment } = useAreaAssignmentMutations(
     parseInt(orgId),
     areaAssId
@@ -130,8 +133,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   return (
     <ZUIFuture future={areaAssignmentFuture}>
       {(assignment: ZetkinAreaAssignment) => (
-        <Box display="flex">
-          <Box width="60%">
+        <Grid
+          container
+          direction={isMobile ? 'column-reverse' : 'row'}
+          spacing={2}
+        >
+          <Grid item md={8} xs={12}>
             <Box>
               {assignment.metrics.map((metric) => (
                 <Card key={metric.id} sx={{ mb: 2 }}>
@@ -398,8 +405,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 </Box>
               </Dialog>
             </Box>
-          </Box>
-          <Box ml={2} width="40%">
+          </Grid>
+
+          <Grid item md={4} xs={12}>
             {assignment.start_date && (
               <ZUICard
                 header={
@@ -577,8 +585,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 </RadioGroup>
               </FormControl>
             </ZUICard>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       )}
     </ZUIFuture>
   );
