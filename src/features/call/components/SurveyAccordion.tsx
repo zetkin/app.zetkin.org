@@ -13,7 +13,7 @@ import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import {
   ELEMENT_TYPE,
-  ZetkinSurvey,
+  ZetkinSurveyExtended,
   ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyQuestionResponse,
   ZetkinSurveyTextQuestionElement,
@@ -25,7 +25,7 @@ import { ZetkinCallTarget } from '../types';
 
 interface SurveyAccordionProps {
   orgId: number;
-  survey: ZetkinSurvey;
+  survey: ZetkinSurveyExtended;
   target: ZetkinCallTarget;
 }
 
@@ -53,11 +53,7 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
   };
 
   const handleFormSubmission = () => {
-    const signature = {
-      email: target.email,
-      first_name: target.first_name,
-      last_name: target.last_name,
-    };
+    const signature = target.id;
     const formResponses: {
       [key: number]: { options?: number[]; response?: string };
     } = responses;

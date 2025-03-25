@@ -6,7 +6,6 @@ import { FC, Suspense } from 'react';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useActiveCampaigns from '../hooks/useActiveCampaigns';
-import useSurveys from 'features/surveys/hooks/useSurveys';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -14,6 +13,7 @@ import { useAppSelector } from 'core/hooks';
 import CallLog from '../components/CallLog';
 import SurveyAccordion from '../components/SurveyAccordion';
 import TargetEvents from '../components/TargetEvents';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -21,7 +21,7 @@ type Props = {
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useAppSelector((state) => state.call.currentCall).data;
-  const surveys = useSurveys(assignment.organization.id).data || [];
+  const surveys = useSurveysWithElements(assignment.organization.id).data || [];
   const events = useActiveCampaigns(assignment.organization.id).data || [];
 
   if (!call) {

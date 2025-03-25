@@ -1,8 +1,13 @@
 import {
-  ZetkinSurveyApiSubmission,
   ZetkinSurveyFormStatus,
+  ZetkinSurveyQuestionResponse,
 } from 'utils/types/zetkin';
 import { useApiClient } from 'core/hooks';
+
+export type ZetkinSurveyCallSubmission = {
+  responses: ZetkinSurveyQuestionResponse[];
+  signature: number;
+};
 
 export default function useSurveySubmissionMutations(
   orgId: number,
@@ -11,7 +16,7 @@ export default function useSurveySubmissionMutations(
   const apiClient = useApiClient();
 
   const addSubmission = (
-    formData: ZetkinSurveyApiSubmission
+    formData: ZetkinSurveyCallSubmission
   ): Promise<ZetkinSurveyFormStatus> => {
     return apiClient.post(
       `/api/orgs/${orgId}/surveys/${surveyId}/submissions`,
