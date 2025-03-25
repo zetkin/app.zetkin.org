@@ -11,7 +11,6 @@ const Scale: FC<ScaleProps> = ({ maxValue }) => {
   return (
     <Box aria-hidden="true">
       <Box
-        className="scale"
         sx={{
           color: 'text.secondary',
           display: 'flex',
@@ -22,7 +21,6 @@ const Scale: FC<ScaleProps> = ({ maxValue }) => {
         }}
       >
         <Box
-          className="numbers"
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -48,7 +46,6 @@ const Scale: FC<ScaleProps> = ({ maxValue }) => {
           </Typography>
         </Box>
         <Box
-          className="lines"
           sx={{
             '.line': {
               backgroundColor: 'currentColor',
