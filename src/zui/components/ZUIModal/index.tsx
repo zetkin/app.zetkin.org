@@ -85,7 +85,14 @@ const ZUIModal: FC<ZUIModalProps> = ({
       slots={{
         backdrop: () => (
           <Fade in={open} timeout={300}>
-            <Box onClick={onClose} sx={{ height: '100%', width: '100%' }}>
+            <Box
+              onClick={onClose}
+              sx={{
+                backgroundColor: 'rgba(255,255,255,0.5)',
+                height: '100%',
+                width: '100%',
+              }}
+            >
               <ModalBackground height="100%" width="100%" />
             </Box>
           </Fade>
@@ -95,7 +102,6 @@ const ZUIModal: FC<ZUIModalProps> = ({
       <Fade in={open} timeout={300}>
         <Paper
           sx={(theme) => ({
-            WebkitOverflowScrolling: 'touch',
             border: `0.063rem solid ${theme.palette.dividers.main}`,
             boxShadow: theme.elevation.bottom.big.medium,
             height,

@@ -88,7 +88,14 @@ const ZUIDrawerModal: FC<Props> = ({
       slots={{
         backdrop: () => (
           <Fade in={open} timeout={300}>
-            <Box onClick={onClose} sx={{ height: '100%', width: '100%' }}>
+            <Box
+              onClick={onClose}
+              sx={{
+                backgroundColor: 'rgba(255,255,255,0.5)',
+                height: '100%',
+                width: '100%',
+              }}
+            >
               <ModalBackground height="100%" width="100%" />
             </Box>
           </Fade>
@@ -98,7 +105,6 @@ const ZUIDrawerModal: FC<Props> = ({
       <Slide direction="up" in={open} timeout={300}>
         <Box
           sx={{
-            WebkitOverflowScrolling: 'touch',
             backgroundColor: 'white',
             bottom: 0,
             display: 'flex',
