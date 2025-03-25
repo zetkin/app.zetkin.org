@@ -20,7 +20,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUISection from 'zui/ZUISection';
 import ZUITimeline from 'zui/ZUITimeline';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -31,34 +31,28 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
   async (ctx) => {
     const { orgId, instanceId, journeyId } = ctx.params!;
 
-    const apiClient = new BackendApiClient(ctx.req.headers);
-    const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
-      `/api/orgs/${orgId}/journey_instances/${instanceId}`
-    );
-    const organization = await apiClient.get<ZetkinOrganization>(
-      `/api/orgs/${orgId}`
-    );
+    try {
+      const apiClient = new BackendApiClient(ctx.req.headers);
+      const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
+        `/api/orgs/${orgId}/journey_instances/${instanceId}`
+      );
 
-    if (
-      journeyInstance &&
-      journeyInstance.journey.id.toString() !== (journeyId as string)
-    ) {
-      return {
-        redirect: {
-          destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
-          permanent: false,
-        },
-      };
-    }
-
-    if (organization && journeyInstance) {
-      return {
-        props: {
-          instanceId,
-          orgId,
-        },
-      };
-    } else {
+      if (journeyInstance.journey.id.toString() !== (journeyId as string)) {
+        return {
+          redirect: {
+            destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
+            permanent: false,
+          },
+        };
+      } else {
+        return {
+          props: {
+            instanceId,
+            orgId,
+          },
+        };
+      }
+    } catch {
       return {
         notFound: true,
       };

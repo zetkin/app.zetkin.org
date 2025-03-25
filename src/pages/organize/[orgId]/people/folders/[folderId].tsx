@@ -8,6 +8,7 @@ import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import ViewBrowser from 'features/views/components/ViewBrowser';
 import messageIds from 'features/views/l10n/messageIds';
+import { ZetkinViewFolder } from 'features/views/components/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -17,19 +18,20 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, folderId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const folder = await apiClient.get(
-    `/api/orgs/${orgId}/people/view_folders/${folderId}`
-  );
-
-  if (folder) {
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    // Note: We don't actually care for the returned folder, but we still want to perform
+    // the api request to know if this user may access this particular folder.
+    await apiClient.get<ZetkinViewFolder>(
+      `/api/orgs/${orgId}/people/view_folders/${folderId}`
+    );
     return {
       props: {
         folderId,
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };

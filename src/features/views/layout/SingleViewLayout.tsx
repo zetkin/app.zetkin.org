@@ -52,7 +52,11 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { deleteView: deleteList, updateView } = useViewMutations(orgId);
+  const {
+    deleteView: deleteList,
+    duplicateView,
+    updateView,
+  } = useViewMutations(orgId);
   const viewFuture = useView(orgId, viewId);
   const { deleteContentQuery } = useViewDataTableMutations(orgId, viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
@@ -144,6 +148,21 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
         title: messages.deleteDialog.title(),
         warningText: messages.deleteDialog.warningText(),
       });
+    },
+  });
+
+  ellipsisMenu.push({
+    id: 'duplicate-view',
+    label: messages.viewLayout.ellipsisMenu.duplicate(),
+    onSelect: async () => {
+      if (view != null) {
+        const copiedList = await duplicateView(
+          viewId,
+          view.folder?.id ?? null,
+          messages.browser.menu.viewCopy({ viewName: view.title })
+        );
+        router.push(`/organize/${orgId}/people/lists/${copiedList.id}`);
+      }
     },
   });
 

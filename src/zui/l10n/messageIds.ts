@@ -126,6 +126,10 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  expandableText: {
+    showLess: m('Show less'),
+    showMore: m('Show more'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
