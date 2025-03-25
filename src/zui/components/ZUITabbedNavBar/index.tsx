@@ -5,8 +5,19 @@ import { ZUIBadgeProps } from '../ZUIBadge';
 import { getContrastColor } from 'utils/colorUtils';
 
 type LinkTabItem = {
+  /**
+   * Send in properties that will render a badge on the tab.
+   */
   badge?: Omit<ZUIBadgeProps, 'children'>;
+
+  /**
+   * The href the tab routes to.
+   */
   href: string;
+
+  /**
+   * The label of the tab.
+   */
   label: string;
 };
 
@@ -34,7 +45,7 @@ type ZUITabbedNavBar = {
   selectedTab: string;
 };
 
-const TabBadge: FC<Omit<ZUIBadgeProps, 'children'>> = ({
+export const TabBadge: FC<Omit<ZUIBadgeProps, 'children'>> = ({
   color,
   number,
   truncateLargeNumber = false,

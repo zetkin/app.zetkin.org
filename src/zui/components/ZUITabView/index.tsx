@@ -2,7 +2,15 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Tab } from '@mui/material';
 import { FC } from 'react';
 
+import { ZUIBadgeProps } from '../ZUIBadge';
+import { TabBadge } from '../ZUITabbedNavBar';
+
 type TabItem = {
+  /**
+   * Send in properties that will render a badge on the tab.
+   */
+  badge?: Omit<ZUIBadgeProps, 'children'>;
+
   /**
    * The label of the tab
    */
@@ -62,6 +70,18 @@ const ZUITabView: FC<ZUITabViewProps> = ({
         {items.map((tab) => (
           <Tab
             key={`tab-${tab.value}`}
+            icon={
+              tab.badge ? (
+                <TabBadge
+                  color={tab.badge.color}
+                  number={tab.badge.number}
+                  truncateLargeNumber={tab.badge.truncateLargeNumber}
+                />
+              ) : (
+                ''
+              )
+            }
+            iconPosition="end"
             label={tab.label}
             sx={{
               fontSize: '0.875rem',
