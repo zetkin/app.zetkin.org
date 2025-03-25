@@ -2,9 +2,9 @@ import { Box, Fade, IconButton, Modal, Paper, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { Close } from '@mui/icons-material';
 
-import ZUIModalBackground from '../ZUIModalBackground';
 import ZUIButton from '../ZUIButton';
 import { ZUISize } from '../types';
+import ModalBackground from './ModalBackground';
 
 type ZUIModalProps = {
   /**
@@ -86,7 +86,7 @@ const ZUIModal: FC<ZUIModalProps> = ({
         backdrop: () => (
           <Fade in={open} timeout={300}>
             <Box onClick={onClose} sx={{ height: '100%', width: '100%' }}>
-              <ZUIModalBackground height="100%" width="100%" />
+              <ModalBackground height="100%" width="100%" />
             </Box>
           </Fade>
         ),

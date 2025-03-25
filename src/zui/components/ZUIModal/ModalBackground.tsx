@@ -63,7 +63,7 @@ type LayerData = {
   imageWidth: number;
 };
 
-const ZUIModalBackground: FC<Props> = ({ height, width }) => {
+const ModalBackground: FC<Props> = ({ height, width }) => {
   const [layers, setLayers] = useState<LayerData[]>([]);
 
   useEffect(() => {
@@ -200,4 +200,4 @@ const ZUIModalBackground: FC<Props> = ({ height, width }) => {
   );
 };
 
-export default ZUIModalBackground;
+export default ModalBackground;

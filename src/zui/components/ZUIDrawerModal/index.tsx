@@ -2,10 +2,10 @@ import { ChevronRight, KeyboardArrowDown } from '@mui/icons-material';
 import { Box, Fade, IconButton, Modal, Slide, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-import ZUIModalBackground from '../ZUIModalBackground';
 import { MUIIcon } from '../types';
 import AvatarBackground from '../ZUIAvatar/AvatarBackground';
 import ZUIButton from '../ZUIButton';
+import ModalBackground from '../ZUIModal/ModalBackground';
 
 type Props = {
   /**
@@ -89,7 +89,7 @@ const ZUIDrawerModal: FC<Props> = ({
         backdrop: () => (
           <Fade in={open} timeout={300}>
             <Box onClick={onClose} sx={{ height: '100%', width: '100%' }}>
-              <ZUIModalBackground height="100%" width="100%" />
+              <ModalBackground height="100%" width="100%" />
             </Box>
           </Fade>
         ),
