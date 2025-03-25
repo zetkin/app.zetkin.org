@@ -50,35 +50,19 @@ const Scale: FC<ScaleProps> = ({ maxValue }) => {
         <Box
           className="lines"
           sx={{
+            '.line': {
+              backgroundColor: 'currentColor',
+              height: '1px',
+              width: '0.25rem',
+            },
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
           }}
         >
-          <Box
-            className="line"
-            sx={{
-              backgroundColor: 'currentColor',
-              height: '1px',
-              width: '0.25rem',
-            }}
-          />
-          <Box
-            className="line"
-            sx={{
-              backgroundColor: 'currentColor',
-              height: '1px',
-              width: '0.25rem',
-            }}
-          />
-          <Box
-            className="line"
-            sx={{
-              backgroundColor: 'currentColor',
-              height: '1px',
-              width: '0.25rem',
-            }}
-          />
+          <Box className="line" />
+          <Box className="line" />
+          <Box className="line" />
         </Box>
       </Box>
     </Box>

@@ -43,6 +43,16 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
         setBarIndex(-1);
       }}
       sx={{
+        '.hoverElem': {
+          color: 'data.main',
+          paddingBlock: 0.25,
+          pointerEvents: 'none',
+          position: 'absolute',
+          transitionDuration: '.3s',
+          transitionProperty: 'opacity',
+          whiteSpace: 'nowrap',
+          width: 'auto',
+        },
         position: 'relative',
         width: '100%',
       }}
@@ -141,19 +151,12 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
           <Typography
             ref={(elem: HTMLDivElement) => setLabelElem(elem)}
             aria-live="polite"
+            className="hoverElem"
             component="div"
             sx={{
-              color: 'data.main',
               left: calcHoverXPos(labelElem),
               opacity: labelElem ? 1 : 0,
-              paddingBlock: '0.125rem',
-              pointerEvents: 'none',
-              position: 'absolute',
               top: '100%',
-              transitionDuration: '.3s',
-              transitionProperty: 'opacity',
-              whiteSpace: 'nowrap',
-              width: 'auto',
             }}
             variant="labelSmMedium"
           >
@@ -162,20 +165,13 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
           <Typography
             ref={(elem: HTMLDivElement) => setValueElem(elem)}
             aria-live="polite"
+            className="hoverElem"
             component="div"
             sx={{
-              color: 'data.main',
               left: calcHoverXPos(valueElem),
               opacity: valueElem ? 1 : 0,
-              paddingBlock: '0.125rem',
-              pointerEvents: 'none',
-              position: 'absolute',
               top: 0,
-              transitionDuration: '.3s',
-              transitionProperty: 'opacity',
               translate: `0 -100%`,
-              whiteSpace: 'nowrap',
-              width: 'auto',
             }}
             variant="labelSmMedium"
           >
