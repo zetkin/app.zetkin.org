@@ -50,7 +50,7 @@ export const Basic: Story = {
 };
 
 export const FullWidth: Story = {
-  args: { fullWidth: true },
+  args: { ...Basic.args, fullWidth: true },
   render: Basic.render,
 };
 
