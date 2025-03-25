@@ -51,3 +51,30 @@ export const FullWidth: Story = {
   args: { ...Basic.args, fullWidth: true },
   render: Basic.render,
 };
+
+export const WithBadge: Story = {
+  args: {
+    items: [
+      {
+        badge: { color: 'danger' },
+        href: '/?path=/docs/components-zuitabbednavbar--docs',
+        label: 'Overview',
+      },
+      {
+        badge: { color: 'warning', number: 13 },
+        href: '/?path=/docs/components',
+        label: 'Map',
+      },
+      {
+        badge: {
+          color: 'info',
+          number: 99999999999,
+          truncateLargeNumber: true,
+        },
+        href: '/?path=/docs/components-zuitabview--docs',
+        label: 'Assignees',
+      },
+    ],
+  },
+  render: Basic.render,
+};
