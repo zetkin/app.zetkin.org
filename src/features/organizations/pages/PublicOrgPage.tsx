@@ -15,6 +15,7 @@ import useUser from 'core/hooks/useUser';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIDialog from 'zui/ZUIDialog';
+import useMyEvents from 'features/events/hooks/useMyEvents';
 
 type Props = {
   orgId: number;
@@ -25,12 +26,14 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
   const orgEvents = useUpcomingOrgEvents(orgId);
+  const myEvents = useMyEvents();
   const user = useUser();
 
   const allEvents = useMemo(() => {
     return orgEvents.map<ZetkinEventWithStatus>((event) => ({
       ...event,
-      status: null,
+      status:
+        myEvents.find((userEvent) => userEvent.id == event.id)?.status || null,
     }));
   }, [orgEvents]);
 
