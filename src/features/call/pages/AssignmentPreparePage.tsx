@@ -5,7 +5,7 @@ import { FC, Suspense } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import useActiveCampaigns from '../hooks/useActiveCampaigns';
+import useActiveEvents from '../hooks/useActiveEvents';
 import useCallWithTarget from '../hooks/useCallWithTarget';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -19,7 +19,7 @@ type Props = {
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useCallWithTarget(assignment.organization.id, assignment.id);
   const surveys = useSurveys(assignment.id).data || [];
-  const campaigns = useActiveCampaigns(assignment.organization.id).data || [];
+  const events = useActiveEvents(assignment.organization.id).data || [];
 
   return (
     <Box display="flex" gap={2}>
@@ -77,7 +77,8 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
                   id={messageIds.prepare.previousEventsOfTarget}
                   values={{
                     eventTitle:
-                      call.target.past_actions.last_action.activity.title || '',
+                      call.target.past_actions.last_action.activity?.title ||
+                      '',
                     name: call.target.first_name,
                     numEvents: call.target.past_actions.num_actions,
                   }}
@@ -113,18 +114,14 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           <Typography variant="h5">
             <Msg id={messageIds.prepare.activeCampaigns} />
           </Typography>
-          {campaigns.length == 0 && (
+          {events.length == 0 && (
             <Typography>
               <Msg id={messageIds.prepare.noActiveCampaigns} />
             </Typography>
           )}
-          {campaigns.length > 0 &&
-            campaigns.map((campaign) => {
-              return (
-                <Typography key={campaign.id}>
-                  {campaign.campaign.title}
-                </Typography>
-              );
+          {events.length > 0 &&
+            events.map((event) => {
+              return <Typography key={event.id}>{event.title}</Typography>;
             })}
           <Box mt={2}>
             <Typography variant="h5">

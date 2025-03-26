@@ -1,20 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ZetkinAction, ZetkinCall } from './types';
+import { ZetkinCall } from './types';
 import {
   remoteItem,
   RemoteItem,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 export interface CallStoreSlice {
-  activeCampaignsList: RemoteList<ZetkinAction>;
+  activeEventList: RemoteList<ZetkinEvent>;
   currentCall: RemoteItem<ZetkinCall>;
 }
 
 const initialState: CallStoreSlice = {
-  activeCampaignsList: remoteList(),
+  activeEventList: remoteList(),
   currentCall: remoteItem<ZetkinCall>(0, { data: null, isLoading: false }),
 };
 
@@ -22,12 +23,12 @@ const CallSlice = createSlice({
   initialState,
   name: 'call',
   reducers: {
-    activeCampaignsLoad: (state) => {
-      state.activeCampaignsList.isLoading = true;
+    activeEventsLoad: (state) => {
+      state.activeEventList.isLoading = true;
     },
-    activeCampaignsLoaded: (state, action: PayloadAction<ZetkinAction[]>) => {
-      state.activeCampaignsList = remoteList(action.payload);
-      state.activeCampaignsList.loaded = new Date().toISOString();
+    activeEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.activeEventList = remoteList(action.payload);
+      state.activeEventList.loaded = new Date().toISOString();
     },
     currentCallLoad: (state) => {
       state.currentCall.isLoading = true;
@@ -45,8 +46,8 @@ const CallSlice = createSlice({
 
 export default CallSlice;
 export const {
-  activeCampaignsLoad,
-  activeCampaignsLoaded,
+  activeEventsLoad,
+  activeEventsLoaded,
   currentCallLoad,
   currentCallLoaded,
 } = CallSlice.actions;
