@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, MouseEvent, ReactNode } from 'react';
 import { Box, Button, Fade, Typography } from '@mui/material';
 import {
   Event,
@@ -17,10 +17,15 @@ import { removeOffset } from 'utils/dateUtils';
 
 type Props = {
   event: ZetkinEventWithStatus;
+  onClickSignUp?: (ev: MouseEvent) => void;
   showIcon?: boolean;
 };
 
-const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
+const EventListItem: FC<Props> = ({
+  event,
+  onClickSignUp,
+  showIcon = false,
+}) => {
   const messages = useMessages(messageIds);
   const { signUp, undoSignup } = useEventActions(
     event.organization.id,
@@ -68,7 +73,15 @@ const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
     actions.push(
       <Button
         key="action"
-        onClick={() => signUp()}
+        onClick={(ev) => {
+          if (onClickSignUp) {
+            onClickSignUp(ev);
+          }
+
+          if (!ev.isDefaultPrevented()) {
+            signUp();
+          }
+        }}
         size="small"
         variant="contained"
       >

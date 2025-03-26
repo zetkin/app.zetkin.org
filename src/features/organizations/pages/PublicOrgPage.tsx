@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { Box, Divider, Fade, Typography } from '@mui/material';
+import { Box, Button, Divider, Fade, Typography } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
 import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
@@ -10,15 +10,22 @@ import { ZetkinEventWithStatus } from 'features/home/types';
 import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
 import ZUIDate from 'zui/ZUIDate';
 import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
+import { ZetkinEvent } from 'utils/types/zetkin';
+import useUser from 'core/hooks/useUser';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
+import ZUIDialog from 'zui/ZUIDialog';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
   const orgEvents = useUpcomingOrgEvents(orgId);
+  const user = useUser();
 
   const allEvents = useMemo(() => {
     return orgEvents.map<ZetkinEventWithStatus>((event) => ({
@@ -72,7 +79,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <Box display="flex" flexDirection="column" gap={1}>
               {eventsByDate[date].map((event) => (
-                <EventListItem key={event.id} event={event} />
+                <EventListItem
+                  key={event.id}
+                  event={event}
+                  onClickSignUp={(ev) => {
+                    if (!user) {
+                      setPostAuthEvent(event);
+                      ev.preventDefault();
+                    }
+                  }}
+                />
               ))}
             </Box>
           </Fade>
@@ -97,6 +113,20 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           )}
         </Box>
       ))}
+      <ZUIDialog
+        maxWidth="md"
+        onClose={() => setPostAuthEvent(null)}
+        open={!!postAuthEvent}
+      >
+        <Typography>
+          <Msg id={messageIds.authDialog.label} />
+        </Typography>
+        {postAuthEvent && (
+          <Button href={`/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`}>
+            <Msg id={messageIds.authDialog.loginButton} />
+          </Button>
+        )}
+      </ZUIDialog>
     </Box>
   );
 };

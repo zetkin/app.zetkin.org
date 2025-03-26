@@ -3,6 +3,10 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.organizations', {
+  authDialog: {
+    label: m('You need a Zetkin account to sign up for events'),
+    loginButton: m('Log in'),
+  },
   gen3: {
     description: m(
       'This is the new (generation 3) organizer web app. If you are used to the old one, you will find lots of new features and an improved user interface here. But if you want, you can still use the old organizer app for a while longer.'
