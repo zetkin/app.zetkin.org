@@ -61,12 +61,12 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box mt={2}>
             <Typography mt={1} variant="h5">
-              <Msg id={messageIds.prepare.previousActivity} />
+              <Msg id={messageIds.prepare.previousEvents} />
             </Typography>
             {call.target.past_actions.num_actions == 0 && (
               <Typography variant="body1">
                 <Msg
-                  id={messageIds.prepare.noPreviousActivity}
+                  id={messageIds.prepare.noPreviousEvents}
                   values={{ name: call.target.first_name }}
                 />
               </Typography>
@@ -74,12 +74,12 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             {call.target.past_actions.num_actions > 0 && (
               <Typography variant="body1">
                 <Msg
-                  id={messageIds.prepare.arePreviousActivity}
+                  id={messageIds.prepare.previousEventsOfTarget}
                   values={{
-                    actionTitle:
+                    eventTitle:
                       call.target.past_actions.last_action.activity.title || '',
-                    activities: call.target.past_actions.num_actions,
                     name: call.target.first_name,
+                    numEvents: call.target.past_actions.num_actions,
                   }}
                 />
               </Typography>
@@ -87,7 +87,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             <Box mt={2}>
               <Typography variant="h5">
                 <Msg
-                  id={messageIds.prepare.previousCalls}
+                  id={messageIds.prepare.previousCallsOfTarget}
                   values={{
                     name: call.target.first_name,
                   }}
@@ -100,7 +100,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
               )}
               {call.target.call_log.length > 0 && (
                 <Typography>
-                  <Msg id={messageIds.prepare.arePreviousCalls} />
+                  <Msg id={messageIds.prepare.previousCalls} />
                 </Typography>
               )}
             </Box>
