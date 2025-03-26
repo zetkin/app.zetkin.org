@@ -52,9 +52,8 @@ const EventListItem: FC<Props> = ({
       >
         <Msg id={messageIds.activityList.actions.undoSignup} />
       </Button>,
-      <Fade appear in style={{ transitionDelay: '0.3s' }}>
+      <Fade key="signedUp" appear in style={{ transitionDelay: '0.3s' }}>
         <Box
-          key="signedUp"
           sx={{
             bgcolor: '#C1EEC1',
             borderRadius: 4,
