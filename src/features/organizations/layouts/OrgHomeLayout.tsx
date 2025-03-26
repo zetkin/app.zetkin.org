@@ -1,9 +1,18 @@
 'use client';
 
-import { Box, Link, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Button,
+  Link,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { FC, ReactNode, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
+import { NorthWest } from '@mui/icons-material';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -42,10 +51,15 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           bgcolor: theme.palette.grey[300],
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
-          pt: 10,
         })}
       >
+        <Box sx={{ mb: 6, minHeight: 30, mt: 2, mx: 2, opacity: 0.7 }}>
+          {org.parent && (
+            <NextLink href={`/o/${org.parent.id}`} passHref>
+              <Button startIcon={<NorthWest />}>{org.parent.title}</Button>
+            </NextLink>
+          )}
+        </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
           <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
             <ZUIAvatar size="sm" url={`/api/orgs/${org.id}/avatar`} />
