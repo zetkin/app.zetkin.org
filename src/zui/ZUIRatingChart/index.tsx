@@ -117,35 +117,36 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
         {(width: number) => {
           const baseNumber = 4;
           const highestValue = Math.max(...data, 1);
-          let path = `M ${baseNumber} ${visualizationHeight}`;
+          const path = [`M ${baseNumber} ${visualizationHeight}`];
           const dots: { x: number; y: number }[] = [];
           const graphWidth = width - baseNumber * 2;
+          const widthPerSegment = graphWidth / (data.length - 1 || 1);
 
-          path += data
-            .map((val, i) => {
-              const x = i * (graphWidth / (data.length - 1 || 1)) + baseNumber;
-              const y =
-                visualizationHeight -
-                (val / highestValue) * visualizationHeight;
-              const prevX =
-                (i - 1) * (graphWidth / (data.length - 1 || 1)) + baseNumber;
-              const prevY =
-                visualizationHeight -
-                (data[i - 1] / highestValue) * visualizationHeight;
+          data.forEach((val, i) => {
+            const x = i * widthPerSegment + baseNumber;
+            const y =
+              visualizationHeight - (val / highestValue) * visualizationHeight;
+            const prevX = (i - 1) * widthPerSegment + baseNumber;
+            const prevY =
+              visualizationHeight -
+              (data[i - 1] / highestValue) * visualizationHeight;
 
-              dots.push({ x, y });
+            dots.push({ x, y });
 
-              if (i === 0) {
-                return `L ${x} ${y}`;
-              } else {
-                return `C ${prevX + graphWidth / 12} ${prevY}, ${
+            if (i === 0) {
+              path.push(`L ${x} ${y}`);
+            } else {
+              path.push(
+                `C ${prevX + graphWidth / 12} ${prevY}, ${
                   x - graphWidth / 12
-                } ${y}, ${x} ${y}`;
-              }
-            })
-            .join(' ');
+                } ${y}, ${x} ${y}`
+              );
+            }
+          });
 
-          path += ` L ${graphWidth + baseNumber} ${visualizationHeight} Z`;
+          path.push(`L ${graphWidth + baseNumber} ${visualizationHeight} Z`);
+
+          const finalPath = path.join(' ');
 
           return (
             <svg
@@ -155,7 +156,7 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
               xmlns="http://www.w3.org/2000/svg"
             >
               <g className="data" transform="translate(0, 5)">
-                <path className="chart" d={path} />
+                <path className="chart" d={finalPath} />
                 {dots.map((dot, index) => (
                   <>
                     <circle
