@@ -132,11 +132,11 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
               </Typography>
               <Box
                 aria-label={row.value.toString()}
-                style={{ height: `${(row.value / maxValue) * 100}%` }}
                 sx={{
                   backgroundColor: 'var(--barColor)',
                   borderRadius: '0.25rem',
                   flex: '1 0 auto',
+                  height: `${(row.value / maxValue) * 100}%`,
                   marginInline: 'min(0.25rem, 10%)',
                   transition: 'background-color 0.3s',
                   width: 'auto',
