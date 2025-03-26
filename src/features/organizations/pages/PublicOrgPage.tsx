@@ -1,29 +1,38 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { Box, Fade, Typography } from '@mui/material';
-import { FC, useMemo } from 'react';
+import { Box, Divider, Fade, Typography } from '@mui/material';
+import { FC, useMemo, useState } from 'react';
 
 import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
 import ZUIDate from 'zui/ZUIDate';
+import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
   const orgEvents = useUpcomingOrgEvents(orgId);
 
-  const events = useMemo(() => {
+  const allEvents = useMemo(() => {
     return orgEvents.map<ZetkinEventWithStatus>((event) => ({
       ...event,
       status: null,
     }));
   }, [orgEvents]);
+
+  const topOrgEvents = allEvents.filter(
+    (event) => event.organization.id == orgId
+  );
+
+  const events =
+    includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
 
   const eventsByDate = events.reduce<Record<string, ZetkinEventWithStatus[]>>(
     (dates, event) => {
@@ -46,10 +55,12 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   );
 
   const dates = Object.keys(eventsByDate).sort();
+  const indexForSubOrgsButton = Math.min(1, dates.length);
+  const showSubOrgBlurb = allEvents.length > events.length;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, my: 2 }}>
-      {dates.map((date) => (
+      {dates.map((date, index) => (
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
@@ -65,6 +76,25 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               ))}
             </Box>
           </Fade>
+          {index == indexForSubOrgsButton && showSubOrgBlurb && (
+            <Fade
+              appear
+              in
+              mountOnEnter
+              style={{ transitionDelay: nextDelay() }}
+            >
+              <Box sx={{ my: 4 }}>
+                <Divider />
+                <SubOrgEventBlurb
+                  onClickShow={() => setIncludeSubOrgs(true)}
+                  subOrgEvents={allEvents.filter(
+                    (event) => event.organization.id != orgId
+                  )}
+                />
+                <Divider />
+              </Box>
+            </Fade>
+          )}
         </Box>
       ))}
     </Box>

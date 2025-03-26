@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.organizations', {
@@ -38,5 +40,17 @@ export default makeMessages('feat.organizations', {
       clear: m('Clear'),
       title: m('Recent organizations'),
     },
+  },
+  subOrgEventBlurb: {
+    description: m<{
+      eventsElem: ReactElement;
+      numEvents: number;
+      numOrgs: number;
+      orgsElem: ReactElement;
+    }>(
+      'There are {eventsElem} {numEvents, plural, =1 {additional event} other {additional events}} in {orgsElem} {numOrgs, plural, =1 {suborganization} other {suborganizations}}.'
+    ),
+    headline: m('Dig deeper'),
+    showButton: m('Show all events'),
   },
 });
