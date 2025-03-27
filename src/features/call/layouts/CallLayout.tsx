@@ -35,17 +35,9 @@ const CallLayout: FC<Props> = ({ children }) => {
   };
 
   const getCallIdFromPath = (pathname: string): string => {
-    const segments = pathname.split('/');
+    const [, callSegment, callId] = pathname.split('/');
 
-    if (
-      segments.length >= 3 &&
-      segments[1] === 'call' &&
-      !isNaN(Number(segments[2]))
-    ) {
-      return segments[2];
-    }
-    //should never happen
-    return '';
+    return callSegment === 'call' && !isNaN(Number(callId)) ? callId : '';
   };
 
   const pathname = usePathname() || '';
