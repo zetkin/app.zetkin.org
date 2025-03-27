@@ -65,7 +65,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   );
 
   const dates = Object.keys(eventsByDate).sort();
-  const indexForSubOrgsButton = Math.min(1, dates.length);
+  const indexForSubOrgsButton = Math.min(1, dates.length - 1);
   const showSubOrgBlurb = allEvents.length > events.length;
 
   return (
