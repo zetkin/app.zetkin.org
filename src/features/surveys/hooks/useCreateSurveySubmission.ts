@@ -9,7 +9,7 @@ export type ZetkinSurveyCallSubmission = {
   signature: number;
 };
 
-export default function useSurveySubmissionMutations(
+export default function useCreateSurveySubmission(
   orgId: number,
   surveyId: number
 ) {

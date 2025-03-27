@@ -11,6 +11,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
+import useCreateSurveySubmission from 'features/surveys/hooks/useCreateSurveySubmission';
+import SurveyText from './Survey/SurveyText';
+import SurveyOptions from './Survey/SurveyOptions';
+import { ZetkinCallTarget } from '../types';
 import {
   ELEMENT_TYPE,
   ZetkinSurveyExtended,
@@ -18,10 +22,6 @@ import {
   ZetkinSurveyQuestionResponse,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
-import useSurveySubmissionMutations from 'features/surveys/hooks/useSurveySubmissionsMutations';
-import SurveyText from './Survey/SurveyText';
-import SurveyOptions from './Survey/SurveyOptions';
-import { ZetkinCallTarget } from '../types';
 
 interface SurveyAccordionProps {
   orgId: number;
@@ -35,7 +35,7 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
   target,
 }) => {
   const elements = useSurveyElements(orgId, survey.id).data;
-  const { addSubmission } = useSurveySubmissionMutations(orgId, survey.id);
+  const { addSubmission } = useCreateSurveySubmission(orgId, survey.id);
   const [responses, setResponses] = useState<{
     [key: number]: { options?: number[]; response?: string };
   }>({});
