@@ -10,13 +10,13 @@ import {
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export interface CallStoreSlice {
-  activeCampaignsList: RemoteList<ZetkinEvent>;
+  activeEventList: RemoteList<ZetkinEvent>;
   currentCall: RemoteItem<ZetkinCall>;
   outgoingCalls: RemoteList<ZetkinCall>;
 }
 
 const initialState: CallStoreSlice = {
-  activeCampaignsList: remoteList(),
+  activeEventList: remoteList(),
   currentCall: remoteItem<ZetkinCall>(0, { data: null, isLoading: false }),
   outgoingCalls: remoteList(),
 };
@@ -25,12 +25,12 @@ const CallSlice = createSlice({
   initialState,
   name: 'call',
   reducers: {
-    activeCampaignsLoad: (state) => {
-      state.activeCampaignsList.isLoading = true;
+    activeEventsLoad: (state) => {
+      state.activeEventList.isLoading = true;
     },
-    activeCampaignsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      state.activeCampaignsList = remoteList(action.payload);
-      state.activeCampaignsList.loaded = new Date().toISOString();
+    activeEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.activeEventList = remoteList(action.payload);
+      state.activeEventList.loaded = new Date().toISOString();
     },
     currentCallDeleted: (state, action: PayloadAction<number>) => {
       state.currentCall.deleted = true;
@@ -61,8 +61,8 @@ const CallSlice = createSlice({
 
 export default CallSlice;
 export const {
-  activeCampaignsLoad,
-  activeCampaignsLoaded,
+  activeEventsLoad,
+  activeEventsLoaded,
   currentCallDeleted,
   currentCallLoad,
   currentCallLoaded,

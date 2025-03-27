@@ -5,7 +5,7 @@ import { FC, Suspense } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import useActiveCampaigns from '../hooks/useActiveCampaigns';
+import useActiveEvents from '../hooks/useActiveEvents';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -22,7 +22,7 @@ type Props = {
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useAppSelector((state) => state.call.currentCall).data;
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
-  const events = useActiveCampaigns(assignment.organization.id).data || [];
+  const events = useActiveEvents(assignment.organization.id).data || [];
 
   if (!call) {
     return null;
@@ -69,12 +69,12 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box mt={2}>
             <Typography mt={1} variant="h5">
-              <Msg id={messageIds.prepare.previousActivity} />
+              <Msg id={messageIds.prepare.previousEvents} />
             </Typography>
             {call.target.past_actions.num_actions == 0 && (
               <Typography variant="body1">
                 <Msg
-                  id={messageIds.prepare.noPreviousActivity}
+                  id={messageIds.prepare.noPreviousEvents}
                   values={{ name: call.target.first_name }}
                 />
               </Typography>
@@ -82,13 +82,13 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             {call.target.past_actions.num_actions > 0 && (
               <Typography variant="body1">
                 <Msg
-                  id={messageIds.prepare.arePreviousActivity}
+                  id={messageIds.prepare.previousEventsOfTarget}
                   values={{
-                    actionTitle:
-                      call?.target.past_actions.last_action.activity?.title ||
+                    eventTitle:
+                      call.target.past_actions.last_action.activity?.title ||
                       '',
-                    activities: call?.target.past_actions.num_actions,
-                    name: call?.target.first_name,
+                    name: call.target.first_name,
+                    numEvents: call.target.past_actions.num_actions,
                   }}
                 />
               </Typography>
@@ -96,7 +96,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             <Box mt={2}>
               <Typography variant="h5">
                 <Msg
-                  id={messageIds.prepare.previousCalls}
+                  id={messageIds.prepare.previousCallsOfTarget}
                   values={{
                     name: call.target.first_name,
                   }}
@@ -109,7 +109,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
               )}
               {call.target.call_log.length > 0 && (
                 <Typography>
-                  <Msg id={messageIds.prepare.arePreviousCalls} />
+                  <Msg id={messageIds.prepare.previousCalls} />
                 </Typography>
               )}
             </Box>
