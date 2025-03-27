@@ -1,5 +1,9 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { currentCallDeleted, currentCallLoaded } from '../store';
+import {
+  currentCallDeleted,
+  currentCallLoad,
+  currentCallLoaded,
+} from '../store';
 import { ZetkinCall, ZetkinCallPatchBody } from '../types';
 
 export default function useCallMutations(orgId: number) {
@@ -9,6 +13,17 @@ export default function useCallMutations(orgId: number) {
   const deleteCall = async (callId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
     dispatch(currentCallDeleted(callId));
+  };
+
+  const skipCall = async (assignmentId: number) => {
+    dispatch(currentCallLoad());
+    const data = await apiClient.post<ZetkinCall>(
+      `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
+      {}
+    );
+
+    dispatch(currentCallLoaded(data));
+    return data;
   };
 
   const switchCurrentCall = async (call: ZetkinCall) => {
@@ -22,5 +37,5 @@ export default function useCallMutations(orgId: number) {
     );
   };
 
-  return { deleteCall, switchCurrentCall, updateCall };
+  return { deleteCall, skipCall, switchCurrentCall, updateCall };
 }

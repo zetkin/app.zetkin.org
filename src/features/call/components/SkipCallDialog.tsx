@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 import useCallMutations from '../hooks/useCallMutations';
-import useCallWithTarget from '../hooks/useCallWithTarget';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 type SkipCallDialogProps = {
@@ -17,13 +16,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
   targetName,
 }) => {
   const [open, setOpen] = useState(false);
-
-  const { deleteCall } = useCallMutations(assignment.organization.id);
-
-  const { refreshCall } = useCallWithTarget(
-    assignment.organization.id,
-    assignment.id
-  );
+  const { deleteCall, skipCall } = useCallMutations(assignment.organization.id);
 
   return (
     <>
@@ -39,7 +32,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
             onClick={() => {
               setOpen(false);
               deleteCall(callId);
-              refreshCall();
+              skipCall(assignment.id);
             }}
             variant="contained"
           >
