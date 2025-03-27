@@ -43,11 +43,10 @@ export type ZetkinCallTarget = Pick<
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchBody = Pick<
-  ZetkinCall,
-  | 'call_back_after'
-  | 'message_to_organizer'
-  | 'notes'
-  | 'organizer_action_needed'
-  | 'state'
->;
+export type ZetkinCallPatchBody = {
+  call_back_after?: string | null;
+  message_to_organizer: string | null;
+  notes: string | null;
+  organizer_action_needed: boolean;
+  state: number;
+};

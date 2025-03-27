@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Card, Chip, Typography } from '@mui/material';
 import { FC, Suspense } from 'react';
 
 import messageIds from '../l10n/messageIds';
@@ -14,6 +14,7 @@ import CallLog from '../components/CallLog';
 import SurveyAccordion from '../components/SurveyAccordion';
 import TargetEvents from '../components/TargetEvents';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
+import ReportCall from '../components/ReportCall';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -114,6 +115,9 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
               )}
             </Box>
           </Box>
+          <Card>
+            <ReportCall call={call} orgId={assignment.organization.id} />
+          </Card>
         </Box>
         <Box flex={1} mt={2}>
           <Typography my={1} variant="h6">
