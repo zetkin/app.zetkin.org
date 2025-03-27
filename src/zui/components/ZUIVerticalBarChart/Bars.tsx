@@ -17,21 +17,24 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
   const [valueElem, setValueElem] = useState<HTMLDivElement | null>(null);
 
   function calcHoverXPos(el: HTMLDivElement | null) {
-    if (barIndex >= 0 && containerRef.current && el) {
-      const hoveredBar = containerRef.current.querySelector(
+    const container = containerRef.current;
+    if (barIndex >= 0 && container && el) {
+      const hoveredBar = container.querySelector(
         `.barContainer:nth-of-type(${barIndex + 1})`
-      ) as HTMLDivElement;
-      const containerWidth = containerRef.current.clientWidth;
-      const barOffset = hoveredBar.offsetLeft;
-      const barWidth = hoveredBar.clientWidth;
-      const elWidth = el.clientWidth;
+      ) as HTMLLIElement | null;
+      if (hoveredBar) {
+        const containerWidth = container.clientWidth;
+        const barOffset = hoveredBar.offsetLeft;
+        const barWidth = hoveredBar.clientWidth;
+        const elWidth = el.clientWidth;
 
-      const calculatedX = barOffset + barWidth / 2 - elWidth / 2;
-      const boundedX = Math.max(
-        0,
-        Math.min(calculatedX, containerWidth - elWidth)
-      );
-      return boundedX;
+        const calculatedX = barOffset + barWidth / 2 - elWidth / 2;
+        const boundedX = Math.max(
+          0,
+          Math.min(calculatedX, containerWidth - elWidth)
+        );
+        return boundedX;
+      }
     }
     return 0;
   }
