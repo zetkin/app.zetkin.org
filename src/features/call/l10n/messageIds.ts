@@ -9,12 +9,12 @@ export default makeMessages('feat.call', {
     startCalling: m('Start calling'),
   },
   prepare: {
-    activeCampaigns: m('Active campaigns'),
+    activeEvents: m('Active events'),
     edit: m('Edit this information?'),
     editDescription: m(
       'If something in this tab needs changing, write a message to the organizer in the report after finishing the call.'
     ),
-    noActiveCampaigns: m('No active campaigns.'),
+    noActiveEvents: m('No active events.'),
     noPreviousCalls: m('Never called'),
     noPreviousEvents: m<{ name: string }>(
       '{name} never participated in any events.'

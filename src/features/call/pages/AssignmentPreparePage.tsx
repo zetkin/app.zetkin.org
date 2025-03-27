@@ -124,11 +124,11 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             <Msg id={messageIds.prepare.summary} />
           </Typography>
           <Typography variant="h5">
-            <Msg id={messageIds.prepare.activeCampaigns} />
+            <Msg id={messageIds.prepare.activeEvents} />
           </Typography>
           {events.length == 0 && (
             <Typography>
-              <Msg id={messageIds.prepare.noActiveCampaigns} />
+              <Msg id={messageIds.prepare.noActiveEvents} />
             </Typography>
           )}
           {events.length > 0 &&
