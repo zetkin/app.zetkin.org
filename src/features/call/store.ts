@@ -12,11 +12,13 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 export interface CallStoreSlice {
   activeEventList: RemoteList<ZetkinEvent>;
   currentCall: RemoteItem<ZetkinCall>;
+  outgoingCalls: RemoteList<ZetkinCall>;
 }
 
 const initialState: CallStoreSlice = {
   activeEventList: remoteList(),
   currentCall: remoteItem<ZetkinCall>(0, { data: null, isLoading: false }),
+  outgoingCalls: remoteList(),
 };
 
 const CallSlice = createSlice({
@@ -30,6 +32,12 @@ const CallSlice = createSlice({
       state.activeEventList = remoteList(action.payload);
       state.activeEventList.loaded = new Date().toISOString();
     },
+    currentCallDeleted: (state, action: PayloadAction<number>) => {
+      state.currentCall.deleted = true;
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (call) => call.id !== action.payload
+      );
+    },
     currentCallLoad: (state) => {
       state.currentCall.isLoading = true;
     },
@@ -41,6 +49,13 @@ const CallSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    outgoingCallsLoad: (state) => {
+      state.outgoingCalls.isLoading = true;
+    },
+    outgoingCallsLoaded: (state, action: PayloadAction<ZetkinCall[]>) => {
+      state.outgoingCalls = remoteList(action.payload);
+      state.outgoingCalls.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -48,6 +63,9 @@ export default CallSlice;
 export const {
   activeEventsLoad,
   activeEventsLoaded,
+  currentCallDeleted,
   currentCallLoad,
   currentCallLoaded,
+  outgoingCallsLoad,
+  outgoingCallsLoaded,
 } = CallSlice.actions;
