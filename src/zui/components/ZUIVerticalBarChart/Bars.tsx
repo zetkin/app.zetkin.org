@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 type BarsProps = {
   data: {
@@ -15,6 +15,15 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
   const [barIndex, setBarIndex] = useState<number>(-1);
   const [labelElem, setLabelElem] = useState<HTMLDivElement | null>(null);
   const [valueElem, setValueElem] = useState<HTMLDivElement | null>(null);
+  const [labelPos, setLabelPos] = useState(0);
+  const [valuePos, setValuePos] = useState(0);
+
+  useEffect(() => {
+    if (labelElem && valueElem) {
+      setLabelPos(calcHoverXPos(labelElem));
+      setValuePos(calcHoverXPos(valueElem));
+    }
+  }, [barIndex, valueElem, labelElem]);
 
   function calcHoverXPos(el: HTMLDivElement | null) {
     const container = containerRef.current;
@@ -157,7 +166,7 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
             className="hoverElem"
             component="div"
             sx={{
-              left: calcHoverXPos(labelElem),
+              left: labelPos,
               opacity: labelElem ? 1 : 0,
               top: '100%',
             }}
@@ -171,7 +180,7 @@ const Bars: FC<BarsProps> = ({ data, maxValue, visualizationHeight }) => {
             className="hoverElem"
             component="div"
             sx={{
-              left: calcHoverXPos(valueElem),
+              left: valuePos,
               opacity: valueElem ? 1 : 0,
               top: 0,
               translate: `0 -100%`,
