@@ -117,18 +117,24 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         </Box>
       ))}
       <ZUIDialog
-        maxWidth="md"
+        maxWidth="sm"
         onClose={() => setPostAuthEvent(null)}
         open={!!postAuthEvent}
       >
         <Typography>
           <Msg id={messageIds.authDialog.label} />
         </Typography>
-        {postAuthEvent && (
-          <Button href={`/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`}>
+        <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+          <Button onClick={() => setPostAuthEvent(null)} variant="outlined">
+            <Msg id={messageIds.authDialog.cancelButton} />
+          </Button>
+          <Button
+            href={`/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`}
+            variant="contained"
+          >
             <Msg id={messageIds.authDialog.loginButton} />
           </Button>
-        )}
+        </Box>
       </ZUIDialog>
     </Box>
   );
