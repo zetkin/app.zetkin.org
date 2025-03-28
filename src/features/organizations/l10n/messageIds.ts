@@ -20,7 +20,7 @@ export default makeMessages('feat.organizations', {
     },
     tabs: {
       calendar: m('Calendar'),
-      suborgs: m('Sub-organizations'),
+      suborgs: m('Explore'),
     },
   },
   notOrganizer: {
