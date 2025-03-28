@@ -4,8 +4,12 @@ import { Box } from '@mui/material';
 import { FC, Suspense } from 'react';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import SettingsList from '../components/SettingsList';
+import useCurrentUser from 'features/user/hooks/useCurrentUser';
 
 const AllEventsPage: FC = () => {
+  const user = useCurrentUser();
+
   return (
     <Suspense
       fallback={
@@ -19,7 +23,9 @@ const AllEventsPage: FC = () => {
           <ZUILogoLoadingIndicator />
         </Box>
       }
-    />
+    >
+      {user && <SettingsList user={user} />}
+    </Suspense>
   );
 };
 
