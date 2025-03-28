@@ -35,7 +35,8 @@ const OrganizationsSlice = createSlice({
   name: 'organizations',
   reducers: {
     orgEventsLoad: (state, action: PayloadAction<number>) => {
-      state.eventsByOrgId[action.payload] = remoteList();
+      state.eventsByOrgId[action.payload] ||= remoteList();
+      state.eventsByOrgId[action.payload].isLoading = true;
     },
     orgEventsLoaded: (
       state,
