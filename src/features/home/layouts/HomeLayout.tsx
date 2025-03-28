@@ -71,6 +71,13 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
             sx={{ textTransform: 'none' }}
             value="feed"
           />
+          <Tab
+            component={NextLink}
+            href="/my/settings"
+            label="Settings"
+            sx={{ textTransform: 'none' }}
+            value="settings"
+          />
         </Tabs>
       </Box>
       <Box minHeight="90dvh">{children}</Box>
