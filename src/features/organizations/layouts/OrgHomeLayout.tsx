@@ -22,6 +22,7 @@ import ZUILogo from 'zui/ZUILogo';
 import { useEnv } from 'core/hooks';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import useSubOrganizations from '../hooks/useSubOrganizations';
 
 type Props = {
   children: ReactNode;
@@ -32,8 +33,12 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
 
+  const subOrgsFuture = useSubOrganizations(org.id);
+  const subOrgs = subOrgsFuture.data || [];
+
   const path = usePathname();
   const lastSegment = path?.split('/')[3] ?? 'home';
+  const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
 
   const isMobile = useMediaQuery('(max-width: 640px)');
 
@@ -95,13 +100,15 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
               sx={{ textTransform: 'none' }}
               value="home"
             />
-            <Tab
-              component={NextLink}
-              href={`/o/${org.id}/suborgs`}
-              label={messages.home.tabs.suborgs()}
-              sx={{ textTransform: 'none' }}
-              value="suborgs"
-            />
+            {showSuborgsTab && (
+              <Tab
+                component={NextLink}
+                href={`/o/${org.id}/suborgs`}
+                label={messages.home.tabs.suborgs()}
+                sx={{ textTransform: 'none' }}
+                value="suborgs"
+              />
+            )}
           </Tabs>
         </Box>
       </Box>
