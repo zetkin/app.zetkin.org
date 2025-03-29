@@ -1,59 +1,16 @@
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import { createElement } from 'react';
 import { createTheme } from '@mui/material/styles';
+import { Figtree } from 'next/font/google';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
 import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro';
 
-interface PaletteIntensityOptions {
-  disabled?: string;
-  high?: string;
-  medium?: string;
-  main?: string;
-}
+import { themePalette } from 'themePalette';
 
-interface FilterCategoryColors {
-  pale: string;
-  strong: string;
-}
+//Font family
+const figtree = Figtree({ subsets: ['latin-ext'] });
 
-declare module '@mui/material/styles/createPalette' {
-  interface Palette {
-    onSurface: Required<PaletteIntensityOptions>;
-    outline: PaletteIntensityOptions;
-    filterCategoryColors: {
-      darkBlue: FilterCategoryColors;
-      green: FilterCategoryColors;
-      lightBlue: FilterCategoryColors;
-      orange: FilterCategoryColors;
-      pink: FilterCategoryColors;
-      purple: FilterCategoryColors;
-      red: FilterCategoryColors;
-      teal: FilterCategoryColors;
-      yellow: FilterCategoryColors;
-    };
-    statusColors: {
-      blue: string;
-      gray: string;
-      green: string;
-      orange: string;
-      red: string;
-    };
-    transparentGrey: {
-      light: string;
-    };
-    viewColumnGallery: {
-      blue: string;
-      purple: string;
-      red: string;
-    };
-  }
-  interface PaletteOptions {
-    onSurface: PaletteIntensityOptions;
-    outline: PaletteIntensityOptions;
-  }
-}
-
-const themePalette = {
+const oldThemePalette = {
   background: {
     default: '#F9F9F9',
   },
@@ -219,7 +176,7 @@ const theme = createTheme({
       },
     },
   },
-  palette: themePalette,
+  palette: oldThemePalette,
   typography: {
     fontFamily: 'azo-sans-web, sans-serif',
     h2: {
@@ -240,6 +197,224 @@ const theme = createTheme({
     subtitle2: {
       fontWeight: 600,
     },
+  },
+});
+
+// The new theme.
+export const newTheme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-disabled': {
+            '&.MuiButton-containedError': {
+              backgroundColor: '#EE7B7B',
+            },
+            '&.MuiButton-containedPrimary': {
+              backgroundColor: '#5D5D5D',
+              color: '#B0B0B0',
+            },
+            '&.MuiButton-containedWarning': {
+              backgroundColor: '#FAED8E',
+            },
+            '&.MuiButton-outlinedPrimary': {
+              borderColor: '#B0B0B0',
+              color: '#888888',
+            },
+            '&.MuiButton-textPrimary': {
+              color: '#888888',
+            },
+          },
+          ':hover': {
+            boxShadow: 'none',
+          },
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiButtonGroup: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          color: '#B0B0B0',
+        },
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '0.625rem',
+          fontWeight: 600,
+          lineHeight: '0.875rem',
+        },
+      },
+    },
+  },
+  elevation: {
+    bottom: {
+      big: {
+        light: '0rem 0.25rem 2.5rem 0rem #00000014',
+        medium: '0rem 0.25rem 2.5rem 0rem #0000001F',
+      },
+      small: {
+        light: '0rem 0.25rem 1.25rem 0rem #00000014',
+        medium: '0rem 0.25rem 1.25rem 0rem #0000001F',
+      },
+    },
+    top: {
+      big: {
+        light: '0.rem -0.25rem 2.25rem 0rem #00000014',
+        medium: '0rem -0.25rem 2.25rem 0rem #0000001F',
+      },
+      small: {
+        light: '0rem -0.25rem 1.25rem 0rem #00000014',
+        medium: '0rem -0.25rem 1.25rem 0rem #0000001F',
+      },
+    },
+  },
+  palette: themePalette,
+  typography: {
+    body1: undefined,
+    body2: undefined,
+    bodyMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 300,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodyMdSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 500,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.5rem',
+    },
+    bodySmRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
+    bodySmSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      letterSpacing: '0.01rem',
+      lineHeight: '1.313rem',
+    },
+    button: {
+      fontWeight: 600,
+      textTransform: 'none',
+    },
+    caption: undefined,
+    fontFamily: figtree.style.fontFamily,
+    fontSize: 16,
+    h1: undefined,
+    h2: undefined,
+    h3: undefined,
+    h4: undefined,
+    h5: undefined,
+    h6: undefined,
+    headingLg: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.375rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.788rem',
+    },
+    headingMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1.125rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.463rem',
+    },
+    headingSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 400,
+      letterSpacing: '-0.005rem',
+      lineHeight: '1.3rem',
+    },
+    labelLgMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.938rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.406rem',
+    },
+    labelLgSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.938rem',
+      fontWeight: 500,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.406rem',
+    },
+    labelMdMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelMdRegular: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelMdSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.313rem',
+    },
+    labelSmMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.813rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.219rem',
+    },
+    labelSmSemiBold: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.813rem',
+      fontWeight: 500,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.219rem',
+    },
+    labelXlMedium: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 400,
+      letterSpacing: '0.03rem',
+      lineHeight: '1.5rem',
+    },
+    linkMd: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '1rem',
+      fontWeight: 300,
+      lineHeight: '1.5rem',
+    },
+    linkSm: {
+      fontFamily: figtree.style.fontFamily,
+      fontSize: '0.875rem',
+      fontWeight: 300,
+      lineHeight: '1.313rem',
+    },
+    overline: undefined,
+    subtitle1: undefined,
+    subtitle2: undefined,
   },
 });
 

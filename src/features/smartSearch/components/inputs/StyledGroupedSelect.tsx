@@ -7,10 +7,13 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { FC, ReactElement } from 'react';
+
+import theme from 'theme';
+
 interface StyleProps {
   minWidth?: string;
 }
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   MuiInput: {
     fontSize: theme.typography.h4.fontSize,
     padding: 0,

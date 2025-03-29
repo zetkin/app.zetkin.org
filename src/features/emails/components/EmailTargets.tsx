@@ -18,8 +18,9 @@ import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     backgroundColor: theme.palette.statusColors.gray,
     borderRadius: '1em',

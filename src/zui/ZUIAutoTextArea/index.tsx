@@ -2,7 +2,9 @@ import React from 'react';
 import { lighten, TextareaAutosize } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+import theme from 'theme';
+
+const useStyles = makeStyles(() => ({
   textarea: {
     border: '2px dotted transparent',
     borderColor: lighten(theme.palette.primary.main, 0.65),
