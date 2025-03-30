@@ -22,7 +22,7 @@ import ZUILogo from 'zui/ZUILogo';
 import { useEnv } from 'core/hooks';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import useSubOrganizations from '../hooks/useSubOrganizations';
+import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
 
 type Props = {
   children: ReactNode;
@@ -33,8 +33,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
 
-  const subOrgsFuture = useSubOrganizations(org.id);
-  const subOrgs = subOrgsFuture.data || [];
+  const subOrgs = usePublicSubOrgs(org.id);
 
   const path = usePathname();
   const lastSegment = path?.split('/')[3] ?? 'home';
