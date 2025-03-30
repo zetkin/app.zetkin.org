@@ -55,6 +55,8 @@ export default class ImageExtension extends NodeExtension<ImageOptions> {
       ...override,
       attrs: {
         ...extra.defaults(),
+        alt: { default: null },
+        fileId: { default: null },
         src: { default: null },
       },
       parseDOM: [
@@ -102,9 +104,13 @@ export default class ImageExtension extends NodeExtension<ImageOptions> {
   @command()
   setImageFile(file: ZetkinFile | null, pos: number): CommandFunction {
     return (props) => {
-      props.dispatch?.(
-        props.tr.setNodeAttribute(pos, 'src', file?.url ?? null)
-      );
+      const { dispatch, tr } = props;
+      tr.setNodeAttribute(pos, 'src', file?.url ?? null);
+      tr.setNodeAttribute(pos, 'alt', file?.original_name ?? null);
+      tr.setNodeAttribute(pos, 'fileId', file?.id ?? null);
+
+      dispatch?.(tr);
+
       return true;
     };
   }
