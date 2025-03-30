@@ -57,7 +57,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           flexDirection: 'column',
         })}
       >
-        <Box sx={{ mb: 6, minHeight: 30, mt: 2, mx: 2, opacity: 0.7 }}>
+        <Box sx={{ mb: 6, minHeight: 40, mt: 2, mx: 2, opacity: 0.7 }}>
           {org.parent && (
             <NextLink href={`/o/${org.parent.id}`} passHref>
               <Button startIcon={<NorthWest />}>{org.parent.title}</Button>
