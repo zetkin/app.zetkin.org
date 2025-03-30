@@ -20,7 +20,6 @@ export default makeMessages('feat.areaAssignments', {
       saveButton: m('Save'),
       savedMessage: m('Everything is up to date!'),
       savingButton: m('Saving...'),
-      title: m('Activist instructions'),
       unsavedMessage: m('You have unsaved changes.'),
     },
     title: m('Assignee instructions'),
