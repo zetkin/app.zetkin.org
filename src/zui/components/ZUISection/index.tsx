@@ -1,7 +1,8 @@
 import { Box, Typography } from '@mui/material';
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 
 import ZUIDivider from '../ZUIDivider';
+import { ZUIOrientation } from '../types';
 
 type SubSectionBase = {
   /**
@@ -21,10 +22,18 @@ type SubSectionBase = {
 };
 
 type SubSectionWithFullWidthHeaderContent = SubSectionBase & {
+  /**
+   * A function that returns a component that will be
+   * rendered as full width content in the header.
+   */
   renderFullWidthHeaderContent: () => JSX.Element;
 };
 
 type SubSectionWithRightHeaderContent = SubSectionBase & {
+  /**
+   * A function that returns a component that will be rendered
+   * in the right side of the header.
+   */
   renderRightHeaderContent: () => JSX.Element;
 };
 
@@ -33,7 +42,7 @@ type SubSectionType =
   | SubSectionWithFullWidthHeaderContent
   | SubSectionWithRightHeaderContent;
 
-type SectionTitles = {
+type SectionBase = {
   /**
    * The subtitle of the section.
    */
@@ -45,24 +54,37 @@ type SectionTitles = {
   title: string;
 };
 
-type SectionWithContent = SectionTitles & {
+type SectionWithContent = SectionBase & {
+  /**
+   * A function that returns an element to be rendered as the content of the section.
+   */
   renderContent: () => JSX.Element;
 };
 
-type SectionWithSubSections = SectionTitles & {
+type SectionWithSubSections = SectionBase & {
+  /**
+   * The orientation of the sub sections.
+   *
+   * Defaults to "horizontal".
+   */
+  subSectionOrientation?: ZUIOrientation;
+
+  /**
+   * A list of sub sections.
+   */
   subSections: SubSectionType[];
 };
 
-type SectionBase = SectionWithContent | SectionWithSubSections;
+type SectionWithChildren = SectionWithContent | SectionWithSubSections;
 
-type SectionWithFullWidthHeaderContent = SectionBase & {
+type SectionWithFullWidthHeaderContent = SectionWithChildren & {
   /**
    * A function that returns a component to be rendered in full width next to the title of the section.
    */
   renderFullWidthHeaderContent: () => JSX.Element;
 };
 
-type SectionWithRightHeaderContent = SectionBase & {
+type SectionWithRightHeaderContent = SectionWithChildren & {
   /**
    * A number that renders to the right of the title
    */
@@ -75,7 +97,7 @@ type SectionWithRightHeaderContent = SectionBase & {
 };
 
 type Section =
-  | SectionBase
+  | SectionWithChildren
   | SectionWithFullWidthHeaderContent
   | SectionWithRightHeaderContent;
 
@@ -186,6 +208,8 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
   const hasRightHeaderContent = isSectionWithRightHeaderContent(section);
   const hasSubSections = isSectionWithSubSections(section);
   const hasContent = isSectionWithContent(section);
+  const hasVerticalSubSections =
+    hasSubSections && section.subSectionOrientation == 'vertical';
 
   const showVerticalDivider =
     (hasRightHeaderContent && !!section.dataPoint) || hasFullWidthHeaderContent;
@@ -276,18 +300,31 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
       {hasSubSections && (
         <>
           <ZUIDivider />
-          <Box sx={{ display: 'flex' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: hasVerticalSubSections ? 'column' : 'row',
+            }}
+          >
             {section.subSections.map((subSection, index) => (
               <Box
                 key={`subSection-${subSection.title}`}
                 sx={{
                   display: 'flex',
-                  width: `${100 / section.subSections.length}%`,
+                  flexDirection: hasVerticalSubSections ? 'column' : 'row',
+                  width: hasVerticalSubSections
+                    ? 'inherit'
+                    : `${100 / section.subSections.length}%`,
                 }}
               >
                 <SubSection subSection={subSection} />
                 {index != section.subSections.length - 1 && (
-                  <ZUIDivider flexItem orientation="vertical" />
+                  <ZUIDivider
+                    flexItem
+                    orientation={
+                      hasVerticalSubSections ? 'horizontal' : 'vertical'
+                    }
+                  />
                 )}
               </Box>
             ))}

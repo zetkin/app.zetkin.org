@@ -185,3 +185,78 @@ export const SubSections: Story = {
     },
   },
 };
+
+export const VerticalWithSubSections: Story = {
+  args: {
+    section: {
+      renderFullWidthHeaderContent: () => (
+        <Box
+          sx={{
+            backgroundColor: 'peachpuff',
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
+          <ZUIText>Full width header content</ZUIText>
+        </Box>
+      ),
+      subSectionOrientation: 'vertical',
+      subSections: [
+        {
+          renderContent: () => (
+            <Box sx={{ backgroundColor: 'lightsteelblue', height: '200px' }}>
+              <ZUIText>Content here</ZUIText>
+            </Box>
+          ),
+          subtitle: 'Subtitle is long but not super super long',
+          title: 'Sub componente Marcos',
+        },
+        {
+          renderContent: () => (
+            <Box sx={{ backgroundColor: 'lightsteelblue', height: '100px' }}>
+              <ZUIText>Content here</ZUIText>
+            </Box>
+          ),
+          renderRightHeaderContent: () => (
+            <Box
+              sx={{
+                backgroundColor: 'lightskyblue',
+                height: '30px',
+                width: '50px',
+              }}
+            />
+          ),
+          subtitle: 'Subtitle is a bit shorter',
+          title: 'Sub componente Marcos very longggg',
+        },
+        {
+          renderContent: () => (
+            <Box sx={{ backgroundColor: 'lightsteelblue', height: '300px' }}>
+              <ZUIText>Content here</ZUIText>
+            </Box>
+          ),
+          renderFullWidthHeaderContent: () => (
+            <Box
+              sx={{
+                backgroundColor: 'lightskyblue',
+                height: '10px',
+                width: '100%',
+              }}
+            />
+          ),
+          title: 'Sub componente Marcos3',
+        },
+      ],
+      subtitle: 'Subtitle',
+      title: 'Section',
+    },
+  },
+  render: function Render(args) {
+    return (
+      <Box width="500px">
+        <ZUISection section={args.section} />
+      </Box>
+    );
+  },
+};
