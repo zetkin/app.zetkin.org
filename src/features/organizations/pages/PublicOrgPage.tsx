@@ -16,6 +16,7 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIDialog from 'zui/ZUIDialog';
 import useMyEvents from 'features/events/hooks/useMyEvents';
+import NoEventsBlurb from '../components/NoEventsBlurb';
 
 type Props = {
   orgId: number;
@@ -70,6 +71,11 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, my: 2 }}>
+      {!dates.length && (
+        <Box key="empty">
+          <NoEventsBlurb orgId={orgId} />
+        </Box>
+      )}
       {dates.map((date, index) => (
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>

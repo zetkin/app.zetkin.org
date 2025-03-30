@@ -24,6 +24,10 @@ export default makeMessages('feat.organizations', {
       suborgs: m('Explore'),
     },
   },
+  noEventsBlurb: {
+    description: m<{ org: string }>('{org} has no upcoming events.'),
+    headline: m('There are no upcoming events'),
+  },
   notOrganizer: {
     description: m(
       'This part of Zetkin is only available to users who have been granted organizer access by another organization official. You do not currently have the sufficient level of access. If you believe that this is a mistake, please reach out to your local Zetkin officials or to Zetkin Foundation.'
