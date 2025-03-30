@@ -292,6 +292,7 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
                 flexGrow: 1,
                 flexShrink: 0,
                 justifyContent: 'flex-end',
+                paddingLeft: '0.5rem',
               }}
             >
               {section.renderRightHeaderContent()}
