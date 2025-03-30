@@ -59,21 +59,25 @@ const getTextPadding = (
 ) => {
   if (size === 'large') {
     if (variant === 'secondary') {
-      return '0.438rem 1.375rem 0.438rem 1.375rem';
+      return '0.467rem 1.375rem';
     } else {
-      return '0.5rem 1.375rem 0.5rem 1.375rem';
+      return '0.517rem 1.375rem';
     }
   }
 
   if (size === 'medium') {
-    if (variant === 'tertiary') {
-      return '0.375rem 1rem 0.375rem 1rem';
+    if (variant == 'secondary') {
+      return '0.45rem 1rem';
+    } else {
+      return '0.5rem 1rem';
     }
   }
 
   if (size === 'small') {
-    if (variant === 'tertiary') {
-      return '0.25rem 0.625rem 0.25rem 0.625rem';
+    if (variant === 'secondary') {
+      return '0.275rem 0.625rem';
+    } else {
+      return '0.33rem 0.625rem';
     }
   }
 };
