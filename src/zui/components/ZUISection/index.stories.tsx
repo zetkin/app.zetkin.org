@@ -49,7 +49,8 @@ export const DataPoint: Story = {
         </Box>
       ),
       subtitle: 'Subtitle',
-      title: 'Section',
+      title:
+        'Section with a pretty long title maybe it is in Finnish or something',
     },
   },
 };
@@ -68,7 +69,8 @@ export const RightHeaderContent: Story = {
         </Box>
       ),
       subtitle: 'Subtitle',
-      title: 'Section',
+      title:
+        'Section with a pretty long title maybe it is in Finnish or something',
     },
   },
 };
@@ -88,7 +90,8 @@ export const RightHeaderContentAndDataPoint: Story = {
         </Box>
       ),
       subtitle: 'Subtitle',
-      title: 'Section',
+      title:
+        'Section with a pretty long title maybe it is in Finnish or something',
     },
   },
 };
@@ -114,7 +117,7 @@ export const FullWidthHeaderContent: Story = {
         </Box>
       ),
       subtitle: 'Subtitle',
-      title: 'Section',
+      title: 'Section with a title',
     },
   },
 };
@@ -181,7 +184,8 @@ export const SubSections: Story = {
         },
       ],
       subtitle: 'Subtitle',
-      title: 'Section',
+      title:
+        'Section with a pretty long title maybe it is in Finnish or something',
     },
   },
 };
@@ -251,12 +255,5 @@ export const VerticalWithSubSections: Story = {
       subtitle: 'Subtitle',
       title: 'Section',
     },
-  },
-  render: function Render(args) {
-    return (
-      <Box width="500px">
-        <ZUISection section={args.section} />
-      </Box>
-    );
   },
 };

@@ -230,18 +230,43 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
           paddingBottom: '1rem',
           paddingTop: hasSubSections ? '1.25rem' : '',
           paddingX: hasSubSections ? '1.25rem' : '',
+          width: '100%',
         }}
       >
         <Box
-          sx={{ alignItems: 'center', display: 'flex', minHeight: '1.463rem' }}
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            height: '1.463rem',
+          }}
         >
-          <Typography variant="headingMd">{title}</Typography>
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              height: '100%',
+              minWidth: 0,
+            }}
+          >
+            <Typography
+              sx={{
+                flex: hasFullWidthHeaderContent ? 1 : '',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+              variant="headingMd"
+            >
+              {title}
+            </Typography>
+          </Box>
           {showVerticalDivider && (
             <Box
               sx={{
                 alignItems: 'center',
                 display: 'flex',
-                minHeight: 'inherit',
+                flexShrink: 0,
+                height: '100%',
                 paddingX: '0.75rem',
               }}
             >
@@ -250,7 +275,11 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
           )}
           {hasRightHeaderContent && section.dataPoint && (
             <Typography
-              sx={(theme) => ({ color: theme.palette.data.main })}
+              sx={(theme) => ({
+                color: theme.palette.data.main,
+                flexShrink: 0,
+                paddingRight: '0.5rem',
+              })}
               variant="headingMd"
             >
               {section.dataPoint}
@@ -260,15 +289,16 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
             <Box
               sx={{
                 display: 'flex',
+                flexGrow: 1,
+                flexShrink: 0,
                 justifyContent: 'flex-end',
-                width: '100%',
               }}
             >
               {section.renderRightHeaderContent()}
             </Box>
           )}
           {hasFullWidthHeaderContent && (
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ flexGrow: 2, flexShrink: 0, minWidth: '50%' }}>
               {section.renderFullWidthHeaderContent()}
             </Box>
           )}
