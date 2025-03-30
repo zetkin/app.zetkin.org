@@ -29,9 +29,9 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
         },
         name: 'slash',
         onChange: (details, tr) => {
-          const resolved = tr.doc.resolve(details.range.to);
+          const resolved = tr.doc.resolve(details.range.to - 1);
           const exited = !!details.exitReason;
-          const inParagraph = resolved.node(1).type.name == 'paragraph';
+          const inParagraph = resolved.node(1)?.type.name == 'paragraph';
           this.options.onBlockQuery(
             exited || !inParagraph ? null : details.query.full
           );
@@ -61,6 +61,23 @@ class BlockMenuExtension extends PlainExtension<BlockMenuOptions> {
     return ({ dispatch, tr }) => {
       const node = this.store.getExtension(ParagraphExtension).type.create();
       dispatch?.(tr.insert(pos, node));
+      return true;
+    };
+  }
+
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
+  //@ts-ignore
+  @command()
+  insertSlash(): CommandFunction {
+    return (props) => {
+      const { dispatch, state, tr } = props;
+
+      const anchor = state.selection.anchor;
+
+      tr.insertText('/', anchor);
+
+      dispatch?.(tr);
+
       return true;
     };
   }
