@@ -103,17 +103,9 @@ const TagChip: React.FunctionComponent<{
   noWrappedLabel?: boolean;
   onClick?: (tag: ZetkinTag) => void;
   onDelete?: (tag: ZetkinTag) => void;
-  optionalString?: string;
   size?: TagChipSize;
   tag: ZetkinTag;
-}> = ({
-  disabled = false,
-  onClick,
-  onDelete,
-  optionalString,
-  size = 'medium',
-  tag,
-}) => {
+}> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
   const [hover, setHover] = useState(false);
   const classes = useStyles({
     clickable: !!onClick,
@@ -167,7 +159,6 @@ const TagChip: React.FunctionComponent<{
         <TagToolTip tag={tag}>
           <Box className={classes.label + ' ' + classes.deleteContainer}>
             {tag.title}
-            {optionalString}
             {deleteButton}
           </Box>
         </TagToolTip>

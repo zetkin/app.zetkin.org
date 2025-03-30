@@ -73,8 +73,10 @@ const AddedTags: FC<AddedTagsProps> = ({
         {addedTags.map((tag) => (
           <TagChip
             key={tag.id}
-            optionalString={` (${peoplePerTag[tag.id]})`}
-            tag={tag}
+            tag={{
+              ...tag,
+              title: `${tag.title} (${peoplePerTag[tag.id]})`,
+            }}
           />
         ))}
       </Box>
