@@ -62,7 +62,7 @@ const EventListItem: FC<Props> = ({
             py: 0.3,
           }}
         >
-          <Typography variant="body2">
+          <Typography sx={{ pointerEvents: 'none' }} variant="body2">
             <Msg id={messageIds.activityList.eventStatus.signedUp} />
           </Typography>
         </Box>
@@ -100,7 +100,7 @@ const EventListItem: FC<Props> = ({
             py: 0.3,
           }}
         >
-          <Typography variant="body2">
+          <Typography sx={{ pointerEvents: 'none' }} variant="body2">
             <Msg id={messageIds.activityList.eventStatus.needed} />
           </Typography>
         </Box>
