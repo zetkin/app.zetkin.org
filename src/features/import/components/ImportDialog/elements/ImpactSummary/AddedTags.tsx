@@ -69,12 +69,13 @@ const AddedTags: FC<AddedTagsProps> = ({
           }}
         />
       </Typography>
-      <Box display="inline" flexWrap="wrap" gap={1} paddingTop={1}>
+      <Box display="flex" flexWrap="wrap" gap={1} paddingTop={1}>
         {addedTags.map((tag) => (
-          <Box key={tag.id} display="flex" paddingTop={1}>
-            <TagChip tag={tag} />
-            <Typography fontWeight="bold"> : {peoplePerTag[tag.id]}</Typography>
-          </Box>
+          <TagChip
+            key={tag.id}
+            optionalString={` (${peoplePerTag[tag.id]})`}
+            tag={tag}
+          />
         ))}
       </Box>
     </Box>
