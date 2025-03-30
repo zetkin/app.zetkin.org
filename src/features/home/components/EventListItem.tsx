@@ -27,7 +27,7 @@ const EventListItem: FC<Props> = ({
   showIcon = false,
 }) => {
   const messages = useMessages(messageIds);
-  const { signUp, undoSignup } = useEventActions(
+  const { requiresConnect, signUp, undoSignup } = useEventActions(
     event.organization.id,
     event.id
   );
@@ -69,6 +69,10 @@ const EventListItem: FC<Props> = ({
       </Fade>
     );
   } else {
+    const msgId = requiresConnect
+      ? messageIds.activityList.actions.connectAndSignUp
+      : messageIds.activityList.actions.signUp;
+
     actions.push(
       <Button
         key="action"
@@ -84,7 +88,7 @@ const EventListItem: FC<Props> = ({
         size="small"
         variant="contained"
       >
-        <Msg id={messageIds.activityList.actions.signUp} />
+        <Msg id={msgId} />
       </Button>
     );
 
