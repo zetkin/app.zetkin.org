@@ -50,12 +50,18 @@ const CallSlice = createSlice({
       state.outgoingCalls.isLoading = false;
     },
     currentCallDeleted: (state, action: PayloadAction<number>) => {
-      state.currentCallId = null;
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (call) => call.id !== action.payload
-      );
-    },
+      const deletedCallId = action.payload;
 
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id !== deletedCallId
+      );
+
+      const nextCall = state.outgoingCalls.items.find(
+        (item) => item.data?.state === 0
+      );
+
+      state.currentCallId = nextCall ? Number(nextCall.id) : null;
+    },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
     },
