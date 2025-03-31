@@ -11,7 +11,7 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import CallLog from '../components/CallLog';
 import SurveyAccordion from '../components/SurveyAccordion';
-import TargetEvents from '../components/TargetEvents';
+import TargetEvent from '../components/TargetEvent';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ReportCall from '../components/ReportCall';
 import useCurrentCall from '../hooks/useCurrentCall';
@@ -138,7 +138,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           {events.length > 0 &&
             events.map((event) => {
               return (
-                <TargetEvents
+                <TargetEvent
                   key={event.id}
                   event={event}
                   target={call.target}

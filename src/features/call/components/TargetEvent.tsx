@@ -19,12 +19,12 @@ import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useAllEvents from 'features/events/hooks/useAllEvents';
 
-interface TargetEventsProps {
+interface TargetEventProps {
   event: ZetkinEvent;
   target: ZetkinCallTarget;
 }
 
-const TargetEvents: FC<TargetEventsProps> = ({ event, target }) => {
+const TargetEvent: FC<TargetEventProps> = ({ event, target }) => {
   const { signUp, undoSignup } = useEventCallActions(
     event.organization.id,
     event.id,
@@ -123,4 +123,4 @@ const TargetEvents: FC<TargetEventsProps> = ({ event, target }) => {
   );
 };
 
-export default TargetEvents;
+export default TargetEvent;
