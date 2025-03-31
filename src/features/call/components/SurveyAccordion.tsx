@@ -143,7 +143,7 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
             onClick={handleFormSubmission}
             variant="contained"
           >
-            Update Submission
+            Add Submission
           </Button>
         </AccordionDetails>
       </Accordion>

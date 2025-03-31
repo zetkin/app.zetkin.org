@@ -111,16 +111,7 @@ const CallLayout: FC<Props> = ({ children }) => {
               <Msg id={messageIds.nav.startCalling} />
             </Button>
           )}
-          {isPreparePage && (
-            <Button
-              onClick={() => {
-                router.push(`/call/${callAssId}/call`);
-              }}
-              variant="contained"
-            >
-              Start Call
-            </Button>
-          )}
+          {isPreparePage && <Button variant="contained">Start Call</Button>}
         </Box>
       </Box>
       <Box>{children}</Box>

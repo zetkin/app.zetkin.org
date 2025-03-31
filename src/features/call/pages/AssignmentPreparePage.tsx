@@ -116,7 +116,11 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             </Box>
           </Box>
           <Card>
-            <ReportCall call={call} orgId={assignment.organization.id} />
+            <ReportCall
+              assignmentId={assignment.id}
+              call={call}
+              orgId={assignment.organization.id}
+            />
           </Card>
         </Box>
         <Box flex={1} mt={2}>
