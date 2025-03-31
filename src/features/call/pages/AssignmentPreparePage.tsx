@@ -23,7 +23,7 @@ type Props = {
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useCurrentCall();
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
-  const events = useActiveEvents(assignment.organization.id).data || [];
+  const events = useActiveEvents(assignment.organization.id) || [];
 
   if (!call) {
     return null;
