@@ -9,7 +9,7 @@ export default function useActiveEvents(orgId: number): ZetkinEvent[] {
 
   const todaysDate = new Date().toISOString().split('T')[0];
 
-  const activeEventsList = useRemoteList(list, {
+  return useRemoteList(list, {
     actionOnLoad: () => activeEventsLoad(),
     actionOnSuccess: (data) => activeEventsLoaded(data),
     loader: () => {
@@ -18,6 +18,4 @@ export default function useActiveEvents(orgId: number): ZetkinEvent[] {
       return apiClient.get<ZetkinEvent[]>(url);
     },
   });
-
-  return activeEventsList;
 }
