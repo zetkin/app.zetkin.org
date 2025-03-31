@@ -14,10 +14,11 @@ import useAllocateCall from '../hooks/useAllocateCall';
 import useCallMutations from '../hooks/useCallMutations';
 
 type Props = {
+  callAssId: string;
   children?: ReactNode;
 };
 
-const CallLayout: FC<Props> = ({ children }) => {
+const CallLayout: FC<Props> = ({ callAssId, children }) => {
   const router = useRouter();
   const call = useAppSelector((state) => state.call.currentCall).data;
   const assignments = useMyCallAssignments();
@@ -34,16 +35,9 @@ const CallLayout: FC<Props> = ({ children }) => {
     return false;
   };
 
-  const getCallIdFromPath = (pathname: string): string => {
-    const [, callSegment, callId] = pathname.split('/');
-
-    return callSegment === 'call' && !isNaN(Number(callId)) ? callId : '';
-  };
-
   const pathname = usePathname() || '';
   const isPreparePage = pathname.endsWith('/prepare');
   const isDetailsPage = getDetailsPage(pathname);
-  const callAssId = getCallIdFromPath(pathname);
 
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
