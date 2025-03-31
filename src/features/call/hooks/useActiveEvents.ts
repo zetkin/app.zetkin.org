@@ -1,17 +1,15 @@
-import { IFuture } from 'core/caching/futures';
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { activeEventsLoad, activeEventsLoaded } from '../store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import useRemoteList from 'core/hooks/useRemoteList';
 
-export default function useActiveEvents(orgId: number): IFuture<ZetkinEvent[]> {
+export default function useActiveEvents(orgId: number): ZetkinEvent[] {
   const apiClient = useApiClient();
   const list = useAppSelector((state) => state.call.activeEventList);
-  const dispatch = useAppDispatch();
 
   const todaysDate = new Date().toISOString().split('T')[0];
 
-  const activeCampaignsList = loadListIfNecessary(list, dispatch, {
+  const activeEventsList = useRemoteList(list, {
     actionOnLoad: () => activeEventsLoad(),
     actionOnSuccess: (data) => activeEventsLoaded(data),
     loader: () => {
@@ -21,5 +19,5 @@ export default function useActiveEvents(orgId: number): IFuture<ZetkinEvent[]> {
     },
   });
 
-  return activeCampaignsList;
+  return activeEventsList;
 }

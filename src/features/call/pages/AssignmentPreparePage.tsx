@@ -18,8 +18,8 @@ type Props = {
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useAppSelector((state) => state.call.currentCall).data;
-  const surveys = useSurveys(assignment.id).data || [];
-  const events = useActiveEvents(assignment.organization.id).data || [];
+  const surveys = useSurveys(assignment.organization.id).data || [];
+  const events = useActiveEvents(assignment.organization.id) || [];
 
   if (!call) {
     return null;
