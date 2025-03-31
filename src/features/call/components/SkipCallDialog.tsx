@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 import useCallMutations from '../hooks/useCallMutations';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
+import useAllocateCall from '../hooks/useAllocateCall';
 
 type SkipCallDialogProps = {
   assignment: ZetkinCallAssignment;
@@ -16,7 +17,11 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
   targetName,
 }) => {
   const [open, setOpen] = useState(false);
-  const { deleteCall, skipCall } = useCallMutations(assignment.organization.id);
+  const { deleteCall } = useCallMutations(assignment.organization.id);
+  const { allocateCall } = useAllocateCall(
+    assignment.organization.id,
+    assignment.id
+  );
 
   return (
     <>
@@ -32,7 +37,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
             onClick={() => {
               setOpen(false);
               deleteCall(callId);
-              skipCall(assignment.id);
+              allocateCall();
             }}
             variant="contained"
           >
