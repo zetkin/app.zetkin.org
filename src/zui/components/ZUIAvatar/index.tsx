@@ -48,7 +48,7 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
     fontSize = 12;
     letterSpacing = 0.08;
   } else if (size == 'large') {
-    avatarSize = 48;
+    avatarSize = 40;
     fontSize = 20;
     letterSpacing = 0.14;
   }
