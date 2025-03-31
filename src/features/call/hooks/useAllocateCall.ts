@@ -1,5 +1,5 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { currentCallLoad, currentCallLoaded } from '../store';
+import { allocateNewCallLoad, allocateNewCallLoaded } from '../store';
 import { ZetkinCall } from '../types';
 
 export default function useAllocateCall(
@@ -10,12 +10,12 @@ export default function useAllocateCall(
   const dispatch = useAppDispatch();
 
   const allocateCall = async (): Promise<ZetkinCall> => {
-    dispatch(currentCallLoad());
+    dispatch(allocateNewCallLoad());
     const response = await apiClient.post<ZetkinCall>(
       `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
       {}
     );
-    dispatch(currentCallLoaded(response));
+    dispatch(allocateNewCallLoaded(response));
 
     return response;
   };
