@@ -7,14 +7,12 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography,
+  TextField,
 } from '@mui/material';
 
-import messageIds from '../../breadcrumbs/l10n/messageIds';
 import useUserMutations from '../hooks/useUserMutations';
-import { useMessages } from 'core/i18n';
-import ZUICard from 'zui/ZUICard';
 import { ZetkinUser } from 'utils/types/zetkin';
+import ZUICard from 'zui/ZUICard';
 
 export type ZetkinLanguage = 'en' | 'sv' | 'da' | 'nn' | 'de' | null;
 
@@ -23,8 +21,6 @@ type SettingListProps = {
 };
 
 const SettingsList: FC<SettingListProps> = ({ user }) => {
-  const messages = useMessages(messageIds);
-
   const languageOptions: { [key: string]: string } = {
     da: 'Danish',
     de: 'German',
@@ -46,10 +42,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
       overflow="hidden"
       position="relative"
     >
-      <Typography>
-        String that changes the language: {messages.elements.activities()}
-      </Typography>
-      {user && (
+      <Box mt={2}>
         <ZUICard header={'App settings'}>
           <Divider />
           <FormControl fullWidth sx={{ mt: 2 }}>
@@ -58,6 +51,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
               onChange={(e) => {
                 const lang = e.target.value as ZetkinLanguage;
                 setSelectedLanguage(lang), changeUserLanguage(lang);
+                location.reload();
               }}
               value={selectedLanguage}
             >
@@ -69,9 +63,17 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
             </Select>
           </FormControl>
         </ZUICard>
-      )}
+      </Box>
 
-      <Button />
+      <Box mt={2}>
+        <ZUICard header={'Account settings'}>
+          <Divider />
+          {user.phone && (
+            <TextField fullWidth sx={{ mt: 2 }} value={user.phone} />
+          )}
+        </ZUICard>
+        <Button />
+      </Box>
     </Box>
   );
 };
