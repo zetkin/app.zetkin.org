@@ -8,10 +8,10 @@ import { FC, ReactNode } from 'react';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import SkipCallDialog from '../components/SkipCallDialog';
-import { useAppSelector } from 'core/hooks';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import useAllocateCall from '../hooks/useAllocateCall';
 import useCallMutations from '../hooks/useCallMutations';
+import useCurrentCall from '../hooks/useCurrentCall';
 
 type Props = {
   callAssId: string;
@@ -20,7 +20,7 @@ type Props = {
 
 const CallLayout: FC<Props> = ({ callAssId, children }) => {
   const router = useRouter();
-  const call = useAppSelector((state) => state.call.currentCall).data;
+  const call = useCurrentCall();
   const assignments = useMyCallAssignments();
 
   const getDetailsPage = (pathname: string) => {

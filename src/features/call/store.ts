@@ -1,23 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ZetkinCall } from './types';
-import {
-  remoteItem,
-  RemoteItem,
-  remoteList,
-  RemoteList,
-} from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export interface CallStoreSlice {
   activeEventList: RemoteList<ZetkinEvent>;
-  currentCall: RemoteItem<ZetkinCall>;
+  currentCallId: number | null;
   outgoingCalls: RemoteList<ZetkinCall>;
 }
 
 const initialState: CallStoreSlice = {
   activeEventList: remoteList(),
-  currentCall: remoteItem<ZetkinCall>(0, { data: null, isLoading: false }),
+  currentCallId: null,
   outgoingCalls: remoteList(),
 };
 
@@ -33,15 +28,10 @@ const CallSlice = createSlice({
       state.activeEventList.loaded = new Date().toISOString();
     },
     allocateNewCallLoad: (state) => {
-      state.currentCall.isLoading = true;
+      state.outgoingCalls.isLoading = true;
     },
     allocateNewCallLoaded: (state, action: PayloadAction<ZetkinCall>) => {
-      state.currentCall = remoteItem(action.payload.id, {
-        data: action.payload,
-        isLoading: false,
-        isStale: false,
-        loaded: new Date().toISOString(),
-      });
+      state.currentCallId = action.payload.id;
 
       const callExists = state.outgoingCalls.items.some(
         (call) => call.id === action.payload.id
@@ -58,7 +48,7 @@ const CallSlice = createSlice({
       }
     },
     currentCallDeleted: (state, action: PayloadAction<number>) => {
-      state.currentCall.deleted = true;
+      state.currentCallId = null;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
         (call) => call.id !== action.payload
       );

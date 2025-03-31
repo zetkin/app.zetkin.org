@@ -9,19 +9,19 @@ import useActiveEvents from '../hooks/useActiveEvents';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import { useAppSelector } from 'core/hooks';
 import CallLog from '../components/CallLog';
 import SurveyAccordion from '../components/SurveyAccordion';
 import TargetEvents from '../components/TargetEvents';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ReportCall from '../components/ReportCall';
+import useCurrentCall from '../hooks/useCurrentCall';
 
 type Props = {
   assignment: ZetkinCallAssignment;
 };
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
-  const call = useAppSelector((state) => state.call.currentCall).data;
+  const call = useCurrentCall();
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
   const events = useActiveEvents(assignment.organization.id).data || [];
 
