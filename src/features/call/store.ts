@@ -46,6 +46,8 @@ const CallSlice = createSlice({
           })
         );
       }
+
+      state.outgoingCalls.isLoading = false;
     },
     currentCallDeleted: (state, action: PayloadAction<number>) => {
       state.currentCallId = null;
@@ -58,8 +60,23 @@ const CallSlice = createSlice({
       state.outgoingCalls.isLoading = true;
     },
     outgoingCallsLoaded: (state, action: PayloadAction<ZetkinCall[]>) => {
-      state.outgoingCalls = remoteList(action.payload);
+      const payloadItems = action.payload.map((call) =>
+        remoteItem(call.id, {
+          data: call,
+          isLoading: false,
+          isStale: false,
+          loaded: new Date().toISOString(),
+        })
+      );
+
+      state.outgoingCalls.items = state.outgoingCalls.items
+        .filter(
+          (item) => !payloadItems.some((newItem) => newItem.id === item.id)
+        )
+        .concat(payloadItems);
+
       state.outgoingCalls.loaded = new Date().toISOString();
+      state.outgoingCalls.isLoading = false;
     },
   },
 });
