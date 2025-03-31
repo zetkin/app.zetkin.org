@@ -48,6 +48,20 @@ const CallSlice = createSlice({
         isStale: false,
         loaded: new Date().toISOString(),
       });
+
+      const callExists = state.outgoingCalls.items.some(
+        (call) => call.id === action.payload.id
+      );
+      if (!callExists) {
+        state.outgoingCalls.items.push(
+          remoteItem(action.payload.id, {
+            data: action.payload,
+            isLoading: false,
+            isStale: false,
+            loaded: new Date().toISOString(),
+          })
+        );
+      }
     },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
