@@ -45,6 +45,13 @@ export default makeMessages('feat.home', {
   footer: {
     privacyPolicy: m('Privacy policy'),
   },
+  settings: {
+    lang: {
+      auto: m('Automatic (from browser)'),
+      label: m('Language'),
+      saveButton: m('Save & reload'),
+    },
+  },
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
