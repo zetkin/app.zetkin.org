@@ -74,7 +74,7 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
           <Tab
             component={NextLink}
             href="/my/settings"
-            label="Settings"
+            label={messages.tabs.settings()}
             sx={{ textTransform: 'none' }}
             value="settings"
           />

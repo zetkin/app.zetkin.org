@@ -46,15 +46,19 @@ export default makeMessages('feat.home', {
     privacyPolicy: m('Privacy policy'),
   },
   settings: {
-    lang: {
-      auto: m('Automatic (from browser)'),
-      label: m('Language'),
-      saveButton: m('Save & reload'),
+    appPreferences: {
+      header: m('App preferences'),
+      lang: {
+        auto: m('Automatic (configured in  browser)'),
+        label: m('Language'),
+        saveButton: m('Save & reload'),
+      },
     },
   },
   tabs: {
     feed: m('All events'),
     home: m('My activities'),
+    settings: m('Settings'),
   },
   title: m('My Zetkin'),
 });

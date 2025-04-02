@@ -45,7 +45,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
       position="relative"
     >
       <Box mt={2}>
-        <ZUICard header={'App settings'}>
+        <ZUICard header={messages.settings.appPreferences.header()}>
           <Divider />
           <Box
             sx={{
@@ -57,10 +57,10 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
           >
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel shrink>
-                <Msg id={messageIds.settings.lang.label} />
+                <Msg id={messageIds.settings.appPreferences.lang.label} />
               </InputLabel>
               <Select
-                label={messages.settings.lang.label()}
+                label={messages.settings.appPreferences.lang.label()}
                 onChange={(e) => {
                   if (e.target.value == 'auto') {
                     setSelectedLanguage(null);
@@ -71,7 +71,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
                 value={selectedLanguage || 'auto'}
               >
                 <MenuItem key="auto" value="auto">
-                  <Msg id={messageIds.settings.lang.auto} />
+                  <Msg id={messageIds.settings.appPreferences.lang.auto} />
                 </MenuItem>
                 {Object.entries(languageOptions).map(([code, label]) => (
                   <MenuItem key={code} value={code}>
@@ -88,7 +88,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
               }}
               variant="contained"
             >
-              <Msg id={messageIds.settings.lang.saveButton} />
+              <Msg id={messageIds.settings.appPreferences.lang.saveButton} />
             </Button>
           </Box>
         </ZUICard>
