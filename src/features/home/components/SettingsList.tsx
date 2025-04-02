@@ -93,16 +93,6 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
           </Box>
         </ZUICard>
       </Box>
-
-      <Box mt={2}>
-        <ZUICard header={'Account settings'}>
-          <Divider />
-          {user.phone && (
-            <TextField fullWidth sx={{ mt: 2 }} value={user.phone} />
-          )}
-        </ZUICard>
-        <Button />
-      </Box>
     </Box>
   );
 };
