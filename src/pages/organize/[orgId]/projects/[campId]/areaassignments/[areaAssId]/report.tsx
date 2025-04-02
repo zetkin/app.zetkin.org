@@ -280,7 +280,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </Dialog>
             )}
             <Box>
-              {unlocked && (
+              {(!assignment.start_date || unlocked) && (
                 <Card
                   sx={{
                     backgroundColor: theme.palette.grey[200],
