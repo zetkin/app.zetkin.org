@@ -135,8 +135,11 @@ export interface ZetkinUser {
   first_name: string;
   id: number;
   is_superuser?: boolean;
+  is_verifiend: boolean;
   lang: string | null;
   last_name: string;
+  phone: string | null;
+  phone_is_verified: boolean;
   username: string;
 }
 

@@ -6,7 +6,6 @@ export default makeMessages('feat.canvass', {
   default: {
     description: m('Empty description'),
     floor: m('Unknown floor'),
-    household: m('Untitled household'),
     location: m('Untitled location'),
   },
   households: {
@@ -15,9 +14,6 @@ export default makeMessages('feat.canvass', {
         'Create {numHouseholds, plural, one {1 household} other {# households}}'
       ),
       header: m('Create households'),
-      householdDefaultTitle: m<{ householdNumber: number }>(
-        'Household {householdNumber}'
-      ),
       numberOfFloorsInput: m('Number of floors'),
       numberOfHouseholdsInput: m('Households per floor'),
     },
@@ -27,6 +23,9 @@ export default makeMessages('feat.canvass', {
       saveButtonLabel: m('Save'),
       titleLabel: m('Edit title'),
     },
+    householdDefaultTitle: m<{ householdNumber: number }>(
+      'Household {householdNumber}'
+    ),
     page: {
       empty: m('This location does not have any households yet'),
       header: m('Households'),

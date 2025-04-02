@@ -15,12 +15,11 @@ export default makeMessages('feat.areaAssignments', {
       confirm: m(
         'Do you want to delete all unsaved changes and go back to saved instructions?'
       ),
-      editorPlaceholder: m('Add instructions for your callers'),
+      editorPlaceholder: m('Add instructions for your activists'),
       revertLink: m('Revert to saved version?'),
       saveButton: m('Save'),
       savedMessage: m('Everything is up to date!'),
       savingButton: m('Saving...'),
-      title: m('Caller instructions'),
       unsavedMessage: m('You have unsaved changes.'),
     },
     title: m('Assignee instructions'),
