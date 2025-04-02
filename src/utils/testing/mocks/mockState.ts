@@ -18,11 +18,16 @@ export default function mockState(overrides?: RootState) {
     breadcrumbs: {
       crumbsByPath: {},
     },
+    call: {
+      activeEventList: remoteList(),
+      currentCall: remoteItem(0),
+    },
     callAssignments: {
       assignmentList: remoteList(),
       callAssignmentIdsByCampaignId: {},
       callList: remoteList(),
       callersById: {},
+      simpleStatsById: {},
       statsById: {},
       userAssignmentList: remoteList(),
     },
