@@ -27,9 +27,9 @@ export default function useTaskActivities(
   const tasksSlice = useAppSelector((state) => state.tasks);
 
   const hasTasks = useFeature(TASKS);
-    if (!hasTasks) {
-      return new ResolvedFuture([]);
-    }
+  if (!hasTasks) {
+    return new ResolvedFuture([]);
+  }
 
   const activities: CampaignActivity[] = [];
 

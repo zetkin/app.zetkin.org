@@ -31,7 +31,7 @@ const FilterActivities = ({
 }: FilterActivitiesProps) => {
   const messages = useMessages(messageIds);
   const hasAreaAssignments = useFeature(AREAS);
-  const hasTasks = useFeature(TASKS)
+  const hasTasks = useFeature(TASKS);
 
   const debouncedFinishedTyping = useDebounce(
     async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -93,17 +93,17 @@ const FilterActivities = ({
             />
           )}
           {hasTasks && (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={filters.includes(ACTIVITIES.TASK)}
-                disabled={!filterTypes.includes(ACTIVITIES.TASK)}
-                onChange={onFiltersChange}
-                value={ACTIVITIES.TASK}
-              />
-            }
-            label={messages.tasks()}
-          />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={filters.includes(ACTIVITIES.TASK)}
+                  disabled={!filterTypes.includes(ACTIVITIES.TASK)}
+                  onChange={onFiltersChange}
+                  value={ACTIVITIES.TASK}
+                />
+              }
+              label={messages.tasks()}
+            />
           )}
           <FormControlLabel
             control={

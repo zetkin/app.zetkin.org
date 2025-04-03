@@ -114,11 +114,11 @@ const CampaignActionButtons: React.FunctionComponent<
   ];
 
   if (hasTasks) {
-    menuItems.push({  
+    menuItems.push({
       icon: <CheckBoxOutlined />,
       label: campaginMessages.createButton.createTask(),
       onClick: () => setCreateTaskDialogOpen(true),
-    })
+    });
   }
 
   if (hasAreaAssignments) {
