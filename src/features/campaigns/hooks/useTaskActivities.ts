@@ -15,6 +15,8 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { TASKS } from 'utils/featureFlags';
+import useFeature from 'utils/featureFlags/useFeature';
 
 export default function useTaskActivities(
   orgId: number,
@@ -23,6 +25,11 @@ export default function useTaskActivities(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const tasksSlice = useAppSelector((state) => state.tasks);
+
+  const hasTasks = useFeature(TASKS);
+    if (!hasTasks) {
+      return new ResolvedFuture([]);
+    }
 
   const activities: CampaignActivity[] = [];
 

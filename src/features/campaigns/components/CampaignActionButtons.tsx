@@ -30,7 +30,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS } from 'utils/featureFlags';
+import { AREAS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
@@ -51,6 +51,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
+  const hasTasks = useFeature(TASKS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -110,12 +111,15 @@ const CampaignActionButtons: React.FunctionComponent<
           title: campaginMessages.form.createSurvey.newSurvey(),
         }),
     },
-    {
+  ];
+
+  if (hasTasks) {
+    menuItems.push({  
       icon: <CheckBoxOutlined />,
       label: campaginMessages.createButton.createTask(),
       onClick: () => setCreateTaskDialogOpen(true),
-    },
-  ];
+    })
+  }
 
   if (hasAreaAssignments) {
     menuItems.push({
