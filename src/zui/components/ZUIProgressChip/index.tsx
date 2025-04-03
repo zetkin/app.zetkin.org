@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 import { ZUIMedium, ZUISmall } from '../types';
 
-type ZUIProgressChipProps = {
+export type ZUIProgressChipProps = {
   /**
    * The size of the component. Defaults to 'small'.
    */

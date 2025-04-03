@@ -4,15 +4,17 @@ import { FC } from 'react';
 import ZUIAvatar from '../ZUIAvatar';
 import { ZUISize } from '../types';
 
+export type AvatarData = {
+  firstName: string;
+  id: number;
+  lastName: string;
+};
+
 type ZUIAvatarGroupProps = {
   /**
    * List of the people you want to display as avatars.
    */
-  avatars: {
-    firstName: string;
-    id: number;
-    lastName: string;
-  }[];
+  avatars: AvatarData[];
 
   /**
    * Maximum number of avatars shown.
@@ -78,6 +80,7 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
           width={avatarSize}
         >
           <Typography
+            color={theme.palette.text.primary}
             fontFamily={theme.typography.fontFamily}
             fontSize={fontSize}
             fontWeight={500}
