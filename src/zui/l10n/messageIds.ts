@@ -139,6 +139,10 @@ export default makeMessages('zui', {
     ),
     signUps: m('There are pending signups'),
   },
+  expandableText: {
+    showLess: m('Show less'),
+    showMore: m('Show more'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },

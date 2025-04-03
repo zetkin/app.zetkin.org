@@ -71,6 +71,13 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
             sx={{ textTransform: 'none' }}
             value="feed"
           />
+          <Tab
+            component={NextLink}
+            href="/my/settings"
+            label={messages.tabs.settings()}
+            sx={{ textTransform: 'none' }}
+            value="settings"
+          />
         </Tabs>
       </Box>
       <Box minHeight="90dvh">{children}</Box>
@@ -81,7 +88,7 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         flexDirection="column"
         mx={1}
         my={2}
-        sx={{ opacity: 0.5 }}
+        sx={{ opacity: 0.75 }}
       >
         <ZUILogo />
         <Typography variant="body2">Zetkin</Typography>
