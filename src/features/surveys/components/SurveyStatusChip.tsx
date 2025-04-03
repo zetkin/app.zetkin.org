@@ -5,12 +5,13 @@ import { makeStyles } from '@mui/styles';
 import { Msg } from 'core/i18n';
 import { SurveyState } from '../hooks/useSurveyState';
 import messageIds from '../l10n/messageIds';
+import theme from 'theme';
 
 interface SurveyStatusChipProps {
   state: SurveyState;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     alignItems: 'center',
     borderRadius: '2em',

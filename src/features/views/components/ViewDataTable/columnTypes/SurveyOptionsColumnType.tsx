@@ -15,6 +15,7 @@ import { IColumnType } from '.';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import useToggleDebounce from 'utils/hooks/useToggleDebounce';
+import theme from 'theme';
 
 export type SurveyOptionsViewCell =
   | {
@@ -50,7 +51,7 @@ export default class SurveyOptionsColumnType
   }
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   cell: {
     alignItems: 'center',
     display: 'flex',

@@ -9,6 +9,12 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  autocomplete: {
+    noOptionsDefaultText: m('No option matches your search'),
+  },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
+  },
   collapse: {
     collapse: m('Collapse'),
     expand: m('Expand'),
@@ -197,6 +203,14 @@ export default makeMessages('zui', {
     success: m('Success!'),
     warning: m('Warning!'),
   },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
+  },
   submitOrCancel: {
     cancel: m('Cancel'),
     submit: m('Submit'),
@@ -231,9 +245,10 @@ export default makeMessages('zui', {
       'Today, {start} - {end}'
     ),
   },
-  timezonePicker: {
+  timeZonePicker: {
     gmt: m('GMT'),
-    placeholder: m('Type to search location'),
-    timezone: m('Timezone'),
+    noOptionsText: m('No location matches your search'),
+    placeholder: m('Type to search for a location'),
+    timeZone: m('Time zone'),
   },
 });
