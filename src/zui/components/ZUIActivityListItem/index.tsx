@@ -256,6 +256,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                 <Box sx={{ paddingTop: '0.25rem' }}>
                   <EventWarningIcons
                     hasContact={meta.eventWarningIcons.hasContact}
+                    isUrgent={meta.eventWarningIcons.isUrgent}
                     numBooked={meta.eventWarningIcons.numBooked}
                     numRemindersSent={meta.eventWarningIcons.numRemindersSent}
                     numSignups={meta.eventWarningIcons.numSignups}
@@ -277,13 +278,14 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                     alignItems: 'center',
                     display: 'flex',
                     gap: '0.25rem',
+                    justifyContent: 'flex-end',
                     width: variant == 'narrow' ? 'fit-content' : '5rem',
                   }}
                 >
-                  <ZUIIcon color="secondary" icon={endData.icon} size="small" />
                   <Typography color="secondary" variant="bodyMdRegular">
                     <ZUISuffixedNumber number={endData.number} />
                   </Typography>
+                  <ZUIIcon color="secondary" icon={endData.icon} size="small" />
                 </Box>
               </Box>
             </Box>
