@@ -141,6 +141,13 @@ export function remoteList<DataType extends RemoteData>(
 }
 
 export {
+  remoteListCreated,
+  remoteListLoad,
+  remoteListLoaded,
+  remoteListInvalidated,
+} from 'utils/storeUtils/remoteListUtils';
+
+export {
   remoteItemCreated,
   remoteItemUpdate,
   remoteItemLoad,
