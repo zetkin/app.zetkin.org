@@ -5,6 +5,7 @@ import {
   Chip,
   CircularProgress,
   Grid,
+  Stack,
   Theme,
   Typography,
 } from '@mui/material';
@@ -38,7 +39,7 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
       <Box>
         <EmailHeader headers={emailData.headers} />
         <Typography
-          style={{ fontWeight: 'bold', marginBottom: 8, marginTop: 8 }}
+          sx={{ fontWeight: 'bold', marginBottom: '8px', marginTop: '8px' }}
         >
           {emailData.headers.Subject}
         </Typography>
@@ -110,7 +111,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
   const RELEVANT_HEADERS = ['from', 'to', 'cc'] as const;
 
   return (
-    <Grid container direction="column" spacing={1}>
+    <Stack spacing={1}>
       {RELEVANT_HEADERS.map((headerName) => {
         const matchedHeader = Object.entries(headers).find(
           ([key]) => key.toLowerCase() == headerName.toLowerCase()
@@ -120,13 +121,13 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
           const values = matchedHeader[1].split(',');
 
           return (
-            <Grid key={headerName} container direction="row" item wrap="nowrap">
-              <Grid item style={{ marginRight: 12, marginTop: '0.2em' }}>
+            <Grid key={headerName} container direction="row" wrap="nowrap">
+              <Grid style={{ marginRight: 12, marginTop: '0.2em' }}>
                 <Typography>
                   <Msg id={messageIds.email.headers[headerName]} />
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid>
                 {values.map((value) => (
                   <Link
                     key={value}
@@ -148,7 +149,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
           return null;
         }
       })}
-    </Grid>
+    </Stack>
   );
 };
 

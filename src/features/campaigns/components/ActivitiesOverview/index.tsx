@@ -94,7 +94,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
 
           return (
             <Grid container spacing={2}>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <ActivitiesOverviewCard
                   activities={data.today}
                   campId={campaignId}
@@ -104,7 +104,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   timeScale={'day'}
                 />
               </Grid>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <ActivitiesOverviewCard
                   activities={data.tomorrow}
                   campId={campaignId}
@@ -114,7 +114,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
                   timeScale={'day'}
                 />
               </Grid>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <ActivitiesOverviewCard
                   activities={data.alsoThisWeek}
                   campId={campaignId}
