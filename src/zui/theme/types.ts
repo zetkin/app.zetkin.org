@@ -1,5 +1,5 @@
-import { Typography } from '@mui/material/styles/createTypography';
-import { Palette } from '@mui/material';
+import { TypographyVariants as MUITypographyVariants } from '@mui/material/styles';
+import { Palette as MUIPalette } from '@mui/material';
 import { CSSProperties } from 'react';
 
 import { Swatches } from './palette';
@@ -66,8 +66,8 @@ interface Elevation {
 declare module '@mui/material/styles' {
   interface Theme {
     elevation: Elevation;
-    palette: Palette;
-    typography: Typography;
+    palette: MUIPalette;
+    typography: MUITypographyVariants;
   }
 
   interface ThemeOptions {
@@ -112,7 +112,7 @@ interface DataColor {
   mid3: string;
 }
 
-declare module '@mui/material/styles/createPalette' {
+declare module '@mui/material/styles' {
   interface PaletteColor {
     focus?: string;
     focusVisible?: string;
