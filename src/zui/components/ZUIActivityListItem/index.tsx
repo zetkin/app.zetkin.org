@@ -277,7 +277,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    gap: '0.25rem',
+                    gap: '0.5rem',
                     justifyContent: 'flex-end',
                     width: variant == 'narrow' ? 'fit-content' : '5rem',
                   }}
