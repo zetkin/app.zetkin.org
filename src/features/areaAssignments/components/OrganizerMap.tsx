@@ -9,9 +9,11 @@ import {
   Divider,
   IconButton,
   Paper,
+  Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material';
-import { Close, Layers, Search } from '@mui/icons-material';
+import { Close, Layers, Pentagon } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
@@ -31,8 +33,9 @@ import MapStyleSettings from './MapStyleSettings';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import MapControls from './MapControls';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import messageIdsAss from '../l10n/messageIds';
 
 type OrganizerMapProps = {
   areaAssId: string;
@@ -50,6 +53,8 @@ export type MapStyle = {
   overlay: 'assignees' | 'households' | 'progress' | 'hide';
 };
 
+type SettingName = 'layers' | 'filters' | 'select';
+
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
@@ -60,6 +65,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   sessions,
 }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
   const [mapStyle, setMapStyle] = useLocalStorage<MapStyle>(
     `mapStyle-${areaAssId}`,
     {
@@ -69,9 +75,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     }
   );
 
-  const [settingsOpen, setSettingsOpen] = useState<
-    ('layers' | 'filters' | 'select') | null
-  >(null);
+  const [settingsOpen, setSettingsOpen] = useState<SettingName | null>(null);
   const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
   const [selectedId, setSelectedId] = useState('');
   const [filterText, setFilterText] = useState('');
@@ -128,6 +132,14 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
     setFilterText('');
   };
 
+  const toggleSettings = (settingName: SettingName) => {
+    if (settingsOpen === settingName) {
+      clearAndCloseSettings();
+    } else {
+      setSettingsOpen(settingName);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -173,44 +185,61 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             zIndex: 999,
           }}
         >
-          <ButtonGroup orientation="vertical" variant="contained">
-            <Button
-              onClick={() => {
-                if (settingsOpen == 'filters') {
-                  clearAndCloseSettings();
-                } else {
-                  setSettingsOpen('filters');
-                }
-              }}
+          <ButtonGroup
+            orientation="vertical"
+            sx={{
+              '& .MuiButton-root': {
+                height: 40,
+                width: 40,
+              },
+              bgcolor: theme.palette.background.default,
+            }}
+            variant="outlined"
+          >
+            <Tooltip
+              placement="left"
+              title={messages.areas.controlLabels.filters()}
             >
-              <OrganizerMapFilterBadge />
-            </Button>
-            <Button
-              onClick={() => {
-                if (settingsOpen == 'layers') {
-                  clearAndCloseSettings();
-                } else {
-                  setSettingsOpen('layers');
-                }
-              }}
-            >
-              <Layers />
-            </Button>
-            <Button
-              onClick={() => {
-                if (settingsOpen == 'select') {
-                  if (selectedId) {
-                    setSelectedId('');
-                  } else {
+              <Button
+                onClick={() => {
+                  if (settingsOpen == 'filters') {
                     clearAndCloseSettings();
+                  } else {
+                    setSettingsOpen('filters');
                   }
-                } else {
-                  setSettingsOpen('select');
-                }
-              }}
+                }}
+              >
+                <OrganizerMapFilterBadge />
+              </Button>
+            </Tooltip>
+            <Tooltip
+              placement="left"
+              title={messages.areas.controlLabels.layers()}
             >
-              <Search />
-            </Button>
+              <Button onClick={() => toggleSettings('layers')}>
+                <Layers />
+              </Button>
+            </Tooltip>
+            <Tooltip
+              placement="left"
+              title={messages.areas.controlLabels.select()}
+            >
+              <Button
+                onClick={() => {
+                  if (settingsOpen == 'select') {
+                    if (selectedId) {
+                      setSelectedId('');
+                    } else {
+                      clearAndCloseSettings();
+                    }
+                  } else {
+                    setSettingsOpen('select');
+                  }
+                }}
+              >
+                <Pentagon />
+              </Button>
+            </Tooltip>
           </ButtonGroup>
         </Box>
         {settingsOpen && (
@@ -222,7 +251,8 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               maxWidth: 400,
               minWidth: 400,
               overflow: 'hidden',
-              padding: 2,
+              paddingX: settingsOpen == 'select' ? 0 : 2,
+              paddingY: 1,
               position: 'absolute',
               right: '1rem',
               top: '1rem',
@@ -230,27 +260,45 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             }}
           >
             {settingsOpen == 'select' && (
-              <AreaSelect
-                key={selectedArea?.id}
-                areaAssId={areaAssId}
-                areas={areas}
-                filterAreas={filterAreas}
-                filterText={filterText}
-                locations={locations}
-                onAddAssignee={(person) => {
-                  if (selectedArea) {
-                    onAddAssigneeToArea(selectedArea, person);
-                  }
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
                 }}
-                onClose={clearAndCloseSettings}
-                onFilterTextChange={(newValue) => setFilterText(newValue)}
-                onSelectArea={(newValue) => setSelectedId(newValue)}
-                selectedArea={selectedArea}
-                selectedAreaStats={areaStats.stats.find(
-                  (stat) => stat.areaId == selectedArea?.id
-                )}
-                sessions={sessions}
-              />
+              >
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    height: '100%',
+                    overflowY: 'auto',
+                    paddingBottom: 4,
+                    paddingX: 2,
+                  }}
+                >
+                  <AreaSelect
+                    key={selectedArea?.id}
+                    areaAssId={areaAssId}
+                    areas={areas}
+                    filterAreas={filterAreas}
+                    filterText={filterText}
+                    locations={locations}
+                    onAddAssignee={(person) => {
+                      if (selectedArea) {
+                        onAddAssigneeToArea(selectedArea, person);
+                      }
+                    }}
+                    onClose={clearAndCloseSettings}
+                    onFilterTextChange={(newValue) => setFilterText(newValue)}
+                    onSelectArea={(newValue) => setSelectedId(newValue)}
+                    selectedArea={selectedArea}
+                    selectedAreaStats={areaStats.stats.find(
+                      (stat) => stat.areaId == selectedArea?.id
+                    )}
+                    sessions={sessions}
+                  />
+                </Box>
+              </Box>
             )}
             {settingsOpen != 'select' && (
               <>
@@ -258,15 +306,23 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   alignItems="center"
                   display="flex"
                   justifyContent="space-between"
-                  paddingBottom={1}
                 >
                   <Typography variant="h5">
-                    {settingsOpen == 'filters' ? 'Filters' : 'Map style'}
+                    {settingsOpen == 'filters' ? (
+                      <Msg id={messageIdsAss.map.filter.header} />
+                    ) : (
+                      <Msg id={messageIdsAss.map.mapStyle.title} />
+                    )}
                   </Typography>
                   <IconButton onClick={clearAndCloseSettings}>
                     <Close />
                   </IconButton>
                 </Box>
+                {settingsOpen == 'filters' && (
+                  <Typography color="secondary" paddingBottom={1}>
+                    <Msg id={messageIdsAss.map.filter.description} />
+                  </Typography>
+                )}
                 <Divider />
                 {settingsOpen == 'layers' && (
                   <MapStyleSettings
@@ -302,7 +358,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             assignment={assignment}
             locations={locations}
             locationStyle={mapStyle.location}
-            onSelectedIdChange={(newId) => {
+            onSelectedIdChange={(newId: string) => {
               setSelectedId(newId);
 
               if (!newId) {

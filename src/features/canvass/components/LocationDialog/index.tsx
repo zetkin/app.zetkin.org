@@ -200,7 +200,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                   timestamp: new Date().toISOString(),
                 });
                 setShowSparkle(true);
-                back();
+                goto('households');
               }}
             />
           )}

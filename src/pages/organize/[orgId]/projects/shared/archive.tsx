@@ -94,7 +94,7 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
 
           return (
             <Grid container spacing={2}>
-              <Grid item sm={8}>
+              <Grid size={{ sm: 8 }}>
                 <ActivityList
                   allActivities={data}
                   filters={filters}
@@ -103,7 +103,7 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
                 />
               </Grid>
 
-              <Grid item sm={4}>
+              <Grid size={{ sm: 4 }}>
                 <FilterActivities
                   filters={filters}
                   filterTypes={filterTypes}

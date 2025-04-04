@@ -19,7 +19,7 @@ import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinJourney, ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -34,20 +34,19 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
-  const apiClient = new BackendApiClient(ctx.req.headers);
-  const journey = await apiClient.get(
-    `/api/orgs/${orgId}/journeys/${journeyId}`
-  );
-  const organization = await apiClient.get(`/api/orgs/${orgId}`);
+  try {
+    const apiClient = new BackendApiClient(ctx.req.headers);
+    await apiClient.get<ZetkinJourney>(
+      `/api/orgs/${orgId}/journeys/${journeyId}`
+    );
 
-  if (organization && journey) {
     return {
       props: {
         journeyId,
         orgId,
       },
     };
-  } else {
+  } catch {
     return {
       notFound: true,
     };
@@ -148,7 +147,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
             />
             <Box p={3}>
               <Grid container justifyContent="space-between" spacing={2}>
-                <Grid item md={6}>
+                <Grid size={{ md: 6 }}>
                   <Typography
                     color="secondary"
                     style={{ marginBottom: '1.5rem' }}
@@ -188,7 +187,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     />
                   </form>
                 </Grid>
-                <Grid item md={4}>
+                <Grid size={{ md: 4 }}>
                   <JourneyInstanceSidebar
                     journeyInstance={{
                       assignees,

@@ -34,28 +34,28 @@ const SmartSearchSankeyStatsPopper: FC<SmartSearchSankeyStatsPopperProps> = ({
             <Msg id={messageIds.statsPopper.headline} />
           </Typography>
           <Grid container>
-            <Grid item sm={6}>
+            <Grid size={{ sm: 6 }}>
               <Metric
                 color={light}
                 label={messages.statsPopper.input()}
                 value={stats.input}
               />
             </Grid>
-            <Grid item sm={6}>
+            <Grid size={{ sm: 6 }}>
               <Metric
                 color={light}
                 label={messages.statsPopper.matches()}
                 value={stats.matches}
               />
             </Grid>
-            <Grid item sm={6}>
+            <Grid size={{ sm: 6 }}>
               <Metric
                 color={light}
                 label={messages.statsPopper.output()}
                 value={stats.output}
               />
             </Grid>
-            <Grid item sm={6}>
+            <Grid size={{ sm: 6 }}>
               <Metric
                 color={dark}
                 label={messages.statsPopper.change()}

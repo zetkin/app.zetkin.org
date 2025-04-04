@@ -20,7 +20,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUISection from 'zui/ZUISection';
 import ZUITimeline from 'zui/ZUITimeline';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -31,34 +31,28 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
   async (ctx) => {
     const { orgId, instanceId, journeyId } = ctx.params!;
 
-    const apiClient = new BackendApiClient(ctx.req.headers);
-    const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
-      `/api/orgs/${orgId}/journey_instances/${instanceId}`
-    );
-    const organization = await apiClient.get<ZetkinOrganization>(
-      `/api/orgs/${orgId}`
-    );
+    try {
+      const apiClient = new BackendApiClient(ctx.req.headers);
+      const journeyInstance = await apiClient.get<ZetkinJourneyInstance>(
+        `/api/orgs/${orgId}/journey_instances/${instanceId}`
+      );
 
-    if (
-      journeyInstance &&
-      journeyInstance.journey.id.toString() !== (journeyId as string)
-    ) {
-      return {
-        redirect: {
-          destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
-          permanent: false,
-        },
-      };
-    }
-
-    if (organization && journeyInstance) {
-      return {
-        props: {
-          instanceId,
-          orgId,
-        },
-      };
-    } else {
+      if (journeyInstance.journey.id.toString() !== (journeyId as string)) {
+        return {
+          redirect: {
+            destination: `/organize/${orgId}/journeys/${journeyInstance.journey.id}/${instanceId}`,
+            permanent: false,
+          },
+        };
+      } else {
+        return {
+          props: {
+            instanceId,
+            orgId,
+          },
+        };
+      }
+    } catch {
       return {
         notFound: true,
       };
@@ -102,7 +96,7 @@ const JourneyDetailsPage: PageWithLayout = () => {
         </title>
       </Head>
       <Grid container justifyContent="space-between" spacing={3}>
-        <Grid item lg={6} md={7} xl={5} xs={12}>
+        <Grid size={{ lg: 6, md: 7, xl: 5, xs: 12 }}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           {journeyInstance.closed && (
             <JourneyInstanceOutcome journeyInstance={journeyInstance} />
@@ -127,7 +121,7 @@ const JourneyDetailsPage: PageWithLayout = () => {
             </ZUIFuture>
           </ZUISection>
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid size={{ lg: 4, md: 4, xs: 12 }}>
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
             onAddAssignee={addAssignee}

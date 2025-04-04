@@ -59,10 +59,10 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
       {(data) => {
         return (
           <Grid container spacing={2}>
-            <Grid item md={8} xs={12}>
+            <Grid size={{ md: 8, xs: 12 }}>
               <EventOverviewCard data={data} orgId={parseInt(orgId)} />
             </Grid>
-            <Grid item md={4} xs={6}>
+            <Grid size={{ md: 4, xs: 6 }}>
               <EventParticipantsCard
                 eventId={parseInt(eventId)}
                 orgId={parseInt(orgId)}

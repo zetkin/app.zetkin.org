@@ -124,9 +124,16 @@ const HouseholdsPage: FC<Props> = ({
             disabled={adding}
             onClick={async () => {
               setAdding(true);
-              const newlyAddedHousehold = await addHousehold({
-                title: messages.default.household(),
+
+              // Since this button adds households to the unknown floor, we only count those households
+              const householdsOnUnknownFloor = sortedHouseholds.filter(
+                ({ floor }) => floor == null
+              );
+              const title = messages.households.householdDefaultTitle({
+                householdNumber: householdsOnUnknownFloor.length + 1,
               });
+
+              const newlyAddedHousehold = await addHousehold({ title });
               setAdding(false);
               onCreateHousehold(newlyAddedHousehold);
             }}

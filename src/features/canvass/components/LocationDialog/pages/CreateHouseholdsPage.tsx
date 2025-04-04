@@ -74,10 +74,9 @@ const CreateHouseholdsPage: FC<Props> = ({
               range(numFloors).flatMap((floorIndex) =>
                 range(numAptsPerFloor).map((aptIndex) => ({
                   floor: floorIndex + 1,
-                  title:
-                    messages.households.createMultiple.householdDefaultTitle({
-                      householdNumber: aptIndex + 1,
-                    }),
+                  title: messages.households.householdDefaultTitle({
+                    householdNumber: aptIndex + 1,
+                  }),
                 }))
               )
             );
@@ -159,11 +158,13 @@ const CreateHouseholdsPage: FC<Props> = ({
         <Box display="flex" justifyContent="space-around">
           <IntInput
             label={messages.households.createMultiple.numberOfFloorsInput()}
+            min={1}
             onChange={(value) => updateSize(value, numAptsPerFloor)}
             value={numFloors}
           />
           <IntInput
             label={messages.households.createMultiple.numberOfHouseholdsInput()}
+            min={1}
             onChange={(value) => updateSize(numFloors, value)}
             value={numAptsPerFloor}
           />

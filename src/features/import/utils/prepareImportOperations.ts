@@ -3,6 +3,7 @@ import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 import getUniqueTags from './getUniqueTags';
 import { CellData, ColumnKind, Sheet } from './types';
 import parserFactory from './dateParsing/parserFactory';
+import { cleanPhoneNumber } from './phoneUtils';
 
 export type ZetkinPersonImportOp = {
   data?: Record<string, CellData>;
@@ -63,7 +64,7 @@ export default function prepareImportOperations(
             //Parse phone numbers to international format
             if (fieldKey == 'phone' || fieldKey == 'alt_phone') {
               const parsedPhoneNumber = parsePhoneNumber(
-                typeof value == 'string' ? value : value.toString(),
+                cleanPhoneNumber(value),
                 countryCode
               );
               value = parsedPhoneNumber.format('E.164');

@@ -79,18 +79,20 @@ const Map: FC<MapProps> = ({
     >
       <MapWrapper>
         {(map) => {
-          if (selectedLocation) {
-            map.setView(
-              { lat: selectedLocation.lat, lng: selectedLocation.lng },
-              17
-            );
-          }
+          if (!newPosition) {
+            if (selectedLocation) {
+              map.setView(
+                { lat: selectedLocation.lat, lng: selectedLocation.lng },
+                17
+              );
+            }
 
-          if (pendingLocation) {
-            map.setView(
-              { lat: pendingLocation.lat, lng: pendingLocation.lng },
-              17
-            );
+            if (pendingLocation) {
+              map.setView(
+                { lat: pendingLocation.lat, lng: pendingLocation.lng },
+                17
+              );
+            }
           }
 
           map.on('click', (evt) => {
@@ -121,6 +123,10 @@ const Map: FC<MapProps> = ({
                     eventHandlers={{
                       click: (evt) => {
                         evt.originalEvent.stopPropagation();
+                        // click runs after dragend, so dont reset position if we were dragging
+                        if (newPosition && isSelectedMarker) {
+                          return;
+                        }
                         setNewPosition(null);
                         map.setView(evt.latlng, 17);
                         onMarkerClick(location.id);

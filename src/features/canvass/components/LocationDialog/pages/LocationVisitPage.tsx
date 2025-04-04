@@ -167,6 +167,7 @@ const LocationVisitPage: FC<Props> = ({
                         <IntInput
                           label={messages.visit.location.yesInputLabel()}
                           labelPlacement="horizontal"
+                          min={1}
                           onChange={(value) => {
                             setValuesByMetricId((current) => ({
                               ...current,
@@ -178,6 +179,7 @@ const LocationVisitPage: FC<Props> = ({
                         <IntInput
                           label={messages.visit.location.noInputLabel()}
                           labelPlacement="horizontal"
+                          min={1}
                           onChange={(value) => {
                             setValuesByMetricId((current) => ({
                               ...current,

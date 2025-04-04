@@ -56,7 +56,7 @@ const CampaignSummaryPage: PageWithLayout = () => {
         <Box mb={campaign?.info_text || campaign?.manager ? 2 : 0}>
           <Grid container spacing={2}>
             {campaign?.info_text && (
-              <Grid item lg={6} md={12} xs={12}>
+              <Grid size={{ lg: 6, md: 12, xs: 12 }}>
                 <Typography variant="body1">{campaign?.info_text}</Typography>
               </Grid>
             )}

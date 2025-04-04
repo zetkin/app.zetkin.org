@@ -21,6 +21,7 @@ import useTagging from 'features/tags/hooks/useTagging';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -34,7 +35,7 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
 
   try {
     const apiClient = new BackendApiClient(ctx.req.headers);
-    await apiClient.get(`/api/orgs/${orgId}/people/${personId}`);
+    await apiClient.get<ZetkinPerson>(`/api/orgs/${orgId}/people/${personId}`);
     return {
       props: {
         orgId,
@@ -76,14 +77,14 @@ const PersonProfilePage: PageWithLayout = () => {
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
-        <Grid item lg={4} xs={12}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <ZUIFuture future={fieldsFuture}>
             {(fields) => (
               <PersonDetailsCard customFields={fields} person={person} />
             )}
           </ZUIFuture>
         </Grid>
-        <Grid item lg={4} xs={12}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <ZUIFuture future={personTagsFuture}>
             {(personTags) => (
               <TagManagerSection
@@ -108,11 +109,11 @@ const PersonProfilePage: PageWithLayout = () => {
           </ZUIFuture>
         </Grid>
         {journeysFuture.data?.length && (
-          <Grid item lg={4} xs={12}>
+          <Grid size={{ lg: 4, xs: 12 }}>
             <PersonJourneysCard orgId={orgId} personId={personId} />
           </Grid>
         )}
-        <Grid item lg={4} xs={12}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
       </Grid>

@@ -44,7 +44,7 @@ const SettingsPage: PageWithLayout = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item md={8}>
+      <Grid size={{ md: 8 }}>
         <Box
           alignItems="center"
           display="flex"
@@ -90,7 +90,7 @@ const SettingsPage: PageWithLayout = () => {
         </Typography>
         <OfficialList officialList={organizerList} orgId={orgId} />
       </Grid>
-      <Grid item md={4}>
+      <Grid size={{ md: 4 }}>
         <ZUICard
           header={messages.officials.urlCard.linkToPub()}
           subheader={messages.officials.urlCard.subTitle()}

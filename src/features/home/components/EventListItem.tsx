@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, MouseEvent, ReactNode } from 'react';
 import { Box, Button, Fade, Typography } from '@mui/material';
 import {
   Event,
@@ -17,12 +17,17 @@ import { removeOffset } from 'utils/dateUtils';
 
 type Props = {
   event: ZetkinEventWithStatus;
+  onClickSignUp?: (ev: MouseEvent) => void;
   showIcon?: boolean;
 };
 
-const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
+const EventListItem: FC<Props> = ({
+  event,
+  onClickSignUp,
+  showIcon = false,
+}) => {
   const messages = useMessages(messageIds);
-  const { signUp, undoSignup } = useEventActions(
+  const { requiresConnect, signUp, undoSignup } = useEventActions(
     event.organization.id,
     event.id
   );
@@ -47,9 +52,8 @@ const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
       >
         <Msg id={messageIds.activityList.actions.undoSignup} />
       </Button>,
-      <Fade appear in style={{ transitionDelay: '0.3s' }}>
+      <Fade key="signedUp" appear in style={{ transitionDelay: '0.3s' }}>
         <Box
-          key="signedUp"
           sx={{
             bgcolor: '#C1EEC1',
             borderRadius: 4,
@@ -58,21 +62,33 @@ const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
             py: 0.3,
           }}
         >
-          <Typography variant="body2">
+          <Typography sx={{ pointerEvents: 'none' }} variant="body2">
             <Msg id={messageIds.activityList.eventStatus.signedUp} />
           </Typography>
         </Box>
       </Fade>
     );
   } else {
+    const msgId = requiresConnect
+      ? messageIds.activityList.actions.connectAndSignUp
+      : messageIds.activityList.actions.signUp;
+
     actions.push(
       <Button
         key="action"
-        onClick={() => signUp()}
+        onClick={(ev) => {
+          if (onClickSignUp) {
+            onClickSignUp(ev);
+          }
+
+          if (!ev.isDefaultPrevented()) {
+            signUp();
+          }
+        }}
         size="small"
         variant="contained"
       >
-        <Msg id={messageIds.activityList.actions.signUp} />
+        <Msg id={msgId} />
       </Button>
     );
 
@@ -88,7 +104,7 @@ const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
             py: 0.3,
           }}
         >
-          <Typography variant="body2">
+          <Typography sx={{ pointerEvents: 'none' }} variant="body2">
             <Msg id={messageIds.activityList.eventStatus.needed} />
           </Typography>
         </Box>

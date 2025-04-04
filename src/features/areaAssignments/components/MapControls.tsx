@@ -1,7 +1,7 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { Map } from 'leaflet';
 import React, { useState } from 'react';
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
 import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
 
 type MapControlsProps = {
@@ -10,18 +10,30 @@ type MapControlsProps = {
 };
 
 const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
+  const theme = useTheme();
   const [locating, setLocating] = useState(false);
 
   return (
     <Box
       sx={{
-        left: 16,
+        left: 0,
+        padding: 2, // This padding acts as a deadzone for the map, so that inaccurate taps don't cause the map to pan
         position: 'absolute',
-        top: 16,
+        top: 0,
         zIndex: 999,
       }}
     >
-      <ButtonGroup orientation="vertical" variant="contained">
+      <ButtonGroup
+        orientation="vertical"
+        sx={{
+          '& .MuiButton-root': {
+            height: 40,
+            width: 40,
+          },
+          bgcolor: theme.palette.background.default,
+        }}
+        variant="outlined"
+      >
         <Button onClick={() => map?.zoomIn()}>
           <Add />
         </Button>
@@ -33,12 +45,15 @@ const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
         </Button>
         <Button
           onClick={() => {
+            if (locating) {
+              return;
+            }
             setLocating(true);
             navigator.geolocation.getCurrentPosition(
               (pos) => {
                 setLocating(false);
 
-                const zoom = 16;
+                const zoom = undefined; // We do not want to override the user's zoom level
                 const latLng = {
                   lat: pos.coords.latitude,
                   lng: pos.coords.longitude,

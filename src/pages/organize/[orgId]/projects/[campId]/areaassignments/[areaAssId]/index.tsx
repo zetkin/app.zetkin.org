@@ -61,7 +61,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
         {({ data: { assignment, stats } }) => {
           const planUrl = `/organize/${orgId}/projects/${
             assignment.campaign.id || 'standalone'
-          }/areaassignments/${assignment.id}/plan`;
+          }/areaassignments/${assignment.id}/map`;
           return (
             <Box display="flex" flexDirection="column" gap={2}>
               {stats.num_areas == 0 && (

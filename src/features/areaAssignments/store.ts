@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  findOrAddItem,
+  remoteItemLoad,
+  remoteItemDeleted,
+  remoteItemUpdated,
   RemoteItem,
   remoteItem,
   remoteList,
@@ -56,53 +58,22 @@ const areaAssignmentSlice = createSlice({
       action: PayloadAction<ZetkinAreaAssignment>
     ) => {
       const areaAssignment = action.payload;
-      const item = remoteItem(areaAssignment.id, {
-        data: areaAssignment,
-        loaded: new Date().toISOString(),
-      });
-
-      state.areaAssignmentList.items.push(item);
+      remoteItemUpdated(state.areaAssignmentList, areaAssignment);
     },
     areaAssignmentDeleted: (state, action: PayloadAction<number>) => {
       const areaAssId = action.payload;
-      const areaAssignmentItem = state.areaAssignmentList.items.find(
-        (item) => item.id === areaAssId
-      );
-
-      if (areaAssignmentItem) {
-        areaAssignmentItem.deleted = true;
-      }
+      remoteItemDeleted(state.areaAssignmentList, areaAssId);
     },
     areaAssignmentLoad: (state, action: PayloadAction<string>) => {
       const areaAssId = action.payload;
-      const item = state.areaAssignmentList.items.find(
-        (item) => item.id == areaAssId
-      );
-
-      if (item) {
-        item.isLoading = true;
-      } else {
-        state.areaAssignmentList.items = state.areaAssignmentList.items.concat([
-          remoteItem(areaAssId, { isLoading: true }),
-        ]);
-      }
+      remoteItemLoad(state.areaAssignmentList, areaAssId);
     },
     areaAssignmentLoaded: (
       state,
       action: PayloadAction<ZetkinAreaAssignment>
     ) => {
       const areaAssignment = action.payload;
-      const item = state.areaAssignmentList.items.find(
-        (item) => item.id == areaAssignment.id
-      );
-
-      if (!item) {
-        throw new Error('Finished loading item that never started loading');
-      }
-
-      item.data = areaAssignment;
-      item.isLoading = false;
-      item.loaded = new Date().toISOString();
+      remoteItemUpdated(state.areaAssignmentList, areaAssignment);
     },
     areaAssignmentSessionCreated: (
       state,
@@ -153,11 +124,8 @@ const areaAssignmentSlice = createSlice({
       state,
       action: PayloadAction<ZetkinAreaAssignment>
     ) => {
-      const assignment = action.payload;
-      const item = findOrAddItem(state.areaAssignmentList, assignment.id);
-
-      item.data = assignment;
-      item.loaded = new Date().toISOString();
+      const updatedArea = action.payload;
+      remoteItemUpdated(state.areaAssignmentList, updatedArea);
     },
     areaAssignmentsLoad: (state) => {
       state.areaAssignmentList.isLoading = true;
@@ -219,19 +187,11 @@ const areaAssignmentSlice = createSlice({
     },
     locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
-      const item = remoteItem(location.id, {
-        data: location,
-        loaded: new Date().toISOString(),
-      });
-
-      state.locationList.items.push(item);
+      remoteItemUpdated(state.locationList, location);
     },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
-      const location = action.payload;
-      const item = findOrAddItem(state.locationList, location.id);
-
-      item.data = location;
-      item.loaded = new Date().toISOString();
+      const updatedLocation = action.payload;
+      remoteItemUpdated(state.locationList, updatedLocation);
     },
     locationsInvalidated: (state) => {
       state.locationList.isStale = true;

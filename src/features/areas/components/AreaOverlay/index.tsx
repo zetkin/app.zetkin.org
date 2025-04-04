@@ -1,4 +1,11 @@
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Close } from '@mui/icons-material';
 import {
   Box,
@@ -18,8 +25,9 @@ import ZUIPreviewableInput, {
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import TagsSection from './TagsSection';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 
 type Props = {
   area: ZetkinArea;
@@ -36,6 +44,7 @@ const AreaOverlay: FC<Props> = ({
   onCancelEdit,
   onClose,
 }) => {
+  const messages = useMessages(messageIds);
   const [title, setTitle] = useState(area.title);
   const [description, setDescription] = useState(area.description);
   const [fieldEditing, setFieldEditing] = useState<
@@ -45,16 +54,24 @@ const AreaOverlay: FC<Props> = ({
     area.organization.id,
     area.id
   );
+  const tagsElement = useRef<HTMLElement>();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const enteredEditableMode = useRef(false);
 
   const handleDescriptionTextAreaRef = useCallback(
     (el: HTMLTextAreaElement | null) => {
-      if (el) {
+      if (el && enteredEditableMode.current) {
         // When entering edit mode for desciption, focus the text area and put
         // caret at the end of the text
         el.focus();
         el.setSelectionRange(el.value.length, el.value.length);
-        el.scrollTop = el.scrollHeight;
+        // We want to display the last line of the textarea.
+        // We do this by scrolling the element under the textarea into view.
+        // This way we don't have to keep track of which element contains the scroll
+        setTimeout(() => {
+          tagsElement.current?.scrollIntoView();
+        }, 0);
+        enteredEditableMode.current = false;
       }
     },
     []
@@ -71,7 +88,9 @@ const AreaOverlay: FC<Props> = ({
         bottom: '1rem',
         display: 'flex',
         flexDirection: 'column',
+        maxWidth: 400,
         minWidth: 400,
+        overflow: 'auto',
         padding: 2,
         position: 'absolute',
         right: '1rem',
@@ -84,7 +103,9 @@ const AreaOverlay: FC<Props> = ({
         onClickAway={() => {
           if (fieldEditing === 'title') {
             setFieldEditing(null);
-            updateArea({ title });
+            updateArea({
+              title: title?.trim() || messages.areas.default.title(),
+            });
           } else if (fieldEditing === 'description') {
             setFieldEditing(null);
             updateArea({ description });
@@ -111,7 +132,9 @@ const AreaOverlay: FC<Props> = ({
                   onBlur={() => {
                     if (fieldEditing === 'title') {
                       setFieldEditing(null);
-                      updateArea({ title });
+                      updateArea({
+                        title: title?.trim() || messages.areas.default.title(),
+                      });
                     }
                   }}
                   onChange={(ev) => setTitle(ev.target.value)}
@@ -120,7 +143,9 @@ const AreaOverlay: FC<Props> = ({
                 />
               )}
               renderPreview={() => (
-                <Typography variant="h5">{area.title}</Typography>
+                <Typography variant="h5">
+                  {area.title?.trim() || messages.areas.default.title()}
+                </Typography>
               )}
               value={area.title || ''}
             />
@@ -141,6 +166,9 @@ const AreaOverlay: FC<Props> = ({
                 : ZUIPreviewableMode.PREVIEW
             }
             onSwitchMode={(mode) => {
+              if (mode === ZUIPreviewableMode.EDITABLE) {
+                enteredEditableMode.current = true;
+              }
               setFieldEditing(
                 mode === ZUIPreviewableMode.EDITABLE ? 'description' : null
               );
@@ -150,7 +178,6 @@ const AreaOverlay: FC<Props> = ({
                 fullWidth
                 inputProps={props}
                 inputRef={handleDescriptionTextAreaRef}
-                maxRows={4}
                 multiline
                 onBlur={() => {
                   if (fieldEditing === 'description') {
@@ -159,25 +186,26 @@ const AreaOverlay: FC<Props> = ({
                   }
                 }}
                 onChange={(ev) => setDescription(ev.target.value)}
-                sx={{ marginTop: 2 }}
+                sx={{
+                  marginTop: 2,
+                }}
                 value={description}
               />
             )}
             renderPreview={() => (
               <Box paddingTop={1}>
-                <Typography
+                <ZUIExpandableText
                   color="secondary"
+                  content={
+                    area.description?.trim().length
+                      ? area.description
+                      : messages.areas.default.description()
+                  }
                   fontStyle={
                     area.description?.trim().length ? 'inherit' : 'italic'
                   }
-                  sx={{ overflowWrap: 'anywhere' }}
-                >
-                  {area.description?.trim().length ? (
-                    area.description
-                  ) : (
-                    <Msg id={messageIds.areas.default.description} />
-                  )}
-                </Typography>
+                  maxVisibleChars={110}
+                />
               </Box>
             )}
             value={area.description || ''}
@@ -185,7 +213,7 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
-      <Box flexGrow={1} my={2}>
+      <Box ref={tagsElement} flexGrow={1} my={2}>
         <TagsSection area={area} />
       </Box>
       <Box display="flex" gap={1}>

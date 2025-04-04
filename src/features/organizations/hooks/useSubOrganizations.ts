@@ -3,20 +3,7 @@ import useOrganization from './useOrganization';
 import { ZetkinSubOrganization } from 'utils/types/zetkin';
 import { subOrgsLoad, subOrgsLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-
-const flattenSubOrgs = (orgs: ZetkinSubOrganization[]) => {
-  let subOrgs: ZetkinSubOrganization[] = [];
-  orgs.forEach((org) => {
-    if (org.sub_orgs.length > 0) {
-      const children = flattenSubOrgs(org.sub_orgs);
-      if (children.length > 0) {
-        subOrgs = [...children, ...subOrgs];
-      }
-    }
-    subOrgs.unshift(org);
-  });
-  return subOrgs;
-};
+import flattenSubOrgs from '../utils/flattenSubOrgs';
 
 export default function useSubOrganizations(orgId: number) {
   const apiClient = useApiClient();

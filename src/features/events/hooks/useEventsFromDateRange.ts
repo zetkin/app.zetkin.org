@@ -21,7 +21,7 @@ export default function useEventsFromDateRange(
     dayjs(endDate).startOf('day').diff(dayjs(startDate).startOf('day'), 'day') +
       1
   ).map((diff) =>
-    dayjs(startDate).startOf('day').add(diff, 'day').utc().toISOString()
+    dayjs(startDate).startOf('day').add(diff, 'day').utc(true).toISOString()
   );
 
   const mustLoad = dateRange.some((date) =>

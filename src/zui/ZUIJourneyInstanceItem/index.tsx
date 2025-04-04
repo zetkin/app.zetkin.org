@@ -1,6 +1,6 @@
 import { AccessTime } from '@mui/icons-material';
 import NextLink from 'next/link';
-import { Box, Grid, Link, Typography } from '@mui/material';
+import { Box, Grid, Link, Stack, Typography } from '@mui/material';
 
 import JourneyStatusChip from '../../features/journeys/components/JourneyStatusChip';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
@@ -25,49 +25,45 @@ const ZUIJourneyInstanceItem: React.FC<ZUIJourneyInstanceItemProps> = ({
       href={`/organize/${orgId}/journeys/${instance.journey.id}/${instance.id}`}
       legacyBehavior
     >
-      <Grid container direction="column" style={{ cursor: 'pointer' }}>
-        <Grid item>
-          <Box
-            alignItems="center"
-            display="flex"
-            flexWrap="wrap-reverse"
-            justifyContent="space-between"
-            style={{ gap: 5 }}
+      <Stack sx={{ cursor: 'pointer' }}>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexWrap="wrap-reverse"
+          justifyContent="space-between"
+          sx={{ gap: '5px' }}
+        >
+          <Typography
+            color={isOpen ? 'textPrimary' : 'textSecondary'}
+            component="span"
+            data-testid="page-title"
+            variant="h5"
           >
-            <Typography
-              color={isOpen ? 'textPrimary' : 'textSecondary'}
-              component="span"
-              data-testid="page-title"
-              variant="h5"
-            >
-              <Link color="inherit" underline="hover">
-                {instance.title || instance.journey.title}
-              </Link>
-              <Typography color="textSecondary" component="span" variant="h5">
-                {' '}
-                {`#${instance.id}`}
-              </Typography>
+            <Link color="inherit" underline="hover">
+              {instance.title || instance.journey.title}
+            </Link>
+            <Typography color="textSecondary" component="span" variant="h5">
+              {' '}
+              {`#${instance.id}`}
             </Typography>
-            <JourneyStatusChip instance={instance} />
-          </Box>
-        </Grid>
+          </Typography>
+          <JourneyStatusChip instance={instance} />
+        </Box>
         {isOpen && hasMeta && (
           <>
-            <Grid item>
-              <Typography variant="body2">{instance.journey.title}</Typography>
-            </Grid>
+            <Typography variant="body2">{instance.journey.title}</Typography>
             {instance.next_milestone && (
-              <Grid container item>
+              <Grid container>
                 <Typography
                   color="inherit"
-                  style={{
+                  sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    marginTop: 8,
+                    marginTop: '8px',
                   }}
                   variant="body2"
                 >
-                  <AccessTime color="inherit" style={{ marginRight: 4 }} />
+                  <AccessTime color="inherit" sx={{ marginRight: '4px' }} />
                   {instance.next_milestone.title}
                   {instance.next_milestone.deadline && (
                     <>
@@ -80,7 +76,7 @@ const ZUIJourneyInstanceItem: React.FC<ZUIJourneyInstanceItemProps> = ({
             )}
           </>
         )}
-      </Grid>
+      </Stack>
     </NextLink>
   );
 };

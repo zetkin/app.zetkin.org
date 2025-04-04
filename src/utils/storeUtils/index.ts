@@ -1,4 +1,4 @@
-interface RemoteData {
+export interface RemoteData {
   id: number | string;
 }
 
@@ -140,16 +140,12 @@ export function remoteList<DataType extends RemoteData>(
   };
 }
 
-export function findOrAddItem<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  id: number | string
-): RemoteItem<DataType> {
-  const existingItem = list.items.find((item) => item.id == id);
-  if (existingItem) {
-    return existingItem;
-  } else {
-    const newItem = remoteItem<DataType>(id);
-    list.items.push(newItem);
-    return newItem;
-  }
-}
+export {
+  remoteItemCreated,
+  remoteItemUpdate,
+  remoteItemLoad,
+} from 'utils/storeUtils/findOrAddItem';
+
+export { remoteItemUpdated } from 'utils/storeUtils/remoteItemUpdated';
+
+export { remoteItemDeleted } from 'utils/storeUtils/remoteItemDeleted';

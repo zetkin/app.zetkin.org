@@ -2429,7 +2429,7 @@ feat:
           title: Last name
         localPerson:
           columnTitle: Assignee
-          description: Let's you pick an assignee on every row
+          description: Lets you pick an assignee on every row
           keywords: ""
           title: Assigned Person
         localQuery:
