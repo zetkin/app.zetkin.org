@@ -124,7 +124,8 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
         alignItems: 'center',
         cursor: 'pointer',
         display: 'flex',
-        paddingX: '1.25rem',
+        paddingLeft: checkboxProps ? '0.625rem' : '1.25rem',
+        paddingRight: '1.25rem',
         paddingY: variant == 'wide' ? '0.875rem' : '1rem',
         width: '100%',
       })}
