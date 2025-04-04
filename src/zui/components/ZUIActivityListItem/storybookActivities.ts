@@ -12,36 +12,66 @@ import { ZUIActivityListItemProps } from '.';
 export const activities: ZUIActivityListItemProps[] = [
   {
     avatars: [
-      { firstName: 'Angela', id: 1, lastName: 'Davis' },
-      { firstName: 'James', id: 2, lastName: 'Dean' },
-      { firstName: 'Georg', id: 3, lastName: 'Schneider' },
-      { firstName: 'Bernie', id: 4, lastName: 'Sanders' },
-      { firstName: 'Peder', id: 5, lastName: 'Kofoed' },
-      { firstName: 'Jessee', id: 5, lastName: 'Jamthorpe' },
       { firstName: 'Jimmy', id: 34, lastName: 'Junderkud' },
       { firstName: 'Katja', id: 22, lastName: 'Karahi' },
-      { firstName: 'Goran', id: 54, lastName: 'Gogovic' },
-      { firstName: 'Bundi', id: 65, lastName: 'Binbun' },
-      { firstName: 'Jayne', id: 64, lastName: 'Jackal' },
-      { firstName: 'Evita', id: 12, lastName: 'Lopez' },
     ],
     endData: {
       icon: Group,
-      number: 12,
+      number: 6,
     },
     href: '#',
     mainIcon: EventOutlined,
     meta: {
       eventWarningIcons: {
         hasContact: true,
-        numBooked: 12,
-        numRemindersSent: 5,
+        isUrgent: true,
+        numBooked: 2,
+        numRemindersSent: 2,
+        numSignups: 1,
+      },
+    },
+    status: 'published',
+    subtitle: 'Sunday, april 13th, 14.00',
+    title: 'Meet-up for nurses',
+  },
+  {
+    avatars: [
+      { firstName: 'Jimmy', id: 34, lastName: 'Junderkud' },
+      { firstName: 'Katja', id: 22, lastName: 'Karahi' },
+      { firstName: 'Goran', id: 54, lastName: 'Gogovic' },
+    ],
+    endData: {
+      icon: Group,
+      number: 6,
+    },
+    href: '#',
+    mainIcon: EventOutlined,
+    meta: {
+      eventWarningIcons: {
+        hasContact: false,
+        isUrgent: true,
+        numBooked: 3,
+        numRemindersSent: 2,
         numSignups: 2,
       },
     },
-    status: 'scheduled',
-    subtitle: 'Friday April 23rd, 17.00-20.00',
-    title: 'Spring meeting with all the organizers',
+    status: 'published',
+    subtitle: 'Sunday april 13th, 16.00',
+    title: 'Work day at the headquarters',
+  },
+  {
+    endData: {
+      icon: Group,
+      number: 455,
+    },
+    href: '#',
+    mainIcon: CheckBoxOutlined,
+    meta: {
+      values: [200, 100, 155],
+    },
+    status: 'published',
+    subtitle: 'Sunday, April 13th',
+    title: 'Talk to 2 neighbours about rents',
   },
   {
     avatars: [
@@ -61,6 +91,7 @@ export const activities: ZUIActivityListItemProps[] = [
     meta: {
       eventWarningIcons: {
         hasContact: false,
+        isUrgent: false,
         numBooked: 6,
         numRemindersSent: 6,
         numSignups: 2,
@@ -100,17 +131,37 @@ export const activities: ZUIActivityListItemProps[] = [
     title: 'Calling for May 1st - people to the streets!',
   },
   {
+    avatars: [
+      { firstName: 'Angela', id: 1, lastName: 'Davis' },
+      { firstName: 'James', id: 2, lastName: 'Dean' },
+      { firstName: 'Georg', id: 3, lastName: 'Schneider' },
+      { firstName: 'Bernie', id: 4, lastName: 'Sanders' },
+      { firstName: 'Peder', id: 5, lastName: 'Kofoed' },
+      { firstName: 'Jessee', id: 5, lastName: 'Jamthorpe' },
+      { firstName: 'Jimmy', id: 34, lastName: 'Junderkud' },
+      { firstName: 'Katja', id: 22, lastName: 'Karahi' },
+      { firstName: 'Goran', id: 54, lastName: 'Gogovic' },
+      { firstName: 'Bundi', id: 65, lastName: 'Binbun' },
+      { firstName: 'Jayne', id: 64, lastName: 'Jackal' },
+      { firstName: 'Evita', id: 12, lastName: 'Lopez' },
+    ],
     endData: {
       icon: Group,
-      number: 455,
+      number: 12,
     },
     href: '#',
-    mainIcon: CheckBoxOutlined,
+    mainIcon: EventOutlined,
     meta: {
-      values: [200, 100, 155],
+      eventWarningIcons: {
+        hasContact: true,
+        isUrgent: false,
+        numBooked: 12,
+        numRemindersSent: 5,
+        numSignups: 2,
+      },
     },
-    status: 'published',
-    subtitle: 'Thursday, October 15th',
-    title: 'Talk to 2 neighbours about rents',
+    status: 'scheduled',
+    subtitle: 'Friday April 23rd, 17.00-20.00',
+    title: 'Spring meeting with all the organizers',
   },
 ];
