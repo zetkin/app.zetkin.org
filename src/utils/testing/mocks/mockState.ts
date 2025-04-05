@@ -140,6 +140,7 @@ export default function mockState(overrides?: RootState) {
     },
     user: {
       membershipList: remoteList(),
+      orgUserList: remoteList(),
       userItem: remoteItem('me'),
     },
     views: {
