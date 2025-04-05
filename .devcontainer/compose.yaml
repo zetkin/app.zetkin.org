@@ -1,0 +1,18 @@
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    network_mode: 'service:geo-db'
+    command: sleep infinity
+
+  geo-db:
+    image: mongo:latest
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:

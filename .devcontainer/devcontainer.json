@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/devcontainer.json.
+{
+  "name": "node:lts-bookworm",
+  "dockerComposeFile": "compose.yaml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000],
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "remote.autoForwardPorts": false,
+        "remote.restoreForwardedPorts": false,
+        "prettier.requireConfig": true,
+        "prettier.useEditorConfig": false
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "firefox-devtools.vscode-firefox-debug"
+      ]
+    }
+  },
+
+  "remoteUser": "node",
+
+  "postStartCommand": "bash .devcontainer/start.sh"
+}

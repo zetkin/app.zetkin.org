@@ -90,13 +90,34 @@ Note: If you are running the backend locally and things like `dev.zetkin.org` re
 then this only works on Linux-based systems, due to the nature of `127.0.0.1` pointing to the host on Linux
 (but not on Windows/Mac, where it points to the container itself).
 
+### Running the code (Dev container)
+
+As **another alternative**, you can run the provided dev container. This
+
+- Requires Docker Compose
+- (VSCode) Requires [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+Once you have cloned the GitHub repo locally, select the option to `Open in Container`, either from the prompt or after clicking the `Open a Remote Window` icon in the bottom-left corner of the window.
+
+The new container will take a while to set itself up. It will automatically pull the images, install dependencies, then install the app and playwright, along with recommended VSCode extensions and preferred configurations. It will also start a mongodb container for using the Geographies feature.
+
+Once setup is complete, you can start the development server in the same way as the normal method above:
+
+```
+$ yarn devserver
+```
+
+For your reference, there's a [guide to developing inside a container](https://code.visualstudio.com/docs/devcontainers/containers) on the VSCode website.
+
+JetBrains IDE also supports dev containers but this has not yet been tested!
+
 ### Debugging
 
 If you want to debug this applications you can do so through VS Code or JetBrains IDE's (as IntelliJ or WebStorm).
 
 #### VS Code
 
-For VS Code there are 2 debugging configurations within [`./.vscode/launch.json`](./.vscode/launch.json). 
+For VS Code there are 2 debugging configurations within [`./.vscode/launch.json`](./.vscode/launch.json).
 One for debugging with chrome and one for firefox.
 
 1. Start the devserver via `yarn devserver`
@@ -109,10 +130,9 @@ One for debugging with chrome and one for firefox.
 For JetBrains IDE's unfortunately there's only a debug configuration for chrome available ([`./.idea/launch.json`](./.idea/launch.json)).
 
 1. Start the devserver via `yarn devserver`
-2. In the top bar select the run configuration `Next.js: debug client-side (Chrome)` 
+2. In the top bar select the run configuration `Next.js: debug client-side (Chrome)`
 3. Run that selected configuration in the debug mode by clicking on the bug icon.
 4. A chrome window should open itself. Navigate to the page that you need to debug (don't forget to set your breakpoints first)
-
 
 ## Development server login credentials
 
