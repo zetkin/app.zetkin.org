@@ -88,8 +88,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
     null
   );
 
-  const selectedHousehold = location.households.find(
-    (household) => household.id == selectedHouseholdId
+  // TODO: Load from households API
+  //const selectedHousehold = location.households.find(
+  const selectedHousehold = [].find(
+    (household) => household == selectedHouseholdId
   );
 
   return (
@@ -143,9 +145,15 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
               }}
-              visitedInThisAssignment={selectedHousehold.visits.some(
+              visitedInThisAssignment={
+                false
+                // TODO: Get from API
+                /*
+                selectedHousehold.visits.some(
                 (visit) => visit.assignment_id == assignment.id
-              )}
+              )
+                */
+              }
             />
           )}
         </Box>
@@ -164,8 +172,11 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onBack={() => back()}
               onClose={onClose}
               onSave={async (title, floor) => {
-                await updateHousehold(selectedHousehold.id, { floor, title });
-                back();
+                // TODO: Could probably be simplified once API exists
+                if (selectedHouseholdId) {
+                  await updateHousehold(selectedHouseholdId, { floor, title });
+                  back();
+                }
               }}
             />
           )}
@@ -193,14 +204,17 @@ const LocationDialog: FC<LocationDialogProps> = ({
               metrics={assignment.metrics}
               onBack={() => back()}
               onLogVisit={async (responses, noteToOfficial) => {
-                await addVisit(selectedHousehold.id, {
-                  assignment_id: assignment.id,
-                  noteToOfficial,
-                  responses,
-                  timestamp: new Date().toISOString(),
-                });
-                setShowSparkle(true);
-                goto('households');
+                // TODO: Could probably be simplified once API exists
+                if (selectedHouseholdId) {
+                  await addVisit(selectedHouseholdId, {
+                    assignment_id: assignment.id,
+                    noteToOfficial,
+                    responses,
+                    timestamp: new Date().toISOString(),
+                  });
+                  setShowSparkle(true);
+                  goto('households');
+                }
               }}
             />
           )}

@@ -27,6 +27,7 @@ import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import locToLatLng from 'features/geography/utils/locToLatLng';
 
 type Props = {
   areaAssId: number;
@@ -71,7 +72,7 @@ const AreaSelect: FC<Props> = ({
   if (selectedArea) {
     locations.map((location) => {
       const isInsideArea = isPointInsidePolygon(
-        location.position,
+        locToLatLng(location),
         selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
       );
       if (isInsideArea) {
@@ -81,7 +82,9 @@ const AreaSelect: FC<Props> = ({
   }
 
   const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
-    .map((location) => location.households.length)
+    .map(
+      (location) => location.num_households || location.num_estimated_households
+    )
     .reduce((prev, curr) => prev + curr, 0);
 
   return (

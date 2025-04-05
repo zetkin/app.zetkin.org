@@ -25,19 +25,19 @@ import {
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
+import locToLatLng from 'features/geography/utils/locToLatLng';
 
 const LocationMarker: FC<{
   areaAssId: number;
-  idOfMetricThatDefinesDone: string;
   location: ZetkinLocation;
   locationStyle: 'dot' | 'households' | 'progress';
-}> = ({ areaAssId, idOfMetricThatDefinesDone, location, locationStyle }) => {
+}> = ({ areaAssId, location, locationStyle }) => {
   const theme = useTheme();
   if (locationStyle == 'dot') {
     return (
       <DivIconMarker
         iconAnchor={[2, 2]}
-        position={location.position}
+        position={locToLatLng(location)}
         zIndexOffset={-1000}
       >
         <Box
@@ -50,7 +50,7 @@ const LocationMarker: FC<{
     );
   } else if (locationStyle == 'households') {
     return (
-      <DivIconMarker iconAnchor={[6, 22]} position={location.position}>
+      <DivIconMarker iconAnchor={[6, 22]} position={locToLatLng(location)}>
         <Box
           alignItems="center"
           display="flex"
@@ -70,7 +70,7 @@ const LocationMarker: FC<{
             paddingX="10px"
             width="100%"
           >
-            {location.households.length}
+            {location.num_households || location.num_estimated_households}
           </Box>
           <div
             style={{
@@ -86,14 +86,10 @@ const LocationMarker: FC<{
       </DivIconMarker>
     );
   } else {
-    const percentage = getVisitPercentage(
-      areaAssId,
-      location.households,
-      idOfMetricThatDefinesDone
-    );
+    const percentage = getVisitPercentage(areaAssId, [], '');
 
     return (
-      <DivIconMarker iconAnchor={[6, 24]} position={location.position}>
+      <DivIconMarker iconAnchor={[6, 24]} position={locToLatLng(location)}>
         <MarkerIcon
           percentage={percentage}
           selected={false}
@@ -211,7 +207,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     locations.forEach((location) => {
       const isInsideArea = isPointInsidePolygon(
-        location.position,
+        locToLatLng(location),
         area.points.map((point) => ({
           lat: point[0],
           lng: point[1],
@@ -227,7 +223,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   Object.keys(locationsByAreaId).forEach((id) => {
     let numberOfHouseholdsInArea = 0;
     locationsByAreaId[id].forEach((location) => {
-      numberOfHouseholdsInArea += location.households.length;
+      numberOfHouseholdsInArea +=
+        location.num_households || location.num_estimated_households;
     });
 
     if (numberOfHouseholdsInArea > highestHousholds) {
@@ -313,7 +310,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
             let numberOfHouseholds = 0;
             locationsByAreaId[area.id].forEach(
-              (location) => (numberOfHouseholds += location.households.length)
+              (location) =>
+                (numberOfHouseholds +=
+                  location.num_households || location.num_estimated_households)
             );
             const numberOfLocations = locationsByAreaId[area.id].length;
 
@@ -527,7 +526,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             const areaIds: number[] = [];
             areas.forEach((area) => {
               const isInsideArea = isPointInsidePolygon(
-                location.position,
+                locToLatLng(location),
                 area.points.map((point) => ({
                   lat: point[0],
                   lng: point[1],
@@ -556,12 +555,16 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             }
 
             //Check if the location has housholds with visits in this assignment
+            // TODO: This will require a better solution
+            const hasVisitsInThisAssignment = false;
+            /*
             const hasVisitsInThisAssignment = location.households.some(
               (household) =>
                 !!household.visits.find(
                   (visit) => visit.assignment_id == areaAssId
                 )
             );
+            */
 
             //If user wants to see progress of locations,
             //don't show locations outside of assigned areas
@@ -579,10 +582,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               <LocationMarker
                 key={location.id}
                 areaAssId={areaAssId}
-                idOfMetricThatDefinesDone={
-                  assignment.metrics.find((metric) => metric.definesDone)?.id ||
-                  ''
-                }
                 location={location}
                 locationStyle={locationStyle}
               />

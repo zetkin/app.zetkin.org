@@ -5,6 +5,7 @@ export interface VisitStats {
   totalVisits: number;
 }
 
+// TODO: This should be mostly replaced by API data
 export function getVisitPercentage(
   areaAssId: number | null,
   households: Household[],

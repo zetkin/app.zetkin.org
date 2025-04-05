@@ -14,6 +14,6 @@ export default function useLocations(orgId: number) {
     actionOnLoad: () => locationsLoad(),
     actionOnSuccess: (data) => locationsLoaded(data),
     loader: () =>
-      apiClient.get<ZetkinLocation[]>(`/beta/orgs/${orgId}/locations`),
+      apiClient.get<ZetkinLocation[]>(`/api2/orgs/${orgId}/locations`),
   });
 }

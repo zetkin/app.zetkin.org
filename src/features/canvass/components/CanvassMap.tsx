@@ -33,6 +33,7 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { ZetkinArea } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import locToLatLng from 'features/geography/utils/locToLatLng';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -122,7 +123,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
         locations.forEach((location) => {
-          const screenPos = map.latLngToContainerPoint(location.position);
+          const screenPos = map.latLngToContainerPoint(locToLatLng(location));
           const dx = screenPos.x - markerPos.markerX;
           const dy = screenPos.y - markerPos.markerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -322,7 +323,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           const key = `marker-${location.id}-${selected.toString()}`;
           const percentage = getVisitPercentage(
             assignment.id,
-            location.households,
+            [],
             assignment.metrics.find((metric) => metric.definesDone)?.id || null
           );
           return (
@@ -334,10 +335,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
                 },
               }}
               iconAnchor={[11, 33]}
-              position={{
-                lat: location.position.lat,
-                lng: location.position.lng,
-              }}
+              position={locToLatLng(location)}
             >
               <MarkerIcon
                 percentage={percentage}
@@ -364,7 +362,8 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             if (point) {
               setCreated(true);
               createLocation({
-                position: point,
+                latitude: point.lat,
+                longitude: point.lng,
                 title,
               });
             }

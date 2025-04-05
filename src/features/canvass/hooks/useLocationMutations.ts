@@ -27,7 +27,7 @@ export default function useLocationMutations(
         data
       );
       dispatch(locationUpdated(location));
-      return location.households[0];
+      return null;
     },
     addHouseholds: async (households: { floor: number; title: string }[]) => {
       const location = await apiClient.rpc(createHouseholds, {

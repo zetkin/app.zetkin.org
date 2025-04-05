@@ -44,10 +44,13 @@ const LocationPage: FC<LocationPageProps> = ({
     location.id
   );
 
+  /* TODO: Get from API
   const numHouseholdsVisitedIndividually =
     location?.households.filter((household) =>
       household.visits.some((visit) => visit.assignment_id == assignment.id)
     ).length ?? 0;
+    */
+  const numHouseholdsVisitedIndividually = 0;
 
   const numHouseholdsPerLocationVisit =
     visitsFuture.data?.map(estimateVisitedHouseholds) ?? [];
@@ -58,7 +61,7 @@ const LocationPage: FC<LocationPageProps> = ({
   );
 
   const numHouseholds = Math.max(
-    location.households.length,
+    location.num_households || location.num_estimated_households,
     numVisitedHouseholds
   );
 

@@ -42,12 +42,16 @@ const HouseholdsPage: FC<Props> = ({
   const [adding, setAdding] = useState(false);
   const { addHousehold } = useLocationMutations(orgId, location.id);
 
+  // TODO: Get from API
+  /*
   const sortedHouseholds = location.households.concat().sort((h0, h1) => {
     const floor0 = h0.floor ?? Infinity;
     const floor1 = h1.floor ?? Infinity;
 
     return floor0 - floor1;
   });
+  */
+  const sortedHouseholds: Household[] = [];
 
   return (
     <PageBase
@@ -57,7 +61,7 @@ const HouseholdsPage: FC<Props> = ({
       title={messages.households.page.header()}
     >
       <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
-        {location.households.length == 0 && (
+        {location.num_households == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             <Msg id={messageIds.households.page.empty} />
           </Typography>
@@ -135,7 +139,10 @@ const HouseholdsPage: FC<Props> = ({
 
               const newlyAddedHousehold = await addHousehold({ title });
               setAdding(false);
-              onCreateHousehold(newlyAddedHousehold);
+              // TODO: Remove condition after API update
+              if (newlyAddedHousehold) {
+                onCreateHousehold(newlyAddedHousehold);
+              }
             }}
             startIcon={
               adding ? (

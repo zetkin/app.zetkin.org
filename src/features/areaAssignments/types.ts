@@ -52,10 +52,12 @@ export type Household = {
 
 export type ZetkinLocation = {
   description: string;
-  households: Household[];
   id: string;
-  orgId: number;
-  position: { lat: number; lng: number };
+  latitude: number;
+  longitude: number;
+  num_estimated_households: number;
+  num_households: number;
+  organization_id: number;
   title: string;
 };
 

@@ -74,12 +74,14 @@ export default function useSidebarStats(
   const userLocationsToday = new Set<string>();
   const teamLocationsToday = new Set<string>();
   const teamLocations = new Set<string>();
+  const todayStr = new Date().toISOString().slice(0, 10);
 
+  // TODO: Get from API
+  /*
   const userHouseholdsToday = new Set<string>();
   const teamHouseholdsToday = new Set<string>();
   const teamHouseholds = new Set<string>();
 
-  const todayStr = new Date().toISOString().slice(0, 10);
 
   if (locationListFuture.data) {
     locationListFuture.data.forEach((location) => {
@@ -104,6 +106,7 @@ export default function useSidebarStats(
   stats.allTime.numHouseholds = teamHouseholds.size;
   stats.today.numHouseholds = teamHouseholdsToday.size;
   stats.today.numUserHouseholds = userHouseholdsToday.size;
+  */
 
   if (visitListFuture.data) {
     visitListFuture.data.forEach((visit) => {

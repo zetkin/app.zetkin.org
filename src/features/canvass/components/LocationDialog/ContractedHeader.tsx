@@ -3,30 +3,20 @@ import { Box, IconButton, lighten, useTheme } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
 
 import PageBaseHeader from './pages/PageBaseHeader';
-import useLocationVisits from 'features/canvass/hooks/useLocationVisits';
-import {
-  ZetkinAreaAssignment,
-  ZetkinLocation,
-} from 'features/areaAssignments/types';
-import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
 type Props = {
-  assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
 };
 
-const ContractedHeader: FC<Props> = ({ assignment, location }) => {
+const ContractedHeader: FC<Props> = ({ location }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
 
-  const visitsFuture = useLocationVisits(
-    assignment.organization_id,
-    assignment.id,
-    location.id
-  );
-
+  // TODO: get stats from location API
+  /*
   const numHouseholdsVisitedIndividually =
     location?.households.filter((household) =>
       household.visits.some((visit) => visit.assignment_id == assignment.id)
@@ -59,6 +49,11 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
         )
     )
   ).length;
+  */
+
+  const numVisitedHouseholds = 0;
+  const numHouseholds = 0;
+  const successfulVisits = 0;
 
   return (
     <PageBaseHeader
