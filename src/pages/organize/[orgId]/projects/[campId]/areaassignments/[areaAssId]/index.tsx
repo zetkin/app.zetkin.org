@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 interface AreaAssignmentPageProps {
   orgId: string;
-  areaAssId: string;
+  areaAssId: number;
 }
 
 const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
@@ -59,9 +59,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
         }}
       >
         {({ data: { assignment, stats } }) => {
-          const planUrl = `/organize/${orgId}/projects/${
-            assignment.campaign.id || 'standalone'
-          }/areaassignments/${assignment.id}/map`;
+          const planUrl = `/organize/${orgId}/projects/${assignment.project_id}/areaassignments/${assignment.id}/map`;
           return (
             <Box display="flex" flexDirection="column" gap={2}>
               {stats.num_areas == 0 && (
@@ -125,7 +123,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         const filteredAreas = dataGraph
                           .map((area) => {
                             return areasStats.stats.filter(
-                              (item) => item.areaId === area.area.id
+                              (item) => item.area_id === area.area_id
                             );
                           })
                           .flat();
@@ -134,7 +132,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                           .map((area) => {
                             const successfulVisitsTotal =
                               dataGraph
-                                .find((graph) => graph.area.id === area.areaId)
+                                .find((graph) => graph.area_id === area.area_id)
                                 ?.data.reduce(
                                   (sum, item) => sum + item.successfulVisits,
                                   0
@@ -160,7 +158,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         );
 
                         const noAreaData = dataGraph.find(
-                          (graph) => graph.area.id === 'noArea'
+                          (graph) => !graph.area_id
                         );
                         if (noAreaData && noAreaData.data.length > 0) {
                           const latestEntry = [...noAreaData.data].sort(
@@ -176,7 +174,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                             latestEntry.householdVisits;
 
                           const noArea: ZetkinAssignmentAreaStatsItem = {
-                            areaId: 'noArea',
+                            area_id: null,
                             num_households: 0,
                             num_locations: 0,
                             num_successful_visited_households,

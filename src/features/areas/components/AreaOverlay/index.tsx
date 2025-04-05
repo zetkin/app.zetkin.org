@@ -50,7 +50,7 @@ const AreaOverlay: FC<Props> = ({
     'title' | 'description' | null
   >(null);
   const { deleteArea, updateArea } = useAreaMutations(
-    area.organization.id,
+    area.organization_id,
     area.id
   );
   const tagsElement = useRef<HTMLElement>();

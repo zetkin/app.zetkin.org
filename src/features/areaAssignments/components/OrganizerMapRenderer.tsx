@@ -27,7 +27,7 @@ import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
 
 const LocationMarker: FC<{
-  areaAssId: string;
+  areaAssId: number;
   idOfMetricThatDefinesDone: string;
   location: ZetkinLocation;
   locationStyle: 'dot' | 'households' | 'progress';
@@ -105,17 +105,17 @@ const LocationMarker: FC<{
 };
 
 type OrganizerMapRendererProps = {
-  areaAssId: string;
+  areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
   locationStyle: 'dot' | 'households' | 'progress' | 'hide';
   locations: ZetkinLocation[];
-  navigateToAreaId?: string;
-  onSelectedIdChange: (newId: string) => void;
+  navigateToAreaId?: number;
+  onSelectedIdChange: (newId: number) => void;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
-  selectedId: string;
+  selectedId: number;
   sessions: ZetkinAreaAssignmentSession[];
 };
 
@@ -287,11 +287,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
             const detailed = zoom >= 15;
 
-            const people = sessions
-              .filter((session) => session.area.id == area.id)
-              .map((session) => session.assignee);
+            const userIds = sessions
+              .filter((session) => session.area_id == area.id)
+              .map((session) => session.user_id);
 
-            const hasPeople = !!people.length;
+            const hasPeople = !!userIds.length;
 
             if (hasPeople && assigneesFilter == 'unassigned') {
               return null;
@@ -308,7 +308,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               (hasPeople ? '-assigned' : '');
 
             const stats = areaStats.stats.find(
-              (stat) => stat.areaId == area.id
+              (stat) => stat.area_id == area.id
             );
 
             let numberOfHouseholds = 0;
@@ -436,13 +436,11 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                         }}
                         width={zoom >= 16 ? '95px' : '65px'}
                       >
-                        {people.map((person, index) => {
+                        {userIds.map((userId, index) => {
                           if (index <= 4) {
                             return (
                               <Box
-                                //TODO: only use person id once we have logic preventing
-                                //assigning the same person to an area more than once
-                                key={`${person.id}-${index}`}
+                                key={userId}
                                 sx={{
                                   borderRadius: '50%',
                                   boxShadow: '0 0 8px rgba(0,0,0,0.3)',
@@ -450,7 +448,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                               >
                                 <ZUIAvatar
                                   size={zoom >= 16 ? 'sm' : 'xs'}
-                                  url={`/api/orgs/${assignment.organization.id}/people/${person.id}/avatar`}
+                                  url={`/api/orgs/${assignment.organization_id}/connected_users/${userId}/avatar`}
                                 />
                               </Box>
                             );
@@ -470,7 +468,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                                 <Typography
                                   color="secondary"
                                   fontSize={zoom >= 16 ? 14 : 11}
-                                >{`+${people.length - 5}`}</Typography>
+                                >{`+${userIds.length - 5}`}</Typography>
                               </Box>
                             );
                           } else {
@@ -496,7 +494,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                           width: 30,
                         }}
                       >
-                        <Box>{people.length}</Box>
+                        <Box>{userIds.length}</Box>
                       </Box>
                     )}
                   </DivIconMarker>
@@ -507,7 +505,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                   dashArray={!hasPeople ? '5px 7px' : ''}
                   eventHandlers={{
                     click: () => {
-                      onSelectedIdChange(selected ? '' : area.id);
+                      onSelectedIdChange(selected ? 0 : area.id);
                     },
                   }}
                   fillColor={getAreaColor(
@@ -526,7 +524,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
         {locationStyle != 'hide' &&
           locations.map((location) => {
             //Find ids of area/s that the location is in
-            const areaIds: string[] = [];
+            const areaIds: number[] = [];
             areas.forEach((area) => {
               const isInsideArea = isPointInsidePolygon(
                 location.position,
@@ -542,12 +540,12 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             });
 
             //See if any of those areas have assignees in this assignment
-            let idOfAreaInThisAssignment = '';
+            let idOfAreaInThisAssignment = 0;
             for (let i = 0; i < areaIds.length; i++) {
               const id = areaIds[i];
               const people = sessions
-                .filter((session) => session.area.id == id)
-                .map((session) => session.assignee);
+                .filter((session) => session.area_id == id)
+                .map((session) => session.user_id);
 
               const hasPeople = !!people.length;
 
@@ -560,7 +558,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             //Check if the location has housholds with visits in this assignment
             const hasVisitsInThisAssignment = location.households.some(
               (household) =>
-                !!household.visits.find((visit) => visit.areaAssId == areaAssId)
+                !!household.visits.find(
+                  (visit) => visit.assignment_id == areaAssId
+                )
             );
 
             //If user wants to see progress of locations,

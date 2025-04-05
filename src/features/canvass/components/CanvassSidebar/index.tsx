@@ -24,7 +24,7 @@ type Props = {
 
 const CanvassSidebar: FC<Props> = ({ assignment }) => {
   const { loading, stats, sync, synced } = useSidebarStats(
-    assignment.organization.id,
+    assignment.organization_id,
     assignment.id
   );
 

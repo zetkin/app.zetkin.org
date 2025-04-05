@@ -144,7 +144,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 goto('householdVisit');
               }}
               visitedInThisAssignment={selectedHousehold.visits.some(
-                (visit) => visit.areaAssId == assignment.id
+                (visit) => visit.assignment_id == assignment.id
               )}
             />
           )}
@@ -194,7 +194,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onBack={() => back()}
               onLogVisit={async (responses, noteToOfficial) => {
                 await addVisit(selectedHousehold.id, {
-                  areaAssId: assignment.id,
+                  assignment_id: assignment.id,
                   noteToOfficial,
                   responses,
                   timestamp: new Date().toISOString(),

@@ -15,10 +15,8 @@ export default function useAreas(orgId: number) {
       apiClient.get<Zetkin2Area[]>(`/api2/orgs/${orgId}/areas`).then((areas) =>
         areas.map<ZetkinArea>((area) => ({
           description: area.description,
-          id: area.id.toString(),
-          organization: {
-            id: area.organization_id,
-          },
+          id: area.id,
+          organization_id: area.organization_id,
           points: area.boundary.coordinates[0],
           tags: [],
           title: area.title,

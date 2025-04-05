@@ -20,7 +20,7 @@ const AreaAssignmentOverviewListItem: FC<Props> = ({ activity, focusDate }) => {
   const allSessions =
     useAreaAssignmentSessions(orgId, assignment.id).data || [];
   const sessions = allSessions.filter(
-    (session) => session.assignment.id === assignment.id
+    (session) => session.assignment_id === assignment.id
   );
 
   const areaAssignees = getAreaAssignees(sessions);
@@ -31,9 +31,7 @@ const AreaAssignmentOverviewListItem: FC<Props> = ({ activity, focusDate }) => {
       endDate={activity.visibleUntil}
       endNumber={areaAssignees.length}
       focusDate={focusDate}
-      href={`/organize/${assignment.organization.id}/projects/${
-        assignment.campaign?.id ?? 'standalone'
-      }/areaassignments/${assignment.id}`}
+      href={`/organize/${assignment.organization_id}/projects/${assignment.project_id}/areaassignments/${assignment.id}`}
       PrimaryIcon={Map}
       SecondaryIcon={Person}
       startDate={activity.visibleFrom}

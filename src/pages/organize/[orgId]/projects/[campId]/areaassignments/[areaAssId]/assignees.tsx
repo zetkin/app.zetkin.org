@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 type Props = {
-  areaAssId: string;
+  areaAssId: number;
   orgId: string;
 };
 
@@ -38,7 +38,7 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
   const allSessions =
     useAreaAssignmentSessions(parseInt(orgId), areaAssId).data || [];
   const sessions = allSessions.filter(
-    (session) => session.assignment.id === areaAssId
+    (session) => session.assignment_id === areaAssId
   );
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const areaAssignees = getAreaAssignees(sessions);
@@ -49,10 +49,10 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
       field: 'id',
       headerName: ' ',
       renderCell: (params) => (
-        <ZUIPersonHoverCard personId={params.row.person.id}>
+        <ZUIPersonHoverCard personId={params.row.id}>
           <ZUIAvatar
             size={'md'}
-            url={`/api/orgs/${orgId}/people/${params.row.person.id}/avatar`}
+            url={`/api/orgs/${orgId}/connected_users/${params.row.id}/avatar`}
           />
         </ZUIPersonHoverCard>
       ),
@@ -62,8 +62,7 @@ const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
       field: 'name',
       flex: 1,
       headerName: messages.assignees.columns.name(),
-      valueGetter: (params) =>
-        `${params.row.person.first_name} ${params.row.person.last_name}`,
+      valueGetter: (params) => params.row.id,
     },
     {
       align: 'left',

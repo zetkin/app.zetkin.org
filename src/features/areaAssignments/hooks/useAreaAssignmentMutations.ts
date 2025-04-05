@@ -4,7 +4,7 @@ import { areaAssignmentDeleted, areaAssignmentUpdated } from '../store';
 
 export default function useAreaAssignmentMutations(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -12,15 +12,15 @@ export default function useAreaAssignmentMutations(
   return {
     deleteAreaAssignment: async () => {
       await apiClient.delete(
-        `/beta/orgs/${orgId}/areaassignments/${areaAssId}`
+        `/api2/orgs/${orgId}/area_assignments/${areaAssId}`
       );
-      dispatch(areaAssignmentDeleted(parseInt(areaAssId)));
+      dispatch(areaAssignmentDeleted(areaAssId));
     },
     updateAreaAssignment: async (data: ZetkinAreaAssignmentPatchbody) => {
       const updated = await apiClient.patch<
         ZetkinAreaAssignment,
         ZetkinAreaAssignmentPatchbody
-      >(`/beta/orgs/${orgId}/areaassignments/${areaAssId}`, data);
+      >(`/api2/orgs/${orgId}/area_assignments/${areaAssId}`, data);
 
       dispatch(areaAssignmentUpdated(updated));
     },

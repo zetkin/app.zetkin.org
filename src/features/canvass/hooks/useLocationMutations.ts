@@ -54,7 +54,7 @@ export default function useLocationMutations(
     },
     isAddVisitLoading,
     reportLocationVisit: async (
-      areaAssId: string,
+      areaAssId: number,
       data: ZetkinLocationVisitPostBody
     ) => {
       const visit = await apiClient.post<

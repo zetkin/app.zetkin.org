@@ -24,7 +24,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 type AreaAssignmentLayoutProps = {
-  areaAssId: string;
+  areaAssId: number;
   campId: number;
   children: ReactNode;
   orgId: number;
@@ -44,7 +44,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
 
   const allSessions = useAreaAssignmentSessions(orgId, areaAssId).data || [];
   const sessions = allSessions.filter(
-    (session) => session.assignment.id === areaAssId
+    (session) => session.assignment_id === areaAssId
   );
 
   const stats = useAreaAssignmentStats(orgId, areaAssId);
@@ -65,9 +65,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
 
   const handleDelete = () => {
     deleteAreaAssignment();
-    router.push(
-      `/organize/${orgId}/projects/${areaAssignment.campaign.id || ''} `
-    );
+    router.push(`/organize/${orgId}/projects/${areaAssignment.project_id} `);
   };
 
   return (

@@ -4,10 +4,8 @@ export type PointData = [number, number];
 
 export type ZetkinArea = {
   description: string;
-  id: string;
-  organization: {
-    id: number;
-  };
+  id: number;
+  organization_id: number;
   points: PointData[];
   tags: ZetkinTag[];
   title: string;

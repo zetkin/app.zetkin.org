@@ -11,7 +11,7 @@ export type AssignmentWithAreas = ZetkinAreaAssignment & {
 };
 
 export type ZetkinLocationVisit = {
-  areaAssId: string;
+  areaAssId: number;
   id: string;
   locationId: string;
   personId: number;

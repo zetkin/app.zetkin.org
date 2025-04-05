@@ -39,14 +39,14 @@ const LocationPage: FC<LocationPageProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const visitsFuture = uselocationVisits(
-    assignment.organization.id,
+    assignment.organization_id,
     assignment.id,
     location.id
   );
 
   const numHouseholdsVisitedIndividually =
     location?.households.filter((household) =>
-      household.visits.some((visit) => visit.areaAssId == assignment.id)
+      household.visits.some((visit) => visit.assignment_id == assignment.id)
     ).length ?? 0;
 
   const numHouseholdsPerLocationVisit =

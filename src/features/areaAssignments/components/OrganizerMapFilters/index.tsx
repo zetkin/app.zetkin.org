@@ -14,7 +14,7 @@ import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
-  onFilteredIdsChange: (areaIds: string[]) => void;
+  onFilteredIdsChange: (areaIds: number[]) => void;
 };
 
 const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {

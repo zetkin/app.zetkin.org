@@ -12,7 +12,7 @@ import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
-  onFilteredIdsChange: (areaIds: string[]) => void;
+  onFilteredIdsChange: (areaIds: number[]) => void;
 };
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {

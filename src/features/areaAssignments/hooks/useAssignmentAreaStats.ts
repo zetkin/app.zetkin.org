@@ -5,7 +5,7 @@ import { ZetkinAssignmentAreaStats } from '../types';
 
 export default function useAssignmentAreaStats(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

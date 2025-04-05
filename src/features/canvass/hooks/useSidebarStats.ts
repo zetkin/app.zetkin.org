@@ -29,7 +29,7 @@ type UseSidebarReturn = {
 
 export default function useSidebarStats(
   orgId: number,
-  assignmentId: string
+  assignmentId: number
 ): UseSidebarReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -85,7 +85,7 @@ export default function useSidebarStats(
     locationListFuture.data.forEach((location) => {
       location.households.forEach((household) => {
         household.visits.forEach((visit) => {
-          if (visit.areaAssId == assignmentId) {
+          if (visit.assignment_id == assignmentId) {
             teamHouseholds.add(household.id);
 
             if (visit.timestamp.startsWith(todayStr)) {

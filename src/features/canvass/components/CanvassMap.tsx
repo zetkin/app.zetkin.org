@@ -72,8 +72,8 @@ type CanvassMapProps = {
 const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   const theme = useTheme();
   const classes = useStyles();
-  const locations = useLocations(assignment.organization.id).data || [];
-  const createLocation = useCreateLocation(assignment.organization.id);
+  const locations = useLocations(assignment.organization_id).data || [];
+  const createLocation = useCreateLocation(assignment.organization_id);
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LatLngTuple, LatLngTuple] | null
   >(`mapBounds-${assignment.id}`, null);

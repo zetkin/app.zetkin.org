@@ -99,7 +99,7 @@ const CanvassMapOverlays: FC<Props> = ({
             onClose={() => {
               setExpanded(false);
             }}
-            orgId={assignment.organization.id}
+            orgId={assignment.organization_id}
           />
         )}
         {isCreating && (

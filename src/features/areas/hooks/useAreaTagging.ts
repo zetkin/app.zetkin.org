@@ -9,7 +9,7 @@ type UseAreaTaggingReturn = {
 
 export default function useAreaTagging(
   orgId: number,
-  areaId: string
+  areaId: number
 ): UseAreaTaggingReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

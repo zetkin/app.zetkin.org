@@ -3,13 +3,13 @@ import { sessionDeleted } from '../store';
 
 export default function useAreaAssignmentSessionMutations(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
   return {
-    deleteSession: async (areaId: string, personId: number) => {
+    deleteSession: async (areaId: number, personId: number) => {
       await apiClient.delete(
         `/beta/orgs/${orgId}/areaassignment/${areaAssId}/areas/${areaId}/assignees/${personId}`
       );

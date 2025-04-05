@@ -5,7 +5,7 @@ import { statsLoad, statsLoaded } from '../store';
 
 export default function useAreaAssignmentStats(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

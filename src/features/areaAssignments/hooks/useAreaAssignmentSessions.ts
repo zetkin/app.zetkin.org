@@ -8,7 +8,7 @@ import {
 
 export default function useAreaAssignmentSessions(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -23,7 +23,7 @@ export default function useAreaAssignmentSessions(
       dispatch(areaAssignmentSessionsLoaded([areaAssId, data])),
     loader: () =>
       apiClient.get<ZetkinAreaAssignmentSession[]>(
-        `/beta/orgs/${orgId}/areaassignments/${areaAssId}/sessions`
+        `/api2/orgs/${orgId}/area_assignments/${areaAssId}/assignees`
       ),
   });
 }

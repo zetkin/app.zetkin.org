@@ -29,7 +29,7 @@ import areasMessageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 
 type Props = {
-  areaAssId: string;
+  areaAssId: number;
   areas: ZetkinArea[];
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
@@ -37,7 +37,7 @@ type Props = {
   onAddAssignee: (person: ZetkinPerson) => void;
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
-  onSelectArea: (selectedId: string) => void;
+  onSelectArea: (selectedId: number) => void;
   selectedArea?: ZetkinArea | null;
   selectedAreaStats?: ZetkinAssignmentAreaStatsItem;
   sessions: ZetkinAreaAssignmentSession[];
@@ -64,8 +64,8 @@ const AreaSelect: FC<Props> = ({
   const { orgId } = useNumericRouteParams();
   const { deleteSession } = useAreaAssignmentSessionMutations(orgId, areaAssId);
   const selectedAreaAssignees = sessions
-    .filter((session) => session.area.id == selectedArea?.id)
-    .map((session) => session.assignee);
+    .filter((session) => session.area_id == selectedArea?.id)
+    .map((session) => session.user_id);
 
   const locationsInSelectedArea: ZetkinLocation[] = [];
   if (selectedArea) {
@@ -97,7 +97,7 @@ const AreaSelect: FC<Props> = ({
           <Box alignItems="center" display="flex">
             {selectedArea && (
               <IconButton
-                onClick={() => onSelectArea('')}
+                onClick={() => onSelectArea(0)}
                 sx={{ mr: 1, padding: 0 }}
               >
                 <ChevronLeft />
@@ -158,8 +158,8 @@ const AreaSelect: FC<Props> = ({
           >
             {filterAreas(areas, filterText).map((area, index) => {
               const assignees = sessions
-                .filter((session) => session.area.id == area.id)
-                .map((session) => session.assignee);
+                .filter((session) => session.area_id == area.id)
+                .map((session) => session.user_id);
               return (
                 <>
                   {index != 0 && <Divider />}
@@ -179,18 +179,18 @@ const AreaSelect: FC<Props> = ({
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>
                     <Box alignItems="center" display="flex">
-                      {assignees.map((assignee, index) => {
+                      {assignees.map((user_id, index) => {
                         if (index <= 3) {
                           return (
-                            <Box key={assignee.id} marginX={0.2}>
+                            <Box key={user_id} marginX={0.2}>
                               <ZUIPersonHoverCard
-                                key={assignee.id}
-                                personId={assignee.id}
+                                key={user_id}
+                                personId={user_id}
                               >
                                 <ZUIAvatar
-                                  key={assignee.id}
+                                  key={user_id}
                                   size="sm"
-                                  url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
+                                  url={`/api/orgs/${area.organization_id}/people/${user_id}/avatar`}
                                 />
                               </ZUIPersonHoverCard>
                             </Box>
@@ -312,17 +312,14 @@ const AreaSelect: FC<Props> = ({
                 />
               </Typography>
             )}
-            {selectedAreaAssignees.map((assignee) => (
-              <Box key={assignee.id} display="flex" my={1}>
-                <ZUIPersonHoverCard personId={assignee.id}>
-                  <ZUIPerson
-                    id={assignee.id}
-                    name={`${assignee.first_name} ${assignee.last_name}`}
-                  />
+            {selectedAreaAssignees.map((user_id) => (
+              <Box key={user_id} display="flex" my={1}>
+                <ZUIPersonHoverCard personId={user_id}>
+                  <ZUIPerson id={user_id} name={`${user_id} ${user_id}`} />
                 </ZUIPersonHoverCard>
                 <IconButton
                   color="secondary"
-                  onClick={() => deleteSession(selectedArea.id, assignee.id)}
+                  onClick={() => deleteSession(selectedArea.id, user_id)}
                 >
                   <Close />
                 </IconButton>
@@ -335,9 +332,7 @@ const AreaSelect: FC<Props> = ({
               <ZUIPersonSelect
                 disabled
                 getOptionDisabled={(person) =>
-                  selectedAreaAssignees.some(
-                    (assignee) => assignee.id == person.id
-                  )
+                  selectedAreaAssignees.some((user_id) => user_id == person.id)
                 }
                 onChange={function (person: ZetkinPerson): void {
                   onAddAssignee(person);

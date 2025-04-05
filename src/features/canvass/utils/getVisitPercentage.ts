@@ -6,7 +6,7 @@ export interface VisitStats {
 }
 
 export function getVisitPercentage(
-  areaAssId: string | null,
+  areaAssId: number | null,
   households: Household[],
   metricDefinesDone: string | null
 ): VisitStats {
@@ -17,13 +17,13 @@ export function getVisitPercentage(
     return { totalSuccessfulVisits: 0, totalVisits: 0 };
   }
   const numberOfVisitedHouseholds = households.filter((household) =>
-    household.visits.some((visit) => visit.areaAssId === areaAssId)
+    household.visits.some((visit) => visit.assignment_id === areaAssId)
   ).length;
 
   const successfulVisits = households.filter((household) =>
     household.visits.some(
       (visit) =>
-        visit.areaAssId === areaAssId &&
+        visit.assignment_id === areaAssId &&
         visit.responses.some(
           (response) =>
             response.metricId === metricDefinesDone &&

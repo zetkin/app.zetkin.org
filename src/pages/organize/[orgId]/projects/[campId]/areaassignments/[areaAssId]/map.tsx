@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 interface OrganizerMapPageProps {
   orgId: string;
-  areaAssId: string;
+  areaAssId: number;
 }
 
 const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
@@ -87,7 +87,7 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
                   locations={locations}
                   onAddAssigneeToArea={(area, person) => {
                     createAreaAssignmentSession({
-                      areaId: area.id,
+                      areaId: area.id.toString(),
                       personId: person.id,
                     });
                   }}

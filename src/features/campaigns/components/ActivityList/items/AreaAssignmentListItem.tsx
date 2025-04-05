@@ -7,7 +7,7 @@ import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAss
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 
 type Props = {
-  caId: string;
+  caId: number;
   orgId: number;
 };
 
@@ -16,7 +16,7 @@ const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
 
   const allSessions = useAreaAssignmentSessions(orgId, caId).data || [];
   const sessions = allSessions.filter(
-    (session) => session.assignment.id === caId
+    (session) => session.assignment_id === caId
   );
 
   if (!assignment) {
@@ -31,7 +31,7 @@ const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
       color={color}
       endNumber={areaAssignees.length}
       href={`/organize/${orgId}/projects/${
-        assignment?.campaign?.id ?? 'standalone'
+        assignment?.project_id ?? 'standalone'
       }/areaassignments/${caId}`}
       PrimaryIcon={Map}
       SecondaryIcon={Person}

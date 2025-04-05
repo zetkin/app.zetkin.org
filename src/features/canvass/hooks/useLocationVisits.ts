@@ -5,7 +5,7 @@ import { ResolvedFuture } from 'core/caching/futures';
 
 export default function useLocationVisits(
   orgId: number,
-  assignmentId: string,
+  assignmentId: number,
   locationId: string
 ) {
   const apiClient = useApiClient();

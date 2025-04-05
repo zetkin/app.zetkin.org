@@ -15,10 +15,8 @@ export default function useCreateArea(orgId: number) {
     );
     const translated = {
       description: created.description,
-      id: created.id.toString(),
-      organization: {
-        id: created.organization_id,
-      },
+      id: created.id,
+      organization_id: created.organization_id,
       points: created.boundary.coordinates[0],
       tags: [],
       title: created.title,

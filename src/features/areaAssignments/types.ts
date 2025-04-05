@@ -1,9 +1,5 @@
-import { ZetkinArea } from 'features/areas/types';
-import { ZetkinPerson } from 'utils/types/zetkin';
-
 export type AreaAssigneeInfo = {
   id: number;
-  person: ZetkinPerson;
   sessions: ZetkinAreaAssignmentSession[];
 };
 
@@ -16,16 +12,12 @@ export type ZetkinMetric = {
 };
 
 export type ZetkinAreaAssignment = {
-  campaign: {
-    id: number;
-  };
   end_date: string | null;
-  id: string;
+  id: number;
   instructions: string;
   metrics: ZetkinMetric[];
-  organization: {
-    id: number;
-  };
+  organization_id: number;
+  project_id: number;
   reporting_level: 'household' | 'location';
   start_date: string | null;
   title: string;
@@ -33,16 +25,14 @@ export type ZetkinAreaAssignment = {
 
 export type ZetkinAreaAssignmentPostBody = Partial<
   Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
-> & {
-  campaign_id: number;
-  metrics: Omit<ZetkinMetric, 'id'>[];
-};
+>;
+
 export type ZetkinAreaAssignmentPatchbody = Partial<
   Omit<ZetkinAreaAssignment, 'id'>
 >;
 
 export type Visit = {
-  areaAssId: string | null;
+  assignment_id: number;
   id: string;
   noteToOfficial: string | null;
   personId: number;
@@ -70,9 +60,9 @@ export type ZetkinLocation = {
 };
 
 export type ZetkinAreaAssignmentSession = {
-  area: ZetkinArea;
-  assignee: ZetkinPerson;
-  assignment: ZetkinAreaAssignment;
+  area_id: number;
+  assignment_id: number;
+  user_id: number;
 };
 
 export type ZetkinAreaAssignmentSessionPostBody = {
@@ -97,7 +87,7 @@ export type ZetkinAreaAssignmentStats = {
 };
 
 export type ZetkinAssignmentAreaStatsItem = {
-  areaId: string;
+  area_id: number | null;
   num_households: number;
   num_locations: number;
   num_successful_visited_households: number;
@@ -110,10 +100,7 @@ export type ZetkinAssignmentAreaStats = {
 };
 
 export type AreaCardData = {
-  area: {
-    id: string;
-    title: string | null;
-  };
+  area_id: number | null;
   data: AreaGraphData[];
 };
 
@@ -125,7 +112,7 @@ export type AreaGraphData = {
 };
 
 export type SessionDeletedPayload = {
-  areaId: string;
+  areaId: number;
   assigneeId: number;
-  assignmentId: string;
+  assignmentId: number;
 };

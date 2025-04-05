@@ -2,7 +2,7 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import { Zetkin2Area, Zetkin2AreaPostBody } from '../types';
 import { areaDeleted, areaUpdated } from '../store';
 
-export default function useAreaMutations(orgId: number, areaId: string) {
+export default function useAreaMutations(orgId: number, areaId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
@@ -20,10 +20,8 @@ export default function useAreaMutations(orgId: number, areaId: string) {
       dispatch(
         areaUpdated({
           description: area.description,
-          id: area.id.toString(),
-          organization: {
-            id: area.organization_id,
-          },
+          id: area.id,
+          organization_id: area.organization_id,
           points: area.boundary.coordinates[0],
           tags: [],
           title: area.title,

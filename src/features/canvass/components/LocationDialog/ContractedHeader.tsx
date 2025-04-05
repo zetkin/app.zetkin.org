@@ -22,14 +22,14 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
   const theme = useTheme();
 
   const visitsFuture = useLocationVisits(
-    assignment.organization.id,
+    assignment.organization_id,
     assignment.id,
     location.id
   );
 
   const numHouseholdsVisitedIndividually =
     location?.households.filter((household) =>
-      household.visits.some((visit) => visit.areaAssId == assignment.id)
+      household.visits.some((visit) => visit.assignment_id == assignment.id)
     ).length ?? 0;
 
   const numHouseholdsPerLocationVisit =
@@ -51,7 +51,7 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
   const successfulVisits = location?.households.filter((household) =>
     household.visits.some(
       (visit) =>
-        visit.areaAssId === assignment.id &&
+        visit.assignment_id === assignment.id &&
         visit.responses.some(
           (response) =>
             response.metricId === metricDefinesDone &&

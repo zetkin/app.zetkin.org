@@ -7,7 +7,7 @@ import { areaAssignmentSessionCreated } from '../store';
 
 export default function useCreateAreaAssignmentSession(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

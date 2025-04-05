@@ -17,7 +17,6 @@ import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import useSidebarStats from '../hooks/useSidebarStats';
-import useMembership from 'features/organizations/hooks/useMembership';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import theme from 'theme';
@@ -25,35 +24,34 @@ import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAss
 import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useUser from 'core/hooks/useUser';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
 }> = ({ assignment }) => {
-  const orgFuture = useOrganization(assignment.organization.id);
+  const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const { loading, stats } = useSidebarStats(
-    assignment.organization.id,
+    assignment.organization_id,
     assignment.id
   );
 
   const { data } = useAreaAssignmentStats(
-    assignment.organization.id,
+    assignment.organization_id,
     assignment.id
   );
 
   const allSessions =
-    useAreaAssignmentSessions(assignment.organization.id, assignment.id).data ||
+    useAreaAssignmentSessions(assignment.organization_id, assignment.id).data ||
     [];
 
-  const membershipFuture = useMembership(assignment.organization.id);
-  const userPersonId = membershipFuture.data?.profile.id;
+  const userId = useUser()?.id ?? null;
   const sessions = allSessions.filter(
     (session) =>
-      session.assignment.id === assignment.id &&
-      session.assignee.id === userPersonId
+      session.assignment_id === assignment.id && session.user_id === userId
   );
 
-  const areaIds = sessions.map((entry) => entry.area.id);
+  const areaIds = sessions.map((entry) => entry.area_id);
   const numberOfAreas = areaIds.length;
 
   return (
@@ -237,7 +235,7 @@ const Page: FC<{
 };
 
 type CanvassInstructionsPageProps = {
-  areaAssId: string;
+  areaAssId: number;
 };
 
 const CanvassInstructionsPage: FC<CanvassInstructionsPageProps> = ({
