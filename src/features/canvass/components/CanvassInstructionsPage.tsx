@@ -20,7 +20,7 @@ import useSidebarStats from '../hooks/useSidebarStats';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import theme from 'theme';
-import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -42,8 +42,7 @@ const Page: FC<{
   );
 
   const allSessions =
-    useAreaAssignmentSessions(assignment.organization_id, assignment.id).data ||
-    [];
+    useAreaAssignees(assignment.organization_id, assignment.id).data || [];
 
   const userId = useUser()?.id ?? null;
   const sessions = allSessions.filter(

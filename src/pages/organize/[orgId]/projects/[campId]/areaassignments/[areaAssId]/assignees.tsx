@@ -9,7 +9,7 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { AREAS } from 'utils/featureFlags';
 import { AreaAssigneeInfo } from 'features/areaAssignments/types';
-import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
@@ -35,8 +35,7 @@ type Props = {
 
 const AreaAssignmentPage: PageWithLayout<Props> = ({ orgId, areaAssId }) => {
   const messages = useMessages(messageIds);
-  const allSessions =
-    useAreaAssignmentSessions(parseInt(orgId), areaAssId).data || [];
+  const allSessions = useAreaAssignees(parseInt(orgId), areaAssId).data || [];
   const sessions = allSessions.filter(
     (session) => session.assignment_id === areaAssId
   );

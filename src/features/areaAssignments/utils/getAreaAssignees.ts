@@ -1,6 +1,6 @@
-import { AreaAssigneeInfo, ZetkinAreaAssignmentSession } from '../types';
+import { AreaAssigneeInfo, ZetkinAreaAssignee } from '../types';
 
-const getAreaAssignees = (sessions: ZetkinAreaAssignmentSession[]) => {
+const getAreaAssignees = (sessions: ZetkinAreaAssignee[]) => {
   const sessionsByPersonId: Record<number, AreaAssigneeInfo> = {};
 
   sessions.forEach((session) => {

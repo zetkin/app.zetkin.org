@@ -19,7 +19,7 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignment,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
@@ -112,7 +112,7 @@ type OrganizerMapRendererProps = {
   onSelectedIdChange: (newId: number) => void;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
   selectedId: number;
-  sessions: ZetkinAreaAssignmentSession[];
+  sessions: ZetkinAreaAssignee[];
 };
 
 const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({

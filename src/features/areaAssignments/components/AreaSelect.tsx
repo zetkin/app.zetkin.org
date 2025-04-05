@@ -9,18 +9,15 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
-import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { ZetkinArea } from 'features/areas/types';
 import {
   ZetkinAssignmentAreaStatsItem,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
-import useAreaAssignmentSessionMutations from '../hooks/useAreaAssingmentSessionMutations';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Msg, useMessages } from 'core/i18n';
@@ -28,6 +25,9 @@ import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 import locToLatLng from 'features/geography/utils/locToLatLng';
+import UserAutocomplete from 'features/user/components/UserAutocomplete';
+import { ZetkinOrgUser } from 'features/user/types';
+import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
 
 type Props = {
   areaAssId: number;
@@ -35,13 +35,13 @@ type Props = {
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
   locations: ZetkinLocation[];
-  onAddAssignee: (person: ZetkinPerson) => void;
+  onAddAssignee: (user: ZetkinOrgUser) => void;
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
   onSelectArea: (selectedId: number) => void;
   selectedArea?: ZetkinArea | null;
   selectedAreaStats?: ZetkinAssignmentAreaStatsItem;
-  sessions: ZetkinAreaAssignmentSession[];
+  sessions: ZetkinAreaAssignee[];
 };
 
 const AreaSelect: FC<Props> = ({
@@ -63,7 +63,7 @@ const AreaSelect: FC<Props> = ({
   const theme = useTheme();
 
   const { orgId } = useNumericRouteParams();
-  const { deleteSession } = useAreaAssignmentSessionMutations(orgId, areaAssId);
+  const { unassignArea } = useAreaAssignmentMutations(orgId, areaAssId);
   const selectedAreaAssignees = sessions
     .filter((session) => session.area_id == selectedArea?.id)
     .map((session) => session.user_id);
@@ -317,12 +317,10 @@ const AreaSelect: FC<Props> = ({
             )}
             {selectedAreaAssignees.map((user_id) => (
               <Box key={user_id} display="flex" my={1}>
-                <ZUIPersonHoverCard personId={user_id}>
-                  <ZUIPerson id={user_id} name={`${user_id} ${user_id}`} />
-                </ZUIPersonHoverCard>
+                <ZUIPerson id={user_id} name={`${user_id} ${user_id}`} />
                 <IconButton
                   color="secondary"
-                  onClick={() => deleteSession(selectedArea.id, user_id)}
+                  onClick={() => unassignArea(user_id, selectedArea.id)}
                 >
                   <Close />
                 </IconButton>
@@ -332,15 +330,13 @@ const AreaSelect: FC<Props> = ({
               <Typography variant="h6">
                 <Msg id={areaAssignmentMessageIds.map.areaInfo.assignees.add} />
               </Typography>
-              <ZUIPersonSelect
-                disabled
-                getOptionDisabled={(person) =>
-                  selectedAreaAssignees.some((user_id) => user_id == person.id)
-                }
-                onChange={function (person: ZetkinPerson): void {
-                  onAddAssignee(person);
+              <UserAutocomplete
+                onSelect={(user) => {
+                  if (user) {
+                    onAddAssignee(user);
+                  }
                 }}
-                selectedPerson={null}
+                orgId={orgId}
               />
             </Box>
           </Box>

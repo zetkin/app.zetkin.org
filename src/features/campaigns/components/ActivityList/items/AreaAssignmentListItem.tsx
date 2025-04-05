@@ -3,7 +3,7 @@ import { Map, Person } from '@mui/icons-material';
 
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
-import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
   const { data: assignment } = useAreaAssignment(orgId, caId);
 
-  const allSessions = useAreaAssignmentSessions(orgId, caId).data || [];
+  const allSessions = useAreaAssignees(orgId, caId).data || [];
   const sessions = allSessions.filter(
     (session) => session.assignment_id === caId
   );

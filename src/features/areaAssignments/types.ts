@@ -1,6 +1,6 @@
 export type AreaAssigneeInfo = {
   id: number;
-  sessions: ZetkinAreaAssignmentSession[];
+  sessions: ZetkinAreaAssignee[];
 };
 
 export type ZetkinMetric = {
@@ -61,7 +61,7 @@ export type ZetkinLocation = {
   title: string;
 };
 
-export type ZetkinAreaAssignmentSession = {
+export type ZetkinAreaAssignee = {
   area_id: number;
   assignment_id: number;
   user_id: number;

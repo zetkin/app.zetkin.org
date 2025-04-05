@@ -9,8 +9,7 @@ import { PageWithLayout } from 'utils/types';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
 import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
-import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
-import useCreateAreaAssignmentSession from 'features/areaAssignments/hooks/useCreateAreaAssigneeSession';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import { AREAS } from 'utils/featureFlags';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
@@ -18,6 +17,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import AssigneeFilterProvider from 'features/areaAssignments/components/OrganizerMapFilters/AssigneeFilterContext';
+import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
 
 const OrganizerMap = dynamic(
   () =>
@@ -51,12 +51,12 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
   const areas = useAreas(parseInt(orgId)).data || [];
   const locations = useLocations(parseInt(orgId)).data || [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
-  const sessionsFuture = useAreaAssignmentSessions(parseInt(orgId), areaAssId);
-  const createAreaAssignmentSession = useCreateAreaAssignmentSession(
+  const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
+  const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
+  const { assignArea: assignUserToArea } = useAreaAssignmentMutations(
     parseInt(orgId),
     areaAssId
   );
-  const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
 
   const isServer = useServerSide();
   if (isServer) {
@@ -85,11 +85,8 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
                   areaStats={areaStats}
                   assignment={assignment}
                   locations={locations}
-                  onAddAssigneeToArea={(area, person) => {
-                    createAreaAssignmentSession({
-                      areaId: area.id.toString(),
-                      personId: person.id,
-                    });
+                  onAddAssigneeToArea={(area, user) => {
+                    assignUserToArea(user.id, area.id);
                   }}
                   sessions={sessions}
                 />

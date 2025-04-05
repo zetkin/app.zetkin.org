@@ -17,11 +17,10 @@ import { Close, Layers, Pentagon } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
-import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignment,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
@@ -36,6 +35,7 @@ import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFil
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
+import { ZetkinOrgUser } from 'features/user/types';
 
 type OrganizerMapProps = {
   areaAssId: number;
@@ -43,8 +43,8 @@ type OrganizerMapProps = {
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
   locations: ZetkinLocation[];
-  onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
-  sessions: ZetkinAreaAssignmentSession[];
+  onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
+  sessions: ZetkinAreaAssignee[];
 };
 
 export type MapStyle = {
@@ -285,9 +285,9 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     filterAreas={filterAreas}
                     filterText={filterText}
                     locations={locations}
-                    onAddAssignee={(person) => {
+                    onAddAssignee={(user) => {
                       if (selectedArea) {
-                        onAddAssigneeToArea(selectedArea, person);
+                        onAddAssigneeToArea(selectedArea, user);
                       }
                     }}
                     onClose={clearAndCloseSettings}

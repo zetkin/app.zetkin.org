@@ -9,7 +9,7 @@ import getAreaAssignees from '../utils/getAreaAssignees';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useAreaAssignment from '../hooks/useAreaAssignment';
 import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
-import useAreaAssignmentSessions from '../hooks/useAreaAssignmentSessions';
+import useAreaAssignees from '../hooks/useAreaAssignees';
 import useAreaAssignmentStats from '../hooks/useAreaAssignmentStats';
 import useStartEndAssignment from '../hooks/useStartEndAssignment';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -42,7 +42,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
   const { deleteAreaAssignment, updateAreaAssignment } =
     useAreaAssignmentMutations(orgId, areaAssId);
 
-  const allSessions = useAreaAssignmentSessions(orgId, areaAssId).data || [];
+  const allSessions = useAreaAssignees(orgId, areaAssId).data || [];
   const sessions = allSessions.filter(
     (session) => session.assignment_id === areaAssId
   );
