@@ -39,9 +39,9 @@ const fontSizes: Record<ZUISize, string> = {
 };
 
 const avatarSizes: Record<ZUISize, string> = {
-  large: '3rem',
+  large: '2.5rem',
   medium: '2rem',
-  small: '0.875rem',
+  small: '1.5rem',
 };
 
 const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
