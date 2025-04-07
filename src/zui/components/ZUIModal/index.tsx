@@ -54,6 +54,14 @@ type ZUIModalProps = {
   title: string;
 };
 
+const widths: Record<ZUISize | 'auto' | 'full', string> = {
+  auto: 'auto',
+  full: 'calc(100dvw - 2.5rem)',
+  large: '60rem',
+  medium: '37.5rem',
+  small: '25rem',
+};
+
 const ZUIModal: FC<ZUIModalProps> = ({
   children,
   onClose,
@@ -62,126 +70,110 @@ const ZUIModal: FC<ZUIModalProps> = ({
   secondaryButton,
   size = 'auto',
   title,
-}) => {
-  let height = 'auto';
-  let width = 'auto';
-
-  if (size == 'full') {
-    height = 'calc(100dvh - 3.75rem)';
-    width = 'calc(100dvw - 2.5rem)';
-  } else if (size == 'small') {
-    width = '25rem';
-  } else if (size == 'medium') {
-    width = '37.5rem';
-  } else if (size == 'large') {
-    width = '60rem';
-  }
-
-  return (
-    <Modal
-      disableRestoreFocus
-      onClose={onClose}
-      open={open}
-      slots={{
-        backdrop: () => (
-          <Fade in={open} timeout={300}>
+}) => (
+  <Modal
+    disableRestoreFocus
+    onClose={onClose}
+    open={open}
+    slots={{
+      backdrop: () => (
+        <Fade in={open} timeout={300}>
+          <Box
+            onClick={onClose}
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              height: '100%',
+              width: '100%',
+            }}
+          >
+            <ModalBackground height="100%" width="100%" />
+          </Box>
+        </Fade>
+      ),
+    }}
+  >
+    <Fade in={open} timeout={300}>
+      <Paper
+        sx={(theme) => ({
+          border: `0.063rem solid ${theme.palette.dividers.main}`,
+          boxShadow: theme.elevation.bottom.big.medium,
+          height: size == 'full' ? 'calc(100dvh - 3.75rem)' : 'auto',
+          left: '50%',
+          maxWidth: 'calc(100dvw - 2.5rem)',
+          minWidth: '25rem',
+          position: 'absolute',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: widths[size],
+        })}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: 'auto',
+            maxHeight: 'calc(100dvh - 3.75rem)',
+            maxWidth: 'calc(100dvw - 2.5rem)',
+            overflowY: 'hidden',
+            padding: '1.25rem',
+          }}
+        >
+          <Box
+            sx={(theme) => ({
+              alignItems: 'flex-start',
+              borderBottom: `0.063rem solid ${theme.palette.dividers.lighter}`,
+              display: 'flex',
+              justifyContent: 'space-between',
+              paddingBottom: '1rem',
+            })}
+          >
             <Box
-              onClick={onClose}
               sx={{
-                backgroundColor: 'rgba(255,255,255,0.5)',
-                height: '100%',
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
                 width: '100%',
               }}
             >
-              <ModalBackground height="100%" width="100%" />
+              <Typography variant="headingMd">{title}</Typography>
+              <IconButton onClick={onClose} size="small">
+                <Close sx={{ fontSize: '1.25rem' }} />
+              </IconButton>
             </Box>
-          </Fade>
-        ),
-      }}
-    >
-      <Fade in={open} timeout={300}>
-        <Paper
-          sx={(theme) => ({
-            border: `0.063rem solid ${theme.palette.dividers.main}`,
-            boxShadow: theme.elevation.bottom.big.medium,
-            height,
-            left: '50%',
-            maxWidth: 'calc(100dvw - 2.5rem)',
-            minWidth: '25rem',
-            position: 'absolute',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            width,
-          })}
-        >
+          </Box>
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
-              height: 'auto',
-              maxHeight: 'calc(100dvh - 3.75rem)',
-              maxWidth: 'calc(100dvw - 2.5rem)',
-              overflowY: 'hidden',
-              padding: '1.25rem',
+              overflowY: 'auto',
             }}
           >
-            <Box
-              sx={(theme) => ({
-                alignItems: 'flex-start',
-                borderBottom: `0.063rem solid ${theme.palette.dividers.lighter}`,
-                display: 'flex',
-                justifyContent: 'space-between',
-                paddingBottom: '1rem',
-              })}
-            >
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <Typography variant="headingMd">{title}</Typography>
-                <IconButton onClick={onClose} size="small">
-                  <Close sx={{ fontSize: '1.25rem' }} />
-                </IconButton>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                overflowY: 'auto',
-              }}
-            >
-              {children}
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '1rem',
-                justifyContent: 'flex-end',
-                paddingTop: '1.25rem',
-              }}
-            >
-              {secondaryButton && (
-                <ZUIButton
-                  label={secondaryButton.label}
-                  onClick={secondaryButton.onClick}
-                  variant="secondary"
-                />
-              )}
-              <ZUIButton
-                label={primaryButton.label}
-                onClick={primaryButton.onClick}
-                variant="primary"
-              />
-            </Box>
+            {children}
           </Box>
-        </Paper>
-      </Fade>
-    </Modal>
-  );
-};
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '1rem',
+              justifyContent: 'flex-end',
+              paddingTop: '1.25rem',
+            }}
+          >
+            {secondaryButton && (
+              <ZUIButton
+                label={secondaryButton.label}
+                onClick={secondaryButton.onClick}
+                variant="secondary"
+              />
+            )}
+            <ZUIButton
+              label={primaryButton.label}
+              onClick={primaryButton.onClick}
+              variant="primary"
+            />
+          </Box>
+        </Box>
+      </Paper>
+    </Fade>
+  </Modal>
+);
 
 export default ZUIModal;

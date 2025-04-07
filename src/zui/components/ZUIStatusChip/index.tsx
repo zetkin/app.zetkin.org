@@ -7,6 +7,9 @@ import messageIds from 'zui/l10n/messageIds';
 import { ActivityStatus } from 'zui/types';
 
 interface ZUIStatusChipProps {
+  /**
+   * The status of the activity.
+   */
   status: ActivityStatus;
 }
 

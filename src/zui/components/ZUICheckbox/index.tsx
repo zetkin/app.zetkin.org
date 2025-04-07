@@ -11,6 +11,9 @@ const sizes: Record<ZUISize, string> = {
 };
 
 export type ZUICheckboxProps = {
+  /**
+   * If the box is checked or not.
+   */
   checked: boolean;
 
   /**
@@ -19,6 +22,9 @@ export type ZUICheckboxProps = {
    */
   disabled?: boolean;
 
+  /**
+   * The label of the checkbox.
+   */
   label: string;
 
   /**
@@ -26,10 +32,14 @@ export type ZUICheckboxProps = {
    */
   labelPlacement?: ZUIPlacement;
 
+  /**
+   * The function that runs when the user clicks in the checkbox.
+   */
   onChange: (newCheckedState: boolean) => void;
 
   /**
    * The size of the checkbox. Defaults to 'medium'.
+   *
    * This does not affect the size of the label text.
    */
   size?: ZUISize;
@@ -63,43 +73,22 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
         </Typography>
       }
       labelPlacement={labelPlacement}
-      sx={[
-        {
-          '& .MuiSvgIcon-root': {
-            fontSize: sizes[size],
-          },
-
-          '& .MuiTypography-root': {
-            '-ms-user-select': 'none',
-            '-webkit-user-select': 'none',
-            userSelect: 'none',
-          },
-
-          marginBottom:
-            labelPlacement == 'top' || labelPlacement == 'bottom'
-              ? '0.5rem'
-              : '',
-
-          marginTop:
-            labelPlacement == 'top' || labelPlacement == 'bottom'
-              ? '0.5rem'
-              : '',
+      sx={{
+        '& .MuiSvgIcon-root': {
+          fontSize: sizes[size],
         },
-        labelPlacement != 'end'
-          ? {
-              marginLeft: 0,
-            }
-          : {
-              marginLeft: '',
-            },
-        labelPlacement != 'start'
-          ? {
-              marginRight: 0,
-            }
-          : {
-              marginRight: '',
-            },
-      ]}
+        '& .MuiTypography-root': {
+          '-ms-user-select': 'none',
+          '-webkit-user-select': 'none',
+          userSelect: 'none',
+        },
+        marginBottom:
+          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+        marginLeft: labelPlacement != 'end' ? 0 : '',
+        marginRight: labelPlacement != 'start' ? 0 : '',
+        marginTop:
+          labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+      }}
     />
   );
 };

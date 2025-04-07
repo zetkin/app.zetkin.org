@@ -1,25 +1,38 @@
-import { SvgIconTypeMap, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FC } from 'react';
 
-import { ZUIOrientation, ZUISize } from '../types';
+import { MUIIcon, ZUIOrientation, ZUISize } from '../types';
 
-type TextOption = {
+type OptionBase = {
+  value: string;
+};
+
+type TextOption = OptionBase & {
+  /**
+   * A label for the toggle button.
+   */
   label: string;
-  value: string;
 };
 
-type IconOption = {
-  label: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
-  value: string;
+type IconOption = OptionBase & {
+  /**
+   * A function that returns a reference to an icon.
+   *
+   * Note that it should return the referecn to an icon,
+   * for example: () => Close, not () => < Close / >.
+   */
+  renderIcon: () => MUIIcon;
 };
+
+type Option = TextOption | IconOption;
 
 interface ZUIToggleButtonProps {
   /**
    * One option for each button.
-   * The labels can be either strings or icons.
+   *
+   *
    */
-  options: TextOption[] | IconOption[];
+  options: Option[];
 
   onChange: (newValue: string) => void;
 
@@ -38,10 +51,8 @@ interface ZUIToggleButtonProps {
   size?: ZUISize;
 }
 
-const isTextOption = (
-  option: TextOption | IconOption
-): option is TextOption => {
-  return typeof option.label == 'string';
+const isTextOption = (option: Option): option is TextOption => {
+  return 'label' in option;
 };
 
 const ZUIToggleButton: FC<ZUIToggleButtonProps> = ({
@@ -115,7 +126,7 @@ const ZUIToggleButton: FC<ZUIToggleButtonProps> = ({
           </ToggleButton>
         );
       } else {
-        const Icon = option.label;
+        const Icon = option.renderIcon();
         return (
           <ToggleButton key={option.value} value={option.value}>
             <Icon fontSize={size} />

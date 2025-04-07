@@ -21,6 +21,8 @@ type Props = {
 
   /**
    * The icon to display in the avatar.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   icon: MUIIcon;
 

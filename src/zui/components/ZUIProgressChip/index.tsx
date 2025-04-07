@@ -35,28 +35,43 @@ const ZUIProgressChip: FC<ZUIProgressChipProps> = ({
   }
 
   return (
-    <Box
-      sx={{ borderRadius: '2em', display: 'inline-flex', overflow: 'hidden' }}
-    >
-      {values.map((value, index) => (
-        <Box
-          key={`${value}-${index}`}
-          sx={{
-            backgroundColor: colors[index],
-            borderLeft:
-              index > 0 ? `0.063rem solid ${theme.palette.common.white}` : '',
-            color:
-              index == values.length - 1
-                ? theme.palette.common.black
-                : theme.palette.common.white,
-            paddingLeft: index == 0 ? '0.625rem' : '0.375rem',
-            paddingRight: index == values.length - 1 ? '0.625rem' : '0.375rem',
-            paddingY: size == 'small' ? '0.188rem' : '0.438rem',
-          }}
-        >
-          <Typography variant="labelSmMedium">{value}</Typography>
-        </Box>
-      ))}
+    <Box sx={{ display: 'flex', height: 'fit-content' }}>
+      {values.map((value, index) => {
+        const isFirst = index == 0;
+        const isLast = index == values.length - 1;
+
+        const getBorderRadius = () => {
+          if (isFirst) {
+            return '2em 0 0 2em';
+          }
+
+          if (isLast) {
+            return '0 2em 2em 0';
+          }
+        };
+
+        return (
+          <Box
+            key={`${value}-${index}`}
+            sx={(theme) => ({
+              backgroundColor: colors[index],
+              borderLeft:
+                index > 0 ? `0.063rem solid ${theme.palette.common.white}` : '',
+              borderRadius: getBorderRadius(),
+              color:
+                index == values.length - 1
+                  ? theme.palette.common.black
+                  : theme.palette.common.white,
+              paddingLeft: index == 0 ? '0.625rem' : '0.375rem',
+              paddingRight:
+                index == values.length - 1 ? '0.625rem' : '0.375rem',
+              paddingY: size == 'small' ? '0.188rem' : '0.438rem',
+            })}
+          >
+            <Typography variant="labelSmMedium">{value}</Typography>
+          </Box>
+        );
+      })}
     </Box>
   );
 };

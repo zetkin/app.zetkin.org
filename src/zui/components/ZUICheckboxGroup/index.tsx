@@ -11,10 +11,20 @@ type ZUICheckboxGroupProps = {
    */
   disabled?: boolean;
 
+  /**
+   * If there is an error.
+   */
   error?: boolean;
 
+  /**
+   * Text that will render below the checkbox group, to give context and help
+   * to the user.
+   */
   helperText?: string;
 
+  /**
+   * The label of the checkbox group.
+   */
   label: string;
 
   /**
@@ -24,7 +34,7 @@ type ZUICheckboxGroupProps = {
 };
 
 /**
- * This component is used to group ZUICheckbox and ZUISwitch controls.
+ * This component is used to group ZUICheckbox controls.
  */
 const ZUICheckboxGroup: FC<ZUICheckboxGroupProps> = ({
   options,

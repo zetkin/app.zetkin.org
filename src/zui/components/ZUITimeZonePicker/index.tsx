@@ -12,10 +12,17 @@ import {
 import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
-interface ZUITimezonePickerProps {
+type ZUITimezonePickerProps = {
+  /**
+   * The function that runs when the value changes.
+   */
   onChange: (newTimeZone: string) => void;
+
+  /**
+   * The currently selected timezone.
+   */
   selectedTimeZone?: string | null;
-}
+};
 
 export const findCurrentTZ = () => {
   const tzCode = Intl.DateTimeFormat().resolvedOptions().timeZone;

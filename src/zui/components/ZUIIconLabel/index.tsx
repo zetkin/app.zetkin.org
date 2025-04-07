@@ -20,6 +20,8 @@ export type ZUIIconLabelProps = {
 
   /**
    * The icon.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   icon: MUIIcon;
 
@@ -41,28 +43,26 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
   icon,
   label,
   size = 'medium',
-}) => {
-  return (
-    <Box
+}) => (
+  <Box
+    sx={{
+      alignItems: 'center',
+      display: 'flex',
+      flexShrink: 0,
+      gap: '0.5rem',
+    }}
+  >
+    <ZUIIcon color={color} icon={icon} size={size} />
+    <Typography
+      color={color == 'danger' ? 'error' : color}
       sx={{
-        alignItems: 'center',
-        display: 'flex',
         flexShrink: 0,
-        gap: '0.5rem',
       }}
+      variant={TextVariants[size]}
     >
-      <ZUIIcon color={color} icon={icon} size={size} />
-      <Typography
-        color={color == 'danger' ? 'error' : color}
-        sx={{
-          flexShrink: 0,
-        }}
-        variant={TextVariants[size]}
-      >
-        {label}
-      </Typography>
-    </Box>
-  );
-};
+      {label}
+    </Typography>
+  </Box>
+);
 
 export default ZUIIconLabel;

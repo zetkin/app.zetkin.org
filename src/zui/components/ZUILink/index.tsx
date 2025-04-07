@@ -3,16 +3,36 @@ import NextLink from 'next/link';
 import { FC } from 'react';
 
 import { ZUISize } from '../types';
+
 type ZUILinkProps = {
+  /**
+   * The href to link to.
+   */
   href: string;
-  message: string;
+
+  /**
+   * If true, the link will open in a new tab.
+   *
+   * Defaults to "false".
+   */
   openInNewTab?: boolean;
+
+  /**
+   * The size of the text.
+   *
+   * Defaults to "small".
+   */
   size?: ZUISize;
+
+  /**
+   * The text that will show as the link.
+   */
+  text: string;
 };
 
 const ZUILink: FC<ZUILinkProps> = ({
   href,
-  message,
+  text,
   openInNewTab = false,
   size = 'small',
 }) => (
@@ -29,7 +49,7 @@ const ZUILink: FC<ZUILinkProps> = ({
     target={openInNewTab ? '_blank' : ''}
     variant={size == 'small' ? 'linkSm' : 'linkMd'}
   >
-    {message}
+    {text}
   </Link>
 );
 

@@ -27,6 +27,8 @@ type ActivityListItemBase = {
 
   /**
    * The icon and number that is displayed at the end of the list item.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   endData: {
     icon: MUIIcon;
@@ -40,6 +42,8 @@ type ActivityListItemBase = {
 
   /**
    * The main icon of the list item.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   mainIcon: MUIIcon;
 

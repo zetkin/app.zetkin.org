@@ -10,6 +10,10 @@ type ZUIDividerProps = Partial<
   variant?: 'middle' | 'fullWidth';
 };
 
+/**
+ * Remember that if this divider is inside a
+ * flex container, you need to set "flexItem" to true.
+ */
 const ZUIDivider: FC<ZUIDividerProps> = ({
   flexItem,
   orientation = 'horizontal',

@@ -31,6 +31,8 @@ export interface ZUIButtonProps {
 
   /**
    * If the button has an end icon.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   endIcon?: MUIIcon;
 
@@ -66,6 +68,8 @@ export interface ZUIButtonProps {
 
   /**
    * The start icon of the button.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   startIcon?: MUIIcon;
 
