@@ -1,4 +1,4 @@
-import { Button, CircularProgress, useTheme } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import {
   CSSProperties,
   FC,
@@ -6,20 +6,69 @@ import {
   MouseEventHandler,
 } from 'react';
 
-import { ZUISize, ZUIVariant } from '../types';
+import { MUIIcon, ZUISize, ZUIVariant } from '../types';
 
 type ZUIButtonVariant = ZUIVariant | 'destructive' | 'warning' | 'loading';
 
 export interface ZUIButtonProps {
+  /**
+   * The type of the button.
+   *
+   * Defaults to "button".
+   */
   actionType?: 'button' | 'reset' | 'submit';
+
+  /**
+   * If the button is disabled or not.
+   *
+   * Defaults to "false".
+   */
   disabled?: boolean;
-  endIcon?: JSX.Element;
+
+  /**
+   * If the button has an end icon.
+   */
+  endIcon?: MUIIcon;
+
+  /**
+   * If the button is full width.
+   *
+   * Defaults to "false".
+   */
   fullWidth?: boolean;
+
+  /**
+   * The text on the button.
+   */
   label: string;
+
+  /**
+   * The function that runs when the user presses the button.
+   */
   onClick?: MouseEventHandler<HTMLButtonElement>;
+
+  /**
+   * The function that runs when the user presses a key on
+   * the keyboard.
+   */
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
+
+  /**
+   * The size of the button.
+   *
+   * Defaults to "medium".
+   */
   size?: ZUISize;
-  startIcon?: JSX.Element;
+
+  /**
+   * The start icon of the button.
+   */
+  startIcon?: MUIIcon;
+
+  /**
+   * The variant of the button.
+   * Controls the color and outline.
+   */
   variant?: ZUIButtonVariant;
 }
 
@@ -85,28 +134,27 @@ const getTextPadding = (
 const ZUIButton: FC<ZUIButtonProps> = ({
   actionType,
   disabled,
-  endIcon,
+  endIcon: EndIcon,
   fullWidth,
   label,
   onClick,
   onKeyDown,
   size = 'medium',
-  startIcon,
+  startIcon: StartIcon,
   variant,
 }) => {
-  const theme = useTheme();
   const isLoading = variant === 'loading';
   return (
     <Button
       color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
-      endIcon={endIcon}
+      endIcon={EndIcon ? <EndIcon /> : null}
       fullWidth={fullWidth}
       onClick={onClick}
       onKeyDown={onKeyDown}
       size={size}
-      startIcon={startIcon}
-      sx={() => {
+      startIcon={StartIcon ? <StartIcon /> : null}
+      sx={(theme) => {
         let textStyle: CSSProperties;
         if (size === 'small') {
           textStyle = theme.typography.labelSmSemiBold;

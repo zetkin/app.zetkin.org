@@ -56,14 +56,14 @@ export const Loading: Story = {
 export const StartIcon: Story = {
   args: {
     label: 'Start icon',
-    startIcon: <CatchingPokemon />,
+    startIcon: CatchingPokemon,
     variant: 'primary',
   },
 };
 
 export const EndIcon: Story = {
   args: {
-    endIcon: <ExpandMore />,
+    endIcon: ExpandMore,
     label: 'End icon',
     variant: 'primary',
   },

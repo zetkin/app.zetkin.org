@@ -114,7 +114,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
 
   if (actionButtonLabel) {
     actionButtons.push({
-      endIcon: actionButtonPopoverContent ? <ExpandMore /> : undefined,
+      endIcon: actionButtonPopoverContent ? ExpandMore : undefined,
       label: actionButtonLabel,
       onClick: (ev) => {
         if (actionButtonPopoverContent) {
