@@ -8,7 +8,11 @@ import {
 
 import { MUIIcon, ZUISize, ZUIVariant } from '../types';
 
-type ZUIButtonVariant = ZUIVariant | 'destructive' | 'warning' | 'loading';
+export type ZUIButtonVariant =
+  | ZUIVariant
+  | 'destructive'
+  | 'warning'
+  | 'loading';
 
 export interface ZUIButtonProps {
   /**
@@ -190,6 +194,21 @@ const ZUIButton: FC<ZUIButtonProps> = ({
             },
           },
           '&:hover': {
+            '&.MuiButton-containedError': {
+              backgroundColor: theme.palette.error.dark,
+            },
+            '&.MuiButton-containedPrimary': {
+              backgroundColor: theme.palette.primary.dark,
+            },
+            '&.MuiButton-containedWarning': {
+              backgroundColor: theme.palette.warning.dark,
+            },
+            '&.MuiButton-outlinedPrimary': {
+              backgroundColor: theme.palette.grey[100],
+            },
+            '&.MuiButton-textPrimary': {
+              backgroundColor: theme.palette.grey[100],
+            },
             boxShadow: 'none',
           },
           ...textStyle,
