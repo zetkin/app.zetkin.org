@@ -31,7 +31,7 @@ const Base: Story = {
 export const Medium: Story = {
   args: {
     checked: true,
-    label: 'Confetti rain',
+    label: 'Animations',
     size: 'medium',
   },
   render: Base.render,
@@ -50,7 +50,7 @@ export const Disabled: Story = {
   args: {
     checked: false,
     disabled: true,
-    label: "Party like it's 1999",
+    label: 'Sound',
     size: 'small',
   },
   render: Base.render,

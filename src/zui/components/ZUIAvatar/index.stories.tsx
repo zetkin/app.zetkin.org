@@ -34,11 +34,11 @@ export const Multiple: Story = {
         <Box sx={{ display: 'flex', gap: '0.5rem' }}>
           <ZUIAvatar firstName="Angela" id={ids[0]} lastName="Davis" />
           <ZUIAvatar firstName="Huey" id={ids[1]} lastName="Newton" />
-          <ZUIAvatar firstName="Steve" id={ids[2]} lastName="Carrell" />
-          <ZUIAvatar firstName="James" id={ids[3]} lastName="Joyce" />
+          <ZUIAvatar firstName="Toni" id={ids[2]} lastName="Morrisson" />
+          <ZUIAvatar firstName="Bobby" id={ids[3]} lastName="Seale" />
           <ZUIAvatar firstName="Maya" id={ids[4]} lastName="Angelou" />
-          <ZUIAvatar firstName="Pamela" id={ids[5]} lastName="Anderson" />
-          <ZUIAvatar firstName="Ray" id={ids[6]} lastName="Charles" />
+          <ZUIAvatar firstName="Assata" id={ids[5]} lastName="Shakur" />
+          <ZUIAvatar firstName="Alice" id={ids[6]} lastName="Walker" />
         </Box>
         <ZUIButton
           label="Change avatar colours"

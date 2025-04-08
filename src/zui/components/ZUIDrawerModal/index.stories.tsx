@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Box } from '@mui/material';
-import { People, Search, Surfing } from '@mui/icons-material';
+import { People, Phone, Search } from '@mui/icons-material';
 
 import ZUIDrawerModal from './index';
 import ZUIText from '../ZUIText';
@@ -17,12 +17,12 @@ type Story = StoryObj<typeof ZUIDrawerModal>;
 
 export const Basic: Story = {
   args: {
-    featureName: 'test',
-    icon: Surfing,
-    primaryButton: { label: 'Go surfing!', onClick: () => null },
-    secondaryButton: { label: 'Start over', onClick: () => null },
-    subtitle: 'Hang loose man',
-    title: 'Surf the waves',
+    featureName: 'contacts',
+    icon: Phone,
+    primaryButton: { label: 'New message', onClick: () => null },
+    secondaryButton: { label: 'Close', onClick: () => null },
+    subtitle: 'No unread messages',
+    title: 'Contact center',
   },
   render: function Render(args) {
     const [drawerOpen, setDrawerOpen] = useState(false);

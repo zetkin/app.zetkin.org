@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import {
-  Celebration,
   Edit,
   Email,
+  Event,
   HeadsetMicOutlined,
   People,
   Share,
@@ -115,7 +115,7 @@ export const ActionButtonWithMenuAndEllipsisMenu: Story = {
   args: {
     actionButtonLabel: 'Create an activity',
     actionButtonPopoverContent: [
-      { label: 'Event', onClick: () => null, startIcon: Celebration },
+      { label: 'Event', onClick: () => null, startIcon: Event },
       { label: 'Email', onClick: () => null, startIcon: Email },
     ],
     ellipsisMenuItems: [

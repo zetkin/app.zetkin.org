@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Surfing } from '@mui/icons-material';
+import { Event } from '@mui/icons-material';
 
 import ZUIIcon from './index';
 
@@ -13,20 +13,20 @@ type Story = StoryObj<typeof ZUIIcon>;
 
 export const Medium: Story = {
   args: {
-    icon: Surfing,
+    icon: Event,
   },
 };
 
 export const Small: Story = {
   args: {
-    icon: Surfing,
+    icon: Event,
     size: 'small',
   },
 };
 
 export const Large: Story = {
   args: {
-    icon: Surfing,
+    icon: Event,
     size: 'large',
   },
 };

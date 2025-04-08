@@ -52,7 +52,7 @@ const BreadCrumbSibling: FC<{
               paddingBottom: isLast ? '' : '0.5rem',
             }}
           >
-            {Icon ? (
+            {Icon && !isCurrentItem ? (
               <Icon
                 sx={(theme) => ({
                   color: theme.palette.grey[300],

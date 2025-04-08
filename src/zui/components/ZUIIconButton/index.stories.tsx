@@ -1,4 +1,4 @@
-import { Surfing } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIIconButton from './index';
@@ -13,42 +13,42 @@ type Story = StoryObj<typeof ZUIIconButton>;
 
 export const Primary: Story = {
   args: {
-    icon: Surfing,
+    icon: Close,
     variant: 'primary',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    icon: Surfing,
+    icon: Close,
     variant: 'secondary',
   },
 };
 
 export const Tertiary: Story = {
   args: {
-    icon: Surfing,
+    icon: Close,
     variant: 'tertiary',
   },
 };
 
 export const Warning: Story = {
   args: {
-    icon: Surfing,
+    icon: Close,
     variant: 'warning',
   },
 };
 
 export const Destructive: Story = {
   args: {
-    icon: Surfing,
+    icon: Close,
     variant: 'destructive',
   },
 };
 
 export const Loading: Story = {
   args: {
-    icon: Surfing,
+    icon: Close,
     variant: 'loading',
   },
 };

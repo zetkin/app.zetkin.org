@@ -30,7 +30,7 @@ const Base: Story = {
 export const Medium: Story = {
   args: {
     checked: true,
-    label: 'Do laundry',
+    label: 'I want to participate',
     size: 'medium',
   },
   render: Base.render,
@@ -39,7 +39,7 @@ export const Medium: Story = {
 export const Small: Story = {
   args: {
     checked: false,
-    label: 'Pick outfit for party',
+    label: 'I agree',
     size: 'small',
   },
   render: Base.render,
@@ -48,7 +48,7 @@ export const Small: Story = {
 export const Large: Story = {
   args: {
     checked: false,
-    label: 'March to beat of own drum',
+    label: 'Yes',
     size: 'large',
   },
   render: Base.render,
@@ -58,7 +58,7 @@ export const Disabled: Story = {
   args: {
     checked: false,
     disabled: true,
-    label: 'Go to meeting',
+    label: 'No',
     size: 'small',
   },
   render: Base.render,

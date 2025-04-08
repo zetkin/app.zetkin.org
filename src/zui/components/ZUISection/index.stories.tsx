@@ -20,7 +20,7 @@ export const Basic: Story = {
           <ZUIText>Content</ZUIText>
         </Box>
       ),
-      title: 'Section',
+      title: 'Activists',
     },
   },
 };
@@ -33,8 +33,8 @@ export const WithSubtitle: Story = {
           <ZUIText>Content</ZUIText>
         </Box>
       ),
-      subtitle: 'Subtitle',
-      title: 'Section',
+      subtitle: 'There are 5 new people in this section',
+      title: 'Activists',
     },
   },
 };
@@ -48,9 +48,8 @@ export const DataPoint: Story = {
           <ZUIText>Content</ZUIText>
         </Box>
       ),
-      subtitle: 'Subtitle',
-      title:
-        'Section with a pretty long title maybe it is in Finnish or something',
+      subtitle: 'The numbers are up to date',
+      title: 'Every household that we need to keep track of in this assignment',
     },
   },
 };
@@ -68,9 +67,9 @@ export const RightHeaderContent: Story = {
           <ZUIText>Right header content</ZUIText>
         </Box>
       ),
-      subtitle: 'Subtitle',
+      subtitle: 'The numbers are up to date',
       title:
-        'Section with a pretty long title maybe it is in Finnish or something',
+        'Every household that we need to keep track of in this assignment and some more information',
     },
   },
 };
@@ -89,9 +88,9 @@ export const RightHeaderContentAndDataPoint: Story = {
           <ZUIText>Right header content</ZUIText>
         </Box>
       ),
-      subtitle: 'Subtitle',
+      subtitle: 'The numbers are up to date',
       title:
-        'Section with a pretty long title maybe it is in Finnish or something',
+        'Every household that we need to keep track of in this assignment and some more information',
     },
   },
 };
@@ -116,8 +115,8 @@ export const FullWidthHeaderContent: Story = {
           <ZUIText>Full width header content</ZUIText>
         </Box>
       ),
-      subtitle: 'Subtitle',
-      title: 'Section with a title',
+      subtitle: '5 activists, 24 areas',
+      title: 'Statistics of the assignment',
     },
   },
 };
@@ -144,8 +143,9 @@ export const SubSections: Story = {
               <ZUIText>Content here</ZUIText>
             </Box>
           ),
-          subtitle: 'Subtitle is long but not super super long',
-          title: 'Sub componente Marcos',
+          subtitle:
+            'These are people that are currently not in the que to be called.',
+          title: 'Blocked from being called',
         },
         {
           renderContent: () => (
@@ -162,8 +162,8 @@ export const SubSections: Story = {
               }}
             />
           ),
-          subtitle: 'Subtitle is a bit shorter',
-          title: 'Sub componente Marcos very longggg',
+          subtitle: 'They are waiting to get your call',
+          title: 'Ready to be called in this assignment',
         },
         {
           renderContent: () => (
@@ -180,12 +180,12 @@ export const SubSections: Story = {
               }}
             />
           ),
-          title: 'Sub componente Marcos3',
+          title: 'Done',
         },
       ],
-      subtitle: 'Subtitle',
+      subtitle: 'The statistics are re-calculated every time a call is made',
       title:
-        'Section with a pretty long title maybe it is in Finnish or something',
+        'The statistics of the situation of the call assignment as it is currently',
     },
   },
 };

@@ -53,12 +53,12 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
   onClick,
   onKeyDown,
   size = 'medium',
-  variant = 'tertiary',
+  variant,
 }) => {
   const isLoading = variant == 'loading';
   return (
     <Button
-      color={getColor(variant)}
+      color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
       onClick={onClick}
       onKeyDown={onKeyDown}
@@ -108,10 +108,10 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
         },
         boxShadow: 'none',
         minWidth: 0,
-        padding: getPadding(size, variant),
+        padding: variant ? getPadding(size, variant) : '',
       })}
       type={actionType}
-      variant={getVariant(variant)}
+      variant={variant ? getVariant(variant) : undefined}
     >
       {variant == 'loading' && (
         <CircularProgress
@@ -122,15 +122,19 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
       {variant != 'loading' && (
         <Icon
           sx={(theme) => {
-            let color = '';
+            let color: string | undefined = '';
 
             if (!disabled) {
               if (variant == 'primary' || variant == 'destructive') {
                 color = theme.palette.common.white;
-              } else {
+              } else if (variant) {
                 color = theme.palette.common.black;
+              } else {
+                //Variant is undefined = we want to inherit color from parent.
+                color = '';
               }
             }
+
             return {
               color,
               fontSize: size == 'small' ? '1.25rem' : '1.5rem',

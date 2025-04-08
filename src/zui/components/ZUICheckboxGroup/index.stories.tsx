@@ -69,19 +69,11 @@ export const Basic: Story = {
 };
 
 export const Disabled: Story = {
-  args: {
-    disabled: true,
-    helperText: 'You can pick multiple groups',
-    label: 'Which groups do you want to participate in?',
-  },
+  args: { ...Basic.args, disabled: true },
   render: Basic.render,
 };
 
 export const Error: Story = {
-  args: {
-    error: true,
-    helperText: 'You need to pick at least one group',
-    label: 'Which groups do you want to participate in?',
-  },
+  args: { ...Basic.args, error: true },
   render: Basic.render,
 };

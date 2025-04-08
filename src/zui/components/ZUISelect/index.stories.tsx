@@ -15,13 +15,13 @@ export const Basic: Story = {
   args: {
     items: [
       {
-        label: 'Maria',
-        value: 'm',
+        label: 'Angela',
+        value: 'a',
       },
-      { label: 'Joanna', value: 'j' },
-      { label: 'Elisabeth-Anne', value: 'e' },
+      { label: 'Huey', value: 'h' },
+      { label: 'Assata', value: 'as' },
     ],
-    label: 'Name',
+    label: 'Assignee',
   },
   render: function Render(args) {
     const [selection, setSelection] = useState('');
