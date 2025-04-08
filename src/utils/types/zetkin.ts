@@ -389,19 +389,6 @@ export interface ZetkinSurveySubmissionPatchBody
   respondent_id: number | null;
 }
 
-export interface ZetkinAreaAssignment {
-  start_data: string;
-  end_date: string;
-  description: string;
-  organization: {
-    id: string;
-    title: string;
-  };
-  instructions: string;
-  id: string;
-  title: string;
-}
-
 export interface ZetkinLocation {
   id: number;
   lat: number;
