@@ -8,6 +8,7 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinMembership, ZetkinUser } from 'utils/types/zetkin';
 import { ZetkinOrgUser } from './types';
+import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface UserStoreSlice {
   membershipList: RemoteList<ZetkinMembership & { id: number }>;
@@ -37,6 +38,25 @@ const userSlice = createSlice({
       );
       state.membershipList.loaded = new Date().toISOString();
     },
+    orgUserLoad: (state, action: PayloadAction<number>) => {
+      const userId = action.payload;
+      const item = findOrAddItem(state.orgUserList, userId);
+      item.isLoading = true;
+    },
+    orgUserLoaded: (state, action: PayloadAction<[number, ZetkinOrgUser]>) => {
+      const [userId, user] = action.payload;
+      const item = findOrAddItem(state.orgUserList, userId);
+      item.loaded = new Date().toISOString();
+      item.isLoading = false;
+      item.data = user;
+    },
+    orgUsersLoad: (state) => {
+      state.orgUserList.isLoading = true;
+    },
+    orgUsersLoaded: (state, action: PayloadAction<ZetkinOrgUser[]>) => {
+      state.orgUserList = remoteList(action.payload);
+      state.orgUserList.loaded = new Date().toISOString();
+    },
     userLoad: (state) => {
       state.userItem = remoteItem('me');
       state.userItem.isLoading = true;
@@ -47,13 +67,6 @@ const userSlice = createSlice({
       state.userItem.loaded = new Date().toISOString();
       state.userItem.isLoading = false;
     },
-    usersLoad: (state) => {
-      state.orgUserList.isLoading = true;
-    },
-    usersLoaded: (state, action: PayloadAction<ZetkinOrgUser[]>) => {
-      state.orgUserList = remoteList(action.payload);
-      state.orgUserList.loaded = new Date().toISOString();
-    },
   },
 });
 
@@ -63,6 +76,8 @@ export const {
   membershipsLoaded,
   userLoad,
   userLoaded,
-  usersLoad,
-  usersLoaded,
+  orgUserLoad,
+  orgUserLoaded,
+  orgUsersLoad,
+  orgUsersLoaded,
 } = userSlice.actions;
