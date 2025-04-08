@@ -19,7 +19,6 @@ import { ZetkinArea } from '../../areas/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
 import {
   ZetkinAssignmentAreaStats,
-  ZetkinAreaAssignment,
   ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
@@ -41,7 +40,6 @@ type OrganizerMapProps = {
   areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
-  assignment: ZetkinAreaAssignment;
   locations: ZetkinLocation[];
   onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
   sessions: ZetkinAreaAssignee[];
@@ -58,7 +56,6 @@ type SettingName = 'layers' | 'filters' | 'select';
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
-  assignment,
   areaAssId,
   onAddAssigneeToArea,
   locations,
@@ -357,7 +354,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
-            assignment={assignment}
             locations={locations}
             locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {

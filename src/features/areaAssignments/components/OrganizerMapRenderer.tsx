@@ -18,7 +18,6 @@ import { ZetkinArea } from 'features/areas/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
   ZetkinAssignmentAreaStats,
-  ZetkinAreaAssignment,
   ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
@@ -105,7 +104,6 @@ type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
-  assignment: ZetkinAreaAssignment;
   locationStyle: 'dot' | 'households' | 'progress' | 'hide';
   locations: ZetkinLocation[];
   navigateToAreaId?: number;
@@ -119,7 +117,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
-  assignment,
   areaAssId,
   locations,
   selectedId,
@@ -447,7 +444,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                               >
                                 <ZUIAvatar
                                   size={zoom >= 16 ? 'sm' : 'xs'}
-                                  url={`/api/orgs/${assignment.organization_id}/connected_users/${userId}/avatar`}
+                                  url={`/api/users/${userId}/avatar`}
                                 />
                               </Box>
                             );
