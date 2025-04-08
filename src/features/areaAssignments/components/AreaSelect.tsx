@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
 import {
   Box,
+  CircularProgress,
   Divider,
   IconButton,
   TextField,
@@ -9,7 +10,6 @@ import {
   useTheme,
 } from '@mui/material';
 
-import ZUIPerson from 'zui/ZUIPerson';
 import { ZetkinArea } from 'features/areas/types';
 import {
   ZetkinAssignmentAreaStatsItem,
@@ -19,7 +19,6 @@ import {
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import { useNumericRouteParams } from 'core/hooks';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
@@ -28,6 +27,7 @@ import locToLatLng from 'features/geography/utils/locToLatLng';
 import UserAutocomplete from 'features/user/components/UserAutocomplete';
 import { ZetkinOrgUser } from 'features/user/types';
 import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
+import UserItem from 'features/user/components/UserItem';
 
 type Props = {
   areaAssId: number;
@@ -186,16 +186,11 @@ const AreaSelect: FC<Props> = ({
                         if (index <= 3) {
                           return (
                             <Box key={user_id} marginX={0.2}>
-                              <ZUIPersonHoverCard
+                              <ZUIAvatar
                                 key={user_id}
-                                personId={user_id}
-                              >
-                                <ZUIAvatar
-                                  key={user_id}
-                                  size="sm"
-                                  url={`/api/orgs/${area.organization_id}/people/${user_id}/avatar`}
-                                />
-                              </ZUIPersonHoverCard>
+                                size="sm"
+                                url={`/api/users/${user_id}/avatar`}
+                              />
                             </Box>
                           );
                         } else if (index == 4) {
@@ -315,17 +310,32 @@ const AreaSelect: FC<Props> = ({
                 />
               </Typography>
             )}
-            {selectedAreaAssignees.map((user_id) => (
-              <Box key={user_id} display="flex" my={1}>
-                <ZUIPerson id={user_id} name={`${user_id} ${user_id}`} />
-                <IconButton
-                  color="secondary"
-                  onClick={() => unassignArea(user_id, selectedArea.id)}
+            <Suspense
+              fallback={
+                <Box m={2}>
+                  <CircularProgress size={20} />
+                </Box>
+              }
+            >
+              {selectedAreaAssignees.map((userId) => (
+                <Box
+                  key={userId}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    my: 1,
+                  }}
                 >
-                  <Close />
-                </IconButton>
-              </Box>
-            ))}
+                  <UserItem orgId={orgId} userId={userId} />
+                  <IconButton
+                    color="secondary"
+                    onClick={() => unassignArea(userId, selectedArea.id)}
+                  >
+                    <Close />
+                  </IconButton>
+                </Box>
+              ))}
+            </Suspense>
             <Box mt={2}>
               <Typography variant="h6">
                 <Msg id={areaAssignmentMessageIds.map.areaInfo.assignees.add} />
