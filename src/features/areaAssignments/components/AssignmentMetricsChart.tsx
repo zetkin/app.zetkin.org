@@ -12,7 +12,7 @@ const AssignmentMetricsChart: FC<Props> = ({ stats }) => {
   const theme = useTheme();
 
   const metricBars = stats.metrics.map((response) => {
-    if (response.metric.kind == 'boolean') {
+    if (response.metric.type == 'bool') {
       return {
         1: 0,
         2: 0,

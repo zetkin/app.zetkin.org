@@ -4,18 +4,21 @@ export type AreaAssigneeInfo = {
 };
 
 export type ZetkinMetric = {
-  definesDone: boolean;
-  description: string;
-  id: string;
-  kind: 'boolean' | 'scale5';
+  area_assignment_id: number;
+  defines_success: boolean;
+  description?: string;
+  id: number;
   question: string;
+  type: 'bool' | 'scale5';
 };
+
+export type ZetkinMetricPatchBody = Partial<Omit<ZetkinMetric, 'id'>>;
+export type ZetkinMetricPostBody = Partial<Omit<ZetkinMetric, 'id'>>;
 
 export type ZetkinAreaAssignment = {
   end_date: string | null;
   id: number;
   instructions: string;
-  metrics: ZetkinMetric[];
   organization_id: number;
   project_id: number;
   reporting_level: 'household' | 'location';
@@ -24,7 +27,7 @@ export type ZetkinAreaAssignment = {
 };
 
 export type ZetkinAreaAssignmentPostBody = Partial<
-  Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
+  Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization'>
 >;
 
 export type ZetkinAreaAssignmentPatchbody = Partial<

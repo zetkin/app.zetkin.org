@@ -11,18 +11,14 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import {
-  Household,
-  Visit,
-  ZetkinAreaAssignment,
-} from 'features/areaAssignments/types';
+import { Household, Visit, ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
 type HouseholdVisitPageProps = {
   household: Household;
-  metrics: ZetkinAreaAssignment['metrics'];
+  metrics: ZetkinMetric[];
   onBack: () => void;
   onLogVisit: (
     responses: Visit['responses'],
@@ -76,7 +72,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
           const options =
-            metric.kind == 'boolean'
+            metric.type == 'bool'
               ? [
                   {
                     label: messages.visit.household.yesButtonLabel(),
@@ -158,7 +154,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                       </ToggleButton>
                     ))}
                   </ToggleButtonGroup>
-                  {!metric.definesDone && (
+                  {!metric.defines_success && (
                     <Button onClick={() => setStep(index + 1)}>
                       <Msg id={messageIds.visit.household.skipButtonLabel} />
                     </Button>

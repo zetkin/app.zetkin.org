@@ -17,7 +17,9 @@ import {
   ZetkinLocation,
   ZetkinAssignmentAreaStats,
   SessionDeletedPayload,
+  ZetkinMetric,
 } from './types';
+import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface AreaAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
@@ -34,6 +36,7 @@ export interface AreaAssignmentsStoreSlice {
     RemoteList<ZetkinAreaAssignee & { id: number }>
   >;
   locationList: RemoteList<ZetkinLocation>;
+  metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByAreaAssId: Record<
     number,
     RemoteItem<ZetkinAreaAssignmentStats & { id: number }>
@@ -46,6 +49,7 @@ const initialState: AreaAssignmentsStoreSlice = {
   areaStatsByAssignmentId: {},
   assigneesByAssignmentId: {},
   locationList: remoteList(),
+  metricsByAssignmentId: {},
   statsByAreaAssId: {},
 };
 
@@ -221,6 +225,43 @@ const areaAssignmentSlice = createSlice({
       state.locationList.loaded = timestamp;
       state.locationList.items.forEach((item) => (item.loaded = timestamp));
     },
+    metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
+      const [assignmentId, metric] = action.payload;
+      state.metricsByAssignmentId[assignmentId].items.push(
+        remoteItem(metric.id, {
+          data: metric,
+          loaded: new Date().toISOString(),
+        })
+      );
+    },
+    metricDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, metricId] = action.payload;
+      state.metricsByAssignmentId[assignmentId].items =
+        state.metricsByAssignmentId[assignmentId].items.filter(
+          (item) => item.id != metricId
+        );
+    },
+    metricUpdated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
+      const [assignmentId, metric] = action.payload;
+      const item = findOrAddItem(
+        state.metricsByAssignmentId[assignmentId],
+        metric.id
+      );
+      item.data = metric;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
+    metricsLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.metricsByAssignmentId[assignmentId] ||= remoteList();
+      state.metricsByAssignmentId[assignmentId].isLoading = true;
+    },
+    metricsLoaded: (state, action: PayloadAction<[number, ZetkinMetric[]]>) => {
+      const [assignmentId, metrics] = action.payload;
+      state.metricsByAssignmentId[assignmentId] = remoteList(metrics);
+      state.metricsByAssignmentId[assignmentId].loaded =
+        new Date().toISOString();
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const areaAssId = action.payload;
 
@@ -271,6 +312,11 @@ export const {
   locationsLoad,
   locationsLoaded,
   locationUpdated,
+  metricCreated,
+  metricDeleted,
+  metricUpdated,
+  metricsLoad,
+  metricsLoaded,
   assigneeDeleted,
   statsLoad,
   statsLoaded,

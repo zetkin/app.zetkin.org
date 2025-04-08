@@ -85,7 +85,7 @@ const LocationMarker: FC<{
       </DivIconMarker>
     );
   } else {
-    const percentage = getVisitPercentage(areaAssId, [], '');
+    const percentage = getVisitPercentage(areaAssId, [], 0);
 
     return (
       <DivIconMarker iconAnchor={[6, 24]} position={locToLatLng(location)}>

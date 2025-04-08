@@ -34,6 +34,7 @@ import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { ZetkinArea } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import locToLatLng from 'features/geography/utils/locToLatLng';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -75,6 +76,10 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   const classes = useStyles();
   const locations = useLocations(assignment.organization_id).data || [];
   const createLocation = useCreateLocation(assignment.organization_id);
+  const metrics = useAreaAssignmentMetrics(
+    assignment.organization_id,
+    assignment.id
+  );
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LatLngTuple, LatLngTuple] | null
   >(`mapBounds-${assignment.id}`, null);
@@ -324,7 +329,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           const percentage = getVisitPercentage(
             assignment.id,
             [],
-            assignment.metrics.find((metric) => metric.definesDone)?.id || null
+            metrics.find((metric) => metric.defines_success)?.id || null
           );
           return (
             <DivIconMarker

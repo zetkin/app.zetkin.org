@@ -31,6 +31,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { omit } from 'lodash';
 
 import { AREAS } from 'utils/featureFlags';
 import AreaAssignmentLayout from 'features/areaAssignments/layouts/AreaAssignmentLayout';
@@ -49,6 +50,7 @@ import {
   ZetkinAreaAssignment,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -72,10 +74,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   areaAssId,
 }) => {
   const theme = useTheme();
-  const { updateAreaAssignment } = useAreaAssignmentMutations(
-    parseInt(orgId),
-    areaAssId
-  );
+  const { addMetric, deleteMetric, updateAreaAssignment, updateMetric } =
+    useAreaAssignmentMutations(parseInt(orgId), areaAssId);
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const areaAssignmentStats = useAreaAssignmentStats(
     parseInt(orgId),
@@ -83,45 +83,38 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   ).data;
   const messages = useMessages(messagesIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const metrics = useAreaAssignmentMetrics(parseInt(orgId), areaAssId);
 
   const [metricBeingCreated, setMetricBeingCreated] =
-    useState<ZetkinMetric | null>(null);
+    useState<Partial<ZetkinMetric> | null>(null);
   const [metricBeingEdited, setMetricBeingEdited] =
     useState<ZetkinMetric | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [metricBeingDeleted, setMetricBeingDeleted] =
     useState<ZetkinMetric | null>(null);
 
-  const handleSaveMetric = async (metric: ZetkinMetric) => {
-    if (areaAssignmentFuture.data) {
-      await updateAreaAssignment({
-        metrics: areaAssignmentFuture.data.metrics
-          .map((m: ZetkinMetric) => (m.id === metric.id ? metric : m))
-          .concat(metric.id ? [] : [metric]),
-      });
+  const handleSaveMetric = async (metric: Partial<ZetkinMetric>) => {
+    if (metric.id) {
+      updateMetric(metric.id, omit(metric, 'id'));
+    } else {
+      addMetric(metric);
     }
     setMetricBeingEdited(null);
     setMetricBeingCreated(null);
   };
 
-  const handleDeleteMetric = async (id: string) => {
+  const handleDeleteMetric = async (id: number) => {
     if (areaAssignmentFuture.data) {
-      await updateAreaAssignment({
-        metrics: areaAssignmentFuture.data.metrics.filter(
-          (m: ZetkinMetric) => m.id !== id
-        ),
-      });
+      await deleteMetric(id);
     }
     setMetricBeingEdited(null);
   };
 
-  const handleAddNewMetric = (kind: 'boolean' | 'scale5') => {
+  const handleAddNewMetric = (type: 'bool' | 'scale5') => {
     setMetricBeingCreated({
-      definesDone: false,
-      description: '',
-      id: '',
-      kind: kind,
+      defines_success: false,
       question: '',
+      type: type,
     });
   };
 
@@ -133,7 +126,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
         <Box display="flex">
           <Box width="60%">
             <Box>
-              {assignment.metrics.map((metric) => (
+              {metrics.map((metric) => (
                 <Card key={metric.id} sx={{ mb: 2 }}>
                   <CardContent>
                     <Box display="flex">
@@ -155,7 +148,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                               mr={1}
                               variant="h6"
                             >
-                              {metric.kind == 'boolean' ? (
+                              {metric.type == 'bool' ? (
                                 <Typography color="secondary" mr={1}>
                                   <SwitchLeft />
                                 </Typography>
@@ -169,7 +162,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                             </Typography>
                           </Box>
                           <Box alignItems="center" display="flex">
-                            {metric.definesDone && metric.kind === 'boolean' && (
+                            {metric.defines_success && metric.type === 'bool' && (
                               <Box
                                 bgcolor={alpha(
                                   theme.palette.success.light,
@@ -196,15 +189,14 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                               </IconButton>
                             )}
                             {unlocked &&
-                              (metric.kind === 'scale5' ||
-                                (metric.kind === 'boolean' &&
-                                  assignment.metrics.filter(
-                                    (m) => m.kind === 'boolean'
-                                  ).length > 1)) && (
+                              (metric.type === 'scale5' ||
+                                (metric.type === 'bool' &&
+                                  metrics.filter((m) => m.type === 'bool')
+                                    .length > 1)) && (
                                 <IconButton
                                   color="secondary"
                                   onClick={(ev) => {
-                                    if (metric.definesDone) {
+                                    if (metric.defines_success) {
                                       setMetricBeingDeleted(metric);
                                       setAnchorEl(ev.currentTarget);
                                     } else {
@@ -233,10 +225,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 </IconButton>
                               )}
                             {unlocked &&
-                              assignment.metrics.filter(
-                                (metric) => metric.kind === 'boolean'
-                              ).length <= 1 &&
-                              metric.kind == 'boolean' && (
+                              metrics.filter((metric) => metric.type === 'bool')
+                                .length <= 1 &&
+                              metric.type == 'bool' && (
                                 <Tooltip title={messages.report.card.tooltip()}>
                                   <Delete color="disabled" sx={{ mx: 1 }} />
                                 </Tooltip>
@@ -294,7 +285,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                   </Typography>
                   <Box alignItems="center" display="flex" mt={2}>
                     <Button
-                      onClick={() => handleAddNewMetric('boolean')}
+                      onClick={() => handleAddNewMetric('bool')}
                       startIcon={<SwitchLeft />}
                       sx={{ marginRight: 1 }}
                       variant="outlined"
@@ -322,7 +313,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       {`${
                         messages.report.card.delete() +
                           ' ' +
-                          assignment.metrics.find(
+                          metrics.find(
                             (metric) => metric.id === metricBeingDeleted?.id
                           )?.question || messages.report.card.question()
                       }`}
@@ -347,10 +338,10 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                         }}
                       />
                     </Typography>
-                    {assignment.metrics
+                    {metrics
                       .filter(
                         (metric) =>
-                          metric.kind == 'boolean' &&
+                          metric.type == 'bool' &&
                           metric.id != metricBeingDeleted?.id
                       )
                       .map((metric) => (
@@ -364,25 +355,11 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                         >
                           {metric.question || messages.report.card.question()}
                           <Button
-                            onClick={() => {
-                              if (metricBeingDeleted?.definesDone) {
-                                const filtered = assignment.metrics.filter(
-                                  (metric) => metric.id != metricBeingDeleted.id
-                                );
-                                updateAreaAssignment({
-                                  metrics: [
-                                    ...filtered.slice(
-                                      0,
-                                      filtered.indexOf(metric)
-                                    ),
-                                    {
-                                      ...metric,
-                                      definesDone: true,
-                                    },
-                                    ...filtered.slice(
-                                      filtered.indexOf(metric) + 1
-                                    ),
-                                  ],
+                            onClick={async () => {
+                              if (metricBeingDeleted?.defines_success) {
+                                await deleteMetric(metricBeingDeleted.id);
+                                await updateMetric(metric.id, {
+                                  defines_success: true,
                                 });
                               }
                               setAnchorEl(null);
@@ -470,40 +447,31 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 <Select
                   disabled={
                     !unlocked ||
-                    assignment.metrics.filter(
-                      (metric) => metric.kind === 'boolean'
-                    ).length <= 1
+                    metrics.filter((metric) => metric.type === 'bool').length <=
+                      1
                   }
                   label={messages.report.card.definesSuccess()}
-                  onChange={(ev: SelectChangeEvent) => {
-                    const updatedMetrics =
-                      areaAssignmentFuture.data?.metrics.map(
-                        (m: ZetkinMetric) => {
-                          if (m.id === ev.target.value) {
-                            return {
-                              ...m,
-                              definesDone: true,
-                            };
-                          } else {
-                            return {
-                              ...m,
-                              definesDone: false,
-                            };
-                          }
-                        }
-                      );
+                  onChange={async (ev: SelectChangeEvent) => {
+                    const prevSuccessMetric = metrics.find(
+                      (metric) => metric.defines_success
+                    );
 
-                    updateAreaAssignment({
-                      metrics: updatedMetrics,
+                    if (prevSuccessMetric) {
+                      await updateMetric(prevSuccessMetric.id, {
+                        defines_success: false,
+                      });
+                    }
+
+                    await updateMetric(parseInt(ev.target.value), {
+                      defines_success: true,
                     });
                   }}
-                  value={
-                    assignment.metrics.find((metric) => metric.definesDone)
-                      ?.id || ''
-                  }
+                  value={metrics
+                    .find((metric) => metric.defines_success)
+                    ?.id.toString()}
                 >
-                  {assignment.metrics.map((metric) =>
-                    metric.kind === 'boolean' ? (
+                  {metrics.map((metric) =>
+                    metric.type === 'bool' ? (
                       <MenuItem key={metric.id} value={metric.id}>
                         {metric.question}
                       </MenuItem>

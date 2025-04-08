@@ -9,7 +9,7 @@ export interface VisitStats {
 export function getVisitPercentage(
   areaAssId: number | null,
   households: Household[],
-  metricDefinesDone: string | null
+  metricDefinesDone: number | null
 ): VisitStats {
   if (households.length === 0) {
     return { totalSuccessfulVisits: 0, totalVisits: 0 };
@@ -27,7 +27,7 @@ export function getVisitPercentage(
         visit.assignment_id === areaAssId &&
         visit.responses.some(
           (response) =>
-            response.metricId === metricDefinesDone &&
+            response.metricId == metricDefinesDone.toString() &&
             response.response.toLowerCase() === 'yes'
         )
     )

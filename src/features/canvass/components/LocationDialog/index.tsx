@@ -16,6 +16,7 @@ import LocationVisitPage from './pages/LocationVisitPage';
 import HouseholdsPage from './pages/HouseholdsPage';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import EncouragingSparkle from '../EncouragingSparkle';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -42,6 +43,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
 }) => {
   const [dialogStep, setDialogStep] = useState<LocationDialogStep>('location');
   const [showSparkle, setShowSparkle] = useState(false);
+  const metrics = useAreaAssignmentMetrics(
+    assignment.organization_id,
+    assignment.id
+  );
   const { addVisit, reportLocationVisit, updateHousehold, updateLocation } =
     useLocationMutations(orgId, location.id);
 
@@ -201,7 +206,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           {selectedHousehold && (
             <HouseholdVisitPage
               household={selectedHousehold}
-              metrics={assignment.metrics}
+              metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses, noteToOfficial) => {
                 // TODO: Could probably be simplified once API exists
