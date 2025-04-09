@@ -31,7 +31,7 @@ const AppPreferences: FC<SettingListProps> = ({ user }) => {
     sv: 'Svenska',
   } as const;
 
-  const { changeUserLanguage } = useUserMutations();
+  const { updateUser } = useUserMutations();
   const [selectedLanguage, setSelectedLanguage] = useState<ZetkinLanguage>(
     user?.lang as ZetkinLanguage
   );
@@ -83,7 +83,7 @@ const AppPreferences: FC<SettingListProps> = ({ user }) => {
             <Button
               disabled={selectedLanguage == user.lang}
               onClick={() => {
-                changeUserLanguage(selectedLanguage);
+                updateUser({ lang: selectedLanguage });
                 location.reload();
               }}
               variant="contained"
