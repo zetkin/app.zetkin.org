@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { FC, Suspense } from 'react';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import SettingsList from '../components/SettingsList';
+import AppPreferences from '../components/AppPreferences';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 
 const AllEventsPage: FC = () => {
@@ -24,7 +24,7 @@ const AllEventsPage: FC = () => {
         </Box>
       }
     >
-      {user && <SettingsList user={user} />}
+      {user && <AppPreferences user={user} />}
     </Suspense>
   );
 };

@@ -21,7 +21,7 @@ type SettingListProps = {
   user: ZetkinUser;
 };
 
-const SettingsList: FC<SettingListProps> = ({ user }) => {
+const AppPreferences: FC<SettingListProps> = ({ user }) => {
   const messages = useMessages(messageIds);
   const languageOptions = {
     da: 'Dansk',
@@ -97,4 +97,4 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
   );
 };
 
-export default SettingsList;
+export default AppPreferences;

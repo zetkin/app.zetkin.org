@@ -1,5 +1,5 @@
 import { useApiClient } from 'core/hooks';
-import { ZetkinLanguage } from '../components/SettingsList';
+import { ZetkinLanguage } from '../components/AppPreferences';
 
 export default function useUserMutations() {
   const apiClient = useApiClient();
