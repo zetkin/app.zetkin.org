@@ -17,6 +17,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
 }) => {
   const theme = useTheme();
   const totalVisitsKey = uniqueKey + '_totalVisits';
+  const visitsBackgroundKey = uniqueKey + '_visitsBackground';
 
   return (
     <svg
@@ -31,7 +32,14 @@ const MarkerIcon: FC<MarkerIconProps> = ({
         d="M10.5 0C4.695 0 0 4.695 0 10.5C0 18.375 10.5 30 10.5 30C10.5 30 21 18.375 21 10.5C21 4.695 16.305 0 10.5 0Z"
         fill={selected ? '#ED1C55' : 'white'}
       />
-
+      <clipPath id={visitsBackgroundKey}>
+        <rect height="30" width="21" x="0" y="0" />
+      </clipPath>
+      <path
+        clipPath={`url(#${visitsBackgroundKey})`}
+        d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z"
+        fill={'white'}
+      />
       <clipPath id={totalVisitsKey}>
         <rect
           height="30"
