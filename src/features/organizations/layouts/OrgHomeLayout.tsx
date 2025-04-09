@@ -23,6 +23,8 @@ import { useEnv } from 'core/hooks';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
+import useMembership from '../hooks/useMembership';
+import useFollowOrgMutations from '../hooks/useFollowOrgMutations';
 
 type Props = {
   children: ReactNode;
@@ -42,6 +44,9 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const isMobile = useMediaQuery('(max-width: 640px)');
 
   const user = useUser();
+  const membership = useMembership(org.id).data;
+
+  const { unfollowOrg } = useFollowOrgMutations(org.id);
 
   return (
     <Box
@@ -68,6 +73,9 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
             <ZUIAvatar size="sm" url={`/api/orgs/${org.id}/avatar`} />
             <Typography>{org.title}</Typography>
+            {user && membership?.follow && (
+              <Button onClick={() => unfollowOrg()}>Unfollow</Button>
+            )}
           </Box>
           {user && (
             <NextLink href="/my">

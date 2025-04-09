@@ -46,6 +46,15 @@ const OrganizationsSlice = createSlice({
       state.eventsByOrgId[orgId] = remoteList(events);
       state.eventsByOrgId[orgId].loaded = new Date().toISOString();
     },
+    orgUnfollowed: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+
+      state.userMembershipList.items = state.userMembershipList.items.filter(
+        (membership) => membership.id !== orgId
+      );
+
+      state.userMembershipList.loaded = new Date().toISOString();
+    },
     organizationLoad: (state) => {
       state.orgData.isLoading = true;
     },
@@ -108,6 +117,7 @@ export const {
   orgEventsLoaded,
   organizationLoaded,
   organizationLoad,
+  orgUnfollowed,
   treeDataLoad,
   treeDataLoaded,
   subOrgsLoad,
