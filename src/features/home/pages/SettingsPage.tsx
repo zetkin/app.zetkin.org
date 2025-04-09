@@ -6,6 +6,7 @@ import { FC, Suspense } from 'react';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import AppPreferences from '../components/AppPreferences';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
+import AccountSettings from '../components/AccountSettings';
 
 const AllEventsPage: FC = () => {
   const user = useCurrentUser();
@@ -24,7 +25,12 @@ const AllEventsPage: FC = () => {
         </Box>
       }
     >
-      {user && <AppPreferences user={user} />}
+      {user && (
+        <>
+          <AppPreferences user={user} />
+          <AccountSettings user={user} />
+        </>
+      )}
     </Suspense>
   );
 };

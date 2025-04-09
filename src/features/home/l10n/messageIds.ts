@@ -47,6 +47,22 @@ export default makeMessages('feat.home', {
     privacyPolicy: m('Privacy policy'),
   },
   settings: {
+    accountSettings: {
+      email: {
+        addInstructions: m(
+          'Add an email address to your account to be able to log in using a password.'
+        ),
+        changeInstructions: m(
+          'If you need to change your email address, you must reach out to info@zetkin.org.'
+        ),
+        errorText: m(
+          'An error ocurred. Try again or contact Zetkin Foundation for support.'
+        ),
+        label: m('E-mail address'),
+        saveButton: m('Save'),
+      },
+      header: m('Account settings'),
+    },
     appPreferences: {
       header: m('App preferences'),
       lang: {
