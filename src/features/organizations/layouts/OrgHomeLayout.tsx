@@ -46,7 +46,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const user = useUser();
   const membership = useMembership(org.id).data;
 
-  const { unfollowOrg } = useFollowOrgMutations(org.id);
+  const { followOrg, unfollowOrg } = useFollowOrgMutations(org.id);
 
   return (
     <Box
@@ -75,6 +75,9 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             <Typography>{org.title}</Typography>
             {user && membership?.follow && (
               <Button onClick={() => unfollowOrg()}>Unfollow</Button>
+            )}
+            {user && membership?.follow === false && (
+              <Button onClick={() => followOrg(membership)}>Follow</Button>
             )}
           </Box>
           {user && (
