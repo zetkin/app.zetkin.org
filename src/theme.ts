@@ -96,7 +96,7 @@ const theme = createTheme({
             fontSize: 16,
           },
           '& .MuiDataGrid-columnHeaderTitle': {
-            color: themePalette.onSurface.medium,
+            color: oldThemePalette.onSurface.medium,
             fontWeight: 'bold',
           },
           '& [role="toolbar"]': {

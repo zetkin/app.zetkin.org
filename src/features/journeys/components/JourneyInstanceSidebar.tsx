@@ -17,7 +17,7 @@ import messageIds from '../l10n/messageIds';
 import zuiMessageIds from 'zui/l10n/messageIds';
 
 const GridDivider = () => (
-  <Grid item xs={12}>
+  <Grid size={{ xs: 12 }}>
     <Divider />
   </Grid>
 );
@@ -57,7 +57,7 @@ const JourneyInstanceSidebar = ({
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <ZUISection
           data-testid="ZetkinSection-assignees"
           title={messages.instance.sections.assigned()}
@@ -109,7 +109,7 @@ const JourneyInstanceSidebar = ({
         </ZUISection>
       </Grid>
       <GridDivider />
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <ZUISection
           data-testid="ZetkinSection-subjects"
           title={messages.instance.sections.members()}
@@ -160,7 +160,7 @@ const JourneyInstanceSidebar = ({
         </ZUISection>
       </Grid>
       <GridDivider />
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <TagManagerSection
           assignedTags={journeyInstance.tags}
           onAssignTag={onAssignTag}
@@ -172,7 +172,7 @@ const JourneyInstanceSidebar = ({
       {journeyInstance.milestones?.length && (
         <>
           <GridDivider />
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <ZUISection title={messages.instance.sections.milestones()}>
               <JourneyMilestoneProgress
                 milestones={journeyInstance.milestones}

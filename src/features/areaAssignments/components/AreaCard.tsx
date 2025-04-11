@@ -95,7 +95,7 @@ const AreaCard: FC<AreaCardProps> = ({
         );
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
-          <Grid key={area.areaId} item lg={3} md={4} sm={6} xs={12}>
+          <Grid key={area.areaId} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
             <Card key={area.areaId} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
