@@ -20,7 +20,7 @@ import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const iconAndMessage = (
   intl: IntlShape,
@@ -122,7 +122,7 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   label: {
     '&:hover': {
-      borderBottomColor: lighten(theme.palette.primary.main, 0.65),
+      borderBottomColor: lighten(oldTheme.palette.primary.main, 0.65),
       borderBottomStyle: 'dotted',
       borderBottomWidth: ({ readonly }) => (!readonly ? 2 : 0),
     },

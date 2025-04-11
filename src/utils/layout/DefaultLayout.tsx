@@ -4,16 +4,16 @@ import { FunctionComponent, useState } from 'react';
 
 import { PageContainerContext } from 'utils/panes/PageContainerContext';
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   breadcrumbs: {
-    [theme.breakpoints.down('sm')]: {
+    [oldTheme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
   root: {
-    [theme.breakpoints.down('sm')]: {
+    [oldTheme.breakpoints.down('sm')]: {
       paddingTop: '3.5rem',
     },
   },

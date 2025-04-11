@@ -1,7 +1,12 @@
 import { AssignmentOutlined } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+} from '@mui/material';
 
 import getSurveyUrl from 'features/surveys/utils/getSurveyUrl';
 import ResultsListItemText from './ResultsListItemText';
@@ -21,16 +26,18 @@ const SurveyListItem: React.FunctionComponent<{
       legacyBehavior
       passHref
     >
-      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
-        <ListItemAvatar>
-          <Avatar>
-            <AssignmentOutlined />
-          </Avatar>
-        </ListItemAvatar>
-        <ResultsListItemText
-          primary={survey.title}
-          secondary={<Msg id={messageIds.results.survey} />}
-        />
+      <ListItem data-testid="SearchDialog-resultsListItem">
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar>
+              <AssignmentOutlined />
+            </Avatar>
+          </ListItemAvatar>
+          <ResultsListItemText
+            primary={survey.title}
+            secondary={<Msg id={messageIds.results.survey} />}
+          />
+        </ListItemButton>
       </ListItem>
     </Link>
   );

@@ -24,19 +24,19 @@ declare module '@mui/material/Typography' {
     labelMdSemiBold: true;
     labelSmSemiBold: true;
     labelSmMedium: true;
-    h1: false;
-    h3: false;
-    h2: false;
-    h4: false;
-    h5: false;
-    h6: false;
-    subtitle1: false;
-    subtitle2: false;
-    body1: false;
-    body2: false;
-    caption: false;
-    button: false;
-    overline: false;
+    h1: true;
+    h3: true;
+    h2: true;
+    h4: true;
+    h5: true;
+    h6: true;
+    subtitle1: true;
+    subtitle2: true;
+    body1: true;
+    body2: true;
+    caption: true;
+    button: true;
+    overline: true;
   }
 }
 
@@ -134,6 +134,65 @@ declare module '@mui/material/styles' {
     dividers: {
       lighter: string;
       main: string;
+    };
+    //TODO: Remove from type once the use of these colors have been replaced everywhere
+    filterCategoryColors: {
+      darkBlue: {
+        pale: string;
+        strong: string;
+      };
+      green: {
+        pale: string;
+        strong: string;
+      };
+      lightBlue: {
+        pale: string;
+        strong: string;
+      };
+      orange: {
+        pale: string;
+        strong: string;
+      };
+      pink: { pale: string; strong: string };
+      purple: {
+        pale: string;
+        strong: string;
+      };
+      red: { pale: string; strong: string };
+      teal: {
+        pale: string;
+        strong: string;
+      };
+      yellow: {
+        pale: string;
+        strong: string;
+      };
+    };
+    //TODO: Remove from type once the use of these colors have been replaced everywhere
+    onSurface: {
+      disabled: string;
+      high: string;
+      medium: string;
+    };
+    //TODO: Remove from type once the use of these colors have been replaced everywhere
+    outline: {
+      main: string;
+    };
+    //TODO: Remove from type once the use of these colors have been replaced everywhere
+    statusColors: {
+      blue: string;
+      green: string;
+      grey: string;
+      orange: string;
+      red: string;
+    };
+    //TODO: Remove from type once the use of these colors have been replaced everywhere
+    transparentGrey: { light: string };
+    //TODO: Remove from type once the use of these colors have been replaced everywhere
+    viewColumnGallery: {
+      blue: string;
+      purple: string;
+      red: string;
     };
     swatches: Swatches;
   }

@@ -6,11 +6,11 @@ import { Tooltip } from '@mui/material';
 import { getEllipsedString } from 'utils/stringUtils';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles({
   MuiInput: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     padding: 0,
     width: '10rem',
   },

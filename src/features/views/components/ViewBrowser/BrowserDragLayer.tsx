@@ -5,7 +5,7 @@ import { useDragDropManager, useDragLayer, XYCoord } from 'react-dnd';
 
 import BrowserItemIcon from './BrowserItemIcon';
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles<Theme, CollectedProps>(() => ({
   '@keyframes dragPreview-in': {
@@ -24,7 +24,7 @@ const useStyles = makeStyles<Theme, CollectedProps>(() => ({
     zIndex: 9999,
   },
   dragPreview: {
-    animation: `$dragPreview-in 400ms ${theme.transitions.easing.easeInOut}`,
+    animation: `$dragPreview-in 400ms ${oldTheme.transitions.easing.easeInOut}`,
     backgroundColor: 'white',
     boxShadow: (props) =>
       props.canDrop

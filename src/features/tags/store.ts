@@ -8,12 +8,16 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
-import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+import {
+  ZetkinAppliedTag,
+  ZetkinTag,
+  ZetkinTagGroup,
+} from 'utils/types/zetkin';
 
 export interface TagsStoreSlice {
   tagGroupList: RemoteList<ZetkinTagGroup>;
   tagList: RemoteList<ZetkinTag>;
-  tagsByPersonId: Record<number, RemoteList<ZetkinTag>>;
+  tagsByPersonId: Record<number, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: TagsStoreSlice = {
@@ -33,7 +37,10 @@ const tagsSlice = createSlice({
       }
       state.tagsByPersonId[id].isLoading = true;
     },
-    personTagsLoaded: (state, action: PayloadAction<[number, ZetkinTag[]]>) => {
+    personTagsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinAppliedTag[]]>
+    ) => {
       const [id, tags] = action.payload;
       state.tagsByPersonId[id] = remoteList(tags);
       state.tagsByPersonId[id].loaded = new Date().toISOString();
@@ -115,7 +122,7 @@ const tagsSlice = createSlice({
       Object.values(state.tagsByPersonId).forEach((tagList) => {
         tagList.items.forEach((item) => {
           if (item.id == tag.id) {
-            item.data = { ...tag, value: item.data?.value };
+            item.data = { ...tag, value: item.data?.value || null };
           }
         });
       });

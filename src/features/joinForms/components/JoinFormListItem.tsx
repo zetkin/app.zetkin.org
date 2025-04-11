@@ -3,7 +3,7 @@ import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Box, Button, Typography } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { ZetkinJoinForm } from '../types';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useApiClient } from 'core/hooks';
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     width: '7em',
   },
   icon: {
-    color: theme.palette.grey[500],
+    color: oldTheme.palette.grey[500],
     fontSize: '28px',
   },
   left: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles({
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',
-  GRAY = 'gray',
+  GREY = 'grey',
   ORANGE = 'orange',
   RED = 'red',
 }
@@ -85,7 +85,7 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
       <Box className={classes.left}>
         <FormatListBulleted className={classes.icon} />
         <Box>
-          <Typography color={theme.palette.text.primary}>
+          <Typography color={oldTheme.palette.text.primary}>
             {form.title}
           </Typography>
         </Box>

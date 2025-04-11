@@ -5,7 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 
 import { DEFAULT_TAG_COLOR } from '../utils';
 import { getContrastColor } from 'utils/colorUtils';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 type TagChipSize = 'small' | 'medium' | 'large';
 
@@ -98,13 +98,19 @@ const TagToolTip: React.FunctionComponent<{
   );
 };
 
+const isValueTag = (
+  tag: ZetkinAppliedTag | ZetkinTag
+): tag is ZetkinAppliedTag => {
+  return tag.value_type == 'text';
+};
+
 const TagChip: React.FunctionComponent<{
   disabled?: boolean;
   noWrappedLabel?: boolean;
   onClick?: (tag: ZetkinTag) => void;
-  onDelete?: (tag: ZetkinTag) => void;
+  onDelete?: (tag: ZetkinAppliedTag) => void;
   size?: TagChipSize;
-  tag: ZetkinTag;
+  tag: ZetkinTag | ZetkinAppliedTag;
 }> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
   const [hover, setHover] = useState(false);
   const classes = useStyles({
@@ -116,6 +122,8 @@ const TagChip: React.FunctionComponent<{
     tag,
   });
 
+  const hasValue = isValueTag(tag);
+
   const deleteButton = onDelete ? (
     <IconButton
       className={classes.deleteButton}
@@ -123,7 +131,7 @@ const TagChip: React.FunctionComponent<{
       onClick={(ev) => {
         // Stop propagation to prevent regular onClick() from being invoked
         ev.stopPropagation();
-        onDelete(tag);
+        onDelete(tag as ZetkinAppliedTag);
       }}
       size="large"
       tabIndex={-1}
@@ -139,7 +147,7 @@ const TagChip: React.FunctionComponent<{
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {tag.value_type && (
+      {hasValue && (
         <>
           <TagToolTip tag={tag}>
             <Box className={classes.label}>{tag.title}</Box>
@@ -155,7 +163,7 @@ const TagChip: React.FunctionComponent<{
           </Tooltip>
         </>
       )}
-      {!tag.value_type && (
+      {!hasValue && (
         <TagToolTip tag={tag}>
           <Box className={classes.label + ' ' + classes.deleteContainer}>
             {tag.title}
