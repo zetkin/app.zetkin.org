@@ -1,24 +1,28 @@
 'use client';
 
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Card, Chip, Typography } from '@mui/material';
 import { FC, Suspense } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useActiveEvents from '../hooks/useActiveEvents';
-import useSurveys from 'features/surveys/hooks/useSurveys';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import { useAppSelector } from 'core/hooks';
+import CallLog from '../components/CallLog';
+import SurveyAccordion from '../components/SurveyAccordion';
+import TargetEvent from '../components/TargetEvent';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
+import ReportCall from '../components/ReportCall';
+import useCurrentCall from '../hooks/useCurrentCall';
 
 type Props = {
   assignment: ZetkinCallAssignment;
 };
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
-  const call = useAppSelector((state) => state.call.currentCall).data;
-  const surveys = useSurveys(assignment.organization.id).data || [];
+  const call = useCurrentCall();
+  const surveys = useSurveysWithElements(assignment.organization.id).data || [];
   const events = useActiveEvents(assignment.organization.id) || [];
 
   if (!call) {
@@ -32,6 +36,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           <Typography>
             <Msg id={messageIds.prepare.title} />
           </Typography>
+          ID -- {call.target.id}
           <ZUIAvatar
             size={'lg'}
             url={`/api/orgs/${assignment.organization.id}/people/${call.target.id}/avatar`}
@@ -110,39 +115,66 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
               )}
             </Box>
           </Box>
+          <Card>
+            <ReportCall
+              assignmentId={assignment.id}
+              call={call}
+              orgId={assignment.organization.id}
+            />
+          </Card>
         </Box>
         <Box flex={1} mt={2}>
-          <Typography my={1}>
+          <Typography my={1} variant="h6">
             <Msg id={messageIds.prepare.summary} />
           </Typography>
           <Typography variant="h5">
-            <Msg id={messageIds.prepare.activeCampaigns} />
+            <Msg id={messageIds.prepare.activeEvents} />
           </Typography>
           {events.length == 0 && (
             <Typography>
-              <Msg id={messageIds.prepare.noActiveCampaigns} />
+              <Msg id={messageIds.prepare.noActiveEvents} />
             </Typography>
           )}
           {events.length > 0 &&
             events.map((event) => {
-              return <Typography key={event.id}>{event.title}</Typography>;
+              return (
+                <TargetEvent
+                  key={event.id}
+                  event={event}
+                  target={call.target}
+                />
+              );
             })}
           <Box mt={2}>
-            <Typography variant="h5">
-              <Msg id={messageIds.prepare.surveys} />
-            </Typography>
-            {surveys.length == 0 && (
-              <Typography>
-                <Msg id={messageIds.prepare.noSurveys} />
-              </Typography>
+            <Typography variant="h6">Surveys</Typography>
+            {surveys.length === 0 && (
+              <Typography>No surveys available</Typography>
             )}
             {surveys.length > 0 &&
-              surveys.map((survey) => {
-                return <Typography key={survey.id}>{survey.title}</Typography>;
-              })}
+              surveys.map((survey) => (
+                <SurveyAccordion
+                  key={survey.id}
+                  orgId={assignment.organization.id}
+                  survey={survey}
+                  target={call.target}
+                />
+              ))}
           </Box>
         </Box>
       </Suspense>
+      <Box
+        sx={{
+          bottom: 16,
+          left: 16,
+          position: 'fixed',
+          zIndex: 1300,
+        }}
+      >
+        <CallLog
+          assingmentId={assignment.id}
+          orgId={assignment.organization.id}
+        />
+      </Box>
     </Box>
   );
 };

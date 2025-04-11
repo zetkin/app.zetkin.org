@@ -1,22 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ZetkinCall } from './types';
-import {
-  remoteItem,
-  RemoteItem,
-  remoteList,
-  RemoteList,
-} from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export interface CallStoreSlice {
   activeEventList: RemoteList<ZetkinEvent>;
-  currentCall: RemoteItem<ZetkinCall>;
+  currentCallId: number | null;
+  outgoingCalls: RemoteList<ZetkinCall>;
 }
 
 const initialState: CallStoreSlice = {
   activeEventList: remoteList(),
-  currentCall: remoteItem<ZetkinCall>(0, { data: null, isLoading: false }),
+  currentCallId: null,
+  outgoingCalls: remoteList(),
 };
 
 const CallSlice = createSlice({
@@ -30,16 +27,62 @@ const CallSlice = createSlice({
       state.activeEventList = remoteList(action.payload);
       state.activeEventList.loaded = new Date().toISOString();
     },
-    currentCallLoad: (state) => {
-      state.currentCall.isLoading = true;
+    allocateNewCallLoad: (state) => {
+      state.outgoingCalls.isLoading = true;
     },
-    currentCallLoaded: (state, action: PayloadAction<ZetkinCall>) => {
-      state.currentCall = remoteItem(action.payload.id, {
-        data: action.payload,
-        isLoading: false,
-        isStale: false,
-        loaded: new Date().toISOString(),
-      });
+    allocateNewCallLoaded: (state, action: PayloadAction<ZetkinCall>) => {
+      state.currentCallId = action.payload.id;
+
+      const callExists = state.outgoingCalls.items.some(
+        (call) => call.id === action.payload.id
+      );
+      if (!callExists) {
+        state.outgoingCalls.items.push(
+          remoteItem(action.payload.id, {
+            data: action.payload,
+            isLoading: false,
+            isStale: false,
+            loaded: new Date().toISOString(),
+          })
+        );
+      }
+
+      state.outgoingCalls.isLoading = false;
+    },
+    currentCallDeleted: (state, action: PayloadAction<number>) => {
+      const deletedCallId = action.payload;
+
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id !== deletedCallId
+      );
+
+      const nextCall = state.outgoingCalls.items.find(
+        (item) => item.data?.state === 0
+      );
+
+      state.currentCallId = nextCall ? Number(nextCall.id) : null;
+    },
+    outgoingCallsLoad: (state) => {
+      state.outgoingCalls.isLoading = true;
+    },
+    outgoingCallsLoaded: (state, action: PayloadAction<ZetkinCall[]>) => {
+      const payloadItems = action.payload.map((call) =>
+        remoteItem(call.id, {
+          data: call,
+          isLoading: false,
+          isStale: false,
+          loaded: new Date().toISOString(),
+        })
+      );
+
+      state.outgoingCalls.items = state.outgoingCalls.items
+        .filter(
+          (item) => !payloadItems.some((newItem) => newItem.id === item.id)
+        )
+        .concat(payloadItems);
+
+      state.outgoingCalls.loaded = new Date().toISOString();
+      state.outgoingCalls.isLoading = false;
     },
   },
 });
@@ -48,6 +91,9 @@ export default CallSlice;
 export const {
   activeEventsLoad,
   activeEventsLoaded,
-  currentCallLoad,
-  currentCallLoaded,
+  currentCallDeleted,
+  allocateNewCallLoad,
+  allocateNewCallLoaded,
+  outgoingCallsLoad,
+  outgoingCallsLoaded,
 } = CallSlice.actions;

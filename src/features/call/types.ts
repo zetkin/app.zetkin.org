@@ -11,7 +11,7 @@ export type ZetkinCall = {
   organizer_action_needed: boolean;
   organizer_action_taken: string | null;
   state: number;
-  target: ZetkinTarget;
+  target: ZetkinCallTarget;
   update_time: string;
 };
 
@@ -20,7 +20,7 @@ type ZetkinCaller = {
   name: string;
 };
 
-type ZetkinTarget = Pick<
+export type ZetkinCallTarget = Pick<
   ZetkinPerson,
   | 'alt_phone'
   | 'city'
@@ -41,4 +41,12 @@ type ZetkinTarget = Pick<
     num_actions: number;
   };
   tags: ZetkinTag[];
+};
+
+export type ZetkinCallPatchBody = {
+  call_back_after?: string | null;
+  message_to_organizer: string | null;
+  notes: string | null;
+  organizer_action_needed: boolean;
+  state: number;
 };
