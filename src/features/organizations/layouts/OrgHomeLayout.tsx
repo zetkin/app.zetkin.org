@@ -25,6 +25,7 @@ import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
 import useMembership from '../hooks/useMembership';
 import useFollowOrgMutations from '../hooks/useFollowOrgMutations';
+import useConnectOrg from '../hooks/useConnectOrg';
 
 type Props = {
   children: ReactNode;
@@ -47,6 +48,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const membership = useMembership(org.id).data;
 
   const { followOrg, unfollowOrg } = useFollowOrgMutations(org.id);
+  const { connectOrg } = useConnectOrg(org.id);
 
   return (
     <Box
@@ -78,6 +80,9 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             )}
             {user && membership?.follow === false && (
               <Button onClick={() => followOrg(membership)}>Follow</Button>
+            )}
+            {user && !membership && (
+              <Button onClick={() => connectOrg()}>Connect</Button>
             )}
           </Box>
           {user && (
