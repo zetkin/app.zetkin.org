@@ -1,7 +1,6 @@
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import NextLink from 'next/link';
 import { Theme } from '@mui/material/styles';
 import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
 
@@ -79,20 +78,15 @@ const BreadcrumbTrail = ({
         {breadcrumbs.map((crumb, index) => {
           if (index < breadcrumbs.length - 1) {
             return (
-              <NextLink
+              <Link
                 key={crumb.href}
+                className={classes.breadcrumb}
+                color="inherit"
                 href={crumb.href}
-                legacyBehavior
-                passHref
+                underline="hover"
               >
-                <Link
-                  className={classes.breadcrumb}
-                  color="inherit"
-                  underline="hover"
-                >
-                  {getLabel(crumb)}
-                </Link>
-              </NextLink>
+                {getLabel(crumb)}
+              </Link>
             );
           } else {
             return (
