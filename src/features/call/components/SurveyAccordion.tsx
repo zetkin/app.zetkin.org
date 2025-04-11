@@ -1,4 +1,4 @@
-import React, { FC, Suspense, useState } from 'react';
+import React, { FC, Suspense } from 'react';
 import {
   Accordion,
   AccordionSummary,
@@ -10,18 +10,13 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import useSurveyElements from 'features/surveys/hooks/useSurveyElements';
 import useCreateSurveySubmission from 'features/surveys/hooks/useCreateSurveySubmission';
-import SurveyText from './Survey/SurveyText';
-import SurveyOptions from './Survey/SurveyOptions';
 import { ZetkinCallTarget } from '../types';
 import {
-  ELEMENT_TYPE,
   ZetkinSurveyExtended,
-  ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyQuestionResponse,
-  ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
+import SurveyElements from 'features/surveys/components/surveyForm/SurveyElements';
 
 interface SurveyAccordionProps {
   orgId: number;
@@ -34,59 +29,50 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
   survey,
   target,
 }) => {
-  const elements = useSurveyElements(orgId, survey.id).data;
   const { addSubmission } = useCreateSurveySubmission(orgId, survey.id);
-  const [responses, setResponses] = useState<{
-    [key: number]: { options?: number[]; response?: string };
-  }>({});
 
-  const handleResponseChange = (
-    questionId: number,
-    value: number[] | string | number
-  ) => {
-    setResponses((prevResponses) => ({
-      ...prevResponses,
-      [questionId]: Array.isArray(value)
-        ? { options: value }
-        : { response: String(value) },
-    }));
-  };
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const responseMap = new Map<
+      number,
+      { options?: number[]; response?: string }
+    >();
 
-  const handleFormSubmission = () => {
-    const signature = target.id;
-    const formResponses: {
-      [key: number]: { options?: number[]; response?: string };
-    } = responses;
+    for (const [key, value] of formData.entries()) {
+      const [idPart, subKey] = key.split('.');
+      const questionId = Number(idPart);
 
-    const mappedResponses: ZetkinSurveyQuestionResponse[] = Object.keys(
-      formResponses
-    )
-      .map((key) => {
-        const questionId = parseInt(key);
-        const response = formResponses[questionId];
-
-        if (response.response) {
-          return {
-            question_id: questionId,
-            response: response.response,
-          };
-        } else if (response.options) {
-          return {
-            options: response.options,
-            question_id: questionId,
-          };
+      if (questionId) {
+        if (!responseMap.has(questionId)) {
+          responseMap.set(questionId, {});
         }
 
-        return null;
-      })
-      .filter(
-        (response): response is ZetkinSurveyQuestionResponse =>
-          response !== null
-      );
+        const current = responseMap.get(questionId)!;
+
+        if (subKey === 'options') {
+          if (!current.options) {
+            current.options = [];
+          }
+          current.options.push(Number(value));
+        } else {
+          current.response = String(value);
+        }
+      }
+    }
+
+    const mappedResponses: ZetkinSurveyQuestionResponse[] = Array.from(
+      responseMap.entries()
+    ).map(([question_id, responseObj]) => ({
+      question_id,
+      ...(responseObj.options
+        ? { options: responseObj.options }
+        : { response: responseObj.response ?? '' }),
+    }));
 
     addSubmission({
       responses: mappedResponses,
-      signature,
+      signature: target.id,
     });
   };
 
@@ -101,50 +87,14 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
             <Typography variant="h6">{survey.title}</Typography>
             <Typography>{survey.info_text}</Typography>
           </Box>
-          {elements &&
-            elements.length > 0 &&
-            elements.map((element) => {
-              if (element.type === ELEMENT_TYPE.QUESTION) {
-                if (element.question.response_type === 'text') {
-                  return (
-                    <SurveyText
-                      key={element.id}
-                      element={element as ZetkinSurveyTextQuestionElement}
-                      onChange={(value) => {
-                        handleResponseChange(element.id, value);
-                      }}
-                    />
-                  );
-                } else if (element.question.response_type === 'options') {
-                  return (
-                    <SurveyOptions
-                      key={element.id}
-                      element={element as ZetkinSurveyOptionsQuestionElement}
-                      onChange={(value) => {
-                        handleResponseChange(element.id, value);
-                      }}
-                    />
-                  );
-                }
-              } else {
-                return (
-                  <Box key={element.id} mb={1} mt={2}>
-                    <Typography variant="h6">
-                      {element.text_block.header}
-                    </Typography>
-                    <Typography>{element.text_block.content}</Typography>
-                  </Box>
-                );
-              }
-              return null;
-            })}
-          <Button
-            disabled={Object.keys(responses).length === 0}
-            onClick={handleFormSubmission}
-            variant="contained"
-          >
-            Add Submission
-          </Button>
+          <form onSubmit={handleFormSubmit}>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <SurveyElements survey={survey} />
+              <Button type="submit" variant="contained">
+                Add Submission
+              </Button>
+            </Box>
+          </form>
         </AccordionDetails>
       </Accordion>
     </Suspense>
