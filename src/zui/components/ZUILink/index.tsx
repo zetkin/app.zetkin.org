@@ -2,7 +2,7 @@ import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import { FC } from 'react';
 
-import { ZUISize } from '../types';
+import { ZUIMedium, ZUISmall } from '../types';
 
 type ZUILinkProps = {
   /**
@@ -20,9 +20,9 @@ type ZUILinkProps = {
   /**
    * The size of the text.
    *
-   * Defaults to "small".
+   * If nothing is sent in it inherits the style from its parent.
    */
-  size?: ZUISize;
+  size?: ZUISmall | ZUIMedium;
 
   /**
    * The text that will show as the link.
@@ -34,23 +34,30 @@ const ZUILink: FC<ZUILinkProps> = ({
   href,
   text,
   openInNewTab = false,
-  size = 'small',
-}) => (
-  <Link
-    component={NextLink}
-    href={href}
-    rel={openInNewTab ? 'noopener' : ''}
-    sx={(theme) => ({
-      '&:hover': {
+  size,
+}) => {
+  const linkVariants = {
+    medium: 'linkMd',
+    small: 'linkSm',
+  } as const;
+
+  return (
+    <Link
+      component={NextLink}
+      href={href}
+      rel={openInNewTab ? 'noopener' : ''}
+      sx={(theme) => ({
+        '&:hover': {
+          textDecorationColor: theme.palette.text.primary,
+        },
         textDecorationColor: theme.palette.text.primary,
-      },
-      textDecorationColor: theme.palette.text.primary,
-    })}
-    target={openInNewTab ? '_blank' : ''}
-    variant={size == 'small' ? 'linkSm' : 'linkMd'}
-  >
-    {text}
-  </Link>
-);
+      })}
+      target={openInNewTab ? '_blank' : ''}
+      variant={size ? linkVariants[size] : undefined}
+    >
+      {text}
+    </Link>
+  );
+};
 
 export default ZUILink;
