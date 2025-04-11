@@ -8,14 +8,15 @@ const sizes: Record<Sizes, string> = {
   small: '0.25rem',
 };
 
-interface ZUIBarDiagramProps {
+export type ZUIBarDiagramProps = {
+  size: Sizes;
+
   /**
    * Width of segments as an array of numbers whose total is < 100.
    * The final segment width is the remainder.
    */
   values: [number] | [number, number] | [number, number, number];
-  size: Sizes;
-}
+};
 
 /**
  * Renders a horizontal stacked bar. Define the percentage width of
