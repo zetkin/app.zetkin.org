@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Surfing } from '@mui/icons-material';
+import { Event } from '@mui/icons-material';
 
 import ZUIIconLabel from './index';
 
@@ -13,8 +13,8 @@ type Story = StoryObj<typeof ZUIIconLabel>;
 
 export const Medium: Story = {
   args: {
-    icon: Surfing,
-    label: 'Surfing',
+    icon: Event,
+    label: 'April 15th, 13.00-17.00',
   },
 };
 

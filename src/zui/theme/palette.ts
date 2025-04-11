@@ -521,11 +521,11 @@ const palette: Omit<
   },
   primary: {
     contrastText: uiSwatches.basic.white,
-    dark: '', // TODO: Remove from type?
+    dark: uiSwatches.basic.black,
     focus: alpha(uiSwatches.grey[950], 0.12),
     focusVisible: alpha(uiSwatches.grey[950], 0.3),
     hover: alpha(uiSwatches.grey[950], 0.04),
-    light: '', // TODO: Remove from type?
+    light: uiSwatches.grey[600],
     main: uiSwatches.grey[950],
     outlinedBorder: alpha(uiSwatches.grey[950], 0.5),
     selected: alpha(uiSwatches.grey[950], 0.08),

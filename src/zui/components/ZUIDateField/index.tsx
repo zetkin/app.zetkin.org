@@ -3,14 +3,27 @@ import { Dayjs } from 'dayjs';
 import { DatePicker, PickersDay } from '@mui/x-date-pickers';
 
 import { ZUIDatePickerProps } from '../ZUIDatePicker';
+import { ZUILarge, ZUIMedium } from '../types';
 
 type ZUIDateFieldProps = Pick<
   ZUIDatePickerProps,
   'datesToMark' | 'disablePast'
 > & {
+  /**
+   * The label of the date field.
+   */
   label: string;
+
+  /**
+   *
+   * The function that runs when the value changes.
+   */
   onChange: (newDate: Dayjs | null) => void;
-  size: 'medium' | 'large';
+
+  /**
+   * The size of the component.
+   */
+  size: ZUIMedium | ZUILarge;
   value: Dayjs | null;
 };
 

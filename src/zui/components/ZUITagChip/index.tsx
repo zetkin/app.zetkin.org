@@ -8,36 +8,34 @@ import getTagContrastColor from './getTagContrastColor';
 const ZUITagTooltip: FC<{
   children: JSX.Element;
   tag: ZetkinTag | ZetkinAppliedTag;
-}> = ({ children, tag }) => {
-  return (
-    <Tooltip
-      arrow
-      enterDelay={1000}
-      slotProps={{
-        arrow: {
-          sx: {
-            color: '#616161E5',
-          },
+}> = ({ children, tag }) => (
+  <Tooltip
+    arrow
+    enterDelay={1000}
+    slotProps={{
+      arrow: {
+        sx: {
+          color: '#616161E5',
         },
-        tooltip: {
-          sx: {
-            backgroundColor: '#616161E5',
-            fontSize: '0.625rem',
-            fontWeight: 600,
-            lineHeight: '0.875rem',
-          },
+      },
+      tooltip: {
+        sx: {
+          backgroundColor: '#616161E5',
+          fontSize: '0.625rem',
+          fontWeight: 600,
+          lineHeight: '0.875rem',
         },
-      }}
-      title={
-        <>
-          {tag.title} <br /> {tag.description || ''}
-        </>
-      }
-    >
-      {children}
-    </Tooltip>
-  );
-};
+      },
+    }}
+    title={
+      <>
+        {tag.title} <br /> {tag.description || ''}
+      </>
+    }
+  >
+    {children}
+  </Tooltip>
+);
 
 type ZUITagChipProps = {
   /**
@@ -95,7 +93,7 @@ const ZUITagChip: FC<ZUITagChipProps> = ({
       <Clear
         sx={(theme) => ({
           color: tag.value_type
-            ? 'black'
+            ? theme.palette.common.black
             : getTagContrastColor(tag.color || theme.palette.grey[200]),
           fontSize: 'inherit',
         })}

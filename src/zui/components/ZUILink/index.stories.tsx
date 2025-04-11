@@ -14,8 +14,8 @@ type Story = StoryObj<typeof ZUILink>;
 export const LinkMd: Story = {
   args: {
     href: 'http://www.katt.org',
-    message: 'a medium size link',
     size: 'medium',
+    text: 'a medium size link',
   },
   render: function Render(args) {
     return (
@@ -29,8 +29,8 @@ export const LinkMd: Story = {
 export const LinkSm: Story = {
   args: {
     href: 'http://www.zetkin.org',
-    message: 'a small size link',
     size: 'small',
+    text: 'a small size link',
   },
   render: function Render(args) {
     return (

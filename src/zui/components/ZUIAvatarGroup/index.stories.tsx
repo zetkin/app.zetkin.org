@@ -14,10 +14,10 @@ export const Basic: Story = {
   args: {
     avatars: [
       { firstName: 'Angela', id: 1, lastName: 'Davis' },
-      { firstName: 'James', id: 2, lastName: 'Dean' },
-      { firstName: 'Georg', id: 3, lastName: 'Schneider' },
-      { firstName: 'Bernie', id: 4, lastName: 'Sanders' },
-      { firstName: 'Peder', id: 5, lastName: 'Kofoed' },
+      { firstName: 'Assata', id: 2, lastName: 'Shakur' },
+      { firstName: 'Maya', id: 3, lastName: 'Angelou' },
+      { firstName: 'Toni', id: 4, lastName: 'Morrison' },
+      { firstName: 'Alice', id: 5, lastName: 'Walker' },
     ],
   },
 };

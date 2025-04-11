@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { Box, Link, Menu, SvgIconTypeMap, useTheme } from '@mui/material';
+import { Box, Link, Menu, SvgIconTypeMap } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import {
   MoreHoriz,
@@ -13,9 +13,24 @@ import messageIds from 'zui/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 
 export interface BreadcrumbTreeItem {
+  /**
+   * The href that the item leads to.
+   */
   href: string;
+
+  /**
+   * The icon of the item
+   */
   icon?: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
+
+  /**
+   * The title of the item
+   */
   title: string;
+
+  /**
+   * The children of the item
+   */
   children: BreadcrumbTreeItem[] | [];
 }
 
@@ -25,7 +40,6 @@ const BreadCrumbSibling: FC<{
   isLast: boolean;
   item: BreadcrumbTreeItem;
 }> = ({ children, item, isCurrentItem, isLast }) => {
-  const theme = useTheme();
   const Icon = item.icon;
   return (
     <Box>
@@ -38,13 +52,13 @@ const BreadCrumbSibling: FC<{
               paddingBottom: isLast ? '' : '0.5rem',
             }}
           >
-            {Icon ? (
+            {Icon && !isCurrentItem ? (
               <Icon
-                sx={{
+                sx={(theme) => ({
                   color: theme.palette.grey[300],
                   fontSize: '1.25rem',
                   marginRight: '0.375rem',
-                }}
+                })}
               />
             ) : (
               ''
@@ -66,32 +80,29 @@ const Breadcrumb: FC<{
   children: ReactNode;
   isLastLevel: boolean;
   isTopLevel: boolean;
-}> = ({ children, isTopLevel, isLastLevel }) => {
-  const theme = useTheme();
-  return (
-    <Box sx={{ display: 'flex' }}>
-      {!isTopLevel ? (
-        <SubdirectoryArrowRight
-          sx={{
-            color: theme.palette.grey[200],
-            fontSize: '1.25rem',
-            marginRight: '0.25rem',
-          }}
-        />
-      ) : (
-        ''
-      )}
-      <Box
-        sx={{
-          display: isLastLevel ? 'flex' : undefined,
-          flexDirection: isLastLevel ? 'column' : undefined,
-        }}
-      >
-        {children}
-      </Box>
+}> = ({ children, isTopLevel, isLastLevel }) => (
+  <Box sx={{ display: 'flex' }}>
+    {!isTopLevel ? (
+      <SubdirectoryArrowRight
+        sx={(theme) => ({
+          color: theme.palette.grey[200],
+          fontSize: '1.25rem',
+          marginRight: '0.25rem',
+        })}
+      />
+    ) : (
+      ''
+    )}
+    <Box
+      sx={{
+        display: isLastLevel ? 'flex' : undefined,
+        flexDirection: isLastLevel ? 'column' : undefined,
+      }}
+    >
+      {children}
     </Box>
-  );
-};
+  </Box>
+);
 
 const renderTree = (
   breadcrumbs: BreadcrumbTreeItem[],
@@ -154,6 +165,9 @@ const findParentItem = (
 };
 
 interface ZUIBreadcrumbsProps {
+  /**
+   * The list of items to be rendered as breadcrumbs.
+   */
   breadcrumbs: BreadcrumbTreeItem[];
 }
 

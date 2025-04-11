@@ -56,51 +56,49 @@ const ZUITabView: FC<ZUITabViewProps> = ({
   items,
   onSelectTab,
   selectedTab,
-}) => {
-  return (
-    <TabContext value={selectedTab}>
-      <TabList
-        onChange={(ev, newTab) => onSelectTab(newTab)}
-        sx={(theme) => ({
-          borderBottom: `0.063rem solid ${theme.palette.dividers.main}`,
-          minHeight: '2.438rem',
-        })}
-        variant={fullWidth ? 'fullWidth' : 'standard'}
-      >
-        {items.map((tab) => (
-          <Tab
-            key={`tab-${tab.value}`}
-            icon={
-              tab.badge ? (
-                <TabBadge
-                  color={tab.badge.color}
-                  number={tab.badge.number}
-                  truncateLargeNumber={tab.badge.truncateLargeNumber}
-                />
-              ) : (
-                ''
-              )
-            }
-            iconPosition="end"
-            label={tab.label}
-            sx={{
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              minHeight: '2.438rem',
-              minWidth: '1.5rem',
-              paddingY: '0.563rem',
-            }}
-            value={tab.value}
-          />
-        ))}
-      </TabList>
+}) => (
+  <TabContext value={selectedTab}>
+    <TabList
+      onChange={(ev, newTab) => onSelectTab(newTab)}
+      sx={(theme) => ({
+        borderBottom: `0.063rem solid ${theme.palette.dividers.main}`,
+        minHeight: '2.438rem',
+      })}
+      variant={fullWidth ? 'fullWidth' : 'standard'}
+    >
       {items.map((tab) => (
-        <TabPanel key={`tabPanel-${tab.value}`} value={tab.value}>
-          {tab.render()}
-        </TabPanel>
+        <Tab
+          key={`tab-${tab.value}`}
+          icon={
+            tab.badge ? (
+              <TabBadge
+                color={tab.badge.color}
+                number={tab.badge.number}
+                truncateLargeNumber={tab.badge.truncateLargeNumber}
+              />
+            ) : (
+              ''
+            )
+          }
+          iconPosition="end"
+          label={tab.label}
+          sx={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            minHeight: '2.438rem',
+            minWidth: '1.5rem',
+            paddingY: '0.563rem',
+          }}
+          value={tab.value}
+        />
       ))}
-    </TabContext>
-  );
-};
+    </TabList>
+    {items.map((tab) => (
+      <TabPanel key={`tabPanel-${tab.value}`} value={tab.value}>
+        {tab.render()}
+      </TabPanel>
+    ))}
+  </TabContext>
+);
 
 export default ZUITabView;

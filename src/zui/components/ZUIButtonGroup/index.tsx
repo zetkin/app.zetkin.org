@@ -11,9 +11,30 @@ import ZUIIconButton, {
 import { ZUIOrientation, ZUISize, ZUIVariant } from '../types';
 
 interface ZUIButtonGroupProps {
+  /**
+   * List of button props to be rendered in the button group.
+   */
   buttons: (ZUIButtonProps | ZUIIconButtonProps)[];
+
+  /**
+   * The orientation of the button group.
+   *
+   * Defaults to "horizontal".
+   */
   orientation?: ZUIOrientation;
+
+  /**
+   * The size of the buttons.
+   *
+   * Defaults to "medium".
+   */
   size?: ZUISize;
+
+  /**
+   * The variant of the buttons.
+   *
+   * Defaults to "primary".
+   */
   variant?: ZUIVariant;
 }
 

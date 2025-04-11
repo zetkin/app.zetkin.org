@@ -29,14 +29,12 @@ type ZUIIconLabelRowProps = {
 const ZUIIconLabelRow: FC<ZUIIconLabelRowProps> = ({
   iconLabels,
   ...restProps
-}) => {
-  return (
-    <Box display="flex" flexShrink="0" gap={2}>
-      {iconLabels.map((props, index) => (
-        <ZUIIconLabel key={index} {...restProps} {...props} />
-      ))}
-    </Box>
-  );
-};
+}) => (
+  <Box display="flex" flexShrink="0" gap={2}>
+    {iconLabels.map((props, index) => (
+      <ZUIIconLabel key={index} {...restProps} {...props} />
+    ))}
+  </Box>
+);
 
 export default ZUIIconLabelRow;

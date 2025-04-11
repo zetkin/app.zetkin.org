@@ -35,17 +35,6 @@ type ZUIIconProps = {
   size?: ZUISize;
 };
 
-const getFontSize = (size: ZUISize) => {
-  if (size == 'small') {
-    return '1.25rem';
-  } else if (size == 'medium') {
-    return '1.5rem';
-  } else {
-    //Size is "large"¨
-    return '2.188rem';
-  }
-};
-
 const ZUIIcon: FC<ZUIIconProps> = ({
   color = 'secondary',
   icon: Icon,
@@ -61,11 +50,18 @@ const ZUIIcon: FC<ZUIIconProps> = ({
     success: theme.palette.success.main,
     warning: theme.palette.warning.main,
   };
+
+  const fontSizes: Record<ZUISize, string> = {
+    large: '2.188rem',
+    medium: '1.5rem',
+    small: '1.25rem',
+  };
+
   return (
     <Icon
       sx={{
         color: iconColors[color],
-        fontSize: getFontSize(size),
+        fontSize: fontSizes[size],
       }}
     />
   );

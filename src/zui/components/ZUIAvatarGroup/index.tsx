@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import ZUIAvatar from '../ZUIAvatar';
@@ -32,28 +32,28 @@ type ZUIAvatarGroupProps = {
   variant?: 'circular' | 'square';
 };
 
+const fontSizes: Record<ZUISize, string> = {
+  large: '1rem',
+  medium: '0.875rem',
+  small: '0.625rem',
+};
+
+const avatarSizes: Record<ZUISize, string> = {
+  large: '2.5rem',
+  medium: '2rem',
+  small: '1.5rem',
+};
+
 const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
   avatars,
   max,
   size = 'medium',
   variant = 'circular',
 }) => {
-  const theme = useTheme();
-
-  let avatarSize = '2rem';
-  let fontSize = '0.875rem';
-  if (size == 'small') {
-    avatarSize = '1.5rem';
-    fontSize = '0.625rem';
-  } else if (size == 'large') {
-    avatarSize = '3rem';
-    fontSize = '1rem';
-  }
-
   const showOverflowNumber = !!max && max < avatars.length;
 
   return (
-    <Box display="flex" gap="0.25rem">
+    <Box sx={{ display: 'flex', gap: '0.25rem' }}>
       {avatars.map((avatar, index) => {
         if (showOverflowNumber && index > max - 2) {
           return;
@@ -71,19 +71,23 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
       })}
       {showOverflowNumber && (
         <Box
-          alignItems="center"
-          bgcolor={theme.palette.grey[100]}
-          borderRadius={variant == 'circular' ? 100 : '0.25rem'}
-          display="flex"
-          height={avatarSize}
-          justifyContent="center"
-          width={avatarSize}
+          sx={(theme) => ({
+            alignItems: 'center',
+            backgroundColor: theme.palette.grey[100],
+            borderRadius: variant == 'circular' ? 100 : '0.25rem',
+            display: 'flex',
+            height: avatarSizes[size],
+            justifyContent: 'center',
+            width: avatarSizes[size],
+          })}
         >
           <Typography
-            color={theme.palette.text.primary}
-            fontFamily={theme.typography.fontFamily}
-            fontSize={fontSize}
-            fontWeight={500}
+            sx={(theme) => ({
+              color: theme.palette.text.primary,
+              fontFamily: theme.typography.fontFamily,
+              fontSize: fontSizes[size],
+              fontWeight: 500,
+            })}
           >
             {'+' + (avatars.length - max + 1)}
           </Typography>

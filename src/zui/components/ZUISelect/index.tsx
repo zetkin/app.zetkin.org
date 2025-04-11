@@ -103,7 +103,6 @@ const ZUISelect: FC<ZUISelectProps> = ({
         paddingLeft: '0.25rem',
         paddingRight: '0.25rem',
       },
-      color: 'red',
       minWidth: '13.75rem',
     })}
   >

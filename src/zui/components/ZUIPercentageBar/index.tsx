@@ -1,15 +1,20 @@
 import { Box, useTheme } from '@mui/material';
 
-type Sizes = 'small' | 'medium' | 'large';
+import { ZUISize } from '../types';
 
-const sizes: Record<Sizes, string> = {
+const sizes: Record<ZUISize, string> = {
   large: '1rem',
   medium: '0.5rem',
   small: '0.25rem',
 };
 
-export type ZUIBarDiagramProps = {
-  size: Sizes;
+export type ZUIPercentageBarProps = {
+  /**
+   * The size of the bar diagram.
+   *
+   * Defaults to "medium"
+   */
+  size?: ZUISize;
 
   /**
    * Width of segments as an array of numbers whose total is < 100.
@@ -23,7 +28,10 @@ export type ZUIBarDiagramProps = {
  * different segments, up to 100. The final segment width is the
  * remainder of 100 minus the previous segment widths.
  */
-const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
+const ZUIPercentageBar = ({
+  values,
+  size = 'medium',
+}: ZUIPercentageBarProps) => {
   const theme = useTheme();
   const progressSum = values.reduce((sum, val) => {
     return sum + val;
@@ -86,4 +94,4 @@ const ZUIBarDiagram = ({ values, size }: ZUIBarDiagramProps) => {
   );
 };
 
-export default ZUIBarDiagram;
+export default ZUIPercentageBar;

@@ -1,4 +1,4 @@
-import { CatchingPokemon, ExpandMore } from '@mui/icons-material';
+import { ExpandMore, Mail } from '@mui/icons-material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIButton from './index';
@@ -13,35 +13,35 @@ type Story = StoryObj<typeof ZUIButton>;
 
 export const Primary: Story = {
   args: {
-    label: 'Primary',
+    label: 'Open',
     variant: 'primary',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    label: 'Secondary',
+    label: 'Cancel',
     variant: 'secondary',
   },
 };
 
 export const Tertiary: Story = {
   args: {
-    label: 'Tertiary',
+    label: 'Attended',
     variant: 'tertiary',
   },
 };
 
 export const Warning: Story = {
   args: {
-    label: 'Warning',
+    label: 'Change surevy question',
     variant: 'warning',
   },
 };
 
 export const Destructive: Story = {
   args: {
-    label: 'Destructive',
+    label: 'Delete person',
     variant: 'destructive',
   },
 };
@@ -55,16 +55,16 @@ export const Loading: Story = {
 
 export const StartIcon: Story = {
   args: {
-    label: 'Start icon',
-    startIcon: <CatchingPokemon />,
+    label: 'Send an email',
+    startIcon: Mail,
     variant: 'primary',
   },
 };
 
 export const EndIcon: Story = {
   args: {
-    endIcon: <ExpandMore />,
-    label: 'End icon',
+    endIcon: ExpandMore,
+    label: 'Create activity',
     variant: 'primary',
   },
 };

@@ -31,6 +31,24 @@ export interface ZUIAvatarProps {
   variant?: 'square' | 'circular';
 }
 
+const fontSizes: Record<ZUISize, number> = {
+  large: 20,
+  medium: 16,
+  small: 12,
+};
+
+const avatarSizes: Record<ZUISize, number> = {
+  large: 40,
+  medium: 32,
+  small: 24,
+};
+
+const letterSpacing: Record<ZUISize, number> = {
+  large: 0.14,
+  medium: 0.11,
+  small: 0.08,
+};
+
 const ZUIAvatar: FC<ZUIAvatarProps> = ({
   firstName,
   id,
@@ -40,29 +58,17 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
 }) => {
   const theme = useTheme();
 
-  let avatarSize = 32;
-  let fontSize = 16;
-  let letterSpacing = 0.11;
-  if (size == 'small') {
-    avatarSize = 24;
-    fontSize = 12;
-    letterSpacing = 0.08;
-  } else if (size == 'large') {
-    avatarSize = 40;
-    fontSize = 20;
-    letterSpacing = 0.14;
-  }
-
   const initials = firstName.slice(0, 1) + lastName.slice(0, 1);
+  const avatarSize = avatarSizes[size];
 
   return (
     <AvatarBackground seed={id.toString()} size={avatarSize} variant={variant}>
       <text
         dominantBaseline="central"
         fontFamily={theme.typography.fontFamily}
-        fontSize={fontSize}
+        fontSize={fontSizes[size]}
         fontWeight={600}
-        letterSpacing={letterSpacing}
+        letterSpacing={letterSpacing[size]}
         textAnchor="middle"
         x={avatarSize / 2}
         y={avatarSize / 2}

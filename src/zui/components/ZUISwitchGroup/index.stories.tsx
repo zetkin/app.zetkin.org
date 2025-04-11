@@ -13,8 +13,8 @@ type Story = StoryObj<typeof ZUISwitchGroup>;
 
 export const Basic: Story = {
   args: {
-    helperText: 'Make it nice and cozy.',
-    label: 'Light switches',
+    helperText: 'Applies to the whole organization.',
+    label: 'Settings',
   },
   render: function Render(args) {
     const [lights, setLights] = useState({
@@ -26,7 +26,7 @@ export const Basic: Story = {
     const options = [
       {
         checked: lights.big,
-        label: 'Big light',
+        label: 'Animations',
         onChange: () =>
           setLights({
             ...lights,
@@ -35,7 +35,7 @@ export const Basic: Story = {
       },
       {
         checked: lights.disco,
-        label: 'Disco light',
+        label: 'Subtitles',
         onChange: () =>
           setLights({
             ...lights,
@@ -44,7 +44,7 @@ export const Basic: Story = {
       },
       {
         checked: lights.reading,
-        label: 'Reading lamp',
+        label: 'Sounds',
         onChange: () =>
           setLights({
             ...lights,
@@ -64,19 +64,14 @@ export const Basic: Story = {
 };
 
 export const Disabled: Story = {
-  args: {
-    disabled: true,
-    helperText: 'You can turn on multiple lights',
-    label: 'Which lights should be on',
-  },
+  args: { ...Basic.args, disabled: true },
   render: Basic.render,
 };
 
 export const Error: Story = {
   args: {
+    ...Basic.args,
     error: true,
-    helperText: 'You need to pick at least one light',
-    label: 'Turn on the lights',
   },
   render: Basic.render,
 };

@@ -21,7 +21,7 @@ type LinkTabItem = {
   label: string;
 };
 
-type ZUITabbedNavBar = {
+type ZUITabbedNavBarProps = {
   /**
    * If true, the tabs will take up all available horizontal space.
    *
@@ -86,7 +86,7 @@ export const TabBadge: FC<Omit<ZUIBadgeProps, 'children'>> = ({
   );
 };
 
-const ZUITabbedNavBar: FC<ZUITabbedNavBar> = ({
+const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
   fullWidth = false,
   items,
   onSelectTab,

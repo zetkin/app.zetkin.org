@@ -1,36 +1,70 @@
 import { FC } from 'react';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import {
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  SvgIconTypeMap,
-  Typography,
-} from '@mui/material';
+import { ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 
-export interface MenuItem {
+import { MUIIcon } from '../types';
+
+export type MenuItem = {
+  /**
+   * If the menu item is disabled.
+   *
+   * Defaults to "false".
+   */
   disabled?: boolean;
-  divider?: boolean;
-  label: string;
-  onClick: () => void;
-  startIcon?: OverridableComponent<
-    SvgIconTypeMap<Record<string, unknown>, 'svg'>
-  >;
-}
 
-interface ZUIMenuProps {
+  /**
+   * If a divider should be rendered below the menu item.
+   *
+   * Defaults to "false".
+   */
+  divider?: boolean;
+
+  /**
+   * The text in the menu item.
+   */
+  label: string;
+
+  /**
+   * The function that runs when the user clicks this menu item.
+   */
+  onClick: () => void;
+
+  /**
+   * An icon to display to the left of the menu item text.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
+   */
+  startIcon?: MUIIcon;
+};
+
+type ZUIMenuProps = {
+  /**
+   * The html element that the menu anchors itself at.
+   */
   anchorEl?: Element | null;
-  dense?: boolean;
-  disableGutters?: boolean;
-  menuItems: MenuItem[];
+
+  /**
+   * The maximum height of the menu.
+   */
   maxHeight?: string;
+
+  /**
+   * The list of menu items.
+   */
+  menuItems: MenuItem[];
+
+  /**
+   * The function that runs when the menu should close.
+   */
   onClose?: () => void;
+
+  /**
+   * The width of the menu.
+   * If none is provided it will be as wide as its widest menu item.
+   */
   width?: string;
-}
+};
 
 const ZUIMenu: FC<ZUIMenuProps> = ({
-  dense,
-  disableGutters,
   anchorEl,
   maxHeight,
   menuItems,
@@ -64,9 +98,7 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       return (
         <MenuItem
           key={index}
-          dense={dense}
           disabled={item.disabled}
-          disableGutters={disableGutters}
           divider={item.divider}
           onClick={() => {
             item.onClick();

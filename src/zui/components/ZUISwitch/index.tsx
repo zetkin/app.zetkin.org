@@ -35,55 +35,41 @@ const ZUISwitch: FC<ZUISwitchProps> = ({
   labelPlacement = 'end',
   onChange,
   size = 'medium',
-}) => {
-  return (
-    <FormControlLabel
-      control={
-        <Switch
-          checked={checked}
-          onChange={(event, newCheckedState) => onChange(newCheckedState)}
-          size={size}
-        />
-      }
-      disabled={disabled}
-      label={
-        <Typography
-          sx={(theme) => ({
-            color: disabled ? theme.palette.text.disabled : '',
-          })}
-          variant="labelXlMedium"
-        >
-          {label}
-        </Typography>
-      }
-      labelPlacement={labelPlacement}
-      sx={[
-        {
-          '& .MuiTypography-root': {
-            '-ms-user-select': 'none',
-            '-webkit-user-select': 'none',
-            userSelect: 'none',
-          },
-          marginBottom:
-            labelPlacement == 'top' || labelPlacement == 'bottom'
-              ? '0.5rem'
-              : '',
-          marginRight: 0,
-          marginTop:
-            labelPlacement == 'top' || labelPlacement == 'bottom'
-              ? '0.5rem'
-              : '',
-        },
-        labelPlacement != 'end'
-          ? {
-              marginLeft: 0,
-            }
-          : {
-              marginLeft: '',
-            },
-      ]}
-    />
-  );
-};
+}) => (
+  <FormControlLabel
+    control={
+      <Switch
+        checked={checked}
+        onChange={(event, newCheckedState) => onChange(newCheckedState)}
+        size={size}
+      />
+    }
+    disabled={disabled}
+    label={
+      <Typography
+        sx={(theme) => ({
+          color: disabled ? theme.palette.text.disabled : '',
+        })}
+        variant="labelXlMedium"
+      >
+        {label}
+      </Typography>
+    }
+    labelPlacement={labelPlacement}
+    sx={{
+      '& .MuiTypography-root': {
+        '-ms-user-select': 'none',
+        '-webkit-user-select': 'none',
+        userSelect: 'none',
+      },
+      marginBottom:
+        labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+      marginLeft: labelPlacement != 'end' ? 0 : '',
+      marginRight: 0,
+      marginTop:
+        labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
+    }}
+  />
+);
 
 export default ZUISwitch;

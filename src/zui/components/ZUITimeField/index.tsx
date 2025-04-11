@@ -3,8 +3,19 @@ import { Dayjs } from 'dayjs';
 import { FC } from 'react';
 
 type ZUITimeFieldProps = {
+  /**
+   * The label of the time field.
+   */
   label: string;
+
+  /**
+   * The functiont that runs when a change happens in the time field.
+   */
   onChange: (newTime: Dayjs | null) => void;
+
+  /**
+   * The value of the time field.
+   */
   value: Dayjs | null;
 };
 

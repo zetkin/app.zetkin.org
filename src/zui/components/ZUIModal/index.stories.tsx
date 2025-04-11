@@ -21,7 +21,7 @@ export const Auto: Story = {
     return (
       <>
         <ZUIButton
-          label="Open"
+          label="Open modal"
           onClick={() => setOpen(true)}
           variant="primary"
         />
@@ -29,8 +29,8 @@ export const Auto: Story = {
           {...args}
           onClose={() => setOpen(false)}
           open={open}
-          primaryButton={{ label: 'Go ahead', onClick: () => null }}
-          secondaryButton={{ label: 'Quit', onClick: () => setOpen(false) }}
+          primaryButton={{ label: 'Confirm', onClick: () => null }}
+          secondaryButton={{ label: 'Cancel', onClick: () => setOpen(false) }}
           title="Modal title"
         >
           <Box

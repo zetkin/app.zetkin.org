@@ -1,4 +1,4 @@
-import { Surfing } from '@mui/icons-material';
+import { AssignmentOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 
@@ -20,7 +20,7 @@ export const Basic: Story = {
         label: 'Call assignment',
         onClick: () => null,
       },
-      { label: 'Survey', onClick: () => null, startIcon: Surfing },
+      { label: 'Survey', onClick: () => null, startIcon: AssignmentOutlined },
       { label: 'Task', onClick: () => null },
       { label: 'Journey', onClick: () => null },
       { divider: true, label: 'Event', onClick: () => null },
@@ -44,22 +44,6 @@ export const Basic: Story = {
       </>
     );
   },
-};
-
-export const Dense: Story = {
-  args: {
-    ...Basic.args,
-    dense: true,
-  },
-  render: Basic.render,
-};
-
-export const GuttersDisabled: Story = {
-  args: {
-    ...Basic.args,
-    disableGutters: true,
-  },
-  render: Basic.render,
 };
 
 export const MaxHeight: Story = {

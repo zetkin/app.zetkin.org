@@ -43,9 +43,9 @@ export const Basic: Story = {
 export const WithIcons: Story = {
   args: {
     options: [
-      { label: CalendarToday, value: 'day' },
-      { label: CalendarViewWeek, value: 'week' },
-      { label: CalendarViewMonth, value: 'month' },
+      { renderIcon: () => CalendarToday, value: 'day' },
+      { renderIcon: () => CalendarViewWeek, value: 'week' },
+      { renderIcon: () => CalendarViewMonth, value: 'month' },
     ],
   },
   render: Basic.render,

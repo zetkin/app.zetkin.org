@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { CatchingPokemon, FoodBank, Surfing } from '@mui/icons-material';
+import { Event, People, PentagonOutlined } from '@mui/icons-material';
 
 import ZUIIconLabelRow from './index';
 
@@ -15,16 +15,16 @@ export const Medium: Story = {
   args: {
     iconLabels: [
       {
-        icon: Surfing,
-        label: 'Surfing',
+        icon: People,
+        label: '13 assignees',
       },
       {
-        icon: CatchingPokemon,
-        label: 'Pokemon',
+        icon: PentagonOutlined,
+        label: '5 areas',
       },
       {
-        icon: FoodBank,
-        label: 'Food',
+        icon: Event,
+        label: 'April 15, 13.00-17.00',
       },
     ],
   },

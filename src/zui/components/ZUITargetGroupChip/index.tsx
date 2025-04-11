@@ -1,14 +1,15 @@
-import { Box, SvgIconTypeMap, Typography } from '@mui/material';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
+
+import { MUIIcon } from '../types';
 
 type ZUITargetGroupChipProps = {
   /**
    * The MUI icon to be used.
    *
-   * Pass in reference to the icon, for example: Close, not <Close/>.
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
-  icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
+  icon: MUIIcon;
 
   /**
    * The text to be shown

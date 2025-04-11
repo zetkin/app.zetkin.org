@@ -1,4 +1,3 @@
-import { OverridableComponent } from '@mui/material/OverridableComponent';
 import {
   Box,
   Divider,
@@ -6,7 +5,6 @@ import {
   MenuItem,
   MenuList,
   Popover,
-  SvgIconTypeMap,
   Typography,
 } from '@mui/material';
 import { ExpandMore, MoreVert } from '@mui/icons-material';
@@ -23,7 +21,7 @@ import { WithRequired } from 'utils/types';
 import { ZUIIconButtonProps } from 'zui/components/ZUIIconButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILabel from 'zui/components/ZUILabel';
-import { ZUIPrimary, ZUISecondary } from '../types';
+import { MUIIcon, ZUIPrimary, ZUISecondary } from '../types';
 import ZUIAvatar, { ZUIAvatarProps } from '../ZUIAvatar';
 
 interface ZUIHeaderProps {
@@ -45,26 +43,38 @@ interface ZUIHeaderProps {
    */
   actionButtonVariant?: ZUIPrimary | ZUISecondary;
 
-  /**An object of first name, last name and id to render a ZUIAvatar */
+  /**
+   * An object of first name, last name and id to render a ZUIAvatar
+   */
   avatar?: Omit<ZUIAvatarProps, 'variant' | 'size'>;
 
-  /**A component to be shown under the action button */
+  /**
+   * A component to be shown under the action button
+   */
   belowActionButton?: JSX.Element;
 
-  /**A component to be shown under the title */
+  /**
+   * A component to be shown under the title.
+   */
   belowTitle?: JSX.Element;
 
-  /**Send in the breadcrumbs and the breadcrumb widget will show them */
+  /**
+   * Send in the breadcrumbs and the breadcrumb widget will show them
+   */
   breadcrumbs?: BreadcrumbTreeItem[];
 
-  /**Start icon is required for each menu item */
+  /**
+   * Start icon is required for each menu item
+   * */
   ellipsisMenuItems?: WithRequired<MenuItemType, 'startIcon'>[];
 
-  /**Icon + text pairs to be shown under the title */
+  /**
+   * Icon + text pairs to be shown under the title
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
+   * */
   metaData?: {
-    icon: OverridableComponent<
-      SvgIconTypeMap<Record<string, unknown>, 'svg'>
-    > & { muiName: string };
+    icon: MUIIcon;
     label: string;
   }[];
 
@@ -114,7 +124,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
 
   if (actionButtonLabel) {
     actionButtons.push({
-      endIcon: actionButtonPopoverContent ? <ExpandMore /> : undefined,
+      endIcon: actionButtonPopoverContent ? ExpandMore : undefined,
       label: actionButtonLabel,
       onClick: (ev) => {
         if (actionButtonPopoverContent) {

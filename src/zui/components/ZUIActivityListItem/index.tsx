@@ -6,12 +6,12 @@ import { ActivityStatus } from 'zui/types';
 import { MUIIcon } from '../types';
 import ZUIActivityStatusBadge from '../ZUIActivityStatusBadge';
 import ZUIIcon from '../ZUIIcon';
-import ZUIProgressChip, { ZUIProgressChipProps } from '../ZUIProgressChip';
-import ZUIBarDiagram, { ZUIBarDiagramProps } from '../ZUIBarDiagram';
+import ZUIPercentageBar, { ZUIPercentageBarProps } from '../ZUIPercentageBar';
 import EventWarningIcons, { EventWarningIconsProps } from './EventWarningIcons';
 import ZUIAvatarGroup, { AvatarData } from '../ZUIAvatarGroup';
 import ZUISuffixedNumber from '../ZUISuffixedNumber';
 import { ZUICheckboxProps } from '../ZUICheckbox';
+import ZUIMultiDataChip, { ZUIMultiDataChipProps } from '../ZUIMultiDataChip';
 
 type ActivityListItemBase = {
   /**
@@ -27,6 +27,8 @@ type ActivityListItemBase = {
 
   /**
    * The icon and number that is displayed at the end of the list item.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   endData: {
     icon: MUIIcon;
@@ -40,11 +42,15 @@ type ActivityListItemBase = {
 
   /**
    * The main icon of the list item.
+   *
+   * Pass in reference to the icon, for example: Close, not < Close / >.
    */
   mainIcon: MUIIcon;
 
   /**
-   * The onClick function for the list item.
+   * Pass in a URL to link the entire item.
+   * You can still prevent default link behavior with onClick()
+   * if you need it to be conditional somehow.
    */
   onClick?: (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => void;
 
@@ -71,7 +77,7 @@ type ActivityListItemBase = {
   variant?: 'default' | 'narrow' | 'wide';
 };
 
-type ValuesMeta = Pick<ZUIProgressChipProps, 'values'>;
+type ValuesMeta = Pick<ZUIMultiDataChipProps, 'values'>;
 type EventWarningIconsMeta = {
   eventWarningIcons: EventWarningIconsProps;
 };
@@ -110,7 +116,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
   const makeBarDiagramValues = (values: ValuesMeta['values']) => {
     const sum = values.reduce((prev, curr) => (prev += curr));
     const percent = values.map((value) => Math.round((value / sum) * 100));
-    return percent.slice(0, -1) as unknown as ZUIBarDiagramProps['values'];
+    return percent.slice(0, -1) as unknown as ZUIPercentageBarProps['values'];
   };
 
   return (
@@ -246,14 +252,14 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
             >
               {showBarDiagram && (
                 <Box sx={{ paddingTop: '0.25rem', width: '5.25rem' }}>
-                  <ZUIBarDiagram
+                  <ZUIPercentageBar
                     size="small"
                     values={makeBarDiagramValues(meta.values)}
                   />
                 </Box>
               )}
               <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                {showProgressChip && <ZUIProgressChip values={meta.values} />}
+                {showProgressChip && <ZUIMultiDataChip values={meta.values} />}
                 {hasEventWarningIcons && (
                   <Box sx={{ paddingTop: '0.25rem' }}>
                     <EventWarningIcons

@@ -18,12 +18,12 @@ type Story = StoryObj<typeof ZUIAutocomplete>;
 
 export const Basic: Story = {
   args: {
-    label: 'Activists',
+    label: 'Add assignee',
     options: [
-      { label: 'Clara' },
-      { label: 'Angela' },
-      { label: 'Maya' },
-      { label: 'Huey' },
+      { label: 'Clara Zetkin' },
+      { label: 'Angela Davis' },
+      { label: 'Maya Angelou' },
+      { label: 'Huey P Newton' },
     ],
   },
   render: function Render(args) {
@@ -58,10 +58,10 @@ export const Subtitles: Story = {
   args: {
     ...Basic.args,
     options: [
-      { label: 'Clara', subtitle: 'Zetkin' },
-      { label: 'Angela', subtitle: 'Davis' },
-      { label: 'Maya', subtitle: 'Angelou' },
-      { label: 'Huey', subtitle: 'P Newton' },
+      { label: 'Clara Zetkin', subtitle: 'claraZzz@riseup.net' },
+      { label: 'Angela Davis', subtitle: 'angela.davis@gmail.com' },
+      { label: 'Maya Angelou', subtitle: 'maya_1975@network.net' },
+      { label: 'Huey P Newton', subtitle: 'huey@hotmail.com' },
     ],
   },
   render: Basic.render,
@@ -120,24 +120,24 @@ export const AvatarsAndSubtitles: Story = {
     ...Basic.args,
     options: [
       {
-        label: 'Clara',
+        label: 'Clara Zetkin',
         picture: <ZUIAvatar firstName="Clara" id={12} lastName="Zetkin" />,
-        subtitle: 'Zetkin',
+        subtitle: 'claraZzz@riseup.net',
       },
       {
-        label: 'Angela',
+        label: 'Angela Davis',
         picture: <ZUIAvatar firstName="Angela" id={42} lastName="Davis" />,
-        subtitle: 'Davis',
+        subtitle: 'angela.davis@gmail.com',
       },
       {
-        label: 'Maya',
+        label: 'Maya Angelou',
         picture: <ZUIAvatar firstName="Maya" id={5} lastName="Angelou" />,
-        subtitle: 'Angelou',
+        subtitle: 'maya_1975@network.net',
       },
       {
-        label: 'Huey',
+        label: 'Huey P Newton',
         picture: <ZUIAvatar firstName="Huey" id={98} lastName="Newton" />,
-        subtitle: 'P Newton',
+        subtitle: 'huey@hotmail.com',
       },
     ],
   },

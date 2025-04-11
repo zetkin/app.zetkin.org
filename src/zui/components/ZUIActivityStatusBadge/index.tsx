@@ -12,17 +12,15 @@ type ZUIActivityStatusBadgeProps = {
 
 const ZUIActivityStatusBadge: FC<ZUIActivityStatusBadgeProps> = ({
   status,
-}) => {
-  return (
-    <Box
-      sx={(theme) => ({
-        backgroundColor: theme.palette.activityStatusColors[status],
-        borderRadius: '1rem',
-        height: '0.625rem',
-        width: '0.625rem',
-      })}
-    />
-  );
-};
+}) => (
+  <Box
+    sx={(theme) => ({
+      backgroundColor: theme.palette.activityStatusColors[status],
+      borderRadius: '1rem',
+      height: '0.625rem',
+      width: '0.625rem',
+    })}
+  />
+);
 
 export default ZUIActivityStatusBadge;
