@@ -1,5 +1,5 @@
 import { FC, MouseEvent, ReactNode } from 'react';
-import { Box, Button, Fade, Typography } from '@mui/material';
+import { Box, Fade } from '@mui/material';
 import {
   Event,
   GroupWorkOutlined,
@@ -14,6 +14,8 @@ import { ZetkinEventWithStatus } from '../types';
 import useEventActions from '../hooks/useEventActions';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
+import ZUIText from 'zui/components/ZUIText';
+import ZUIButton from 'zui/components/ZUIButton';
 
 type Props = {
   event: ZetkinEventWithStatus;
@@ -35,47 +37,48 @@ const EventListItem: FC<Props> = ({
   const actions: ReactNode[] = [];
   if (event.status == 'booked') {
     actions.push(
-      <Typography key="booked" variant="body2">
+      <ZUIText key="booked" variant="bodySmRegular">
         <Msg
           id={messageIds.activityList.eventStatus.booked}
           values={{ org: event.organization.title }}
         />
-      </Typography>
+      </ZUIText>
     );
   } else if (event.status == 'signedUp') {
     actions.push(
-      <Button
+      <ZUIButton
         key="action"
+        label={messages.activityList.actions.undoSignup()}
         onClick={() => undoSignup()}
         size="small"
-        variant="outlined"
-      >
-        <Msg id={messageIds.activityList.actions.undoSignup} />
-      </Button>,
+        variant="secondary"
+      />,
       <Fade key="signedUp" appear in style={{ transitionDelay: '0.3s' }}>
         <Box
           sx={{
             bgcolor: '#C1EEC1',
             borderRadius: 4,
             color: '#080',
+            pointerEvents: 'none',
             px: 1,
             py: 0.3,
           }}
         >
-          <Typography sx={{ pointerEvents: 'none' }} variant="body2">
+          <ZUIText variant="bodySmRegular">
             <Msg id={messageIds.activityList.eventStatus.signedUp} />
-          </Typography>
+          </ZUIText>
         </Box>
       </Fade>
     );
   } else {
-    const msgId = requiresConnect
-      ? messageIds.activityList.actions.connectAndSignUp
-      : messageIds.activityList.actions.signUp;
+    const label = requiresConnect
+      ? messages.activityList.actions.connectAndSignUp()
+      : messages.activityList.actions.signUp();
 
     actions.push(
-      <Button
+      <ZUIButton
         key="action"
+        label={label}
         onClick={(ev) => {
           if (onClickSignUp) {
             onClickSignUp(ev);
@@ -86,10 +89,8 @@ const EventListItem: FC<Props> = ({
           }
         }}
         size="small"
-        variant="contained"
-      >
-        <Msg id={msgId} />
-      </Button>
+        variant="primary"
+      />
     );
 
     if (event.num_participants_available < event.num_participants_required) {
@@ -100,13 +101,14 @@ const EventListItem: FC<Props> = ({
             bgcolor: '#FFE5C1',
             borderRadius: 4,
             color: '#f40',
+            pointerEvents: 'none',
             px: 1,
             py: 0.3,
           }}
         >
-          <Typography sx={{ pointerEvents: 'none' }} variant="body2">
+          <ZUIText variant="bodySmRegular">
             <Msg id={messageIds.activityList.eventStatus.needed} />
-          </Typography>
+          </ZUIText>
         </Box>
       );
     }
@@ -125,12 +127,16 @@ const EventListItem: FC<Props> = ({
         {
           Icon: WatchLaterOutlined,
           labels: [
-            <Typography key={`event-time-${event.id}`} variant="body2">
+            <ZUIText
+              key={`event-time-${event.id}`}
+              noWrap
+              variant="bodySmRegular"
+            >
               <ZUITimeSpan
                 end={new Date(removeOffset(event.end_time))}
                 start={new Date(removeOffset(event.start_time))}
               />
-            </Typography>,
+            </ZUIText>,
           ],
         },
         {

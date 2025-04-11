@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 import { getContrastColor } from 'utils/colorUtils';
+import ZUIText from 'zui/components/ZUIText';
 
 const FilterButton: FC<{
   active: boolean;
@@ -22,12 +23,11 @@ const FilterButton: FC<{
         cursor: 'pointer',
         display: 'inline-flex',
         flexShrink: 0,
-        fontSize: '13px',
         paddingX: round ? '3px' : '10px',
         paddingY: '3px',
       })}
     >
-      {children}
+      <ZUIText variant="bodySmRegular">{children}</ZUIText>
     </Box>
   );
 };

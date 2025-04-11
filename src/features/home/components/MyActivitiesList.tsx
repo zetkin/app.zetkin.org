@@ -16,6 +16,7 @@ import messageIds from '../l10n/messageIds';
 import EventListItem from './EventListItem';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import FilterButton from './FilterButton';
+import ZUIText from 'zui/components/ZUIText';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -54,7 +55,9 @@ const MyActivitiesList: FC = () => {
                   setFilteredKinds(newValue);
                 }}
               >
-                <Msg id={messageIds.activityList.filters[kind]} />
+                <ZUIText variant="bodySmRegular">
+                  <Msg id={messageIds.activityList.filters[kind]} />
+                </ZUIText>
               </FilterButton>
             );
           })}

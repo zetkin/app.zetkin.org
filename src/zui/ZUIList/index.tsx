@@ -42,7 +42,6 @@ const ZUIList: React.FunctionComponent<ZUIListProps> = ({
       })}
       {childrenArray.length > numResultsToDisplay && (
         <ListItem
-          button
           component="a"
           onClick={() => {
             setNumResultsToDisplay(numResultsToDisplay + (showMoreStep || 5));

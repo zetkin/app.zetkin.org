@@ -1,4 +1,5 @@
 import { Box, Tab, Tabs } from '@mui/material';
+import NextLink from 'next/link';
 import { FC } from 'react';
 
 import { ZUIBadgeProps } from '../ZUIBadge';
@@ -19,6 +20,11 @@ type LinkTabItem = {
    * The label of the tab.
    */
   label: string;
+
+  /**
+   * The value of the tab
+   */
+  value: string;
 };
 
 type ZUITabbedNavBarProps = {
@@ -33,11 +39,6 @@ type ZUITabbedNavBarProps = {
    * List of the items that will render as tabs.
    */
   items: LinkTabItem[];
-
-  /**
-   * The function that runs when the user clicks a tab.
-   */
-  onSelectTab: (newTab: string) => void;
 
   /**
    * The value of the tabs list.
@@ -89,12 +90,10 @@ export const TabBadge: FC<Omit<ZUIBadgeProps, 'children'>> = ({
 const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
   fullWidth = false,
   items,
-  onSelectTab,
   selectedTab,
 }) => {
   return (
     <Tabs
-      onChange={(ev, newTab) => onSelectTab(newTab)}
       role="navigation"
       sx={(theme) => ({
         borderBottom: `0.063rem solid ${theme.palette.dividers.main}`,
@@ -106,7 +105,7 @@ const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
       {items.map((tab) => (
         <Tab
           key={`navTab-${tab.href}`}
-          component="a"
+          component={NextLink}
           href={tab.href}
           icon={
             tab.badge ? (
@@ -128,7 +127,7 @@ const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
             minWidth: '1.5rem',
             paddingY: '0.563rem',
           }}
-          value={tab.href}
+          value={tab.value}
         />
       ))}
     </Tabs>

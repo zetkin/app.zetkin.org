@@ -1,16 +1,18 @@
 'use client';
 
-import { Box, Link, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import NextLink from 'next/link';
 
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIAvatar from 'zui/components/ZUIAvatar';
 import useUser from 'core/hooks/useUser';
 import ZUILogo from 'zui/ZUILogo';
 import { useEnv } from 'core/hooks';
+import ZUITabbedNavBar from 'zui/components/ZUITabbedNavBar';
+import ZUIText from 'zui/components/ZUIText';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   children: ReactNode;
@@ -35,9 +37,21 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         maxWidth: 640,
       }}
     >
-      <Box display="flex" justifyContent="space-between" m={2}>
-        <Typography>{title || messages.title()}</Typography>
-        {user && <ZUIAvatar size="sm" url={`/api/users/${user.id}/avatar`} />}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        m={2}
+        sx={{ cursor: 'default' }}
+      >
+        <ZUIText>{title || messages.title()}</ZUIText>
+        {user && (
+          <ZUIAvatar
+            firstName={user.first_name}
+            id={user.id}
+            lastName={user.last_name}
+            size="small"
+          />
+        )}
       </Box>
       <Box
         sx={(theme) => ({
@@ -47,38 +61,19 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
           zIndex: 1,
         })}
       >
-        <Tabs
-          centered={isMobile}
-          sx={{
-            '& .MuiTabs-indicator > span': {
-              backgroundColor: '#252525',
+        <ZUITabbedNavBar
+          fullWidth={isMobile}
+          items={[
+            { href: '/my/home', label: messages.tabs.home(), value: 'home' },
+            { href: '/my/feed', label: messages.tabs.feed(), value: 'feed' },
+            {
+              href: '/my/settings',
+              label: messages.tabs.settings(),
+              value: 'settings',
             },
-          }}
-          value={lastSegment}
-          variant={isMobile ? 'fullWidth' : 'standard'}
-        >
-          <Tab
-            component={NextLink}
-            href="/my/home"
-            label={messages.tabs.home()}
-            sx={{ textTransform: 'none' }}
-            value="home"
-          />
-          <Tab
-            component={NextLink}
-            href="/my/feed"
-            label={messages.tabs.feed()}
-            sx={{ textTransform: 'none' }}
-            value="feed"
-          />
-          <Tab
-            component={NextLink}
-            href="/my/settings"
-            label={messages.tabs.settings()}
-            sx={{ textTransform: 'none' }}
-            value="settings"
-          />
-        </Tabs>
+          ]}
+          selectedTab={lastSegment}
+        />
       </Box>
       <Box minHeight="90dvh">{children}</Box>
       <Box
@@ -91,17 +86,14 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         sx={{ opacity: 0.75 }}
       >
         <ZUILogo />
-        <Typography variant="body2">Zetkin</Typography>
-        <Typography variant="body2">
-          <Link
-            href={
-              env.vars.ZETKIN_PRIVACY_POLICY_LINK ||
-              'https://www.zetkin.org/privacy'
-            }
-          >
-            <Msg id={messageIds.footer.privacyPolicy} />
-          </Link>
-        </Typography>
+        <ZUIText variant="bodySmRegular">Zetkin</ZUIText>
+        <ZUILink
+          href={
+            env.vars.ZETKIN_PRIVACY_POLICY_LINK ||
+            'https://www.zetkin.org/privacy'
+          }
+          text={messages.footer.privacyPolicy()}
+        />
       </Box>
     </Box>
   );
