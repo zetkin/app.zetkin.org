@@ -1,9 +1,23 @@
 import { FC } from 'react';
-import { Divider, DividerProps } from '@mui/material';
+import { Divider } from '@mui/material';
 
-type ZUIDividerProps = Partial<
-  Pick<DividerProps, 'flexItem' | 'orientation'>
-> & {
+import { ZUIOrientation } from '../types';
+
+type ZUIDividerProps = {
+  /**
+   * This should be set to "true" if the divider
+   * is inside a flex container.
+   *
+   * Defaults to "false".
+   */
+  flexItem?: boolean;
+
+  /**
+   * The orientation of the component.
+   * Defaults to "horizontal";
+   */
+  orientation?: ZUIOrientation;
+
   /**
    * The variant of the divider. Defaults to 'fullWidth'
    */
