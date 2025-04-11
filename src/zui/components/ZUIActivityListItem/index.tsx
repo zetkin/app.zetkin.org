@@ -46,7 +46,7 @@ type ActivityListItemBase = {
   /**
    * The onClick function for the list item.
    */
-  onClick?: (event: ReactMouseEvent<HTMLLIElement, MouseEvent>) => void;
+  onClick?: (event: ReactMouseEvent<HTMLDivElement, MouseEvent>) => void;
 
   /**
    * The status of the activity.
@@ -116,7 +116,6 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
   return (
     <ListItem
       divider
-      onClick={onClick}
       sx={(theme) => ({
         '& a:focus-visible': {
           color: theme.palette.text.primary,
@@ -124,7 +123,8 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
         alignItems: 'center',
         cursor: 'pointer',
         display: 'flex',
-        paddingX: '1.25rem',
+        paddingLeft: checkboxProps ? '0.625rem' : '1.25rem',
+        paddingRight: '1.25rem',
         paddingY: variant == 'wide' ? '0.875rem' : '1rem',
         width: '100%',
       })}
@@ -151,7 +151,6 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
         }}
       >
         <Box
-          component="li"
           onClick={(ev) => {
             if (onClick) {
               onClick(ev);
@@ -190,7 +189,7 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                 alignItems: 'baseline',
                 display: 'flex',
                 flexDirection: variant == 'wide' ? 'row' : 'column',
-                gap: variant == 'wide' ? '0.5rem' : '',
+                flexGrow: 1,
                 minWidth: 0,
                 paddingRight: '0.5rem',
               }}
@@ -198,10 +197,11 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
               <Typography
                 color="primary"
                 sx={{
+                  flexGrow: 1,
+                  maxWidth: variant == 'wide' ? 'fit-content' : '100%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  width: '100%',
                 }}
                 variant="bodyMdRegular"
               >
@@ -210,11 +210,13 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
               <Typography
                 color="secondary"
                 sx={{
+                  flexGrow: 1,
+                  maxWidth: '100%',
                   overflow: 'hidden',
+                  paddingLeft: variant == 'wide' ? '0.5rem' : '',
                   paddingTop: variant != 'wide' ? '0.2rem' : '',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  width: '100%',
                 }}
                 variant="bodySmRegular"
               >
@@ -233,14 +235,13 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                   : 'space-between',
             }}
           >
-            {showProgressChip && <ZUIProgressChip values={meta.values} />}
             <Box
               sx={{
                 alignItems: variant == 'narrow' ? 'flex-end' : '',
                 display: 'flex',
                 flexDirection: variant == 'narrow' ? 'column-reverse' : 'row',
                 flexGrow: 1,
-                justifyContent: showProgressChip ? 'flex-end' : 'space-between',
+                justifyContent: 'space-between',
               }}
             >
               {showBarDiagram && (
@@ -251,21 +252,25 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                   />
                 </Box>
               )}
-              {hasEventWarningIcons && (
-                <Box sx={{ paddingTop: '0.25rem' }}>
-                  <EventWarningIcons
-                    hasContact={meta.eventWarningIcons.hasContact}
-                    numBooked={meta.eventWarningIcons.numBooked}
-                    numRemindersSent={meta.eventWarningIcons.numRemindersSent}
-                    numSignups={meta.eventWarningIcons.numSignups}
-                  />
-                </Box>
-              )}
+              <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                {showProgressChip && <ZUIProgressChip values={meta.values} />}
+                {hasEventWarningIcons && (
+                  <Box sx={{ paddingTop: '0.25rem' }}>
+                    <EventWarningIcons
+                      hasContact={meta.eventWarningIcons.hasContact}
+                      isUrgent={meta.eventWarningIcons.isUrgent}
+                      numBooked={meta.eventWarningIcons.numBooked}
+                      numRemindersSent={meta.eventWarningIcons.numRemindersSent}
+                      numSignups={meta.eventWarningIcons.numSignups}
+                    />
+                  </Box>
+                )}
+              </Box>
               <Box
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  gap: '1.25rem',
+                  gap: '1rem',
                 }}
               >
                 {showAvatars && (
@@ -275,14 +280,15 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    gap: '0.25rem',
+                    gap: '0.5rem',
+                    justifyContent: 'flex-end',
                     width: variant == 'narrow' ? 'fit-content' : '5rem',
                   }}
                 >
-                  <ZUIIcon color="secondary" icon={endData.icon} size="small" />
                   <Typography color="secondary" variant="bodyMdRegular">
                     <ZUISuffixedNumber number={endData.number} />
                   </Typography>
+                  <ZUIIcon color="secondary" icon={endData.icon} size="small" />
                 </Box>
               </Box>
             </Box>
