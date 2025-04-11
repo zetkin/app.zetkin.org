@@ -23,6 +23,9 @@ import { useEnv } from 'core/hooks';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
+import useMembership from '../hooks/useMembership';
+import useFollowOrgMutations from '../hooks/useFollowOrgMutations';
+import useConnectOrg from '../hooks/useConnectOrg';
 
 type Props = {
   children: ReactNode;
@@ -42,6 +45,10 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const isMobile = useMediaQuery('(max-width: 640px)');
 
   const user = useUser();
+  const membership = useMembership(org.id).data;
+
+  const { followOrg, unfollowOrg } = useFollowOrgMutations(org.id);
+  const { connectOrg } = useConnectOrg(org.id);
 
   return (
     <Box
@@ -68,6 +75,28 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
             <ZUIAvatar size="sm" url={`/api/orgs/${org.id}/avatar`} />
             <Typography>{org.title}</Typography>
+            {user && membership?.follow && (
+              <Button onClick={() => unfollowOrg()}>
+                <Msg id={messageIds.home.header.unfollow} />
+              </Button>
+            )}
+            {user && membership?.follow === false && (
+              <Button onClick={() => followOrg(membership)}>
+                <Msg id={messageIds.home.header.follow} />
+              </Button>
+            )}
+            {user && !membership && (
+              <Button onClick={() => connectOrg()}>
+                <Msg id={messageIds.home.header.connect} />
+              </Button>
+            )}
+            {!user && (
+              <Button
+                href={`/login?redirect=${encodeURIComponent(`/o/${org.id}`)}`}
+              >
+                <Msg id={messageIds.home.header.login} />
+              </Button>
+            )}
           </Box>
           {user && (
             <NextLink href="/my">
