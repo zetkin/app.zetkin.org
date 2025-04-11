@@ -96,7 +96,7 @@ type SectionWithRightHeaderContent = SectionWithChildren & {
   renderRightHeaderContent?: () => JSX.Element;
 };
 
-type Section =
+type SectionProps =
   | SectionWithChildren
   | SectionWithFullWidthHeaderContent
   | SectionWithRightHeaderContent;
@@ -114,25 +114,25 @@ const isSubSectionWithRightHeaderContent = (
 };
 
 const isSectionWithContent = (
-  section: Section
+  section: SectionProps
 ): section is SectionWithContent => {
   return 'renderContent' in section;
 };
 
 const isSectionWithSubSections = (
-  section: Section
+  section: SectionProps
 ): section is SectionWithSubSections => {
   return 'subSections' in section;
 };
 
 const isSectionWithFullWidthHeaderContent = (
-  section: Section
+  section: SectionProps
 ): section is SectionWithFullWidthHeaderContent => {
   return 'renderFullWidthHeaderContent' in section;
 };
 
 const isSectionWithRightHeaderContent = (
-  section: Section
+  section: SectionProps
 ): section is SectionWithRightHeaderContent => {
   return 'renderRightHeaderContent' in section || 'dataPoint' in section;
 };
@@ -200,19 +200,18 @@ const SubSection: FC<{ subSection: SubSectionType }> = ({ subSection }) => {
   );
 };
 
-const ZUISection: FC<{ section: Section }> = ({ section }) => {
-  const { title, subtitle } = section;
+const ZUISection: FC<SectionProps> = (props) => {
+  const { title, subtitle } = props;
 
-  const hasFullWidthHeaderContent =
-    isSectionWithFullWidthHeaderContent(section);
-  const hasRightHeaderContent = isSectionWithRightHeaderContent(section);
-  const hasSubSections = isSectionWithSubSections(section);
-  const hasContent = isSectionWithContent(section);
+  const hasFullWidthHeaderContent = isSectionWithFullWidthHeaderContent(props);
+  const hasRightHeaderContent = isSectionWithRightHeaderContent(props);
+  const hasSubSections = isSectionWithSubSections(props);
+  const hasContent = isSectionWithContent(props);
   const hasVerticalSubSections =
-    hasSubSections && section.subSectionOrientation == 'vertical';
+    hasSubSections && props.subSectionOrientation == 'vertical';
 
   const showVerticalDivider =
-    (hasRightHeaderContent && !!section.dataPoint) || hasFullWidthHeaderContent;
+    (hasRightHeaderContent && !!props.dataPoint) || hasFullWidthHeaderContent;
 
   return (
     <Box
@@ -273,7 +272,7 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
               <ZUIDivider flexItem orientation="vertical" />
             </Box>
           )}
-          {hasRightHeaderContent && section.dataPoint && (
+          {hasRightHeaderContent && props.dataPoint && (
             <Typography
               sx={(theme) => ({
                 color: theme.palette.data.main,
@@ -282,10 +281,10 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
               })}
               variant="headingMd"
             >
-              {section.dataPoint}
+              {props.dataPoint}
             </Typography>
           )}
-          {hasRightHeaderContent && section.renderRightHeaderContent && (
+          {hasRightHeaderContent && props.renderRightHeaderContent && (
             <Box
               sx={{
                 display: 'flex',
@@ -295,12 +294,12 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
                 paddingLeft: '0.5rem',
               }}
             >
-              {section.renderRightHeaderContent()}
+              {props.renderRightHeaderContent()}
             </Box>
           )}
           {hasFullWidthHeaderContent && (
             <Box sx={{ flexGrow: 2, flexShrink: 0, minWidth: '50%' }}>
-              {section.renderFullWidthHeaderContent()}
+              {props.renderFullWidthHeaderContent()}
             </Box>
           )}
         </Box>
@@ -325,7 +324,7 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
           }}
         >
           <ZUIDivider />
-          {section.renderContent()}
+          {props.renderContent()}
         </Box>
       )}
       {hasSubSections && (
@@ -337,7 +336,7 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
               flexDirection: hasVerticalSubSections ? 'column' : 'row',
             }}
           >
-            {section.subSections.map((subSection, index) => (
+            {props.subSections.map((subSection, index) => (
               <Box
                 key={`subSection-${subSection.title}`}
                 sx={{
@@ -345,11 +344,11 @@ const ZUISection: FC<{ section: Section }> = ({ section }) => {
                   flexDirection: hasVerticalSubSections ? 'column' : 'row',
                   width: hasVerticalSubSections
                     ? 'inherit'
-                    : `${100 / section.subSections.length}%`,
+                    : `${100 / props.subSections.length}%`,
                 }}
               >
                 <SubSection subSection={subSection} />
-                {index != section.subSections.length - 1 && (
+                {index != props.subSections.length - 1 && (
                   <ZUIDivider
                     flexItem
                     orientation={
