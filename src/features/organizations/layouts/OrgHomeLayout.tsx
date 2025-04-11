@@ -90,6 +90,13 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
                 <Msg id={messageIds.home.header.connect} />
               </Button>
             )}
+            {!user && (
+              <Button
+                href={`/login?redirect=${encodeURIComponent(`/o/${org.id}`)}`}
+              >
+                <Msg id={messageIds.home.header.connectAndSignUp} />
+              </Button>
+            )}
           </Box>
           {user && (
             <NextLink href="/my">
