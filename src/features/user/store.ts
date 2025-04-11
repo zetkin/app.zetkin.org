@@ -44,9 +44,20 @@ const userSlice = createSlice({
       state.userItem.loaded = new Date().toISOString();
       state.userItem.isLoading = false;
     },
+    userUpdated: (state, action: PayloadAction<ZetkinUser>) => {
+      const user = action.payload;
+      state.userItem.data = user;
+      state.userItem.loaded = new Date().toISOString();
+      state.userItem.isLoading = false;
+    },
   },
 });
 
 export default userSlice;
-export const { membershipsLoad, membershipsLoaded, userLoad, userLoaded } =
-  userSlice.actions;
+export const {
+  membershipsLoad,
+  membershipsLoaded,
+  userLoad,
+  userLoaded,
+  userUpdated,
+} = userSlice.actions;
