@@ -55,6 +55,7 @@ const OrganizationsSlice = createSlice({
 
       if (existingMembership?.data) {
         existingMembership.data.follow = true;
+        existingMembership.loaded = new Date().toISOString();
       } else {
         const membershipWithId: ZetkinMembership & { id: number } = {
           ...membership,
@@ -66,8 +67,6 @@ const OrganizationsSlice = createSlice({
           remoteItem(membership.organization.id, { data: membershipWithId })
         );
       }
-
-      state.userMembershipList.loaded = new Date().toISOString();
     },
     orgUnfollowed: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
@@ -78,9 +77,8 @@ const OrganizationsSlice = createSlice({
 
       if (membershipToUpdate?.data) {
         membershipToUpdate.data.follow = false;
+        membershipToUpdate.loaded = new Date().toISOString();
       }
-
-      state.userMembershipList.loaded = new Date().toISOString();
     },
     organizationLoad: (state) => {
       state.orgData.isLoading = true;
