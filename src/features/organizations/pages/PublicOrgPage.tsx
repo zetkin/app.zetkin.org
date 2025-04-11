@@ -1,8 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import NextLink from 'next/link';
-import { Box, Dialog, Fade } from '@mui/material';
+import { Box, Button, Divider, Fade, Typography } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
 import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
@@ -13,20 +12,17 @@ import ZUIDate from 'zui/ZUIDate';
 import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
-import { Msg, useMessages } from 'core/i18n';
+import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import ZUIDialog from 'zui/ZUIDialog';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import NoEventsBlurb from '../components/NoEventsBlurb';
-import ZUIText from 'zui/components/ZUIText';
-import ZUIButton from 'zui/components/ZUIButton';
-import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
-  const messages = useMessages(messageIds);
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
@@ -84,9 +80,9 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
-              <ZUIText my={1} variant="bodyMdSemiBold">
+              <Typography my={1} variant="h5">
                 <ZUIDate datetime={date} />
-              </ZUIText>
+              </Typography>
             </div>
           </Fade>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
@@ -113,42 +109,39 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               style={{ transitionDelay: nextDelay() }}
             >
               <Box sx={{ my: 4 }}>
-                <ZUIDivider />
+                <Divider />
                 <SubOrgEventBlurb
                   onClickShow={() => setIncludeSubOrgs(true)}
                   subOrgEvents={allEvents.filter(
                     (event) => event.organization.id != orgId
                   )}
                 />
-                <ZUIDivider />
+                <Divider />
               </Box>
             </Fade>
           )}
         </Box>
       ))}
-      <Dialog
+      <ZUIDialog
         maxWidth="sm"
         onClose={() => setPostAuthEvent(null)}
         open={!!postAuthEvent}
       >
-        <ZUIText>
+        <Typography>
           <Msg id={messageIds.authDialog.label} />
-        </ZUIText>
+        </Typography>
         <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-          <ZUIButton
-            label={messages.authDialog.cancelButton()}
-            onClick={() => setPostAuthEvent(null)}
-            variant="secondary"
-          />
-          <ZUIButton label={messages.authDialog.loginButton()} />
-          <NextLink
+          <Button onClick={() => setPostAuthEvent(null)} variant="outlined">
+            <Msg id={messageIds.authDialog.cancelButton} />
+          </Button>
+          <Button
             href={`/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`}
-            passHref
+            variant="contained"
           >
-            <ZUIButton label={messages.authDialog.loginButton()} />
-          </NextLink>
+            <Msg id={messageIds.authDialog.loginButton} />
+          </Button>
         </Box>
-      </Dialog>
+      </ZUIDialog>
     </Box>
   );
 };

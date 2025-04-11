@@ -1,13 +1,19 @@
 import { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material';
 
 import useUserMutations from '../hooks/useUserMutations';
 import { ZetkinUser } from 'utils/types/zetkin';
+import ZUICard from 'zui/ZUICard';
 import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
-import ZUISection from 'zui/components/ZUISection';
-import ZUISelect from 'zui/components/ZUISelect';
-import ZUIButton from 'zui/components/ZUIButton';
+import { Msg, useMessages } from 'core/i18n';
 
 export type ZetkinLanguage = 'en' | 'sv' | 'da' | 'nn' | 'de' | null;
 
@@ -37,53 +43,56 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
       gap={1}
       overflow="hidden"
       position="relative"
-      sx={{ paddingTop: 1 }}
     >
-      <ZUISection
-        renderContent={() => (
+      <Box mt={2}>
+        <ZUICard header={messages.settings.appPreferences.header()}>
+          <Divider />
           <Box
             sx={{
+              alignItems: 'flex-end',
               display: 'flex',
               flexDirection: 'column',
               gap: 2,
             }}
           >
-            <ZUISelect
-              items={[
-                {
-                  label: messages.settings.appPreferences.lang.auto(),
-                  value: 'auto',
-                },
-                ...Object.entries(languageOptions).map(([code, label]) => ({
-                  label,
-                  value: code,
-                })),
-              ]}
-              label={messages.settings.appPreferences.lang.label()}
-              onChange={(newLanguage) => {
-                if (newLanguage == 'auto') {
-                  setSelectedLanguage(null);
-                } else {
-                  setSelectedLanguage(newLanguage as ZetkinLanguage);
-                }
-              }}
-              selectedOption={selectedLanguage || 'auto'}
-            />
-            <Box alignSelf="flex-end">
-              <ZUIButton
-                disabled={selectedLanguage == user.lang}
-                label={messages.settings.appPreferences.lang.saveButton()}
-                onClick={() => {
-                  changeUserLanguage(selectedLanguage);
-                  location.reload();
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel shrink>
+                <Msg id={messageIds.settings.appPreferences.lang.label} />
+              </InputLabel>
+              <Select
+                label={messages.settings.appPreferences.lang.label()}
+                onChange={(e) => {
+                  if (e.target.value == 'auto') {
+                    setSelectedLanguage(null);
+                  } else {
+                    setSelectedLanguage(e.target.value as ZetkinLanguage);
+                  }
                 }}
-                variant="primary"
-              />
-            </Box>
+                value={selectedLanguage || 'auto'}
+              >
+                <MenuItem key="auto" value="auto">
+                  <Msg id={messageIds.settings.appPreferences.lang.auto} />
+                </MenuItem>
+                {Object.entries(languageOptions).map(([code, label]) => (
+                  <MenuItem key={code} value={code}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              disabled={selectedLanguage == user.lang}
+              onClick={() => {
+                changeUserLanguage(selectedLanguage);
+                location.reload();
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.settings.appPreferences.lang.saveButton} />
+            </Button>
           </Box>
-        )}
-        title={messages.settings.appPreferences.header()}
-      />
+        </ZUICard>
+      </Box>
     </Box>
   );
 };

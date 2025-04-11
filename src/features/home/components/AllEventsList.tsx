@@ -12,7 +12,11 @@ import {
   Typography,
 } from '@mui/material';
 import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
-import { DateRange } from '@mui/x-date-pickers-pro';
+import {
+  DateRange,
+  DateRangeCalendar,
+  DateRangePickerDay,
+} from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
 
@@ -25,9 +29,7 @@ import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import FilterButton from './FilterButton';
 import DrawerModal from './DrawerModal';
-import ZUIIcon from 'zui/components/ZUIIcon';
-import ZUIText from 'zui/components/ZUIText';
-import ZUIDatePicker from 'zui/components/ZUIDatePicker';
+import { getContrastColor } from 'utils/colorUtils';
 
 const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
   start,
@@ -250,7 +252,7 @@ const AllEventsList: FC = () => {
               }}
               round
             >
-              <ZUIIcon icon={Clear} size="small" />
+              <Clear fontSize="small" />
             </FilterButton>
           )}
           {filters.map((filter) => (
@@ -298,9 +300,9 @@ const AllEventsList: FC = () => {
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
-              <ZUIText my={1} variant="bodyMdSemiBold">
+              <Typography my={1} variant="h5">
                 <ZUIDate datetime={date} />
-              </ZUIText>
+              </Typography>
             </div>
           </Fade>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
@@ -322,15 +324,7 @@ const AllEventsList: FC = () => {
           justifyContent="center"
           padding={1}
         >
-          <ZUIDatePicker
-            allowRangeSelection
-            onChange={(newDateRange) => {
-              setDateFilterState('custom');
-              setCustomDatesToFilterBy(newDateRange);
-            }}
-            value={getDateRange()}
-          />
-          {/*           <DateRangeCalendar
+          <DateRangeCalendar
             calendars={1}
             disablePast
             onChange={(newDateRange) => {
@@ -377,7 +371,7 @@ const AllEventsList: FC = () => {
               },
             }}
             value={getDateRange()}
-          /> */}
+          />
         </Box>
       </DrawerModal>
       <DrawerModal
