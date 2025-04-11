@@ -148,12 +148,7 @@ test.describe('Journey instance page Milestones tab', () => {
         )
         .first()
         .click(),
-      page
-        .locator(
-          '[data-testid=JourneyMilestoneCard-datePickerActionBar] button'
-        )
-        .first()
-        .click(),
+      page.locator('.MuiPickersLayout-actionBar button').first().click(),
     ]);
 
     //Expect deadline to be set to null
