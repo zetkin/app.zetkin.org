@@ -40,51 +40,49 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
       sx={{ paddingTop: 1 }}
     >
       <ZUISection
-        section={{
-          renderContent: () => (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
+        renderContent={() => (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
+            <ZUISelect
+              items={[
+                {
+                  label: messages.settings.appPreferences.lang.auto(),
+                  value: 'auto',
+                },
+                ...Object.entries(languageOptions).map(([code, label]) => ({
+                  label,
+                  value: code,
+                })),
+              ]}
+              label={messages.settings.appPreferences.lang.label()}
+              onChange={(newLanguage) => {
+                if (newLanguage == 'auto') {
+                  setSelectedLanguage(null);
+                } else {
+                  setSelectedLanguage(newLanguage as ZetkinLanguage);
+                }
               }}
-            >
-              <ZUISelect
-                items={[
-                  {
-                    label: messages.settings.appPreferences.lang.auto(),
-                    value: 'auto',
-                  },
-                  ...Object.entries(languageOptions).map(([code, label]) => ({
-                    label,
-                    value: code,
-                  })),
-                ]}
-                label={messages.settings.appPreferences.lang.label()}
-                onChange={(newLanguage) => {
-                  if (newLanguage == 'auto') {
-                    setSelectedLanguage(null);
-                  } else {
-                    setSelectedLanguage(newLanguage as ZetkinLanguage);
-                  }
+              selectedOption={selectedLanguage || 'auto'}
+            />
+            <Box alignSelf="flex-end">
+              <ZUIButton
+                disabled={selectedLanguage == user.lang}
+                label={messages.settings.appPreferences.lang.saveButton()}
+                onClick={() => {
+                  changeUserLanguage(selectedLanguage);
+                  location.reload();
                 }}
-                selectedOption={selectedLanguage || 'auto'}
+                variant="primary"
               />
-              <Box alignSelf="flex-end">
-                <ZUIButton
-                  disabled={selectedLanguage == user.lang}
-                  label={messages.settings.appPreferences.lang.saveButton()}
-                  onClick={() => {
-                    changeUserLanguage(selectedLanguage);
-                    location.reload();
-                  }}
-                  variant="primary"
-                />
-              </Box>
             </Box>
-          ),
-          title: messages.settings.appPreferences.header(),
-        }}
+          </Box>
+        )}
+        title={messages.settings.appPreferences.header()}
       />
     </Box>
   );

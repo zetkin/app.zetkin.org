@@ -20,7 +20,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     padding: '1.0em 0.5em',
   },
   dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
+    backgroundColor: ({ color }) => oldTheme.palette.statusColors[color],
     borderRadius: '100%',
     flexShrink: 0,
     height: '10px',
@@ -44,7 +44,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     width: '8em',
   },
   primaryIcon: {
-    color: theme.palette.grey[500],
+    color: oldTheme.palette.grey[500],
     fontSize: '28px',
   },
   right: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     display: 'flex',
   },
   secondaryIcon: {
-    color: theme.palette.grey[700],
+    color: oldTheme.palette.grey[700],
     margin: '0 0.5em',
   },
 }));
