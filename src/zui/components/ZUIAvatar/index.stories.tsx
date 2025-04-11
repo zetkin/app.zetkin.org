@@ -41,7 +41,7 @@ export const Multiple: Story = {
           <ZUIAvatar firstName="Alice" id={ids[6]} lastName="Walker" />
         </Box>
         <ZUIButton
-          label="Change avatar colours"
+          label="Update id:s to change colors"
           onClick={() => {
             setIds(ids.map((id) => (id += ids.length)));
           }}
