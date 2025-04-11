@@ -37,7 +37,7 @@ type ZUIIconProps = {
 
 const getFontSize = (size: ZUISize) => {
   if (size == 'small') {
-    return '1rem';
+    return '1.25rem';
   } else if (size == 'medium') {
     return '1.5rem';
   } else {

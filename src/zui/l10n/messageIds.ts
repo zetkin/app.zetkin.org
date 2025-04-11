@@ -132,6 +132,13 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  eventWarningIcons: {
+    contact: m('No contact person has been assigned'),
+    reminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+    signUps: m('There are pending signups'),
+  },
   expandableText: {
     showLess: m('Show less'),
     showMore: m('Show more'),
