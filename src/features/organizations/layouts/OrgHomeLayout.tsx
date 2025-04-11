@@ -76,13 +76,19 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             <ZUIAvatar size="sm" url={`/api/orgs/${org.id}/avatar`} />
             <Typography>{org.title}</Typography>
             {user && membership?.follow && (
-              <Button onClick={() => unfollowOrg()}>Unfollow</Button>
+              <Button onClick={() => unfollowOrg()}>
+                <Msg id={messageIds.home.header.unfollow} />
+              </Button>
             )}
             {user && membership?.follow === false && (
-              <Button onClick={() => followOrg(membership)}>Follow</Button>
+              <Button onClick={() => followOrg(membership)}>
+                <Msg id={messageIds.home.header.follow} />
+              </Button>
             )}
             {user && !membership && (
-              <Button onClick={() => connectOrg()}>Connect</Button>
+              <Button onClick={() => connectOrg()}>
+                <Msg id={messageIds.home.header.connect} />
+              </Button>
             )}
           </Box>
           {user && (
