@@ -21,8 +21,8 @@ export default makeMessages('feat.organizations', {
     },
     header: {
       connect: m('Connect'),
-      connectAndSignUp: m('Connect & sign up'),
       follow: m('Follow'),
+      login: m('Login & connect'),
       unfollow: m('Unfollow'),
     },
     tabs: {

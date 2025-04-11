@@ -94,7 +94,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
               <Button
                 href={`/login?redirect=${encodeURIComponent(`/o/${org.id}`)}`}
               >
-                <Msg id={messageIds.home.header.connectAndSignUp} />
+                <Msg id={messageIds.home.header.login} />
               </Button>
             )}
           </Box>
