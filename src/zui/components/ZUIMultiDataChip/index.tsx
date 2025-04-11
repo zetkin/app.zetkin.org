@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 import { ZUIMedium, ZUISmall } from '../types';
 
-export type ZUIProgressChipProps = {
+export type ZUIMultiDataChipProps = {
   /**
    * The size of the component. Defaults to 'small'.
    */
@@ -19,7 +19,7 @@ export type ZUIProgressChipProps = {
     | [number, number, number, number];
 };
 
-const ZUIProgressChip: FC<ZUIProgressChipProps> = ({
+const ZUIMultiDataChip: FC<ZUIMultiDataChipProps> = ({
   size = 'small',
   values,
 }) => {
@@ -76,4 +76,4 @@ const ZUIProgressChip: FC<ZUIProgressChipProps> = ({
   );
 };
 
-export default ZUIProgressChip;
+export default ZUIMultiDataChip;

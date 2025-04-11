@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import ZUIBarDiagram from './index';
+import ZUIPercentageBar from './index';
 
-const meta: Meta<typeof ZUIBarDiagram> = {
-  component: ZUIBarDiagram,
-  title: 'Components/ZUIBarDiagram',
+const meta: Meta<typeof ZUIPercentageBar> = {
+  component: ZUIPercentageBar,
+  title: 'Components/ZUIPercentageBar',
 };
 export default meta;
 
-type Story = StoryObj<typeof ZUIBarDiagram>;
+type Story = StoryObj<typeof ZUIPercentageBar>;
 
 export const TwoSegments: Story = {
   args: {
