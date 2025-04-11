@@ -28,5 +28,5 @@
 
   "remoteUser": "node",
 
-  "postStartCommand": "bash .devcontainer/start.sh"
+  "postCreateCommand": "git config core.hooksPath .githooks && yarn install"
 }

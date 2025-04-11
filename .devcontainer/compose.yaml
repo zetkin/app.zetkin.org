@@ -5,10 +5,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../..:/workspaces:cached
-    network_mode: 'service:geo-db'
+    network_mode: 'service:betadb'
     command: sleep infinity
 
-  geo-db:
+  betadb:
     image: mongo:latest
     restart: unless-stopped
     volumes:
