@@ -1,5 +1,5 @@
-import mockTag from '../../../utils/testing/mocks/mockTag';
-import { ZetkinTagGroup } from 'utils/types/zetkin';
+import { mockAppliedTag } from '../../../utils/testing/mocks/mockTag';
+import { ZetkinAppliedTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import {
   getTagColumns,
   JourneyTagColumnType,
@@ -10,7 +10,7 @@ import {
 
 describe('journeyInstanceUtils', () => {
   describe('getTagColumns()', () => {
-    const tagMock = mockTag();
+    const tagMock = mockAppliedTag();
     const groupMock: ZetkinTagGroup = {
       id: 1,
       organization: {
@@ -41,9 +41,9 @@ describe('journeyInstanceUtils', () => {
     it('separates value tags from other columns', () => {
       const instance = {
         tags: [
-          { ...tagMock, id: 1, value: 'Clara', value_type: 'string' },
+          { ...tagMock, id: 1, value: 'Clara', value_type: 'text' },
           { ...tagMock, id: 2 },
-        ],
+        ] as ZetkinAppliedTag[],
       };
 
       const columns = getTagColumns([instance]);

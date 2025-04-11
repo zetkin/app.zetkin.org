@@ -9,7 +9,7 @@ import {
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import noPropagate from 'utils/noPropagate';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type horizontalType = 'left' | 'center' | 'right';
 type verticalType = 'top' | 'center' | 'bottom';
@@ -70,7 +70,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
                 marginRight: 1,
               },
             },
-            marginTop: theme.spacing(1),
+            marginTop: oldTheme.spacing(1),
           },
         }}
         transformOrigin={

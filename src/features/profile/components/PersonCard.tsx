@@ -3,6 +3,7 @@ import {
   Card,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
@@ -12,7 +13,7 @@ import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
 import messageIds from '../l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -22,11 +23,11 @@ const useStyles = makeStyles(() => ({
     '& span': {
       fontWeight: 'bold',
     },
-    color: theme.palette.primary.main,
+    color: oldTheme.palette.primary.main,
     textTransform: 'uppercase',
   },
   title: {
-    marginBottom: theme.spacing(1),
+    marginBottom: oldTheme.spacing(1),
   },
 }));
 
@@ -52,22 +53,24 @@ const PersonCard: React.FunctionComponent<{
         {children}
         {onClickEdit && (
           <List disablePadding>
-            <ListItem button disabled={!onClickEdit} onClick={onToggleEdit}>
-              <ListItemIcon>
-                {editable ? (
-                  <Close color="primary" />
-                ) : (
-                  <Edit color="primary" />
-                )}
-              </ListItemIcon>
-              <ListItemText
-                className={classes.editButton}
-                primary={
-                  editable
-                    ? messages.editButtonClose({ title })
-                    : messages.editButton({ title })
-                }
-              />
+            <ListItem onClick={onToggleEdit}>
+              <ListItemButton disabled={!onClickEdit}>
+                <ListItemIcon>
+                  {editable ? (
+                    <Close color="primary" />
+                  ) : (
+                    <Edit color="primary" />
+                  )}
+                </ListItemIcon>
+                <ListItemText
+                  className={classes.editButton}
+                  primary={
+                    editable
+                      ? messages.editButtonClose({ title })
+                      : messages.editButton({ title })
+                  }
+                />
+              </ListItemButton>
             </ListItem>
           </List>
         )}

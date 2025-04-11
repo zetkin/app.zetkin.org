@@ -8,7 +8,7 @@ import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
 import { SurveyOptionViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
-import theme from '../../../../../theme';
+import oldTheme from '../../../../../theme';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import messageIds from 'features/views/l10n/messageIds';
@@ -76,7 +76,7 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   return (
     <Box
       alignItems="center"
-      bgcolor={mostRecent.selected ? theme.palette.success.light : ''}
+      bgcolor={mostRecent.selected ? oldTheme.palette.success.light : ''}
       display="flex"
       height="100%"
       justifyContent="center"

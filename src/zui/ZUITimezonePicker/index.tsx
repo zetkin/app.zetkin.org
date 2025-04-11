@@ -27,12 +27,12 @@ const ZUITimezonePicker = ({
     cities: [currentTimezone.tzCode],
     tzValue: `${
       scheduledTime || currentTimezone.utc
-    } ${messages.timezonePicker.gmt()}`,
+    } ${messages.timeZonePicker.gmt()}`,
   });
 
   const tzOptions = timezones.reduce(
     (acc: { cities: string[]; tzValue: string }[], timezone, index) => {
-      const tzValue = `${timezone.utc} ${messages.timezonePicker.gmt()}`;
+      const tzValue = `${timezone.utc} ${messages.timeZonePicker.gmt()}`;
       const tzGroupIndex = acc.findIndex((item) => item.tzValue === tzValue);
 
       const city = timezone.tzCode
@@ -75,8 +75,8 @@ const ZUITimezonePicker = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label={messages.timezonePicker.timezone()}
-          placeholder={messages.timezonePicker.placeholder()}
+          label={messages.timeZonePicker.timeZone()}
+          placeholder={messages.timeZonePicker.placeholder()}
         />
       )}
       renderOption={(props, option, state) => {

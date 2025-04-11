@@ -1,5 +1,5 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 import { tagAssigned, tagUnassigned } from '../store';
 
 type UseAreaTaggingReturn = {
@@ -16,7 +16,7 @@ export default function useAreaTagging(
 
   return {
     assignTag: async (tagId, value) => {
-      const tag = await apiClient.put<ZetkinTag>(
+      const tag = await apiClient.put<ZetkinAppliedTag>(
         `/beta/orgs/${orgId}/areas/${areaId}/tags/${tagId}`,
         { value }
       );

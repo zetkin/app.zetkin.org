@@ -17,31 +17,29 @@ export const Basic: Story = {
   args: {
     items: [
       {
-        href: '/?path=/docs/components',
+        href: '/#',
         label: 'Overview',
+        value: 'overview',
       },
       {
-        href: '/?path=/docs/components-zuitabbednavbar--docs',
+        href: '/#',
         label: 'Map',
+        value: 'map',
       },
       {
-        href: '/?path=/docs/components-zuitabview--docs',
+        href: '/#',
         label: 'Assignees',
+        value: 'assignees',
       },
     ],
   },
   render: function Render(args) {
-    const [value, setValue] = useState('/?path=/docs/components');
+    const [value] = useState('overview');
 
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2' }}>
         <ZUIText>Warning: clicking will navigate</ZUIText>
-        <ZUITabbedNavBar
-          {...args}
-          items={args.items}
-          onSelectTab={(newValue) => setValue(newValue)}
-          selectedTab={value}
-        />
+        <ZUITabbedNavBar {...args} items={args.items} selectedTab={value} />
       </Box>
     );
   },
@@ -57,13 +55,15 @@ export const WithBadge: Story = {
     items: [
       {
         badge: { color: 'danger' },
-        href: '/?path=/docs/components-zuitabbednavbar--docs',
+        href: '#',
         label: 'Overview',
+        value: 'overview',
       },
       {
         badge: { color: 'warning', number: 13 },
-        href: '/?path=/docs/components',
+        href: '#',
         label: 'Map',
+        value: 'map',
       },
       {
         badge: {
@@ -71,8 +71,9 @@ export const WithBadge: Story = {
           number: 99999999999,
           truncateLargeNumber: true,
         },
-        href: '/?path=/docs/components-zuitabview--docs',
+        href: '/#',
         label: 'Assignees',
+        value: 'assignees',
       },
     ],
   },

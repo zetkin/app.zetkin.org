@@ -26,7 +26,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     return null;
   }
 
-  let color = STATUS_COLORS.GRAY;
+  let color = STATUS_COLORS.GREY;
   if (
     state === CallAssignmentState.ACTIVE ||
     state === CallAssignmentState.OPEN

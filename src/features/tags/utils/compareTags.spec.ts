@@ -1,15 +1,15 @@
 import { describe, expect, it } from '@jest/globals';
 
 import compareTags from './compareTags';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { mockAppliedTag } from 'utils/testing/mocks/mockTag';
 
 describe('compareTags()', () => {
   it('puts any tag before null', () => {
     const result = compareTags(
-      {
+      mockAppliedTag({
         id: 1,
         title: 'My tag',
-      } as ZetkinTag,
+      }),
       null
     );
 
@@ -18,16 +18,16 @@ describe('compareTags()', () => {
 
   it('puts non-null value before null value', () => {
     const result = compareTags(
-      {
+      mockAppliedTag({
         id: 1,
         title: 'My tag',
         value: 1,
-      } as ZetkinTag,
-      {
+      }),
+      mockAppliedTag({
         id: 1,
         title: 'My tag',
-        value: undefined,
-      } as ZetkinTag
+        value: null,
+      })
     );
 
     expect(result).toBeLessThan(0);
@@ -35,14 +35,15 @@ describe('compareTags()', () => {
 
   it('sorts titles alphebtically', () => {
     const result = compareTags(
-      {
+      mockAppliedTag({
         id: 1,
         title: 'First tag',
-      } as ZetkinTag,
-      {
+        value: null,
+      }),
+      mockAppliedTag({
         id: 2,
         title: 'Second tag',
-      } as ZetkinTag
+      })
     );
 
     expect(result).toBeLessThan(1);
@@ -50,16 +51,16 @@ describe('compareTags()', () => {
 
   it('sorts string values alphabetically', () => {
     const result = compareTags(
-      {
+      mockAppliedTag({
         id: 1,
         title: 'My tag',
         value: 'first value',
-      } as ZetkinTag,
-      {
+      }),
+      mockAppliedTag({
         id: 2,
         title: 'My tag',
         value: 'second value',
-      } as ZetkinTag
+      })
     );
 
     expect(result).toBeLessThan(0);
@@ -67,16 +68,16 @@ describe('compareTags()', () => {
 
   it('sorts numbers in ascent order', () => {
     const result = compareTags(
-      {
+      mockAppliedTag({
         id: 1,
         title: 'My tag',
         value: 10,
-      } as ZetkinTag,
-      {
+      }),
+      mockAppliedTag({
         id: 2,
         title: 'My tag',
         value: 9,
-      } as ZetkinTag
+      })
     );
 
     expect(result).toBeGreaterThan(0);
@@ -84,16 +85,16 @@ describe('compareTags()', () => {
 
   it('parses string values into numbers', () => {
     const result = compareTags(
-      {
+      mockAppliedTag({
         id: 1,
         title: 'My tag',
         value: '10',
-      } as ZetkinTag,
-      {
+      }),
+      mockAppliedTag({
         id: 2,
         title: 'My tag',
         value: '9',
-      } as ZetkinTag
+      })
     );
 
     expect(result).toBeGreaterThan(0);

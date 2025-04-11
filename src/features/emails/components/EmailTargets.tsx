@@ -18,13 +18,13 @@ import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import { ZetkinEmail, ZetkinQuery } from 'utils/types/zetkin';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   chip: {
-    backgroundColor: theme.palette.statusColors.gray,
+    backgroundColor: oldTheme.palette.statusColors.grey,
     borderRadius: '1em',
-    color: theme.palette.text.secondary,
+    color: oldTheme.palette.text.secondary,
     display: 'flex',
     fontSize: '1.8em',
     lineHeight: 'normal',

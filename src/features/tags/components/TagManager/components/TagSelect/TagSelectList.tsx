@@ -74,7 +74,6 @@ const TagSelectList: React.FC<{
         );
       })}
       <ListItem
-        button
         data-testid="TagManager-TagSelect-createTagOption"
         dense
         onClick={() =>

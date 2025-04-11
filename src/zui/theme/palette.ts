@@ -511,6 +511,18 @@ const palette: Omit<
     light: uiSwatches.red[400],
     main: uiSwatches.red[600],
   },
+  //TODO: Remove when use of theses color have been replaced everywhere.
+  filterCategoryColors: {
+    darkBlue: { pale: '#BED0F9', strong: '#2563EB' },
+    green: { pale: '#D1F39A', strong: '#A3E635' },
+    lightBlue: { pale: '#93E9EB', strong: '#28D4D7' },
+    orange: { pale: '#FDD497', strong: '#FBA930' },
+    pink: { pale: ' #FCE4EC', strong: '#F48FB1' },
+    purple: { pale: '#E5C0F5', strong: '#C026D3' },
+    red: { pale: '#F1A8A8', strong: '#DC2626' },
+    teal: { pale: '#99E9CC ', strong: '#34D399' },
+    yellow: { pale: '#EEEA8F', strong: '#DDD520' },
+  },
   //Remove A.. properties from type?
   grey: { ...uiSwatches.grey, A100: '', A200: '', A400: '', A700: '' },
   info: {
@@ -518,6 +530,16 @@ const palette: Omit<
     dark: uiSwatches.blue[800],
     light: uiSwatches.blue[400],
     main: uiSwatches.blue[600],
+  },
+  //TODO: Remove when use of these colors have been replaced everywhere.
+  onSurface: {
+    disabled: '#231F2061',
+    high: '#231F20DE',
+    medium: '#231F2099',
+  },
+  //TODO: Remove when use of this color has been replaced everywhere.
+  outline: {
+    main: 'rgba(0,0,0,0.12)',
   },
   primary: {
     contrastText: uiSwatches.basic.white,
@@ -536,6 +558,14 @@ const palette: Omit<
     light: uiSwatches.grey[400],
     main: uiSwatches.grey[500],
   },
+  //TODO:Remove when use of these colors have been replaced everywhere
+  statusColors: {
+    blue: 'rgba(25, 118, 210, 1)',
+    green: 'rgba(102, 187, 106, 1)',
+    grey: 'rgba(0, 0, 0, 0.12)',
+    orange: 'rgba(245, 124, 0, 1)',
+    red: 'rgba(239, 83, 80, 1)',
+  },
   success: {
     contrastText: uiSwatches.basic.white,
     dark: uiSwatches.green[800],
@@ -547,6 +577,14 @@ const palette: Omit<
     disabled: uiSwatches.grey[400],
     primary: uiSwatches.grey[950],
     secondary: uiSwatches.grey[500],
+  },
+  //TODO:Remove when use of these colors have been replaced everywhere
+  transparentGrey: { light: 'rgba(0,0,0,0.04)' },
+  //TODO:Remove when use of these colors have been replaced everywhere
+  viewColumnGallery: {
+    blue: '#1976D2',
+    purple: '#BA68C8',
+    red: '#ED1C55',
   },
   warning: {
     contrastText: uiSwatches.basic.black,

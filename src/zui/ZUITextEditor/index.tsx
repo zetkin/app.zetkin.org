@@ -31,7 +31,7 @@ import { markdownToSlate } from './utils/markdownToSlate';
 import './types';
 import { FileUpload } from 'features/files/hooks/useFileUploads';
 import TextElement from './TextElement';
-import theme from 'theme';
+import oldTheme from 'theme';
 import Toolbar from './Toolbar';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
 import {
@@ -51,19 +51,19 @@ const emptySlate = [
 const useStyles = makeStyles({
   container: {
     '& a': {
-      color: theme.palette.primary.main,
+      color: oldTheme.palette.primary.main,
       fontWeight: 600,
     },
     '&:hover': {
-      borderColor: theme.palette.onSurface.medium,
+      borderColor: oldTheme.palette.onSurface.medium,
     },
     background: (props: { active: boolean }) =>
       props.active ? 'white' : 'transparent',
     border: '1.5px solid',
     borderColor: (props: { active: boolean }) =>
       props.active
-        ? theme.palette.onSurface.medium
-        : theme.palette.outline.main,
+        ? oldTheme.palette.onSurface.medium
+        : oldTheme.palette.outline.main,
     borderRadius: 8,
     fontFamily: 'system-ui',
     padding: 16,

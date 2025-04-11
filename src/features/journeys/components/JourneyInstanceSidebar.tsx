@@ -1,6 +1,7 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
-import { Button, ClickAwayListener, Divider, Grid } from '@mui/material';
+import { Button, ClickAwayListener, Divider } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 import JourneyMilestoneProgress from 'features/journeys/components/JourneyMilestoneProgress';
 import JourneyPerson from './JourneyPerson';
@@ -9,6 +10,7 @@ import { TagManagerSection } from 'features/tags/components/TagManager';
 import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
 import {
+  ZetkinAppliedTag,
   ZetkinJourneyInstance,
   ZetkinPerson as ZetkinPersonType,
   ZetkinTag,
@@ -43,7 +45,7 @@ const JourneyInstanceSidebar = ({
   > & { id?: number };
   onAddAssignee: (person: ZetkinPersonType) => void;
   onAddSubject: (person: ZetkinPersonType) => void;
-  onAssignTag: (tag: ZetkinTag) => void;
+  onAssignTag: (tag: ZetkinAppliedTag) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
   onRemoveSubject: (person: ZetkinPersonType) => void;
   onTagEdited: (tag: ZetkinTag) => void;

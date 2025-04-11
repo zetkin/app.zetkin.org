@@ -10,7 +10,11 @@ import ValueTagForm from './ValueTagForm';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { EditTag, NewTag } from '../../types';
 import { filterTags, groupTags } from '../../utils';
-import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+import {
+  ZetkinAppliedTag,
+  ZetkinTag,
+  ZetkinTagGroup,
+} from 'utils/types/zetkin';
 
 interface TagSelectProps {
   disableEditTags?: boolean;
@@ -21,7 +25,7 @@ interface TagSelectProps {
   onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onDeleteTag: (tagId: number) => void;
   onEditTag: (tag: EditTag) => void;
-  onSelect: (tag: ZetkinTag) => void;
+  onSelect: (tag: ZetkinAppliedTag) => void;
   submitCreateTagLabel?: string;
   tags: ZetkinTag[];
 }
@@ -69,7 +73,7 @@ const TagSelect: FC<TagSelectProps> = ({
 
   const handleSubmitValue = () => {
     if (selectedValueTag) {
-      onSelect({ ...selectedValueTag, value: tagValue || undefined });
+      onSelect({ ...selectedValueTag, value: tagValue || null });
       setSelectedValueTag(null);
       setInputValue('');
     }
@@ -133,7 +137,7 @@ const TagSelect: FC<TagSelectProps> = ({
                 setSelectedValueTag(tag);
                 setInputValue('');
               } else {
-                onSelect(tag);
+                onSelect({ ...tag, value: null });
               }
             }}
           />

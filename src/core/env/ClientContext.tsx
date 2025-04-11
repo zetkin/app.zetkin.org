@@ -19,7 +19,7 @@ import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
 import { store } from 'core/store';
-import { themeWithLocale } from '../../theme';
+import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -64,7 +64,7 @@ const ClientContext: FC<ClientContextProps> = ({
     <ReduxProvider store={store}>
       <StyledEngineProvider injectFirst>
         <CacheProvider value={cache}>
-          <ThemeProvider theme={themeWithLocale(lang)}>
+          <ThemeProvider theme={oldThemeWithLocale(lang)}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>

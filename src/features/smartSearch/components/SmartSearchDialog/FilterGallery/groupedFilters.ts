@@ -1,7 +1,7 @@
-import theme from 'theme';
+import oldTheme from 'theme';
 import { FILTER_CATEGORY, FILTER_TYPE } from '../../types';
 
-const filterCategoryColors = theme.palette.filterCategoryColors;
+const filterCategoryColors = oldTheme.palette.filterCategoryColors;
 
 export const GROUPED_FILTERS: {
   [key in FILTER_CATEGORY]: {

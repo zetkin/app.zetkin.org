@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 import { AreaAssignmentState } from '../hooks/useAreaAssignmentStatus';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 interface AssigmentStatusChipProps {
   state: AreaAssignmentState;
@@ -24,16 +24,16 @@ const useStyles = makeStyles(() => ({
     padding: '0.5em 0.7em',
   },
   closed: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: oldTheme.palette.error.main,
   },
   draft: {
-    backgroundColor: theme.palette.grey[500],
+    backgroundColor: oldTheme.palette.grey[500],
   },
   open: {
-    backgroundColor: theme.palette.success.main,
+    backgroundColor: oldTheme.palette.success.main,
   },
   scheduled: {
-    backgroundColor: theme.palette.statusColors.blue,
+    backgroundColor: oldTheme.palette.statusColors.blue,
   },
 }));
 

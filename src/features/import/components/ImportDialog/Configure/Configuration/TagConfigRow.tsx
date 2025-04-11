@@ -5,14 +5,14 @@ import { Box, Typography } from '@mui/material';
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import TagManager from 'features/tags/components/TagManager';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 interface TagConfigRowProps {
-  assignedTags: ZetkinTag[];
+  assignedTags: ZetkinAppliedTag[];
   italic?: boolean;
   numRows: number;
-  onAssignTag: (tag: ZetkinTag) => void;
-  onUnassignTag: (tag: ZetkinTag) => void;
+  onAssignTag: (tag: ZetkinAppliedTag) => void;
+  onUnassignTag: (tag: ZetkinAppliedTag) => void;
   title: string;
 }
 

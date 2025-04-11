@@ -1,4 +1,4 @@
-import theme from 'theme';
+import oldTheme from 'theme';
 
 export function getParticipantsStatusColor(
   reqParticipants: number,
@@ -7,10 +7,10 @@ export function getParticipantsStatusColor(
   const diff = reqParticipants - availParticipants;
 
   if (diff <= 0) {
-    return theme.palette.statusColors.green;
+    return oldTheme.palette.statusColors.green;
   } else if (diff === 1) {
-    return theme.palette.statusColors.orange;
+    return oldTheme.palette.statusColors.orange;
   } else {
-    return theme.palette.statusColors.red;
+    return oldTheme.palette.statusColors.red;
   }
 }

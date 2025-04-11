@@ -2,7 +2,7 @@ import { columnUpdate } from '../store';
 import notEmpty from 'utils/notEmpty';
 import { useAppDispatch } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 import { CellData, Column, ColumnKind, TagColumn } from '../utils/types';
 
 export default function useTagConfig(
@@ -66,12 +66,13 @@ export default function useTagConfig(
     }
   };
 
-  const getAssignedTags = (value: CellData): ZetkinTag[] => {
+  const getAssignedTags = (value: CellData): ZetkinAppliedTag[] => {
     if (column.kind == ColumnKind.TAG && tags != null) {
       const map = column.mapping.find((m) => m.value === value);
       const assignedTags = map?.tags
         .map((tag) => tags.find((t) => t.id == tag.id))
-        .filter(notEmpty);
+        .filter(notEmpty)
+        .map((tag) => ({ ...tag, value: null }));
       return assignedTags || [];
     }
     return [];

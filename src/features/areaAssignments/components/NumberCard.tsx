@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Typography, Box } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type NumberCardProps = {
   firstNumber: number;
@@ -28,7 +28,7 @@ const NumberCard: FC<NumberCardProps> = ({
         <Box alignItems="baseline" display="flex" justifyContent="left">
           <Typography
             sx={{
-              color: theme.palette.primary.main,
+              color: oldTheme.palette.primary.main,
 
               marginRight: '2px',
             }}
@@ -36,7 +36,7 @@ const NumberCard: FC<NumberCardProps> = ({
           >
             {firstNumber}
           </Typography>
-          <Typography color={theme.palette.secondary.light} variant="h5">
+          <Typography color={oldTheme.palette.secondary.light} variant="h5">
             /{secondNumber}
           </Typography>
         </Box>

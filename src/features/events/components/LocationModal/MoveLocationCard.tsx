@@ -6,12 +6,12 @@ import { Close, OpenWith } from '@mui/icons-material';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   instructions: {
     alignItems: 'center',
-    backgroundColor: lighten(theme.palette.primary.main, 0.8),
+    backgroundColor: lighten(oldTheme.palette.primary.main, 0.8),
     borderRadius: 4,
     display: 'flex',
     flexDirection: 'row',
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     padding: 8,
   },
   moveIcon: {
-    color: theme.palette.primary.main,
+    color: oldTheme.palette.primary.main,
   },
 }));
 

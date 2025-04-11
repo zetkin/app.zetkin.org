@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import PotentialDuplicateModal from './PotentialDuplicateModal';
 import messageIds from '../l10n/messageIds';
 import { PotentialDuplicate } from '../store';
@@ -26,7 +26,7 @@ const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
       <Paper elevation={2} sx={{ mb: 1.5, p: 1.5 }}>
         <Box display={'flex'} flexDirection={'column'} gap={1.5}>
           <Typography
-            color={theme.palette.grey[500]}
+            color={oldTheme.palette.grey[500]}
             sx={{ textTransform: 'uppercase' }}
             variant="subtitle2"
           >

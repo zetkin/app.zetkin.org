@@ -40,7 +40,7 @@ const ZUIText: FC<ZUITextProps> = ({
   component = 'p',
   gutterBottom,
   noWrap,
-  variant = 'bodySmRegular',
+  variant = 'bodyMdRegular',
   ...boxProps
 }) => (
   <Typography

@@ -13,10 +13,10 @@ import getUniqueColumnName from '../../../utils/getUniqueColumnName';
 import MultiIconCardVisual from '../MultiIconCardVisual';
 import PersonTagConfig from '../PersonTagConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 
-const { blue, purple, red } = theme.palette.viewColumnGallery;
+const { blue, purple, red } = oldTheme.palette.viewColumnGallery;
 
 export const personTag: ColumnChoice = {
   color: blue,

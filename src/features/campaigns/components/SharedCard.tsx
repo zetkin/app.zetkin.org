@@ -11,7 +11,7 @@ import {
 
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { useNumericRouteParams } from 'core/hooks';
 
 const SharedCard = (): JSX.Element => {
@@ -20,7 +20,7 @@ const SharedCard = (): JSX.Element => {
   return (
     <Card
       data-testid="campaign-card"
-      sx={{ border: `2px solid ${theme.palette.primary.main}` }}
+      sx={{ border: `2px solid ${oldTheme.palette.primary.main}` }}
     >
       <CardContent>
         <Box display="flex" justifyContent="space-between">

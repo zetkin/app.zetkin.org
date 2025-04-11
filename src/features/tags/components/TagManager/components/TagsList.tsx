@@ -6,8 +6,8 @@ import { groupTags } from '../utils';
 import messageIds from '../../../l10n/messageIds';
 import TagChip from './TagChip';
 import { useMessages } from 'core/i18n';
-import { ZetkinTag } from 'utils/types/zetkin';
-import theme from 'theme';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
+import oldTheme from 'theme';
 
 interface StyleProps {
   clickable: boolean;
@@ -15,10 +15,10 @@ interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   chip: {
-    borderColor: theme.palette.grey[500],
+    borderColor: oldTheme.palette.grey[500],
     borderRadius: '1em',
     borderWidth: '1px',
-    color: theme.palette.text.secondary,
+    color: oldTheme.palette.text.secondary,
     cursor: ({ clickable }) => (clickable ? 'pointer' : 'default'),
     display: 'flex',
     lineHeight: 'normal',
@@ -47,7 +47,7 @@ const TagsList: React.FunctionComponent<{
   cap?: number;
   capOverflowHref?: string;
   isGrouped: boolean;
-  onUnassignTag?: (tag: ZetkinTag) => void;
+  onUnassignTag?: (tag: ZetkinAppliedTag) => void;
   tags: ZetkinTag[];
 }> = ({ cap = Infinity, capOverflowHref, isGrouped, onUnassignTag, tags }) => {
   const classes = useStyles({

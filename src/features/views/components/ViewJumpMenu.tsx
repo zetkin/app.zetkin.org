@@ -9,6 +9,7 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Popover,
   TextField,
@@ -158,13 +159,10 @@ const ViewJumpMenu: FunctionComponent = () => {
                     legacyBehavior
                     passHref
                   >
-                    <ListItem
-                      button
-                      component="a"
-                      selected={idx == activeIndex}
-                      tabIndex={-1}
-                    >
-                      <ListItemText>{view.title}</ListItemText>
+                    <ListItem component="a" tabIndex={-1}>
+                      <ListItemButton selected={idx == activeIndex}>
+                        <ListItemText>{view.title}</ListItemText>
+                      </ListItemButton>
                     </ListItem>
                   </Link>
                 );

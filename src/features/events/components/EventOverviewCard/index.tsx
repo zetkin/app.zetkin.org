@@ -23,7 +23,7 @@ import { FC, useMemo, useState } from 'react';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import useEventLocations from 'features/events/hooks/useEventLocations';
@@ -453,7 +453,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     renderPreview: () => (
                       <Box marginLeft={4}>
                         <Typography
-                          color={theme.palette.text.secondary}
+                          color={oldTheme.palette.text.secondary}
                           variant="subtitle1"
                         >
                           {messages.eventOverviewCard.url().toUpperCase()}
@@ -501,7 +501,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 renderPreview: () => (
                   <Box>
                     <Typography
-                      color={theme.palette.text.secondary}
+                      color={oldTheme.palette.text.secondary}
                       variant="subtitle1"
                     >
                       {messages.eventOverviewCard.description().toUpperCase()}

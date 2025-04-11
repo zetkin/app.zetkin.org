@@ -3,7 +3,7 @@ import { AlarmOff, Cancel, CheckCircle, Flag } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 
 import { Msg } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceMilestone } from 'zui/ZUITimeline/types';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
@@ -50,10 +50,10 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
     return (
       <Box display="flex">
         {changeToRender === 'complete' && (
-          <CheckCircle sx={{ color: theme.palette.success.main }} />
+          <CheckCircle sx={{ color: oldTheme.palette.success.main }} />
         )}
         {changeToRender === 'incomplete' && (
-          <Cancel sx={{ color: theme.palette.warning.main }} />
+          <Cancel sx={{ color: oldTheme.palette.warning.main }} />
         )}
         <Box paddingX={1}>
           <Typography variant="h6">{update.details.milestone.title}</Typography>
@@ -69,9 +69,9 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
     return (
       <Box alignItems="center" display="flex" style={{ gap: 8 }}>
         {deadlineTo ? (
-          <Flag sx={{ color: theme.palette.text.secondary }} />
+          <Flag sx={{ color: oldTheme.palette.text.secondary }} />
         ) : (
-          <AlarmOff sx={{ color: theme.palette.text.secondary }} />
+          <AlarmOff sx={{ color: oldTheme.palette.text.secondary }} />
         )}
         <Typography color="textSecondary" variant="body2">
           {deadlineTo ? (

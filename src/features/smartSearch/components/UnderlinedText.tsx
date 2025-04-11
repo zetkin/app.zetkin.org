@@ -2,13 +2,13 @@ import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   text: {
     display: 'inline',
     textDecoration: 'underline',
-    textDecorationColor: theme.palette.grey[500],
+    textDecorationColor: oldTheme.palette.grey[500],
     textDecorationThickness: '2px',
     textUnderlineOffset: '5px',
   },

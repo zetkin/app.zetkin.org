@@ -61,7 +61,7 @@ const LazyActivitiesBox = ({
     <Box ref={boxRef}>
       {index > 0 && <Divider />}
       <ActivityListItem
-        color={STATUS_COLORS.GRAY}
+        color={STATUS_COLORS.GREY}
         endNumber={0}
         href={'#'}
         PrimaryIcon={Pending}

@@ -83,7 +83,6 @@ const IncomingPage: PageWithLayout<Props> = ({ orgId }) => {
             onChange={(event) => {
               setFilterByStatus(event.target.value as FilterByStatusType);
             }}
-            placeholder={messages.status()}
             value={filterByStatus}
           >
             <MenuItem selected value="all">

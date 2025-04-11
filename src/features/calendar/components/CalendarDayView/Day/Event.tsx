@@ -11,7 +11,7 @@ import { isAllDay } from '../../utils';
 import messageIds from 'features/events/l10n/messageIds';
 import { removeOffset } from 'utils/dateUtils';
 import StatusDot from 'features/events/components/EventPopper/StatusDot';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { truncateOnMiddle } from 'utils/stringUtils';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -43,7 +43,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             <Typography
               noWrap
               sx={{
-                color: theme.palette.secondary.main,
+                color: oldTheme.palette.secondary.main,
               }}
             >
               {truncateOnMiddle(
@@ -54,7 +54,10 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
               )}
             </Typography>
             {/* Time */}
-            <Typography color={theme.palette.secondary.main} component={'div'}>
+            <Typography
+              color={oldTheme.palette.secondary.main}
+              component={'div'}
+            >
               <Box alignItems="center" display="flex" gap={0.5}>
                 <Schedule />
                 {isAllDay(event.start_time, event.end_time) ? (
@@ -83,7 +86,7 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
             {/* Location */}
             {event.location && (
               <Typography
-                color={theme.palette.secondary.main}
+                color={oldTheme.palette.secondary.main}
                 component={'div'}
                 noWrap
               >

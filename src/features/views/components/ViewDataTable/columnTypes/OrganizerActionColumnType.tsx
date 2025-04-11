@@ -16,7 +16,7 @@ import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
 import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerActionPane';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePanes } from 'utils/panes';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
@@ -76,11 +76,13 @@ export default class OrganizerActionColumnType implements IColumnType {
   }
 }
 
-const useStyles = makeStyles<typeof theme, { numUnsolved: number }>(() => ({
+const useStyles = makeStyles<typeof oldTheme, { numUnsolved: number }>(() => ({
   organizerActionContainer: {
     alignItems: 'center',
     backgroundColor: (props) =>
-      props.numUnsolved > 0 ? theme.palette.statusColors.orange : 'transparent',
+      props.numUnsolved > 0
+        ? oldTheme.palette.statusColors.orange
+        : 'transparent',
     cursor: 'pointer',
     display: 'flex',
     height: '100%',

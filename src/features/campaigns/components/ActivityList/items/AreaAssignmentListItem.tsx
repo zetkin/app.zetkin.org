@@ -24,7 +24,7 @@ const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
   }
 
   const areaAssignees = getAreaAssignees(sessions);
-  const color = STATUS_COLORS.GRAY;
+  const color = STATUS_COLORS.GREY;
 
   return (
     <ActivityListItem

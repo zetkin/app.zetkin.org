@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
 import useParticipantStatus from '../hooks/useParticipantsStatus';
@@ -34,7 +34,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
     <Box ref={ref}>
       {numSignedParticipants > 0 && (
         <ParticipantListSection
-          chipColor={theme.palette.grey[500]}
+          chipColor={oldTheme.palette.grey[500]}
           chipNumber={numSignedParticipants.toString()}
           description={messages.eventParticipantsList.descriptionSignups()}
           eventId={data.id}
@@ -58,7 +58,7 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
       />
       {numCancelledParticipants > 0 && (
         <ParticipantListSection
-          chipColor={theme.palette.grey[500]}
+          chipColor={oldTheme.palette.grey[500]}
           chipNumber={numCancelledParticipants.toString()}
           description={messages.eventParticipantsList.descriptionCancelled()}
           eventId={data.id}

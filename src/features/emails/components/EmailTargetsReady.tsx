@@ -55,7 +55,7 @@ const EmailTargetsReady: FC<EmailTargetsReadyProps> = ({
                   backgroundColor:
                     parseInt(animatedValue) > 0
                       ? theme.palette.statusColors.green
-                      : theme.palette.statusColors.gray,
+                      : theme.palette.statusColors.grey,
                   borderRadius: '1em',
                   color:
                     parseInt(animatedValue) > 0

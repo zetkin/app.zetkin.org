@@ -1,4 +1,5 @@
 import {
+  ZetkinAppliedTag,
   ZetkinJourneyInstance,
   ZetkinTag,
   ZetkinTagGroup,
@@ -12,7 +13,7 @@ export enum JourneyTagColumnType {
 
 export interface JourneyValueTagColumnData {
   type: JourneyTagColumnType.VALUE_TAG;
-  tag: ZetkinTag;
+  tag: ZetkinAppliedTag;
   header: string;
 }
 
@@ -84,7 +85,7 @@ export function getTagColumns(
   const groupIds = new Set<number>();
 
   let hasUnsorted = false;
-  const valueTags: ZetkinTag[] = [];
+  const valueTags: ZetkinAppliedTag[] = [];
   const groups: ZetkinTagGroup[] = [];
 
   instances.forEach((instance) => {

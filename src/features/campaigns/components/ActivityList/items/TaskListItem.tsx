@@ -20,7 +20,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
   }
 
   const taskStatus = getTaskStatus(task);
-  let color = STATUS_COLORS.GRAY;
+  let color = STATUS_COLORS.GREY;
 
   if (taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED) {
     color = STATUS_COLORS.GREEN;

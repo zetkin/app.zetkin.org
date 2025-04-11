@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const DateLabel = ({ date }: { date: Date }) => {
   const isToday = dayjs(date).isSame(dayjs(), 'day');
@@ -13,14 +13,14 @@ const DateLabel = ({ date }: { date: Date }) => {
       display="flex"
       gap={1}
       sx={{
-        backgroundColor: isToday ? theme.palette.primary.main : undefined,
+        backgroundColor: isToday ? oldTheme.palette.primary.main : undefined,
         borderRadius: '20%/50%',
         color: isToday
           ? // White colour if today
             'white'
           : isThePast
           ? // Grey if it's the past
-            theme.palette.secondary.main
+            oldTheme.palette.secondary.main
           : // Default colour if it's the future
             'inherit',
         padding: '8px 12px',

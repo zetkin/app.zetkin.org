@@ -2,7 +2,7 @@ import { Box, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FC, useEffect } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type StyleProps = {
   duration: number;
@@ -62,7 +62,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     animationDuration: ({ duration }) => duration + 'ms',
     animationIterationCount: 'infinite',
     animationName: '$hover',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: oldTheme.palette.primary.main,
     borderRadius: 5,
     height: 10,
     position: 'fixed',
@@ -75,7 +75,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     animationIterationCount: 1,
     animationName: '$flyToMenu',
     animationTimingFunction: 'easeInOut',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: oldTheme.palette.primary.main,
     borderRadius: 5,
     height: 10,
     position: 'fixed',

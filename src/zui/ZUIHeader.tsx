@@ -14,7 +14,7 @@ import BreadcrumbTrail from 'features/breadcrumbs/components/BreadcrumbTrail';
 import { Msg } from 'core/i18n';
 import ZUIEllipsisMenu, { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 import messageIds from './l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 interface StyleProps {
   collapsed: boolean;
@@ -45,7 +45,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     gridTemplateRows: 'auto',
     transition: 'font-size 0.2s ease',
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [oldTheme.breakpoints.down('md')]: {
       gridTemplateColumns: '1fr',
     },
   },

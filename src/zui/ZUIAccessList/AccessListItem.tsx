@@ -25,7 +25,7 @@ const AccessListItem: FC<AccessListItemProps> = ({
         </Box>
         <Box flexGrow={1}>
           <Typography component="div">{title}</Typography>
-          <Typography color="gray" component="div" variant="caption">
+          <Typography color="secondary" component="div" variant="caption">
             {subtitle}
           </Typography>
         </Box>

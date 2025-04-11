@@ -5,7 +5,7 @@ import { FC, useEffect, useState } from 'react';
 import { CallAssignmentCaller } from '../apiTypes';
 import TagManager from 'features/tags/components/TagManager';
 import { useMessages } from 'core/i18n';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import messageIds from '../l10n/messageIds';
@@ -24,8 +24,8 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
   open,
 }) => {
   const messages = useMessages(messageIds);
-  const [prioTags, setPrioTags] = useState<ZetkinTag[]>([]);
-  const [excludedTags, setExcludedTags] = useState<ZetkinTag[]>([]);
+  const [prioTags, setPrioTags] = useState<ZetkinAppliedTag[]>([]);
+  const [excludedTags, setExcludedTags] = useState<ZetkinAppliedTag[]>([]);
 
   useEffect(() => {
     if (caller) {
@@ -84,9 +84,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const CallerTagSection: FC<{
-  onChange: (tags: ZetkinTag[]) => void;
+  onChange: (tags: ZetkinAppliedTag[]) => void;
   subtitle: string;
-  tags: ZetkinTag[];
+  tags: ZetkinAppliedTag[];
   title: string;
 }> = ({ onChange, subtitle, tags, title }) => {
   const classes = useStyles();

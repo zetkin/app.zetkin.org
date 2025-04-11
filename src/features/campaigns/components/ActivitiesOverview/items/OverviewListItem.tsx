@@ -11,7 +11,7 @@ import { Msg } from 'core/i18n';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -24,7 +24,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     padding: '1em',
   },
   dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
+    backgroundColor: ({ color }) => oldTheme.palette.statusColors[color],
     borderRadius: '100%',
     height: '10px',
     marginLeft: 'auto',
@@ -41,7 +41,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     display: 'flex',
   },
   primaryIcon: {
-    color: theme.palette.grey[500],
+    color: oldTheme.palette.grey[500],
     fontSize: '28px',
   },
   right: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     display: 'flex',
   },
   secondaryIcon: {
-    color: theme.palette.grey[700],
+    color: oldTheme.palette.grey[700],
     margin: '0 0.5em',
   },
 }));
@@ -57,7 +57,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',
-  GRAY = 'gray',
+  GREY = 'grey',
   ORANGE = 'orange',
   RED = 'red',
 }
@@ -184,7 +184,7 @@ const OverviewListItem = ({
             width="calc(100% - 30px - 80px - 20px)"
           >
             <Typography
-              color={theme.palette.text.primary}
+              color={oldTheme.palette.text.primary}
               sx={{
                 margin: 0,
                 overflow: 'hidden',
@@ -219,7 +219,7 @@ const OverviewListItem = ({
             </Tooltip>
           </Box>
           <Box width="calc(100% - 30px - 80px - 20px)">
-            <Typography color={theme.palette.grey[500]} variant="body2">
+            <Typography color={oldTheme.palette.grey[500]} variant="body2">
               {label}
             </Typography>
           </Box>

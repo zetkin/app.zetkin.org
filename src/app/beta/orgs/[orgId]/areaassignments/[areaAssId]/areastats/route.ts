@@ -15,7 +15,7 @@ import {
 } from 'features/areaAssignments/types';
 import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 import { ZetkinArea } from 'features/areas/types';
 
 type RouteMeta = {
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       }));
 
       const allAreas: ZetkinArea[] = allAreaModels.map((model) => {
-        const tags: ZetkinTag[] = [];
+        const tags: (ZetkinTag | ZetkinAppliedTag)[] = [];
         (model.tags || []).forEach((item) => {
           const tag = allTags.find((tag) => tag.id == item.id);
           if (tag) {
