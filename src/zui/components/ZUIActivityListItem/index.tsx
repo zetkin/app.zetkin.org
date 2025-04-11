@@ -48,7 +48,9 @@ type ActivityListItemBase = {
   mainIcon: MUIIcon;
 
   /**
-   * The onClick function for the list item.
+   * Pass in a URL to link the entire item.
+   * You can still prevent default link behavior with onClick()
+   * if you need it to be conditional somehow.
    */
   onClick?: (event: ReactMouseEvent<HTMLLIElement, MouseEvent>) => void;
 
