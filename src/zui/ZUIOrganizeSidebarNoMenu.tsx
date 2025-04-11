@@ -14,10 +14,11 @@ import {
 } from '@mui/material';
 
 import ZUILogo from './ZUILogo';
+import theme from 'theme';
 
 const drawerWidth = '5rem';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   appBar: {
     [theme.breakpoints.up('sm')]: {
       display: 'none',

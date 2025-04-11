@@ -147,7 +147,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
             />
             <Box p={3}>
               <Grid container justifyContent="space-between" spacing={2}>
-                <Grid item md={6}>
+                <Grid size={{ md: 6 }}>
                   <Typography
                     color="secondary"
                     style={{ marginBottom: '1.5rem' }}
@@ -187,7 +187,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     />
                   </form>
                 </Grid>
-                <Grid item md={4}>
+                <Grid size={{ md: 4 }}>
                   <JourneyInstanceSidebar
                     journeyInstance={{
                       assignees,

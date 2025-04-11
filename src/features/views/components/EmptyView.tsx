@@ -34,7 +34,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
   return (
     <Box m={2}>
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid size={{ md: 6 }}>
           <Card>
             <CardContent>
               <Typography variant="h5">
@@ -61,7 +61,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item md={6}>
+        <Grid size={{ md: 6 }}>
           <Card>
             <CardContent>
               <Typography variant="h5">

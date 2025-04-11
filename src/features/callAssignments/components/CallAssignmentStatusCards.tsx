@@ -54,7 +54,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
 
   return (
     <Grid container spacing={2}>
-      <Grid item md={4} xs={12}>
+      <Grid size={{ md: 4, xs: 12 }}>
         <Card>
           <StatusCardHeader
             chipColor={hasTargets ? 'orange' : 'gray'}
@@ -161,7 +161,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
           </List>
         </Card>
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid size={{ md: 4, xs: 12 }}>
         <Card>
           <StatusCardHeader
             chipColor={hasTargets ? 'blue' : 'gray'}
@@ -181,7 +181,7 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
           </List>
         </Card>
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid size={{ md: 4, xs: 12 }}>
         <Card>
           <StatusCardHeader
             chipColor={hasTargets ? 'green' : 'gray'}

@@ -52,7 +52,7 @@ const AllJourneysOverviewPage: PageWithLayout = () => {
       <ZUISection title={messages.journeys.overview.overviewTitle()}>
         <Grid container spacing={2}>
           {journeysFuture.data?.map((journey: ZetkinJourney) => (
-            <Grid key={journey.id} item lg={4} md={6} xl={3} xs={12}>
+            <Grid key={journey.id} size={{ lg: 4, md: 6, xl: 3, xs: 12 }}>
               <JourneyCard journey={journey} />
             </Grid>
           ))}

@@ -96,7 +96,7 @@ const JourneyDetailsPage: PageWithLayout = () => {
         </title>
       </Head>
       <Grid container justifyContent="space-between" spacing={3}>
-        <Grid item lg={6} md={7} xl={5} xs={12}>
+        <Grid size={{ lg: 6, md: 7, xl: 5, xs: 12 }}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           {journeyInstance.closed && (
             <JourneyInstanceOutcome journeyInstance={journeyInstance} />
@@ -121,7 +121,7 @@ const JourneyDetailsPage: PageWithLayout = () => {
             </ZUIFuture>
           </ZUISection>
         </Grid>
-        <Grid item lg={4} md={4} xs={12}>
+        <Grid size={{ lg: 4, md: 4, xs: 12 }}>
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
             onAddAssignee={addAssignee}

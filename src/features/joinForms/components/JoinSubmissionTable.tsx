@@ -7,8 +7,9 @@ import messageIds from '../l10n/messageIds';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
 import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
+import theme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     backgroundColor: theme.palette.grey[300],
     borderRadius: '1em',

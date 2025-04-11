@@ -93,13 +93,13 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
           <Grid container spacing={2}>
-            <Grid item md={8}>
+            <Grid size={{ md: 8 }}>
               <SubmissionChartCard
                 orgId={parseInt(orgId)}
                 surveyId={parseInt(surveyId)}
               />
             </Grid>
-            <Grid item md={4}>
+            <Grid size={{ md: 4 }}>
               <SurveyURLCard
                 isOpen={isOpen}
                 orgId={survey.organization.id.toString()}

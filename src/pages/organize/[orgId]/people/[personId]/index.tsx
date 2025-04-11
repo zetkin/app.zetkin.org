@@ -77,14 +77,14 @@ const PersonProfilePage: PageWithLayout = () => {
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
-        <Grid item lg={4} xs={12}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <ZUIFuture future={fieldsFuture}>
             {(fields) => (
               <PersonDetailsCard customFields={fields} person={person} />
             )}
           </ZUIFuture>
         </Grid>
-        <Grid item lg={4} xs={12}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <ZUIFuture future={personTagsFuture}>
             {(personTags) => (
               <TagManagerSection
@@ -109,11 +109,11 @@ const PersonProfilePage: PageWithLayout = () => {
           </ZUIFuture>
         </Grid>
         {journeysFuture.data?.length && (
-          <Grid item lg={4} xs={12}>
+          <Grid size={{ lg: 4, xs: 12 }}>
             <PersonJourneysCard orgId={orgId} personId={personId} />
           </Grid>
         )}
-        <Grid item lg={4} xs={12}>
+        <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
       </Grid>

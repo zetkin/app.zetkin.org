@@ -5,7 +5,7 @@ import ZUIJourneyInstanceCard from '.';
 
 export default {
   component: ZUIJourneyInstanceCard,
-  title: 'Molecules/ZUIJourneyInstanceCard',
+  title: 'Other/ZUIJourneyInstanceCard',
 } as Meta<typeof ZUIJourneyInstanceCard>;
 
 const Template: StoryFn<typeof ZUIJourneyInstanceCard> = (args) => (
