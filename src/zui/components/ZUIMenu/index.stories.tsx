@@ -46,22 +46,6 @@ export const Basic: Story = {
   },
 };
 
-export const Dense: Story = {
-  args: {
-    ...Basic.args,
-    dense: true,
-  },
-  render: Basic.render,
-};
-
-export const GuttersDisabled: Story = {
-  args: {
-    ...Basic.args,
-    disableGutters: true,
-  },
-  render: Basic.render,
-};
-
 export const MaxHeight: Story = {
   args: {
     ...Basic.args,

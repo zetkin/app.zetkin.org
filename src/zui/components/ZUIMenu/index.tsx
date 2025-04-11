@@ -43,20 +43,6 @@ type ZUIMenuProps = {
   anchorEl?: Element | null;
 
   /**
-   * If true the menu will be more compact.
-   *
-   * Defaults to "false".
-   */
-  dense?: boolean;
-
-  /**
-   * If true there will be less space between items.
-   *
-   * Defaults to "false".
-   */
-  disableGutters?: boolean;
-
-  /**
    * The maximum height of the menu.
    */
   maxHeight?: string;
@@ -79,8 +65,6 @@ type ZUIMenuProps = {
 };
 
 const ZUIMenu: FC<ZUIMenuProps> = ({
-  dense,
-  disableGutters,
   anchorEl,
   maxHeight,
   menuItems,
@@ -114,9 +98,7 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
       return (
         <MenuItem
           key={index}
-          dense={dense}
           disabled={item.disabled}
-          disableGutters={disableGutters}
           divider={item.divider}
           onClick={() => {
             item.onClick();
