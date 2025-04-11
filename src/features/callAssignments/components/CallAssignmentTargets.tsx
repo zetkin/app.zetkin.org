@@ -9,13 +9,13 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import useCallAssignment from '../hooks/useCallAssignment';
 import useCallAssignmentStats from '../hooks/useCallAssignmentStats';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   chip: {
-    backgroundColor: theme.palette.statusColors.gray,
+    backgroundColor: oldTheme.palette.statusColors.grey,
     borderRadius: '1em',
-    color: theme.palette.text.secondary,
+    color: oldTheme.palette.text.secondary,
     display: 'flex',
     fontSize: '1.8em',
     lineHeight: 'normal',

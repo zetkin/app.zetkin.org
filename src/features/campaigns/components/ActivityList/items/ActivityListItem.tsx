@@ -4,7 +4,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
 
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
-import theme from 'theme';
+import oldTheme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
 interface StyleProps {
@@ -60,7 +60,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',
-  GRAY = 'gray',
+  GREY = 'grey',
   ORANGE = 'orange',
   RED = 'red',
 }
@@ -113,7 +113,9 @@ const ActivityListItem = ({
           </Tooltip>
           <PrimaryIcon className={classes.primaryIcon} />
           <Box>
-            <Typography color={theme.palette.text.primary}>{title}</Typography>
+            <Typography color={oldTheme.palette.text.primary}>
+              {title}
+            </Typography>
             {subtitle && (
               <Box>
                 <Typography variant="body2">{subtitle}</Typography>

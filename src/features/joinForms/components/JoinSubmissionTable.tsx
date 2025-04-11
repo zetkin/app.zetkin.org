@@ -7,13 +7,13 @@ import messageIds from '../l10n/messageIds';
 import useJoinSubmissionMutations from '../hooks/useJoinSubmissionMutations';
 import { ZetkinJoinSubmission } from '../types';
 import { Msg, useMessages } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const useStyles = makeStyles(() => ({
   chip: {
-    backgroundColor: theme.palette.grey[300],
+    backgroundColor: oldTheme.palette.grey[300],
     borderRadius: '1em',
-    color: theme.palette.text.secondary,
+    color: oldTheme.palette.text.secondary,
     fontSize: 'xs',
     padding: '0.2em 0.7em',
   },

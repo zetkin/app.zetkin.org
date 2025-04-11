@@ -5,7 +5,7 @@ import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 import { FC, MouseEvent, ReactNode, useState } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type ZUIButtonMenuProps = {
   items: {
@@ -60,12 +60,12 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
               },
               '&:active': {
                 backgroundColor: alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.selectedOpacity
+                  oldTheme.palette.primary.main,
+                  oldTheme.palette.action.selectedOpacity
                 ),
               },
             },
-            marginTop: theme.spacing(1),
+            marginTop: oldTheme.spacing(1),
           },
         }}
         transformOrigin={{

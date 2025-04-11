@@ -6,7 +6,7 @@ import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import useDeleteType from '../hooks/useDeleteType';
@@ -22,13 +22,13 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   inputRoot: {
     '& fieldset': { border: 'none' },
     '&:focus, &:hover': {
-      borderColor: lighten(theme.palette.primary.main, 0.65),
+      borderColor: lighten(oldTheme.palette.primary.main, 0.65),
       paddingLeft: 10,
       paddingRight: 0,
     },
     border: '2px dotted transparent',
     borderColor: ({ showBorder }) =>
-      showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
+      showBorder ? lighten(oldTheme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
     paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
     paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
@@ -37,7 +37,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   span: {
     // Same styles as input
     '&:focus, &:hover': {
-      borderColor: lighten(theme.palette.primary.main, 0.65),
+      borderColor: lighten(oldTheme.palette.primary.main, 0.65),
       paddingLeft: 10,
       paddingRight: 0,
     },
@@ -258,9 +258,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                     }}
                     sx={{
                       '&:hover': {
-                        color: theme.palette.secondary.main,
+                        color: oldTheme.palette.secondary.main,
                       },
-                      color: theme.palette.secondary.light,
+                      color: oldTheme.palette.secondary.light,
                       cursor: 'pointer',
                       transition: 'color 0.3s ease',
                     }}

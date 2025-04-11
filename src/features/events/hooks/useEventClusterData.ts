@@ -73,7 +73,7 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
     });
   }
 
-  let color = STATUS_COLORS.GRAY;
+  let color = STATUS_COLORS.GREY;
   if (status === EventState.OPEN) {
     color = STATUS_COLORS.GREEN;
   } else if (status === EventState.ENDED) {
