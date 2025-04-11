@@ -11,6 +11,8 @@ import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import useJoinFormMutations from '../hooks/useJoinFormMutations';
 
 const useStyles = makeStyles({
   container: {
@@ -59,7 +61,19 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
   const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteForm } = useJoinFormMutations(form.organization.id, form.id);
   const messages = useMessages(messageIds);
+  async function handleDeleteJoinForm() {
+    await deleteForm();
+    showSnackbar(
+      'success',
+      <Msg
+        id={messageIds.deleteJoinForm.success}
+        values={{ title: form.title }}
+      />
+    );
+  }
 
   return (
     <Box
@@ -118,6 +132,19 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                     </Button>
                   </>
                 );
+              },
+            },
+            {
+              label: messages.embedding.delete(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+                showConfirmDialog({
+                  onSubmit: handleDeleteJoinForm,
+                  title: messages.deleteJoinForm.title(),
+                  warningText: messages.deleteJoinForm.warning({
+                    title: form.title,
+                  }),
+                });
               },
             },
           ]}

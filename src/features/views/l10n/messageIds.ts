@@ -144,7 +144,7 @@ export default makeMessages('feat.views', {
       },
       localPerson: {
         columnTitle: m('Assignee'),
-        description: m("Let's you pick an assignee on every row"),
+        description: m('Lets you pick an assignee on every row'),
         keywords: m(''),
         title: m('Assigned Person'),
       },
@@ -417,6 +417,7 @@ export default makeMessages('feat.views', {
     },
     ellipsisMenu: {
       delete: m('Delete list'),
+      duplicate: m('Duplicate'),
       editQuery: m('Edit Smart Search query'),
       makeDynamic: m('Convert to Smart Search list'),
       makeStatic: {
