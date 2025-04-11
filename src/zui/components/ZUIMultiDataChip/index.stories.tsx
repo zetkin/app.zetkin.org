@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import ZUIProgressChip from './index';
+import ZUIMultiDataChip from './index';
 
-const meta: Meta<typeof ZUIProgressChip> = {
-  component: ZUIProgressChip,
-  title: 'Components/ZUIProgressChip',
+const meta: Meta<typeof ZUIMultiDataChip> = {
+  component: ZUIMultiDataChip,
+  title: 'Components/ZUIMultiDataChip',
 };
 export default meta;
 
-type Story = StoryObj<typeof ZUIProgressChip>;
+type Story = StoryObj<typeof ZUIMultiDataChip>;
 
 export const TwoSmall: Story = {
   args: {

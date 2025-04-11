@@ -1,19 +1,23 @@
 import { FC } from 'react';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Button, CircularProgress, SvgIconTypeMap } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 
 import {
   getVariant,
   ZUIButtonProps,
   ZUIButtonVariant,
 } from 'zui/components/ZUIButton';
-import { ZUISize } from '../types';
+import { MUIIcon, ZUISize } from '../types';
 
 export type ZUIIconButtonProps = Omit<
   ZUIButtonProps,
   'endIcon' | 'fullWidth' | 'label' | 'startIcon'
 > & {
-  icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>;
+  /**
+   * The icon to be rendered in the button.
+   *
+   * Send in a reference to the icon, not the component, for example: Close, not < Close / >
+   */
+  icon: MUIIcon;
 };
 
 const getColor = (variant: ZUIButtonVariant) => {

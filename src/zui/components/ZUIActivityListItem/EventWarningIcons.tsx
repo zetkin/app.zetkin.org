@@ -13,6 +13,7 @@ import messageIds from 'zui/l10n/messageIds';
 
 export type EventWarningIconsProps = {
   hasContact: boolean;
+  isUrgent: boolean;
   numBooked: number;
   numRemindersSent: number;
   numSignups: number;
@@ -21,6 +22,7 @@ export type EventWarningIconsProps = {
 const EventWarningIcons: FC<EventWarningIconsProps> = ({
   hasContact,
   numBooked,
+  isUrgent,
   numRemindersSent,
   numSignups,
 }) => {
@@ -29,24 +31,56 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
   return (
     <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.75rem' }}>
       <Box sx={{ alignItems: 'center', display: 'flex', width: '1.25rem' }}>
+        {hasContact && (
+          <FaceRetouchingOff
+            sx={(theme) => ({
+              color: theme.palette.grey[200],
+              fontSize: '1.25rem',
+            })}
+          />
+        )}
         {!hasContact && (
           <ZUITooltip label={messages.eventWarningIcons.contact()}>
             <span style={{ alignItems: 'center', display: 'flex' }}>
-              <ZUIIcon color="danger" icon={FaceRetouchingOff} size="small" />
+              <ZUIIcon
+                color={isUrgent ? 'danger' : 'primary'}
+                icon={FaceRetouchingOff}
+                size="small"
+              />
             </span>
           </ZUITooltip>
         )}
       </Box>
       <Box sx={{ alignItems: 'center', display: 'flex', width: '1.25rem' }}>
+        {numSignups == 0 && (
+          <EmojiPeople
+            sx={(theme) => ({
+              color: theme.palette.grey[200],
+              fontSize: '1.25rem',
+            })}
+          />
+        )}
         {numSignups > 0 && (
           <ZUITooltip label={messages.eventWarningIcons.signUps()}>
             <span style={{ alignItems: 'center', display: 'flex' }}>
-              <ZUIIcon color="danger" icon={EmojiPeople} size="small" />
+              <ZUIIcon
+                color={isUrgent ? 'danger' : 'primary'}
+                icon={EmojiPeople}
+                size="small"
+              />
             </span>
           </ZUITooltip>
         )}
       </Box>
       <Box sx={{ alignItems: 'center', display: 'flex', width: '1.25rem' }}>
+        {numRemindersSent >= numBooked && (
+          <MailOutline
+            sx={(theme) => ({
+              color: theme.palette.grey[200],
+              fontSize: '1.25rem',
+            })}
+          />
+        )}
         {numRemindersSent < numBooked && (
           <ZUITooltip
             label={messages.eventWarningIcons.reminders({
@@ -54,7 +88,11 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
             })}
           >
             <span style={{ alignItems: 'center', display: 'flex' }}>
-              <ZUIIcon color="danger" icon={MailOutline} size="small" />
+              <ZUIIcon
+                color={isUrgent ? 'danger' : 'primary'}
+                icon={MailOutline}
+                size="small"
+              />
             </span>
           </ZUITooltip>
         )}

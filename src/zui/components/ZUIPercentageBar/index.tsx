@@ -8,7 +8,7 @@ const sizes: Record<ZUISize, string> = {
   small: '0.25rem',
 };
 
-export type ZUIBarDiagramProps = {
+export type ZUIPercentageBarProps = {
   /**
    * The size of the bar diagram.
    *
@@ -28,7 +28,10 @@ export type ZUIBarDiagramProps = {
  * different segments, up to 100. The final segment width is the
  * remainder of 100 minus the previous segment widths.
  */
-const ZUIBarDiagram = ({ values, size = 'medium' }: ZUIBarDiagramProps) => {
+const ZUIPercentageBar = ({
+  values,
+  size = 'medium',
+}: ZUIPercentageBarProps) => {
   const theme = useTheme();
   const progressSum = values.reduce((sum, val) => {
     return sum + val;
@@ -91,4 +94,4 @@ const ZUIBarDiagram = ({ values, size = 'medium' }: ZUIBarDiagramProps) => {
   );
 };
 
-export default ZUIBarDiagram;
+export default ZUIPercentageBar;
