@@ -11,7 +11,7 @@ interface StyleProps {
   color: STATUS_COLORS;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
     alignItems: 'center',
     cursor: 'pointer',
