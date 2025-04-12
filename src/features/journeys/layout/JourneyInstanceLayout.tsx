@@ -38,14 +38,11 @@ const JourneyInstanceLayout: React.FunctionComponent<
   const journeyInstanceFuture = useJourneyInstance(orgId, instanceId);
   const journeysFuture = useJourneys(orgId);
 
-  const { updateJourneyInstance } = useJourneyInstanceMutations(
-    orgId,
-    instanceId
-  );
+  const { updateJourneyInstance, deleteJourneyInstance } =
+    useJourneyInstanceMutations(orgId, instanceId);
 
   const handleDelete = async () => {
-    // eslint-disable-next-line no-console
-    console.log('Deleting journey instance');
+    await deleteJourneyInstance();
     router.push(`/organize/${orgId}/journeys/${journeyId}`);
   };
 
