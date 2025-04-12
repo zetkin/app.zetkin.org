@@ -8,8 +8,9 @@ import { Breadcrumb } from 'utils/types';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useBreadcrumbElements from '../hooks/useBreadcrumbs';
+import oldTheme from 'theme';
 
-const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
+const useStyles = makeStyles<Theme, { highlight?: boolean }>(() =>
   createStyles({
     breadcrumb: {
       display: 'block',
@@ -21,9 +22,9 @@ const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
     },
     root: {
       '& > * + *': {
-        marginTop: theme.spacing(2),
+        marginTop: oldTheme.spacing(2),
       },
-      [theme.breakpoints.down('sm')]: {
+      [oldTheme.breakpoints.down('sm')]: {
         width: '100%',
       },
     },

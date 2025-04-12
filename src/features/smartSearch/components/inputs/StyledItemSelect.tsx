@@ -1,15 +1,16 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { Autocomplete, AutocompleteProps, Box } from '@mui/material';
 import { Chip, TextField } from '@mui/material';
-import { Theme, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import oldTheme from 'theme';
 
-const useStyles = makeStyles<Theme>((theme) => ({
+const useStyles = makeStyles({
   MuiInput: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     padding: 0,
     width: '10rem',
   },
@@ -20,7 +21,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
   autocomplete: {
     display: 'inline',
   },
-}));
+});
 
 interface StyledItem {
   id: number;

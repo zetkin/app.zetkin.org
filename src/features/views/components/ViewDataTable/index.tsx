@@ -59,6 +59,7 @@ import {
 import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
+import oldTheme from 'theme';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -87,10 +88,10 @@ declare module '@mui/x-data-grid-pro' {
   }
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   '@keyframes addedRowAnimation': {
     '0%': {
-      backgroundColor: theme.palette.success.main,
+      backgroundColor: oldTheme.palette.success.main,
     },
     '100%': {
       backgroundColor: 'transparent',

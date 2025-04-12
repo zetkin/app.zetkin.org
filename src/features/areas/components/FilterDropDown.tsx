@@ -6,7 +6,7 @@ import { MenuItem } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import { Box } from '@mui/system';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type Props = {
   items: {
@@ -64,8 +64,8 @@ const FilterDropDown: FC<Props> = ({
               },
               '&:active': {
                 backgroundColor: alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.selectedOpacity
+                  oldTheme.palette.primary.main,
+                  oldTheme.palette.action.selectedOpacity
                 ),
               },
             },
