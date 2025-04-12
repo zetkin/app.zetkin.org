@@ -11,9 +11,9 @@ import {
   List,
   ListItem,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useTheme } from '@mui/styles';
 
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIFuture from 'zui/ZUIFuture';
