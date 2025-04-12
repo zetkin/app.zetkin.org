@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { useTheme } from '@mui/styles';
 import { lighten } from '@mui/system';
 
 import { VisitStats } from '../utils/getVisitPercentage';
+import oldTheme from 'theme';
 
 interface MarkerIconProps {
   percentage?: VisitStats;
@@ -15,7 +15,6 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   percentage,
   selected,
 }) => {
-  const theme = useTheme();
   const totalVisitsKey = uniqueKey + '_totalVisits';
 
   return (
@@ -43,7 +42,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       <path
         clipPath={`url(#${totalVisitsKey})`}
         d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z"
-        fill={lighten(theme.palette.primary.main, 0.7)}
+        fill={lighten(oldTheme.palette.primary.main, 0.7)}
       />
       <clipPath id={uniqueKey}>
         <rect
@@ -60,7 +59,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       <path
         clipPath={`url(#${uniqueKey})`}
         d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z"
-        fill={theme.palette.primary.main}
+        fill={oldTheme.palette.primary.main}
       />
     </svg>
   );
