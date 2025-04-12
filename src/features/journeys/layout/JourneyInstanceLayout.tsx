@@ -1,10 +1,12 @@
 import { FormattedDate } from 'react-intl';
-import { Forward } from '@mui/icons-material';
+import { Forward, Delete } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useContext } from 'react';
 
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import JourneyStatusChip from '../components/JourneyStatusChip';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
@@ -29,6 +31,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
 > = ({ children }) => {
   const messages = useMessages(messageIds);
   const { orgId, journeyId, instanceId } = useNumericRouteParams();
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +43,26 @@ const JourneyInstanceLayout: React.FunctionComponent<
     instanceId
   );
 
-  const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
+  const handleDelete = async () => {
+    // eslint-disable-next-line no-console
+    console.log('Deleting journey instance');
+    router.push(`/organize/${orgId}/journeys/${journeyId}`);
+  };
+
+  const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [
+    {
+      id: 'delete-journey-instance',
+      label: messages.instance.ellipsisMenu.delete(),
+      onSelect: () => {
+        showConfirmDialog({
+          onSubmit: handleDelete,
+          title: 'test',
+          warningText: 'test message',
+        });
+      },
+      startIcon: <Delete color="secondary" />,
+    },
+  ];
 
   const submenuItems =
     journeysFuture.data
