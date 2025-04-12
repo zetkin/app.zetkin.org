@@ -91,7 +91,7 @@ feat:
         none: Inga
       type: Skriv för att filtrera innehåll
     lastDayWithEvents: Den senaste dagen med aktiviteter ägde {numEvents, plural,
-      one {ett} other {numEvents}} event rum
+      one {ett} other {#}} event rum
     loadMore: Ladda mer
     moreEvents: '{numEvents, plural, one {# event till} other {# fler event}}'
     next: NÄSTA
