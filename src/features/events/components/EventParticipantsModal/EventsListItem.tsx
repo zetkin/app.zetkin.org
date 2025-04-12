@@ -15,24 +15,25 @@ import { useMessages } from 'core/i18n';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
+import oldTheme from 'theme';
 
 interface StyleProps {
   color: STATUS_COLORS;
   selected: boolean;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
     alignItems: 'center',
     backgroundColor: ({ selected }) =>
-      selected ? theme.palette.grey[100] : 'transparent',
+      selected ? oldTheme.palette.grey[100] : 'transparent',
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'space-between',
     padding: '1.0em 0.5em',
   },
   dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
+    backgroundColor: ({ color }) => oldTheme.palette.statusColors[color],
     borderRadius: '100%',
     flexShrink: 0,
     height: '10px',
@@ -52,7 +53,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     flex: '1 0',
   },
   primaryIcon: {
-    color: theme.palette.grey[500],
+    color: oldTheme.palette.grey[500],
     fontSize: '28px',
   },
 }));
@@ -72,7 +73,7 @@ const EventListsItem: FC<Props> = ({ eventId, onSelect, orgId, selected }) => {
 
   const status = event ? getEventState(event) : EventState.UNKNOWN;
 
-  let color = STATUS_COLORS.GRAY;
+  let color = STATUS_COLORS.GREY;
   if (status === EventState.OPEN) {
     color = STATUS_COLORS.GREEN;
   } else if (status === EventState.ENDED) {

@@ -1,7 +1,7 @@
 import KPD from '..';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
-const PlaysGuitarTag: ZetkinTag = {
+const PlaysGuitarTag: ZetkinAppliedTag = {
   color: null,
   description: 'Can strum a cheery tune',
   group: null,
@@ -12,6 +12,7 @@ const PlaysGuitarTag: ZetkinTag = {
     title: KPD.title,
   },
   title: 'Plays guitar',
+  value: null,
   value_type: null,
 };
 

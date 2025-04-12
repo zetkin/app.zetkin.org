@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
 import messageIds from 'features/tags/l10n/messageIds';
-import mockTag from 'utils/testing/mocks/mockTag';
+import mockTag, { mockAppliedTag } from 'utils/testing/mocks/mockTag';
 import { render } from 'utils/testing';
 import { TagManagerController } from './TagManagerController';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -26,8 +26,8 @@ const deleteTagCallback = jest.fn((tagId: number) => tagId);
 describe('<TagManagerController />', () => {
   describe('Renders list of tags passed in', () => {
     it('shows tags that have been applied in the tags list', () => {
-      const tag1 = mockTag({ title: 'Organizer' });
-      const tag2 = mockTag({ id: 2, title: 'Activist' });
+      const tag1 = mockAppliedTag({ title: 'Organizer' });
+      const tag2 = mockAppliedTag({ id: 2, title: 'Activist' });
       const { getByText } = render(
         <TagManagerController
           assignedTags={[tag1, tag2]}
@@ -46,34 +46,34 @@ describe('<TagManagerController />', () => {
   });
   it('groups tags passed tagsGrouped prop', () => {
     const tags = [
-      mockTag({ group: { id: 1, title: 'Political' } }),
-      mockTag({
+      mockAppliedTag({ group: { id: 1, title: 'Political' } }),
+      mockAppliedTag({
         group: { id: 1, title: 'Political' },
         id: 2,
         title: 'Activist',
       }),
-      mockTag({
+      mockAppliedTag({
         group: { id: 2, title: 'Skills' },
         id: 3,
         title: 'Software',
       }),
-      mockTag({
+      mockAppliedTag({
         group: { id: 2, title: 'Skills' },
         id: 4,
         title: 'Cooking',
       }),
-      mockTag({
+      mockAppliedTag({
         group: { id: 2, title: 'Skills' },
         id: 4,
         title: 'Phone banking',
       }),
       // Ungrouped tags
-      mockTag({
+      mockAppliedTag({
         group: null,
         id: 5,
         title: 'Vegan',
       }),
-      mockTag({
+      mockAppliedTag({
         group: null,
         id: 5,
         title: 'Listens to progg',
@@ -192,7 +192,7 @@ describe('<TagManagerController />', () => {
   it('can remove a tag', async () => {
     const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
-    const tag1 = mockTag({
+    const tag1 = mockAppliedTag({
       group: { id: 2, title: 'Skills' },
       id: 4,
       title: 'Phone banking',

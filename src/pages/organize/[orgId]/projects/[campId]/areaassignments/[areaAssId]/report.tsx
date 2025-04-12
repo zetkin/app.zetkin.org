@@ -126,6 +126,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   };
 
   const [unlocked, setUnlocked] = useState(false);
+  const isReportEditable = !areaAssignmentFuture.data?.start_date || unlocked;
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
@@ -280,7 +281,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </Dialog>
             )}
             <Box>
-              {unlocked && (
+              {isReportEditable && (
                 <Card
                   sx={{
                     backgroundColor: theme.palette.grey[200],

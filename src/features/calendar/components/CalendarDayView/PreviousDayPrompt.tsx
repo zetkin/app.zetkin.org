@@ -5,7 +5,7 @@ import DateLabel from './Day/DateLabel';
 import { DaySummary } from '../utils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 
 const PreviousDayPrompt = ({
   date,
@@ -26,7 +26,7 @@ const PreviousDayPrompt = ({
         gap={1}
         justifyContent="center"
       >
-        <Typography color={theme.palette.secondary.main}>
+        <Typography color={oldTheme.palette.secondary.main}>
           <Msg
             id={messageIds.lastDayWithEvents}
             values={{ numEvents: daySummary.events.length }}

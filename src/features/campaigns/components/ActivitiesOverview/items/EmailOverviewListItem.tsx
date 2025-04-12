@@ -58,7 +58,7 @@ const EmailOverviewListItem: FC<EmailOverviewListItemProps> = ({
 
     // Should never happen, because it should not be in the
     // overview if it's not yet scheduled/published.
-    return STATUS_COLORS.GRAY;
+    return STATUS_COLORS.GREY;
   }
 
   return (

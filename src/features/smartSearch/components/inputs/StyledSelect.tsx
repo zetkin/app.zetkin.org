@@ -1,15 +1,19 @@
 import { TextField, TextFieldProps, Theme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+
+import oldTheme from 'theme';
+
 interface StyleProps {
   minWidth?: string;
 }
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   MuiInput: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     padding: 0,
   },
   MuiSelect: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     minWidth: ({ minWidth }) => minWidth,
     padding: 0,
   },

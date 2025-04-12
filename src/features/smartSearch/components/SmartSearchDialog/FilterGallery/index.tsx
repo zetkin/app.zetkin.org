@@ -124,7 +124,7 @@ const FilterGallery = ({
 
                 <Grid container paddingTop={2} spacing={3}>
                   {categoryData.filters.map((filter) => (
-                    <Grid key={filter} item lg={4} sm={6} xs={12}>
+                    <Grid key={filter} size={{ lg: 4, sm: 6, xs: 12 }}>
                       <FilterGalleryCard
                         colors={categoryData.colors}
                         filter={filter}

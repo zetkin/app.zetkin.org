@@ -2,12 +2,14 @@ import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material';
 
+import theme from '../../../../theme';
+
 interface StyleProps {
   cancelled: boolean;
   draft: boolean;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   topBadge: {
     alignItems: 'center',
     backgroundColor: ({ cancelled, draft }) =>
