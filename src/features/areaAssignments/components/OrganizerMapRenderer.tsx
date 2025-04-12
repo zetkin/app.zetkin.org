@@ -451,16 +451,20 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               return getBoundSize(a1) - getBoundSize(a0);
             }
           })
-          .map((area) => {
+          .map((area, index) => {
             const selected = selectedId == area.id;
 
             // The key changes when selected, to force redraw of polygon
-            // to reflect new state through visual style
-            const key =
-              area.id +
-              (selected ? '-selected' : '-default') +
-              `-${areaStyle}` +
-              (area.hasPeople ? '-assigned' : '');
+            // to reflect new state through visual style. Since we also
+            // care about keeping the order form above, we include that in the
+            // key as well.
+            const key = [
+              area.id,
+              selected ? 'selected' : 'default',
+              areaStyle,
+              area.hasPeople ? 'assigned' : 'unassigned',
+              index,
+            ].join('-');
 
             const stats = areaStats.stats.find(
               (stat) => stat.areaId == area.id
