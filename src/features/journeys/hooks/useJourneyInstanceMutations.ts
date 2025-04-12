@@ -3,6 +3,7 @@ import {
   invalidateJourneyInstance,
   journeyInstanceUpdate,
   journeyInstanceUpdated,
+  journeyInstanceDeleted,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
@@ -56,7 +57,7 @@ export default function useJourneyInstanceMutations(
     await apiClient.delete(
       `/api/orgs/${orgId}/journey_instances/${instanceId}`
     );
-    // dispatch(journeyInstanceDeleted(instanceId));
+    dispatch(journeyInstanceDeleted(instanceId));
   }
 
   async function closeJourneyInstance(closeBody: JourneyInstanceCloseBody) {

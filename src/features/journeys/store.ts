@@ -81,6 +81,20 @@ const journeysSlice = createSlice({
         remoteItem(journeyInstance.id, { data: journeyInstance })
       );
     },
+    journeyInstanceDeleted: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+
+      state.journeyInstanceList.items = state.journeyInstanceList.items.filter(
+        (item) => item.id !== id
+      );
+
+      for (const journeyId in state.journeyInstancesByJourneyId) {
+        state.journeyInstancesByJourneyId[+journeyId].items =
+          state.journeyInstancesByJourneyId[+journeyId].items.filter(
+            (item) => item.id !== id
+          );
+      }
+    },
     journeyInstanceLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.journeyInstanceList.items.find(
@@ -260,6 +274,7 @@ export const {
   invalidateTimeline,
   journeyInstanceCreate,
   journeyInstanceCreated,
+  journeyInstanceDeleted,
   journeyInstanceLoad,
   journeyInstanceLoaded,
   journeyInstanceUpdate,
