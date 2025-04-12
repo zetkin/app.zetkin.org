@@ -95,11 +95,7 @@ const LocationMarker: FC<{
 
     return (
       <DivIconMarker iconAnchor={[6, 24]} position={location.position}>
-        <MarkerIcon
-          percentage={percentage}
-          selected={false}
-          uniqueKey={location.id}
-        />
+        <MarkerIcon percentage={percentage} selected={false} />
       </DivIconMarker>
     );
   }
