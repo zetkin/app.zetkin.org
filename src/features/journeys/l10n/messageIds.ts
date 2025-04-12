@@ -31,7 +31,12 @@ export default makeMessages('feat.journeys', {
     editButton: m('Edit'),
     ellipsisMenu: {
       convert: m('Convert to...'),
-      delete: m('Delete'),
+      deletion: {
+        delete: m<{ instanceTitle: string }>('Delete "{instanceTitle}"'),
+        warning: m<{ instanceTitle: string }>(
+          '"{instanceTitle}" will be deleted.'
+        ),
+      },
     },
     expandButton: m('Expand'),
     markedCompleteLabel: m<{ relativeTime: ReactElement }>(

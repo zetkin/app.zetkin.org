@@ -49,20 +49,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
     router.push(`/organize/${orgId}/journeys/${journeyId}`);
   };
 
-  const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [
-    {
-      id: 'delete-journey-instance',
-      label: messages.instance.ellipsisMenu.delete(),
-      onSelect: () => {
-        showConfirmDialog({
-          onSubmit: handleDelete,
-          title: 'test',
-          warningText: 'test message',
-        });
-      },
-      startIcon: <Delete color="secondary" />,
-    },
-  ];
+  const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
 
   const submenuItems =
     journeysFuture.data
@@ -95,6 +82,25 @@ const JourneyInstanceLayout: React.FunctionComponent<
   if (!journeyInstance) {
     return null;
   }
+
+  ellipsisMenu.push({
+    id: 'delete-journey-instance',
+    label: messages.instance.ellipsisMenu.deletion.delete({
+      instanceTitle: journeyInstance.title || journeyInstance.journey.title,
+    }),
+    onSelect: () => {
+      showConfirmDialog({
+        onSubmit: handleDelete,
+        title: messages.instance.ellipsisMenu.deletion.delete({
+          instanceTitle: journeyInstance.title || journeyInstance.journey.title,
+        }),
+        warningText: messages.instance.ellipsisMenu.deletion.warning({
+          instanceTitle: journeyInstance.title || journeyInstance.journey.title,
+        }),
+      });
+    },
+    startIcon: <Delete color="secondary" />,
+  });
 
   return (
     <TabbedLayout
