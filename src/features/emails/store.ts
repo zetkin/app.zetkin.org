@@ -164,6 +164,11 @@ const emailsSlice = createSlice({
         isLoading: true,
       });
     },
+    statsLoadError: (state, action: PayloadAction<number>) => {
+      // This kind of works, as the loading will be retried, but unfortunately, it happens instantly, rather than after the naviation has completed
+      const id = action.payload;
+      delete state.statsById[id];
+    },
     statsLoaded: (
       state,
       action: PayloadAction<ZetkinEmailStats & { id: number }>
@@ -212,4 +217,5 @@ export const {
   themesLoaded,
   statsLoad,
   statsLoaded,
+  statsLoadError,
 } = emailsSlice.actions;

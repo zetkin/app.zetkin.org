@@ -2,7 +2,7 @@ import { PlaceholderFuture, ResolvedFuture } from 'core/caching/futures';
 import { futureToObject } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';
-import { statsLoad, statsLoaded } from '../store';
+import { statsLoad, statsLoaded, statsLoadError } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinEmailStats } from '../types';
 
@@ -35,6 +35,7 @@ export default function useEmailStats(
   const statsItem = useAppSelector((state) => state.emails.statsById[emailId]);
 
   let statsFuture = loadItemIfNecessary(statsItem, dispatch, {
+    actionOnError: () => statsLoadError(emailId),
     actionOnLoad: () => statsLoad(emailId),
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {

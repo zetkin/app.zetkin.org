@@ -150,6 +150,12 @@ export function loadItemIfNecessary<
   dispatch: AppDispatch,
   hooks: {
     /**
+     * Called when an error occurs while loading the item.
+     * @param err The error that occurred during the loading process.
+     * @return {PayloadAction} The action to dispatch when an error occurs.
+     */
+    actionOnError?: (err: unknown) => PayloadAction<OnLoadPayload>;
+    /**
      * Called when the item begins loading.
      * @returns {PayloadAction} The action to dispatch when the item is loading.
      */
@@ -173,6 +179,9 @@ export function loadItemIfNecessary<
     const promise = hooks.loader().then((val) => {
       dispatch(hooks.actionOnSuccess(val));
       return val;
+    }).catch((err: unknown) => {
+      hooks.actionOnError && dispatch(hooks.actionOnError(err));
+      throw err;
     });
 
     return new PromiseFuture(promise, remoteItem?.data);
