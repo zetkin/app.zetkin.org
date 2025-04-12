@@ -79,20 +79,22 @@ const JourneyInstanceLayout: React.FunctionComponent<
   if (!journeyInstance) {
     return null;
   }
+  const journeyInstanceTitle =
+    journeyInstance.title || journeyInstance.journey.title;
 
   ellipsisMenu.push({
     id: 'delete-journey-instance',
     label: messages.instance.ellipsisMenu.deletion.delete({
-      instanceTitle: journeyInstance.title || journeyInstance.journey.title,
+      instanceTitle: journeyInstanceTitle,
     }),
     onSelect: () => {
       showConfirmDialog({
         onSubmit: handleDelete,
         title: messages.instance.ellipsisMenu.deletion.delete({
-          instanceTitle: journeyInstance.title || journeyInstance.journey.title,
+          instanceTitle: journeyInstanceTitle,
         }),
         warningText: messages.instance.ellipsisMenu.deletion.warning({
-          instanceTitle: journeyInstance.title || journeyInstance.journey.title,
+          instanceTitle: journeyInstanceTitle,
         }),
       });
     },
@@ -209,7 +211,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
               await updateJourneyInstance({ title: newTitle });
               setIsLoading(false);
             }}
-            value={journeyInstance.title || journeyInstance.journey.title}
+            value={journeyInstanceTitle}
           />
           <Typography
             color="secondary"
