@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, Theme } from '@mui/material';
 
+import oldTheme from 'theme';
+
 type ZUINumberChipProps = {
   color: string;
   outlined?: boolean;
@@ -18,16 +20,16 @@ const FONT_SIZES = {
 const useStyles = makeStyles<
   Theme,
   { color: string; outlined: boolean; size: keyof typeof FONT_SIZES }
->((theme) => ({
+>(() => ({
   chip: {
     backgroundColor: ({ color, outlined }) =>
-      outlined ? theme.palette.common.white : color,
+      outlined ? oldTheme.palette.common.white : color,
     borderColor: ({ color }) => color,
     borderRadius: '1em',
     borderStyle: 'solid',
     borderWidth: 'thin',
     color: ({ color, outlined }) =>
-      outlined ? color : theme.palette.getContrastText(color),
+      outlined ? color : oldTheme.palette.getContrastText(color),
     display: 'flex',
     flexShrink: 0,
     fontSize: ({ size }) => FONT_SIZES[size],

@@ -1,8 +1,8 @@
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export default function compareTags(
-  tag0: ZetkinTag | null,
-  tag1: ZetkinTag | null
+  tag0: ZetkinAppliedTag | null,
+  tag1: ZetkinAppliedTag | null
 ): number {
   //only compare titles if they are not null
   if (tag0 && tag0.title && tag1 && tag1.title) {

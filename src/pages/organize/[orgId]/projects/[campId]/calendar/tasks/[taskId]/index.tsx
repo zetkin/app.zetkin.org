@@ -69,10 +69,10 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({
         <title>{task?.title}</title>
       </Head>
       <Grid container justifyContent="space-between" spacing={4}>
-        <Grid item lg={6} md={6} sm={12}>
+        <Grid size={{ lg: 6, md: 6, xs: 12 }}>
           <TaskDetailsSection task={task} />
         </Grid>
-        <Grid item lg={4} md={6} sm={12}>
+        <Grid size={{ lg: 4, md: 6, xs: 12 }}>
           <TaskPreviewSection task={task} />
         </Grid>
       </Grid>

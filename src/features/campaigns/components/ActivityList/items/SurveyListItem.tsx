@@ -35,7 +35,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
     }
   }
 
-  let color = STATUS_COLORS.GRAY;
+  let color = STATUS_COLORS.GREY;
   if (state === SurveyState.PUBLISHED) {
     color = STATUS_COLORS.GREEN;
   } else if (state === SurveyState.SCHEDULED) {
