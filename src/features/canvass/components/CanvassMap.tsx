@@ -339,11 +339,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
                 lng: location.position.lng,
               }}
             >
-              <MarkerIcon
-                percentage={percentage}
-                selected={selected}
-                uniqueKey={key}
-              />
+              <MarkerIcon percentage={percentage} selected={selected} />
             </DivIconMarker>
           );
         })}

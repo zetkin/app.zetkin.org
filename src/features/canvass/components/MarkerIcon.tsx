@@ -7,16 +7,10 @@ import { VisitStats } from '../utils/getVisitPercentage';
 interface MarkerIconProps {
   percentage?: VisitStats;
   selected: boolean;
-  uniqueKey?: string;
 }
 
-const MarkerIcon: FC<MarkerIconProps> = ({
-  uniqueKey,
-  percentage,
-  selected,
-}) => {
+const MarkerIcon: FC<MarkerIconProps> = ({ percentage, selected }) => {
   const theme = useTheme();
-  const totalVisitsKey = uniqueKey + '_totalVisits';
 
   return (
     <svg
@@ -29,38 +23,38 @@ const MarkerIcon: FC<MarkerIconProps> = ({
     >
       <path
         d="M10.5 0C4.695 0 0 4.695 0 10.5C0 18.375 10.5 30 10.5 30C10.5 30 21 18.375 21 10.5C21 4.695 16.305 0 10.5 0Z"
-        fill={selected ? '#ED1C55' : 'white'}
+        fill={selected ? theme.palette.primary.main : 'white'}
       />
-
-      <clipPath id={totalVisitsKey}>
-        <rect
-          height="30"
-          width="21"
-          x="0"
-          y={percentage ? `${30 - (percentage.totalVisits / 100) * 30}` : '0'}
-        />
+      <clipPath id="pinInterior">
+        <path d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z" />
       </clipPath>
-      <path
-        clipPath={`url(#${totalVisitsKey})`}
-        d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z"
+      <rect
+        clipPath="url(#pinInterior)"
+        fill="white"
+        height="30"
+        width="21"
+        x="0"
+        y="0"
+      />
+      <rect
+        clipPath="url(#pinInterior)"
         fill={lighten(theme.palette.primary.main, 0.7)}
+        height="30"
+        width="21"
+        x="0"
+        y={percentage ? `${30 - (percentage.totalVisits / 100) * 30}` : '0'}
       />
-      <clipPath id={uniqueKey}>
-        <rect
-          height="30"
-          width="21"
-          x="0"
-          y={
-            percentage
-              ? `${30 - (percentage.totalSuccessfulVisits / 100) * 30}`
-              : '0'
-          }
-        />
-      </clipPath>
-      <path
-        clipPath={`url(#${uniqueKey})`}
-        d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z"
+      <rect
+        clipPath="url(#pinInterior)"
         fill={theme.palette.primary.main}
+        height="30"
+        width="21"
+        x="0"
+        y={
+          percentage
+            ? `${30 - (percentage.totalSuccessfulVisits / 100) * 30}`
+            : '0'
+        }
       />
     </svg>
   );
