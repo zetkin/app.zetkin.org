@@ -31,7 +31,10 @@ export default function useCallAssignmentStats(
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {
       const data = await apiClient.get<CallAssignmentStats & { id: number }>(
-        `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`
+        `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`,
+        {
+          abortOnNavigate: true,
+        }
       );
       return { ...data, id: assignmentId };
     },

@@ -39,7 +39,10 @@ export default function useEmailStats(
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {
       const data = await apiClient.get<ZetkinEmailStats & { id: number }>(
-        `/api/orgs/${orgId}/emails/${emailId}/stats`
+        `/api/orgs/${orgId}/emails/${emailId}/stats`,
+        {
+          abortOnNavigate: true,
+        }
       );
       return { ...data, id: emailId };
     },

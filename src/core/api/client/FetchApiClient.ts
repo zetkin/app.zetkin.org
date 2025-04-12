@@ -1,5 +1,5 @@
 import { ApiFetch } from 'utils/apiFetch';
-import IApiClient from './IApiClient';
+import IApiClient, { IApiClientFetchOptions } from './IApiClient';
 import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 import { ApiClientError } from '../errors';
 
@@ -10,22 +10,40 @@ function assertOk(res: Response) {
 }
 
 export default class FetchApiClient implements IApiClient {
+  private _abortController = new AbortController();
   private _fetch: ApiFetch;
+
+  private addAbortSignal(
+    options: IApiClientFetchOptions | undefined
+  ): AbortSignal | null {
+    return options?.abortOnNavigate ? this._abortController.signal : null;
+  }
+
+  cancelRequests(): void {
+    this._abortController.abort();
+    this._abortController = new AbortController();
+  }
 
   constructor(fetch: ApiFetch) {
     this._fetch = fetch;
   }
 
-  async delete(path: string): Promise<void> {
+  async delete(path: string, options?: IApiClientFetchOptions): Promise<void> {
     const res = await this._fetch(path, {
       method: 'DELETE',
+      signal: this.addAbortSignal(options),
     });
 
     assertOk(res);
   }
 
-  async get<DataType>(path: string): Promise<DataType> {
-    const res = await this._fetch(path);
+  async get<DataType>(
+    path: string,
+    options?: IApiClientFetchOptions
+  ): Promise<DataType> {
+    const res = await this._fetch(path, {
+      signal: this.addAbortSignal(options),
+    });
     const body = await res.json();
 
     assertOk(res);
@@ -35,7 +53,8 @@ export default class FetchApiClient implements IApiClient {
 
   async patch<DataType, InputType = Partial<DataType>>(
     path: string,
-    data: InputType
+    data: InputType,
+    options?: IApiClientFetchOptions
   ): Promise<DataType> {
     const res = await this._fetch(path, {
       body: JSON.stringify(data),
@@ -43,6 +62,7 @@ export default class FetchApiClient implements IApiClient {
         'Content-Type': 'application/json',
       },
       method: 'PATCH',
+      signal: this.addAbortSignal(options),
     });
 
     assertOk(res);
@@ -53,7 +73,8 @@ export default class FetchApiClient implements IApiClient {
 
   async post<DataType, InputType = DataType>(
     path: string,
-    data: Partial<InputType>
+    data: Partial<InputType>,
+    options?: IApiClientFetchOptions
   ): Promise<DataType> {
     const res = await this._fetch(path, {
       body: JSON.stringify(data),
@@ -61,6 +82,7 @@ export default class FetchApiClient implements IApiClient {
         'Content-Type': 'application/json',
       },
       method: 'POST',
+      signal: this.addAbortSignal(options),
     });
 
     assertOk(res);
@@ -71,20 +93,22 @@ export default class FetchApiClient implements IApiClient {
 
   async put<DataType = void>(
     path: string,
-    data?: Partial<DataType> | undefined
+    data?: Partial<DataType> | undefined,
+    options?: IApiClientFetchOptions
   ): Promise<DataType> {
-    const options: RequestInit = {
+    const reqOptions: RequestInit = {
       method: 'PUT',
+      signal: this.addAbortSignal(options),
     };
 
     if (data) {
-      options.body = JSON.stringify(data);
-      options.headers = {
+      reqOptions.body = JSON.stringify(data);
+      reqOptions.headers = {
         'Content-Type': 'application/json',
       };
     }
 
-    const res = await this._fetch(path, options);
+    const res = await this._fetch(path, reqOptions);
 
     assertOk(res);
 
@@ -99,7 +123,8 @@ export default class FetchApiClient implements IApiClient {
 
   async rpc<ParamsType, ResultType>(
     def: RPCDef<ParamsType, ResultType>,
-    params: ParamsType
+    params: ParamsType,
+    options?: IApiClientFetchOptions
   ): Promise<ResultType> {
     const reqBody: RPCRequestBody<ParamsType> = {
       func: def.name,
@@ -112,6 +137,7 @@ export default class FetchApiClient implements IApiClient {
         'Content-Type': 'application/json',
       },
       method: 'POST',
+      signal: this.addAbortSignal(options),
     });
 
     const body = (await res.json()) as RPCResponseBody<ResultType>;

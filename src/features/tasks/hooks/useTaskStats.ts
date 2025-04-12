@@ -21,7 +21,8 @@ export default function useTaskStats(
   const taskStatsFuture = loadItemIfNecessary(item, dispatch, {
     actionOnLoad: () => statsLoad(taskId!),
     actionOnSuccess: (data) => statsLoaded([taskId!, data]),
-    loader: () => apiClient.rpc(getStats, { orgId, taskId }),
+    loader: () =>
+      apiClient.rpc(getStats, { orgId, taskId }, { abortOnNavigate: true }),
   });
 
   return {

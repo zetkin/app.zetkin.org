@@ -17,6 +17,11 @@ export default function useSurveyStats(
   return loadItemIfNecessary(statsItem, dispatch, {
     actionOnLoad: () => statsLoad(surveyId),
     actionOnSuccess: (stats) => statsLoaded([surveyId, stats]),
-    loader: () => apiClient.rpc(getSurveyStats, { orgId, surveyId }),
+    loader: () =>
+      apiClient.rpc(
+        getSurveyStats,
+        { orgId, surveyId },
+        { abortOnNavigate: true }
+      ),
   });
 }
