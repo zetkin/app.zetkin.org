@@ -23,10 +23,10 @@ import { usePersonSelect } from './ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
 import messageIds from './l10n/messageIds';
-import ZUICreatePerson from 'zui/ZUICreatePerson';
 
 const ZUIPersonGridEditCell: FC<{
   cell?: (Partial<Omit<ZetkinPerson, 'id'>> & { id: number | null }) | null;
+  onCreate: () => void;
   onUpdate: (person: ZetkinPerson | null) => void;
   removePersonLabel: string;
   restrictedMode?: boolean;
@@ -34,6 +34,7 @@ const ZUIPersonGridEditCell: FC<{
   suggestedPeopleLabel: string;
 }> = ({
   cell,
+  onCreate,
   onUpdate,
   removePersonLabel,
   restrictedMode: isRestrictedMode = false,
@@ -46,7 +47,6 @@ const ZUIPersonGridEditCell: FC<{
   const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searching, setSearching] = useState(false);
-  const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
   const orgId = parseInt(query.orgId as string);
 
@@ -311,9 +311,7 @@ const ZUIPersonGridEditCell: FC<{
                           searchResults.length === 0 && (
                             <Button
                               color="primary"
-                              onClick={() => {
-                                setCreatePersonOpen(true);
-                              }}
+                              onClick={onCreate}
                               startIcon={<PersonAdd />}
                               sx={{
                                 justifyContent: 'flex-start',
@@ -333,13 +331,6 @@ const ZUIPersonGridEditCell: FC<{
           </Paper>
         </Popper>
       ) : null}
-
-      <ZUICreatePerson
-        onClose={() => setCreatePersonOpen(false)}
-        open={createPersonOpen}
-        submitLabel={messages.createPerson.submitLabel.default()}
-        title={messages.createPerson.defaultitle()}
-      />
     </Box>
   );
 };
