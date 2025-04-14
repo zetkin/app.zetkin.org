@@ -64,7 +64,10 @@ const OrganizationsSlice = createSlice({
         };
 
         state.userMembershipList.items.push(
-          remoteItem(membership.organization.id, { data: membershipWithId })
+          remoteItem(membership.organization.id, {
+            data: membershipWithId,
+            loaded: new Date().toISOString(),
+          })
         );
       }
     },
