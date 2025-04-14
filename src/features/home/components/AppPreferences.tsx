@@ -17,11 +17,11 @@ import { Msg, useMessages } from 'core/i18n';
 
 export type ZetkinLanguage = 'en' | 'sv' | 'da' | 'nn' | 'de' | null;
 
-type SettingListProps = {
+type Props = {
   user: ZetkinUser;
 };
 
-const AppPreferences: FC<SettingListProps> = ({ user }) => {
+const AppPreferences: FC<Props> = ({ user }) => {
   const messages = useMessages(messageIds);
   const languageOptions = {
     da: 'Dansk',
