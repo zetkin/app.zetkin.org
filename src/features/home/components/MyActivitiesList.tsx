@@ -2,12 +2,7 @@
 
 import { FC, useState } from 'react';
 import { Box, Button, Fade, Typography } from '@mui/material';
-import {
-  GroupWorkOutlined,
-  Hotel,
-  MapsHomeWork,
-  PhoneInTalk,
-} from '@mui/icons-material';
+import { GroupWorkOutlined, Hotel } from '@mui/icons-material';
 
 import useMyActivities from '../hooks/useMyActivities';
 import MyActivityListItem from './MyActivityListItem';
@@ -84,19 +79,24 @@ const MyActivitiesList: FC = () => {
           elem = (
             <MyActivityListItem
               actions={[
-                <Button key="mainAction" size="small" variant="outlined">
+                <Button
+                  key="mainAction"
+                  href={href}
+                  size="small"
+                  variant="outlined"
+                >
                   <Msg id={messageIds.activityList.actions.call} />
                 </Button>,
               ]}
-              href={href}
-              Icon={PhoneInTalk}
               info={[
                 {
                   Icon: GroupWorkOutlined,
-                  labels: [
-                    activity.data.campaign?.title,
-                    activity.data.organization.title,
-                  ],
+                  labels: activity.data.campaign
+                    ? [
+                        activity.data.campaign.title,
+                        activity.data.organization.title,
+                      ]
+                    : [activity.data.organization.title],
                 },
               ]}
               title={
@@ -109,12 +109,15 @@ const MyActivitiesList: FC = () => {
           elem = (
             <MyActivityListItem
               actions={[
-                <Button key="mainAction" size="small" variant="outlined">
+                <Button
+                  key="mainAction"
+                  href={href}
+                  size="small"
+                  variant="outlined"
+                >
                   <Msg id={messageIds.activityList.actions.areaAssignment} />
                 </Button>,
               ]}
-              href={href}
-              Icon={MapsHomeWork}
               info={[]}
               title={
                 activity.data.title || messages.defaultTitles.areaAssignment()
@@ -123,7 +126,7 @@ const MyActivitiesList: FC = () => {
           );
         } else if (activity.kind == 'event') {
           href = `/o/${activity.data.organization.id}/events/${activity.data.id}`;
-          elem = <EventListItem event={activity.data} showIcon />;
+          elem = <EventListItem event={activity.data} />;
         }
 
         return (

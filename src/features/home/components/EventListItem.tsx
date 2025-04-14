@@ -1,7 +1,7 @@
+import { useIntl } from 'react-intl';
 import { FC, MouseEvent, ReactNode } from 'react';
 import { Box, Button, Fade, Typography } from '@mui/material';
 import {
-  Event,
   GroupWorkOutlined,
   LocationOnOutlined,
   WatchLaterOutlined,
@@ -12,20 +12,16 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import useEventActions from '../hooks/useEventActions';
-import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
+import { timeSpanToString } from 'zui/utils/timeSpanString';
 
 type Props = {
   event: ZetkinEventWithStatus;
   onClickSignUp?: (ev: MouseEvent) => void;
-  showIcon?: boolean;
 };
 
-const EventListItem: FC<Props> = ({
-  event,
-  onClickSignUp,
-  showIcon = false,
-}) => {
+const EventListItem: FC<Props> = ({ event, onClickSignUp }) => {
+  const intl = useIntl();
   const messages = useMessages(messageIds);
   const { requiresConnect, signUp, undoSignup } = useEventActions(
     event.organization.id,
@@ -115,22 +111,22 @@ const EventListItem: FC<Props> = ({
   return (
     <MyActivityListItem
       actions={actions}
-      Icon={showIcon ? Event : null}
       image={event.cover_file?.url}
       info={[
         {
           Icon: GroupWorkOutlined,
-          labels: [event.campaign?.title, event.organization.title],
+          labels: [event.campaign?.title, event.organization.title].filter(
+            (label) => !!label
+          ) as string[],
         },
         {
           Icon: WatchLaterOutlined,
           labels: [
-            <Typography key={`event-time-${event.id}`} variant="body2">
-              <ZUITimeSpan
-                end={new Date(removeOffset(event.end_time))}
-                start={new Date(removeOffset(event.start_time))}
-              />
-            </Typography>,
+            timeSpanToString(
+              new Date(removeOffset(event.start_time)),
+              new Date(removeOffset(event.end_time)),
+              intl
+            ),
           ],
         },
         {

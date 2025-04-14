@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  Box,
-  Button,
-  Link,
-  Tab,
-  Tabs,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { FC, ReactNode, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
@@ -16,13 +8,16 @@ import { NorthWest } from '@mui/icons-material';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import ZUIAvatar from 'zui/ZUIAvatar';
 import useUser from 'core/hooks/useUser';
 import ZUILogo from 'zui/ZUILogo';
 import { useEnv } from 'core/hooks';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUITabbedNavBar from 'zui/components/ZUITabbedNavBar';
+import ZUIOldAvatar from 'zui/ZUIAvatar';
+import ZUIAvatar from 'zui/components/ZUIAvatar';
+import ZUIText from 'zui/components/ZUIText';
 
 type Props = {
   children: ReactNode;
@@ -33,13 +28,8 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
 
-  const subOrgs = usePublicSubOrgs(org.id);
-
   const path = usePathname();
   const lastSegment = path?.split('/')[3] ?? 'home';
-  const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
-
-  const isMobile = useMediaQuery('(max-width: 640px)');
 
   const user = useUser();
 
@@ -52,7 +42,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
     >
       <Box
         sx={(theme) => ({
-          bgcolor: theme.palette.grey[300],
+          bgcolor: theme.palette.grey[100],
           display: 'flex',
           flexDirection: 'column',
         })}
@@ -60,18 +50,22 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
         <Box sx={{ mb: 6, minHeight: 40, mt: 2, mx: 2, opacity: 0.7 }}>
           {org.parent && (
             <NextLink href={`/o/${org.parent.id}`} passHref>
-              <Button startIcon={<NorthWest />}>{org.parent.title}</Button>
+              <ZUIButton label={org.parent.title} startIcon={NorthWest} />
             </NextLink>
           )}
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
           <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <ZUIAvatar size="sm" url={`/api/orgs/${org.id}/avatar`} />
-            <Typography>{org.title}</Typography>
+            <ZUIOldAvatar size="md" url={`/api/orgs/${org.id}/avatar`} />
+            <ZUIText variant="headingLg">{org.title}</ZUIText>
           </Box>
           {user && (
             <NextLink href="/my">
-              <ZUIAvatar size="sm" url={`/api/users/${user.id}/avatar`} />
+              <ZUIAvatar
+                firstName={user.first_name}
+                id={user.id}
+                lastName={user.last_name}
+              />
             </NextLink>
           )}
         </Box>
@@ -82,33 +76,21 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             zIndex: 1,
           }}
         >
-          <Tabs
-            centered={isMobile}
-            sx={{
-              '& .MuiTabs-indicator > span': {
-                backgroundColor: '#252525',
+          <ZUITabbedNavBar
+            items={[
+              {
+                href: `/o/${org.id}`,
+                label: messages.home.tabs.calendar(),
+                value: 'home',
               },
-            }}
-            value={lastSegment}
-            variant={isMobile ? 'fullWidth' : 'standard'}
-          >
-            <Tab
-              component={NextLink}
-              href={`/o/${org.id}`}
-              label={messages.home.tabs.calendar()}
-              sx={{ textTransform: 'none' }}
-              value="home"
-            />
-            {showSuborgsTab && (
-              <Tab
-                component={NextLink}
-                href={`/o/${org.id}/suborgs`}
-                label={messages.home.tabs.suborgs()}
-                sx={{ textTransform: 'none' }}
-                value="suborgs"
-              />
-            )}
-          </Tabs>
+              {
+                href: `/o/${org.id}/suborgs`,
+                label: messages.home.tabs.suborgs(),
+                value: 'suborgs',
+              },
+            ]}
+            selectedTab={lastSegment}
+          />
         </Box>
       </Box>
       <Suspense

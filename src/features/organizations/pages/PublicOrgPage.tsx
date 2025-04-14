@@ -17,6 +17,7 @@ import messageIds from '../l10n/messageIds';
 import ZUIDialog from 'zui/ZUIDialog';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import NoEventsBlurb from '../components/NoEventsBlurb';
+import ZUIText from 'zui/components/ZUIText';
 
 type Props = {
   orgId: number;
@@ -79,11 +80,11 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       {dates.map((date, index) => (
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
-            <div>
-              <Typography my={1} variant="h5">
+            <Box sx={{ mb: 2, mt: 3 }}>
+              <ZUIText variant="headingMd">
                 <ZUIDate datetime={date} />
-              </Typography>
-            </div>
+              </ZUIText>
+            </Box>
           </Fade>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <Box display="flex" flexDirection="column" gap={1}>
