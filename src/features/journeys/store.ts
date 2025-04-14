@@ -84,8 +84,8 @@ const journeysSlice = createSlice({
     journeyInstanceDeleted: (state, action: PayloadAction<number>) => {
       const id = action.payload;
 
-      state.journeyInstanceList.items = state.journeyInstanceList.items.filter(
-        (item) => item.id !== id
+      state.journeyInstanceList.items = state.journeyInstanceList.items.map(
+        (item) => item.id == id ? { ...item, deleted: true } : item
       );
 
       for (const journeyId in state.journeyInstancesByJourneyId) {
