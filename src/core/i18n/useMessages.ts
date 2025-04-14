@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useIntl } from 'react-intl';
+import { IntlShape, useIntl } from 'react-intl';
 
 import { Message, MessageMap, MessageValue } from './messages';
 
@@ -20,34 +20,35 @@ export default function useMessages<MapType extends MessageMap>(
 ): UseMessagesMap<MapType> {
   const intl = useIntl();
 
-  function injectIntl<MapType extends MessageMap>(
-    map: MapType
-  ): UseMessagesMap<MapType> {
-    const output: Record<
-      string,
-      HookedMessageFunc<Message<any>> | UseMessagesMap<any>
-    > = {};
+  return injectIntl(messages, intl);
+}
 
-    Object.entries(map).forEach(([key, val]) => {
-      if (isMessage(val)) {
-        output[key] = ((values?: Record<string, MessageValue>) => {
-          return intl.formatMessage(
-            {
-              defaultMessage: val._defaultMessage,
-              id: val._id,
-            },
-            values
-          );
-        }) as HookedMessageFunc<typeof val>;
-      } else {
-        output[key] = injectIntl(val) as UseMessagesMap<typeof val>;
-      }
-    });
+export function injectIntl<MapType extends MessageMap>(
+  map: MapType,
+  intl: IntlShape
+): UseMessagesMap<MapType> {
+  const output: Record<
+    string,
+    HookedMessageFunc<Message<any>> | UseMessagesMap<any>
+  > = {};
 
-    return output as UseMessagesMap<MapType>;
-  }
+  Object.entries(map).forEach(([key, val]) => {
+    if (isMessage(val)) {
+      output[key] = ((values?: Record<string, MessageValue>) => {
+        return intl.formatMessage(
+          {
+            defaultMessage: val._defaultMessage,
+            id: val._id,
+          },
+          values
+        );
+      }) as HookedMessageFunc<typeof val>;
+    } else {
+      output[key] = injectIntl(val, intl) as UseMessagesMap<typeof val>;
+    }
+  });
 
-  return injectIntl(messages);
+  return output as UseMessagesMap<MapType>;
 }
 
 export type HookedMessageFunc<MapEntry extends Message<any>> = (
