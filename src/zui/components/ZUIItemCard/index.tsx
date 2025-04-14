@@ -52,60 +52,62 @@ const ZUIItemCard: FC<ZUIItemCardProps> = ({
   image,
   subtitle,
   title,
-}) => (
-  <Box
-    sx={(theme) => ({
-      border: `0.063rem solid ${theme.palette.dividers.main}`,
-      borderRadius: '0.25rem',
-    })}
-  >
-    {image && <Box sx={{ height: '9.375rem' }}>{image}</Box>}
+}) => {
+  return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.25rem',
-        padding: '1.25rem',
-      }}
+      sx={(theme) => ({
+        border: `0.063rem solid ${theme.palette.dividers.main}`,
+        borderRadius: '0.25rem',
+      })}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.75rem' }}>
-          {avatar && (
-            <ZUIAvatar
-              firstName={avatar.firstName}
-              id={avatar.id}
-              lastName={avatar.lastName}
-              size="large"
-            />
-          )}
-          <Box
-            sx={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}
-          >
-            <Typography variant="bodyMdSemiBold">{title}</Typography>
-            {subtitle && (
-              <Typography variant="bodyMdRegular">{subtitle}</Typography>
+      {image && <Box sx={{ height: '9.375rem' }}>{image}</Box>}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.25rem',
+          padding: '1.25rem',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.75rem' }}>
+            {avatar && (
+              <ZUIAvatar
+                firstName={avatar.firstName}
+                id={avatar.id}
+                lastName={avatar.lastName}
+                size="large"
+              />
             )}
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}
+            >
+              <Typography variant="bodyMdSemiBold">{title}</Typography>
+              {subtitle && (
+                <Typography variant="bodyMdRegular">{subtitle}</Typography>
+              )}
+            </Box>
           </Box>
+          {description &&
+            (typeof description == 'string' ? (
+              <Typography variant="bodySmRegular">{description}</Typography>
+            ) : (
+              description
+            ))}
         </Box>
-        {description &&
-          (typeof description == 'string' ? (
-            <Typography variant="bodySmRegular">{description}</Typography>
-          ) : (
-            description
-          ))}
+        {button && (
+          <Box sx={{ display: 'flex' }}>
+            <ZUIButton
+              label={button.label}
+              onClick={button.onClick}
+              size="large"
+              variant="secondary"
+            />
+          </Box>
+        )}
       </Box>
-      {button && (
-        <Box sx={{ display: 'flex' }}>
-          <ZUIButton
-            label={button.label}
-            onClick={button.onClick}
-            size="large"
-            variant="secondary"
-          />
-        </Box>
-      )}
     </Box>
-  </Box>
-);
+  );
+};
 
 export default ZUIItemCard;
