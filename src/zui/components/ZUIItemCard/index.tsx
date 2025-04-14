@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import ZUIAvatar, { ZUIAvatarProps } from '../ZUIAvatar';
@@ -25,7 +25,7 @@ type ZUIItemCardProps = {
   /**
    * The description of the card.
    */
-  description?: string;
+  description?: (string | ReactNode)[];
 
   /**
    * The image to display at the top of the card.
@@ -87,9 +87,12 @@ const ZUIItemCard: FC<ZUIItemCardProps> = ({
             )}
           </Box>
         </Box>
-        {description && (
-          <Typography variant="bodySmRegular">{description}</Typography>
-        )}
+        {description &&
+          (typeof description == 'string' ? (
+            <Typography variant="bodySmRegular">{description}</Typography>
+          ) : (
+            description
+          ))}
       </Box>
       {button && (
         <Box sx={{ display: 'flex' }}>

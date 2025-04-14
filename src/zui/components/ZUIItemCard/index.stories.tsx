@@ -14,8 +14,9 @@ type Story = StoryObj<typeof ZUIItemCard>;
 export const Basic: Story = {
   args: {
     button: { label: 'See the full program', onClick: () => null },
-    description:
+    description: [
       '20 events across 5 venues with presenters from Denmark, Bulgaria, Greece and France.',
+    ],
     subtitle: 'March 5 - March 9',
     title: 'Feminist action week',
   },
@@ -31,8 +32,9 @@ export const Basic: Story = {
 export const Avatar: Story = {
   args: {
     avatar: { firstName: 'Angela', id: 1, lastName: 'Davis' },
-    description:
+    description: [
       'Angela has been a caller in 5 call assignments, attended 14 events and participated in 3 area assignments.',
+    ],
     subtitle: 'Activist',
     title: 'Angela Davis',
   },
