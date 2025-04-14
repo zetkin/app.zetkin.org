@@ -19,6 +19,12 @@ export default makeMessages('feat.organizations', {
     footer: {
       privacyPolicy: m('Privacy policy'),
     },
+    header: {
+      connect: m('Connect'),
+      follow: m('Follow'),
+      login: m('Login & connect'),
+      unfollow: m('Unfollow'),
+    },
     tabs: {
       calendar: m('Calendar'),
       suborgs: m('Explore'),
