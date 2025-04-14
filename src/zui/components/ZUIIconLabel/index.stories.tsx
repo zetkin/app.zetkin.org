@@ -32,6 +32,13 @@ export const Large: Story = {
   },
 };
 
+export const MultipleLabels: Story = {
+  args: {
+    icon: Event,
+    label: ['April 15th, 13.00', 'April 15th, 17.00'],
+  },
+};
+
 export const Secondary: Story = {
   args: {
     ...Medium.args,
