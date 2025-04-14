@@ -1,23 +1,11 @@
-import { FC, ReactNode, Suspense } from 'react';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Fade,
-  Typography,
-} from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import { FC } from 'react';
+import { Box, Button, Typography } from '@mui/material';
 
-import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { ZetkinCallTarget } from '../types';
 import useEventCallActions from '../hooks/useEventCallActions';
-import MyActivityListItem from 'features/home/components/MyActivityListItem';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import useAllEvents from 'features/events/hooks/useAllEvents';
 
 interface TargetEventProps {
   event: ZetkinEvent;
@@ -31,95 +19,41 @@ const TargetEvent: FC<TargetEventProps> = ({ event, target }) => {
     target.id
   );
 
-  const events = useAllEvents();
-  const eventWithStatus = events.find((callEvent) => callEvent.id == event.id);
+  const responses = target.action_responses;
+  const futureEvents = target.future_actions;
 
-  if (!eventWithStatus) {
-    return null;
-  }
-
-  const actions: ReactNode[] = [];
-  if (eventWithStatus.status == 'booked') {
-    actions.push(
-      <Typography key="booked" variant="body2">
-        Booked
-      </Typography>
-    );
-  } else if (eventWithStatus.status == 'signedUp') {
-    actions.push(
-      <Button
-        key="action"
-        onClick={() => undoSignup()}
-        size="small"
-        variant="outlined"
-      >
-        Undo-signup
-      </Button>,
-      <Fade appear in style={{ transitionDelay: '0.3s' }}>
-        <Box
-          key="signedUp"
-          sx={{
-            bgcolor: '#C1EEC1',
-            borderRadius: 4,
-            color: '#080',
-            px: 1,
-            py: 0.3,
-          }}
-        >
-          <Typography variant="body2">Signed-up</Typography>
-        </Box>
-      </Fade>
-    );
-  } else {
-    actions.push(
-      <Button
-        key="action"
-        onClick={() => signUp()}
-        size="small"
-        variant="contained"
-      >
-        Signup
-      </Button>
-    );
-
-    if (event.num_participants_available < event.num_participants_required) {
-      actions.push(
-        <Box
-          key="needed"
-          sx={{
-            bgcolor: '#FFE5C1',
-            borderRadius: 4,
-            color: '#f40',
-            px: 1,
-            py: 0.3,
-          }}
-        >
-          <Typography variant="body2">Needed</Typography>
-        </Box>
-      );
-    }
-  }
   return (
-    <Suspense fallback={<ZUILogoLoadingIndicator />}>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Typography>{event.title}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box mb={2}>
-            <ZUITimeSpan
-              end={new Date(removeOffset(event.end_time))}
-              start={new Date(removeOffset(event.start_time))}
-            />
-            <MyActivityListItem
-              actions={actions}
-              info={[]}
-              title={event.title || ''}
-            />
+    <Box m={2}>
+      <Typography variant="h6">{event.title || 'Untitled event'}</Typography>
+      <ZUITimeSpan
+        end={new Date(removeOffset(event.end_time))}
+        start={new Date(removeOffset(event.start_time))}
+      />
+      <Box>
+        {futureEvents.some((futureEvent) => futureEvent.id === event.id) && (
+          <Typography key="booked" variant="body2">
+            {target.first_name} is already booked
+          </Typography>
+        )}
+        {responses.some((response) => response.action_id == event.id) && (
+          <Box>
+            <Typography>{target.first_name} is signed up</Typography>
+            <Button onClick={() => undoSignup()}>Undo Sign-up</Button>
           </Box>
-        </AccordionDetails>
-      </Accordion>
-    </Suspense>
+        )}
+        {!responses.some((response) => response.action_id === event.id) &&
+          !futureEvents.some((futureEvent) => futureEvent.id === event.id) && (
+            <Button
+              key="action"
+              onClick={() => signUp()}
+              size="small"
+              variant="contained"
+            >
+              Sign Up
+            </Button>
+          )}
+      </Box>
+    </Box>
   );
 };
 

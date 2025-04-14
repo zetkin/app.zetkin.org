@@ -1,4 +1,9 @@
-import { ZetkinEvent, ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import {
+  ZetkinEvent,
+  ZetkinEventResponse,
+  ZetkinPerson,
+  ZetkinTag,
+} from 'utils/types/zetkin';
 
 export type ZetkinCall = {
   allocation_time: string;
@@ -32,9 +37,9 @@ export type ZetkinCallTarget = Pick<
   | 'phone'
   | 'zip_code'
 > & {
-  action_responses: [];
+  action_responses: CombinedEventResponse[];
   call_log: [];
-  future_actions: [];
+  future_actions: ZetkinEvent[];
   name: string;
   past_actions: {
     last_action: ZetkinEvent;
@@ -50,3 +55,7 @@ export type ZetkinCallPatchBody = {
   organizer_action_needed: boolean;
   state: number;
 };
+
+export interface CombinedEventResponse extends ZetkinEventResponse {
+  action: ZetkinEvent;
+}

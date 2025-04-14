@@ -6,15 +6,20 @@ import { FC, Suspense } from 'react';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useActiveEvents from '../hooks/useActiveEvents';
-import { ZetkinCallAssignment } from 'utils/types/zetkin';
+import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import CallLog from '../components/CallLog';
 import SurveyAccordion from '../components/SurveyAccordion';
-import TargetEvent from '../components/TargetEvent';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ReportCall from '../components/ReportCall';
 import useCurrentCall from '../hooks/useCurrentCall';
+import ActiveProjects from '../components/ActiveProjects';
+
+export type EventsByProject = {
+  campaign: { id: number; title: string };
+  events: ZetkinEvent[];
+};
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -24,6 +29,32 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useCurrentCall();
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
   const events = useActiveEvents(assignment.organization.id) || [];
+
+  const groupEventsByProject = (events: ZetkinEvent[]): EventsByProject[] => {
+    const map = new Map<
+      number,
+      { id: number; title: string } & { events: ZetkinEvent[] }
+    >();
+
+    for (const event of events) {
+      const campaign = event.campaign;
+
+      if (campaign) {
+        if (!map.has(campaign.id)) {
+          map.set(campaign.id, { ...campaign, events: [event] });
+        } else {
+          map.get(campaign.id)!.events.push(event);
+        }
+      }
+    }
+
+    return Array.from(map.values()).map(({ id, title, events }) => ({
+      campaign: { id, title },
+      events,
+    }));
+  };
+
+  const projectsWithEvents = groupEventsByProject(events);
 
   if (!call) {
     return null;
@@ -135,12 +166,12 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
               <Msg id={messageIds.prepare.noActiveEvents} />
             </Typography>
           )}
-          {events.length > 0 &&
-            events.map((event) => {
+          {projectsWithEvents.length > 0 &&
+            projectsWithEvents.map((project) => {
               return (
-                <TargetEvent
-                  key={event.id}
-                  event={event}
+                <ActiveProjects
+                  key={project.campaign.id}
+                  eventsByProject={project}
                   target={call.target}
                 />
               );
