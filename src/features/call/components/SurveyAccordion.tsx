@@ -10,7 +10,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import useCreateSurveySubmission from 'features/surveys/hooks/useCreateSurveySubmission';
+import useSubmitSurveySubmission from 'features/surveys/hooks/useSubmitSurveySubmission';
 import { ZetkinCallTarget } from '../types';
 import {
   ZetkinSurveyExtended,
@@ -29,7 +29,10 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
   survey,
   target,
 }) => {
-  const { addSubmission } = useCreateSurveySubmission(orgId, survey.id);
+  const { submitSurveySubmission } = useSubmitSurveySubmission(
+    orgId,
+    survey.id
+  );
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,7 +73,7 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
         : { response: responseObj.response ?? '' }),
     }));
 
-    addSubmission({
+    submitSurveySubmission({
       responses: mappedResponses,
       signature: target.id,
     });

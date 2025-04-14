@@ -9,13 +9,13 @@ export type ZetkinSurveyCallSubmission = {
   signature: number;
 };
 
-export default function useCreateSurveySubmission(
+export default function useSubmitSurveySubmission(
   orgId: number,
   surveyId: number
 ) {
   const apiClient = useApiClient();
 
-  const addSubmission = (
+  const submitSurveySubmission = (
     formData: ZetkinSurveyCallSubmission
   ): Promise<ZetkinSurveyFormStatus> => {
     return apiClient.post(
@@ -24,5 +24,5 @@ export default function useCreateSurveySubmission(
     );
   };
 
-  return { addSubmission };
+  return { submitSurveySubmission };
 }
