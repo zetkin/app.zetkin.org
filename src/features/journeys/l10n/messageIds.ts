@@ -34,7 +34,7 @@ export default makeMessages('feat.journeys', {
       deletion: {
         delete: m<{ instanceTitle: string }>('Delete "{instanceTitle}"'),
         warning: m<{ instanceTitle: string }>(
-          '"{instanceTitle}" will be deleted.'
+          '"{instanceTitle}" will be deleted. This action cannot be undone.'
         ),
       },
     },
