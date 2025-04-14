@@ -1,38 +1,26 @@
-import { FC, ReactNode } from 'react';
-import { Box, Typography } from '@mui/material';
+import { FC } from 'react';
+import { Box, Stack, Typography } from '@mui/material';
+import Image from 'next/image';
 
 import ZUIAvatar, { ZUIAvatarProps } from '../ZUIAvatar';
-import ZUIButton from '../ZUIButton';
+import { MUIIcon } from '../types';
+import ZUIIcon from '../ZUIIcon';
+import ZUIText from '../ZUIText';
 
-type ZUIItemCardProps = {
+type ItemCardBase = {
   /**
-   * An avatar to be displayed to the left of the card title.
-   */
-  avatar?: Omit<ZUIAvatarProps, 'size' | 'variant'>;
-
-  button?: {
-    /**
-     * The label of the button
-     */
-
-    label: string;
-    /**
-     * The function that runs when pressing the button.
-     */
-    onClick: () => void;
-  };
-
-  /**
-   * The description of the card.
-   */
-  description?: (string | ReactNode)[];
-
-  /**
-   * The image to display at the top of the card.
+   * The content of the card.
    *
-   * This element needs to have its height set to 100%.
+   * Can be either an array of elements and/or strings,
+   * or just a string.
+   *
+   * DO NOT: use this prop to send in a complex component,
+   * for example a Box that contains a ZUIIconLabel and a ZUIText.
+   *
+   * DO: Send in an array that contains, for example,
+   * a ZUIIconLabel and a string.
    */
-  image?: JSX.Element;
+  content?: (JSX.Element | string)[] | string;
 
   /**
    * The subtitle of the card
@@ -45,22 +33,125 @@ type ZUIItemCardProps = {
   title: string;
 };
 
-const ZUIItemCard: FC<ZUIItemCardProps> = ({
-  avatar,
-  button,
-  description,
-  image,
-  subtitle,
-  title,
-}) => {
+type AvatarCard = ItemCardBase & {
+  /**
+   * An avatar to be displayed to the left of the card title.
+   */
+  avatar: Omit<ZUIAvatarProps, 'size' | 'variant'>;
+};
+
+type IconCard = ItemCardBase & {
+  /**
+   * An icon that will be displayed to the left of the card title.
+   */
+  icon: MUIIcon;
+};
+
+type CardWithoutImage = ItemCardBase | AvatarCard | IconCard;
+
+type ImageSrcCard = CardWithoutImage & {
+  /**
+   * The src to an image file.
+   * The image will be rendered at the top of the card.
+   */
+  src: string;
+};
+
+type ImageElementCard = CardWithoutImage & {
+  /**
+   * An element to display as an image at the top of the card.
+   * Use this prop if the card image is, for example, an icon
+   * on a colored background.
+   *
+   * This element needs to have its height set to 100%.
+   *
+   * If you have an image file, use the "src" prop instead.
+   */
+  imageElement?: JSX.Element;
+};
+
+type CardWithImage = ImageSrcCard | ImageElementCard;
+
+type CardWithoutActions = CardWithoutImage | CardWithImage;
+
+type CardWithActions = CardWithoutActions & {
+  /**
+   * An array of elements to be displayed at the bottom of the card.
+   *
+   * DO NOT: use this prop to send in a complex component,
+   * for example a Box that contains a ZUIButton and a ZUIStatusChip.
+   *
+   * DO: Send in an array that contains, for example, a ZUIButton and a ZUIStatusChip.
+   */
+  actions: JSX.Element[];
+};
+
+type ItemCard = CardWithoutActions | CardWithActions;
+
+const isAvatarCard = (itemCard: ItemCard): itemCard is AvatarCard => {
+  return 'avatar' in itemCard;
+};
+
+const isIconCard = (itemCard: ItemCard): itemCard is IconCard => {
+  return 'icon' in itemCard;
+};
+
+const isImageSrcCard = (itemCard: ItemCard): itemCard is ImageSrcCard => {
+  return 'src' in itemCard;
+};
+
+const isImageElementCard = (
+  itemCard: ItemCard
+): itemCard is ImageElementCard => {
+  return 'imageElement' in itemCard;
+};
+
+const isCardWithActions = (itemCard: ItemCard): itemCard is CardWithActions => {
+  return 'actions' in itemCard;
+};
+
+const ZUIItemCard: FC<ItemCard> = (props) => {
+  const { title, subtitle } = props;
+
+  const hasImageElement = isImageElementCard(props);
+  const hasImageSrc = isImageSrcCard(props);
+  const hasAvatar = isAvatarCard(props);
+  const hasIcon = isIconCard(props);
+  const hasActions = isCardWithActions(props);
+
+  const content = props.content;
+  const hasContent = !!content;
+  const hasStringContent = hasContent && typeof content == 'string';
+  const hasArrayContent = hasContent && Array.isArray(content);
+
+  const hasImage = hasImageElement || hasImageSrc;
+
   return (
     <Box
       sx={(theme) => ({
         border: `0.063rem solid ${theme.palette.dividers.main}`,
         borderRadius: '0.25rem',
+        overflow: 'hidden',
       })}
     >
-      {image && <Box sx={{ height: '9.375rem' }}>{image}</Box>}
+      {hasImage && (
+        <Box
+          sx={{
+            height: '9.375rem',
+          }}
+        >
+          {hasImageSrc && (
+            <Image
+              alt={props.title}
+              height={100}
+              src={props.src}
+              style={{ height: '100%', objectFit: 'cover', width: '100%' }}
+              width={100}
+            />
+          )}
+          {hasImageElement && props.imageElement}
+        </Box>
+      )}
       <Box
         sx={{
           display: 'flex',
@@ -71,11 +162,14 @@ const ZUIItemCard: FC<ZUIItemCardProps> = ({
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.75rem' }}>
-            {avatar && (
+            {hasIcon && (
+              <ZUIIcon color="secondary" icon={props.icon} size="large" />
+            )}
+            {hasAvatar && (
               <ZUIAvatar
-                firstName={avatar.firstName}
-                id={avatar.id}
-                lastName={avatar.lastName}
+                firstName={props.avatar.firstName}
+                id={props.avatar.id}
+                lastName={props.avatar.lastName}
                 size="large"
               />
             )}
@@ -88,21 +182,30 @@ const ZUIItemCard: FC<ZUIItemCardProps> = ({
               )}
             </Box>
           </Box>
-          {description &&
-            (typeof description == 'string' ? (
-              <Typography variant="bodySmRegular">{description}</Typography>
-            ) : (
-              description
-            ))}
+          {hasArrayContent && (
+            <Stack spacing="0.5rem">
+              {content.map((c) => {
+                if (typeof c == 'string') {
+                  return (
+                    <ZUIText color="secondary" variant="bodySmRegular">
+                      {c}
+                    </ZUIText>
+                  );
+                } else {
+                  return c;
+                }
+              })}
+            </Stack>
+          )}
+          {hasStringContent && (
+            <ZUIText color="secondary" variant="bodySmRegular">
+              {content}
+            </ZUIText>
+          )}
         </Box>
-        {button && (
-          <Box sx={{ display: 'flex' }}>
-            <ZUIButton
-              label={button.label}
-              onClick={button.onClick}
-              size="large"
-              variant="secondary"
-            />
+        {hasActions && (
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
+            {props.actions}
           </Box>
         )}
       </Box>
