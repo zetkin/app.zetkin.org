@@ -31,6 +31,13 @@ export type ZUIIconLabelProps = {
   label: string | string[];
 
   /**
+   * If true, the text will not overflow and end with an ellipsis.
+   *
+   * Defaults to "false".
+   */
+  noWrap?: boolean;
+
+  /**
    * The size of the icon-label pair.
    *
    * Defaults to "medium."
@@ -42,6 +49,7 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
   color = 'primary',
   icon,
   label,
+  noWrap = false,
   size = 'medium',
 }) => {
   const labels: ReactNode[] = [];
@@ -50,7 +58,7 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
     label.forEach((text, index) => {
       if (index > 0) {
         labels.push(
-          <Typography component="span" sx={{ mx: 1 }}>
+          <Typography key={index} component="span" sx={{ mx: 1 }}>
             ·
           </Typography>
         );
@@ -74,8 +82,9 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
       <ZUIIcon color={color} icon={icon} size={size} />
       <Typography
         color={color == 'danger' ? 'error' : color}
+        noWrap={noWrap}
         sx={{
-          flexShrink: 0,
+          flexShrink: noWrap ? '' : 0,
         }}
         variant={TextVariants[size]}
       >
