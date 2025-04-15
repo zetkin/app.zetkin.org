@@ -204,6 +204,10 @@ export default makeMessages('zui', {
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),
   },
+  signUpChip: {
+    needed: m('You are needed'),
+    signedUp: m('You have signed up'),
+  },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
