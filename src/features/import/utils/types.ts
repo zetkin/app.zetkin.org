@@ -13,6 +13,7 @@ export type Sheet = {
   columns: Column[];
   firstRowIsHeaders: boolean;
   rows: Row[];
+  skipUnknown?: boolean;
   title: string;
 };
 

@@ -120,6 +120,7 @@ export default function prepareImportOperations(
 
     if (extId) {
       preparedOps.push({
+        if_none: sheet.skipUnknown ? 'skip' : undefined,
         key: {
           ext_id: extId,
         },
@@ -128,6 +129,7 @@ export default function prepareImportOperations(
       });
     } else if (zetkinId) {
       preparedOps.push({
+        if_none: sheet.skipUnknown ? 'skip' : undefined,
         key: {
           id: zetkinId,
         },
