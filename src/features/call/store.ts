@@ -100,6 +100,39 @@ const CallSlice = createSlice({
       state.outgoingCalls.loaded = new Date().toISOString();
       state.outgoingCalls.isLoading = false;
     },
+    targetSubmissionAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinEvent]>
+    ) => {
+      const [targetId, event] = action.payload;
+
+      const eventList = state.eventsByTargetId[targetId];
+      const existingItem = eventList.items.find((item) => item.id === event.id);
+
+      if (existingItem && existingItem.data) {
+        existingItem.data = {
+          ...existingItem.data,
+          status: 'signedUp',
+        };
+      }
+    },
+    targetSubmissionDeleted: (
+      state,
+      action: PayloadAction<[number, number]>
+    ) => {
+      const [targetId, eventId] = action.payload;
+
+      const eventList = state.eventsByTargetId[targetId];
+
+      const existingItem = eventList.items.find((item) => item.id === eventId);
+
+      if (existingItem && existingItem.data) {
+        existingItem.data = {
+          ...existingItem.data,
+          status: null,
+        };
+      }
+    },
   },
 });
 
@@ -112,4 +145,6 @@ export const {
   allocateNewCallLoaded,
   outgoingCallsLoad,
   outgoingCallsLoaded,
+  targetSubmissionAdded,
+  targetSubmissionDeleted,
 } = CallSlice.actions;
