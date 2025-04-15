@@ -35,7 +35,14 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         maxWidth: 640,
       }}
     >
-      <Box display="flex" justifyContent="space-between" m={2}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          margin: 2,
+        }}
+      >
         <ZUIText variant="headingLg">{title || messages.title()}</ZUIText>
         {user && (
           <Box sx={{ cursor: 'default' }}>
@@ -43,7 +50,6 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
               firstName={user.first_name}
               id={user.id}
               lastName={user.last_name}
-              size="small"
             />
           </Box>
         )}

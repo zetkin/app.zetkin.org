@@ -55,7 +55,14 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             </NextLink>
           )}
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 2 }}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            mx: 2,
+          }}
+        >
           <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
             <ZUIOldAvatar size="md" url={`/api/orgs/${org.id}/avatar`} />
             <ZUIText variant="headingLg">{org.title}</ZUIText>
