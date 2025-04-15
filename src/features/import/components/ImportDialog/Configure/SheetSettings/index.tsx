@@ -40,7 +40,7 @@ const SheetSettings: FC<SheetSettingsProps> = ({ clearConfiguration }) => {
     firstRowIsHeaders,
     selectedSheetIndex,
     sheets,
-    updateFirstRowIsHeaders,
+    updateSheetSettings,
     updateSelectedSheetIndex,
   } = useSheets();
   const [settingsExpanded, setSettingsExpanded] = useState(true);
@@ -93,7 +93,9 @@ const SheetSettings: FC<SheetSettingsProps> = ({ clearConfiguration }) => {
         <Box alignItems="center" display="flex">
           <Checkbox
             checked={firstRowIsHeaders}
-            onChange={(ev, isChecked) => updateFirstRowIsHeaders(isChecked)}
+            onChange={(ev, isChecked) =>
+              updateSheetSettings({ firstRowIsHeaders: isChecked })
+            }
           />
           <Typography>
             <Msg id={messageIds.configuration.settings.firstRowIsHeaders} />

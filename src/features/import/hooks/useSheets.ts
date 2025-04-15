@@ -1,5 +1,6 @@
-import { setFirstRowIsHeaders, setSelectedSheetIndex } from '../store';
+import { sheetSettingsUpdated, setSelectedSheetIndex } from '../store';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { SheetSettings } from '../utils/types';
 
 export default function useSheets() {
   const dispatch = useAppDispatch();
@@ -13,15 +14,15 @@ export default function useSheets() {
     dispatch(setSelectedSheetIndex(newIndex));
   };
 
-  const updateFirstRowIsHeaders = (firstRowIsHeaders: boolean) => {
-    dispatch(setFirstRowIsHeaders(firstRowIsHeaders));
+  const updateSheetSettings = (settings: Partial<SheetSettings>) => {
+    dispatch(sheetSettingsUpdated(settings));
   };
 
   return {
     firstRowIsHeaders: selectedSheet.firstRowIsHeaders,
     selectedSheetIndex: pendingFile.selectedSheetIndex,
     sheets,
-    updateFirstRowIsHeaders,
     updateSelectedSheetIndex,
+    updateSheetSettings,
   };
 }

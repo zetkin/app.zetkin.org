@@ -16,6 +16,8 @@ export type Sheet = {
   title: string;
 };
 
+export type SheetSettings = Omit<Sheet, 'columns' | 'rows' | 'title'>;
+
 export type Row = {
   data: CellData[];
 };
