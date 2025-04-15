@@ -137,11 +137,11 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           onClick: () => setPostAuthEvent(null),
         }}
         size="small"
-        title="Log in"
+        title={messages.authDialog.label()}
       >
         <Box sx={{ paddingTop: '0.75rem' }}>
           <ZUIText>
-            <Msg id={messageIds.authDialog.label} />
+            <Msg id={messageIds.authDialog.content} />
           </ZUIText>
         </Box>
       </ZUIModal>
