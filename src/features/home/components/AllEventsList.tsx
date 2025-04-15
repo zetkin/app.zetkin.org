@@ -2,14 +2,11 @@ import { FC, useState } from 'react';
 import {
   Avatar,
   Box,
-  Button,
   Fade,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
   Switch,
-  Typography,
 } from '@mui/material';
 import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
 import {
@@ -30,6 +27,8 @@ import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import DrawerModal from './DrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIText from 'zui/components/ZUIText';
 
 const AllEventsList: FC = () => {
   const intl = useIntl();
@@ -267,23 +266,20 @@ const AllEventsList: FC = () => {
           marginTop={3}
           padding={2}
         >
-          <Typography color="secondary">
+          <ZUIText color="secondary">
             <Msg id={messageIds.allEventsList.emptyList.message} />
-          </Typography>
+          </ZUIText>
           <Search color="secondary" fontSize="large" />
           {isFiltered && (
-            <Button
+            <ZUIButton
+              label={messages.allEventsList.emptyList.removeFiltersButton()}
               onClick={() => {
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
                 setDateFilterState(null);
               }}
-              variant="outlined"
-            >
-              <Msg
-                id={messageIds.allEventsList.emptyList.removeFiltersButton}
-              />
-            </Button>
+              variant="secondary"
+            />
           )}
         </Box>
       )}
@@ -291,9 +287,9 @@ const AllEventsList: FC = () => {
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
-              <Typography my={1} variant="h5">
+              <ZUIText my={1} variant="headingMd">
                 <ZUIDate datetime={date} />
-              </Typography>
+              </ZUIText>
             </div>
           </Fade>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
@@ -376,11 +372,11 @@ const AllEventsList: FC = () => {
                 <ListItemAvatar>
                   <Avatar alt="icon" src={`/api/orgs/${org.id}/avatar`} />
                 </ListItemAvatar>
-                <ListItemText>{org.title}</ListItemText>
+                <ZUIText>{org.title}</ZUIText>
               </Box>
               <Switch
                 checked={orgIdsToFilterBy.includes(org.id)}
-                onChange={(ev, checked) => {
+                onChange={(checked) => {
                   if (checked) {
                     setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
                   } else {
