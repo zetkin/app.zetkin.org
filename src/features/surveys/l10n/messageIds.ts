@@ -162,6 +162,8 @@ export default makeMessages('feat.surveys', {
   },
   submissions: {
     anonymous: m('Anonymous'),
+    createPersonSubmit: m('Save and link'),
+    createPersonTitle: m('Create new person'),
     dateColumn: m('Date'),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),

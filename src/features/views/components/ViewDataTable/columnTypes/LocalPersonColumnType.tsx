@@ -102,6 +102,7 @@ const EditCell: FC<{
   return (
     <ZUIPersonGridEditCell
       cell={cell}
+      onCreate={() => null}
       onUpdate={updateCellValue}
       removePersonLabel={messages.cells.localPerson.clearLabel()}
       restrictedMode={isRestrictedMode}

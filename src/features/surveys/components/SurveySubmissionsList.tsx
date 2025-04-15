@@ -20,6 +20,7 @@ import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import ZUICreatePerson from 'zui/ZUICreatePerson';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
@@ -34,6 +35,7 @@ const SurveySubmissionsList = ({
 
   const [dialogPerson, setDialogPerson] = useState<ZetkinPerson | null>(null);
   const [dialogEmail, setDialogEmail] = useState('');
+  const [createPersonOpen, setCreatePersonOpen] = useState(false);
 
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
@@ -216,6 +218,7 @@ const SurveySubmissionsList = ({
     return (
       <ZUIPersonGridEditCell
         cell={row.respondent}
+        onCreate={() => setCreatePersonOpen(true)}
         onUpdate={updateCellValue}
         removePersonLabel={messages.submissions.unlink()}
         suggestedPeople={row.respondent === null ? [] : suggestedPeople} //filter anonymous
@@ -259,6 +262,12 @@ const SurveySubmissionsList = ({
         style={{
           border: 'none',
         }}
+      />
+      <ZUICreatePerson
+        onClose={() => setCreatePersonOpen(false)}
+        open={createPersonOpen}
+        submitLabel={messages.submissions.createPersonSubmit()}
+        title={messages.submissions.createPersonTitle()}
       />
       {dialogPerson && (
         <SurveyLinkDialog
