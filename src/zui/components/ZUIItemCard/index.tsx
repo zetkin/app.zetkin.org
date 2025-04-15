@@ -97,13 +97,13 @@ const isIconCard = (itemCard: ItemCard): itemCard is IconCard => {
 };
 
 const isImageSrcCard = (itemCard: ItemCard): itemCard is ImageSrcCard => {
-  return 'src' in itemCard;
+  return 'src' in itemCard && !!itemCard.src;
 };
 
 const isImageElementCard = (
   itemCard: ItemCard
 ): itemCard is ImageElementCard => {
-  return 'imageElement' in itemCard;
+  return 'imageElement' in itemCard && !!itemCard.imageElement;
 };
 
 const isCardWithActions = (itemCard: ItemCard): itemCard is CardWithActions => {
@@ -188,7 +188,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
               {content.map((c) => {
                 if (typeof c == 'string') {
                   return (
-                    <ZUIText color="secondary" variant="bodySmRegular">
+                    <ZUIText key={c} color="secondary" variant="bodySmRegular">
                       {c}
                     </ZUIText>
                   );
