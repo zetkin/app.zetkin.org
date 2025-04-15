@@ -68,3 +68,11 @@ export const EndIcon: Story = {
     variant: 'primary',
   },
 };
+
+export const Href: Story = {
+  args: {
+    href: '#',
+    label: 'Sign up!',
+    variant: 'secondary',
+  },
+};
