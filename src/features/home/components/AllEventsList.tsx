@@ -18,38 +18,22 @@ import {
   DateRangePickerDay,
 } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
-import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import useAllEvents from 'features/events/hooks/useAllEvents';
 import EventListItem from './EventListItem';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
-import FilterButton from './FilterButton';
 import DrawerModal from './DrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
-
-const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
-  start,
-  end,
-}) => {
-  if (!end) {
-    return <FormattedDate day="numeric" month="short" value={start.toDate()} />;
-  } else {
-    return (
-      <FormattedDateTimeRange
-        day="numeric"
-        from={start.toDate()}
-        month="short"
-        to={end.toDate()}
-      />
-    );
-  }
-};
+import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 
 const AllEventsList: FC = () => {
+  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const allEvents = useAllEvents();
   const nextDelay = useIncrementalDelay();
 
@@ -83,6 +67,20 @@ const AllEventsList: FC = () => {
     } else {
       //dateFilterState is 'thisWeek'
       return [today.startOf('week'), today.endOf('week')];
+    }
+  };
+
+  const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
+    if (!end) {
+      return intl.formatDate(start.toDate(), {
+        day: 'numeric',
+        month: 'short',
+      });
+    } else {
+      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+        day: 'numeric',
+        month: 'short',
+      });
     }
   };
 
@@ -160,7 +158,7 @@ const AllEventsList: FC = () => {
     {
       active: dateFilterState == 'today',
       key: 'today',
-      label: <Msg id={messageIds.allEventsList.filterButtonLabels.today} />,
+      label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
         setCustomDatesToFilterBy([null, null]);
         setDateFilterState('today');
@@ -169,7 +167,7 @@ const AllEventsList: FC = () => {
     {
       active: dateFilterState == 'tomorrow',
       key: 'tomorrow',
-      label: <Msg id={messageIds.allEventsList.filterButtonLabels.tomorrow} />,
+      label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
         setCustomDatesToFilterBy([null, null]);
         setDateFilterState('tomorrow');
@@ -178,7 +176,7 @@ const AllEventsList: FC = () => {
     {
       active: dateFilterState == 'thisWeek',
       key: 'thisWeek',
-      label: <Msg id={messageIds.allEventsList.filterButtonLabels.thisWeek} />,
+      label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
         setCustomDatesToFilterBy([null, null]);
         setDateFilterState('thisWeek');
@@ -188,14 +186,12 @@ const AllEventsList: FC = () => {
       active: dateFilterState == 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
-          <DatesFilteredBy
-            end={customDatesToFilterBy[1]}
-            start={customDatesToFilterBy[0]}
-          />
-        ) : (
-          <CalendarMonthOutlined fontSize="small" />
-        ),
+        dateFilterState == 'custom' && customDatesToFilterBy[0]
+          ? getDatesFilteredBy(
+              customDatesToFilterBy[1],
+              customDatesToFilterBy[0]
+            )
+          : CalendarMonthOutlined,
       onClick: () => {
         setDrawerContent('calendar');
       },
@@ -205,12 +201,9 @@ const AllEventsList: FC = () => {
           {
             active: !!orgIdsToFilterBy.length,
             key: 'orgs',
-            label: (
-              <Msg
-                id={messageIds.allEventsList.filterButtonLabels.organizations}
-                values={{ numOrgs: orgIdsToFilterBy.length }}
-              />
-            ),
+            label: messages.allEventsList.filterButtonLabels.organizations({
+              numOrgs: orgIdsToFilterBy.length,
+            }),
             onClick: () => setDrawerContent('orgs'),
           },
         ]
@@ -243,26 +236,24 @@ const AllEventsList: FC = () => {
           sx={{ overflowX: 'auto' }}
         >
           {isFiltered && (
-            <FilterButton
+            <ZUIFilterButton
               active={true}
+              circular
+              label={Clear}
               onClick={() => {
                 setDateFilterState(null);
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
               }}
-              round
-            >
-              <Clear fontSize="small" />
-            </FilterButton>
+            />
           )}
           {filters.map((filter) => (
-            <FilterButton
+            <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              label={filter.label}
               onClick={filter.onClick}
-            >
-              {filter.label}
-            </FilterButton>
+            />
           ))}
         </Box>
       )}

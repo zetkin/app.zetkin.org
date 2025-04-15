@@ -10,9 +10,9 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import EventListItem from './EventListItem';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
-import FilterButton from './FilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
+import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -36,9 +36,10 @@ const MyActivitiesList: FC = () => {
           {kinds.map((kind) => {
             const active = filteredKinds.includes(kind);
             return (
-              <FilterButton
+              <ZUIFilterButton
                 key={kind}
                 active={active}
+                label={messages.activityList.filters[kind]()}
                 onClick={() => {
                   const newValue = filteredKinds.filter(
                     (prevKind) => prevKind != kind
@@ -50,9 +51,7 @@ const MyActivitiesList: FC = () => {
 
                   setFilteredKinds(newValue);
                 }}
-              >
-                <Msg id={messageIds.activityList.filters[kind]} />
-              </FilterButton>
+              />
             );
           })}
         </Box>
