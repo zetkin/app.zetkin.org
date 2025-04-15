@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 
-import ZUIText from '../ZUIText';
 import { Msg } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import ZUILabel from '../ZUILabel';
 
 type ZUISignUpChipProps = {
   status: 'needed' | 'signedUp';
@@ -29,9 +29,9 @@ const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ status }) => {
         py: 0.3,
       })}
     >
-      <ZUIText color="inherit" variant="bodySmRegular">
+      <ZUILabel color="inherit">
         <Msg id={messageIds.signUpChip[status]} />
-      </ZUIText>
+      </ZUILabel>
     </Box>
   );
 };
