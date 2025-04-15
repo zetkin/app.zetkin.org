@@ -231,6 +231,7 @@ export default makeMessages('feat.import', {
         'Your file has multiple sheets, select which one to use.'
       ),
       sheetSelectLabel: m('Sheet'),
+      skipUnknown: m('Skip rows with unknown IDs (never create new people)'),
     },
     show: m('Show'),
     statusMessage: {

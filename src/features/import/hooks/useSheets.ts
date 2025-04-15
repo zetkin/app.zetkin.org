@@ -22,6 +22,7 @@ export default function useSheets() {
     firstRowIsHeaders: selectedSheet.firstRowIsHeaders,
     selectedSheetIndex: pendingFile.selectedSheetIndex,
     sheets,
+    skipUnknown: !!selectedSheet.skipUnknown,
     updateSelectedSheetIndex,
     updateSheetSettings,
   };
