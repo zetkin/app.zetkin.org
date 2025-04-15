@@ -71,12 +71,18 @@ const ActiveEventsSection: FC<ActiveEventsSectionProps> = ({
             <AccordionSummary expandIcon={<ExpandMore />}>
               <Box>
                 <Typography variant="h6">{project.campaign.title}</Typography>
+
                 <Typography>{project.events.length} Events</Typography>
                 {!futureEvents.some(
                   (event: ZetkinEvent) =>
                     event.campaign?.id === project.campaign.id
                 ) && (
-                  <Typography>{target.first_name} has no bookings </Typography>
+                  <Typography>
+                    <Msg
+                      id={messageIds.activeEvents.noBookings}
+                      values={{ name: target.first_name }}
+                    />
+                  </Typography>
                 )}
                 {futureEvents.some(
                   (event: ZetkinEvent) =>

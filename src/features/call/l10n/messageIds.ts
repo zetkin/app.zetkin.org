@@ -1,6 +1,12 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.call', {
+  activeEvents: {
+    alreadyBooked: m<{ name: string }>('{name} is already booked'),
+    noBookings: m<{ name: string }>('{name} has no bookings'),
+    signUp: m('Sign Up'),
+    undoSignUp: m('Undo Sign Up'),
+  },
   instructions: {
     title: m('Instructions'),
   },

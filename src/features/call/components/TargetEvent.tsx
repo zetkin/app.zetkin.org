@@ -7,6 +7,8 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { useAppSelector } from 'core/hooks';
+import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 interface TargetEventProps {
   event: ZetkinEvent;
@@ -42,17 +44,20 @@ const TargetEvent: FC<TargetEventProps> = ({ event, target }) => {
       <Box mt={1}>
         {targetIsBooked ? (
           <Typography variant="body2">
-            {target.first_name} is already booked
+            <Msg
+              id={messageIds.activeEvents.alreadyBooked}
+              values={{ name: target.first_name }}
+            />
           </Typography>
         ) : (
           <Box>
             {isSignup ? (
               <Button onClick={undoSignup} size="small" variant="outlined">
-                Undo Sign up
+                <Msg id={messageIds.activeEvents.undoSignUp} />
               </Button>
             ) : (
               <Button onClick={signUp} size="small" variant="contained">
-                Sign up
+                <Msg id={messageIds.activeEvents.signUp} />
               </Button>
             )}
           </Box>
