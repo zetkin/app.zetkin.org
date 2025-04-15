@@ -17,11 +17,11 @@ import { Msg, useMessages } from 'core/i18n';
 
 export type ZetkinLanguage = 'en' | 'sv' | 'da' | 'nn' | 'de' | null;
 
-type SettingListProps = {
+type Props = {
   user: ZetkinUser;
 };
 
-const SettingsList: FC<SettingListProps> = ({ user }) => {
+const AppPreferences: FC<Props> = ({ user }) => {
   const messages = useMessages(messageIds);
   const languageOptions = {
     da: 'Dansk',
@@ -31,7 +31,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
     sv: 'Svenska',
   } as const;
 
-  const { changeUserLanguage } = useUserMutations();
+  const { updateUser } = useUserMutations();
   const [selectedLanguage, setSelectedLanguage] = useState<ZetkinLanguage>(
     user?.lang as ZetkinLanguage
   );
@@ -83,7 +83,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
             <Button
               disabled={selectedLanguage == user.lang}
               onClick={() => {
-                changeUserLanguage(selectedLanguage);
+                updateUser({ lang: selectedLanguage });
                 location.reload();
               }}
               variant="contained"
@@ -97,4 +97,4 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
   );
 };
 
-export default SettingsList;
+export default AppPreferences;
