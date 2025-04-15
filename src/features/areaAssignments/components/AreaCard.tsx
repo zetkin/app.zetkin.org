@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { useNumericRouteParams } from 'core/hooks';
 import {
   AreaCardData,
@@ -95,7 +95,7 @@ const AreaCard: FC<AreaCardProps> = ({
         );
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
-          <Grid key={area.areaId} item lg={3} md={4} sm={6} xs={12}>
+          <Grid key={area.areaId} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
             <Card key={area.areaId} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
@@ -129,8 +129,8 @@ const AreaCard: FC<AreaCardProps> = ({
                   <Typography
                     color={
                       areaData?.area.id !== 'noArea'
-                        ? theme.palette.primary.dark
-                        : theme.palette.grey[900]
+                        ? oldTheme.palette.primary.dark
+                        : oldTheme.palette.grey[900]
                     }
                     variant="h6"
                   >
@@ -158,7 +158,7 @@ const AreaCard: FC<AreaCardProps> = ({
                   >
                     <InfoOutlined
                       sx={{
-                        color: theme.palette.secondary.main,
+                        color: oldTheme.palette.secondary.main,
                         marginRight: 1,
                       }}
                     />
@@ -176,17 +176,20 @@ const AreaCard: FC<AreaCardProps> = ({
                       colors={
                         areaData?.area.id !== 'noArea'
                           ? [
-                              theme.palette.primary.light,
-                              theme.palette.primary.dark,
+                              oldTheme.palette.primary.light,
+                              oldTheme.palette.primary.dark,
                             ]
-                          : [theme.palette.grey[400], theme.palette.grey[900]]
+                          : [
+                              oldTheme.palette.grey[400],
+                              oldTheme.palette.grey[900],
+                            ]
                       }
                       data={transformedData}
                       defs={[
                         linearGradientDef('householdsVisited', [
-                          { color: theme.palette.primary.light, offset: 0 },
+                          { color: oldTheme.palette.primary.light, offset: 0 },
                           {
-                            color: theme.palette.primary.dark,
+                            color: oldTheme.palette.primary.dark,
                             offset: 100,
                             opacity: 0,
                           },
@@ -204,7 +207,8 @@ const AreaCard: FC<AreaCardProps> = ({
                         return (
                           <Paper
                             style={{
-                              backgroundColor: theme.palette.background.paper,
+                              backgroundColor:
+                                oldTheme.palette.background.paper,
                               borderRadius: '3px',
                               padding: '5px',
                             }}
@@ -220,13 +224,13 @@ const AreaCard: FC<AreaCardProps> = ({
                                       if (areaData?.area.id !== 'noArea') {
                                         return dataPoint.serieId ===
                                           'householdsVisited'
-                                          ? theme.palette.primary.light
-                                          : theme.palette.primary.dark;
+                                          ? oldTheme.palette.primary.light
+                                          : oldTheme.palette.primary.dark;
                                       } else {
                                         return dataPoint.serieId ===
                                           'householdsVisited'
-                                          ? theme.palette.grey[400]
-                                          : theme.palette.grey[900];
+                                          ? oldTheme.palette.grey[400]
+                                          : oldTheme.palette.grey[900];
                                       }
                                     })(),
                                     borderRadius: '50%',
@@ -265,8 +269,8 @@ const AreaCard: FC<AreaCardProps> = ({
                   <Typography
                     color={
                       areaData?.area.id !== 'noArea'
-                        ? theme.palette.primary.light
-                        : theme.palette.grey[400]
+                        ? oldTheme.palette.primary.light
+                        : oldTheme.palette.grey[400]
                     }
                     variant="h6"
                   >
@@ -283,8 +287,8 @@ const AreaCard: FC<AreaCardProps> = ({
                     <Typography
                       color={
                         areaData?.area.id !== 'noArea'
-                          ? theme.palette.secondary.light
-                          : theme.palette.grey[900]
+                          ? oldTheme.palette.secondary.light
+                          : oldTheme.palette.grey[900]
                       }
                       variant="h6"
                     >

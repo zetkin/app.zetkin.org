@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { getDstChangeAtDate } from '../utils';
 import { Msg } from 'core/i18n';
 import messageIds from '../../l10n/messageIds';
@@ -30,7 +30,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
     >
       {/* Day string */}
       <Box alignItems="center" display="flex" justifyContent="flex-start">
-        <Typography color={theme.palette.grey[500]} variant="subtitle2">
+        <Typography color={oldTheme.palette.grey[500]} variant="subtitle2">
           <FormattedDate value={date} weekday="short" />
         </Typography>
       </Box>
@@ -42,7 +42,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
           display="flex"
           justifyContent="center"
           sx={{
-            backgroundColor: focused ? theme.palette.primary.main : null,
+            backgroundColor: focused ? oldTheme.palette.primary.main : null,
             borderRadius: '50%',
             color: focused ? 'white' : 'inherit',
             height: '2.1em',
@@ -58,7 +58,7 @@ const DayHeader = ({ date, focused, onClick }: DayHeaderProps) => {
       <Box />
       {dstChange !== undefined && (
         <Box gridColumn={'1 / span 3'} gridRow={2}>
-          <Typography color={theme.palette.grey[500]} variant="body2">
+          <Typography color={oldTheme.palette.grey[500]} variant="body2">
             <Msg
               id={
                 dstChange === 'summertime'

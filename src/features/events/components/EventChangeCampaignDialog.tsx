@@ -17,7 +17,7 @@ import { makeStyles } from '@mui/styles';
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { Msg, useMessages } from 'core/i18n';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
@@ -52,7 +52,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
     event.id
   );
 
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(oldTheme.breakpoints.down('md'));
 
   const [campaignFilter, setCampaignFilter] = useState('');
   const [isLoadingCampaign, setIsLoadingCampaign] = useState(0);

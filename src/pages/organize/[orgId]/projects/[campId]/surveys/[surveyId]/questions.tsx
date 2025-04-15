@@ -63,7 +63,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
               direction={isMobile ? 'column-reverse' : undefined}
               spacing={2}
             >
-              <Grid item md={8} xs={12}>
+              <Grid size={{ md: 8, xs: 12 }}>
                 <SurveyEditor
                   orgId={parseInt(orgId)}
                   readOnly={
@@ -72,7 +72,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
                   surveyId={parseInt(surveyId)}
                 />
               </Grid>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 {receivingSubmissions && !isShared && (
                   <EditWarningCard
                     editing={forceEditable}

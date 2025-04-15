@@ -1,7 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Checkbox, IconButton, Typography } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Box, Checkbox, IconButton, Typography, useTheme } from '@mui/material';
 
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
@@ -9,7 +8,7 @@ import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFil
 import AddFilterButton from 'features/areas/components/AreaFilters/AddFilterButton';
 import FilterDropDown from 'features/areas/components/FilterDropDown';
 import { assigneesFilterContext } from './AssigneeFilterContext';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 type Props = {
@@ -87,99 +86,76 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
       display="flex"
       flexDirection="column"
       gap={1}
-      paddingRight={2}
       sx={{ overflowY: 'auto' }}
     >
-      <Box paddingTop={1}>
-        <Typography>
-          <Msg id={messageIds.map.filter.title} />
-        </Typography>
-      </Box>
-      <Box display="flex" flexDirection="column" flexGrow={1} gap={1}>
-        <AddFilterButton
-          items={Object.values(groupsById).map((item) => {
-            const groupId = item.group?.id ?? 0;
-            const selected = activeGroupIds.includes(groupId);
-
-            return {
-              icon: <Checkbox checked={selected} />,
-              label: item.group
-                ? item.group.title
-                : messages.map.filter.ungroupedTags(),
-              onClick: () => {
-                if (selected) {
-                  setActiveGroupIds(
-                    activeGroupIds.filter((id) => groupId != id)
-                  );
-                  const newValue = { ...activeTagIdsByGroup };
-                  delete newValue[groupId];
-                  setActiveTagIdsByGroup(newValue);
-                } else {
-                  setActiveGroupIds([...activeGroupIds, groupId]);
-                  setOpenTagsDropdown(groupId);
-                }
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexGrow={1}
+        gap={1}
+        paddingTop={2}
+      >
+        <Box alignItems="center" display="flex">
+          <FilterDropDown
+            items={[
+              {
+                icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
+                label: messages.map.filter.assignees.assigned(),
+                onClick: () => {
+                  if (!assigneesFilter || assigneesFilter == 'unassigned') {
+                    onAssigneesFilterChange('assigned');
+                  } else {
+                    onAssigneesFilterChange(null);
+                  }
+                },
               },
-            };
-          })}
-          onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
-          open={openTagsDropdown == 'add'}
-        />
-        <FilterDropDown
-          items={[
-            {
-              icon: <Checkbox checked={assigneesFilter == 'assigned'} />,
-              label: messages.map.filter.assignees.assigned(),
-              onClick: () => {
-                if (!assigneesFilter || assigneesFilter == 'unassigned') {
-                  onAssigneesFilterChange('assigned');
-                } else {
-                  onAssigneesFilterChange(null);
-                }
+              {
+                icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
+                label: messages.map.filter.assignees.unassigned(),
+                onClick: () => {
+                  if (!assigneesFilter || assigneesFilter == 'assigned') {
+                    onAssigneesFilterChange('unassigned');
+                  } else {
+                    onAssigneesFilterChange(null);
+                  }
+                },
               },
-            },
-            {
-              icon: <Checkbox checked={assigneesFilter == 'unassigned'} />,
-              label: messages.map.filter.assignees.unassigned(),
-              onClick: () => {
-                if (!assigneesFilter || assigneesFilter == 'assigned') {
-                  onAssigneesFilterChange('unassigned');
-                } else {
-                  onAssigneesFilterChange(null);
-                }
-              },
-            },
-          ]}
-          label={messages.map.filter.assignees.label()}
-          onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
-          open={openAssigneesDropdown}
-          startIcon={
-            assigneesFilter ? (
-              <Box
-                sx={{
-                  // TODO: Use ZUI for this
-                  alignItems: 'center',
-                  aspectRatio: '1/1',
-                  backgroundColor: theme.palette.primary.light,
-                  borderRadius: '50%',
-                  color: theme.palette.primary.contrastText,
-                  display: 'flex',
-                  height: '1.2em',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography
+            ]}
+            label={messages.map.filter.assignees.label()}
+            onToggle={() => setOpenAssigneesDropdown(!openAssigneesDropdown)}
+            open={openAssigneesDropdown}
+            startIcon={
+              assigneesFilter ? (
+                <Box
                   sx={{
-                    fontSize: '0.75rem',
-                    margin: 0,
+                    // TODO: Use ZUI for this
+                    alignItems: 'center',
+                    aspectRatio: '1/1',
+                    backgroundColor: theme.palette.primary.light,
+                    borderRadius: '50%',
+                    color: theme.palette.primary.contrastText,
+                    display: 'flex',
+                    height: '1.2em',
+                    justifyContent: 'center',
                   }}
                 >
-                  {1}
-                </Typography>
-              </Box>
-            ) : null
-          }
-          variant="outlined"
-        />
+                  <Typography
+                    sx={{
+                      fontSize: '0.75rem',
+                      margin: 0,
+                    }}
+                  >
+                    {1}
+                  </Typography>
+                </Box>
+              ) : null
+            }
+            variant="outlined"
+          />
+          <IconButton disabled>
+            <Close />
+          </IconButton>
+        </Box>
         {activeGroupIds.map((groupId) => {
           const info = groupsById[groupId];
           const currentIds = activeTagIdsByGroup[groupId] || [];
@@ -257,6 +233,32 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           }
         })}
       </Box>
+      <AddFilterButton
+        items={Object.values(groupsById).map((item) => {
+          const groupId = item.group?.id ?? 0;
+          const selected = activeGroupIds.includes(groupId);
+
+          return {
+            icon: <Checkbox checked={selected} />,
+            label: item.group
+              ? item.group.title
+              : messages.map.filter.ungroupedTags(),
+            onClick: () => {
+              if (selected) {
+                setActiveGroupIds(activeGroupIds.filter((id) => groupId != id));
+                const newValue = { ...activeTagIdsByGroup };
+                delete newValue[groupId];
+                setActiveTagIdsByGroup(newValue);
+              } else {
+                setActiveGroupIds([...activeGroupIds, groupId]);
+                setOpenTagsDropdown(groupId);
+              }
+            },
+          };
+        })}
+        onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
+        open={openTagsDropdown == 'add'}
+      />
     </Box>
   );
 };

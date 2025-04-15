@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AreaModel } from 'features/areas/models';
 import { ZetkinArea } from 'features/areas/types';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const areaModels = await AreaModel.find({ orgId });
       const areas: ZetkinArea[] = areaModels.map((model) => {
-        const tags: ZetkinTag[] = [];
+        const tags: (ZetkinTag | ZetkinAppliedTag)[] = [];
         (model.tags || []).forEach((item) => {
           const tag = allTags.find((tag) => tag.id == item.id);
           if (tag) {

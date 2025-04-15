@@ -15,6 +15,7 @@ import { IColumnType } from '.';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import useToggleDebounce from 'utils/hooks/useToggleDebounce';
+import oldTheme from 'theme';
 
 export type SurveyOptionsViewCell =
   | {
@@ -50,7 +51,7 @@ export default class SurveyOptionsColumnType
   }
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   cell: {
     alignItems: 'center',
     display: 'flex',
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cellCount: {
     alignItems: 'center',
-    backgroundColor: theme.palette.outline.main,
+    backgroundColor: oldTheme.palette.outline.main,
     borderRadius: '50%',
     display: 'flex',
     fontSize: '0.8em',
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: 'break-all',
   },
   optionsChip: {
-    border: '1px solid ' + theme.palette.grey.A400,
+    border: '1px solid ' + oldTheme.palette.grey.A400,
     borderRadius: '2em',
     display: 'inline',
     fontSize: '0.8em',

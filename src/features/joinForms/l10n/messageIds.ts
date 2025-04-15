@@ -2,8 +2,14 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.joinForms', {
   defaultTitle: m('Untitled form'),
+  deleteJoinForm: {
+    success: m<{ title: string }>('{title} was deleted'),
+    title: m('Delete join form'),
+    warning: m<{ title: string }>('Are you sure you want to delete "{title}"?'),
+  },
   embedding: {
     copyLink: m('Copy embed URL'),
+    delete: m('Delete'),
     formSubmitted: m('Form submitted'),
     linkCopied: m('Embed URL copied.'),
     openLink: m('Visit now'),
@@ -14,6 +20,7 @@ export default makeMessages('feat.joinForms', {
       addField: m('Add field'),
       description: m('Description'),
       requireEmailVerification: m('Require e-mail verification'),
+      shareWithSuborgs: m('Share with sub-organizations'),
       title: m('Title'),
     },
     title: m('Edit form'),

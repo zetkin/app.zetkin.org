@@ -6,7 +6,7 @@ import DateLabel from './DateLabel';
 import { DaySummary, getDstChangeAtDate } from '../../utils';
 import Event from './Event';
 import messageIds from 'features/calendar/l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 
 const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
@@ -26,7 +26,7 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
         <DateLabel date={date} />
         {dstChange !== undefined && (
           <Box padding="8px 12px">
-            <Typography color={theme.palette.grey[600]} variant="body2">
+            <Typography color={oldTheme.palette.grey[600]} variant="body2">
               <Msg
                 id={
                   dstChange === 'summertime'

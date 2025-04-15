@@ -1,8 +1,8 @@
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 import KPD from '..';
 import Political from './groups/Political';
-import { ZetkinTag } from 'utils/types/zetkin';
 
-const ActivistTag: ZetkinTag = {
+const ActivistTag: ZetkinAppliedTag = {
   color: null,
   description: 'People who volunteer',
   group: Political,
@@ -13,6 +13,7 @@ const ActivistTag: ZetkinTag = {
     title: KPD.title,
   },
   title: 'Activist',
+  value: null,
   value_type: null,
 };
 

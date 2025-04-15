@@ -8,6 +8,8 @@ assignees: ''
 
 ## Description
 
+See the full list of ZUI design system issues tracked here: [#2111](https://github.com/zetkin/app.zetkin.org/pull/2111)
+
 ## Screenshots
 
 ## Figma link
@@ -31,7 +33,7 @@ Name your branch `issue-number/zui-name`, ex: `issue-928/zui-button` for a branc
 ### Storybook
 
 Use [Storybook](https://storybook.js.org/) to develop the new design system components. If you are not familiar with working with Storybook, please ask and Ziggi or someone else will be happy to introduce you!
-When you have checked out the branch `undocumented/new-design-system` (and, as always when checking out a branch just to be sure, run `yarn install`), run `yarn storybook` in the terminal. This starts Storybook locally, and should open your browser to `localhost:6006` where you see all the components. Note that you want to only look at the ones under the "New design system" headline.
+When you have checked out the branch `undocumented/new-design-system` (and, as always when checking out a branch just to be sure, run `yarn install`), run `yarn storybook` in the terminal. This starts Storybook locally, and should open your browser to `localhost:6006` where you see all the components. Note that you want to only look at the ones under the "Components" headline.
 
 ### Files
 

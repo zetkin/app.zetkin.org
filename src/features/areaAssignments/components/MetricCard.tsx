@@ -1,4 +1,4 @@
-import { Close } from '@mui/icons-material';
+import { Close, LinearScale, SwitchLeft } from '@mui/icons-material';
 import React, { FC, useEffect, useState } from 'react';
 import {
   Card,
@@ -6,30 +6,21 @@ import {
   Typography,
   Box,
   TextField,
-  Checkbox,
   Button,
   IconButton,
 } from '@mui/material';
 
+import messageIds from '../l10n/messageIds';
+import { Msg } from 'core/i18n';
 import { ZetkinMetric } from '../types';
 
 type MetricCardProps = {
-  hasDefinedDone: boolean;
-  isOnlyQuestion: boolean;
   metric: ZetkinMetric;
   onClose: () => void;
-  onDelete: (target: EventTarget & HTMLButtonElement) => void;
   onSave: (metric: ZetkinMetric) => void;
 };
 
-const MetricCard: FC<MetricCardProps> = ({
-  hasDefinedDone,
-  isOnlyQuestion,
-  metric,
-  onClose,
-  onDelete,
-  onSave,
-}) => {
+const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
   const [question, setQuestion] = useState<string>(metric.question || '');
   const [description, setDescription] = useState<string>(
     metric.description || ''
@@ -38,32 +29,36 @@ const MetricCard: FC<MetricCardProps> = ({
     metric.definesDone || false
   );
 
-  const isEditing = !!metric?.id;
-
   useEffect(() => {
     setQuestion(metric.question || '');
     setDescription(metric.description || '');
     setDefinesDone(metric.definesDone || false);
   }, [metric]);
 
-  const showDefinesDoneCheckbox =
-    metric.kind == 'boolean' && (metric.definesDone || !hasDefinedDone);
-
   return (
-    <Card sx={{ marginTop: 2 }}>
+    <Card sx={{ minWidth: 400 }}>
       <CardContent>
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          <Typography gutterBottom variant="h5">
-            {metric.kind === 'boolean' ? 'Yes/No Question' : 'Scale Question'}
-          </Typography>
+          {metric.kind === 'boolean' ? (
+            <Typography alignItems="center" display="flex" variant="h6">
+              <SwitchLeft color="secondary" sx={{ marginRight: 1 }} />
+              <Msg id={messageIds.report.metricCard.choice} />
+            </Typography>
+          ) : (
+            <Typography alignItems="center" display="flex" variant="h6">
+              <LinearScale color="secondary" sx={{ marginRight: 1 }} />
+              <Msg id={messageIds.report.metricCard.scale} />
+            </Typography>
+          )}
+
           <IconButton onClick={onClose}>
             <Close />
           </IconButton>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center">
           {metric.kind == 'scale5' && (
-            <Typography fontStyle="italic" mb={1}>
-              The areaAssignee will respond by giving a rating from 1 to 5
+            <Typography color="secondary" fontStyle="italic" mb={1}>
+              <Msg id={messageIds.report.metricCard.ratingDescription} />
             </Typography>
           )}
           <TextField
@@ -80,30 +75,9 @@ const MetricCard: FC<MetricCardProps> = ({
             value={description}
             variant="outlined"
           />
-          {showDefinesDoneCheckbox && (
-            <Box alignItems="center" display="flex">
-              <Checkbox
-                checked={definesDone}
-                disabled={definesDone && isOnlyQuestion}
-                onChange={(ev) => setDefinesDone(ev.target.checked)}
-              />
-              <Typography>
-                The answer to this question defines if the mission was
-                successful
-              </Typography>
-            </Box>
-          )}
-          <Box display="flex" gap={1} justifyContent="center" width="100%">
-            {isEditing && !isOnlyQuestion && (
-              <Button
-                color="error"
-                onClick={(ev) => onDelete(ev.currentTarget)}
-                variant="outlined"
-              >
-                Delete
-              </Button>
-            )}
+          <Box display="flex" gap={1} justifyContent="right" width="100%">
             <Button
+              disabled={question == ''}
               onClick={() => {
                 onSave({
                   definesDone,
@@ -113,9 +87,9 @@ const MetricCard: FC<MetricCardProps> = ({
                   question,
                 });
               }}
-              variant="outlined"
+              variant="contained"
             >
-              {isEditing ? 'Update' : 'Save'}
+              <Msg id={messageIds.report.metricCard.save} />
             </Button>
           </Box>
         </Box>

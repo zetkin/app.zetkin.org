@@ -16,6 +16,7 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useJoinForm from '../hooks/useJoinForm';
 import useJoinFormMutations from '../hooks/useJoinFormMutations';
 import { useMessages } from 'core/i18n';
+import useDebounce from 'utils/hooks/useDebounce';
 
 type Props = {
   formId: number;
@@ -25,6 +26,7 @@ type Props = {
 const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
   const { data: joinForm } = useJoinForm(orgId, formId);
   const { updateForm } = useJoinFormMutations(orgId, formId);
+  const updateFormDebounced = useDebounce(updateForm, 200);
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const customFields = useCustomFields(orgId);
@@ -59,7 +61,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           defaultValue={joinForm.title}
           fullWidth
           label={messages.formPane.labels.title()}
-          onChange={(evt) => updateForm({ title: evt.target.value })}
+          onChange={(evt) => updateFormDebounced({ title: evt.target.value })}
         />
       </Box>
       <Box mb={1}>
@@ -67,7 +69,9 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           defaultValue={joinForm.description}
           fullWidth
           label={messages.formPane.labels.description()}
-          onChange={(evt) => updateForm({ description: evt.target.value })}
+          onChange={(evt) =>
+            updateFormDebounced({ description: evt.target.value })
+          }
         />
       </Box>
       <Box mb={1}>
@@ -80,12 +84,12 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
           multiple
           onChange={(ev, values) => {
             if (values.length > 0) {
-              updateForm({
+              updateFormDebounced({
                 fields: values,
               });
             }
             if (values.length === 0) {
-              updateForm({
+              updateFormDebounced({
                 fields: ['first_name', 'last_name'],
               });
             } else {
@@ -143,7 +147,7 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
             <Checkbox
               checked={joinForm.requires_email_verification}
               onChange={(evt) =>
-                updateForm({
+                updateFormDebounced({
                   fields:
                     evt.target.checked &&
                     !joinForm?.fields.includes(NATIVE_PERSON_FIELDS.EMAIL)
@@ -158,6 +162,19 @@ const JoinFormPane: FC<Props> = ({ orgId, formId }) => {
             />
           }
           label={messages.formPane.labels.requireEmailVerification()}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={joinForm.org_access == 'suborgs'}
+              onChange={(evt) =>
+                updateFormDebounced({
+                  org_access: evt.target.checked ? 'suborgs' : 'sameorg',
+                })
+              }
+            />
+          }
+          label={messages.formPane.labels.shareWithSuborgs()}
         />
       </Box>
     </>

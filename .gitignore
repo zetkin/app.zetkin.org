@@ -27,6 +27,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -36,8 +37,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# vs code
-.vscode/
+# Ignore everything in the .vscode folder
+.vscode/*
+# Except the launch.json file and extensions.json file
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # intellij
 .idea

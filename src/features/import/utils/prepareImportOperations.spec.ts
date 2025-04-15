@@ -258,6 +258,10 @@ describe('prepareImportOperations()', () => {
         {
           data: ['123', '070 123 45 67', '+46 704 123 123'],
         },
+        {
+          // Phone number contains 202D, a Unicode control character, to validate that it is stripped.
+          data: [124, '+‭46704007858', ''],
+        },
       ],
       title: 'My sheet',
     };
@@ -274,6 +278,20 @@ describe('prepareImportOperations()', () => {
             data: {
               alt_phone: '+46704123123',
               phone: '+46701234567',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+      {
+        key: {
+          id: 124,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              phone: '+46704007858',
             },
             op: 'person.setfields',
           },

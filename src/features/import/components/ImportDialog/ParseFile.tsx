@@ -17,6 +17,7 @@ import ImportHeader from './elements/ImportHeader';
 import messageIds from '../../l10n/messageIds';
 import useFileParsing from '../../hooks/useFileParsing';
 import { useMessages } from 'core/i18n';
+import oldTheme from 'theme';
 
 const sharedProperties: CSSProperties = {
   alignItems: 'center',
@@ -31,28 +32,28 @@ const sharedProperties: CSSProperties = {
   transition: 'height 1s',
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   errorState: {
     backgroundColor: alpha(
-      theme.palette.statusColors.red,
-      theme.palette.action.selectedOpacity
+      oldTheme.palette.statusColors.red,
+      oldTheme.palette.action.selectedOpacity
     ),
-    borderColor: theme.palette.error.dark,
+    borderColor: oldTheme.palette.error.dark,
     borderStyle: 'solid',
     ...sharedProperties,
   },
   initialState: {
     backgroundColor: 'transparent',
-    borderColor: theme.palette.grey[300],
+    borderColor: oldTheme.palette.grey[300],
     borderStyle: 'dashed',
     ...sharedProperties,
   },
   loadingState: {
     backgroundColor: alpha(
-      theme.palette.statusColors.blue,
-      theme.palette.action.selectedOpacity
+      oldTheme.palette.statusColors.blue,
+      oldTheme.palette.action.selectedOpacity
     ),
-    borderColor: theme.palette.statusColors.blue,
+    borderColor: oldTheme.palette.statusColors.blue,
     borderStyle: 'dashed',
     ...sharedProperties,
   },

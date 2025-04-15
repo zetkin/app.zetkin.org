@@ -4,6 +4,7 @@ import { CellData, ColumnKind, Sheet } from './types';
 import parserFactory from './dateParsing/parserFactory';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { BulkOp, BulkSubOp } from '../types';
+import { cleanPhoneNumber } from './phoneUtils';
 
 // TODO: Get rid of this type and dependencies on it
 export type ZetkinPersonImportOp = {
@@ -36,15 +37,23 @@ export default function prepareImportOperations(
         const value = row.data[index];
 
         if (col.kind == ColumnKind.FIELD) {
-          const colIsPhoneField =
-            col.field == 'phone' || col.field == 'alt_phone';
-          if (value && colIsPhoneField) {
-            const parsedPhoneNumber = parsePhoneNumber(
-              value.toString(),
-              countryCode
-            );
-            fields[col.field] = parsedPhoneNumber.format('E.164');
-          } else {
+          const fieldKey = col.field;
+          let value = row.data[index];
+
+          if (value) {
+            //Parse phone numbers to international format
+            if (fieldKey == 'phone' || fieldKey == 'alt_phone') {
+              const parsedPhoneNumber = parsePhoneNumber(
+                cleanPhoneNumber(value),
+                countryCode
+              );
+              value = parsedPhoneNumber.format('E.164');
+            }
+
+            if (fieldKey == 'email') {
+              value = value.toString().trim();
+            }
+
             fields[col.field] = value;
           }
         } else if (col.kind == ColumnKind.ID_FIELD) {

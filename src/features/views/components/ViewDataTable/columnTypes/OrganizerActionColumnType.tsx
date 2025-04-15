@@ -16,7 +16,7 @@ import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
 import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerActionPane';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePanes } from 'utils/panes';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
@@ -26,6 +26,20 @@ import messageIds from 'features/views/l10n/messageIds';
 import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 
 type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
+
+const sortByOa = (v1: ZetkinOrganizerAction[], v2: ZetkinOrganizerAction[]) => {
+  const getPriority = (v: ZetkinOrganizerAction[]) => {
+    if (v.length === 0) {
+      return 2;
+    }
+    if (v.every((oan) => oan.organizer_action_taken)) {
+      return 1;
+    }
+    return 0;
+  };
+
+  return getPriority(v1) - getPriority(v2);
+};
 
 export default class OrganizerActionColumnType implements IColumnType {
   cellToString(cell: OrganizerActionViewCell): string {
@@ -53,6 +67,7 @@ export default class OrganizerActionColumnType implements IColumnType {
           />
         );
       },
+      sortComparator: (v1, v2) => sortByOa(v1, v2),
     };
   }
 
@@ -61,11 +76,13 @@ export default class OrganizerActionColumnType implements IColumnType {
   }
 }
 
-const useStyles = makeStyles<typeof theme, { numUnsolved: number }>(() => ({
+const useStyles = makeStyles<typeof oldTheme, { numUnsolved: number }>(() => ({
   organizerActionContainer: {
     alignItems: 'center',
     backgroundColor: (props) =>
-      props.numUnsolved > 0 ? theme.palette.statusColors.orange : 'transparent',
+      props.numUnsolved > 0
+        ? oldTheme.palette.statusColors.orange
+        : 'transparent',
     cursor: 'pointer',
     display: 'flex',
     height: '100%',

@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { FeatureGroup, latLngBounds } from 'leaflet';
+import { FeatureGroup } from 'leaflet';
 import { FC, useEffect, useRef, useState } from 'react';
 import {
   FeatureGroup as FeatureGroupComponent,
@@ -11,7 +11,7 @@ import {
 
 import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import { getBoundSize } from '../../../canvass/utils/getBoundSize';
 
 type Props = {
   areas: ZetkinArea[];
@@ -141,30 +141,18 @@ const MapRenderer: FC<Props> = ({
           .filter(
             (area) => area.id != editingArea?.id && area.id != selectedArea?.id
           )
+          // Sort areas by size, so that big ones are underneath and the
+          // smaller ones can more easily be clicked.
+          .map((area) => ({ area, size: getBoundSize(area) }))
           .sort((a0, a1) => {
-            // Sort areas by size, so that big ones are underneith and the
-            // smaller ones can more easily be clicked.
-            const bounds0 = latLngBounds(a0.points.map(objToLatLng));
-            const bounds1 = latLngBounds(a1.points.map(objToLatLng));
-
-            const dimensions0 = {
-              x: bounds0.getEast() - bounds0.getWest(),
-              y: bounds0.getNorth() - bounds0.getSouth(),
-            };
-            const dimensions1 = {
-              x: bounds1.getEast() - bounds1.getWest(),
-              y: bounds1.getNorth() - bounds1.getSouth(),
-            };
-
-            const size0 = dimensions0.x * dimensions0.y;
-            const size1 = dimensions1.x * dimensions1.y;
-
-            return size1 - size0;
+            return a1.size - a0.size;
           })
-          .map((area) => {
+          .map(({ area }, index) => {
             // The key changes when selected, to force redraw of polygon
-            // to reflect new state through visual style
-            const key = area.id + '-default';
+            // to reflect new state through visual style. Since we also
+            // care about keeping the order form above, we include that in the
+            // key as well.
+            const key = `${area.id}-${index}-default`;
 
             return (
               <Polygon

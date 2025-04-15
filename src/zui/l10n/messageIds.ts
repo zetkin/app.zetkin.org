@@ -9,6 +9,12 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  autocomplete: {
+    noOptionsDefaultText: m('No option matches your search'),
+  },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
+  },
   collapse: {
     collapse: m('Collapse'),
     expand: m('Expand'),
@@ -126,6 +132,17 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  eventWarningIcons: {
+    contact: m('No contact person has been assigned'),
+    reminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+    signUps: m('There are pending signups'),
+  },
+  expandableText: {
+    showLess: m('Show less'),
+    showMore: m('Show more'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
@@ -193,6 +210,14 @@ export default makeMessages('zui', {
     success: m('Success!'),
     warning: m('Warning!'),
   },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
+  },
   submitOrCancel: {
     cancel: m('Cancel'),
     submit: m('Submit'),
@@ -227,9 +252,10 @@ export default makeMessages('zui', {
       'Today, {start} - {end}'
     ),
   },
-  timezonePicker: {
+  timeZonePicker: {
     gmt: m('GMT'),
-    placeholder: m('Type to search location'),
-    timezone: m('Timezone'),
+    noOptionsText: m('No location matches your search'),
+    placeholder: m('Type to search for a location'),
+    timeZone: m('Time zone'),
   },
 });

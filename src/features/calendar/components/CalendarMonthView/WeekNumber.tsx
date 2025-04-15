@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 
 type CalendarWeekNumberProps = {
   onClick: () => void;
@@ -17,7 +17,7 @@ const WeekNumber = ({ onClick, weekNr }: CalendarWeekNumberProps) => {
       }}
     >
       <Typography
-        color={theme.palette.secondary.light}
+        color={oldTheme.palette.secondary.light}
         fontStyle="bold"
         sx={{ fontWeight: 800 }}
         variant="body2"
