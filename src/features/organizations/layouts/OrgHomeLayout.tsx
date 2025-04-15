@@ -1,12 +1,12 @@
 'use client';
 
-import { Box, Link, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC, ReactNode, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
 import { NorthWest } from '@mui/icons-material';
 
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useUser from 'core/hooks/useUser';
 import ZUILogo from 'zui/ZUILogo';
@@ -18,6 +18,7 @@ import ZUITabbedNavBar from 'zui/components/ZUITabbedNavBar';
 import ZUIOldAvatar from 'zui/ZUIAvatar';
 import ZUIAvatar from 'zui/components/ZUIAvatar';
 import ZUIText from 'zui/components/ZUIText';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   children: ReactNode;
@@ -118,17 +119,15 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
         sx={{ opacity: 0.75 }}
       >
         <ZUILogo />
-        <Typography variant="body2">Zetkin</Typography>
-        <Typography variant="body2">
-          <Link
-            href={
-              env.vars.ZETKIN_PRIVACY_POLICY_LINK ||
-              'https://www.zetkin.org/privacy'
-            }
-          >
-            <Msg id={messageIds.home.footer.privacyPolicy} />
-          </Link>
-        </Typography>
+        <ZUIText variant="bodySmRegular">Zetkin</ZUIText>
+        <ZUILink
+          href={
+            env.vars.ZETKIN_PRIVACY_POLICY_LINK ||
+            'https://www.zetkin.org/privacy'
+          }
+          size="small"
+          text={messages.home.footer.privacyPolicy()}
+        />
       </Box>
     </Box>
   );
