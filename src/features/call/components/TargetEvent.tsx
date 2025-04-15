@@ -6,6 +6,7 @@ import useEventCallActions from '../hooks/useEventCallActions';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { useAppSelector } from 'core/hooks';
 
 interface TargetEventProps {
   event: ZetkinEvent;
@@ -19,8 +20,17 @@ const TargetEvent: FC<TargetEventProps> = ({ event, target }) => {
     target.id
   );
 
-  const responses = target.action_responses;
-  const futureEvents = target.future_actions;
+  const targetIsBooked = target.future_actions.some(
+    (futureEvent) => futureEvent.id === event.id
+  );
+  const eventList = useAppSelector(
+    (state) => state.call.eventsByTargetId[target.id].items || []
+  );
+
+  const isSignup = eventList.some(
+    (eventInList) =>
+      eventInList.data?.status == 'signedUp' && eventInList.data.id == event.id
+  );
 
   return (
     <Box m={2}>
@@ -29,29 +39,24 @@ const TargetEvent: FC<TargetEventProps> = ({ event, target }) => {
         end={new Date(removeOffset(event.end_time))}
         start={new Date(removeOffset(event.start_time))}
       />
-      <Box>
-        {futureEvents.some((futureEvent) => futureEvent.id === event.id) && (
-          <Typography key="booked" variant="body2">
+      <Box mt={1}>
+        {targetIsBooked ? (
+          <Typography variant="body2">
             {target.first_name} is already booked
           </Typography>
-        )}
-        {responses.some((response) => response.action_id == event.id) && (
+        ) : (
           <Box>
-            <Typography>{target.first_name} is signed up</Typography>
-            <Button onClick={() => undoSignup()}>Undo Sign-up</Button>
+            {isSignup ? (
+              <Button onClick={undoSignup} size="small" variant="outlined">
+                Undo Sign up
+              </Button>
+            ) : (
+              <Button onClick={signUp} size="small" variant="contained">
+                Sign up
+              </Button>
+            )}
           </Box>
         )}
-        {!responses.some((response) => response.action_id === event.id) &&
-          !futureEvents.some((futureEvent) => futureEvent.id === event.id) && (
-            <Button
-              key="action"
-              onClick={() => signUp()}
-              size="small"
-              variant="contained"
-            >
-              Sign Up
-            </Button>
-          )}
       </Box>
     </Box>
   );

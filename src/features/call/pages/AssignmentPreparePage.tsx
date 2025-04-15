@@ -5,7 +5,6 @@ import { FC, Suspense } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import useActiveEvents from '../hooks/useActiveEvents';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -14,7 +13,7 @@ import SurveyAccordion from '../components/SurveyAccordion';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ReportCall from '../components/ReportCall';
 import useCurrentCall from '../hooks/useCurrentCall';
-import ActiveProjects from '../components/ActiveProjects';
+import ActiveEventsSection from '../components/ActiveEventsSection';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -28,37 +27,12 @@ type Props = {
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useCurrentCall();
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
-  const events = useActiveEvents(assignment.organization.id) || [];
-
-  const groupEventsByProject = (events: ZetkinEvent[]): EventsByProject[] => {
-    const map = new Map<
-      number,
-      { id: number; title: string } & { events: ZetkinEvent[] }
-    >();
-
-    for (const event of events) {
-      const campaign = event.campaign;
-
-      if (campaign) {
-        if (!map.has(campaign.id)) {
-          map.set(campaign.id, { ...campaign, events: [event] });
-        } else {
-          map.get(campaign.id)!.events.push(event);
-        }
-      }
-    }
-
-    return Array.from(map.values()).map(({ id, title, events }) => ({
-      campaign: { id, title },
-      events,
-    }));
-  };
-
-  const projectsWithEvents = groupEventsByProject(events);
 
   if (!call) {
     return null;
   }
+
+  const target = call.target;
 
   return (
     <Box display="flex" gap={2}>
@@ -155,27 +129,12 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
           </Card>
         </Box>
         <Box flex={1} mt={2}>
-          <Typography my={1} variant="h6">
-            <Msg id={messageIds.prepare.summary} />
-          </Typography>
-          <Typography variant="h5">
-            <Msg id={messageIds.prepare.activeEvents} />
-          </Typography>
-          {events.length == 0 && (
-            <Typography>
-              <Msg id={messageIds.prepare.noActiveEvents} />
-            </Typography>
+          {target && (
+            <ActiveEventsSection
+              orgId={assignment.organization.id}
+              target={target}
+            />
           )}
-          {projectsWithEvents.length > 0 &&
-            projectsWithEvents.map((project) => {
-              return (
-                <ActiveProjects
-                  key={project.campaign.id}
-                  eventsByProject={project}
-                  target={call.target}
-                />
-              );
-            })}
           <Box mt={2}>
             <Typography variant="h6">Surveys</Typography>
             {surveys.length === 0 && (
