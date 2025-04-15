@@ -24,11 +24,11 @@ import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
-import DrawerModal from './DrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
+import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 
 const AllEventsList: FC = () => {
   const intl = useIntl();
@@ -301,7 +301,7 @@ const AllEventsList: FC = () => {
           </Fade>
         </Box>
       ))}
-      <DrawerModal
+      <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
         open={drawerContent == 'calendar'}
       >
@@ -360,8 +360,8 @@ const AllEventsList: FC = () => {
             value={getDateRange()}
           />
         </Box>
-      </DrawerModal>
-      <DrawerModal
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
         open={drawerContent == 'orgs'}
       >
@@ -389,7 +389,7 @@ const AllEventsList: FC = () => {
             </ListItem>
           ))}
         </List>
-      </DrawerModal>
+      </ZUIDrawerModal>
     </Box>
   );
 };
