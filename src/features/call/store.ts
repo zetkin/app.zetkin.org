@@ -3,16 +3,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ZetkinCall } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinEventWithStatus } from 'features/home/types';
 
 export interface CallStoreSlice {
-  activeEventList: RemoteList<ZetkinEvent>;
   currentCallId: number | null;
+  eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
   outgoingCalls: RemoteList<ZetkinCall>;
 }
 
 const initialState: CallStoreSlice = {
-  activeEventList: remoteList(),
   currentCallId: null,
+  eventsByTargetId: {},
   outgoingCalls: remoteList(),
 };
 
@@ -20,12 +21,27 @@ const CallSlice = createSlice({
   initialState,
   name: 'call',
   reducers: {
-    activeEventsLoad: (state) => {
-      state.activeEventList.isLoading = true;
+    activeEventsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      if (!state.eventsByTargetId[id]) {
+        state.eventsByTargetId[id] = remoteList();
+      }
+
+      state.eventsByTargetId[id].isLoading = true;
     },
-    activeEventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
-      state.activeEventList = remoteList(action.payload);
-      state.activeEventList.loaded = new Date().toISOString();
+    activeEventsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventWithStatus[]]>
+    ) => {
+      const [id, events] = action.payload;
+      const eventsWithStatus = events.map((event) => ({
+        ...event,
+        status: null,
+      }));
+
+      state.eventsByTargetId[id] = remoteList(eventsWithStatus);
+      state.eventsByTargetId[id].loaded = new Date().toISOString();
+      state.eventsByTargetId[id].isLoading = false;
     },
     allocateNewCallLoad: (state) => {
       state.outgoingCalls.isLoading = true;
