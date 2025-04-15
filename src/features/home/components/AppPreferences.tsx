@@ -11,11 +11,11 @@ import ZUIButton from 'zui/components/ZUIButton';
 
 export type ZetkinLanguage = 'en' | 'sv' | 'da' | 'nn' | 'de' | null;
 
-type SettingListProps = {
+type Props = {
   user: ZetkinUser;
 };
 
-const SettingsList: FC<SettingListProps> = ({ user }) => {
+const AppPreferences: FC<Props> = ({ user }) => {
   const messages = useMessages(messageIds);
   const languageOptions = {
     da: 'Dansk',
@@ -25,7 +25,7 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
     sv: 'Svenska',
   } as const;
 
-  const { changeUserLanguage } = useUserMutations();
+  const { updateUser } = useUserMutations();
   const [selectedLanguage, setSelectedLanguage] = useState<ZetkinLanguage>(
     user?.lang as ZetkinLanguage
   );
@@ -41,8 +41,16 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
       <Box mt={2}>
         <ZUISection
           renderContent={() => (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <Box
+              sx={{
+                alignItems: 'flex-end',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+              }}
+            >
               <ZUISelect
+                fullWidth
                 items={[
                   {
                     label: messages.settings.appPreferences.lang.auto(),
@@ -64,18 +72,16 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
                 selectedOption={selectedLanguage || 'auto'}
                 size="large"
               />
-              <Box sx={{ alignSelf: 'flex-end' }}>
-                <ZUIButton
-                  disabled={selectedLanguage == user.lang}
-                  label={messages.settings.appPreferences.lang.saveButton()}
-                  onClick={() => {
-                    changeUserLanguage(selectedLanguage);
-                    location.reload();
-                  }}
-                  size="large"
-                  variant="primary"
-                />
-              </Box>
+              <ZUIButton
+                disabled={selectedLanguage == user.lang}
+                label={messages.settings.appPreferences.lang.saveButton()}
+                onClick={() => {
+                  updateUser({ lang: selectedLanguage });
+                  location.reload();
+                }}
+                size="large"
+                variant="primary"
+              />
             </Box>
           )}
           title={messages.settings.appPreferences.header()}
@@ -85,4 +91,4 @@ const SettingsList: FC<SettingListProps> = ({ user }) => {
   );
 };
 
-export default SettingsList;
+export default AppPreferences;
