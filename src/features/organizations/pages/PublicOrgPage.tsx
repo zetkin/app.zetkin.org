@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { Box, Button, Divider, Fade, Typography } from '@mui/material';
+import { Box, Fade } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
 import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
@@ -12,18 +12,20 @@ import ZUIDate from 'zui/ZUIDate';
 import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import ZUIDialog from 'zui/ZUIDialog';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import NoEventsBlurb from '../components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
+import ZUIModal from 'zui/components/ZUIModal';
+import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const messages = useMessages(messageIds);
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
@@ -110,39 +112,39 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               style={{ transitionDelay: nextDelay() }}
             >
               <Box sx={{ my: 4 }}>
-                <Divider />
+                <ZUIDivider />
                 <SubOrgEventBlurb
                   onClickShow={() => setIncludeSubOrgs(true)}
                   subOrgEvents={allEvents.filter(
                     (event) => event.organization.id != orgId
                   )}
                 />
-                <Divider />
+                <ZUIDivider />
               </Box>
             </Fade>
           )}
         </Box>
       ))}
-      <ZUIDialog
-        maxWidth="sm"
+      <ZUIModal
         onClose={() => setPostAuthEvent(null)}
         open={!!postAuthEvent}
+        primaryButton={{
+          href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
+          label: messages.authDialog.loginButton(),
+        }}
+        secondaryButton={{
+          label: messages.authDialog.cancelButton(),
+          onClick: () => setPostAuthEvent(null),
+        }}
+        size="small"
+        title="Log in"
       >
-        <Typography>
-          <Msg id={messageIds.authDialog.label} />
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-          <Button onClick={() => setPostAuthEvent(null)} variant="outlined">
-            <Msg id={messageIds.authDialog.cancelButton} />
-          </Button>
-          <Button
-            href={`/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`}
-            variant="contained"
-          >
-            <Msg id={messageIds.authDialog.loginButton} />
-          </Button>
+        <Box sx={{ paddingTop: '0.75rem' }}>
+          <ZUIText>
+            <Msg id={messageIds.authDialog.label} />
+          </ZUIText>
         </Box>
-      </ZUIDialog>
+      </ZUIModal>
     </Box>
   );
 };
