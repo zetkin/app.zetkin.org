@@ -1,13 +1,12 @@
 import { SvgIconTypeMap } from '@mui/material';
-import Image from 'next/image';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 
 import ZUIItemCard from 'zui/components/ZUIItemCard';
 import ZUIIconLabel from 'zui/components/ZUIIconLabel';
 
 type Props = {
-  actions?: ReactNode[];
+  actions?: JSX.Element[];
   image?: string;
   info: {
     Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
@@ -19,23 +18,21 @@ type Props = {
 const MyActivityListItem: FC<Props> = ({ actions, image, info, title }) => {
   return (
     <ZUIItemCard
-      description={[
+      actions={actions}
+      content={[
         ...info.map((item, index) => {
           return (
-            <ZUIIconLabel key={index} icon={item.Icon} label={item.labels} />
+            <ZUIIconLabel
+              key={index}
+              color="secondary"
+              icon={item.Icon}
+              label={item.labels}
+              size="small"
+            />
           );
         }),
-        ...(actions || []),
       ]}
-      image={
-        image ? (
-          <Image
-            alt={title}
-            src={image}
-            style={{ height: '100%', objectFit: 'cover', width: '100%' }}
-          />
-        ) : undefined
-      }
+      src={image}
       title={title}
     />
   );

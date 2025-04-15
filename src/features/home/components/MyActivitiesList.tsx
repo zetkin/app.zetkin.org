@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Box, Button, Fade, Typography } from '@mui/material';
+import { Box, Fade } from '@mui/material';
 import { GroupWorkOutlined, Hotel } from '@mui/icons-material';
 
 import useMyActivities from '../hooks/useMyActivities';
@@ -11,6 +11,8 @@ import messageIds from '../l10n/messageIds';
 import EventListItem from './EventListItem';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import FilterButton from './FilterButton';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIText from 'zui/components/ZUIText';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -65,9 +67,9 @@ const MyActivitiesList: FC = () => {
           marginTop={3}
           padding={2}
         >
-          <Typography color="secondary">
+          <ZUIText color="secondary">
             <Msg id={messageIds.activityList.emptyListMessage} />
-          </Typography>
+          </ZUIText>
           <Hotel color="secondary" fontSize="large" />
         </Box>
       )}
@@ -79,14 +81,13 @@ const MyActivitiesList: FC = () => {
           elem = (
             <MyActivityListItem
               actions={[
-                <Button
+                <ZUIButton
                   key="mainAction"
                   href={href}
-                  size="small"
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.activityList.actions.call} />
-                </Button>,
+                  label={messages.activityList.actions.call()}
+                  size="large"
+                  variant="secondary"
+                />,
               ]}
               info={[
                 {
@@ -109,14 +110,13 @@ const MyActivitiesList: FC = () => {
           elem = (
             <MyActivityListItem
               actions={[
-                <Button
+                <ZUIButton
                   key="mainAction"
                   href={href}
-                  size="small"
-                  variant="outlined"
-                >
-                  <Msg id={messageIds.activityList.actions.areaAssignment} />
-                </Button>,
+                  label={messages.activityList.actions.areaAssignment()}
+                  size="large"
+                  variant="secondary"
+                />,
               ]}
               info={[]}
               title={
