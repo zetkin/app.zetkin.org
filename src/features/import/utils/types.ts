@@ -1,5 +1,5 @@
-import { ZetkinPersonImportOp } from './prepareImportOperations';
 import { Gender } from '../hooks/useGenderMapping';
+import { BulkOp } from '../types';
 
 export type CellData = string | number | null | undefined;
 
@@ -100,7 +100,7 @@ export type ConfigurableColumn =
 export type Column = UnknownColumn | FieldColumn | ConfigurableColumn;
 
 export interface ZetkinPersonImportPostBody {
-  ops: ZetkinPersonImportOp[];
+  ops: BulkOp[];
 }
 
 export type PersonImportSummary = {
