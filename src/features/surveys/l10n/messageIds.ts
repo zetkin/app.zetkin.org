@@ -80,7 +80,7 @@ export default makeMessages('feat.surveys', {
   },
   editWarning: {
     editing: {
-      header: m('Survey can be edited'),
+      header: m('Survey unlocked'),
       safe: {
         bullet1: m('Fixing spelling mistakes'),
         bullet2: m('Reordering blocks'),
