@@ -129,6 +129,7 @@ describe('prepareImportOperations()', () => {
           {
             data: {
               email: 'clara@example.com',
+              ext_id: '123',
             },
             op: 'person.setfields',
           },

@@ -105,9 +105,11 @@ export default function prepareImportOperations(
       }
     });
 
-    if (extId && zetkinId) {
+    if (extId) {
       fields.ext_id = extId;
-      extId = null;
+      if (zetkinId) {
+        extId = null;
+      }
     }
 
     const hasFields = Object.keys(fields).length > 0;
