@@ -28,6 +28,7 @@ const MapControls: React.FC<MapControlsProps> = ({ map, onFitBounds }) => {
         sx={{
           '& .MuiButton-root': {
             height: 40,
+            padding: 0,
             width: 40,
           },
           bgcolor: theme.palette.background.default,

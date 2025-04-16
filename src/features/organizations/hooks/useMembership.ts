@@ -3,6 +3,7 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { userMembershipsLoad, userMembershipsLoaded } from '../store';
+import useUser from 'core/hooks/useUser';
 
 export default function useMembership(
   orgId: number
@@ -12,6 +13,12 @@ export default function useMembership(
   const membershipList = useAppSelector(
     (state) => state.organizations.userMembershipList
   );
+
+  const user = useUser();
+
+  if (!user) {
+    return new ResolvedFuture(null);
+  }
 
   const membershipsFuture = loadListIfNecessary(membershipList, dispatch, {
     actionOnLoad: () => dispatch(userMembershipsLoad()),

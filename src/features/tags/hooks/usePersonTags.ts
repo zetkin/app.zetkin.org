@@ -1,5 +1,5 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 import { personTagsLoad, personTagsLoaded } from 'features/tags/store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
@@ -14,6 +14,8 @@ export default function usePersonTags(orgId: number, personId: number) {
     actionOnLoad: () => personTagsLoad(personId),
     actionOnSuccess: (tags) => personTagsLoaded([personId, tags]),
     loader: () =>
-      apiClient.get<ZetkinTag[]>(`/api/orgs/${orgId}/people/${personId}/tags`),
+      apiClient.get<ZetkinAppliedTag[]>(
+        `/api/orgs/${orgId}/people/${personId}/tags`
+      ),
   });
 }

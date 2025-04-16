@@ -14,7 +14,7 @@ import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { MessageList } from 'utils/locale';
 import { Store } from './store';
-import { themeWithLocale } from '../theme';
+import { oldThemeWithLocale } from '../theme';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
@@ -66,7 +66,7 @@ const Providers: FC<ProvidersProps> = ({
         <UserProvider user={user}>
           <StyledEngineProvider injectFirst>
             <CacheProvider value={cache}>
-              <ThemeProvider theme={themeWithLocale(lang)}>
+              <ThemeProvider theme={oldThemeWithLocale(lang)}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <IntlProvider
                     defaultLocale="en"

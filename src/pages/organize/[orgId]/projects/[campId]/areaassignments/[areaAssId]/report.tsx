@@ -128,6 +128,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   };
 
   const [unlocked, setUnlocked] = useState(false);
+  const isReportEditable = !areaAssignmentFuture.data?.start_date || unlocked;
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
@@ -137,7 +138,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
           direction={isMobile ? 'column-reverse' : 'row'}
           spacing={2}
         >
-          <Grid item md={8} xs={12}>
+          <Grid size={{ md: 8, xs: 12 }}>
             <Box>
               {assignment.metrics.map((metric) => (
                 <Card key={metric.id} sx={{ mb: 2 }}>
@@ -286,7 +287,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </Dialog>
             )}
             <Box>
-              {unlocked && (
+              {isReportEditable && (
                 <Card
                   sx={{
                     backgroundColor: theme.palette.grey[200],
@@ -405,8 +406,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </Dialog>
             </Box>
           </Grid>
-
-          <Grid item md={4} xs={12}>
+          <Grid size={{ md: 4, xs: 12 }}>
             {assignment.start_date && (
               <ZUILockCard
                 isActive={unlocked}

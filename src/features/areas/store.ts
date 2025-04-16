@@ -8,11 +8,11 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 import { ZetkinArea } from './types';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
-  tagsByAreaId: Record<string, RemoteList<ZetkinTag>>;
+  tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: AreasStoreSlice = {
@@ -84,7 +84,10 @@ const areasSlice = createSlice({
       state.tagsByAreaId[areaId] ||= remoteList();
       state.tagsByAreaId[areaId].isLoading = true;
     },
-    tagsLoaded: (state, action: PayloadAction<[string, ZetkinTag[]]>) => {
+    tagsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinAppliedTag[]]>
+    ) => {
       const [areaId, tags] = action.payload;
       state.tagsByAreaId[areaId] = remoteList(tags);
       state.tagsByAreaId[areaId].loaded = new Date().toISOString();

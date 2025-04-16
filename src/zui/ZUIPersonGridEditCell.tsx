@@ -8,6 +8,7 @@ import {
   InputBase,
   List,
   ListItem,
+  ListItemButton,
   ListSubheader,
   Paper,
   Popper,
@@ -325,22 +326,23 @@ const PersonListItem: FC<{
     <ListItem
       {...itemProps}
       disablePadding
-      selected={selected}
       sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
     >
-      <Box
-        sx={{
-          cursor: 'pointer',
-          display: 'flex',
-          gap: 1,
-          justifyContent: 'center',
-        }}
-      >
-        <ZUIPersonAvatar orgId={orgId} personId={person.id} size="sm" />
-        <Typography component="span">
-          {`${person.first_name} ${person.last_name}`}
-        </Typography>
-      </Box>
+      <ListItemButton selected={selected}>
+        <Box
+          sx={{
+            cursor: 'pointer',
+            display: 'flex',
+            gap: 1,
+            justifyContent: 'center',
+          }}
+        >
+          <ZUIPersonAvatar orgId={orgId} personId={person.id} size="sm" />
+          <Typography component="span">
+            {`${person.first_name} ${person.last_name}`}
+          </Typography>
+        </Box>
+      </ListItemButton>
     </ListItem>
   );
 };

@@ -8,6 +8,7 @@ import {
   Link,
   Popper,
   PopperProps,
+  Stack,
   Typography,
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
@@ -94,36 +95,32 @@ const HoverCardContent: FC<{ personId: number }> = ({ personId }) => {
   }
 
   return (
-    <Card elevation={5} style={{ padding: 24 }} variant="elevation">
-      <Grid container direction="column" spacing={2} style={{ width: '25rem' }}>
-        <Grid item>
-          <ZUIPerson
-            id={person?.id}
-            link
-            name={`${person?.first_name} ${person?.last_name}`}
-            subtitle={
-              <Typography color="secondary" variant="body2">
-                <Msg
-                  id={
-                    person?.is_user
-                      ? messageIds.user.hasAccount
-                      : messageIds.user.noAccount
-                  }
-                />
-              </Typography>
-            }
-            tooltip={false}
-          />
-        </Grid>
+    <Card elevation={5} sx={{ padding: '24px' }} variant="elevation">
+      <Stack spacing={2} sx={{ width: '25rem' }}>
+        <ZUIPerson
+          id={person?.id}
+          link
+          name={`${person?.first_name} ${person?.last_name}`}
+          subtitle={
+            <Typography color="secondary" variant="body2">
+              <Msg
+                id={
+                  person?.is_user
+                    ? messageIds.user.hasAccount
+                    : messageIds.user.noAccount
+                }
+              />
+            </Typography>
+          }
+          tooltip={false}
+        />
         {tags && (
-          <Grid item>
-            <TagsList
-              cap={10}
-              capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
-              isGrouped={false}
-              tags={tags}
-            />
-          </Grid>
+          <TagsList
+            cap={10}
+            capOverflowHref={`/organize/${orgId}/people/${person?.id}`}
+            isGrouped={false}
+            tags={tags}
+          />
         )}
         {(['phone', 'alt_phone', 'email'] as Array<keyof ZetkinPerson>)
           .filter((field) => !!person[field])
@@ -139,21 +136,21 @@ const HoverCardContent: FC<{ personId: number }> = ({ personId }) => {
               return null;
             }
             return (
-              <Grid key={field} container item>
+              <Grid key={field} container>
                 <Box display="flex" flexDirection="row">
                   {field.includes('mail') ? (
                     <MailIcon color="secondary" />
                   ) : (
                     <PhoneIcon color="secondary" />
                   )}
-                  <Typography style={{ marginLeft: '1.5rem' }}>
+                  <Typography sx={{ marginLeft: '1.5rem' }}>
                     <Link href={linkType + value}> {value} </Link>
                   </Typography>
                   <Button
                     onClick={() =>
                       navigator.clipboard.writeText(value as string)
                     }
-                    style={{ marginTop: '-0.3rem' }}
+                    sx={{ marginTop: '-0.3rem' }}
                   >
                     <CopyIcon color="secondary" />
                   </Button>
@@ -161,7 +158,7 @@ const HoverCardContent: FC<{ personId: number }> = ({ personId }) => {
               </Grid>
             );
           })}
-      </Grid>
+      </Stack>
     </Card>
   );
 };
