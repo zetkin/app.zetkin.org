@@ -204,6 +204,10 @@ export default makeMessages('zui', {
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),
   },
+  signUpChip: {
+    needed: m('You are needed'),
+    signedUp: m('You have signed up'),
+  },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
@@ -227,30 +231,31 @@ export default makeMessages('zui', {
   },
   timeSpan: {
     multiDay: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - {endDate}, {end}'),
     multiDayEndsToday: m<{
-      end: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - Today, {end}'),
     multiDayToday: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
     }>('Today, {start} - {endDate}, {end}'),
     singleDay: m<{
-      date: ReactElement;
-      end: ReactElement;
-      start: ReactElement;
+      date: string | ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
     }>('{date}, {start} - {end}'),
     singleDayAllDay: m('All day today'),
-    singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
-      'Today, {start} - {end}'
-    ),
+    singleDayToday: m<{
+      end: string | ReactElement;
+      start: string | ReactElement;
+    }>('Today, {start} - {end}'),
   },
   timeZonePicker: {
     gmt: m('GMT'),

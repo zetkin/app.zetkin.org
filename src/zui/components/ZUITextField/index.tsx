@@ -4,7 +4,7 @@ import {
   SvgIconTypeMap,
   TextField,
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, HTMLInputTypeAttribute } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 import { ZUILarge, ZUIMedium } from '../types';
@@ -26,6 +26,13 @@ type ZUITextFieldProps = {
    * If there is an error in the texfield.
    */
   error?: boolean;
+
+  /**
+   * If the text field should be full width.
+   *
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
 
   /**
    * Text that displays below the textfield, used
@@ -80,6 +87,11 @@ type ZUITextFieldProps = {
   >;
 
   /**
+   * The type of the input field.
+   */
+  type?: HTMLInputTypeAttribute;
+
+  /**
    * The value of the textfield.
    */
   value: string;
@@ -89,6 +101,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   disabled = false,
   endIcon: EndIcon,
   error = false,
+  fullWidth = false,
   helperText,
   label,
   maxRows = 5,
@@ -98,11 +111,13 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   placeholder,
   size = 'medium',
   startIcon: StartIcon,
+  type,
   value,
 }) => (
   <TextField
     disabled={disabled}
     error={error}
+    fullWidth={fullWidth}
     helperText={helperText}
     label={label}
     maxRows={maxRows}
@@ -183,6 +198,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
         paddingLeft: '0.375rem',
       },
     })}
+    type={type}
     value={value}
     variant="outlined"
   />

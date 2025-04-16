@@ -44,6 +44,11 @@ export interface ZUIButtonProps {
   fullWidth?: boolean;
 
   /**
+   * If you want the button to lead to a url.
+   */
+  href?: string;
+
+  /**
    * The text on the button.
    */
   label: string;
@@ -144,6 +149,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   disabled,
   endIcon: EndIcon,
   fullWidth,
+  href,
   label,
   onClick,
   onKeyDown,
@@ -158,6 +164,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       disabled={disabled || isLoading}
       endIcon={EndIcon ? <EndIcon /> : null}
       fullWidth={fullWidth}
+      href={href}
       onClick={onClick}
       onKeyDown={onKeyDown}
       size={size}

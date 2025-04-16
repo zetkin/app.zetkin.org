@@ -6,6 +6,18 @@ import ZUIButton from '../ZUIButton';
 import { ZUISize } from '../types';
 import ModalBackground from './ModalBackground';
 
+type ButtonBase = {
+  label: string;
+};
+
+type OnClickButton = ButtonBase & {
+  onClick: () => void;
+};
+
+type HrefButton = ButtonBase & {
+  href: string;
+};
+
 type ZUIModalProps = {
   /**
    * The content of the modal.
@@ -25,18 +37,12 @@ type ZUIModalProps = {
   /**
    * The primary action button in the modal header.
    */
-  primaryButton: {
-    label: string;
-    onClick: () => void;
-  };
+  primaryButton: OnClickButton | HrefButton;
 
   /**
    * The secondary action button in the modal header.
    */
-  secondaryButton?: {
-    label: string;
-    onClick: () => void;
-  };
+  secondaryButton?: OnClickButton | HrefButton;
 
   /**
    * The size of the modal.
@@ -159,14 +165,30 @@ const ZUIModal: FC<ZUIModalProps> = ({
           >
             {secondaryButton && (
               <ZUIButton
+                href={
+                  'href' in secondaryButton && !!secondaryButton.href
+                    ? secondaryButton.href
+                    : undefined
+                }
                 label={secondaryButton.label}
-                onClick={secondaryButton.onClick}
+                onClick={
+                  'onClick' in secondaryButton
+                    ? secondaryButton.onClick
+                    : undefined
+                }
                 variant="secondary"
               />
             )}
             <ZUIButton
+              href={
+                'href' in primaryButton && !!primaryButton.href
+                  ? primaryButton.href
+                  : undefined
+              }
               label={primaryButton.label}
-              onClick={primaryButton.onClick}
+              onClick={
+                'onClick' in primaryButton ? primaryButton.onClick : undefined
+              }
               variant="primary"
             />
           </Box>
