@@ -13,8 +13,11 @@ export type Sheet = {
   columns: Column[];
   firstRowIsHeaders: boolean;
   rows: Row[];
+  skipUnknown?: boolean;
   title: string;
 };
+
+export type SheetSettings = Omit<Sheet, 'columns' | 'rows' | 'title'>;
 
 export type Row = {
   data: CellData[];

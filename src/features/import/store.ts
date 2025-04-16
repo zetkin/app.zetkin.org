@@ -5,6 +5,7 @@ import {
   ImportedFile,
   ImportPreview,
   PersonImport,
+  SheetSettings,
 } from './utils/types';
 
 export interface ImportStoreSlice {
@@ -42,12 +43,18 @@ const importSlice = createSlice({
     importResultAdd: (state, action: PayloadAction<PersonImport>) => {
       state.importResult = action.payload;
     },
-    setFirstRowIsHeaders: (state, action: PayloadAction<boolean>) => {
-      const sheetIndex = state.pendingFile.selectedSheetIndex;
-      state.pendingFile.sheets[sheetIndex].firstRowIsHeaders = action.payload;
-    },
     setSelectedSheetIndex: (state, action: PayloadAction<number>) => {
       state.pendingFile.selectedSheetIndex = action.payload;
+    },
+    sheetSettingsUpdated: (
+      state,
+      action: PayloadAction<Partial<SheetSettings>>
+    ) => {
+      const sheetIndex = state.pendingFile.selectedSheetIndex;
+      state.pendingFile.sheets[sheetIndex] = {
+        ...state.pendingFile.sheets[sheetIndex],
+        ...action.payload,
+      };
     },
   },
 });
@@ -58,6 +65,6 @@ export const {
   columnUpdate,
   importPreviewAdd,
   importResultAdd,
-  setFirstRowIsHeaders,
+  sheetSettingsUpdated,
   setSelectedSheetIndex,
 } = importSlice.actions;

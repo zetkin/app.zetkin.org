@@ -208,6 +208,42 @@ describe('prepareImportOperations()', () => {
     ]);
   });
 
+  it('sets if_none in person.get when sheet is configured to skip unknown', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', 'clara@example.com'],
+        },
+      ],
+      skipUnknown: true,
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        if_none: 'skip',
+        key: {
+          ext_id: '123',
+        },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              email: 'clara@example.com',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+    ]);
+  });
+
   it('parses and sets date field', () => {
     const sheet: Sheet = {
       columns: [
