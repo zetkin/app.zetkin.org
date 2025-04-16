@@ -85,6 +85,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
                   surveyId={parseInt(surveyId)}
                 />
               </Grid>
+
               <Grid size={{ md: 4, xs: 12 }}>
                 {isEditingLocked && !isShared && (
                   <ZUILockCard
