@@ -1,17 +1,14 @@
 'use client';
 
-import { Box, Button } from '@mui/material';
+import { AppBar, Box, Button, Toolbar, useMediaQuery } from '@mui/material';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
 import { FC, ReactNode } from 'react';
 
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
-import SkipCallDialog from '../components/SkipCallDialog';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
-import useAllocateCall from '../hooks/useAllocateCall';
-import useCallMutations from '../hooks/useCallMutations';
-import useCurrentCall from '../hooks/useCurrentCall';
+import theme from 'zui/theme';
+import ZUIText from 'zui/components/ZUIText';
+import newTheme from 'zui/theme';
+import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
 
 type Props = {
   callAssId: string;
@@ -19,95 +16,66 @@ type Props = {
 };
 
 const CallLayout: FC<Props> = ({ callAssId, children }) => {
-  const router = useRouter();
-  const call = useCurrentCall();
   const assignments = useMyCallAssignments();
-
-  const getDetailsPage = (pathname: string) => {
-    if (!pathname) {
-      return false;
-    }
-    const segments = pathname.split('/');
-    if (segments.length === 3 && segments[1] === 'call') {
-      const callId = Number(segments[2]);
-      return !isNaN(callId);
-    }
-    return false;
-  };
-
-  const pathname = usePathname() || '';
-  const isPreparePage = pathname.endsWith('/prepare');
-  const isDetailsPage = getDetailsPage(pathname);
-
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
   );
 
-  const { allocateCall } = useAllocateCall(
-    assignment!.organization.id,
-    parseInt(callAssId)
-  );
-  const { deleteCall } = useCallMutations(assignment!.organization.id);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          p: 2,
-        }}
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar
+        elevation={1}
+        position="static"
+        sx={{ backgroundColor: newTheme.palette.common.white }}
       >
-        {isDetailsPage && (
-          <Link href="/my/home" passHref>
-            <Button variant="outlined">
-              <Msg id={messageIds.nav.backToHome} />
-            </Button>
-          </Link>
-        )}
-        {isPreparePage && (
-          <Link href="/my/home" passHref>
-            <Button
-              onClick={() => {
-                if (call) {
-                  deleteCall(call.id);
-                }
-              }}
-              variant="outlined"
-            >
-              Stop calling
-            </Button>
-          </Link>
-        )}
-        <Box>
-          {isPreparePage && call && assignment && (
-            <SkipCallDialog
-              assignment={assignment}
-              callId={call?.id}
-              targetName={
-                call?.target.first_name + ' ' + call?.target.last_name
-              }
-            />
-          )}
-          {isDetailsPage && (
-            <Button
-              onClick={() => {
-                router.push(`/call/${callAssId}/prepare`);
-                allocateCall();
-              }}
-              variant="contained"
-            >
-              <Msg id={messageIds.nav.startCalling} />
-            </Button>
-          )}
-          {isPreparePage && <Button variant="contained">Start Call</Button>}
+        <Box pt={2} sx={{ pl: { sm: 3, xs: 2 } }}>
+          <ZUIText variant="headingMd">
+            {assignment?.title
+              ? isMobile && assignment.title.length > 30
+                ? `${assignment.title.slice(0, 30)}...`
+                : assignment.title
+              : 'Untitled call assignment'}
+          </ZUIText>
         </Box>
-      </Box>
+        <Toolbar>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            width="100%"
+          >
+            <Box alignItems="center" display="flex">
+              {assignment && (
+                <ZUIOrgAvatar
+                  orgId={assignment.organization.id}
+                  title={assignment.organization.title}
+                />
+              )}
+              <Box ml={1}>
+                <ZUIText variant="bodySmRegular">
+                  {assignment?.organization.title
+                    ? isMobile && assignment.organization.title.length > 20
+                      ? `${assignment.organization.title.slice(0, 30)}...`
+                      : assignment.organization.title
+                    : 'Untitledorganization'}
+                </ZUIText>
+              </Box>
+            </Box>
+            <Box>
+              <Link href="/my/home" passHref>
+                <Button sx={{ mr: 1 }} variant="outlined">
+                  Quit
+                </Button>
+              </Link>
+              <Button color="primary" variant="contained">
+                Start calling
+              </Button>
+            </Box>
+          </Box>
+        </Toolbar>
+      </AppBar>
       <Box>{children}</Box>
     </Box>
   );
