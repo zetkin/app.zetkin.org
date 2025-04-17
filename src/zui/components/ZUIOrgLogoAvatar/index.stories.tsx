@@ -13,7 +13,7 @@ type Story = StoryObj<typeof ZUIOrgLogoAvatar>;
 export const Medium: Story = {
   args: {
     orgId: 1,
-    urlBase: 'http://app.dev.zetkin.org/api',
+    urlBase: 'https://app.dev.zetkin.org/api',
   },
 };
 
