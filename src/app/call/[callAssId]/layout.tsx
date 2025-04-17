@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -34,7 +34,9 @@ const CallPageLayout = async ({ children, params }: Props) => {
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
     return <CallLayout callAssId={callAssId}>{children}</CallLayout>;
   } else {
-    return notFound();
+    const callUrl = process.env.ZETKIN_GEN2_CALL_URL;
+    const assignmentUrl = `${callUrl}/assignments/${params.callAssId}/call`;
+    redirect(assignmentUrl);
   }
 };
 
