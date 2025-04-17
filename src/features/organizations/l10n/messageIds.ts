@@ -5,7 +5,8 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.organizations', {
   authDialog: {
     cancelButton: m('Cancel'),
-    label: m('You need a Zetkin account to sign up for events.'),
+    content: m('You need a Zetkin account to sign up for events.'),
+    label: m('Sign up'),
     loginButton: m('Log in & come back'),
   },
   gen3: {

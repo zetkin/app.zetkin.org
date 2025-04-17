@@ -231,6 +231,7 @@ export default makeMessages('feat.import', {
         'Your file has multiple sheets, select which one to use.'
       ),
       sheetSelectLabel: m('Sheet'),
+      skipUnknown: m('Skip rows with unknown IDs (never create new people)'),
     },
     show: m('Show'),
     statusMessage: {
@@ -341,6 +342,9 @@ export default makeMessages('feat.import', {
       noImpact: {
         description: m(
           'This could be because the file contains no new data, or due to an unknown error.'
+        ),
+        descriptionSkipped: m(
+          'This could be because the file contains no new data, or because all new data was skipped according to your settings. In rare occasions, it could be due to an unknown error.'
         ),
         title: m('This import would have no effect'),
       },

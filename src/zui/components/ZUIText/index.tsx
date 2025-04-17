@@ -14,7 +14,7 @@ type TextVariant =
 
 type ZUITextProps = {
   children: ReactNode;
-  color?: ZUIPrimary | ZUISecondary;
+  color?: ZUIPrimary | ZUISecondary | 'inherit';
   component?: 'div' | 'p' | 'span';
   gutterBottom?: boolean;
   noWrap?: boolean;
@@ -45,7 +45,7 @@ const ZUIText: FC<ZUITextProps> = ({
 }) => (
   <Typography
     {...boxProps}
-    color={color}
+    color={color == 'inherit' ? '' : color}
     component={component}
     gutterBottom={gutterBottom}
     noWrap={noWrap}

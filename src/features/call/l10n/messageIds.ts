@@ -1,6 +1,12 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.call', {
+  activeEvents: {
+    alreadyBooked: m<{ name: string }>('{name} is already booked'),
+    noBookings: m<{ name: string }>('{name} has no bookings'),
+    signUp: m('Sign Up'),
+    undoSignUp: m('Undo Sign Up'),
+  },
   instructions: {
     title: m('Instructions'),
   },
@@ -9,12 +15,12 @@ export default makeMessages('feat.call', {
     startCalling: m('Start calling'),
   },
   prepare: {
-    activeCampaigns: m('Active campaigns'),
+    activeEvents: m('Active events'),
     edit: m('Edit this information?'),
     editDescription: m(
       'If something in this tab needs changing, write a message to the organizer in the report after finishing the call.'
     ),
-    noActiveCampaigns: m('No active campaigns.'),
+    noActiveEvents: m('No active events.'),
     noPreviousCalls: m('Never called'),
     noPreviousEvents: m<{ name: string }>(
       '{name} never participated in any events.'

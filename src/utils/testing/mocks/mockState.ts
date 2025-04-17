@@ -19,8 +19,9 @@ export default function mockState(overrides?: RootState) {
       crumbsByPath: {},
     },
     call: {
-      activeEventList: remoteList(),
-      currentCall: remoteItem(0),
+      currentCallId: null,
+      eventsByTargetId: {},
+      outgoingCalls: remoteList(),
     },
     callAssignments: {
       assignmentList: remoteList(),

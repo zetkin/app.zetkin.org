@@ -75,3 +75,8 @@ export const NoButtonsInHeader: Story = {
   },
   render: Basic.render,
 };
+
+export const NoHeaderContent: Story = {
+  args: {},
+  render: Basic.render,
+};

@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIText from './index';
@@ -56,5 +57,20 @@ export const BodySmallBold: Story = {
   args: {
     children: 'This is a small size, bold weight body text',
     variant: 'bodySmSemiBold',
+  },
+};
+
+export const InheritColor: Story = {
+  args: {
+    children: 'This text inherits the color property from its parent',
+    color: 'inherit',
+    variant: 'bodyMdRegular',
+  },
+  render: function Render(args) {
+    return (
+      <Box sx={(theme) => ({ color: theme.palette.success.main })}>
+        <ZUIText {...args} />
+      </Box>
+    );
   },
 };

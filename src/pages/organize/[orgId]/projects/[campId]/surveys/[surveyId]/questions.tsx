@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { Grid, useMediaQuery, useTheme } from '@mui/material';
+import dayjs from 'dayjs';
 
 import EditWarningCard from 'features/surveys/components/EditWarningCard';
 import { PageWithLayout } from 'utils/types';
@@ -49,6 +50,16 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isShared = campId === 'shared';
 
+  const now = dayjs();
+  const today = now.format('YYYY-MM-DD');
+  const surveyStart = dayjs(surveyFuture.data?.published).format('YYYY-MM-DD');
+  const surveyEnd = dayjs(surveyFuture.data?.expires).format('YYYY-MM-DD');
+
+  const isActive =
+    surveyEnd && surveyStart
+      ? surveyStart <= today && today <= surveyEnd
+      : false;
+
   return (
     <>
       <Head>
@@ -57,6 +68,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
       <ZUIFuture future={statsFuture}>
         {(stats) => {
           const receivingSubmissions = stats.submissionCount > 0;
+          const isEditingLocked = receivingSubmissions || isActive;
           return (
             <Grid
               container
@@ -66,14 +78,12 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
               <Grid size={{ md: 8, xs: 12 }}>
                 <SurveyEditor
                   orgId={parseInt(orgId)}
-                  readOnly={
-                    (receivingSubmissions && !forceEditable) || isShared
-                  }
+                  readOnly={(isEditingLocked && !forceEditable) || isShared}
                   surveyId={parseInt(surveyId)}
                 />
               </Grid>
               <Grid size={{ md: 4, xs: 12 }}>
-                {receivingSubmissions && !isShared && (
+                {isEditingLocked && !isShared && (
                   <EditWarningCard
                     editing={forceEditable}
                     onToggle={(newValue) => setForceEditable(newValue)}
