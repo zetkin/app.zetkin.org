@@ -24,11 +24,6 @@ export interface ZUIPersonAvatarProps {
    * The size of the avatar, defaults to 'medium'.
    */
   size?: ZUISize;
-
-  /**
-   * The shape of the avatar, defaults to 'circular'.
-   */
-  variant?: 'square' | 'circular';
 }
 
 const fontSizes: Record<ZUISize, number> = {
@@ -54,7 +49,6 @@ const ZUIPersonAvatar: FC<ZUIPersonAvatarProps> = ({
   id,
   lastName,
   size = 'medium',
-  variant = 'circular',
 }) => {
   const theme = useTheme();
 
@@ -62,7 +56,7 @@ const ZUIPersonAvatar: FC<ZUIPersonAvatarProps> = ({
   const avatarSize = avatarSizes[size];
 
   return (
-    <AvatarBackground seed={id.toString()} size={avatarSize} variant={variant}>
+    <AvatarBackground seed={id.toString()} size={avatarSize} variant="circular">
       <text
         dominantBaseline="central"
         fontFamily={theme.typography.fontFamily}

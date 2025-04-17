@@ -25,11 +25,6 @@ type ZUIAvatarGroupProps = {
    * The size of the avatars. Defaults to 'medium'.
    */
   size?: ZUISize;
-
-  /**
-   * The shape of the avatars. Defaults to 'circular.
-   */
-  variant?: 'circular' | 'square';
 };
 
 const fontSizes: Record<ZUISize, string> = {
@@ -48,7 +43,6 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
   avatars,
   max,
   size = 'medium',
-  variant = 'circular',
 }) => {
   const showOverflowNumber = !!max && max < avatars.length;
 
@@ -65,7 +59,6 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
             id={avatar.id}
             lastName={avatar.lastName}
             size={size}
-            variant={variant}
           />
         );
       })}
@@ -74,7 +67,7 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
           sx={(theme) => ({
             alignItems: 'center',
             backgroundColor: theme.palette.grey[100],
-            borderRadius: variant == 'circular' ? 100 : '0.25rem',
+            borderRadius: '10rem',
             display: 'flex',
             height: avatarSizes[size],
             justifyContent: 'center',

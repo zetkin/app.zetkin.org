@@ -44,11 +44,3 @@ export const Large: Story = {
     size: 'large',
   },
 };
-
-export const Square: Story = {
-  args: {
-    ...Basic.args,
-    max: 4,
-    variant: 'square',
-  },
-};
