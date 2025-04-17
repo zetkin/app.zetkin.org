@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import ZUIAvatarGroup from './index';
+import ZUIPersonAvatarGroup from './index';
 
-const meta: Meta<typeof ZUIAvatarGroup> = {
-  component: ZUIAvatarGroup,
-  title: 'Components/ZUIAvatarGroup',
+const meta: Meta<typeof ZUIPersonAvatarGroup> = {
+  component: ZUIPersonAvatarGroup,
+  title: 'Components/ZUIPersonAvatarGroup',
 };
 export default meta;
 
-type Story = StoryObj<typeof ZUIAvatarGroup>;
+type Story = StoryObj<typeof ZUIPersonAvatarGroup>;
 
 export const Basic: Story = {
   args: {

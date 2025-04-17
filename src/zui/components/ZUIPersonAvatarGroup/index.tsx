@@ -4,17 +4,17 @@ import { FC } from 'react';
 import ZUIPersonAvatar from '../ZUIPersonAvatar';
 import { ZUISize } from '../types';
 
-export type AvatarData = {
+export type PersonAvatarData = {
   firstName: string;
   id: number;
   lastName: string;
 };
 
-type ZUIAvatarGroupProps = {
+type ZUIPersonAvatarGroupProps = {
   /**
    * List of the people you want to display as avatars.
    */
-  avatars: AvatarData[];
+  avatars: PersonAvatarData[];
 
   /**
    * Maximum number of avatars shown.
@@ -39,7 +39,7 @@ const avatarSizes: Record<ZUISize, string> = {
   small: '1.5rem',
 };
 
-const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
+const ZUIPersonAvatarGroup: FC<ZUIPersonAvatarGroupProps> = ({
   avatars,
   max,
   size = 'medium',
@@ -90,4 +90,4 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
   );
 };
 
-export default ZUIAvatarGroup;
+export default ZUIPersonAvatarGroup;
