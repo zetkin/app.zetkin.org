@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import ZUIAvatar from 'zui/components/ZUIAvatar';
+import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import useUser from 'core/hooks/useUser';
 import ZUILogo from 'zui/ZUILogo';
 import { useEnv } from 'core/hooks';
@@ -46,7 +46,7 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         <ZUIText variant="headingLg">{title || messages.title()}</ZUIText>
         {user && (
           <Box sx={{ cursor: 'default' }}>
-            <ZUIAvatar
+            <ZUIPersonAvatar
               firstName={user.first_name}
               id={user.id}
               lastName={user.last_name}

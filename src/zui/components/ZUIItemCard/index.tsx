@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 
-import ZUIAvatar, { ZUIAvatarProps } from '../ZUIAvatar';
+import ZUIPersonAvatar, { ZUIPersonAvatarProps } from '../ZUIPersonAvatar';
 import { MUIIcon } from '../types';
 import ZUIIcon from '../ZUIIcon';
 import ZUIText from '../ZUIText';
@@ -37,7 +37,7 @@ type AvatarCard = ItemCardBase & {
   /**
    * An avatar to be displayed to the left of the card title.
    */
-  avatar: Omit<ZUIAvatarProps, 'size' | 'variant'>;
+  avatar: Omit<ZUIPersonAvatarProps, 'size' | 'variant'>;
 };
 
 type IconCard = ItemCardBase & {
@@ -167,7 +167,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
               <ZUIIcon color="secondary" icon={props.icon} size="large" />
             )}
             {hasAvatar && (
-              <ZUIAvatar
+              <ZUIPersonAvatar
                 firstName={props.avatar.firstName}
                 id={props.avatar.id}
                 lastName={props.avatar.lastName}

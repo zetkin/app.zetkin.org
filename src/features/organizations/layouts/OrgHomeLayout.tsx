@@ -16,7 +16,7 @@ import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUITabbedNavBar from 'zui/components/ZUITabbedNavBar';
 import ZUIOldAvatar from 'zui/ZUIAvatar';
-import ZUIAvatar from 'zui/components/ZUIAvatar';
+import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILink from 'zui/components/ZUILink';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
@@ -120,7 +120,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           </Box>
           {user && (
             <NextLink href="/my">
-              <ZUIAvatar
+              <ZUIPersonAvatar
                 firstName={user.first_name}
                 id={user.id}
                 lastName={user.last_name}

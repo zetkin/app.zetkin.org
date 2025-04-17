@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material';
 import { ZUISize } from '../types';
 import AvatarBackground from './AvatarBackground';
 
-export interface ZUIAvatarProps {
+export interface ZUIPersonAvatarProps {
   /**
    * First name of the person the avatar represents.
    */
@@ -24,37 +24,31 @@ export interface ZUIAvatarProps {
    * The size of the avatar, defaults to 'medium'.
    */
   size?: ZUISize;
-
-  /**
-   * The shape of the avatar, defaults to 'circular'.
-   */
-  variant?: 'square' | 'circular';
 }
 
-const fontSizes: Record<ZUISize, number> = {
+export const fontSizes: Record<ZUISize, number> = {
   large: 20,
   medium: 16,
   small: 12,
 };
 
-const avatarSizes: Record<ZUISize, number> = {
+export const avatarSizes: Record<ZUISize, number> = {
   large: 40,
   medium: 32,
   small: 24,
 };
 
-const letterSpacing: Record<ZUISize, number> = {
+export const letterSpacing: Record<ZUISize, number> = {
   large: 0.14,
   medium: 0.11,
   small: 0.08,
 };
 
-const ZUIAvatar: FC<ZUIAvatarProps> = ({
+const ZUIPersonAvatar: FC<ZUIPersonAvatarProps> = ({
   firstName,
   id,
   lastName,
   size = 'medium',
-  variant = 'circular',
 }) => {
   const theme = useTheme();
 
@@ -62,7 +56,7 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   const avatarSize = avatarSizes[size];
 
   return (
-    <AvatarBackground seed={id.toString()} size={avatarSize} variant={variant}>
+    <AvatarBackground seed={id.toString()} size={avatarSize} variant="circular">
       <text
         dominantBaseline="central"
         fontFamily={theme.typography.fontFamily}
@@ -79,4 +73,4 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   );
 };
 
-export default ZUIAvatar;
+export default ZUIPersonAvatar;
