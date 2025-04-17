@@ -1,6 +1,7 @@
-import { Avatar } from '@mui/material';
 import { FC } from 'react';
+import Image from 'next/image';
 
+import { avatarSizes } from '../ZUIPersonAvatar';
 import { ZUISize } from '../types';
 
 type ZUIOrgLogoAvatarProps = {
@@ -28,17 +29,12 @@ const ZUIOrgLogoAvatar: FC<ZUIOrgLogoAvatarProps> = ({
   size = 'medium',
   urlBase = '/api',
 }) => {
-  const avatarSizes = {
-    large: '2.5rem',
-    medium: '2rem',
-    small: '1.5rem',
-  } as const;
-
   return (
-    <Avatar
+    <Image
       alt="icon"
+      height={avatarSizes[size]}
       src={`${urlBase}/orgs/${orgId}/avatar`}
-      sx={{ height: avatarSizes[size], width: avatarSizes[size] }}
+      width={avatarSizes[size]}
     />
   );
 };
