@@ -1,5 +1,4 @@
 import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
 
 import AssignmentPreparePage from 'features/call/pages/AssignmentPreparePage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -24,7 +23,7 @@ export default async function Page({ params }: PageProps) {
   );
 
   if (!assignment) {
-    return notFound();
+    return null;
   }
 
   return <AssignmentPreparePage assignment={assignment} />;
