@@ -30,5 +30,7 @@ export default async function Page({ params }: PageProps) {
 
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
     return <AssignmentPreparePage assignment={assignment} />;
+  } else {
+    return notFound();
   }
 }
