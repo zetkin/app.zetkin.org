@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AreaModel } from 'features/areas/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { ZetkinArea } from 'features/areas/types';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         return new NextResponse(null, { status: 404 });
       }
 
-      const tags: ZetkinTag[] = [];
+      const tags: (ZetkinTag | ZetkinAppliedTag)[] = [];
       (areaModel.tags || []).forEach((item) => {
         const tag = allTags.find((tag) => tag.id == item.id);
         if (tag) {
@@ -89,7 +89,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         `/api/orgs/${orgId}/people/tags`
       );
 
-      const tags: ZetkinTag[] = [];
+      const tags: (ZetkinTag | ZetkinAppliedTag)[] = [];
       (model.tags || []).forEach((item) => {
         const tag = allTags.find((tag) => tag.id == item.id);
         if (tag) {

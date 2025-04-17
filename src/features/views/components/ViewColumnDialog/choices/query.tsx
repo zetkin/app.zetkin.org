@@ -11,7 +11,7 @@ import { CHOICES } from './types';
 import { ColumnChoice } from './types';
 import LocalQueryConfig from '../LocalQueryConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   CallHistoryFilterConfig,
@@ -20,7 +20,7 @@ import {
 } from 'features/smartSearch/components/types';
 import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 
-const { blue } = theme.palette.viewColumnGallery;
+const { blue } = oldTheme.palette.viewColumnGallery;
 
 export const customQuery: ColumnChoice = {
   color: blue,

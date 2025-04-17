@@ -255,6 +255,8 @@ const SurveySubmissionsList = ({
             });
           }
         }}
+        pageSizeOptions={[100, 250, 500]}
+        pagination
         rows={sortedSubmissions}
         style={{
           border: 'none',

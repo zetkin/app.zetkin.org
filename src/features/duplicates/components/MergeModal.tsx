@@ -11,7 +11,7 @@ import {
 import { FC, useState } from 'react';
 import React, { useEffect } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import PotentialDuplicatesLists from './PotentialDuplicatesLists';
@@ -34,7 +34,7 @@ const MergeModal: FC<Props> = ({
   onMerge,
   persons,
 }) => {
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(oldTheme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
   const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
 

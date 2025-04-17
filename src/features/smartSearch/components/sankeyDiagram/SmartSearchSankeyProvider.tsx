@@ -1,7 +1,7 @@
 import { createContext, FC, ReactNode, useContext } from 'react';
 
 import makeSankeySegments from './makeSankeySegments';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useSmartSearchStats from 'features/smartSearch/hooks/useSmartSearchStats';
 import { ZetkinSmartSearchFilter } from '../types';
 import { SankeyConfig, SankeySegment } from './types';
@@ -28,9 +28,9 @@ const SmartSearchSankeyProvider: FC<SmartSearchSankeyProviderProps> = ({
   arrowDepth = 10,
   arrowWidth = 20,
   children,
-  color = theme.palette.grey[300],
+  color = oldTheme.palette.grey[300],
   diagWidth = 200,
-  hoverColor = theme.palette.grey[400],
+  hoverColor = oldTheme.palette.grey[400],
   margin = 30,
   filters,
 }) => {

@@ -147,10 +147,12 @@ const MapRenderer: FC<Props> = ({
           .sort((a0, a1) => {
             return a1.size - a0.size;
           })
-          .map(({ area }) => {
+          .map(({ area }, index) => {
             // The key changes when selected, to force redraw of polygon
-            // to reflect new state through visual style
-            const key = area.id + '-default';
+            // to reflect new state through visual style. Since we also
+            // care about keeping the order form above, we include that in the
+            // key as well.
+            const key = `${area.id}-${index}-default`;
 
             return (
               <Polygon

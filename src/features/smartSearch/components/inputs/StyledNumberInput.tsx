@@ -1,15 +1,17 @@
 import { TextField, TextFieldProps } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+import oldTheme from 'theme';
+
+const useStyles = makeStyles(() => ({
   MuiInput: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     padding: 0,
     textAlign: 'center',
     width: '5rem',
   },
   MuiSelect: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     padding: 0,
   },
   MuiTextField: {

@@ -26,8 +26,8 @@ import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import {
   CUSTOM_FIELD_TYPE,
+  ZetkinAppliedTag,
   ZetkinCreatePerson,
-  ZetkinTag,
 } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
 
@@ -58,10 +58,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
 
   const allTags = useTags(orgId).data ?? [];
   const selectedTags =
-    tags.reduce((acc: ZetkinTag[], item) => {
+    tags.reduce((acc: ZetkinAppliedTag[], item) => {
       const tag = allTags.find((t) => t.id === item);
       if (tag) {
-        return acc.concat(tag);
+        return acc.concat({ ...tag, value: null });
       }
       return acc;
     }, []) ?? [];

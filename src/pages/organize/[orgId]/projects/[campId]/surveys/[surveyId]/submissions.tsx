@@ -63,8 +63,8 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
         <title>{surveyFuture.data?.title}</title>
       </Head>
       <Grid container spacing={2}>
-        <Grid item md={isShared ? 12 : 8} sm={12} xs={12}>
-          <ZUIFuture future={submissionsFuture}>
+        <Grid size={{ md: isShared ? 12 : 8, sm: 12, xs: 12 }}>
+          <ZUIFuture future={submissionsFuture} ignoreDataWhileLoading>
             {(data) => {
               let submissions = data;
               if (showUnlinkedOnly) {
@@ -83,7 +83,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
             }}
           </ZUIFuture>
         </Grid>
-        <Grid item md={4} sm={12} xs={12}>
+        <Grid size={{ md: 4, sm: 12, xs: 12 }}>
           <SubmissionWarningAlert
             campId={campaignId}
             orgId={parseInt(orgId)}

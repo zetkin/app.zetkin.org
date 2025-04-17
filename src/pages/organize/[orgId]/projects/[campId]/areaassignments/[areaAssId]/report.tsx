@@ -1,4 +1,5 @@
 import {
+  Check,
   Close,
   Delete,
   Edit,
@@ -9,6 +10,7 @@ import { GetServerSideProps } from 'next';
 import { useContext, useState } from 'react';
 import {
   alpha,
+  Badge,
   Box,
   Button,
   Card,
@@ -24,8 +26,10 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
+  Switch,
   Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 import { AREAS } from 'utils/featureFlags';
@@ -34,17 +38,17 @@ import messagesIds from 'features/areaAssignments/l10n/messageIds';
 import MetricCard from 'features/areaAssignments/components/MetricCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import theme from 'theme';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
-import { Msg, useMessages } from 'core/i18n';
+import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import ZUICard from 'zui/ZUICard';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIFuture from 'zui/ZUIFuture';
+import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinAreaAssignment,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
-import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -67,11 +71,16 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   orgId,
   areaAssId,
 }) => {
+  const theme = useTheme();
   const { updateAreaAssignment } = useAreaAssignmentMutations(
     parseInt(orgId),
     areaAssId
   );
   const areaAssignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
+  const areaAssignmentStats = useAreaAssignmentStats(
+    parseInt(orgId),
+    areaAssId
+  ).data;
   const messages = useMessages(messagesIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
@@ -115,6 +124,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
       question: '',
     });
   };
+
+  const [unlocked, setUnlocked] = useState(false);
+  const isReportEditable = !areaAssignmentFuture.data?.start_date || unlocked;
 
   return (
     <ZUIFuture future={areaAssignmentFuture}>
@@ -176,49 +188,55 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 </Typography>
                               </Box>
                             )}
-                            <Button
-                              onClick={() => setMetricBeingEdited(metric)}
-                            >
-                              <Edit />
-                            </Button>
-                            {(metric.kind === 'scale5' ||
-                              (metric.kind === 'boolean' &&
-                                assignment.metrics.filter(
-                                  (m) => m.kind === 'boolean'
-                                ).length > 1)) && (
-                              <Button
-                                onClick={(ev) => {
-                                  if (metric.definesDone) {
-                                    setMetricBeingDeleted(metric);
-                                    setAnchorEl(ev.currentTarget);
-                                  } else {
-                                    showConfirmDialog({
-                                      onCancel: () => {
-                                        setMetricBeingDeleted(null),
-                                          setAnchorEl(null);
-                                      },
-                                      onSubmit: () => {
-                                        handleDeleteMetric(metric.id);
-                                        setAnchorEl(null);
-                                        setMetricBeingDeleted(null);
-                                      },
-                                      title: `${
-                                        messages.report.card.delete() +
-                                        ' ' +
-                                        metric.question
-                                      }`,
-                                      warningText:
-                                        messages.report.delete.dialog(),
-                                    });
-                                  }
-                                }}
+                            {unlocked && (
+                              <IconButton
+                                color="secondary"
+                                onClick={() => setMetricBeingEdited(metric)}
                               >
-                                <Delete />
-                              </Button>
+                                <Edit />
+                              </IconButton>
                             )}
-                            {assignment.metrics.filter(
-                              (metric) => metric.kind === 'boolean'
-                            ).length <= 1 &&
+                            {unlocked &&
+                              (metric.kind === 'scale5' ||
+                                (metric.kind === 'boolean' &&
+                                  assignment.metrics.filter(
+                                    (m) => m.kind === 'boolean'
+                                  ).length > 1)) && (
+                                <IconButton
+                                  color="secondary"
+                                  onClick={(ev) => {
+                                    if (metric.definesDone) {
+                                      setMetricBeingDeleted(metric);
+                                      setAnchorEl(ev.currentTarget);
+                                    } else {
+                                      showConfirmDialog({
+                                        onCancel: () => {
+                                          setMetricBeingDeleted(null),
+                                            setAnchorEl(null);
+                                        },
+                                        onSubmit: () => {
+                                          handleDeleteMetric(metric.id);
+                                          setAnchorEl(null);
+                                          setMetricBeingDeleted(null);
+                                        },
+                                        title: `${
+                                          messages.report.card.delete() +
+                                          ' ' +
+                                          metric.question
+                                        }`,
+                                        warningText:
+                                          messages.report.delete.dialog(),
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <Delete />
+                                </IconButton>
+                              )}
+                            {unlocked &&
+                              assignment.metrics.filter(
+                                (metric) => metric.kind === 'boolean'
+                              ).length <= 1 &&
                               metric.kind == 'boolean' && (
                                 <Tooltip title={messages.report.card.tooltip()}>
                                   <Delete color="disabled" sx={{ mx: 1 }} />
@@ -263,35 +281,37 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               </Dialog>
             )}
             <Box>
-              <Card
-                sx={{
-                  backgroundColor: theme.palette.grey[200],
-                  border: 'none',
-                  marginTop: 2,
-                  padding: 2,
-                }}
-              >
-                <Typography color="secondary">
-                  <Msg id={messagesIds.report.toolBar.title} />
-                </Typography>
-                <Box alignItems="center" display="flex" mt={2}>
-                  <Button
-                    onClick={() => handleAddNewMetric('boolean')}
-                    startIcon={<SwitchLeft />}
-                    sx={{ marginRight: 1 }}
-                    variant="outlined"
-                  >
-                    <Msg id={messagesIds.report.metricCard.choice} />
-                  </Button>
-                  <Button
-                    onClick={() => handleAddNewMetric('scale5')}
-                    startIcon={<LinearScale />}
-                    variant="outlined"
-                  >
-                    <Msg id={messagesIds.report.metricCard.scale} />
-                  </Button>
-                </Box>
-              </Card>
+              {isReportEditable && (
+                <Card
+                  sx={{
+                    backgroundColor: theme.palette.grey[200],
+                    border: 'none',
+                    marginTop: 2,
+                    padding: 2,
+                  }}
+                >
+                  <Typography color="secondary">
+                    <Msg id={messagesIds.report.toolBar.title} />
+                  </Typography>
+                  <Box alignItems="center" display="flex" mt={2}>
+                    <Button
+                      onClick={() => handleAddNewMetric('boolean')}
+                      startIcon={<SwitchLeft />}
+                      sx={{ marginRight: 1 }}
+                      variant="outlined"
+                    >
+                      <Msg id={messagesIds.report.metricCard.choice} />
+                    </Button>
+                    <Button
+                      onClick={() => handleAddNewMetric('scale5')}
+                      startIcon={<LinearScale />}
+                      variant="outlined"
+                    >
+                      <Msg id={messagesIds.report.metricCard.scale} />
+                    </Button>
+                  </Box>
+                </Card>
+              )}
               <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
                 <Box display="flex" flexDirection="column" gap={1} padding={2}>
                   <Box
@@ -381,6 +401,65 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
             </Box>
           </Box>
           <Box ml={2} width="40%">
+            {assignment.start_date && (
+              <ZUICard
+                header={
+                  !unlocked ? (
+                    <Msg id={messagesIds.report.lockCard.header} />
+                  ) : (
+                    <Msg id={messagesIds.report.lockCard.headerUnlock} />
+                  )
+                }
+                status={
+                  <Switch
+                    checked={!unlocked}
+                    onChange={(event) => setUnlocked(!event.target.checked)}
+                  />
+                }
+                subheader={
+                  !unlocked
+                    ? messages.report.lockCard.description()
+                    : messages.report.lockCard.descriptionUnlock()
+                }
+                sx={{ mb: 2 }}
+              >
+                {unlocked && (
+                  <Box>
+                    <Divider />
+                    <Typography my={1}>
+                      <Msg id={messagesIds.report.lockCard.safe} />
+                    </Typography>
+                    <Box alignItems="center" display="flex">
+                      <Check style={{ color: theme.palette.success.main }} />
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.fix} />
+                      </Typography>
+                    </Box>
+                    <Box alignItems="center" display="flex">
+                      <Check style={{ color: theme.palette.success.main }} />
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.add} />
+                      </Typography>
+                    </Box>
+                    <Typography my={1}>
+                      <Msg id={messagesIds.report.lockCard.unsafe} />
+                    </Typography>
+                    <Box alignItems="start" display="flex">
+                      <Close color="error" />
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.rename} />
+                      </Typography>
+                    </Box>
+                    <Box alignItems="start" display="flex">
+                      <Close color="error" />
+                      <Typography ml={1}>
+                        <Msg id={messagesIds.report.lockCard.change} />
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+              </ZUICard>
+            )}
             <ZUICard
               header={messages.report.successCard.header()}
               subheader={messages.report.successCard.subheader()}
@@ -391,6 +470,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 <InputLabel>{messages.report.card.definesSuccess()}</InputLabel>
                 <Select
                   disabled={
+                    !unlocked ||
                     assignment.metrics.filter(
                       (metric) => metric.kind === 'boolean'
                     ).length <= 1
@@ -439,7 +519,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               sx={{ mb: 2 }}
             >
               <Divider />
-              <FormControl>
+              <FormControl fullWidth>
                 <RadioGroup
                   onChange={(ev) => {
                     const value = ev.target.value;
@@ -449,23 +529,52 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       });
                     }
                   }}
+                  sx={{ mr: 2 }}
                   value={assignment.reporting_level}
                 >
                   <Typography mt={1}>
                     <Msg id={messagesIds.report.dataCard.info} />
                   </Typography>
-                  <FormControlLabel
-                    control={<Radio />}
-                    label={messages.report.dataCard.household()}
-                    sx={{ ml: 1 }}
-                    value="household"
-                  />
-                  <FormControlLabel
-                    control={<Radio />}
-                    label={messages.report.dataCard.location()}
-                    sx={{ ml: 1 }}
-                    value="location"
-                  />
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <FormControlLabel
+                      control={<Radio disabled={!unlocked} />}
+                      label={messages.report.dataCard.household()}
+                      sx={{ ml: 1 }}
+                      value="household"
+                    />
+                    {unlocked && (
+                      <Badge
+                        badgeContent={
+                          areaAssignmentStats?.num_visited_households
+                        }
+                        color="secondary"
+                      />
+                    )}
+                  </Box>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <FormControlLabel
+                      control={<Radio disabled={!unlocked} />}
+                      label={messages.report.dataCard.location()}
+                      sx={{ ml: 1 }}
+                      value="location"
+                    />
+                    {unlocked && (
+                      <Badge
+                        badgeContent={
+                          areaAssignmentStats?.num_visited_locations
+                        }
+                        color="secondary"
+                      />
+                    )}
+                  </Box>
                 </RadioGroup>
               </FormControl>
             </ZUICard>

@@ -15,12 +15,11 @@ export default makeMessages('feat.areaAssignments', {
       confirm: m(
         'Do you want to delete all unsaved changes and go back to saved instructions?'
       ),
-      editorPlaceholder: m('Add instructions for your callers'),
+      editorPlaceholder: m('Add instructions for your activists'),
       revertLink: m('Revert to saved version?'),
       saveButton: m('Save'),
       savedMessage: m('Everything is up to date!'),
       savingButton: m('Saving...'),
-      title: m('Caller instructions'),
       unsavedMessage: m('You have unsaved changes.'),
     },
     title: m('Assignee instructions'),
@@ -57,8 +56,6 @@ export default makeMessages('feat.areaAssignments', {
         none: m('No assignees'),
         title: m('Assignees'),
       },
-      showLess: m('Show less'),
-      showMore: m('Show more'),
       stats: {
         households: m<{ numHouseholds: number }>(
           '{numHouseholds, plural, one {Household visited} other {Households visited}}'
@@ -177,6 +174,22 @@ export default makeMessages('feat.areaAssignments', {
         'Are you sure you want to delete this question? This action is permanent and it cannot be undone.'
       ),
       select: m('Select'),
+    },
+    lockCard: {
+      add: m('Adding questions'),
+      change: m('Changing question that defines successful visit'),
+      description: m(
+        'This assignment has started. Editing the assignment now may cause problems with the data. Proceed with caution.'
+      ),
+      descriptionUnlock: m(
+        'Be careful not to make changes that may cause data to be lost or corrupted.'
+      ),
+      fix: m('Fixing spelling'),
+      header: m('Report locked'),
+      headerUnlock: m('Report unlocked'),
+      rename: m('Rephrasing questions in ways that change their meaning'),
+      safe: m('Safe changes'),
+      unsafe: m('Unsafe changes'),
     },
     metricCard: {
       choice: m('Choice question'),

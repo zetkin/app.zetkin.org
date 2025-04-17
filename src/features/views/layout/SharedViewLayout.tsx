@@ -11,8 +11,9 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import messageIds from '../l10n/messageIds';
+import oldTheme from 'theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   main: {
     overflowX: 'hidden',
   },
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateRows: 'auto',
     transition: 'font-size 0.2s ease',
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [oldTheme.breakpoints.down('md')]: {
       gridTemplateColumns: '1fr',
     },
   },

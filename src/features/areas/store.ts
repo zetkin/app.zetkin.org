@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  findOrAddItem,
-  remoteItem,
+  remoteItemDeleted,
+  remoteItemLoad,
+  remoteItemUpdated,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
 import { ZetkinArea } from './types';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
-  tagsByAreaId: Record<string, RemoteList<ZetkinTag>>;
+  tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: AreasStoreSlice = {
@@ -25,49 +26,23 @@ const areasSlice = createSlice({
   reducers: {
     areaCreated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      const item = remoteItem(area.id, {
-        data: area,
-        loaded: new Date().toISOString(),
-      });
-
-      state.areaList.items.push(item);
+      remoteItemUpdated(state.areaList, area);
     },
     areaDeleted: (state, action: PayloadAction<string>) => {
       const deletedId = action.payload;
-      state.areaList.items = state.areaList.items.filter(
-        (item) => item.id != deletedId
-      );
+      remoteItemDeleted(state.areaList, deletedId);
     },
     areaLoad: (state, action: PayloadAction<string>) => {
       const areaId = action.payload;
-      const item = state.areaList.items.find((item) => item.id == areaId);
-
-      if (item) {
-        item.isLoading = true;
-      } else {
-        state.areaList.items = state.areaList.items.concat([
-          remoteItem(areaId, { isLoading: true }),
-        ]);
-      }
+      remoteItemLoad(state.areaList, areaId);
     },
     areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      const item = state.areaList.items.find((item) => item.id == area.id);
-
-      if (!item) {
-        throw new Error('Finished loading item that never started loading');
-      }
-
-      item.data = area;
-      item.isLoading = false;
-      item.loaded = new Date().toISOString();
+      remoteItemUpdated(state.areaList, area);
     },
     areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
       const area = action.payload;
-      const item = findOrAddItem(state.areaList, area.id);
-
-      item.data = area;
-      item.loaded = new Date().toISOString();
+      remoteItemUpdated(state.areaList, area);
     },
     areasLoad: (state) => {
       state.areaList.isLoading = true;
@@ -82,9 +57,8 @@ const areasSlice = createSlice({
     tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
-      const tagItem = findOrAddItem(state.tagsByAreaId[areaId], tag.id);
-      tagItem.data = tag;
-      tagItem.loaded = new Date().toISOString();
+
+      remoteItemUpdated(state.tagsByAreaId[areaId], tag);
 
       const areaItem = state.areaList.items.find((item) => item.id == areaId);
       if (areaItem?.data) {
@@ -110,7 +84,10 @@ const areasSlice = createSlice({
       state.tagsByAreaId[areaId] ||= remoteList();
       state.tagsByAreaId[areaId].isLoading = true;
     },
-    tagsLoaded: (state, action: PayloadAction<[string, ZetkinTag[]]>) => {
+    tagsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinAppliedTag[]]>
+    ) => {
       const [areaId, tags] = action.payload;
       state.tagsByAreaId[areaId] = remoteList(tags);
       state.tagsByAreaId[areaId].loaded = new Date().toISOString();

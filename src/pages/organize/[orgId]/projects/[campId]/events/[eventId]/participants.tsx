@@ -56,7 +56,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
         return (
           <Box sx={{ overflowY: 'auto' }}>
             <Grid container spacing={2}>
-              <Grid item md={8} xs={12}>
+              <Grid size={{ md: 8, xs: 12 }}>
                 <ParticipantSummaryCard
                   eventId={parseInt(eventId)}
                   onClickRecord={() => {
@@ -67,16 +67,15 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
                   orgId={parseInt(orgId)}
                 />
               </Grid>
-              <Grid item md={4} xs={12}>
+              <Grid size={{ md: 4, xs: 12 }}>
                 <EventContactCard data={data} orgId={parseInt(orgId)} />
               </Grid>
             </Grid>
             <Grid
               container
-              item
               justifyContent="flex-end"
-              md={12}
-              style={{ marginBottom: '40px', marginTop: '30px' }}
+              size={{ md: 12 }}
+              sx={{ marginBottom: '40px', marginTop: '30px' }}
             >
               <EventParticipantsFilter
                 onFilterChange={(value) => {

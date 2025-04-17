@@ -1,15 +1,31 @@
-import { ZetkinCallAssignment, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinCallAssignment } from 'utils/types/zetkin';
 
 export interface CallAssignmentCaller {
   id: number;
   first_name: string;
   last_name: string;
-  prioritized_tags: ZetkinTag[];
-  excluded_tags: ZetkinTag[];
+  prioritized_tags: ZetkinAppliedTag[];
+  excluded_tags: ZetkinAppliedTag[];
 }
 
 // TODO: Consolidate these
 export type CallAssignmentData = ZetkinCallAssignment;
+
+export type ZetkinCallAssignmentStats = {
+  num_blocked: {
+    allocated: number;
+    any: number;
+    call_back_after: number;
+    cooldown: number;
+    no_number: number;
+    organizer_action_needed: number;
+  };
+  num_calls_made: number;
+  num_calls_reached: number;
+  num_goal_matches: number;
+  num_remaining_targets: number;
+  num_target_matches: number;
+};
 
 export interface CallAssignmentStats {
   id: number;

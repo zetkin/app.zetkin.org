@@ -1,10 +1,9 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
 import {
   Box,
   Divider,
   IconButton,
-  Link,
   TextField,
   Typography,
   useTheme,
@@ -27,6 +26,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
+import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 
 type Props = {
   areaAssId: string;
@@ -121,7 +121,7 @@ const AreaSelect: FC<Props> = ({
             mb={1}
             sx={{ overflowWrap: 'anywhere' }}
           >
-            <ExpandableText
+            <ZUIExpandableText
               content={
                 selectedArea.description?.trim() ||
                 areaMessages.areas.default.description()
@@ -353,62 +353,3 @@ const AreaSelect: FC<Props> = ({
 };
 
 export default AreaSelect;
-
-interface ExpandableTextProps {
-  content: string;
-  maxVisibleChars: number;
-}
-
-export const ExpandableText: React.FC<ExpandableTextProps> = ({
-  content,
-  maxVisibleChars,
-}) => {
-  const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-  const handleToggle = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
-  const displayedText = isExpanded
-    ? content
-    : content.slice(0, maxVisibleChars);
-
-  const isLongContent = content.length > maxVisibleChars;
-  return (
-    <Box sx={{ display: 'inline' }}>
-      <Typography
-        component="span"
-        sx={{
-          display: 'inline',
-          verticalAlign: 'baseline',
-        }}
-        variant="body1"
-      >
-        {displayedText}
-        {isLongContent && (
-          <>
-            {!isExpanded && <span>...</span>}
-            <Link
-              component="button"
-              onClick={handleToggle}
-              sx={{
-                cursor: 'pointer',
-                display: 'inline',
-                ml: !isExpanded ? 1 : 0,
-                padding: 0,
-                textDecoration: 'underline',
-                verticalAlign: 'baseline',
-              }}
-              variant="body1"
-            >
-              {isExpanded
-                ? areaAssignmentMessages.map.areaInfo.showLess()
-                : areaAssignmentMessages.map.areaInfo.showMore()}
-            </Link>
-          </>
-        )}
-      </Typography>
-    </Box>
-  );
-};

@@ -1,7 +1,7 @@
-import { FC, ReactNode } from 'react';
-import { Box, Button, Fade, Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
+import { FC, MouseEvent } from 'react';
+import { Fade } from '@mui/material';
 import {
-  Event,
   GroupWorkOutlined,
   LocationOnOutlined,
   WatchLaterOutlined,
@@ -12,109 +12,97 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import useEventActions from '../hooks/useEventActions';
-import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { removeOffset } from 'utils/dateUtils';
+import { timeSpanToString } from 'zui/utils/timeSpanString';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIText from 'zui/components/ZUIText';
+import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 
 type Props = {
   event: ZetkinEventWithStatus;
-  showIcon?: boolean;
+  onClickSignUp?: (ev: MouseEvent) => void;
 };
 
-const EventListItem: FC<Props> = ({ event, showIcon = false }) => {
+const EventListItem: FC<Props> = ({ event, onClickSignUp }) => {
+  const intl = useIntl();
   const messages = useMessages(messageIds);
-  const { signUp, undoSignup } = useEventActions(
+  const { requiresConnect, signUp, undoSignup } = useEventActions(
     event.organization.id,
     event.id
   );
 
-  const actions: ReactNode[] = [];
+  const actions: JSX.Element[] = [];
   if (event.status == 'booked') {
     actions.push(
-      <Typography key="booked" variant="body2">
+      <ZUIText key="booked" variant="bodySmRegular">
         <Msg
           id={messageIds.activityList.eventStatus.booked}
           values={{ org: event.organization.title }}
         />
-      </Typography>
+      </ZUIText>
     );
   } else if (event.status == 'signedUp') {
     actions.push(
-      <Button
+      <ZUIButton
         key="action"
+        label={messages.activityList.actions.undoSignup()}
         onClick={() => undoSignup()}
-        size="small"
-        variant="outlined"
-      >
-        <Msg id={messageIds.activityList.actions.undoSignup} />
-      </Button>,
-      <Fade appear in style={{ transitionDelay: '0.3s' }}>
-        <Box
-          key="signedUp"
-          sx={{
-            bgcolor: '#C1EEC1',
-            borderRadius: 4,
-            color: '#080',
-            px: 1,
-            py: 0.3,
-          }}
-        >
-          <Typography variant="body2">
-            <Msg id={messageIds.activityList.eventStatus.signedUp} />
-          </Typography>
-        </Box>
+        size="large"
+        variant="secondary"
+      />,
+      <Fade key="signedUp" appear in style={{ transitionDelay: '0.3s' }}>
+        <span>
+          <ZUISignUpChip status="signedUp" />
+        </span>
       </Fade>
     );
   } else {
+    const buttonLabel = requiresConnect
+      ? messages.activityList.actions.connectAndSignUp()
+      : messages.activityList.actions.signUp();
+
     actions.push(
-      <Button
+      <ZUIButton
         key="action"
-        onClick={() => signUp()}
-        size="small"
-        variant="contained"
-      >
-        <Msg id={messageIds.activityList.actions.signUp} />
-      </Button>
+        label={buttonLabel}
+        onClick={(ev) => {
+          if (onClickSignUp) {
+            onClickSignUp(ev);
+          }
+
+          if (!ev.isDefaultPrevented()) {
+            signUp();
+          }
+        }}
+        size="large"
+        variant="primary"
+      />
     );
 
     if (event.num_participants_available < event.num_participants_required) {
-      actions.push(
-        <Box
-          key="needed"
-          sx={{
-            bgcolor: '#FFE5C1',
-            borderRadius: 4,
-            color: '#f40',
-            px: 1,
-            py: 0.3,
-          }}
-        >
-          <Typography variant="body2">
-            <Msg id={messageIds.activityList.eventStatus.needed} />
-          </Typography>
-        </Box>
-      );
+      actions.push(<ZUISignUpChip status="needed" />);
     }
   }
 
   return (
     <MyActivityListItem
       actions={actions}
-      Icon={showIcon ? Event : null}
       image={event.cover_file?.url}
       info={[
         {
           Icon: GroupWorkOutlined,
-          labels: [event.campaign?.title, event.organization.title],
+          labels: [event.campaign?.title, event.organization.title].filter(
+            (label) => !!label
+          ) as string[],
         },
         {
           Icon: WatchLaterOutlined,
           labels: [
-            <Typography key={`event-time-${event.id}`} variant="body2">
-              <ZUITimeSpan
-                end={new Date(removeOffset(event.end_time))}
-                start={new Date(removeOffset(event.start_time))}
-              />
-            </Typography>,
+            timeSpanToString(
+              new Date(removeOffset(event.start_time)),
+              new Date(removeOffset(event.end_time)),
+              intl
+            ),
           ],
         },
         {

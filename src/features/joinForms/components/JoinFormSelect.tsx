@@ -36,12 +36,7 @@ const JoinFormSelect: FC<Props> = ({
   return (
     <FormControl sx={{ minWidth: 200 }}>
       <InputLabel>{messages.forms()}</InputLabel>
-      <Select
-        label={messages.forms()}
-        onChange={onChange}
-        placeholder={messages.forms()}
-        value={formId}
-      >
+      <Select label={messages.forms()} onChange={onChange} value={formId}>
         <MenuItem selected={!formId} value="all">
           {messages.submissionPane.allForms()}
         </MenuItem>
