@@ -1,8 +1,7 @@
 import React from 'react';
-import TreeItem from '@mui/lab/TreeItem';
-import TreeView from '@mui/lab/TreeView';
 import { Box, Link, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
+import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';
 
 import ProceduralColorIcon from './ProceduralColorIcon';
 import { TreeItemData } from '../types';
@@ -22,6 +21,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
   return sortedTreeItems.map((item) => (
     <TreeItem
       key={item.id}
+      itemId={item.id.toString()}
       label={
         <Link color="inherit" href={`/organize/${item.id}`} underline="none">
           <Box
@@ -41,7 +41,6 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
           </Box>
         </Link>
       }
-      nodeId={item.id.toString()}
       onClick={onSwitchOrg}
     >
       {item.children
@@ -60,14 +59,13 @@ function OrganizationTree({
 
   return (
     <div>
-      <TreeView
-        defaultCollapseIcon={<ExpandMore />}
-        defaultExpanded={
+      <SimpleTreeView
+        defaultExpandedItems={
           // If there is only one top-level org, expand it by default
           treeItemData.length == 1 ? [treeItemData[0].id.toString()] : undefined
         }
-        defaultExpandIcon={<ChevronRight />}
         disableSelection
+        slots={{ collapseIcon: ExpandMore, expandIcon: ChevronRight }}
         sx={{
           '& .Mui-focused': {
             backgroundColor: theme.palette.grey[100],
@@ -81,7 +79,7 @@ function OrganizationTree({
         }}
       >
         {renderTree({ onSwitchOrg, orgId, treeItemData })}
-      </TreeView>
+      </SimpleTreeView>
     </div>
   );
 }
