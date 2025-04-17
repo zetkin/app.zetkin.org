@@ -7,7 +7,7 @@ import ZUIButton from '../ZUIButton';
 
 const meta: Meta<typeof ZUIPersonAvatar> = {
   component: ZUIPersonAvatar,
-  title: 'Components/ZUIAvatar',
+  title: 'Components/ZUIPersonAvatar',
 };
 
 export default meta;
