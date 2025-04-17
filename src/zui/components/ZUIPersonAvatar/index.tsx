@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material';
 import { ZUISize } from '../types';
 import AvatarBackground from './AvatarBackground';
 
-export interface ZUIAvatarProps {
+export interface ZUIPersonAvatarProps {
   /**
    * First name of the person the avatar represents.
    */
@@ -49,7 +49,7 @@ const letterSpacing: Record<ZUISize, number> = {
   small: 0.08,
 };
 
-const ZUIAvatar: FC<ZUIAvatarProps> = ({
+const ZUIPersonAvatar: FC<ZUIPersonAvatarProps> = ({
   firstName,
   id,
   lastName,
@@ -79,4 +79,4 @@ const ZUIAvatar: FC<ZUIAvatarProps> = ({
   );
 };
 
-export default ZUIAvatar;
+export default ZUIPersonAvatar;

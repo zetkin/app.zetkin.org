@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import { Meta, StoryObj } from '@storybook/react';
 
-import ZUIAvatar from './index';
+import ZUIPersonAvatar from './index';
 import ZUIButton from '../ZUIButton';
 
-const meta: Meta<typeof ZUIAvatar> = {
-  component: ZUIAvatar,
+const meta: Meta<typeof ZUIPersonAvatar> = {
+  component: ZUIPersonAvatar,
   title: 'Components/ZUIAvatar',
 };
 
 export default meta;
-type Story = StoryObj<typeof ZUIAvatar>;
+type Story = StoryObj<typeof ZUIPersonAvatar>;
 
 export const Multiple: Story = {
   args: {
@@ -32,13 +32,13 @@ export const Multiple: Story = {
         }}
       >
         <Box sx={{ display: 'flex', gap: '0.5rem' }}>
-          <ZUIAvatar firstName="Angela" id={ids[0]} lastName="Davis" />
-          <ZUIAvatar firstName="Huey" id={ids[1]} lastName="Newton" />
-          <ZUIAvatar firstName="Toni" id={ids[2]} lastName="Morrisson" />
-          <ZUIAvatar firstName="Bobby" id={ids[3]} lastName="Seale" />
-          <ZUIAvatar firstName="Maya" id={ids[4]} lastName="Angelou" />
-          <ZUIAvatar firstName="Assata" id={ids[5]} lastName="Shakur" />
-          <ZUIAvatar firstName="Alice" id={ids[6]} lastName="Walker" />
+          <ZUIPersonAvatar firstName="Angela" id={ids[0]} lastName="Davis" />
+          <ZUIPersonAvatar firstName="Huey" id={ids[1]} lastName="Newton" />
+          <ZUIPersonAvatar firstName="Toni" id={ids[2]} lastName="Morrisson" />
+          <ZUIPersonAvatar firstName="Bobby" id={ids[3]} lastName="Seale" />
+          <ZUIPersonAvatar firstName="Maya" id={ids[4]} lastName="Angelou" />
+          <ZUIPersonAvatar firstName="Assata" id={ids[5]} lastName="Shakur" />
+          <ZUIPersonAvatar firstName="Alice" id={ids[6]} lastName="Walker" />
         </Box>
         <ZUIButton
           label="Update id:s to change colors"

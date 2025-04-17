@@ -6,7 +6,7 @@ import { Add } from '@mui/icons-material';
 import ZUIAutocomplete from './index';
 import ZUIText from '../ZUIText';
 import ZUIButton from '../ZUIButton';
-import ZUIAvatar from '../ZUIAvatar';
+import ZUIPersonAvatar from '../ZUIPersonAvatar';
 
 const meta: Meta<typeof ZUIAutocomplete> = {
   component: ZUIAutocomplete,
@@ -121,22 +121,26 @@ export const AvatarsAndSubtitles: Story = {
     options: [
       {
         label: 'Clara Zetkin',
-        picture: <ZUIAvatar firstName="Clara" id={12} lastName="Zetkin" />,
+        picture: (
+          <ZUIPersonAvatar firstName="Clara" id={12} lastName="Zetkin" />
+        ),
         subtitle: 'claraZzz@riseup.net',
       },
       {
         label: 'Angela Davis',
-        picture: <ZUIAvatar firstName="Angela" id={42} lastName="Davis" />,
+        picture: (
+          <ZUIPersonAvatar firstName="Angela" id={42} lastName="Davis" />
+        ),
         subtitle: 'angela.davis@gmail.com',
       },
       {
         label: 'Maya Angelou',
-        picture: <ZUIAvatar firstName="Maya" id={5} lastName="Angelou" />,
+        picture: <ZUIPersonAvatar firstName="Maya" id={5} lastName="Angelou" />,
         subtitle: 'maya_1975@network.net',
       },
       {
         label: 'Huey P Newton',
-        picture: <ZUIAvatar firstName="Huey" id={98} lastName="Newton" />,
+        picture: <ZUIPersonAvatar firstName="Huey" id={98} lastName="Newton" />,
         subtitle: 'huey@hotmail.com',
       },
     ],

@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 
-import ZUIAvatar from '../ZUIAvatar';
+import ZUIPersonAvatar from '../ZUIPersonAvatar';
 import { ZUISize } from '../types';
 
 export type AvatarData = {
@@ -59,7 +59,7 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
           return;
         }
         return (
-          <ZUIAvatar
+          <ZUIPersonAvatar
             key={avatar.id}
             firstName={avatar.firstName}
             id={avatar.id}

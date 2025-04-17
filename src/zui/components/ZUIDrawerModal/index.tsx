@@ -3,7 +3,7 @@ import { Box, Fade, IconButton, Modal, Slide, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 import { MUIIcon } from '../types';
-import AvatarBackground from '../ZUIAvatar/AvatarBackground';
+import AvatarBackground from '../ZUIPersonAvatar/AvatarBackground';
 import ZUIButton from '../ZUIButton';
 import ModalBackground from '../ZUIModal/ModalBackground';
 
