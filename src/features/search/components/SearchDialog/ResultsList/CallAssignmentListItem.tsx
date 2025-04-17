@@ -1,7 +1,12 @@
 import { HeadsetMic } from '@mui/icons-material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+} from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -22,16 +27,18 @@ const CallassigmentListItem: React.FunctionComponent<{
       legacyBehavior
       passHref
     >
-      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
-        <ListItemAvatar>
-          <Avatar>
-            <HeadsetMic />
-          </Avatar>
-        </ListItemAvatar>
-        <ResultsListItemText
-          primary={callAssignment.title}
-          secondary={<Msg id={messageIds.results.callassignment} />}
-        />
+      <ListItem data-testid="SearchDialog-resultsListItem">
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar>
+              <HeadsetMic />
+            </Avatar>
+          </ListItemAvatar>
+          <ResultsListItemText
+            primary={callAssignment.title}
+            secondary={<Msg id={messageIds.results.callassignment} />}
+          />
+        </ListItemButton>
       </ListItem>
     </Link>
   );

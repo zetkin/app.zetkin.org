@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
-import { Box, Button, Theme, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { ZetkinJoinForm } from '../types';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useApiClient } from 'core/hooks';
@@ -11,8 +11,10 @@ import getJoinFormEmbedData from '../rpc/getJoinFormEmbedData';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import useJoinFormMutations from '../hooks/useJoinFormMutations';
 
-const useStyles = makeStyles<Theme>((theme) => ({
+const useStyles = makeStyles({
   container: {
     alignItems: 'center',
     cursor: 'pointer',
@@ -27,7 +29,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
     width: '7em',
   },
   icon: {
-    color: theme.palette.grey[500],
+    color: oldTheme.palette.grey[500],
     fontSize: '28px',
   },
   left: {
@@ -40,12 +42,12 @@ const useStyles = makeStyles<Theme>((theme) => ({
     alignItems: 'center',
     display: 'flex',
   },
-}));
+});
 
 export enum STATUS_COLORS {
   BLUE = 'blue',
   GREEN = 'green',
-  GRAY = 'gray',
+  GREY = 'grey',
   ORANGE = 'orange',
   RED = 'red',
 }
@@ -59,7 +61,19 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
   const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteForm } = useJoinFormMutations(form.organization.id, form.id);
   const messages = useMessages(messageIds);
+  async function handleDeleteJoinForm() {
+    await deleteForm();
+    showSnackbar(
+      'success',
+      <Msg
+        id={messageIds.deleteJoinForm.success}
+        values={{ title: form.title }}
+      />
+    );
+  }
 
   return (
     <Box
@@ -71,7 +85,7 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
       <Box className={classes.left}>
         <FormatListBulleted className={classes.icon} />
         <Box>
-          <Typography color={theme.palette.text.primary}>
+          <Typography color={oldTheme.palette.text.primary}>
             {form.title}
           </Typography>
         </Box>
@@ -118,6 +132,19 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                     </Button>
                   </>
                 );
+              },
+            },
+            {
+              label: messages.embedding.delete(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+                showConfirmDialog({
+                  onSubmit: handleDeleteJoinForm,
+                  title: messages.deleteJoinForm.title(),
+                  warningText: messages.deleteJoinForm.warning({
+                    title: form.title,
+                  }),
+                });
               },
             },
           ]}

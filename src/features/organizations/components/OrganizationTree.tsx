@@ -1,8 +1,7 @@
-import NextLink from 'next/link';
 import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import TreeView from '@mui/lab/TreeView';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 import ProceduralColorIcon from './ProceduralColorIcon';
@@ -24,7 +23,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
     <TreeItem
       key={item.id}
       label={
-        <NextLink href={`/organize/${item.id}`} legacyBehavior>
+        <Link color="inherit" href={`/organize/${item.id}`} underline="none">
           <Box
             m={1}
             onClick={(e) => e.stopPropagation()}
@@ -40,7 +39,7 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
               {item.title}
             </Typography>
           </Box>
-        </NextLink>
+        </Link>
       }
       nodeId={item.id.toString()}
       onClick={onSwitchOrg}

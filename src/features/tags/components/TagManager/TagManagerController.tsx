@@ -7,21 +7,25 @@ import { Msg } from 'core/i18n';
 import TagSelect from 'features/tags/components/TagManager/components/TagSelect';
 import TagsList from './components/TagsList';
 import { EditTag, NewTag } from './types';
-import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+import {
+  ZetkinAppliedTag,
+  ZetkinTag,
+  ZetkinTagGroup,
+} from 'utils/types/zetkin';
 
 export interface TagManagerControllerProps {
-  assignedTags: ZetkinTag[];
+  assignedTags: ZetkinAppliedTag[];
   availableGroups: ZetkinTagGroup[];
   availableTags: ZetkinTag[];
   disableEditTags?: boolean;
-  disabledTags?: ZetkinTag[];
+  disabledTags?: ZetkinAppliedTag[];
   groupTags?: boolean;
   ignoreValues?: boolean;
-  onAssignTag: (tag: ZetkinTag) => void;
+  onAssignTag: (tag: ZetkinAppliedTag) => void;
   onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onDeleteTag: (tagId: number) => void;
   onEditTag: (tag: EditTag) => void;
-  onUnassignTag: (tag: ZetkinTag) => void;
+  onUnassignTag: (tag: ZetkinAppliedTag) => void;
   submitCreateTagLabel?: string;
 }
 
@@ -71,8 +75,7 @@ export const TagManagerController: FC<TagManagerControllerProps> = ({
             onCreateTag={async (tag) => {
               const newTag = await onCreateTag(tag);
               if (!newTag.value_type) {
-                // If not a value tag, assign to resource directly
-                onAssignTag(newTag);
+                onAssignTag({ ...newTag, value: null });
               }
               // New tag is accessible in TagSelect
               return newTag;

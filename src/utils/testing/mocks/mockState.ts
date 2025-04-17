@@ -98,6 +98,7 @@ export default function mockState(overrides?: RootState) {
       timelineUpdatesByInstanceId: {},
     },
     organizations: {
+      eventsByOrgId: {},
       orgData: remoteItem(0),
       subOrgsByOrgId: {},
       treeDataList: remoteList(),

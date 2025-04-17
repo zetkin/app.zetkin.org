@@ -21,3 +21,11 @@ export interface Breadcrumb {
   label?: string;
   labelMsg?: string;
 }
+
+/**
+ * This is a utility type to create a version of a type where you select
+ * which optional properties are made required.
+ * <br>
+ * Stolen from: https://www.emmanuelgautier.com/blog/snippets/typescript-required-properties
+ */
+export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };

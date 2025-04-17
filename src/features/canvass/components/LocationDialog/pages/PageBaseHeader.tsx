@@ -5,7 +5,7 @@ import { FC, ReactNode } from 'react';
 type Props = {
   iconButtons: ReactNode;
   onBack?: () => void;
-  subtitle?: string;
+  subtitle?: string | ReactNode;
   title: string;
 };
 
