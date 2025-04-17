@@ -7,6 +7,7 @@ import CallLayout from 'features/call/layouts/CallLayout';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { CALL, hasFeature } from 'utils/featureFlags';
+import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 
 type Props = {
   children?: ReactNode;
@@ -32,7 +33,11 @@ const CallPageLayout = async ({ children, params }: Props) => {
   const { callAssId } = params;
 
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
-    return <CallLayout callAssId={callAssId}>{children}</CallLayout>;
+    return (
+      <HomeThemeProvider>
+        <CallLayout callAssId={callAssId}>{children}</CallLayout>;
+      </HomeThemeProvider>
+    );
   } else {
     const callUrl = process.env.ZETKIN_GEN2_CALL_URL;
     const assignmentUrl = `${callUrl}/assignments/${params.callAssId}/call`;
