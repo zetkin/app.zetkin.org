@@ -12,8 +12,9 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import theme from '../../../theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     borderColor: theme.palette.grey[500],
     borderRadius: '1em',

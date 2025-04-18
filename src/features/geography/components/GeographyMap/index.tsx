@@ -45,6 +45,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
 
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
+  const containerElm = useRef<HTMLElement | undefined>();
 
   useEffect(() => {
     const map = mapRef.current;
@@ -128,6 +129,18 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
     }
   };
 
+  useEffect(() => {
+    if (containerElm.current !== undefined) {
+      const resizeObserver = new ResizeObserver(() => {
+        mapRef.current?.invalidateSize();
+      });
+      resizeObserver.observe(containerElm.current);
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, [containerElm]);
+
   return (
     <AreaFilterProvider>
       <Box
@@ -138,7 +151,13 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
           width: '100%',
         }}
       >
-        <Box display="flex" justifyContent="space-between" px={2} py={1}>
+        <Box
+          ref={(ref) => (containerElm.current = ref as HTMLElement)}
+          display="flex"
+          justifyContent="space-between"
+          px={2}
+          py={1}
+        >
           <Box alignItems="center" display="flex" gap={1}>
             <ButtonGroup variant="contained">
               {!drawingPoints && (

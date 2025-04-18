@@ -1,11 +1,11 @@
-import { ZetkinCallAssignment, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinCallAssignment } from 'utils/types/zetkin';
 
 export interface CallAssignmentCaller {
   id: number;
   first_name: string;
   last_name: string;
-  prioritized_tags: ZetkinTag[];
-  excluded_tags: ZetkinTag[];
+  prioritized_tags: ZetkinAppliedTag[];
+  excluded_tags: ZetkinAppliedTag[];
 }
 
 // TODO: Consolidate these

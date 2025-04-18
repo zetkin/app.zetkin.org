@@ -1,6 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
+import {
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+} from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinPerson } from 'utils/types/zetkin';
@@ -19,14 +24,16 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
       legacyBehavior
       passHref
     >
-      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
-        <ListItemAvatar>
-          <Avatar src={`/api/orgs/${orgId}/people/${person.id}/avatar`} />
-        </ListItemAvatar>
-        <ResultsListItemText
-          primary={person.first_name + ' ' + person.last_name}
-          secondary={<Msg id={messageIds.results.person} />}
-        />
+      <ListItem data-testid="SearchDialog-resultsListItem">
+        <ListItemButton>
+          <ListItemAvatar>
+            <Avatar src={`/api/orgs/${orgId}/people/${person.id}/avatar`} />
+          </ListItemAvatar>
+          <ResultsListItemText
+            primary={person.first_name + ' ' + person.last_name}
+            secondary={<Msg id={messageIds.results.person} />}
+          />
+        </ListItemButton>
       </ListItem>
     </Link>
   );

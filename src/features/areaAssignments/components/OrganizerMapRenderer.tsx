@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/styles';
 import { DoorFront, Place } from '@mui/icons-material';
 import {
   AttributionControl,
@@ -26,6 +25,7 @@ import { getBoundSize } from '../../canvass/utils/getBoundSize';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
 import { ZetkinPerson } from '../../../utils/types/zetkin';
+import oldTheme from 'theme';
 
 const LocationMarker: FC<{
   areaAssId: string;
@@ -33,7 +33,6 @@ const LocationMarker: FC<{
   location: ZetkinLocation;
   locationStyle: 'dot' | 'households' | 'progress';
 }> = ({ areaAssId, idOfMetricThatDefinesDone, location, locationStyle }) => {
-  const theme = useTheme();
   if (locationStyle == 'dot') {
     return (
       <DivIconMarker
@@ -42,7 +41,7 @@ const LocationMarker: FC<{
         zIndexOffset={-1000}
       >
         <Box
-          bgcolor={theme.palette.text.primary}
+          bgcolor={oldTheme.palette.text.primary}
           borderRadius="2em"
           height={6}
           width={6}
@@ -63,7 +62,7 @@ const LocationMarker: FC<{
             bgcolor="white"
             borderRadius={1}
             boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
-            color={theme.palette.text.secondary}
+            color={oldTheme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
             fontSize="14px"
@@ -124,7 +123,6 @@ function HouseholdOverlayMarker(props: {
   numberOfHouseholds: number;
   numberOfLocations: number;
 }) {
-  const theme = useTheme();
   return (
     <Box
       alignItems="center"
@@ -138,7 +136,10 @@ function HouseholdOverlayMarker(props: {
       sx={{ translate: '-50% -50%' }}
     >
       <Typography alignItems="center" display="flex" fontSize="14px">
-        <DoorFront fontSize="small" sx={{ color: theme.palette.grey[300] }} />
+        <DoorFront
+          fontSize="small"
+          sx={{ color: oldTheme.palette.grey[300] }}
+        />
         {props.numberOfHouseholds}
       </Typography>
       <Divider
@@ -147,7 +148,7 @@ function HouseholdOverlayMarker(props: {
         }}
       />
       <Typography alignItems="center" display="flex" fontSize="14px">
-        <Place fontSize="small" sx={{ color: theme.palette.grey[300] }} />
+        <Place fontSize="small" sx={{ color: oldTheme.palette.grey[300] }} />
 
         {props.numberOfLocations}
       </Typography>
@@ -159,8 +160,6 @@ function ProgressOverlayMarker(props: {
   successfulVisitsColorPercent: number;
   visitsColorPercent: number;
 }) {
-  const theme = useTheme();
-
   return (
     <Box
       bgcolor="white"
@@ -174,11 +173,11 @@ function ProgressOverlayMarker(props: {
       <div
         style={{
           alignItems: 'center',
-          background: `conic-gradient(${theme.palette.primary.main} ${
+          background: `conic-gradient(${oldTheme.palette.primary.main} ${
             props.successfulVisitsColorPercent
-          }%, ${lighten(theme.palette.primary.main, 0.7)} ${
+          }%, ${lighten(oldTheme.palette.primary.main, 0.7)} ${
             props.successfulVisitsColorPercent
-          }% ${props.visitsColorPercent}%, ${theme.palette.grey[400]} ${
+          }% ${props.visitsColorPercent}%, ${oldTheme.palette.grey[400]} ${
             props.visitsColorPercent
           }%)`,
           borderRadius: '2em',
@@ -194,16 +193,14 @@ function ProgressOverlayMarker(props: {
 }
 
 function NumberOverlayMarker(props: { value: number }) {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
         alignItems: 'center',
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: oldTheme.palette.primary.main,
         borderRadius: 10,
         boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-        color: theme.palette.primary.contrastText,
+        color: oldTheme.palette.primary.contrastText,
         display: 'flex',
         fontWeight: 'bold',
         height: 30,
@@ -299,7 +296,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   overlayStyle,
   locationStyle,
 }) => {
-  const theme = useTheme();
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
   const [zoomed, setZoomed] = useState(false);
@@ -353,21 +349,21 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     if (areaStyle == 'assignees') {
       return hasPeople
-        ? theme.palette.primary.main
-        : theme.palette.secondary.main;
+        ? oldTheme.palette.primary.main
+        : oldTheme.palette.secondary.main;
     }
 
     if (areaStyle == 'progress' && !hasPeople) {
-      return theme.palette.secondary.main;
+      return oldTheme.palette.secondary.main;
     }
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, ${lighten(theme.palette.primary.main, 0.8)}, ${
-          theme.palette.primary.main
+        `color-mix(in hsl, ${lighten(oldTheme.palette.primary.main, 0.8)}, ${
+          oldTheme.palette.primary.main
         } ${householdColorPercent}%)`
-      : `color-mix(in hsl,  ${lighten(theme.palette.primary.main, 0.8)}, ${
-          theme.palette.primary.main
+      : `color-mix(in hsl,  ${lighten(oldTheme.palette.primary.main, 0.8)}, ${
+          oldTheme.palette.primary.main
         } ${visitsColorPercent || 1}%)`;
   };
 
@@ -451,16 +447,20 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               return getBoundSize(a1) - getBoundSize(a0);
             }
           })
-          .map((area) => {
+          .map((area, index) => {
             const selected = selectedId == area.id;
 
             // The key changes when selected, to force redraw of polygon
-            // to reflect new state through visual style
-            const key =
-              area.id +
-              (selected ? '-selected' : '-default') +
-              `-${areaStyle}` +
-              (area.hasPeople ? '-assigned' : '');
+            // to reflect new state through visual style. Since we also
+            // care about keeping the order form above, we include that in the
+            // key as well.
+            const key = [
+              area.id,
+              selected ? 'selected' : 'default',
+              areaStyle,
+              area.hasPeople ? 'assigned' : 'unassigned',
+              index,
+            ].join('-');
 
             const stats = areaStats.stats.find(
               (stat) => stat.areaId == area.id

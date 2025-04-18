@@ -9,6 +9,12 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  autocomplete: {
+    noOptionsDefaultText: m('No option matches your search'),
+  },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
+  },
   collapse: {
     collapse: m('Collapse'),
     expand: m('Expand'),
@@ -126,6 +132,13 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  eventWarningIcons: {
+    contact: m('No contact person has been assigned'),
+    reminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+    signUps: m('There are pending signups'),
+  },
   expandableText: {
     showLess: m('Show less'),
     showMore: m('Show more'),
@@ -191,11 +204,23 @@ export default makeMessages('zui', {
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),
   },
+  signUpChip: {
+    needed: m('You are needed'),
+    signedUp: m('You have signed up'),
+  },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
     success: m('Success!'),
     warning: m('Warning!'),
+  },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
   },
   submitOrCancel: {
     cancel: m('Cancel'),
@@ -206,34 +231,36 @@ export default makeMessages('zui', {
   },
   timeSpan: {
     multiDay: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - {endDate}, {end}'),
     multiDayEndsToday: m<{
-      end: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - Today, {end}'),
     multiDayToday: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
     }>('Today, {start} - {endDate}, {end}'),
     singleDay: m<{
-      date: ReactElement;
-      end: ReactElement;
-      start: ReactElement;
+      date: string | ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
     }>('{date}, {start} - {end}'),
     singleDayAllDay: m('All day today'),
-    singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
-      'Today, {start} - {end}'
-    ),
+    singleDayToday: m<{
+      end: string | ReactElement;
+      start: string | ReactElement;
+    }>('Today, {start} - {end}'),
   },
-  timezonePicker: {
+  timeZonePicker: {
     gmt: m('GMT'),
-    placeholder: m('Type to search location'),
-    timezone: m('Timezone'),
+    noOptionsText: m('No location matches your search'),
+    placeholder: m('Type to search for a location'),
+    timeZone: m('Time zone'),
   },
 });

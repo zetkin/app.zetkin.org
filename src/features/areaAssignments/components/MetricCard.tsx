@@ -77,6 +77,7 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
           />
           <Box display="flex" gap={1} justifyContent="right" width="100%">
             <Button
+              disabled={question == ''}
               onClick={() => {
                 onSave({
                   definesDone,

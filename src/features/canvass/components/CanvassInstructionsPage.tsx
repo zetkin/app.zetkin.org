@@ -20,7 +20,7 @@ import useSidebarStats from '../hooks/useSidebarStats';
 import useMembership from 'features/organizations/hooks/useMembership';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
 import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import { Msg } from 'core/i18n';
@@ -69,7 +69,7 @@ const Page: FC<{
         >
           <Box
             alignItems="center"
-            bgcolor={theme.palette.background.paper}
+            bgcolor={oldTheme.palette.background.paper}
             display="flex"
             justifyContent="space-between"
             padding={2}
@@ -200,7 +200,7 @@ const Page: FC<{
                 }}
               >
                 <HomeWork
-                  sx={{ color: theme.palette.grey[400], fontSize: 100 }}
+                  sx={{ color: oldTheme.palette.grey[400], fontSize: 100 }}
                 />
                 <Typography color="secondary" variant="body1">
                   <Msg id={messageIds.instructions.ready} />

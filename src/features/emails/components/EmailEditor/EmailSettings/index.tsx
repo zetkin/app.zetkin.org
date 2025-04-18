@@ -26,7 +26,7 @@ const EmailSettings: FC<EmailSettingsProps> = ({
   const [activeTab, setActiveTab] = useState<
     'content' | 'preview' | 'settings'
   >('content');
-  const boxRef = useRef<HTMLElement>();
+  const boxRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     boxRef.current?.children[selectedBlockIndex]?.scrollIntoView({

@@ -188,7 +188,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 </Typography>
                               </Box>
                             )}
-                            {unlocked && (
+                            {isReportEditable && (
                               <IconButton
                                 color="secondary"
                                 onClick={() => setMetricBeingEdited(metric)}
@@ -196,7 +196,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 <Edit />
                               </IconButton>
                             )}
-                            {unlocked &&
+                            {isReportEditable &&
                               (metric.kind === 'scale5' ||
                                 (metric.kind === 'boolean' &&
                                   assignment.metrics.filter(
@@ -233,7 +233,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                   <Delete />
                                 </IconButton>
                               )}
-                            {unlocked &&
+                            {isReportEditable &&
                               assignment.metrics.filter(
                                 (metric) => metric.kind === 'boolean'
                               ).length <= 1 &&
@@ -470,7 +470,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 <InputLabel>{messages.report.card.definesSuccess()}</InputLabel>
                 <Select
                   disabled={
-                    !unlocked ||
+                    !isReportEditable ||
                     assignment.metrics.filter(
                       (metric) => metric.kind === 'boolean'
                     ).length <= 1
@@ -541,7 +541,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     justifyContent="space-between"
                   >
                     <FormControlLabel
-                      control={<Radio disabled={!unlocked} />}
+                      control={<Radio disabled={!isReportEditable} />}
                       label={messages.report.dataCard.household()}
                       sx={{ ml: 1 }}
                       value="household"
@@ -561,7 +561,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                     justifyContent="space-between"
                   >
                     <FormControlLabel
-                      control={<Radio disabled={!unlocked} />}
+                      control={<Radio disabled={!isReportEditable} />}
                       label={messages.report.dataCard.location()}
                       sx={{ ml: 1 }}
                       value="location"

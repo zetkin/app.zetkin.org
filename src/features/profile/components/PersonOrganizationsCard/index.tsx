@@ -91,7 +91,7 @@ const PersonOrganizationsCard: React.FunctionComponent<
           organizationTree={data.personOrganizationTree}
         />
         <Collapse in={editable && !addable}>
-          <ListItem button color="primary" onClick={() => setAddable(!addable)}>
+          <ListItem color="primary" onClick={() => setAddable(!addable)}>
             <ListItemIcon>
               <Add />
             </ListItemIcon>

@@ -40,7 +40,8 @@ const SheetSettings: FC<SheetSettingsProps> = ({ clearConfiguration }) => {
     firstRowIsHeaders,
     selectedSheetIndex,
     sheets,
-    updateFirstRowIsHeaders,
+    skipUnknown,
+    updateSheetSettings,
     updateSelectedSheetIndex,
   } = useSheets();
   const [settingsExpanded, setSettingsExpanded] = useState(true);
@@ -93,10 +94,23 @@ const SheetSettings: FC<SheetSettingsProps> = ({ clearConfiguration }) => {
         <Box alignItems="center" display="flex">
           <Checkbox
             checked={firstRowIsHeaders}
-            onChange={(ev, isChecked) => updateFirstRowIsHeaders(isChecked)}
+            onChange={(ev, isChecked) =>
+              updateSheetSettings({ firstRowIsHeaders: isChecked })
+            }
           />
           <Typography>
             <Msg id={messageIds.configuration.settings.firstRowIsHeaders} />
+          </Typography>
+        </Box>
+        <Box alignItems="center" display="flex">
+          <Checkbox
+            checked={skipUnknown}
+            onChange={(ev, isChecked) =>
+              updateSheetSettings({ skipUnknown: isChecked })
+            }
+          />
+          <Typography>
+            <Msg id={messageIds.configuration.settings.skipUnknown} />
           </Typography>
         </Box>
       </AccordionDetails>
