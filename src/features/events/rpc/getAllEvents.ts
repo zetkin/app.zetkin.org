@@ -20,9 +20,11 @@ export const getAllEventsDef = {
 export default makeRPCDef<Params, Result>(getAllEventsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
-  const memberships = await apiClient.get<ZetkinMembership[]>(
-    '/api/users/me/memberships'
-  );
+  const memberships = await apiClient
+    .get<ZetkinMembership[]>('/api/users/me/memberships')
+    .then((memberships) =>
+      memberships.filter((membership) => membership.follow)
+    );
 
   const now = new Date().toISOString();
 
