@@ -28,16 +28,17 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const now = new Date().toISOString();
 
-  const events: ZetkinEvent[] = [];
-  for (const membership of memberships) {
-    const eventsOfOrg = await apiClient.get<ZetkinEvent[]>(
-      `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}`
-    );
-    events.push(...eventsOfOrg);
-  }
-
-  return events.filter((event) => {
-    const state = getEventState(event);
-    return state == EventState.OPEN || state == EventState.SCHEDULED;
-  });
+  return await Promise.all(
+    memberships.map((membership) =>
+      apiClient
+        .get<ZetkinEvent[]>(
+          `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}`
+        )
+        .then((events) =>
+          events.filter((event) => eventStates.includes(getEventState(event)))
+        )
+    )
+  ).then((eventsByOrg) => eventsByOrg.flat());
 }
+
+const eventStates = [EventState.OPEN, EventState.SCHEDULED];
