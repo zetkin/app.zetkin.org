@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Divider } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Link from 'next/link';
 import { FC, ReactNode } from 'react';
 
@@ -8,6 +8,7 @@ import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssign
 import ZUIText from 'zui/components/ZUIText';
 import newTheme from 'zui/theme';
 import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
+import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Props = {
   callAssId: string;
@@ -91,7 +92,7 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
           </Box>
         </Box>
       </Box>
-      <Divider />
+      <ZUIDivider />
       <Box>{children}</Box>
     </Box>
   );
