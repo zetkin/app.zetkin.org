@@ -80,8 +80,7 @@ export default makeMessages('feat.surveys', {
   },
   editWarning: {
     editing: {
-      header: m('Survey can be edited'),
-      lockButton: m('Lock'),
+      header: m('Survey unlocked'),
       safe: {
         bullet1: m('Fixing spelling mistakes'),
         bullet2: m('Reordering blocks'),
@@ -105,7 +104,6 @@ export default makeMessages('feat.surveys', {
       subheader: m(
         'This survey has started receiving submissions. Editing the survey now may cause problems with the data. Proceed with caution.'
       ),
-      unlockButton: m('Unlock'),
     },
   },
   layout: {

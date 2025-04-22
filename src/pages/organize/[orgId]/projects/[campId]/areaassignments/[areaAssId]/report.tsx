@@ -1,5 +1,4 @@
 import {
-  Check,
   Close,
   Delete,
   Edit,
@@ -26,10 +25,11 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
-  Switch,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
+  Grid,
 } from '@mui/material';
 
 import { AREAS } from 'utils/featureFlags';
@@ -49,6 +49,7 @@ import {
   ZetkinAreaAssignment,
   ZetkinMetric,
 } from 'features/areaAssignments/types';
+import ZUILockCard from 'zui/ZUILockCard';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -72,6 +73,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   areaAssId,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { updateAreaAssignment } = useAreaAssignmentMutations(
     parseInt(orgId),
     areaAssId
@@ -131,8 +133,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   return (
     <ZUIFuture future={areaAssignmentFuture}>
       {(assignment: ZetkinAreaAssignment) => (
-        <Box display="flex">
-          <Box width="60%">
+        <Grid
+          container
+          direction={isMobile ? 'column-reverse' : 'row'}
+          spacing={2}
+        >
+          <Grid size={{ md: 8, xs: 12 }}>
             <Box>
               {assignment.metrics.map((metric) => (
                 <Card key={metric.id} sx={{ mb: 2 }}>
@@ -399,66 +405,35 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 </Box>
               </Dialog>
             </Box>
-          </Box>
-          <Box ml={2} width="40%">
+          </Grid>
+          <Grid size={{ md: 4, xs: 12 }}>
             {assignment.start_date && (
-              <ZUICard
-                header={
-                  !unlocked ? (
-                    <Msg id={messagesIds.report.lockCard.header} />
-                  ) : (
-                    <Msg id={messagesIds.report.lockCard.headerUnlock} />
-                  )
-                }
-                status={
-                  <Switch
-                    checked={!unlocked}
-                    onChange={(event) => setUnlocked(!event.target.checked)}
-                  />
-                }
-                subheader={
-                  !unlocked
-                    ? messages.report.lockCard.description()
-                    : messages.report.lockCard.descriptionUnlock()
-                }
-                sx={{ mb: 2 }}
-              >
-                {unlocked && (
-                  <Box>
-                    <Divider />
-                    <Typography my={1}>
-                      <Msg id={messagesIds.report.lockCard.safe} />
-                    </Typography>
-                    <Box alignItems="center" display="flex">
-                      <Check style={{ color: theme.palette.success.main }} />
-                      <Typography ml={1}>
-                        <Msg id={messagesIds.report.lockCard.fix} />
-                      </Typography>
-                    </Box>
-                    <Box alignItems="center" display="flex">
-                      <Check style={{ color: theme.palette.success.main }} />
-                      <Typography ml={1}>
-                        <Msg id={messagesIds.report.lockCard.add} />
-                      </Typography>
-                    </Box>
-                    <Typography my={1}>
-                      <Msg id={messagesIds.report.lockCard.unsafe} />
-                    </Typography>
-                    <Box alignItems="start" display="flex">
-                      <Close color="error" />
-                      <Typography ml={1}>
-                        <Msg id={messagesIds.report.lockCard.rename} />
-                      </Typography>
-                    </Box>
-                    <Box alignItems="start" display="flex">
-                      <Close color="error" />
-                      <Typography ml={1}>
-                        <Msg id={messagesIds.report.lockCard.change} />
-                      </Typography>
-                    </Box>
-                  </Box>
-                )}
-              </ZUICard>
+              <ZUILockCard
+                isActive={unlocked}
+                lockedHeader={messages.report.lockCard.header()}
+                lockedSubheader={messages.report.lockCard.description()}
+                onToggle={setUnlocked}
+                tips={{
+                  safe: {
+                    bullets: [
+                      messages.report.lockCard.fix(),
+                      messages.report.lockCard.add(),
+                    ],
+                    header: messages.report.lockCard.safe(),
+                    iconType: 'check',
+                  },
+                  unsafe: {
+                    bullets: [
+                      messages.report.lockCard.rename(),
+                      messages.report.lockCard.change(),
+                    ],
+                    header: messages.report.lockCard.unsafe(),
+                    iconType: 'close',
+                  },
+                }}
+                unlockedHeader={messages.report.lockCard.headerUnlock()}
+                unlockedSubheader={messages.report.lockCard.descriptionUnlock()}
+              />
             )}
             <ZUICard
               header={messages.report.successCard.header()}
@@ -578,8 +553,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 </RadioGroup>
               </FormControl>
             </ZUICard>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       )}
     </ZUIFuture>
   );
