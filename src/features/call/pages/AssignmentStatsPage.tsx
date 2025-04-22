@@ -8,6 +8,7 @@ import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
+import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -19,7 +20,10 @@ type Props = {
 };
 
 const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
-  assignment;
+  const stats = useSimpleCallAssignmentStats(
+    assignment.organization.id,
+    assignment.id
+  );
 
   return (
     <Box m={2}>
@@ -28,19 +32,19 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
           <Box display="flex" justifyContent="space-between" mt={2}>
             <Box>
               <Typography sx={{ color: newTheme.palette.data.main }}>
-                {1}
+                {stats.num_calls_reached}
               </Typography>
               <ZUIText variant="headingSm">successful calls </ZUIText>
             </Box>
             <Box>
               <Typography sx={{ color: newTheme.palette.data.main }}>
-                {2}
+                {stats.num_calls_made}
               </Typography>
               <ZUIText variant="headingSm"> calls made</ZUIText>
             </Box>
             <Box>
               <Typography sx={{ color: newTheme.palette.data.main }}>
-                {3}
+                {stats.num_target_matches}
               </Typography>
               <ZUIText variant="headingSm">people in target group</ZUIText>
             </Box>
