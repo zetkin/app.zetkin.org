@@ -16,9 +16,10 @@ import useEventMutations from '../hooks/useEventMutations';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIDatePicker from 'zui/ZUIDatePicker';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import EventChangeCampaignDialog from './EventChangeCampaignDialog';
+import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
 
 interface EventActionButtonsProps {
   event: ZetkinEvent;
@@ -30,9 +31,10 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   const messages = useMessages(messageIds);
   const orgId = event.organization.id;
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const router = useRouter();
-  const { cancelEvent, deleteEvent, restoreEvent, setPublished } =
+  const { cancelEvent, updateEvent, deleteEvent, restoreEvent, setPublished } =
     useEventMutations(orgId, event.id);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const router = useRouter();
   const duplicateEvent = useDuplicateEvent(orgId, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
 
@@ -73,6 +75,20 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
 
   const handleMove = () => {
     setIsMoveDialogOpen(true);
+  };
+
+  const handleOnCampaignSelected = async (campaignId: number) => {
+    await updateEvent({ campaign_id: campaignId });
+    await router.push(
+      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+    );
+    showSnackbar(
+      'success',
+      messages.eventChangeCampaignDialog.success({
+        campaignTitle: event.campaign!.title,
+        eventTitle: event.title!,
+      })
+    );
   };
 
   return (
@@ -153,11 +169,12 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
       <Box>
         <ZUIDatePicker date={event.published} onChange={handleChangeDate} />
       </Box>
-
-      <EventChangeCampaignDialog
-        close={() => setIsMoveDialogOpen(false)}
-        event={event}
-        isOpen={isMoveDialogOpen}
+      <ChangeCampaignDialog
+        errorMessage={messages.eventChangeCampaignDialog.error()}
+        onCampaignSelected={handleOnCampaignSelected}
+        onClose={() => setIsMoveDialogOpen(false)}
+        open={isMoveDialogOpen}
+        title={messages.eventChangeCampaignDialog.title()}
       />
     </Box>
   );
