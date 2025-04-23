@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Link from 'next/link';
 import { FC, ReactNode } from 'react';
 
@@ -9,6 +9,7 @@ import ZUIText from 'zui/components/ZUIText';
 import newTheme from 'zui/theme';
 import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import ZUIButton from 'zui/components/ZUIButton';
 
 type Props = {
   callAssId: string;
@@ -74,20 +75,11 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
                 </ZUIText>
               </Box>
             </Box>
-
-            <Box display="flex">
+            <Box display="flex" gap={2}>
               <Link href="/my/home" passHref>
-                <Button sx={{ whiteSpace: 'nowrap' }} variant="outlined">
-                  Quit
-                </Button>
+                <ZUIButton label="Quit" variant="secondary" />
               </Link>
-              <Button
-                color="primary"
-                sx={{ ml: 1, whiteSpace: 'nowrap' }}
-                variant="contained"
-              >
-                Start calling
-              </Button>
+              <ZUIButton label="Start calling" variant="primary" />
             </Box>
           </Box>
         </Box>
