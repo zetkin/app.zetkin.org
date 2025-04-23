@@ -4,7 +4,7 @@ import {
   Remirror,
   useRemirror,
 } from '@remirror/react';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BoldExtension,
   BulletListExtension,
@@ -13,8 +13,14 @@ import {
   ItalicExtension,
   OrderedListExtension,
 } from 'remirror/extensions';
-import { AnyExtension, PasteRulesExtension } from 'remirror';
+import {
+  AnyExtension,
+  FromToProps,
+  PasteRulesExtension,
+  ProsemirrorNode,
+} from 'remirror';
 import { Box, useTheme } from '@mui/material';
+import { Attrs } from '@remirror/pm/model';
 
 import LinkExtension from './extensions/LinkExtension';
 import ButtonExtension from './extensions/ButtonExtension';
@@ -31,6 +37,9 @@ import LinkExtensionUI from './LinkExtensionUI';
 import ButtonExtensionUI from './ButtonExtensionUI';
 import MoveExtension from './extensions/MoveExtension';
 import IndentDedentExtension from './extensions/IndentDedentExtension';
+import { EmailContentBlock } from 'features/emails/types';
+import zetkinToRemirror from './utils/zetkinToRemirror';
+import remirrorToZetkin from './utils/remirrorToZetkin';
 
 type BlockExtension =
   | ButtonExtension
@@ -39,7 +48,24 @@ type BlockExtension =
   | OrderedListExtension
   | BulletListExtension;
 
+export type BlockType =
+  | 'paragraph'
+  | 'heading'
+  | 'orderedList'
+  | 'bulletList'
+  | 'zimage'
+  | 'zbutton';
+
+export type BlockData = {
+  attributes: Attrs;
+  node: ProsemirrorNode;
+  range: FromToProps;
+  rect: DOMRect;
+  type: BlockType;
+};
+
 type Props = {
+  content: EmailContentBlock[];
   editable: boolean;
   enableBold?: boolean;
   enableButton?: boolean;
@@ -49,9 +75,12 @@ type Props = {
   enableLink?: boolean;
   enableLists?: boolean;
   enableVariable?: boolean;
+  onChange: (newContent: EmailContentBlock[]) => void;
+  onSelectBlock: (selectedBlockIndex: number) => void;
 };
 
 const ZUIEditor: FC<Props> = ({
+  content,
   editable,
   enableBold,
   enableButton,
@@ -61,9 +90,35 @@ const ZUIEditor: FC<Props> = ({
   enableLink,
   enableLists,
   enableVariable,
+  onChange,
+  onSelectBlock,
 }) => {
   const messages = useMessages(messageIds.editor);
   const theme = useTheme();
+  const editorContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    const editorContainer = editorContainerRef.current;
+
+    if (editorContainer) {
+      const detectClickOnEditor = (ev: Event) => {
+        const clickedInside = ev.composedPath().includes(editorContainer);
+        if (clickedInside) {
+          setFocused(true);
+        } else {
+          setFocused(false);
+        }
+      };
+
+      document.addEventListener('click', detectClickOnEditor);
+
+      return () => {
+        document.removeEventListener('click', detectClickOnEditor);
+      };
+    }
+  }, [document]);
 
   const boldExtension = new BoldExtension({});
   const btnExtension = new ButtonExtension();
@@ -126,17 +181,7 @@ const ZUIEditor: FC<Props> = ({
 
   const { manager, state } = useRemirror({
     content: {
-      content: [
-        {
-          content: [
-            {
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas dictum tempus leo sit amet ornare. Aliquam efficitur arcu id ex efficitur viverra. Morbi malesuada posuere faucibus. Donec tempus ornare interdum. Aliquam ac mattis erat, sed dapibus odio. Sed sollicitudin turpis et diam ultrices, at luctus ex blandit. Sed semper, ligula tempus molestie hendrerit, nisi quam euismod lorem, ac ullamcorper felis lorem sit amet elit. Nullam lacinia tortor ut facilisis cursus. Nullam vel pulvinar magna, semper tristique lacus. Vivamus egestas lorem erat, eget rutrum arcu lobortis et. Quisque placerat nisi a porta dapibus. Donec sed congue risus. Pellentesque condimentum, nibh ac lobortis efficitur, dui dolor molestie tortor, id auctor libero erat eget diam. Fusce rutrum mollis congue. Aliquam erat volutpat. Praesent volutpat, nibh ut cursus dictum, mauris magna pulvinar elit, ut mattis ex felis id nulla.',
-              type: 'text',
-            },
-          ],
-          type: 'paragraph',
-        },
-      ],
+      content: zetkinToRemirror(content),
       type: 'doc',
     },
     extensions: () => [
@@ -166,6 +211,9 @@ const ZUIEditor: FC<Props> = ({
 
   return (
     <Box
+      display="flex"
+      justifyContent="center"
+      paddingTop={5}
       sx={{
         '.zbutton-button': {
           bgcolor: 'black',
@@ -192,6 +240,7 @@ const ZUIEditor: FC<Props> = ({
           px: 1,
         },
         ['[contenteditable="true"]']: {
+          outline: '0px solid transparent',
           padding: 1,
         },
         ['[contenteditable="true"] > *']: {
@@ -199,7 +248,10 @@ const ZUIEditor: FC<Props> = ({
         },
       }}
     >
-      <div style={{ minHeight: '200px' }}>
+      <div
+        ref={editorContainerRef}
+        style={{ minHeight: '200px', width: '600px' }}
+      >
         <Remirror editable={editable} initialContent={state} manager={manager}>
           <EditorOverlays
             blocks={blockExtensions.map((ext) => ({
@@ -211,6 +263,9 @@ const ZUIEditor: FC<Props> = ({
             enableItalic={!!enableItalic}
             enableLink={!!enableLink}
             enableVariable={!!enableVariable}
+            focused={focused}
+            onSelectBlock={(selectedBlock) => onSelectBlock(selectedBlock)}
+            zetkinContent={content}
           />
           {enableBlockMenu && <EmptyBlockPlaceholder />}
           {enableBlockMenu && enableImage && <ImageExtensionUI orgId={orgId} />}
@@ -218,8 +273,12 @@ const ZUIEditor: FC<Props> = ({
           {enableLink && <LinkExtensionUI />}
           <EditorComponent />
           <OnChangeJSON
-            // eslint-disable-next-line no-console
-            onChange={(updatedContent) => console.log(updatedContent)}
+            onChange={(updatedContent) => {
+              if (updatedContent.content) {
+                const zetkinContent = remirrorToZetkin(updatedContent.content);
+                onChange(zetkinContent);
+              }
+            }}
           />
         </Remirror>
       </div>

@@ -49,10 +49,6 @@ const EmailLayout: FC<EmailLayoutProps> = ({
       href: '/compose',
       label: messages.tabs.compose(),
     },
-    {
-      href: '/newEditor',
-      label: 'New editor',
-    },
   ];
 
   if (email.processed) {

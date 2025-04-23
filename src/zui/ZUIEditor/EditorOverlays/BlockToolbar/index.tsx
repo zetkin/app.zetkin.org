@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FromToProps } from 'remirror';
 import { Attrs } from '@remirror/pm/model';
-import { CheckBoxOutlineBlank } from '@mui/icons-material';
+import { Crop75 } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
 import { BlockType } from '..';
@@ -66,7 +66,7 @@ const BlockToolbar: FC<BlockToolbarProps> = ({
         )}
         {blockType == 'zbutton' && (
           <BlockToolbarBase
-            icon={<CheckBoxOutlineBlank />}
+            icon={<Crop75 />}
             range={range}
             title={messages.editor.blockLabels.zbutton()}
           />

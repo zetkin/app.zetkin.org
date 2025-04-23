@@ -1,13 +1,14 @@
+import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 
-import EmailEditor from 'features/emails/components/EmailEditor';
 import EmailLayout from 'features/emails/layout/EmailLayout';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useDebounce from 'utils/hooks/useDebounce';
 import useEmail from 'features/emails/hooks/useEmail';
 import useServerSide from 'core/useServerSide';
-import { ZetkinEmail } from 'utils/types/zetkin';
+import { ZetkinEmailPostBody } from 'utils/types/zetkin';
+import EmailEditor from 'features/emails/components/EmailEditor';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -41,7 +42,7 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
   const onServer = useServerSide();
 
   const debouncedUpdateEmail = useDebounce(
-    async (email: Partial<ZetkinEmail>) => {
+    async (email: Partial<ZetkinEmailPostBody>) => {
       updateEmail({
         ...email,
         locked: undefined,
@@ -58,13 +59,19 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
     return null;
   }
 
+  const readOnly = !!email.published;
+
   return (
-    <EmailEditor
-      email={email}
-      onSave={(email) => {
-        debouncedUpdateEmail(email);
-      }}
-    />
+    <>
+      <Head>
+        <title>{email.title}</title>
+      </Head>
+      <EmailEditor
+        email={email}
+        onSave={(email) => debouncedUpdateEmail(email)}
+        readOnly={readOnly}
+      />
+    </>
   );
 };
 

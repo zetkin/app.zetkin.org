@@ -4,15 +4,17 @@ import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   BlockKind,
+  BoldNode,
   EmailInsights,
   InlineNodeKind,
+  ItalicNode,
+  LinkNode,
   ZetkinEmailLink,
   ZetkinEmailRecipient,
   ZetkinEmailStats,
 } from '../types';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import EmailContentTraverser from '../utils/rendering/EmailContentTraverser';
-import inlineNodesToHtml from '../utils/inlineNodesToHtml';
 
 const paramsSchema = z.object({
   emailId: z.number(),
@@ -95,8 +97,29 @@ async function handle(params: Params, apiClient: IApiClient) {
       return block;
     },
     handleInline(node) {
-      if (node.kind == InlineNodeKind.LINK) {
-        linkTextByTag[node.tag] = inlineNodesToHtml(node.content);
+      if ('content' in node) {
+        let text = '';
+        let tag = '';
+
+        const findLink = (
+          nodeWithContent: BoldNode | ItalicNode | LinkNode
+        ) => {
+          if (nodeWithContent.kind == InlineNodeKind.LINK) {
+            tag = nodeWithContent.tag;
+          }
+
+          const childNode = nodeWithContent.content[0];
+          if ('content' in childNode) {
+            findLink(childNode);
+          } else if (childNode.kind == InlineNodeKind.STRING) {
+            text = childNode.value;
+          }
+        };
+
+        findLink(node);
+        if (text && tag) {
+          linkTextByTag[tag] = text;
+        }
       }
       return node;
     },
