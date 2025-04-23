@@ -3,6 +3,9 @@ import NextLink from 'next/link';
 import {
   AccessTime,
   ArrowForward,
+  Cancel,
+  ContentCopy,
+  Delete,
   EmojiPeople,
   FaceOutlined,
   MailOutline,
@@ -10,7 +13,8 @@ import {
   PlaceOutlined,
 } from '@mui/icons-material';
 import { Box, Button, Link, Typography } from '@mui/material';
-import { FC, useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
+import router from 'next/router';
 
 import { useMessages } from 'core/i18n';
 import { eventsDeselected } from 'features/events/store';
@@ -29,12 +33,14 @@ import useEventMutations from 'features/events/hooks/useEventMutations';
 import useEventParticipants from 'features/events/hooks/useEventParticipants';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
+import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
 
 const useStyles = makeStyles(() => ({
   description: {
@@ -62,16 +68,16 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     event.organization.id,
     event.id
   );
-  const { cancelEvent, deleteEvent, publishEvent } = useEventMutations(
-    event.organization.id,
-    event.id
-  );
+  const { cancelEvent, updateEvent, deleteEvent, publishEvent } =
+    useEventMutations(event.organization.id, event.id);
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
 
   const dispatch = useAppDispatch();
   const participants = participantsFuture.data || [];
   const respondents = respondentsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const showPublishButton =
     state == EventState.DRAFT ||
@@ -87,7 +93,40 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     (r) => !participants.some((p) => p.id === r.id)
   );
 
+  const handleMove = () => {
+    setIsMoveDialogOpen(true);
+  };
+
+  const handleOnCampaignSelected = async (campaignId: number) => {
+    await updateEvent({ campaign_id: campaignId });
+    onClickAway();
+    await router.push(
+      `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
+    );
+
+    showSnackbar(
+      'success',
+      messages.eventChangeCampaignDialog.success({
+        campaignTitle: event.campaign!.title,
+        eventTitle: event.title!,
+      })
+    );
+  };
+
   const ellipsisMenuItems = [
+    {
+      label: messages.eventActionButtons.move(),
+      onSelect: handleMove,
+      startIcon: <ArrowForward />,
+    },
+    {
+      label: messages.eventPopper.duplicate(),
+      onSelect: async () => {
+        await duplicateEvent();
+        onClickAway();
+      },
+      startIcon: <ContentCopy />,
+    },
     {
       label: messages.eventPopper.delete(),
       onSelect: () =>
@@ -100,13 +139,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           title: messages.eventPopper.confirmDelete(),
           warningText: messages.eventPopper.deleteWarning(),
         }),
-    },
-    {
-      label: messages.eventPopper.duplicate(),
-      onSelect: () => {
-        duplicateEvent();
-        onClickAway();
-      },
+      startIcon: <Delete />,
     },
   ];
   if (state !== EventState.CANCELLED) {
@@ -121,6 +154,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           title: messages.eventPopper.confirmCancel(),
           warningText: messages.eventPopper.cancelWarning(),
         }),
+      startIcon: <Cancel />,
     });
   }
 
@@ -344,6 +378,13 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           </NextLink>
 
           <ZUIEllipsisMenu items={ellipsisMenuItems} />
+          <ChangeCampaignDialog
+            errorMessage={messages.eventChangeCampaignDialog.error()}
+            onCampaignSelected={handleOnCampaignSelected}
+            onClose={() => setIsMoveDialogOpen(false)}
+            open={isMoveDialogOpen}
+            title={messages.eventChangeCampaignDialog.title()}
+          />
         </Box>
       )}
     </>
