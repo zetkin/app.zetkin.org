@@ -6,8 +6,8 @@ import { FC } from 'react';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIMarkdown from 'zui/ZUIMarkdown';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
+import InstructionsSection from '../components/InstructionsSection';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -104,14 +104,7 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
       />
       {assignment.instructions && (
         <Box mt={2}>
-          <ZUISection
-            renderContent={() => (
-              <ZUIText>
-                <ZUIMarkdown markdown={assignment.instructions} />
-              </ZUIText>
-            )}
-            title={'Instructions'}
-          />
+          <InstructionsSection instructions={assignment.instructions} />
         </Box>
       )}
     </Box>
