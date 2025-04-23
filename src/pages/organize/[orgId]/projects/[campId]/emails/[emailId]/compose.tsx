@@ -59,9 +59,7 @@ const EmailPage: PageWithLayout<Props> = ({ emailId, orgId }) => {
     return null;
   }
 
-  const now = new Date();
-  const readOnly =
-    !!email.published || (!!email.published && new Date(email.published) > now);
+  const readOnly = !!email.published;
 
   return (
     <>
