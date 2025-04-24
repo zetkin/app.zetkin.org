@@ -73,3 +73,14 @@ export const Large: Story = {
     size: 'large',
   },
 };
+
+/**
+ * This is to make it possible to distinguish that you
+ * are representing the user, rather than the person.
+ */
+export const User: Story = {
+  args: {
+    ...Medium.args,
+    isUser: true,
+  },
+};
