@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { Delete, Headset, People } from '@mui/icons-material';
+import { ArrowForward, Delete, Headset, People } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
@@ -13,12 +13,14 @@ import useCallers from '../hooks/useCallers';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
 import useCallAssignmentState, {
   CallAssignmentState,
 } from '../hooks/useCallAssignmentState';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -42,7 +44,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   const { statsFuture } = useCallAssignmentStats(orgId, callAssId);
   const { filteredCallersFuture } = useCallers(orgId, callAssId);
   const state = useCallAssignmentState(orgId, callAssId);
-
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const handleDelete = () => {
     deleteAssignment();
     router.push(
@@ -50,9 +53,31 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     );
   };
 
+  const handleMove = () => {
+    setIsMoveDialogOpen(true);
+  };
+
   if (!callAssignment) {
     return null;
   }
+
+  const handleOnCampaignSelected = async (campaignId: number) => {
+    await updateCallAssignment({
+      campaign_id: campaignId,
+    });
+    await router.push(
+      `/organize/${orgId}/projects/${campaignId}/callassignments/${
+        callAssignment!.id
+      }`
+    );
+    showSnackbar(
+      'success',
+      messages.callAssignmentChangeCampaignDialog.success({
+        assignmentTitle: callAssignment.title,
+        campaignTitle: callAssignment.campaign!.title,
+      })
+    );
+  };
 
   return (
     <TabbedLayout
@@ -73,13 +98,21 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         <ZUIDateRangePicker
           endDate={callAssignment.end_date || null}
           onChange={(startDate, endDate) => {
-            updateCallAssignment({ end_date: endDate, start_date: startDate });
+            updateCallAssignment({
+              end_date: endDate,
+              start_date: startDate,
+            });
           }}
           startDate={callAssignment.start_date || null}
         />
       }
       defaultTab="/"
       ellipsisMenuItems={[
+        {
+          label: messages.actions.move(),
+          onSelect: handleMove,
+          startIcon: <ArrowForward />,
+        },
         {
           label: messages.actions.delete(),
           onSelect: () => {
@@ -137,6 +170,13 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
               )}
             </ZUIFuture>
           </Box>
+          <ChangeCampaignDialog
+            errorMessage={messages.callAssignmentChangeCampaignDialog.error()}
+            onCampaignSelected={handleOnCampaignSelected}
+            onClose={() => setIsMoveDialogOpen(false)}
+            open={isMoveDialogOpen}
+            title={messages.callAssignmentChangeCampaignDialog.title()}
+          />
         </Box>
       }
       tabs={[
@@ -164,5 +204,4 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     </TabbedLayout>
   );
 };
-
 export default CallAssignmentLayout;
