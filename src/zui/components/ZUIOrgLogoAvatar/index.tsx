@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import Image from 'next/image';
 
 import { avatarSizes } from '../ZUIPersonAvatar';
 import { ZUISize } from '../types';
@@ -30,7 +29,9 @@ const ZUIOrgLogoAvatar: FC<ZUIOrgLogoAvatarProps> = ({
   urlBase = '/api',
 }) => {
   return (
-    <Image
+    /* eslint-disable @next/next/no-img-element*/
+    //TODO: Investigate how we can use the Image component from Next.js here
+    <img
       alt="icon"
       height={avatarSizes[size]}
       src={`${urlBase}/orgs/${orgId}/avatar`}
