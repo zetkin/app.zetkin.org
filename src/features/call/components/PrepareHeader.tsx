@@ -8,6 +8,7 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
 
 type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
@@ -24,7 +25,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
     <>
       <Stack alignItems="center" direction="row" mb={1}>
         <Link href={`/call/${assignment.id}`} passHref>
-          <ZUIButton label={''} size="small" startIcon={ArrowBackIos} />
+          <ZUIIconButton icon={ArrowBackIos} size="small" variant="tertiary" />
         </Link>
         <Box
           sx={{
