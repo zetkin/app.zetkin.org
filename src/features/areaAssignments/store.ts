@@ -20,6 +20,7 @@ import {
   ZetkinMetric,
 } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
+import { Zetkin2Area } from 'features/areas/types';
 
 export interface AreaAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
@@ -31,6 +32,7 @@ export interface AreaAssignmentsStoreSlice {
     RemoteItem<ZetkinAssignmentAreaStats & { id: number }>
   >;
   areaAssignmentList: RemoteList<ZetkinAreaAssignment>;
+  areasByAssignmentId: Record<string, RemoteList<Zetkin2Area>>;
   assigneesByAssignmentId: Record<
     number,
     RemoteList<ZetkinAreaAssignee & { id: number }>
@@ -47,6 +49,7 @@ const initialState: AreaAssignmentsStoreSlice = {
   areaAssignmentList: remoteList(),
   areaGraphByAssignmentId: {},
   areaStatsByAssignmentId: {},
+  areasByAssignmentId: {},
   assigneesByAssignmentId: {},
   locationList: remoteList(),
   metricsByAssignmentId: {},
@@ -204,6 +207,20 @@ const areaAssignmentSlice = createSlice({
       state.assigneesByAssignmentId[assignmentId].loaded =
         new Date().toISOString();
     },
+    assignmentAreasLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.areasByAssignmentId[assignmentId] ||= remoteList();
+      state.areasByAssignmentId[assignmentId].isLoading = true;
+    },
+    assignmentAreasLoaded: (
+      state,
+      action: PayloadAction<[number, Zetkin2Area[]]>
+    ) => {
+      const [assignmentId, areas] = action.payload;
+      state.areasByAssignmentId[assignmentId] = remoteList(areas);
+      state.areasByAssignmentId[assignmentId].isLoading = false;
+      state.areasByAssignmentId[assignmentId].loaded = new Date().toISOString();
+    },
     locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
       remoteItemUpdated(state.locationList, location);
@@ -307,6 +324,8 @@ export const {
   assigneeAdded,
   assigneesLoad,
   assigneesLoaded,
+  assignmentAreasLoad,
+  assignmentAreasLoaded,
   locationCreated,
   locationsInvalidated,
   locationsLoad,

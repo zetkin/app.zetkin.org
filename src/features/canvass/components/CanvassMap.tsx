@@ -31,7 +31,7 @@ import objToLatLng from 'features/areas/utils/objToLatLng';
 import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
-import { ZetkinArea } from '../../areas/types';
+import { Zetkin2Area } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import locToLatLng from 'features/geography/utils/locToLatLng';
 import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 type CanvassMapProps = {
-  areas: ZetkinArea[];
+  areas: Zetkin2Area[];
   assignment: ZetkinAreaAssignment;
 };
 
@@ -223,10 +223,12 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
     [-90, -180],
   ];
 
-  function getMaskLayer(areas: ZetkinArea[]) {
+  function getMaskLayer(areas: Zetkin2Area[]) {
     const maskPositions: LatLngExpression[][] = [
       outerBounds,
-      ...areas.map((area) => area.points as LatLngExpression[]),
+      ...areas.map(
+        (area) => area.boundary.coordinates[0] as LatLngExpression[]
+      ),
     ];
     return maskPositions;
   }
@@ -241,13 +243,13 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
               if (areas.length) {
                 // Start with first area
                 const totalBounds = latLngBounds(
-                  areas[0].points.map((p) => objToLatLng(p))
+                  areas[0].boundary.coordinates[0].map((p) => objToLatLng(p))
                 );
 
                 // Extend with all areas
                 areas.forEach((area) => {
                   const areaBounds = latLngBounds(
-                    area.points.map((p) => objToLatLng(p))
+                    area.boundary.coordinates[0].map((p) => objToLatLng(p))
                   );
                   totalBounds.extend(areaBounds);
                 });
@@ -319,7 +321,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
                 opacity: 0.5,
                 weight: 4,
               }}
-              positions={area.points}
+              positions={area.boundary.coordinates[0]}
             />
           ))}
         </FeatureGroup>

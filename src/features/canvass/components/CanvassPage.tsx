@@ -9,14 +9,16 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
-import { AssignmentWithAreas } from '../types';
 import CanvassSidebar from './CanvassSidebar';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
 
 const CanvassMap = dynamic(() => import('./CanvassMap'), {
   ssr: false,
 });
 
-const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
+const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
+  const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
@@ -73,8 +75,8 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
                 </IconButton>
               </Box>
             </Box>
-            <Box flexGrow={1}>
-              <CanvassMap areas={assignment.areas} assignment={assignment} />
+            <Box flexGrow={1} sx={{ height: '200px' }}>
+              <CanvassMap areas={areas} assignment={assignment} />
             </Box>
             <Box
               onClick={() => setShowMenu(false)}

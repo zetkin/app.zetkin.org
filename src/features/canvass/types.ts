@@ -1,14 +1,8 @@
 import {
   Household,
   Visit,
-  ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import { ZetkinArea } from 'features/areas/types';
-
-export type AssignmentWithAreas = ZetkinAreaAssignment & {
-  areas: ZetkinArea[];
-};
 
 export type ZetkinLocationVisit = {
   areaAssId: number;

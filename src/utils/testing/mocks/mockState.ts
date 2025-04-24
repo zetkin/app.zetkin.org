@@ -7,6 +7,7 @@ export default function mockState(overrides?: RootState) {
       areaAssignmentList: remoteList(),
       areaGraphByAssignmentId: {},
       areaStatsByAssignmentId: {},
+      areasByAssignmentId: {},
       assigneesByAssignmentId: {},
       locationList: remoteList(),
       metricsByAssignmentId: {},
@@ -38,7 +39,7 @@ export default function mockState(overrides?: RootState) {
       recentlyCreatedCampaign: null,
     },
     canvass: {
-      myAssignmentsWithAreasList: remoteList(),
+      myAssignmentsList: remoteList(),
       visitsByAssignmentId: {},
     },
     duplicates: {

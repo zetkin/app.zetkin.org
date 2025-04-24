@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
-import { AssignmentWithAreas, ZetkinLocationVisit } from './types';
+import { ZetkinLocationVisit } from './types';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 
 export interface CanvassStoreSlice {
-  myAssignmentsWithAreasList: RemoteList<AssignmentWithAreas>;
+  myAssignmentsList: RemoteList<ZetkinAreaAssignment>;
   visitsByAssignmentId: Record<string, RemoteList<ZetkinLocationVisit>>;
 }
 
 const initialState: CanvassStoreSlice = {
-  myAssignmentsWithAreasList: remoteList(),
+  myAssignmentsList: remoteList(),
   visitsByAssignmentId: {},
 };
 
@@ -18,18 +19,18 @@ const canvassSlice = createSlice({
   name: 'canvass',
   reducers: {
     myAssignmentsLoad: (state) => {
-      state.myAssignmentsWithAreasList.isLoading = true;
+      state.myAssignmentsList.isLoading = true;
     },
     myAssignmentsLoaded: (
       state,
-      action: PayloadAction<AssignmentWithAreas[]>
+      action: PayloadAction<ZetkinAreaAssignment[]>
     ) => {
       const assignments = action.payload;
       const timestamp = new Date().toISOString();
 
-      state.myAssignmentsWithAreasList = remoteList(assignments);
-      state.myAssignmentsWithAreasList.loaded = timestamp;
-      state.myAssignmentsWithAreasList.items.forEach(
+      state.myAssignmentsList = remoteList(assignments);
+      state.myAssignmentsList.loaded = timestamp;
+      state.myAssignmentsList.items.forEach(
         (item) => (item.loaded = timestamp)
       );
     },
