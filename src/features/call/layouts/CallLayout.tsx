@@ -27,10 +27,8 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
         <Box
           pt={2}
           sx={{
-            overflow: 'hidden',
             pl: { sm: 3, xs: 2 },
             pr: 2,
-            textOverflow: 'ellipsis',
           }}
         >
           <ZUIText noWrap variant="headingMd">
@@ -58,15 +56,7 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
                 </Box>
               )}
 
-              <Box
-                maxWidth="100%"
-                minWidth={0}
-                ml={1}
-                sx={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
+              <Box maxWidth="100%" minWidth={0} ml={1}>
                 <ZUIText noWrap variant="bodySmRegular">
                   {assignment?.organization.title || 'Untitled organization'}
                 </ZUIText>
