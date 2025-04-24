@@ -39,7 +39,6 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
   return (
     <Box>
       <Box
-        p={2}
         sx={(theme) => ({
           backgroundColor: theme.palette.common.white,
         })}

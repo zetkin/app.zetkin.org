@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 import Link from 'next/link';
 
@@ -20,48 +20,68 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
   return (
     <>
       <Box
-        mb={1}
         sx={{
           overflow: 'hidden',
+          pl: { sm: 3, xs: 2 },
+          pr: 2,
+          pt: 2,
           textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
         }}
       >
         <ZUIText noWrap variant="headingMd">
-          {assignment.title}
+          {assignment?.title || 'Untitled call assignment'}
         </ZUIText>
       </Box>
 
-      <Stack alignItems="center" direction="row" justifyContent="space-between">
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <ZUIOrgAvatar
-            orgId={assignment.organization.id}
-            title={assignment.organization.title}
-          />
-          <ZUIText variant="bodySmRegular">
-            {assignment.organization.title}
-          </ZUIText>
-        </Stack>
-        <Stack direction="row" spacing={2}>
-          <Link href="/my/home" passHref>
-            <ZUIButton
-              label="Quit"
-              variant="secondary"
-              // sx={{ whiteSpace: 'nowrap' }}
-            />
-          </Link>
-          <Link href={`/call/${assignment.id}/prepare`} passHref>
-            <ZUIButton
-              label="Start calling"
-              onClick={() => {
-                allocateCall();
+      <Box sx={{ px: { sm: 3, xs: 2 }, py: 2 }}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'grid',
+            gap: 1,
+            gridTemplateColumns: '1fr auto',
+            width: '100%',
+          }}
+        >
+          <Box alignItems="center" display="flex" minWidth={0}>
+            <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
+              <ZUIOrgAvatar
+                orgId={assignment.organization.id}
+                title={assignment.organization.title}
+              />
+            </Box>
+
+            <Box
+              maxWidth="100%"
+              minWidth={0}
+              ml={1}
+              sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
-              //sx={{ ml: 1, whiteSpace: 'nowrap' }}
-              variant="primary"
-            />
-          </Link>
-        </Stack>
-      </Stack>
+            >
+              <ZUIText noWrap variant="bodySmRegular">
+                {assignment?.organization.title || 'Untitled organization'}
+              </ZUIText>
+            </Box>
+          </Box>
+
+          <Box display="flex" gap={2}>
+            <Link href="/my/home" passHref>
+              <ZUIButton label="Quit" variant="secondary" />
+            </Link>
+            <Link href={`/call/${assignment.id}/prepare`} passHref>
+              <ZUIButton
+                label="Start calling"
+                onClick={() => {
+                  allocateCall();
+                }}
+                variant="primary"
+              />
+            </Link>
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 };

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowBackIos } from '@mui/icons-material';
-import { Box, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -22,40 +22,60 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
   }
 
   return (
-    <>
-      <Stack alignItems="center" direction="row" mb={1}>
+    <Box p={2}>
+      <Box alignItems="center" display="flex" gap={1} mb={1} minWidth={0}>
         <Link href={`/call/${assignment.id}`} passHref>
           <ZUIIconButton icon={ArrowBackIos} size="small" variant="tertiary" />
         </Link>
         <Box
           sx={{
+            flexGrow: 1,
+            minWidth: 0,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
           }}
         >
           <ZUIText noWrap variant="bodySmRegular">
             {assignment.title}
           </ZUIText>
         </Box>
-      </Stack>
-      <Stack alignItems="center" direction="row" justifyContent="space-between">
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <ZUIPersonAvatar
-            firstName={call.target.first_name}
-            id={call.target.id}
-            lastName={call.target.last_name}
-          />
-          <ZUIText variant="headingLg">
-            {call.target.first_name} {call.target.last_name}
-          </ZUIText>
-        </Stack>
-        <Stack direction="row" spacing={2}>
+      </Box>
+      <Box
+        alignItems="center"
+        display="grid"
+        gap={1}
+        gridTemplateColumns="1fr auto"
+      >
+        <Box alignItems="center" display="flex" minWidth={0}>
+          <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
+            <ZUIPersonAvatar
+              firstName={call.target.first_name}
+              id={call.target.id}
+              lastName={call.target.last_name}
+            />
+          </Box>
+          <Box
+            alignItems="center"
+            display="flex"
+            ml={1}
+            sx={{
+              minWidth: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            <ZUIText noWrap variant="headingLg">
+              {call.target.first_name} {call.target.last_name}
+            </ZUIText>
+          </Box>
+        </Box>
+
+        <Box display="flex" gap={2}>
           <ZUIButton label="Skip" variant="secondary" />
           <ZUIButton label="Call" variant="primary" />
-        </Stack>
-      </Stack>
-    </>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
