@@ -11,9 +11,9 @@ export default function useAreaAssignees(orgId: number, areaAssId: number) {
   );
 
   return loadListIfNecessary(sessions, dispatch, {
-    actionOnLoad: () => dispatch(assigneesLoad(areaAssId)),
+    actionOnLoad: () => assigneesLoad(areaAssId),
 
-    actionOnSuccess: (data) => dispatch(assigneesLoaded([areaAssId, data])),
+    actionOnSuccess: (data) => assigneesLoaded([areaAssId, data]),
     loader: () =>
       apiClient.get<ZetkinAreaAssignee[]>(
         `/api2/orgs/${orgId}/area_assignments/${areaAssId}/assignees`
