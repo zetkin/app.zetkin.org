@@ -42,6 +42,7 @@ const AvatarBackground: FC<AvatarBackgroundProps> = ({
   return (
     <svg
       height={size}
+      style={{ flexShrink: 0 }}
       version="1.1"
       width={size}
       xmlns="http://www.w3.org/2000/svg"
