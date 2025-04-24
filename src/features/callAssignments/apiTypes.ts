@@ -11,6 +11,10 @@ export interface CallAssignmentCaller {
 // TODO: Consolidate these
 export type CallAssignmentData = ZetkinCallAssignment;
 
+export type CallAssignmentPatchBody = CallAssignmentData & {
+  campaign_id?: number;
+};
+
 export type ZetkinCallAssignmentStats = {
   num_blocked: {
     allocated: number;
