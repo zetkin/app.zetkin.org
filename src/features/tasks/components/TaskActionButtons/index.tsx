@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
-import { Delete, Settings } from '@mui/icons-material';
+import { ArrowForward, Delete, Settings } from '@mui/icons-material';
 import React, { useContext, useState } from 'react';
 
 import PublishButton from './PublishButton';
@@ -13,10 +13,13 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 import { ZetkinTaskRequestBody } from '../types';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
 
 enum TASK_MENU_ITEMS {
   EDIT_TASK = 'editTask',
   DELETE_TASK = 'deleteTask',
+  MOVE_TASK = 'moveTask',
 }
 
 interface TaskActionButtonsProps {
@@ -30,7 +33,8 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   const router = useRouter();
   const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const { deleteTask, updateTask } = useTaskMutations(
     task.organization.id,
     task.id
@@ -41,10 +45,25 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
     updateTask(task);
     setEditTaskDialogOpen(false);
   };
+
   const handleDeleteTask = () => {
     deleteTask();
     router.push(
       `/organize/${task.organization.id}/projects/${task.campaign.id}`
+    );
+  };
+
+  const handleOnCampaignSelected = async (campaignId: number) => {
+    await updateTask({ campaign_id: campaignId });
+    await router.push(
+      `/organize/${task.organization.id}/projects/${campaignId}/calendar/tasks/${task.id}`
+    );
+    showSnackbar(
+      'success',
+      messages.taskChangeCampaignDialog.success({
+        campaignTitle: task.campaign.title,
+        taskTitle: task.title,
+      })
     );
   };
 
@@ -56,6 +75,18 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
       <Box>
         <ZUIEllipsisMenu
           items={[
+            {
+              id: TASK_MENU_ITEMS.MOVE_TASK,
+              label: (
+                <>
+                  <Box mr={1}>
+                    <ArrowForward />
+                  </Box>
+                  <Msg id={messageIds.actions.move} />
+                </>
+              ),
+              onSelect: () => setIsMoveDialogOpen(true),
+            },
             {
               id: TASK_MENU_ITEMS.EDIT_TASK,
               label: (
@@ -102,6 +133,13 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
           task={task}
         />
       </ZUIDialog>
+      <ChangeCampaignDialog
+        errorMessage={messages.taskChangeCampaignDialog.error()}
+        onCampaignSelected={handleOnCampaignSelected}
+        onClose={() => setIsMoveDialogOpen(false)}
+        open={isMoveDialogOpen}
+        title={messages.taskChangeCampaignDialog.title()}
+      />
     </Box>
   );
 };
