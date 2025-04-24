@@ -188,6 +188,37 @@ export const getStaticColumns = (
       },
     },
     {
+      field: 'assignees',
+      filterOperators: [
+        makeIncludesFilterOperator(
+          messages,
+          messages.instances.filters.personLabel(),
+          uniqueAssignees
+        ),
+        makeDoesNotIncludeFilterOperator(
+          messages,
+          messages.instances.filters.doesNotIncludeOperator(),
+          uniqueAssignees
+        ),
+        makeEmptyFilterOperator(messages),
+      ],
+      renderCell: (params) =>
+        (params.row.assignees as ZetkinPersonType[]).map((person) => (
+          <ZUIPersonHoverCard key={person.id} personId={person.id}>
+            <ZUIPerson
+              containerProps={{ style: { marginRight: 10 } }}
+              id={person.id}
+              link
+              name={`${person.first_name} ${person.last_name}`}
+              showText={false}
+            />
+          </ZUIPersonHoverCard>
+        )),
+      sortComparator: (value0, value1) => sortByName(value0, value1),
+      valueFormatter: (params) =>
+        getPeopleString(params.value as ZetkinPersonType[]),
+    },
+    {
       field: 'subjects',
       filterOperators: [
         makeIncludesFilterOperator(
@@ -278,37 +309,6 @@ export const getStaticColumns = (
     },
     {
       field: 'outcome',
-    },
-    {
-      field: 'assignees',
-      filterOperators: [
-        makeIncludesFilterOperator(
-          messages,
-          messages.instances.filters.personLabel(),
-          uniqueAssignees
-        ),
-        makeDoesNotIncludeFilterOperator(
-          messages,
-          messages.instances.filters.doesNotIncludeOperator(),
-          uniqueAssignees
-        ),
-        makeEmptyFilterOperator(messages),
-      ],
-      renderCell: (params) =>
-        (params.row.assignees as ZetkinPersonType[]).map((person) => (
-          <ZUIPersonHoverCard key={person.id} personId={person.id}>
-            <ZUIPerson
-              containerProps={{ style: { marginRight: 10 } }}
-              id={person.id}
-              link
-              name={`${person.first_name} ${person.last_name}`}
-              showText={false}
-            />
-          </ZUIPersonHoverCard>
-        )),
-      sortComparator: (value0, value1) => sortByName(value0, value1),
-      valueFormatter: (params) =>
-        getPeopleString(params.value as ZetkinPersonType[]),
     },
   ];
 };
