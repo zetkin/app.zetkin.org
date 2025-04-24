@@ -6,7 +6,6 @@ import { FC, ReactNode } from 'react';
 
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import ZUIText from 'zui/components/ZUIText';
-import newTheme from 'zui/theme';
 import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -24,7 +23,7 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
 
   return (
     <Box>
-      <Box sx={{ backgroundColor: newTheme.palette.common.white }}>
+      <Box sx={(theme) => ({ backgroundColor: theme.palette.common.white })}>
         <Box
           pt={2}
           sx={{
