@@ -32,7 +32,6 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
             pl: { sm: 3, xs: 2 },
             pr: 2,
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
           }}
         >
           <ZUIText noWrap variant="headingMd">
@@ -67,7 +66,6 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
                 sx={{
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
                 }}
               >
                 <ZUIText noWrap variant="bodySmRegular">
