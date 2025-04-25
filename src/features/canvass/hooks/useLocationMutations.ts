@@ -77,7 +77,7 @@ export default function useLocationMutations(
       const location = await apiClient.patch<
         ZetkinLocation,
         ZetkinLocationPatchBody
-      >(`/beta/orgs/${orgId}/locations/${locationId}`, data);
+      >(`/api2/orgs/${orgId}/locations/${locationId}`, data);
       dispatch(locationUpdated(location));
     },
   };

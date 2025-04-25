@@ -1,10 +1,6 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  locationsInvalidated,
-  locationsLoad,
-  locationsLoaded,
-} from '../../areaAssignments/store';
+import { locationsInvalidated } from '../../areaAssignments/store';
 import { visitsLoad, visitsLoaded, visitsInvalidated } from '../store';
 import useMembership from 'features/organizations/hooks/useMembership';
 import estimateVisitedHouseholds from '../utils/estimateVisitedHouseholds';
@@ -33,21 +29,12 @@ export default function useSidebarStats(
 ): UseSidebarReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const locationList = useAppSelector(
-    (state) => state.areaAssignments.locationList
-  );
   const visitList = useAppSelector(
     (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
   const membershipFuture = useMembership(orgId);
   const userPersonId = membershipFuture.data?.profile.id;
-
-  const locationListFuture = loadListIfNecessary(locationList, dispatch, {
-    actionOnLoad: () => locationsLoad(),
-    actionOnSuccess: (items) => locationsLoaded(items),
-    loader: () => apiClient.get(`/beta/orgs/${orgId}/locations`),
-  });
 
   const visitListFuture = loadListIfNecessary(visitList, dispatch, {
     actionOnLoad: () => visitsLoad(assignmentId),
@@ -132,7 +119,7 @@ export default function useSidebarStats(
   stats.today.numUserLocations = userLocationsToday.size;
 
   return {
-    loading: locationListFuture.isLoading || visitListFuture.isLoading,
+    loading: visitListFuture.isLoading,
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
