@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button, CircularProgress } from '@mui/material';
+import { alpha, Button, CircularProgress } from '@mui/material';
 
 import {
   getVariant,
@@ -103,13 +103,14 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
             backgroundColor: theme.palette.warning.dark,
           },
           '&.MuiButton-outlinedPrimary': {
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: alpha(theme.palette.primary.main, 0.11),
           },
           '&.MuiButton-textPrimary': {
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: alpha(theme.palette.primary.main, 0.11),
           },
           boxShadow: 'none',
         },
+        borderColor: theme.palette.primary.light,
         boxShadow: 'none',
         minWidth: 0,
         padding: variant ? getPadding(size, variant) : '',

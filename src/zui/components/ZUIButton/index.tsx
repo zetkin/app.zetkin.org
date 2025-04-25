@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from '@mui/material';
+import { alpha, Button, CircularProgress } from '@mui/material';
 import {
   CSSProperties,
   FC,
@@ -215,14 +215,15 @@ const ZUIButton: FC<ZUIButtonProps> = ({
               backgroundColor: theme.palette.warning.dark,
             },
             '&.MuiButton-outlinedPrimary': {
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor: alpha(theme.palette.primary.main, 0.11),
             },
             '&.MuiButton-textPrimary': {
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor: alpha(theme.palette.primary.main, 0.11),
             },
             boxShadow: 'none',
           },
           ...textStyle,
+          borderColor: theme.palette.primary.light,
           boxShadow: 'none',
           minWidth: '2.188rem',
           padding: isLoading
