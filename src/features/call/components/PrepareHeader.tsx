@@ -9,6 +9,7 @@ import ZUIText from 'zui/components/ZUIText';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
+import SkipCallDialog from './SkipCallDialog';
 
 type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
@@ -71,7 +72,13 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
         </Box>
 
         <Box display="flex" gap={2}>
-          <ZUIButton label="Skip" variant="secondary" />
+          {call && (
+            <SkipCallDialog
+              assignment={assignment}
+              callId={call.id}
+              targetName={call.target.first_name + ' ' + call.target.last_name}
+            />
+          )}
           <ZUIButton label="Call" variant="primary" />
         </Box>
       </Box>
