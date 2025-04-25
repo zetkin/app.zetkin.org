@@ -74,7 +74,7 @@ const CreateHouseholdsPage: FC<Props> = ({
             await addHouseholds(
               range(numFloors).flatMap((floorIndex) =>
                 range(numAptsPerFloor).map((aptIndex) => ({
-                  floor: floorIndex + 1,
+                  level: floorIndex + 1,
                   title: messages.households.householdDefaultTitle({
                     householdNumber: aptIndex + 1,
                   }),

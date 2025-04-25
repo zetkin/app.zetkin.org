@@ -30,13 +30,14 @@ export default function useLocationMutations(
       dispatch(householdCreated(household));
       return household;
     },
-    addHouseholds: async (households: { floor: number; title: string }[]) => {
-      const location = await apiClient.rpc(createHouseholds, {
+    addHouseholds: async (households: { level: number; title: string }[]) => {
+      const created = await apiClient.rpc(createHouseholds, {
         households,
         locationId,
         orgId,
       });
-      dispatch(locationUpdated(location));
+
+      created.forEach((household) => dispatch(householdCreated(household)));
     },
     addVisit: async (
       householdId: number,

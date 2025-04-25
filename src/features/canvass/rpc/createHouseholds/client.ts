@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 import { makeRPCDef } from 'core/rpc/types';
-import { ZetkinLocation } from 'features/areaAssignments/types';
+import { Zetkin2Household } from 'features/canvass/types';
 
 export const paramsSchema = z.object({
   households: z.array(
     z.object({
-      floor: z.union([z.number(), z.null()]).optional(),
+      level: z.number(),
       title: z.string().optional(),
     })
   ),
@@ -14,7 +14,7 @@ export const paramsSchema = z.object({
   orgId: z.number(),
 });
 
-type Params = z.input<typeof paramsSchema>;
-type Result = ZetkinLocation;
+export type Params = z.input<typeof paramsSchema>;
+export type Result = Zetkin2Household[];
 
 export default makeRPCDef<Params, Result>('createHouseholds');
