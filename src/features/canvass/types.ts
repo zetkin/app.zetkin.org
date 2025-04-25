@@ -1,36 +1,64 @@
-import {
-  Household,
-  Visit,
-  ZetkinLocation,
-} from 'features/areaAssignments/types';
+import { ZetkinLocation } from 'features/areaAssignments/types';
+
+export type YesNoMetricBulkResponse = {
+  metric_id: number;
+  num_no: number;
+  num_yes: number;
+};
+
+export type Scale5MetricBulkResponse = {
+  metric_id: number;
+  num_values: [number, number, number, number, number];
+};
+
+export type MetricBulkResponse =
+  | YesNoMetricBulkResponse
+  | Scale5MetricBulkResponse;
 
 export type ZetkinLocationVisit = {
-  areaAssId: number;
+  assignment_id: number;
+  created: string;
+  created_by_user_id: number;
   id: string;
-  locationId: number;
-  personId: number;
-  responses: {
-    metricId: string;
-    responseCounts: number[];
-  }[];
-  timestamp: string;
+  location_id: number;
+  metrics: MetricBulkResponse[];
+  num_households_visited: number;
 };
 
 export type ZetkinLocationVisitPostBody = Omit<
   ZetkinLocationVisit,
-  'id' | 'timestamp' | 'personId'
+  'id' | 'created' | 'created_by_user_id' | 'location_id' | 'assignment_id'
 >;
 
-export type ZetkinLocationPostBody = Partial<
-  Omit<ZetkinLocation, 'id' | 'households'>
->;
-
-export type ZetkinLocationPatchBody = Partial<
-  Omit<ZetkinLocation, 'id' | 'households'>
-> & {
-  households?: Partial<Omit<Household, 'id' | 'visits'>> &
-    { visits?: Partial<Omit<Visit, 'id'>>[] }[];
+export type ZetkinHouseholdVisit = {
+  assignment_id: number;
+  created: string;
+  created_by_user_id: number;
+  household_id: number;
+  id: number;
+  metrics: MetricResponse[];
 };
+
+export type YesNoMetricResponse = {
+  metric_id: number;
+  response: 'yes' | 'no';
+};
+
+export type Scale5MetricResponse = {
+  metric_id: number;
+  response: 1 | 2 | 3 | 4 | 5;
+};
+
+export type MetricResponse = YesNoMetricResponse | Scale5MetricResponse;
+
+export type ZetkinHouseholdVisitPostBody = Omit<
+  ZetkinHouseholdVisit,
+  'assignment_id' | 'created' | 'created_by_user_id' | 'household_id' | 'id'
+>;
+
+export type ZetkinLocationPostBody = Partial<Omit<ZetkinLocation, 'id'>>;
+
+export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 export type Zetkin2Household = {
   id: number;

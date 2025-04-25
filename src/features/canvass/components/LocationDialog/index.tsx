@@ -17,6 +17,8 @@ import HouseholdsPage from './pages/HouseholdsPage';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import EncouragingSparkle from '../EncouragingSparkle';
 import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
+import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
+import { ZetkinLocationVisit } from 'features/canvass/types';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -47,8 +49,12 @@ const LocationDialog: FC<LocationDialogProps> = ({
     assignment.organization_id,
     assignment.id
   );
-  const { addVisit, reportLocationVisit, updateHousehold, updateLocation } =
-    useLocationMutations(orgId, location.id);
+  const {
+    reportHouseholdVisit,
+    reportLocationVisit,
+    updateHousehold,
+    updateLocation,
+  } = useLocationMutations(orgId, location.id);
 
   const pushedRef = useRef(false);
 
@@ -188,10 +194,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
             onBack={() => back()}
             onClose={onClose}
             onLogVisit={async (responses) => {
+              // TODO: User should specify household count
+              const numHouseholds = estimateVisitedHouseholds({
+                metrics: responses,
+              } as ZetkinLocationVisit);
+
               await reportLocationVisit(assignment.id, {
-                areaAssId: assignment.id,
-                locationId: location.id,
-                responses,
+                metrics: responses,
+                num_households_visited: numHouseholds,
               });
               setShowSparkle(true);
             }}
@@ -204,18 +214,12 @@ const LocationDialog: FC<LocationDialogProps> = ({
               location={location}
               metrics={metrics}
               onBack={() => back()}
-              onLogVisit={async (responses, noteToOfficial) => {
-                // TODO: Could probably be simplified once API exists
-                if (selectedHouseholdId) {
-                  await addVisit(selectedHouseholdId, {
-                    assignment_id: assignment.id,
-                    noteToOfficial,
-                    responses,
-                    timestamp: new Date().toISOString(),
-                  });
-                  setShowSparkle(true);
-                  goto('households');
-                }
+              onLogVisit={async (responses) => {
+                await reportHouseholdVisit(assignment.id, selectedHouseholdId, {
+                  metrics: responses,
+                });
+                setShowSparkle(true);
+                goto('households');
               }}
             />
           )}

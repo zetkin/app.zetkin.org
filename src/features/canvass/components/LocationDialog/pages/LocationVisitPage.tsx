@@ -13,7 +13,7 @@ import {
 import PageBase from './PageBase';
 import IntInput from '../IntInput';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
-import { ZetkinLocationVisit } from 'features/canvass/types';
+import { MetricBulkResponse } from 'features/canvass/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
@@ -23,7 +23,7 @@ type Props = {
   assignment: ZetkinAreaAssignment;
   onBack: () => void;
   onClose: () => void;
-  onLogVisit: (responses: ZetkinLocationVisit['responses']) => Promise<void>;
+  onLogVisit: (responses: MetricBulkResponse[]) => Promise<void>;
 };
 
 const LocationVisitPage: FC<Props> = ({
@@ -73,13 +73,31 @@ const LocationVisitPage: FC<Props> = ({
           <Button
             disabled={submitting}
             onClick={async () => {
-              const metricIds = Object.keys(valuesByMetricId);
+              const metricIds = Object.keys(valuesByMetricId).map((key) =>
+                parseInt(key)
+              );
+
               setSubmitting(true);
+
               await onLogVisit(
-                metricIds.map((metricId) => ({
-                  metricId,
-                  responseCounts: valuesByMetricId[metricId],
-                }))
+                metricIds.map((metricId) =>
+                  valuesByMetricId[metricId].length == 2
+                    ? {
+                        metric_id: metricId,
+                        num_no: 0,
+                        num_yes: 0,
+                      }
+                    : {
+                        metric_id: metricId,
+                        num_values: [
+                          valuesByMetricId[metricId][0] || 0,
+                          valuesByMetricId[metricId][1] || 0,
+                          valuesByMetricId[metricId][2] || 0,
+                          valuesByMetricId[metricId][3] || 0,
+                          valuesByMetricId[metricId][4] || 0,
+                        ],
+                      }
+                )
               );
               setSubmitting(false);
               onClose();

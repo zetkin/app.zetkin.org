@@ -25,7 +25,7 @@ export default function useLocationVisits(
 
   if (future.data) {
     return new ResolvedFuture(
-      future.data.filter((visit) => visit.locationId == locationId)
+      future.data.filter((visit) => visit.location_id == locationId)
     );
   }
 

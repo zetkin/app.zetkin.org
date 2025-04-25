@@ -4,14 +4,19 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   HouseholdPatchBody,
   Zetkin2Household,
+  ZetkinHouseholdVisit,
+  ZetkinHouseholdVisitPostBody,
   ZetkinLocationPatchBody,
   ZetkinLocationVisit,
   ZetkinLocationVisitPostBody,
 } from '../types';
 import { householdCreated, householdUpdated, visitCreated } from '../store';
-import { locationUpdated } from '../../areaAssignments/store';
+import {
+  householdVisitCreated,
+  locationUpdated,
+} from '../../areaAssignments/store';
 import createHouseholds from '../rpc/createHouseholds/client';
-import { Visit, ZetkinLocation } from 'features/areaAssignments/types';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 export default function useLocationMutations(
   orgId: number,
@@ -39,22 +44,23 @@ export default function useLocationMutations(
 
       created.forEach((household) => dispatch(householdCreated(household)));
     },
-    addVisit: async (
+    isAddVisitLoading,
+    reportHouseholdVisit: async (
+      areaAssId: number,
       householdId: number,
-      data: Omit<Visit, 'id' | 'personId'>
+      data: ZetkinHouseholdVisitPostBody
     ) => {
       setIsAddVisitLoading(true);
-      const location = await apiClient.post<
-        ZetkinLocation,
-        Omit<Visit, 'id' | 'personId'>
+      const visit = await apiClient.post<
+        ZetkinHouseholdVisit,
+        ZetkinHouseholdVisitPostBody
       >(
-        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}/visits`,
+        `/api2/orgs/${orgId}/area_assignments/${areaAssId}/households/${householdId}/visits`,
         data
       );
-      dispatch(locationUpdated(location));
+      dispatch(householdVisitCreated(visit));
       setIsAddVisitLoading(false);
     },
-    isAddVisitLoading,
     reportLocationVisit: async (
       areaAssId: number,
       data: ZetkinLocationVisitPostBody
@@ -62,7 +68,10 @@ export default function useLocationMutations(
       const visit = await apiClient.post<
         ZetkinLocationVisit,
         ZetkinLocationVisitPostBody
-      >(`/beta/orgs/${orgId}/areaassignments/${areaAssId}/visits`, data);
+      >(
+        `/api2/orgs/${orgId}/area_assignments/${areaAssId}/locations/${locationId}/visits`,
+        data
+      );
       dispatch(visitCreated(visit));
     },
     updateHousehold: async (householdId: number, data: HouseholdPatchBody) => {

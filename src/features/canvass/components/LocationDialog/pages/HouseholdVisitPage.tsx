@@ -11,25 +11,19 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import {
-  Visit,
-  ZetkinLocation,
-  ZetkinMetric,
-} from 'features/areaAssignments/types';
+import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import useHousehold from 'features/canvass/hooks/useHousehold';
+import { MetricResponse } from 'features/canvass/types';
 
 type HouseholdVisitPageProps = {
   householdId: number;
   location: ZetkinLocation;
   metrics: ZetkinMetric[];
   onBack: () => void;
-  onLogVisit: (
-    responses: Visit['responses'],
-    noteToOfficial: Visit['noteToOfficial']
-  ) => void;
+  onLogVisit: (metrics: MetricResponse[]) => void;
 };
 
 const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
@@ -47,7 +41,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   );
 
   const [responseByMetricId, setResponseByMetricId] = useState<
-    Record<string, string>
+    Record<string, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
 
@@ -62,13 +56,14 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           <Button
             fullWidth
             onClick={() => {
-              const responses = Object.entries(responseByMetricId).map(
-                ([metricId, response]) => ({ metricId, response })
+              const responses = Object.values(responseByMetricId).map(
+                (response) => response
               );
+
               const filteredResponses = responses.filter(
                 (response) => !!response.response
               );
-              onLogVisit(filteredResponses, '');
+              onLogVisit(filteredResponses);
             }}
             variant="contained"
           >
@@ -128,7 +123,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
 
                 {completed && step != index && (
                   <Typography variant="body2">
-                    {responseByMetricId[metric.id]}
+                    {responseByMetricId[metric.id].response}
                   </Typography>
                 )}
               </StepButton>

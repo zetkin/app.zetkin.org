@@ -133,7 +133,7 @@ const LocationPage: FC<LocationPageProps> = ({
                             values={{ numHouseholds: households }}
                           />
                         </Typography>
-                        <ZUIRelativeTime datetime={visit.timestamp} />
+                        <ZUIRelativeTime datetime={visit.created} />
                       </Box>
                     </ListItem>
                   );

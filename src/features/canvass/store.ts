@@ -102,7 +102,7 @@ const canvassSlice = createSlice({
     },
     visitCreated: (state, action: PayloadAction<ZetkinLocationVisit>) => {
       const visit = action.payload;
-      const assignmentId = visit.areaAssId;
+      const assignmentId = visit.assignment_id;
       if (!state.visitsByAssignmentId[assignmentId]) {
         state.visitsByAssignmentId[assignmentId] = remoteList();
       }
