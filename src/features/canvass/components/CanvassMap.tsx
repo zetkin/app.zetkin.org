@@ -86,7 +86,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
 
   const [map, setMap] = useState<Map | null>(null);
   const [zoomed, setZoomed] = useState(false);
-  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
+  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
   const [isCreating, setIsCreating] = useState(false);
@@ -111,7 +111,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   };
 
   const updateSelection = useCallback(() => {
-    let nearestLocation: string | null = null;
+    let nearestLocation: number | null = null;
     let nearestDistance = Infinity;
 
     if (isCreating) {

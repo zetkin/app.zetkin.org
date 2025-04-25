@@ -3,31 +3,32 @@ import { useState } from 'react';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   HouseholdPatchBody,
+  Zetkin2Household,
   ZetkinLocationPatchBody,
   ZetkinLocationVisit,
   ZetkinLocationVisitPostBody,
 } from '../types';
-import { visitCreated } from '../store';
+import { householdCreated, householdUpdated, visitCreated } from '../store';
 import { locationUpdated } from '../../areaAssignments/store';
 import createHouseholds from '../rpc/createHouseholds/client';
 import { Visit, ZetkinLocation } from 'features/areaAssignments/types';
 
 export default function useLocationMutations(
   orgId: number,
-  locationId: string
+  locationId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const [isAddVisitLoading, setIsAddVisitLoading] = useState<boolean>(false);
 
   return {
-    addHousehold: async (data: Partial<ZetkinLocation>) => {
-      const location = await apiClient.post<ZetkinLocation>(
-        `/beta/orgs/${orgId}/locations/${locationId}/households`,
+    addHousehold: async (data: Partial<Zetkin2Household>) => {
+      const household = await apiClient.post<Zetkin2Household>(
+        `/api2/orgs/${orgId}/locations/${locationId}/households`,
         data
       );
-      dispatch(locationUpdated(location));
-      return null;
+      dispatch(householdCreated(household));
+      return household;
     },
     addHouseholds: async (households: { floor: number; title: string }[]) => {
       const location = await apiClient.rpc(createHouseholds, {
@@ -38,7 +39,7 @@ export default function useLocationMutations(
       dispatch(locationUpdated(location));
     },
     addVisit: async (
-      householdId: string,
+      householdId: number,
       data: Omit<Visit, 'id' | 'personId'>
     ) => {
       setIsAddVisitLoading(true);
@@ -63,15 +64,15 @@ export default function useLocationMutations(
       >(`/beta/orgs/${orgId}/areaassignments/${areaAssId}/visits`, data);
       dispatch(visitCreated(visit));
     },
-    updateHousehold: async (householdId: string, data: HouseholdPatchBody) => {
-      const location = await apiClient.patch<
-        ZetkinLocation,
+    updateHousehold: async (householdId: number, data: HouseholdPatchBody) => {
+      const household = await apiClient.patch<
+        Zetkin2Household,
         HouseholdPatchBody
       >(
-        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
+        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
         data
       );
-      dispatch(locationUpdated(location));
+      dispatch(householdUpdated([locationId, household]));
     },
     updateLocation: async (data: ZetkinLocationPatchBody) => {
       const location = await apiClient.patch<

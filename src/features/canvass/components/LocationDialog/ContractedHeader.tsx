@@ -52,7 +52,8 @@ const ContractedHeader: FC<Props> = ({ location }) => {
   */
 
   const numVisitedHouseholds = 0;
-  const numHouseholds = 0;
+  const numHouseholds =
+    location.num_estimated_households || location.num_known_households;
   const successfulVisits = 0;
 
   return (

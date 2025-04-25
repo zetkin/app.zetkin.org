@@ -83,7 +83,8 @@ const AreaSelect: FC<Props> = ({
 
   const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
     .map(
-      (location) => location.num_households || location.num_estimated_households
+      (location) =>
+        location.num_known_households || location.num_estimated_households
     )
     .reduce((prev, curr) => prev + curr, 0);
 

@@ -61,7 +61,7 @@ const LocationPage: FC<LocationPageProps> = ({
   );
 
   const numHouseholds = Math.max(
-    location.num_households || location.num_estimated_households,
+    location.num_known_households || location.num_estimated_households,
     numVisitedHouseholds
   );
 

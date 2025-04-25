@@ -1,9 +1,7 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { locationsInvalidated } from '../../areaAssignments/store';
-import { visitsLoad, visitsLoaded, visitsInvalidated } from '../store';
+import { visitsInvalidated } from '../store';
 import useMembership from 'features/organizations/hooks/useMembership';
-import estimateVisitedHouseholds from '../utils/estimateVisitedHouseholds';
 
 type UseSidebarReturn = {
   loading: boolean;
@@ -27,15 +25,15 @@ export default function useSidebarStats(
   orgId: number,
   assignmentId: number
 ): UseSidebarReturn {
-  const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const visitList = useAppSelector(
     (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
-  const membershipFuture = useMembership(orgId);
-  const userPersonId = membershipFuture.data?.profile.id;
+  useMembership(orgId);
 
+  // TODO: Get From API
+  /*
   const visitListFuture = loadListIfNecessary(visitList, dispatch, {
     actionOnLoad: () => visitsLoad(assignmentId),
     actionOnSuccess: (items) => visitsLoaded([assignmentId, items]),
@@ -44,6 +42,7 @@ export default function useSidebarStats(
         `/beta/orgs/${orgId}/areaassignments/${assignmentId}/visits`
       ),
   });
+  */
 
   const stats = {
     allTime: {
@@ -61,10 +60,10 @@ export default function useSidebarStats(
   const userLocationsToday = new Set<string>();
   const teamLocationsToday = new Set<string>();
   const teamLocations = new Set<string>();
-  const todayStr = new Date().toISOString().slice(0, 10);
 
   // TODO: Get from API
   /*
+  const todayStr = new Date().toISOString().slice(0, 10);
   const userHouseholdsToday = new Set<string>();
   const teamHouseholdsToday = new Set<string>();
   const teamHouseholds = new Set<string>();
@@ -95,6 +94,7 @@ export default function useSidebarStats(
   stats.today.numUserHouseholds = userHouseholdsToday.size;
   */
 
+  /*
   if (visitListFuture.data) {
     visitListFuture.data.forEach((visit) => {
       const numHouseholds = estimateVisitedHouseholds(visit);
@@ -113,13 +113,14 @@ export default function useSidebarStats(
       }
     });
   }
+    */
 
   stats.allTime.numLocations = teamLocations.size;
   stats.today.numLocations = teamLocationsToday.size;
   stats.today.numUserLocations = userLocationsToday.size;
 
   return {
-    loading: visitListFuture.isLoading,
+    loading: false,
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));

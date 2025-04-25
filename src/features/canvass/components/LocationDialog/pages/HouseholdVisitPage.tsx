@@ -11,13 +11,19 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import { Household, Visit, ZetkinMetric } from 'features/areaAssignments/types';
+import {
+  Visit,
+  ZetkinLocation,
+  ZetkinMetric,
+} from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useHousehold from 'features/canvass/hooks/useHousehold';
 
 type HouseholdVisitPageProps = {
-  household: Household;
+  householdId: number;
+  location: ZetkinLocation;
   metrics: ZetkinMetric[];
   onBack: () => void;
   onLogVisit: (
@@ -27,12 +33,18 @@ type HouseholdVisitPageProps = {
 };
 
 const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
-  household,
+  householdId,
+  location,
   metrics,
   onBack,
   onLogVisit,
 }) => {
   const messages = useMessages(messageIds);
+  const household = useHousehold(
+    location.organization_id,
+    location.id,
+    householdId
+  );
 
   const [responseByMetricId, setResponseByMetricId] = useState<
     Record<string, string>

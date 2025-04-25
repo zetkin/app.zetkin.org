@@ -89,14 +89,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
     }
   }, []);
 
-  const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
-  );
-
-  // TODO: Load from households API
-  //const selectedHousehold = location.households.find(
-  const selectedHousehold = [].find(
-    (household) => household == selectedHouseholdId
   );
 
   return (
@@ -134,16 +128,17 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdId(household.id);
             goto('household');
           }}
-          onSelectHousehold={(householdId: string) => {
+          onSelectHousehold={(householdId: number) => {
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
           orgId={orgId}
         />
         <Box key="household" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <HouseholdPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               onBack={() => back()}
               onClose={onClose}
               onEdit={() => goto('editHousehold')}
@@ -164,22 +159,22 @@ const LocationDialog: FC<LocationDialogProps> = ({
         </Box>
         <Box key="createHouseholds" height="100%">
           <CreateHouseholdsPage
-            locationId={location.id}
+            location={location}
             onBack={() => back()}
             onClose={onClose}
             orgId={orgId}
           />
         </Box>
         <Box key="editHousehold" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <EditHouseholdPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title, floor) => {
-                // TODO: Could probably be simplified once API exists
+              onSave={async (title, level) => {
                 if (selectedHouseholdId) {
-                  await updateHousehold(selectedHouseholdId, { floor, title });
+                  await updateHousehold(selectedHouseholdId, { level, title });
                   back();
                 }
               }}
@@ -203,9 +198,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
           />
         </Box>
         <Box key="householdVisit" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <HouseholdVisitPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses, noteToOfficial) => {

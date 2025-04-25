@@ -69,7 +69,7 @@ const LocationMarker: FC<{
             paddingX="10px"
             width="100%"
           >
-            {location.num_households || location.num_estimated_households}
+            {location.num_known_households || location.num_estimated_households}
           </Box>
           <div
             style={{
@@ -92,7 +92,7 @@ const LocationMarker: FC<{
         <MarkerIcon
           percentage={percentage}
           selected={false}
-          uniqueKey={location.id}
+          uniqueKey={location.id.toString()}
         />
       </DivIconMarker>
     );
@@ -221,7 +221,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     let numberOfHouseholdsInArea = 0;
     locationsByAreaId[id].forEach((location) => {
       numberOfHouseholdsInArea +=
-        location.num_households || location.num_estimated_households;
+        location.num_known_households || location.num_estimated_households;
     });
 
     if (numberOfHouseholdsInArea > highestHousholds) {
@@ -309,7 +309,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             locationsByAreaId[area.id].forEach(
               (location) =>
                 (numberOfHouseholds +=
-                  location.num_households || location.num_estimated_households)
+                  location.num_known_households ||
+                  location.num_estimated_households)
             );
             const numberOfLocations = locationsByAreaId[area.id].length;
 

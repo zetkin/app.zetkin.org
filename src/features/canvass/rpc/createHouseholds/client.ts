@@ -10,7 +10,7 @@ export const paramsSchema = z.object({
       title: z.string().optional(),
     })
   ),
-  locationId: z.string(),
+  locationId: z.number(),
   orgId: z.number(),
 });
 

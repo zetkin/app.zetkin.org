@@ -7,7 +7,7 @@ import {
 export type ZetkinLocationVisit = {
   areaAssId: number;
   id: string;
-  locationId: string;
+  locationId: number;
   personId: number;
   responses: {
     metricId: string;
@@ -32,4 +32,11 @@ export type ZetkinLocationPatchBody = Partial<
     { visits?: Partial<Omit<Visit, 'id'>>[] }[];
 };
 
-export type HouseholdPatchBody = Partial<Omit<Household, 'id'>>;
+export type Zetkin2Household = {
+  id: number;
+  level: number;
+  location_id: number;
+  title: string;
+};
+
+export type HouseholdPatchBody = Partial<Omit<Zetkin2Household, 'id'>>;
