@@ -1,5 +1,5 @@
-import { Box, Button, useTheme } from '@mui/material';
-import { FC } from 'react';
+import { Box, Button, Grow, useTheme } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
 import {
   CheckCircleOutline,
   Close,
@@ -11,20 +11,61 @@ import ZUIText from '../ZUIText';
 import { ZUIButtonProps } from '../ZUIButton';
 
 type ZUIAlertProps = {
+  /**
+   * Controls if the alert will animate when it appears.
+   * Set this to true if the alert you are making might appear
+   * on the page after it has already rendered.
+   *
+   * Defaults to false.
+   */
+  appear?: boolean;
+
+  /**
+   * Props to render an action button at the bottom of the alert.
+   */
   buttonProps?: Pick<
     ZUIButtonProps,
     'label' | 'onClick' | 'endIcon' | 'startIcon' | 'href'
   >;
+
+  /**
+   * The description/content of the alert.
+   */
   description?: string;
+
+  /**
+   * If this function is provided there will be an "X"-button
+   * to close the alert in the top right corner.
+   *
+   * This function will run when the user presses that button.
+   */
   onClose?: () => void;
+
+  /**
+   * If you provide an onClose-function, also provide this property.
+   * Controls if the alert is visible or not.
+   *
+   * Defaults to "true".
+   */
+  open?: boolean;
+
+  /**
+   * The type of alert to show.
+   */
   severity: 'error' | 'info' | 'success' | 'warning';
+
+  /**
+   * The title of the alert.
+   */
   title: string;
 };
 
 const ZUIAlert: FC<ZUIAlertProps> = ({
+  appear = false,
   buttonProps,
   description,
   onClose,
+  open = true,
   severity,
   title,
 }) => {
@@ -85,88 +126,111 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
     }
   };
 
+  const [animatedOut, setAnimatedOut] = useState(false);
+
+  const timeout = 1000;
+
+  useEffect(() => {
+    if (open) {
+      setAnimatedOut(false);
+    } else {
+      const timer = setTimeout(() => {
+        setAnimatedOut(true);
+      }, timeout);
+
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  if (animatedOut) {
+    return null;
+  }
+
   return (
-    <Box
-      sx={() => ({
-        backgroundColor: backgroundColors[severity],
-        borderRadius: '0.25rem',
-        color: colors[severity],
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '1rem',
-      })}
-    >
+    <Grow appear={appear} in={open} timeout={timeout}>
       <Box
-        sx={{
-          alignItems: 'flex-start',
+        sx={() => ({
+          backgroundColor: backgroundColors[severity],
+          borderRadius: '0.25rem',
+          color: colors[severity],
           display: 'flex',
-          gap: '0.75rem',
-          justifyContent: 'space-between',
-        }}
+          flexDirection: 'column',
+          padding: '1rem',
+        })}
       >
         <Box
           sx={{
+            alignItems: 'flex-start',
             display: 'flex',
             gap: '0.75rem',
-            paddingTop: onClose ? '0.25rem' : '',
+            justifyContent: 'space-between',
           }}
         >
           <Box
             sx={{
               display: 'flex',
-              paddingTop: '0.1rem',
+              gap: '0.75rem',
+              paddingTop: onClose ? '0.25rem' : '',
             }}
           >
-            <Icon />
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-            }}
-          >
-            <ZUIText color="inherit" variant="bodyMdSemiBold">
-              {title}
-            </ZUIText>
-            {description && (
-              <ZUIText color="inherit" variant="bodySmSemiBold">
-                {description}
+            <Box
+              sx={{
+                display: 'flex',
+                paddingTop: '0.1rem',
+              }}
+            >
+              <Icon />
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+              }}
+            >
+              <ZUIText color="inherit" variant="bodyMdSemiBold">
+                {title}
               </ZUIText>
-            )}
+              {description && (
+                <ZUIText color="inherit" variant="bodySmSemiBold">
+                  {description}
+                </ZUIText>
+              )}
+            </Box>
           </Box>
+          {onClose && (
+            <Button
+              color="inherit"
+              onClick={onClose}
+              sx={{
+                boxShadow: 'none',
+                flexShrink: 0,
+                minWidth: 0,
+                padding: '0.313rem',
+              }}
+            >
+              <Close sx={{ fontSize: '1.25rem' }} />
+            </Button>
+          )}
         </Box>
-        {onClose && (
-          <Button
-            color="inherit"
-            sx={{
-              boxShadow: 'none',
-              flexShrink: 0,
-              minWidth: 0,
-              padding: '0.313rem',
-            }}
-          >
-            <Close sx={{ fontSize: '1.25rem' }} />
-          </Button>
+        {buttonProps && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              color="inherit"
+              sx={(theme) => ({
+                boxShadow: 'none',
+                minWidth: 'max-content',
+                padding: '0.33rem 0.625rem',
+                ...theme.typography.labelSmSemiBold,
+              })}
+              variant="outlined"
+            >
+              {buttonProps.label}
+            </Button>
+          </Box>
         )}
       </Box>
-      {buttonProps && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            color="inherit"
-            sx={(theme) => ({
-              boxShadow: 'none',
-              minWidth: 'max-content',
-              padding: '0.33rem 0.625rem',
-              ...theme.typography.labelSmSemiBold,
-            })}
-            variant="outlined"
-          >
-            {buttonProps.label}
-          </Button>
-        </Box>
-      )}
-    </Box>
+    </Grow>
   );
 };
 
