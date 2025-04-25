@@ -10,6 +10,7 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import SkipCallDialog from './SkipCallDialog';
+import useCallMutations from '../hooks/useCallMutations';
 
 type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
@@ -17,6 +18,7 @@ type PrepareHeaderProps = {
 
 const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
   const call = useCurrentCall();
+  const { deleteCall } = useCallMutations(assignment.organization.id);
 
   if (!call) {
     return null;
@@ -26,7 +28,12 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
     <Box p={2}>
       <Box alignItems="center" display="flex" gap={1} mb={1} minWidth={0}>
         <Link href={`/call/${assignment.id}`} passHref>
-          <ZUIIconButton icon={ArrowBackIos} size="small" variant="tertiary" />
+          <ZUIIconButton
+            icon={ArrowBackIos}
+            onClick={() => deleteCall(call.id)}
+            size="small"
+            variant="tertiary"
+          />
         </Link>
         <Box
           sx={{
