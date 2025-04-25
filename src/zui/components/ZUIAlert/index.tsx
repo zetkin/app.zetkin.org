@@ -139,7 +139,12 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
         {onClose && (
           <Button
             color="inherit"
-            sx={{ boxShadow: 'none', minWidth: 0, padding: '0.313rem' }}
+            sx={{
+              boxShadow: 'none',
+              flexShrink: 0,
+              minWidth: 0,
+              padding: '0.313rem',
+            }}
           >
             <Close sx={{ fontSize: '1.25rem' }} />
           </Button>
