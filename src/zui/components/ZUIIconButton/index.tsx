@@ -132,7 +132,7 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
               if (variant == 'primary' || variant == 'destructive') {
                 color = theme.palette.common.white;
               } else if (variant) {
-                color = theme.palette.common.black;
+                color = theme.palette.primary.main;
               } else {
                 //Variant is undefined = we want to inherit color from parent.
                 color = '';
