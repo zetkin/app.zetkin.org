@@ -1,7 +1,7 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import { visitsLoad, visitsLoaded } from '../store';
-import { ResolvedFuture } from 'core/caching/futures';
+import useRemoteList from 'core/hooks/useRemoteList';
+import { ZetkinLocationVisit } from '../types';
 
 export default function useLocationVisits(
   orgId: number,
@@ -9,25 +9,18 @@ export default function useLocationVisits(
   locationId: number
 ) {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const visitList = useAppSelector(
     (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
-  const future = loadListIfNecessary(visitList, dispatch, {
+  const visits = useRemoteList(visitList, {
     actionOnLoad: () => visitsLoad(assignmentId),
     actionOnSuccess: (items) => visitsLoaded([assignmentId, items]),
     loader: () =>
-      apiClient.get(
-        `/beta/orgs/${orgId}/areaassignments/${assignmentId}/visits`
+      apiClient.get<ZetkinLocationVisit[]>(
+        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits`
       ),
   });
 
-  if (future.data) {
-    return new ResolvedFuture(
-      future.data.filter((visit) => visit.location_id == locationId)
-    );
-  }
-
-  return future;
+  return visits.filter((visit) => visit.location_id == locationId);
 }

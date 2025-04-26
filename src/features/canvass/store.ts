@@ -111,6 +111,19 @@ const canvassSlice = createSlice({
         remoteItem(visit.id, { data: visit })
       );
     },
+    visitUpdated: (state, action: PayloadAction<ZetkinLocationVisit>) => {
+      const visit = action.payload;
+      const assignmentId = visit.assignment_id;
+
+      state.visitsByAssignmentId[assignmentId] ||= remoteList();
+      const item = findOrAddItem(
+        state.visitsByAssignmentId[assignmentId],
+        visit.id
+      );
+      item.data = visit;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
     visitsInvalidated: (state, action: PayloadAction<number>) => {
       const assignmentId = action.payload;
       state.visitsByAssignmentId[assignmentId].isStale = true;
@@ -142,6 +155,7 @@ export const {
   myAssignmentsLoad,
   myAssignmentsLoaded,
   visitCreated,
+  visitUpdated,
   visitsInvalidated,
   visitsLoad,
   visitsLoaded,

@@ -14,7 +14,6 @@ import {
 } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import uselocationVisits from 'features/canvass/hooks/useLocationVisits';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { Msg, useMessages } from 'core/i18n';
@@ -38,7 +37,7 @@ const LocationPage: FC<LocationPageProps> = ({
   location,
 }) => {
   const messages = useMessages(messageIds);
-  const visitsFuture = uselocationVisits(
+  const visits = uselocationVisits(
     assignment.organization_id,
     assignment.id,
     location.id
@@ -53,7 +52,7 @@ const LocationPage: FC<LocationPageProps> = ({
   const numHouseholdsVisitedIndividually = 0;
 
   const numHouseholdsPerLocationVisit =
-    visitsFuture.data?.map(estimateVisitedHouseholds) ?? [];
+    visits.map(estimateVisitedHouseholds) ?? [];
 
   const numVisitedHouseholds = Math.max(
     numHouseholdsVisitedIndividually,
@@ -110,38 +109,32 @@ const LocationPage: FC<LocationPageProps> = ({
         <Divider />
       </Box>
       <Box>
-        <ZUIFuture future={visitsFuture}>
-          {(visits) => (
-            <>
-              <Typography>
-                <Msg id={messageIds.location.page.historySectionHeader} />
-              </Typography>
-              <List>
-                {visits.map((visit) => {
-                  const households = estimateVisitedHouseholds(visit);
-                  return (
-                    <ListItem key={visit.id}>
-                      <Box
-                        display="flex"
-                        gap={1}
-                        justifyContent="space-between"
-                        width="100%"
-                      >
-                        <Typography>
-                          <Msg
-                            id={messageIds.location.page.numberOfHouseholds}
-                            values={{ numHouseholds: households }}
-                          />
-                        </Typography>
-                        <ZUIRelativeTime datetime={visit.created} />
-                      </Box>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </>
-          )}
-        </ZUIFuture>
+        <Typography>
+          <Msg id={messageIds.location.page.historySectionHeader} />
+        </Typography>
+        <List>
+          {visits.map((visit) => {
+            const households = estimateVisitedHouseholds(visit);
+            return (
+              <ListItem key={visit.id}>
+                <Box
+                  display="flex"
+                  gap={1}
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Typography>
+                    <Msg
+                      id={messageIds.location.page.numberOfHouseholds}
+                      values={{ numHouseholds: households }}
+                    />
+                  </Typography>
+                  <ZUIRelativeTime datetime={visit.created} />
+                </Box>
+              </ListItem>
+            );
+          })}
+        </List>
       </Box>
     </PageBase>
   );

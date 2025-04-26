@@ -19,7 +19,7 @@ export type ZetkinLocationVisit = {
   assignment_id: number;
   created: string;
   created_by_user_id: number;
-  id: string;
+  id: number;
   location_id: number;
   metrics: MetricBulkResponse[];
   num_households_visited: number;
