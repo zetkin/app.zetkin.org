@@ -57,9 +57,7 @@ const areasSlice = createSlice({
     tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
 
-      state.tagsByAreaId[areaId] ||= remoteListCreated(
-        state.tagsByAreaId[areaId]
-      );
+      state.tagsByAreaId[areaId] ||= remoteListCreated();
       remoteItemUpdated(state.tagsByAreaId[areaId], tag);
 
       const areaItem = state.areaList.items.find((item) => item.id == areaId);

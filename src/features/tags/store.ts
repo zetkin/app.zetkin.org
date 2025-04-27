@@ -46,9 +46,7 @@ const tagsSlice = createSlice({
     },
     tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       const [personId, tag] = action.payload;
-      state.tagsByPersonId[personId] ||= remoteListCreated(
-        state.tagsByPersonId[personId]
-      );
+      state.tagsByPersonId[personId] ||= remoteListCreated();
       remoteItemUpdated(state.tagsByPersonId[personId], tag);
     },
     tagCreate: (state) => {
@@ -80,6 +78,7 @@ const tagsSlice = createSlice({
       remoteItemUpdated(state.tagGroupList, tagGroup);
     },
     tagGroupsLoad: (state) => {
+      state.tagGroupList.isLoading = true; // Same as above comment
       state.tagGroupList = remoteListLoad(state.tagGroupList);
     },
     tagGroupsLoaded: (state, action: PayloadAction<ZetkinTagGroup[]>) => {

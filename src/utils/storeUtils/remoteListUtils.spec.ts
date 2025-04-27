@@ -9,28 +9,15 @@ import {
 describe('remoteListCreated', () => {
   afterEach(() => {
     jest.clearAllTimers();
-    jest.clearAllMocks();
   });
 
   it('Sets loaded to recent time if list is created', () => {
     const testDate = new Date('2020-01-01');
     jest.useFakeTimers().setSystemTime(testDate);
 
-    const resultList = remoteListCreated(null);
+    const resultList = remoteListCreated();
 
     expect(resultList.loaded).toBe(testDate.toISOString());
-  });
-
-  it('Leaves loaded untouched if list already exists', () => {
-    const existingList = remoteList();
-    const correctDate = new Date('2020-01-01');
-    const incorrectDate = new Date('2025-01-01');
-    jest.useFakeTimers().setSystemTime(incorrectDate);
-    existingList.loaded = correctDate.toISOString();
-
-    const resultList = remoteListCreated(existingList);
-
-    expect(resultList.loaded).toBe(correctDate.toISOString());
   });
 });
 
@@ -54,7 +41,6 @@ describe('remoteListLoad', () => {
 describe('remoteListLoaded', () => {
   afterEach(() => {
     jest.clearAllTimers();
-    jest.clearAllMocks();
   });
 
   it('Sets loaded to recent time for the list', () => {
@@ -77,7 +63,7 @@ describe('remoteListLoaded', () => {
 
     const resultList = remoteListLoaded(loadedData);
 
-    expect(resultList.items.length).toBe(loadedData.length);
+    expect(resultList.items.length).toBe(2);
     resultList.items.forEach((item) => {
       expect(item.loaded).toBe(correctDate.toISOString());
     });

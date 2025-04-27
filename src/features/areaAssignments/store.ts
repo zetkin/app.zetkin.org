@@ -85,9 +85,8 @@ const areaAssignmentSlice = createSlice({
     ) => {
       const session = action.payload;
 
-      state.sessionsByAssignmentId[session.assignment.id] ||= remoteListCreated(
-        state.sessionsByAssignmentId[session.assignment.id]
-      );
+      state.sessionsByAssignmentId[session.assignment.id] ||=
+        remoteListCreated();
       remoteItemUpdated(state.sessionsByAssignmentId[session.assignment.id], {
         ...session,
         id: session.assignee.id,

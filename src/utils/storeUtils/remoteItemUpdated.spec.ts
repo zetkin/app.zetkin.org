@@ -16,7 +16,6 @@ describe('remoteItemUpdated', () => {
 
   afterEach(() => {
     jest.clearAllTimers();
-    jest.clearAllMocks();
   });
 
   it('Creates an item with data if none exist', () => {
