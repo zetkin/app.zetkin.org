@@ -74,10 +74,31 @@ const LazyActivitiesBox = ({
 
 const Activities = ({ activities, orgId }: ActivitiesProps) => {
   const clustered = useClusteredActivities(activities);
+  
+  const ordered = useMemo(() => {
+    return clustered.sort((a, b) => {
+      const aStart = isEventCluster(a)
+          ? new Date(a.events[0].start_time)
+          : a.visibleFrom;
+      const bStart = isEventCluster(b)
+          ? new Date(b.events[0].start_time)
+          : b.visibleFrom;
+
+      if (!aStart && !bStart) {
+        return 0;
+      } else if (!aStart) {
+        return 1;
+      } else if (!bStart) {
+        return -1;
+      }
+
+      return bStart.getTime() - aStart.getTime();
+    });
+  }, [clustered]);
 
   return (
     <Card>
-      {clustered.map((activity, index) => {
+      {ordered.map((activity, index) => {
         if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
           return (
             <LazyActivitiesBox key={`ca-${activity.data.id}`} index={index}>
