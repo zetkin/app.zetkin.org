@@ -157,12 +157,12 @@ export default function useClusteredActivities(
     if (!aStart && !bStart) {
       return 0;
     } else if (!aStart) {
-      return 1;
-    } else if (!bStart) {
       return -1;
+    } else if (!bStart) {
+      return 1;
     }
 
-    return bStart.getTime() - aStart.getTime();
+    return aStart.getTime() - bStart.getTime();
   });
 }
 
