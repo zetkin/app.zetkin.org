@@ -50,13 +50,17 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const goto = useCallback(
     (step: LocationDialogStep) => {
       setDialogStep(step);
-      history.pushState({ step: step }, '', `?step=${step}`);
+      history.pushState(
+        { previousStep: dialogStep, step },
+        '',
+        `?step=${step}`
+      );
     },
-    [setDialogStep]
+    [setDialogStep, dialogStep]
   );
 
-  const back = useCallback(() => {
-    history.back();
+  const back = useCallback((stepsToGoBack = 1) => {
+    history.go(-stepsToGoBack);
   }, []);
 
   useEffect(() => {
@@ -200,7 +204,18 @@ const LocationDialog: FC<LocationDialogProps> = ({
                   timestamp: new Date().toISOString(),
                 });
                 setShowSparkle(true);
-                goto('households');
+
+                // Generally, we want to back 2 steps, to the `households` step.
+                // But in case the user can end up here from another route in the future, we don't want to always
+                // back 2 steps, since that could back too far. So we have this check with a fallback behavior.
+                if (
+                  'previousStep' in history.state &&
+                  history.state.previousStep === 'household'
+                ) {
+                  back(2);
+                } else {
+                  back();
+                }
               }}
             />
           )}
