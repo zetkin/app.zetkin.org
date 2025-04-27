@@ -84,8 +84,8 @@ const LocationVisitPage: FC<Props> = ({
                   valuesByMetricId[metricId].length == 2
                     ? {
                         metric_id: metricId,
-                        num_no: 0,
-                        num_yes: 0,
+                        num_no: valuesByMetricId[metricId][1] || 0,
+                        num_yes: valuesByMetricId[metricId][0] || 0,
                       }
                     : {
                         metric_id: metricId,

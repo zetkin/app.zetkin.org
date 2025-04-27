@@ -41,7 +41,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   );
 
   const [responseByMetricId, setResponseByMetricId] = useState<
-    Record<string, MetricResponse>
+    Record<number, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
 
@@ -143,10 +143,13 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   <ToggleButtonGroup
                     exclusive
                     fullWidth
-                    onChange={(ev, newValue) => {
+                    onChange={(ev, newValue: MetricResponse['response']) => {
                       setResponseByMetricId({
                         ...responseByMetricId,
-                        [metric.id]: newValue,
+                        [metric.id]: {
+                          metric_id: metric.id,
+                          response: newValue,
+                        },
                       });
                       setStep(index + 1);
                     }}

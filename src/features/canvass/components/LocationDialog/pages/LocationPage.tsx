@@ -18,6 +18,7 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useBasicLocationStats from 'features/canvass/hooks/useBasicLocationStats';
 
 type LocationPageProps = {
   assignment: ZetkinAreaAssignment;
@@ -43,25 +44,9 @@ const LocationPage: FC<LocationPageProps> = ({
     location.id
   );
 
-  /* TODO: Get from API
-  const numHouseholdsVisitedIndividually =
-    location?.households.filter((household) =>
-      household.visits.some((visit) => visit.assignment_id == assignment.id)
-    ).length ?? 0;
-    */
-  const numHouseholdsVisitedIndividually = 0;
-
-  const numHouseholdsPerLocationVisit =
-    visits.map(estimateVisitedHouseholds) ?? [];
-
-  const numVisitedHouseholds = Math.max(
-    numHouseholdsVisitedIndividually,
-    ...numHouseholdsPerLocationVisit
-  );
-
-  const numHouseholds = Math.max(
-    location.num_known_households || location.num_estimated_households,
-    numVisitedHouseholds
+  const { numHouseholds, numVisitedHouseholds } = useBasicLocationStats(
+    assignment.id,
+    location
   );
 
   return (

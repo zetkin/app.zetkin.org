@@ -13,37 +13,49 @@ import {
 import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
-import { Visit, ZetkinLocation } from 'features/areaAssignments/types';
+import {
+  ZetkinAreaAssignment,
+  ZetkinLocation,
+} from 'features/areaAssignments/types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import useHouseholds from 'features/canvass/hooks/useHouseholds';
 import { Zetkin2Household } from 'features/canvass/types';
+import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 
 type Props = {
+  assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onBack: () => void;
   onBulk: () => void;
   onClose: () => void;
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
-  orgId: number;
 };
 
 const HouseholdsPage: FC<Props> = ({
+  assignment,
   onBack,
   onBulk,
   onClose,
   onCreateHousehold,
   onSelectHousehold,
-  orgId,
   location,
 }) => {
   const messages = useMessages(messageIds);
-  const households = useHouseholds(orgId, location.id);
+  const households = useHouseholds(location.organization_id, location.id);
   const [adding, setAdding] = useState(false);
-  const { addHousehold } = useLocationMutations(orgId, location.id);
+  const { addHousehold } = useLocationMutations(
+    location.organization_id,
+    location.id
+  );
+  const { lastVisitByHouseholdId } = useVisitReporting(
+    location.organization_id,
+    assignment.id,
+    location.id
+  );
 
   const sortedHouseholds = households.concat().sort((h0, h1) => {
     const floor0 = h0.level ?? Infinity;
@@ -67,28 +79,11 @@ const HouseholdsPage: FC<Props> = ({
         )}
         <List sx={{ overflowY: 'visible' }}>
           {sortedHouseholds.map((household, index) => {
-            // TODO: Sort out with new API
-            /*
-            const sortedVisits = household.visits.toSorted((a, b) => {
-              const dateA = new Date(a.timestamp);
-              const dateB = new Date(b.timestamp);
-              if (dateA > dateB) {
-                return -1;
-              } else if (dateB > dateA) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-            */
-            const sortedVisits: Visit[] = [];
-
             const prevFloor = sortedHouseholds[index - 1]?.level ?? null;
             const curFloor = household.level || null;
             const firstOnFloor = index == 0 || curFloor != prevFloor;
 
-            const mostRecentVisit =
-              sortedVisits.length > 0 ? sortedVisits[0] : null;
+            const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
             return (
               <Box key={household.id}>
@@ -111,7 +106,7 @@ const HouseholdsPage: FC<Props> = ({
                   </Box>
                   {mostRecentVisit && (
                     <Typography color="secondary">
-                      <ZUIRelativeTime datetime={mostRecentVisit.timestamp} />
+                      <ZUIRelativeTime datetime={mostRecentVisit.created} />
                     </Typography>
                   )}
                   <KeyboardArrowRight />

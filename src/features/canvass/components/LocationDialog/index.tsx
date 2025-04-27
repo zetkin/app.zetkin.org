@@ -19,6 +19,7 @@ import EncouragingSparkle from '../EncouragingSparkle';
 import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { ZetkinLocationVisit } from 'features/canvass/types';
+import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -49,12 +50,12 @@ const LocationDialog: FC<LocationDialogProps> = ({
     assignment.organization_id,
     assignment.id
   );
-  const {
-    reportHouseholdVisit,
-    reportLocationVisit,
-    updateHousehold,
-    updateLocation,
-  } = useLocationMutations(orgId, location.id);
+  const { updateHousehold, updateLocation } = useLocationMutations(
+    orgId,
+    location.id
+  );
+  const { lastVisitByHouseholdId, reportHouseholdVisit, reportLocationVisit } =
+    useVisitReporting(orgId, assignment.id, location.id);
 
   const pushedRef = useRef(false);
 
@@ -126,6 +127,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         />
         <HouseholdsPage
           key="households"
+          assignment={assignment}
           location={location}
           onBack={() => back()}
           onBulk={() => goto('createHouseholds')}
@@ -138,7 +140,6 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
-          orgId={orgId}
         />
         <Box key="household" height="100%">
           {selectedHouseholdId && (
@@ -152,13 +153,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 goto('householdVisit');
               }}
               visitedInThisAssignment={
-                false
-                // TODO: Get from API
-                /*
-                selectedHousehold.visits.some(
-                (visit) => visit.assignment_id == assignment.id
-              )
-                */
+                !!lastVisitByHouseholdId[selectedHouseholdId]
               }
             />
           )}
@@ -199,10 +194,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 metrics: responses,
               } as ZetkinLocationVisit);
 
-              await reportLocationVisit(assignment.id, {
-                metrics: responses,
-                num_households_visited: numHouseholds,
-              });
+              await reportLocationVisit(numHouseholds, responses);
               setShowSparkle(true);
             }}
           />
@@ -215,9 +207,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
               metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses) => {
-                await reportHouseholdVisit(assignment.id, selectedHouseholdId, {
-                  metrics: responses,
-                });
+                await reportHouseholdVisit(selectedHouseholdId, responses);
                 setShowSparkle(true);
                 goto('households');
               }}
