@@ -103,7 +103,8 @@ export default function useJourneyInstanceMutations(
   async function assignTag(tag: Pick<ZetkinAppliedTag, 'id' | 'value'>) {
     await apiClient.put<ZetkinAppliedTag>(
       `/api/orgs/${orgId}/journey_instances/${instanceId}/tags/${tag.id}`,
-      { value: tag.value }
+      // dont send empty value
+      tag.value ? { value: tag.value } : undefined 
     );
     dispatch(invalidateJourneyInstance(instanceId));
   }
