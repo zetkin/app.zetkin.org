@@ -334,7 +334,8 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             const percentage = getVisitPercentage(
               assignment.id,
               location.households,
-              assignment.metrics.find((metric) => metric.definesDone)?.id || null
+              assignment.metrics.find((metric) => metric.definesDone)?.id ||
+                null
             );
             return (
               <DivIconMarker
