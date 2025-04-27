@@ -33,6 +33,7 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { ZetkinArea } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -79,6 +80,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   >(`mapBounds-${assignment.id}`, null);
 
   const [map, setMap] = useState<Map | null>(null);
+  useAutoResizeMap(map);
   const [zoomed, setZoomed] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     null
@@ -278,7 +280,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         </Box>
       </Box>
       <MapContainer
-        ref={(map) => setMap(map)}
+        ref={setMap}
         attributionControl={false}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}

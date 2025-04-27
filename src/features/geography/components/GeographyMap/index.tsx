@@ -26,6 +26,7 @@ import AreaFilterButton from '../../../areas/components/AreaFilters/AreaFilterBu
 import MapControls from 'features/areaAssignments/components/MapControls';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -45,7 +46,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
 
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
-  const containerElm = useRef<HTMLElement | undefined>();
+  useAutoResizeMap(mapRef.current);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -129,18 +130,6 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
     }
   };
 
-  useEffect(() => {
-    if (containerElm.current !== undefined) {
-      const resizeObserver = new ResizeObserver(() => {
-        mapRef.current?.invalidateSize();
-      });
-      resizeObserver.observe(containerElm.current);
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
-  }, [containerElm]);
-
   return (
     <AreaFilterProvider>
       <Box
@@ -151,13 +140,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
           width: '100%',
         }}
       >
-        <Box
-          ref={(ref) => (containerElm.current = ref as HTMLElement)}
-          display="flex"
-          justifyContent="space-between"
-          px={2}
-          py={1}
-        >
+        <Box display="flex" justifyContent="space-between" px={2} py={1}>
           <Box alignItems="center" display="flex" gap={1}>
             <ButtonGroup variant="contained">
               {!drawingPoints && (
