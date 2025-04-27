@@ -194,7 +194,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                 >
                                   <Typography px={1}>
                                     <Msg
-                                      id={messagesIds.report.card.definesSuccess}
+                                      id={
+                                        messagesIds.report.card.definesSuccess
+                                      }
                                     />
                                   </Typography>
                                 </Box>
@@ -249,7 +251,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                   (metric) => metric.kind === 'boolean'
                                 ).length <= 1 &&
                                 metric.kind == 'boolean' && (
-                                  <Tooltip title={messages.report.card.tooltip()}>
+                                  <Tooltip
+                                    title={messages.report.card.tooltip()}
+                                  >
                                     <Delete color="disabled" sx={{ mx: 1 }} />
                                   </Tooltip>
                                 )}
@@ -324,7 +328,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                   </Card>
                 )}
                 <Dialog onClose={() => setAnchorEl(null)} open={!!anchorEl}>
-                  <Box display="flex" flexDirection="column" gap={1} padding={2}>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                    padding={2}
+                  >
                     <Box
                       alignItems="center"
                       display="flex"
@@ -379,7 +388,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                               onClick={() => {
                                 if (metricBeingDeleted?.definesDone) {
                                   const filtered = assignment.metrics.filter(
-                                    (metric) => metric.id != metricBeingDeleted.id
+                                    (metric) =>
+                                      metric.id != metricBeingDeleted.id
                                   );
                                   updateAreaAssignment({
                                     metrics: [
@@ -447,7 +457,9 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
               >
                 <Divider />
                 <FormControl fullWidth sx={{ mt: 2 }}>
-                  <InputLabel>{messages.report.card.definesSuccess()}</InputLabel>
+                  <InputLabel>
+                    {messages.report.card.definesSuccess()}
+                  </InputLabel>
                   <Select
                     disabled={
                       !isReportEditable ||
