@@ -74,15 +74,15 @@ const LazyActivitiesBox = ({
 
 const Activities = ({ activities, orgId }: ActivitiesProps) => {
   const clustered = useClusteredActivities(activities);
-  
+
   const ordered = useMemo(() => {
     return clustered.sort((a, b) => {
       const aStart = isEventCluster(a)
-          ? new Date(a.events[0].start_time)
-          : a.visibleFrom;
+        ? new Date(a.events[0].start_time)
+        : a.visibleFrom;
       const bStart = isEventCluster(b)
-          ? new Date(b.events[0].start_time)
-          : b.visibleFrom;
+        ? new Date(b.events[0].start_time)
+        : b.visibleFrom;
 
       if (!aStart && !bStart) {
         return 0;
