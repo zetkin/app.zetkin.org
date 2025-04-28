@@ -10,8 +10,9 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITagChip from 'zui/components/ZUITagChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import TargetInfo from '../components/TargetInfo';
+import PreviousCallsInfo from '../components/PreviousCallsInfo';
+import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -72,6 +73,9 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
                     .
                   </ZUIText>
                 </>
+              )}
+              {call.target.call_log.length > 0 && (
+                <PreviousCallsInfo call={call} />
               )}
             </>
           )}
