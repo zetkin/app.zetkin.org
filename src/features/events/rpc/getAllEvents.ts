@@ -29,18 +29,18 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const now = new Date().toISOString();
 
-  const allEvents = await Promise.all(
-    filteredMemberships.map(async (membership) => {
-      const events = await apiClient.get<ZetkinEvent[]>(
-        `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}`
-      );
-      return events.filter((event) =>
-        eventStates.includes(getEventState(event))
-      );
-    })
+  const eventsByOrg = await Promise.all(
+    filteredMemberships.map(
+      async (membership) =>
+        await apiClient.get<ZetkinEvent[]>(
+          `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}`
+        )
+    )
   );
+  const events = eventsByOrg.flat();
 
-  return allEvents.flat();
+  return events.filter((event) => {
+    const state = getEventState(event);
+    return state == EventState.OPEN || state == EventState.SCHEDULED;
+  });
 }
-
-const eventStates = [EventState.OPEN, EventState.SCHEDULED];
