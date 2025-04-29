@@ -27,26 +27,27 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
   return (
     <Box p={2}>
       <Box alignItems="center" display="flex" mb={1} minWidth={0}>
-        <Link href={`/call/${assignment.id}`} passHref>
+        <Link
+          href={`/call/${assignment.id}`}
+          passHref
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            minWidth: 0,
+            textDecoration: 'none',
+            width: '100%',
+          }}
+        >
           <ZUIIconButton
             icon={ArrowBackIos}
             onClick={() => deleteCall(call.id)}
             size="small"
             variant="tertiary"
           />
-        </Link>
-        <Box
-          sx={{
-            flexGrow: 1,
-            minWidth: 0,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
           <ZUIText noWrap variant="bodySmRegular">
             {assignment.title}
           </ZUIText>
-        </Box>
+        </Link>
       </Box>
       <Box
         alignItems="center"
