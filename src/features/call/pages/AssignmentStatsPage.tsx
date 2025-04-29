@@ -102,11 +102,10 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
         )}
         title={'Assignment'}
       />
-      {assignment.instructions && (
-        <Box mt={2}>
-          <InstructionsSection instructions={assignment.instructions} />
-        </Box>
-      )}
+
+      <Box mt={2}>
+        <InstructionsSection instructions={assignment.instructions} />
+      </Box>
     </Box>
   );
 };

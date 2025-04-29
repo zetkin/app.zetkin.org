@@ -26,7 +26,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
 
   return (
     <Box p={2}>
-      <Box alignItems="center" display="flex" gap={1} mb={1} minWidth={0}>
+      <Box alignItems="center" display="flex" mb={1} minWidth={0}>
         <Link href={`/call/${assignment.id}`} passHref>
           <ZUIIconButton
             icon={ArrowBackIos}
