@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { AccessTime, CallMade, CallMissedOutgoing } from '@mui/icons-material';
 
-import useUser from 'core/hooks/useUser';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
@@ -15,7 +14,9 @@ type PreviousCallsInfoProps = {
 };
 
 const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
-  const caller = useUser();
+  const fullName = call.caller.name;
+  const [callerFirstName, ...rest] = fullName.split(' ');
+  const callerLastName = rest.join(' ');
 
   const renderCallStatus = (
     call: ZetkinCall,
@@ -82,14 +83,12 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
               <ZUIText color="secondary">
                 <ZUIDateTime datetime={call.update_time} />
               </ZUIText>
-              {caller && (
-                <ZUIPersonAvatar
-                  firstName={caller.first_name}
-                  id={call.caller.id}
-                  lastName={caller.last_name}
-                  size="small"
-                />
-              )}
+              <ZUIPersonAvatar
+                firstName={callerFirstName}
+                id={call.caller.id}
+                lastName={callerLastName}
+                size="small"
+              />
             </Box>
           </Box>
           {additionalInfo && <Box display="flex">{additionalInfo}</Box>}
