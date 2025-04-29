@@ -1,8 +1,11 @@
+import { Box } from '@mui/material';
+import { Suspense } from 'react';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import AssignmentStatsPage from 'features/call/pages/AssignmentStatsPage';
+import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
 interface PageProps {
   params: {
@@ -26,5 +29,21 @@ export default async function Page({ params }: PageProps) {
     return null;
   }
 
-  return <AssignmentStatsPage assignment={assignment} />;
+  return (
+    <Suspense
+      fallback={
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+          height="90dvh"
+          justifyContent="center"
+        >
+          <ZUILogoLoadingIndicator />
+        </Box>
+      }
+    >
+      <AssignmentStatsPage assignment={assignment} />
+    </Suspense>
+  );
 }
