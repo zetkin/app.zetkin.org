@@ -51,9 +51,14 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
       if (call.message_to_organizer) {
         additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
       }
-    } else if (call.state === 12 || call.state === 13 || call.state === 14) {
+    } else if (
+      call.state === 12 ||
+      call.state === 13 ||
+      call.state === 14 ||
+      call.state === 15
+    ) {
       icon = <ZUIIcon color="warning" icon={AccessTime} size="small" />;
-      label = 'Not available';
+      label = call.state == 15 ? 'Message left' : 'Not available';
       color = (theme: Theme) => ({ color: theme.palette.warning.main });
       if (call.call_back_after) {
         additionalInfo = (
@@ -63,12 +68,6 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
           </ZUIText>
         );
       }
-    } else {
-      return (
-        <ZUIText key={call.id}>
-          Status {call.state}: {call.message_to_organizer}
-        </ZUIText>
-      );
     }
 
     return (
