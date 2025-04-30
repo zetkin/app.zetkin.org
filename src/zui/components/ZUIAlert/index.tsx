@@ -1,4 +1,4 @@
-import { Box, Button, Grow, useTheme } from '@mui/material';
+import { Box, Button, Fade, useTheme } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import {
   CheckCircleOutline,
@@ -147,7 +147,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
   }
 
   return (
-    <Grow appear={appear} in={open} timeout={timeout}>
+    <Fade appear={appear} in={open} timeout={timeout}>
       <Box
         sx={() => ({
           backgroundColor: backgroundColors[severity],
@@ -230,7 +230,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
           </Box>
         )}
       </Box>
-    </Grow>
+    </Fade>
   );
 };
 
