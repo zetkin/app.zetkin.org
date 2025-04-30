@@ -68,6 +68,8 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
           </ZUIText>
         );
       }
+    } else {
+      return null;
     }
 
     return (
