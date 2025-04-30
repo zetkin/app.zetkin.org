@@ -8,6 +8,7 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import { ZetkinCall } from '../types';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import ZUIIcon from 'zui/components/ZUIIcon';
 
 type PreviousCallsInfoProps = {
   call: ZetkinCall;
@@ -17,6 +18,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   const fullName = call.caller.name;
   const [callerFirstName, ...rest] = fullName.split(' ');
   const callerLastName = rest.join(' ');
+  const callLog = call.target.call_log ?? [];
 
   const renderCallStatus = (
     call: ZetkinCall,
@@ -29,27 +31,27 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
     let additionalInfo = null;
 
     if (call.state === 1) {
-      icon = <CallMade color="inherit" sx={{ fontSize: '1.3rem' }} />;
+      icon = <ZUIIcon color="success" icon={CallMade} size="small" />;
       label = 'Success';
       color = (theme: Theme) => ({ color: theme.palette.success.main });
     } else if (call.state === 11) {
-      icon = <CallMissedOutgoing color="inherit" sx={{ fontSize: '1.3rem' }} />;
+      icon = <ZUIIcon color="danger" icon={CallMissedOutgoing} size="small" />;
       label = 'No response';
       color = (theme: Theme) => ({ color: theme.palette.error.main });
       if (call.message_to_organizer) {
         additionalInfo = <ZUIText>{call.message_to_organizer}</ZUIText>;
       }
     } else if (call.state === 21) {
-      icon = <CallMissedOutgoing color="inherit" sx={{ fontSize: '1.3rem' }} />;
+      icon = <ZUIIcon color="danger" icon={CallMissedOutgoing} size="small" />;
       label = 'Wrong number';
       color = (theme: Theme) => ({ color: theme.palette.error.main });
       if (call.message_to_organizer) {
         additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
       }
     } else if (call.state === 12 || call.state === 13 || call.state === 14) {
-      icon = <AccessTime color="inherit" sx={{ fontSize: '1.3rem' }} />;
+      icon = <ZUIIcon color="warning" icon={AccessTime} size="small" />;
       label = 'Not available';
-      color = (theme: Theme) => ({ color: theme.palette.warning.dark });
+      color = (theme: Theme) => ({ color: theme.palette.warning.main });
       if (call.call_back_after) {
         additionalInfo = (
           <ZUIText>
@@ -91,20 +93,22 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
               />
             </Box>
           </Box>
-          {additionalInfo && <Box display="flex">{additionalInfo}</Box>}
+          {additionalInfo && (
+            //calculation: 1.25 of icon space + 0.5 of margin
+            <Box display="flex" ml={`calc(1.25rem + 0.5rem)`}>
+              {additionalInfo}
+            </Box>
+          )}
         </Box>
         {index < totalCalls - 1 && <ZUIDivider />}
       </>
     );
   };
-  const callLogs = Array.isArray(call.target.call_log)
-    ? call.target.call_log
-    : [];
   return (
     <>
       <ZUIText variant="headingMd">Previous Calls</ZUIText>
-      {callLogs.map((call, index) =>
-        renderCallStatus(call, index, callLogs.length)
+      {callLog.map((call, index) =>
+        renderCallStatus(call, index, callLog.length)
       )}
     </>
   );
