@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import { Box, useMediaQuery } from '@mui/material';
+import { Theme, useTheme } from '@mui/material/styles';
 import { AccessTime, CallMade, CallMissedOutgoing } from '@mui/icons-material';
 
 import ZUIDateTime from 'zui/ZUIDateTime';
@@ -15,15 +15,18 @@ type PreviousCallsInfoProps = {
 };
 
 const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const fullName = call.caller.name;
   const [callerFirstName, ...rest] = fullName.split(' ');
   const callerLastName = rest.join(' ');
   const callLog = call.target.call_log ?? [];
+  const infoIndent = `calc(1.25rem + 0.5rem)`; //calculation: 1.25 of icon space + 0.5 of margin
 
   const renderCallStatus = (
     call: ZetkinCall,
     index: number,
-    totalCalls: number
+    totalPreviousCalls: number
   ) => {
     let icon = null;
     let label = '';
@@ -75,32 +78,48 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
             alignItems="center"
             display="flex"
             justifyContent="space-between"
+            sx={color}
           >
             <Box alignItems="center" display="flex" gap={1} sx={color}>
               {icon}
               <ZUIText color="inherit">{label}</ZUIText>
             </Box>
-
-            <Box alignItems="center" display="flex" gap={1}>
-              <ZUIText color="secondary">
-                <ZUIDateTime datetime={call.update_time} />
-              </ZUIText>
+            {isMobile ? (
               <ZUIPersonAvatar
                 firstName={callerFirstName}
                 id={call.caller.id}
                 lastName={callerLastName}
                 size="small"
               />
-            </Box>
+            ) : (
+              <Box alignItems="center" display="flex" gap={1}>
+                <ZUIText color="secondary">
+                  <ZUIDateTime datetime={call.update_time} />
+                </ZUIText>
+                <ZUIPersonAvatar
+                  firstName={callerFirstName}
+                  id={call.caller.id}
+                  lastName={callerLastName}
+                  size="small"
+                />
+              </Box>
+            )}
           </Box>
+          {isMobile && (
+            <Box ml={infoIndent}>
+              <ZUIText color="secondary">
+                <ZUIDateTime datetime={call.update_time} />
+              </ZUIText>
+            </Box>
+          )}
+
           {additionalInfo && (
-            //calculation: 1.25 of icon space + 0.5 of margin
-            <Box display="flex" ml={`calc(1.25rem + 0.5rem)`}>
+            <Box display="flex" ml={infoIndent}>
               {additionalInfo}
             </Box>
           )}
         </Box>
-        {index < totalCalls - 1 && <ZUIDivider />}
+        {index < totalPreviousCalls - 1 && <ZUIDivider />}
       </>
     );
   };
