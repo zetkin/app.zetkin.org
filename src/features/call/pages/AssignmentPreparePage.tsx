@@ -3,7 +3,6 @@
 import { FC } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import useCurrentCall from '../hooks/useCurrentCall';
 import InstructionsSection from '../components/InstructionsSection';
 import ZUISection from 'zui/components/ZUISection';
@@ -12,12 +11,7 @@ import ZUITagChip from 'zui/components/ZUITagChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import TargetInfo from '../components/TargetInfo';
 import PreviousCallsInfo from '../components/PreviousCallsInfo';
-import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
-
-export type EventsByProject = {
-  campaign: { id: number; title: string };
-  events: ZetkinEvent[];
-};
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -25,8 +19,6 @@ type Props = {
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useCurrentCall();
-  const surveys = useSurveysWithElements(assignment.organization.id).data || [];
-  surveys;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
