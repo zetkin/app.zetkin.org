@@ -319,36 +319,48 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             />
           ))}
         </FeatureGroup>
-        {locations.map((location) => {
-          const selected = location.id == selectedLocationId;
-          const key = `marker-${location.id}-${selected.toString()}`;
-          const percentage = getVisitPercentage(
-            assignment.id,
-            location.households,
-            assignment.metrics.find((metric) => metric.definesDone)?.id || null
-          );
-          return (
-            <DivIconMarker
-              key={key}
-              eventHandlers={{
-                click: (evt) => {
-                  panTo(evt.latlng);
-                },
-              }}
-              iconAnchor={[11, 33]}
-              position={{
-                lat: location.position.lat,
-                lng: location.position.lng,
-              }}
-            >
-              <MarkerIcon
-                percentage={percentage}
-                selected={selected}
-                uniqueKey={key}
-              />
-            </DivIconMarker>
-          );
-        })}
+        {locations
+          // sort the selectedLocation on top of the others
+          .sort((a0, a1) => {
+            if (a0.id == selectedLocationId) {
+              return 1;
+            }
+            if (a1.id == selectedLocationId) {
+              return -1;
+            }
+            return 0;
+          })
+          .map((location) => {
+            const selected = location.id == selectedLocationId;
+            const key = `marker-${location.id}-${selected.toString()}`;
+            const percentage = getVisitPercentage(
+              assignment.id,
+              location.households,
+              assignment.metrics.find((metric) => metric.definesDone)?.id ||
+                null
+            );
+            return (
+              <DivIconMarker
+                key={key}
+                eventHandlers={{
+                  click: (evt) => {
+                    panTo(evt.latlng);
+                  },
+                }}
+                iconAnchor={[11, 33]}
+                position={{
+                  lat: location.position.lat,
+                  lng: location.position.lng,
+                }}
+              >
+                <MarkerIcon
+                  percentage={percentage}
+                  selected={selected}
+                  uniqueKey={key}
+                />
+              </DivIconMarker>
+            );
+          })}
       </MapContainer>
       <CanvassMapOverlays
         assignment={assignment}
