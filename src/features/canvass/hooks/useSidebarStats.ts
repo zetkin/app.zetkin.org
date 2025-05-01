@@ -124,7 +124,7 @@ export default function useSidebarStats(
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
-      dispatch(locationsInvalidated());
+      dispatch(locationsInvalidated(assignmentId));
     },
     synced: visitList?.loaded || null,
   };

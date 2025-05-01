@@ -23,14 +23,12 @@ import {
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
-import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
 import locToLatLng from 'features/geography/utils/locToLatLng';
 
 const LocationMarker: FC<{
-  areaAssId: number;
   location: ZetkinLocation;
   locationStyle: 'dot' | 'households' | 'progress';
-}> = ({ areaAssId, location, locationStyle }) => {
+}> = ({ location, locationStyle }) => {
   const theme = useTheme();
   if (locationStyle == 'dot') {
     return (
@@ -85,13 +83,16 @@ const LocationMarker: FC<{
       </DivIconMarker>
     );
   } else {
-    const percentage = getVisitPercentage(areaAssId, [], 0);
-
     return (
       <DivIconMarker iconAnchor={[6, 24]} position={locToLatLng(location)}>
         <MarkerIcon
-          percentage={percentage}
           selected={false}
+          successfulVisits={location.num_households_successful}
+          totalHouseholds={Math.max(
+            location.num_estimated_households,
+            location.num_known_households
+          )}
+          totalVisits={location.num_households_visited}
           uniqueKey={location.id.toString()}
         />
       </DivIconMarker>
@@ -100,7 +101,6 @@ const LocationMarker: FC<{
 };
 
 type OrganizerMapRendererProps = {
-  areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
@@ -117,7 +117,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
-  areaAssId,
   locations,
   selectedId,
   sessions,
@@ -579,7 +578,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             return (
               <LocationMarker
                 key={location.id}
-                areaAssId={areaAssId}
                 location={location}
                 locationStyle={locationStyle}
               />

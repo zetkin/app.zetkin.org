@@ -19,12 +19,8 @@ type Props = {
 const ContractedHeader: FC<Props> = ({ assignment, location }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const { numHouseholds, numVisitedHouseholds } = useBasicLocationStats(
-    assignment.id,
-    location
-  );
-
-  const successfulVisits = 0;
+  const { numHouseholds, numSuccessfulHouseholds, numVisitedHouseholds } =
+    useBasicLocationStats(assignment.id, location);
 
   return (
     <PageBaseHeader
@@ -51,7 +47,7 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
             numVisitedHouseholds,
           })}
 
-          {successfulVisits > 0 && (
+          {numSuccessfulHouseholds > 0 && (
             <>
               <Box
                 sx={{
@@ -64,7 +60,7 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
                 }}
               />
               {messages.location.subheader({
-                successfulVisits,
+                successfulVisits: numSuccessfulHouseholds,
               })}
             </>
           )}

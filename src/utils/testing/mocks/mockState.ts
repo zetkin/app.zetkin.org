@@ -9,7 +9,7 @@ export default function mockState(overrides?: RootState) {
       areaStatsByAssignmentId: {},
       areasByAssignmentId: {},
       assigneesByAssignmentId: {},
-      locationList: remoteList(),
+      locationsByAssignmentId: {},
       metricsByAssignmentId: {},
       statsByAreaAssId: {},
       visitsByHouseholdId: {},

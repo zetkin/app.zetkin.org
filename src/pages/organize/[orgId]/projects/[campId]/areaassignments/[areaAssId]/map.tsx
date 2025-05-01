@@ -49,7 +49,7 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
   orgId,
 }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
-  const locations = useLocations(parseInt(orgId)).data || [];
+  const locations = useLocations(parseInt(orgId), areaAssId).data || [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);

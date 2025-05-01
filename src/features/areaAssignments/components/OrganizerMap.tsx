@@ -350,7 +350,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           zoomControl={false}
         >
           <OrganizerMapRenderer
-            areaAssId={areaAssId}
             areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}

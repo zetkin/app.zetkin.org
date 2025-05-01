@@ -5,6 +5,7 @@ import useVisitReporting from './useVisitReporting';
 
 type BasicLocationStats = {
   numHouseholds: number;
+  numSuccessfulHouseholds: number;
   numVisitedHouseholds: number;
 };
 export default function useBasicLocationStats(
@@ -43,6 +44,10 @@ export default function useBasicLocationStats(
 
   return {
     numHouseholds,
-    numVisitedHouseholds,
+    numSuccessfulHouseholds: location.num_households_successful,
+    numVisitedHouseholds: Math.min(
+      location.num_households_visited,
+      numHouseholds
+    ),
   };
 }

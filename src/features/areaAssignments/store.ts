@@ -38,7 +38,7 @@ export interface AreaAssignmentsStoreSlice {
     number,
     RemoteList<ZetkinAreaAssignee & { id: number }>
   >;
-  locationList: RemoteList<ZetkinLocation>;
+  locationsByAssignmentId: Record<number, RemoteList<ZetkinLocation>>;
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByAreaAssId: Record<
     number,
@@ -53,7 +53,7 @@ const initialState: AreaAssignmentsStoreSlice = {
   areaStatsByAssignmentId: {},
   areasByAssignmentId: {},
   assigneesByAssignmentId: {},
-  locationList: remoteList(),
+  locationsByAssignmentId: {},
   metricsByAssignmentId: {},
   statsByAreaAssId: {},
   visitsByHouseholdId: {},
@@ -236,24 +236,39 @@ const areaAssignmentSlice = createSlice({
     },
     locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
-      remoteItemUpdated(state.locationList, location);
+
+      Object.values(state.locationsByAssignmentId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
     },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
-      const updatedLocation = action.payload;
-      remoteItemUpdated(state.locationList, updatedLocation);
+      const location = action.payload;
+
+      Object.values(state.locationsByAssignmentId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
     },
-    locationsInvalidated: (state) => {
-      state.locationList.isStale = true;
+    locationsInvalidated: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      state.locationsByAssignmentId[assignmentId].isStale = true;
     },
-    locationsLoad: (state) => {
-      state.locationList.isLoading = true;
+    locationsLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      state.locationsByAssignmentId[assignmentId].isLoading = true;
     },
-    locationsLoaded: (state, action: PayloadAction<ZetkinLocation[]>) => {
+    locationsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinLocation[]]>
+    ) => {
       const timestamp = new Date().toISOString();
-      const locations = action.payload;
-      state.locationList = remoteList(locations);
-      state.locationList.loaded = timestamp;
-      state.locationList.items.forEach((item) => (item.loaded = timestamp));
+      const [assignmentId, locations] = action.payload;
+      state.locationsByAssignmentId[assignmentId] = remoteList(locations);
+      state.locationsByAssignmentId[assignmentId].loaded = timestamp;
+      state.locationsByAssignmentId[assignmentId].items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
     },
     metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
       const [assignmentId, metric] = action.payload;

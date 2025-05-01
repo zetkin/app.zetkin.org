@@ -20,11 +20,9 @@ import useSidebarStats from '../hooks/useSidebarStats';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import theme from 'theme';
-import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import useUser from 'core/hooks/useUser';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
@@ -41,17 +39,8 @@ const Page: FC<{
     assignment.id
   );
 
-  const allSessions =
-    useAreaAssignees(assignment.organization_id, assignment.id).data || [];
-
-  const userId = useUser()?.id ?? null;
-  const sessions = allSessions.filter(
-    (session) =>
-      session.assignment_id === assignment.id && session.user_id === userId
-  );
-
-  const areaIds = sessions.map((entry) => entry.area_id);
-  const numberOfAreas = areaIds.length;
+  // TODO: Get from stats
+  const numberOfAreas = 0;
 
   return (
     <ZUIFutures futures={{ org: orgFuture }}>

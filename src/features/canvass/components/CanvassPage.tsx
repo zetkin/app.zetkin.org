@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { FC, useState } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { Menu } from '@mui/icons-material';
 
@@ -127,7 +127,11 @@ const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
     return null;
   }
 
-  return <Page assignment={assignment} />;
+  return (
+    <Suspense>
+      <Page assignment={assignment} />
+    </Suspense>
+  );
 };
 
 export default CanvassPage;

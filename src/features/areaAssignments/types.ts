@@ -59,6 +59,8 @@ export type ZetkinLocation = {
   latitude: number;
   longitude: number;
   num_estimated_households: number;
+  num_households_successful: number;
+  num_households_visited: number;
   num_known_households: number;
   organization_id: number;
   title: string;
