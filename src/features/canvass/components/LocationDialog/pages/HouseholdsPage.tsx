@@ -61,6 +61,10 @@ const HouseholdsPage: FC<Props> = ({
     const floor0 = h0.level ?? Infinity;
     const floor1 = h1.level ?? Infinity;
 
+    if (floor0 == floor1) {
+      return h0.title.localeCompare(h1.title);
+    }
+
     return floor0 - floor1;
   });
 
