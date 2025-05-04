@@ -23,9 +23,21 @@ export default class LocalTextColumnType implements IColumnType {
     accessLevel: ZetkinObjectAccess['level'] | null
   ): Omit<GridColDef, 'field'> {
     return {
-      editable: accessLevel != 'readonly',
+      /* 
+        Important trade-off:
+        Our goal is to show a resizable textarea even in read-only mode.
+
+        We are going against MUI's semantics here, setting `editable` to `true`, 
+        because we want to leverage MUI's built-in user interaction handlers (and styles).
+
+        We guarantee that the accessLevel is respected, 
+        by overwriting the `isEditable` prop of the Textarea component directly.
+      */
+      editable: true,
       renderCell: (params) => <Cell cell={params.value} />,
-      renderEditCell: (params) => <EditTextarea {...params} />,
+      renderEditCell: (params) => (
+        <Textarea {...params} isEditable={accessLevel != 'readonly'} />
+      ),
       width: 250,
     };
   }
@@ -73,7 +85,7 @@ const Cell: FC<{ cell: LocalTextViewCell | undefined }> = ({ cell }) => {
   );
 };
 
-const EditTextarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
+const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
   const { id, field, value, colDef } = props;
   const [valueState, setValueState] = useState(value);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
@@ -95,6 +107,9 @@ const EditTextarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
 
   const handleChange = useCallback<NonNullable<InputBaseProps['onChange']>>(
     (event) => {
+      if (!props.isEditable) {
+        return;
+      }
       const newValue = event.target.value;
       setValueState(newValue);
       apiRef.current.setEditCellValue(
@@ -135,6 +150,7 @@ const EditTextarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
               multiline
               onChange={handleChange}
               onKeyDown={handleKeyDown}
+              readOnly={!props.isEditable}
               rows={4}
               sx={{ textarea: { resize: 'both' }, width: '100%' }}
               value={valueState}
