@@ -143,6 +143,9 @@ export default makeMessages('zui', {
     showLess: m('Show less'),
     showMore: m('Show more'),
   },
+  footer: {
+    privacyPolicy: m('Privacy policy'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
