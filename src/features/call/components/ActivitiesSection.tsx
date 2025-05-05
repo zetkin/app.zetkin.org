@@ -18,7 +18,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
   target,
 }) => {
-  const events = useActiveEvents(assignment.organization.id, target.id);
+  const events = useActiveEvents(assignment.organization.id, target.id).filter(
+    (event) => !!event.published
+  );
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
   const today = new Date();
 
