@@ -23,6 +23,11 @@ export interface ZUIButtonProps {
   actionType?: 'button' | 'reset' | 'submit';
 
   /**
+   * To pass in an id for testing purposes.
+   */
+  dataTestId?: string;
+
+  /**
    * If the button is disabled or not.
    *
    * Defaults to "false".
@@ -147,6 +152,7 @@ const getTextPadding = (
 const ZUIButton: FC<ZUIButtonProps> = ({
   actionType,
   disabled,
+  dataTestId,
   endIcon: EndIcon,
   fullWidth,
   href,
@@ -161,6 +167,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   return (
     <Button
       color={variant ? getColor(variant) : undefined}
+      data-testid={dataTestId}
       disabled={disabled || isLoading}
       endIcon={EndIcon ? <EndIcon /> : null}
       fullWidth={fullWidth}
