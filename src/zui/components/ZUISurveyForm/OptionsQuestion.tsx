@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 
-import messageIds from 'features/surveys/l10n/messageIds';
+import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import {
   ZetkinSurveyOption,

@@ -26,7 +26,7 @@ import {
 } from 'utils/types/zetkin';
 import ZUIButton from '../ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/surveys/l10n/messageIds';
+import messageIds from 'zui/l10n/messageIds';
 import ZUIText from '../ZUIText';
 import TextQuestion from './TextQuestion';
 import OptionsQuestion from './OptionsQuestion';
@@ -75,7 +75,7 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
   }, []);
 
   const privacyUrl =
-    process.env.ZETKIN_PRIVACY_POLICY_LINK || messages.surveyForm.policy.link();
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || messages.privacyPolicyLink();
 
   const showForm = status == 'editing' || status == 'error';
   const showSuccess = status == 'submitted';
@@ -142,7 +142,7 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
                 <Box display="flex" flexDirection="column" gap={1}>
                   <FormLabel id="survey-signature">
                     <ZUIText variant="headingMd">
-                      <Msg id={messageIds.surveySignature.title} />
+                      <Msg id={messageIds.surveyForm.signature.title} />
                     </ZUIText>
                   </FormLabel>
                   <Box display="flex" flexDirection="column" rowGap={1}>
@@ -151,7 +151,7 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
                         control={<Radio required />}
                         label={
                           <Msg
-                            id={messageIds.surveySignature.type.user}
+                            id={messageIds.surveyForm.signature.type.user}
                             values={{
                               email: user.email,
                               person: user.first_name,
@@ -163,25 +163,27 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
                     )}
                     <SurveyOption
                       control={<Radio required />}
-                      label={<Msg id={messageIds.surveySignature.type.email} />}
+                      label={
+                        <Msg id={messageIds.surveyForm.signature.type.email} />
+                      }
                       value="email"
                     />
                     {signatureType === 'email' && (
                       <Box display="flex" flexDirection="column" gap={1} pt={1}>
                         <ZUITextField
-                          label={messages.surveySignature.email.firstName()}
+                          label={messages.surveyForm.signature.email.firstName()}
                           name="sig.first_name"
                           required
                           size="large"
                         />
                         <ZUITextField
-                          label={messages.surveySignature.email.lastName()}
+                          label={messages.surveyForm.signature.email.lastName()}
                           name="sig.last_name"
                           required
                           size="large"
                         />
                         <ZUITextField
-                          label={messages.surveySignature.email.email()}
+                          label={messages.surveyForm.signature.email.email()}
                           name="sig.email"
                           required
                           size="large"
@@ -192,7 +194,9 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
                       <SurveyOption
                         control={<Radio required />}
                         label={
-                          <Msg id={messageIds.surveySignature.type.anonymous} />
+                          <Msg
+                            id={messageIds.surveyForm.signature.type.anonymous}
+                          />
                         }
                         value="anonymous"
                       />

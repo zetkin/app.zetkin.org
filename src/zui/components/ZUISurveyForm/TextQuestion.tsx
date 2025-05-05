@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box, FormControl, FormLabel } from '@mui/material';
 
-import messageIds from 'features/surveys/l10n/messageIds';
+import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';

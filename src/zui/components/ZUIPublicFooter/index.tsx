@@ -26,8 +26,7 @@ const ZUIPublicFooter: FC = () => {
       <ZUIText variant="bodySmRegular">Zetkin</ZUIText>
       <ZUILink
         href={
-          env.vars.ZETKIN_PRIVACY_POLICY_LINK ||
-          'https://www.zetkin.org/privacy'
+          env.vars.ZETKIN_PRIVACY_POLICY_LINK || messages.privacyPolicyLink()
         }
         openInNewTab
         size="small"

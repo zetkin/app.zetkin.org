@@ -194,6 +194,7 @@ export default makeMessages('zui', {
     search: m('Type to start searching'),
     searching: m('Searching...'),
   },
+  privacyPolicyLink: m('https://zetkin.org/privacy'),
   publicFooter: {
     hostingOrganization: m<{ name: string }>(
       'This instance of Zetkin is hosted and managed by {name}.'
@@ -202,7 +203,6 @@ export default makeMessages('zui', {
       foundation: m('Zetkin Foundation'),
       privacy: m('Privacy Policy'),
     },
-    privacyPolicyLink: m('https://zetkin.org/privacy'),
     text: m(
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),
@@ -231,6 +231,46 @@ export default makeMessages('zui', {
   },
   suffixedNumber: {
     thousands: m<{ num: number }>('{num}K'),
+  },
+  surveyForm: {
+    accept: m('I accept the terms stated below'),
+    error: m(
+      'Something went wrong when submitting your answers. Please try again later.'
+    ),
+    policy: {
+      text: m('Click to read the full Zetkin Privacy Policy'),
+    },
+    required: m('required'),
+    signature: {
+      anonymous: m('Sign anonymously'),
+      email: {
+        email: m('Email'),
+        firstName: m('First name'),
+        lastName: m('Last name'),
+      },
+      nameAndEmail: m('Sign with name and e-mail'),
+      title: m('Choose how to sign'),
+      type: {
+        anonymous: m('Sign anonymously'),
+        email: m('Sign with name and email'),
+        user: m<{ email: string; person: string }>(
+          'Sign as {person} with email {email}'
+        ),
+      },
+    },
+    submit: m('Submit'),
+    submitted: {
+      text: m<{ title: string }>(
+        'Your responses to “{title}” have been submitted.'
+      ),
+      title: m('Survey Submitted'),
+    },
+    terms: {
+      description: m<{ organization: string }>(
+        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
+      ),
+      title: m('Privacy Policy'),
+    },
   },
   timeSpan: {
     multiDay: m<{
