@@ -41,7 +41,7 @@ type ZUISurveyFormProps = {
     formData: FormData
   ) => Promise<ZetkinSurveyFormStatus>;
   survey: ZetkinSurveyExtended;
-  user: ZetkinUser | null;
+  user: Pick<ZetkinUser, 'email' | 'first_name'> | null;
 };
 
 const isTextQuestionType = (
