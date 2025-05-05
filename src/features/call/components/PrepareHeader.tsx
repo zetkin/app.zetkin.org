@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
@@ -17,12 +17,17 @@ type PrepareHeaderProps = {
 };
 
 const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
+  const [inCall, setInCall] = useState(false);
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
 
   if (!call) {
     return null;
   }
+
+  const handleToggleCall = () => {
+    setInCall((prev) => !prev);
+  };
 
   return (
     <Box p={2}>
@@ -80,14 +85,25 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
         </Box>
 
         <Box display="flex" gap={2}>
-          {call && (
+          {!inCall && (
             <SkipCallDialog
               assignment={assignment}
               callId={call.id}
               targetName={call.target.first_name + ' ' + call.target.last_name}
             />
           )}
-          <ZUIButton label="Call" variant="primary" />
+
+          {inCall ? (
+            <ZUIButton label="End Call" variant="primary" />
+          ) : (
+            <Link href={`/call/${assignment.id}/ongoing`} passHref>
+              <ZUIButton
+                label="Call"
+                onClick={handleToggleCall}
+                variant="primary"
+              />
+            </Link>
+          )}
         </Box>
       </Box>
     </Box>
