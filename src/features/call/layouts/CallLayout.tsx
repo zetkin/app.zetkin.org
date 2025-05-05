@@ -34,6 +34,7 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
 
   const pathname = usePathname() || '';
   const isPreparePage = pathname.endsWith('/prepare');
+  const isOngoingPage = pathname.endsWith('/ongoing');
   const isStatsPage = getDetailsPage(pathname);
 
   return (
@@ -44,7 +45,7 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
         })}
       >
         {isStatsPage && assignment && <StatsHeader assignment={assignment} />}
-        {isPreparePage && assignment && (
+        {(isPreparePage || isOngoingPage) && assignment && (
           <PrepareHeader assignment={assignment} />
         )}
       </Box>
