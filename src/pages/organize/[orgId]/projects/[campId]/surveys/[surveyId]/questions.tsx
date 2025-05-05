@@ -8,7 +8,7 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SurveyEditor from 'features/surveys/components/SurveyEditor';
-import SurveyLayout from 'features/surveys/layout/SurveyLayout';
+import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import { useMessages } from 'core/i18n';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
