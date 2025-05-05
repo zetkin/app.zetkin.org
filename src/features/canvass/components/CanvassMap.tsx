@@ -33,6 +33,7 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { ZetkinArea } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -79,6 +80,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   >(`mapBounds-${assignment.id}`, null);
 
   const [map, setMap] = useState<Map | null>(null);
+  useAutoResizeMap(map);
   const [zoomed, setZoomed] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     null
@@ -278,7 +280,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         </Box>
       </Box>
       <MapContainer
-        ref={(map) => setMap(map)}
+        ref={setMap}
         attributionControl={false}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}
@@ -317,36 +319,48 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             />
           ))}
         </FeatureGroup>
-        {locations.map((location) => {
-          const selected = location.id == selectedLocationId;
-          const key = `marker-${location.id}-${selected.toString()}`;
-          const percentage = getVisitPercentage(
-            assignment.id,
-            location.households,
-            assignment.metrics.find((metric) => metric.definesDone)?.id || null
-          );
-          return (
-            <DivIconMarker
-              key={key}
-              eventHandlers={{
-                click: (evt) => {
-                  panTo(evt.latlng);
-                },
-              }}
-              iconAnchor={[11, 33]}
-              position={{
-                lat: location.position.lat,
-                lng: location.position.lng,
-              }}
-            >
-              <MarkerIcon
-                percentage={percentage}
-                selected={selected}
-                uniqueKey={key}
-              />
-            </DivIconMarker>
-          );
-        })}
+        {locations
+          // sort the selectedLocation on top of the others
+          .sort((a0, a1) => {
+            if (a0.id == selectedLocationId) {
+              return 1;
+            }
+            if (a1.id == selectedLocationId) {
+              return -1;
+            }
+            return 0;
+          })
+          .map((location) => {
+            const selected = location.id == selectedLocationId;
+            const key = `marker-${location.id}-${selected.toString()}`;
+            const percentage = getVisitPercentage(
+              assignment.id,
+              location.households,
+              assignment.metrics.find((metric) => metric.definesDone)?.id ||
+                null
+            );
+            return (
+              <DivIconMarker
+                key={key}
+                eventHandlers={{
+                  click: (evt) => {
+                    panTo(evt.latlng);
+                  },
+                }}
+                iconAnchor={[11, 33]}
+                position={{
+                  lat: location.position.lat,
+                  lng: location.position.lng,
+                }}
+              >
+                <MarkerIcon
+                  percentage={percentage}
+                  selected={selected}
+                  uniqueKey={key}
+                />
+              </DivIconMarker>
+            );
+          })}
       </MapContainer>
       <CanvassMapOverlays
         assignment={assignment}
