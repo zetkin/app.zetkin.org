@@ -19,9 +19,9 @@ const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
   const showOrganization = searchParams?.get('hideOrganization') != 'true';
 
   return (
-    <Box minHeight="100dvh">
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Box flex={1} maxWidth="sm" padding={2} width="100%">
+        <Box sx={{ flex: 1, maxWidth: 'sm', padding: 2, width: '100%' }}>
           {showOrganization && (
             <Box
               alignItems="center"
@@ -41,7 +41,7 @@ const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
           </Box>
         </Box>
       </Box>
-      <Box minHeight="75dvh">{children}</Box>
+      <Box sx={{ flexGrow: 1 }}>{children}</Box>
       <ZUIPublicFooter />
     </Box>
   );
