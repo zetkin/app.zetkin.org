@@ -34,6 +34,7 @@ import ZUILink from '../ZUILink';
 import SurveyOption from './SurveyOption';
 import ZUITextField from '../ZUITextField';
 import useServerSide from 'core/useServerSide';
+import ZUIAlert from '../ZUIAlert';
 
 type ZUISurveyFormProps = {
   onSubmit: (
@@ -90,7 +91,7 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
     <>
       {showErrorAlert && (
         <Box ref={errorMessageRef} data-testid="Survey-error" role="alert">
-          {'this will be an error alert'}
+          <ZUIAlert severity="error" title={messages.surveyForm.error()} />
         </Box>
       )}
       {showForm && (
@@ -245,11 +246,13 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
         </form>
       )}
       {showSuccess && (
-        <Box>
-          {
-            'this will be a success Alert, maybe with min height 60vh like it was before'
-          }
-        </Box>
+        <ZUIAlert
+          description={messages.surveyForm.submitted.text({
+            title: survey.title,
+          })}
+          severity="success"
+          title={messages.surveyForm.submitted.title()}
+        />
       )}
     </>
   );
