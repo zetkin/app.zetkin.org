@@ -38,7 +38,7 @@ export default class SurveyResponseColumnType
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return cell.map((response) => response.text);
+        return cell?.map((response) => response.text) || [];
       },
       width: 250,
     };
