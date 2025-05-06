@@ -9,6 +9,10 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import TargetInfo from '../components/TargetInfo';
 import ZUISection from 'zui/components/ZUISection';
 import InstructionsSection from '../components/InstructionsSection';
+import ZUIText from 'zui/components/ZUIText';
+import ZUITagChip from 'zui/components/ZUITagChip';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import PreviousCallsInfo from '../components/PreviousCallsInfo';
 
 type AssignmentOngoingPageProps = {
   assignment: ZetkinCallAssignment;
@@ -37,7 +41,43 @@ const AssignmentOngoingPage: FC<AssignmentOngoingPageProps> = ({
       </Box>
       <Box flex={isMobile ? 'none' : '4'} order={isMobile ? 2 : 1} p={2}>
         <ZUISection
-          renderContent={() => <TargetInfo call={call} />}
+          renderContent={() => (
+            <>
+              <TargetInfo call={call} />
+              {call.target.tags.length > 0 && (
+                <>
+                  <ZUIText variant="headingMd">Tags</ZUIText>
+                  <Box alignItems="center" display="flex" gap={1}>
+                    {call.target.tags.map((tag) => {
+                      return <ZUITagChip key={tag.id} tag={tag} />;
+                    })}
+                  </Box>
+                </>
+              )}
+              {call.target.past_actions.num_actions > 0 && (
+                <>
+                  <ZUIText variant="headingMd">Previous activity</ZUIText>
+                  <ZUIText display="inline">
+                    {`${call.target.first_name} participated in `}
+                    <ZUIText display="inline" variant="bodyMdSemiBold">
+                      {call.target.past_actions.num_actions} actions
+                    </ZUIText>
+                    {`, the most recent being `}
+                    <ZUIText display="inline" variant="bodyMdSemiBold">
+                      {call.target.past_actions.last_action.title}
+                    </ZUIText>{' '}
+                    <ZUIRelativeTime
+                      datetime={call.target.past_actions.last_action.end_time}
+                    />
+                    .
+                  </ZUIText>
+                </>
+              )}
+              {call.target.call_log.length > 0 && (
+                <PreviousCallsInfo call={call} />
+              )}
+            </>
+          )}
           title={`About ${call.target.first_name} ${call.target.last_name}`}
         />
         <Box mt={2}>
