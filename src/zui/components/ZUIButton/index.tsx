@@ -112,9 +112,9 @@ const getColor = (variant: ZUIButtonVariant) => {
 
 const getLoadingIndicatorPadding = (size: ZUISize = 'medium') => {
   if (size == 'large') {
-    return '0.183rem 1.375rem 0.183rem 1.375rem';
+    return '0.719rem 1.375rem 0.719rem 1.375rem';
   } else if (size == 'medium') {
-    return '0.625rem 1rem 0.625rem 1rem';
+    return '0.656rem 1rem 0.656rem 1rem';
   } else if (size == 'small') {
     return '0.438rem 0.625rem 0.438rem 0.625rem';
   }
