@@ -3,6 +3,9 @@ import NextLink from 'next/link';
 import {
   AccessTime,
   ArrowForward,
+  Cancel,
+  ContentCopy,
+  Delete,
   EmojiPeople,
   FaceOutlined,
   MailOutline,
@@ -114,10 +117,12 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     {
       label: messages.eventActionButtons.move(),
       onSelect: handleMove,
+      startIcon: <ArrowForward />,
     },
     {
       label: messages.eventPopper.duplicate(),
       onSelect: () => duplicateEvent().then(onClickAway),
+      startIcon: <ContentCopy />,
     },
     {
       label: messages.eventPopper.delete(),
@@ -131,6 +136,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           title: messages.eventPopper.confirmDelete(),
           warningText: messages.eventPopper.deleteWarning(),
         }),
+      startIcon: <Delete />,
     },
   ];
   if (state !== EventState.CANCELLED) {
@@ -145,6 +151,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           title: messages.eventPopper.confirmCancel(),
           warningText: messages.eventPopper.cancelWarning(),
         }),
+      startIcon: <Cancel />,
     });
   }
 
