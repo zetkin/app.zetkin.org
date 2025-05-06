@@ -126,9 +126,14 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   };
   return (
     <>
-      <ZUIText variant="headingMd">Previous Calls</ZUIText>
-      {callLog.map((call, index) =>
-        renderCallStatus(call, index, callLog.length)
+      <ZUIText variant="headingMd">Previous calls</ZUIText>
+      {call.target.call_log.length > 0 &&
+        callLog.map((call, index) =>
+          renderCallStatus(call, index, callLog.length)
+        )}
+
+      {call.target.call_log.length == 0 && (
+        <ZUIText color="secondary">Never called</ZUIText>
       )}
     </>
   );
