@@ -16,6 +16,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinCallTarget } from '../types';
+import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 
 type EventCardProps = {
   event: ZetkinEvent;
@@ -52,12 +53,18 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
               </ZUIText>,
             ]
           : [
-              <ZUIButton
-                key={event.id}
-                label={isSignup ? 'Undo sign up' : 'Sign up'}
-                onClick={() => (isSignup ? undoSignup() : signUp())}
-                variant="primary"
-              />,
+              <>
+                <ZUIButton
+                  key={event.id}
+                  label={isSignup ? 'Undo sign up' : 'Sign up'}
+                  onClick={() => (isSignup ? undoSignup() : signUp())}
+                  variant="primary"
+                />
+                {event.num_participants_available <
+                  event.num_participants_required &&
+                  !isSignup && <ZUISignUpChip status="needed" />}
+                {isSignup && <ZUISignUpChip status="signedUp" />}
+              </>,
             ]
       }
       iconTitle={Event}
