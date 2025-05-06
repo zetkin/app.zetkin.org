@@ -12,11 +12,13 @@ import { ZetkinJoinForm, ZetkinJoinSubmission } from './types';
 
 export interface JoinFormsStoreSlice {
   formList: RemoteList<ZetkinJoinForm>;
+  recentlyCreatedJoinForm: ZetkinJoinForm | null;
   submissionList: RemoteList<ZetkinJoinSubmission>;
 }
 
 const initialState: JoinFormsStoreSlice = {
   formList: remoteList(),
+  recentlyCreatedJoinForm: null,
   submissionList: remoteList(),
 };
 
@@ -24,8 +26,13 @@ const joinFormsSlice = createSlice({
   initialState: initialState,
   name: 'joinForms',
   reducers: {
+    joinFormCreate: (state) => {
+      state.formList.isLoading = true;
+      state.recentlyCreatedJoinForm = null;
+    },
     joinFormCreated: (state, action: PayloadAction<ZetkinJoinForm>) => {
       const form = action.payload;
+      state.recentlyCreatedJoinForm = form;
       remoteItemUpdated(state.formList, form);
     },
     joinFormDeleted: (state, action: PayloadAction<number>) => {
@@ -93,6 +100,7 @@ const joinFormsSlice = createSlice({
 
 export default joinFormsSlice;
 export const {
+  joinFormCreate,
   joinFormCreated,
   joinFormDeleted,
   joinFormLoad,
