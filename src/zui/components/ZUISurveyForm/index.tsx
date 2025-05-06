@@ -60,6 +60,7 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
   const [signatureType, setSignatureType] = useState<
     ZetkinSurveySignatureType | undefined
   >(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   const errorMessageRef = useRef<HTMLDivElement | null>(null);
   const handleRadioChange = useCallback(
@@ -74,6 +75,12 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
       errorMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, []);
+
+  useEffect(() => {
+    if (status == 'submitted' || status == 'error') {
+      setIsLoading(false);
+    }
+  }, [status]);
 
   const privacyUrl =
     process.env.ZETKIN_PRIVACY_POLICY_LINK || messages.privacyPolicyLink();
@@ -95,7 +102,12 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
         </Box>
       )}
       {showForm && (
-        <form action={action as unknown as string}>
+        <form
+          action={action as unknown as string}
+          onSubmit={() => {
+            setIsLoading(true);
+          }}
+        >
           <input name="orgId" type="hidden" value={survey.organization.id} />
           <input name="surveyId" type="hidden" value={survey.id} />
           <Box display="flex" flexDirection="column" gap={4} paddingX={2}>
@@ -240,7 +252,7 @@ const ZUISurveyForm: FC<ZUISurveyFormProps> = ({ onSubmit, survey, user }) => {
               dataTestId="Survey-submit"
               label={messages.surveyForm.submit()}
               size="large"
-              variant="primary"
+              variant={isLoading ? 'loading' : 'primary'}
             />
           </Box>
         </form>
