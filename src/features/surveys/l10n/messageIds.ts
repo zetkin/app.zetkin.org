@@ -108,7 +108,8 @@ export default makeMessages('feat.surveys', {
   },
   layout: {
     actions: {
-      delete: m('Delete survey'),
+      delete: m('Delete'),
+      move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
       warning: m<{ surveyTitle: string }>('"{surveyTitle}" will be deleted.'),
@@ -168,6 +169,14 @@ export default makeMessages('feat.surveys', {
     personRecordColumn: m('Respondent'),
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
+  },
+  surveyChangeCampaignDialog: {
+    dialogTitle: m('Move survey'),
+    error: m('Error: Could not move the survey to the selected project'),
+    moveButtonLabel: m('Move'),
+    success: m<{ campaignTitle: string; surveyTitle: string }>(
+      'Survey "{surveyTitle}" moved to "{campaignTitle}"'
+    ),
   },
   surveyDialog: {
     add: m('Add'),

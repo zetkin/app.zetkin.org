@@ -14,22 +14,25 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useContext, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 import oldTheme from 'theme';
-import { Msg, useMessages } from 'core/i18n';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { Msg, PlainMessage, useMessages } from 'core/i18n';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
-import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
-import useEventMutations from '../hooks/useEventMutations';
-import messageIds from 'features/events/l10n/messageIds';
+import { useNumericRouteParams } from '../../../core/hooks';
 
-interface EventActionButtonsProps {
-  event: ZetkinEvent;
-  isOpen: boolean;
+type ChangeCampaignMessageIds = {
+  dialogTitle: PlainMessage;
+  error: PlainMessage;
+  moveButtonLabel: PlainMessage;
+};
+
+type ChangeCampaignDialogProps = {
+  changeCampaignMessageIds: ChangeCampaignMessageIds;
   close: () => void;
-}
+  isOpen: boolean;
+  onCampaignSelected: (campaignId: number) => Promise<void>;
+};
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -38,55 +41,65 @@ const useStyles = makeStyles(() => ({
   listItem: {},
 }));
 
-const EventChangeCampaignDialog: React.FunctionComponent<
-  EventActionButtonsProps
-> = ({ event, isOpen, close }) => {
+/**
+ * `ChangeCampaignDialog` is a React functional component that renders a dialog
+ * for selecting and switching to a different campaign. It provides a search
+ * functionality to filter campaigns and allows the user to select a campaign
+ * from the filtered list.
+ *
+ * ## Props:
+ * - `changeCampaignMessageIds` (ChangeCampaignMessageIds): Object containing message IDs for localization
+ * - `isOpen` (boolean): Controls whether the dialog is open or closed.
+ * - `onCampaignSelected` (function): Callback function triggered when a new campaign is selected.
+ *    It receives the selected campaign ID as an argument and returns a Promise.
+ * - `close` (function): Callback function to close the dialog.
+ *
+ * ## Usage:
+ * ```tsx
+ * <ChangeCampaignDialog
+ *   changeCampaignMessageIds={{
+ *     dialogTitle: 'changeCampaign.dialogTitle',
+ *     error: 'changeCampaign.error',
+ *     moveButtonLabel: 'changeCampaign.moveButtonLabel',
+ *   }}
+ *   isOpen={isDialogOpen}
+ *   onCampaignSelected={handleCampaignSelection}
+ *   close={handleCloseDialog}
+ * />
+ * ```
+ */
+const ChangeCampaignDialog: React.FunctionComponent<
+  ChangeCampaignDialogProps
+> = ({ changeCampaignMessageIds, isOpen, onCampaignSelected, close }) => {
+  const { orgId, campId } = useNumericRouteParams();
   const classes = useStyles();
-  const messages = useMessages(messageIds);
-  const router = useRouter();
-  const { showSnackbar } = useContext(ZUISnackbarContext);
-  const [error, setError] = useState(false);
+  const changeCampaignMessages = useMessages(changeCampaignMessageIds);
 
-  const { changeEventCampaign } = useEventMutations(
-    event.organization.id,
-    event.id
-  );
+  const [error, setError] = useState(false);
 
   const fullScreen = useMediaQuery(oldTheme.breakpoints.down('md'));
 
   const [campaignFilter, setCampaignFilter] = useState('');
   const [isLoadingCampaign, setIsLoadingCampaign] = useState(0);
 
-  const { data: campaigns } = useCampaigns(event.organization.id);
+  const { data: campaigns } = useCampaigns(orgId);
   campaigns?.reverse();
 
   const filteredCampaigns = campaigns
     ?.filter((campaign) =>
       campaign.title.toLowerCase().includes(campaignFilter)
     )
-    .filter((campaign) => campaign.id !== event.campaign?.id);
+    .filter((campaign) => campaign.id != campId);
 
   const onSearchChange = (value: string) => {
     setCampaignFilter(value);
   };
 
-  const handleMove = async (campaign: ZetkinCampaign) => {
-    setIsLoadingCampaign(campaign.id);
+  const handleMove = async (campaignId: number) => {
+    setIsLoadingCampaign(campaignId);
 
     try {
-      await changeEventCampaign(campaign.id);
-
-      showSnackbar(
-        'success',
-        messages.eventChangeCampaignDialog.success({
-          campaignTitle: campaign.title,
-        })
-      );
-
-      router.push(
-        `/organize/${campaign.organization.id}/projects/${campaign.id}/events/${event.id}`
-      );
-
+      await onCampaignSelected(campaignId);
       handleClose();
     } catch (error) {
       setIsLoadingCampaign(0);
@@ -119,7 +132,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
       >
         <Box display="flex" justifyContent="space-between">
           <DialogTitle sx={{ paddingLeft: 2 }} variant="h5">
-            {messages.eventChangeCampaignDialog.dialogTitle()}
+            {changeCampaignMessages.dialogTitle()}
           </DialogTitle>
 
           <IconButton onClick={handleClose}>
@@ -135,7 +148,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
         <Box display="flex" flexDirection="column" rowGap={1}>
           <TextField
             fullWidth
-            id="EventChangeCampaignDialog-inputField"
+            id="ChangeCampaignDialog-inputField"
             InputProps={{
               startAdornment: <Search color="secondary" />,
             }}
@@ -146,7 +159,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
 
           {error && (
             <Alert severity="error">
-              <Msg id={messageIds.eventChangeCampaignDialog.error} />
+              <Msg id={changeCampaignMessageIds.error} />
             </Alert>
           )}
 
@@ -159,7 +172,7 @@ const EventChangeCampaignDialog: React.FunctionComponent<
               {filteredCampaigns?.map((campaign) => {
                 return (
                   <ListItem
-                    key={`EventChangeCampaignDialog-campaignItem-${campaign.id}`}
+                    key={`ChangeCampaignDialog-campaignItem-${campaign.id}`}
                     className={classes.listItem}
                   >
                     <Box
@@ -177,10 +190,10 @@ const EventChangeCampaignDialog: React.FunctionComponent<
                       <Box alignItems="center" display="flex">
                         {!isLoadingCampaign && (
                           <Button
-                            onClick={() => handleMove(campaign)}
+                            onClick={() => handleMove(campaign.id)}
                             variant="outlined"
                           >
-                            {messages.eventChangeCampaignDialog.moveButtonLabel()}
+                            {changeCampaignMessages.moveButtonLabel()}
                           </Button>
                         )}
                         {isLoadingCampaign === campaign.id && (
@@ -198,5 +211,4 @@ const EventChangeCampaignDialog: React.FunctionComponent<
     </Dialog>
   );
 };
-
-export default EventChangeCampaignDialog;
+export default ChangeCampaignDialog;

@@ -3,6 +3,11 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.tasks', {
+  actions: {
+    delete: m('Delete'),
+    edit: m('Edit'),
+    move: m('Move'),
+  },
   assignees: {
     completedStates: {
       completed: m<{ time: ReactElement }>('Completed {time}'),
@@ -149,6 +154,14 @@ export default makeMessages('feat.tasks', {
     draft: m('Draft'),
     expired: m('Expired'),
     scheduled: m('Scheduled'),
+  },
+  taskChangeCampaignDialog: {
+    dialogTitle: m('Move task'),
+    error: m('Error: Could not move the task to the selected project'),
+    moveButtonLabel: m('Move'),
+    success: m<{ campaignTitle: string; taskTitle: string }>(
+      'Task "{taskTitle}" moved to "{campaignTitle}"'
+    ),
   },
   taskDetails: {
     deadlineTime: m('Deadline Time'),
