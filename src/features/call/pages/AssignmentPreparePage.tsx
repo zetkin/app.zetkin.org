@@ -5,13 +5,8 @@ import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import InstructionsSection from '../components/InstructionsSection';
-import ZUISection from 'zui/components/ZUISection';
-import ZUIText from 'zui/components/ZUIText';
-import ZUITagChip from 'zui/components/ZUITagChip';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import TargetInfo from '../components/TargetInfo';
-import PreviousCallsInfo from '../components/PreviousCallsInfo';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
+import AboutSection from '../components/AboutSection';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -33,46 +28,7 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
       width="100%"
     >
       <Box flex={isMobile ? 'none' : '6'} order={isMobile ? 1 : 2} p={2}>
-        <ZUISection
-          renderContent={() => (
-            <>
-              <TargetInfo call={call} />
-              {call.target.tags.length > 0 && (
-                <>
-                  <ZUIText variant="headingMd">Tags</ZUIText>
-                  <Box alignItems="center" display="flex" gap={1}>
-                    {call.target.tags.map((tag) => {
-                      return <ZUITagChip key={tag.id} tag={tag} />;
-                    })}
-                  </Box>
-                </>
-              )}
-              {call.target.past_actions.num_actions > 0 && (
-                <>
-                  <ZUIText variant="headingMd">Previous activity</ZUIText>
-                  <ZUIText display="inline">
-                    {`${call.target.first_name} participated in `}
-                    <ZUIText display="inline" variant="bodyMdSemiBold">
-                      {call.target.past_actions.num_actions} actions
-                    </ZUIText>
-                    {`, the most recent being `}
-                    <ZUIText display="inline" variant="bodyMdSemiBold">
-                      {call.target.past_actions.last_action.title}
-                    </ZUIText>{' '}
-                    <ZUIRelativeTime
-                      datetime={call.target.past_actions.last_action.end_time}
-                    />
-                    .
-                  </ZUIText>
-                </>
-              )}
-              {call.target.call_log.length > 0 && (
-                <PreviousCallsInfo call={call} />
-              )}
-            </>
-          )}
-          title={`About ${call.target.first_name} ${call.target.last_name}`}
-        />
+        <AboutSection call={call} />
       </Box>
 
       <Box flex={isMobile ? 'none' : '4'} order={isMobile ? 2 : 1} p={2}>
