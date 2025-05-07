@@ -10,7 +10,7 @@ import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 import { ZetkinTaskRequestBody } from '../types';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -77,38 +77,19 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
           items={[
             {
               id: TASK_MENU_ITEMS.MOVE_TASK,
-              label: (
-                <>
-                  <Box mr={1}>
-                    <ArrowForward />
-                  </Box>
-                  <Msg id={messageIds.actions.move} />
-                </>
-              ),
+              label: messages.actions.move(),
               onSelect: () => setIsMoveDialogOpen(true),
+              startIcon: <ArrowForward />,
             },
             {
               id: TASK_MENU_ITEMS.EDIT_TASK,
-              label: (
-                <>
-                  <Box mr={1}>
-                    <Settings />
-                  </Box>
-                  <Msg id={messageIds.editTask.title} />
-                </>
-              ),
+              label: messages.editTask.title(),
               onSelect: () => setEditTaskDialogOpen(true),
+              startIcon: <Settings />,
             },
             {
               id: TASK_MENU_ITEMS.DELETE_TASK,
-              label: (
-                <>
-                  <Box mr={1}>
-                    <Delete />
-                  </Box>
-                  <Msg id={messageIds.deleteTask.title} />
-                </>
-              ),
+              label: messages.deleteTask.title(),
               onSelect: () => {
                 showConfirmDialog({
                   onSubmit: handleDeleteTask,
@@ -116,6 +97,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
                   warningText: messages.deleteTask.warning(),
                 });
               },
+              startIcon: <Delete />,
             },
           ]}
         />
