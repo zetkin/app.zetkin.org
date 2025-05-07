@@ -12,7 +12,7 @@
     "lint:eslint": "eslint src integrationTesting",
     "lint:prettier": "prettier --check src integrationTesting",
     "lint:translations": "ts-node src/tools/lint-translations",
-    "lint": "run-p lint:*",
+    "lint": "run-p 'lint:*'",
     "check-types": "tsc --noEmit",
     "test": "jest",
     "suite:0-checks": "run-p lint:* check-types",
