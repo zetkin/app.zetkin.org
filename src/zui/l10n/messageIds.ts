@@ -116,6 +116,9 @@ export default makeMessages('zui', {
     }>('{date}'),
     singleDayToday: m('Today'),
   },
+  drawerModal: {
+    close: m('Close'),
+  },
   duration: {
     days: m<{ n: number }>('{n, plural, =1 {1 day} other {# days}}'),
     h: m<{ n: number }>('{n}h'),
