@@ -1,3 +1,5 @@
+import { MetricBulkResponse } from 'features/canvass/types';
+
 export type AreaAssigneeInfo = {
   id: number;
   sessions: ZetkinAreaAssignee[];
@@ -78,19 +80,13 @@ export type ZetkinAreaAssignmentSessionPostBody = {
 };
 
 export type ZetkinAreaAssignmentStats = {
-  metrics: {
-    metric: ZetkinMetric;
-    values: number[];
-  }[];
-  num_areas: number;
+  metrics: MetricBulkResponse;
   num_households: number;
+  num_households_visited: number;
   num_locations: number;
-  num_successful_visited_households: number;
-  num_visited_areas: number;
-  num_visited_households: number;
-  num_visited_households_outside_areas: number;
-  num_visited_locations: number;
-  num_visited_locations_outside_areas: number;
+  num_locations_visited: number;
+  num_successful_visits: number;
+  num_visits: number;
 };
 
 export type ZetkinAssignmentAreaStatsItem = {

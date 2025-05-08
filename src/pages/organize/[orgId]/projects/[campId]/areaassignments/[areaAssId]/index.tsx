@@ -18,6 +18,7 @@ import useAssignmentAreaGraph from 'features/areaAssignments/hooks/useAssignment
 import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areaAssignments/l10n/messageIds';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -41,11 +42,16 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   areaAssId,
 }) => {
   const messages = useMessages(messageIds);
+  const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const statsFuture = useAreaAssignmentStats(parseInt(orgId), areaAssId);
   const areasStats = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const dataGraph = useAssignmentAreaGraph(parseInt(orgId), areaAssId);
   const router = useRouter();
+
+  const numAreas = new Set(
+    sessionsFuture.data?.map((session) => session.area_id) ?? []
+  ).size;
 
   return (
     <>
@@ -62,7 +68,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
           const planUrl = `/organize/${orgId}/projects/${assignment.project_id}/areaassignments/${assignment.id}/map`;
           return (
             <Box display="flex" flexDirection="column" gap={2}>
-              {stats.num_areas == 0 && (
+              {numAreas == 0 && (
                 <Card>
                   <Box p={10} sx={{ textAlign: ' center' }}>
                     <Typography>
@@ -82,7 +88,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                   </Box>
                 </Card>
               )}
-              {stats.num_areas > 0 && (
+              {numAreas > 0 && (
                 <>
                   <Card>
                     <Box
@@ -99,19 +105,19 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                     <Divider />
                     <Box display="flex" width="100%">
                       <NumberCard
-                        firstNumber={stats.num_successful_visited_households}
+                        firstNumber={stats.num_successful_visits}
                         message={messages.overview.progress.headers.successful()}
-                        secondNumber={stats.num_visited_households}
+                        secondNumber={stats.num_households_visited}
                       />
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
-                        firstNumber={stats.num_visited_households}
+                        firstNumber={stats.num_households_visited}
                         message={messages.overview.progress.headers.households()}
                         secondNumber={stats.num_households}
                       />
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
-                        firstNumber={stats.num_visited_locations}
+                        firstNumber={stats.num_locations_visited}
                         message={messages.overview.progress.headers.locations()}
                         secondNumber={stats.num_locations}
                       />

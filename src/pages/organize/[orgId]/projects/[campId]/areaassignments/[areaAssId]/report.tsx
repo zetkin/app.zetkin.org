@@ -513,7 +513,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       {unlocked && (
                         <Badge
                           badgeContent={
-                            areaAssignmentStats?.num_visited_households
+                            areaAssignmentStats?.num_households_visited
                           }
                           color="secondary"
                         />
@@ -533,7 +533,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       {unlocked && (
                         <Badge
                           badgeContent={
-                            areaAssignmentStats?.num_visited_locations
+                            areaAssignmentStats?.num_locations_visited
                           }
                           color="secondary"
                         />
