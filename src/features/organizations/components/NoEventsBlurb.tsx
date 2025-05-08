@@ -1,9 +1,10 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useOrganization from '../hooks/useOrganization';
+import ZUIText from 'zui/components/ZUIText';
 
 type Props = { orgId: number };
 
@@ -22,16 +23,16 @@ const NoEventsBlurb: FC<Props> = ({ orgId }) => {
         p: 2,
       })}
     >
-      <Typography variant="h5">
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.noEventsBlurb.headline} />
-      </Typography>
+      </ZUIText>
       {!!org.data && (
-        <Typography variant="body2">
+        <ZUIText variant="bodySmRegular">
           <Msg
             id={messageIds.noEventsBlurb.description}
             values={{ org: org.data.title }}
           />
-        </Typography>
+        </ZUIText>
       )}
     </Box>
   );

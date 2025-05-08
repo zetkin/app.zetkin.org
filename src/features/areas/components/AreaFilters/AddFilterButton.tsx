@@ -5,7 +5,7 @@ import Menu from '@mui/material/Menu';
 import { MenuItem } from '@mui/material';
 import { FC, useState } from 'react';
 
-import theme from 'theme';
+import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 
@@ -49,8 +49,8 @@ const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
               },
               '&:active': {
                 backgroundColor: alpha(
-                  theme.palette.primary.main,
-                  theme.palette.action.selectedOpacity
+                  oldTheme.palette.primary.main,
+                  oldTheme.palette.action.selectedOpacity
                 ),
               },
             },

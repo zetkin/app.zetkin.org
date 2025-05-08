@@ -16,7 +16,7 @@ import { FC, useState } from 'react';
 import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
@@ -203,7 +203,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
           >
             <Link underline="none">
               <Typography
-                color={theme.palette.info.main}
+                color={oldTheme.palette.info.main}
                 component="h6"
                 variant="subtitle1"
               >

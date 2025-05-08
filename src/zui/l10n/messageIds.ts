@@ -9,6 +9,12 @@ export default makeMessages('zui', {
     ),
     removeAccess: m('Remove access'),
   },
+  autocomplete: {
+    noOptionsDefaultText: m('No option matches your search'),
+  },
+  breadcrumbs: {
+    showMore: m<{ number: number }>('{number} more...'),
+  },
   collapse: {
     collapse: m('Collapse'),
     expand: m('Expand'),
@@ -126,9 +132,19 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  eventWarningIcons: {
+    contact: m('No contact person has been assigned'),
+    reminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
+    signUps: m('There are pending signups'),
+  },
   expandableText: {
     showLess: m('Show less'),
     showMore: m('Show more'),
+  },
+  footer: {
+    privacyPolicy: m('Privacy policy'),
   },
   futures: {
     errorLoading: m('There was an error loading the data.'),
@@ -178,6 +194,7 @@ export default makeMessages('zui', {
     search: m('Type to start searching'),
     searching: m('Searching...'),
   },
+  privacyPolicyLink: m('https://zetkin.org/privacy'),
   publicFooter: {
     hostingOrganization: m<{ name: string }>(
       'This instance of Zetkin is hosted and managed by {name}.'
@@ -186,16 +203,27 @@ export default makeMessages('zui', {
       foundation: m('Zetkin Foundation'),
       privacy: m('Privacy Policy'),
     },
-    privacyPolicyLink: m('https://zetkin.org/privacy'),
     text: m(
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),
+  },
+  signUpChip: {
+    needed: m('You are needed'),
+    signedUp: m('You have signed up'),
   },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
     success: m('Success!'),
     warning: m('Warning!'),
+  },
+  statusChip: {
+    cancelled: m('Cancelled'),
+    closed: m('Closed'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    published: m('Published'),
+    scheduled: m('Scheduled'),
   },
   submitOrCancel: {
     cancel: m('Cancel'),
@@ -204,36 +232,78 @@ export default makeMessages('zui', {
   suffixedNumber: {
     thousands: m<{ num: number }>('{num}K'),
   },
+  surveyForm: {
+    accept: m('I accept the terms stated below'),
+    error: m(
+      'Something went wrong when submitting your answers. Please try again later.'
+    ),
+    policy: {
+      text: m('Click to read the full Zetkin Privacy Policy'),
+    },
+    required: m('required'),
+    signature: {
+      anonymous: m('Sign anonymously'),
+      email: {
+        email: m('Email'),
+        firstName: m('First name'),
+        lastName: m('Last name'),
+      },
+      nameAndEmail: m('Sign with name and e-mail'),
+      title: m('Choose how to sign'),
+      type: {
+        anonymous: m('Sign anonymously'),
+        email: m('Sign with name and email'),
+        user: m<{ email: string; person: string }>(
+          'Sign as {person} with email {email}'
+        ),
+      },
+    },
+    submit: m('Submit'),
+    submitted: {
+      text: m<{ title: string }>(
+        'Your responses to “{title}” have been submitted.'
+      ),
+      title: m('Survey Submitted'),
+    },
+    terms: {
+      description: m<{ organization: string }>(
+        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
+      ),
+      title: m('Privacy Policy'),
+    },
+  },
   timeSpan: {
     multiDay: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - {endDate}, {end}'),
     multiDayEndsToday: m<{
-      end: ReactElement;
-      start: ReactElement;
-      startDate: ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
+      startDate: string | ReactElement;
     }>('{startDate}, {start} - Today, {end}'),
     multiDayToday: m<{
-      end: ReactElement;
-      endDate: ReactElement;
-      start: ReactElement;
+      end: string | ReactElement;
+      endDate: string | ReactElement;
+      start: string | ReactElement;
     }>('Today, {start} - {endDate}, {end}'),
     singleDay: m<{
-      date: ReactElement;
-      end: ReactElement;
-      start: ReactElement;
+      date: string | ReactElement;
+      end: string | ReactElement;
+      start: string | ReactElement;
     }>('{date}, {start} - {end}'),
     singleDayAllDay: m('All day today'),
-    singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
-      'Today, {start} - {end}'
-    ),
+    singleDayToday: m<{
+      end: string | ReactElement;
+      start: string | ReactElement;
+    }>('Today, {start} - {end}'),
   },
-  timezonePicker: {
+  timeZonePicker: {
     gmt: m('GMT'),
-    placeholder: m('Type to search location'),
-    timezone: m('Timezone'),
+    noOptionsText: m('No location matches your search'),
+    placeholder: m('Type to search for a location'),
+    timeZone: m('Time zone'),
   },
 });

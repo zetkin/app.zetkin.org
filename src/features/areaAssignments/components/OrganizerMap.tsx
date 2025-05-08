@@ -35,6 +35,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
 import { ZetkinOrgUser } from 'features/user/types';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 type OrganizerMapProps = {
   areaAssId: number;
@@ -42,6 +43,7 @@ type OrganizerMapProps = {
   areas: ZetkinArea[];
   locations: ZetkinLocation[];
   onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
+  orgId: number;
   sessions: ZetkinAreaAssignee[];
 };
 
@@ -58,6 +60,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   areaStats,
   areaAssId,
   onAddAssigneeToArea,
+  orgId,
   locations,
   sessions,
 }) => {
@@ -85,6 +88,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   );
 
   const mapRef = useRef<MapType | null>(null);
+  useAutoResizeMap(mapRef.current);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 
@@ -364,6 +368,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 setSettingsOpen('select');
               }
             }}
+            orgId={orgId}
             overlayStyle={mapStyle.overlay}
             selectedId={selectedId}
             sessions={sessions}

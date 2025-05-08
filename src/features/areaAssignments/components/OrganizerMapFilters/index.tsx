@@ -1,7 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Checkbox, IconButton, Typography } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Box, Checkbox, IconButton, Typography, useTheme } from '@mui/material';
 
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';

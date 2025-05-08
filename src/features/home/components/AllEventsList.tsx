@@ -2,14 +2,11 @@ import { FC, useState } from 'react';
 import {
   Avatar,
   Box,
-  Button,
   Fade,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
   Switch,
-  Typography,
 } from '@mui/material';
 import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
 import {
@@ -18,38 +15,24 @@ import {
   DateRangePickerDay,
 } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
-import { FormattedDate, FormattedDateTimeRange } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import useAllEvents from 'features/events/hooks/useAllEvents';
 import EventListItem from './EventListItem';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from '../types';
 import ZUIDate from 'zui/ZUIDate';
 import useIncrementalDelay from '../hooks/useIncrementalDelay';
-import FilterButton from './FilterButton';
-import DrawerModal from './DrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
-
-const DatesFilteredBy: FC<{ end: Dayjs | null; start: Dayjs }> = ({
-  start,
-  end,
-}) => {
-  if (!end) {
-    return <FormattedDate day="numeric" month="short" value={start.toDate()} />;
-  } else {
-    return (
-      <FormattedDateTimeRange
-        day="numeric"
-        from={start.toDate()}
-        month="short"
-        to={end.toDate()}
-      />
-    );
-  }
-};
+import ZUIFilterButton from 'zui/components/ZUIFilterButton';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIText from 'zui/components/ZUIText';
+import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 
 const AllEventsList: FC = () => {
+  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const allEvents = useAllEvents();
   const nextDelay = useIncrementalDelay();
 
@@ -83,6 +66,20 @@ const AllEventsList: FC = () => {
     } else {
       //dateFilterState is 'thisWeek'
       return [today.startOf('week'), today.endOf('week')];
+    }
+  };
+
+  const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
+    if (!end) {
+      return intl.formatDate(start.toDate(), {
+        day: 'numeric',
+        month: 'short',
+      });
+    } else {
+      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+        day: 'numeric',
+        month: 'short',
+      });
     }
   };
 
@@ -160,7 +157,7 @@ const AllEventsList: FC = () => {
     {
       active: dateFilterState == 'today',
       key: 'today',
-      label: <Msg id={messageIds.allEventsList.filterButtonLabels.today} />,
+      label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
         setCustomDatesToFilterBy([null, null]);
         setDateFilterState('today');
@@ -169,7 +166,7 @@ const AllEventsList: FC = () => {
     {
       active: dateFilterState == 'tomorrow',
       key: 'tomorrow',
-      label: <Msg id={messageIds.allEventsList.filterButtonLabels.tomorrow} />,
+      label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
         setCustomDatesToFilterBy([null, null]);
         setDateFilterState('tomorrow');
@@ -178,7 +175,7 @@ const AllEventsList: FC = () => {
     {
       active: dateFilterState == 'thisWeek',
       key: 'thisWeek',
-      label: <Msg id={messageIds.allEventsList.filterButtonLabels.thisWeek} />,
+      label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
         setCustomDatesToFilterBy([null, null]);
         setDateFilterState('thisWeek');
@@ -188,14 +185,12 @@ const AllEventsList: FC = () => {
       active: dateFilterState == 'custom',
       key: 'custom',
       label:
-        dateFilterState == 'custom' && customDatesToFilterBy[0] ? (
-          <DatesFilteredBy
-            end={customDatesToFilterBy[1]}
-            start={customDatesToFilterBy[0]}
-          />
-        ) : (
-          <CalendarMonthOutlined fontSize="small" />
-        ),
+        dateFilterState == 'custom' && customDatesToFilterBy[0]
+          ? getDatesFilteredBy(
+              customDatesToFilterBy[1],
+              customDatesToFilterBy[0]
+            )
+          : CalendarMonthOutlined,
       onClick: () => {
         setDrawerContent('calendar');
       },
@@ -205,12 +200,9 @@ const AllEventsList: FC = () => {
           {
             active: !!orgIdsToFilterBy.length,
             key: 'orgs',
-            label: (
-              <Msg
-                id={messageIds.allEventsList.filterButtonLabels.organizations}
-                values={{ numOrgs: orgIdsToFilterBy.length }}
-              />
-            ),
+            label: messages.allEventsList.filterButtonLabels.organizations({
+              numOrgs: orgIdsToFilterBy.length,
+            }),
             onClick: () => setDrawerContent('orgs'),
           },
         ]
@@ -243,26 +235,24 @@ const AllEventsList: FC = () => {
           sx={{ overflowX: 'auto' }}
         >
           {isFiltered && (
-            <FilterButton
+            <ZUIFilterButton
               active={true}
+              circular
+              label={Clear}
               onClick={() => {
                 setDateFilterState(null);
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
               }}
-              round
-            >
-              <Clear fontSize="small" />
-            </FilterButton>
+            />
           )}
           {filters.map((filter) => (
-            <FilterButton
+            <ZUIFilterButton
               key={filter.key}
               active={filter.active}
+              label={filter.label}
               onClick={filter.onClick}
-            >
-              {filter.label}
-            </FilterButton>
+            />
           ))}
         </Box>
       )}
@@ -276,23 +266,20 @@ const AllEventsList: FC = () => {
           marginTop={3}
           padding={2}
         >
-          <Typography color="secondary">
+          <ZUIText color="secondary">
             <Msg id={messageIds.allEventsList.emptyList.message} />
-          </Typography>
+          </ZUIText>
           <Search color="secondary" fontSize="large" />
           {isFiltered && (
-            <Button
+            <ZUIButton
+              label={messages.allEventsList.emptyList.removeFiltersButton()}
               onClick={() => {
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
                 setDateFilterState(null);
               }}
-              variant="outlined"
-            >
-              <Msg
-                id={messageIds.allEventsList.emptyList.removeFiltersButton}
-              />
-            </Button>
+              variant="secondary"
+            />
           )}
         </Box>
       )}
@@ -300,9 +287,9 @@ const AllEventsList: FC = () => {
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
-              <Typography my={1} variant="h5">
+              <ZUIText my={1} variant="headingMd">
                 <ZUIDate datetime={date} />
-              </Typography>
+              </ZUIText>
             </div>
           </Fade>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
@@ -314,7 +301,7 @@ const AllEventsList: FC = () => {
           </Fade>
         </Box>
       ))}
-      <DrawerModal
+      <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
         open={drawerContent == 'calendar'}
       >
@@ -373,8 +360,8 @@ const AllEventsList: FC = () => {
             value={getDateRange()}
           />
         </Box>
-      </DrawerModal>
-      <DrawerModal
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
         open={drawerContent == 'orgs'}
       >
@@ -385,11 +372,11 @@ const AllEventsList: FC = () => {
                 <ListItemAvatar>
                   <Avatar alt="icon" src={`/api/orgs/${org.id}/avatar`} />
                 </ListItemAvatar>
-                <ListItemText>{org.title}</ListItemText>
+                <ZUIText>{org.title}</ZUIText>
               </Box>
               <Switch
                 checked={orgIdsToFilterBy.includes(org.id)}
-                onChange={(ev, checked) => {
+                onChange={(checked) => {
                   if (checked) {
                     setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
                   } else {
@@ -402,7 +389,7 @@ const AllEventsList: FC = () => {
             </ListItem>
           ))}
         </List>
-      </DrawerModal>
+      </ZUIDrawerModal>
     </Box>
   );
 };

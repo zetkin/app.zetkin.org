@@ -1,10 +1,8 @@
 import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
 
 import AssignmentPreparePage from 'features/call/pages/AssignmentPreparePage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import { CALL, hasFeature } from 'utils/featureFlags';
 
 interface PageProps {
   params: {
@@ -25,10 +23,8 @@ export default async function Page({ params }: PageProps) {
   );
 
   if (!assignment) {
-    return notFound();
+    return null;
   }
 
-  if (hasFeature(CALL, assignment.organization.id, process.env)) {
-    return <AssignmentPreparePage assignment={assignment} />;
-  }
+  return <AssignmentPreparePage assignment={assignment} />;
 }

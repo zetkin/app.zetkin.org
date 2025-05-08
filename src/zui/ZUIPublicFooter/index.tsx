@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { useEnv } from 'core/hooks';
 
 const ZUIPublicFooter: FC = () => {
@@ -22,7 +22,7 @@ const ZUIPublicFooter: FC = () => {
         href:
           typeof env.vars.ZETKIN_PRIVACY_POLICY_LINK === 'string'
             ? env.vars.ZETKIN_PRIVACY_POLICY_LINK
-            : messages.publicFooter.privacyPolicyLink(),
+            : messages.privacyPolicyLink(),
         text: messages.publicFooter.links.privacy(),
       },
       ...(typeof env.vars.INSTANCE_OWNER_NAME === 'string' &&
@@ -44,7 +44,7 @@ const ZUIPublicFooter: FC = () => {
         <Box flex={1} maxWidth="sm" width="100%">
           <Box pb={4}>
             <Typography
-              color={theme.palette.secondary.light}
+              color={oldTheme.palette.secondary.light}
               component="p"
               fontSize="1rem"
               textAlign="center"
@@ -55,7 +55,7 @@ const ZUIPublicFooter: FC = () => {
           {typeof env.vars.INSTANCE_OWNER_NAME === 'string' && (
             <Box pb={4}>
               <Typography
-                color={theme.palette.secondary.light}
+                color={oldTheme.palette.secondary.light}
                 component="p"
                 fontSize="1rem"
                 textAlign="center"
@@ -80,7 +80,7 @@ const ZUIPublicFooter: FC = () => {
           </Box>
           <List
             sx={{
-              columnGap: theme.spacing(1),
+              columnGap: oldTheme.spacing(1),
               display: 'flex',
               flexDirection: 'row',
               flexWrap: 'wrap',
@@ -92,10 +92,10 @@ const ZUIPublicFooter: FC = () => {
                 key={link.href}
                 sx={{
                   '&:not(:last-child)': {
-                    borderRightColor: theme.palette.divider,
+                    borderRightColor: oldTheme.palette.divider,
                     borderRightStyle: 'solid',
                     borderRightWidth: 1,
-                    paddingRight: theme.spacing(1),
+                    paddingRight: oldTheme.spacing(1),
                   },
                   padding: 0,
                   width: 'inherit',
@@ -103,7 +103,7 @@ const ZUIPublicFooter: FC = () => {
               >
                 <Link
                   href={link.href}
-                  style={{ color: theme.palette.secondary.light }}
+                  style={{ color: oldTheme.palette.secondary.light }}
                   target="_blank"
                 >
                   {link.text}

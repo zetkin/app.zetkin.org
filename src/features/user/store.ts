@@ -67,6 +67,12 @@ const userSlice = createSlice({
       state.userItem.loaded = new Date().toISOString();
       state.userItem.isLoading = false;
     },
+    userUpdated: (state, action: PayloadAction<ZetkinUser>) => {
+      const user = action.payload;
+      state.userItem.data = user;
+      state.userItem.loaded = new Date().toISOString();
+      state.userItem.isLoading = false;
+    },
   },
 });
 
@@ -80,4 +86,5 @@ export const {
   orgUserLoaded,
   orgUsersLoad,
   orgUsersLoaded,
+  userUpdated,
 } = userSlice.actions;

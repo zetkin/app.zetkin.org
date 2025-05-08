@@ -33,6 +33,7 @@ import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { Zetkin2Area } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import locToLatLng from 'features/geography/utils/locToLatLng';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -80,6 +81,7 @@ const CanvassMap: FC<Props> = ({ areas, assignment }) => {
   >(`mapBounds-${assignment.id}`, null);
 
   const [map, setMap] = useState<Map | null>(null);
+  useAutoResizeMap(map);
   const [zoomed, setZoomed] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
@@ -281,7 +283,7 @@ const CanvassMap: FC<Props> = ({ areas, assignment }) => {
         </Box>
       </Box>
       <MapContainer
-        ref={(map) => setMap(map)}
+        ref={setMap}
         attributionControl={false}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}
@@ -320,34 +322,44 @@ const CanvassMap: FC<Props> = ({ areas, assignment }) => {
             />
           ))}
         </FeatureGroup>
-        {locations.map((location) => {
-          const selected = location.id == selectedLocationId;
-          const key = `marker-${location.id}-${selected.toString()}`;
+        {locations
+          .sort((a0, a1) => {
+            if (a0.id == selectedLocationId) {
+              return 1;
+            }
+            if (a1.id == selectedLocationId) {
+              return -1;
+            }
+            return 0;
+          })
+          .map((location) => {
+            const selected = location.id == selectedLocationId;
+            const key = `marker-${location.id}-${selected.toString()}`;
 
-          return (
-            <DivIconMarker
-              key={key}
-              eventHandlers={{
-                click: (evt) => {
-                  panTo(evt.latlng);
-                },
-              }}
-              iconAnchor={[11, 33]}
-              position={locToLatLng(location)}
-            >
-              <MarkerIcon
-                selected={selected}
-                successfulVisits={location.num_households_successful}
-                totalHouseholds={Math.max(
-                  location.num_estimated_households,
-                  location.num_known_households
-                )}
-                totalVisits={location.num_households_visited}
-                uniqueKey={key}
-              />
-            </DivIconMarker>
-          );
-        })}
+            return (
+              <DivIconMarker
+                key={key}
+                eventHandlers={{
+                  click: (evt) => {
+                    panTo(evt.latlng);
+                  },
+                }}
+                iconAnchor={[11, 33]}
+                position={locToLatLng(location)}
+              >
+                <MarkerIcon
+                  selected={selected}
+                  successfulVisits={location.num_households_successful}
+                  totalHouseholds={Math.max(
+                    location.num_estimated_households,
+                    location.num_known_households
+                  )}
+                  totalVisits={location.num_households_visited}
+                  uniqueKey={key}
+                />
+              </DivIconMarker>
+            );
+          })}
       </MapContainer>
       <CanvassMapOverlays
         assignment={assignment}
