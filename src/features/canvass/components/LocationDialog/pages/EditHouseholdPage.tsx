@@ -2,35 +2,43 @@ import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
-import { Household } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useHousehold from 'features/canvass/hooks/useHousehold';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 type Props = {
-  household: Household;
+  householdId: number;
+  location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string, floor: number | null) => void;
+  onSave: (title: string, level: number) => void;
 };
 
 const EditHouseholdPage: FC<Props> = ({
+  householdId,
+  location,
   onClose,
   onBack,
   onSave,
-  household,
 }) => {
   const messages = useMessages(messageIds);
+  const household = useHousehold(
+    location.organization_id,
+    location.id,
+    householdId
+  );
 
   const [title, setTitle] = useState(household.title || '');
-  const [floor, setFloor] = useState(household.floor ?? NaN);
+  const [floor, setFloor] = useState(household.level ?? 0);
 
   useEffect(() => {
     setTitle(household.title || '');
-    setFloor(household.floor ?? NaN);
+    setFloor(household.level ?? 0);
   }, [household]);
 
   const nothingHasBeenEdited =
-    title == household.title && floor == household.floor;
+    title == household.title && floor == household.level;
 
   return (
     <PageBase
@@ -38,7 +46,7 @@ const EditHouseholdPage: FC<Props> = ({
         <Button
           disabled={nothingHasBeenEdited || title.length === 0}
           onClick={() => {
-            onSave(title, floor || null);
+            onSave(title, floor || 0);
           }}
           variant="contained"
         >
@@ -54,7 +62,7 @@ const EditHouseholdPage: FC<Props> = ({
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title, floor || null);
+          onSave(title, floor);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>

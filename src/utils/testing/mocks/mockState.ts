@@ -7,9 +7,12 @@ export default function mockState(overrides?: RootState) {
       areaAssignmentList: remoteList(),
       areaGraphByAssignmentId: {},
       areaStatsByAssignmentId: {},
-      locationList: remoteList(),
-      sessionsByAssignmentId: {},
+      areasByAssignmentId: {},
+      assigneesByAssignmentId: {},
+      locationsByAssignmentId: {},
+      metricsByAssignmentId: {},
       statsByAreaAssId: {},
+      visitsByHouseholdId: {},
     },
     areas: {
       areaList: remoteList(),
@@ -38,7 +41,8 @@ export default function mockState(overrides?: RootState) {
       recentlyCreatedCampaign: null,
     },
     canvass: {
-      myAssignmentsWithAreasList: remoteList(),
+      householdsByLocationId: {},
+      myAssignmentsList: remoteList(),
       visitsByAssignmentId: {},
     },
     duplicates: {
@@ -141,6 +145,7 @@ export default function mockState(overrides?: RootState) {
     },
     user: {
       membershipList: remoteList(),
+      orgUserList: remoteList(),
       userItem: remoteItem('me'),
     },
     views: {

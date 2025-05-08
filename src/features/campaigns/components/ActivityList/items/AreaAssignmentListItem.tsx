@@ -3,20 +3,20 @@ import { Map, Person } from '@mui/icons-material';
 
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
-import useAreaAssignmentSessions from 'features/areaAssignments/hooks/useAreaAssignmentSessions';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 
 type Props = {
-  caId: string;
+  caId: number;
   orgId: number;
 };
 
 const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
   const { data: assignment } = useAreaAssignment(orgId, caId);
 
-  const allSessions = useAreaAssignmentSessions(orgId, caId).data || [];
+  const allSessions = useAreaAssignees(orgId, caId).data || [];
   const sessions = allSessions.filter(
-    (session) => session.assignment.id === caId
+    (session) => session.assignment_id === caId
   );
 
   if (!assignment) {
@@ -31,7 +31,7 @@ const AreaAssignmentListItem: FC<Props> = ({ caId, orgId }) => {
       color={color}
       endNumber={areaAssignees.length}
       href={`/organize/${orgId}/projects/${
-        assignment?.campaign?.id ?? 'standalone'
+        assignment?.project_id ?? 'standalone'
       }/areaassignments/${caId}`}
       PrimaryIcon={Map}
       SecondaryIcon={Person}

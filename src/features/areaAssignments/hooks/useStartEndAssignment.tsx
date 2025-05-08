@@ -5,7 +5,7 @@ import useAreaAssignmentMutations from './useAreaAssignmentMutations';
 
 export default function useStartEndAssignment(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const areaAssignment = useAreaAssignment(orgId, areaAssId);
   const { updateAreaAssignment } = useAreaAssignmentMutations(orgId, areaAssId);

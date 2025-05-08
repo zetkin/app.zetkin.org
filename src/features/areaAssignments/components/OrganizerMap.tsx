@@ -17,11 +17,9 @@ import { Close, Layers, Pentagon } from '@mui/icons-material';
 
 import { ZetkinArea } from '../../areas/types';
 import OrganizerMapRenderer from './OrganizerMapRenderer';
-import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinAssignmentAreaStats,
-  ZetkinAreaAssignment,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
 import objToLatLng from 'features/areas/utils/objToLatLng';
@@ -36,16 +34,17 @@ import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFil
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
+import { ZetkinOrgUser } from 'features/user/types';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 type OrganizerMapProps = {
-  areaAssId: string;
+  areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
-  assignment: ZetkinAreaAssignment;
   locations: ZetkinLocation[];
-  onAddAssigneeToArea: (area: ZetkinArea, person: ZetkinPerson) => void;
-  sessions: ZetkinAreaAssignmentSession[];
+  onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
+  orgId: number;
+  sessions: ZetkinAreaAssignee[];
 };
 
 export type MapStyle = {
@@ -59,9 +58,9 @@ type SettingName = 'layers' | 'filters' | 'select';
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
-  assignment,
   areaAssId,
   onAddAssigneeToArea,
+  orgId,
   locations,
   sessions,
 }) => {
@@ -77,14 +76,16 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   );
 
   const [settingsOpen, setSettingsOpen] = useState<SettingName | null>(null);
-  const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
-  const [selectedId, setSelectedId] = useState('');
+  const [filteredAreaIds, setFilteredAreaIds] = useState<null | number[]>(null);
+  const [selectedId, setSelectedId] = useState(0);
   const [filterText, setFilterText] = useState('');
   const { onAssigneesFilterChange } = useContext(assigneesFilterContext);
   const { setActiveGroupIds, setActiveTagIdsByGroup } =
     useContext(areaFilterContext);
   const router = useRouter();
-  const { navigateToAreaId } = router.query;
+  const navigateToAreaId = parseInt(
+    router.query.navigateToAreaId?.toString() ?? '0'
+  );
 
   const mapRef = useRef<MapType | null>(null);
   useAutoResizeMap(mapRef.current);
@@ -126,7 +127,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
 
   const clearAndCloseSettings = () => {
     setSettingsOpen(null);
-    setSelectedId('');
+    setSelectedId(0);
     onAssigneesFilterChange(null);
     setFilteredAreaIds(null);
     setActiveGroupIds([]);
@@ -230,7 +231,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 onClick={() => {
                   if (settingsOpen == 'select') {
                     if (selectedId) {
-                      setSelectedId('');
+                      setSelectedId(0);
                     } else {
                       clearAndCloseSettings();
                     }
@@ -285,9 +286,9 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     filterAreas={filterAreas}
                     filterText={filterText}
                     locations={locations}
-                    onAddAssignee={(person) => {
+                    onAddAssignee={(user) => {
                       if (selectedArea) {
-                        onAddAssigneeToArea(selectedArea, person);
+                        onAddAssigneeToArea(selectedArea, user);
                       }
                     }}
                     onClose={clearAndCloseSettings}
@@ -295,7 +296,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     onSelectArea={(newValue) => setSelectedId(newValue)}
                     selectedArea={selectedArea}
                     selectedAreaStats={areaStats.stats.find(
-                      (stat) => stat.areaId == selectedArea?.id
+                      (stat) => stat.area_id == selectedArea?.id
                     )}
                     sessions={sessions}
                   />
@@ -353,14 +354,12 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
           zoomControl={false}
         >
           <OrganizerMapRenderer
-            areaAssId={areaAssId}
             areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
-            assignment={assignment}
             locations={locations}
             locationStyle={mapStyle.location}
-            onSelectedIdChange={(newId: string) => {
+            onSelectedIdChange={(newId) => {
               setSelectedId(newId);
 
               if (!newId) {
@@ -369,6 +368,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 setSettingsOpen('select');
               }
             }}
+            orgId={orgId}
             overlayStyle={mapStyle.overlay}
             selectedId={selectedId}
             sessions={sessions}

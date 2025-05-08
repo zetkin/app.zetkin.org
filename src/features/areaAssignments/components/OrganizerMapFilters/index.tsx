@@ -5,7 +5,6 @@ import { Box, Checkbox, IconButton, Typography, useTheme } from '@mui/material';
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFilterContext';
-import AddFilterButton from 'features/areas/components/AreaFilters/AddFilterButton';
 import FilterDropDown from 'features/areas/components/FilterDropDown';
 import { assigneesFilterContext } from './AssigneeFilterContext';
 import { useMessages } from 'core/i18n';
@@ -13,7 +12,7 @@ import messageIds from 'features/areaAssignments/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
-  onFilteredIdsChange: (areaIds: string[]) => void;
+  onFilteredIdsChange: (areaIds: number[]) => void;
 };
 
 const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
@@ -233,6 +232,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
           }
         })}
       </Box>
+      {/* TODO: Re-enable once area tags have been implemented
       <AddFilterButton
         items={Object.values(groupsById).map((item) => {
           const groupId = item.group?.id ?? 0;
@@ -259,6 +259,7 @@ const OrganizerMapFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {
         onToggle={(open) => setOpenTagsDropdown(open ? 'add' : null)}
         open={openTagsDropdown == 'add'}
       />
+      */}
     </Box>
   );
 };

@@ -16,9 +16,9 @@ type Props = {
 
 const TagsSection: FC<Props> = ({ area }) => {
   const [grouped, setGrouped] = useState(true);
-  const tagsFuture = useAreaTags(area.organization.id, area.id);
+  const tagsFuture = useAreaTags(area.organization_id, area.id);
   const { assignTag, unassignTag } = useAreaTagging(
-    area.organization.id,
+    area.organization_id,
     area.id
   );
 

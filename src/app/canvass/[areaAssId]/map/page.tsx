@@ -8,7 +8,7 @@ import CanvassPage from 'features/canvass/components/CanvassPage';
 
 interface PageProps {
   params: {
-    areaAssId: string;
+    areaAssId: number;
   };
 }
 

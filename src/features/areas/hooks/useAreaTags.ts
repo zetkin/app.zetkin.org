@@ -6,7 +6,7 @@ import { tagsLoad, tagsLoaded } from '../store';
 
 export default function useAreaTags(
   orgId: number,
-  areaId: string
+  areaId: number
 ): IFuture<ZetkinAppliedTag[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

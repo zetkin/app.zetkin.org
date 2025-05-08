@@ -24,7 +24,6 @@ import ZUIPreviewableInput, {
 } from 'zui/ZUIPreviewableInput';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
-import TagsSection from './TagsSection';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
@@ -51,7 +50,7 @@ const AreaOverlay: FC<Props> = ({
     'title' | 'description' | null
   >(null);
   const { deleteArea, updateArea } = useAreaMutations(
-    area.organization.id,
+    area.organization_id,
     area.id
   );
   const tagsElement = useRef<HTMLElement>();
@@ -214,7 +213,9 @@ const AreaOverlay: FC<Props> = ({
       </ClickAwayListener>
       <Divider />
       <Box ref={tagsElement} flexGrow={1} my={2}>
+        {/*
         <TagsSection area={area} />
+        */}
       </Box>
       <Box display="flex" gap={1}>
         {editing && (
@@ -222,7 +223,10 @@ const AreaOverlay: FC<Props> = ({
             <Button
               onClick={() => {
                 updateArea({
-                  points: area.points,
+                  boundary: {
+                    coordinates: [area.points],
+                    type: 'Polygon',
+                  },
                 });
                 onCancelEdit();
               }}

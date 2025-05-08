@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import { ChevronLeft, ChevronRight, Close, Search } from '@mui/icons-material';
 import {
   Box,
+  CircularProgress,
   Divider,
   IconButton,
   TextField,
@@ -9,38 +10,38 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUIPerson from 'zui/ZUIPerson';
-import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { ZetkinArea } from 'features/areas/types';
 import {
   ZetkinAssignmentAreaStatsItem,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
-import useAreaAssignmentSessionMutations from '../hooks/useAreaAssingmentSessionMutations';
 import { useNumericRouteParams } from 'core/hooks';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import locToLatLng from 'features/geography/utils/locToLatLng';
+import UserAutocomplete from 'features/user/components/UserAutocomplete';
+import { ZetkinOrgUser } from 'features/user/types';
+import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
+import UserItem from 'features/user/components/UserItem';
 
 type Props = {
-  areaAssId: string;
+  areaAssId: number;
   areas: ZetkinArea[];
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
   locations: ZetkinLocation[];
-  onAddAssignee: (person: ZetkinPerson) => void;
+  onAddAssignee: (user: ZetkinOrgUser) => void;
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
-  onSelectArea: (selectedId: string) => void;
+  onSelectArea: (selectedId: number) => void;
   selectedArea?: ZetkinArea | null;
   selectedAreaStats?: ZetkinAssignmentAreaStatsItem;
-  sessions: ZetkinAreaAssignmentSession[];
+  sessions: ZetkinAreaAssignee[];
 };
 
 const AreaSelect: FC<Props> = ({
@@ -62,16 +63,16 @@ const AreaSelect: FC<Props> = ({
   const theme = useTheme();
 
   const { orgId } = useNumericRouteParams();
-  const { deleteSession } = useAreaAssignmentSessionMutations(orgId, areaAssId);
+  const { unassignArea } = useAreaAssignmentMutations(orgId, areaAssId);
   const selectedAreaAssignees = sessions
-    .filter((session) => session.area.id == selectedArea?.id)
-    .map((session) => session.assignee);
+    .filter((session) => session.area_id == selectedArea?.id)
+    .map((session) => session.user_id);
 
   const locationsInSelectedArea: ZetkinLocation[] = [];
   if (selectedArea) {
     locations.map((location) => {
       const isInsideArea = isPointInsidePolygon(
-        location.position,
+        locToLatLng(location),
         selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
       );
       if (isInsideArea) {
@@ -81,7 +82,10 @@ const AreaSelect: FC<Props> = ({
   }
 
   const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
-    .map((location) => location.households.length)
+    .map(
+      (location) =>
+        location.num_known_households || location.num_estimated_households
+    )
     .reduce((prev, curr) => prev + curr, 0);
 
   return (
@@ -97,7 +101,7 @@ const AreaSelect: FC<Props> = ({
           <Box alignItems="center" display="flex">
             {selectedArea && (
               <IconButton
-                onClick={() => onSelectArea('')}
+                onClick={() => onSelectArea(0)}
                 sx={{ mr: 1, padding: 0 }}
               >
                 <ChevronLeft />
@@ -158,8 +162,8 @@ const AreaSelect: FC<Props> = ({
           >
             {filterAreas(areas, filterText).map((area, index) => {
               const assignees = sessions
-                .filter((session) => session.area.id == area.id)
-                .map((session) => session.assignee);
+                .filter((session) => session.area_id == area.id)
+                .map((session) => session.user_id);
               return (
                 <>
                   {index != 0 && <Divider />}
@@ -179,20 +183,15 @@ const AreaSelect: FC<Props> = ({
                   >
                     <Typography>{area.title || 'Untitled area'}</Typography>
                     <Box alignItems="center" display="flex">
-                      {assignees.map((assignee, index) => {
+                      {assignees.map((user_id, index) => {
                         if (index <= 3) {
                           return (
-                            <Box key={assignee.id} marginX={0.2}>
-                              <ZUIPersonHoverCard
-                                key={assignee.id}
-                                personId={assignee.id}
-                              >
-                                <ZUIAvatar
-                                  key={assignee.id}
-                                  size="sm"
-                                  url={`/api/orgs/${area.organization.id}/people/${assignee.id}/avatar`}
-                                />
-                              </ZUIPersonHoverCard>
+                            <Box key={user_id} marginX={0.2}>
+                              <ZUIAvatar
+                                key={user_id}
+                                size="sm"
+                                url={`/api/users/${user_id}/avatar`}
+                              />
                             </Box>
                           );
                         } else if (index == 4) {
@@ -312,37 +311,43 @@ const AreaSelect: FC<Props> = ({
                 />
               </Typography>
             )}
-            {selectedAreaAssignees.map((assignee) => (
-              <Box key={assignee.id} display="flex" my={1}>
-                <ZUIPersonHoverCard personId={assignee.id}>
-                  <ZUIPerson
-                    id={assignee.id}
-                    name={`${assignee.first_name} ${assignee.last_name}`}
-                  />
-                </ZUIPersonHoverCard>
-                <IconButton
-                  color="secondary"
-                  onClick={() => deleteSession(selectedArea.id, assignee.id)}
+            <Suspense
+              fallback={
+                <Box m={2}>
+                  <CircularProgress size={20} />
+                </Box>
+              }
+            >
+              {selectedAreaAssignees.map((userId) => (
+                <Box
+                  key={userId}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    my: 1,
+                  }}
                 >
-                  <Close />
-                </IconButton>
-              </Box>
-            ))}
+                  <UserItem orgId={orgId} userId={userId} />
+                  <IconButton
+                    color="secondary"
+                    onClick={() => unassignArea(userId, selectedArea.id)}
+                  >
+                    <Close />
+                  </IconButton>
+                </Box>
+              ))}
+            </Suspense>
             <Box mt={2}>
               <Typography variant="h6">
                 <Msg id={areaAssignmentMessageIds.map.areaInfo.assignees.add} />
               </Typography>
-              <ZUIPersonSelect
-                disabled
-                getOptionDisabled={(person) =>
-                  selectedAreaAssignees.some(
-                    (assignee) => assignee.id == person.id
-                  )
-                }
-                onChange={function (person: ZetkinPerson): void {
-                  onAddAssignee(person);
+              <UserAutocomplete
+                onSelect={(user) => {
+                  if (user) {
+                    onAddAssignee(user);
+                  }
                 }}
-                selectedPerson={null}
+                orgId={orgId}
               />
             </Box>
           </Box>
