@@ -62,20 +62,6 @@ const MarkerIcon: FC<MarkerIconProps> = ({
         x="0"
         y="0"
       />
-      {/*
-      <clipPath id={uniqueKey}>
-        <rect
-          height={totalHeight}
-          width="21"
-          x="0"
-          y={0.9 * totalHeight - successBandHeight}
-        />
-      </clipPath>
-      <path
-        clipPath={`url(#${uniqueKey})`}
-        d="M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z"
-        fill={theme.palette.primary.main}
-        */}
       <rect
         clipPath={`url(#${pinInteriorKey})`}
         fill={lighten(oldTheme.palette.primary.main, 0.7)}

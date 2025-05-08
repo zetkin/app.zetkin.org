@@ -2,25 +2,15 @@
 
 import { FC } from 'react';
 import { HomeWork } from '@mui/icons-material';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Divider,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
-import useSidebarStats from '../hooks/useSidebarStats';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import oldTheme from 'theme';
-import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
@@ -29,18 +19,6 @@ const Page: FC<{
 }> = ({ assignment }) => {
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
-  const { loading, stats } = useSidebarStats(
-    assignment.organization_id,
-    assignment.id
-  );
-
-  const { data } = useAreaAssignmentStats(
-    assignment.organization_id,
-    assignment.id
-  );
-
-  // TODO: Get from stats
-  const numberOfAreas = 0;
 
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
@@ -79,86 +57,6 @@ const Page: FC<{
               paddingBottom: 8,
             }}
           >
-            {loading ? (
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            ) : (
-              <Card
-                sx={{
-                  mx: 1,
-                }}
-              >
-                <Box alignItems="center" display="flex">
-                  <Typography m={1} p={1}>
-                    <Msg id={messageIds.instructions.areas} />
-                  </Typography>
-                  <Divider orientation="vertical" sx={{ height: '20px' }} />
-                  <Typography color="secondary" ml={2}>
-                    {numberOfAreas}
-                  </Typography>
-                </Box>
-                <Divider />
-                <Box alignItems="center" display="flex" ml={2}>
-                  <Box
-                    alignItems="flex-start"
-                    flexDirection="column"
-                    mr={2}
-                    pb={2}
-                  >
-                    <Box alignItems="center" display="flex" mt={2}>
-                      <Typography color="primary" sx={{ mr: 0.5 }} variant="h5">
-                        {stats.allTime.numHouseholds}
-                      </Typography>
-                      <Typography
-                        color="textPrimary"
-                        sx={{ mr: 0.5 }}
-                        variant="h5"
-                      >
-                        {' / '}
-                      </Typography>
-                      <Typography color="secondary" sx={{ mr: 1 }} variant="h5">
-                        {data?.num_households}
-                      </Typography>
-                    </Box>
-                    <Typography color="secondary" pb={2} variant="caption">
-                      <Msg id={messageIds.instructions.visitedHouseholds} />
-                    </Typography>
-                  </Box>
-                  <Divider flexItem orientation="vertical" sx={{ mx: 2 }} />
-                  <Box alignItems="flex-start" flexDirection="column" pb={2}>
-                    <Box alignItems="center" display="flex" mt={2}>
-                      <Typography color="primary" sx={{ mr: 0.5 }} variant="h5">
-                        {stats.allTime.numLocations}
-                      </Typography>
-                      <Typography
-                        color="textPrimary"
-                        sx={{ mr: 0.5 }}
-                        variant="h5"
-                      >
-                        {' / '}
-                      </Typography>
-                      <Typography
-                        color="secondary"
-                        sx={{ mr: 0.5 }}
-                        variant="h5"
-                      >
-                        {data?.num_locations}
-                      </Typography>
-                    </Box>
-                    <Typography color="textSecondary" mb={2} variant="caption">
-                      <Msg id={messageIds.instructions.visitedLocations} />
-                    </Typography>
-                  </Box>
-                </Box>
-              </Card>
-            )}
             {assignment.instructions ? (
               <Card sx={{ mt: 2, mx: 1 }}>
                 <Typography m={2}>
