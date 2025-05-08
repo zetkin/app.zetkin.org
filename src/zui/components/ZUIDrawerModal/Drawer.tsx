@@ -5,7 +5,7 @@ import ModalBackground from '../ZUIModal/ModalBackground';
 
 type Props = {
   children: ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
   open: boolean;
 };
 
@@ -54,7 +54,6 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
             sx={{
               maxHeight: 'calc(100dvh - 3.75rem)',
               overflowY: 'hidden',
-              padding: '1.25rem',
             }}
           >
             {children}

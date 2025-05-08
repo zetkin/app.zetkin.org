@@ -76,6 +76,7 @@ const ZUIDrawerModal: FC<Props> = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          padding: '1.25',
         }}
       >
         <Box
