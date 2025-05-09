@@ -63,6 +63,7 @@ const ModalContent: FC<ModalContentProps> = ({
           sx={{
             display: 'flex',
             overflowY: 'auto',
+            paddingY: '1rem',
           }}
         >
           {children}
