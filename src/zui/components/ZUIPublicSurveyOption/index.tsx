@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { FormControlLabel, FormControlLabelProps } from '@mui/material';
 
-export type SurveyOptionProps = FormControlLabelProps;
-
-const SurveyOption: FC<SurveyOptionProps> = ({ ...formControlLabelProps }) => {
+const ZUIPublicSurveyOption: FC<FormControlLabelProps> = ({
+  ...formControlLabelProps
+}) => {
   return (
     <FormControlLabel
       {...formControlLabelProps}
@@ -47,4 +47,4 @@ const SurveyOption: FC<SurveyOptionProps> = ({ ...formControlLabelProps }) => {
   );
 };
 
-export default SurveyOption;
+export default ZUIPublicSurveyOption;

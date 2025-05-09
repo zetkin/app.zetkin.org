@@ -20,7 +20,7 @@ import {
   ZetkinSurveyOptionsQuestionElement,
 } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
-import SurveyOption from './SurveyOption';
+import ZUIPublicSurveyOption from '../ZUIPublicSurveyOption';
 
 export type OptionsQuestionProps = {
   element: ZetkinSurveyOptionsQuestionElement;
@@ -64,7 +64,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             )}
           </Box>
           {options.map((option) => (
-            <SurveyOption
+            <ZUIPublicSurveyOption
               key={option.id}
               control={<Radio required={question.required} />}
               label={option.text}
@@ -126,7 +126,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
             )}
             {hasCheckboxes &&
               options.map((option) => (
-                <SurveyOption
+                <ZUIPublicSurveyOption
                   key={option.id}
                   control={<Checkbox name={`${element.id}.options`} />}
                   label={option.text}
