@@ -42,7 +42,9 @@ const CallHistory = ({
   filter: initialFilter,
 }: CallHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const assignmentsFuture = useCallAssignments(orgId).data?.sort((as1, as2) => {
+  const assignmentsFuture = useCallAssignments(orgId);
+  const assignments = assignmentsFuture.data || [];
+  const sortedAssignments = assignments.sort((as1, as2) => {
     return as1.title.localeCompare(as2.title);
   });
   const { filter, setConfig, setOp } =
@@ -52,7 +54,7 @@ const CallHistory = ({
     });
 
   // only submit if assignments exist
-  const submittable = !!assignmentsFuture?.length;
+  const submittable = !!sortedAssignments?.length;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -123,7 +125,7 @@ const CallHistory = ({
                         id={localMessageIds.assignmentSelect.assignment}
                         values={{
                           assignmentTitle: truncateOnMiddle(
-                            assignmentsFuture?.find((a) => a.id === value)
+                            sortedAssignments?.find((a) => a.id === value)
                               ?.title ?? '',
                             40
                           ),
@@ -134,17 +136,17 @@ const CallHistory = ({
                 }}
                 value={filter.config.assignment || ANY_ASSIGNMENT}
               >
-                {!assignmentsFuture?.length && (
+                {!sortedAssignments?.length && (
                   <MenuItem key={ANY_ASSIGNMENT} value={ANY_ASSIGNMENT}>
                     <Msg id={localMessageIds.assignmentSelect.none} />
                   </MenuItem>
                 )}
-                {assignmentsFuture?.length && (
+                {sortedAssignments?.length && (
                   <MenuItem key={ANY_ASSIGNMENT} value={ANY_ASSIGNMENT}>
                     <Msg id={localMessageIds.assignmentSelect.any} />
                   </MenuItem>
                 )}
-                {assignmentsFuture?.map((a) => (
+                {sortedAssignments?.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
                     <Tooltip
                       placement="right-start"
