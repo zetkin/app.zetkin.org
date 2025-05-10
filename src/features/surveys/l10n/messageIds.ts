@@ -177,49 +177,6 @@ export default makeMessages('feat.surveys', {
     ),
     title: m('Add email address'),
   },
-  surveyForm: {
-    accept: m('I accept the terms stated below'),
-    error: m(
-      'Something went wrong when submitting your answers. Please try again later.'
-    ),
-    policy: {
-      link: m('https://zetkin.org/privacy'),
-      text: m('Click to read the full Zetkin Privacy Policy'),
-    },
-    required: m('required'),
-    sign: {
-      anonymous: m('Sign anonymously'),
-      nameAndEmail: m('Sign with name and e-mail'),
-    },
-    submit: m('Submit'),
-    terms: {
-      description: m<{ organization: string }>(
-        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
-      ),
-      title: m('Privacy Policy'),
-    },
-  },
-  surveyFormSubmitted: {
-    text: m<{ title: string }>(
-      'Your responses to “{title}” have been submitted.'
-    ),
-    title: m('Survey Submitted'),
-  },
-  surveySignature: {
-    email: {
-      email: m('Email'),
-      firstName: m('First name'),
-      lastName: m('Last name'),
-    },
-    title: m('Choose how to sign'),
-    type: {
-      anonymous: m('Sign anonymously'),
-      email: m('Sign with name and email'),
-      user: m<{ email: string; person: string }>(
-        'Sign as {person} with email {email}'
-      ),
-    },
-  },
   tabs: {
     overview: m('Overview'),
     questions: m('Questions'),
