@@ -36,6 +36,18 @@ export default class SurveyResponseColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
+      sortComparator: (v1: string[], v2: string[]) => {
+        const lastInV1 = v1[v1.length - 1];
+        const lastInV2 = v2[v2.length - 1];
+
+        if (v1.length == 0 || lastInV1 == '') {
+          return 1;
+        } else if (v2.length == 0 || lastInV2 == '') {
+          return -1;
+        } else {
+          return lastInV1.localeCompare(lastInV2);
+        }
+      },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
         return cell.map((response) => response.text);

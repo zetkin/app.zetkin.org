@@ -67,3 +67,25 @@ export const Full: Story = {
   args: { size: 'full' },
   render: Auto.render,
 };
+
+export const NoChildrenAndNoOnclose: Story = {
+  render: function Render() {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <>
+        <ZUIButton
+          label="Open modal"
+          onClick={() => setOpen(true)}
+          variant="primary"
+        />
+        <ZUIModal
+          open={open}
+          primaryButton={{ label: 'Confirm', onClick: () => null }}
+          secondaryButton={{ label: 'Cancel', onClick: () => setOpen(false) }}
+          title="Modal title"
+        />
+      </>
+    );
+  },
+};

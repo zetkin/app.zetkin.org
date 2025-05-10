@@ -20,19 +20,24 @@ export const getAllEventsDef = {
 export default makeRPCDef<Params, Result>(getAllEventsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
-  const memberships = await apiClient.get<ZetkinMembership[]>(
+  const allMemberships = await apiClient.get<ZetkinMembership[]>(
     '/api/users/me/memberships'
+  );
+  const filteredMemberships = allMemberships.filter(
+    (membership) => membership.follow
   );
 
   const now = new Date().toISOString();
 
-  const events: ZetkinEvent[] = [];
-  for (const membership of memberships) {
-    const eventsOfOrg = await apiClient.get<ZetkinEvent[]>(
-      `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}`
-    );
-    events.push(...eventsOfOrg);
-  }
+  const eventsByOrg = await Promise.all(
+    filteredMemberships.map(
+      async (membership) =>
+        await apiClient.get<ZetkinEvent[]>(
+          `/api/orgs/${membership.organization.id}/actions?filter=start_time%3E=${now}`
+        )
+    )
+  );
+  const events = eventsByOrg.flat();
 
   return events.filter((event) => {
     const state = getEventState(event);

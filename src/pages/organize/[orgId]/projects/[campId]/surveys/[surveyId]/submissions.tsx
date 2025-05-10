@@ -7,7 +7,7 @@ import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarningAlert';
-import SurveyLayout from 'features/surveys/layout/SurveyLayout';
+import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySuborgsCard from 'features/surveys/components/SurveySuborgsCard';
 import useSurvey from 'features/surveys/hooks/useSurvey';

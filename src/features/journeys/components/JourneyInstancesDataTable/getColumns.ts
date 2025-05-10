@@ -15,7 +15,7 @@ const getColumns = (
   const staticColumns = getStaticColumns(messages, journeyInstances);
   return (
     staticColumns
-      .splice(0, 2)
+      .splice(0, 3)
       .concat(getTagColumns(messages, journeyInstances, tagColumns))
       // Add/override common props
       .concat(staticColumns)

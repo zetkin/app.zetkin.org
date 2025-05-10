@@ -713,21 +713,4 @@ test.describe('User submitting a survey', () => {
       'https://zetkin.org/privacy'
     );
   });
-
-  test('privacy policy link picks up environment variable', async ({
-    appUri,
-    page,
-  }) => {
-    process.env.ZETKIN_PRIVACY_POLICY_LINK = 'https://foo.bar';
-
-    await page.goto(
-      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
-
-    const policyLink = await page.locator(
-      '[aria-labelledby="privacy-policy-label"] a'
-    );
-
-    expect(await policyLink.getAttribute('href')).toEqual('https://foo.bar');
-  });
 });

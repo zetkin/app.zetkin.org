@@ -22,7 +22,7 @@ assignees: ''
 
 **Be detailed, volunteers need to know exactly how to reproduce!**
 
-1. Go to [https://app.dev.zetkin.org/](https://app.dev.zetkin.org/) **<- add rest of url**
+1. Go to https://app.dev.zetkin.org/ **<- add rest of url**
 2. Click on '....'
 
 ### Expected Behaviour
@@ -31,4 +31,4 @@ assignees: ''
 
 ## Screenshots
 
-### **Provide at least one fullscreen screenshot (preferably including URL bar) for context**
+**Provide at least one fullscreen screenshot (preferably including URL bar) for context**

@@ -3,11 +3,11 @@ import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import CallLayout from 'features/call/layouts/CallLayout';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { CALL, hasFeature } from 'utils/featureFlags';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
+import CallLayout from 'features/call/layouts/CallLayout';
 
 type Props = {
   children?: ReactNode;
@@ -35,7 +35,7 @@ const CallPageLayout = async ({ children, params }: Props) => {
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
     return (
       <HomeThemeProvider>
-        <CallLayout callAssId={callAssId}>{children}</CallLayout>;
+        <CallLayout callAssId={callAssId}>{children}</CallLayout>
       </HomeThemeProvider>
     );
   } else {

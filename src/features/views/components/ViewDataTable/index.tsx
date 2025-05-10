@@ -14,7 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
-import { Link, useTheme } from '@mui/material';
+import { Box, Link, useTheme } from '@mui/material';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
@@ -306,17 +306,17 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             passHref
           >
             <Link
-              alt="Avatar"
-              component="img"
               onClick={(evt) => evt.stopPropagation()}
-              src={url}
-              style={{
-                cursor: 'pointer',
-                maxHeight: '100%',
-                maxWidth: '100%',
-              }}
+              style={{ cursor: 'pointer' }}
               underline="hover"
-            />
+            >
+              <Box
+                alt={'Avatar'}
+                component="img"
+                src={url}
+                sx={{ maxHeight: '100%', maxWidth: '100%' }}
+              />
+            </Link>
           </NextLink>
         </ZUIPersonHoverCard>
       );

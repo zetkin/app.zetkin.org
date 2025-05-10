@@ -22,12 +22,13 @@ type ZUIModalProps = {
   /**
    * The content of the modal.
    */
-  children: ReactNode;
+  children?: ReactNode;
 
   /**
-   * Function that runs when closing the modal.
+   * If provided the user will be able to close the modal by
+   *  clicking X-icon in corner, or outside the modal.
    */
-  onClose: () => void;
+  onClose?: () => void;
 
   /**
    * Determines whether the modal is open.
@@ -127,10 +128,12 @@ const ZUIModal: FC<ZUIModalProps> = ({
           <Box
             sx={(theme) => ({
               alignItems: 'flex-start',
-              borderBottom: `0.063rem solid ${theme.palette.dividers.lighter}`,
+              borderBottom: children
+                ? `0.063rem solid ${theme.palette.dividers.lighter}`
+                : '',
               display: 'flex',
               justifyContent: 'space-between',
-              paddingBottom: '1rem',
+              paddingBottom: children ? '1rem' : '',
             })}
           >
             <Box
@@ -142,19 +145,23 @@ const ZUIModal: FC<ZUIModalProps> = ({
               }}
             >
               <Typography variant="headingMd">{title}</Typography>
-              <IconButton onClick={onClose} size="small">
-                <Close sx={{ fontSize: '1.25rem' }} />
-              </IconButton>
+              {onClose && (
+                <IconButton onClick={onClose} size="small">
+                  <Close sx={{ fontSize: '1.25rem' }} />
+                </IconButton>
+              )}
             </Box>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              overflowY: 'auto',
-            }}
-          >
-            {children}
-          </Box>
+          {children && (
+            <Box
+              sx={{
+                display: 'flex',
+                overflowY: 'auto',
+              }}
+            >
+              {children}
+            </Box>
+          )}
           <Box
             sx={{
               display: 'flex',

@@ -1,44 +1,30 @@
 'use server';
 
+import { FC } from 'react';
 import { headers } from 'next/headers';
-import { Metadata } from 'next';
-import { FC, ReactElement } from 'react';
 
-import SurveyForm from 'features/surveys/components/surveyForm/SurveyForm';
+import PublicSurveyPage from 'features/surveys/pages/PublicSurveyPage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinSurveyExtended, ZetkinUser } from 'utils/types/zetkin';
 
-type PageProps = {
+type Props = {
   params: {
     orgId: string;
     surveyId: string;
   };
 };
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { orgId, surveyId } = params;
-  const apiClient = new BackendApiClient({});
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
-  return {
-    description: survey.info_text,
-    openGraph: {
-      description: survey.info_text,
-      title: survey.title,
-    },
-    title: survey.title,
-  };
-}
-
 // @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
-const Page: FC<PageProps> = async ({ params }): Promise<ReactElement> => {
+const Page: FC<Props> = async ({ params }) => {
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
+
+  const { orgId, surveyId } = params;
+  const survey = await apiClient.get<ZetkinSurveyExtended>(
+    `/api/orgs/${orgId}/surveys/${surveyId}`
+  );
 
   let user: ZetkinUser | null;
   try {
@@ -47,12 +33,7 @@ const Page: FC<PageProps> = async ({ params }): Promise<ReactElement> => {
     user = null;
   }
 
-  const { orgId, surveyId } = params;
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
-
-  return <SurveyForm survey={survey} user={user} />;
+  return <PublicSurveyPage survey={survey} user={user} />;
 };
 
 export default Page;

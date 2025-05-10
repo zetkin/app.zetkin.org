@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from '@mui/material';
+import { alpha, Button, CircularProgress } from '@mui/material';
 import {
   CSSProperties,
   FC,
@@ -21,6 +21,11 @@ export interface ZUIButtonProps {
    * Defaults to "button".
    */
   actionType?: 'button' | 'reset' | 'submit';
+
+  /**
+   * To pass in an id for testing purposes.
+   */
+  dataTestId?: string;
 
   /**
    * If the button is disabled or not.
@@ -107,9 +112,9 @@ const getColor = (variant: ZUIButtonVariant) => {
 
 const getLoadingIndicatorPadding = (size: ZUISize = 'medium') => {
   if (size == 'large') {
-    return '0.183rem 1.375rem 0.183rem 1.375rem';
+    return '0.719rem 1.375rem 0.719rem 1.375rem';
   } else if (size == 'medium') {
-    return '0.625rem 1rem 0.625rem 1rem';
+    return '0.656rem 1rem 0.656rem 1rem';
   } else if (size == 'small') {
     return '0.438rem 0.625rem 0.438rem 0.625rem';
   }
@@ -147,6 +152,7 @@ const getTextPadding = (
 const ZUIButton: FC<ZUIButtonProps> = ({
   actionType,
   disabled,
+  dataTestId,
   endIcon: EndIcon,
   fullWidth,
   href,
@@ -161,6 +167,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   return (
     <Button
       color={variant ? getColor(variant) : undefined}
+      data-testid={dataTestId}
       disabled={disabled || isLoading}
       endIcon={EndIcon ? <EndIcon /> : null}
       fullWidth={fullWidth}
@@ -215,14 +222,15 @@ const ZUIButton: FC<ZUIButtonProps> = ({
               backgroundColor: theme.palette.warning.dark,
             },
             '&.MuiButton-outlinedPrimary': {
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor: alpha(theme.palette.primary.main, 0.11),
             },
             '&.MuiButton-textPrimary': {
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor: alpha(theme.palette.primary.main, 0.11),
             },
             boxShadow: 'none',
           },
           ...textStyle,
+          borderColor: theme.palette.primary.light,
           boxShadow: 'none',
           minWidth: '2.188rem',
           padding: isLoading

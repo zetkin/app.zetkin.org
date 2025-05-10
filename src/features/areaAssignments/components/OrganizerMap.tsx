@@ -36,6 +36,7 @@ import { areaFilterContext } from 'features/areas/components/AreaFilters/AreaFil
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import messageIdsAss from '../l10n/messageIds';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 type OrganizerMapProps = {
   areaAssId: string;
@@ -86,6 +87,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const { navigateToAreaId } = router.query;
 
   const mapRef = useRef<MapType | null>(null);
+  useAutoResizeMap(mapRef.current);
 
   const selectedArea = areas.find((area) => area.id == selectedId);
 

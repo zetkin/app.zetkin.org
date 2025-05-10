@@ -45,6 +45,7 @@ yarn-error.log*
 
 # intellij
 .idea
+!.idea/launch.json
 
 # typescript
 tsconfig.tsbuildinfo

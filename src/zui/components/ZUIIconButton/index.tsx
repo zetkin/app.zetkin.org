@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button, CircularProgress } from '@mui/material';
+import { alpha, Button, CircularProgress } from '@mui/material';
 
 import {
   getVariant,
@@ -103,13 +103,14 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
             backgroundColor: theme.palette.warning.dark,
           },
           '&.MuiButton-outlinedPrimary': {
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: alpha(theme.palette.primary.main, 0.11),
           },
           '&.MuiButton-textPrimary': {
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: alpha(theme.palette.primary.main, 0.11),
           },
           boxShadow: 'none',
         },
+        borderColor: theme.palette.primary.light,
         boxShadow: 'none',
         minWidth: 0,
         padding: variant ? getPadding(size, variant) : '',
@@ -132,7 +133,7 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
               if (variant == 'primary' || variant == 'destructive') {
                 color = theme.palette.common.white;
               } else if (variant) {
-                color = theme.palette.common.black;
+                color = theme.palette.primary.main;
               } else {
                 //Variant is undefined = we want to inherit color from parent.
                 color = '';

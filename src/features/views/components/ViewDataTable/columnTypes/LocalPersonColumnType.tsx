@@ -57,7 +57,15 @@ export default class LocalPersonColumnType
         return makeName(v1).localeCompare(makeName(v2));
       },
       valueGetter: (params) => {
-        return params.value ? makeName(params.value) : '';
+        // we add a `toString`-method, which will be used when filtering for LocalPersons
+        return params.value
+          ? {
+              ...params.value,
+              toString() {
+                return makeName(this);
+              },
+            }
+          : undefined;
       },
     };
   }

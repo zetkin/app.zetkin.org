@@ -18,7 +18,7 @@ export default function useAreaTagging(
     assignTag: async (tagId, value) => {
       const tag = await apiClient.put<ZetkinAppliedTag>(
         `/beta/orgs/${orgId}/areas/${areaId}/tags/${tagId}`,
-        { value }
+        value ? { value } : undefined // don't send emty value
       );
       dispatch(tagAssigned([areaId, tag]));
     },

@@ -38,6 +38,17 @@ export default class SurveyOptionsColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
+      sortComparator: (v1: string[][], v2: string[][]) => {
+        const getPriority = (cell: string[][]) => {
+          if (cell == null || cell.length == 0) {
+            return 0;
+          } else {
+            return -cell[cell.length - 1].length;
+          }
+        };
+
+        return getPriority(v1) - getPriority(v2);
+      },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
         return cell?.map((response) =>
