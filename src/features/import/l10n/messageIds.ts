@@ -284,9 +284,7 @@ export default makeMessages('feat.import', {
     people: m<{ numPeople: number; number: ReactElement }>(
       '{number} {numPeople, plural, =1 {person} other {people}}'
     ),
-    peopleToSubOrg: m<{ num: number, orgName: string }>(
-      '{orgName} ({num})'
-    ),
+    peopleToSubOrg: m<{ num: number; orgName: string }>('{orgName} ({num})'),
   },
   importStatus: {
     completed: {

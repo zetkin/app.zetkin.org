@@ -68,10 +68,13 @@ const AddedOrgs: FC<AddedOrgsProps> = ({
       <Box display="flex" flexWrap="wrap" gap={0.5}>
         {orgsWithNewPeople.map((org, index) => (
           <Typography key={org.org.id} color="secondary">
-            <Msg id={messageIds.impactSummary.peopleToSubOrg} values={{
-              num: org.adding,
-              orgName: org.org.title,
-            }} />
+            <Msg
+              id={messageIds.impactSummary.peopleToSubOrg}
+              values={{
+                num: org.adding,
+                orgName: org.org.title,
+              }}
+            />
             {orgsWithNewPeople.length === 1 ||
             orgsWithNewPeople.length - 1 === index
               ? ''
