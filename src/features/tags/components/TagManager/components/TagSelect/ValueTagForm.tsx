@@ -46,7 +46,14 @@ const ValueTagForm: React.FC<{
           <TagChip tag={{ ...tag, value: inputValue }} />
         </Box>
       </Box>
-      <ZUISubmitCancelButtons onCancel={onCancel} />
+      <ZUISubmitCancelButtons 
+      onCancel={onCancel} 
+      submitDisabled={
+        inputValue === ''
+        ? true
+        : false
+      }
+        />
     </form>
   );
 };
