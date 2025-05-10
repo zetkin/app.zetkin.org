@@ -161,6 +161,12 @@ export default makeMessages('feat.surveys', {
   submissions: {
     anonymous: m('Anonymous'),
     dateColumn: m('Date'),
+    delete: m('Delete'),
+    deleteSuccess: m('Successfully deleted'),
+    deleteTitle: m('Delete submission'),
+    deleteWarningText: m(
+      'Are you sure you want to delete this survey submission?'
+    ),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
