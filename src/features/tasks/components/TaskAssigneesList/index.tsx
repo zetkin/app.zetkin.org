@@ -24,7 +24,7 @@ const TaskAssigneesList: React.FunctionComponent<{
       <Grid container spacing={4}>
         {sortedAssignedTasks.map((task) => {
           return (
-            <Grid key={task.id} item lg={3} md={4} sm={6} xs={12}>
+            <Grid key={task.id} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
               <Card data-testid="task-assignee">
                 <Box p={3}>
                   <ZUIPerson

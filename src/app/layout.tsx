@@ -33,6 +33,7 @@ export default async function RootLayout({
           <ClientContext
             envVars={{
               FEAT_AREAS: process.env.FEAT_AREAS,
+              FEAT_TASKS: process.env.FEAT_TASKS,
               INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
               INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,

@@ -7,6 +7,7 @@ import {
   LatLngBounds,
   LatLngTuple,
   LeafletMouseEvent,
+  LatLngExpression,
 } from 'leaflet';
 import { makeStyles } from '@mui/styles';
 import { GpsNotFixed } from '@mui/icons-material';
@@ -15,24 +16,25 @@ import {
   AttributionControl,
   FeatureGroup,
   MapContainer,
+  Pane,
   Polygon,
   TileLayer,
 } from 'react-leaflet';
 
-import { ZetkinArea } from '../../areas/types';
-import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import useCreateLocation from '../hooks/useCreateLocation';
-import useLocations from 'features/areaAssignments/hooks/useLocations';
-import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import getVisitState from '../utils/getVisitState';
-import MarkerIcon from '../utils/markerIcon';
-import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
-import MapControls from 'features/areaAssignments/components/MapControls';
-import objToLatLng from 'features/areas/utils/objToLatLng';
 import CanvassMapOverlays from './CanvassMapOverlays';
-import useAllLocationVisits from '../hooks/useAllLocationVisits';
+import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
+import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
+import { getVisitPercentage } from '../utils/getVisitPercentage';
+import MapControls from 'features/areaAssignments/components/MapControls';
+import MarkerIcon from './MarkerIcon';
+import objToLatLng from 'features/areas/utils/objToLatLng';
+import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useEnv } from 'core/hooks';
+import useLocations from 'features/areaAssignments/hooks/useLocations';
+import { ZetkinArea } from '../../areas/types';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -75,15 +77,12 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   const classes = useStyles();
   const locations = useLocations(assignment.organization.id).data || [];
   const createLocation = useCreateLocation(assignment.organization.id);
-  const locationVisitList = useAllLocationVisits(
-    assignment.organization.id,
-    assignment.id
-  );
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LatLngTuple, LatLngTuple] | null
   >(`mapBounds-${assignment.id}`, null);
 
   const [map, setMap] = useState<Map | null>(null);
+  useAutoResizeMap(map);
   const [zoomed, setZoomed] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     null
@@ -215,6 +214,21 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
     }
   }, [areas, map]);
 
+  const outerBounds: [number, number][] = [
+    [90, -180],
+    [90, 180],
+    [-90, 180],
+    [-90, -180],
+  ];
+
+  function getMaskLayer(areas: ZetkinArea[]) {
+    const maskPositions: LatLngExpression[][] = [
+      outerBounds,
+      ...areas.map((area) => area.points as LatLngExpression[]),
+    ];
+    return maskPositions;
+  }
+
   return (
     <>
       <Box position="relative">
@@ -268,7 +282,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         </Box>
       </Box>
       <MapContainer
-        ref={(map) => setMap(map)}
+        ref={setMap}
         attributionControl={false}
         minZoom={1}
         style={{ height: '100%', width: '100%' }}
@@ -279,6 +293,13 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
           url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
         />
+        <Pane name="blendedPane" style={{ mixBlendMode: 'color-burn' }} />
+        <Polygon
+          fillColor="black"
+          fillOpacity={0.3}
+          positions={getMaskLayer(areas)}
+          stroke={false}
+        />
         <FeatureGroup
           ref={(fgRef) => {
             reactFGref.current = fgRef;
@@ -287,47 +308,61 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           {areas.map((area) => (
             <Polygon
               key={area.id}
-              color={theme.palette.primary.main}
+              color="#A8A8A8"
+              fillColor="#A8A8A8"
+              fillOpacity={0.5}
+              pane="blendedPane"
+              pathOptions={{
+                color: theme.palette.common.black,
+                opacity: 0.5,
+                weight: 4,
+              }}
               positions={area.points}
             />
           ))}
         </FeatureGroup>
-        {locations.map((location) => {
-          const householdState = getVisitState(
-            location.households,
-            assignment.id
-          );
-          const visited = locationVisitList.data?.some(
-            (visit) => visit.locationId == location.id
-          );
-
-          const state = visited ? 'all' : householdState;
-
-          const selected = location.id == selectedLocationId;
-          const key = `marker-${location.id}-${selected.toString()}`;
-
-          return (
-            <DivIconMarker
-              key={key}
-              eventHandlers={{
-                click: (evt) => {
-                  panTo(evt.latlng);
-                },
-              }}
-              iconAnchor={[11, 33]}
-              position={{
-                lat: location.position.lat,
-                lng: location.position.lng,
-              }}
-            >
-              <MarkerIcon
-                dataToShow="visited"
-                selected={selected}
-                state={state}
-              />
-            </DivIconMarker>
-          );
-        })}
+        {locations
+          // sort the selectedLocation on top of the others
+          .sort((a0, a1) => {
+            if (a0.id == selectedLocationId) {
+              return 1;
+            }
+            if (a1.id == selectedLocationId) {
+              return -1;
+            }
+            return 0;
+          })
+          .map((location) => {
+            const selected = location.id == selectedLocationId;
+            const key = `marker-${location.id}-${selected.toString()}`;
+            const percentage = getVisitPercentage(
+              assignment.id,
+              location.households,
+              assignment.metrics.find((metric) => metric.definesDone)?.id ||
+                null
+            );
+            return (
+              <DivIconMarker
+                key={key}
+                eventHandlers={{
+                  click: (evt) => {
+                    panTo(evt.latlng);
+                  },
+                }}
+                iconAnchor={[11, 33]}
+                position={{
+                  lat: location.position.lat,
+                  lng: location.position.lng,
+                }}
+              >
+                <MarkerIcon
+                  percentage={percentage}
+                  selected={selected}
+                  uniqueKey={key}
+                />
+              </DivIconMarker>
+            );
+          })}
       </MapContainer>
       <CanvassMapOverlays
         assignment={assignment}

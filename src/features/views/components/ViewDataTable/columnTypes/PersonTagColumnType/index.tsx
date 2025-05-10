@@ -22,7 +22,7 @@ import useTagging from 'features/tags/hooks/useTagging';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import ValueTagCell from './ValueTagCell';
 import { ZetkinObjectAccess } from 'core/api/types';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { AppDispatch, RootState } from 'core/store';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
@@ -67,7 +67,9 @@ export default class PersonTagColumnType implements IColumnType {
       align: 'center',
       editable: !accessLevel && tag?.value_type !== null,
       headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<ZetkinViewRow, ZetkinTag>) => (
+      renderCell: (
+        params: GridRenderCellParams<ZetkinViewRow, ZetkinAppliedTag>
+      ) => (
         <Cell
           cellValue={params.value}
           personId={params.row.id}
@@ -77,7 +79,7 @@ export default class PersonTagColumnType implements IColumnType {
       renderEditCell: (params) => (
         <ValueTagEditCell tagColor={tag?.color} {...params} />
       ),
-      sortComparator: (v1: ZetkinTag, v2: ZetkinTag) => {
+      sortComparator: (v1: ZetkinAppliedTag, v2: ZetkinAppliedTag) => {
         return compareTags(v1, v2);
       },
     };
@@ -132,9 +134,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface CellProps {
-  cellValue: ZetkinTag | string | undefined;
+  cellValue: ZetkinAppliedTag | string | undefined;
   personId: number;
-  tag?: ZetkinTag | null;
+  tag?: ZetkinTag | ZetkinAppliedTag | null;
 }
 
 const Cell: FC<CellProps> = ({ cellValue, personId, tag }) => {
@@ -171,7 +173,7 @@ const ValueTagEditCell = (
   props: GridRenderEditCellParams<ZetkinViewRow> & { tagColor?: string | null }
 ) => {
   const { field, id, tagColor } = props;
-  const tag: ZetkinTag | null = props.value;
+  const tag: ZetkinAppliedTag | null = props.value;
   const apiRef = useGridApiContext();
 
   const [valueState, setValueState] = useState(tag?.value || '');
@@ -229,7 +231,7 @@ const ValueTagEditCell = (
 };
 
 const BasicTagCell: FC<{
-  cell: ZetkinTag | undefined;
+  cell: ZetkinAppliedTag | undefined;
   personId: number;
   tagId: number;
 }> = ({ cell, personId, tagId }) => {

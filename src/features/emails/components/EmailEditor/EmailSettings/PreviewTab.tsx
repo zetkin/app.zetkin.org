@@ -14,6 +14,7 @@ import messageIds from 'features/emails/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useSendTestEmail from 'features/emails/hooks/useSendTestEmail';
+import usePreviewEmail from 'features/emails/hooks/usePreviewEmail';
 
 const emailAddressIsValid = (emailAddress: string): boolean =>
   z.string().email().safeParse(emailAddress).success;
@@ -21,6 +22,7 @@ const emailAddressIsValid = (emailAddress: string): boolean =>
 const PreviewTab: FC = () => {
   const user = useCurrentUser();
   const { emailWasSent, isLoading, reset, sendTestEmail } = useSendTestEmail();
+  const { previewUrl } = usePreviewEmail();
   const [emailError, setEmailError] = useState(false);
   const [destinationEmailAddress, setDestinationEmailAddress] = useState('');
   useEffect(() => {
@@ -35,6 +37,16 @@ const PreviewTab: FC = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2} padding={2}>
+      <Typography>
+        <Msg
+          id={
+            messageIds.editor.settings.tabs.preview.previewInBrowserInstructions
+          }
+        />
+      </Typography>
+      <Button href={previewUrl} target="_blank" variant="contained">
+        <Msg id={messageIds.editor.settings.tabs.preview.previewInBrowser} />
+      </Button>
       <Typography>
         <Msg id={messageIds.editor.settings.tabs.preview.instructions} />
       </Typography>

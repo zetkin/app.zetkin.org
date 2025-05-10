@@ -5,12 +5,13 @@ import { makeStyles } from '@mui/styles';
 import { EmailState } from '../hooks/useEmailState';
 import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import oldTheme from 'theme';
 
 interface EmailStatusChipProps {
   state: EmailState;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     alignItems: 'center',
     borderRadius: '2em',
@@ -21,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
     padding: '0.5em 0.7em',
   },
   draft: {
-    backgroundColor: theme.palette.grey[500],
+    backgroundColor: oldTheme.palette.grey[500],
   },
   scheduled: {
-    backgroundColor: theme.palette.statusColors.blue,
+    backgroundColor: oldTheme.palette.statusColors.blue,
   },
   sent: {
-    backgroundColor: theme.palette.success.main,
+    backgroundColor: oldTheme.palette.success.main,
   },
 }));
 

@@ -26,6 +26,7 @@ import AreaFilterButton from '../../../areas/components/AreaFilters/AreaFilterBu
 import MapControls from 'features/areaAssignments/components/MapControls';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 interface MapProps {
   areas: ZetkinArea[];
@@ -45,6 +46,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
 
   const { orgId } = useNumericRouteParams();
   const createArea = useCreateArea(orgId);
+  useAutoResizeMap(mapRef.current);
 
   useEffect(() => {
     const map = mapRef.current;

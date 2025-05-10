@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 
 import messageIds from '../../l10n/messageIds';
-import theme from 'theme';
+import oldTheme from 'theme';
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import EventCluster from '../EventCluster';
 import { getDstChangeAtDate } from '../utils';
@@ -28,9 +28,9 @@ const Day = ({
   const isToday = dayjs(date).isSame(new Date(), 'day');
   const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
 
-  let textColor = theme.palette.text.secondary;
+  let textColor = oldTheme.palette.text.secondary;
   if (isToday) {
-    textColor = theme.palette.primary.main;
+    textColor = oldTheme.palette.primary.main;
   } else if (!isInFocusMonth) {
     textColor = '#dfdfdf';
   }
@@ -40,7 +40,7 @@ const Day = ({
       alignItems="stretch"
       bgcolor={isInFocusMonth ? '#eee' : 'none'}
       border="2px solid #eeeeee"
-      borderColor={isToday ? theme.palette.primary.main : 'eee'}
+      borderColor={isToday ? oldTheme.palette.primary.main : 'eee'}
       display="flex"
       flexDirection="column"
       height="100%"
@@ -63,7 +63,7 @@ const Day = ({
       </Box>
       {dstChange !== undefined && (
         <Box paddingLeft="4px">
-          <Typography color={theme.palette.grey[500]} variant="body2">
+          <Typography color={oldTheme.palette.grey[500]} variant="body2">
             <Msg
               id={
                 dstChange === 'summertime'

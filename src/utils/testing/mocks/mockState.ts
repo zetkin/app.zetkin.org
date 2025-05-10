@@ -18,11 +18,17 @@ export default function mockState(overrides?: RootState) {
     breadcrumbs: {
       crumbsByPath: {},
     },
+    call: {
+      currentCallId: null,
+      eventsByTargetId: {},
+      outgoingCalls: remoteList(),
+    },
     callAssignments: {
       assignmentList: remoteList(),
       callAssignmentIdsByCampaignId: {},
       callList: remoteList(),
       callersById: {},
+      simpleStatsById: {},
       statsById: {},
       userAssignmentList: remoteList(),
     },
@@ -92,6 +98,7 @@ export default function mockState(overrides?: RootState) {
       timelineUpdatesByInstanceId: {},
     },
     organizations: {
+      eventsByOrgId: {},
       orgData: remoteItem(0),
       subOrgsByOrgId: {},
       treeDataList: remoteList(),

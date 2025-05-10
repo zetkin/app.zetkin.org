@@ -53,19 +53,19 @@ const QueryOverviewListItem: FC<QueryOverviewListItemProps> = ({
         justifyContent="space-between"
         width={1}
       >
-        <Grid display="flex" item xs={1}>
+        <Grid display="flex" size={{ xs: 1 }}>
           {render(icon)}
         </Grid>
-        <Grid item lg={8} py={2} xs={7}>
+        <Grid py={2} size={{ lg: 8, xs: 7 }}>
           {organizations && (
             <OrgScope organizations={organizations} orgId={orgId} />
           )}
           <Typography>{render(filterText)}</Typography>
         </Grid>
-        <Grid alignSelf="stretch" item lg={2} px={3} xs={3}>
+        <Grid alignSelf="stretch" px={3} size={{ lg: 2, xs: 3 }}>
           {render(diagram)}
         </Grid>
-        <Grid alignItems="center" display="flex" item xs={1}>
+        <Grid alignItems="center" display="flex" size={{ xs: 1 }}>
           {canEdit && (
             <IconButton
               data-testid="QueryOverview-editFilterButton"

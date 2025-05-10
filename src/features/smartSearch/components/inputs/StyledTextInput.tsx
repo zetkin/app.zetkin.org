@@ -3,9 +3,11 @@ import { Theme } from '@mui/material';
 import { StandardTextFieldProps, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
-const useStyles = makeStyles<Theme, ExpandingTextInputProps>((theme) => ({
+import oldTheme from 'theme';
+
+const useStyles = makeStyles<Theme, ExpandingTextInputProps>(() => ({
   MuiInput: (props) => ({
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     padding: 0,
     width: `${props.inputWidth + 20}px`,
   }),
@@ -15,9 +17,9 @@ const useStyles = makeStyles<Theme, ExpandingTextInputProps>((theme) => ({
   },
 }));
 
-const useHiddenInputStyles = makeStyles<Theme>((theme) => ({
+const useHiddenInputStyles = makeStyles<Theme>(() => ({
   hiddenInput: {
-    fontSize: theme.typography.h4.fontSize,
+    fontSize: oldTheme.typography.h4.fontSize,
     position: 'absolute',
     visibility: 'hidden',
   },

@@ -7,7 +7,7 @@ import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarningAlert';
-import SurveyLayout from 'features/surveys/layout/SurveyLayout';
+import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySuborgsCard from 'features/surveys/components/SurveySuborgsCard';
 import useSurvey from 'features/surveys/hooks/useSurvey';
@@ -63,8 +63,8 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
         <title>{surveyFuture.data?.title}</title>
       </Head>
       <Grid container spacing={2}>
-        <Grid item md={isShared ? 12 : 8} sm={12} xs={12}>
-          <ZUIFuture future={submissionsFuture}>
+        <Grid size={{ md: isShared ? 12 : 8, sm: 12, xs: 12 }}>
+          <ZUIFuture future={submissionsFuture} ignoreDataWhileLoading>
             {(data) => {
               let submissions = data;
               if (showUnlinkedOnly) {
@@ -83,7 +83,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
             }}
           </ZUIFuture>
         </Grid>
-        <Grid item md={4} sm={12} xs={12}>
+        <Grid size={{ md: 4, sm: 12, xs: 12 }}>
           <SubmissionWarningAlert
             campId={campaignId}
             orgId={parseInt(orgId)}

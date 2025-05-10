@@ -1,4 +1,8 @@
-import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
+import AssignmentStatsPage from 'features/call/pages/AssignmentStatsPage';
 
 interface PageProps {
   params: {
@@ -7,7 +11,20 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  const callUrl = process.env.ZETKIN_GEN2_CALL_URL;
-  const assignmentUrl = callUrl + '/assignments/' + params.callAssId;
-  redirect(assignmentUrl);
+  const headersList = headers();
+  const headersEntries = headersList.entries();
+  const headersObject = Object.fromEntries(headersEntries);
+  const apiClient = new BackendApiClient(headersObject);
+  const assignments = await apiClient.get<ZetkinCallAssignment[]>(
+    '/api/users/me/call_assignments'
+  );
+  const assignment = assignments.find(
+    (assignment) => assignment.id == parseInt(params.callAssId)
+  );
+
+  if (!assignment) {
+    return null;
+  }
+
+  return <AssignmentStatsPage assignment={assignment} />;
 }

@@ -5,7 +5,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
-import theme from '../../../../../theme';
+import oldTheme from '../../../../../theme';
 import { LocalQueryViewColumn, ZetkinViewColumn } from '../../types';
 
 type LocalQueryViewCell = boolean | null;
@@ -63,7 +63,7 @@ const Cell: FC<{ cell: LocalQueryViewCell | undefined }> = ({ cell }) => {
   return (
     <Box
       alignItems="center"
-      bgcolor={theme.palette.success.light}
+      bgcolor={oldTheme.palette.success.light}
       display="flex"
       height="100%"
       justifyContent="center"

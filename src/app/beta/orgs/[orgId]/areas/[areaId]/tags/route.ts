@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { AreaModel } from 'features/areas/models';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     async ({ orgId, apiClient }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
-      const tags: ZetkinTag[] = [];
+      const tags: (ZetkinTag | ZetkinAppliedTag)[] = [];
 
       const area = await AreaModel.findOne({ _id: params.areaId });
       if (area) {
