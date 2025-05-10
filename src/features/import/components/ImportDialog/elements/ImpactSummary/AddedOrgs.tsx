@@ -7,7 +7,10 @@ import { ZetkinOrganization } from 'utils/types/zetkin';
 
 interface AddedOrgsProps {
   numPeopleWithOrgsAdded: number;
-  orgsWithNewPeople: Pick<ZetkinOrganization, 'title' | 'id'>[];
+  orgsWithNewPeople: {
+    adding: number;
+    org: Pick<ZetkinOrganization, 'title' | 'id'>;
+  }[];
   tense: 'past' | 'future';
 }
 
@@ -64,8 +67,8 @@ const AddedOrgs: FC<AddedOrgsProps> = ({
       </Typography>
       <Box display="flex" flexWrap="wrap" gap={0.5}>
         {orgsWithNewPeople.map((org, index) => (
-          <Typography key={org.id} color="secondary">
-            {org.title}
+          <Typography key={org.org.id} color="secondary">
+            {org.org.title} ({org.adding})
             {orgsWithNewPeople.length === 1 ||
             orgsWithNewPeople.length - 1 === index
               ? ''

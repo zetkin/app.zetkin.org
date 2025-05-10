@@ -25,10 +25,16 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
     Object.keys(tagged.byTag).includes(tag.id.toString())
   );
 
-  const orgsWithNewPeople = subOrgs.filter(
-    (org) =>
-      Object.keys(addedToOrg.byOrg).includes(org.id.toString()) && org.is_active
-  );
+  const orgsWithNewPeople = subOrgs
+    .filter(
+      (org) =>
+        Object.keys(addedToOrg.byOrg).includes(org.id.toString()) &&
+        org.is_active
+    )
+    .map((org) => ({
+      org,
+      adding: summary.addedToOrg.byOrg[org.id],
+    }));
 
   return (
     <>
