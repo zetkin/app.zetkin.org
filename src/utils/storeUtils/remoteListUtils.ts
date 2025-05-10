@@ -15,7 +15,7 @@ export function remoteListCreated<
 }
 
 /**
- * When recieving response from backend that a remote list is being loaded, this method should be used to update the redux store (cache).
+ * When a remote list has been invalidated, this method should be used to update the redux store (cache).
  * This is a utility method for manipulating the cache, and should only be used in this context.
  *
  * @param list RemoteList to set as loading.
