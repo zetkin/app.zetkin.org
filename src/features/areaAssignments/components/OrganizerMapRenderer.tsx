@@ -22,6 +22,7 @@ import {
   ZetkinLocation,
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
+import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { getVisitPercentage } from 'features/canvass/utils/getVisitPercentage';
 import { ZetkinPerson } from '../../../utils/types/zetkin';
@@ -338,6 +339,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
   const { assigneesFilter } = useContext(assigneesFilterContext);
 
+  const env = useEnv();
   const getAreaColor = (
     hasPeople: boolean,
     householdColorPercent: number,
@@ -424,7 +426,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
       <AttributionControl position="bottomright" prefix={false} />
       <TileLayer
         attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
       />
       <FeatureGroup
         ref={(fgRef) => {
