@@ -21,23 +21,7 @@ export function findOrAddItem<DataType extends RemoteData>(
 }
 
 /**
- * When recieving response from backend that a remote item has been created, this method should be used to update the redux store (cache).
- * It receives a RemoteList and a RemoteItem ID and checks if the item exists in the lists, else, it creates it. Returns the item.
- * This is a utility method for manipulating the cache, and should only be used in this context.
- *
- * @param list RemoteList, a cached representation of an existing list in the database.
- * @param id ID of a RemoteItem, which might or might not exist in cache.
- * @returns The existing or newly created RemoteItem.
- */
-export function remoteItemCreated<DataType extends RemoteData>(
-  list: RemoteList<DataType>,
-  id: number | string
-): RemoteItem<DataType> {
-  return findOrAddItem(list, id);
-}
-
-/**
- * When recieving response from backend that a remote item is due for an update (mutating), this method should be used to update the redux store (cache).
+ * When sending an update to backend, this method should be used to update the redux store (cache).
  * It receives the item, creates it if needed and sets the mutating field. Returns the item.
  * This is a utility method for manipulating the cache, and should only be used in this context.
  *
@@ -57,7 +41,7 @@ export function remoteItemUpdate<DataType extends RemoteData>(
 }
 
 /**
- * When recieving response from backend that a remote item is being loaded, this method should be used to update the redux store (cache).
+ * When starting a load from backend, this method should be used to update the redux store (cache).
  * It receives the item, creates it if needed and sets the isLoading field. Returns the item.
  * This is a utility method for manipulating the cache, and should only be used in this context.
  *

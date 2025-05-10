@@ -148,7 +148,6 @@ export {
 } from 'utils/storeUtils/remoteListUtils';
 
 export {
-  remoteItemCreated,
   remoteItemUpdate,
   remoteItemLoad,
 } from 'utils/storeUtils/findOrAddItem';
