@@ -32,8 +32,8 @@ const ImpactSummary: FC<Props> = ({ orgId, summary, tense }) => {
         org.is_active
     )
     .map((org) => ({
-      org,
       adding: summary.addedToOrg.byOrg[org.id],
+      org,
     }));
 
   return (
