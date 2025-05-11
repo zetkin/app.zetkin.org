@@ -56,6 +56,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             label: messages.actions.createFolder(),
             onClick: () => {
               createFolder(messages.newFolderTitle(), folderId || undefined);
+              router.push(`/organize/${orgId}/people`);
             },
           },
           {
