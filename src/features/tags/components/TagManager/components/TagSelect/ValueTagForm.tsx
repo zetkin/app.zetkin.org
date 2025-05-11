@@ -48,7 +48,7 @@ const ValueTagForm: React.FC<{
       </Box>
       <ZUISubmitCancelButtons
         onCancel={onCancel}
-        submitDisabled={inputValue === '' ? true : false}
+        submitDisabled={!inputValue}
       />
     </form>
   );
