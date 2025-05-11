@@ -7,11 +7,18 @@ const SurveyOption: FC<SurveyOptionProps> = ({ ...formControlLabelProps }) => {
   return (
     <FormControlLabel
       {...formControlLabelProps}
-      sx={{
+      sx={(theme) => ({
+        '& .MuiCheckbox-root:hover, .MuiRadio-root:hover': {
+          backgroundColor: theme.palette.grey[100],
+        },
+
         '&:not(.Mui-checked)': {
           '&, & + .MuiFormControlLabel-label': {
-            backgroundColor: '#f3f3f3',
-            borderRadius: '50px',
+            '&:hover': {
+              backgroundColor: theme.palette.grey[100],
+            },
+            backgroundColor: theme.palette.grey[50],
+            borderRadius: '5rem',
           },
         },
         // :has(.Mui-checked) needs to be after :not(.Mui-checked) and the
@@ -19,15 +26,23 @@ const SurveyOption: FC<SurveyOptionProps> = ({ ...formControlLabelProps }) => {
         // eslint-disable-next-line sort-keys
         '&:has(.Mui-checked)': {
           '&, & + .MuiFormControlLabel-label': {
-            backgroundColor: '#fbcbd8',
-            borderRadius: '50px',
+            '&:hover': {
+              backgroundColor: theme.palette.grey[100],
+            },
+            backgroundColor: theme.palette.grey[200],
+            borderRadius: '5rem',
           },
         },
         '.MuiFormControlLabel-label': {
           width: '100%',
         },
+        fontFamily: theme.typography.fontFamily,
+        fontSize: '1rem',
+        fontWeight: 400,
+        letterSpacing: '0.03rem',
+        lineHeight: '1.5rem',
         margin: 0,
-      }}
+      })}
     />
   );
 };

@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import AssignmentDetailsPage from 'features/call/pages/AssignmentDetailsPage';
+import AssignmentStatsPage from 'features/call/pages/AssignmentStatsPage';
 
 interface PageProps {
   params: {
@@ -26,5 +26,5 @@ export default async function Page({ params }: PageProps) {
     return null;
   }
 
-  return <AssignmentDetailsPage assignment={assignment} />;
+  return <AssignmentStatsPage assignment={assignment} />;
 }

@@ -22,7 +22,7 @@ const ZUIPublicFooter: FC = () => {
         href:
           typeof env.vars.ZETKIN_PRIVACY_POLICY_LINK === 'string'
             ? env.vars.ZETKIN_PRIVACY_POLICY_LINK
-            : messages.publicFooter.privacyPolicyLink(),
+            : messages.privacyPolicyLink(),
         text: messages.publicFooter.links.privacy(),
       },
       ...(typeof env.vars.INSTANCE_OWNER_NAME === 'string' &&

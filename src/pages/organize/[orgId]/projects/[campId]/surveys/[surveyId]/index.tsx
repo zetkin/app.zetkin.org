@@ -8,7 +8,7 @@ import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
-import SurveyLayout from 'features/surveys/layout/SurveyLayout';
+import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useServerSide from 'core/useServerSide';
