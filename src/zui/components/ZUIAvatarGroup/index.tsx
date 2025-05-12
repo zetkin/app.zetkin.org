@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 import ZUIPersonAvatar from '../ZUIPersonAvatar';
 import { ZUISize } from '../types';
+import ZUIOrgAvatar, { ZUIOrgAvatarProps } from '../ZUIOrgAvatar';
 
 export type PersonAvatarData = {
   firstName: string;
@@ -14,7 +15,7 @@ type ZUIPersonAvatarGroupProps = {
   /**
    * List of the people you want to display as avatars.
    */
-  avatars: PersonAvatarData[];
+  avatars: PersonAvatarData[] | ZUIOrgAvatarProps[];
 
   /**
    * Maximum number of avatars shown.
@@ -39,6 +40,12 @@ const avatarSizes: Record<ZUISize, string> = {
   small: '1.5rem',
 };
 
+const isPersonAvatar = (
+  avatarData: ZUIOrgAvatarProps | PersonAvatarData
+): avatarData is PersonAvatarData => {
+  return 'firstName' in avatarData;
+};
+
 const ZUIPersonAvatarGroup: FC<ZUIPersonAvatarGroupProps> = ({
   avatars,
   max,
@@ -52,22 +59,34 @@ const ZUIPersonAvatarGroup: FC<ZUIPersonAvatarGroupProps> = ({
         if (showOverflowNumber && index > max - 2) {
           return;
         }
-        return (
-          <ZUIPersonAvatar
-            key={avatar.id}
-            firstName={avatar.firstName}
-            id={avatar.id}
-            lastName={avatar.lastName}
-            size={size}
-          />
-        );
+
+        if (isPersonAvatar(avatar)) {
+          return (
+            <ZUIPersonAvatar
+              key={avatar.id}
+              firstName={avatar.firstName}
+              id={avatar.id}
+              lastName={avatar.lastName}
+              size={size}
+            />
+          );
+        } else {
+          return (
+            <ZUIOrgAvatar
+              key={avatar.orgId}
+              orgId={avatar.orgId}
+              size={size}
+              title={avatar.title}
+            />
+          );
+        }
       })}
       {showOverflowNumber && (
         <Box
           sx={(theme) => ({
             alignItems: 'center',
             backgroundColor: theme.palette.grey[100],
-            borderRadius: '10rem',
+            borderRadius: isPersonAvatar(avatars[0]) ? '10rem' : '0.25rem',
             display: 'flex',
             height: avatarSizes[size],
             justifyContent: 'center',

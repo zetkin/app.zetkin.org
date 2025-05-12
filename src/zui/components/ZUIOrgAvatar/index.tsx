@@ -5,7 +5,7 @@ import { ZUISize } from '../types';
 import AvatarBackground from '../ZUIPersonAvatar/AvatarBackground';
 import { avatarSizes, fontSizes, letterSpacing } from '../ZUIPersonAvatar';
 
-type ZUIOrgAvatarProps = {
+export type ZUIOrgAvatarProps = {
   /**
    * The id of the organization.
    */
@@ -42,7 +42,7 @@ const ZUIOrgAvatar: FC<ZUIOrgAvatarProps> = ({
 
   return (
     <AvatarBackground
-      seed={orgId.toString()}
+      seed={orgId.toString() + 'org'}
       size={avatarSize}
       variant="square"
     >

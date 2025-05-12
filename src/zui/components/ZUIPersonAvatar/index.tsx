@@ -16,6 +16,13 @@ export interface ZUIPersonAvatarProps {
   id: number;
 
   /**
+   * If the avatar should represent the user object rather than the person object
+   *
+   * Defaults to "false"
+   */
+  isUser?: boolean;
+
+  /**
    * Last name of the person the avatar represents.
    */
   lastName: string;
@@ -47,6 +54,7 @@ export const letterSpacing: Record<ZUISize, number> = {
 const ZUIPersonAvatar: FC<ZUIPersonAvatarProps> = ({
   firstName,
   id,
+  isUser = false,
   lastName,
   size = 'medium',
 }) => {
@@ -55,8 +63,10 @@ const ZUIPersonAvatar: FC<ZUIPersonAvatarProps> = ({
   const initials = firstName.slice(0, 1) + lastName.slice(0, 1);
   const avatarSize = avatarSizes[size];
 
+  const seed = isUser ? id.toString() + 'user' : id.toString();
+
   return (
-    <AvatarBackground seed={id.toString()} size={avatarSize} variant="circular">
+    <AvatarBackground seed={seed} size={avatarSize} variant="circular">
       <text
         dominantBaseline="central"
         fontFamily={theme.typography.fontFamily}
