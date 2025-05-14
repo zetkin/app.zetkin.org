@@ -20,13 +20,13 @@ export const Medium: Story = {
 export const Small: Story = {
   args: {
     ...Medium.args,
-    size: 'small',
+    size: 'sm',
   },
 };
 
 export const Large: Story = {
   args: {
     ...Medium.args,
-    size: 'large',
+    size: 'lg',
   },
 };
