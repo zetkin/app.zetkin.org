@@ -7,7 +7,7 @@ type ZUIOrgLogoAvatarProps = {
    * The id of the organization
    */
   orgId?: number;
-
+  size?: 'sm' | 'md' | 'lg';
   /**
    * If there is need to send in a custom url base to fetch the avatar,
    * do this here.
@@ -20,8 +20,9 @@ type ZUIOrgLogoAvatarProps = {
 const ZUIOrgLogoAvatar: FC<ZUIOrgLogoAvatarProps> = ({
   orgId,
   urlBase = '/api',
+  size = 'md',
 }) => {
-  return <ZUIAvatar size="md" url={`${urlBase}/orgs/${orgId}/avatar`} />;
+  return <ZUIAvatar size={size} url={`${urlBase}/orgs/${orgId}/avatar`} />;
 };
 
 export default ZUIOrgLogoAvatar;
