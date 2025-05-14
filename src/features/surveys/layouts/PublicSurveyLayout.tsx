@@ -29,7 +29,7 @@ const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
               display="flex"
               flexDirection="row"
             >
-              <ZUIOrgLogoAvatar orgId={survey.organization.id} size="medium" />
+              <ZUIOrgLogoAvatar orgId={survey.organization.id} size="md" />
               <ZUIText>{survey.organization.title}</ZUIText>
             </Box>
           )}
