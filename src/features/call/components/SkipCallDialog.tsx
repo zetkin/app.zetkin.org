@@ -5,7 +5,6 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIModal from 'zui/components/ZUIModal';
-import ZUIText from 'zui/components/ZUIText';
 
 type SkipCallDialogProps = {
   assignment: ZetkinCallAssignment;
@@ -32,7 +31,6 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
         onClick={() => setOpen(true)}
         variant="secondary"
       />
-      {/* TODO: Implement new ZUIModal for confirmation dialogs */}
       <ZUIModal
         onClose={() => setOpen(false)}
         open={open}
@@ -52,9 +50,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
         }}
         size="small"
         title={`Skip ${targetName} call?`}
-      >
-        <ZUIText>this sentence will be removed</ZUIText>
-      </ZUIModal>
+      />
     </>
   );
 };
