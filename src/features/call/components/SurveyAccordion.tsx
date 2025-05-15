@@ -16,7 +16,7 @@ import {
   ZetkinSurveyExtended,
   ZetkinSurveyQuestionResponse,
 } from 'utils/types/zetkin';
-import SurveyElements from 'features/surveys/components/surveyForm/SurveyElements';
+import ZUISurveyForm from 'zui/components/ZUISurveyForm';
 
 interface SurveyAccordionProps {
   orgId: number;
@@ -34,9 +34,7 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
     survey.id
   );
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+  const handleFormSubmit = (formData: FormData) => {
     const responseMap = new Map<
       number,
       { options?: number[]; response?: string }
@@ -73,7 +71,7 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
         : { response: responseObj.response ?? '' }),
     }));
 
-    submitSurveySubmission({
+    return submitSurveySubmission({
       responses: mappedResponses,
       signature: target.id,
     });
@@ -90,14 +88,19 @@ const SurveyAccordion: FC<SurveyAccordionProps> = ({
             <Typography variant="h6">{survey.title}</Typography>
             <Typography>{survey.info_text}</Typography>
           </Box>
-          <form onSubmit={handleFormSubmit}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <SurveyElements survey={survey} />
-              <Button type="submit" variant="contained">
-                Add Submission
-              </Button>
-            </Box>
-          </form>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <ZUISurveyForm
+              onSubmit={(prevState, formData) => handleFormSubmit(formData)}
+              survey={survey}
+              user={{
+                email: target.email || '',
+                first_name: target.first_name,
+              }}
+            />
+            <Button type="submit" variant="contained">
+              Add Submission
+            </Button>
+          </Box>
         </AccordionDetails>
       </Accordion>
     </Suspense>
