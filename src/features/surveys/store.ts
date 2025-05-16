@@ -308,6 +308,15 @@ const surveysSlice = createSlice({
 
       state.elementsBySurveyId[survey.id] = remoteList(survey.elements);
     },
+    surveySubmissionDeleted: (state, action: PayloadAction<number>) => {
+      const submissionId = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item.id === submissionId
+      );
+      if (item) {
+        item.deleted = true;
+      }
+    },
     surveySubmissionUpdate: (
       state,
       action: PayloadAction<[number, string[]]>
@@ -457,6 +466,7 @@ export const {
   surveyDeleted,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionDeleted,
   surveySubmissionUpdate,
   surveySubmissionUpdated,
   surveySubmissionsLoad,
