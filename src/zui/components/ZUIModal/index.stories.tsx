@@ -2,9 +2,9 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Box } from '@mui/material';
 import { useState } from 'react';
 
-import ZUIModal from './index';
 import ZUIButton from '../ZUIButton';
 import ZUIText from '../ZUIText';
+import ZUIModal from '.';
 
 const meta: Meta<typeof ZUIModal> = {
   component: ZUIModal,
@@ -82,7 +82,6 @@ export const NoChildrenAndNoOnclose: Story = {
         <ZUIModal
           open={open}
           primaryButton={{ label: 'Confirm', onClick: () => null }}
-          secondaryButton={{ label: 'Cancel', onClick: () => setOpen(false) }}
           title="Modal title"
         />
       </>

@@ -9,7 +9,6 @@ import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import CallLog from '../components/CallLog';
-import SurveyAccordion from '../components/SurveyAccordion';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ReportCall from '../components/ReportCall';
 import useCurrentCall from '../hooks/useCurrentCall';
@@ -140,15 +139,6 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
             {surveys.length === 0 && (
               <Typography>No surveys available</Typography>
             )}
-            {surveys.length > 0 &&
-              surveys.map((survey) => (
-                <SurveyAccordion
-                  key={survey.id}
-                  orgId={assignment.organization.id}
-                  survey={survey}
-                  target={call.target}
-                />
-              ))}
           </Box>
         </Box>
       </Suspense>
