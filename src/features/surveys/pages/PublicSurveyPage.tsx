@@ -18,7 +18,7 @@ import {
 // @ts-ignore
 import { useFormState } from 'react-dom';
 
-import ZUISurveyForm from 'zui/components/ZUISurveyForm';
+import SurveyForm from 'features/surveys/components/SurveyForm';
 import { submit } from '../actions/submit';
 import {
   ZetkinSurveyExtended,
@@ -77,8 +77,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const showErrorAlert = status == 'error';
 
   const privacyUrl =
-    process.env.ZETKIN_PRIVACY_POLICY_LINK ||
-    messages.publicSurveyPage.policy.link();
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || messages.surveyForm.policy.link();
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -89,10 +88,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
       >
         {showErrorAlert && (
           <Box ref={errorMessageRef} data-testid="Survey-error" role="alert">
-            <ZUIAlert
-              severity="error"
-              title={messages.publicSurveyPage.error()}
-            />
+            <ZUIAlert severity="error" title={messages.surveyForm.error()} />
           </Box>
         )}
         {showForm && (
@@ -102,6 +98,8 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
               setIsLoading(true);
             }}
           >
+            <input name="orgId" type="hidden" value={survey.organization.id} />
+            <input name="surveyId" type="hidden" value={survey.id} />
             <Box
               sx={{
                 display: 'flex',
@@ -110,7 +108,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                 padding: '1rem',
               }}
             >
-              <ZUISurveyForm survey={survey} />
+              <SurveyForm survey={survey} />
               <FormControl fullWidth>
                 <RadioGroup
                   aria-labelledby="survey-signature"
@@ -124,7 +122,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                   <Box display="flex" flexDirection="column" gap={1}>
                     <FormLabel id="survey-signature">
                       <ZUIText variant="headingMd">
-                        <Msg id={messageIds.publicSurveyPage.signature.title} />
+                        <Msg id={messageIds.surveySignature.title} />
                       </ZUIText>
                     </FormLabel>
                     <Box display="flex" flexDirection="column" rowGap={1}>
@@ -133,9 +131,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                           control={<Radio required />}
                           label={
                             <Msg
-                              id={
-                                messageIds.publicSurveyPage.signature.type.user
-                              }
+                              id={messageIds.surveySignature.type.user}
                               values={{
                                 email: user.email,
                                 person: user.first_name,
@@ -148,11 +144,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                       <ZUIPublicSurveyOption
                         control={<Radio required />}
                         label={
-                          <Msg
-                            id={
-                              messageIds.publicSurveyPage.signature.type.email
-                            }
-                          />
+                          <Msg id={messageIds.surveySignature.type.email} />
                         }
                         value="email"
                       />
@@ -164,19 +156,19 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                           pt={1}
                         >
                           <ZUITextField
-                            label={messages.publicSurveyPage.signature.email.firstName()}
+                            label={messages.surveySignature.email.firstName()}
                             name="sig.first_name"
                             required
                             size="large"
                           />
                           <ZUITextField
-                            label={messages.publicSurveyPage.signature.email.lastName()}
+                            label={messages.surveySignature.email.lastName()}
                             name="sig.last_name"
                             required
                             size="large"
                           />
                           <ZUITextField
-                            label={messages.publicSurveyPage.signature.email.email()}
+                            label={messages.surveySignature.email.email()}
                             name="sig.email"
                             required
                             size="large"
@@ -188,10 +180,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                           control={<Radio required />}
                           label={
                             <Msg
-                              id={
-                                messageIds.publicSurveyPage.signature.type
-                                  .anonymous
-                              }
+                              id={messageIds.surveySignature.type.anonymous}
                             />
                           }
                           value="anonymous"
@@ -213,31 +202,31 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
                 >
                   <FormLabel id="privacy-policy-label">
                     <ZUIText variant="headingMd">
-                      <Msg id={messageIds.publicSurveyPage.terms.title} />
+                      <Msg id={messageIds.surveyForm.terms.title} />
                     </ZUIText>
                   </FormLabel>
                   <ZUIPublicSurveyOption
                     control={<Checkbox required />}
                     data-testid="Survey-acceptTerms"
-                    label={<Msg id={messageIds.publicSurveyPage.accept} />}
+                    label={<Msg id={messageIds.surveyForm.accept} />}
                     name="privacy.approval"
                   />
                   <ZUIText>
                     <Msg
-                      id={messageIds.publicSurveyPage.terms.description}
+                      id={messageIds.surveyForm.terms.description}
                       values={{ organization: survey.organization.title }}
                     />
                   </ZUIText>
                   <ZUILink
                     href={privacyUrl}
-                    text={messages.publicSurveyPage.policy.text()}
+                    text={messages.surveyForm.policy.text()}
                   />
                 </FormGroup>
               </FormControl>
               <ZUIButton
                 actionType="submit"
                 dataTestId="Survey-submit"
-                label={messages.publicSurveyPage.submitButtonLabel()}
+                label={messages.surveyForm.submit()}
                 size="large"
                 variant={isLoading ? 'loading' : 'primary'}
               />
@@ -246,11 +235,11 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         )}
         {showSuccess && (
           <ZUIAlert
-            description={messages.publicSurveyPage.submitted.text({
+            description={messages.surveyFormSubmitted.text({
               title: survey.title,
             })}
             severity="success"
-            title={messages.publicSurveyPage.submitted.title()}
+            title={messages.surveyFormSubmitted.title()}
           />
         )}
       </Box>
