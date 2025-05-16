@@ -34,6 +34,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
       <Box alignItems="center" display="flex" mb={1} minWidth={0}>
         <Link
           href={`/call/${assignment.id}`}
+          onClick={() => deleteCall(call.id)}
           passHref
           style={{
             alignItems: 'center',
@@ -43,12 +44,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
             width: '100%',
           }}
         >
-          <ZUIIconButton
-            icon={ArrowBackIos}
-            onClick={() => deleteCall(call.id)}
-            size="small"
-            variant="tertiary"
-          />
+          <ZUIIconButton icon={ArrowBackIos} size="small" variant="tertiary" />
           <ZUIText noWrap variant="bodySmRegular">
             {assignment.title}
           </ZUIText>
