@@ -13,22 +13,30 @@ import {
 } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 
-import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import {
   ZetkinSurveyOption,
   ZetkinSurveyOptionsQuestionElement,
 } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIPublicSurveyOption from '../ZUIPublicSurveyOption';
+import ZUIPublicSurveyOption from '../../../../zui/components/ZUIPublicSurveyOption';
+import messageIds from 'features/surveys/l10n/messageIds';
 
 export type OptionsQuestionProps = {
   element: ZetkinSurveyOptionsQuestionElement;
+  initialValue?: string | string[];
+  name: string;
 };
 
-const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
+const OptionsQuestion: FC<OptionsQuestionProps> = ({
+  element,
+  initialValue,
+  name,
+}) => {
   const messages = useMessages(messageIds);
-  const [dropdownValue, setDropdownValue] = useState('');
+  const [dropdownValue, setDropdownValue] = useState(
+    initialValue?.toString() || ''
+  );
   const handleDropdownChange = useCallback((ev: SelectChangeEvent) => {
     setDropdownValue(ev.target.value);
   }, []);
@@ -47,7 +55,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
         <RadioGroup
           aria-describedby={`description-${element.id}`}
           aria-labelledby={`label-${element.id}`}
-          name={`${element.id}.options`}
+          defaultValue={initialValue}
+          name={name}
           sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
         >
           <Box display="flex" flexDirection="column">
@@ -103,12 +112,12 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
               <Select
                 aria-describedby={`description-${element.id}`}
                 aria-labelledby={`label-${element.id}`}
-                name={`${element.id}.options`}
+                name={name}
                 onChange={handleDropdownChange}
                 required={question.required}
                 value={dropdownValue}
               >
-                {question.options!.map((option: ZetkinSurveyOption) => (
+                {options.map((option: ZetkinSurveyOption) => (
                   <MenuItem key={option.id} value={option.id}>
                     <Typography
                       sx={(theme) => ({
@@ -128,7 +137,14 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({ element }) => {
               options.map((option) => (
                 <ZUIPublicSurveyOption
                   key={option.id}
-                  control={<Checkbox name={`${element.id}.options`} />}
+                  control={
+                    <Checkbox
+                      defaultChecked={initialValue?.includes(
+                        option.id.toString()
+                      )}
+                      name={`${element.id}.options`}
+                    />
+                  }
                   label={option.text}
                   value={option.id}
                 />

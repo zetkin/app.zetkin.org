@@ -139,46 +139,6 @@ export default makeMessages('feat.surveys', {
       title: m('There are no questions in this survey yet'),
     },
   },
-  publicSurveyPage: {
-    accept: m('I accept the terms stated below'),
-    error: m(
-      'Something went wrong when submitting your answers. Please try again later.'
-    ),
-    policy: {
-      link: m('https://zetkin.org/privacy'),
-      text: m('Click to read the full Zetkin Privacy Policy'),
-    },
-    signature: {
-      anonymous: m('Sign anonymously'),
-      email: {
-        email: m('Email'),
-        firstName: m('First name'),
-        lastName: m('Last name'),
-      },
-      nameAndEmail: m('Sign with name and e-mail'),
-      title: m('Choose how to sign'),
-      type: {
-        anonymous: m('Sign anonymously'),
-        email: m('Sign with name and email'),
-        user: m<{ email: string; person: string }>(
-          'Sign as {person} with email {email}'
-        ),
-      },
-    },
-    submitButtonLabel: m('Submit'),
-    submitted: {
-      text: m<{ title: string }>(
-        'Your responses to “{title}” have been submitted.'
-      ),
-      title: m('Survey Submitted'),
-    },
-    terms: {
-      description: m<{ organization: string }>(
-        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
-      ),
-      title: m('Privacy Policy'),
-    },
-  },
   shareSuborgsCard: {
     caption: m(
       'When this is enabled, officials in sub-organizations can read and search surveys submitted by people connected to their organization.'
@@ -216,6 +176,49 @@ export default makeMessages('feat.surveys', {
       'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
     ),
     title: m('Add email address'),
+  },
+  surveyForm: {
+    accept: m('I accept the terms stated below'),
+    error: m(
+      'Something went wrong when submitting your answers. Please try again later.'
+    ),
+    policy: {
+      link: m('https://zetkin.org/privacy'),
+      text: m('Click to read the full Zetkin Privacy Policy'),
+    },
+    required: m('required'),
+    sign: {
+      anonymous: m('Sign anonymously'),
+      nameAndEmail: m('Sign with name and e-mail'),
+    },
+    submit: m('Submit'),
+    terms: {
+      description: m<{ organization: string }>(
+        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
+      ),
+      title: m('Privacy Policy'),
+    },
+  },
+  surveyFormSubmitted: {
+    text: m<{ title: string }>(
+      'Your responses to “{title}” have been submitted.'
+    ),
+    title: m('Survey Submitted'),
+  },
+  surveySignature: {
+    email: {
+      email: m('Email'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+    },
+    title: m('Choose how to sign'),
+    type: {
+      anonymous: m('Sign anonymously'),
+      email: m('Sign with name and email'),
+      user: m<{ email: string; person: string }>(
+        'Sign as {person} with email {email}'
+      ),
+    },
   },
   tabs: {
     overview: m('Overview'),

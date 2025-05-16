@@ -235,9 +235,6 @@ export default makeMessages('zui', {
   suffixedNumber: {
     thousands: m<{ num: number }>('{num}K'),
   },
-  surveyForm: {
-    required: m('required'),
-  },
   timeSpan: {
     multiDay: m<{
       end: string | ReactElement;
