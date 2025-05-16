@@ -20,7 +20,6 @@ export const Basic: Story = {
     featureName: 'contacts',
     icon: Phone,
     primaryButton: { label: 'New message', onClick: () => null },
-    secondaryButton: { label: 'Close', onClick: () => null },
     subtitle: 'No unread messages',
     title: 'Contact center',
   },
@@ -59,14 +58,13 @@ export const WithBreadcrumbs: Story = {
     featureName: 'Smart search',
     icon: Search,
     primaryButton: { label: 'Start over', onClick: () => null },
-    secondaryButton: { label: 'Close', onClick: () => null },
     subtitle: ['Overview', 'Select filter', 'Filter settings'],
     title: 'Smart search',
   },
   render: Basic.render,
 };
 
-export const NoButtonsInHeader: Story = {
+export const NoPrimaryButton: Story = {
   args: {
     featureName: 'Import',
     icon: People,

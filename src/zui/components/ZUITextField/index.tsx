@@ -53,6 +53,12 @@ type ZUITextFieldProps = {
   id?: string;
 
   /**
+   * If the text field should be initiated with a specific value.
+   * Only use when component is uncontrolled.
+   */
+  initialValue?: string;
+
+  /**
    * The label of the textfield
    */
   label?: string;
@@ -129,6 +135,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   fullWidth = false,
   helperText,
   id,
+  initialValue,
   label,
   maxRows = 5,
   multiline = false,
@@ -143,6 +150,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   value,
 }) => (
   <TextField
+    defaultValue={initialValue}
     disabled={disabled}
     error={error}
     fullWidth={fullWidth}

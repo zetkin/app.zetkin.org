@@ -35,7 +35,7 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
     <Box display="flex" flexDirection="column" gap={2} m={2}>
       {error !== null && (
         <ZUIAlert
-          buttonProps={{
+          button={{
             label: 'Choose another assignment',
             onClick: () => {
               router.push(`/my/home`);
