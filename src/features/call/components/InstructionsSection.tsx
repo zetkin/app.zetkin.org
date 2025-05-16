@@ -13,7 +13,11 @@ const InstructionsSection: FC<Props> = ({ instructions }) => {
     <ZUISection
       renderContent={() => (
         <ZUIText>
-          <ZUIMarkdown markdown={instructions} />
+          {instructions ? (
+            <ZUIMarkdown markdown={instructions} />
+          ) : (
+            "This assignment doesn't have instructions."
+          )}
         </ZUIText>
       )}
       title={'Instructions'}

@@ -4,8 +4,8 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import AssignmentStatsPage from 'features/call/pages/AssignmentStatsPage';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import AssignmentOngoingPage from 'features/call/pages/AssignmentOngoingPage';
 
 interface PageProps {
   params: {
@@ -43,7 +43,7 @@ export default async function Page({ params }: PageProps) {
         </Box>
       }
     >
-      <AssignmentStatsPage assignment={assignment} />
+      <AssignmentOngoingPage assignment={assignment} />
     </Suspense>
   );
 }

@@ -43,6 +43,14 @@ const CallSlice = createSlice({
       state.eventsByTargetId[id].loaded = new Date().toISOString();
       state.eventsByTargetId[id].isLoading = false;
     },
+    allocateCallError: (state, action: PayloadAction<unknown>) => {
+      const error = action.payload;
+
+      state.outgoingCalls = remoteList();
+      state.outgoingCalls.error = error;
+      state.outgoingCalls.loaded = new Date().toISOString();
+      state.outgoingCalls.isLoading = false;
+    },
     allocateNewCallLoad: (state) => {
       state.outgoingCalls.isLoading = true;
     },
@@ -140,6 +148,7 @@ export default CallSlice;
 export const {
   activeEventsLoad,
   activeEventsLoaded,
+  allocateCallError,
   currentCallDeleted,
   allocateNewCallLoad,
   allocateNewCallLoaded,
