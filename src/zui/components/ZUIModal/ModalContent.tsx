@@ -63,7 +63,6 @@ const ModalContent: FC<ModalContentProps> = ({
           sx={{
             display: 'flex',
             overflowY: 'auto',
-            paddingY: '1rem',
           }}
         >
           {children}
@@ -101,7 +100,11 @@ const ModalContent: FC<ModalContentProps> = ({
           onClick={
             'onClick' in primaryButton ? primaryButton.onClick : undefined
           }
-          variant="primary"
+          variant={
+            'isLoading' in primaryButton && primaryButton.isLoading
+              ? 'loading'
+              : 'primary'
+          }
         />
       </Box>
     </Box>

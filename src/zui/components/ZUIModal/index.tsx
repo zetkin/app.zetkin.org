@@ -10,6 +10,7 @@ type ButtonBase = {
 };
 
 type OnClickButton = ButtonBase & {
+  isLoading?: boolean;
   onClick: () => void;
 };
 
