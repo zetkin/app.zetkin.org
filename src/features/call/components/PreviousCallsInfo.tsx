@@ -1,7 +1,15 @@
 import { FC } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import { Theme, useTheme } from '@mui/material/styles';
-import { AccessTime, CallMade, CallMissedOutgoing } from '@mui/icons-material';
+import {
+  AccessTime,
+  CallMade,
+  CallMissedOutgoing,
+  KeyboardTab,
+  RemoveCircleOutline,
+  TurnSlightLeft,
+  Voicemail,
+} from '@mui/icons-material';
 
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIText from 'zui/components/ZUIText';
@@ -42,23 +50,49 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
       label = 'No response';
       color = (theme: Theme) => ({ color: theme.palette.error.main });
       if (call.message_to_organizer) {
-        additionalInfo = <ZUIText>{call.message_to_organizer}</ZUIText>;
+        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
       }
     } else if (call.state === 21) {
-      icon = <ZUIIcon color="danger" icon={CallMissedOutgoing} size="small" />;
+      icon = <ZUIIcon color="danger" icon={TurnSlightLeft} size="small" />;
       label = 'Wrong number';
       color = (theme: Theme) => ({ color: theme.palette.error.main });
       if (call.message_to_organizer) {
         additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
       }
-    } else if (
-      call.state === 12 ||
-      call.state === 13 ||
-      call.state === 14 ||
-      call.state === 15
-    ) {
+    } else if (call.state === 12) {
+      icon = <ZUIIcon color="danger" icon={KeyboardTab} size="small" />;
+      label = 'Line busy';
+      color = (theme: Theme) => ({ color: theme.palette.error.main });
+      if (call.message_to_organizer) {
+        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
+      }
+    } else if (call.state === 15) {
+      icon = <ZUIIcon color="warning" icon={Voicemail} size="small" />;
+      label = 'Left voice mail';
+      color = (theme: Theme) => ({ color: theme.palette.warning.main });
+      if (call.message_to_organizer) {
+        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
+      }
+    } else if (call.state === 14) {
       icon = <ZUIIcon color="warning" icon={AccessTime} size="small" />;
-      label = call.state == 15 ? 'Message left' : 'Not available';
+      label = 'No time to talk';
+      color = (theme: Theme) => ({ color: theme.palette.warning.main });
+      if (call.message_to_organizer) {
+        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
+      }
+      if (call.call_back_after) {
+        additionalInfo = (
+          <ZUIText>
+            Call {call.target.first_name} back after:{' '}
+            <ZUIDateTime datetime={call.call_back_after} />
+          </ZUIText>
+        );
+      }
+    } else if (call.state === 13) {
+      icon = (
+        <ZUIIcon color="warning" icon={RemoveCircleOutline} size="small" />
+      );
+      label = 'Unavailable to talk';
       color = (theme: Theme) => ({ color: theme.palette.warning.main });
       if (call.call_back_after) {
         additionalInfo = (
