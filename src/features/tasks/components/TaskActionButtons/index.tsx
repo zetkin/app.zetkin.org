@@ -54,14 +54,14 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   };
 
   const handleOnCampaignSelected = async (campaignId: number) => {
-    await updateTask({ campaign_id: campaignId });
+    const updatedTask = await updateTask({ campaign_id: campaignId });
     await router.push(
       `/organize/${task.organization.id}/projects/${campaignId}/calendar/tasks/${task.id}`
     );
     showSnackbar(
       'success',
       messages.taskChangeCampaignDialog.success({
-        campaignTitle: task.campaign.title,
+        campaignTitle: updatedTask.campaign.title,
         taskTitle: task.title,
       })
     );

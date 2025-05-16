@@ -62,7 +62,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   }
 
   const handleOnCampaignSelected = async (campaignId: number) => {
-    await updateCallAssignment({
+    const updatedCallAssignment = await updateCallAssignment({
       campaign_id: campaignId,
     });
     await router.push(
@@ -73,8 +73,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     showSnackbar(
       'success',
       messages.callAssignmentChangeCampaignDialog.success({
-        assignmentTitle: callAssignment.title,
-        campaignTitle: callAssignment.campaign!.title,
+        assignmentTitle: updatedCallAssignment.title,
+        campaignTitle: updatedCallAssignment.campaign!.title,
       })
     );
   };

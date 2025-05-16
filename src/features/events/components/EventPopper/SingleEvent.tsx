@@ -98,7 +98,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   };
 
   const handleOnCampaignSelected = async (campaignId: number) => {
-    await updateEvent({ campaign_id: campaignId });
+    const updatedEvent = await updateEvent({ campaign_id: campaignId });
     onClickAway();
     await router.push(
       `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
@@ -107,7 +107,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
     showSnackbar(
       'success',
       messages.eventChangeCampaignDialog.success({
-        campaignTitle: event.campaign!.title,
+        campaignTitle: updatedEvent.campaign!.title,
         eventTitle: event.title!,
       })
     );

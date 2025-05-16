@@ -91,14 +91,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   };
 
   const handleOnCampaignSelected = async (campaignId: number) => {
-    await updateSurvey({ campaign_id: campaignId });
+    const updatedSurvey = await updateSurvey({ campaign_id: campaignId });
     await router.push(
       `/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`
     );
     showSnackbar(
       'success',
       messages.surveyChangeCampaignDialog.success({
-        campaignTitle: surveyFuture.data!.campaign!.title,
+        campaignTitle: updatedSurvey.campaign!.title,
         surveyTitle: surveyFuture.data!.title,
       })
     );

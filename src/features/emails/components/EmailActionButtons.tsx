@@ -40,14 +40,14 @@ const EmailActionButtons = ({
   }
 
   const handleOnCampaignSelected = async (campaignId: number) => {
-    await updateEmail({ campaign_id: campaignId });
+    const updatedEmail = await updateEmail({ campaign_id: campaignId });
     await router.push(
       `/organize/${orgId}/projects/${campaignId}/emails/${email.id}`
     );
     showSnackbar(
       'success',
       messages.emailChangeCampaignDialog.success({
-        campaignTitle: email.campaign!.title!,
+        campaignTitle: updatedEmail.campaign!.title,
         emailTitle: email.title!,
       })
     );
