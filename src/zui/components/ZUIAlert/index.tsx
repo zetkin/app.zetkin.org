@@ -217,6 +217,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button
               color="inherit"
+              onClick={buttonProps.onClick}
               sx={(theme) => ({
                 boxShadow: 'none',
                 minWidth: 'max-content',
