@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { FC } from 'react';
 
@@ -8,6 +9,8 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import InstructionsSection from '../components/InstructionsSection';
+import useAllocateCall from '../hooks/useAllocateCall';
+import ZUIAlert from 'zui/components/ZUIAlert';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -23,12 +26,26 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
     assignment.organization.id,
     assignment.id
   );
-
+  const { error } = useAllocateCall(assignment.organization.id, assignment.id);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const router = useRouter();
 
   return (
-    <Box m={2}>
+    <Box display="flex" flexDirection="column" gap={2} m={2}>
+      {error !== null && (
+        <ZUIAlert
+          buttonProps={{
+            label: 'Choose another assignment',
+            onClick: () => {
+              router.push(`/my/home`);
+            },
+          }}
+          description="The call queue is empty at the moment. More people might be added shortly, but for now you can't continue calling in this assingment."
+          severity={'warning'}
+          title={'No more people to call!'}
+        />
+      )}
       <ZUISection
         renderContent={() => (
           <>

@@ -13,7 +13,7 @@ type StatsHeaderProps = {
 };
 
 const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
-  const { allocateCall } = useAllocateCall(
+  const { allocateCall, error } = useAllocateCall(
     assignment.organization.id,
     assignment.id
   );
@@ -70,8 +70,12 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
             <Link href="/my/home" passHref>
               <ZUIButton label="Quit" variant="secondary" />
             </Link>
-            <Link href={`/call/${assignment.id}/prepare`} passHref>
+            <Link
+              href={error !== null ? '' : `/call/${assignment.id}/prepare`}
+              passHref
+            >
               <ZUIButton
+                disabled={error !== null ? true : false}
                 label="Start calling"
                 onClick={() => {
                   allocateCall();
