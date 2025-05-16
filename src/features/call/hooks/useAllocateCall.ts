@@ -1,30 +1,51 @@
 import { useRouter } from 'next/navigation';
 
-import { useApiClient, useAppDispatch } from 'core/hooks';
-import { allocateNewCallLoad, allocateNewCallLoaded } from '../store';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import {
+  allocateCallError,
+  allocateNewCallLoad,
+  allocateNewCallLoaded,
+} from '../store';
 import { ZetkinCall } from '../types';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
+
+type UseAllocateCallReturn = {
+  allocateCall: () => Promise<ZetkinCall | null>;
+  error: unknown;
+};
 
 export default function useAllocateCall(
   orgId: number,
   assignmentId: number
-): { allocateCall: () => Promise<ZetkinCall | null> } {
+): UseAllocateCallReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const list = useAppSelector((state) => state.call.outgoingCalls);
+  const error = useAppSelector((state) => state.call.outgoingCalls.error);
 
   const allocateCall = async (): Promise<ZetkinCall | null> => {
-    dispatch(allocateNewCallLoad());
-    try {
-      const response = await apiClient.post<ZetkinCall>(
-        `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
-        {}
-      );
-      dispatch(allocateNewCallLoaded(response));
-      return response;
-    } catch (error) {
-      router.push(`/call/${assignmentId}`);
-      return null;
-    }
+    const future = loadListIfNecessary(list, dispatch, {
+      actionOnError: (error) => {
+        router.push(`/call/${assignmentId}`);
+        return allocateCallError([assignmentId, error]);
+      },
+      actionOnLoad: () => allocateNewCallLoad(),
+      actionOnSuccess: ([call]: ZetkinCall[]) => allocateNewCallLoaded(call),
+      loader: () =>
+        apiClient
+          .post<ZetkinCall>(
+            `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
+            {}
+          )
+          .then((call) => [call]),
+    });
+
+    return future.data ? future.data[0] : null;
   };
-  return { allocateCall };
+
+  return {
+    allocateCall,
+    error,
+  };
 }
