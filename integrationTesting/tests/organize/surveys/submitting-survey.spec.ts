@@ -466,8 +466,7 @@ test.describe('User submitting a survey', () => {
     expect(valueMissing).toBe(true);
   });
 
-  // eslint-disable-next-line no-only-tests/no-only-tests
-  test.only('submits untouched "select" widget as []', async ({
+  test('submits untouched "select" widget as []', async ({
     appUri,
     moxy,
     page,
