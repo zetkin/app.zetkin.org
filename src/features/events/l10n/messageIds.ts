@@ -32,10 +32,11 @@ export default makeMessages('feat.events', {
     ),
   },
   eventChangeCampaignDialog: {
-    dialogTitle: m('Move event'),
     error: m('Error: Could not move the event to the selected project'),
-    moveButtonLabel: m('Move'),
-    success: m<{ campaignTitle: string }>('Event moved to "{campaignTitle}"'),
+    success: m<{ campaignTitle: string; eventTitle: string }>(
+      'Event "{eventTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move event'),
   },
   eventContactCard: {
     header: m('Contact'),

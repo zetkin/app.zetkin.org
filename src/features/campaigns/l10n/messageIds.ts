@@ -59,6 +59,9 @@ export default makeMessages('feat.campaigns', {
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
+  changeCampaignDialog: {
+    moveButtonLabel: m('Move'),
+  },
   createButton: {
     createActivity: m('Create'),
     createAreaAssignment: m('Area assignment'),

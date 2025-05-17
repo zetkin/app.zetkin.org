@@ -6,6 +6,7 @@ export default makeMessages('feat.callAssignments', {
   actions: {
     delete: m('Delete'),
     end: m('End assignment'),
+    move: m('Move'),
     start: m('Start assignment'),
     warning: m<{ title: string }>('"{title}" will be deleted.'),
   },
@@ -24,6 +25,13 @@ export default makeMessages('feat.callAssignments', {
     subtitle: m('Targets not ready to be called'),
     title: m('Blocked'),
     viewSheetButton: m('View list'),
+  },
+  callAssignmentChangeCampaignDialog: {
+    error: m('Error: Could not move the assignment to the selected project'),
+    success: m<{ assignmentTitle: string; campaignTitle: string }>(
+      'Assignment "{assignmentTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move assignment'),
   },
   callers: {
     actions: {

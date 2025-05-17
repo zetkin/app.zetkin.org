@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { CallAssignmentData } from '../apiTypes';
+import { CallAssignmentData, CallAssignmentPatchBody } from '../apiTypes';
 import { futureToObject } from 'core/caching/futures';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import {
@@ -10,7 +10,6 @@ import {
   callAssignmentUpdate,
   callAssignmentUpdated,
 } from '../store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
@@ -23,7 +22,9 @@ interface UseCallAssignmentReturn {
   updateGoal: (query: Partial<ZetkinQuery>) => void;
   updateTargets: (query: Partial<ZetkinQuery>) => void;
   start: () => void;
-  updateCallAssignment: (data: Partial<ZetkinCallAssignment>) => void;
+  updateCallAssignment: (
+    data: CallAssignmentPatchBody
+  ) => Promise<CallAssignmentData>;
   deleteAssignment: () => void;
 }
 
@@ -74,7 +75,7 @@ export default function useCallAssignment(
     }
   };
 
-  const updateGoal = (query: Partial<ZetkinQuery>): void => {
+  const updateGoal = (query: Partial<ZetkinQuery>) => {
     // TODO: Refactor once SmartSearch is supported in redux framework
     if (callAssignment) {
       dispatch(callAssignmentUpdate([assignmentId, ['goal']]));
@@ -97,23 +98,18 @@ export default function useCallAssignment(
     }
   };
 
-  const updateCallAssignment = (
-    data: Partial<CallAssignmentData>
-  ): IFuture<CallAssignmentData> => {
+  const updateCallAssignment = async (
+    data: CallAssignmentPatchBody
+  ): Promise<CallAssignmentData> => {
     const mutatingAttributes = Object.keys(data);
 
     dispatch(callAssignmentUpdate([assignmentId, mutatingAttributes]));
-    const promise = apiClient
-      .patch<CallAssignmentData>(
-        `/api/orgs/${orgId}/call_assignments/${assignmentId}`,
-        data
-      )
-      .then((data: CallAssignmentData) => {
-        dispatch(callAssignmentUpdated([data, mutatingAttributes]));
-        return data;
-      });
-
-    return new PromiseFuture(promise);
+    const callAssignmentData = await apiClient.patch<CallAssignmentData>(
+      `/api/orgs/${orgId}/call_assignments/${assignmentId}`,
+      data
+    );
+    dispatch(callAssignmentUpdated([callAssignmentData, mutatingAttributes]));
+    return callAssignmentData;
   };
 
   const start = () => {

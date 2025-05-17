@@ -106,6 +106,7 @@ export default makeMessages('feat.emails', {
     deliveryDate: m('Delivery date'),
     deliveryTime: m('Delivery time'),
     duplicate: m('Duplicate'),
+    move: m('Move'),
     schedule: m('Schedule'),
     sendAnyway: m('Send anyway'),
     sendLater: m('Send later'),
@@ -123,6 +124,13 @@ export default makeMessages('feat.emails', {
     warning: m(
       'Are you sure you want to delete this email? This action is permanent and cannot be undone.'
     ),
+  },
+  emailChangeCampaignDialog: {
+    error: m('Error: Could not move the email to the selected project'),
+    success: m<{ campaignTitle: string; emailTitle: string }>(
+      'Email "{emailTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move email'),
   },
   emailFeatureIsBlocked: {
     errorMessage: m(
