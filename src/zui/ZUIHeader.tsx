@@ -22,6 +22,7 @@ interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   avatar: {
+    aspectRatio: 1,
     height: 65,
     marginRight: 20,
     width: 'auto',
