@@ -515,12 +515,22 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    // eslint-disable-next-line no-console
+    console.log('This is the flaky test');
+
     // Navigate to survey and submit without touching the select widget (or any)
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
+
+    // eslint-disable-next-line no-console
+    console.log('Signing survey');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
+
+    // eslint-disable-next-line no-console
+    console.log('Clicking and listening');
+
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
       await page.click('data-testid=Survey-submit'),
