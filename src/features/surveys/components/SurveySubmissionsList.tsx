@@ -54,8 +54,11 @@ const SurveySubmissionsList = ({
     return sorted;
   }, [submissions]);
 
-  async function handleDeleteJoinForm(submissionId: number) {
-    await deleteSurveySubmission(submissionId);
+  async function handleDeleteSurveySubmission(
+    submissionId: number,
+    surveyId: number
+  ) {
+    await deleteSurveySubmission(submissionId, surveyId);
     showSnackbar('success', <Msg id={messageIds.submissions.deleteSuccess} />);
   }
 
@@ -144,8 +147,7 @@ const SurveySubmissionsList = ({
       align: 'right',
       editable: false,
       field: 'menu',
-      flex: 1,
-      headerName: 'hej',
+      headerName: '',
       renderCell: (
         params: GridRenderCellParams<
           ZetkinSurveySubmission,
@@ -160,7 +162,11 @@ const SurveySubmissionsList = ({
                 onSelect: async (ev) => {
                   ev.stopPropagation();
                   showConfirmDialog({
-                    onSubmit: () => handleDeleteJoinForm(params.row.id),
+                    onSubmit: () =>
+                      handleDeleteSurveySubmission(
+                        params.row.id,
+                        params.row.survey.id
+                      ),
                     title: messages.submissions.deleteTitle(),
                     warningText: messages.submissions.deleteWarningText(),
                   });
