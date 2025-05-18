@@ -25,6 +25,7 @@ export type EnvVars = {
   INSTANCE_OWNER_HREF?: string;
   INSTANCE_OWNER_NAME?: string;
   MUIX_LICENSE_KEY?: string;
+  TILESERVER?: string;
   ZETKIN_APP_DOMAIN?: string;
   ZETKIN_GEN2_ORGANIZE_URL?: string;
   ZETKIN_PRIVACY_POLICY_LINK?: string;
