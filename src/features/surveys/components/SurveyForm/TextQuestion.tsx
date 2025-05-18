@@ -1,17 +1,23 @@
 import { FC } from 'react';
 import { Box, FormControl, FormLabel } from '@mui/material';
 
-import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
+import messageIds from 'features/surveys/l10n/messageIds';
 
 export type SurveyTextQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;
+  initialValue?: string;
+  name: string;
 };
 
-const TextQuestion: FC<SurveyTextQuestionProps> = ({ element }) => {
+const TextQuestion: FC<SurveyTextQuestionProps> = ({
+  element,
+  initialValue,
+  name,
+}) => {
   const messages = useMessages(messageIds);
   return (
     <FormControl fullWidth>
@@ -35,9 +41,10 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({ element }) => {
         <ZUITextField
           ariaDescribedBy={`description-${element.id}`}
           id={`input-${element.id}`}
+          initialValue={initialValue}
           maxRows={element.question.response_config.multiline ? 4 : 1}
           multiline={element.question.response_config.multiline}
-          name={`${element.id}.text`}
+          name={name}
           required={element.question.required}
           size="large"
           type="text"

@@ -30,6 +30,7 @@ import MarkerIcon from './MarkerIcon';
 import objToLatLng from 'features/areas/utils/objToLatLng';
 import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import { useEnv } from 'core/hooks';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import { ZetkinArea } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
@@ -71,6 +72,7 @@ type CanvassMapProps = {
 };
 
 const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
+  const env = useEnv();
   const theme = useTheme();
   const classes = useStyles();
   const locations = useLocations(assignment.organization.id).data || [];
@@ -289,7 +291,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         <AttributionControl position="bottomright" prefix={false} />
         <TileLayer
           attribution="<span style='color:#a3a3a3;'>Leaflet & OpenStreetMap</span>"
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
         />
         <Pane name="blendedPane" style={{ mixBlendMode: 'color-burn' }} />
         <Polygon
