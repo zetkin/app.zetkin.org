@@ -313,11 +313,19 @@ const surveysSlice = createSlice({
       action: PayloadAction<{ submissionId: number; surveyId: number }>
     ) => {
       const { submissionId, surveyId } = action.payload;
-      const item = state.submissionsBySurveyId[surveyId].items.find(
+
+      const itemInList = state.submissionList.items.find(
         (item) => item.id === submissionId
       );
-      if (item) {
-        item.deleted = true;
+      if (itemInList) {
+        itemInList.deleted = true;
+      }
+
+      const itemInMap = state.submissionsBySurveyId[surveyId].items.find(
+        (item) => item.id === submissionId
+      );
+      if (itemInMap) {
+        itemInMap.deleted = true;
       }
     },
     surveySubmissionUpdate: (
