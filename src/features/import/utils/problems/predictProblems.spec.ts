@@ -575,11 +575,14 @@ describe('predictProblem()', () => {
       rows: [
         // Valid values
         {
-          data: [2, '+46701234567'],
+          data: [1, '+46701234567'],
         },
         // Invalid values
         {
-          data: [1, '701234567'],
+          data: [2, '701234567'],
+        },
+        {
+          data: [3, '701234567'],
         },
       ],
     });
@@ -594,7 +597,7 @@ describe('predictProblem()', () => {
       },
       {
         field: 'phone',
-        indices: [1],
+        indices: [1, 2],
         kind: ImportProblemKind.INVALID_FORMAT,
       },
     ]);
