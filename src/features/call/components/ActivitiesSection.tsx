@@ -37,7 +37,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
             <EventCard key={index} event={event} target={target} />
           ))}
           {activeSurveys.map((survey, index) => (
-            <SurveyCard key={index} survey={survey} />
+            <SurveyCard key={index} survey={survey} targetId={target.id} />
           ))}
         </Box>
       )}
