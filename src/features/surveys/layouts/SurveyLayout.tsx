@@ -1,7 +1,12 @@
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
-import { ChatBubbleOutline, Delete, QuizOutlined } from '@mui/icons-material';
-import { useContext } from 'react';
+import {
+  ArrowForward,
+  ChatBubbleOutline,
+  Delete,
+  QuizOutlined,
+} from '@mui/icons-material';
+import React, { useContext, useState } from 'react';
 
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
@@ -22,6 +27,8 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
+import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
+import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -46,10 +53,12 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     parsedOrg,
     parseInt(surveyId)
   );
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const { surveyIsEmpty, ...elementsFuture } = useSurveyElements(
     parsedOrg,
     parseInt(surveyId)
   );
+  const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const state = useSurveyState(parsedOrg, parseInt(surveyId));
   const originalOrgId = surveyFuture.data?.organization.id;
   const isShared = campId === 'shared';
@@ -74,10 +83,24 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       />
     );
   };
-  const handleDelete = () => {
-    deleteSurvey();
-    router.push(
+  const handleDelete = async () => {
+    await deleteSurvey();
+    await router.push(
       `/organize/${orgId}/projects/${surveyFuture.data?.campaign?.id || ''} `
+    );
+  };
+
+  const handleOnCampaignSelected = async (campaignId: number) => {
+    const updatedSurvey = await updateSurvey({ campaign_id: campaignId });
+    await router.push(
+      `/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`
+    );
+    showSnackbar(
+      'success',
+      messages.surveyChangeCampaignDialog.success({
+        campaignTitle: updatedSurvey.campaign!.title,
+        surveyTitle: surveyFuture.data!.title,
+      })
     );
   };
 
@@ -119,6 +142,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       }
       defaultTab="/"
       ellipsisMenuItems={[
+        {
+          label: messages.layout.actions.move(),
+          onSelect: () => setIsMoveDialogOpen(true),
+          startIcon: <ArrowForward />,
+        },
         {
           label: messages.layout.actions.delete(),
           onSelect: () => {
@@ -190,6 +218,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
               }}
             </ZUIFutures>
           </Box>
+          <ChangeCampaignDialog
+            errorMessage={messages.surveyChangeCampaignDialog.error()}
+            onCampaignSelected={handleOnCampaignSelected}
+            onClose={() => setIsMoveDialogOpen(false)}
+            open={isMoveDialogOpen}
+            title={messages.surveyChangeCampaignDialog.title()}
+          />
         </Box>
       }
       tabs={[
@@ -223,5 +258,4 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     </TabbedLayout>
   );
 };
-
 export default SurveyLayout;
