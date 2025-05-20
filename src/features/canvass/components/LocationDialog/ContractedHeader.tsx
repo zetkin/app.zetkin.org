@@ -7,7 +7,7 @@ import {
   ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import useBasicLocationStats from 'features/canvass/hooks/useBasicLocationStats';
 
@@ -31,23 +31,25 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
       }
       subtitle={
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          {numVisitedHouseholds > 0 && (
-            <Box
-              sx={{
-                backgroundColor: lighten(theme.palette.primary.main, 0.7),
-                borderRadius: '50%',
-                height: 10,
-                mr: 0.5,
-                width: 10,
-              }}
-            />
+          {numVisitedHouseholds && (
+            <>
+              <Box
+                sx={{
+                  backgroundColor: lighten(theme.palette.primary.main, 0.7),
+                  borderRadius: '50%',
+                  height: 10,
+                  mr: 0.5,
+                  width: 10,
+                }}
+              />
+              <Msg
+                id={messageIds.location.header}
+                values={{ numHouseholds, numVisitedHouseholds }}
+              />
+            </>
           )}
-          {messages.location.header({
-            numHouseholds,
-            numVisitedHouseholds,
-          })}
 
-          {numSuccessfulHouseholds > 0 && (
+          {numSuccessfulHouseholds && (
             <>
               <Box
                 sx={{

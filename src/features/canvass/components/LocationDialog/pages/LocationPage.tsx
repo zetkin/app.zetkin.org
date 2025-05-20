@@ -61,7 +61,7 @@ const LocationPage: FC<LocationPageProps> = ({
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" flexDirection="column" my={3}>
-        {!!numHouseholds && (
+        {!!numHouseholds && !!numVisitedHouseholds && (
           <>
             <Typography variant="h4">
               <Msg

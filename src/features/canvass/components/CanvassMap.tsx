@@ -349,12 +349,17 @@ const CanvassMap: FC<Props> = ({ areas, assignment }) => {
               >
                 <MarkerIcon
                   selected={selected}
-                  successfulVisits={location.num_households_successful}
+                  successfulVisits={
+                    location.num_households_successful ||
+                    location.num_successful_visits
+                  }
                   totalHouseholds={Math.max(
                     location.num_estimated_households,
                     location.num_known_households
                   )}
-                  totalVisits={location.num_households_visited}
+                  totalVisits={
+                    location.num_households_visited || location.num_visits
+                  }
                   uniqueKey={key}
                 />
               </DivIconMarker>

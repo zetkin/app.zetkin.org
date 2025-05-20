@@ -107,14 +107,18 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                       <NumberCard
                         firstNumber={stats.num_successful_visits}
                         message={messages.overview.progress.headers.successful()}
-                        secondNumber={stats.num_households_visited}
+                        secondNumber={stats.num_visits}
                       />
-                      <Divider flexItem orientation="vertical" />
-                      <NumberCard
-                        firstNumber={stats.num_households_visited}
-                        message={messages.overview.progress.headers.households()}
-                        secondNumber={stats.num_households}
-                      />
+                      {stats.num_households_visited != null && (
+                        <>
+                          <Divider flexItem orientation="vertical" />
+                          <NumberCard
+                            firstNumber={stats.num_households_visited}
+                            message={messages.overview.progress.headers.households()}
+                            secondNumber={stats.num_households}
+                          />
+                        </>
+                      )}
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
                         firstNumber={stats.num_locations_visited}

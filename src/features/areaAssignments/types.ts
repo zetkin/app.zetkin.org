@@ -61,9 +61,11 @@ export type ZetkinLocation = {
   latitude: number;
   longitude: number;
   num_estimated_households: number;
-  num_households_successful: number;
-  num_households_visited: number;
+  num_households_successful: number | null;
+  num_households_visited: number | null;
   num_known_households: number;
+  num_successful_visits: number;
+  num_visits: number;
   organization_id: number;
   title: string;
 };
@@ -82,7 +84,8 @@ export type ZetkinAreaAssignmentSessionPostBody = {
 export type ZetkinAreaAssignmentStats = {
   metrics: MetricBulkResponse;
   num_households: number;
-  num_households_visited: number;
+  num_households_successfully_visited: number | null;
+  num_households_visited: number | null;
   num_locations: number;
   num_locations_visited: number;
   num_successful_visits: number;
