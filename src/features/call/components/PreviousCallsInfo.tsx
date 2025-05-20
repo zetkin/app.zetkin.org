@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   AccessTime,
   CallMade,
@@ -17,9 +17,40 @@ import { ZetkinCall } from '../types';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { MUIIcon } from 'zui/components/types';
 
 type PreviousCallsInfoProps = {
   call: ZetkinCall;
+};
+
+const labels: Record<number, string> = {
+  1: 'Success',
+  11: 'No response',
+  12: 'Line busy',
+  13: 'Unavailable to talk',
+  14: 'No time to talk',
+  15: 'Left voice mail',
+  21: 'Wrong number',
+};
+
+const icons: Record<number, MUIIcon> = {
+  1: CallMade,
+  11: CallMissedOutgoing,
+  12: KeyboardTab,
+  13: RemoveCircleOutline,
+  14: AccessTime,
+  15: Voicemail,
+  21: TurnSlightLeft,
+};
+
+const colors: Record<number, 'success' | 'warning' | 'error'> = {
+  1: 'success',
+  11: 'error',
+  12: 'error',
+  13: 'warning',
+  14: 'warning',
+  15: 'warning',
+  21: 'error',
 };
 
 const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
@@ -27,147 +58,90 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
   const fullName = call.caller.name;
   const [callerFirstName, ...rest] = fullName.split(' ');
   const callerLastName = rest.join(' ');
-  const callLog = call.target.call_log ?? [];
-  const infoIndent = `calc(1.25rem + 0.5rem)`; //calculation: 1.25 of icon space + 0.5 of margin
+  const callLog = call.target.call_log || [];
 
-  const renderCallStatus = (
-    call: ZetkinCall,
-    index: number,
-    totalPreviousCalls: number
-  ) => {
-    let icon = null;
-    let label = '';
-    let color;
-    let additionalInfo = null;
+  const hasPreviousCalls = callLog.length > 0;
 
-    if (call.state === 1) {
-      icon = <ZUIIcon color="success" icon={CallMade} size="small" />;
-      label = 'Success';
-      color = (theme: Theme) => ({ color: theme.palette.success.main });
-    } else if (call.state === 11) {
-      icon = <ZUIIcon color="danger" icon={CallMissedOutgoing} size="small" />;
-      label = 'No response';
-      color = (theme: Theme) => ({ color: theme.palette.error.main });
-      if (call.message_to_organizer) {
-        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
-      }
-    } else if (call.state === 21) {
-      icon = <ZUIIcon color="danger" icon={TurnSlightLeft} size="small" />;
-      label = 'Wrong number';
-      color = (theme: Theme) => ({ color: theme.palette.error.main });
-      if (call.message_to_organizer) {
-        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
-      }
-    } else if (call.state === 12) {
-      icon = <ZUIIcon color="danger" icon={KeyboardTab} size="small" />;
-      label = 'Line busy';
-      color = (theme: Theme) => ({ color: theme.palette.error.main });
-      if (call.message_to_organizer) {
-        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
-      }
-    } else if (call.state === 15) {
-      icon = <ZUIIcon color="warning" icon={Voicemail} size="small" />;
-      label = 'Left voice mail';
-      color = (theme: Theme) => ({ color: theme.palette.warning.main });
-      if (call.message_to_organizer) {
-        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
-      }
-    } else if (call.state === 14) {
-      icon = <ZUIIcon color="warning" icon={AccessTime} size="small" />;
-      label = 'No time to talk';
-      color = (theme: Theme) => ({ color: theme.palette.warning.main });
-      if (call.message_to_organizer) {
-        additionalInfo = <ZUIText>Note: {call.message_to_organizer}</ZUIText>;
-      }
-      if (call.call_back_after) {
-        additionalInfo = (
-          <ZUIText>
-            Call {call.target.first_name} back after:{' '}
-            <ZUIDateTime datetime={call.call_back_after} />
-          </ZUIText>
-        );
-      }
-    } else if (call.state === 13) {
-      icon = (
-        <ZUIIcon color="warning" icon={RemoveCircleOutline} size="small" />
-      );
-      label = 'Unavailable to talk';
-      color = (theme: Theme) => ({ color: theme.palette.warning.main });
-      if (call.call_back_after) {
-        additionalInfo = (
-          <ZUIText>
-            Call {call.target.first_name} back after:{' '}
-            <ZUIDateTime datetime={call.call_back_after} />
-          </ZUIText>
-        );
-      }
-    } else {
-      return null;
-    }
-
-    return (
-      <>
-        <Box key={call.id}>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="space-between"
-            sx={color}
-          >
-            <Box alignItems="center" display="flex" gap={1} sx={color}>
-              {icon}
-              <ZUIText color="inherit">{label}</ZUIText>
-            </Box>
-            {isMobile ? (
-              <ZUIPersonAvatar
-                firstName={callerFirstName}
-                id={call.caller.id}
-                lastName={callerLastName}
-                size="small"
-              />
-            ) : (
-              <Box alignItems="center" display="flex" gap={1}>
-                <ZUIText color="secondary">
-                  <ZUIDateTime datetime={call.update_time} />
-                </ZUIText>
-                <ZUIPersonAvatar
-                  firstName={callerFirstName}
-                  id={call.caller.id}
-                  lastName={callerLastName}
-                  size="small"
-                />
-              </Box>
-            )}
-          </Box>
-          {isMobile && (
-            <Box ml={infoIndent}>
-              <ZUIText color="secondary">
-                <ZUIDateTime datetime={call.update_time} />
-              </ZUIText>
-            </Box>
-          )}
-
-          {additionalInfo && (
-            <Box display="flex" ml={infoIndent}>
-              {additionalInfo}
-            </Box>
-          )}
-        </Box>
-        {index < totalPreviousCalls - 1 && <ZUIDivider />}
-      </>
-    );
-  };
   return (
     <>
       <ZUIText variant="headingMd">Previous calls</ZUIText>
-      {call.target.call_log.length > 0 &&
-        callLog.map((call, index) =>
-          renderCallStatus(call, index, callLog.length)
-        )}
-
-      {call.target.call_log.length == 0 && (
-        <ZUIText color="secondary">Never called</ZUIText>
+      {!hasPreviousCalls && (
+        <ZUIText color="secondary">Never been called</ZUIText>
       )}
+      {hasPreviousCalls &&
+        callLog.map((call, index) => {
+          return (
+            <Box key={call.id}>
+              <Box>
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  justifyContent="space-between"
+                >
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    gap={1}
+                    sx={(theme) => {
+                      const color = colors[call.state];
+                      if (color == 'warning') {
+                        return { color: theme.palette.warning.dark };
+                      } else {
+                        return { color: theme.palette[color].main };
+                      }
+                    }}
+                  >
+                    <ZUIIcon
+                      color={colors[call.state]}
+                      icon={icons[call.state]}
+                      size="small"
+                    />
+                    <ZUIText color="inherit">{labels[call.state]}</ZUIText>
+                  </Box>
+                  {isMobile ? (
+                    <ZUIPersonAvatar
+                      firstName={callerFirstName}
+                      id={call.caller.id}
+                      lastName={callerLastName}
+                      size="small"
+                    />
+                  ) : (
+                    <Box alignItems="center" display="flex" gap={1}>
+                      <ZUIText color="secondary">
+                        <ZUIDateTime datetime={call.update_time} />
+                      </ZUIText>
+                      <ZUIPersonAvatar
+                        firstName={callerFirstName}
+                        id={call.caller.id}
+                        lastName={callerLastName}
+                        size="small"
+                      />
+                    </Box>
+                  )}
+                </Box>
+                {isMobile && (
+                  <Box ml="1.75rem">
+                    <ZUIText color="secondary">
+                      <ZUIDateTime datetime={call.update_time} />
+                    </ZUIText>
+                  </Box>
+                )}
+                {call.message_to_organizer && (
+                  <Box display="flex" ml="1.75rem">
+                    <ZUIText>Note: {call.message_to_organizer}</ZUIText>
+                  </Box>
+                )}
+                {call.call_back_after && (
+                  <ZUIText>
+                    Call {call.target.first_name} back after:{' '}
+                    <ZUIDateTime datetime={call.call_back_after} />
+                  </ZUIText>
+                )}
+              </Box>
+              {index < callLog.length - 1 && <ZUIDivider />}
+            </Box>
+          );
+        })}
     </>
   );
 };
