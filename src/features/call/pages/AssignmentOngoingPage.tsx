@@ -1,7 +1,8 @@
 'use client';
 
 import { FC } from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/system';
+import { useTheme } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/system';
 
 import ActivitiesSection from '../components/ActivitiesSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';

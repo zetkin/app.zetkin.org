@@ -21,11 +21,9 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
     <>
       <Box
         sx={{
-          overflow: 'hidden',
           pl: { sm: 3, xs: 2 },
           pr: 2,
           pt: 2,
-          textOverflow: 'ellipsis',
         }}
       >
         <ZUIText noWrap variant="headingMd">
@@ -51,15 +49,7 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
               />
             </Box>
 
-            <Box
-              maxWidth="100%"
-              minWidth={0}
-              ml={1}
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
+            <Box maxWidth="100%" minWidth={0} ml={1}>
               <ZUIText noWrap variant="bodySmRegular">
                 {assignment?.organization.title || 'Untitled organization'}
               </ZUIText>

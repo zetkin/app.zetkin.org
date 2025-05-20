@@ -58,6 +58,8 @@ const TargetInfo: FC<TargetInfoProps> = ({ call }) => {
             <ZUIIcon color="secondary" icon={Transgender} size="small" />
             {call.target.gender == 'm' && <ZUIText>Male</ZUIText>}
             {call.target.gender == 'f' && <ZUIText>Female</ZUIText>}
+            {call.target.gender == 'o' && <ZUIText>Other</ZUIText>}
+            {call.target.gender == null && <ZUIText>Unknown</ZUIText>}
           </Box>
         )}
         {(call.target.co_address || call.target.street_address) && (
