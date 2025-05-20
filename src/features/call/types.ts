@@ -27,7 +27,7 @@ type ZetkinCaller = {
 
 export type ZetkinCallTarget = ZetkinPerson & {
   action_responses: CombinedEventResponse[];
-  call_log: [];
+  call_log: ZetkinCall[];
   future_actions: ZetkinEvent[];
   name: string;
   past_actions: {
