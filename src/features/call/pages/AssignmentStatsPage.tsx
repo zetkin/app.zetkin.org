@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
@@ -11,6 +11,7 @@ import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats'
 import InstructionsSection from '../components/InstructionsSection';
 import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -27,8 +28,7 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
     assignment.id
   );
   const { error } = useAllocateCall(assignment.organization.id, assignment.id);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useIsMobile();
   const router = useRouter();
 
   return (
@@ -98,7 +98,7 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
                   >
                     <ZUIText color="inherit">{stats.num_calls_made}</ZUIText>
                   </Box>
-                  <Box sx={{ color: theme.palette.data.main }}>
+                  <Box sx={(theme) => ({ color: theme.palette.data.main })}>
                     <ZUIText variant="headingSm"> calls made</ZUIText>
                   </Box>
                 </Box>

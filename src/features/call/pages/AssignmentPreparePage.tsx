@@ -1,12 +1,13 @@
 'use client';
 
 import { FC } from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import InstructionsSection from '../components/InstructionsSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import AboutSection from '../components/AboutSection';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -14,8 +15,7 @@ type Props = {
 
 const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   const call = useCurrentCall();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useIsMobile();
 
   if (!call) {
     return null;

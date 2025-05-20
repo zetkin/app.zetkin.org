@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Theme, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Theme } from '@mui/material';
 import {
   AccessTime,
   CallMade,
@@ -16,14 +16,14 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import { ZetkinCall } from '../types';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIIcon from 'zui/components/ZUIIcon';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type PreviousCallsInfoProps = {
   call: ZetkinCall;
 };
 
 const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useIsMobile();
   const fullName = call.caller.name;
   const [callerFirstName, ...rest] = fullName.split(' ');
   const callerLastName = rest.join(' ');

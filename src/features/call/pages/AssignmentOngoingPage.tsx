@@ -1,14 +1,14 @@
 'use client';
 
 import { FC } from 'react';
-import { useTheme } from '@mui/material';
-import { Box, useMediaQuery } from '@mui/system';
+import { Box } from '@mui/system';
 
 import ActivitiesSection from '../components/ActivitiesSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useCurrentCall from '../hooks/useCurrentCall';
 import InstructionsSection from '../components/InstructionsSection';
 import AboutSection from '../components/AboutSection';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type AssignmentOngoingPageProps = {
   assignment: ZetkinCallAssignment;
@@ -19,8 +19,7 @@ const AssignmentOngoingPage: FC<AssignmentOngoingPageProps> = ({
 }) => {
   assignment;
   const call = useCurrentCall();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useIsMobile();
 
   if (!call) {
     return null;

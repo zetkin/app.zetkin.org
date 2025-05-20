@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Box } from '@mui/system';
-import { useMediaQuery, useTheme } from '@mui/material';
 import {
   Fingerprint,
   HomeOutlined,
@@ -12,14 +11,14 @@ import {
 import ZUIText from 'zui/components/ZUIText';
 import { ZetkinCall } from '../types';
 import ZUIIcon from 'zui/components/ZUIIcon';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type TargetInfoProps = {
   call: ZetkinCall;
 };
 
 const TargetInfo: FC<TargetInfoProps> = ({ call }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useIsMobile();
   return (
     <Box display={isMobile ? 'block' : 'flex'} flexDirection="row" gap={2}>
       <Box display="flex" flex={1} flexDirection="column" gap={1}>
