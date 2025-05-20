@@ -40,10 +40,12 @@ const TargetInfo: FC<TargetInfoProps> = ({ call }) => {
             <ZUIText>{call.target.email}</ZUIText>
           </Box>
         )}
-        <Box alignItems="center" display="flex" gap={1}>
-          <ZUIIcon color="secondary" icon={Fingerprint} size="small" />
-          <ZUIText>{call.target.id}</ZUIText>
-        </Box>
+        {call.target.ext_id && (
+          <Box alignItems="center" display="flex" gap={1}>
+            <ZUIIcon color="secondary" icon={Fingerprint} size="small" />
+            <ZUIText>{call.target.ext_id}</ZUIText>
+          </Box>
+        )}
       </Box>
       <Box
         display={isMobile ? 'block' : 'flex'}

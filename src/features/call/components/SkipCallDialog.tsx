@@ -32,7 +32,6 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
         variant="secondary"
       />
       <ZUIModal
-        onClose={() => setOpen(false)}
         open={open}
         primaryButton={{
           label: 'Skip',
