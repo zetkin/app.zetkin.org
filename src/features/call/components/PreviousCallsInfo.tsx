@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import { Box, useMediaQuery } from '@mui/material';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box, Theme, useMediaQuery, useTheme } from '@mui/material';
 import {
   AccessTime,
   CallMade,

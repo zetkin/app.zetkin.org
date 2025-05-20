@@ -70,8 +70,6 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment }) => {
             ml={1}
             sx={{
               minWidth: 0,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
             }}
           >
             <ZUIText noWrap variant="headingLg">

@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIOrgAvatar from 'zui/components/ZUIOrgAvatar';
 import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIButton from 'zui/components/ZUIButton';
+import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 
 type StatsHeaderProps = {
   assignment: ZetkinCallAssignment;
@@ -43,10 +43,7 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
         >
           <Box alignItems="center" display="flex" minWidth={0}>
             <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
-              <ZUIOrgAvatar
-                orgId={assignment.organization.id}
-                title={assignment.organization.title}
-              />
+              <ZUIOrgLogoAvatar orgId={assignment.organization.id} />
             </Box>
 
             <Box maxWidth="100%" minWidth={0} ml={1}>
