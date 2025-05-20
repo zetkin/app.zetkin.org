@@ -444,7 +444,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                       metrics.filter(
                         (metric) =>
                           metric.type === 'bool' && !metric.defines_success
-                      ).length <= 1
+                      ).length < 1
                     }
                     label={messages.report.card.definesSuccess()}
                     onChange={async (ev: SelectChangeEvent) => {
