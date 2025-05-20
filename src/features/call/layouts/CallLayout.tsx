@@ -37,6 +37,9 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
   const isOngoingPage = pathname.endsWith('/ongoing');
   const isStatsPage = getDetailsPage(pathname);
 
+  const isStatsHeader = isStatsPage && !!assignment;
+  const isPrepareHeader = (isPreparePage || isOngoingPage) && !!assignment;
+
   return (
     <Box>
       <Box
@@ -44,10 +47,8 @@ const CallLayout: FC<Props> = ({ callAssId, children }) => {
           backgroundColor: theme.palette.common.white,
         })}
       >
-        {isStatsPage && assignment && <StatsHeader assignment={assignment} />}
-        {(isPreparePage || isOngoingPage) && assignment && (
-          <PrepareHeader assignment={assignment} />
-        )}
+        {isStatsHeader && <StatsHeader assignment={assignment} />}
+        {isPrepareHeader && <PrepareHeader assignment={assignment} />}
       </Box>
       <ZUIDivider />
       <Box>{children}</Box>
