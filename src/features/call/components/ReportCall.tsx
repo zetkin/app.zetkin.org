@@ -10,17 +10,16 @@ import {
 
 import { ZetkinCall, ZetkinCallPatchBody } from '../types';
 import useCallMutations from '../hooks/useCallMutations';
-import useAllocateCall from '../hooks/useAllocateCall';
 
 type ReportCallProps = {
-  assignmentId: number;
   call: ZetkinCall;
+  onSummarize: () => void;
   orgId: number;
 };
 
 const ReportCall: React.FC<ReportCallProps> = ({
-  assignmentId,
   call,
+  onSummarize,
   orgId,
 }) => {
   const { updateCall } = useCallMutations(orgId);
@@ -31,8 +30,6 @@ const ReportCall: React.FC<ReportCallProps> = ({
   );
   const [state, setState] = useState(call.state || 0);
 
-  const { allocateCall } = useAllocateCall(orgId, assignmentId);
-
   const handleSubmit = () => {
     const updatedData: ZetkinCallPatchBody = {
       message_to_organizer: message,
@@ -42,7 +39,7 @@ const ReportCall: React.FC<ReportCallProps> = ({
     };
 
     updateCall(call.id, updatedData);
-    allocateCall();
+    onSummarize();
   };
 
   return (
