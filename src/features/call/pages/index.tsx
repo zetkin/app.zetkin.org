@@ -56,6 +56,7 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
           >
             <PrepareHeader
               assignment={assignment}
+              onBack={() => setActiveStep(CallStep.STATS)}
               onStartCall={() => setActiveStep(CallStep.CALLING)}
             />
           </Box>

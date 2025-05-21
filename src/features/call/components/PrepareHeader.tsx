@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { FC } from 'react';
@@ -8,17 +7,21 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
-import ZUIIconButton from 'zui/components/ZUIIconButton';
 import SkipCallDialog from './SkipCallDialog';
 import useCallMutations from '../hooks/useCallMutations';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
 type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
+  onBack: () => void;
   onStartCall: () => void;
 };
 
-const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment, onStartCall }) => {
+const PrepareHeader: FC<PrepareHeaderProps> = ({
+  assignment,
+  onBack,
+  onStartCall,
+}) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
 
@@ -30,27 +33,15 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment, onStartCall }) => {
     <>
       <Box p={2}>
         <Box alignItems="center" display="flex" mb={1} minWidth={0}>
-          <Link
-            href={`/call/${assignment.id}`}
-            onClick={() => deleteCall(call.id)}
-            passHref
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              minWidth: 0,
-              textDecoration: 'none',
-              width: '100%',
+          <ZUIButton
+            label={assignment.title}
+            noWrap
+            onClick={() => {
+              deleteCall(call.id);
+              onBack();
             }}
-          >
-            <ZUIIconButton
-              icon={ArrowBackIos}
-              size="small"
-              variant="tertiary"
-            />
-            <ZUIText noWrap variant="bodySmRegular">
-              {assignment.title}
-            </ZUIText>
-          </Link>
+            startIcon={ArrowBackIos}
+          />
         </Box>
         <Box
           alignItems="center"
