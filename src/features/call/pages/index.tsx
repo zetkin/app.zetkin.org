@@ -6,9 +6,9 @@ import { FC, ReactNode, useState } from 'react';
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import PrepareHeader from '../components/PrepareHeader';
 import StatsHeader from '../components/StatsHeader';
-import AssignmentStatsPage from './AssignmentStatsPage';
-import AssignmentPreparePage from './AssignmentPreparePage';
-import AssignmentOngoingPage from './AssignmentOngoingPage';
+import CallStats from '../components/CallStats';
+import CallPrepare from '../components/CallPrepare';
+import CallOngoing from '../components/CallOngoing';
 import OnCallHeader from '../components/OnCallHeader';
 
 type Props = {
@@ -17,14 +17,14 @@ type Props = {
 };
 
 export enum CallStep {
-  LOBBY = 0,
+  STATS = 0,
   PREPARE = 1,
   CALLING = 2,
   REPORT = 3,
 }
 
 const CallPage: FC<Props> = ({ callAssId, children }) => {
-  const [activeStep, setActiveStep] = useState<CallStep>(CallStep.LOBBY);
+  const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
@@ -32,7 +32,7 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
 
   return (
     <Box>
-      {activeStep == CallStep.LOBBY && assignment && (
+      {activeStep == CallStep.STATS && assignment && (
         <>
           <Box
             sx={(theme) => ({
@@ -44,7 +44,7 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
               onPrepareCall={() => setActiveStep(CallStep.PREPARE)}
             />
           </Box>
-          <AssignmentStatsPage assignment={assignment} />
+          <CallStats assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.PREPARE && assignment && (
@@ -59,7 +59,7 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
               onStartCall={() => setActiveStep(CallStep.CALLING)}
             />
           </Box>
-          <AssignmentPreparePage assignment={assignment} />
+          <CallPrepare assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.CALLING && assignment && (
@@ -74,7 +74,7 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
               onReportCall={() => setActiveStep(CallStep.REPORT)}
             />
           </Box>
-          <AssignmentOngoingPage assignment={assignment} />
+          <CallOngoing assignment={assignment} />
         </>
       )}
 
