@@ -9,7 +9,7 @@ import StatsHeader from '../components/StatsHeader';
 import CallStats from '../components/CallStats';
 import CallPrepare from '../components/CallPrepare';
 import CallOngoing from '../components/CallOngoing';
-import OnCallHeader from '../components/OnCallHeader';
+import OngoingHeader from '../components/OngoingHeader';
 
 type Props = {
   callAssId: string;
@@ -19,7 +19,7 @@ type Props = {
 export enum CallStep {
   STATS = 0,
   PREPARE = 1,
-  CALLING = 2,
+  ONGOING = 2,
   REPORT = 3,
 }
 
@@ -57,20 +57,20 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
             <PrepareHeader
               assignment={assignment}
               onBack={() => setActiveStep(CallStep.STATS)}
-              onStartCall={() => setActiveStep(CallStep.CALLING)}
+              onStartCall={() => setActiveStep(CallStep.ONGOING)}
             />
           </Box>
           <CallPrepare assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.CALLING && assignment && (
+      {activeStep == CallStep.ONGOING && assignment && (
         <>
           <Box
             sx={(theme) => ({
               backgroundColor: theme.palette.common.white,
             })}
           >
-            <OnCallHeader
+            <OngoingHeader
               assignment={assignment}
               onReportCall={() => setActiveStep(CallStep.REPORT)}
             />

@@ -12,12 +12,15 @@ import ZUIIconButton from 'zui/components/ZUIIconButton';
 import useCallMutations from '../hooks/useCallMutations';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
-type OnCallHeaderProps = {
+type OngoingHeaderProps = {
   assignment: ZetkinCallAssignment;
   onReportCall?: () => void;
 };
 
-const OnCallHeader: FC<OnCallHeaderProps> = ({ assignment, onReportCall }) => {
+const OngoingHeader: FC<OngoingHeaderProps> = ({
+  assignment,
+  onReportCall,
+}) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
 
@@ -91,4 +94,4 @@ const OnCallHeader: FC<OnCallHeaderProps> = ({ assignment, onReportCall }) => {
   );
 };
 
-export default OnCallHeader;
+export default OngoingHeader;
