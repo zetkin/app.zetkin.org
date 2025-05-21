@@ -9,16 +9,15 @@ import ZUIText from 'zui/components/ZUIText';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
-import SkipCallDialog from './SkipCallDialog';
 import useCallMutations from '../hooks/useCallMutations';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
-type PrepareHeaderProps = {
+type OnCallHeaderProps = {
   assignment: ZetkinCallAssignment;
-  onStartCall: () => void;
+  onReportCall?: () => void;
 };
 
-const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment, onStartCall }) => {
+const OnCallHeader: FC<OnCallHeaderProps> = ({ assignment, onReportCall }) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
 
@@ -80,21 +79,11 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment, onStartCall }) => {
             </Box>
           </Box>
 
-          <Box display="flex" gap={2}>
-            <SkipCallDialog
-              assignment={assignment}
-              callId={call.id}
-              targetName={call.target.first_name + ' ' + call.target.last_name}
-            />
-
-            <ZUIButton
-              label="Call"
-              onClick={() => {
-                onStartCall();
-              }}
-              variant="primary"
-            />
-          </Box>
+          <ZUIButton
+            label="End Call"
+            onClick={onReportCall}
+            variant="primary"
+          />
         </Box>
       </Box>
       <ZUIDivider />
@@ -102,4 +91,4 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({ assignment, onStartCall }) => {
   );
 };
 
-export default PrepareHeader;
+export default OnCallHeader;

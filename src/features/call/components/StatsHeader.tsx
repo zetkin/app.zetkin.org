@@ -7,12 +7,14 @@ import ZUIText from 'zui/components/ZUIText';
 import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
+import ZUIDivider from 'zui/components/ZUIDivider';
 
 type StatsHeaderProps = {
   assignment: ZetkinCallAssignment;
+  onPrepareCall: () => void;
 };
 
-const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
+const StatsHeader: FC<StatsHeaderProps> = ({ assignment, onPrepareCall }) => {
   const { allocateCall, error } = useAllocateCall(
     assignment.organization.id,
     assignment.id
@@ -57,22 +59,20 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
             <Link href="/my/home" passHref>
               <ZUIButton label="Quit" variant="secondary" />
             </Link>
-            <Link
-              href={error !== null ? '' : `/call/${assignment.id}/prepare`}
-              passHref
-            >
-              <ZUIButton
-                disabled={error !== null ? true : false}
-                label="Start calling"
-                onClick={() => {
-                  allocateCall();
-                }}
-                variant="primary"
-              />
-            </Link>
+
+            <ZUIButton
+              disabled={error !== null ? true : false}
+              label="Start calling"
+              onClick={() => {
+                allocateCall();
+                onPrepareCall();
+              }}
+              variant="primary"
+            />
           </Box>
         </Box>
       </Box>
+      <ZUIDivider />
     </>
   );
 };
