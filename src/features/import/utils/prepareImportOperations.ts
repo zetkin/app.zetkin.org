@@ -83,7 +83,10 @@ export default function prepareImportOperations(
           });
         } else if (col.kind == ColumnKind.TAG) {
           col.mapping.forEach((mapping) => {
-            if (value == mapping.value) {
+            if (
+              value == mapping.value ||
+              (value === '' && mapping.value === null)
+            ) {
               mapping.tags.forEach((tag) => {
                 subOps.push({
                   op: 'person.tag',
