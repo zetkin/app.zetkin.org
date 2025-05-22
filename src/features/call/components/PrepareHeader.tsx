@@ -31,60 +31,68 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
 
   return (
     <>
-      <Box p={2}>
-        <Box alignItems="center" display="flex" mb={1} minWidth={0}>
-          <ZUIButton
-            label={assignment.title}
-            noWrap
-            onClick={() => {
-              deleteCall(call.id);
-              onBack();
-            }}
-            startIcon={ArrowBackIos}
-          />
-        </Box>
-        <Box
-          alignItems="center"
-          display="grid"
-          gap={1}
-          gridTemplateColumns="1fr auto"
-        >
-          <Box alignItems="center" display="flex" minWidth={0}>
-            <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
-              <ZUIPersonAvatar
-                firstName={call.target.first_name}
-                id={call.target.id}
-                lastName={call.target.last_name}
+      <Box
+        sx={(theme) => ({
+          backgroundColor: theme.palette.common.white,
+        })}
+      >
+        <Box p={2}>
+          <Box alignItems="center" display="flex" mb={0.5} minWidth={0}>
+            <ZUIButton
+              label={assignment.title}
+              noWrap
+              onClick={() => {
+                deleteCall(call.id);
+                onBack();
+              }}
+              startIcon={ArrowBackIos}
+            />
+          </Box>
+          <Box
+            alignItems="center"
+            display="grid"
+            gap={1}
+            gridTemplateColumns="1fr auto"
+          >
+            <Box alignItems="center" display="flex" minWidth={0}>
+              <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
+                <ZUIPersonAvatar
+                  firstName={call.target.first_name}
+                  id={call.target.id}
+                  lastName={call.target.last_name}
+                />
+              </Box>
+              <Box
+                alignItems="center"
+                display="flex"
+                ml={1}
+                sx={{
+                  minWidth: 0,
+                }}
+              >
+                <ZUIText noWrap variant="headingLg">
+                  {call.target.first_name} {call.target.last_name}
+                </ZUIText>
+              </Box>
+            </Box>
+
+            <Box display="flex" gap={2}>
+              <SkipCallDialog
+                assignment={assignment}
+                callId={call.id}
+                targetName={
+                  call.target.first_name + ' ' + call.target.last_name
+                }
+              />
+
+              <ZUIButton
+                label="Call"
+                onClick={() => {
+                  onStartCall();
+                }}
+                variant="primary"
               />
             </Box>
-            <Box
-              alignItems="center"
-              display="flex"
-              ml={1}
-              sx={{
-                minWidth: 0,
-              }}
-            >
-              <ZUIText noWrap variant="headingLg">
-                {call.target.first_name} {call.target.last_name}
-              </ZUIText>
-            </Box>
-          </Box>
-
-          <Box display="flex" gap={2}>
-            <SkipCallDialog
-              assignment={assignment}
-              callId={call.id}
-              targetName={call.target.first_name + ' ' + call.target.last_name}
-            />
-
-            <ZUIButton
-              label="Call"
-              onClick={() => {
-                onStartCall();
-              }}
-              variant="primary"
-            />
           </Box>
         </Box>
       </Box>

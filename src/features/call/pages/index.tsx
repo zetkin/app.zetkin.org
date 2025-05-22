@@ -37,59 +37,42 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
     <Box>
       {activeStep == CallStep.STATS && assignment && (
         <>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.common.white,
-            })}
-          >
-            <StatsHeader
-              assignment={assignment}
-              onPrepareCall={() => setActiveStep(CallStep.PREPARE)}
-            />
-          </Box>
+          <StatsHeader
+            assignment={assignment}
+            onPrepareCall={() => setActiveStep(CallStep.PREPARE)}
+          />
           <CallStats assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.PREPARE && assignment && (
         <>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.common.white,
-            })}
-          >
-            <PrepareHeader
-              assignment={assignment}
-              onBack={() => setActiveStep(CallStep.STATS)}
-              onStartCall={() => setActiveStep(CallStep.ONGOING)}
-            />
-          </Box>
+          <PrepareHeader
+            assignment={assignment}
+            onBack={() => setActiveStep(CallStep.STATS)}
+            onStartCall={() => setActiveStep(CallStep.ONGOING)}
+          />
+
           <CallPrepare assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.ONGOING && assignment && (
         <>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.common.white,
-            })}
-          >
-            <OngoingHeader
-              assignment={assignment}
-              onReportCall={() => setActiveStep(CallStep.REPORT)}
-            />
-          </Box>
+          <OngoingHeader
+            assignment={assignment}
+            onReportCall={() => setActiveStep(CallStep.REPORT)}
+            step={CallStep.ONGOING}
+          />
           <CallOngoing assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.REPORT && assignment && (
         <>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.common.white,
-            })}
-          >
-            <OngoingHeader assignment={assignment} />
-          </Box>
+          <OngoingHeader
+            assignment={assignment}
+            onBack={() => setActiveStep(CallStep.ONGOING)}
+            step={CallStep.REPORT}
+          />
+
           <CallReport
             assignment={assignment}
             onSummarize={() => setActiveStep(CallStep.SUMMARY)}
@@ -97,16 +80,16 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
         </>
       )}
       {activeStep == CallStep.SUMMARY && assignment && (
-        <Box
-          sx={(theme) => ({
-            backgroundColor: theme.palette.common.white,
-          })}
-        >
-          <CallSummary
+        <>
+          <OngoingHeader
             assignment={assignment}
+            onBack={() => setActiveStep(CallStep.STATS)}
+            onReportCall={() => setActiveStep(CallStep.PREPARE)}
             onSummarize={() => setActiveStep(CallStep.PREPARE)}
+            step={CallStep.SUMMARY}
           />
-        </Box>
+          <CallSummary />
+        </>
       )}
 
       <Box>{children}</Box>
