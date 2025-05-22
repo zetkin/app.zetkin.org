@@ -44,7 +44,7 @@ const OngoingHeader: FC<OngoingHeaderProps> = ({
         })}
       >
         <Box p={2}>
-          {(step === CallStep.REPORT || step === CallStep.SUMMARY) && onBack && (
+          {step === CallStep.REPORT && onBack && (
             <Box alignItems="center" display="flex" mb={0.5} minWidth={0}>
               <ZUIButton
                 label={assignment.title}
@@ -56,7 +56,7 @@ const OngoingHeader: FC<OngoingHeaderProps> = ({
               />
             </Box>
           )}
-          {step == CallStep.ONGOING && (
+          {(step == CallStep.ONGOING || step === CallStep.SUMMARY) && (
             <Box alignItems="center" display="flex" mb={2} minWidth={0}>
               <ZUIText noWrap variant="headingMd">
                 {assignment?.title || 'Untitled call assignment'}
