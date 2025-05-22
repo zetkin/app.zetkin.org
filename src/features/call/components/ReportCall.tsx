@@ -28,7 +28,7 @@ const ReportCall: React.FC<ReportCallProps> = ({
   const [organizerAction, setOrganizerAction] = useState(
     call.organizer_action_needed || false
   );
-  const [state, setState] = useState(call.state || 0);
+  const [state, setState] = useState(call.state || 1);
 
   const handleSubmit = () => {
     const updatedData: ZetkinCallPatchBody = {
