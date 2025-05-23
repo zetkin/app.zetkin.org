@@ -23,7 +23,11 @@ type ZUIDateFieldProps = Pick<
   /**
    * The size of the component.
    */
-  size: ZUIMedium | ZUILarge;
+  size?: ZUIMedium | ZUILarge;
+
+  /**
+   * The value of the date field.
+   */
   value: Dayjs | null;
 };
 
