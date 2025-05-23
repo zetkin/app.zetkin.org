@@ -24,7 +24,7 @@ export default async function RootLayout({
     INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
     INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
     MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
-    TILESERVER: process.env.TILESERVER,
+    TILESERVER: process.env.TILESERVER || 'https://tile.openstreetmap.org',
     ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
     ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
     ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
