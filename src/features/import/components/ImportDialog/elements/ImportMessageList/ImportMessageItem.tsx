@@ -114,6 +114,18 @@ const ImportMessageItem: FC<Props> = ({ onCheck, onClickBack, problem }) => {
         title={messages.preflight.messages.unknownPerson.title()}
       />
     );
+  } else if (problem.kind == ImportProblemKind.INVALID_ORG_COUNTRY) {
+    return (
+      <ImportMessage
+        description={messages.preflight.messages.invalidOrgCountry.description()}
+        onCheck={onCheck}
+        onClickBack={onClickBack}
+        status="info"
+        title={messages.preflight.messages.invalidOrgCountry.title({
+          code: problem.code,
+        })}
+      />
+    );
   } else if (problem.kind == ImportProblemKind.UNKNOWN_ERROR) {
     return (
       <ImportMessage

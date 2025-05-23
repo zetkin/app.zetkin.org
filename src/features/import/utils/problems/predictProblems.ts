@@ -1,6 +1,10 @@
 import isURL from 'validator/lib/isURL';
 import { z } from 'zod';
-import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+import {
+  CountryCode,
+  isValidPhoneNumber,
+  getCountries,
+} from 'libphonenumber-js';
 
 import { ColumnKind, Sheet } from '../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
@@ -64,12 +68,14 @@ export function predictProblems(
     const existing = problemByField[field];
     if (existing) {
       existing.indices.push(row);
+      return true;
     } else {
       problemByField[field] = {
         field: field,
         indices: [row],
         kind: ImportProblemKind.INVALID_FORMAT,
       };
+      return false;
     }
   }
 
@@ -115,7 +121,21 @@ export function predictProblems(
               accumulateFieldProblem(column.field, rowIndex);
             } else if (column.field == 'phone' || column.field == 'alt_phone') {
               if (!isValidPhoneNumber(cleanPhoneNumber(value), country)) {
-                accumulateFieldProblem(column.field, rowIndex);
+                const isKnownProblem = accumulateFieldProblem(
+                  column.field,
+                  rowIndex
+                );
+
+                if (!isKnownProblem) {
+                  const countryIsUnknown =
+                    getCountries().findIndex((iso) => country == iso) == -1;
+                  if (countryIsUnknown) {
+                    problems.push({
+                      code: country,
+                      kind: ImportProblemKind.INVALID_ORG_COUNTRY,
+                    });
+                  }
+                }
               }
             } else if (column.field == 'gender') {
               if (!['m', 'f', 'o', ''].includes(value.toString())) {
