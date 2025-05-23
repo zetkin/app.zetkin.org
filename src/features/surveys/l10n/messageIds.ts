@@ -108,7 +108,8 @@ export default makeMessages('feat.surveys', {
   },
   layout: {
     actions: {
-      delete: m('Delete survey'),
+      delete: m('Delete'),
+      move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
       warning: m<{ surveyTitle: string }>('"{surveyTitle}" will be deleted.'),
@@ -161,6 +162,12 @@ export default makeMessages('feat.surveys', {
   submissions: {
     anonymous: m('Anonymous'),
     dateColumn: m('Date'),
+    delete: m('Delete'),
+    deleteSuccess: m('Successfully deleted'),
+    deleteTitle: m('Delete submission'),
+    deleteWarningText: m(
+      'Are you sure you want to delete this survey submission?'
+    ),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
@@ -169,6 +176,13 @@ export default makeMessages('feat.surveys', {
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
+  surveyChangeCampaignDialog: {
+    error: m('Error: Could not move the survey to the selected project'),
+    success: m<{ campaignTitle: string; surveyTitle: string }>(
+      'Survey "{surveyTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move survey'),
+  },
   surveyDialog: {
     add: m('Add'),
     cancel: m("Don't add"),
@@ -176,6 +190,49 @@ export default makeMessages('feat.surveys', {
       'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
     ),
     title: m('Add email address'),
+  },
+  surveyForm: {
+    accept: m('I accept the terms stated below'),
+    error: m(
+      'Something went wrong when submitting your answers. Please try again later.'
+    ),
+    policy: {
+      link: m('https://zetkin.org/privacy'),
+      text: m('Click to read the full Zetkin Privacy Policy'),
+    },
+    required: m('required'),
+    sign: {
+      anonymous: m('Sign anonymously'),
+      nameAndEmail: m('Sign with name and e-mail'),
+    },
+    submit: m('Submit'),
+    terms: {
+      description: m<{ organization: string }>(
+        'When you submit this survey, the information you provide will be stored and processed in Zetkin by {organization} in order to organize activism and in accordance with the Zetkin privacy policy.'
+      ),
+      title: m('Privacy Policy'),
+    },
+  },
+  surveyFormSubmitted: {
+    text: m<{ title: string }>(
+      'Your responses to “{title}” have been submitted.'
+    ),
+    title: m('Survey Submitted'),
+  },
+  surveySignature: {
+    email: {
+      email: m('Email'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+    },
+    title: m('Choose how to sign'),
+    type: {
+      anonymous: m('Sign anonymously'),
+      email: m('Sign with name and email'),
+      user: m<{ email: string; person: string }>(
+        'Sign as {person} with email {email}'
+      ),
+    },
   },
   tabs: {
     overview: m('Overview'),

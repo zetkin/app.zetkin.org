@@ -58,9 +58,9 @@ export const Secondary: Story = {
   },
 };
 
-export const Danger: Story = {
+export const Error: Story = {
   args: {
     ...Medium.args,
-    color: 'danger',
+    color: 'error',
   },
 };

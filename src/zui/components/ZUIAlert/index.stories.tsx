@@ -41,7 +41,7 @@ export const DescriptionAndCloseButton: Story = {
 export const Button: Story = {
   args: {
     ...Description.args,
-    buttonProps: { label: 'Click me', onClick: () => null },
+    button: { label: 'Click me', onClick: () => null },
   },
 };
 

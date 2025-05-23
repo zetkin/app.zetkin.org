@@ -23,7 +23,7 @@ type ZUIAlertProps = {
   /**
    * Props to render an action button at the bottom of the alert.
    */
-  buttonProps?: Pick<
+  button?: Pick<
     ZUIButtonProps,
     'label' | 'onClick' | 'endIcon' | 'startIcon' | 'href'
   >;
@@ -62,7 +62,7 @@ type ZUIAlertProps = {
 
 const ZUIAlert: FC<ZUIAlertProps> = ({
   appear = false,
-  buttonProps,
+  button,
   description,
   onClose,
   open = true,
@@ -213,10 +213,17 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
             </Button>
           )}
         </Box>
-        {buttonProps && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {button && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingTop: '0.5rem',
+            }}
+          >
             <Button
               color="inherit"
+              onClick={button.onClick}
               sx={(theme) => ({
                 boxShadow: 'none',
                 minWidth: 'max-content',
@@ -225,7 +232,7 @@ const ZUIAlert: FC<ZUIAlertProps> = ({
               })}
               variant="outlined"
             >
-              {buttonProps.label}
+              {button.label}
             </Button>
           </Box>
         )}
