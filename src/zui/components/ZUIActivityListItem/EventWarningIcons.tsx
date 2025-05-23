@@ -43,7 +43,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
           <ZUITooltip label={messages.eventWarningIcons.contact()}>
             <span style={{ alignItems: 'center', display: 'flex' }}>
               <ZUIIcon
-                color={isUrgent ? 'danger' : 'primary'}
+                color={isUrgent ? 'error' : 'primary'}
                 icon={FaceRetouchingOff}
                 size="small"
               />
@@ -64,7 +64,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
           <ZUITooltip label={messages.eventWarningIcons.signUps()}>
             <span style={{ alignItems: 'center', display: 'flex' }}>
               <ZUIIcon
-                color={isUrgent ? 'danger' : 'primary'}
+                color={isUrgent ? 'error' : 'primary'}
                 icon={EmojiPeople}
                 size="small"
               />
@@ -89,7 +89,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
           >
             <span style={{ alignItems: 'center', display: 'flex' }}>
               <ZUIIcon
-                color={isUrgent ? 'danger' : 'primary'}
+                color={isUrgent ? 'error' : 'primary'}
                 icon={MailOutline}
                 size="small"
               />

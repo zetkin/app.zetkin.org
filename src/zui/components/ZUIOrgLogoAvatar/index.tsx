@@ -29,13 +29,14 @@ const ZUIOrgLogoAvatar: FC<ZUIOrgLogoAvatarProps> = ({
   urlBase = '/api',
 }) => {
   return (
+    /*TODO: Use Next.JS Image component here if we figure out 
+    how to handle it properly */
     /* eslint-disable @next/next/no-img-element*/
-    //TODO: Investigate how we can use the Image component from Next.js here
     <img
       alt="icon"
       height={avatarSizes[size]}
       src={`${urlBase}/orgs/${orgId}/avatar`}
-      style={{ flexShrink: 0 }}
+      style={{ flexShrink: 0, objectFit: 'contain' }}
       width={avatarSizes[size]}
     />
   );

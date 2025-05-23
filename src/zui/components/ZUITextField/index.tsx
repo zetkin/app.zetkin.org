@@ -11,6 +11,11 @@ import { ZUILarge, ZUIMedium } from '../types';
 
 type ZUITextFieldProps = {
   /**
+   * Identifies the element (or elements) that describes the object.
+   */
+  ariaDescribedBy?: string;
+
+  /**
    * If the textfield is disabled or not.
    */
   disabled?: boolean;
@@ -41,9 +46,22 @@ type ZUITextFieldProps = {
   helperText?: string;
 
   /**
+   * The id of the text field.
+   * Use this prop to make label and helperText readable
+   * for screen readers.
+   */
+  id?: string;
+
+  /**
+   * If the text field should be initiated with a specific value.
+   * Only use when component is uncontrolled.
+   */
+  initialValue?: string;
+
+  /**
    * The label of the textfield
    */
-  label: string;
+  label?: string;
 
   /**
    * How many rows a multiline textfield can be before it starts scrolling.
@@ -60,9 +78,14 @@ type ZUITextFieldProps = {
   multiline?: boolean;
 
   /**
+   * The name of the html input element.
+   */
+  name?: string;
+
+  /**
    * Function that runs when the content of the textfield changes.
    */
-  onChange: (newValue: string) => void;
+  onChange?: (newValue: string) => void;
 
   /**
    * Function that runs when clicking the end icon.
@@ -73,6 +96,13 @@ type ZUITextFieldProps = {
    * Text to display inside the textfield when it is empty.
    */
   placeholder?: string;
+
+  /**
+   * If the text field is required. Used in forms.
+   *
+   * Defaults to "false".
+   */
+  required?: boolean;
 
   /**
    * The height of the textfield. Defaults to 'medium'.
@@ -94,40 +124,54 @@ type ZUITextFieldProps = {
   /**
    * The value of the textfield.
    */
-  value: string;
+  value?: string;
 };
 
 const ZUITextField: FC<ZUITextFieldProps> = ({
+  ariaDescribedBy,
   disabled = false,
   endIcon: EndIcon,
   error = false,
   fullWidth = false,
   helperText,
+  id,
+  initialValue,
   label,
   maxRows = 5,
   multiline = false,
+  name,
   onChange,
   onEndIconClick,
   placeholder,
+  required = false,
   size = 'medium',
   startIcon: StartIcon,
   type,
   value,
 }) => (
   <TextField
+    defaultValue={initialValue}
     disabled={disabled}
     error={error}
     fullWidth={fullWidth}
     helperText={helperText}
+    id={id}
     label={label}
     maxRows={maxRows}
     multiline={multiline}
-    onChange={(ev) => onChange(ev.target.value)}
+    name={name}
+    onChange={(ev) => {
+      if (onChange) {
+        onChange(ev.target.value);
+      }
+    }}
     placeholder={placeholder}
+    required={required}
     rows={maxRows < 5 ? maxRows : 5}
     size={size == 'medium' ? 'small' : 'medium'}
     slotProps={{
       htmlInput: {
+        'aria-describedby': ariaDescribedBy,
         sx: (theme) => ({
           fontFamily: theme.typography.fontFamily,
           fontSize: '1rem',
@@ -162,6 +206,9 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
       },
     }}
     sx={(theme) => ({
+      ' textarea': {
+        paddingX: 0,
+      },
       '& .MuiFormHelperText-root': {
         marginX: '0.75rem',
       },
@@ -186,14 +233,16 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
         letterSpacing: '3%',
         lineHeight: '1.219rem',
       },
-      '& >.MuiInputBase-root > fieldset > legend > span': {
-        fontFamily: theme.typography.fontFamily,
-        fontSize: '0.813rem',
-        fontWeight: '500',
-        letterSpacing: '3%',
-        paddingLeft: '0.25rem',
-        paddingRight: '0.25rem',
-      },
+      '& >.MuiInputBase-root > fieldset > legend > span': label
+        ? {
+            fontFamily: theme.typography.fontFamily,
+            fontSize: '0.813rem',
+            fontWeight: '500',
+            letterSpacing: '3%',
+            paddingLeft: '0.25rem',
+            paddingRight: '0.25rem',
+          }
+        : '',
       '& fieldset': {
         paddingLeft: '0.375rem',
       },

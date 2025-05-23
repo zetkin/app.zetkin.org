@@ -116,6 +116,9 @@ export default makeMessages('zui', {
     }>('{date}'),
     singleDayToday: m('Today'),
   },
+  drawerModal: {
+    close: m('Close'),
+  },
   duration: {
     days: m<{ n: number }>('{n, plural, =1 {1 day} other {# days}}'),
     h: m<{ n: number }>('{n}h'),
@@ -142,6 +145,9 @@ export default makeMessages('zui', {
   expandableText: {
     showLess: m('Show less'),
     showMore: m('Show more'),
+  },
+  footer: {
+    privacyPolicy: m('Privacy policy'),
   },
   futures: {
     errorLoading: m('There was an error loading the data.'),
@@ -191,6 +197,7 @@ export default makeMessages('zui', {
     search: m('Type to start searching'),
     searching: m('Searching...'),
   },
+  privacyPolicyLink: m('https://zetkin.org/privacy'),
   publicFooter: {
     hostingOrganization: m<{ name: string }>(
       'This instance of Zetkin is hosted and managed by {name}.'
@@ -199,7 +206,6 @@ export default makeMessages('zui', {
       foundation: m('Zetkin Foundation'),
       privacy: m('Privacy Policy'),
     },
-    privacyPolicyLink: m('https://zetkin.org/privacy'),
     text: m(
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),

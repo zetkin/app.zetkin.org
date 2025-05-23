@@ -2,9 +2,9 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Box } from '@mui/material';
 import { useState } from 'react';
 
-import ZUIModal from './index';
 import ZUIButton from '../ZUIButton';
 import ZUIText from '../ZUIText';
+import ZUIModal from '.';
 
 const meta: Meta<typeof ZUIModal> = {
   component: ZUIModal,
@@ -66,4 +66,25 @@ export const Large: Story = {
 export const Full: Story = {
   args: { size: 'full' },
   render: Auto.render,
+};
+
+export const NoChildrenAndNoOnclose: Story = {
+  render: function Render() {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <>
+        <ZUIButton
+          label="Open modal"
+          onClick={() => setOpen(true)}
+          variant="primary"
+        />
+        <ZUIModal
+          open={open}
+          primaryButton={{ label: 'Confirm', onClick: () => null }}
+          title="Modal title"
+        />
+      </>
+    );
+  },
 };
