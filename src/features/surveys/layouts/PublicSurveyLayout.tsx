@@ -30,7 +30,7 @@ const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
           sx={{
             flex: 1,
             gap: '1rem',
-            maxWidth: 'sm',
+            maxWidth: '37.5rem',
             padding: 2,
             width: '100%',
           }}
