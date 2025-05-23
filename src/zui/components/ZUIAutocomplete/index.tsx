@@ -35,6 +35,8 @@ type Option = {
    * Subtitle of the option.
    */
   subtitle?: string;
+
+  value: string;
 };
 
 type AutocompleteBaseProps = {
