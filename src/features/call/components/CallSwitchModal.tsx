@@ -8,13 +8,13 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
 
-type CallSwitchDrawerProps = {
+type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
   onClose: () => void;
   open: boolean;
 };
 
-const CallSwitchDrawer: FC<CallSwitchDrawerProps> = ({
+const CallSwitchModal: FC<CallSwitchModalProps> = ({
   assignment,
   onClose,
   open,
@@ -60,4 +60,4 @@ const CallSwitchDrawer: FC<CallSwitchDrawerProps> = ({
   );
 };
 
-export default CallSwitchDrawer;
+export default CallSwitchModal;

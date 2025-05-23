@@ -1,6 +1,6 @@
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, ArrowDropDown } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
@@ -10,6 +10,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import SkipCallDialog from './SkipCallDialog';
 import useCallMutations from '../hooks/useCallMutations';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import CallSwitchModal from './CallSwitchModal';
 
 type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
@@ -24,6 +25,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
 }) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
+  const [showModal, setShowModal] = useState(false);
 
   if (!call) {
     return null;
@@ -54,7 +56,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
             gap={1}
             gridTemplateColumns="1fr auto"
           >
-            <Box alignItems="center" display="flex" minWidth={0}>
+            <Box alignItems="center" display="flex" gap={1} minWidth={0}>
               <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
                 <ZUIPersonAvatar
                   firstName={call.target.first_name}
@@ -65,7 +67,6 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
               <Box
                 alignItems="center"
                 display="flex"
-                ml={1}
                 sx={{
                   minWidth: 0,
                 }}
@@ -74,6 +75,17 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
                   {call.target.first_name} {call.target.last_name}
                 </ZUIText>
               </Box>
+              <ZUIButton
+                endIcon={ArrowDropDown}
+                label={'Switch'}
+                onClick={() => setShowModal(true)}
+                variant="secondary"
+              />
+              <CallSwitchModal
+                assignment={assignment}
+                onClose={() => setShowModal(false)}
+                open={showModal}
+              />
             </Box>
 
             <Box display="flex" gap={2}>
