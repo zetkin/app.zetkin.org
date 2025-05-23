@@ -76,3 +76,13 @@ export const Href: Story = {
     variant: 'secondary',
   },
 };
+
+export const NoWrap: Story = {
+  args: {
+    href: '#',
+    label:
+      'A really looooooooooong titleeeeeee that needs to be trucaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaated',
+    noWrap: true,
+    variant: 'secondary',
+  },
+};

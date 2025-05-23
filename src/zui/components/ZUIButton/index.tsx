@@ -59,6 +59,11 @@ export interface ZUIButtonProps {
   label: string;
 
   /**
+   * Truncates the text of the button.
+   */
+  noWrap?: boolean;
+
+  /**
    * The function that runs when the user presses the button.
    */
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -157,6 +162,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   fullWidth,
   href,
   label,
+  noWrap,
   onClick,
   onKeyDown,
   size = 'medium',
@@ -241,7 +247,20 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       type={actionType}
       variant={variant ? getVariant(variant) : undefined}
     >
-      {isLoading ? <CircularProgress size={16} /> : label}
+      {isLoading ? (
+        <CircularProgress size={16} />
+      ) : (
+        <span
+          style={{
+            maxWidth: noWrap ? '18rem' : undefined,
+            overflow: noWrap ? 'hidden' : undefined,
+            textOverflow: noWrap ? 'ellipsis' : undefined,
+            whiteSpace: noWrap ? 'nowrap' : undefined,
+          }}
+        >
+          {label}
+        </span>
+      )}
     </Button>
   );
 };

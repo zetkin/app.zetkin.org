@@ -8,7 +8,7 @@ import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
-import InstructionsSection from '../components/InstructionsSection';
+import InstructionsSection from './InstructionsSection';
 import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import useIsMobile from 'utils/hooks/useIsMobile';
@@ -18,11 +18,11 @@ export type EventsByProject = {
   events: ZetkinEvent[];
 };
 
-type Props = {
+type CallStatsProps = {
   assignment: ZetkinCallAssignment;
 };
 
-const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
+const CallStats: FC<CallStatsProps> = ({ assignment }) => {
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
     assignment.id
@@ -119,7 +119,6 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
         )}
         title={'Assignment'}
       />
-
       <Box mt={2}>
         <InstructionsSection instructions={assignment.instructions} />
       </Box>
@@ -127,4 +126,4 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
   );
 };
 
-export default AssignmentStatsPage;
+export default CallStats;

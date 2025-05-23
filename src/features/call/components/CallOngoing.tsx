@@ -3,20 +3,18 @@
 import { FC } from 'react';
 import { Box } from '@mui/system';
 
-import ActivitiesSection from '../components/ActivitiesSection';
+import ActivitiesSection from './ActivitiesSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useCurrentCall from '../hooks/useCurrentCall';
-import InstructionsSection from '../components/InstructionsSection';
-import AboutSection from '../components/AboutSection';
+import InstructionsSection from './InstructionsSection';
+import AboutSection from './AboutSection';
 import useIsMobile from 'utils/hooks/useIsMobile';
 
-type AssignmentOngoingPageProps = {
+type CallOngoingProps = {
   assignment: ZetkinCallAssignment;
 };
 
-const AssignmentOngoingPage: FC<AssignmentOngoingPageProps> = ({
-  assignment,
-}) => {
+const CallOngoing: FC<CallOngoingProps> = ({ assignment }) => {
   assignment;
   const call = useCurrentCall();
   const isMobile = useIsMobile();
@@ -44,4 +42,4 @@ const AssignmentOngoingPage: FC<AssignmentOngoingPageProps> = ({
   );
 };
 
-export default AssignmentOngoingPage;
+export default CallOngoing;
