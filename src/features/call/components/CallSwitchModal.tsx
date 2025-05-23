@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Box } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
@@ -21,6 +21,8 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
   open,
 }) => {
   const isMobile = useIsMobile();
+  const [showUnfinishedCalls, setShowUnfinishedCalls] = useState(false);
+
   return (
     <ZUIModal
       open={open}
@@ -40,12 +42,14 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           width: '100%',
         }}
       >
-        {!isMobile && (
-          <Box my={2}>
+        {!isMobile && !showUnfinishedCalls && (
+          <Box mb={1} mt={2}>
             <ZUIAlert
               button={{
                 label: 'Show unfinished calls',
-                onClick: () => {},
+                onClick: () => {
+                  setShowUnfinishedCalls(true);
+                },
               }}
               description="Placeholder for future description"
               severity={'info'}
@@ -53,13 +57,14 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
             />
           </Box>
         )}
-        <Box mt={isMobile ? 2 : 0}>
+        <Box mt={2}>
           <ZUITextField fullWidth label="Type to find" startIcon={Search} />
         </Box>
         <PreviousCallsSection
           assingmentId={assignment.id}
           onClose={onClose}
           orgId={assignment.organization.id}
+          showUnfinishedCalls={showUnfinishedCalls}
         />
       </Box>
     </ZUIModal>
