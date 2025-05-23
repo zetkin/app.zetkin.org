@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
+import { EnvVars } from 'core/env/Environment';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
@@ -17,6 +18,17 @@ export default async function RootLayout({
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
+  const envVars: EnvVars = {
+    FEAT_AREAS: process.env.FEAT_AREAS,
+    FEAT_TASKS: process.env.FEAT_TASKS,
+    INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
+    INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+    MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
+    TILESERVER: process.env.TILESERVER,
+    ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
+    ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
+    ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,
+  };
   const apiClient = new BackendApiClient(headersObject);
 
   let user: ZetkinUser | null;
@@ -31,18 +43,7 @@ export default async function RootLayout({
       <body>
         <AppRouterCacheProvider>
           <ClientContext
-            envVars={{
-              FEAT_AREAS: process.env.FEAT_AREAS,
-              FEAT_TASKS: process.env.FEAT_TASKS,
-              INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
-              INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
-              MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
-              TILESERVER: process.env.TILESERVER,
-              ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
-              ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
-              ZETKIN_PRIVACY_POLICY_LINK:
-                process.env.ZETKIN_PRIVACY_POLICY_LINK,
-            }}
+            envVars={envVars}
             headers={headersObject}
             lang={lang}
             messages={messages}
