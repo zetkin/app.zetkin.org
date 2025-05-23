@@ -7,6 +7,7 @@ import ZUITextField from 'zui/components/ZUITextField';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
@@ -19,6 +20,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
   onClose,
   open,
 }) => {
+  const isMobile = useIsMobile();
   return (
     <ZUIModal
       open={open}
@@ -38,18 +40,22 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           width: '100%',
         }}
       >
-        <Box my={2}>
-          <ZUIAlert
-            button={{
-              label: 'Show unfinished calls',
-              onClick: () => {},
-            }}
-            description="Placeholder for future description"
-            severity={'info'}
-            title={'Title'}
-          />
+        {!isMobile && (
+          <Box my={2}>
+            <ZUIAlert
+              button={{
+                label: 'Show unfinished calls',
+                onClick: () => {},
+              }}
+              description="Placeholder for future description"
+              severity={'info'}
+              title={'Title'}
+            />
+          </Box>
+        )}
+        <Box mt={isMobile ? 2 : 0}>
+          <ZUITextField fullWidth label="Type to find" startIcon={Search} />
         </Box>
-        <ZUITextField fullWidth label="Type to find" startIcon={Search} />
         <PreviousCallsSection
           assingmentId={assignment.id}
           onClose={onClose}
