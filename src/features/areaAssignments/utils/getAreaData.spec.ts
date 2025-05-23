@@ -25,7 +25,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -53,7 +53,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -100,7 +100,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -141,7 +141,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -183,7 +183,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -197,7 +197,7 @@ describe('getAreasData()', () => {
         title: 'household 2',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -245,7 +245,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -253,7 +253,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-13T13:00:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -261,7 +261,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-11T11:00:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '3',
             noteToOfficial: null,
             personId: 1,
@@ -275,7 +275,7 @@ describe('getAreasData()', () => {
         title: 'household 2',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '4',
             noteToOfficial: null,
             personId: 1,
@@ -329,7 +329,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -370,7 +370,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -423,7 +423,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -431,7 +431,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-13T12:00:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -496,7 +496,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -504,7 +504,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-14T09:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -512,7 +512,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-14T09:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -565,7 +565,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -573,7 +573,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-14T00:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -620,7 +620,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -628,7 +628,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T23:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -681,7 +681,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -689,7 +689,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T23:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -703,7 +703,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '3',
             noteToOfficial: null,
             personId: 1,
@@ -711,7 +711,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T01:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '4',
             noteToOfficial: null,
             personId: 1,
@@ -764,7 +764,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -772,7 +772,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T23:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -786,7 +786,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -800,7 +800,7 @@ describe('getAreasData()', () => {
         title: 'household 2',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '3',
             noteToOfficial: null,
             personId: 1,
@@ -808,7 +808,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T01:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '4',
             noteToOfficial: null,
             personId: 1,
@@ -861,7 +861,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -869,7 +869,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T23:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '2',
             noteToOfficial: null,
             personId: 1,
@@ -883,7 +883,7 @@ describe('getAreasData()', () => {
         title: 'household 1',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '1',
             noteToOfficial: null,
             personId: 1,
@@ -897,7 +897,7 @@ describe('getAreasData()', () => {
         title: 'household 2',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '3',
             noteToOfficial: null,
             personId: 1,
@@ -905,7 +905,7 @@ describe('getAreasData()', () => {
             timestamp: '2024-10-31T01:10:00.000Z',
           },
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '4',
             noteToOfficial: null,
             personId: 1,
@@ -919,7 +919,7 @@ describe('getAreasData()', () => {
         title: 'household 3',
         visits: [
           {
-            areaAssId: '1',
+            assignment_id: 1,
             id: '3',
             noteToOfficial: null,
             personId: 1,

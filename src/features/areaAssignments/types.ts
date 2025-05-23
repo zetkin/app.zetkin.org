@@ -1,48 +1,43 @@
-import { ZetkinArea } from 'features/areas/types';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { MetricBulkResponse } from 'features/canvass/types';
 
 export type AreaAssigneeInfo = {
   id: number;
-  person: ZetkinPerson;
-  sessions: ZetkinAreaAssignmentSession[];
+  sessions: ZetkinAreaAssignee[];
 };
 
 export type ZetkinMetric = {
-  definesDone: boolean;
-  description: string;
-  id: string;
-  kind: 'boolean' | 'scale5';
+  area_assignment_id: number;
+  defines_success: boolean;
+  description?: string;
+  id: number;
   question: string;
+  type: 'bool' | 'scale5';
 };
 
+export type ZetkinMetricPatchBody = Partial<Omit<ZetkinMetric, 'id'>>;
+export type ZetkinMetricPostBody = Partial<Omit<ZetkinMetric, 'id'>>;
+
 export type ZetkinAreaAssignment = {
-  campaign: {
-    id: number;
-  };
   end_date: string | null;
-  id: string;
+  id: number;
   instructions: string;
-  metrics: ZetkinMetric[];
-  organization: {
-    id: number;
-  };
+  organization_id: number;
+  project_id: number;
   reporting_level: 'household' | 'location';
   start_date: string | null;
   title: string;
 };
 
 export type ZetkinAreaAssignmentPostBody = Partial<
-  Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization' | 'metrics'>
-> & {
-  campaign_id: number;
-  metrics: Omit<ZetkinMetric, 'id'>[];
-};
+  Omit<ZetkinAreaAssignment, 'id' | 'campaign' | 'organization'>
+>;
+
 export type ZetkinAreaAssignmentPatchbody = Partial<
   Omit<ZetkinAreaAssignment, 'id'>
 >;
 
 export type Visit = {
-  areaAssId: string | null;
+  assignment_id: number;
   id: string;
   noteToOfficial: string | null;
   personId: number;
@@ -62,17 +57,23 @@ export type Household = {
 
 export type ZetkinLocation = {
   description: string;
-  households: Household[];
-  id: string;
-  orgId: number;
-  position: { lat: number; lng: number };
+  id: number;
+  latitude: number;
+  longitude: number;
+  num_estimated_households: number;
+  num_households_successful: number | null;
+  num_households_visited: number | null;
+  num_known_households: number;
+  num_successful_visits: number;
+  num_visits: number;
+  organization_id: number;
   title: string;
 };
 
-export type ZetkinAreaAssignmentSession = {
-  area: ZetkinArea;
-  assignee: ZetkinPerson;
-  assignment: ZetkinAreaAssignment;
+export type ZetkinAreaAssignee = {
+  area_id: number;
+  assignment_id: number;
+  user_id: number;
 };
 
 export type ZetkinAreaAssignmentSessionPostBody = {
@@ -81,23 +82,18 @@ export type ZetkinAreaAssignmentSessionPostBody = {
 };
 
 export type ZetkinAreaAssignmentStats = {
-  metrics: {
-    metric: ZetkinMetric;
-    values: number[];
-  }[];
-  num_areas: number;
+  metrics: MetricBulkResponse;
   num_households: number;
+  num_households_successfully_visited: number | null;
+  num_households_visited: number | null;
   num_locations: number;
-  num_successful_visited_households: number;
-  num_visited_areas: number;
-  num_visited_households: number;
-  num_visited_households_outside_areas: number;
-  num_visited_locations: number;
-  num_visited_locations_outside_areas: number;
+  num_locations_visited: number;
+  num_successful_visits: number;
+  num_visits: number;
 };
 
 export type ZetkinAssignmentAreaStatsItem = {
-  areaId: string;
+  area_id: number | null;
   num_households: number;
   num_locations: number;
   num_successful_visited_households: number;
@@ -110,10 +106,7 @@ export type ZetkinAssignmentAreaStats = {
 };
 
 export type AreaCardData = {
-  area: {
-    id: string;
-    title: string | null;
-  };
+  area_id: number | null;
   data: AreaGraphData[];
 };
 
@@ -125,7 +118,7 @@ export type AreaGraphData = {
 };
 
 export type SessionDeletedPayload = {
-  areaId: string;
+  areaId: number;
   assigneeId: number;
-  assignmentId: string;
+  assignmentId: number;
 };

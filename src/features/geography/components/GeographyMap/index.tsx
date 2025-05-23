@@ -22,7 +22,6 @@ import AreaFilters from '../../../areas/components/AreaFilters';
 import AreaOverlay from '../../../areas/components/AreaOverlay';
 import MapRenderer from './MapRenderer';
 import AreaFilterProvider from '../../../areas/components/AreaFilters/AreaFilterContext';
-import AreaFilterButton from '../../../areas/components/AreaFilters/AreaFilterButton';
 import MapControls from 'features/areaAssignments/components/MapControls';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
@@ -36,11 +35,11 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
   const messages = useMessages(messageIds);
   const mapRef = useRef<MapType | null>(null);
   const [drawingPoints, setDrawingPoints] = useState<PointData[] | null>(null);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState(0);
   const [filterText, setFilterText] = useState('');
   const [editingArea, setEditingArea] = useState<ZetkinArea | null>(null);
-  const [filteredAreaIds, setFilteredAreaIds] = useState<null | string[]>(null);
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filteredAreaIds, setFilteredAreaIds] = useState<null | number[]>(null);
+  const [filtersOpen] = useState(false);
 
   const selectedArea = areas.find((area) => area.id == selectedId) || null;
 
@@ -73,8 +72,11 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
   async function finishDrawing() {
     if (drawingPoints && drawingPoints.length > 2) {
       const area = await createArea({
+        boundary: {
+          coordinates: [[...drawingPoints, drawingPoints[0]]],
+          type: 'Polygon',
+        },
         description: '',
-        points: drawingPoints,
         title: messages.areas.default.title(),
       });
       setSelectedId(area.id);
@@ -177,14 +179,16 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
           </Box>
 
           <Box alignItems="center" display="flex" gap={1}>
+            {/* TODO: Re-enable once area tags have been implemented
             <AreaFilterButton
               onToggle={() => setFiltersOpen((current) => !current)}
             />
+            */}
             <Autocomplete
               filterOptions={(options, state) =>
                 filterAreas(options, state.inputValue)
               }
-              getOptionLabel={(option) => option.id}
+              getOptionLabel={(option) => option.id.toString()}
               inputValue={filterText}
               onChange={(ev, area) => {
                 if (area) {
@@ -235,7 +239,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
               editing={!!editingArea}
               onBeginEdit={() => setEditingArea(selectedArea)}
               onCancelEdit={() => setEditingArea(null)}
-              onClose={() => setSelectedId('')}
+              onClose={() => setSelectedId(0)}
             />
           )}
           <MapContainer
@@ -252,7 +256,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
               onChangeArea={(area) => setEditingArea(area)}
               onChangeDrawingPoints={(points) => setDrawingPoints(points)}
               onFinishDrawing={() => finishDrawing()}
-              onSelectArea={(area) => setSelectedId(area?.id ?? '')}
+              onSelectArea={(area) => setSelectedId(area?.id ?? 0)}
               selectedArea={selectedArea}
             />
           </MapContainer>

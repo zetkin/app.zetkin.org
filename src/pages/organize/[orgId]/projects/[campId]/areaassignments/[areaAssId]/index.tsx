@@ -18,6 +18,7 @@ import useAssignmentAreaGraph from 'features/areaAssignments/hooks/useAssignment
 import { ZetkinAssignmentAreaStatsItem } from 'features/areaAssignments/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areaAssignments/l10n/messageIds';
+import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -33,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 interface AreaAssignmentPageProps {
   orgId: string;
-  areaAssId: string;
+  areaAssId: number;
 }
 
 const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
@@ -41,11 +42,16 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   areaAssId,
 }) => {
   const messages = useMessages(messageIds);
+  const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const statsFuture = useAreaAssignmentStats(parseInt(orgId), areaAssId);
   const areasStats = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const dataGraph = useAssignmentAreaGraph(parseInt(orgId), areaAssId);
   const router = useRouter();
+
+  const numAreas = new Set(
+    sessionsFuture.data?.map((session) => session.area_id) ?? []
+  ).size;
 
   return (
     <>
@@ -59,12 +65,10 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
         }}
       >
         {({ data: { assignment, stats } }) => {
-          const planUrl = `/organize/${orgId}/projects/${
-            assignment.campaign.id || 'standalone'
-          }/areaassignments/${assignment.id}/map`;
+          const planUrl = `/organize/${orgId}/projects/${assignment.project_id}/areaassignments/${assignment.id}/map`;
           return (
             <Box display="flex" flexDirection="column" gap={2}>
-              {stats.num_areas == 0 && (
+              {numAreas == 0 && (
                 <Card>
                   <Box p={10} sx={{ textAlign: ' center' }}>
                     <Typography>
@@ -84,7 +88,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                   </Box>
                 </Card>
               )}
-              {stats.num_areas > 0 && (
+              {numAreas > 0 && (
                 <>
                   <Card>
                     <Box
@@ -101,19 +105,23 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                     <Divider />
                     <Box display="flex" width="100%">
                       <NumberCard
-                        firstNumber={stats.num_successful_visited_households}
+                        firstNumber={stats.num_successful_visits}
                         message={messages.overview.progress.headers.successful()}
-                        secondNumber={stats.num_visited_households}
+                        secondNumber={stats.num_visits}
                       />
+                      {stats.num_households_visited != null && (
+                        <>
+                          <Divider flexItem orientation="vertical" />
+                          <NumberCard
+                            firstNumber={stats.num_households_visited}
+                            message={messages.overview.progress.headers.households()}
+                            secondNumber={stats.num_households}
+                          />
+                        </>
+                      )}
                       <Divider flexItem orientation="vertical" />
                       <NumberCard
-                        firstNumber={stats.num_visited_households}
-                        message={messages.overview.progress.headers.households()}
-                        secondNumber={stats.num_households}
-                      />
-                      <Divider flexItem orientation="vertical" />
-                      <NumberCard
-                        firstNumber={stats.num_visited_locations}
+                        firstNumber={stats.num_locations_visited}
                         message={messages.overview.progress.headers.locations()}
                         secondNumber={stats.num_locations}
                       />
@@ -125,7 +133,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         const filteredAreas = dataGraph
                           .map((area) => {
                             return areasStats.stats.filter(
-                              (item) => item.areaId === area.area.id
+                              (item) => item.area_id === area.area_id
                             );
                           })
                           .flat();
@@ -134,7 +142,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                           .map((area) => {
                             const successfulVisitsTotal =
                               dataGraph
-                                .find((graph) => graph.area.id === area.areaId)
+                                .find((graph) => graph.area_id === area.area_id)
                                 ?.data.reduce(
                                   (sum, item) => sum + item.successfulVisits,
                                   0
@@ -160,7 +168,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                         );
 
                         const noAreaData = dataGraph.find(
-                          (graph) => graph.area.id === 'noArea'
+                          (graph) => !graph.area_id
                         );
                         if (noAreaData && noAreaData.data.length > 0) {
                           const latestEntry = [...noAreaData.data].sort(
@@ -176,7 +184,7 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
                             latestEntry.householdVisits;
 
                           const noArea: ZetkinAssignmentAreaStatsItem = {
-                            areaId: 'noArea',
+                            area_id: null,
                             num_households: 0,
                             num_locations: 0,
                             num_successful_visited_households,

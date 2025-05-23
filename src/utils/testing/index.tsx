@@ -20,6 +20,7 @@ import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLu
 import oldTheme from 'theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
+import mockApiClient from './mocks/mockApiClient';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -96,18 +97,13 @@ export * from '@testing-library/react';
 
 export { customRender as render };
 
-export const makeWrapper = (store: Store) =>
+export const makeWrapper = (
+  store: Store,
+  apiClient: IApiClient = mockApiClient()
+) =>
   function Wrapper({ children }: { children: ReactNode }) {
-    const apiClient: jest.Mocked<IApiClient> = {
-      delete: jest.fn(),
-      get: jest.fn(),
-      patch: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      rpc: jest.fn(),
-    };
-
     const env = new Environment(apiClient);
+
     return (
       <ReduxProvider store={store}>
         <EnvProvider env={env}>

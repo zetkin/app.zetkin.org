@@ -2,7 +2,7 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinAreaAssignment, ZetkinAreaAssignmentPostBody } from '../types';
 import { areaAssignmentCreated } from '../store';
 
-export default function useCreateAreaAssignment(orgId: number) {
+export default function useCreateAreaAssignment(orgId: number, projId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
@@ -10,7 +10,7 @@ export default function useCreateAreaAssignment(orgId: number) {
     const created = await apiClient.post<
       ZetkinAreaAssignment,
       ZetkinAreaAssignmentPostBody
-    >(`/beta/orgs/${orgId}/areaassignments`, data);
+    >(`/api2/orgs/${orgId}/projects/${projId}/area_assignments`, data);
     dispatch(areaAssignmentCreated(created));
   };
 }

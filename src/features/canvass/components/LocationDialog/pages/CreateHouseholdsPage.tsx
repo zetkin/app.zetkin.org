@@ -8,19 +8,20 @@ import IntInput from '../IntInput';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 type Props = {
-  locationId: string;
+  location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
   orgId: number;
 };
 
 const CreateHouseholdsPage: FC<Props> = ({
+  location,
   onBack,
   onClose,
   orgId,
-  locationId,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -28,7 +29,7 @@ const CreateHouseholdsPage: FC<Props> = ({
   const [numAptsPerFloor, setNumAptsPerFloor] = useState(3);
   const [creating, setCreating] = useState(false);
   const [scale, setScale] = useState(1);
-  const { addHouseholds } = useLocationMutations(orgId, locationId);
+  const { addHouseholds } = useLocationMutations(orgId, location.id);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   const updateSize = useCallback(
@@ -73,7 +74,7 @@ const CreateHouseholdsPage: FC<Props> = ({
             await addHouseholds(
               range(numFloors).flatMap((floorIndex) =>
                 range(numAptsPerFloor).map((aptIndex) => ({
-                  floor: floorIndex + 1,
+                  level: floorIndex + 1,
                   title: messages.households.householdDefaultTitle({
                     householdNumber: aptIndex + 1,
                   }),

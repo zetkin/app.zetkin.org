@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { FC, useState } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { Menu } from '@mui/icons-material';
 
@@ -9,15 +9,17 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import useServerSide from 'core/useServerSide';
 import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
-import { AssignmentWithAreas } from '../types';
 import CanvassSidebar from './CanvassSidebar';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
 
 const CanvassMap = dynamic(() => import('./CanvassMap'), {
   ssr: false,
 });
 
-const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
-  const orgFuture = useOrganization(assignment.organization.id);
+const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
+  const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
+  const orgFuture = useOrganization(assignment.organization_id);
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -73,8 +75,8 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
                 </IconButton>
               </Box>
             </Box>
-            <Box flexGrow={1}>
-              <CanvassMap areas={assignment.areas} assignment={assignment} />
+            <Box flexGrow={1} sx={{ height: '200px' }}>
+              <CanvassMap areas={areas} assignment={assignment} />
             </Box>
             <Box
               onClick={() => setShowMenu(false)}
@@ -112,7 +114,7 @@ const Page: FC<{ assignment: AssignmentWithAreas }> = ({ assignment }) => {
 };
 
 type CanvassPageProps = {
-  areaAssId: string;
+  areaAssId: number;
 };
 
 const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
@@ -125,7 +127,11 @@ const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
     return null;
   }
 
-  return <Page assignment={assignment} />;
+  return (
+    <Suspense>
+      <Page assignment={assignment} />
+    </Suspense>
+  );
 };
 
 export default CanvassPage;

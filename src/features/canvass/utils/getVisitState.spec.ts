@@ -2,7 +2,7 @@ import getVisitState from './getVisitState';
 
 describe('getVisitState()', () => {
   it('returns "none" when passed an empty array', () => {
-    const state = getVisitState([], '123');
+    const state = getVisitState([], 123);
 
     expect(state).toEqual('none');
   });
@@ -16,7 +16,7 @@ describe('getVisitState()', () => {
           title: 'Door 2',
           visits: [
             {
-              areaAssId: '345',
+              assignment_id: 345,
               id: 'a',
               noteToOfficial: '',
               personId: 1,
@@ -26,7 +26,7 @@ describe('getVisitState()', () => {
           ],
         },
       ],
-      '123'
+      123
     );
 
     expect(state).toEqual('none');
@@ -41,7 +41,7 @@ describe('getVisitState()', () => {
           title: 'Door 2',
           visits: [
             {
-              areaAssId: '123',
+              assignment_id: 123,
               id: 'a',
               noteToOfficial: '',
               personId: 1,
@@ -51,7 +51,7 @@ describe('getVisitState()', () => {
           ],
         },
       ],
-      '123'
+      123
     );
 
     expect(state).toEqual('some');
@@ -65,7 +65,7 @@ describe('getVisitState()', () => {
           title: 'Door 2',
           visits: [
             {
-              areaAssId: '123',
+              assignment_id: 123,
               id: 'a',
               noteToOfficial: '',
               personId: 1,
@@ -75,7 +75,7 @@ describe('getVisitState()', () => {
           ],
         },
       ],
-      '123'
+      123
     );
 
     expect(state).toEqual('all');

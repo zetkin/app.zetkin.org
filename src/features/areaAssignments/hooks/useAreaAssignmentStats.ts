@@ -5,7 +5,7 @@ import { statsLoad, statsLoaded } from '../store';
 
 export default function useAreaAssignmentStats(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -18,7 +18,7 @@ export default function useAreaAssignmentStats(
     actionOnSuccess: (data) => statsLoaded([areaAssId, data]),
     loader: () =>
       apiClient.get<ZetkinAreaAssignmentStats>(
-        `/beta/orgs/${orgId}/areaassignments/${areaAssId}/stats`
+        `/api2/orgs/${orgId}/area_assignments/${areaAssId}/stats`
       ),
   });
 }

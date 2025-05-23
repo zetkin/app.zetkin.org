@@ -58,7 +58,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
-  const createAreaAssignment = useCreateAreaAssignment(orgId);
+  const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -127,8 +127,8 @@ const CampaignActionButtons: React.FunctionComponent<
       label: campaginMessages.createButton.createAreaAssignment(),
       onClick: () =>
         createAreaAssignment({
-          campaign_id: campaign.id,
           instructions: '',
+          /*
           metrics: [
             {
               definesDone: true,
@@ -138,6 +138,8 @@ const CampaignActionButtons: React.FunctionComponent<
                 campaginMessages.form.createAreaAssignment.defaultQuestion(),
             },
           ],
+          */
+          reporting_level: 'location',
           title: areaAssignmentMessages.default.title(),
         }),
     });

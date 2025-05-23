@@ -9,11 +9,9 @@ import getAreaAssignees from '../utils/getAreaAssignees';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useAreaAssignment from '../hooks/useAreaAssignment';
 import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
-import useAreaAssignmentSessions from '../hooks/useAreaAssignmentSessions';
-import useAreaAssignmentStats from '../hooks/useAreaAssignmentStats';
+import useAreaAssignees from '../hooks/useAreaAssignees';
 import useStartEndAssignment from '../hooks/useStartEndAssignment';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import useAreaAssignmentStatus, {
   AreaAssignmentState,
@@ -24,7 +22,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 type AreaAssignmentLayoutProps = {
-  areaAssId: string;
+  areaAssId: number;
   campId: number;
   children: ReactNode;
   orgId: number;
@@ -42,12 +40,8 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
   const { deleteAreaAssignment, updateAreaAssignment } =
     useAreaAssignmentMutations(orgId, areaAssId);
 
-  const allSessions = useAreaAssignmentSessions(orgId, areaAssId).data || [];
-  const sessions = allSessions.filter(
-    (session) => session.assignment.id === areaAssId
-  );
+  const sessions = useAreaAssignees(orgId, areaAssId).data || [];
 
-  const stats = useAreaAssignmentStats(orgId, areaAssId);
   const state = useAreaAssignmentStatus(orgId, areaAssId);
   const { startAssignment, endAssignment } = useStartEndAssignment(
     orgId,
@@ -59,15 +53,15 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
 
   const isMapTab = path.endsWith('/map');
 
+  const numAreas = new Set(sessions.map((assignee) => assignee.area_id)).size;
+
   if (!areaAssignment) {
     return null;
   }
 
   const handleDelete = () => {
     deleteAreaAssignment();
-    router.push(
-      `/organize/${orgId}/projects/${areaAssignment.campaign.id || ''} `
-    );
+    router.push(`/organize/${orgId}/projects/${areaAssignment.project_id} `);
   };
 
   return (
@@ -122,19 +116,15 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
           <Box marginRight={1}>
             <AssignmentStatusChip state={state} />
           </Box>
-          <ZUIFuture future={stats} ignoreDataWhileLoading skeletonWidth={100}>
-            {(data) => (
-              <Box display="flex" marginX={1}>
-                <Pentagon />
-                <Typography marginLeft={1}>
-                  <Msg
-                    id={messageIds.layout.basicAssignmentStats.areas}
-                    values={{ numAreas: data.num_areas }}
-                  />
-                </Typography>
-              </Box>
-            )}
-          </ZUIFuture>
+          <Box display="flex" marginX={1}>
+            <Pentagon />
+            <Typography marginLeft={1}>
+              <Msg
+                id={messageIds.layout.basicAssignmentStats.areas}
+                values={{ numAreas }}
+              />
+            </Typography>
+          </Box>
           <Box display="flex" marginX={1}>
             <People />
             <Typography marginLeft={1}>
