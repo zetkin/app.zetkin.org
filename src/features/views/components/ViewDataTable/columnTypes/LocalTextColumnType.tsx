@@ -107,15 +107,9 @@ const EditTextarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
 
   const handleKeyDown = useCallback<NonNullable<InputBaseProps['onKeyDown']>>(
     (event) => {
-      if (
-        event.key === 'Escape' ||
-        (event.key === 'Enter' &&
-          !event.shiftKey &&
-          !event.ctrlKey &&
-          !event.metaKey)
-      ) {
-        const params = apiRef.current.getCellParams(id, field);
-        apiRef.current.publishEvent('cellKeyDown', params, event);
+      // allow adding newlines without submission
+      if (event.key === 'Enter' && event.shiftKey) {
+        event.stopPropagation();
       }
     },
     [apiRef, id, field]
