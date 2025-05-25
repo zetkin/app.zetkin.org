@@ -46,7 +46,7 @@ export type YesNoMetricResponse = {
 
 export type Scale5MetricResponse = {
   metric_id: number;
-  response: 1 | 2 | 3 | 4 | 5;
+  response: 1 | 2 | 3 | 4 | 5 | string;
 };
 
 export type MetricResponse = YesNoMetricResponse | Scale5MetricResponse;
