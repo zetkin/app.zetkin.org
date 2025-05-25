@@ -54,7 +54,7 @@ type EmbeddedJoinFormDataField =
       s: keyof ZetkinPersonNativeFields;
     }
   | { l: string; s: string; t: CUSTOM_FIELD_TYPE }
-  | { l: string; s: string; t: CUSTOM_FIELD_TYPE.ENUM; e: EnumChoice[] };
+  | { e: EnumChoice[]; l: string; s: string; t: CUSTOM_FIELD_TYPE.ENUM };
 
 export type EmbeddedJoinFormData = {
   fields: EmbeddedJoinFormDataField[];

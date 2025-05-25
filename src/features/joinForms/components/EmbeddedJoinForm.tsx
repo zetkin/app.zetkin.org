@@ -68,9 +68,9 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
                   {label}
                   {field.e.map((v) => {
                     return (
-                      <p>
+                      <p key={v.key}>
                         <label>
-                          <input type="radio" name={field.s} value={v.key} />
+                          <input name={field.s} type="radio" value={v.key} />
                           {v.label}
                         </label>
                       </p>
