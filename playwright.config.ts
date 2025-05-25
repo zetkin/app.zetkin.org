@@ -1,4 +1,7 @@
+import { cpus as osCpus } from 'node:os';
 import { PlaywrightTestConfig } from '@playwright/test';
+
+const NR_OF_CPUS = osCpus().length;
 
 const config: PlaywrightTestConfig = {
   globalSetup: './integrationTesting/globalSetup.ts',
@@ -8,7 +11,7 @@ const config: PlaywrightTestConfig = {
     ['html', { open: 'never' }]
   ],
   testDir: './integrationTesting',
-  workers: parseInt(process.env.PLAYWRIGHT_WORKERS as string) || 4,
+  workers: parseInt(process.env.PLAYWRIGHT_WORKERS as string) || NR_OF_CPUS || 4,
 };
 
 export default config;
