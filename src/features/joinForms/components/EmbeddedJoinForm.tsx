@@ -14,6 +14,7 @@ import { Msg, useMessages } from 'core/i18n';
 import globalMessageIds from 'core/i18n/globalMessageIds';
 import submitJoinForm from '../actions/submitEmbeddedJoinForm';
 import messageIds from '../l10n/messageIds';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 
 type Props = {
   encrypted: string;
@@ -55,43 +56,64 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
           <input name="__joinFormData" type="hidden" value={encrypted} />
           {fields.map((field) => {
             const isCustom = 'l' in field;
+            const isEnum =
+              isCustom && field.t == CUSTOM_FIELD_TYPE.ENUM && 'e' in field;
             const label = isCustom
               ? field.l
               : globalMessages.personFields[field.s]();
 
-            return (
-              <div key={field.s} className="zetkin-joinform__field">
-                <label>
+            if (isEnum) {
+              return (
+                <div key={field.s} className="zetkin-joinform__field">
                   {label}
-                  <div>
-                    {field.s != 'gender' && (
-                      <input
-                        name={field.s}
-                        required={
-                          field.s == 'first_name' || field.s == 'last_name'
-                        }
-                      />
-                    )}
-                    {field.s == 'gender' && (
-                      <select name={field.s}>
-                        <option value="unspecified">
-                          {globalMessages.genderOptions.unspecified()}
-                        </option>
-                        <option value="m">
-                          {globalMessages.genderOptions.m()}
-                        </option>
-                        <option value="f">
-                          {globalMessages.genderOptions.f()}
-                        </option>
-                        <option value="o">
-                          {globalMessages.genderOptions.o()}
-                        </option>
-                      </select>
-                    )}
-                  </div>
-                </label>
-              </div>
-            );
+                  {field.e.map((v) => {
+                    return (
+                      <p>
+                        <label>
+                          <input type="radio" name={field.s} value={v.key} />
+                          {v.label}
+                        </label>
+                      </p>
+                    );
+                  })}
+                </div>
+              );
+            } else {
+              return (
+                <div key={field.s} className="zetkin-joinform__field">
+                  <label>
+                    {label}
+                    <div>
+                      {field.s != 'gender' && (
+                        <input
+                          name={field.s}
+                          required={
+                            field.s == 'first_name' || field.s == 'last_name'
+                          }
+                          type="text"
+                        />
+                      )}
+                      {field.s == 'gender' && (
+                        <select name={field.s}>
+                          <option value="unspecified">
+                            {globalMessages.genderOptions.unspecified()}
+                          </option>
+                          <option value="m">
+                            {globalMessages.genderOptions.m()}
+                          </option>
+                          <option value="f">
+                            {globalMessages.genderOptions.f()}
+                          </option>
+                          <option value="o">
+                            {globalMessages.genderOptions.o()}
+                          </option>
+                        </select>
+                      )}
+                    </div>
+                  </label>
+                </div>
+              );
+            }
           })}
           <button className="zetkin-joinform__submit-button" type="submit">
             <Msg id={messageIds.embedding.submitButton} />
