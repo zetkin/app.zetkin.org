@@ -1,5 +1,5 @@
 import { CheckBoxOutlined } from '@mui/icons-material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Badge,
   Box,
@@ -39,6 +39,12 @@ const SelectionBar = () => {
     dispatch(eventsSelected(eventsVisibleInUI));
   };
 
+  const canSelectAll = useMemo(() => {
+    const canSelect = !eventsVisibleInUI.every((v) =>
+      selectedEventIds.includes(v)
+    );
+    return canSelect;
+  }, [selectedEventIds, eventsVisibleInUI]);
   return (
     <Box
       sx={{
@@ -65,7 +71,11 @@ const SelectionBar = () => {
                   {selectedEventIds.length}
                 </Typography>
                 <ButtonGroup sx={{ marginLeft: '4px' }}>
-                  <Button onClick={handleSelectAll} variant={'outlined'}>
+                  <Button
+                    disabled={!canSelectAll}
+                    onClick={handleSelectAll}
+                    variant={'outlined'}
+                  >
                     <Msg id={messageIds.selectionBar.selectAll} />
                   </Button>
                   <Button onClick={handleDeselect} variant={'outlined'}>
