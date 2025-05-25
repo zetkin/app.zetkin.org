@@ -37,7 +37,7 @@ describe('viewQuickSearch', () => {
 
   const rows = [
     mockViewRow({
-      content: ['Angela', 'Davis', mockSurveyResponseCell('Response text Ab')],
+      content: ['Angela', 'Davis', mockSurveyResponseCell('Response text AA')],
     }),
     mockViewRow({
       content: ['Clara', 'Zetkin', mockSurveyResponseCell('Response text B')],
@@ -56,15 +56,15 @@ describe('viewQuickSearch', () => {
     expect(matchedRows.length).toEqual(1);
   });
   it('Correctly returns rows when searching for an object field', () => {
-    const matchedRows = viewQuickSearch(rows, columns, 'text ab');
+    const matchedRows = viewQuickSearch(rows, columns, 'text aa');
     const matchedNotes = matchedRows[0].content[2] as SurveyResponseViewCell;
 
     expect(matchedRows.length).toEqual(1);
     expect(matchedNotes).toHaveLength(1);
-    expect(matchedNotes[0].text).toEqual('Response text Ab');
+    expect(matchedNotes[0].text).toEqual('Response text AA');
   });
   it('Returns an empty array if no rows match the search', () => {
-    const matchedRows = viewQuickSearch(rows, columns, 'text cal');
+    const matchedRows = viewQuickSearch(rows, columns, 'text ca');
 
     expect(matchedRows).toEqual([]);
   });
