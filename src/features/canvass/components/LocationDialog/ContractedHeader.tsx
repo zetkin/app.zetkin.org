@@ -31,7 +31,7 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
       }
       subtitle={
         <Box alignItems="center" display="flex" justifyContent="space-between">
-          {numVisitedHouseholds && (
+          {!!numVisitedHouseholds && (
             <>
               <Box
                 sx={{
@@ -49,7 +49,7 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
             </>
           )}
 
-          {numSuccessfulHouseholds && (
+          {!!numSuccessfulHouseholds && (
             <>
               <Box
                 sx={{
