@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 interface AreaAssignmentInstructionsProps {
   orgId: string;
-  areaAssId: string;
+  areaAssId: number;
 }
 
 const AreaAssignmentInstructionsPage: PageWithLayout<

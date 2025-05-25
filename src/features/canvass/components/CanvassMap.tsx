@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import {
   LatLng,
   Map,
@@ -24,7 +24,6 @@ import {
 import CanvassMapOverlays from './CanvassMapOverlays';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import getCrosshairPositionOnMap from '../utils/getCrosshairPositionOnMap';
-import { getVisitPercentage } from '../utils/getVisitPercentage';
 import MapControls from 'features/areaAssignments/components/MapControls';
 import MarkerIcon from './MarkerIcon';
 import objToLatLng from 'features/areas/utils/objToLatLng';
@@ -32,8 +31,9 @@ import useCreateLocation from '../hooks/useCreateLocation';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import { useEnv } from 'core/hooks';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
-import { ZetkinArea } from '../../areas/types';
+import { Zetkin2Area } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
+import locToLatLng from 'features/geography/utils/locToLatLng';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 const useStyles = makeStyles(() => ({
@@ -66,17 +66,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type CanvassMapProps = {
-  areas: ZetkinArea[];
+type Props = {
+  areas: Zetkin2Area[];
   assignment: ZetkinAreaAssignment;
 };
 
-const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
+const CanvassMap: FC<Props> = ({ areas, assignment }) => {
   const env = useEnv();
   const theme = useTheme();
   const classes = useStyles();
-  const locations = useLocations(assignment.organization.id).data || [];
-  const createLocation = useCreateLocation(assignment.organization.id);
+  const locations =
+    useLocations(assignment.organization_id, assignment.id).data || [];
+  const createLocation = useCreateLocation(assignment.organization_id);
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LatLngTuple, LatLngTuple] | null
   >(`mapBounds-${assignment.id}`, null);
@@ -84,7 +85,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   const [map, setMap] = useState<Map | null>(null);
   useAutoResizeMap(map);
   const [zoomed, setZoomed] = useState(false);
-  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
+  const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
   const [isCreating, setIsCreating] = useState(false);
@@ -109,7 +110,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   };
 
   const updateSelection = useCallback(() => {
-    let nearestLocation: string | null = null;
+    let nearestLocation: number | null = null;
     let nearestDistance = Infinity;
 
     if (isCreating) {
@@ -126,7 +127,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
         const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
         locations.forEach((location) => {
-          const screenPos = map.latLngToContainerPoint(location.position);
+          const screenPos = map.latLngToContainerPoint(locToLatLng(location));
           const dx = screenPos.x - markerPos.markerX;
           const dy = screenPos.y - markerPos.markerY;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -221,10 +222,12 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
     [-90, -180],
   ];
 
-  function getMaskLayer(areas: ZetkinArea[]) {
+  function getMaskLayer(areas: Zetkin2Area[]) {
     const maskPositions: LatLngExpression[][] = [
       outerBounds,
-      ...areas.map((area) => area.points as LatLngExpression[]),
+      ...areas.map(
+        (area) => area.boundary.coordinates[0] as LatLngExpression[]
+      ),
     ];
     return maskPositions;
   }
@@ -239,13 +242,13 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
               if (areas.length) {
                 // Start with first area
                 const totalBounds = latLngBounds(
-                  areas[0].points.map((p) => objToLatLng(p))
+                  areas[0].boundary.coordinates[0].map((p) => objToLatLng(p))
                 );
 
                 // Extend with all areas
                 areas.forEach((area) => {
                   const areaBounds = latLngBounds(
-                    area.points.map((p) => objToLatLng(p))
+                    area.boundary.coordinates[0].map((p) => objToLatLng(p))
                   );
                   totalBounds.extend(areaBounds);
                 });
@@ -317,12 +320,11 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
                 opacity: 0.5,
                 weight: 4,
               }}
-              positions={area.points}
+              positions={area.boundary.coordinates[0]}
             />
           ))}
         </FeatureGroup>
         {locations
-          // sort the selectedLocation on top of the others
           .sort((a0, a1) => {
             if (a0.id == selectedLocationId) {
               return 1;
@@ -335,12 +337,7 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
           .map((location) => {
             const selected = location.id == selectedLocationId;
             const key = `marker-${location.id}-${selected.toString()}`;
-            const percentage = getVisitPercentage(
-              assignment.id,
-              location.households,
-              assignment.metrics.find((metric) => metric.definesDone)?.id ||
-                null
-            );
+
             return (
               <DivIconMarker
                 key={key}
@@ -350,14 +347,21 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
                   },
                 }}
                 iconAnchor={[11, 33]}
-                position={{
-                  lat: location.position.lat,
-                  lng: location.position.lng,
-                }}
+                position={locToLatLng(location)}
               >
                 <MarkerIcon
-                  percentage={percentage}
                   selected={selected}
+                  successfulVisits={
+                    location.num_households_successful ||
+                    location.num_successful_visits
+                  }
+                  totalHouseholds={Math.max(
+                    location.num_estimated_households,
+                    location.num_known_households
+                  )}
+                  totalVisits={
+                    location.num_households_visited || location.num_visits
+                  }
                   uniqueKey={key}
                 />
               </DivIconMarker>
@@ -380,7 +384,8 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
             if (point) {
               setCreated(true);
               createLocation({
-                position: point,
+                latitude: point.lat,
+                longitude: point.lng,
                 title,
               });
             }
@@ -393,4 +398,12 @@ const CanvassMap: FC<CanvassMapProps> = ({ areas, assignment }) => {
   );
 };
 
-export default CanvassMap;
+const CanvassMapWrapper: FC<Props> = (props) => {
+  return (
+    <Suspense>
+      <CanvassMap {...props} />
+    </Suspense>
+  );
+};
+
+export default CanvassMapWrapper;

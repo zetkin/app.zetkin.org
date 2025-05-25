@@ -73,12 +73,10 @@ const AreaCard: FC<AreaCardProps> = ({
     return [householdVisitsSeries, successfulVisitsSeries];
   };
 
-  const navigateToArea = (areaId: string) => {
+  const navigateToArea = (areaId: number) => {
     router.replace(
       {
-        pathname: `/organize/${orgId}/projects/${
-          assignment.campaign.id || ''
-        }/areaassignments/${assignment.id}/map`,
+        pathname: `/organize/${orgId}/projects/${assignment.project_id}/areaassignments/${assignment.id}/map`,
         query: { navigateToAreaId: areaId },
       },
       undefined,
@@ -91,12 +89,12 @@ const AreaCard: FC<AreaCardProps> = ({
       {areas.map((area) => {
         const areaData = data.find(
           (graphData) =>
-            graphData.area.id === area.areaId || graphData.area.id === 'noArea'
+            graphData.area_id === area.area_id || graphData.area_id == null
         );
         const transformedData = areaData ? transformToNivoData(areaData) : [];
         return (
-          <Grid key={area.areaId} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
-            <Card key={area.areaId} sx={{ height: 'auto' }}>
+          <Grid key={area.area_id} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
+            <Card key={area.area_id} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
                 display="flex"
@@ -114,13 +112,9 @@ const AreaCard: FC<AreaCardProps> = ({
                     }}
                     variant="h6"
                   >
-                    {areaData?.area.id !== 'noArea' ? (
-                      areaData?.area.title
-                    ) : (
-                      <Msg
-                        id={messageIds.overview.progress.unassignedVisits.title}
-                      />
-                    )}
+                    <Msg
+                      id={messageIds.overview.progress.unassignedVisits.title}
+                    />
                   </Typography>
                   <Divider
                     orientation="vertical"
@@ -128,7 +122,7 @@ const AreaCard: FC<AreaCardProps> = ({
                   />
                   <Typography
                     color={
-                      areaData?.area.id !== 'noArea'
+                      areaData?.area_id !== 0
                         ? oldTheme.palette.primary.dark
                         : oldTheme.palette.grey[900]
                     }
@@ -137,10 +131,10 @@ const AreaCard: FC<AreaCardProps> = ({
                     {area.num_successful_visited_households}
                   </Typography>
                 </Box>
-                {area.areaId !== 'noArea' ? (
+                {area.area_id ? (
                   <IconButton
                     onClick={() =>
-                      areaData?.area.id ? navigateToArea(areaData?.area.id) : ''
+                      areaData?.area_id ? navigateToArea(areaData.area_id) : ''
                     }
                   >
                     <MapIcon />
@@ -174,7 +168,7 @@ const AreaCard: FC<AreaCardProps> = ({
                       axisBottom={null}
                       axisLeft={null}
                       colors={
-                        areaData?.area.id !== 'noArea'
+                        areaData?.area_id
                           ? [
                               oldTheme.palette.primary.light,
                               oldTheme.palette.primary.dark,
@@ -221,7 +215,7 @@ const AreaCard: FC<AreaCardProps> = ({
                                 <Box
                                   sx={{
                                     backgroundColor: (() => {
-                                      if (areaData?.area.id !== 'noArea') {
+                                      if (areaData?.area_id) {
                                         return dataPoint.serieId ===
                                           'householdsVisited'
                                           ? oldTheme.palette.primary.light
@@ -248,7 +242,7 @@ const AreaCard: FC<AreaCardProps> = ({
                           </Paper>
                         );
                       }}
-                      {...(areaData?.area.id !== 'noArea'
+                      {...(areaData?.area_id
                         ? {
                             yScale: {
                               max: maxVisitedHouseholds,
@@ -268,7 +262,7 @@ const AreaCard: FC<AreaCardProps> = ({
                   </Typography>
                   <Typography
                     color={
-                      areaData?.area.id !== 'noArea'
+                      areaData?.area_id
                         ? oldTheme.palette.primary.light
                         : oldTheme.palette.grey[400]
                     }
@@ -277,7 +271,7 @@ const AreaCard: FC<AreaCardProps> = ({
                     {area.num_visited_households}
                   </Typography>
                 </Box>
-                {area.areaId !== 'noArea' && (
+                {area.area_id && (
                   <Box textAlign="start">
                     <Typography sx={{ fontSize: 14 }}>
                       <Msg
@@ -286,7 +280,7 @@ const AreaCard: FC<AreaCardProps> = ({
                     </Typography>
                     <Typography
                       color={
-                        areaData?.area.id !== 'noArea'
+                        areaData?.area_id
                           ? oldTheme.palette.secondary.light
                           : oldTheme.palette.grey[900]
                       }
