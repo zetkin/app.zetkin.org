@@ -7,6 +7,7 @@ import ZUIIconLabel from 'zui/components/ZUIIconLabel';
 
 type Props = {
   actions?: JSX.Element[];
+  iconTitle?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
   image?: string;
   info: {
     Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
@@ -15,23 +16,26 @@ type Props = {
   title: string;
 };
 
-const MyActivityListItem: FC<Props> = ({ actions, image, info, title }) => {
+const MyActivityListItem: FC<Props> = ({
+  actions,
+  iconTitle,
+  image,
+  info,
+  title,
+}) => {
   return (
     <ZUIItemCard
       actions={actions}
-      content={[
-        ...info.map((item, index) => {
-          return (
-            <ZUIIconLabel
-              key={index}
-              color="secondary"
-              icon={item.Icon}
-              label={item.labels}
-              size="small"
-            />
-          );
-        }),
-      ]}
+      content={info.map((item, index) => (
+        <ZUIIconLabel
+          key={index}
+          color="secondary"
+          icon={item.Icon}
+          label={item.labels}
+          size="small"
+        />
+      ))}
+      {...(iconTitle ? { icon: iconTitle } : {})}
       src={image}
       title={title}
     />

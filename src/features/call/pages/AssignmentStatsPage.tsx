@@ -1,6 +1,7 @@
 'use client';
 
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
@@ -8,6 +9,9 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import InstructionsSection from '../components/InstructionsSection';
+import useAllocateCall from '../hooks/useAllocateCall';
+import ZUIAlert from 'zui/components/ZUIAlert';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -23,12 +27,25 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
     assignment.organization.id,
     assignment.id
   );
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { error } = useAllocateCall(assignment.organization.id, assignment.id);
+  const isMobile = useIsMobile();
+  const router = useRouter();
 
   return (
-    <Box m={2}>
+    <Box display="flex" flexDirection="column" gap={2} m={2}>
+      {error !== null && (
+        <ZUIAlert
+          button={{
+            label: 'Choose another assignment',
+            onClick: () => {
+              router.push(`/my/home`);
+            },
+          }}
+          description="The call queue is empty at the moment. More people might be added shortly, but for now you can't continue calling in this assingment."
+          severity={'warning'}
+          title={'No more people to call!'}
+        />
+      )}
       <ZUISection
         renderContent={() => (
           <>
@@ -81,7 +98,7 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
                   >
                     <ZUIText color="inherit">{stats.num_calls_made}</ZUIText>
                   </Box>
-                  <Box sx={{ color: theme.palette.data.main }}>
+                  <Box sx={(theme) => ({ color: theme.palette.data.main })}>
                     <ZUIText variant="headingSm"> calls made</ZUIText>
                   </Box>
                 </Box>
@@ -102,11 +119,10 @@ const AssignmentStatsPage: FC<Props> = ({ assignment }) => {
         )}
         title={'Assignment'}
       />
-      {assignment.instructions && (
-        <Box mt={2}>
-          <InstructionsSection instructions={assignment.instructions} />
-        </Box>
-      )}
+
+      <Box mt={2}>
+        <InstructionsSection instructions={assignment.instructions} />
+      </Box>
     </Box>
   );
 };

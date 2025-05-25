@@ -13,16 +13,17 @@ import {
 import PageBase from './PageBase';
 import IntInput from '../IntInput';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
-import { ZetkinLocationVisit } from 'features/canvass/types';
+import { MetricBulkResponse } from 'features/canvass/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 type Props = {
   active: boolean;
   assignment: ZetkinAreaAssignment;
   onBack: () => void;
   onClose: () => void;
-  onLogVisit: (responses: ZetkinLocationVisit['responses']) => Promise<void>;
+  onLogVisit: (responses: MetricBulkResponse[]) => Promise<void>;
 };
 
 const LocationVisitPage: FC<Props> = ({
@@ -39,9 +40,13 @@ const LocationVisitPage: FC<Props> = ({
   const [valuesByMetricId, setValuesByMetricId] = useState<
     Record<string, number[]>
   >({});
+  const metrics = useAreaAssignmentMetrics(
+    assignment.organization_id,
+    assignment.id
+  );
 
   useEffect(() => {
-    const metricCounts = assignment.metrics.map((metric) => {
+    const metricCounts = metrics.map((metric) => {
       const values = valuesByMetricId[metric.id] || [];
       return values.reduce((sum, value) => sum + value, 0);
     });
@@ -64,17 +69,35 @@ const LocationVisitPage: FC<Props> = ({
   return (
     <PageBase
       actions={
-        step >= assignment.metrics.length - 1 && (
+        step >= metrics.length - 1 && (
           <Button
             disabled={submitting}
             onClick={async () => {
-              const metricIds = Object.keys(valuesByMetricId);
+              const metricIds = Object.keys(valuesByMetricId).map((key) =>
+                parseInt(key)
+              );
+
               setSubmitting(true);
+
               await onLogVisit(
-                metricIds.map((metricId) => ({
-                  metricId,
-                  responseCounts: valuesByMetricId[metricId],
-                }))
+                metricIds.map((metricId) =>
+                  valuesByMetricId[metricId].length == 2
+                    ? {
+                        metric_id: metricId,
+                        num_no: valuesByMetricId[metricId][1] || 0,
+                        num_yes: valuesByMetricId[metricId][0] || 0,
+                      }
+                    : {
+                        metric_id: metricId,
+                        num_values: [
+                          valuesByMetricId[metricId][0] || 0,
+                          valuesByMetricId[metricId][1] || 0,
+                          valuesByMetricId[metricId][2] || 0,
+                          valuesByMetricId[metricId][3] || 0,
+                          valuesByMetricId[metricId][4] || 0,
+                        ],
+                      }
+                )
               );
               setSubmitting(false);
               onClose();
@@ -101,15 +124,15 @@ const LocationVisitPage: FC<Props> = ({
         justifyContent="center"
       >
         <Stepper activeStep={step} nonLinear orientation="vertical">
-          {assignment.metrics.map((metric, index) => {
+          {metrics.map((metric, index) => {
             const completed = !!valuesByMetricId[metric.id];
             const numYes = valuesByMetricId[metric.id]?.[0] ?? 0;
             const numNo = valuesByMetricId[metric.id]?.[1] ?? 0;
             const numHouseholds = numYes + numNo;
             const stepIsCurrent = index == step;
-            const stepIsLast = index == assignment.metrics.length - 1;
+            const stepIsLast = index == metrics.length - 1;
 
-            if (metric.kind == 'boolean') {
+            if (metric.type == 'bool') {
               const values = valuesByMetricId[metric.id] || [0, 0];
               return (
                 <Step
@@ -203,7 +226,7 @@ const LocationVisitPage: FC<Props> = ({
                   </StepContent>
                 </Step>
               );
-            } else if (metric.kind == 'scale5') {
+            } else if (metric.type == 'scale5') {
               const values = valuesByMetricId[metric.id] || [0, 0, 0, 0, 0];
               const numHouseholds = values.reduce((sum, val) => sum + val, 0);
               const sumTotal = values.reduce(
@@ -287,6 +310,16 @@ const LocationVisitPage: FC<Props> = ({
                           );
                         })}
                       </Box>
+                      {!stepIsLast && (
+                        <Button
+                          onClick={() => setStep((current) => current + 1)}
+                          variant="contained"
+                        >
+                          <Msg
+                            id={messageIds.visit.location.proceedButtonLabel}
+                          />
+                        </Button>
+                      )}
                     </Box>
                   </StepContent>
                 </Step>

@@ -20,14 +20,24 @@ export const viewQuickSearch = (
     return rows;
   }
 
-  return rows.filter((row) => {
-    const searchStrings = columns.flatMap((col, idx) => {
-      return columnTypes[col.type].getSearchableStrings(row.content[idx], col);
-    });
+  const searchTerms = quickSearch
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((term) => term.length > 0);
 
-    const lowerCaseQuickSearch = quickSearch.toLowerCase();
-    return searchStrings.some((str) =>
-      str.toLowerCase().includes(lowerCaseQuickSearch)
+  return rows.filter((row) => {
+    const columnsText = columns
+      .flatMap((col, idx) => {
+        return columnTypes[col.type].getSearchableStrings(
+          row.content[idx],
+          col
+        );
+      })
+      .map((str) => str.toLowerCase());
+
+    // All search terms must be found somewhere in the searchable strings
+    return searchTerms.every((term) =>
+      columnsText.some((personCol) => personCol.includes(term))
     );
   });
 };

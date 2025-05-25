@@ -11,35 +11,37 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import {
-  Household,
-  Visit,
-  ZetkinAreaAssignment,
-} from 'features/areaAssignments/types';
+import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useHousehold from 'features/canvass/hooks/useHousehold';
+import { MetricResponse } from 'features/canvass/types';
 
 type HouseholdVisitPageProps = {
-  household: Household;
-  metrics: ZetkinAreaAssignment['metrics'];
+  householdId: number;
+  location: ZetkinLocation;
+  metrics: ZetkinMetric[];
   onBack: () => void;
-  onLogVisit: (
-    responses: Visit['responses'],
-    noteToOfficial: Visit['noteToOfficial']
-  ) => void;
+  onLogVisit: (metrics: MetricResponse[]) => void;
 };
 
 const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
-  household,
+  householdId,
+  location,
   metrics,
   onBack,
   onLogVisit,
 }) => {
   const messages = useMessages(messageIds);
+  const household = useHousehold(
+    location.organization_id,
+    location.id,
+    householdId
+  );
 
   const [responseByMetricId, setResponseByMetricId] = useState<
-    Record<string, string>
+    Record<number, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
 
@@ -54,13 +56,14 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           <Button
             fullWidth
             onClick={() => {
-              const responses = Object.entries(responseByMetricId).map(
-                ([metricId, response]) => ({ metricId, response })
+              const responses = Object.values(responseByMetricId).map(
+                (response) => response
               );
+
               const filteredResponses = responses.filter(
                 (response) => !!response.response
               );
-              onLogVisit(filteredResponses, '');
+              onLogVisit(filteredResponses);
             }}
             variant="contained"
           >
@@ -76,7 +79,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
           const options =
-            metric.kind == 'boolean'
+            metric.type == 'bool'
               ? [
                   {
                     label: messages.visit.household.yesButtonLabel(),
@@ -120,7 +123,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
 
                 {completed && step != index && (
                   <Typography variant="body2">
-                    {responseByMetricId[metric.id]}
+                    {responseByMetricId[metric.id].response}
                   </Typography>
                 )}
               </StepButton>
@@ -140,10 +143,13 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   <ToggleButtonGroup
                     exclusive
                     fullWidth
-                    onChange={(ev, newValue) => {
+                    onChange={(ev, newValue: MetricResponse['response']) => {
                       setResponseByMetricId({
                         ...responseByMetricId,
-                        [metric.id]: newValue,
+                        [metric.id]: {
+                          metric_id: metric.id,
+                          response: newValue,
+                        },
                       });
                       setStep(index + 1);
                     }}
@@ -158,7 +164,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                       </ToggleButton>
                     ))}
                   </ToggleButtonGroup>
-                  {!metric.definesDone && (
+                  {!metric.defines_success && (
                     <Button onClick={() => setStep(index + 1)}>
                       <Msg id={messageIds.visit.household.skipButtonLabel} />
                     </Button>

@@ -5,7 +5,7 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useAssignmentAreaStats(
   orgId: number,
-  areaAssId: string
+  areaAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();

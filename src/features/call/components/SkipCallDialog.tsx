@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 import useCallMutations from '../hooks/useCallMutations';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useAllocateCall from '../hooks/useAllocateCall';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIModal from 'zui/components/ZUIModal';
 
 type SkipCallDialogProps = {
   assignment: ZetkinCallAssignment;
@@ -25,29 +26,30 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} sx={{ mr: 1 }} variant="outlined">
-        Skip
-      </Button>
-
-      <Dialog onClose={() => setOpen(false)} open={open}>
-        <DialogTitle variant="h6">Skip {targetName} call?</DialogTitle>
-        <DialogActions sx={{ justifyContent: ' center' }}>
-          <Button
-            color="error"
-            onClick={() => {
-              setOpen(false);
-              deleteCall(callId);
-              allocateCall();
-            }}
-            variant="contained"
-          >
-            Skip
-          </Button>
-          <Button onClick={() => setOpen(false)} variant="outlined">
-            Resume
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ZUIButton
+        label="Skip"
+        onClick={() => setOpen(true)}
+        variant="secondary"
+      />
+      <ZUIModal
+        open={open}
+        primaryButton={{
+          label: 'Skip',
+          onClick: () => {
+            setOpen(false);
+            deleteCall(callId);
+            allocateCall();
+          },
+        }}
+        secondaryButton={{
+          label: 'Resume',
+          onClick: () => {
+            setOpen(false);
+          },
+        }}
+        size="small"
+        title={`Skip ${targetName} call?`}
+      />
     </>
   );
 };

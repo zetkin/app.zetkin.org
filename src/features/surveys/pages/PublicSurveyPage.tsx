@@ -83,7 +83,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
       <Box
         sx={{
-          maxWidth: 'sm',
+          maxWidth: '37.5rem',
         }}
       >
         {showErrorAlert && (
