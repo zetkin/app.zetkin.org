@@ -35,13 +35,12 @@ const potentialDuplicatesSlice = createSlice({
     },
     duplicateUpdated: (state, action: PayloadAction<PotentialDuplicate>) => {
       const potentialDuplicate = action.payload;
-      const item = state.potentialDuplicatesList.items.find(
-        (item) => item.id === potentialDuplicate.id
-      );
+      const potentialDuplicatesFiltered =
+        state.potentialDuplicatesList.items.filter(
+          (item) => item.id !== potentialDuplicate.id
+        );
 
-      if (item && item.data) {
-        item.data = potentialDuplicate;
-      }
+      state.potentialDuplicatesList.items = potentialDuplicatesFiltered;
     },
     potentialDuplicatesLoad: (state) => {
       state.potentialDuplicatesList.isLoading = true;
