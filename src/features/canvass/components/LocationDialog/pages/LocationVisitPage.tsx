@@ -310,6 +310,16 @@ const LocationVisitPage: FC<Props> = ({
                           );
                         })}
                       </Box>
+                      {!stepIsLast && (
+                        <Button
+                          onClick={() => setStep((current) => current + 1)}
+                          variant="contained"
+                        >
+                          <Msg
+                            id={messageIds.visit.location.proceedButtonLabel}
+                          />
+                        </Button>
+                      )}
                     </Box>
                   </StepContent>
                 </Step>
