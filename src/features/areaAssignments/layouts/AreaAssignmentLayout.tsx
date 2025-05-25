@@ -139,7 +139,6 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
       tabs={[
         { href: '/', label: messages.layout.tabs.overview() },
         { href: '/map', label: messages.layout.tabs.map() },
-        { href: '/assignees', label: messages.layout.tabs.assignees() },
         { href: '/report', label: messages.layout.tabs.report() },
         { href: '/instructions', label: messages.layout.tabs.instructions() },
       ]}
