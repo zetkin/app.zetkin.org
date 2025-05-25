@@ -380,6 +380,64 @@ describe('useVisitReporting()', () => {
       expect(result.current.currentLocationVisit).toEqual(correctCurrentVisit);
     });
 
+    it('reportHouseholdVisit() handles scale5 metric', async () => {
+      const store = createStore(initialState);
+      const newVisit = mockLocationVisit({
+        assignment_id: ASSIGNMENT_ID,
+        metrics: [
+          {
+            metric_id: 10001,
+            num_values: [0, 0, 1, 0, 0],
+          },
+        ],
+        num_households_visited: 1,
+      });
+
+      const apiClient = mockApiClient({
+        post: jest.fn().mockResolvedValue(newVisit),
+      });
+
+      const { result } = renderHook(
+        () => useVisitReporting(1, ASSIGNMENT_ID, LOCATION_ID),
+        {
+          wrapper: makeWrapper(store, apiClient),
+        }
+      );
+
+      await act(async () => {
+        await result.current.reportHouseholdVisit(HOUSEHOLD_ID, [
+          {
+            metric_id: 10001,
+            response: '3',
+          },
+        ]);
+      });
+
+      expect(apiClient.post).toHaveBeenCalledWith(
+        '/api2/orgs/1/area_assignments/11/locations/101/visits',
+        {
+          metrics: [
+            {
+              metric_id: 10001,
+              num_values: [0, 0, 1, 0, 0],
+            },
+          ],
+          num_households_visited: 1,
+        }
+      );
+
+      const dateStr =
+        result.current.lastVisitByHouseholdId[HOUSEHOLD_ID].created;
+      const date = new Date(dateStr);
+      expect(date.getTime() / 1000).toBeCloseTo(new Date().getTime() / 1000, 1);
+
+      const stateAfterAction = store.getState();
+      expect(
+        stateAfterAction.canvass.visitsByAssignmentId[ASSIGNMENT_ID].items[0]
+          .data
+      ).toEqual(newVisit);
+    });
+
     it('reportHouseholdVisit() updates recent location visit when one exists', async () => {
       const correctCurrentVisit = mockLocationVisit({
         // This one is good

@@ -19,7 +19,8 @@ export default function summarizeMetrics(
 
   return {
     metrics: Object.values(responsesByMetricId).map((responses) => {
-      const isBool = typeof responses[0].response == 'string';
+      const firstResp = responses[0].response;
+      const isBool = firstResp == 'yes' || firstResp == 'no';
 
       if (isBool) {
         return {

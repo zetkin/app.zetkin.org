@@ -102,4 +102,30 @@ describe('summarizeMetrics()', () => {
       num_households_visited: 2,
     });
   });
+
+  it('summarizes scale5 metrics when incorrectly typed as string', () => {
+    const output = summarizeMetrics([
+      {
+        household_id: 1,
+        metrics: [
+          { metric_id: 1, response: '1' },
+          { metric_id: 2, response: '3' },
+        ],
+      },
+    ]);
+
+    expect(output).toEqual({
+      metrics: [
+        {
+          metric_id: 1,
+          num_values: [1, 0, 0, 0, 0],
+        },
+        {
+          metric_id: 2,
+          num_values: [0, 0, 1, 0, 0],
+        },
+      ],
+      num_households_visited: 1,
+    });
+  });
 });
