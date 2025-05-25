@@ -1,14 +1,16 @@
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
+import { setEventIdsVisibleInUI } from 'features/events/store';
 import Day from './Day';
 import range from 'utils/range';
 import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
-import { useNumericRouteParams } from 'core/hooks';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
+import { setEquals } from '../utils';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -28,6 +30,7 @@ const CalendarMonthView = ({
 }: CalendarMonthViewProps) => {
   const itemHeight = 25;
   const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
+  const dispatch = useAppDispatch();
 
   const firstDayOfMonth: Date = new Date(
     Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)
@@ -50,6 +53,19 @@ const CalendarMonthView = ({
     orgId,
     startDate: firstDayOfCalendar,
   });
+
+  const [visibleEvents, setVisibleEvents] = useState<Set<number>>(new Set());
+  useEffect(() => {
+    const eventIds = clustersByDate
+      .flatMap((c) => c.clusters)
+      .flatMap((c) => c.events)
+      .flatMap((e) => e.id);
+    const newVisibleEvents = new Set(eventIds);
+    if (!setEquals(newVisibleEvents, visibleEvents)) {
+      setVisibleEvents(newVisibleEvents);
+      dispatch(setEventIdsVisibleInUI([...newVisibleEvents]));
+    }
+  }, [clustersByDate]);
 
   return (
     <Box

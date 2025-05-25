@@ -24,10 +24,11 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
-import { getDstChangeAtDate } from '../utils';
+import { getDstChangeAtDate, setEquals } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useNumericRouteParams } from 'core/hooks';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
+import { setEventIdsVisibleInUI } from 'features/events/store';
 
 dayjs.extend(isoWeek);
 
@@ -40,6 +41,7 @@ export interface CalendarWeekViewProps {
 }
 const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
@@ -68,6 +70,20 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
     dates: dayDates,
     orgId,
   });
+
+  const [visibleEvents, setVisibleEvents] = useState<Set<number>>(new Set());
+  useEffect(() => {
+    const eventIds = eventsByDate
+      .flatMap((c) => c.lanes)
+      .flatMap((c) => c)
+      .flatMap((e) => e.events)
+      .map((e) => e.id);
+    const newVisibleEvents = new Set(eventIds);
+    if (!setEquals(newVisibleEvents, visibleEvents)) {
+      setVisibleEvents(newVisibleEvents);
+      dispatch(setEventIdsVisibleInUI([...newVisibleEvents]));
+    }
+  }, [eventsByDate]);
 
   let laneHeight = 0;
   const weekGridRef = useRef<HTMLDivElement>();

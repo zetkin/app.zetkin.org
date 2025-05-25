@@ -58,6 +58,7 @@ export default function mockState(overrides?: RootState) {
     },
     events: {
       allEventsList: remoteList(),
+      eventIdsVisibleInUI: [],
       eventList: remoteList(),
       eventsByCampaignId: {},
       eventsByDate: {},
