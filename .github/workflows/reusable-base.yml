@@ -46,8 +46,13 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node_version }}
-        cache: 'yarn'
 
+    - name: restore node_modules from cache
+      id: node-modules-cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.node_version }}-node_modules
     - name: Install dependencies
       run: yarn install --frozen-lockfile
       env:
