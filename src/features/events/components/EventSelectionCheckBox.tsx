@@ -22,21 +22,22 @@ const EventSelectionCheckBox = ({ events }: EventSelectionCheckBoxProps) => {
   );
 
   const handleChange = (checked: boolean) => {
+    const eventIds = events.map((e) => e.id);
     if (events.length > 1) {
       if (checked) {
-        dispatch(eventsSelected(events));
+        dispatch(eventsSelected(eventIds));
       }
       if (!checked) {
-        dispatch(eventsDeselected(events));
+        dispatch(eventsDeselected(eventIds));
       }
     }
 
     if (events.length === 1) {
       if (checked) {
-        dispatch(eventsSelected(events));
+        dispatch(eventsSelected(eventIds));
       }
       if (!checked) {
-        dispatch(eventsDeselected(events));
+        dispatch(eventsDeselected(eventIds));
       }
     }
   };

@@ -55,6 +55,7 @@ export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
+  eventIdsVisibleInUI: number[];
   filters: {
     selectedActions: string[];
     selectedStates: string[];
@@ -74,6 +75,7 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   allEventsList: remoteList(),
+  eventIdsVisibleInUI: [],
   eventList: remoteList(),
   eventsByCampaignId: {},
   eventsByDate: {},
@@ -223,12 +225,12 @@ const eventsSlice = createSlice({
       addEventToState(state, events);
       state.eventList.isLoading = false;
     },
-    eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+    eventsDeselected: (state, action: PayloadAction<number[]>) => {
       const toggledEvents = action.payload;
 
       state.selectedEventIds = state.selectedEventIds.filter(
         (selectedEventId) =>
-          !toggledEvents.some((event) => event.id == selectedEventId)
+          !toggledEvents.some((eventId) => eventId == selectedEventId)
       );
     },
     eventsLoad: (state) => {
@@ -238,12 +240,12 @@ const eventsSlice = createSlice({
       addEventToState(state, action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+    eventsSelected: (state, action: PayloadAction<number[]>) => {
       const toggledEvents = action.payload;
 
       const uniqueEventIds = new Set([
         ...state.selectedEventIds,
-        ...toggledEvents.map((filtered) => filtered.id),
+        ...toggledEvents.map((filtered) => filtered),
       ]);
       state.selectedEventIds = Array.from(uniqueEventIds);
     },
@@ -528,6 +530,9 @@ const eventsSlice = createSlice({
       state.respondentsByEventId[eventId] = remoteList(respondents);
       state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
+    setEventIdsVisibleInUI: (state, action: PayloadAction<number[]>) => {
+      state.eventIdsVisibleInUI = action.payload;
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.statsByEventId[eventId] = remoteItem<EventStats>(eventId);
@@ -774,6 +779,7 @@ export const {
   resetSelection,
   respondentsLoad,
   respondentsLoaded,
+  setEventIdsVisibleInUI,
   statsLoad,
   statsLoaded,
   typeAdd,

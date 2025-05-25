@@ -1,12 +1,20 @@
 import { CheckBoxOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { Badge, Box, Button, Divider, Paper, Typography } from '@mui/material';
+import {
+  Badge,
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  Paper,
+  Typography,
+} from '@mui/material';
 
 import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
 import { Msg } from 'core/i18n';
-import { resetSelection } from 'features/events/store';
+import { eventsSelected, resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
 import useParticipantPool from 'features/events/hooks/useParticipantPool';
@@ -19,9 +27,16 @@ const SelectionBar = () => {
   const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
   );
+  const eventsVisibleInUI = useAppSelector(
+    (state) => state.events.eventIdsVisibleInUI
+  );
 
   const handleDeselect = () => {
     dispatch(resetSelection());
+  };
+
+  const handleSelectAll = () => {
+    dispatch(eventsSelected(eventsVisibleInUI));
   };
 
   return (
@@ -49,9 +64,14 @@ const SelectionBar = () => {
                 <Typography color="primary" sx={{ px: 0.4 }}>
                   {selectedEventIds.length}
                 </Typography>
-                <Button color="primary" onClick={handleDeselect} sx={{ mr: 1 }}>
-                  <Msg id={messageIds.selectionBar.deselect} />
-                </Button>
+                <ButtonGroup sx={{ marginLeft: '4px' }}>
+                  <Button onClick={handleSelectAll} variant={'outlined'}>
+                    <Msg id={messageIds.selectionBar.selectAll} />
+                  </Button>
+                  <Button onClick={handleDeselect} variant={'outlined'}>
+                    <Msg id={messageIds.selectionBar.deselect} />
+                  </Button>
+                </ButtonGroup>
                 <Divider orientation="vertical" variant="fullWidth" />
                 {/* TODO: Implement edit events                
                 <Button

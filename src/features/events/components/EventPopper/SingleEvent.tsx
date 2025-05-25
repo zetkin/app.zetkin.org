@@ -133,7 +133,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
         showConfirmDialog({
           onSubmit: () => {
             deleteEvent();
-            dispatch(eventsDeselected([event]));
+            dispatch(eventsDeselected([event.id]));
             onClickAway();
           },
           title: messages.eventPopper.confirmDelete(),
