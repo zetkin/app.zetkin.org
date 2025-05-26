@@ -93,6 +93,9 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
 
   const handleTextAreaRef = useCallback((el: HTMLTextAreaElement | null) => {
     if (el) {
+      if (!props.isEditable) {
+        return;
+      }
       // When entering edit mode, focus the text area and put
       // caret at the end of the text
       el.focus();
@@ -146,6 +149,7 @@ const Textarea = (props: GridRenderEditCellParams<ZetkinViewRow>) => {
         <Popper anchorEl={anchorEl} open placement="bottom-start">
           <Paper elevation={1} sx={{ minWidth: colDef.computedWidth, p: 1 }}>
             <InputBase
+              disabled={!props.isEditable}
               inputRef={handleTextAreaRef}
               multiline
               onChange={handleChange}
