@@ -70,8 +70,16 @@ const reportSteps: ReportStep[] = [
         onClick={() =>
           onReportUpdate({
             ...report,
+            callBackAfter: null,
+            callerLog: '',
+            failureReason: null,
+            leftMessage: false,
+            organizerActionNeeded: false,
+            organizerLog: '',
             step: 'successOrFailure',
             success: false,
+            targetCouldTalk: false,
+            wrongNumber: null,
           })
         }
         title={report.success ? 'Was reached' : 'Did not reach'}
@@ -95,8 +103,15 @@ const reportSteps: ReportStep[] = [
         onClick={() =>
           onReportUpdate({
             ...report,
+            callBackAfter: null,
+            callerLog: '',
+            failureReason: null,
+            leftMessage: false,
+            organizerActionNeeded: false,
+            organizerLog: '',
             step: 'couldTalk',
             targetCouldTalk: false,
+            wrongNumber: null,
           })
         }
         title={
@@ -140,8 +155,14 @@ const reportSteps: ReportStep[] = [
             onClick={() =>
               onReportUpdate({
                 ...report,
+                callBackAfter: null,
+                callerLog: '',
                 failureReason: null,
+                leftMessage: false,
+                organizerActionNeeded: false,
+                organizerLog: '',
                 step: 'failureReason',
+                wrongNumber: null,
               })
             }
             title={failureReasons[report.failureReason]}
@@ -170,8 +191,13 @@ const reportSteps: ReportStep[] = [
         onClick={() =>
           onReportUpdate({
             ...report,
+            callBackAfter: null,
+            callerLog: '',
             leftMessage: false,
+            organizerActionNeeded: false,
+            organizerLog: '',
             step: 'leftMessage',
+            wrongNumber: null,
           })
         }
         title={
@@ -206,7 +232,11 @@ const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
+            callerLog: '',
+            organizerActionNeeded: false,
+            organizerLog: '',
             step: 'callBack',
+            wrongNumber: null,
           })
         }
         title={`Call back after ${report.callBackAfter}`}
@@ -250,7 +280,11 @@ const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
+            callerLog: '',
+            organizerActionNeeded: false,
+            organizerLog: '',
             step: 'wrongNumber',
+            wrongNumber: null,
           })
         }
         title="We had the wrong number"
@@ -286,7 +320,10 @@ const reportSteps: ReportStep[] = [
         onClick={() =>
           onReportUpdate({
             ...report,
+            callerLog: '',
             leftMessage: false,
+            organizerActionNeeded: false,
+            organizerLog: '',
             step: 'orgAction',
           })
         }
@@ -329,7 +366,9 @@ const reportSteps: ReportStep[] = [
         onClick={() =>
           onReportUpdate({
             ...report,
+            callerLog: '',
             leftMessage: false,
+            organizerLog: '',
             step: 'orgLog',
           })
         }
@@ -358,6 +397,7 @@ const reportSteps: ReportStep[] = [
         onClick={() =>
           onReportUpdate({
             ...report,
+            callerLog: '',
             leftMessage: false,
             step: 'callerLog',
           })
@@ -370,7 +410,11 @@ const reportSteps: ReportStep[] = [
       />
     ),
     renderVariant: (report) => {
-      //TODO: Don't show if assignment does not allow caller notes
+      if (report.disableCallerNotes) {
+        //Don't render if assignment does not allow caller notes
+        return null;
+      }
+
       return report.step == 'callerLog' ? 'question' : 'summary';
     },
   },
