@@ -9,20 +9,38 @@ import messageIds from 'zui/l10n/messageIds';
 
 type Props = {
   onClick: () => void;
-  title: ReactNode;
+  subtitle?: ReactNode;
+  title: JSX.Element;
 };
 
-const Summary: FC<Props> = ({ onClick, title }) => {
+const Summary: FC<Props> = ({ onClick, subtitle, title }) => {
   const messages = useMessages(messageIds);
   return (
-    <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
-      <ZUIText>{title}</ZUIText>
-      <ZUIButton
-        label={messages.report.summary.undoButtonLabel()}
-        onClick={() => onClick()}
-        size="small"
-        startIcon={Undo}
-      />
+    <Box
+      onClick={() => onClick()}
+      sx={{ display: 'flex', flexDirection: 'column' }}
+    >
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          cursor: 'pointer',
+        }}
+      >
+        <ZUIText variant="headingMd">{title}</ZUIText>
+        <ZUIButton
+          label={messages.report.summary.undoButtonLabel()}
+          onClick={() => onClick()}
+          size="small"
+          startIcon={Undo}
+        />
+      </Box>
+      {subtitle && (
+        <ZUIText noWrap variant="bodySmSemiBold">
+          {subtitle}
+        </ZUIText>
+      )}
     </Box>
   );
 };

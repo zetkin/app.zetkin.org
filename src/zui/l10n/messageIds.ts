@@ -233,6 +233,9 @@ export default makeMessages('zui', {
           anyTime: m<{ date: JSX.Element }>(
             'Call back on {date} at any time of day'
           ),
+          subtitle: m<{ firstName: string }>(
+            'In the meantime, {firstName} is automatically removed from the queue'
+          ),
         },
       },
       callerLog: {
@@ -242,8 +245,13 @@ export default makeMessages('zui', {
           title: m('Do you wish to leave a note for future callers'),
         },
         summary: {
-          hasMessage: m('You did not leave a message for future callers'),
-          hasNoMessage: m('You left a message to future callers'),
+          withNote: {
+            subtitle: m<{ note: string }>(
+              'Future callers will see your note: {message}'
+            ),
+            title: m('You wrote a note to future callers'),
+          },
+          withoutNote: m('You did not leave a note to future callers'),
         },
       },
       couldTalk: {
@@ -253,8 +261,14 @@ export default makeMessages('zui', {
           yesButton: m('Yes'),
         },
         summary: {
-          couldNotTalk: m<{ firstName: string }>('firstName} could not talk'),
-          couldTalk: m<{ firstName: string }>('{firstName} could talk'),
+          couldNotTalk: {
+            subtitle: m('Future callers will see that we had to call back'),
+            title: m<{ firstName: string }>('{firstName} could not talk'),
+          },
+          couldTalk: {
+            subtitle: m('Future callers will see that you were able to finish'),
+            title: m<{ firstName: string }>('{firstName} could talk'),
+          },
         },
       },
       failureReason: {
@@ -284,7 +298,10 @@ export default makeMessages('zui', {
         },
         summary: {
           didNotLeaveMessage: m('Did not leave message on answering machine'),
-          leftMessage: m('Left message on answering machine'),
+          leftMessage: {
+            subtitle: m('Future callers will see that you left a message'),
+            title: m('Left message on answering machine'),
+          },
         },
       },
       organizerAction: {
@@ -296,9 +313,10 @@ export default makeMessages('zui', {
           yesButton: m('Yes'),
         },
         summary: {
-          orgActionNeeded: m(
-            'You want an organizer to take a look at this call'
-          ),
+          orgActionNeeded: {
+            subtitle: m('An official will be notified'),
+            title: m('You want an official to take a look at this call'),
+          },
           orgActionNotNeeded: m('No action is neccessary'),
         },
       },
@@ -309,8 +327,13 @@ export default makeMessages('zui', {
           withoutMessageButton: m('Save without message'),
         },
         summary: {
-          hasNoOrgLogMessage: m('You did not leave a message to the officials'),
-          hasOrgLogMessage: m('You left a message to the officials'),
+          withoutMessage: m('You did not leave a message to the officials'),
+          withMessage: {
+            subtitle: m<{ message: string }>(
+              'The officials will see your message: {message}'
+            ),
+            title: m('You left a message to the officials'),
+          },
         },
       },
       successOrFailure: {
@@ -320,8 +343,18 @@ export default makeMessages('zui', {
           yesButton: m('Yes'),
         },
         summary: {
-          failure: m<{ firstName: string }>('We did not reach {firstName}'),
-          success: m<{ firstName: string }>('{firstName} was reached'),
+          failure: {
+            subtitle: m<{ firstName: string }>(
+              'Future callers will see that you did not speak to {firstName}'
+            ),
+            title: m<{ firstName: string }>('We did not reach {firstName}'),
+          },
+          success: {
+            subtitle: m<{ firstName: string }>(
+              'Future callers will see that you spoke to {firstName}'
+            ),
+            title: m<{ firstName: string }>('{firstName} was reached'),
+          },
         },
       },
       wrongNumber: {

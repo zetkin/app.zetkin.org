@@ -91,12 +91,22 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
+        subtitle={
+          <Msg
+            id={
+              messageIds.report.steps.successOrFailure.summary[
+                report.success ? 'success' : 'failure'
+              ].subtitle
+            }
+            values={{ firstName: target.first_name }}
+          />
+        }
         title={
           <Msg
             id={
               messageIds.report.steps.successOrFailure.summary[
                 report.success ? 'success' : 'failure'
-              ]
+              ].title
             }
             values={{ firstName: target.first_name }}
           />
@@ -132,12 +142,21 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
+        subtitle={
+          <Msg
+            id={
+              messageIds.report.steps.couldTalk.summary[
+                report.targetCouldTalk ? 'couldTalk' : 'couldNotTalk'
+              ].subtitle
+            }
+          />
+        }
         title={
           <Msg
             id={
               messageIds.report.steps.couldTalk.summary[
                 report.targetCouldTalk ? 'couldTalk' : 'couldNotTalk'
-              ]
+              ].title
             }
             values={{ firstName: target.first_name }}
           />
@@ -227,12 +246,21 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
+        subtitle={
+          report.leftMessage ? (
+            <Msg
+              id={
+                messageIds.report.steps.leftMessage.summary.leftMessage.subtitle
+              }
+            />
+          ) : undefined
+        }
         title={
           <Msg
             id={
-              messageIds.report.steps.leftMessage.summary[
-                report.leftMessage ? 'leftMessage' : 'didNotLeaveMessage'
-              ]
+              report.leftMessage
+                ? messageIds.report.steps.leftMessage.summary.leftMessage.title
+                : messageIds.report.steps.leftMessage.summary.didNotLeaveMessage
             }
           />
         }
@@ -257,7 +285,7 @@ const reportSteps: ReportStep[] = [
     renderQuestion: (report, onReportUpdate) => (
       <CallBack onReportUpdate={onReportUpdate} report={report} />
     ),
-    renderSummary: (report, onReportUpdate) => {
+    renderSummary: (report, onReportUpdate, target) => {
       if (!report.callBackAfter) {
         return null;
       }
@@ -276,6 +304,12 @@ const reportSteps: ReportStep[] = [
               step: 'callBack',
               wrongNumber: null,
             })
+          }
+          subtitle={
+            <Msg
+              id={messageIds.report.steps.callBack.summary.subtitle}
+              values={{ firstName: target.first_name }}
+            />
           }
           title={
             isAnyTimeOfDay ? (
@@ -407,14 +441,24 @@ const reportSteps: ReportStep[] = [
             step: 'orgAction',
           })
         }
+        subtitle={
+          report.organizerActionNeeded ? (
+            <Msg
+              id={
+                messageIds.report.steps.organizerAction.summary.orgActionNeeded
+                  .subtitle
+              }
+            />
+          ) : undefined
+        }
         title={
           <Msg
             id={
-              messageIds.report.steps.organizerAction.summary[
-                report.organizerActionNeeded
-                  ? 'orgActionNeeded'
-                  : 'orgActionNotNeeded'
-              ]
+              report.organizerActionNeeded
+                ? messageIds.report.steps.organizerAction.summary
+                    .orgActionNeeded.title
+                : messageIds.report.steps.organizerAction.summary
+                    .orgActionNotNeeded
             }
           />
         }
@@ -458,12 +502,23 @@ const reportSteps: ReportStep[] = [
             step: 'orgLog',
           })
         }
+        subtitle={
+          report.organizerLog ? (
+            <Msg
+              id={
+                messageIds.report.steps.organizerLog.summary.withMessage
+                  .subtitle
+              }
+              values={{ message: report.organizerLog }}
+            />
+          ) : undefined
+        }
         title={
           <Msg
             id={
-              messageIds.report.steps.organizerLog.summary[
-                report.organizerLog ? 'hasOrgLogMessage' : 'hasNoOrgLogMessage'
-              ]
+              report.organizerLog
+                ? messageIds.report.steps.organizerLog.summary.withMessage.title
+                : messageIds.report.steps.organizerLog.summary.withoutMessage
             }
           />
         }
@@ -492,12 +547,20 @@ const reportSteps: ReportStep[] = [
             step: 'callerLog',
           })
         }
+        subtitle={
+          report.callerLog ? (
+            <Msg
+              id={messageIds.report.steps.callerLog.summary.withNote.subtitle}
+              values={{ note: report.callerLog }}
+            />
+          ) : undefined
+        }
         title={
           <Msg
             id={
-              messageIds.report.steps.callerLog.summary[
-                report.callerLog ? 'hasMessage' : 'hasNoMessage'
-              ]
+              report.callerLog
+                ? messageIds.report.steps.callerLog.summary.withNote.title
+                : messageIds.report.steps.callerLog.summary.withoutNote
             }
           />
         }
