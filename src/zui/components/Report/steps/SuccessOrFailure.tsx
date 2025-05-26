@@ -4,20 +4,29 @@ import { FC } from 'react';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import { ReportType } from '..';
 import ZUIText from 'zui/components/ZUIText';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 type Props = {
+  firstName: string;
   onReportUpdate: (updatedReport: ReportType) => void;
   report: ReportType;
 };
 
-const SuccessOrFailure: FC<Props> = ({ onReportUpdate, report }) => {
+const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
+  const messages = useMessages(messageIds);
   return (
     <Stack gap="1rem">
-      <ZUIText>Did you reach them?</ZUIText>
+      <ZUIText>
+        <Msg
+          id={messageIds.report.steps.successOrFailure.question.title}
+          values={{ firstName }}
+        />
+      </ZUIText>
       <ZUIButtonGroup
         buttons={[
           {
-            label: 'Yes',
+            label: messages.report.steps.successOrFailure.question.yesButton(),
             onClick: () => {
               if (onReportUpdate) {
                 onReportUpdate({
@@ -29,7 +38,7 @@ const SuccessOrFailure: FC<Props> = ({ onReportUpdate, report }) => {
             },
           },
           {
-            label: 'No',
+            label: messages.report.steps.successOrFailure.question.noButton(),
             onClick: () => {
               if (onReportUpdate) {
                 onReportUpdate({

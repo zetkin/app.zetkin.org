@@ -4,6 +4,8 @@ import { Box } from '@mui/material';
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -16,9 +18,12 @@ const WrongNumber: FC<Props> = ({
   report,
   phoneAndAltPhone,
 }) => {
+  const messages = useMessages(messageIds);
   return (
     <Box alignItems="flex-start" display="flex" flexDirection="column">
-      <ZUIText>Which number is wrong?</ZUIText>
+      <ZUIText>
+        <Msg id={messageIds.report.steps.wrongNumber.question.title} />
+      </ZUIText>
       <ZUIButton
         label={phoneAndAltPhone.phone}
         onClick={() =>
@@ -44,7 +49,7 @@ const WrongNumber: FC<Props> = ({
         variant="secondary"
       />
       <ZUIButton
-        label="Both"
+        label={messages.report.steps.wrongNumber.question.bothButton()}
         onClick={() =>
           onReportUpdate({
             ...report,

@@ -4,6 +4,8 @@ import { Box, Stack } from '@mui/material';
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
 
 type Props = {
   nextStepIfWrongNumber: 'wrongNumber' | 'orgLog';
@@ -16,9 +18,12 @@ const FailureReason: FC<Props> = ({
   onReportUpdate,
   report,
 }) => {
+  const messages = useMessages(messageIds);
   return (
     <Stack gap="1rem">
-      <ZUIText>Why not?</ZUIText>
+      <ZUIText>
+        <Msg id={messageIds.report.steps.failureReason.question.title} />
+      </ZUIText>
       <Box
         sx={{
           alignItems: 'flex-start',
@@ -27,7 +32,7 @@ const FailureReason: FC<Props> = ({
         }}
       >
         <ZUIButton
-          label="No pick up"
+          label={messages.report.steps.failureReason.question.noPickup()}
           onClick={() => {
             if (onReportUpdate) {
               onReportUpdate({
@@ -40,7 +45,7 @@ const FailureReason: FC<Props> = ({
           variant="secondary"
         />
         <ZUIButton
-          label="Wrong number"
+          label={messages.report.steps.failureReason.question.wrongNumber()}
           onClick={() => {
             if (onReportUpdate) {
               onReportUpdate({
@@ -55,7 +60,7 @@ const FailureReason: FC<Props> = ({
           variant="secondary"
         />
         <ZUIButton
-          label="Busy"
+          label={messages.report.steps.failureReason.question.lineBusy()}
           onClick={() => {
             if (onReportUpdate) {
               onReportUpdate({
@@ -68,7 +73,7 @@ const FailureReason: FC<Props> = ({
           variant="secondary"
         />
         <ZUIButton
-          label="Not available right now"
+          label={messages.report.steps.failureReason.question.notAvailable()}
           onClick={() => {
             if (onReportUpdate) {
               onReportUpdate({

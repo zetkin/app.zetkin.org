@@ -1,13 +1,16 @@
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { useIntl } from 'react-intl';
 
 import { ReportType } from '..';
 import ZUIAutocomplete from 'zui/components/ZUIAutocomplete';
 import ZUIDateField from 'zui/components/ZUIDateField';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'zui/l10n/messageIds';
+import ZUIDate from 'zui/ZUIDate';
+import ZUIDateTime from 'zui/ZUIDateTime';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -15,7 +18,7 @@ type Props = {
 };
 
 const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const today = dayjs();
   const tomorrow = today.add(1, 'day');
@@ -26,7 +29,10 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     const hour = i.toString().padStart(2, '0') + ':00';
 
     options.push({
-      label: i == 0 ? 'Any time of day' : hour,
+      label:
+        i == 0
+          ? messages.report.steps.callBack.question.anyTimeOptionLabel()
+          : hour,
       value: i == 0 ? 'any' : hour,
     });
   }
@@ -43,14 +49,22 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     return today.add(indexOfToday == 0 ? 1 : 8 - indexOfToday, 'day');
   };
 
+  const callBackTime = time.value == 'any' ? '00:00' : time.value;
+  const month = (date.month() + 1).toString().padStart(2, '0');
+  const day = date.date().toString().padStart(2, '0');
+
+  const callBackAfter = `${date.year()}-${month}-${day}T${callBackTime}`;
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ZUIText>When should we call back?</ZUIText>
+      <ZUIText>
+        <Msg id={messageIds.report.steps.callBack.question.title} />
+      </ZUIText>
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <ZUIDateField
           disablePast
           fullWidth
-          label="On what date"
+          label={messages.report.steps.callBack.question.dateLabel()}
           onChange={(newDate) => {
             if (newDate) {
               setDate(newDate);
@@ -60,7 +74,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         />
         <ZUIAutocomplete
           fullWidth
-          label="After what time"
+          label={messages.report.steps.callBack.question.timeLabel()}
           multiple={false}
           onChange={(newValue) => {
             if (newValue) {
@@ -72,9 +86,11 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         />
       </Box>
       <Box sx={{ alignItems: 'center', display: 'flex' }}>
-        <ZUIText variant="bodySmRegular">Examples:</ZUIText>
+        <ZUIText variant="bodySmRegular">
+          <Msg id={messageIds.report.steps.callBack.question.examples.title} />
+        </ZUIText>
         <ZUIButton
-          label="Later today"
+          label={messages.report.steps.callBack.question.examples.today()}
           onClick={() => {
             setDate(today);
             const currentHour = today.hour();
@@ -100,7 +116,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           size="small"
         />
         <ZUIButton
-          label="Tomorrow"
+          label={messages.report.steps.callBack.question.examples.tomorrow()}
           onClick={() => {
             setDate(today.add(1, 'day'));
             setTime(options[0]);
@@ -108,7 +124,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           size="small"
         />
         <ZUIButton
-          label="Next week"
+          label={messages.report.steps.callBack.question.examples.nextWeek()}
           onClick={() => {
             setDate(getNextMonday());
             setTime(options[0]);
@@ -117,15 +133,15 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         />
       </Box>
       <ZUIButton
-        label={`Call back on ${intl.formatDate(date?.toDate())} after ${
-          time.value
-        }`}
+        label={messages.report.steps.callBack.question.callBackButtonLabel({
+          date:
+            time.value == 'any' ? (
+              <ZUIDate datetime={callBackAfter} />
+            ) : (
+              <ZUIDateTime datetime={callBackAfter} />
+            ),
+        })}
         onClick={() => {
-          const callBackTime = time.value == 'any' ? '00.00' : time.value;
-          const month = (date.month() + 1).toString().padStart(2, '0');
-
-          const callBackAfter = `${date.year()}-${month}-${date.date()}T${callBackTime}`;
-
           onReportUpdate({
             ...report,
             callBackAfter,

@@ -12,6 +12,10 @@ import CallerLog from './steps/CallerLog';
 import WrongNumber from './steps/WrongNumber';
 import { ZetkinCallTarget } from 'features/call/types';
 import Summary from './steps/Summary';
+import messageIds from 'zui/l10n/messageIds';
+import { Msg } from 'core/i18n';
+import ZUIDateTime from 'zui/ZUIDateTime';
+import ZUIDate from 'zui/ZUIDate';
 
 const Step = {
   callBack: 'callBack',
@@ -47,25 +51,30 @@ type ReportStep = {
   renderQuestion: (
     report: ReportType,
     onReportUpdate: (updatedReport: ReportType) => void,
-    target?: ZetkinCallTarget
+    target: ZetkinCallTarget
   ) => ReactNode;
   renderSummary: (
     report: ReportType,
-    onReportUpdate: (updatedReport: ReportType) => void
+    onReportUpdate: (updatedReport: ReportType) => void,
+    target: ZetkinCallTarget
   ) => ReactNode;
   renderVariant: (
     report: ReportType,
-    phoneAndAltPhone?: Pick<ZetkinCallTarget, 'phone' | 'alt_phone'>
+    target?: ZetkinCallTarget
   ) => 'question' | 'summary' | null;
 };
 
 const reportSteps: ReportStep[] = [
   {
     name: 'successOrFailure',
-    renderQuestion: (report, onReportUpdate) => (
-      <SuccessOrFailure onReportUpdate={onReportUpdate} report={report} />
+    renderQuestion: (report, onReportUpdate, target) => (
+      <SuccessOrFailure
+        firstName={target.first_name}
+        onReportUpdate={onReportUpdate}
+        report={report}
+      />
     ),
-    renderSummary: (report, onReportUpdate) => (
+    renderSummary: (report, onReportUpdate, target) => (
       <Summary
         onClick={() =>
           onReportUpdate({
@@ -82,7 +91,16 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
-        title={report.success ? 'Was reached' : 'Did not reach'}
+        title={
+          <Msg
+            id={
+              messageIds.report.steps.successOrFailure.summary[
+                report.success ? 'success' : 'failure'
+              ]
+            }
+            values={{ firstName: target.first_name }}
+          />
+        }
       />
     ),
     renderVariant: (report) => {
@@ -98,7 +116,7 @@ const reportSteps: ReportStep[] = [
     renderQuestion: (report, onReportUpdate) => (
       <CouldTalk onReportUpdate={onReportUpdate} report={report} />
     ),
-    renderSummary: (report, onReportUpdate) => (
+    renderSummary: (report, onReportUpdate, target) => (
       <Summary
         onClick={() =>
           onReportUpdate({
@@ -115,7 +133,14 @@ const reportSteps: ReportStep[] = [
           })
         }
         title={
-          report.targetCouldTalk ? 'They could talk' : 'They could not talk'
+          <Msg
+            id={
+              messageIds.report.steps.couldTalk.summary[
+                report.targetCouldTalk ? 'couldTalk' : 'couldNotTalk'
+              ]
+            }
+            values={{ firstName: target.first_name }}
+          />
         }
       />
     ),
@@ -141,15 +166,8 @@ const reportSteps: ReportStep[] = [
         />
       );
     },
-    renderSummary: (report, onReportUpdate) => {
+    renderSummary: (report, onReportUpdate, target) => {
       if (report.failureReason) {
-        const failureReasons = {
-          lineBusy: 'The line was busy',
-          noPickup: 'They did not pick up',
-          notAvailable: 'They were not available to talk, we need to call back',
-          wrongNumber: 'The number was wrong',
-        };
-
         return (
           <Summary
             onClick={() =>
@@ -165,7 +183,16 @@ const reportSteps: ReportStep[] = [
                 wrongNumber: null,
               })
             }
-            title={failureReasons[report.failureReason]}
+            title={
+              <Msg
+                id={
+                  messageIds.report.steps.failureReason.summary[
+                    report.failureReason
+                  ]
+                }
+                values={{ firstName: target.first_name }}
+              />
+            }
           />
         );
       } else {
@@ -201,9 +228,13 @@ const reportSteps: ReportStep[] = [
           })
         }
         title={
-          report.leftMessage
-            ? 'Left message on answering machine'
-            : 'Did not leave message'
+          <Msg
+            id={
+              messageIds.report.steps.leftMessage.summary[
+                report.leftMessage ? 'leftMessage' : 'didNotLeaveMessage'
+              ]
+            }
+          />
         }
       />
     ),
@@ -226,22 +257,44 @@ const reportSteps: ReportStep[] = [
     renderQuestion: (report, onReportUpdate) => (
       <CallBack onReportUpdate={onReportUpdate} report={report} />
     ),
-    renderSummary: (report, onReportUpdate) => (
-      <Summary
-        onClick={() =>
-          onReportUpdate({
-            ...report,
-            callBackAfter: null,
-            callerLog: '',
-            organizerActionNeeded: false,
-            organizerLog: '',
-            step: 'callBack',
-            wrongNumber: null,
-          })
-        }
-        title={`Call back after ${report.callBackAfter}`}
-      />
-    ),
+    renderSummary: (report, onReportUpdate) => {
+      if (!report.callBackAfter) {
+        return null;
+      }
+
+      const isAnyTimeOfDay = report.callBackAfter.slice(-5) == '00:00';
+
+      return (
+        <Summary
+          onClick={() =>
+            onReportUpdate({
+              ...report,
+              callBackAfter: null,
+              callerLog: '',
+              organizerActionNeeded: false,
+              organizerLog: '',
+              step: 'callBack',
+              wrongNumber: null,
+            })
+          }
+          title={
+            isAnyTimeOfDay ? (
+              <Msg
+                id={messageIds.report.steps.callBack.summary.anyTime}
+                values={{ date: <ZUIDate datetime={report.callBackAfter} /> }}
+              />
+            ) : (
+              <Msg
+                id={messageIds.report.steps.callBack.summary.afterSpecificTime}
+                values={{
+                  time: <ZUIDateTime datetime={report.callBackAfter} />,
+                }}
+              />
+            )
+          }
+        />
+      );
+    },
     renderVariant: (report) => {
       if (report.success && report.targetCouldTalk) {
         // Don't render this step for successfull calls where
@@ -274,22 +327,49 @@ const reportSteps: ReportStep[] = [
         return null;
       }
     },
-    renderSummary: (report, onReportUpdate) => (
-      <Summary
-        onClick={() =>
-          onReportUpdate({
-            ...report,
-            callBackAfter: null,
-            callerLog: '',
-            organizerActionNeeded: false,
-            organizerLog: '',
-            step: 'wrongNumber',
-            wrongNumber: null,
-          })
-        }
-        title="We had the wrong number"
-      />
-    ),
+    renderSummary: (report, onReportUpdate, target) => {
+      const wrongNumber = report.wrongNumber;
+
+      if (!wrongNumber) {
+        return null;
+      }
+
+      const altPhone = target.alt_phone || '';
+      const phone = target.phone || '';
+
+      const bothAreWrong = wrongNumber == 'both' && altPhone && phone;
+
+      return (
+        <Summary
+          onClick={() =>
+            onReportUpdate({
+              ...report,
+              callBackAfter: null,
+              callerLog: '',
+              organizerActionNeeded: false,
+              organizerLog: '',
+              step: 'wrongNumber',
+              wrongNumber: null,
+            })
+          }
+          title={
+            bothAreWrong ? (
+              <Msg
+                id={messageIds.report.steps.wrongNumber.summary.phoneBoth}
+                values={{ altPhone, phone }}
+              />
+            ) : (
+              <Msg
+                id={messageIds.report.steps.wrongNumber.summary.phoneSingle}
+                values={{
+                  phone: report.wrongNumber == 'altPhone' ? altPhone : phone,
+                }}
+              />
+            )
+          }
+        />
+      );
+    },
     renderVariant: (report, target) => {
       const phone = target?.phone;
       const altPhone = target?.alt_phone;
@@ -328,9 +408,15 @@ const reportSteps: ReportStep[] = [
           })
         }
         title={
-          report.organizerActionNeeded
-            ? 'You want an organizer to take a look at this call'
-            : 'No action is neccessary'
+          <Msg
+            id={
+              messageIds.report.steps.organizerAction.summary[
+                report.organizerActionNeeded
+                  ? 'orgActionNeeded'
+                  : 'orgActionNotNeeded'
+              ]
+            }
+          />
         }
       />
     ),
@@ -373,9 +459,13 @@ const reportSteps: ReportStep[] = [
           })
         }
         title={
-          report.organizerLog
-            ? 'You left a message to official'
-            : 'You did not leave a message to official'
+          <Msg
+            id={
+              messageIds.report.steps.organizerLog.summary[
+                report.organizerLog ? 'hasOrgLogMessage' : 'hasNoOrgLogMessage'
+              ]
+            }
+          />
         }
       />
     ),
@@ -403,9 +493,13 @@ const reportSteps: ReportStep[] = [
           })
         }
         title={
-          report.callerLog
-            ? 'You left a message to future callers'
-            : 'You did not leave a message to future callers'
+          <Msg
+            id={
+              messageIds.report.steps.callerLog.summary[
+                report.callerLog ? 'hasMessage' : 'hasNoMessage'
+              ]
+            }
+          />
         }
       />
     ),

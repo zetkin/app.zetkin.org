@@ -210,6 +210,139 @@ export default makeMessages('zui', {
       'Zetkin is a platform for organizing activism. Zetkin is developed by Zetkin Foundation, with a mission to work for radical change in society in a socialist, feminist, antiracist and sustainable direction.'
     ),
   },
+  report: {
+    steps: {
+      callBack: {
+        question: {
+          anyTimeOptionLabel: m('Any time of day'),
+          callBackButtonLabel: m<{ date: JSX.Element }>(
+            'Call back after {date}'
+          ),
+          dateLabel: m('On what date'),
+          examples: {
+            nextWeek: m('Next week'),
+            title: m('Examples:'),
+            today: m('Later today'),
+            tomorrow: m('Tomorrow'),
+          },
+          timeLabel: m('After what time'),
+          title: m('When should we call back?'),
+        },
+        summary: {
+          afterSpecificTime: m<{ time: JSX.Element }>('Call back after {time}'),
+          anyTime: m<{ date: JSX.Element }>(
+            'Call back on {date} at any time of day'
+          ),
+        },
+      },
+      callerLog: {
+        question: {
+          saveWithNoteButton: m('Save with note'),
+          saveWithoutNoteButton: m('Save without note'),
+          title: m('Do you wish to leave a note for future callers'),
+        },
+        summary: {
+          hasMessage: m('You did not leave a message for future callers'),
+          hasNoMessage: m('You left a message to future callers'),
+        },
+      },
+      couldTalk: {
+        question: {
+          noButton: m('No, call back'),
+          title: m('Could they talk?'),
+          yesButton: m('Yes'),
+        },
+        summary: {
+          couldNotTalk: m<{ firstName: string }>('firstName} could not talk'),
+          couldTalk: m<{ firstName: string }>('{firstName} could talk'),
+        },
+      },
+      failureReason: {
+        question: {
+          lineBusy: m('Busy'),
+          noPickup: m('No pick up'),
+          notAvailable: m('Not available right now'),
+          title: m('Why not?'),
+          wrongNumber: m('Wrong number'),
+        },
+        summary: {
+          lineBusy: m<{ firstName: string }>('The line was busy'),
+          noPickup: m<{ firstName: string }>('{firstName} did not pick up'),
+          notAvailable: m<{ firstName: string }>(
+            '{firstName} was not available to talk, we need to call back'
+          ),
+          wrongNumber: m<{ firstName: string }>(
+            'We have the wrong number for {firstName}'
+          ),
+        },
+      },
+      leftMessage: {
+        question: {
+          noButton: m('No'),
+          title: m('Did you leave a message on the answering machine?'),
+          yesButton: m('Yes'),
+        },
+        summary: {
+          didNotLeaveMessage: m('Did not leave message on answering machine'),
+          leftMessage: m('Left message on answering machine'),
+        },
+      },
+      organizerAction: {
+        question: {
+          noButton: m('No'),
+          title: m(
+            'Did anything happen during the call that requires action by an official?'
+          ),
+          yesButton: m('Yes'),
+        },
+        summary: {
+          orgActionNeeded: m(
+            'You want an organizer to take a look at this call'
+          ),
+          orgActionNotNeeded: m('No action is neccessary'),
+        },
+      },
+      organizerLog: {
+        question: {
+          title: m('Explain the problem to the official'),
+          withMessageButton: m('Include message'),
+          withoutMessageButton: m('Save without message'),
+        },
+        summary: {
+          hasNoOrgLogMessage: m('You did not leave a message to the officials'),
+          hasOrgLogMessage: m('You left a message to the officials'),
+        },
+      },
+      successOrFailure: {
+        question: {
+          noButton: m('No'),
+          title: m<{ firstName: string }>('Did you reach {firstName}?'),
+          yesButton: m('Yes'),
+        },
+        summary: {
+          failure: m<{ firstName: string }>('We did not reach {firstName}'),
+          success: m<{ firstName: string }>('{firstName} was reached'),
+        },
+      },
+      wrongNumber: {
+        question: {
+          bothButton: m('Both'),
+          title: m('Which number is wrong?'),
+        },
+        summary: {
+          phoneBoth: m<{ altPhone: string; phone: string }>(
+            'Both numbers are wrong: {phone} and {altPhone}'
+          ),
+          phoneSingle: m<{ phone: string }>(
+            'One phone number is wrong: {phone}'
+          ),
+        },
+      },
+    },
+    summary: {
+      undoButtonLabel: m('Undo'),
+    },
+  },
   signUpChip: {
     needed: m('You are needed'),
     signedUp: m('You have signed up'),

@@ -4,6 +4,8 @@ import { Stack } from '@mui/system';
 import { ReportType } from '..';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
+import messageIds from 'zui/l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -11,15 +13,16 @@ type Props = {
 };
 
 const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
+  const messages = useMessages(messageIds);
   return (
     <Stack gap="1rem">
       <ZUIText>
-        Did anything happen during the call that requires action by an official?
+        <Msg id={messageIds.report.steps.organizerAction.question.title} />
       </ZUIText>
       <ZUIButtonGroup
         buttons={[
           {
-            label: 'Yes',
+            label: messages.report.steps.organizerAction.question.yesButton(),
             onClick: () =>
               onReportUpdate({
                 ...report,
@@ -28,7 +31,7 @@ const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
               }),
           },
           {
-            label: 'No',
+            label: messages.report.steps.organizerAction.question.noButton(),
             onClick: () =>
               onReportUpdate({
                 ...report,
