@@ -245,7 +245,7 @@ const eventsSlice = createSlice({
 
       const uniqueEventIds = new Set([
         ...state.selectedEventIds,
-        ...toggledEvents.map((filtered) => filtered),
+        ...toggledEvents,
       ]);
       state.selectedEventIds = Array.from(uniqueEventIds);
     },
