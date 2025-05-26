@@ -63,6 +63,12 @@ type AutocompleteBaseProps = {
   ) => Option[];
 
   /**
+   * If the component should be full width or not.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
    * The label of the autocomplete.
    */
   label: string;
@@ -103,6 +109,7 @@ const ZUIAutocomplete: FC<Props> = ({
   action,
   checkboxes,
   filterOptions,
+  fullWidth = false,
   label,
   multiple,
   noOptionsText,
@@ -114,6 +121,7 @@ const ZUIAutocomplete: FC<Props> = ({
   return (
     <Autocomplete
       filterOptions={filterOptions}
+      fullWidth={fullWidth}
       multiple={multiple}
       noOptionsText={
         <Typography sx={{ fontStyle: 'italic' }} variant="labelXlMedium">

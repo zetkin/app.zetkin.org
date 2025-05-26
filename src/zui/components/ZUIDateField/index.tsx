@@ -10,6 +10,12 @@ type ZUIDateFieldProps = Pick<
   'datesToMark' | 'disablePast'
 > & {
   /**
+   * If the field should be full width or not.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
    * The label of the date field.
    */
   label: string;
@@ -34,6 +40,7 @@ type ZUIDateFieldProps = Pick<
 const ZUIDateField: FC<ZUIDateFieldProps> = ({
   disablePast = false,
   datesToMark = [],
+  fullWidth = false,
   label,
   onChange,
   size = 'medium',
@@ -85,6 +92,7 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
           }),
         },
         textField: {
+          fullWidth: fullWidth,
           sx: (theme) => ({
             '& > label': {
               fontFamily: theme.typography.fontFamily,
