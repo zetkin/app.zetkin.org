@@ -31,7 +31,7 @@ export type ZetkinCallTarget = ZetkinPerson & {
   future_actions: ZetkinEvent[];
   name: string;
   past_actions: {
-    last_action: ZetkinEvent;
+    last_action: ZetkinEvent | null;
     num_actions: number;
   };
   tags: ZetkinTag[];
