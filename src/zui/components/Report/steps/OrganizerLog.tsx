@@ -7,14 +7,17 @@ import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
 
 type Props = {
+  initialMessage?: string;
   onReportUpdate: (updatedReport: ReportType) => void;
   report: ReportType;
 };
 
-const OrganizerLog: FC<Props> = ({ onReportUpdate, report }) => {
-  const [message, setMessage] = useState(
-    report.wrongNumber ? 'Wrong number, please investigate' : ''
-  );
+const OrganizerLog: FC<Props> = ({
+  initialMessage,
+  onReportUpdate,
+  report,
+}) => {
+  const [message, setMessage] = useState(initialMessage || '');
 
   return (
     <Stack gap="1rem">

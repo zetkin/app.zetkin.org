@@ -47,7 +47,7 @@ type ReportStep = {
   renderQuestion: (
     report: ReportType,
     onReportUpdate: (updatedReport: ReportType) => void,
-    phoneAndAltPhone?: Pick<ZetkinCallTarget, 'phone' | 'alt_phone'>
+    target?: ZetkinCallTarget
   ) => ReactNode;
   renderSummary: (
     report: ReportType,
@@ -114,9 +114,18 @@ const reportSteps: ReportStep[] = [
   },
   {
     name: 'failureReason',
-    renderQuestion: (report, onReportUpdate) => (
-      <FailureReason onReportUpdate={onReportUpdate} report={report} />
-    ),
+    renderQuestion: (report, onReportUpdate, target) => {
+      const phone = target?.phone;
+      const altPhone = target?.alt_phone;
+
+      return (
+        <FailureReason
+          nextStepIfWrongNumber={phone && altPhone ? 'wrongNumber' : 'orgLog'}
+          onReportUpdate={onReportUpdate}
+          report={report}
+        />
+      );
+    },
     renderSummary: (report, onReportUpdate) => {
       if (report.failureReason) {
         const failureReasons = {
@@ -247,7 +256,10 @@ const reportSteps: ReportStep[] = [
         title="We had the wrong number"
       />
     ),
-    renderVariant: (report, phoneAndAltPhone) => {
+    renderVariant: (report, target) => {
+      const phone = target?.phone;
+      const altPhone = target?.alt_phone;
+
       if (report.success) {
         // Don't render this step at all if the call was successful.
         return null;
@@ -255,8 +267,6 @@ const reportSteps: ReportStep[] = [
         // Don't render this if failure was anything but wrong number.
         return null;
       } else {
-        const phone = phoneAndAltPhone?.phone;
-        const altPhone = phoneAndAltPhone?.alt_phone;
         if (phone && altPhone) {
           return report.step == 'wrongNumber' ? 'question' : 'summary';
         } else {
@@ -293,9 +303,27 @@ const reportSteps: ReportStep[] = [
   },
   {
     name: 'orgLog',
-    renderQuestion: (report, onReportUpdate) => (
-      <OrganizerLog onReportUpdate={onReportUpdate} report={report} />
-    ),
+    renderQuestion: (report, onReportUpdate, target) => {
+      const wrongNumber = report.wrongNumber;
+      const phone = target?.phone;
+      const altPhone = target?.alt_phone;
+
+      const wrongNumberMessages = {
+        altPhone: `Alt phone is wrong: ${altPhone}`,
+        both: `Both phone numbers are wrong, ${phone} and ${altPhone}`,
+        phone: `Phone is wrong ${phone}`,
+      } as const;
+
+      return (
+        <OrganizerLog
+          initialMessage={
+            wrongNumber ? wrongNumberMessages[wrongNumber] : undefined
+          }
+          onReportUpdate={onReportUpdate}
+          report={report}
+        />
+      );
+    },
     renderSummary: (report, onReportUpdate) => (
       <Summary
         onClick={() =>
@@ -342,6 +370,7 @@ const reportSteps: ReportStep[] = [
       />
     ),
     renderVariant: (report) => {
+      //TODO: Don't show if assignment does not allow caller notes
       return report.step == 'callerLog' ? 'question' : 'summary';
     },
   },
@@ -350,7 +379,7 @@ const reportSteps: ReportStep[] = [
 type ReportProps = {
   onReportUpdate: (updatedReport: ReportType) => void;
   report: ReportType;
-  target: Pick<ZetkinCallTarget, 'phone' | 'alt_phone'>;
+  target: ZetkinCallTarget;
 };
 
 const Report: FC<ReportProps> = ({ onReportUpdate, report, target }) => {
@@ -375,7 +404,7 @@ const Report: FC<ReportProps> = ({ onReportUpdate, report, target }) => {
     } else {
       const step = reportSteps[i];
 
-      const renderVariant = step.renderVariant(report);
+      const renderVariant = step.renderVariant(report, target);
 
       if (renderVariant == 'summary') {
         steps.push(step.renderSummary);

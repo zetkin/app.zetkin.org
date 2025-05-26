@@ -6,11 +6,16 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 
 type Props = {
+  nextStepIfWrongNumber: 'wrongNumber' | 'orgLog';
   onReportUpdate: (updatedReport: ReportType) => void;
   report: ReportType;
 };
 
-const FailureReason: FC<Props> = ({ onReportUpdate, report }) => {
+const FailureReason: FC<Props> = ({
+  nextStepIfWrongNumber,
+  onReportUpdate,
+  report,
+}) => {
   return (
     <Stack gap="1rem">
       <ZUIText>Why not?</ZUIText>
@@ -42,7 +47,7 @@ const FailureReason: FC<Props> = ({ onReportUpdate, report }) => {
                 ...report,
                 failureReason: 'wrongNumber',
                 organizerActionNeeded: true,
-                step: 'orgLog',
+                step: nextStepIfWrongNumber,
                 wrongNumber: 'phone',
               });
             }

@@ -46,9 +46,10 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <ZUIText>When should we call back?</ZUIText>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
         <ZUIDateField
           disablePast
+          fullWidth
           label="On what date"
           onChange={(newDate) => {
             if (newDate) {
@@ -58,6 +59,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           value={dayjs(date)}
         />
         <ZUIAutocomplete
+          fullWidth
           label="After what time"
           multiple={false}
           onChange={(newValue) => {
