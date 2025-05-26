@@ -17,6 +17,12 @@ interface ZUIButtonGroupProps {
   buttons: (ZUIButtonProps | ZUIIconButtonProps)[];
 
   /**
+   * If the component is full-width or not.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
    * The orientation of the button group.
    *
    * Defaults to "horizontal".
@@ -40,12 +46,14 @@ interface ZUIButtonGroupProps {
 
 const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   buttons,
+  fullWidth = false,
   orientation = 'horizontal',
   size = 'medium',
   variant = 'primary',
 }) => (
   <ButtonGroup
     orientation={orientation}
+    fullWidth={fullWidth}
     size={size}
     sx={{
       '& .MuiButton-outlined': {

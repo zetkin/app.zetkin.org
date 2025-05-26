@@ -240,6 +240,7 @@ export default makeMessages('zui', {
       },
       callerLog: {
         question: {
+          noteLabel: m('Add optional note'),
           saveWithNoteButton: m('Save with note'),
           saveWithoutNoteButton: m('Save without note'),
           title: m('Do you wish to leave a note for future callers'),
@@ -257,7 +258,7 @@ export default makeMessages('zui', {
       couldTalk: {
         question: {
           noButton: m('No, call back'),
-          title: m('Could they talk?'),
+          title: m<{ firstName: string }>('Could {firstName} talk?'),
           yesButton: m('Yes'),
         },
         summary: {
@@ -322,6 +323,7 @@ export default makeMessages('zui', {
       },
       organizerLog: {
         question: {
+          messageLabel: m('Add optional message'),
           title: m('Explain the problem to the official'),
           withMessageButton: m('Include message'),
           withoutMessageButton: m('Save without message'),

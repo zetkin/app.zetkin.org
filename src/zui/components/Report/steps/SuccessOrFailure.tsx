@@ -16,8 +16,8 @@ type Props = {
 const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="1rem">
-      <ZUIText>
+    <Stack gap="0.5rem">
+      <ZUIText variant="headingMd">
         <Msg
           id={messageIds.report.steps.successOrFailure.question.title}
           values={{ firstName }}
@@ -50,6 +50,7 @@ const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
             },
           },
         ]}
+        fullWidth
         variant="secondary"
       />
     </Stack>

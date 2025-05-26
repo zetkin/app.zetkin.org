@@ -123,8 +123,12 @@ const reportSteps: ReportStep[] = [
   },
   {
     name: 'couldTalk',
-    renderQuestion: (report, onReportUpdate) => (
-      <CouldTalk onReportUpdate={onReportUpdate} report={report} />
+    renderQuestion: (report, onReportUpdate, target) => (
+      <CouldTalk
+        firstName={target.first_name}
+        onReportUpdate={onReportUpdate}
+        report={report}
+      />
     ),
     renderSummary: (report, onReportUpdate, target) => (
       <Summary

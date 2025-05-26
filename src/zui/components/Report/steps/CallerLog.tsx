@@ -18,11 +18,12 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
   const [message, setMessage] = useState('');
 
   return (
-    <Stack gap="1rem">
-      <ZUIText>
+    <Stack gap="0.5rem">
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.report.steps.callerLog.question.title} />
       </ZUIText>
       <ZUITextField
+        label={messages.report.steps.callerLog.question.noteLabel()}
         multiline
         onChange={(newMessage) => setMessage(newMessage)}
         value={message}

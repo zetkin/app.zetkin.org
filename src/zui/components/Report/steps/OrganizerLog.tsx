@@ -23,11 +23,12 @@ const OrganizerLog: FC<Props> = ({
   const [message, setMessage] = useState(initialMessage || '');
 
   return (
-    <Stack gap="1rem">
-      <ZUIText>
+    <Stack gap="0.5rem">
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.report.steps.organizerLog.question.title} />
       </ZUIText>
       <ZUITextField
+        label={messages.report.steps.organizerLog.question.messageLabel()}
         multiline
         onChange={(newMessage) => setMessage(newMessage)}
         value={message}

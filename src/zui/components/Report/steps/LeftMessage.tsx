@@ -15,8 +15,8 @@ type Props = {
 const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="1rem">
-      <ZUIText>
+    <Stack gap="0.5rem">
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.report.steps.leftMessage.question.title} />
       </ZUIText>
       <ZUIButtonGroup
@@ -40,6 +40,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
               }),
           },
         ]}
+        fullWidth
         variant="secondary"
       />
     </Stack>

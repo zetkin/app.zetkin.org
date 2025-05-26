@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ReportType } from '..';
@@ -56,8 +56,8 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
   const callBackAfter = `${date.year()}-${month}-${day}T${callBackTime}`;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ZUIText>
+    <Stack gap="0.5rem">
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.report.steps.callBack.question.title} />
       </ZUIText>
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -150,7 +150,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         }}
         variant="secondary"
       />
-    </Box>
+    </Stack>
   );
 };
 

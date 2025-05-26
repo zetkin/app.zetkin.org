@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
+import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -20,8 +20,8 @@ const WrongNumber: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   return (
-    <Box alignItems="flex-start" display="flex" flexDirection="column">
-      <ZUIText>
+    <Stack gap="0.5rem" sx={{ alignItems: 'flex-start' }}>
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.report.steps.wrongNumber.question.title} />
       </ZUIText>
       <ZUIButton
@@ -60,7 +60,7 @@ const WrongNumber: FC<Props> = ({
         }
         variant="secondary"
       />
-    </Box>
+    </Stack>
   );
 };
 

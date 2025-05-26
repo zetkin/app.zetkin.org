@@ -8,16 +8,20 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 
 type Props = {
+  firstName: string;
   onReportUpdate: (updatedReport: ReportType) => void;
   report: ReportType;
 };
 
-const CouldTalk: FC<Props> = ({ onReportUpdate, report }) => {
+const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="1rem">
-      <ZUIText>
-        <Msg id={messageIds.report.steps.couldTalk.question.title} />
+    <Stack gap="0.5rem">
+      <ZUIText variant="headingMd">
+        <Msg
+          id={messageIds.report.steps.couldTalk.question.title}
+          values={{ firstName }}
+        />
       </ZUIText>
       <ZUIButtonGroup
         buttons={[
@@ -46,6 +50,7 @@ const CouldTalk: FC<Props> = ({ onReportUpdate, report }) => {
             },
           },
         ]}
+        fullWidth
         variant="secondary"
       />
     </Stack>
