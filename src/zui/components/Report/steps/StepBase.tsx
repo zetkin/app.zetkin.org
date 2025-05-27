@@ -1,9 +1,8 @@
-import { Done, Undo } from '@mui/icons-material';
-import { Box, Divider, Stack } from '@mui/material';
+import { Close, Done, QuestionMark, Undo } from '@mui/icons-material';
+import { Box, Stack } from '@mui/material';
 import { useMessages } from 'core/i18n';
 import { FC, ReactNode } from 'react';
 import ZUIButton from 'zui/components/ZUIButton';
-import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import ZUIText from 'zui/components/ZUIText';
 import messageIds from 'zui/l10n/messageIds';
@@ -12,11 +11,19 @@ type Props = {
   children?: ReactNode;
   onEdit?: () => void;
   subtitle?: JSX.Element;
+  state: 'active' | 'failure' | 'success';
   title: JSX.Element;
 };
 
-const StepBase: FC<Props> = ({ children, onEdit, subtitle, title }) => {
+const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
   const messages = useMessages(messageIds);
+
+  const icons = {
+    active: QuestionMark,
+    failure: Close,
+    success: Done,
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box
@@ -37,14 +44,17 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, title }) => {
           <Box
             sx={(theme) => ({
               alignItems: 'center',
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor:
+                state == 'failure'
+                  ? theme.palette.secondary.light
+                  : theme.palette.primary.main,
               borderRadius: '5rem',
               display: 'flex',
               justifyContent: 'center',
               padding: '2px',
             })}
           >
-            <ZUIIcon color="white" icon={Done} size="small" />
+            <ZUIIcon color="white" icon={icons[state]} size="small" />
           </Box>
           <ZUIText variant="headingMd">{title}</ZUIText>
         </Box>

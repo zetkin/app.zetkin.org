@@ -20,6 +20,7 @@ const FailureReason: FC<Props> = ({
   const messages = useMessages(messageIds);
   return (
     <StepBase
+      state="active"
       title={<Msg id={messageIds.report.steps.failureReason.question.title} />}
     >
       <ZUIButton

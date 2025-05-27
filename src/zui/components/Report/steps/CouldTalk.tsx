@@ -16,6 +16,7 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
     <StepBase
+      state="active"
       title={
         <Msg
           id={messageIds.report.steps.couldTalk.question.title}

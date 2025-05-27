@@ -17,6 +17,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
     <StepBase
+      state="active"
       title={<Msg id={messageIds.report.steps.leftMessage.question.title} />}
     >
       <ZUIButtonGroup

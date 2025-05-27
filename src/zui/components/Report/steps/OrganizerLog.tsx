@@ -25,6 +25,7 @@ const OrganizerLog: FC<Props> = ({
 
   return (
     <StepBase
+      state="active"
       title={<Msg id={messageIds.report.steps.organizerLog.question.title} />}
     >
       <ZUITextField

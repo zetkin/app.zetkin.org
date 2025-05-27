@@ -18,6 +18,7 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
 
   return (
     <StepBase
+      state="active"
       title={<Msg id={messageIds.report.steps.callerLog.question.title} />}
     >
       <ZUITextField

@@ -76,7 +76,7 @@ const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate, target) => (
       <Summary
-        onClick={() =>
+        onEdit={() =>
           onReportUpdate({
             ...report,
             callBackAfter: null,
@@ -91,6 +91,7 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
+        state={report.success ? 'success' : 'failure'}
         subtitle={
           <Msg
             id={
@@ -132,7 +133,7 @@ const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate, target) => (
       <Summary
-        onClick={() =>
+        onEdit={() =>
           onReportUpdate({
             ...report,
             callBackAfter: null,
@@ -146,6 +147,7 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
+        state={report.targetCouldTalk ? 'success' : 'failure'}
         subtitle={
           <Msg
             id={
@@ -193,7 +195,7 @@ const reportSteps: ReportStep[] = [
       if (report.failureReason) {
         return (
           <Summary
-            onClick={() =>
+            onEdit={() =>
               onReportUpdate({
                 ...report,
                 callBackAfter: null,
@@ -206,6 +208,7 @@ const reportSteps: ReportStep[] = [
                 wrongNumber: null,
               })
             }
+            state="failure"
             title={
               <Msg
                 id={
@@ -238,7 +241,7 @@ const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
-        onClick={() =>
+        onEdit={() =>
           onReportUpdate({
             ...report,
             callBackAfter: null,
@@ -250,6 +253,7 @@ const reportSteps: ReportStep[] = [
             wrongNumber: null,
           })
         }
+        state={report.leftMessage ? 'success' : 'failure'}
         subtitle={
           report.leftMessage ? (
             <Msg
@@ -298,7 +302,7 @@ const reportSteps: ReportStep[] = [
 
       return (
         <Summary
-          onClick={() =>
+          onEdit={() =>
             onReportUpdate({
               ...report,
               callBackAfter: null,
@@ -309,6 +313,7 @@ const reportSteps: ReportStep[] = [
               wrongNumber: null,
             })
           }
+          state="success"
           subtitle={
             <Msg
               id={messageIds.report.steps.callBack.summary.subtitle}
@@ -379,7 +384,7 @@ const reportSteps: ReportStep[] = [
 
       return (
         <Summary
-          onClick={() =>
+          onEdit={() =>
             onReportUpdate({
               ...report,
               callBackAfter: null,
@@ -390,6 +395,7 @@ const reportSteps: ReportStep[] = [
               wrongNumber: null,
             })
           }
+          state="failure"
           title={
             bothAreWrong ? (
               <Msg
@@ -435,7 +441,7 @@ const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
-        onClick={() =>
+        onEdit={() =>
           onReportUpdate({
             ...report,
             callerLog: '',
@@ -445,6 +451,7 @@ const reportSteps: ReportStep[] = [
             step: 'orgAction',
           })
         }
+        state={report.organizerActionNeeded ? 'success' : 'failure'}
         subtitle={
           report.organizerActionNeeded ? (
             <Msg
@@ -497,7 +504,7 @@ const reportSteps: ReportStep[] = [
     },
     renderSummary: (report, onReportUpdate) => (
       <Summary
-        onClick={() =>
+        onEdit={() =>
           onReportUpdate({
             ...report,
             callerLog: '',
@@ -506,6 +513,7 @@ const reportSteps: ReportStep[] = [
             step: 'orgLog',
           })
         }
+        state={report.organizerLog ? 'success' : 'failure'}
         subtitle={
           report.organizerLog ? (
             <Msg
@@ -543,7 +551,7 @@ const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
-        onClick={() =>
+        onEdit={() =>
           onReportUpdate({
             ...report,
             callerLog: '',
@@ -551,6 +559,7 @@ const reportSteps: ReportStep[] = [
             step: 'callerLog',
           })
         }
+        state={report.callerLog ? 'success' : 'failure'}
         subtitle={
           report.callerLog ? (
             <Msg

@@ -20,6 +20,7 @@ const WrongNumber: FC<Props> = ({
   const messages = useMessages(messageIds);
   return (
     <StepBase
+      state="active"
       title={<Msg id={messageIds.report.steps.wrongNumber.question.title} />}
     >
       <ZUIButton

@@ -58,6 +58,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
   return (
     <StepBase
+      state="active"
       title={<Msg id={messageIds.report.steps.callBack.question.title} />}
     >
       <Box sx={{ display: 'flex', gap: '1rem' }}>

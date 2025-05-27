@@ -15,6 +15,7 @@ const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
     <StepBase
+      state="active"
       title={
         <Msg id={messageIds.report.steps.organizerAction.question.title} />
       }
