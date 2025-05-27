@@ -12,12 +12,6 @@ type Context = {
   };
 };
 
-const clientId = requiredEnvVar('ZETKIN_CLIENT_ID');
-const clientSecret = requiredEnvVar('ZETKIN_CLIENT_SECRET');
-const host = requiredEnvVar('ZETKIN_API_HOST');
-const port = process.env.ZETKIN_API_PORT;
-const ssl = stringToBool(process.env.ZETKIN_USE_TLS);
-
 export const GET = proxy;
 export const POST = proxy;
 export const PATCH = proxy;
@@ -28,6 +22,12 @@ async function proxy(
   request: Request,
   context: Context
 ): Promise<NextResponse> {
+  const clientId = requiredEnvVar('ZETKIN_CLIENT_ID');
+  const clientSecret = requiredEnvVar('ZETKIN_CLIENT_SECRET');
+  const host = requiredEnvVar('ZETKIN_API_HOST');
+  const port = process.env.ZETKIN_API_PORT;
+  const ssl = stringToBool(process.env.ZETKIN_USE_TLS);
+
   const path = context.params.path;
   const pathStr = path.join('/');
 
