@@ -253,12 +253,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
         <Box
           component="span"
           sx={{
-            maxWidth: noWrap
-              ? {
-                  sm: 'fit-content',
-                  xs: '100%',
-                }
-              : undefined,
+            maxWidth: noWrap ? '100%' : undefined,
             overflow: noWrap ? 'hidden' : undefined,
             textOverflow: noWrap ? 'ellipsis' : undefined,
             whiteSpace: noWrap ? 'nowrap' : undefined,
