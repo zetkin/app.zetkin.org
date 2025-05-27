@@ -6,7 +6,7 @@ import { useMessages } from 'core/i18n';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import ZUIText from 'zui/components/ZUIText';
-import messageIds from 'zui/l10n/messageIds';
+import messageIds from 'features/call/l10n/messageIds';
 
 type Props = {
   children?: ReactNode;

@@ -1,11 +1,9 @@
 import { FC } from 'react';
-import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
-import ZUIText from 'zui/components/ZUIText';
+import messageIds from 'features/call/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'zui/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {
@@ -13,31 +11,33 @@ type Props = {
   report: ReportType;
 };
 
-const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
+const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
     <StepBase
       state="active"
-      title={<Msg id={messageIds.report.steps.leftMessage.question.title} />}
+      title={
+        <Msg id={messageIds.report.steps.organizerAction.question.title} />
+      }
     >
       <ZUIButtonGroup
         buttons={[
           {
-            label: messages.report.steps.leftMessage.question.yesButton(),
+            label: messages.report.steps.organizerAction.question.yesButton(),
             onClick: () =>
               onReportUpdate({
                 ...report,
-                leftMessage: true,
-                step: 'orgAction',
+                organizerActionNeeded: true,
+                step: 'orgLog',
               }),
           },
           {
-            label: messages.report.steps.leftMessage.question.noButton(),
+            label: messages.report.steps.organizerAction.question.noButton(),
             onClick: () =>
               onReportUpdate({
                 ...report,
-                leftMessage: false,
-                step: 'orgAction',
+                organizerActionNeeded: false,
+                step: 'callerLog',
               }),
           },
         ]}
@@ -48,4 +48,4 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
   );
 };
 
-export default LeftMessage;
+export default OrganizerAction;

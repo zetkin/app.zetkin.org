@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'zui/l10n/messageIds';
+import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import { ReportType } from '..';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'zui/l10n/messageIds';
+import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {

@@ -12,7 +12,7 @@ import CallerLog from './steps/CallerLog';
 import WrongNumber from './steps/WrongNumber';
 import { ZetkinCallTarget } from 'features/call/types';
 import Summary from './steps/Summary';
-import messageIds from 'zui/l10n/messageIds';
+import messageIds from 'features/call/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDate from 'zui/ZUIDate';

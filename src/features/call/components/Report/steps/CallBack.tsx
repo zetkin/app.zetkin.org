@@ -8,7 +8,7 @@ import ZUIDateField from 'zui/components/ZUIDateField';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'zui/l10n/messageIds';
+import messageIds from 'features/call/l10n/messageIds';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import StepBase from './StepBase';
