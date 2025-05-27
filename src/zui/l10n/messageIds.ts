@@ -243,7 +243,7 @@ export default makeMessages('zui', {
           noteLabel: m('Add optional note'),
           saveWithNoteButton: m('Save with note'),
           saveWithoutNoteButton: m('Save without note'),
-          title: m('Do you wish to leave a note for future callers'),
+          title: m('Do you wish to leave a note for future callers?'),
         },
         summary: {
           withNote: {

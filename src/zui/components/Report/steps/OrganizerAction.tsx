@@ -1,11 +1,10 @@
 import { FC } from 'react';
-import { Stack } from '@mui/system';
 
 import { ReportType } from '..';
-import ZUIText from 'zui/components/ZUIText';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import StepBase from './StepBase';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -15,10 +14,11 @@ type Props = {
 const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="0.5rem">
-      <ZUIText variant="headingMd">
+    <StepBase
+      title={
         <Msg id={messageIds.report.steps.organizerAction.question.title} />
-      </ZUIText>
+      }
+    >
       <ZUIButtonGroup
         buttons={[
           {
@@ -43,7 +43,7 @@ const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
         fullWidth
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 

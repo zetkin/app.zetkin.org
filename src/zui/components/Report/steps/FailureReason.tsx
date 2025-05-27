@@ -1,11 +1,10 @@
 import { FC } from 'react';
-import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
-import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import StepBase from './StepBase';
 
 type Props = {
   nextStepIfWrongNumber: 'wrongNumber' | 'orgLog';
@@ -20,10 +19,9 @@ const FailureReason: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="0.5rem" sx={{ alignItems: 'flex-start' }}>
-      <ZUIText variant="headingMd">
-        <Msg id={messageIds.report.steps.failureReason.question.title} />
-      </ZUIText>
+    <StepBase
+      title={<Msg id={messageIds.report.steps.failureReason.question.title} />}
+    >
       <ZUIButton
         label={messages.report.steps.failureReason.question.noPickup()}
         onClick={() => {
@@ -78,7 +76,7 @@ const FailureReason: FC<Props> = ({
         }}
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 

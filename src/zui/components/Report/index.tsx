@@ -622,7 +622,7 @@ const Report: FC<ReportProps> = ({ onReportUpdate, report, target }) => {
   }
 
   return (
-    <Stack gap="1rem">
+    <Stack>
       {steps.map((render) => render(report, onReportUpdate, target))}
     </Stack>
   );

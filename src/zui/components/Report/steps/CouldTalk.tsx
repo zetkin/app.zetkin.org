@@ -1,11 +1,10 @@
 import { FC } from 'react';
-import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
-import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import StepBase from './StepBase';
 
 type Props = {
   firstName: string;
@@ -16,13 +15,14 @@ type Props = {
 const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="0.5rem">
-      <ZUIText variant="headingMd">
+    <StepBase
+      title={
         <Msg
           id={messageIds.report.steps.couldTalk.question.title}
           values={{ firstName }}
         />
-      </ZUIText>
+      }
+    >
       <ZUIButtonGroup
         buttons={[
           {
@@ -53,7 +53,7 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
         fullWidth
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 

@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ReportType } from '..';
@@ -11,6 +11,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIDateTime from 'zui/ZUIDateTime';
+import StepBase from './StepBase';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -56,10 +57,9 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
   const callBackAfter = `${date.year()}-${month}-${day}T${callBackTime}`;
 
   return (
-    <Stack gap="0.5rem">
-      <ZUIText variant="headingMd">
-        <Msg id={messageIds.report.steps.callBack.question.title} />
-      </ZUIText>
+    <StepBase
+      title={<Msg id={messageIds.report.steps.callBack.question.title} />}
+    >
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <ZUIDateField
           disablePast
@@ -150,7 +150,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         }}
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 

@@ -7,6 +7,7 @@ import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import StepBase from './StepBase';
 
 type Props = {
   initialMessage?: string;
@@ -23,10 +24,9 @@ const OrganizerLog: FC<Props> = ({
   const [message, setMessage] = useState(initialMessage || '');
 
   return (
-    <Stack gap="0.5rem">
-      <ZUIText variant="headingMd">
-        <Msg id={messageIds.report.steps.organizerLog.question.title} />
-      </ZUIText>
+    <StepBase
+      title={<Msg id={messageIds.report.steps.organizerLog.question.title} />}
+    >
       <ZUITextField
         label={messages.report.steps.organizerLog.question.messageLabel()}
         multiline
@@ -46,7 +46,7 @@ const OrganizerLog: FC<Props> = ({
         }
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 

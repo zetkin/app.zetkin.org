@@ -1,12 +1,11 @@
 import { FC, useState } from 'react';
-import { Stack } from '@mui/system';
 
 import { ReportType } from '..';
-import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import StepBase from './StepBase';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -18,10 +17,9 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
   const [message, setMessage] = useState('');
 
   return (
-    <Stack gap="0.5rem">
-      <ZUIText variant="headingMd">
-        <Msg id={messageIds.report.steps.callerLog.question.title} />
-      </ZUIText>
+    <StepBase
+      title={<Msg id={messageIds.report.steps.callerLog.question.title} />}
+    >
       <ZUITextField
         label={messages.report.steps.callerLog.question.noteLabel()}
         multiline
@@ -37,7 +35,7 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
         }
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 

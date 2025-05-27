@@ -6,6 +6,7 @@ import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
+import StepBase from './StepBase';
 
 type Props = {
   onReportUpdate: (updatedReport: ReportType) => void;
@@ -15,10 +16,9 @@ type Props = {
 const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   return (
-    <Stack gap="0.5rem">
-      <ZUIText variant="headingMd">
-        <Msg id={messageIds.report.steps.leftMessage.question.title} />
-      </ZUIText>
+    <StepBase
+      title={<Msg id={messageIds.report.steps.leftMessage.question.title} />}
+    >
       <ZUIButtonGroup
         buttons={[
           {
@@ -43,7 +43,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
         fullWidth
         variant="secondary"
       />
-    </Stack>
+    </StepBase>
   );
 };
 
