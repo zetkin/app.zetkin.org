@@ -78,7 +78,7 @@ export default makeMessages('feat.calendar', {
     week: m('Week'),
   },
   selectionBar: {
-    deselect: m('Select none'),
+    deselect: m('Deselect all'),
     editEvents: m('Edit events'),
     editParticipants: m('Manage participants'),
     ellipsisMenu: {
@@ -110,7 +110,7 @@ export default makeMessages('feat.calendar', {
       nextDay: m<{ dates: ReactElement }>('Next day {dates}'),
       nextWeek: m<{ dates: ReactElement }>('Next week {dates}'),
     },
-    selectAll: m('Select all'),
+    selectAll: m('Select visible'),
   },
   shortWeek: m<{ weekNumber: number }>('w {weekNumber}'),
   showMore: m('Show'),
