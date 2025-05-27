@@ -8,6 +8,7 @@ export enum ImportProblemKind {
   UNKNOWN_PERSON = 'UNKNOWN_PERSON',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR',
   MAJOR_CHANGE = 'MAJOR_CHANGE',
+  INVALID_ORG_COUNTRY = 'INVALID_ORG_COUNTRY',
 }
 
 export type ImportFieldProblem = {
@@ -38,6 +39,11 @@ export type ImportSheetProblem = {
     | ImportProblemKind.UNCONFIGURED_ID_AND_NAME;
 };
 
+export type ImportOrgProblem = {
+  code: string;
+  kind: ImportProblemKind.INVALID_ORG_COUNTRY;
+};
+
 export type ImportUnexpectedProblem = {
   kind: ImportProblemKind.UNEXPECTED_ERROR;
 };
@@ -45,6 +51,7 @@ export type ImportUnexpectedProblem = {
 export type ImportProblem =
   | ImportFieldProblem
   | ImportFieldMetaProblem
+  | ImportOrgProblem
   | ImportRowProblem
   | ImportSheetProblem
   | ImportUnexpectedProblem;

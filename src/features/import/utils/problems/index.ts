@@ -2,6 +2,7 @@ import { ImportProblem, ImportProblemKind } from './types';
 
 const LEVEL_BY_PROBLEM_KIND: Record<ImportProblemKind, 'warning' | 'error'> = {
   INVALID_FORMAT: 'error',
+  INVALID_ORG_COUNTRY: 'warning',
   MAJOR_CHANGE: 'warning',
   MISSING_ID_AND_NAME: 'error',
   NO_IMPACT: 'error',
