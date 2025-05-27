@@ -1,5 +1,5 @@
 import { Close, Done, QuestionMark, Undo } from '@mui/icons-material';
-import { Box, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 import { useMessages } from 'core/i18n';
@@ -84,9 +84,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
             {subtitle}
           </ZUIText>
         )}
-        {children && (
-          <Stack sx={{ gap: '0.5rem', paddingY: '0.5rem' }}>{children}</Stack>
-        )}
+        {children && <Box sx={{ paddingY: '0.5rem' }}>{children}</Box>}
       </Box>
     </Box>
   );

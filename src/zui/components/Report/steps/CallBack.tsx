@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ReportType } from '..';
@@ -61,96 +61,100 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
       state="active"
       title={<Msg id={messageIds.report.steps.callBack.question.title} />}
     >
-      <Box sx={{ display: 'flex', gap: '1rem' }}>
-        <ZUIDateField
-          disablePast
-          fullWidth
-          label={messages.report.steps.callBack.question.dateLabel()}
-          onChange={(newDate) => {
-            if (newDate) {
-              setDate(newDate);
-            }
-          }}
-          value={dayjs(date)}
-        />
-        <ZUIAutocomplete
-          fullWidth
-          label={messages.report.steps.callBack.question.timeLabel()}
-          multiple={false}
-          onChange={(newValue) => {
-            if (newValue) {
-              setTime(newValue);
-            }
-          }}
-          options={options}
-          value={time}
-        />
-      </Box>
-      <Box sx={{ alignItems: 'center', display: 'flex' }}>
-        <ZUIText variant="bodySmRegular">
-          <Msg id={messageIds.report.steps.callBack.question.examples.title} />
-        </ZUIText>
-        <ZUIButton
-          label={messages.report.steps.callBack.question.examples.today()}
-          onClick={() => {
-            setDate(today);
-            const currentHour = today.hour();
-
-            let callBackHour: number = currentHour + 3;
-            if (currentHour == 23) {
-              //If it's after 23.00 and you press this button,
-              //we set the call back time to "any time tomorrow"
-              setTime(options[0]);
-              setDate(today.add(1, 'day'));
-            } else {
-              let hourString: string =
-                callBackHour.toString().padStart(2, '0') + ':00';
-              if (currentHour >= 21) {
-                //If it's after 21.00 we add 1 hour to the call back time
-                //instead of 3.
-                callBackHour = currentHour + 1;
-                hourString = callBackHour.toString().padStart(2, '0') + ':00';
+      <Stack sx={{ gap: '0.5rem' }}>
+        <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <ZUIDateField
+            disablePast
+            fullWidth
+            label={messages.report.steps.callBack.question.dateLabel()}
+            onChange={(newDate) => {
+              if (newDate) {
+                setDate(newDate);
               }
-              setTime({ label: `After ${hourString}`, value: hourString });
-            }
-          }}
-          size="small"
-        />
+            }}
+            value={dayjs(date)}
+          />
+          <ZUIAutocomplete
+            fullWidth
+            label={messages.report.steps.callBack.question.timeLabel()}
+            multiple={false}
+            onChange={(newValue) => {
+              if (newValue) {
+                setTime(newValue);
+              }
+            }}
+            options={options}
+            value={time}
+          />
+        </Box>
+        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+          <ZUIText variant="bodySmRegular">
+            <Msg
+              id={messageIds.report.steps.callBack.question.examples.title}
+            />
+          </ZUIText>
+          <ZUIButton
+            label={messages.report.steps.callBack.question.examples.today()}
+            onClick={() => {
+              setDate(today);
+              const currentHour = today.hour();
+
+              let callBackHour: number = currentHour + 3;
+              if (currentHour == 23) {
+                //If it's after 23.00 and you press this button,
+                //we set the call back time to "any time tomorrow"
+                setTime(options[0]);
+                setDate(today.add(1, 'day'));
+              } else {
+                let hourString: string =
+                  callBackHour.toString().padStart(2, '0') + ':00';
+                if (currentHour >= 21) {
+                  //If it's after 21.00 we add 1 hour to the call back time
+                  //instead of 3.
+                  callBackHour = currentHour + 1;
+                  hourString = callBackHour.toString().padStart(2, '0') + ':00';
+                }
+                setTime({ label: `After ${hourString}`, value: hourString });
+              }
+            }}
+            size="small"
+          />
+          <ZUIButton
+            label={messages.report.steps.callBack.question.examples.tomorrow()}
+            onClick={() => {
+              setDate(today.add(1, 'day'));
+              setTime(options[0]);
+            }}
+            size="small"
+          />
+          <ZUIButton
+            label={messages.report.steps.callBack.question.examples.nextWeek()}
+            onClick={() => {
+              setDate(getNextMonday());
+              setTime(options[0]);
+            }}
+            size="small"
+          />
+        </Box>
         <ZUIButton
-          label={messages.report.steps.callBack.question.examples.tomorrow()}
+          label={messages.report.steps.callBack.question.callBackButtonLabel({
+            date:
+              time.value == 'any' ? (
+                <ZUIDate datetime={callBackAfter} />
+              ) : (
+                <ZUIDateTime datetime={callBackAfter} />
+              ),
+          })}
           onClick={() => {
-            setDate(today.add(1, 'day'));
-            setTime(options[0]);
+            onReportUpdate({
+              ...report,
+              callBackAfter,
+              step: 'orgAction',
+            });
           }}
-          size="small"
+          variant="secondary"
         />
-        <ZUIButton
-          label={messages.report.steps.callBack.question.examples.nextWeek()}
-          onClick={() => {
-            setDate(getNextMonday());
-            setTime(options[0]);
-          }}
-          size="small"
-        />
-      </Box>
-      <ZUIButton
-        label={messages.report.steps.callBack.question.callBackButtonLabel({
-          date:
-            time.value == 'any' ? (
-              <ZUIDate datetime={callBackAfter} />
-            ) : (
-              <ZUIDateTime datetime={callBackAfter} />
-            ),
-        })}
-        onClick={() => {
-          onReportUpdate({
-            ...report,
-            callBackAfter,
-            step: 'orgAction',
-          });
-        }}
-        variant="secondary"
-      />
+      </Stack>
     </StepBase>
   );
 };

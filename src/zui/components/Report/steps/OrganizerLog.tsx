@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -37,25 +38,27 @@ const OrganizerLog: FC<Props> = ({ onReportUpdate, report, target }) => {
       state="active"
       title={<Msg id={messageIds.report.steps.organizerLog.question.title} />}
     >
-      <ZUITextField
-        label={messages.report.steps.organizerLog.question.messageLabel()}
-        multiline
-        onChange={(newMessage) => setMessage(newMessage)}
-        value={message}
-      />
-      <ZUIButton
-        label={messages.report.steps.organizerLog.question[
-          message ? 'withMessageButton' : 'withoutMessageButton'
-        ]()}
-        onClick={() =>
-          onReportUpdate({
-            ...report,
-            organizerLog: message,
-            step: 'callerLog',
-          })
-        }
-        variant="secondary"
-      />
+      <Stack sx={{ gap: '0.5rem' }}>
+        <ZUITextField
+          label={messages.report.steps.organizerLog.question.messageLabel()}
+          multiline
+          onChange={(newMessage) => setMessage(newMessage)}
+          value={message}
+        />
+        <ZUIButton
+          label={messages.report.steps.organizerLog.question[
+            message ? 'withMessageButton' : 'withoutMessageButton'
+          ]()}
+          onClick={() =>
+            onReportUpdate({
+              ...report,
+              organizerLog: message,
+              step: 'callerLog',
+            })
+          }
+          variant="secondary"
+        />
+      </Stack>
     </StepBase>
   );
 };

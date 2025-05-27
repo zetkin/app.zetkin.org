@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -23,42 +24,44 @@ const WrongNumber: FC<Props> = ({
       state="active"
       title={<Msg id={messageIds.report.steps.wrongNumber.question.title} />}
     >
-      <ZUIButton
-        label={phoneAndAltPhone.phone}
-        onClick={() =>
-          onReportUpdate({
-            ...report,
-            organizerActionNeeded: true,
-            step: 'orgLog',
-            wrongNumber: 'phone',
-          })
-        }
-        variant="secondary"
-      />
-      <ZUIButton
-        label={phoneAndAltPhone.altPhone}
-        onClick={() =>
-          onReportUpdate({
-            ...report,
-            organizerActionNeeded: true,
-            step: 'orgLog',
-            wrongNumber: 'altPhone',
-          })
-        }
-        variant="secondary"
-      />
-      <ZUIButton
-        label={messages.report.steps.wrongNumber.question.bothButton()}
-        onClick={() =>
-          onReportUpdate({
-            ...report,
-            organizerActionNeeded: true,
-            step: 'orgLog',
-            wrongNumber: 'both',
-          })
-        }
-        variant="secondary"
-      />
+      <Stack sx={{ alignItems: 'flex-start', gap: '0.5rem' }}>
+        <ZUIButton
+          label={phoneAndAltPhone.phone}
+          onClick={() =>
+            onReportUpdate({
+              ...report,
+              organizerActionNeeded: true,
+              step: 'orgLog',
+              wrongNumber: 'phone',
+            })
+          }
+          variant="secondary"
+        />
+        <ZUIButton
+          label={phoneAndAltPhone.altPhone}
+          onClick={() =>
+            onReportUpdate({
+              ...report,
+              organizerActionNeeded: true,
+              step: 'orgLog',
+              wrongNumber: 'altPhone',
+            })
+          }
+          variant="secondary"
+        />
+        <ZUIButton
+          label={messages.report.steps.wrongNumber.question.bothButton()}
+          onClick={() =>
+            onReportUpdate({
+              ...report,
+              organizerActionNeeded: true,
+              step: 'orgLog',
+              wrongNumber: 'both',
+            })
+          }
+          variant="secondary"
+        />
+      </Stack>
     </StepBase>
   );
 };

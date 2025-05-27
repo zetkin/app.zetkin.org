@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Stack } from '@mui/material';
 
 import { ReportType } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -23,60 +24,62 @@ const FailureReason: FC<Props> = ({
       state="active"
       title={<Msg id={messageIds.report.steps.failureReason.question.title} />}
     >
-      <ZUIButton
-        label={messages.report.steps.failureReason.question.noPickup()}
-        onClick={() => {
-          if (onReportUpdate) {
-            onReportUpdate({
-              ...report,
-              failureReason: 'noPickup',
-              step: 'leftMessage',
-            });
-          }
-        }}
-        variant="secondary"
-      />
-      <ZUIButton
-        label={messages.report.steps.failureReason.question.wrongNumber()}
-        onClick={() => {
-          if (onReportUpdate) {
-            onReportUpdate({
-              ...report,
-              failureReason: 'wrongNumber',
-              organizerActionNeeded: true,
-              step: nextStepIfWrongNumber,
-              wrongNumber: 'phone',
-            });
-          }
-        }}
-        variant="secondary"
-      />
-      <ZUIButton
-        label={messages.report.steps.failureReason.question.lineBusy()}
-        onClick={() => {
-          if (onReportUpdate) {
-            onReportUpdate({
-              ...report,
-              failureReason: 'lineBusy',
-              step: 'orgAction',
-            });
-          }
-        }}
-        variant="secondary"
-      />
-      <ZUIButton
-        label={messages.report.steps.failureReason.question.notAvailable()}
-        onClick={() => {
-          if (onReportUpdate) {
-            onReportUpdate({
-              ...report,
-              failureReason: 'notAvailable',
-              step: 'callBack',
-            });
-          }
-        }}
-        variant="secondary"
-      />
+      <Stack sx={{ alignItems: 'flex-start', gap: '0.5rem' }}>
+        <ZUIButton
+          label={messages.report.steps.failureReason.question.noPickup()}
+          onClick={() => {
+            if (onReportUpdate) {
+              onReportUpdate({
+                ...report,
+                failureReason: 'noPickup',
+                step: 'leftMessage',
+              });
+            }
+          }}
+          variant="secondary"
+        />
+        <ZUIButton
+          label={messages.report.steps.failureReason.question.wrongNumber()}
+          onClick={() => {
+            if (onReportUpdate) {
+              onReportUpdate({
+                ...report,
+                failureReason: 'wrongNumber',
+                organizerActionNeeded: true,
+                step: nextStepIfWrongNumber,
+                wrongNumber: 'phone',
+              });
+            }
+          }}
+          variant="secondary"
+        />
+        <ZUIButton
+          label={messages.report.steps.failureReason.question.lineBusy()}
+          onClick={() => {
+            if (onReportUpdate) {
+              onReportUpdate({
+                ...report,
+                failureReason: 'lineBusy',
+                step: 'orgAction',
+              });
+            }
+          }}
+          variant="secondary"
+        />
+        <ZUIButton
+          label={messages.report.steps.failureReason.question.notAvailable()}
+          onClick={() => {
+            if (onReportUpdate) {
+              onReportUpdate({
+                ...report,
+                failureReason: 'notAvailable',
+                step: 'callBack',
+              });
+            }
+          }}
+          variant="secondary"
+        />
+      </Stack>
     </StepBase>
   );
 };
