@@ -1,5 +1,6 @@
 import {
   CUSTOM_FIELD_TYPE,
+  EnumChoice,
   ZetkinPerson,
   ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
@@ -52,7 +53,8 @@ type EmbeddedJoinFormDataField =
   | {
       s: keyof ZetkinPersonNativeFields;
     }
-  | { l: string; s: string; t: CUSTOM_FIELD_TYPE };
+  | { l: string; s: string; t: CUSTOM_FIELD_TYPE }
+  | { e: EnumChoice[]; l: string; s: string; t: CUSTOM_FIELD_TYPE.ENUM };
 
 export type EmbeddedJoinFormData = {
   fields: EmbeddedJoinFormDataField[];
