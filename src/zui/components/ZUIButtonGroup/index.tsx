@@ -52,8 +52,8 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   variant = 'primary',
 }) => (
   <ButtonGroup
-    orientation={orientation}
     fullWidth={fullWidth}
+    orientation={orientation}
     size={size}
     sx={{
       '& .MuiButton-outlined': {
