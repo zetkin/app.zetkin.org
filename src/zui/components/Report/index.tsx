@@ -80,11 +80,9 @@ const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
-            callerLog: '',
             failureReason: null,
             leftMessage: false,
             organizerActionNeeded: false,
-            organizerLog: '',
             step: 'successOrFailure',
             success: false,
             targetCouldTalk: false,
@@ -137,11 +135,9 @@ const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
-            callerLog: '',
             failureReason: null,
             leftMessage: false,
             organizerActionNeeded: false,
-            organizerLog: '',
             step: 'couldTalk',
             targetCouldTalk: false,
             wrongNumber: null,
@@ -199,11 +195,8 @@ const reportSteps: ReportStep[] = [
               onReportUpdate({
                 ...report,
                 callBackAfter: null,
-                callerLog: '',
                 failureReason: null,
                 leftMessage: false,
-                organizerActionNeeded: false,
-                organizerLog: '',
                 step: 'failureReason',
                 wrongNumber: null,
               })
@@ -245,10 +238,8 @@ const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
-            callerLog: '',
             leftMessage: false,
             organizerActionNeeded: false,
-            organizerLog: '',
             step: 'leftMessage',
             wrongNumber: null,
           })
@@ -305,7 +296,6 @@ const reportSteps: ReportStep[] = [
           onEdit={() =>
             onReportUpdate({
               ...report,
-              callBackAfter: null,
               callerLog: '',
               organizerActionNeeded: false,
               organizerLog: '',
@@ -387,10 +377,7 @@ const reportSteps: ReportStep[] = [
           onEdit={() =>
             onReportUpdate({
               ...report,
-              callBackAfter: null,
-              callerLog: '',
               organizerActionNeeded: false,
-              organizerLog: '',
               step: 'wrongNumber',
               wrongNumber: null,
             })
@@ -444,10 +431,8 @@ const reportSteps: ReportStep[] = [
         onEdit={() =>
           onReportUpdate({
             ...report,
-            callerLog: '',
             leftMessage: false,
             organizerActionNeeded: false,
-            organizerLog: '',
             step: 'orgAction',
           })
         }
@@ -482,23 +467,11 @@ const reportSteps: ReportStep[] = [
   {
     name: 'orgLog',
     renderQuestion: (report, onReportUpdate, target) => {
-      const wrongNumber = report.wrongNumber;
-      const phone = target?.phone;
-      const altPhone = target?.alt_phone;
-
-      const wrongNumberMessages = {
-        altPhone: `Alt phone is wrong: ${altPhone}`,
-        both: `Both phone numbers are wrong, ${phone} and ${altPhone}`,
-        phone: `Phone is wrong ${phone}`,
-      } as const;
-
       return (
         <OrganizerLog
-          initialMessage={
-            wrongNumber ? wrongNumberMessages[wrongNumber] : undefined
-          }
           onReportUpdate={onReportUpdate}
           report={report}
+          target={target}
         />
       );
     },
@@ -507,9 +480,6 @@ const reportSteps: ReportStep[] = [
         onEdit={() =>
           onReportUpdate({
             ...report,
-            callerLog: '',
-            leftMessage: false,
-            organizerLog: '',
             step: 'orgLog',
           })
         }
@@ -554,8 +524,6 @@ const reportSteps: ReportStep[] = [
         onEdit={() =>
           onReportUpdate({
             ...report,
-            callerLog: '',
-            leftMessage: false,
             step: 'callerLog',
           })
         }

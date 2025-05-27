@@ -248,7 +248,7 @@ export default makeMessages('zui', {
         summary: {
           withNote: {
             subtitle: m<{ note: string }>(
-              'Future callers will see your note: {message}'
+              'Future callers will see your note: {note}'
             ),
             title: m('You wrote a note to future callers'),
           },
@@ -309,14 +309,14 @@ export default makeMessages('zui', {
         question: {
           noButton: m('No'),
           title: m(
-            'Did anything happen during the call that requires action by an official?'
+            'Did anything happen during the call that requires action by an organizer?'
           ),
           yesButton: m('Yes'),
         },
         summary: {
           orgActionNeeded: {
-            subtitle: m('An official will be notified'),
-            title: m('You want an official to take a look at this call'),
+            subtitle: m('An organizer will be notified'),
+            title: m('You want an organizer to take a look at this call'),
           },
           orgActionNotNeeded: m('No action is neccessary'),
         },
@@ -324,18 +324,27 @@ export default makeMessages('zui', {
       organizerLog: {
         question: {
           messageLabel: m('Add optional message'),
-          title: m('Explain the problem to the official'),
+          title: m('Explain the problem to the organizer'),
           withMessageButton: m('Include message'),
           withoutMessageButton: m('Save without message'),
+          wrongNumberMessages: {
+            altPhone: m<{ altPhone: string }>(
+              'Alt phone number is wrong: {altPhone}'
+            ),
+            both: m<{ altPhone: string; phone: string }>(
+              'Both phone numbers are wrong, {phone} and {altPhone}'
+            ),
+            phone: m<{ phone: string }>('Phone number is wrong: {phone}'),
+          },
         },
         summary: {
-          withoutMessage: m('You did not leave a message to the officials'),
           withMessage: {
             subtitle: m<{ message: string }>(
-              'The officials will see your message: {message}'
+              'The organizers will see your message: {message}'
             ),
-            title: m('You left a message to the officials'),
+            title: m('You left a message to the organizers'),
           },
+          withoutMessage: m('You did not leave a message to the organizers'),
         },
       },
       successOrFailure: {
@@ -375,7 +384,7 @@ export default makeMessages('zui', {
       },
     },
     summary: {
-      undoButtonLabel: m('Undo'),
+      editButtonLabel: m('Edit'),
     },
   },
   signUpChip: {

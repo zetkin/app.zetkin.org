@@ -14,7 +14,7 @@ type Props = {
 
 const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(report.callerLog || '');
 
   return (
     <StepBase
