@@ -205,7 +205,7 @@ export const scaffold =
     if (hasProps(result)) {
       result.props = {
         ...result.props,
-        envVars: omitUndefined({
+        envVars: <EnvVars>omitUndefined({
           FEAT_AREAS: process.env.FEAT_AREAS,
           FEAT_TASKS: process.env.FEAT_TASKS,
           INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
