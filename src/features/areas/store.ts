@@ -28,7 +28,7 @@ const areasSlice = createSlice({
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
-    areaDeleted: (state, action: PayloadAction<string>) => {
+    areaDeleted: (state, action: PayloadAction<number>) => {
       const deletedId = action.payload;
       remoteItemDeleted(state.areaList, deletedId);
     },
@@ -54,7 +54,7 @@ const areasSlice = createSlice({
       state.areaList.loaded = timestamp;
       state.areaList.items.forEach((item) => (item.loaded = timestamp));
     },
-    tagAssigned: (state, action: PayloadAction<[string, ZetkinTag]>) => {
+    tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
       const [areaId, tag] = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
 
@@ -65,7 +65,7 @@ const areasSlice = createSlice({
         areaItem.data.tags.push(tag);
       }
     },
-    tagUnassigned: (state, action: PayloadAction<[string, number]>) => {
+    tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
       const [areaId, tagId] = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
       state.tagsByAreaId[areaId].items = state.tagsByAreaId[
@@ -79,14 +79,14 @@ const areasSlice = createSlice({
         );
       }
     },
-    tagsLoad: (state, action: PayloadAction<string>) => {
+    tagsLoad: (state, action: PayloadAction<number>) => {
       const areaId = action.payload;
       state.tagsByAreaId[areaId] ||= remoteList();
       state.tagsByAreaId[areaId].isLoading = true;
     },
     tagsLoaded: (
       state,
-      action: PayloadAction<[string, ZetkinAppliedTag[]]>
+      action: PayloadAction<[number, ZetkinAppliedTag[]]>
     ) => {
       const [areaId, tags] = action.payload;
       state.tagsByAreaId[areaId] = remoteList(tags);

@@ -33,7 +33,7 @@ export default function useAreaAssignmentActivities(
     actionOnSuccess: (data) => areaAssignmentsLoaded(data),
     loader: () =>
       apiClient.get<ZetkinAreaAssignment[]>(
-        `/beta/orgs/${orgId}/areaassignments`
+        `/api2/orgs/${orgId}/area_assignments`
       ),
   });
 
@@ -43,8 +43,7 @@ export default function useAreaAssignmentActivities(
     return new ResolvedFuture(
       future.data
         .filter((assignment) => {
-          // TODO: This should happen on server using separate API paths
-          return !campId || assignment.campaign.id == campId;
+          return !campId || assignment.project_id == campId;
         })
         .map((assignment) => ({
           data: assignment,

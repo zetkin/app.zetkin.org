@@ -1,18 +1,29 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinArea, ZetkinAreaPostBody } from '../types';
+import { Zetkin2Area, Zetkin2AreaPostBody, ZetkinArea } from '../types';
 import { areaCreated } from '../store';
 
 export default function useCreateArea(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return async function createArea(data: ZetkinAreaPostBody) {
-    const created = await apiClient.post<ZetkinArea, ZetkinAreaPostBody>(
-      `/beta/orgs/${orgId}/areas`,
+  return async function createArea(
+    data: Zetkin2AreaPostBody
+  ): Promise<ZetkinArea> {
+    const created = await apiClient.post<Zetkin2Area, Zetkin2AreaPostBody>(
+      `/api2/orgs/${orgId}/areas`,
       data
     );
-    dispatch(areaCreated(created));
+    const translated = {
+      description: created.description,
+      id: created.id,
+      organization_id: created.organization_id,
+      points: created.boundary.coordinates[0],
+      tags: [],
+      title: created.title,
+    };
 
-    return created;
+    dispatch(areaCreated(translated));
+
+    return translated;
   };
 }
