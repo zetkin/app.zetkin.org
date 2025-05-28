@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { notFound, redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import CallSteps from 'features/call/pages';
+import CallPage from 'features/call/pages';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -15,7 +15,7 @@ type Props = {
   params: { callAssId: string };
 };
 
-export default async function CallPage({ params }: Props) {
+export default async function Page({ params }: Props) {
   await redirectIfLoginNeeded();
   const headersList = headers();
   const headersEntries = headersList.entries();
@@ -49,7 +49,7 @@ export default async function CallPage({ params }: Props) {
             </Box>
           }
         >
-          <CallSteps callAssId={callAssId} />
+          <CallPage callAssId={callAssId} />
         </Suspense>
       </HomeThemeProvider>
     );

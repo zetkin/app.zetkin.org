@@ -25,7 +25,7 @@ export enum CallStep {
   SUMMARY = 4,
 }
 
-const CallSteps: FC<Props> = ({ callAssId }) => {
+const CallPage: FC<Props> = ({ callAssId }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const assignment = assignments.find(
@@ -94,4 +94,4 @@ const CallSteps: FC<Props> = ({ callAssId }) => {
   );
 };
 
-export default CallSteps;
+export default CallPage;
