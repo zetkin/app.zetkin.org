@@ -62,9 +62,7 @@ export default makeMessages('feat.call', {
         },
         summary: {
           afterSpecificTime: m<{ time: JSX.Element }>('Call back after {time}'),
-          anyTime: m<{ date: JSX.Element }>(
-            'Call back on {date} at any time of day'
-          ),
+          anyTime: m<{ date: JSX.Element }>('We will call back after {date}'),
           subtitle: m<{ firstName: string }>(
             'In the meantime, {firstName} is automatically removed from the queue'
           ),

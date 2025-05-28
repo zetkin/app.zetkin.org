@@ -313,19 +313,16 @@ const reportSteps: ReportStep[] = [
             />
           }
           title={
-            isAnyTimeOfDay ? (
-              <Msg
-                id={messageIds.report.steps.callBack.summary.anyTime}
-                values={{ date: <ZUIDate datetime={report.callBackAfter} /> }}
-              />
-            ) : (
-              <Msg
-                id={messageIds.report.steps.callBack.summary.afterSpecificTime}
-                values={{
-                  time: <ZUIDateTime datetime={report.callBackAfter} />,
-                }}
-              />
-            )
+            <Msg
+              id={messageIds.report.steps.callBack.summary.anyTime}
+              values={{
+                date: isAnyTimeOfDay ? (
+                  <ZUIDate datetime={report.callBackAfter} />
+                ) : (
+                  <ZUIDateTime datetime={report.callBackAfter} />
+                ),
+              }}
+            />
           }
         />
       );
