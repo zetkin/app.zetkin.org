@@ -1,16 +1,16 @@
 import { FC } from 'react';
 import { Stack } from '@mui/material';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {
-  onReportUpdate: (updatedReport: ReportType) => void;
+  onReportUpdate: (updatedReport: Report) => void;
   phoneAndAltPhone: { altPhone: string; phone: string };
-  report: ReportType;
+  report: Report;
 };
 
 const WrongNumber: FC<Props> = ({
@@ -31,7 +31,7 @@ const WrongNumber: FC<Props> = ({
             onReportUpdate({
               ...report,
               organizerActionNeeded: true,
-              step: 'orgLog',
+              step: 'organizerLog',
               wrongNumber: 'phone',
             })
           }
@@ -43,7 +43,7 @@ const WrongNumber: FC<Props> = ({
             onReportUpdate({
               ...report,
               organizerActionNeeded: true,
-              step: 'orgLog',
+              step: 'organizerLog',
               wrongNumber: 'altPhone',
             })
           }
@@ -55,7 +55,7 @@ const WrongNumber: FC<Props> = ({
             onReportUpdate({
               ...report,
               organizerActionNeeded: true,
-              step: 'orgLog',
+              step: 'organizerLog',
               wrongNumber: 'both',
             })
           }

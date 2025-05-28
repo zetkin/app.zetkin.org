@@ -1,16 +1,16 @@
 import { FC } from 'react';
 import { Stack } from '@mui/material';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {
-  nextStepIfWrongNumber: 'wrongNumber' | 'orgLog';
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  nextStepIfWrongNumber: 'wrongNumber' | 'organizerLog';
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const FailureReason: FC<Props> = ({
@@ -60,7 +60,7 @@ const FailureReason: FC<Props> = ({
               onReportUpdate({
                 ...report,
                 failureReason: 'lineBusy',
-                step: 'orgAction',
+                step: 'organizerAction',
               });
             }
           }}

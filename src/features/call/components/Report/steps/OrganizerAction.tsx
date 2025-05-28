@@ -1,14 +1,14 @@
 import { FC } from 'react';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import messageIds from 'features/call/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import StepBase from './StepBase';
 
 type Props = {
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
@@ -28,7 +28,7 @@ const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
               onReportUpdate({
                 ...report,
                 organizerActionNeeded: true,
-                step: 'orgLog',
+                step: 'organizerLog',
               }),
           },
           {

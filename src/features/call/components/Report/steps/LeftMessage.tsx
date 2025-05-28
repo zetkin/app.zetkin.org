@@ -1,14 +1,14 @@
 import { FC } from 'react';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
@@ -26,7 +26,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
               onReportUpdate({
                 ...report,
                 leftMessage: true,
-                step: 'orgAction',
+                step: 'organizerAction',
               }),
           },
           {
@@ -35,7 +35,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
               onReportUpdate({
                 ...report,
                 leftMessage: false,
-                step: 'orgAction',
+                step: 'organizerAction',
               }),
           },
         ]}

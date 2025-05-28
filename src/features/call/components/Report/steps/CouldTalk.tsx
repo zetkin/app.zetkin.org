@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
@@ -8,8 +8,8 @@ import StepBase from './StepBase';
 
 type Props = {
   firstName: string;
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
@@ -32,7 +32,7 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
               if (onReportUpdate) {
                 onReportUpdate({
                   ...report,
-                  step: 'orgAction',
+                  step: 'organizerAction',
                   targetCouldTalk: true,
                 });
               }

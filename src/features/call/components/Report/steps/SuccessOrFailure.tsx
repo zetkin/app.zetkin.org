@@ -1,15 +1,15 @@
 import { FC } from 'react';
 
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
-import { ReportType } from '..';
+import { Report } from '..';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {
   firstName: string;
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {

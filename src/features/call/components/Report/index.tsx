@@ -18,20 +18,19 @@ import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDate from 'zui/ZUIDate';
 import calculateState from './utils/calculateState';
 
-const Step = {
-  callBack: 'callBack',
-  callerLog: 'callerLog',
-  couldTalk: 'couldTalk',
-  failureReason: 'failureReason',
-  leftMessage: 'leftMessage',
-  orgAction: 'organizerAction',
-  orgLog: 'organizerLog',
-  successOrFailure: 'successOrFailure',
-  summary: 'summary',
-  wrongNumber: 'wrongNumber',
-} as const;
+type Step =
+  | 'callBack'
+  | 'callerLog'
+  | 'couldTalk'
+  | 'failureReason'
+  | 'leftMessage'
+  | 'organizerAction'
+  | 'organizerLog'
+  | 'successOrFailure'
+  | 'summary'
+  | 'wrongNumber';
 
-export type ReportType = {
+export type Report = {
   callBackAfter: string | null;
   callerLog: string;
   failureReason:
@@ -40,34 +39,41 @@ export type ReportType = {
   leftMessage: boolean;
   organizerActionNeeded: boolean;
   organizerLog: string;
-  step: keyof typeof Step;
+  step: Step;
   success: boolean;
   targetCouldTalk: boolean;
   wrongNumber: ('altPhone' | 'phone' | 'both') | null;
 };
 
 type ReportStep = {
-  name: ReportType['step'];
+  getRenderVariant: (
+    report: Report,
+    target?: ZetkinCallTarget,
+    disableCallerNotes?: boolean
+  ) => 'question' | 'summary' | null;
+  name: Step;
   renderQuestion: (
-    report: ReportType,
-    onReportUpdate: (updatedReport: ReportType) => void,
+    report: Report,
+    onReportUpdate: (updatedReport: Report) => void,
     target: ZetkinCallTarget,
     onReportFinished: () => void
   ) => ReactNode;
   renderSummary: (
-    report: ReportType,
-    onReportUpdate: (updatedReport: ReportType) => void,
+    report: Report,
+    onReportUpdate: (updatedReport: Report) => void,
     target: ZetkinCallTarget
   ) => ReactNode;
-  renderVariant: (
-    report: ReportType,
-    target?: ZetkinCallTarget,
-    disableCallerNotes?: boolean
-  ) => 'question' | 'summary' | null;
 };
 
 const reportSteps: ReportStep[] = [
   {
+    getRenderVariant: (report) => {
+      if (report.step == 'successOrFailure') {
+        return 'question';
+      } else {
+        return 'summary';
+      }
+    },
     name: 'successOrFailure',
     renderQuestion: (report, onReportUpdate, target) => (
       <SuccessOrFailure
@@ -114,15 +120,15 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report) => {
-      if (report.step == 'successOrFailure') {
-        return 'question';
-      } else {
-        return 'summary';
-      }
-    },
   },
   {
+    getRenderVariant: (report) => {
+      if (!report.success) {
+        return null;
+      }
+
+      return report.step == 'couldTalk' ? 'question' : 'summary';
+    },
     name: 'couldTalk',
     renderQuestion: (report, onReportUpdate, target) => (
       <CouldTalk
@@ -167,15 +173,16 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report) => {
-      if (!report.success) {
+  },
+  {
+    getRenderVariant: (report) => {
+      if (report.success) {
+        // Don't render this step at all if the call was successful.
         return null;
       }
 
-      return report.step == 'couldTalk' ? 'question' : 'summary';
+      return report.step == 'failureReason' ? 'question' : 'summary';
     },
-  },
-  {
     name: 'failureReason',
     renderQuestion: (report, onReportUpdate, target) => {
       const phone = target?.phone;
@@ -183,7 +190,9 @@ const reportSteps: ReportStep[] = [
 
       return (
         <FailureReason
-          nextStepIfWrongNumber={phone && altPhone ? 'wrongNumber' : 'orgLog'}
+          nextStepIfWrongNumber={
+            phone && altPhone ? 'wrongNumber' : 'organizerLog'
+          }
           onReportUpdate={onReportUpdate}
           report={report}
         />
@@ -220,16 +229,20 @@ const reportSteps: ReportStep[] = [
         return null;
       }
     },
-    renderVariant: (report) => {
+  },
+  {
+    getRenderVariant: (report) => {
       if (report.success) {
         // Don't render this step at all if the call was successful.
         return null;
+      } else if (report.failureReason != 'noPickup') {
+        // Also don't render this step if the failed call was because of
+        // any other reason than the target not picking up.
+        return null;
       }
 
-      return report.step == 'failureReason' ? 'question' : 'summary';
+      return report.step == 'leftMessage' ? 'question' : 'summary';
     },
-  },
-  {
     name: 'leftMessage',
     renderQuestion: (report, onReportUpdate) => (
       <LeftMessage onReportUpdate={onReportUpdate} report={report} />
@@ -267,21 +280,22 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report) => {
-      if (report.success) {
-        // Don't render this step at all if the call was successful.
-        return null;
-      } else if (report.failureReason != 'noPickup') {
-        // Also don't render this step if the failed call was because of
-        // any other reason than the target not picking up.
-        return null;
-      }
-
-      return report.step == 'leftMessage' ? 'question' : 'summary';
-    },
   },
 
   {
+    getRenderVariant: (report) => {
+      if (report.success && report.targetCouldTalk) {
+        // Don't render this step for successfull calls where
+        // the target had time to talk right now.
+        return null;
+      } else if (!report.success && report.failureReason != 'notAvailable') {
+        // Don't render this step for failed calls unless the
+        // reason was that caller is not available
+        return null;
+      }
+
+      return report.step == 'callBack' ? 'question' : 'summary';
+    },
     name: 'callBack',
     renderQuestion: (report, onReportUpdate) => (
       <CallBack onReportUpdate={onReportUpdate} report={report} />
@@ -327,21 +341,27 @@ const reportSteps: ReportStep[] = [
         />
       );
     },
-    renderVariant: (report) => {
-      if (report.success && report.targetCouldTalk) {
-        // Don't render this step for successfull calls where
-        // the target had time to talk right now.
-        return null;
-      } else if (!report.success && report.failureReason != 'notAvailable') {
-        // Don't render this step for failed calls unless the
-        // reason was that caller is not available
-        return null;
-      }
-
-      return report.step == 'callBack' ? 'question' : 'summary';
-    },
   },
   {
+    getRenderVariant: (report, target) => {
+      const phone = target?.phone;
+      const altPhone = target?.alt_phone;
+
+      if (report.success) {
+        // Don't render this step at all if the call was successful.
+        return null;
+      } else if (report.failureReason != 'wrongNumber') {
+        // Don't render this if failure was anything but wrong number.
+        return null;
+      } else {
+        if (phone && altPhone) {
+          return report.step == 'wrongNumber' ? 'question' : 'summary';
+        } else {
+          // Don't render this when there is only one number
+          return null;
+        }
+      }
+    },
     name: 'wrongNumber',
     renderQuestion: (report, onReportUpdate, target) => {
       if (target && target.alt_phone && target.phone) {
@@ -400,28 +420,12 @@ const reportSteps: ReportStep[] = [
         />
       );
     },
-    renderVariant: (report, target) => {
-      const phone = target?.phone;
-      const altPhone = target?.alt_phone;
-
-      if (report.success) {
-        // Don't render this step at all if the call was successful.
-        return null;
-      } else if (report.failureReason != 'wrongNumber') {
-        // Don't render this if failure was anything but wrong number.
-        return null;
-      } else {
-        if (phone && altPhone) {
-          return report.step == 'wrongNumber' ? 'question' : 'summary';
-        } else {
-          // Don't render this when there is only one number
-          return null;
-        }
-      }
-    },
   },
   {
-    name: 'orgAction',
+    getRenderVariant: (report) => {
+      return report.step == 'organizerAction' ? 'question' : 'summary';
+    },
+    name: 'organizerAction',
     renderQuestion: (report, onReportUpdate) => (
       <OrganizerAction onReportUpdate={onReportUpdate} report={report} />
     ),
@@ -432,7 +436,7 @@ const reportSteps: ReportStep[] = [
             ...report,
             leftMessage: false,
             organizerActionNeeded: false,
-            step: 'orgAction',
+            step: 'organizerAction',
           })
         }
         state={report.organizerActionNeeded ? 'success' : 'failure'}
@@ -459,12 +463,16 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report) => {
-      return report.step == 'orgAction' ? 'question' : 'summary';
-    },
   },
   {
-    name: 'orgLog',
+    getRenderVariant: (report) => {
+      if (!report.organizerActionNeeded) {
+        return null;
+      }
+
+      return report.step == 'organizerLog' ? 'question' : 'summary';
+    },
+    name: 'organizerLog',
     renderQuestion: (report, onReportUpdate, target) => {
       return (
         <OrganizerLog
@@ -479,7 +487,7 @@ const reportSteps: ReportStep[] = [
         onEdit={() =>
           onReportUpdate({
             ...report,
-            step: 'orgLog',
+            step: 'organizerLog',
           })
         }
         state={report.organizerLog ? 'success' : 'failure'}
@@ -505,15 +513,16 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report) => {
-      if (!report.organizerActionNeeded) {
+  },
+  {
+    getRenderVariant: (report, target, disableCallerNotes) => {
+      if (disableCallerNotes) {
+        //Don't render if assignment does not allow caller notes
         return null;
       }
 
-      return report.step == 'orgLog' ? 'question' : 'summary';
+      return report.step == 'callerLog' ? 'question' : 'summary';
     },
-  },
-  {
     name: 'callerLog',
     renderQuestion: (report, onReportUpdate, target, onReportFinished) => (
       <CallerLog
@@ -550,14 +559,6 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report, target, disableCallerNotes) => {
-      if (disableCallerNotes) {
-        //Don't render if assignment does not allow caller notes
-        return null;
-      }
-
-      return report.step == 'callerLog' ? 'question' : 'summary';
-    },
   },
 ];
 
@@ -576,12 +577,12 @@ type ReportProps = {
   target: ZetkinCallTarget;
 };
 
-const Report: FC<ReportProps> = ({
+const ReportForm: FC<ReportProps> = ({
   disableCallerNotes,
   onReportFinished,
   target,
 }) => {
-  const [report, setReport] = useState<ReportType>({
+  const [report, setReport] = useState<Report>({
     callBackAfter: null,
     callerLog: '',
     failureReason: null,
@@ -593,20 +594,6 @@ const Report: FC<ReportProps> = ({
     targetCouldTalk: false,
     wrongNumber: null,
   });
-  const steps = [];
-  const currentStep =
-    report.step == 'summary'
-      ? 'summary'
-      : reportSteps.find((step) => step.name == report.step);
-
-  let currentStepIndex: number = 0;
-  if (currentStep) {
-    if (currentStep == 'summary') {
-      currentStepIndex = reportSteps.length;
-    } else {
-      currentStepIndex = reportSteps.indexOf(currentStep);
-    }
-  }
 
   const handleReportFinished = () => {
     const state = calculateState(report);
@@ -623,35 +610,50 @@ const Report: FC<ReportProps> = ({
     });
   };
 
-  for (let i = 0; i <= currentStepIndex; i++) {
-    if (i == reportSteps.length) {
-      //Do nothing
+  const currentStep =
+    report.step == 'summary'
+      ? 'summary'
+      : reportSteps.find((step) => step.name == report.step)?.name;
+
+  let currentStepIndex: number = 0;
+  if (currentStep) {
+    if (currentStep == 'summary') {
+      currentStepIndex = reportSteps.length;
     } else {
-      const step = reportSteps[i];
-
-      const renderVariant = step.renderVariant(
-        report,
-        target,
-        disableCallerNotes
+      currentStepIndex = reportSteps.findIndex(
+        (step) => step.name == currentStep
       );
-
-      if (renderVariant == 'summary') {
-        steps.push(step.renderSummary);
-      }
-
-      if (renderVariant == 'question') {
-        steps.push(step.renderQuestion);
-      }
     }
   }
 
   return (
     <Stack>
-      {steps.map((render) =>
-        render(report, setReport, target, handleReportFinished)
-      )}
+      {reportSteps.map((step, index) => {
+        if (index > currentStepIndex || index == reportSteps.length) {
+          return null;
+        }
+
+        const renderVariant = step.getRenderVariant(
+          report,
+          target,
+          disableCallerNotes
+        );
+
+        if (renderVariant == 'summary') {
+          return step.renderSummary(report, setReport, target);
+        }
+
+        if (renderVariant == 'question') {
+          return step.renderQuestion(
+            report,
+            setReport,
+            target,
+            handleReportFinished
+          );
+        }
+      })}
     </Stack>
   );
 };
 
-export default Report;
+export default ReportForm;

@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Stack } from '@mui/material';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
@@ -10,8 +10,8 @@ import StepBase from './StepBase';
 
 type Props = {
   onReportFinished: () => void;
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {

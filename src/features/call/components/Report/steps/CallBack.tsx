@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { ReportType } from '..';
+import { Report } from '..';
 import ZUIAutocomplete from 'zui/components/ZUIAutocomplete';
 import ZUIDateField from 'zui/components/ZUIDateField';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -14,8 +14,8 @@ import ZUIDateTime from 'zui/ZUIDateTime';
 import StepBase from './StepBase';
 
 type Props = {
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  onReportUpdate: (updatedReport: Report) => void;
+  report: Report;
 };
 
 const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
@@ -149,7 +149,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             onReportUpdate({
               ...report,
               callBackAfter,
-              step: 'orgAction',
+              step: 'organizerAction',
             });
           }}
           variant="secondary"
