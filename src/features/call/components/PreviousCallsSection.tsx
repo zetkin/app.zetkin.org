@@ -9,7 +9,6 @@ import ZUIButton from 'zui/components/ZUIButton';
 import { labels, colors } from './PreviousCallsInfo';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import useIsMobile from 'utils/hooks/useIsMobile';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
@@ -30,11 +29,9 @@ const PreviousCallsSection: React.FC<PreviousCallsSectionProps> = ({
   const outgoingCalls = useOutgoingCalls();
   const previousCallsList = outgoingCalls.filter((call) => call.state !== 0);
   const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
-  const isMobile = useIsMobile();
-
   return (
     <Box>
-      {(isMobile || showUnfinishedCalls) &&
+      {showUnfinishedCalls &&
         unfinishedCallList.map((call) => (
           <>
             <Box key={call.id} sx={{ my: 2 }}>

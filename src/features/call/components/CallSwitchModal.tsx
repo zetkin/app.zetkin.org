@@ -7,7 +7,6 @@ import ZUITextField from 'zui/components/ZUITextField';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
-import useIsMobile from 'utils/hooks/useIsMobile';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
@@ -20,7 +19,6 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
   onClose,
   open,
 }) => {
-  const isMobile = useIsMobile();
   const [showUnfinishedCalls, setShowUnfinishedCalls] = useState(false);
 
   return (
@@ -42,7 +40,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           width: '100%',
         }}
       >
-        {!isMobile && !showUnfinishedCalls && (
+        {!showUnfinishedCalls && (
           <Box mb={1} mt={2}>
             <ZUIAlert
               button={{
