@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ZetkinCall } from './types';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import { CallState, ZetkinCall, ZetkinCallPatchBody } from './types';
+import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
 
@@ -9,12 +14,14 @@ export interface CallStoreSlice {
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
   outgoingCalls: RemoteList<ZetkinCall>;
+  stateByCallId: Record<number, RemoteItem<CallState>>;
 }
 
 const initialState: CallStoreSlice = {
   currentCallId: null,
   eventsByTargetId: {},
   outgoingCalls: remoteList(),
+  stateByCallId: {},
 };
 
 const CallSlice = createSlice({
@@ -108,6 +115,16 @@ const CallSlice = createSlice({
       state.outgoingCalls.loaded = new Date().toISOString();
       state.outgoingCalls.isLoading = false;
     },
+    reportAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinCallPatchBody]>
+    ) => {
+      const [id, report] = action.payload;
+      state.stateByCallId[id] = remoteItem(id, {
+        data: { id, report },
+        loaded: new Date().toISOString(),
+      });
+    },
     targetSubmissionAdded: (
       state,
       action: PayloadAction<[number, ZetkinEvent]>
@@ -154,6 +171,7 @@ export const {
   allocateNewCallLoaded,
   outgoingCallsLoad,
   outgoingCallsLoaded,
+  reportAdded,
   targetSubmissionAdded,
   targetSubmissionDeleted,
 } = CallSlice.actions;

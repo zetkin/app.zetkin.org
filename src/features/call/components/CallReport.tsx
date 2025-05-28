@@ -4,8 +4,9 @@ import { Box } from '@mui/material';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportForm from './Report';
-import useCallMutations from '../hooks/useCallMutations';
 import ZUISection from 'zui/components/ZUISection';
+import { useAppDispatch } from 'core/hooks';
+import { reportAdded } from '../store';
 
 type CallReportProps = {
   assignment: ZetkinCallAssignment;
@@ -13,7 +14,7 @@ type CallReportProps = {
 
 const CallReport: FC<CallReportProps> = ({ assignment }) => {
   const call = useCurrentCall();
-  const { updateCall } = useCallMutations(assignment.organization.id);
+  const dispatch = useAppDispatch();
 
   if (!call) {
     return null;
@@ -25,7 +26,9 @@ const CallReport: FC<CallReportProps> = ({ assignment }) => {
         renderContent={() => (
           <ReportForm
             disableCallerNotes={assignment.disable_caller_notes}
-            onReportFinished={(report) => updateCall(call.id, report)}
+            onReportFinished={(report) => {
+              dispatch(reportAdded([call.id, report]));
+            }}
             target={call.target}
           />
         )}

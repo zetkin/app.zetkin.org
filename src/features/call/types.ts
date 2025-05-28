@@ -46,3 +46,7 @@ export type ZetkinCallPatchBody = Pick<
 export interface CombinedEventResponse extends ZetkinEventResponse {
   action: ZetkinEvent;
 }
+
+export type CallState = {
+  report: ZetkinCallPatchBody;
+};
