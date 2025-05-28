@@ -1,6 +1,6 @@
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import requiredEnvVar from 'utils/requiredEnvVar';
 import { stringToBool } from 'utils/stringUtils';
@@ -19,7 +19,7 @@ export const PUT = proxy;
 export const DELETE = proxy;
 
 async function proxy(
-  request: Request,
+  request: NextRequest,
   context: Context
 ): Promise<NextResponse> {
   const clientId = requiredEnvVar('ZETKIN_CLIENT_ID');
@@ -61,7 +61,12 @@ async function proxy(
   async function makeZetkinApiRequest() {
     headers.set('Authorization', 'Bearer ' + session.tokenData?.access_token);
 
-    return fetch(apiBase + pathStr, requestOptions);
+    let url = apiBase + pathStr;
+    if (request.nextUrl.searchParams.size) {
+      url += '?' + request.nextUrl.searchParams.toString();
+    }
+
+    return fetch(url, requestOptions);
   }
 
   let zetkinResponse: Response = await makeZetkinApiRequest();
