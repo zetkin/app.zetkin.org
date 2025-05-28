@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { notFound, redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import CallPage from 'features/call/pages';
+import CallPage from 'features/call/pages/CallPage';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
