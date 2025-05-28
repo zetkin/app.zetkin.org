@@ -36,7 +36,7 @@ const ZUIOrgLogoAvatar: FC<ZUIOrgLogoAvatarProps> = ({
       alt="icon"
       height={avatarSizes[size]}
       src={`${urlBase}/orgs/${orgId}/avatar`}
-      style={{ objectFit: 'contain' }}
+      style={{ flexShrink: 0, objectFit: 'contain' }}
       width={avatarSizes[size]}
     />
   );

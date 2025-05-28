@@ -8,9 +8,7 @@ import ZUIActivityStatusBadge from '../ZUIActivityStatusBadge';
 import ZUIIcon from '../ZUIIcon';
 import ZUIPercentageBar, { ZUIPercentageBarProps } from '../ZUIPercentageBar';
 import EventWarningIcons, { EventWarningIconsProps } from './EventWarningIcons';
-import ZUIPersonAvatarGroup, {
-  PersonAvatarData,
-} from '../ZUIPersonAvatarGroup';
+import ZUIPersonAvatarGroup, { PersonAvatarData } from '../ZUIAvatarGroup';
 import ZUISuffixedNumber from '../ZUISuffixedNumber';
 import { ZUICheckboxProps } from '../ZUICheckbox';
 import ZUIMultiDataChip, { ZUIMultiDataChipProps } from '../ZUIMultiDataChip';
