@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
 import { headers } from 'next/headers';
-import { ReactNode, Suspense } from 'react';
+import { Suspense } from 'react';
 import { notFound, redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import CallPage from 'features/call/pages';
+import CallSteps from 'features/call/pages';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
@@ -12,11 +12,10 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { CALL, hasFeature } from 'utils/featureFlags';
 
 type Props = {
-  children?: ReactNode;
   params: { callAssId: string };
 };
 
-const CallPageLayout = async ({ children, params }: Props) => {
+export default async function CallPage({ params }: Props) {
   await redirectIfLoginNeeded();
   const headersList = headers();
   const headersEntries = headersList.entries();
@@ -50,7 +49,7 @@ const CallPageLayout = async ({ children, params }: Props) => {
             </Box>
           }
         >
-          <CallPage callAssId={callAssId}>{children}</CallPage>
+          <CallSteps callAssId={callAssId} />
         </Suspense>
       </HomeThemeProvider>
     );
@@ -59,6 +58,4 @@ const CallPageLayout = async ({ children, params }: Props) => {
     const assignmentUrl = `${callUrl}/assignments/${params.callAssId}/call`;
     redirect(assignmentUrl);
   }
-};
-
-export default CallPageLayout;
+}

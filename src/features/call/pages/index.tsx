@@ -1,7 +1,7 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, ReactNode, useState } from 'react';
+import { FC, useState } from 'react';
 
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import PrepareHeader from '../components/PrepareHeader';
@@ -15,7 +15,6 @@ import CallSummary from '../components/CallSummary';
 
 type Props = {
   callAssId: string;
-  children?: ReactNode;
 };
 
 export enum CallStep {
@@ -26,7 +25,7 @@ export enum CallStep {
   SUMMARY = 4,
 }
 
-const CallPage: FC<Props> = ({ callAssId, children }) => {
+const CallSteps: FC<Props> = ({ callAssId }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const assignment = assignments.find(
@@ -91,10 +90,8 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
           <CallSummary />
         </>
       )}
-
-      <Box>{children}</Box>
     </Box>
   );
 };
 
-export default CallPage;
+export default CallSteps;
