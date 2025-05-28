@@ -69,13 +69,11 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <OngoingHeader
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.ONGOING)}
+            onSummarize={() => setActiveStep(CallStep.SUMMARY)}
             step={CallStep.REPORT}
           />
 
-          <CallReport
-            assignment={assignment}
-            onSummarize={() => setActiveStep(CallStep.SUMMARY)}
-          />
+          <CallReport assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.SUMMARY && assignment && (

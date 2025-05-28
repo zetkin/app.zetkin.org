@@ -9,11 +9,12 @@ import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 
 type Props = {
+  onReportFinished: () => void;
   onReportUpdate: (updatedReport: ReportType) => void;
   report: ReportType;
 };
 
-const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
+const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   const [message, setMessage] = useState(report.callerLog || '');
 
@@ -33,9 +34,10 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
           label={messages.report.steps.callerLog.question[
             message ? 'saveWithNoteButton' : 'saveWithoutNoteButton'
           ]()}
-          onClick={() =>
-            onReportUpdate({ ...report, callerLog: message, step: 'summary' })
-          }
+          onClick={() => {
+            onReportUpdate({ ...report, callerLog: message, step: 'summary' });
+            onReportFinished();
+          }}
           variant="secondary"
         />
       </Stack>

@@ -2,16 +2,18 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import ReportCall from './ReportCall';
 import useCurrentCall from '../hooks/useCurrentCall';
+import Report from './Report';
+import useCallMutations from '../hooks/useCallMutations';
+import ZUISection from 'zui/components/ZUISection';
 
 type CallReportProps = {
   assignment: ZetkinCallAssignment;
-  onSummarize: () => void;
 };
 
-const CallReport: FC<CallReportProps> = ({ assignment, onSummarize }) => {
+const CallReport: FC<CallReportProps> = ({ assignment }) => {
   const call = useCurrentCall();
+  const { updateCall } = useCallMutations(assignment.organization.id);
 
   if (!call) {
     return null;
@@ -19,10 +21,15 @@ const CallReport: FC<CallReportProps> = ({ assignment, onSummarize }) => {
 
   return (
     <Box p={2}>
-      <ReportCall
-        call={call}
-        onSummarize={onSummarize}
-        orgId={assignment.organization.id}
+      <ZUISection
+        renderContent={() => (
+          <Report
+            disableCallerNotes={assignment.disable_caller_notes}
+            onReportFinished={(report) => updateCall(call.id, report)}
+            target={call.target}
+          />
+        )}
+        title="Report"
       />
     </Box>
   );

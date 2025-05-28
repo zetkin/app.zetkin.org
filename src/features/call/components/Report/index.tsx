@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 
 import SuccessOrFailure from './steps/SuccessOrFailure';
 import FailureReason from './steps/FailureReason';
@@ -10,12 +10,13 @@ import OrganizerAction from './steps/OrganizerAction';
 import OrganizerLog from './steps/OrganizerLog';
 import CallerLog from './steps/CallerLog';
 import WrongNumber from './steps/WrongNumber';
-import { ZetkinCallTarget } from 'features/call/types';
+import { ZetkinCall, ZetkinCallTarget } from 'features/call/types';
 import Summary from './steps/Summary';
 import messageIds from 'features/call/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDate from 'zui/ZUIDate';
+import calculateState from './utils/calculateState';
 
 const Step = {
   callBack: 'callBack',
@@ -33,7 +34,6 @@ const Step = {
 export type ReportType = {
   callBackAfter: string | null;
   callerLog: string;
-  disableCallerNotes: boolean;
   failureReason:
     | ('lineBusy' | 'noPickup' | 'wrongNumber' | 'notAvailable')
     | null;
@@ -51,7 +51,8 @@ type ReportStep = {
   renderQuestion: (
     report: ReportType,
     onReportUpdate: (updatedReport: ReportType) => void,
-    target: ZetkinCallTarget
+    target: ZetkinCallTarget,
+    onReportFinished: () => void
   ) => ReactNode;
   renderSummary: (
     report: ReportType,
@@ -60,7 +61,8 @@ type ReportStep = {
   ) => ReactNode;
   renderVariant: (
     report: ReportType,
-    target?: ZetkinCallTarget
+    target?: ZetkinCallTarget,
+    disableCallerNotes?: boolean
   ) => 'question' | 'summary' | null;
 };
 
@@ -516,8 +518,12 @@ const reportSteps: ReportStep[] = [
   },
   {
     name: 'callerLog',
-    renderQuestion: (report, onReportUpdate) => (
-      <CallerLog onReportUpdate={onReportUpdate} report={report} />
+    renderQuestion: (report, onReportUpdate, target, onReportFinished) => (
+      <CallerLog
+        onReportFinished={onReportFinished}
+        onReportUpdate={onReportUpdate}
+        report={report}
+      />
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
@@ -547,8 +553,8 @@ const reportSteps: ReportStep[] = [
         }
       />
     ),
-    renderVariant: (report) => {
-      if (report.disableCallerNotes) {
+    renderVariant: (report, target, disableCallerNotes) => {
+      if (disableCallerNotes) {
         //Don't render if assignment does not allow caller notes
         return null;
       }
@@ -559,12 +565,37 @@ const reportSteps: ReportStep[] = [
 ];
 
 type ReportProps = {
-  onReportUpdate: (updatedReport: ReportType) => void;
-  report: ReportType;
+  disableCallerNotes: boolean;
+  onReportFinished: (
+    report: Pick<
+      ZetkinCall,
+      | 'state'
+      | 'notes'
+      | 'message_to_organizer'
+      | 'organizer_action_needed'
+      | 'call_back_after'
+    >
+  ) => void;
   target: ZetkinCallTarget;
 };
 
-const Report: FC<ReportProps> = ({ onReportUpdate, report, target }) => {
+const Report: FC<ReportProps> = ({
+  disableCallerNotes,
+  onReportFinished,
+  target,
+}) => {
+  const [report, setReport] = useState<ReportType>({
+    callBackAfter: null,
+    callerLog: '',
+    failureReason: null,
+    leftMessage: false,
+    organizerActionNeeded: false,
+    organizerLog: '',
+    step: 'successOrFailure',
+    success: false,
+    targetCouldTalk: false,
+    wrongNumber: null,
+  });
   const steps = [];
   const currentStep =
     report.step == 'summary'
@@ -580,13 +611,32 @@ const Report: FC<ReportProps> = ({ onReportUpdate, report, target }) => {
     }
   }
 
+  const handleReportFinished = () => {
+    const state = calculateState(report);
+
+    onReportFinished({
+      call_back_after: state == 13 || state == 14 ? report.callBackAfter : null,
+      message_to_organizer:
+        report.organizerActionNeeded && report.organizerLog
+          ? report.organizerLog
+          : null,
+      notes: report.callerLog || null,
+      organizer_action_needed: report.organizerActionNeeded,
+      state: state,
+    });
+  };
+
   for (let i = 0; i <= currentStepIndex; i++) {
     if (i == reportSteps.length) {
-      //We've finished, do nothing.
+      //Do nothing
     } else {
       const step = reportSteps[i];
 
-      const renderVariant = step.renderVariant(report, target);
+      const renderVariant = step.renderVariant(
+        report,
+        target,
+        disableCallerNotes
+      );
 
       if (renderVariant == 'summary') {
         steps.push(step.renderSummary);
@@ -600,7 +650,9 @@ const Report: FC<ReportProps> = ({ onReportUpdate, report, target }) => {
 
   return (
     <Stack>
-      {steps.map((render) => render(report, onReportUpdate, target))}
+      {steps.map((render) =>
+        render(report, setReport, target, handleReportFinished)
+      )}
     </Stack>
   );
 };
