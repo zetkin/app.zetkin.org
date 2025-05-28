@@ -42,6 +42,7 @@ const ZUIPublicSurveyOption: FC<FormControlLabelProps> = ({
         letterSpacing: '0.03rem',
         lineHeight: '1.5rem',
         margin: 0,
+        wordBreak: 'break-word',
       })}
     />
   );

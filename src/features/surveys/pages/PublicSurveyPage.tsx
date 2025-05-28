@@ -34,6 +34,7 @@ import messageIds from '../l10n/messageIds';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type PublicSurveyPageProps = {
   survey: ZetkinSurveyExtended;
@@ -42,6 +43,7 @@ type PublicSurveyPageProps = {
 
 const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const messages = useMessages(messageIds);
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState(false);
   const [signatureType, setSignatureType] = useState<
     ZetkinSurveySignatureType | undefined
@@ -83,7 +85,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
       <Box
         sx={{
-          maxWidth: '37.5rem',
+          maxWidth: isMobile ? '100dvw' : '37.5rem',
         }}
       >
         {showErrorAlert && (

@@ -22,7 +22,7 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({
   return (
     <FormControl fullWidth>
       <Box display="flex" flexDirection="column" rowGap={2}>
-        <Box>
+        <Box sx={{ wordBreak: 'break-word' }}>
           <FormLabel htmlFor={`input-${element.id}`}>
             <ZUIText variant="headingMd">
               <>

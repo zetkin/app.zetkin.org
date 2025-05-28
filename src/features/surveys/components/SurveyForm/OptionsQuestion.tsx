@@ -59,7 +59,11 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
           name={name}
           sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
         >
-          <Box display="flex" flexDirection="column">
+          <Box
+            display="flex"
+            flexDirection="column"
+            sx={{ wordBreak: 'break-word' }}
+          >
             <FormLabel id={`label-${element.id}`}>
               <ZUIText variant="headingMd">
                 {question.question}
@@ -91,8 +95,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
             display="flex"
             flexDirection="column"
             gap={1}
-            maxWidth={{ sm: 'sm' }}
             overflow={'hidden'}
+            sx={{ wordBreak: 'break-word' }}
             width="100%"
           >
             <Box display="flex" flexDirection="column">
@@ -115,11 +119,19 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                 name={name}
                 onChange={handleDropdownChange}
                 required={question.required}
+                sx={{
+                  '& p': {
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  },
+                }}
                 value={dropdownValue}
               >
                 {options.map((option: ZetkinSurveyOption) => (
                   <MenuItem key={option.id} value={option.id}>
                     <Typography
+                      noWrap
                       sx={(theme) => ({
                         fontFamily: theme.typography.fontFamily,
                         fontSize: '1rem',

@@ -8,6 +8,7 @@ import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   children: ReactNode;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
+  const isMobile = useIsMobile();
   const searchParams = useSearchParams();
   const showOrganization = searchParams?.get('hideOrganization') != 'true';
 
@@ -30,7 +32,7 @@ const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
           sx={{
             flex: 1,
             gap: '1rem',
-            maxWidth: '37.5rem',
+            maxWidth: isMobile ? '100dvw' : '37.5rem',
             padding: 2,
             width: '100%',
           }}
