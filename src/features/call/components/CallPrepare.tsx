@@ -4,16 +4,16 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import useCurrentCall from '../hooks/useCurrentCall';
-import InstructionsSection from '../components/InstructionsSection';
+import InstructionsSection from './InstructionsSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import AboutSection from '../components/AboutSection';
+import AboutSection from './AboutSection';
 import useIsMobile from 'utils/hooks/useIsMobile';
 
-type Props = {
+type CallPrepareProps = {
   assignment: ZetkinCallAssignment;
 };
 
-const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
+const CallPrepare: FC<CallPrepareProps> = ({ assignment }) => {
   const call = useCurrentCall();
   const isMobile = useIsMobile();
 
@@ -38,4 +38,4 @@ const AssignmentPreparePage: FC<Props> = ({ assignment }) => {
   );
 };
 
-export default AssignmentPreparePage;
+export default CallPrepare;
