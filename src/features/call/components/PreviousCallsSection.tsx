@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import { Box } from '@mui/material';
 
 import useCallMutations from '../hooks/useCallMutations';
@@ -25,7 +24,6 @@ const PreviousCallsSection: React.FC<PreviousCallsSectionProps> = ({
 }) => {
   assingmentId;
   const { deleteCall, switchCurrentCall } = useCallMutations(orgId);
-  const router = useRouter();
   const outgoingCalls = useOutgoingCalls();
   const previousCallsList = outgoingCalls.filter((call) => call.state !== 0);
   const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
@@ -56,12 +54,11 @@ const PreviousCallsSection: React.FC<PreviousCallsSectionProps> = ({
                 <Box>
                   <ZUIButton
                     label="Abandon"
-                    onClick={() => {
-                      deleteCall(call.id);
+                    onClick={async () => {
+                      await deleteCall(call.id);
                       if (unfinishedCallList.length <= 1) {
-                        router.push(`/call/${assingmentId}`);
+                        window.location.reload();
                       }
-                      onClose();
                     }}
                     variant="tertiary"
                   />
