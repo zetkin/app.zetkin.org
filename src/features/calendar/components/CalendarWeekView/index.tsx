@@ -26,9 +26,14 @@ import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import { getDstChangeAtDate, setEquals } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 import { setEventIdsVisibleInUI } from 'features/events/store';
+import { RootState } from 'core/store';
 
 dayjs.extend(isoWeek);
 
@@ -36,11 +41,13 @@ const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '60px';
 
 export interface CalendarWeekViewProps {
-  focusDate: Date;
   onClickDay: (date: Date) => void;
 }
-const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
+const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
   const theme = useTheme();
+  const focusDate = useAppSelector(
+    (state: RootState) => state.calendar.focusDate
+  );
   const dispatch = useAppDispatch();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);

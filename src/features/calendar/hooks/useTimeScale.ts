@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { TimeScale } from '../components';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import { TimeScale } from '../types';
+import { setTimeScale } from '../store';
 
 function getTimeScale(timeScaleQueryParam: string | string[] | undefined) {
   if (
@@ -16,6 +18,7 @@ function getTimeScale(timeScaleQueryParam: string | string[] | undefined) {
 export default function useTimeScale(
   timeScaleQueryParam: string | string[] | undefined
 ) {
+  const dispatch = useDispatch();
   const [localStorageTimeScale, setLocalStorageTimeScale] =
     useLocalStorage<TimeScale>(
       'calendarTimeScale',
@@ -32,8 +35,12 @@ export default function useTimeScale(
     }
   }, [timeScaleQueryParam]);
 
+  function setPersistentTimeScale(timescale: TimeScale) {
+    setLocalStorageTimeScale(timescale);
+    dispatch(setTimeScale(timescale));
+  }
   return {
-    setPersistentTimeScale: setLocalStorageTimeScale,
+    setTimeScale: setPersistentTimeScale,
     timeScale: localStorageTimeScale,
   };
 }
