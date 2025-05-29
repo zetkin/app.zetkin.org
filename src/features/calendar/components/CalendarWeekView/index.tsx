@@ -26,8 +26,10 @@ import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import { getDstChangeAtDate } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useNumericRouteParams } from 'core/hooks';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
+import { setWeekViewDates } from 'features/calendar/store';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 dayjs.extend(isoWeek);
 
@@ -35,11 +37,11 @@ const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '60px';
 
 export interface CalendarWeekViewProps {
-  focusDate: Date;
   onClickDay: (date: Date) => void;
 }
-const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
+const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
@@ -48,24 +50,34 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   );
   const { orgId, campId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
-  const focusWeekStartDay =
-    dayjs(focusDate).isoWeekday() == 7
+  const { focusDate } = useFocusDate();
+  const focusWeekStartDay = useMemo(() => {
+    return dayjs(focusDate).isoWeekday() == 7
       ? dayjs(focusDate).add(-1, 'day')
       : dayjs(focusDate);
+  }, [focusDate]);
 
-  const dayDates = range(7).map((weekday) => {
-    return focusWeekStartDay.day(weekday + 1).toDate();
-  });
+  const weekViewDates = useMemo(() => {
+    return range(7).map((weekday) =>
+      focusWeekStartDay.day(weekday + 1).toDate()
+    );
+  }, [focusWeekStartDay]);
+
+  useEffect(() => {
+    dispatch(setWeekViewDates(weekViewDates.map((d) => d.toISOString())));
+  }, [weekViewDates]);
 
   const dstChange = useMemo(
     () =>
-      dayDates.map((d) => dayjs(d)).find((date) => getDstChangeAtDate(date)),
-    [dayDates]
+      weekViewDates
+        .map((d) => dayjs(d))
+        .find((date) => getDstChangeAtDate(date)),
+    [weekViewDates]
   );
 
   const eventsByDate = useWeekCalendarEvents({
     campaignId: campId,
-    dates: dayDates,
+    dates: weekViewDates,
     orgId,
   });
 
@@ -92,8 +104,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         marginBottom={dstChange === undefined ? 2 : 0}
       >
         {/* Empty */}
-        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
-        {dayDates.map((weekdayDate: Date, weekday: number) => {
+        <HeaderWeekNumber weekNr={dayjs(weekViewDates[0]).isoWeek()} />
+        {weekViewDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <DayHeader
               key={`weekday-${weekday}`}
@@ -133,7 +145,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
           })}
         </Box>
         {/* Day columns */}
-        {dayDates.map((date: Date, index: number) => {
+        {weekViewDates.map((date: Date, index: number) => {
           const pendingTop = pendingEvent
             ? (pendingEvent[0].getUTCHours() * 60 +
                 pendingEvent[0].getMinutes()) /

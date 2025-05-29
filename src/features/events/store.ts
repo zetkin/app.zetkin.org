@@ -223,12 +223,12 @@ const eventsSlice = createSlice({
       addEventToState(state, events);
       state.eventList.isLoading = false;
     },
-    eventsDeselected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+    eventsDeselected: (state, action: PayloadAction<number[]>) => {
       const toggledEvents = action.payload;
 
       state.selectedEventIds = state.selectedEventIds.filter(
         (selectedEventId) =>
-          !toggledEvents.some((event) => event.id == selectedEventId)
+          !toggledEvents.some((eventId) => eventId == selectedEventId)
       );
     },
     eventsLoad: (state) => {
@@ -238,12 +238,12 @@ const eventsSlice = createSlice({
       addEventToState(state, action.payload);
       state.eventList.loaded = new Date().toISOString();
     },
-    eventsSelected: (state, action: PayloadAction<ZetkinEvent[]>) => {
+    eventsSelected: (state, action: PayloadAction<number[]>) => {
       const toggledEvents = action.payload;
 
       const uniqueEventIds = new Set([
         ...state.selectedEventIds,
-        ...toggledEvents.map((filtered) => filtered.id),
+        ...toggledEvents,
       ]);
       state.selectedEventIds = Array.from(uniqueEventIds);
     },
