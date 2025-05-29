@@ -56,20 +56,20 @@ const CalendarNavBar = ({
       <Box>
         <ButtonGroup>
           <Button
-            onClick={() => onChangeTimeScale(TimeScale.DAY)}
-            variant={timeScale === TimeScale.DAY ? 'contained' : 'outlined'}
+            onClick={() => onChangeTimeScale('day')}
+            variant={timeScale === 'day' ? 'contained' : 'outlined'}
           >
             <Msg id={messageIds.ranges.day} />
           </Button>
           <Button
-            onClick={() => onChangeTimeScale(TimeScale.WEEK)}
-            variant={timeScale === TimeScale.WEEK ? 'contained' : 'outlined'}
+            onClick={() => onChangeTimeScale('week')}
+            variant={timeScale === 'week' ? 'contained' : 'outlined'}
           >
             <Msg id={messageIds.ranges.week} />
           </Button>
           <Button
-            onClick={() => onChangeTimeScale(TimeScale.MONTH)}
-            variant={timeScale === TimeScale.MONTH ? 'contained' : 'outlined'}
+            onClick={() => onChangeTimeScale('month')}
+            variant={timeScale === 'month' ? 'contained' : 'outlined'}
           >
             <Msg id={messageIds.ranges.month} />
           </Button>

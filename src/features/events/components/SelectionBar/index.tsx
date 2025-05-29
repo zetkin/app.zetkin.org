@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 
-import { TimeScale } from 'features/calendar/types';
 import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
@@ -74,20 +73,20 @@ const SelectionBar = () => {
 
   function getIdsToSelect() {
     const eventsToSelect = new Set<number>();
-    if (calendarStore.timeScale === TimeScale.MONTH) {
+    if (calendarStore.timeScale === 'month') {
       monthCalendarEvents
         .flatMap((event) => event.clusters)
         .flatMap((cluster) => cluster.events)
         .map((event) => event.id)
         .forEach((id) => eventsToSelect.add(id));
-    } else if (calendarStore.timeScale === TimeScale.WEEK) {
+    } else if (calendarStore.timeScale === 'week') {
       weekCalendarEvents
         .flatMap((events) => events.lanes)
         .flatMap((lanes) => lanes)
         .flatMap((lane) => lane.events)
         .map((event) => event.id)
         .forEach((id) => eventsToSelect.add(id));
-    } else if (calendarStore.timeScale === TimeScale.DAY) {
+    } else if (calendarStore.timeScale === 'day') {
       dayCalendarEvents
         .flatMap((event) => event[1])
         .flatMap((e) => e.events)

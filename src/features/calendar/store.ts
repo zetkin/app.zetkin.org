@@ -6,7 +6,7 @@ export interface CalendarStoreSlice {
   focusDate: string;
   maxMonthEventsPerDay: number;
   weekViewDates: string[];
-  timeScale: TimeScale;
+  timeScale: string;
   monthViewSpan: {
     endDate: string | undefined;
     startDate: string | undefined;
@@ -20,7 +20,7 @@ const initialState: CalendarStoreSlice = {
     endDate: undefined,
     startDate: undefined,
   },
-  timeScale: TimeScale.DAY,
+  timeScale: '',
   weekViewDates: [],
 };
 

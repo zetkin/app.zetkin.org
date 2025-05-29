@@ -8,11 +8,11 @@ import { setTimeScale } from '../store';
 function getTimeScale(timeScaleQueryParam: string | string[] | undefined) {
   if (
     typeof timeScaleQueryParam === 'string' &&
-    Object.values(TimeScale).includes(timeScaleQueryParam as TimeScale)
+    ['day', 'week', 'month'].includes(timeScaleQueryParam as TimeScale)
   ) {
     return timeScaleQueryParam as TimeScale;
   }
-  return TimeScale.MONTH;
+  return 'month';
 }
 
 export default function useTimeScale(

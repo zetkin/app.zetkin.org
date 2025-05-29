@@ -74,7 +74,7 @@ const Calendar = () => {
         }}
         onStepBackward={() => {
           // Steps back to the last day with an event on day view
-          if (timeScale === TimeScale.DAY && prevActivityDay) {
+          if (timeScale === 'day' && prevActivityDay) {
             setFocusDate(prevActivityDay[0]);
           } else {
             setFocusDate(dayjs(focusDate).subtract(1, timeScale).toDate());
@@ -82,7 +82,7 @@ const Calendar = () => {
         }}
         onStepForward={() => {
           // Steps forward to the next day with an event on day view
-          if (timeScale === TimeScale.DAY && nextActivityDay) {
+          if (timeScale === 'day' && nextActivityDay) {
             setFocusDate(nextActivityDay[0]);
           } else {
             setFocusDate(dayjs(focusDate).add(1, timeScale).toDate());
@@ -100,21 +100,19 @@ const Calendar = () => {
         overflow="auto"
       >
         <Suspense>
-          {timeScale === TimeScale.DAY && (
+          {timeScale === 'day' && (
             <CalendarDayView
               onClickPreviousDay={(date) => setFocusDate(date)}
               previousActivityDay={prevActivityDay}
             />
           )}
-          {timeScale === TimeScale.WEEK && (
-            <CalendarWeekView
-              onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
-            />
+          {timeScale === 'week' && (
+            <CalendarWeekView onClickDay={(date) => navigateTo('day', date)} />
           )}
-          {timeScale === TimeScale.MONTH && (
+          {timeScale === 'month' && (
             <CalendarMonthView
-              onClickDay={(date) => navigateTo(TimeScale.DAY, date)}
-              onClickWeek={(date) => navigateTo(TimeScale.WEEK, date)}
+              onClickDay={(date) => navigateTo('day', date)}
+              onClickWeek={(date) => navigateTo('week', date)}
             />
           )}
         </Suspense>
