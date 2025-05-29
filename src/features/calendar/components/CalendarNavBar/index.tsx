@@ -1,15 +1,14 @@
 import { Box } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
-import { TimeScale } from 'features/calendar/types';
 
+import { TimeScale } from 'features/calendar/types';
 import CalendarEventFilter from '../CalendarEventFilter';
 import messageIds from 'features/calendar/l10n/messageIds';
 import MonthSelect from './MonthSelect';
 import { Msg } from 'core/i18n';
 import YearSelect from './YearSelect';
-import { useAppSelector } from 'core/hooks';
-import { RootState } from 'core/store';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 export interface CalendarNavBarProps {
   onChangeFocusDate: (date: Date) => void;
@@ -28,9 +27,7 @@ const CalendarNavBar = ({
   orgId,
   timeScale,
 }: CalendarNavBarProps) => {
-  const focusDate = useAppSelector(
-    (state: RootState) => state.calendar.focusDate
-  );
+  const { focusDate } = useFocusDate();
   return (
     <Box display="flex" justifyContent="space-between">
       <Box alignItems="center" display="flex" gap="4px">

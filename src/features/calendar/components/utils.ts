@@ -295,18 +295,3 @@ export function getTimezoneAtDate(date: dayjs.Dayjs): number {
   const jul = new Date(date.get('year'), 6, 1).getTimezoneOffset();
   return (date.utcOffset() - Math.max(jan, jul)) / 60;
 }
-
-export function setEquals<T>(a: Set<T>, b: Set<T>): boolean {
-  if (a == b) {
-    return true;
-  }
-  if (a.size !== b.size) {
-    return false;
-  }
-  for (const value of a.values()) {
-    if (!b.has(value)) {
-      return false;
-    }
-  }
-  return true;
-}

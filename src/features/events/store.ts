@@ -55,7 +55,6 @@ export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   eventsByCampaignId: Record<string, RemoteList<ZetkinEvent>>;
   eventsByDate: Record<string, RemoteList<ZetkinEvent>>;
-  eventIdsVisibleInUI: number[];
   filters: {
     selectedActions: string[];
     selectedStates: string[];
@@ -75,7 +74,6 @@ export interface EventsStoreSlice {
 
 const initialState: EventsStoreSlice = {
   allEventsList: remoteList(),
-  eventIdsVisibleInUI: [],
   eventList: remoteList(),
   eventsByCampaignId: {},
   eventsByDate: {},
@@ -530,9 +528,6 @@ const eventsSlice = createSlice({
       state.respondentsByEventId[eventId] = remoteList(respondents);
       state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
-    setEventIdsVisibleInUI: (state, action: PayloadAction<number[]>) => {
-      state.eventIdsVisibleInUI = action.payload;
-    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.statsByEventId[eventId] = remoteItem<EventStats>(eventId);
@@ -779,7 +774,6 @@ export const {
   resetSelection,
   respondentsLoad,
   respondentsLoaded,
-  setEventIdsVisibleInUI,
   statsLoad,
   statsLoaded,
   typeAdd,

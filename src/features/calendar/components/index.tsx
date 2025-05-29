@@ -3,9 +3,7 @@ import { useRouter } from 'next/router';
 import { Suspense, useEffect } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useDispatch } from 'react-redux';
 
-import { useAppSelector } from 'core/hooks';
 import { TimeScale } from '../types';
 import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
@@ -14,7 +12,7 @@ import CalendarWeekView from './CalendarWeekView';
 import SelectionBar from '../../events/components/SelectionBar';
 import useDayCalendarNav from '../hooks/useDayCalendarNav';
 import useTimeScale from '../hooks/useTimeScale';
-import { setFocusDate } from '../store';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 dayjs.extend(utc);
 function getDateFromString(focusDateStr: string) {
@@ -34,19 +32,14 @@ const Calendar = () => {
   const orgId = router.query.orgId;
   const campId = router.query.campId;
 
-  const dispatch = useDispatch();
   const { setTimeScale, timeScale } = useTimeScale(router.query.timeScale);
-  const focusDate = useAppSelector((state) => state.calendar.focusDate);
+  const { focusDate, setFocusDate } = useFocusDate();
   const focusDateStr = router.query.focusDate as string;
   const { nextActivityDay, prevActivityDay } = useDayCalendarNav(focusDate);
 
   useEffect(() => {
-    dispatch(setFocusDate(getDateFromString(focusDateStr)));
-  }, []);
-
-  useEffect(() => {
     setFocusDate(getDateFromString(focusDateStr));
-  }, [focusDateStr]);
+  }, []);
 
   useEffect(() => {
     const focusedDate = dayjs.utc(focusDate).format('YYYY-MM-DD');
@@ -65,9 +58,6 @@ const Calendar = () => {
     );
   }, [focusDate, timeScale]);
 
-  function updateFocusDate(date: Date) {
-    dispatch(setFocusDate(date));
-  }
   function navigateTo(timeScale: TimeScale, date: Date) {
     setTimeScale(timeScale);
     setFocusDate(date);
@@ -77,7 +67,7 @@ const Calendar = () => {
     <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
       <CalendarNavBar
         onChangeFocusDate={(date) => {
-          updateFocusDate(date);
+          setFocusDate(date);
         }}
         onChangeTimeScale={(timeScale) => {
           setTimeScale(timeScale);
@@ -85,17 +75,17 @@ const Calendar = () => {
         onStepBackward={() => {
           // Steps back to the last day with an event on day view
           if (timeScale === TimeScale.DAY && prevActivityDay) {
-            updateFocusDate(prevActivityDay[0]);
+            setFocusDate(prevActivityDay[0]);
           } else {
-            updateFocusDate(dayjs(focusDate).subtract(1, timeScale).toDate());
+            setFocusDate(dayjs(focusDate).subtract(1, timeScale).toDate());
           }
         }}
         onStepForward={() => {
           // Steps forward to the next day with an event on day view
           if (timeScale === TimeScale.DAY && nextActivityDay) {
-            updateFocusDate(nextActivityDay[0]);
+            setFocusDate(nextActivityDay[0]);
           } else {
-            updateFocusDate(dayjs(focusDate).add(1, timeScale).toDate());
+            setFocusDate(dayjs(focusDate).add(1, timeScale).toDate());
           }
         }}
         orgId={parseInt(orgId as string)}
@@ -112,7 +102,7 @@ const Calendar = () => {
         <Suspense>
           {timeScale === TimeScale.DAY && (
             <CalendarDayView
-              onClickPreviousDay={(date) => updateFocusDate(date)}
+              onClickPreviousDay={(date) => setFocusDate(date)}
               previousActivityDay={prevActivityDay}
             />
           )}

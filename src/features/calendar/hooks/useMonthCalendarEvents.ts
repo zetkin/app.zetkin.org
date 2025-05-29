@@ -12,10 +12,10 @@ import {
 
 type UseMonthCalendarEventsParams = {
   campaignId?: number;
-  endDate: Date;
+  endDate: Date | undefined;
   maxPerDay: number;
   orgId: number;
-  startDate: Date;
+  startDate: Date | undefined;
 };
 
 type UseMonthCalendarEventsReturn = {
@@ -43,6 +43,10 @@ export default function useMonthCalendarEvents({
   const datesWithActivities = getActivitiesByDay(filteredActivities);
 
   const dates: UseMonthCalendarEventsReturn = [];
+
+  if (startDate === undefined || endDate === undefined) {
+    return [];
+  }
 
   const curDate = new Date(startDate);
   while (curDate.getTime() <= endDate.getTime()) {
