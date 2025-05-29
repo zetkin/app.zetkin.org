@@ -56,11 +56,13 @@ import areaAssignmentSlice, {
 } from 'features/areaAssignments/store';
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
+import calendarSlice, { CalendarStoreSlice } from 'features/calendar/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
   areas: AreasStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
+  calendar: CalendarStoreSlice;
   call: CallStoreSlice;
   callAssignments: CallAssignmentSlice;
   campaigns: CampaignsStoreSlice;
@@ -88,6 +90,7 @@ const reducer = {
   areaAssignments: areaAssignmentSlice.reducer,
   areas: areasSlice.reducer,
   breadcrumbs: breadcrumbsSlice.reducer,
+  calendar: calendarSlice.reducer,
   call: callSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,
   campaigns: campaignsSlice.reducer,

@@ -9,19 +9,21 @@ import { Msg } from 'core/i18n';
 import PreviousDayPrompt from './PreviousDayPrompt';
 import useDayCalendarEvents from 'features/calendar/hooks/useDayCalendarEvents';
 import { setEventIdsVisibleInUI } from 'features/events/store';
-import { useAppDispatch } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { RootState } from 'core/store';
 
 export interface CalendarDayViewProps {
-  focusDate: Date;
   onClickPreviousDay: (date: Date) => void;
   previousActivityDay: [Date, DaySummary] | null;
 }
 
 const CalendarDayView = ({
-  focusDate,
   onClickPreviousDay,
   previousActivityDay,
 }: CalendarDayViewProps) => {
+  const focusDate = useAppSelector(
+    (state: RootState) => state.calendar.focusDate
+  );
   const { activities, hasMore, isLoadingFuture, loadMoreFuture } =
     useDayCalendarEvents(focusDate);
   const dispatch = useAppDispatch();

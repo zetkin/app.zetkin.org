@@ -6,11 +6,16 @@ import { setEventIdsVisibleInUI } from 'features/events/store';
 import Day from './Day';
 import range from 'utils/range';
 import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
-import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
 import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
 import { setEquals } from '../utils';
+import { RootState } from 'core/store';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -18,19 +23,20 @@ const numberOfDayColumns = 7;
 const numberOfGridColumns = 8;
 
 type CalendarMonthViewProps = {
-  focusDate: Date;
   onClickDay: (date: Date) => void;
   onClickWeek: (date: Date) => void;
 };
 
 const CalendarMonthView = ({
-  focusDate,
   onClickDay,
   onClickWeek,
 }: CalendarMonthViewProps) => {
   const itemHeight = 25;
   const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
   const dispatch = useAppDispatch();
+  const focusDate = useAppSelector(
+    (state: RootState) => state.calendar.focusDate
+  );
 
   const firstDayOfMonth: Date = new Date(
     Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)

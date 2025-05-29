@@ -1,16 +1,17 @@
 import { Box } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
+import { TimeScale } from 'features/calendar/types';
 
 import CalendarEventFilter from '../CalendarEventFilter';
 import messageIds from 'features/calendar/l10n/messageIds';
 import MonthSelect from './MonthSelect';
 import { Msg } from 'core/i18n';
-import { TimeScale } from '../index';
 import YearSelect from './YearSelect';
+import { useAppSelector } from 'core/hooks';
+import { RootState } from 'core/store';
 
 export interface CalendarNavBarProps {
-  focusDate: Date;
   onChangeFocusDate: (date: Date) => void;
   onChangeTimeScale: (timeScale: TimeScale) => void;
   onStepBackward: () => void;
@@ -20,7 +21,6 @@ export interface CalendarNavBarProps {
 }
 
 const CalendarNavBar = ({
-  focusDate,
   onChangeFocusDate,
   onChangeTimeScale,
   onStepBackward,
@@ -28,6 +28,9 @@ const CalendarNavBar = ({
   orgId,
   timeScale,
 }: CalendarNavBarProps) => {
+  const focusDate = useAppSelector(
+    (state: RootState) => state.calendar.focusDate
+  );
   return (
     <Box display="flex" justifyContent="space-between">
       <Box alignItems="center" display="flex" gap="4px">
