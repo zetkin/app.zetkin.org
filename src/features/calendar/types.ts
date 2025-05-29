@@ -1,5 +1,1 @@
-export enum TimeScale {
-  DAY = 'day',
-  WEEK = 'week',
-  MONTH = 'month',
-}
+export type TimeScale = 'day' | 'week' | 'month';
