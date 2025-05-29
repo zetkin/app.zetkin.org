@@ -9,7 +9,9 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import dayjs from 'dayjs';
 
+import { TimeScale } from 'features/calendar/types';
 import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
@@ -18,17 +20,85 @@ import { eventsSelected, resetSelection } from 'features/events/store';
 import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
 import useParticipantPool from 'features/events/hooks/useParticipantPool';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+  useNumericRouteParams,
+} from 'core/hooks';
+import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
+import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
+import useDayCalendarEvents from 'features/calendar/hooks/useDayCalendarEvents';
 
 const SelectionBar = () => {
   const dispatch = useAppDispatch();
   const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
   const { affectedParticipantIds } = useParticipantPool();
+  const calendarStore = useAppSelector((state: RootState) => state.calendar);
+  const { focusDate } = useFocusDate();
+
+  const { orgId, campId } = useNumericRouteParams();
+  const monthViewSpan = useMemo(
+    () => ({
+      endDate:
+        calendarStore.monthViewSpan.endDate !== undefined
+          ? dayjs(calendarStore.monthViewSpan.endDate).toDate()
+          : undefined,
+      startDate:
+        calendarStore.monthViewSpan.startDate !== undefined
+          ? dayjs(calendarStore.monthViewSpan.startDate).toDate()
+          : undefined,
+    }),
+    [calendarStore.monthViewSpan]
+  );
+  const weekViewDates = useMemo(
+    () => calendarStore.weekViewDates.map((d) => dayjs(d).toDate()),
+    [calendarStore.weekViewDates]
+  );
+
+  const monthCalendarEvents = useMonthCalendarEvents({
+    campaignId: campId,
+    endDate: monthViewSpan.endDate,
+    maxPerDay: calendarStore.maxMonthEventsPerDay,
+    orgId,
+    startDate: monthViewSpan.startDate,
+  });
+
+  const weekCalendarEvents = useWeekCalendarEvents({
+    campaignId: campId,
+    dates: weekViewDates,
+    orgId,
+  });
+
+  const { activities: dayCalendarEvents } = useDayCalendarEvents(focusDate);
+
+  function getIdsToSelect() {
+    const eventsToSelect = new Set<number>();
+    if (calendarStore.timeScale === TimeScale.MONTH) {
+      monthCalendarEvents
+        .flatMap((event) => event.clusters)
+        .flatMap((cluster) => cluster.events)
+        .map((event) => event.id)
+        .forEach((id) => eventsToSelect.add(id));
+    } else if (calendarStore.timeScale === TimeScale.WEEK) {
+      weekCalendarEvents
+        .flatMap((events) => events.lanes)
+        .flatMap((lanes) => lanes)
+        .flatMap((lane) => lane.events)
+        .map((event) => event.id)
+        .forEach((id) => eventsToSelect.add(id));
+    } else if (calendarStore.timeScale === TimeScale.DAY) {
+      dayCalendarEvents
+        .flatMap((event) => event[1])
+        .flatMap((e) => e.events)
+        .map((e) => e.data.id)
+        .forEach((id) => eventsToSelect.add(id));
+    }
+    return Array.from(eventsToSelect);
+  }
+
   const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
-  );
-  const eventsVisibleInUI = useAppSelector(
-    (state) => state.events.eventIdsVisibleInUI
   );
 
   const handleDeselect = () => {
@@ -36,15 +106,26 @@ const SelectionBar = () => {
   };
 
   const handleSelectAll = () => {
-    dispatch(eventsSelected(eventsVisibleInUI));
+    const eventIds = getIdsToSelect();
+    dispatch(eventsSelected(eventIds));
   };
 
   const canSelectAll = useMemo(() => {
-    const canSelect = !eventsVisibleInUI.every((v) =>
+    const visibleEventIds = getIdsToSelect();
+    if (selectedEventIds.length !== visibleEventIds.length) {
+      return true;
+    }
+    const canSelect = !visibleEventIds.every((v) =>
       selectedEventIds.includes(v)
     );
     return canSelect;
-  }, [selectedEventIds, eventsVisibleInUI]);
+  }, [
+    selectedEventIds,
+    monthCalendarEvents,
+    weekCalendarEvents,
+    dayCalendarEvents,
+  ]);
+
   return (
     <Box
       sx={{

@@ -8,8 +8,8 @@ import { eventRangeLoad, eventRangeLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useEventsFromDateRange(
-  startDate: Date,
-  endDate: Date,
+  startDate: Date | undefined,
+  endDate: Date | undefined,
   orgId: number,
   campId?: number
 ): EventActivity[] {
@@ -17,6 +17,9 @@ export default function useEventsFromDateRange(
   const dispatch = useAppDispatch();
   const eventsState = useAppSelector((state) => state.events);
 
+  if (startDate === undefined || endDate === undefined) {
+    return [];
+  }
   const dateRange = range(
     dayjs(endDate).startOf('day').diff(dayjs(startDate).startOf('day'), 'day') +
       1

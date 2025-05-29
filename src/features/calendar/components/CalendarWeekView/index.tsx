@@ -24,16 +24,12 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
-import { getDstChangeAtDate, setEquals } from '../utils';
+import { getDstChangeAtDate } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import {
-  useAppDispatch,
-  useAppSelector,
-  useNumericRouteParams,
-} from 'core/hooks';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
-import { setEventIdsVisibleInUI } from 'features/events/store';
-import { RootState } from 'core/store';
+import { setWeekViewDates } from 'features/calendar/store';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 dayjs.extend(isoWeek);
 
@@ -45,9 +41,6 @@ export interface CalendarWeekViewProps {
 }
 const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
   const theme = useTheme();
-  const focusDate = useAppSelector(
-    (state: RootState) => state.calendar.focusDate
-  );
   const dispatch = useAppDispatch();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
@@ -57,40 +50,36 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
   );
   const { orgId, campId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
-  const focusWeekStartDay =
-    dayjs(focusDate).isoWeekday() == 7
+  const { focusDate } = useFocusDate();
+  const focusWeekStartDay = useMemo(() => {
+    return dayjs(focusDate).isoWeekday() == 7
       ? dayjs(focusDate).add(-1, 'day')
       : dayjs(focusDate);
+  }, [focusDate]);
 
-  const dayDates = range(7).map((weekday) => {
-    return focusWeekStartDay.day(weekday + 1).toDate();
-  });
+  const weekViewDates = useMemo(() => {
+    return range(7).map((weekday) =>
+      focusWeekStartDay.day(weekday + 1).toDate()
+    );
+  }, [focusWeekStartDay]);
+
+  useEffect(() => {
+    dispatch(setWeekViewDates(weekViewDates.map((d) => d.toISOString())));
+  }, [weekViewDates]);
 
   const dstChange = useMemo(
     () =>
-      dayDates.map((d) => dayjs(d)).find((date) => getDstChangeAtDate(date)),
-    [dayDates]
+      weekViewDates
+        .map((d) => dayjs(d))
+        .find((date) => getDstChangeAtDate(date)),
+    [weekViewDates]
   );
 
   const eventsByDate = useWeekCalendarEvents({
     campaignId: campId,
-    dates: dayDates,
+    dates: weekViewDates,
     orgId,
   });
-
-  const [visibleEvents, setVisibleEvents] = useState<Set<number>>(new Set());
-  useEffect(() => {
-    const eventIds = eventsByDate
-      .flatMap((c) => c.lanes)
-      .flatMap((c) => c)
-      .flatMap((e) => e.events)
-      .map((e) => e.id);
-    const newVisibleEvents = new Set(eventIds);
-    if (!setEquals(newVisibleEvents, visibleEvents)) {
-      setVisibleEvents(newVisibleEvents);
-      dispatch(setEventIdsVisibleInUI([...newVisibleEvents]));
-    }
-  }, [eventsByDate]);
 
   let laneHeight = 0;
   const weekGridRef = useRef<HTMLDivElement>();
@@ -116,8 +105,8 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
         position="relative"
       >
         {/* Empty */}
-        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
-        {dayDates.map((weekdayDate: Date, weekday: number) => {
+        <HeaderWeekNumber weekNr={dayjs(weekViewDates[0]).isoWeek()} />
+        {weekViewDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <Box key={`weekday-${weekday}`} position="relative">
               <DayHeader
@@ -180,7 +169,7 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
           })}
         </Box>
         {/* Day columns */}
-        {dayDates.map((date: Date, index: number) => {
+        {weekViewDates.map((date: Date, index: number) => {
           const pendingTop = pendingEvent
             ? (pendingEvent[0].getUTCHours() * 60 +
                 pendingEvent[0].getMinutes()) /

@@ -29,6 +29,7 @@ export default function useTimeScale(
     // If the time scale changes in the URL, update it in local storage
     if (timeScaleQueryParam) {
       const newTimeScale = getTimeScale(timeScaleQueryParam);
+      dispatch(setTimeScale(newTimeScale));
       if (newTimeScale !== localStorageTimeScale) {
         setLocalStorageTimeScale(newTimeScale);
       }
