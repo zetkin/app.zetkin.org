@@ -108,9 +108,9 @@ const CallersPage: PageWithLayout = () => {
         </Paper>
         <Box marginTop={2}>
           <MUIOnlyPersonSelect
-            getOptionDisabled={isCaller}
+            getOptionDisabled={(person) => isCaller(person.id)}
             getOptionExtraLabel={(person) =>
-              isCaller(person) ? messages.callers.add.alreadyAdded() : ''
+              isCaller(person.id) ? messages.callers.add.alreadyAdded() : ''
             }
             inputRef={selectInputRef}
             onChange={(person) => {
