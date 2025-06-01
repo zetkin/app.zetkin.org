@@ -303,14 +303,16 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         submitLabel={submitLabel}
         title={title}
       />
-      <ZUIBulkPersonSelect
-        onClose={() => setBulkDialogOpen(false)}
-        onSubmit={(ids) => {
-          onSelectMultiple?.(ids);
-          setBulkDialogOpen(false);
-        }}
-        open={bulkDialogOpen}
-      />
+      {showBulkButton && (
+        <ZUIBulkPersonSelect
+          onClose={() => setBulkDialogOpen(false)}
+          onSubmit={(ids) => {
+            onSelectMultiple?.(ids);
+            setBulkDialogOpen(false);
+          }}
+          open={bulkDialogOpen}
+        />
+      )}
     </>
   );
 };
