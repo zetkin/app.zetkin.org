@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 import { FC } from 'react';
 
 import useView from 'features/views/hooks/useView';
@@ -6,6 +6,7 @@ import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIFutures from 'zui/ZUIFutures';
+import ViewDataTable from 'features/views/components/ViewDataTable';
 
 type Props = {
   onBack: () => void;
@@ -16,50 +17,56 @@ type Props = {
 
 const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
   const viewFuture = useView(orgId, viewId);
-  const { rowsFuture } = useViewGrid(orgId, viewId);
+  const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
 
   return (
     <Box>
-      <ZUIFutures futures={{ rows: rowsFuture, view: viewFuture }}>
-        {({ data: { rows, view } }) => {
+      <ZUIFutures
+        futures={{ columns: columnsFuture, rows: rowsFuture, view: viewFuture }}
+      >
+        {({ data: { columns, rows, view } }) => {
           return (
-            <>
-              <Typography>{view.title}</Typography>
-              <Typography variant="body2">{rows.length}</Typography>
-              <Box>
-                <Divider />
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    gap: 2,
-                    justifyContent: 'flex-end',
-                    mt: 2,
-                  }}
-                >
-                  <Box>
-                    <Button
-                      onClick={() => {
-                        onBack();
-                      }}
-                      sx={{ mr: 2 }}
-                      variant="text"
-                    >
-                      <Msg id={messageIds.personSelect.bulkAdd.backButton} />
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        onSubmit(rows.map((row) => row.id));
-                      }}
-                      sx={{ mr: 2 }}
-                      variant="contained"
-                    >
-                      <Msg id={messageIds.personSelect.bulkAdd.submitButton} />
-                    </Button>
-                  </Box>
+            <Box>
+              <ViewDataTable
+                columns={columns}
+                disableAdd
+                disableBulkActions
+                disableConfigure
+                rows={rows}
+                view={view}
+              />
+              <Divider />
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: 2,
+                  justifyContent: 'flex-end',
+                  mt: 2,
+                }}
+              >
+                <Box>
+                  <Button
+                    onClick={() => {
+                      onBack();
+                    }}
+                    sx={{ mr: 2 }}
+                    variant="text"
+                  >
+                    <Msg id={messageIds.personSelect.bulkAdd.backButton} />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      onSubmit(rows.map((row) => row.id));
+                    }}
+                    sx={{ mr: 2 }}
+                    variant="contained"
+                  >
+                    <Msg id={messageIds.personSelect.bulkAdd.submitButton} />
+                  </Button>
                 </Box>
               </Box>
-            </>
+            </Box>
           );
         }}
       </ZUIFutures>
