@@ -6,7 +6,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, MouseEvent, useContext, useEffect, useState } from 'react';
 import { Link, Theme, useMediaQuery } from '@mui/material';
 
 import BrowserDraggableItem from './BrowserDragableItem';
@@ -33,6 +33,7 @@ import MoveViewDialog from '../MoveViewDialog';
 interface ViewBrowserProps {
   basePath: string;
   folderId?: number | null;
+  onSelect?: (item: ViewBrowserItem, ev: MouseEvent) => void;
 }
 
 const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
@@ -43,7 +44,11 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
-const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
+const ViewBrowser: FC<ViewBrowserProps> = ({
+  basePath,
+  folderId = null,
+  onSelect,
+}) => {
   const { orgId } = useNumericRouteParams();
 
   const messages = useMessages(messageIds);
@@ -87,7 +92,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
         if (item.type == 'back') {
           return (
             <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
-              <Link color="inherit">
+              <Link color="inherit" onClick={(ev) => onSelect?.(item, ev)}>
                 <BrowserItemIcon item={params.row} />
               </Link>
             </NextLink>
@@ -95,7 +100,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
         } else {
           return (
             <NextLink href={`${basePath}/${item.id}`} legacyBehavior passHref>
-              <Link color="inherit">
+              <Link color="inherit" onClick={(ev) => onSelect?.(item, ev)}>
                 <BrowserDraggableItem item={params.row}>
                   <BrowserItemIcon item={params.row} />
                 </BrowserDraggableItem>
@@ -114,7 +119,16 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
       flex: 2,
       headerName: messages.viewsList.columns.title(),
       renderCell: (params) => {
-        return <BrowserItem basePath={basePath} item={params.row} />;
+        const item = params.row;
+        return (
+          <BrowserItem
+            basePath={basePath}
+            item={params.row}
+            onClick={(ev) => {
+              onSelect?.(item, ev);
+            }}
+          />
+        );
       },
     },
   ];
