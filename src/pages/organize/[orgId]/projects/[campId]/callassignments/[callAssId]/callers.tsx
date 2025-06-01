@@ -121,6 +121,14 @@ const CallersPage: PageWithLayout = () => {
               selectInputRef?.current?.blur();
               selectInputRef?.current?.focus();
             }}
+            onSelectMultiple={(ids) => {
+              // TODO: Optimize this, e.g. using RPC
+              ids.forEach((id) => {
+                if (!isCaller(id)) {
+                  addCaller(id);
+                }
+              });
+            }}
             placeholder={messages.callers.add.placeholder()}
             selectedPerson={null}
             submitLabel={zuiMessages.createPerson.submitLabel.add()}
