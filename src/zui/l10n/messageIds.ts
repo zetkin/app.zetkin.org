@@ -192,6 +192,12 @@ export default makeMessages('zui', {
     searchResults: m('Search results'),
   },
   personSelect: {
+    bulkAdd: {
+      backButton: m('Back'),
+      cancelButton: m('Cancel'),
+      openButton: m('Bulk add'),
+      submitButton: m('Select'),
+    },
     keepTyping: m('Keep typing to start searching'),
     noResult: m('No matching person found'),
     search: m('Type to start searching'),
