@@ -124,6 +124,7 @@ const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
+  disableAdd?: boolean;
   disableBulkActions?: boolean;
   disableConfigure?: boolean;
   rows: ZetkinViewRow[];
@@ -132,6 +133,7 @@ interface ViewDataTableProps {
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
+  disableAdd = false,
   disableBulkActions = false,
   disableConfigure,
   rows,
@@ -477,7 +479,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
-        hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
+        hideFooter={
+          disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
+        }
         localeText={{
           ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
           noRowsLabel: messages.empty.notice[contentSource](),
