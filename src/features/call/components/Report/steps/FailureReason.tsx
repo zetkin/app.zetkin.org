@@ -7,6 +7,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   nextStepIfWrongNumber: 'wrongNumber' | 'organizerLog';
@@ -19,6 +20,7 @@ const FailureReason: FC<Props> = ({
   onReportUpdate,
   report,
 }) => {
+  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
 
   useEffect(() => {
@@ -84,7 +86,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={LooksOne}
+          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
         <ZUIButton
@@ -100,7 +102,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={LooksTwo}
+          startIcon={!isMobile ? LooksTwo : undefined}
           variant="secondary"
         />
         <ZUIButton
@@ -114,7 +116,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={Looks3}
+          startIcon={!isMobile ? Looks3 : undefined}
           variant="secondary"
         />
         <ZUIButton
@@ -128,7 +130,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={Looks4}
+          startIcon={!isMobile ? Looks4 : undefined}
           variant="secondary"
         />
       </Stack>

@@ -7,6 +7,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   onReportUpdate: (updatedReport: Report) => void;
@@ -19,6 +20,7 @@ const WrongNumber: FC<Props> = ({
   report,
   phoneAndAltPhone,
 }) => {
+  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
 
   useEffect(() => {
@@ -70,7 +72,7 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'phone',
             })
           }
-          startIcon={LooksOne}
+          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
         <ZUIButton
@@ -83,7 +85,7 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'altPhone',
             })
           }
-          startIcon={LooksTwo}
+          startIcon={!isMobile ? LooksTwo : undefined}
           variant="secondary"
         />
         <ZUIButton
@@ -96,7 +98,7 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'both',
             })
           }
-          startIcon={Looks3}
+          startIcon={!isMobile ? Looks3 : undefined}
           variant="secondary"
         />
       </Stack>

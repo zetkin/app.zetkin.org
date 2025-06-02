@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
+import { LooksOne } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -7,6 +8,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   onReportFinished: () => void;
@@ -15,6 +17,7 @@ type Props = {
 };
 
 const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
+  const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
   const [message, setMessage] = useState(report.callerLog || '');
@@ -55,6 +58,7 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
             onReportUpdate({ ...report, callerLog: message, step: 'summary' });
             onReportFinished();
           }}
+          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>

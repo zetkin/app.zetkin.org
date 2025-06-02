@@ -6,6 +6,7 @@ import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import messageIds from 'features/call/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import StepBase from './StepBase';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   onReportFinished?: () => void;
@@ -18,6 +19,7 @@ const OrganizerAction: FC<Props> = ({
   onReportUpdate,
   report,
 }) => {
+  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const OrganizerAction: FC<Props> = ({
                 organizerActionNeeded: true,
                 step: 'organizerLog',
               }),
-            startIcon: LooksOne,
+            startIcon: !isMobile ? LooksOne : undefined,
           },
           {
             label: messages.report.steps.organizerAction.question.noButton(),
@@ -81,7 +83,7 @@ const OrganizerAction: FC<Props> = ({
                 onReportFinished();
               }
             },
-            startIcon: LooksTwo,
+            startIcon: !isMobile ? LooksTwo : undefined,
           },
         ]}
         fullWidth

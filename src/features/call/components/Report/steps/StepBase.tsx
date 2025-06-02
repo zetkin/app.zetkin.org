@@ -33,7 +33,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
       <Box
         onClick={onEdit}
         sx={{
-          alignItems: 'center',
+          alignItems: isMobile ? 'flex-start' : 'center',
           cursor: onEdit ? 'pointer' : 'default',
           display: 'flex',
           justifyContent: 'space-between',
@@ -79,9 +79,10 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
       <Box
         sx={(theme) => ({
           borderLeft: `1px solid ${theme.palette.dividers.main}`,
+          marginBottom: '0.25rem',
           marginLeft: '0.7rem',
-          marginY: '0.25rem',
           minHeight: '0.25rem',
+          paddingBottom: '0.25rem',
           paddingLeft: '1.25rem',
         })}
       >

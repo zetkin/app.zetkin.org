@@ -9,6 +9,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 import { ZetkinCallTarget } from 'features/call/types';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   onReportFinished?: () => void;
@@ -23,6 +24,7 @@ const OrganizerLog: FC<Props> = ({
   report,
   target,
 }) => {
+  const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
   let initialMessage = '';
@@ -91,7 +93,7 @@ const OrganizerLog: FC<Props> = ({
               onReportFinished();
             }
           }}
-          startIcon={LooksOne}
+          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>
