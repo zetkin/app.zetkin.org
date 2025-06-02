@@ -163,6 +163,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     inputRef={inputRef}
     label={label}
     maxRows={maxRows}
+    minRows={maxRows < 5 ? maxRows : 5}
     multiline={multiline}
     name={name}
     onChange={(ev) => {
@@ -172,7 +173,6 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     }}
     placeholder={placeholder}
     required={required}
-    rows={maxRows < 5 ? maxRows : 5}
     size={size == 'medium' ? 'small' : 'medium'}
     slotProps={{
       htmlInput: {
