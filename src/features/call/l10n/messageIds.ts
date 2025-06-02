@@ -57,6 +57,7 @@ export default makeMessages('feat.call', {
             today: m('Later today'),
             tomorrow: m('Tomorrow'),
           },
+          invalidDateButtonLabel: m('Invalid date'),
           timeLabel: m('After what time'),
           title: m('When should we call back?'),
         },

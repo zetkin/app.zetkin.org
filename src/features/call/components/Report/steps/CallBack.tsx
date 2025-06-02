@@ -122,6 +122,8 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     };
   }, [callBackAfter]);
 
+  const dateIsValid = date.isValid() && date.isAfter(today);
+
   return (
     <StepBase
       state="active"
@@ -181,14 +183,19 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           />
         </Box>
         <ZUIButton
-          label={messages.report.steps.callBack.question.callBackButtonLabel({
-            date:
-              time.value == 'any' ? (
-                <ZUIDate datetime={callBackAfter} />
-              ) : (
-                <ZUIDateTime datetime={callBackAfter} />
-              ),
-          })}
+          disabled={!dateIsValid}
+          label={
+            dateIsValid
+              ? messages.report.steps.callBack.question.callBackButtonLabel({
+                  date:
+                    time.value == 'any' ? (
+                      <ZUIDate datetime={callBackAfter} />
+                    ) : (
+                      <ZUIDateTime datetime={callBackAfter} />
+                    ),
+                })
+              : messages.report.steps.callBack.question.invalidDateButtonLabel()
+          }
           onClick={() => {
             onReportUpdate({
               ...report,
@@ -196,7 +203,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
               step: 'organizerAction',
             });
           }}
-          startIcon={LooksOne}
+          startIcon={dateIsValid ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>
