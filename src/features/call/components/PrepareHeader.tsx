@@ -11,6 +11,8 @@ import SkipCallDialog from './SkipCallDialog';
 import useCallMutations from '../hooks/useCallMutations';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import CallSwitchModal from './CallSwitchModal';
+import ZUIBadge from 'zui/components/ZUIBadge';
+import useOutgoingCalls from '../hooks/useOutgoingCalls';
 
 type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
@@ -28,6 +30,8 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
   const [showModal, setShowModal] = useState(false);
+  const outgoingCalls = useOutgoingCalls();
+  const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
 
   if (!call) {
     return null;
@@ -77,12 +81,14 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
                   {call.target.first_name} {call.target.last_name}
                 </ZUIText>
               </Box>
-              <ZUIButton
-                endIcon={ArrowDropDown}
-                label={'Switch'}
-                onClick={() => setShowModal(true)}
-                variant="secondary"
-              />
+              <ZUIBadge color="warning" number={unfinishedCallList.length}>
+                <ZUIButton
+                  endIcon={ArrowDropDown}
+                  label={'Switch'}
+                  onClick={() => setShowModal(true)}
+                  variant="secondary"
+                />
+              </ZUIBadge>
               <CallSwitchModal
                 assignment={assignment}
                 onClose={() => setShowModal(false)}
