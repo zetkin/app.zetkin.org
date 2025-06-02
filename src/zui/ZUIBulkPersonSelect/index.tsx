@@ -1,5 +1,5 @@
 import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import BrowserStep from './BrowserStep';
 import ViewStep from './ViewStep';
@@ -19,7 +19,15 @@ const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [folderId, setFolderId] = useState<number | null>(null);
   const [viewId, setViewId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setFolderId(null);
+      setViewId(null);
+    }
+  }, [open]);
 
   return (
     <Dialog
@@ -42,7 +50,9 @@ const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
         )}
         {!viewId && (
           <BrowserStep
+            folderId={folderId}
             onClose={onClose}
+            onFolderSelect={(id) => setFolderId(id)}
             onViewSelect={(viewId) => setViewId(viewId)}
           />
         )}

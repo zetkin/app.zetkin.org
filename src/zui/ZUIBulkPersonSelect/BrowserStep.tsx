@@ -1,17 +1,23 @@
 import { Box, Button, Divider } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import ViewBrowser from 'features/views/components/ViewBrowser';
 import messageIds from 'zui/l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 type Props = {
+  folderId: number | null;
   onClose: () => void;
+  onFolderSelect: (folderId: number | null) => void;
   onViewSelect: (viewId: number) => void;
 };
 
-const BrowserStep: FC<Props> = ({ onClose, onViewSelect }) => {
-  const [folderId, setFolderId] = useState<number | null>(null);
+const BrowserStep: FC<Props> = ({
+  folderId,
+  onClose,
+  onFolderSelect,
+  onViewSelect,
+}) => {
   return (
     <Box>
       <ViewBrowser
@@ -21,9 +27,9 @@ const BrowserStep: FC<Props> = ({ onClose, onViewSelect }) => {
           ev.preventDefault();
           ev.stopPropagation();
           if (item.type == 'folder') {
-            setFolderId(item.data.id);
+            onFolderSelect(item.data.id);
           } else if (item.type == 'back') {
-            setFolderId(item.folderId);
+            onFolderSelect(item.folderId);
           } else if (item.type == 'view') {
             onViewSelect(item.data.id);
           }
