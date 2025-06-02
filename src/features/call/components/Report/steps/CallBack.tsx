@@ -13,6 +13,7 @@ import messageIds from 'features/call/l10n/messageIds';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import StepBase from './StepBase';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   onReportUpdate: (updatedReport: Report) => void;
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
+  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const timeInputRef = useRef<HTMLInputElement | null>(null);
   const dateInputRef = useRef<HTMLInputElement | null>(null);
@@ -130,7 +132,13 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
       title={<Msg id={messageIds.report.steps.callBack.question.title} />}
     >
       <Stack sx={{ gap: '0.5rem' }}>
-        <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: '1rem',
+          }}
+        >
           <ZUIDateField
             disablePast
             fullWidth
@@ -157,30 +165,39 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             value={time}
           />
         </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
+        <Box
+          sx={{
+            alignItems: isMobile ? 'flex-start' : 'center',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: '0.5rem',
+          }}
+        >
           <ZUIText variant="bodySmRegular">
             <Msg
               id={messageIds.report.steps.callBack.question.examples.title}
             />
           </ZUIText>
-          <ZUIButton
-            label={messages.report.steps.callBack.question.examples.today()}
-            onClick={() => callBackLaterToday()}
-            size="small"
-            startIcon={LooksTwo}
-          />
-          <ZUIButton
-            label={messages.report.steps.callBack.question.examples.tomorrow()}
-            onClick={() => callBackTomorrow()}
-            size="small"
-            startIcon={Looks3}
-          />
-          <ZUIButton
-            label={messages.report.steps.callBack.question.examples.nextWeek()}
-            onClick={() => callBackNextWeek()}
-            size="small"
-            startIcon={Looks4}
-          />
+          <Box sx={{ display: 'flex', gap: '0.5rem' }}>
+            <ZUIButton
+              label={messages.report.steps.callBack.question.examples.today()}
+              onClick={() => callBackLaterToday()}
+              size="small"
+              startIcon={!isMobile ? LooksTwo : undefined}
+            />
+            <ZUIButton
+              label={messages.report.steps.callBack.question.examples.tomorrow()}
+              onClick={() => callBackTomorrow()}
+              size="small"
+              startIcon={!isMobile ? Looks3 : undefined}
+            />
+            <ZUIButton
+              label={messages.report.steps.callBack.question.examples.nextWeek()}
+              onClick={() => callBackNextWeek()}
+              size="small"
+              startIcon={!isMobile ? Looks4 : undefined}
+            />
+          </Box>
         </Box>
         <ZUIButton
           disabled={!dateIsValid}
@@ -203,7 +220,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
               step: 'organizerAction',
             });
           }}
-          startIcon={dateIsValid ? LooksOne : undefined}
+          startIcon={dateIsValid && !isMobile ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>

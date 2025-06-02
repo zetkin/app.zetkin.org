@@ -7,6 +7,8 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import ZUIText from 'zui/components/ZUIText';
 import messageIds from 'features/call/l10n/messageIds';
+import useIsMobile from 'utils/hooks/useIsMobile';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
 
 type Props = {
   children?: ReactNode;
@@ -17,6 +19,7 @@ type Props = {
 };
 
 const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
+  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
 
   const icons = {
@@ -39,7 +42,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
       >
         <Box
           sx={{
-            alignItems: 'center',
+            alignItems: isMobile ? 'flex-start' : 'center',
             display: 'flex',
             gap: '0.5rem',
           }}
@@ -61,13 +64,16 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
           </Box>
           <ZUIText variant="headingMd">{title}</ZUIText>
         </Box>
-        {onEdit && (
+        {onEdit && !isMobile && (
           <ZUIButton
             label={messages.report.summary.editButtonLabel()}
             onClick={() => onEdit()}
             size="small"
             startIcon={Undo}
           />
+        )}
+        {onEdit && isMobile && (
+          <ZUIIconButton icon={Undo} onClick={() => onEdit()} size="small" />
         )}
       </Box>
       <Box
@@ -80,7 +86,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
         })}
       >
         {subtitle && (
-          <ZUIText noWrap variant="bodySmSemiBold">
+          <ZUIText noWrap={isMobile ? false : true} variant="bodySmSemiBold">
             {subtitle}
           </ZUIText>
         )}
