@@ -31,7 +31,7 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, []);
+  }, [message]);
 
   return (
     <StepBase

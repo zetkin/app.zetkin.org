@@ -59,7 +59,7 @@ const OrganizerLog: FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, []);
+  }, [message]);
 
   return (
     <StepBase
@@ -70,7 +70,9 @@ const OrganizerLog: FC<Props> = ({
         <ZUITextField
           label={messages.report.steps.organizerLog.question.messageLabel()}
           multiline
-          onChange={(newMessage) => setMessage(newMessage)}
+          onChange={(newMessage) => {
+            setMessage(newMessage);
+          }}
           value={message}
         />
         <ZUIButton

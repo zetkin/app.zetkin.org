@@ -111,7 +111,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, []);
+  }, [callBackAfter]);
 
   return (
     <StepBase
