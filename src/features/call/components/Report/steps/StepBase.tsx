@@ -31,7 +31,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
         onClick={onEdit}
         sx={{
           alignItems: 'center',
-          cursor: 'pointer',
+          cursor: onEdit ? 'pointer' : 'default',
           display: 'flex',
           justifyContent: 'space-between',
           minHeight: '1.875rem',
