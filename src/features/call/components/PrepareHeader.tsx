@@ -39,11 +39,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
 
   return (
     <>
-      <Box
-        sx={(theme) => ({
-          backgroundColor: theme.palette.common.white,
-        })}
-      >
+      <Box sx={(theme) => ({ backgroundColor: theme.palette.common.white })}>
         <Box p={2}>
           <Box alignItems="center" display="flex" mb={0.5} minWidth={0}>
             <ZUIButton
@@ -56,31 +52,36 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
               startIcon={ArrowBackIos}
             />
           </Box>
+
           <Box
             alignItems="center"
-            display="grid"
-            gap={1}
-            gridTemplateColumns="1fr auto"
+            display="flex"
+            justifyContent="space-between"
           >
-            <Box alignItems="center" display="flex" gap={1} minWidth={0}>
-              <Box alignItems="center" display="flex" sx={{ flexShrink: 0 }}>
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={2}
+              mr={1}
+              sx={{ minWidth: 0 }}
+            >
+              <Box
+                sx={{ alignSelf: 'baseline', display: 'flex', flexShrink: 0 }}
+              >
                 <ZUIPersonAvatar
                   firstName={call.target.first_name}
                   id={call.target.id}
                   lastName={call.target.last_name}
                 />
               </Box>
-              <Box
-                alignItems="center"
-                display="flex"
-                sx={{
-                  minWidth: 0,
-                }}
-              >
+
+              <Box minWidth={0}>
                 <ZUIText noWrap variant="headingLg">
                   {call.target.first_name} {call.target.last_name}
                 </ZUIText>
+                <ZUIText>{call.target.phone}</ZUIText>
               </Box>
+
               <ZUIBadge color="warning" number={unfinishedCallList.length}>
                 <ZUIButton
                   endIcon={ArrowDropDown}
@@ -89,34 +90,25 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
                   variant="secondary"
                 />
               </ZUIBadge>
-              <CallSwitchModal
-                assignment={assignment}
-                onClose={() => setShowModal(false)}
-                onSwitchCall={onSwitchCall}
-                open={showModal}
-              />
             </Box>
-
-            <Box display="flex" gap={2}>
+            <Box alignItems="center" display="flex" gap={1}>
               <SkipCallDialog
                 assignment={assignment}
                 callId={call.id}
-                targetName={
-                  call.target.first_name + ' ' + call.target.last_name
-                }
+                targetName={`${call.target.first_name} ${call.target.last_name}`}
               />
 
-              <ZUIButton
-                label="Call"
-                onClick={() => {
-                  onStartCall();
-                }}
-                variant="primary"
-              />
+              <ZUIButton label="Call" onClick={onStartCall} variant="primary" />
             </Box>
           </Box>
         </Box>
       </Box>
+      <CallSwitchModal
+        assignment={assignment}
+        onClose={() => setShowModal(false)}
+        onSwitchCall={onSwitchCall}
+        open={showModal}
+      />
       <ZUIDivider />
     </>
   );
