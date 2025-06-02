@@ -50,6 +50,7 @@ export const reportSteps: ReportStep[] = [
     name: 'successOrFailure',
     renderQuestion: (report, onReportUpdate, target) => (
       <SuccessOrFailure
+        key="successOrFailure"
         firstName={target.first_name}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -57,6 +58,7 @@ export const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate, target) => (
       <Summary
+        key="successOrFailureSummary"
         onEdit={() =>
           onReportUpdate({
             ...report,
@@ -105,6 +107,7 @@ export const reportSteps: ReportStep[] = [
     name: 'couldTalk',
     renderQuestion: (report, onReportUpdate, target) => (
       <CouldTalk
+        key="couldTalk"
         firstName={target.first_name}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -112,6 +115,7 @@ export const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate, target) => (
       <Summary
+        key="couldTalkSummary"
         onEdit={() =>
           onReportUpdate({
             ...report,
@@ -163,6 +167,7 @@ export const reportSteps: ReportStep[] = [
 
       return (
         <FailureReason
+          key="failureReason"
           nextStepIfWrongNumber={
             phone && altPhone ? 'wrongNumber' : 'organizerLog'
           }
@@ -175,6 +180,7 @@ export const reportSteps: ReportStep[] = [
       if (report.failureReason) {
         return (
           <Summary
+            key="failureReasonSummary"
             onEdit={() =>
               onReportUpdate({
                 ...report,
@@ -218,10 +224,15 @@ export const reportSteps: ReportStep[] = [
     },
     name: 'leftMessage',
     renderQuestion: (report, onReportUpdate) => (
-      <LeftMessage onReportUpdate={onReportUpdate} report={report} />
+      <LeftMessage
+        key="leftMessage"
+        onReportUpdate={onReportUpdate}
+        report={report}
+      />
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
+        key="leftMessageSummary"
         onEdit={() =>
           onReportUpdate({
             ...report,
@@ -271,7 +282,11 @@ export const reportSteps: ReportStep[] = [
     },
     name: 'callBack',
     renderQuestion: (report, onReportUpdate) => (
-      <CallBack onReportUpdate={onReportUpdate} report={report} />
+      <CallBack
+        key="callBack"
+        onReportUpdate={onReportUpdate}
+        report={report}
+      />
     ),
     renderSummary: (report, onReportUpdate, target) => {
       if (!report.callBackAfter) {
@@ -282,6 +297,7 @@ export const reportSteps: ReportStep[] = [
 
       return (
         <Summary
+          key="callBackSummary"
           onEdit={() =>
             onReportUpdate({
               ...report,
@@ -340,6 +356,7 @@ export const reportSteps: ReportStep[] = [
       if (target && target.alt_phone && target.phone) {
         return (
           <WrongNumber
+            key="wrongNumber"
             onReportUpdate={onReportUpdate}
             phoneAndAltPhone={{
               altPhone: target.alt_phone,
@@ -366,6 +383,7 @@ export const reportSteps: ReportStep[] = [
 
       return (
         <Summary
+          key="wrongNumberSummary"
           onEdit={() =>
             onReportUpdate({
               ...report,
@@ -407,6 +425,7 @@ export const reportSteps: ReportStep[] = [
       disableCallerNotes
     ) => (
       <OrganizerAction
+        key="organizerAction"
         onReportFinished={disableCallerNotes ? onReportFinished : undefined}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -414,6 +433,7 @@ export const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
+        key="organizerActionSummary"
         onEdit={() =>
           onReportUpdate({
             ...report,
@@ -465,6 +485,7 @@ export const reportSteps: ReportStep[] = [
     ) => {
       return (
         <OrganizerLog
+          key="organizerLog"
           onReportFinished={disableCallerNotes ? onReportFinished : undefined}
           onReportUpdate={onReportUpdate}
           report={report}
@@ -474,6 +495,7 @@ export const reportSteps: ReportStep[] = [
     },
     renderSummary: (report, onReportUpdate) => (
       <Summary
+        key="organizerLogSummary"
         onEdit={() =>
           onReportUpdate({
             ...report,
@@ -516,6 +538,7 @@ export const reportSteps: ReportStep[] = [
     name: 'callerLog',
     renderQuestion: (report, onReportUpdate, target, onReportFinished) => (
       <CallerLog
+        key="callerLog"
         onReportFinished={onReportFinished}
         onReportUpdate={onReportUpdate}
         report={report}
@@ -523,6 +546,7 @@ export const reportSteps: ReportStep[] = [
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
+        key="callerLogSummary"
         onEdit={() =>
           onReportUpdate({
             ...report,
