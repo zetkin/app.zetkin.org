@@ -25,7 +25,7 @@ const ReportHeader: FC<Props> = ({ assignment, callId, onBack, onForward }) => {
       assignment={assignment}
       forwardButtonDisabled={!reportIsDone}
       forwardButtonIsLoading={isLoading}
-      forwardButtonLabel="Send in report"
+      forwardButtonLabel="Submit report"
       onBack={onBack}
       onForward={async () => {
         if (reportIsDone) {
