@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { LooksOne } from '@mui/icons-material';
+import { Looks3, Looks4, LooksOne, LooksTwo } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIAutocomplete from 'zui/components/ZUIAutocomplete';
@@ -57,6 +57,38 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
   const callBackAfter = `${date.year()}-${month}-${day}T${callBackTime}`;
 
+  const callBackLaterToday = () => {
+    setDate(today);
+    const currentHour = today.hour();
+
+    let callBackHour: number = currentHour + 3;
+    if (currentHour == 23) {
+      //If it's after 23.00 and you press this button,
+      //we set the call back time to "any time tomorrow"
+      setTime(options[0]);
+      setDate(today.add(1, 'day'));
+    } else {
+      let hourString: string = callBackHour.toString().padStart(2, '0') + ':00';
+      if (currentHour >= 21) {
+        //If it's after 21.00 we add 1 hour to the call back time
+        //instead of 3.
+        callBackHour = currentHour + 1;
+        hourString = callBackHour.toString().padStart(2, '0') + ':00';
+      }
+      setTime({ label: `After ${hourString}`, value: hourString });
+    }
+  };
+
+  const callBackTomorrow = () => {
+    setDate(today.add(1, 'day'));
+    setTime(options[0]);
+  };
+
+  const callBackNextWeek = () => {
+    setDate(getNextMonday());
+    setTime(options[0]);
+  };
+
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
       if (ev.key == '1') {
@@ -65,6 +97,12 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           callBackAfter,
           step: 'organizerAction',
         });
+      } else if (ev.key == '2') {
+        callBackLaterToday();
+      } else if (ev.key == '3') {
+        callBackTomorrow();
+      } else if (ev.key == '4') {
+        callBackNextWeek();
       }
     };
 
@@ -106,7 +144,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
             value={time}
           />
         </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
           <ZUIText variant="bodySmRegular">
             <Msg
               id={messageIds.report.steps.callBack.question.examples.title}
@@ -114,45 +152,21 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           </ZUIText>
           <ZUIButton
             label={messages.report.steps.callBack.question.examples.today()}
-            onClick={() => {
-              setDate(today);
-              const currentHour = today.hour();
-
-              let callBackHour: number = currentHour + 3;
-              if (currentHour == 23) {
-                //If it's after 23.00 and you press this button,
-                //we set the call back time to "any time tomorrow"
-                setTime(options[0]);
-                setDate(today.add(1, 'day'));
-              } else {
-                let hourString: string =
-                  callBackHour.toString().padStart(2, '0') + ':00';
-                if (currentHour >= 21) {
-                  //If it's after 21.00 we add 1 hour to the call back time
-                  //instead of 3.
-                  callBackHour = currentHour + 1;
-                  hourString = callBackHour.toString().padStart(2, '0') + ':00';
-                }
-                setTime({ label: `After ${hourString}`, value: hourString });
-              }
-            }}
+            onClick={() => callBackLaterToday()}
             size="small"
+            startIcon={LooksTwo}
           />
           <ZUIButton
             label={messages.report.steps.callBack.question.examples.tomorrow()}
-            onClick={() => {
-              setDate(today.add(1, 'day'));
-              setTime(options[0]);
-            }}
+            onClick={() => callBackTomorrow()}
             size="small"
+            startIcon={Looks3}
           />
           <ZUIButton
             label={messages.report.steps.callBack.question.examples.nextWeek()}
-            onClick={() => {
-              setDate(getNextMonday());
-              setTime(options[0]);
-            }}
+            onClick={() => callBackNextWeek()}
             size="small"
+            startIcon={Looks4}
           />
         </Box>
         <ZUIButton

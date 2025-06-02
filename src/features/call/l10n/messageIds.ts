@@ -53,7 +53,7 @@ export default makeMessages('feat.call', {
           dateLabel: m('On what date'),
           examples: {
             nextWeek: m('Next week'),
-            title: m('Examples:'),
+            title: m('Shortcuts:'),
             today: m('Later today'),
             tomorrow: m('Tomorrow'),
           },
