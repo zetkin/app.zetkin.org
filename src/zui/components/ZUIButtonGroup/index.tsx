@@ -85,9 +85,9 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   >
     {buttons.map((button) => {
       if ('icon' in button) {
-        return <ZUIIconButton {...button} />;
+        return <ZUIIconButton key={button.icon.name} {...button} />;
       } else {
-        return <ZUIButton {...button} />;
+        return <ZUIButton key={button.label} {...button} />;
       }
     })}
   </ButtonGroup>
