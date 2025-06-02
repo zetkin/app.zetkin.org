@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { LooksOne, LooksTwo } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
@@ -13,6 +14,31 @@ type Props = {
 
 const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        onReportUpdate({
+          ...report,
+          leftMessage: true,
+          step: 'organizerAction',
+        });
+      } else if (ev.key == '2') {
+        onReportUpdate({
+          ...report,
+          leftMessage: false,
+          step: 'organizerAction',
+        });
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
   return (
     <StepBase
       state="active"
@@ -28,6 +54,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
                 leftMessage: true,
                 step: 'organizerAction',
               }),
+            startIcon: LooksOne,
           },
           {
             label: messages.report.steps.leftMessage.question.noButton(),
@@ -37,6 +64,7 @@ const LeftMessage: FC<Props> = ({ onReportUpdate, report }) => {
                 leftMessage: false,
                 step: 'organizerAction',
               }),
+            startIcon: LooksTwo,
           },
         ]}
         fullWidth

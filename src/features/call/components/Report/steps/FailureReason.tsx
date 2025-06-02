@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Stack } from '@mui/material';
+import { Looks3, Looks4, LooksOne, LooksTwo } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -19,6 +20,53 @@ const FailureReason: FC<Props> = ({
   report,
 }) => {
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            failureReason: 'noPickup',
+            step: 'leftMessage',
+          });
+        }
+      } else if (ev.key == '2') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            failureReason: 'wrongNumber',
+            organizerActionNeeded: true,
+            step: nextStepIfWrongNumber,
+            wrongNumber: 'phone',
+          });
+        }
+      } else if (ev.key == '3') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            failureReason: 'lineBusy',
+            step: 'organizerAction',
+          });
+        }
+      } else if (ev.key == '4') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            failureReason: 'notAvailable',
+            step: 'callBack',
+          });
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
   return (
     <StepBase
       state="active"
@@ -36,6 +84,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
+          startIcon={LooksOne}
           variant="secondary"
         />
         <ZUIButton
@@ -51,6 +100,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
+          startIcon={LooksTwo}
           variant="secondary"
         />
         <ZUIButton
@@ -64,6 +114,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
+          startIcon={Looks3}
           variant="secondary"
         />
         <ZUIButton
@@ -77,6 +128,7 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
+          startIcon={Looks4}
           variant="secondary"
         />
       </Stack>

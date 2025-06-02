@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 
 import { Report } from '..';
@@ -17,6 +17,21 @@ type Props = {
 const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
   const [message, setMessage] = useState(report.callerLog || '');
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        onReportUpdate({ ...report, callerLog: message, step: 'summary' });
+        onReportFinished();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
 
   return (
     <StepBase

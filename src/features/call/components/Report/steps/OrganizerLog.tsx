@@ -1,5 +1,6 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
+import { LooksOne } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -39,6 +40,27 @@ const OrganizerLog: FC<Props> = ({
 
   const [message, setMessage] = useState(initialMessage);
 
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        onReportUpdate({
+          ...report,
+          organizerLog: message,
+          step: 'callerLog',
+        });
+        if (onReportFinished) {
+          onReportFinished();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
   return (
     <StepBase
       state="active"
@@ -65,6 +87,7 @@ const OrganizerLog: FC<Props> = ({
               onReportFinished();
             }
           }}
+          startIcon={LooksOne}
           variant="secondary"
         />
       </Stack>

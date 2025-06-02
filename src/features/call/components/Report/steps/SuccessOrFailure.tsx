@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { LooksOne, LooksTwo } from '@mui/icons-material';
 
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import { Report } from '..';
@@ -14,6 +15,35 @@ type Props = {
 
 const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            step: 'couldTalk',
+            success: true,
+          });
+        }
+      } else if (ev.key == '2') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            step: 'failureReason',
+            success: false,
+          });
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
   return (
     <StepBase
       state="active"
@@ -39,6 +69,7 @@ const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
+            startIcon: LooksOne,
           },
           {
             label: messages.report.steps.successOrFailure.question.noButton(),
@@ -51,6 +82,7 @@ const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
+            startIcon: LooksTwo,
           },
         ]}
         fullWidth

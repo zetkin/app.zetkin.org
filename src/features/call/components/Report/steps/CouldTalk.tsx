@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { LooksOne, LooksTwo } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
@@ -14,6 +15,35 @@ type Props = {
 
 const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            step: 'organizerAction',
+            targetCouldTalk: true,
+          });
+        }
+      } else if (ev.key == '2') {
+        if (onReportUpdate) {
+          onReportUpdate({
+            ...report,
+            step: 'callBack',
+            targetCouldTalk: false,
+          });
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
   return (
     <StepBase
       state="active"
@@ -37,6 +67,7 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
+            startIcon: LooksOne,
           },
           {
             label: messages.report.steps.couldTalk.question.noButton(),
@@ -49,6 +80,7 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
+            startIcon: LooksTwo,
           },
         ]}
         fullWidth

@@ -1,6 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
+import { LooksOne } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIAutocomplete from 'zui/components/ZUIAutocomplete';
@@ -55,6 +56,24 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
   const day = date.date().toString().padStart(2, '0');
 
   const callBackAfter = `${date.year()}-${month}-${day}T${callBackTime}`;
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        onReportUpdate({
+          ...report,
+          callBackAfter,
+          step: 'organizerAction',
+        });
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
 
   return (
     <StepBase
@@ -152,6 +171,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
               step: 'organizerAction',
             });
           }}
+          startIcon={LooksOne}
           variant="secondary"
         />
       </Stack>

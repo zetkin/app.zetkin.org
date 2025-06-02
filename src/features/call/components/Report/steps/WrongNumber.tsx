@@ -1,5 +1,6 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Stack } from '@mui/material';
+import { Looks3, LooksOne, LooksTwo } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -19,6 +20,40 @@ const WrongNumber: FC<Props> = ({
   phoneAndAltPhone,
 }) => {
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == '1') {
+        onReportUpdate({
+          ...report,
+          organizerActionNeeded: true,
+          step: 'organizerLog',
+          wrongNumber: 'phone',
+        });
+      } else if (ev.key == '2') {
+        onReportUpdate({
+          ...report,
+          organizerActionNeeded: true,
+          step: 'organizerLog',
+          wrongNumber: 'altPhone',
+        });
+      } else if (ev.key == '3') {
+        onReportUpdate({
+          ...report,
+          organizerActionNeeded: true,
+          step: 'organizerLog',
+          wrongNumber: 'both',
+        });
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+
   return (
     <StepBase
       state="active"
@@ -35,6 +70,7 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'phone',
             })
           }
+          startIcon={LooksOne}
           variant="secondary"
         />
         <ZUIButton
@@ -47,6 +83,7 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'altPhone',
             })
           }
+          startIcon={LooksTwo}
           variant="secondary"
         />
         <ZUIButton
@@ -59,6 +96,7 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'both',
             })
           }
+          startIcon={Looks3}
           variant="secondary"
         />
       </Stack>
