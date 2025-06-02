@@ -56,7 +56,8 @@ type ReportStep = {
     report: Report,
     onReportUpdate: (updatedReport: Report) => void,
     target: ZetkinCallTarget,
-    onReportFinished: () => void
+    onReportFinished: () => void,
+    disableCallerNotes: boolean
   ) => ReactNode;
   renderSummary: (
     report: Report,
@@ -426,8 +427,18 @@ const reportSteps: ReportStep[] = [
       return report.step == 'organizerAction' ? 'question' : 'summary';
     },
     name: 'organizerAction',
-    renderQuestion: (report, onReportUpdate) => (
-      <OrganizerAction onReportUpdate={onReportUpdate} report={report} />
+    renderQuestion: (
+      report,
+      onReportUpdate,
+      target,
+      onReportFinished,
+      disableCallerNotes
+    ) => (
+      <OrganizerAction
+        onReportFinished={disableCallerNotes ? onReportFinished : undefined}
+        onReportUpdate={onReportUpdate}
+        report={report}
+      />
     ),
     renderSummary: (report, onReportUpdate) => (
       <Summary
@@ -473,9 +484,16 @@ const reportSteps: ReportStep[] = [
       return report.step == 'organizerLog' ? 'question' : 'summary';
     },
     name: 'organizerLog',
-    renderQuestion: (report, onReportUpdate, target) => {
+    renderQuestion: (
+      report,
+      onReportUpdate,
+      target,
+      onReportFinished,
+      disableCallerNotes
+    ) => {
       return (
         <OrganizerLog
+          onReportFinished={disableCallerNotes ? onReportFinished : undefined}
           onReportUpdate={onReportUpdate}
           report={report}
           target={target}
@@ -648,7 +666,8 @@ const ReportForm: FC<ReportProps> = ({
             report,
             setReport,
             target,
-            handleReportFinished
+            handleReportFinished,
+            disableCallerNotes
           );
         }
       })}

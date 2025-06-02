@@ -10,12 +10,18 @@ import StepBase from './StepBase';
 import { ZetkinCallTarget } from 'features/call/types';
 
 type Props = {
+  onReportFinished?: () => void;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
   target: ZetkinCallTarget;
 };
 
-const OrganizerLog: FC<Props> = ({ onReportUpdate, report, target }) => {
+const OrganizerLog: FC<Props> = ({
+  onReportFinished,
+  onReportUpdate,
+  report,
+  target,
+}) => {
   const messages = useMessages(messageIds);
   let initialMessage = '';
 
@@ -49,13 +55,16 @@ const OrganizerLog: FC<Props> = ({ onReportUpdate, report, target }) => {
           label={messages.report.steps.organizerLog.question[
             message ? 'withMessageButton' : 'withoutMessageButton'
           ]()}
-          onClick={() =>
+          onClick={() => {
             onReportUpdate({
               ...report,
               organizerLog: message,
               step: 'callerLog',
-            })
-          }
+            });
+            if (onReportFinished) {
+              onReportFinished();
+            }
+          }}
           variant="secondary"
         />
       </Stack>

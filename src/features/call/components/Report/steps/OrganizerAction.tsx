@@ -7,11 +7,16 @@ import { Msg, useMessages } from 'core/i18n';
 import StepBase from './StepBase';
 
 type Props = {
+  onReportFinished?: () => void;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
-const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
+const OrganizerAction: FC<Props> = ({
+  onReportFinished,
+  onReportUpdate,
+  report,
+}) => {
   const messages = useMessages(messageIds);
   return (
     <StepBase
@@ -33,12 +38,16 @@ const OrganizerAction: FC<Props> = ({ onReportUpdate, report }) => {
           },
           {
             label: messages.report.steps.organizerAction.question.noButton(),
-            onClick: () =>
+            onClick: () => {
               onReportUpdate({
                 ...report,
                 organizerActionNeeded: false,
                 step: 'callerLog',
-              }),
+              });
+              if (onReportFinished) {
+                onReportFinished();
+              }
+            },
           },
         ]}
         fullWidth

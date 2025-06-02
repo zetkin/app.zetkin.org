@@ -12,9 +12,13 @@ import CallOngoing from '../components/CallOngoing';
 import OngoingHeader from '../components/OngoingHeader';
 import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
+import useAllocateCall from '../hooks/useAllocateCall';
+import useCurrentCall from '../hooks/useCurrentCall';
+import ReportHeader from '../components/ReportHeader';
 
 type Props = {
   callAssId: string;
+  orgId: number;
 };
 
 export enum CallStep {
@@ -25,16 +29,23 @@ export enum CallStep {
   SUMMARY = 4,
 }
 
-const CallPage: FC<Props> = ({ callAssId }) => {
+const CallPage: FC<Props> = ({ callAssId, orgId }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
+  const currentCall = useCurrentCall();
+
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
   );
+  const { allocateCall } = useAllocateCall(orgId, parseInt(callAssId));
+
+  if (!assignment) {
+    return null;
+  }
 
   return (
     <Box>
-      {activeStep == CallStep.STATS && assignment && (
+      {activeStep == CallStep.STATS && (
         <>
           <StatsHeader
             assignment={assignment}
@@ -43,7 +54,7 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <CallStats assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.PREPARE && assignment && (
+      {activeStep == CallStep.PREPARE && (
         <>
           <PrepareHeader
             assignment={assignment}
@@ -54,35 +65,38 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <CallPrepare assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.ONGOING && assignment && (
+      {activeStep == CallStep.ONGOING && (
         <>
           <OngoingHeader
             assignment={assignment}
-            onReportCall={() => setActiveStep(CallStep.REPORT)}
+            forwardButtonLabel="Finish and report"
+            onForward={() => setActiveStep(CallStep.REPORT)}
             step={CallStep.ONGOING}
           />
           <CallOngoing assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.REPORT && assignment && (
+      {activeStep == CallStep.REPORT && currentCall && (
         <>
-          <OngoingHeader
+          <ReportHeader
             assignment={assignment}
+            callId={currentCall.id}
             onBack={() => setActiveStep(CallStep.ONGOING)}
-            onSummarize={() => setActiveStep(CallStep.SUMMARY)}
-            step={CallStep.REPORT}
+            onForward={() => setActiveStep(CallStep.SUMMARY)}
           />
-
           <CallReport assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.SUMMARY && assignment && (
+      {activeStep == CallStep.SUMMARY && (
         <>
           <OngoingHeader
             assignment={assignment}
+            forwardButtonLabel="Keep calling"
             onBack={() => setActiveStep(CallStep.STATS)}
-            onReportCall={() => setActiveStep(CallStep.PREPARE)}
-            onSummarize={() => setActiveStep(CallStep.PREPARE)}
+            onForward={() => {
+              setActiveStep(CallStep.PREPARE);
+              allocateCall();
+            }}
             step={CallStep.SUMMARY}
           />
           <CallSummary />
