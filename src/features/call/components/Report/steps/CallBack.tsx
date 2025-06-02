@@ -124,7 +124,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     };
   }, [callBackAfter]);
 
-  const dateIsValid = date.isValid() && date.isAfter(today);
+  const dateIsValid = date.isValid() && date.isAfter(today.date());
 
   return (
     <StepBase
