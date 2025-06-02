@@ -5,13 +5,13 @@ import useOutgoingCalls from '../hooks/useOutgoingCalls';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
-import { labels, colors } from './PreviousCallsInfo';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import { labels, colors } from './PreviousCallsInfo';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
-  onClose: () => void;
+  onClose?: () => void;
   orgId: number;
   showUnfinishedCalls: boolean;
 };
@@ -66,7 +66,9 @@ const PreviousCallsSection: React.FC<PreviousCallsSectionProps> = ({
                     label="Switch to"
                     onClick={() => {
                       switchCurrentCall(call);
-                      onClose();
+                      if (onClose) {
+                        onClose();
+                      }
                     }}
                     variant="primary"
                   />
@@ -100,7 +102,9 @@ const PreviousCallsSection: React.FC<PreviousCallsSectionProps> = ({
               label="Log another call"
               onClick={() => {
                 switchCurrentCall(call);
-                onClose();
+                if (onClose) {
+                  onClose();
+                }
               }}
               variant="secondary"
             />
