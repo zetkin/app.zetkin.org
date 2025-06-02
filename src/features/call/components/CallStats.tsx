@@ -1,9 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Search } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
@@ -12,9 +11,9 @@ import InstructionsSection from './InstructionsSection';
 import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import useIsMobile from 'utils/hooks/useIsMobile';
-import ZUITextField from 'zui/components/ZUITextField';
 import PreviousCallsSection from './PreviousCallsSection';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
+import PreviousCallsSearch from './PreviousCallsSearch';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -33,6 +32,7 @@ const CallStats: FC<CallStatsProps> = ({ assignment }) => {
   const { error } = useAllocateCall(assignment.organization.id, assignment.id);
   const isMobile = useIsMobile();
   const router = useRouter();
+  const [debouncedInput, setDebouncedInput] = useState<string>('');
 
   return (
     <Box
@@ -157,15 +157,16 @@ const CallStats: FC<CallStatsProps> = ({ assignment }) => {
               }}
             >
               <Box mt={1}>
-                <ZUITextField
-                  fullWidth
-                  label="Type to find"
-                  startIcon={Search}
+                <PreviousCallsSearch
+                  onDebouncedChange={(value) => {
+                    setDebouncedInput(value);
+                  }}
                 />
               </Box>
               <PreviousCallsSection
                 assingmentId={assignment.id}
                 orgId={assignment.organization.id}
+                searchTerm={debouncedInput}
                 showUnfinishedCalls={true}
               />
             </Box>

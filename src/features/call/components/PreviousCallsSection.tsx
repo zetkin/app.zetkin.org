@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { FC } from 'react';
 
 import useCallMutations from '../hooks/useCallMutations';
 import useOutgoingCalls from '../hooks/useOutgoingCalls';
@@ -8,25 +9,44 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import { labels, colors } from './PreviousCallsInfo';
+import { ZetkinCall } from '../types';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
   onClose?: () => void;
   orgId: number;
+  searchTerm?: string;
   showUnfinishedCalls: boolean;
 };
 
-const PreviousCallsSection: React.FC<PreviousCallsSectionProps> = ({
+const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   assingmentId,
   onClose,
   orgId,
+  searchTerm,
   showUnfinishedCalls,
 }) => {
   assingmentId;
   const { deleteCall, switchCurrentCall } = useCallMutations(orgId);
   const outgoingCalls = useOutgoingCalls();
-  const previousCallsList = outgoingCalls.filter((call) => call.state !== 0);
-  const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
+  const search = searchTerm?.toLowerCase().trim();
+
+  const matchesSearch = (call: ZetkinCall) => {
+    if (!search) {
+      return true;
+    }
+    const name =
+      `${call.target.first_name} ${call.target.last_name}`.toLowerCase();
+    const phone = call.target.phone?.toLowerCase() || '';
+    return name.includes(search) || phone.includes(search);
+  };
+
+  const previousCallsList = outgoingCalls.filter(
+    (call) => call.state !== 0 && matchesSearch(call)
+  );
+  const unfinishedCallList = outgoingCalls.filter(
+    (call) => call.state === 0 && matchesSearch(call)
+  );
   return (
     <Box>
       {showUnfinishedCalls &&
