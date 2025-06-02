@@ -28,8 +28,33 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
     success: Done,
   };
 
+  let topDistance = 32;
+  if (!subtitle && isMobile) {
+    topDistance = 27;
+  } else if (!subtitle && !isMobile) {
+    topDistance = 30;
+  }
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={(theme) => ({
+        '&::before': {
+          backgroundColor: theme.palette.dividers.main,
+          content: '""',
+          display: 'block',
+          height: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 38px)',
+          left: 12,
+          minHeight: '4px',
+          position: 'absolute',
+          top: topDistance,
+          width: '1px',
+        },
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        position: 'relative',
+      })}
+    >
       <Box
         onClick={onEdit}
         sx={{
@@ -77,14 +102,12 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
         )}
       </Box>
       <Box
-        sx={(theme) => ({
-          borderLeft: `1px solid ${theme.palette.dividers.main}`,
-          marginBottom: '0.25rem',
+        sx={{
           marginLeft: '0.7rem',
           minHeight: '0.25rem',
           paddingBottom: '0.25rem',
           paddingLeft: '1.25rem',
-        })}
+        }}
       >
         {subtitle && (
           <ZUIText noWrap={isMobile ? false : true} variant="bodySmSemiBold">
