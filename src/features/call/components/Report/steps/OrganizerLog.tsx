@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
 import { LooksOne } from '@mui/icons-material';
 
@@ -23,6 +23,7 @@ const OrganizerLog: FC<Props> = ({
   report,
   target,
 }) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
   let initialMessage = '';
 
@@ -42,7 +43,7 @@ const OrganizerLog: FC<Props> = ({
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key == '1') {
+      if (ev.key == '1' && inputRef.current != document.activeElement) {
         onReportUpdate({
           ...report,
           organizerLog: message,
@@ -68,6 +69,7 @@ const OrganizerLog: FC<Props> = ({
     >
       <Stack sx={{ gap: '0.5rem' }}>
         <ZUITextField
+          inputRef={inputRef}
           label={messages.report.steps.organizerLog.question.messageLabel()}
           multiline
           onChange={(newMessage) => {

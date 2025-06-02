@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
 
 import { Report } from '..';
@@ -15,12 +15,13 @@ type Props = {
 };
 
 const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
   const [message, setMessage] = useState(report.callerLog || '');
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key == '1') {
+      if (ev.key == '1' && inputRef.current != document.activeElement) {
         onReportUpdate({ ...report, callerLog: message, step: 'summary' });
         onReportFinished();
       }
@@ -40,6 +41,7 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
     >
       <Stack sx={{ gap: '0.5rem' }}>
         <ZUITextField
+          inputRef={inputRef}
           label={messages.report.steps.callerLog.question.noteLabel()}
           multiline
           onChange={(newMessage) => setMessage(newMessage)}

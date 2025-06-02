@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
@@ -69,6 +69,11 @@ type AutocompleteBaseProps = {
   fullWidth?: boolean;
 
   /**
+   * Passa ref to the input element.
+   */
+  inputRef?: RefObject<HTMLInputElement>;
+
+  /**
    * The label of the autocomplete.
    */
   label: string;
@@ -110,6 +115,7 @@ const ZUIAutocomplete: FC<Props> = ({
   checkboxes,
   filterOptions,
   fullWidth = false,
+  inputRef,
   label,
   multiple,
   noOptionsText,
@@ -145,6 +151,7 @@ const ZUIAutocomplete: FC<Props> = ({
       renderInput={(params) => (
         <TextField
           {...params}
+          inputRef={inputRef}
           label={label}
           sx={(theme) => ({
             '& > label': {

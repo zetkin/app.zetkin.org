@@ -4,7 +4,7 @@ import {
   SvgIconTypeMap,
   TextField,
 } from '@mui/material';
-import { FC, HTMLInputTypeAttribute } from 'react';
+import { FC, HTMLInputTypeAttribute, RefObject } from 'react';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 import { ZUILarge, ZUIMedium } from '../types';
@@ -57,6 +57,9 @@ type ZUITextFieldProps = {
    * Only use when component is uncontrolled.
    */
   initialValue?: string;
+
+  /**Pass a ref to the input element */
+  inputRef?: RefObject<HTMLInputElement>;
 
   /**
    * The label of the textfield
@@ -136,6 +139,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
   helperText,
   id,
   initialValue,
+  inputRef,
   label,
   maxRows = 5,
   multiline = false,
@@ -156,6 +160,7 @@ const ZUITextField: FC<ZUITextFieldProps> = ({
     fullWidth={fullWidth}
     helperText={helperText}
     id={id}
+    inputRef={inputRef}
     label={label}
     maxRows={maxRows}
     multiline={multiline}

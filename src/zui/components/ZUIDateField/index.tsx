@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
 import { Dayjs } from 'dayjs';
 import { DatePicker, PickersDay } from '@mui/x-date-pickers';
 
@@ -14,6 +14,11 @@ type ZUIDateFieldProps = Pick<
    * Defaults to "false".
    */
   fullWidth?: boolean;
+
+  /**
+   * Pass a ref to the input element.
+   */
+  inputRef?: RefObject<HTMLInputElement>;
 
   /**
    * The label of the date field.
@@ -41,6 +46,7 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
   disablePast = false,
   datesToMark = [],
   fullWidth = false,
+  inputRef,
   label,
   onChange,
   size = 'medium',
@@ -49,6 +55,7 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
   return (
     <DatePicker
       disablePast={disablePast}
+      inputRef={inputRef}
       label={label}
       onChange={(newDate) => onChange(newDate)}
       slotProps={{

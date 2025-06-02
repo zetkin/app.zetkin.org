@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { Looks3, Looks4, LooksOne, LooksTwo } from '@mui/icons-material';
@@ -21,6 +21,8 @@ type Props = {
 
 const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
   const messages = useMessages(messageIds);
+  const timeInputRef = useRef<HTMLInputElement | null>(null);
+  const dateInputRef = useRef<HTMLInputElement | null>(null);
 
   const today = dayjs();
   const tomorrow = today.add(1, 'day');
@@ -91,18 +93,25 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
 
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key == '1') {
-        onReportUpdate({
-          ...report,
-          callBackAfter,
-          step: 'organizerAction',
-        });
-      } else if (ev.key == '2') {
-        callBackLaterToday();
-      } else if (ev.key == '3') {
-        callBackTomorrow();
-      } else if (ev.key == '4') {
-        callBackNextWeek();
+      const dateInputIsActive = dateInputRef.current == document.activeElement;
+      const timeInputIsActive = timeInputRef.current == document.activeElement;
+
+      const focusIsOutsideInputs = !dateInputIsActive && !timeInputIsActive;
+
+      if (focusIsOutsideInputs) {
+        if (ev.key == '1') {
+          onReportUpdate({
+            ...report,
+            callBackAfter,
+            step: 'organizerAction',
+          });
+        } else if (ev.key == '2') {
+          callBackLaterToday();
+        } else if (ev.key == '3') {
+          callBackTomorrow();
+        } else if (ev.key == '4') {
+          callBackNextWeek();
+        }
       }
     };
 
@@ -123,6 +132,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           <ZUIDateField
             disablePast
             fullWidth
+            inputRef={dateInputRef}
             label={messages.report.steps.callBack.question.dateLabel()}
             onChange={(newDate) => {
               if (newDate) {
@@ -133,6 +143,7 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           />
           <ZUIAutocomplete
             fullWidth
+            inputRef={timeInputRef}
             label={messages.report.steps.callBack.question.timeLabel()}
             multiple={false}
             onChange={(newValue) => {
