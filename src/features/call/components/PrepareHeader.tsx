@@ -16,12 +16,14 @@ type PrepareHeaderProps = {
   assignment: ZetkinCallAssignment;
   onBack: () => void;
   onStartCall: () => void;
+  onSwitchCall: () => void;
 };
 
 const PrepareHeader: FC<PrepareHeaderProps> = ({
   assignment,
   onBack,
   onStartCall,
+  onSwitchCall,
 }) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
@@ -84,6 +86,7 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
               <CallSwitchModal
                 assignment={assignment}
                 onClose={() => setShowModal(false)}
+                onSwitchCall={onSwitchCall}
                 open={showModal}
               />
             </Box>

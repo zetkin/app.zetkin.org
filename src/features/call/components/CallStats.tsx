@@ -22,9 +22,10 @@ export type EventsByProject = {
 
 type CallStatsProps = {
   assignment: ZetkinCallAssignment;
+  onSwitchCall: () => void;
 };
 
-const CallStats: FC<CallStatsProps> = ({ assignment }) => {
+const CallStats: FC<CallStatsProps> = ({ assignment, onSwitchCall }) => {
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
     assignment.id
@@ -165,6 +166,7 @@ const CallStats: FC<CallStatsProps> = ({ assignment }) => {
               </Box>
               <PreviousCallsSection
                 assingmentId={assignment.id}
+                onSwitchCall={onSwitchCall}
                 orgId={assignment.organization.id}
                 searchTerm={debouncedInput}
                 showUnfinishedCalls={true}

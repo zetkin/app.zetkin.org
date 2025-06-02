@@ -14,6 +14,7 @@ import { ZetkinCall } from '../types';
 type PreviousCallsSectionProps = {
   assingmentId: number;
   onClose?: () => void;
+  onSwitchCall?: () => void;
   orgId: number;
   searchTerm?: string;
   showUnfinishedCalls: boolean;
@@ -22,6 +23,7 @@ type PreviousCallsSectionProps = {
 const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   assingmentId,
   onClose,
+  onSwitchCall,
   orgId,
   searchTerm,
   showUnfinishedCalls,
@@ -86,9 +88,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                     label="Switch to"
                     onClick={() => {
                       switchCurrentCall(call);
-                      if (onClose) {
-                        onClose();
-                      }
+                      onClose?.();
+                      onSwitchCall?.();
                     }}
                     variant="primary"
                   />
@@ -122,9 +123,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
               label="Log another call"
               onClick={() => {
                 switchCurrentCall(call);
-                if (onClose) {
-                  onClose();
-                }
+                onClose?.();
+                onSwitchCall?.();
               }}
               variant="secondary"
             />

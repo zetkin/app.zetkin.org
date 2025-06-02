@@ -41,7 +41,10 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
             assignment={assignment}
             onPrepareCall={() => setActiveStep(CallStep.PREPARE)}
           />
-          <CallStats assignment={assignment} />
+          <CallStats
+            assignment={assignment}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+          />
         </>
       )}
       {activeStep == CallStep.PREPARE && assignment && (
@@ -50,6 +53,7 @@ const CallPage: FC<Props> = ({ callAssId, children }) => {
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.STATS)}
             onStartCall={() => setActiveStep(CallStep.ONGOING)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
 
           <CallPrepare assignment={assignment} />
