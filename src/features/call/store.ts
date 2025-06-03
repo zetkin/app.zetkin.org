@@ -125,6 +125,10 @@ const CallSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    reportDeleted: (state, action: PayloadAction<number>) => {
+      const callId = action.payload;
+      delete state.stateByCallId[callId];
+    },
     targetSubmissionAdded: (
       state,
       action: PayloadAction<[number, ZetkinEvent]>
@@ -172,6 +176,7 @@ export const {
   outgoingCallsLoad,
   outgoingCallsLoaded,
   reportAdded,
+  reportDeleted,
   targetSubmissionAdded,
   targetSubmissionDeleted,
 } = CallSlice.actions;

@@ -4,6 +4,8 @@ import { FC, useState } from 'react';
 import { ZetkinCall, ZetkinCallTarget } from 'features/call/types';
 import calculateState from './utils/calculateState';
 import { reportSteps } from './reportSteps';
+import { useAppDispatch } from 'core/hooks';
+import { reportDeleted } from 'features/call/store';
 
 export type Step =
   | 'callBack'
@@ -32,7 +34,8 @@ export type Report = {
   wrongNumber: ('altPhone' | 'phone' | 'both') | null;
 };
 
-type ReportProps = {
+type Props = {
+  callId: number;
   disableCallerNotes: boolean;
   onReportFinished: (
     report: Pick<
@@ -47,11 +50,13 @@ type ReportProps = {
   target: ZetkinCallTarget;
 };
 
-const ReportForm: FC<ReportProps> = ({
+const ReportForm: FC<Props> = ({
+  callId,
   disableCallerNotes,
   onReportFinished,
   target,
 }) => {
+  const dispatch = useAppDispatch();
   const initialReport = sessionStorage.getItem(`report-${target.id}`);
 
   const [report, setReport] = useState<Report>(
@@ -124,7 +129,14 @@ const ReportForm: FC<ReportProps> = ({
         );
 
         if (renderVariant == 'summary') {
-          return step.renderSummary(report, updateReport, target);
+          return step.renderSummary(
+            report,
+            (updatedReport) => {
+              dispatch(reportDeleted(callId));
+              updateReport(updatedReport);
+            },
+            target
+          );
         }
 
         if (renderVariant == 'question') {

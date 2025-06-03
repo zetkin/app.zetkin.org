@@ -25,6 +25,7 @@ const CallReport: FC<CallReportProps> = ({ assignment }) => {
       <ZUISection
         renderContent={() => (
           <ReportForm
+            callId={call.id}
             disableCallerNotes={assignment.disable_caller_notes}
             onReportFinished={(report) => {
               dispatch(reportAdded([call.id, report]));
