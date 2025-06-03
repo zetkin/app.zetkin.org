@@ -43,7 +43,9 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
       label:
         i == 0
           ? messages.report.steps.callBack.question.anyTimeOptionLabel()
-          : hour,
+          : messages.report.steps.callBack.question.afterSpecificHourOptionLabel(
+              { hour }
+            ),
       value: i == 0 ? 'any' : hour,
     });
   }
@@ -90,7 +92,13 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         callBackHour = currentHour + 1;
         hourString = callBackHour.toString().padStart(2, '0') + ':00';
       }
-      setTime({ label: `After ${hourString}`, value: hourString });
+      setTime({
+        label:
+          messages.report.steps.callBack.question.afterSpecificHourOptionLabel({
+            hour: hourString,
+          }),
+        value: hourString,
+      });
       laterToday = makeCallBackAfter(hourString, today);
     }
     onReportUpdate({

@@ -46,6 +46,7 @@ export default makeMessages('feat.call', {
     steps: {
       callBack: {
         question: {
+          afterSpecificHourOptionLabel: m<{ hour: string }>('After {hour}'),
           anyTimeOptionLabel: m('Any time of day'),
           callBackButtonLabel: m<{ date: JSX.Element }>(
             'Call back after {date}'
