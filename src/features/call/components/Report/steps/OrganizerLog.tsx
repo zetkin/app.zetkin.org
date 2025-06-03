@@ -44,8 +44,28 @@ const OrganizerLog: FC<Props> = ({
   const [message, setMessage] = useState(initialMessage);
 
   useEffect(() => {
+    const keysPressed: Record<string, boolean> = {};
+
     const onKeyDown = (ev: KeyboardEvent) => {
+      keysPressed[ev.key] = true;
+
+      const shiftAndEnterPressedTogether =
+        (keysPressed['Shift'] && ev.key == 'Enter') ||
+        (keysPressed['Enter'] && ev.key == 'Shift');
+
       if (ev.key == '1' && inputRef.current != document.activeElement) {
+        onReportUpdate({
+          ...report,
+          organizerLog: message,
+          step: 'callerLog',
+        });
+        if (onReportFinished) {
+          onReportFinished();
+        }
+      } else if (
+        shiftAndEnterPressedTogether &&
+        inputRef.current == document.activeElement
+      ) {
         onReportUpdate({
           ...report,
           organizerLog: message,
@@ -57,10 +77,16 @@ const OrganizerLog: FC<Props> = ({
       }
     };
 
+    const onKeyUp = (ev: KeyboardEvent) => {
+      delete keysPressed[ev.key];
+    };
+
     window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
     };
   }, [message]);
 
@@ -71,6 +97,7 @@ const OrganizerLog: FC<Props> = ({
     >
       <Stack sx={{ gap: '0.5rem' }}>
         <ZUITextField
+          helperText={messages.report.steps.organizerLog.question.shortcutHint()}
           inputRef={inputRef}
           label={messages.report.steps.organizerLog.question.messageLabel()}
           multiline

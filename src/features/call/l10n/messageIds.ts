@@ -74,6 +74,9 @@ export default makeMessages('feat.call', {
           noteLabel: m('Add optional note'),
           saveWithNoteButton: m('Save with note'),
           saveWithoutNoteButton: m('Save without note'),
+          shortcutHint: m(
+            'When typing, press SHIFT + ENTER to save with note.'
+          ),
           title: m('Do you wish to leave a note for future callers?'),
         },
         summary: {
@@ -155,6 +158,9 @@ export default makeMessages('feat.call', {
       organizerLog: {
         question: {
           messageLabel: m('Add optional message'),
+          shortcutHint: m(
+            'When typing, press SHIFT + ENTER to include message.'
+          ),
           title: m('Explain the problem to the organizer'),
           withMessageButton: m('Include message'),
           withoutMessageButton: m('Save without message'),

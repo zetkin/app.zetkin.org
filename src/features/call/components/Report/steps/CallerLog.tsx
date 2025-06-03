@@ -23,17 +23,43 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
   const [message, setMessage] = useState(report.callerLog || '');
 
   useEffect(() => {
+    const keysPressed: Record<string, boolean> = {};
+
     const onKeyDown = (ev: KeyboardEvent) => {
+      keysPressed[ev.key] = true;
+
+      const shiftAndEnterPressedTogether =
+        (keysPressed['Shift'] && ev.key == 'Enter') ||
+        (keysPressed['Enter'] && ev.key == 'Shift');
+
       if (ev.key == '1' && inputRef.current != document.activeElement) {
         onReportUpdate({ ...report, callerLog: message, step: 'summary' });
         onReportFinished();
+      } else if (
+        shiftAndEnterPressedTogether &&
+        inputRef.current == document.activeElement
+      ) {
+        onReportUpdate({
+          ...report,
+          callerLog: message,
+          step: 'summary',
+        });
+        if (onReportFinished) {
+          onReportFinished();
+        }
       }
     };
 
+    const onKeyUp = (ev: KeyboardEvent) => {
+      delete keysPressed[ev.key];
+    };
+
     window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
+      window.addEventListener('keyup', onKeyUp);
     };
   }, [message]);
 
@@ -44,6 +70,7 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
     >
       <Stack sx={{ gap: '0.5rem' }}>
         <ZUITextField
+          helperText={messages.report.steps.callerLog.question.shortcutHint()}
           inputRef={inputRef}
           label={messages.report.steps.callerLog.question.noteLabel()}
           multiline
