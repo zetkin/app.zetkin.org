@@ -169,7 +169,6 @@ const CallStats: FC<CallStatsProps> = ({ assignment, onSwitchCall }) => {
                 onSwitchCall={onSwitchCall}
                 orgId={assignment.organization.id}
                 searchTerm={debouncedInput}
-                showUnfinishedCalls={true}
               />
             </Box>
           )}

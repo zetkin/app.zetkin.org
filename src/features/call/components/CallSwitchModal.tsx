@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Box } from '@mui/material';
 
-import ZUIAlert from 'zui/components/ZUIAlert';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
@@ -20,7 +19,6 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
   onClose,
   open,
 }) => {
-  const [showUnfinishedCalls, setShowUnfinishedCalls] = useState(false);
   const [debouncedInput, setDebouncedInput] = useState<string>('');
 
   return (
@@ -42,21 +40,6 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           width: '100%',
         }}
       >
-        {!showUnfinishedCalls && (
-          <Box mb={1} mt={2}>
-            <ZUIAlert
-              button={{
-                label: 'Show unfinished calls',
-                onClick: () => {
-                  setShowUnfinishedCalls(true);
-                },
-              }}
-              description="Placeholder for future description"
-              severity={'info'}
-              title={'Title'}
-            />
-          </Box>
-        )}
         <Box mt={2}>
           <PreviousCallsSearch
             onDebouncedChange={(value) => {
@@ -70,7 +53,6 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           onSwitchCall={onSwitchCall}
           orgId={assignment.organization.id}
           searchTerm={debouncedInput}
-          showUnfinishedCalls={showUnfinishedCalls}
         />
       </Box>
     </ZUIModal>
