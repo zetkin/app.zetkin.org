@@ -31,6 +31,7 @@ const ReportHeader: FC<Props> = ({ assignment, callId, onBack, onForward }) => {
         if (reportIsDone) {
           setIsLoading(true);
           await updateCall(callId, callState.report);
+          sessionStorage.clear();
           //TODO: Error handling
           onForward();
           setIsLoading(false);

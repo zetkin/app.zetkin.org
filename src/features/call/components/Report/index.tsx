@@ -52,18 +52,24 @@ const ReportForm: FC<ReportProps> = ({
   onReportFinished,
   target,
 }) => {
-  const [report, setReport] = useState<Report>({
-    callBackAfter: null,
-    callerLog: '',
-    failureReason: null,
-    leftMessage: false,
-    organizerActionNeeded: false,
-    organizerLog: '',
-    step: 'successOrFailure',
-    success: false,
-    targetCouldTalk: false,
-    wrongNumber: null,
-  });
+  const initialReport = sessionStorage.getItem(`report-${target.id}`);
+
+  const [report, setReport] = useState<Report>(
+    initialReport
+      ? JSON.parse(initialReport)
+      : {
+          callBackAfter: null,
+          callerLog: '',
+          failureReason: null,
+          leftMessage: false,
+          organizerActionNeeded: false,
+          organizerLog: '',
+          step: 'successOrFailure',
+          success: false,
+          targetCouldTalk: false,
+          wrongNumber: null,
+        }
+  );
 
   const handleReportFinished = () => {
     const state = calculateState(report);
@@ -96,6 +102,14 @@ const ReportForm: FC<ReportProps> = ({
     }
   }
 
+  const updateReport = (updatedReport: Report) => {
+    setReport(updatedReport);
+    sessionStorage.setItem(
+      `report-${target.id}`,
+      JSON.stringify(updatedReport)
+    );
+  };
+
   return (
     <Stack>
       {reportSteps.map((step, index) => {
@@ -110,13 +124,13 @@ const ReportForm: FC<ReportProps> = ({
         );
 
         if (renderVariant == 'summary') {
-          return step.renderSummary(report, setReport, target);
+          return step.renderSummary(report, updateReport, target);
         }
 
         if (renderVariant == 'question') {
           return step.renderQuestion(
             report,
-            setReport,
+            updateReport,
             target,
             handleReportFinished,
             disableCallerNotes
