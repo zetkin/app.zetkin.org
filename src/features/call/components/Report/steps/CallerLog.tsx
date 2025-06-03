@@ -70,7 +70,11 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
     >
       <Stack sx={{ gap: '0.5rem' }}>
         <ZUITextField
-          helperText={messages.report.steps.callerLog.question.shortcutHint()}
+          helperText={
+            !isMobile
+              ? messages.report.steps.callerLog.question.shortcutHint()
+              : ''
+          }
           inputRef={inputRef}
           label={messages.report.steps.callerLog.question.noteLabel()}
           multiline

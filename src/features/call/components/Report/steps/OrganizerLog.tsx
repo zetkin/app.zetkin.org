@@ -97,7 +97,11 @@ const OrganizerLog: FC<Props> = ({
     >
       <Stack sx={{ gap: '0.5rem' }}>
         <ZUITextField
-          helperText={messages.report.steps.organizerLog.question.shortcutHint()}
+          helperText={
+            !isMobile
+              ? messages.report.steps.organizerLog.question.shortcutHint()
+              : ''
+          }
           inputRef={inputRef}
           label={messages.report.steps.organizerLog.question.messageLabel()}
           multiline
