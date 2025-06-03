@@ -21,7 +21,11 @@ import {
 } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 import { Zetkin2Area } from 'features/areas/types';
-import { ZetkinHouseholdVisit } from 'features/canvass/types';
+import {
+  ZetkinHouseholdVisit,
+  ZetkinLocationVisit,
+} from 'features/canvass/types';
+import { visitCreated } from 'features/canvass/store';
 
 export interface AreaAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
@@ -60,6 +64,19 @@ const initialState: AreaAssignmentsStoreSlice = {
 };
 
 const areaAssignmentSlice = createSlice({
+  extraReducers: (builder) =>
+    builder.addCase(
+      visitCreated,
+      (state, action: PayloadAction<ZetkinLocationVisit>) => {
+        const visit = action.payload;
+        state.locationsByAssignmentId[visit.assignment_id] ||= remoteList();
+        const item = findOrAddItem(
+          state.locationsByAssignmentId[visit.assignment_id],
+          visit.location_id
+        );
+        item.isStale = true;
+      }
+    ),
   initialState: initialState,
   name: 'areaAssignments',
   reducers: {

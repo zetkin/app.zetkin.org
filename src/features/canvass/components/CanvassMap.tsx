@@ -35,6 +35,7 @@ import { Zetkin2Area } from '../../areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import locToLatLng from 'features/geography/utils/locToLatLng';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
+import LocationMarkerIcon from './LocationMarkerIcon';
 
 const useStyles = makeStyles(() => ({
   '@keyframes ghostMarkerBounce': {
@@ -349,19 +350,11 @@ const CanvassMap: FC<Props> = ({ areas, assignment }) => {
                 iconAnchor={[11, 33]}
                 position={locToLatLng(location)}
               >
-                <MarkerIcon
+                <LocationMarkerIcon
+                  assignmentId={assignment.id}
+                  locationId={location.id}
+                  orgId={assignment.organization_id}
                   selected={selected}
-                  successfulVisits={
-                    location.num_households_successful ||
-                    location.num_successful_visits
-                  }
-                  totalHouseholds={Math.max(
-                    location.num_estimated_households,
-                    location.num_known_households
-                  )}
-                  totalVisits={
-                    location.num_households_visited || location.num_visits
-                  }
                   uniqueKey={key}
                 />
               </DivIconMarker>
