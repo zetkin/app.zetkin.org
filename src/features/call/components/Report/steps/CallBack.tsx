@@ -60,22 +60,28 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
     return today.add(indexOfToday == 0 ? 1 : 8 - indexOfToday, 'day');
   };
 
-  const callBackTime = time.value == 'any' ? '00:00' : time.value;
-  const month = (date.month() + 1).toString().padStart(2, '0');
-  const day = date.date().toString().padStart(2, '0');
+  const makeCallBackAfter = (timeToCallBack: string, dateToCallBack: Dayjs) => {
+    const callBackTime = timeToCallBack == 'any' ? '00:00' : timeToCallBack;
+    const month = (dateToCallBack.month() + 1).toString().padStart(2, '0');
+    const day = dateToCallBack.date().toString().padStart(2, '0');
 
-  const callBackAfter = `${date.year()}-${month}-${day}T${callBackTime}`;
+    return `${dateToCallBack.year()}-${month}-${day}T${callBackTime}`;
+  };
+
+  const callBackAfter = makeCallBackAfter(time.value, date);
 
   const callBackLaterToday = () => {
     setDate(today);
     const currentHour = today.hour();
 
     let callBackHour: number = currentHour + 3;
+    let laterToday = '';
     if (currentHour == 23) {
       //If it's after 23.00 and you press this button,
       //we set the call back time to "any time tomorrow"
       setTime(options[0]);
       setDate(today.add(1, 'day'));
+      laterToday = makeCallBackAfter(options[0].value, today.add(1, 'day'));
     } else {
       let hourString: string = callBackHour.toString().padStart(2, '0') + ':00';
       if (currentHour >= 21) {
@@ -85,17 +91,42 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
         hourString = callBackHour.toString().padStart(2, '0') + ':00';
       }
       setTime({ label: `After ${hourString}`, value: hourString });
+      laterToday = makeCallBackAfter(hourString, today);
     }
+    onReportUpdate({
+      ...report,
+      callBackAfter: laterToday,
+      step: 'organizerAction',
+    });
   };
 
   const callBackTomorrow = () => {
     setDate(today.add(1, 'day'));
     setTime(options[0]);
+
+    const timeTomorrow = makeCallBackAfter(
+      options[0].value,
+      today.add(1, 'day')
+    );
+
+    onReportUpdate({
+      ...report,
+      callBackAfter: timeTomorrow,
+      step: 'organizerAction',
+    });
   };
 
   const callBackNextWeek = () => {
     setDate(getNextMonday());
     setTime(options[0]);
+
+    const timeNextWeek = makeCallBackAfter(options[0].value, getNextMonday());
+
+    onReportUpdate({
+      ...report,
+      callBackAfter: timeNextWeek,
+      step: 'organizerAction',
+    });
   };
 
   useEffect(() => {
