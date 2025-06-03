@@ -56,7 +56,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     <Box>
       {unfinishedCallList.map((call) => (
         <>
-          <Box key={call.id} sx={{ my: 2 }}>
+          <Box key={call.id} sx={{ my: 1 }}>
             <Box
               alignItems="flex-start"
               display="flex"
