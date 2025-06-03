@@ -8,8 +8,9 @@ import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/components/ZUISection';
 import ZUISelect from 'zui/components/ZUISelect';
 import ZUIButton from 'zui/components/ZUIButton';
+import { SupportedLanguage } from 'core/i18n/languages';
 
-export type ZetkinLanguage = 'en' | 'sv' | 'da' | 'nn' | 'de' | null;
+export type ZetkinUserLanguage = SupportedLanguage | null;
 
 type Props = {
   user: ZetkinUser;
@@ -17,17 +18,17 @@ type Props = {
 
 const AppPreferences: FC<Props> = ({ user }) => {
   const messages = useMessages(messageIds);
-  const languageOptions = {
+  const languageOptions: Record<SupportedLanguage, string> = {
     da: 'Dansk',
     de: 'Deutsch',
     en: 'English',
     nn: 'Norsk',
     sv: 'Svenska',
-  } as const;
+  };
 
   const { updateUser } = useUserMutations();
-  const [selectedLanguage, setSelectedLanguage] = useState<ZetkinLanguage>(
-    user?.lang as ZetkinLanguage
+  const [selectedLanguage, setSelectedLanguage] = useState<ZetkinUserLanguage>(
+    user?.lang as ZetkinUserLanguage
   );
 
   return (
@@ -66,7 +67,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
                   if (newValue == 'auto') {
                     setSelectedLanguage(null);
                   } else {
-                    setSelectedLanguage(newValue as ZetkinLanguage);
+                    setSelectedLanguage(newValue as ZetkinUserLanguage);
                   }
                 }}
                 selectedOption={selectedLanguage || 'auto'}
