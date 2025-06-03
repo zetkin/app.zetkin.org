@@ -241,6 +241,31 @@ const areaAssignmentSlice = createSlice({
         remoteItemUpdated(list, location);
       });
     },
+    locationLoad: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, locationId] = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      const item = findOrAddItem(
+        state.locationsByAssignmentId[assignmentId],
+        locationId
+      );
+      item.isLoading = true;
+    },
+    locationLoaded: (
+      state,
+      action: PayloadAction<[number, number, ZetkinLocation]>
+    ) => {
+      const timestamp = new Date().toISOString();
+      const [assignmentId, locationId, location] = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      const item = findOrAddItem(
+        state.locationsByAssignmentId[assignmentId],
+        locationId
+      );
+      item.isLoading = false;
+      item.data = location;
+      item.loaded = timestamp;
+      item.isStale = false;
+    },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
 
@@ -356,6 +381,8 @@ export const {
   assignmentAreasLoaded,
   householdVisitCreated,
   locationCreated,
+  locationLoad,
+  locationLoaded,
   locationsInvalidated,
   locationsLoad,
   locationsLoaded,
