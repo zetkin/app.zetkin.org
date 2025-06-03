@@ -61,43 +61,61 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
           <>
             <Box key={call.id} sx={{ my: 2 }}>
               <Box
-                alignItems="center"
+                alignItems="flex-start"
                 display="flex"
                 gap={1}
                 justifyContent="space-between"
+                sx={{ minWidth: 0 }}
               >
-                <Box alignItems="center" display="flex" gap={1}>
-                  <ZUIPersonAvatar
-                    firstName={call.target.first_name}
-                    id={call.target.id}
-                    lastName={call.target.last_name}
-                    size="medium"
-                  />
-
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  gap={1}
+                  sx={{ flex: 1, minWidth: 0 }}
+                >
+                  <Box>
+                    <ZUIPersonAvatar
+                      firstName={call.target.first_name}
+                      id={call.target.id}
+                      lastName={call.target.last_name}
+                      size="medium"
+                    />
+                  </Box>
                   <ZUIText noWrap variant="bodyMdSemiBold">
                     {call.target.first_name + ' ' + call.target.last_name}
                   </ZUIText>
                 </Box>
-                <Box>
-                  <ZUIButton
-                    label="Abandon"
-                    onClick={async () => {
-                      await deleteCall(call.id);
-                      if (unfinishedCallList.length <= 1) {
-                        window.location.reload();
-                      }
-                    }}
-                    variant="tertiary"
-                  />
-                  <ZUIButton
-                    label="Switch to"
-                    onClick={() => {
-                      switchCurrentCall(call);
-                      onClose?.();
-                      onSwitchCall?.();
-                    }}
-                    variant="primary"
-                  />
+                <Box
+                  alignItems="flex-end"
+                  display="flex"
+                  flexDirection="column"
+                  gap={0.5}
+                  justifyContent="center"
+                >
+                  <Box display="flex" gap={1}>
+                    <ZUIButton
+                      label="Abandon"
+                      onClick={async () => {
+                        await deleteCall(call.id);
+                        if (unfinishedCallList.length <= 1) {
+                          window.location.reload();
+                        }
+                      }}
+                      variant="tertiary"
+                    />
+                    <ZUIButton
+                      label="Switch to"
+                      onClick={() => {
+                        switchCurrentCall(call);
+                        onClose?.();
+                        onSwitchCall?.();
+                      }}
+                      variant="primary"
+                    />
+                  </Box>
+                  <ZUIText color="secondary" noWrap>
+                    <ZUIDateTime datetime={call.update_time} />
+                  </ZUIText>
                 </Box>
               </Box>
             </Box>
@@ -111,13 +129,20 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
             display="flex"
             justifyContent="space-between"
           >
-            <Box alignItems="center" display="flex" gap={1}>
-              <ZUIPersonAvatar
-                firstName={call.target.first_name}
-                id={call.target.id}
-                lastName={call.target.last_name}
-                size="medium"
-              />
+            <Box
+              alignItems="center"
+              display="flex"
+              gap={1}
+              sx={{ flex: 1, minWidth: 0 }}
+            >
+              <Box>
+                <ZUIPersonAvatar
+                  firstName={call.target.first_name}
+                  id={call.target.id}
+                  lastName={call.target.last_name}
+                  size="medium"
+                />
+              </Box>
 
               <ZUIText noWrap variant="bodyMdSemiBold">
                 {call.target.first_name + ' ' + call.target.last_name}
