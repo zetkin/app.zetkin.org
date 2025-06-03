@@ -1,6 +1,10 @@
 import { FC, useEffect } from 'react';
 import { Stack } from '@mui/material';
-import { Looks3, LooksOne, LooksTwo } from '@mui/icons-material';
+import {
+  Looks3Outlined,
+  LooksOneOutlined,
+  LooksTwoOutlined,
+} from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -63,6 +67,7 @@ const WrongNumber: FC<Props> = ({
     >
       <Stack sx={{ alignItems: 'flex-start', gap: '0.5rem' }}>
         <ZUIButton
+          endIcon={!isMobile ? LooksOneOutlined : undefined}
           label={phoneAndAltPhone.phone}
           onClick={() =>
             onReportUpdate({
@@ -72,10 +77,10 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'phone',
             })
           }
-          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
         <ZUIButton
+          endIcon={!isMobile ? LooksTwoOutlined : undefined}
           label={phoneAndAltPhone.altPhone}
           onClick={() =>
             onReportUpdate({
@@ -85,10 +90,10 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'altPhone',
             })
           }
-          startIcon={!isMobile ? LooksTwo : undefined}
           variant="secondary"
         />
         <ZUIButton
+          endIcon={!isMobile ? Looks3Outlined : undefined}
           label={messages.report.steps.wrongNumber.question.bothButton()}
           onClick={() =>
             onReportUpdate({
@@ -98,7 +103,6 @@ const WrongNumber: FC<Props> = ({
               wrongNumber: 'both',
             })
           }
-          startIcon={!isMobile ? Looks3 : undefined}
           variant="secondary"
         />
       </Stack>

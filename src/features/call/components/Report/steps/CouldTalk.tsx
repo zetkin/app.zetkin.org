@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { LooksOne, LooksTwo } from '@mui/icons-material';
+import { LooksOneOutlined, LooksTwoOutlined } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
@@ -59,6 +59,7 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
       <ZUIButtonGroup
         buttons={[
           {
+            endIcon: !isMobile ? LooksOneOutlined : undefined,
             label: messages.report.steps.couldTalk.question.yesButton(),
             onClick: () => {
               if (onReportUpdate) {
@@ -69,9 +70,9 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
-            startIcon: !isMobile ? LooksOne : undefined,
           },
           {
+            endIcon: !isMobile ? LooksTwoOutlined : undefined,
             label: messages.report.steps.couldTalk.question.noButton(),
             onClick: () => {
               if (onReportUpdate) {
@@ -82,7 +83,6 @@ const CouldTalk: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
-            startIcon: !isMobile ? LooksTwo : undefined,
           },
         ]}
         fullWidth

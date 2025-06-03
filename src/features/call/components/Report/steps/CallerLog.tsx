@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
-import { LooksOne } from '@mui/icons-material';
+import { LooksOneOutlined } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -51,6 +51,7 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
           value={message}
         />
         <ZUIButton
+          endIcon={!isMobile ? LooksOneOutlined : undefined}
           label={messages.report.steps.callerLog.question[
             message ? 'saveWithNoteButton' : 'saveWithoutNoteButton'
           ]()}
@@ -58,7 +59,6 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
             onReportUpdate({ ...report, callerLog: message, step: 'summary' });
             onReportFinished();
           }}
-          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>

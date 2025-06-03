@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { LooksOne, LooksTwo } from '@mui/icons-material';
+import { LooksOneOutlined, LooksTwoOutlined } from '@mui/icons-material';
 
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import { Report } from '..';
@@ -61,6 +61,7 @@ const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
       <ZUIButtonGroup
         buttons={[
           {
+            endIcon: !isMobile ? LooksOneOutlined : undefined,
             label: messages.report.steps.successOrFailure.question.yesButton(),
             onClick: () => {
               if (onReportUpdate) {
@@ -71,9 +72,9 @@ const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
-            startIcon: !isMobile ? LooksOne : undefined,
           },
           {
+            endIcon: !isMobile ? LooksTwoOutlined : undefined,
             label: messages.report.steps.successOrFailure.question.noButton(),
             onClick: () => {
               if (onReportUpdate) {
@@ -84,7 +85,6 @@ const SuccessOrFailure: FC<Props> = ({ firstName, onReportUpdate, report }) => {
                 });
               }
             },
-            startIcon: !isMobile ? LooksTwo : undefined,
           },
         ]}
         fullWidth

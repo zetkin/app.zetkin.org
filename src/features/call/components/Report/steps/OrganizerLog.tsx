@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
-import { LooksOne } from '@mui/icons-material';
+import { LooksOneOutlined } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -80,6 +80,7 @@ const OrganizerLog: FC<Props> = ({
           value={message}
         />
         <ZUIButton
+          endIcon={!isMobile ? LooksOneOutlined : undefined}
           label={messages.report.steps.organizerLog.question[
             message ? 'withMessageButton' : 'withoutMessageButton'
           ]()}
@@ -93,7 +94,6 @@ const OrganizerLog: FC<Props> = ({
               onReportFinished();
             }
           }}
-          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>

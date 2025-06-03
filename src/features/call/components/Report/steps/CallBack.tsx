@@ -1,7 +1,12 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
-import { Looks3, Looks4, LooksOne, LooksTwo } from '@mui/icons-material';
+import {
+  Looks3Outlined,
+  Looks4Outlined,
+  LooksOneOutlined,
+  LooksTwoOutlined,
+} from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIAutocomplete from 'zui/components/ZUIAutocomplete';
@@ -180,27 +185,28 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
           </ZUIText>
           <Box sx={{ display: 'flex', gap: '0.5rem' }}>
             <ZUIButton
+              endIcon={!isMobile ? LooksTwoOutlined : undefined}
               label={messages.report.steps.callBack.question.examples.today()}
               onClick={() => callBackLaterToday()}
               size="small"
-              startIcon={!isMobile ? LooksTwo : undefined}
             />
             <ZUIButton
+              endIcon={!isMobile ? Looks3Outlined : undefined}
               label={messages.report.steps.callBack.question.examples.tomorrow()}
               onClick={() => callBackTomorrow()}
               size="small"
-              startIcon={!isMobile ? Looks3 : undefined}
             />
             <ZUIButton
+              endIcon={!isMobile ? Looks4Outlined : undefined}
               label={messages.report.steps.callBack.question.examples.nextWeek()}
               onClick={() => callBackNextWeek()}
               size="small"
-              startIcon={!isMobile ? Looks4 : undefined}
             />
           </Box>
         </Box>
         <ZUIButton
           disabled={!dateIsValid}
+          endIcon={dateIsValid && !isMobile ? LooksOneOutlined : undefined}
           label={
             dateIsValid
               ? messages.report.steps.callBack.question.callBackButtonLabel({
@@ -220,7 +226,6 @@ const CallBack: FC<Props> = ({ onReportUpdate, report }) => {
               step: 'organizerAction',
             });
           }}
-          startIcon={dateIsValid && !isMobile ? LooksOne : undefined}
           variant="secondary"
         />
       </Stack>

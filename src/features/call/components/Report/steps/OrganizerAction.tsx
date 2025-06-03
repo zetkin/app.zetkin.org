@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { LooksOne, LooksTwo } from '@mui/icons-material';
+import { LooksOneOutlined, LooksTwoOutlined } from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
@@ -62,6 +62,7 @@ const OrganizerAction: FC<Props> = ({
       <ZUIButtonGroup
         buttons={[
           {
+            endIcon: !isMobile ? LooksOneOutlined : undefined,
             label: messages.report.steps.organizerAction.question.yesButton(),
             onClick: () =>
               onReportUpdate({
@@ -69,9 +70,9 @@ const OrganizerAction: FC<Props> = ({
                 organizerActionNeeded: true,
                 step: 'organizerLog',
               }),
-            startIcon: !isMobile ? LooksOne : undefined,
           },
           {
+            endIcon: !isMobile ? LooksTwoOutlined : undefined,
             label: messages.report.steps.organizerAction.question.noButton(),
             onClick: () => {
               onReportUpdate({
@@ -83,7 +84,6 @@ const OrganizerAction: FC<Props> = ({
                 onReportFinished();
               }
             },
-            startIcon: !isMobile ? LooksTwo : undefined,
           },
         ]}
         fullWidth

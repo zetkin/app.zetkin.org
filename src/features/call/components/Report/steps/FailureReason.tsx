@@ -1,6 +1,11 @@
 import { FC, useEffect } from 'react';
 import { Stack } from '@mui/material';
-import { Looks3, Looks4, LooksOne, LooksTwo } from '@mui/icons-material';
+import {
+  Looks3Outlined,
+  Looks4Outlined,
+  LooksOneOutlined,
+  LooksTwoOutlined,
+} from '@mui/icons-material';
 
 import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -76,6 +81,7 @@ const FailureReason: FC<Props> = ({
     >
       <Stack sx={{ alignItems: 'flex-start', gap: '0.5rem' }}>
         <ZUIButton
+          endIcon={!isMobile ? LooksOneOutlined : undefined}
           label={messages.report.steps.failureReason.question.noPickup()}
           onClick={() => {
             if (onReportUpdate) {
@@ -86,10 +92,10 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={!isMobile ? LooksOne : undefined}
           variant="secondary"
         />
         <ZUIButton
+          endIcon={!isMobile ? LooksTwoOutlined : undefined}
           label={messages.report.steps.failureReason.question.wrongNumber()}
           onClick={() => {
             if (onReportUpdate) {
@@ -102,10 +108,10 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={!isMobile ? LooksTwo : undefined}
           variant="secondary"
         />
         <ZUIButton
+          endIcon={!isMobile ? Looks3Outlined : undefined}
           label={messages.report.steps.failureReason.question.lineBusy()}
           onClick={() => {
             if (onReportUpdate) {
@@ -116,10 +122,10 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={!isMobile ? Looks3 : undefined}
           variant="secondary"
         />
         <ZUIButton
+          endIcon={!isMobile ? Looks4Outlined : undefined}
           label={messages.report.steps.failureReason.question.notAvailable()}
           onClick={() => {
             if (onReportUpdate) {
@@ -130,7 +136,6 @@ const FailureReason: FC<Props> = ({
               });
             }
           }}
-          startIcon={!isMobile ? Looks4 : undefined}
           variant="secondary"
         />
       </Stack>
