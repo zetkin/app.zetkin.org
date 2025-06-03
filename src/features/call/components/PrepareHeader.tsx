@@ -1,4 +1,4 @@
-import { ArrowBackIos, ArrowDropDown } from '@mui/icons-material';
+import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
@@ -84,7 +84,6 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
 
               <ZUIBadge color="warning" number={unfinishedCallList.length}>
                 <ZUIButton
-                  endIcon={ArrowDropDown}
                   label={'Switch'}
                   onClick={() => setShowModal(true)}
                   variant="secondary"
