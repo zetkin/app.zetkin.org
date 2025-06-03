@@ -86,7 +86,6 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
                   onAddAssigneeToArea={(area, user) => {
                     assignUserToArea(user.id, area.id);
                   }}
-                  orgId={parseInt(orgId)}
                   sessions={sessions}
                 />
               </AssigneeFilterProvider>

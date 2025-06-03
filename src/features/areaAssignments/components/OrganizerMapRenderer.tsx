@@ -110,7 +110,6 @@ type OrganizerMapRendererProps = {
   locations: ZetkinLocation[];
   navigateToAreaId?: number;
   onSelectedIdChange: (newId: number) => void;
-  orgId: number;
   overlayStyle: 'assignees' | 'households' | 'progress' | 'hide';
   selectedId: number;
   sessions: ZetkinAreaAssignee[];
@@ -213,12 +212,10 @@ function NumberOverlayMarker(props: { value: number }) {
 }
 
 function AssigneeOverlayMarker({
-  organizationID,
-  people,
+  userIds,
   zoom,
 }: {
-  organizationID: number;
-  people: number[];
+  userIds: number[];
   zoom: number;
 }) {
   return (
@@ -234,13 +231,13 @@ function AssigneeOverlayMarker({
       }}
       width={zoom >= 16 ? '95px' : '65px'}
     >
-      {people.map((personId, index) => {
+      {userIds.map((userId, index) => {
         if (index <= 4) {
           return (
             <Box
               //TODO: only use person id once we have logic preventing
               //assigning the same person to an area more than once
-              key={`${personId}-${index}`}
+              key={`${userId}-${index}`}
               sx={{
                 borderRadius: '50%',
                 boxShadow: '0 0 8px rgba(0,0,0,0.3)',
@@ -248,7 +245,7 @@ function AssigneeOverlayMarker({
             >
               <ZUIAvatar
                 size={zoom >= 16 ? 'sm' : 'xs'}
-                url={`/api/orgs/${organizationID}/people/${personId}/avatar`}
+                url={`/api/users/${userId}/avatar`}
               />
             </Box>
           );
@@ -268,7 +265,7 @@ function AssigneeOverlayMarker({
               <Typography
                 color="secondary"
                 fontSize={zoom >= 16 ? 14 : 11}
-              >{`+${people.length - 5}`}</Typography>
+              >{`+${userIds.length - 5}`}</Typography>
             </Box>
           );
         } else {
@@ -288,7 +285,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   sessions,
   navigateToAreaId,
   onSelectedIdChange,
-  orgId,
   overlayStyle,
   locationStyle,
 }) => {
@@ -593,7 +589,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
           const detailed = zoom >= 15;
 
-          const people = sessions
+          const userIds = sessions
             .filter((session) => session.area_id == area.id)
             .map((session) => session.user_id);
 
@@ -636,15 +632,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             }
             if (overlayStyle === 'assignees' && area.hasPeople) {
               if (detailed) {
-                return (
-                  <AssigneeOverlayMarker
-                    organizationID={orgId}
-                    people={people}
-                    zoom={zoom}
-                  />
-                );
+                return <AssigneeOverlayMarker userIds={userIds} zoom={zoom} />;
               }
-              return <NumberOverlayMarker value={people.length} />;
+              return <NumberOverlayMarker value={userIds.length} />;
             }
             return null;
           };

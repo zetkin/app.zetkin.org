@@ -43,7 +43,6 @@ type OrganizerMapProps = {
   areas: ZetkinArea[];
   locations: ZetkinLocation[];
   onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
-  orgId: number;
   sessions: ZetkinAreaAssignee[];
 };
 
@@ -60,7 +59,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   areaStats,
   areaAssId,
   onAddAssigneeToArea,
-  orgId,
   locations,
   sessions,
 }) => {
@@ -368,7 +366,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 setSettingsOpen('select');
               }
             }}
-            orgId={orgId}
             overlayStyle={mapStyle.overlay}
             selectedId={selectedId}
             sessions={sessions}

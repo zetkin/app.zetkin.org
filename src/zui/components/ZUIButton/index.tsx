@@ -1,4 +1,4 @@
-import { alpha, Button, CircularProgress } from '@mui/material';
+import { alpha, Box, Button, CircularProgress } from '@mui/material';
 import {
   CSSProperties,
   FC,
@@ -57,6 +57,11 @@ export interface ZUIButtonProps {
    * The text on the button.
    */
   label: string;
+
+  /**
+   * Truncates the text of the button.
+   */
+  noWrap?: boolean;
 
   /**
    * The function that runs when the user presses the button.
@@ -157,6 +162,7 @@ const ZUIButton: FC<ZUIButtonProps> = ({
   fullWidth,
   href,
   label,
+  noWrap,
   onClick,
   onKeyDown,
   size = 'medium',
@@ -241,7 +247,21 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       type={actionType}
       variant={variant ? getVariant(variant) : undefined}
     >
-      {isLoading ? <CircularProgress size={16} /> : label}
+      {isLoading ? (
+        <CircularProgress size={16} />
+      ) : (
+        <Box
+          component="span"
+          sx={{
+            maxWidth: noWrap ? '100%' : undefined,
+            overflow: noWrap ? 'hidden' : undefined,
+            textOverflow: noWrap ? 'ellipsis' : undefined,
+            whiteSpace: noWrap ? 'nowrap' : undefined,
+          }}
+        >
+          {label}
+        </Box>
+      )}
     </Button>
   );
 };

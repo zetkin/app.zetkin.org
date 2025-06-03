@@ -1828,7 +1828,7 @@ feat:
             any: irgendeinem
             minMatching: mindestens
             none: keinem
-            some: schließlich
+            some: mindestens
           edit:
             all: '{conditionSelect}'
             any: '{conditionSelect}'
@@ -1844,7 +1844,7 @@ feat:
           one: 'Füge Personen hinzu mit mindestens einem der folgenden Stichwörter:
             ''Mitglied'', ''Aktivist*in'''
           two: 'Entferne Personen mit allen der folgenden Stichwörter: ''Vorstandsmitglied'''
-        inputString: '{addRemoveSelect} Personen mit {condition} den folgenden Schlagworten:
+        inputString: '{addRemoveSelect} Personen mit {condition} der folgenden Schlagwörter:
           {tags}'
       personView:
         addRemoveSelect:
