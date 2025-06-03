@@ -40,7 +40,12 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     const name =
       `${call.target.first_name} ${call.target.last_name}`.toLowerCase();
     const phone = call.target.phone?.toLowerCase() || '';
-    return name.includes(search) || phone.includes(search);
+
+    const searchParts = search.split(' ').filter((part) => part !== '');
+
+    return searchParts.every(
+      (part) => name.includes(part) || phone.includes(part)
+    );
   };
 
   const previousCallsList = outgoingCalls.filter(
