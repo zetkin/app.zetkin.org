@@ -105,8 +105,9 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
         sx={{
           marginLeft: '0.7rem',
           minHeight: '0.25rem',
-          paddingBottom: '0.25rem',
+          paddingBottom: '0.75rem',
           paddingLeft: '1.25rem',
+          paddingTop: '0.5rem',
         }}
       >
         {subtitle && (
@@ -114,7 +115,7 @@ const StepBase: FC<Props> = ({ children, onEdit, subtitle, state, title }) => {
             {subtitle}
           </ZUIText>
         )}
-        {children && <Box sx={{ paddingY: '0.5rem' }}>{children}</Box>}
+        {children}
       </Box>
     </Box>
   );
