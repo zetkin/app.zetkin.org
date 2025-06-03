@@ -13,38 +13,57 @@ import {
 import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
-import { Household, ZetkinLocation } from 'features/areaAssignments/types';
+import {
+  ZetkinAreaAssignment,
+  ZetkinLocation,
+} from 'features/areaAssignments/types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
+import useHouseholds from 'features/canvass/hooks/useHouseholds';
+import { Zetkin2Household } from 'features/canvass/types';
+import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 
 type Props = {
+  assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onBack: () => void;
   onBulk: () => void;
   onClose: () => void;
-  onCreateHousehold: (householdId: Household) => void;
-  onSelectHousehold: (householdId: string) => void;
-  orgId: number;
+  onCreateHousehold: (householdId: Zetkin2Household) => void;
+  onSelectHousehold: (householdId: number) => void;
 };
 
 const HouseholdsPage: FC<Props> = ({
+  assignment,
   onBack,
   onBulk,
   onClose,
   onCreateHousehold,
   onSelectHousehold,
-  orgId,
   location,
 }) => {
   const messages = useMessages(messageIds);
+  const households = useHouseholds(location.organization_id, location.id);
   const [adding, setAdding] = useState(false);
-  const { addHousehold } = useLocationMutations(orgId, location.id);
+  const { addHousehold } = useLocationMutations(
+    location.organization_id,
+    location.id
+  );
+  const { lastVisitByHouseholdId } = useVisitReporting(
+    location.organization_id,
+    assignment.id,
+    location.id
+  );
 
-  const sortedHouseholds = location.households.concat().sort((h0, h1) => {
-    const floor0 = h0.floor ?? Infinity;
-    const floor1 = h1.floor ?? Infinity;
+  const sortedHouseholds = households.concat().sort((h0, h1) => {
+    const floor0 = h0.level ?? Infinity;
+    const floor1 = h1.level ?? Infinity;
+
+    if (floor0 == floor1) {
+      return h0.title.localeCompare(h1.title);
+    }
 
     return floor0 - floor1;
   });
@@ -57,38 +76,25 @@ const HouseholdsPage: FC<Props> = ({
       title={messages.households.page.header()}
     >
       <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
-        {location.households.length == 0 && (
+        {location.num_known_households == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             <Msg id={messageIds.households.page.empty} />
           </Typography>
         )}
         <List sx={{ overflowY: 'visible' }}>
           {sortedHouseholds.map((household, index) => {
-            const sortedVisits = household.visits.toSorted((a, b) => {
-              const dateA = new Date(a.timestamp);
-              const dateB = new Date(b.timestamp);
-              if (dateA > dateB) {
-                return -1;
-              } else if (dateB > dateA) {
-                return 1;
-              } else {
-                return 0;
-              }
-            });
-
-            const prevFloor = sortedHouseholds[index - 1]?.floor ?? null;
-            const curFloor = household.floor || null;
+            const prevFloor = sortedHouseholds[index - 1]?.level ?? null;
+            const curFloor = household.level || null;
             const firstOnFloor = index == 0 || curFloor != prevFloor;
 
-            const mostRecentVisit =
-              sortedVisits.length > 0 ? sortedVisits[0] : null;
+            const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
             return (
               <Box key={household.id}>
                 {firstOnFloor && (
                   <ListSubheader>
-                    {household.floor
-                      ? `Floor ${household.floor}`
+                    {household.level
+                      ? `Floor ${household.level}`
                       : 'Unknown floor'}
                   </ListSubheader>
                 )}
@@ -104,7 +110,7 @@ const HouseholdsPage: FC<Props> = ({
                   </Box>
                   {mostRecentVisit && (
                     <Typography color="secondary">
-                      <ZUIRelativeTime datetime={mostRecentVisit.timestamp} />
+                      <ZUIRelativeTime datetime={mostRecentVisit.created} />
                     </Typography>
                   )}
                   <KeyboardArrowRight />
@@ -127,13 +133,16 @@ const HouseholdsPage: FC<Props> = ({
 
               // Since this button adds households to the unknown floor, we only count those households
               const householdsOnUnknownFloor = sortedHouseholds.filter(
-                ({ floor }) => floor == null
+                ({ level }) => level == null
               );
               const title = messages.households.householdDefaultTitle({
                 householdNumber: householdsOnUnknownFloor.length + 1,
               });
 
-              const newlyAddedHousehold = await addHousehold({ title });
+              const newlyAddedHousehold = await addHousehold({
+                level: 0,
+                title,
+              });
               setAdding(false);
               onCreateHousehold(newlyAddedHousehold);
             }}

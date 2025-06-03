@@ -13,40 +13,50 @@ import {
   AreaCardData,
   ZetkinAreaAssignmentStats,
   ZetkinAreaAssignment,
-  ZetkinAreaAssignmentSession,
+  ZetkinAreaAssignee,
   ZetkinLocation,
   ZetkinAssignmentAreaStats,
   SessionDeletedPayload,
+  ZetkinMetric,
 } from './types';
+import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
+import { Zetkin2Area } from 'features/areas/types';
+import { ZetkinHouseholdVisit } from 'features/canvass/types';
 
 export interface AreaAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
-    string,
-    RemoteList<AreaCardData & { id: string }>
+    number,
+    RemoteList<AreaCardData & { id: number }>
   >;
   areaStatsByAssignmentId: Record<
-    string,
-    RemoteItem<ZetkinAssignmentAreaStats & { id: string }>
+    number,
+    RemoteItem<ZetkinAssignmentAreaStats & { id: number }>
   >;
   areaAssignmentList: RemoteList<ZetkinAreaAssignment>;
-  sessionsByAssignmentId: Record<
-    string,
-    RemoteList<ZetkinAreaAssignmentSession & { id: number }>
+  areasByAssignmentId: Record<string, RemoteList<Zetkin2Area>>;
+  assigneesByAssignmentId: Record<
+    number,
+    RemoteList<ZetkinAreaAssignee & { id: number }>
   >;
-  locationList: RemoteList<ZetkinLocation>;
+  locationsByAssignmentId: Record<number, RemoteList<ZetkinLocation>>;
+  metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByAreaAssId: Record<
-    string,
-    RemoteItem<ZetkinAreaAssignmentStats & { id: string }>
+    number,
+    RemoteItem<ZetkinAreaAssignmentStats & { id: number }>
   >;
+  visitsByHouseholdId: Record<number, RemoteList<ZetkinHouseholdVisit>>;
 }
 
 const initialState: AreaAssignmentsStoreSlice = {
   areaAssignmentList: remoteList(),
   areaGraphByAssignmentId: {},
   areaStatsByAssignmentId: {},
-  locationList: remoteList(),
-  sessionsByAssignmentId: {},
+  areasByAssignmentId: {},
+  assigneesByAssignmentId: {},
+  locationsByAssignmentId: {},
+  metricsByAssignmentId: {},
   statsByAreaAssId: {},
+  visitsByHouseholdId: {},
 };
 
 const areaAssignmentSlice = createSlice({
@@ -64,7 +74,7 @@ const areaAssignmentSlice = createSlice({
       const areaAssId = action.payload;
       remoteItemDeleted(state.areaAssignmentList, areaAssId);
     },
-    areaAssignmentLoad: (state, action: PayloadAction<string>) => {
+    areaAssignmentLoad: (state, action: PayloadAction<number>) => {
       const areaAssId = action.payload;
       remoteItemLoad(state.areaAssignmentList, areaAssId);
     },
@@ -74,51 +84,6 @@ const areaAssignmentSlice = createSlice({
     ) => {
       const areaAssignment = action.payload;
       remoteItemUpdated(state.areaAssignmentList, areaAssignment);
-    },
-    areaAssignmentSessionCreated: (
-      state,
-      action: PayloadAction<ZetkinAreaAssignmentSession>
-    ) => {
-      const session = action.payload;
-      if (!state.sessionsByAssignmentId[session.assignment.id]) {
-        state.sessionsByAssignmentId[session.assignment.id] = remoteList();
-      }
-      const item = remoteItem(session.assignment.id, {
-        data: { ...session, id: session.assignee.id },
-        loaded: new Date().toISOString(),
-      });
-
-      state.sessionsByAssignmentId[session.assignment.id].items.push(item);
-
-      const hasStatsItem = !!state.areaStatsByAssignmentId[
-        session.assignment.id
-      ].data?.stats.find((statsItem) => statsItem.areaId == session.area.id);
-
-      if (!hasStatsItem) {
-        state.areaStatsByAssignmentId[session.assignment.id].isStale = true;
-      }
-    },
-    areaAssignmentSessionsLoad: (state, action: PayloadAction<string>) => {
-      const assignmentId = action.payload;
-
-      if (!state.sessionsByAssignmentId[assignmentId]) {
-        state.sessionsByAssignmentId[assignmentId] = remoteList();
-      }
-
-      state.sessionsByAssignmentId[assignmentId].isLoading = true;
-    },
-    areaAssignmentSessionsLoaded: (
-      state,
-      action: PayloadAction<[string, ZetkinAreaAssignmentSession[]]>
-    ) => {
-      const [assignmentId, sessions] = action.payload;
-
-      state.sessionsByAssignmentId[assignmentId] = remoteList(
-        sessions.map((session) => ({ ...session, id: session.assignee.id }))
-      );
-
-      state.sessionsByAssignmentId[assignmentId].loaded =
-        new Date().toISOString();
     },
     areaAssignmentUpdated: (
       state,
@@ -137,7 +102,7 @@ const areaAssignmentSlice = createSlice({
       state.areaAssignmentList = remoteList(action.payload);
       state.areaAssignmentList.loaded = new Date().toISOString();
     },
-    areaGraphLoad: (state, action: PayloadAction<string>) => {
+    areaGraphLoad: (state, action: PayloadAction<number>) => {
       const assignmentId = action.payload;
 
       if (!state.areaGraphByAssignmentId[assignmentId]) {
@@ -148,18 +113,18 @@ const areaAssignmentSlice = createSlice({
     },
     areaGraphLoaded: (
       state,
-      action: PayloadAction<[string, AreaCardData[]]>
+      action: PayloadAction<[number, AreaCardData[]]>
     ) => {
       const [assignmentId, graphData] = action.payload;
 
       state.areaGraphByAssignmentId[assignmentId] = remoteList(
-        graphData.map((data) => ({ ...data, id: data.area.id }))
+        graphData.map((data) => ({ ...data, id: data.area_id! }))
       );
 
       state.areaGraphByAssignmentId[assignmentId].loaded =
         new Date().toISOString();
     },
-    areaStatsLoad: (state, action: PayloadAction<string>) => {
+    areaStatsLoad: (state, action: PayloadAction<number>) => {
       const areaAssId = action.payload;
 
       if (!state.areaStatsByAssignmentId[areaAssId]) {
@@ -174,7 +139,7 @@ const areaAssignmentSlice = createSlice({
     },
     areaStatsLoaded: (
       state,
-      action: PayloadAction<[string, ZetkinAssignmentAreaStats]>
+      action: PayloadAction<[number, ZetkinAssignmentAreaStats]>
     ) => {
       const [areaAssId, stats] = action.payload;
 
@@ -185,48 +150,164 @@ const areaAssignmentSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
-    locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
-      const location = action.payload;
-      remoteItemUpdated(state.locationList, location);
-    },
-    locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
-      const updatedLocation = action.payload;
-      remoteItemUpdated(state.locationList, updatedLocation);
-    },
-    locationsInvalidated: (state) => {
-      state.locationList.isStale = true;
-    },
-    locationsLoad: (state) => {
-      state.locationList.isLoading = true;
-    },
-    locationsLoaded: (state, action: PayloadAction<ZetkinLocation[]>) => {
-      const timestamp = new Date().toISOString();
-      const locations = action.payload;
-      state.locationList = remoteList(locations);
-      state.locationList.loaded = timestamp;
-      state.locationList.items.forEach((item) => (item.loaded = timestamp));
-    },
+    assigneeAdded: (state, action: PayloadAction<ZetkinAreaAssignee>) => {
+      const assignee = action.payload;
+      if (!state.assigneesByAssignmentId[assignee.assignment_id]) {
+        state.assigneesByAssignmentId[assignee.assignment_id] = remoteList();
+      }
+      const item = remoteItem(assignee.user_id, {
+        data: { ...assignee, id: assignee.user_id },
+        loaded: new Date().toISOString(),
+      });
 
-    sessionDeleted: (state, action: PayloadAction<SessionDeletedPayload>) => {
+      state.assigneesByAssignmentId[assignee.assignment_id].items.push(item);
+
+      const hasStatsItem = !!state.areaStatsByAssignmentId[
+        assignee.assignment_id
+      ].data?.stats.find((statsItem) => statsItem.area_id == assignee.area_id);
+
+      if (!hasStatsItem) {
+        state.areaStatsByAssignmentId[assignee.assignment_id].isStale = true;
+      }
+    },
+    assigneeDeleted: (state, action: PayloadAction<SessionDeletedPayload>) => {
       const { areaId, assignmentId, assigneeId } = action.payload;
 
-      const sessionsList = state.sessionsByAssignmentId[assignmentId];
+      const sessionsList = state.assigneesByAssignmentId[assignmentId];
 
       if (sessionsList) {
         const filteredSessions = sessionsList.items.filter(
           (item) =>
             !(
-              item.data?.area.id === areaId &&
-              item.data?.assignee.id === assigneeId
+              item.data?.area_id === areaId && item.data?.user_id === assigneeId
             )
         );
-        state.sessionsByAssignmentId[assignmentId] = {
+        state.assigneesByAssignmentId[assignmentId] = {
           ...sessionsList,
           items: filteredSessions,
         };
       }
     },
-    statsLoad: (state, action: PayloadAction<string>) => {
+    assigneesLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+
+      if (!state.assigneesByAssignmentId[assignmentId]) {
+        state.assigneesByAssignmentId[assignmentId] = remoteList();
+      }
+
+      state.assigneesByAssignmentId[assignmentId].isLoading = true;
+    },
+    assigneesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinAreaAssignee[]]>
+    ) => {
+      const [assignmentId, sessions] = action.payload;
+
+      state.assigneesByAssignmentId[assignmentId] = remoteList(
+        sessions.map((session) => ({ ...session, id: session.user_id }))
+      );
+
+      state.assigneesByAssignmentId[assignmentId].loaded =
+        new Date().toISOString();
+    },
+    assignmentAreasLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.areasByAssignmentId[assignmentId] ||= remoteList();
+      state.areasByAssignmentId[assignmentId].isLoading = true;
+    },
+    assignmentAreasLoaded: (
+      state,
+      action: PayloadAction<[number, Zetkin2Area[]]>
+    ) => {
+      const [assignmentId, areas] = action.payload;
+      state.areasByAssignmentId[assignmentId] = remoteList(areas);
+      state.areasByAssignmentId[assignmentId].isLoading = false;
+      state.areasByAssignmentId[assignmentId].loaded = new Date().toISOString();
+    },
+    householdVisitCreated: (
+      state,
+      action: PayloadAction<ZetkinHouseholdVisit>
+    ) => {
+      const visit = action.payload;
+      state.visitsByHouseholdId[visit.household_id] ||= remoteList([]);
+      state.visitsByHouseholdId[visit.household_id].items.push(
+        remoteItem(visit.id, { data: visit, loaded: new Date().toISOString() })
+      );
+    },
+    locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
+      const location = action.payload;
+
+      Object.values(state.locationsByAssignmentId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
+    },
+    locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
+      const location = action.payload;
+
+      Object.values(state.locationsByAssignmentId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
+    },
+    locationsInvalidated: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      state.locationsByAssignmentId[assignmentId].isStale = true;
+    },
+    locationsLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      state.locationsByAssignmentId[assignmentId].isLoading = true;
+    },
+    locationsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinLocation[]]>
+    ) => {
+      const timestamp = new Date().toISOString();
+      const [assignmentId, locations] = action.payload;
+      state.locationsByAssignmentId[assignmentId] = remoteList(locations);
+      state.locationsByAssignmentId[assignmentId].loaded = timestamp;
+      state.locationsByAssignmentId[assignmentId].items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
+    },
+    metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
+      const [assignmentId, metric] = action.payload;
+      state.metricsByAssignmentId[assignmentId].items.push(
+        remoteItem(metric.id, {
+          data: metric,
+          loaded: new Date().toISOString(),
+        })
+      );
+    },
+    metricDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, metricId] = action.payload;
+      state.metricsByAssignmentId[assignmentId].items =
+        state.metricsByAssignmentId[assignmentId].items.filter(
+          (item) => item.id != metricId
+        );
+    },
+    metricUpdated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
+      const [assignmentId, metric] = action.payload;
+      const item = findOrAddItem(
+        state.metricsByAssignmentId[assignmentId],
+        metric.id
+      );
+      item.data = metric;
+      item.isLoading = false;
+      item.loaded = new Date().toISOString();
+    },
+    metricsLoad: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+      state.metricsByAssignmentId[assignmentId] ||= remoteList();
+      state.metricsByAssignmentId[assignmentId].isLoading = true;
+    },
+    metricsLoaded: (state, action: PayloadAction<[number, ZetkinMetric[]]>) => {
+      const [assignmentId, metrics] = action.payload;
+      state.metricsByAssignmentId[assignmentId] = remoteList(metrics);
+      state.metricsByAssignmentId[assignmentId].loaded =
+        new Date().toISOString();
+    },
+    statsLoad: (state, action: PayloadAction<number>) => {
       const areaAssId = action.payload;
 
       if (!state.statsByAreaAssId[areaAssId]) {
@@ -241,7 +322,7 @@ const areaAssignmentSlice = createSlice({
     },
     statsLoaded: (
       state,
-      action: PayloadAction<[string, ZetkinAreaAssignmentStats]>
+      action: PayloadAction<[number, ZetkinAreaAssignmentStats]>
     ) => {
       const [areaAssId, stats] = action.payload;
 
@@ -268,15 +349,23 @@ export const {
   areaAssignmentUpdated,
   areaAssignmentsLoad,
   areaAssignmentsLoaded,
-  areaAssignmentSessionCreated,
-  areaAssignmentSessionsLoad,
-  areaAssignmentSessionsLoaded,
+  assigneeAdded,
+  assigneesLoad,
+  assigneesLoaded,
+  assignmentAreasLoad,
+  assignmentAreasLoaded,
+  householdVisitCreated,
   locationCreated,
   locationsInvalidated,
   locationsLoad,
   locationsLoaded,
   locationUpdated,
-  sessionDeleted,
+  metricCreated,
+  metricDeleted,
+  metricUpdated,
+  metricsLoad,
+  metricsLoaded,
+  assigneeDeleted,
   statsLoad,
   statsLoaded,
 } = areaAssignmentSlice.actions;

@@ -11,7 +11,7 @@ export default function useCreateLocation(orgId: number) {
     const created = await apiClient.post<
       ZetkinLocation,
       ZetkinLocationPostBody
-    >(`/beta/orgs/${orgId}/locations`, data);
+    >(`/api2/orgs/${orgId}/locations`, data);
     dispatch(locationCreated(created));
   };
 }

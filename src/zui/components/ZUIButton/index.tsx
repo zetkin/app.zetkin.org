@@ -1,4 +1,4 @@
-import { alpha, Button, CircularProgress } from '@mui/material';
+import { alpha, Box, Button, CircularProgress } from '@mui/material';
 import {
   CSSProperties,
   FC,
@@ -250,16 +250,17 @@ const ZUIButton: FC<ZUIButtonProps> = ({
       {isLoading ? (
         <CircularProgress size={16} />
       ) : (
-        <span
-          style={{
-            maxWidth: noWrap ? '18rem' : undefined,
+        <Box
+          component="span"
+          sx={{
+            maxWidth: noWrap ? '100%' : undefined,
             overflow: noWrap ? 'hidden' : undefined,
             textOverflow: noWrap ? 'ellipsis' : undefined,
             whiteSpace: noWrap ? 'nowrap' : undefined,
           }}
         >
           {label}
-        </span>
+        </Box>
       )}
     </Button>
   );

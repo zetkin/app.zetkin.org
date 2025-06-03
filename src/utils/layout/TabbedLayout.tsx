@@ -121,6 +121,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
       <Box
         display="flex"
         flexDirection="column"
+        flexGrow="1"
         height={fixedHeight ? 1 : 'auto'}
       >
         <Header

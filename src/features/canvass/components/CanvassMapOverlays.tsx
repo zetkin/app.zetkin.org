@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, Suspense, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
 import {
@@ -86,21 +86,25 @@ const CanvassMapOverlays: FC<Props> = ({
       >
         {showViewLocationButton && (
           <Box onClick={() => setExpanded(true)} p={2}>
-            <ContractedHeader
-              assignment={assignment}
-              location={selectedLocation}
-            />
+            <Suspense>
+              <ContractedHeader
+                assignment={assignment}
+                location={selectedLocation}
+              />
+            </Suspense>
           </Box>
         )}
         {selectedLocation && expanded && (
-          <LocationDialog
-            assignment={assignment}
-            location={selectedLocation}
-            onClose={() => {
-              setExpanded(false);
-            }}
-            orgId={assignment.organization.id}
-          />
+          <Suspense>
+            <LocationDialog
+              assignment={assignment}
+              location={selectedLocation}
+              onClose={() => {
+                setExpanded(false);
+              }}
+              orgId={assignment.organization_id}
+            />
+          </Suspense>
         )}
         {isCreating && (
           <Box p={2}>

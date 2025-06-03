@@ -8,7 +8,7 @@ import ZUIText from 'zui/components/ZUIText';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import { CallStep } from '../pages';
+import { CallStep } from '../pages/CallPage';
 import useAllocateCall from '../hooks/useAllocateCall';
 
 type OngoingHeaderProps = {
