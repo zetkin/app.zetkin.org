@@ -53,7 +53,19 @@ const CanvassSidebar: FC<Props> = ({ assignment }) => {
             />
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
             <Typography sx={{ pb: 2, pt: 2 }} variant="body2">
-              <ZUIMarkdown markdown={assignment.instructions} />
+              <ZUIMarkdown
+                BoxProps={{
+                  ref: (elem: HTMLElement) => {
+                    if (elem) {
+                      const aNodes = elem.querySelectorAll('a');
+                      aNodes.forEach((node) => {
+                        node.setAttribute('target', '_blank');
+                      });
+                    }
+                  },
+                }}
+                markdown={assignment.instructions}
+              />
             </Typography>
             <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
           </ListItem>
