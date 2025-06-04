@@ -84,6 +84,7 @@ const ActivitiesArchivePage: PageWithLayout = () => {
                   filters={filters}
                   orgId={orgId}
                   searchString={searchString}
+                  sortNewestFirst
                 />
               </Grid>
 

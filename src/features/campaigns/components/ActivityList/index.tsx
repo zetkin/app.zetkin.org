@@ -22,6 +22,7 @@ import ActivityListItem, { STATUS_COLORS } from './items/ActivityListItem';
 interface ActivitiesProps {
   activities: CampaignActivity[];
   orgId: number;
+  sortNewestFirst?: boolean;
 }
 
 interface LazyActivitiesBoxProps extends BoxProps {
@@ -72,8 +73,12 @@ const LazyActivitiesBox = ({
   );
 };
 
-const Activities = ({ activities, orgId }: ActivitiesProps) => {
-  const clustered = useClusteredActivities(activities);
+const Activities = ({
+  activities,
+  orgId,
+  sortNewestFirst,
+}: ActivitiesProps) => {
+  const clustered = useClusteredActivities(activities, sortNewestFirst);
 
   return (
     <Card>
@@ -135,6 +140,7 @@ interface ActivityListProps {
   filters: ACTIVITIES[];
   orgId: number;
   searchString: string;
+  sortNewestFirst?: boolean;
 }
 
 const ActivityList = ({
@@ -142,6 +148,7 @@ const ActivityList = ({
   filters,
   orgId,
   searchString,
+  sortNewestFirst,
 }: ActivityListProps) => {
   const messages = useMessages(messageIds);
 
@@ -163,7 +170,11 @@ const ActivityList = ({
   return (
     <>
       {searchResults.length > 0 && (
-        <Activities activities={searchResults} orgId={orgId} />
+        <Activities
+          activities={searchResults}
+          orgId={orgId}
+          sortNewestFirst={sortNewestFirst}
+        />
       )}
       {!searchResults.length && (
         <Box alignItems="center" display="flex" flexDirection="column">
