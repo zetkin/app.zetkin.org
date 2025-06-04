@@ -53,6 +53,7 @@ const SurveyForm: FC<SurveyFormProps> = ({ initialValues = {}, survey }) => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.5rem',
+                    wordBreak: 'break-word',
                   }}
                 >
                   <ZUIText variant="headingMd">
