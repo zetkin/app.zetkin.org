@@ -4,12 +4,12 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
-import PrepareHeader from '../components/PrepareHeader';
-import StatsHeader from '../components/StatsHeader';
+import PrepareHeader from '../components/headers/PrepareHeader';
+import StatsHeader from '../components/headers/StatsHeader';
 import CallStats from '../components/CallStats';
 import CallPrepare from '../components/CallPrepare';
 import CallOngoing from '../components/CallOngoing';
-import OngoingHeader from '../components/OngoingHeader';
+import OngoingHeader from '../components/headers/OngoingHeader';
 import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
 

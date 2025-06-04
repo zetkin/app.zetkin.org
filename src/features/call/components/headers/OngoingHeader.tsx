@@ -5,11 +5,11 @@ import { FC } from 'react';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
-import useCurrentCall from '../hooks/useCurrentCall';
+import useCurrentCall from '../../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import { CallStep } from '../pages/CallPage';
-import useAllocateCall from '../hooks/useAllocateCall';
+import { CallStep } from '../../pages/CallPage';
+import useAllocateCall from '../../hooks/useAllocateCall';
 
 type OngoingHeaderProps = {
   assignment: ZetkinCallAssignment;

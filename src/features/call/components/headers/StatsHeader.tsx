@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
-import useAllocateCall from '../hooks/useAllocateCall';
+import useAllocateCall from '../../hooks/useAllocateCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIDivider from 'zui/components/ZUIDivider';

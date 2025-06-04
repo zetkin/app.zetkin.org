@@ -5,14 +5,14 @@ import { FC, useState } from 'react';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
-import useCurrentCall from '../hooks/useCurrentCall';
+import useCurrentCall from '../../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
-import SkipCallDialog from './SkipCallDialog';
-import useCallMutations from '../hooks/useCallMutations';
+import SkipCallDialog from '../SkipCallDialog';
+import useCallMutations from '../../hooks/useCallMutations';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import CallSwitchModal from './CallSwitchModal';
+import CallSwitchModal from '../CallSwitchModal';
 import ZUIBadge from 'zui/components/ZUIBadge';
-import useOutgoingCalls from '../hooks/useOutgoingCalls';
+import useOutgoingCalls from '../../hooks/useOutgoingCalls';
 import useIsMobile from 'utils/hooks/useIsMobile';
 
 type PrepareHeaderProps = {
