@@ -8,9 +8,9 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Zetkin2Area } from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
-import CanvassMapOverlays from './CanvassMapOverlays';
-import MarkerIcon from './MarkerIcon';
-import useCreateLocation from '../hooks/useCreateLocation';
+import CanvassMapOverlays from '../CanvassMapOverlays';
+import MarkerIcon from '../MarkerIcon';
+import useCreateLocation from '../../hooks/useCreateLocation';
 
 type Props = {
   areas: Zetkin2Area[];
