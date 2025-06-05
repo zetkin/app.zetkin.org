@@ -81,6 +81,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     return {
       features:
         locations.data?.map((location) => {
+          const selected = location.id == selectedLocationId;
           const successfulVisits =
             location?.num_households_successful ||
             location?.num_successful_visits ||
@@ -105,7 +106,11 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
 
           const visitPercentage = Math.round(visitRatio * 10) * 10;
           const successPercentage = Math.round(successRatio * 10) * 10;
-          const icon = `marker-${successPercentage}-${visitPercentage}`;
+          const icon =
+            `marker-${successPercentage}-${visitPercentage}` +
+            (selected ? '-selected' : '');
+
+          const renderOnTop = selected;
 
           return {
             geometry: {
@@ -114,6 +119,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             },
             properties: {
               icon,
+              z: renderOnTop ? 1 : 0,
             },
             type: 'Feature',
           };
@@ -248,6 +254,16 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
                 new MarkerImageRenderer(
                   successPercentage,
                   visitPercentage,
+                  false,
+                  oldTheme.palette.primary.main
+                )
+              );
+              map.addImage(
+                `marker-${successPercentage}-${visitPercentage}-selected`,
+                new MarkerImageRenderer(
+                  successPercentage,
+                  visitPercentage,
+                  true,
                   oldTheme.palette.primary.main
                 )
               );
@@ -272,6 +288,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
               'icon-allow-overlap': true,
               'icon-image': ['get', 'icon'],
               'icon-offset': [0, -15],
+              'symbol-sort-key': ['get', 'z'],
             }}
             source="locations"
             type="symbol"
