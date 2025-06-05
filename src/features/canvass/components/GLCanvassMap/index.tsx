@@ -200,7 +200,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             left: '50%',
             opacity: !selectedLocationId ? 1 : 0.3,
             position: 'absolute',
-            top: '40vh',
+            top: 'calc(50vh - 40px)',
             transform: 'translate(-50%, -50%)',
             transition: 'opacity 0.1s',
             zIndex: 1200,
@@ -242,6 +242,9 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
           bounds,
         }}
         mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+        onClick={(ev) => {
+          ev.target.panTo(ev.lngLat, { animate: true });
+        }}
         onLoad={(ev) => {
           const map = ev.target;
           const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
