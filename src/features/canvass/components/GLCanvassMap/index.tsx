@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Layer, LngLatLike, Map, Source } from '@vis.gl/react-maplibre';
 import { Box } from '@mui/material';
 import { GpsNotFixed } from '@mui/icons-material';
-import { Map as MapType } from 'maplibre-gl';
+import { LngLatBounds, Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Zetkin2Area } from 'features/areas/types';
@@ -14,6 +14,7 @@ import useCreateLocation from '../../hooks/useCreateLocation';
 import oldTheme from 'theme';
 import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import ZUIMapControls from 'zui/ZUIMapControls';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -45,9 +46,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     ];
 
     const areaHoles = areas.map((area) =>
-      area.boundary.coordinates.flatMap((polygon) =>
-        polygon.map(([lat, lng]) => [lng, lat])
-      )
+      area.boundary.coordinates.flatMap((polygon) => polygon.map(flipLatLng))
     );
 
     return {
@@ -213,6 +212,35 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
   return (
     <>
       <Box sx={{ position: 'relative' }}>
+        <ZUIMapControls
+          onFitBounds={() => {
+            if (map) {
+              const firstPolygon = areas[0]?.boundary.coordinates[0];
+              if (firstPolygon.length) {
+                const totalBounds = new LngLatBounds(
+                  flipLatLng(firstPolygon[0]),
+                  flipLatLng(firstPolygon[0])
+                );
+
+                // Extend with all areas
+                areas.forEach((area) => {
+                  area.boundary.coordinates[0]?.forEach((latLng) =>
+                    totalBounds.extend(flipLatLng(latLng))
+                  );
+                });
+
+                if (totalBounds) {
+                  map.fitBounds(totalBounds, { animate: true, duration: 800 });
+                }
+              }
+            }
+          }}
+          onGeolocate={(latLng) => {
+            map?.panTo(flipLatLng(latLng), { animate: true, duration: 800 });
+          }}
+          onZoomIn={() => map?.zoomIn()}
+          onZoomOut={() => map?.zoomOut()}
+        />
         <Box
           ref={crosshairRef}
           sx={{
@@ -367,3 +395,8 @@ const getCrosshairPositionOnMap = (
 
   return { markerX, markerY };
 };
+
+function flipLatLng(latLng: [number, number]): [number, number] {
+  const [lat, lng] = latLng;
+  return [lng, lat];
+}
