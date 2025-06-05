@@ -11,6 +11,8 @@ import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
 import MarkerIcon from '../MarkerIcon';
 import useCreateLocation from '../../hooks/useCreateLocation';
+import oldTheme from 'theme';
+import MarkerImageRenderer from './MarkerImageRenderer';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -75,17 +77,47 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     return [min, max];
   }, [areas]);
 
-  const locationsGeoJson: GeoJSON.GeoJSON = useMemo(() => {
+  const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
     return {
       features:
-        locations.data?.map((location) => ({
-          geometry: {
-            coordinates: [location.longitude, location.latitude],
-            type: 'Point',
-          },
-          properties: {},
-          type: 'Feature',
-        })) ?? [],
+        locations.data?.map((location) => {
+          const successfulVisits =
+            location?.num_households_successful ||
+            location?.num_successful_visits ||
+            0;
+          const totalHouseholds = Math.max(
+            location?.num_estimated_households ?? 0,
+            location?.num_known_households ?? 0
+          );
+          const totalVisits =
+            location?.num_households_visited || location?.num_visits || 0;
+
+          let visitRatio = 0;
+          let successRatio = 0;
+
+          if (totalHouseholds > 0) {
+            visitRatio = totalVisits / totalHouseholds;
+            successRatio = successfulVisits / totalHouseholds;
+          } else if (totalVisits > 0) {
+            visitRatio = 1;
+            successRatio = successfulVisits / totalVisits;
+          }
+
+          const visitPercentage = Math.round(visitRatio * 10) * 10;
+          const successPercentage = Math.round(successRatio * 10) * 10;
+          const icon = `marker-${successPercentage}-${visitPercentage}`;
+
+          return {
+            geometry: {
+              coordinates: [location.longitude, location.latitude],
+              type: 'Point',
+            },
+            properties: {
+              icon,
+            },
+            type: 'Feature',
+          };
+        }) ?? [],
       type: 'FeatureCollection',
     };
   }, [locations.data]);
@@ -204,6 +236,24 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
           bounds,
         }}
         mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+        onLoad={(ev) => {
+          const map = ev.target;
+          const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+          percentages.forEach((visitPercentage, visitIndex) => {
+            const successPercentages = percentages.slice(0, visitIndex + 1);
+            successPercentages.forEach((successPercentage) => {
+              map.addImage(
+                `marker-${successPercentage}-${visitPercentage}`,
+                new MarkerImageRenderer(
+                  successPercentage,
+                  visitPercentage,
+                  oldTheme.palette.primary.main
+                )
+              );
+            });
+          });
+        }}
         onMove={() => updateSelection()}
         style={{ height: '100%', width: '100%' }}
       >
@@ -216,7 +266,16 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
           />
         </Source>
         <Source data={locationsGeoJson} id="locations" type="geojson">
-          <Layer id="locationMarkers" source="locations" type="circle" />
+          <Layer
+            id="locationMarkers"
+            layout={{
+              'icon-allow-overlap': true,
+              'icon-image': ['get', 'icon'],
+              'icon-offset': [0, -15],
+            }}
+            source="locations"
+            type="symbol"
+          />
         </Source>
       </Map>
       <CanvassMapOverlays
