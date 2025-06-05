@@ -4,12 +4,11 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
-import PrepareHeader from '../components/headers/PrepareHeader';
+import StepsHeader from '../components/headers/StepsHeader';
 import StatsHeader from '../components/headers/StatsHeader';
 import CallStats from '../components/CallStats';
 import CallPrepare from '../components/CallPrepare';
 import CallOngoing from '../components/CallOngoing';
-import OngoingHeader from '../components/headers/OngoingHeader';
 import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
 
@@ -48,11 +47,12 @@ const CallPage: FC<Props> = ({ callAssId }) => {
       )}
       {activeStep == CallStep.PREPARE && assignment && (
         <>
-          <PrepareHeader
+          <StepsHeader
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onStartCall={() => setActiveStep(CallStep.ONGOING)}
+            onNextStep={() => setActiveStep(CallStep.ONGOING)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+            step={CallStep.PREPARE}
           />
 
           <CallPrepare assignment={assignment} />
@@ -60,19 +60,25 @@ const CallPage: FC<Props> = ({ callAssId }) => {
       )}
       {activeStep == CallStep.ONGOING && assignment && (
         <>
-          <OngoingHeader
+          <StepsHeader
             assignment={assignment}
-            onReportCall={() => setActiveStep(CallStep.REPORT)}
+            onBack={() => setActiveStep(CallStep.STATS)}
+            onNextStep={() => setActiveStep(CallStep.REPORT)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             step={CallStep.ONGOING}
           />
+
           <CallOngoing assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.REPORT && assignment && (
         <>
-          <OngoingHeader
+          <StepsHeader
             assignment={assignment}
-            onBack={() => setActiveStep(CallStep.ONGOING)}
+            onActivities={() => setActiveStep(CallStep.ONGOING)}
+            onBack={() => setActiveStep(CallStep.STATS)}
+            onNextStep={() => setActiveStep(CallStep.SUMMARY)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             step={CallStep.REPORT}
           />
 
@@ -84,11 +90,11 @@ const CallPage: FC<Props> = ({ callAssId }) => {
       )}
       {activeStep == CallStep.SUMMARY && assignment && (
         <>
-          <OngoingHeader
+          <StepsHeader
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onReportCall={() => setActiveStep(CallStep.PREPARE)}
-            onSummarize={() => setActiveStep(CallStep.PREPARE)}
+            onNextStep={() => setActiveStep(CallStep.PREPARE)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             step={CallStep.SUMMARY}
           />
           <CallSummary />

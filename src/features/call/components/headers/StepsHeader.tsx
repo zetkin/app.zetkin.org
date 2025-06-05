@@ -14,22 +14,95 @@ import CallSwitchModal from '../CallSwitchModal';
 import ZUIBadge from 'zui/components/ZUIBadge';
 import useOutgoingCalls from '../../hooks/useOutgoingCalls';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { CallStep } from 'features/call/pages/CallPage';
+import useAllocateCall from 'features/call/hooks/useAllocateCall';
+import { ZetkinCall } from 'features/call/types';
 
-type PrepareHeaderProps = {
+type StepButtonsProps = {
+  allocateCall: () => void;
   assignment: ZetkinCallAssignment;
+  call: ZetkinCall;
+  onActivities?: () => void;
   onBack: () => void;
-  onStartCall: () => void;
-  onSwitchCall: () => void;
+  onNextStep?: () => void;
+  step?: CallStep;
 };
 
-const PrepareHeader: FC<PrepareHeaderProps> = ({
+const StepButtons: FC<StepButtonsProps> = ({
+  allocateCall,
   assignment,
+  call,
+  onActivities,
   onBack,
-  onStartCall,
+  onNextStep,
+  step,
+}) => {
+  if (step === CallStep.PREPARE) {
+    return (
+      <>
+        <SkipCallDialog
+          assignment={assignment}
+          callId={call.id}
+          targetName={`${call.target.first_name} ${call.target.last_name}`}
+        />
+        <ZUIButton label="Call" onClick={onNextStep} variant="primary" />
+      </>
+    );
+  } else if (step === CallStep.ONGOING) {
+    return <ZUIButton label="Report" onClick={onNextStep} variant="primary" />;
+  } else if (step === CallStep.REPORT) {
+    return (
+      <>
+        <ZUIButton
+          label="Back to activities"
+          onClick={onActivities}
+          variant="secondary"
+        />
+        <ZUIButton label="Finish" onClick={onNextStep} variant="primary" />
+      </>
+    );
+  } else if (step === CallStep.SUMMARY) {
+    return (
+      <>
+        <ZUIButton label="Take a break" onClick={onBack} variant="secondary" />
+        <ZUIButton
+          label="Keep calling"
+          onClick={() => {
+            onNextStep?.();
+            allocateCall();
+          }}
+          variant="primary"
+        />
+      </>
+    );
+  }
+
+  return null;
+};
+
+type StepsHeaderProps = {
+  assignment: ZetkinCallAssignment;
+  onActivities?: () => void;
+  onBack: () => void;
+  onNextStep?: () => void;
+  onSwitchCall: () => void;
+  step?: CallStep;
+};
+
+const StepsHeader: FC<StepsHeaderProps> = ({
+  assignment,
+  onActivities,
+  onBack,
+  onNextStep,
   onSwitchCall,
+  step,
 }) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
+  const { allocateCall } = useAllocateCall(
+    assignment.organization.id,
+    assignment.id
+  );
   const [showModal, setShowModal] = useState(false);
   const outgoingCalls = useOutgoingCalls();
   const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
@@ -98,16 +171,15 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
                 </Box>
               </Box>
               <Box display="flex" gap={2} justifyContent="flex-end">
-                <SkipCallDialog
-                  assignment={assignment}
-                  callId={call.id}
-                  targetName={`${call.target.first_name} ${call.target.last_name}`}
-                />
-                <ZUIButton
-                  label="Call"
-                  onClick={onStartCall}
-                  variant="primary"
-                />
+                {StepButtons({
+                  allocateCall,
+                  assignment,
+                  call,
+                  onActivities,
+                  onBack,
+                  onNextStep,
+                  step,
+                })}
               </Box>
             </>
           )}
@@ -163,18 +235,16 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
                     </ZUIBadge>
                   </Box>
                 </Box>
-
-                <Box alignItems="center" display="flex" gap={1}>
-                  <SkipCallDialog
-                    assignment={assignment}
-                    callId={call.id}
-                    targetName={`${call.target.first_name} ${call.target.last_name}`}
-                  />
-                  <ZUIButton
-                    label="Call"
-                    onClick={onStartCall}
-                    variant="primary"
-                  />
+                <Box display="flex" gap={2} justifyContent="flex-end">
+                  {StepButtons({
+                    allocateCall,
+                    assignment,
+                    call,
+                    onActivities,
+                    onBack,
+                    onNextStep,
+                    step,
+                  })}
                 </Box>
               </Box>
             </>
@@ -192,4 +262,4 @@ const PrepareHeader: FC<PrepareHeaderProps> = ({
   );
 };
 
-export default PrepareHeader;
+export default StepsHeader;
