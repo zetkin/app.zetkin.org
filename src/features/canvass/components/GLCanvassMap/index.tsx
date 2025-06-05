@@ -13,6 +13,7 @@ import MarkerIcon from '../MarkerIcon';
 import useCreateLocation from '../../hooks/useCreateLocation';
 import oldTheme from 'theme';
 import MarkerImageRenderer from './MarkerImageRenderer';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -23,6 +24,9 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
   const locations = useLocations(assignment.organization_id, assignment.id);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const createLocation = useCreateLocation(assignment.organization_id);
+  const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
+    [LngLatLike, LngLatLike] | null
+  >(`mapBounds-${assignment.id}`, null);
 
   const [created, setCreated] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -57,6 +61,10 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
   }, [areas]);
 
   const bounds: [LngLatLike, LngLatLike] = useMemo(() => {
+    if (localStorageBounds) {
+      return localStorageBounds;
+    }
+
     const min: LngLatLike = [180, 90];
     const max: LngLatLike = [-180, -90];
 
@@ -135,6 +143,17 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
 
     return locations.data?.find((loc) => loc.id == selectedLocationId) || null;
   }, [locations]);
+
+  const saveBounds = () => {
+    const bounds = map?.getBounds();
+
+    if (bounds) {
+      setLocalStorageBounds([
+        [bounds.getWest(), bounds.getSouth()],
+        [bounds.getEast(), bounds.getNorth()],
+      ]);
+    }
+  };
 
   const updateSelection = useCallback(() => {
     let nearestLocation: number | null = null;
@@ -274,6 +293,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
           });
         }}
         onMove={() => updateSelection()}
+        onMoveEnd={() => saveBounds()}
         style={{ height: '100%', width: '100%' }}
       >
         <Source data={areasGeoJson} id="areas" type="geojson">
