@@ -53,6 +53,7 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
           )}
           <ZUIMarkdown
             BoxProps={{ component: 'div' }}
+            forceTargetBlank={true}
             markdown={task.instructions}
           />
         </Box>
