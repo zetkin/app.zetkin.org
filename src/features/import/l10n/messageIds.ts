@@ -284,6 +284,7 @@ export default makeMessages('feat.import', {
     people: m<{ numPeople: number; number: ReactElement }>(
       '{number} {numPeople, plural, =1 {person} other {people}}'
     ),
+    peopleToSubOrg: m<{ num: number; orgName: string }>('{orgName} ({num})'),
   },
   importStatus: {
     completed: {
@@ -324,6 +325,14 @@ export default makeMessages('feat.import', {
       },
       invalidFormat: {
         title: m<{ field: string }>('Wrong format for field: {field}'),
+      },
+      invalidOrgCountry: {
+        description: m(
+          'This makes it impossible to guess ex. phone number country codes. Contact support to fix this.'
+        ),
+        title: m<{ code: string }>(
+          'Possible invalid organization country code: {code}'
+        ),
       },
       majorChange: {
         description: m(

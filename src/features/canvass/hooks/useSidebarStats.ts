@@ -1,13 +1,7 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  locationsInvalidated,
-  locationsLoad,
-  locationsLoaded,
-} from '../../areaAssignments/store';
-import { visitsLoad, visitsLoaded, visitsInvalidated } from '../store';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { locationsInvalidated } from '../../areaAssignments/store';
+import { visitsInvalidated } from '../store';
 import useMembership from 'features/organizations/hooks/useMembership';
-import estimateVisitedHouseholds from '../utils/estimateVisitedHouseholds';
 
 type UseSidebarReturn = {
   loading: boolean;
@@ -29,26 +23,17 @@ type UseSidebarReturn = {
 
 export default function useSidebarStats(
   orgId: number,
-  assignmentId: string
+  assignmentId: number
 ): UseSidebarReturn {
-  const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const locationList = useAppSelector(
-    (state) => state.areaAssignments.locationList
-  );
   const visitList = useAppSelector(
     (state) => state.canvass.visitsByAssignmentId[assignmentId]
   );
 
-  const membershipFuture = useMembership(orgId);
-  const userPersonId = membershipFuture.data?.profile.id;
+  useMembership(orgId);
 
-  const locationListFuture = loadListIfNecessary(locationList, dispatch, {
-    actionOnLoad: () => locationsLoad(),
-    actionOnSuccess: (items) => locationsLoaded(items),
-    loader: () => apiClient.get(`/beta/orgs/${orgId}/locations`),
-  });
-
+  // TODO: Get From API
+  /*
   const visitListFuture = loadListIfNecessary(visitList, dispatch, {
     actionOnLoad: () => visitsLoad(assignmentId),
     actionOnSuccess: (items) => visitsLoaded([assignmentId, items]),
@@ -57,6 +42,7 @@ export default function useSidebarStats(
         `/beta/orgs/${orgId}/areaassignments/${assignmentId}/visits`
       ),
   });
+  */
 
   const stats = {
     allTime: {
@@ -75,17 +61,19 @@ export default function useSidebarStats(
   const teamLocationsToday = new Set<string>();
   const teamLocations = new Set<string>();
 
+  // TODO: Get from API
+  /*
+  const todayStr = new Date().toISOString().slice(0, 10);
   const userHouseholdsToday = new Set<string>();
   const teamHouseholdsToday = new Set<string>();
   const teamHouseholds = new Set<string>();
 
-  const todayStr = new Date().toISOString().slice(0, 10);
 
   if (locationListFuture.data) {
     locationListFuture.data.forEach((location) => {
       location.households.forEach((household) => {
         household.visits.forEach((visit) => {
-          if (visit.areaAssId == assignmentId) {
+          if (visit.assignment_id == assignmentId) {
             teamHouseholds.add(household.id);
 
             if (visit.timestamp.startsWith(todayStr)) {
@@ -104,7 +92,9 @@ export default function useSidebarStats(
   stats.allTime.numHouseholds = teamHouseholds.size;
   stats.today.numHouseholds = teamHouseholdsToday.size;
   stats.today.numUserHouseholds = userHouseholdsToday.size;
+  */
 
+  /*
   if (visitListFuture.data) {
     visitListFuture.data.forEach((visit) => {
       const numHouseholds = estimateVisitedHouseholds(visit);
@@ -123,17 +113,18 @@ export default function useSidebarStats(
       }
     });
   }
+    */
 
   stats.allTime.numLocations = teamLocations.size;
   stats.today.numLocations = teamLocationsToday.size;
   stats.today.numUserLocations = userLocationsToday.size;
 
   return {
-    loading: locationListFuture.isLoading || visitListFuture.isLoading,
+    loading: false,
     stats,
     sync: () => {
       dispatch(visitsInvalidated(assignmentId));
-      dispatch(locationsInvalidated());
+      dispatch(locationsInvalidated(assignmentId));
     },
     synced: visitList?.loaded || null,
   };

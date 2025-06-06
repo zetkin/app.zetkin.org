@@ -1,19 +1,22 @@
 import { FC } from 'react';
 import { lighten } from '@mui/system';
 
-import { VisitStats } from '../utils/getVisitPercentage';
 import oldTheme from 'theme';
 
 interface MarkerIconProps {
-  percentage?: VisitStats;
   selected: boolean;
+  totalHouseholds?: number;
+  totalVisits?: number;
+  successfulVisits?: number;
   uniqueKey?: string;
 }
 
 const MarkerIcon: FC<MarkerIconProps> = ({
+  totalHouseholds = 0,
   uniqueKey,
-  percentage,
   selected,
+  totalVisits = 0,
+  successfulVisits = 0,
 }) => {
   const pinInteriorKey = uniqueKey + '_pinInterior';
   const pinOutlinePath =
@@ -21,10 +24,22 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   const pinInteriorPath =
     'M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z';
 
+  const totalHeight = 30;
+
+  let successBandHeight = 0;
+  let visitsBandHeight = 0;
+
+  if (totalHouseholds > 0) {
+    const visitRatio = totalVisits / totalHouseholds;
+    const successRatio = successfulVisits / totalHouseholds;
+    successBandHeight = 0.8 * successRatio * totalHeight;
+    visitsBandHeight = 0.8 * visitRatio * totalHeight;
+  }
+
   return (
     <svg
       fill="white"
-      height="30"
+      height={totalHeight}
       style={{ filter: 'drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.5))' }}
       viewBox="0 0 21 30"
       width="21"
@@ -50,22 +65,18 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       <rect
         clipPath={`url(#${pinInteriorKey})`}
         fill={lighten(oldTheme.palette.primary.main, 0.7)}
-        height="30"
+        height={visitsBandHeight}
         width="21"
         x="0"
-        y={percentage ? `${30 - (percentage.totalVisits / 100) * 30}` : '0'}
+        y={0.9 * totalHeight - visitsBandHeight}
       />
       <rect
         clipPath={`url(#${pinInteriorKey})`}
         fill={oldTheme.palette.primary.main}
-        height="30"
+        height={successBandHeight}
         width="21"
         x="0"
-        y={
-          percentage
-            ? `${30 - (percentage.totalSuccessfulVisits / 100) * 30}`
-            : '0'
-        }
+        y={0.9 * totalHeight - successBandHeight}
       />
     </svg>
   );

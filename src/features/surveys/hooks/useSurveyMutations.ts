@@ -74,7 +74,9 @@ type ZetkinSurveyTextElementPatchBody = {
   };
 };
 
-type ZetkinSurveyPatchBody = Partial<Omit<ZetkinSurvey, 'id'>>;
+type ZetkinSurveyPatchBody = Partial<Omit<ZetkinSurvey, 'id'>> & {
+  campaign_id?: number;
+};
 
 type UseSurveyEditingReturn = {
   addElement: (data: ZetkinSurveyElementPostBody) => Promise<void>;
@@ -102,7 +104,7 @@ type UseSurveyEditingReturn = {
     elemId: number,
     ids: (string | number)[]
   ) => Promise<void>;
-  updateSurvey: (data: ZetkinSurveyPatchBody) => Promise<void>;
+  updateSurvey: (data: ZetkinSurveyPatchBody) => Promise<ZetkinSurvey>;
 };
 
 export default function useSurveyMutations(
@@ -117,14 +119,12 @@ export default function useSurveyMutations(
 
   async function updateSurvey(data: ZetkinSurveyPatchBody) {
     dispatch(surveyUpdate([surveyId, Object.keys(data)]));
-    apiClient
-      .patch<ZetkinSurveyExtended>(
-        `/api/orgs/${orgId}/surveys/${surveyId}`,
-        data
-      )
-      .then((survey) => {
-        dispatch(surveyUpdated(survey));
-      });
+    const survey = await apiClient.patch<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`,
+      data
+    );
+    dispatch(surveyUpdated(survey));
+    return survey;
   }
 
   async function addElement(data: ZetkinSurveyElementPostBody) {

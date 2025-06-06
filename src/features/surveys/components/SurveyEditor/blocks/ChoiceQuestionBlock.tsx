@@ -259,6 +259,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                     <Typography
                       color={option.text ? 'inherit' : 'secondary'}
                       fontStyle={option.text ? 'inherit' : 'italic'}
+                      sx={{ wordBreak: 'break-word' }}
                     >
                       {option.text || messages.blocks.choice.emptyOption()}
                     </Typography>

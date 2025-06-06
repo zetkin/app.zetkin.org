@@ -16,6 +16,10 @@ import LocationVisitPage from './pages/LocationVisitPage';
 import HouseholdsPage from './pages/HouseholdsPage';
 import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import EncouragingSparkle from '../EncouragingSparkle';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
+import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
+import { ZetkinLocationVisit } from 'features/canvass/types';
+import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -42,8 +46,16 @@ const LocationDialog: FC<LocationDialogProps> = ({
 }) => {
   const [dialogStep, setDialogStep] = useState<LocationDialogStep>('location');
   const [showSparkle, setShowSparkle] = useState(false);
-  const { addVisit, reportLocationVisit, updateHousehold, updateLocation } =
-    useLocationMutations(orgId, location.id);
+  const metrics = useAreaAssignmentMetrics(
+    assignment.organization_id,
+    assignment.id
+  );
+  const { updateHousehold, updateLocation } = useLocationMutations(
+    orgId,
+    location.id
+  );
+  const { lastVisitByHouseholdId, reportHouseholdVisit, reportLocationVisit } =
+    useVisitReporting(orgId, assignment.id, location.id);
 
   const pushedRef = useRef(false);
 
@@ -84,12 +96,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
     }
   }, []);
 
-  const [selectedHouseholdId, setSelectedHouseholdId] = useState<string | null>(
+  const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
-  );
-
-  const selectedHousehold = location.households.find(
-    (household) => household.id == selectedHouseholdId
   );
 
   return (
@@ -119,6 +127,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
         />
         <HouseholdsPage
           key="households"
+          assignment={assignment}
           location={location}
           onBack={() => back()}
           onBulk={() => goto('createHouseholds')}
@@ -127,45 +136,48 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdId(household.id);
             goto('household');
           }}
-          onSelectHousehold={(householdId: string) => {
+          onSelectHousehold={(householdId: number) => {
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
-          orgId={orgId}
         />
         <Box key="household" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <HouseholdPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               onBack={() => back()}
               onClose={onClose}
               onEdit={() => goto('editHousehold')}
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
               }}
-              visitedInThisAssignment={selectedHousehold.visits.some(
-                (visit) => visit.areaAssId == assignment.id
-              )}
+              visitedInThisAssignment={
+                !!lastVisitByHouseholdId[selectedHouseholdId]
+              }
             />
           )}
         </Box>
         <Box key="createHouseholds" height="100%">
           <CreateHouseholdsPage
-            locationId={location.id}
+            location={location}
             onBack={() => back()}
             onClose={onClose}
             orgId={orgId}
           />
         </Box>
         <Box key="editHousehold" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <EditHouseholdPage
-              household={selectedHousehold}
+              householdId={selectedHouseholdId}
+              location={location}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title, floor) => {
-                await updateHousehold(selectedHousehold.id, { floor, title });
-                back();
+              onSave={async (title, level) => {
+                if (selectedHouseholdId) {
+                  await updateHousehold(selectedHouseholdId, { level, title });
+                  back();
+                }
               }}
             />
           )}
@@ -177,28 +189,25 @@ const LocationDialog: FC<LocationDialogProps> = ({
             onBack={() => back()}
             onClose={onClose}
             onLogVisit={async (responses) => {
-              await reportLocationVisit(assignment.id, {
-                areaAssId: assignment.id,
-                locationId: location.id,
-                responses,
-              });
+              // TODO: User should specify household count
+              const numHouseholds = estimateVisitedHouseholds({
+                metrics: responses,
+              } as ZetkinLocationVisit);
+
+              await reportLocationVisit(numHouseholds, responses);
               setShowSparkle(true);
             }}
           />
         </Box>
         <Box key="householdVisit" height="100%">
-          {selectedHousehold && (
+          {selectedHouseholdId && (
             <HouseholdVisitPage
-              household={selectedHousehold}
-              metrics={assignment.metrics}
+              householdId={selectedHouseholdId}
+              location={location}
+              metrics={metrics}
               onBack={() => back()}
-              onLogVisit={async (responses, noteToOfficial) => {
-                await addVisit(selectedHousehold.id, {
-                  areaAssId: assignment.id,
-                  noteToOfficial,
-                  responses,
-                  timestamp: new Date().toISOString(),
-                });
+              onLogVisit={async (responses) => {
+                await reportHouseholdVisit(selectedHouseholdId, responses);
                 setShowSparkle(true);
                 goto('households');
               }}

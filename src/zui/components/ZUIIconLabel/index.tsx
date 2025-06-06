@@ -16,7 +16,7 @@ export type ZUIIconLabelProps = {
    *
    * Defaults to "primary".
    */
-  color?: ZUIPrimary | ZUISecondary | 'danger';
+  color?: ZUIPrimary | ZUISecondary | 'error';
 
   /**
    * The icon.
@@ -81,7 +81,7 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
     >
       <ZUIIcon color={color} icon={icon} size={size} />
       <Typography
-        color={color == 'danger' ? 'error' : color}
+        color={color}
         noWrap={noWrap}
         sx={{
           flexShrink: noWrap ? '' : 0,

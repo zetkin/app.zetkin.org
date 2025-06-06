@@ -556,6 +556,47 @@ describe('prepareImportOperations()', () => {
     ]);
   });
 
+  it('includes sub-ops to tag person with empty tags', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
+        {
+          kind: ColumnKind.TAG,
+          mapping: [
+            {
+              tags: [{ id: 1 }],
+              value: null,
+            },
+          ],
+          selected: true,
+        },
+      ],
+      firstRowIsHeaders: false,
+      rows: [
+        {
+          data: ['123', ''],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        key: {
+          id: 123,
+        },
+        op: 'person.get',
+        ops: [
+          {
+            op: 'person.tag',
+            tag_id: 1,
+          },
+        ],
+      },
+    ]);
+  });
+
   it('ignores mismatching tag mappings', () => {
     const sheet: Sheet = {
       columns: [

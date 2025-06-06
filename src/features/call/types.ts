@@ -25,20 +25,9 @@ type ZetkinCaller = {
   name: string;
 };
 
-export type ZetkinCallTarget = Pick<
-  ZetkinPerson,
-  | 'alt_phone'
-  | 'city'
-  | 'email'
-  | 'ext_id'
-  | 'first_name'
-  | 'id'
-  | 'last_name'
-  | 'phone'
-  | 'zip_code'
-> & {
+export type ZetkinCallTarget = ZetkinPerson & {
   action_responses: CombinedEventResponse[];
-  call_log: [];
+  call_log: ZetkinCall[];
   future_actions: ZetkinEvent[];
   name: string;
   past_actions: {

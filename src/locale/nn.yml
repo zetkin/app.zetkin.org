@@ -1627,7 +1627,7 @@ feat:
         inputString: '{addRemoveSelect} folk som {callSelect} {minTimes} i {assignmentSelect}
           {timeFrame}.'
         minTimes: '{minTimes} {minTimes, plural, one {gang} other {ganger}}'
-        minTimesInput: minst {input} {minTimes, plural, one {time} other {times}}
+        minTimesInput: minst {input} {minTimes, plural, one {gang} other {ganger}}
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"

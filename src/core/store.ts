@@ -116,9 +116,9 @@ const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
   actionCreator: areaAssignmentCreated,
   effect: (action) => {
-    const areaAssignment = action.payload;
+    const { organization_id, project_id, id } = action.payload;
     Router.push(
-      `/organize/${areaAssignment.organization.id}/projects/${areaAssignment.campaign.id}/areaassignments/${areaAssignment.id}`
+      `/organize/${organization_id}/projects/${project_id}/areaassignments/${id}`
     );
   },
 });
