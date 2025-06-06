@@ -1,5 +1,5 @@
 import { Box, Button, Divider } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import useView from 'features/views/hooks/useView';
 import messageIds from 'zui/l10n/messageIds';
@@ -18,6 +18,7 @@ type Props = {
 const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
   const viewFuture = useView(orgId, viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
+  const [selectedPersonIds, setSelectedPersonIds] = useState<number[]>([]);
 
   return (
     <Box>
@@ -30,9 +31,11 @@ const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
               <ViewDataTable
                 columns={columns}
                 disableAdd
-                disableBulkActions
                 disableConfigure
+                onSelectionChange={setSelectedPersonIds}
                 rows={rows}
+                selectedIds={selectedPersonIds}
+                selectionMode="select"
                 view={view}
               />
               <Divider />
@@ -56,13 +59,17 @@ const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
                     <Msg id={messageIds.personSelect.bulkAdd.backButton} />
                   </Button>
                   <Button
+                    disabled={selectedPersonIds.length === 0}
                     onClick={() => {
-                      onSubmit(rows.map((row) => row.id));
+                      onSubmit(selectedPersonIds);
                     }}
                     sx={{ mr: 2 }}
                     variant="contained"
                   >
-                    <Msg id={messageIds.personSelect.bulkAdd.submitButton} />
+                    <Msg
+                      id={messageIds.personSelect.bulkAdd.submitButton}
+                      values={{ numSelected: selectedPersonIds.length }}
+                    />
                   </Button>
                 </Box>
               </Box>

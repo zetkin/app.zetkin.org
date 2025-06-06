@@ -34,6 +34,9 @@ interface ViewBrowserProps {
   basePath: string;
   folderId?: number | null;
   onSelect?: (item: ViewBrowserItem, ev: MouseEvent) => void;
+  // TODO #2789: Better to separate out into
+  // `enableDragAndDrop` and `enableEllipsisMenu`?
+  readOnly?: boolean;
 }
 
 const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
@@ -48,6 +51,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   basePath,
   folderId = null,
   onSelect,
+  readOnly,
 }) => {
   const { orgId } = useNumericRouteParams();
 
@@ -153,74 +157,76 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       },
     });
 
-    colDefs.push({
-      field: 'menu',
-      headerName: '',
-      renderCell: (params) => {
-        const item = params.row;
-        if (item.type == 'back') {
-          return null;
-        }
-        return (
-          <ZUIEllipsisMenu
-            items={[
-              {
-                label: messages.browser.menu.rename(),
-                onSelect: (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  gridApiRef.current.startCellEditMode({
-                    field: 'title',
-                    id: params.row.id,
-                  });
+    if (!readOnly) {
+      colDefs.push({
+        field: 'menu',
+        headerName: '',
+        renderCell: (params) => {
+          const item = params.row;
+          if (item.type == 'back') {
+            return null;
+          }
+          return (
+            <ZUIEllipsisMenu
+              items={[
+                {
+                  label: messages.browser.menu.rename(),
+                  onSelect: (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    gridApiRef.current.startCellEditMode({
+                      field: 'title',
+                      id: params.row.id,
+                    });
+                  },
                 },
-              },
-              {
-                id: 'delete-item',
-                label: messages.browser.menu.delete(),
-                onSelect: (e) => {
-                  e.stopPropagation();
-                  showConfirmDialog({
-                    onSubmit: () => {
-                      if (item.type == 'folder') {
-                        deleteFolder(item.data.id);
-                      } else if (params.row.type == 'view') {
-                        deleteView(item.data.id);
-                      }
-                    },
-                    title: messages.browser.confirmDelete[item.type].title(),
-                    warningText:
-                      messages.browser.confirmDelete[item.type].warning(),
-                  });
+                {
+                  id: 'delete-item',
+                  label: messages.browser.menu.delete(),
+                  onSelect: (e) => {
+                    e.stopPropagation();
+                    showConfirmDialog({
+                      onSubmit: () => {
+                        if (item.type == 'folder') {
+                          deleteFolder(item.data.id);
+                        } else if (params.row.type == 'view') {
+                          deleteView(item.data.id);
+                        }
+                      },
+                      title: messages.browser.confirmDelete[item.type].title(),
+                      warningText:
+                        messages.browser.confirmDelete[item.type].warning(),
+                    });
+                  },
                 },
-              },
-              {
-                id: 'move-item',
-                label: messages.browser.menu.move(),
-                onSelect: (e) => {
-                  e.stopPropagation();
-                  setItemToBeMoved(item);
+                {
+                  id: 'move-item',
+                  label: messages.browser.menu.move(),
+                  onSelect: (e) => {
+                    e.stopPropagation();
+                    setItemToBeMoved(item);
+                  },
                 },
-              },
-              {
-                disabled: item.type != 'view',
-                id: 'duplicate-item',
-                label: messages.browser.menu.duplicate(),
-                onSelect: (e) => {
-                  e.stopPropagation();
-                  duplicateView(
-                    item.data.id,
-                    item.folderId,
-                    messages.browser.menu.viewCopy({ viewName: item.title })
-                  );
+                {
+                  disabled: item.type != 'view',
+                  id: 'duplicate-item',
+                  label: messages.browser.menu.duplicate(),
+                  onSelect: (e) => {
+                    e.stopPropagation();
+                    duplicateView(
+                      item.data.id,
+                      item.folderId,
+                      messages.browser.menu.viewCopy({ viewName: item.title })
+                    );
+                  },
                 },
-              },
-            ]}
-          />
-        );
-      },
-      width: 40,
-    });
+              ]}
+            />
+          );
+        },
+        width: 40,
+      });
+    }
   }
 
   return (
@@ -257,7 +263,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 
         return (
           <>
-            <BrowserDragLayer />
+            {!readOnly && <BrowserDragLayer />}
             <DataGridPro
               apiRef={gridApiRef}
               autoHeight

@@ -196,7 +196,9 @@ export default makeMessages('zui', {
       backButton: m('Back'),
       cancelButton: m('Cancel'),
       openButton: m('Bulk add'),
-      submitButton: m('Select'),
+      submitButton: m<{ numSelected: number }>(
+        '{numSelected, plural, =0 {Select} =1 {Select 1 person} other {Select # people}}'
+      ),
     },
     keepTyping: m('Keep typing to start searching'),
     noResult: m('No matching person found'),
