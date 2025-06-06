@@ -6,10 +6,10 @@ import useOutgoingCalls from '../hooks/useOutgoingCalls';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
-import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import { labels, colors } from './PreviousCallsInfo';
 import { ZetkinCall } from '../types';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
@@ -111,7 +111,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                   />
                 </Box>
                 <ZUIText color="secondary" noWrap>
-                  <ZUIDateTime datetime={call.update_time} />
+                  <ZUIRelativeTime datetime={call.update_time} />
                 </ZUIText>
               </Box>
             </Box>
@@ -184,7 +184,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 {labels[call.state]}
               </ZUIText>
               <ZUIText color="secondary" noWrap>
-                <ZUIDateTime datetime={call.update_time} />
+                <ZUIRelativeTime datetime={call.update_time} />
               </ZUIText>
             </Box>
           </Box>
