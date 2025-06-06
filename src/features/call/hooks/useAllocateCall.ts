@@ -1,5 +1,3 @@
-import { useRouter } from 'next/navigation';
-
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
   allocateCallError,
@@ -9,7 +7,7 @@ import {
 import { ZetkinCall } from '../types';
 
 type UseAllocateCallReturn = {
-  allocateCall: () => Promise<void>;
+  allocateCall: () => Promise<void | unknown>;
   error: unknown;
 };
 
@@ -19,22 +17,19 @@ export default function useAllocateCall(
 ): UseAllocateCallReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const router = useRouter();
+  const error = useAppSelector((state) => state.call.queueHasError);
 
-  const error = useAppSelector((state) => state.call.outgoingCalls.error);
-
-  const allocateCall = async (): Promise<void> => {
+  const allocateCall = async (): Promise<void | unknown> => {
     dispatch(allocateNewCallLoad());
     try {
       const call = await apiClient.post<ZetkinCall>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
         {}
       );
-
       dispatch(allocateNewCallLoaded(call));
     } catch (e) {
       dispatch(allocateCallError([assignmentId, e]));
-      router.push(`/call/${assignmentId}`);
+      return e;
     }
   };
 
