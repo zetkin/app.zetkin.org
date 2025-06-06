@@ -4,49 +4,53 @@ import dayjs from 'dayjs';
 import { Box, Fade } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
-import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
+import useCampaignAllEvents from '../hooks/useCampaignAllEvents';
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
 import ZUIDate from 'zui/ZUIDate';
-import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
+import SubOrgEventBlurb from '../../organizations/components/SubOrgEventBlurb';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from '../../organizations/l10n/messageIds';
 import useMyEvents from 'features/events/hooks/useMyEvents';
-import NoEventsBlurb from '../components/NoEventsBlurb';
+import NoEventsBlurb from '../../organizations/components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
-type Props = {
+type PublicProjPageProps = {
   orgId: number;
+  projId: number;
 };
 
-const PublicProjPage: FC<Props> = ({ orgId }) => {
+const PublicProjPage: FC<PublicProjPageProps> = ({ orgId, projId }) => {
   const messages = useMessages(messageIds);
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
-  const orgEvents = useUpcomingOrgEvents(orgId);
+
+  const projectEvents = useCampaignAllEvents(orgId, projId);
   const myEvents = useMyEvents();
   const user = useUser();
 
-  const allEvents = useMemo(() => {
-    return orgEvents.map<ZetkinEventWithStatus>((event) => ({
+  const allProjectEvents = useMemo(() => {
+    return projectEvents.map<ZetkinEventWithStatus>((event) => ({
       ...event,
       status:
         myEvents.find((userEvent) => userEvent.id == event.id)?.status || null,
     }));
-  }, [orgEvents]);
+  }, [projectEvents]);
 
-  const topOrgEvents = allEvents.filter(
+  const topOrgEvents = allProjectEvents.filter(
     (event) => event.organization.id == orgId
   );
 
   const events =
-    includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
+    includeSubOrgs || topOrgEvents.length == 0
+      ? allProjectEvents
+      : topOrgEvents;
 
   const eventsByDate = events.reduce<Record<string, ZetkinEventWithStatus[]>>(
     (dates, event) => {
@@ -70,7 +74,7 @@ const PublicProjPage: FC<Props> = ({ orgId }) => {
 
   const dates = Object.keys(eventsByDate).sort();
   const indexForSubOrgsButton = Math.min(1, dates.length - 1);
-  const showSubOrgBlurb = allEvents.length > events.length;
+  const showSubOrgBlurb = allProjectEvents.length > events.length;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, my: 2 }}>
@@ -115,7 +119,7 @@ const PublicProjPage: FC<Props> = ({ orgId }) => {
                 <ZUIDivider />
                 <SubOrgEventBlurb
                   onClickShow={() => setIncludeSubOrgs(true)}
-                  subOrgEvents={allEvents.filter(
+                  subOrgEvents={allProjectEvents.filter(
                     (event) => event.organization.id != orgId
                   )}
                 />
