@@ -65,17 +65,17 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
             if (isEnum) {
               return (
                 <div key={field.s} className="zetkin-joinform__field">
-                  {label}
-                  {field.e.map((v) => {
-                    return (
-                      <p key={v.key}>
-                        <label>
-                          <input name={field.s} type="radio" value={v.key} />
-                          {v.label}
-                        </label>
-                      </p>
-                    );
-                  })}
+                  <label htmlFor={field.s}>{label}</label>
+                  <br />
+                  <select id={field.s}>
+                    {field.e.map((v) => {
+                      return (
+                        <option key={v.key} value={v.key}>
+                          {v.key}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
               );
             } else {
