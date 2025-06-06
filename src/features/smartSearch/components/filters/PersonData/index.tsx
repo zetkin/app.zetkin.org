@@ -49,9 +49,12 @@ const PersonData = ({
     });
 
   const ALL_FIELDS = Object.values(DATA_FIELD);
+  const ALL_FIELDS_SORTED = ALL_FIELDS.sort((af1, af2) => {
+    return af1.localeCompare(af2);
+  });
 
   // check which fields are present in the filter config, and load their key-value pairs into an array
-  const initialCriteria = ALL_FIELDS.filter(
+  const initialCriteria = ALL_FIELDS_SORTED.filter(
     (f) => f in filter.config.fields
   ).map((f) => ({ field: f, value: filter.config.fields[f] || '' }));
 
