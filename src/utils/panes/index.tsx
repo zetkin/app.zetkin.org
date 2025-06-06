@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     zIndex: 999,
   },
   paper: {
-    height: '100%',
+    minHeight: '100%',
   },
 });
 
