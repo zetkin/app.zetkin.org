@@ -62,6 +62,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         }
 
         return {
+          e: field.enum_choices,
           l: field.title,
           s: slug,
           t: field.type,
