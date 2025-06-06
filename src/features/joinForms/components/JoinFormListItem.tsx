@@ -86,7 +86,10 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
         <FormatListBulleted className={classes.icon} />
         <Box>
           <Typography color={oldTheme.palette.text.primary}>
-            {form.title}
+            {form.title}{' '}
+            <Typography color={oldTheme.palette.text.disabled} component="span">
+              (#{form.id})
+            </Typography>
           </Typography>
         </Box>
       </Box>
@@ -131,6 +134,19 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
                       <Msg id={messageIds.embedding.openLink} />
                     </Button>
                   </>
+                );
+              },
+            },
+            {
+              label: messages.submitToken.copySubmitToken(),
+              onSelect: async (ev) => {
+                ev.stopPropagation();
+
+                navigator.clipboard.writeText(form.submit_token);
+
+                showSnackbar(
+                  'success',
+                  <Msg id={messageIds.submitToken.submitTokenCopied} />
                 );
               },
             },
