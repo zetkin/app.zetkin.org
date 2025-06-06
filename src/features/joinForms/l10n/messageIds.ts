@@ -53,4 +53,8 @@ export default makeMessages('feat.joinForms', {
       'Your submission has been verified and organizers in {org} will review it shortly.'
     ),
   },
+  submitToken: {
+    copySubmitToken: m('Copy submit token'),
+    submitTokenCopied: m('Submit token copied.'),
+  },
 });
