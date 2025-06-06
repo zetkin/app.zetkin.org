@@ -1,3 +1,5 @@
+import { CountryCode } from 'libphonenumber-js';
+
 import { ImportProblemKind } from './types';
 import { predictProblems } from './predictProblems';
 import { ColumnKind, Sheet } from '../types';
@@ -554,5 +556,50 @@ describe('predictProblem()', () => {
     });
     const result = predictProblems(sheet, 'SE', customFields);
     expect(result).toEqual([]);
+  });
+
+  it('detects invalid country code when a phone number is without country code', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'phone',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+      ],
+      rows: [
+        // Valid values
+        {
+          data: [1, '+46701234567'],
+        },
+        // Invalid values
+        {
+          data: [2, '701234567'],
+        },
+        {
+          data: [3, '701234567'],
+        },
+      ],
+    });
+
+    const countryCode = 'not_a_country_code' as CountryCode;
+
+    const problems = predictProblems(sheet, countryCode, customFields);
+    expect(problems).toEqual([
+      {
+        code: countryCode,
+        kind: ImportProblemKind.INVALID_ORG_COUNTRY,
+      },
+      {
+        field: 'phone',
+        indices: [1, 2],
+        kind: ImportProblemKind.INVALID_FORMAT,
+      },
+    ]);
   });
 });
