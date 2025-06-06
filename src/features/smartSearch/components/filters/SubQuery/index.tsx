@@ -79,6 +79,9 @@ const SubQuery = ({
   }, [standaloneQueries, assignments]);
 
   const renderedOptions = queries.filter((q) => q.type === selectedQuery?.type);
+  const renderedOptionsSorted = renderedOptions.sort((r1, r2) => {
+    return r1.title!.localeCompare(r2.title!);
+  });
 
   const submittable = !!queries.length;
 
@@ -260,7 +263,7 @@ const SubQuery = ({
                         onChange={(e) => handleOptionChange(+e.target.value)}
                         value={selectedQuery.id}
                       >
-                        {renderedOptions.map((o) => (
+                        {renderedOptionsSorted.map((o) => (
                           <MenuItem key={o.id} value={o.id}>
                             <Tooltip
                               placement="right-start"
