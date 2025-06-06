@@ -85,6 +85,9 @@ const CampaignParticipation = ({
   });
   const campaigns = useCampaigns(orgId, orgIds).data || [];
   const locations = useEventLocations(orgId) || [];
+  const locationsSorted = locations.sort((l1, l2) => {
+    return l1.title.localeCompare(l2.title);
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -286,7 +289,7 @@ const CampaignParticipation = ({
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
                   <Msg id={localMessageIds.locationSelect.any} />
                 </MenuItem>
-                {locations.map((l) => (
+                {locationsSorted.map((l) => (
                   <MenuItem key={l.id} value={l.id}>
                     {l.title}
                   </MenuItem>
