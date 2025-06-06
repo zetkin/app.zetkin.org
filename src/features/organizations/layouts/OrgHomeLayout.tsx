@@ -151,7 +151,9 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           </Box>
         }
       >
-        <Box minHeight="90dvh">{children}</Box>
+        <Box display="flex" flexDirection="column" minHeight="90dvh">
+          {children}
+        </Box>
       </Suspense>
       <Box
         alignItems="center"
