@@ -67,7 +67,7 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
                 <div key={field.s} className="zetkin-joinform__field">
                   <label htmlFor={field.s}>{label}</label>
                   <br />
-                  <select id={field.s}>
+                  <select id={field.s} name={field.s}>
                     {field.e.map((v) => {
                       return (
                         <option key={v.key} value={v.key}>
