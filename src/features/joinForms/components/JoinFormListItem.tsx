@@ -84,13 +84,9 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
     >
       <Box className={classes.left}>
         <FormatListBulleted className={classes.icon} />
-        <Box>
-          <Typography color={oldTheme.palette.text.primary}>
-            {form.title}{' '}
-            <Typography color={oldTheme.palette.text.disabled} component="span">
-              (#{form.id})
-            </Typography>
-          </Typography>
+        <Box alignItems="center" display="flex" gap={1}>
+          <Typography>{form.title}</Typography>
+          <Typography color="secondary">(#{form.id})</Typography>
         </Box>
       </Box>
       <Box>
