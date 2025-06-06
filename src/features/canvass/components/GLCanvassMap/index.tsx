@@ -15,6 +15,7 @@ import oldTheme from 'theme';
 import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
+import { useEnv } from 'core/hooks';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -22,6 +23,7 @@ type Props = {
 };
 
 const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
+  const env = useEnv();
   const locations = useLocations(assignment.organization_id, assignment.id);
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const createLocation = useCreateLocation(assignment.organization_id);
@@ -288,7 +290,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
         initialViewState={{
           bounds,
         }}
-        mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+        mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}
