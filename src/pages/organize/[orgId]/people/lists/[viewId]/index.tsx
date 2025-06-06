@@ -102,7 +102,12 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
 
           <AccessLevelProvider>
             {!columnsFuture.isLoading || !!columnsFuture.data?.length ? (
-              <ViewDataTable columns={cols} rows={rows} view={view} />
+              <ViewDataTable
+                columns={cols}
+                rows={rows}
+                selectionMode="selectWithBulkActions"
+                view={view}
+              />
             ) : null}
           </AccessLevelProvider>
         </>
