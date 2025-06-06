@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
@@ -11,14 +12,21 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 
 type StatsHeaderProps = {
   assignment: ZetkinCallAssignment;
+  onBack: () => void;
   onPrepareCall: () => void;
 };
 
-const StatsHeader: FC<StatsHeaderProps> = ({ assignment, onPrepareCall }) => {
+const StatsHeader: FC<StatsHeaderProps> = ({
+  assignment,
+  onBack,
+  onPrepareCall,
+}) => {
   const { allocateCall, error } = useAllocateCall(
     assignment.organization.id,
     assignment.id
   );
+  const router = useRouter();
+
   return (
     <>
       <Box
@@ -69,8 +77,13 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment, onPrepareCall }) => {
                 disabled={error !== null ? true : false}
                 label="Start calling"
                 onClick={async () => {
-                  await allocateCall();
-                  onPrepareCall();
+                  const result = await allocateCall();
+                  if (result) {
+                    onBack();
+                    router.push(`/call/${assignment.id}`);
+                  } else {
+                    onPrepareCall();
+                  }
                 }}
                 variant="primary"
               />
