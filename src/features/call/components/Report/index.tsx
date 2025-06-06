@@ -23,7 +23,10 @@ export type Report = {
   callBackAfter: string | null;
   callerLog: string;
   failureReason:
-    | ('lineBusy' | 'noPickup' | 'wrongNumber' | 'notAvailable')
+    | 'lineBusy'
+    | 'noPickup'
+    | 'wrongNumber'
+    | 'notAvailable'
     | null;
   leftMessage: boolean;
   organizerActionNeeded: boolean;
@@ -31,7 +34,7 @@ export type Report = {
   step: Step;
   success: boolean;
   targetCouldTalk: boolean;
-  wrongNumber: ('altPhone' | 'phone' | 'both') | null;
+  wrongNumber: 'altPhone' | 'phone' | 'both' | null;
 };
 
 type Props = {
