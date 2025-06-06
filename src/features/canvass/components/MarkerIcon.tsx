@@ -34,6 +34,11 @@ const MarkerIcon: FC<MarkerIconProps> = ({
     const successRatio = successfulVisits / totalHouseholds;
     successBandHeight = 0.8 * successRatio * totalHeight;
     visitsBandHeight = 0.8 * visitRatio * totalHeight;
+  } else if (totalVisits > 0) {
+    const visitRatio = 1;
+    const successRatio = successfulVisits / totalVisits;
+    successBandHeight = 0.8 * successRatio * totalHeight;
+    visitsBandHeight = 0.8 * visitRatio * totalHeight;
   }
 
   return (

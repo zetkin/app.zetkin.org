@@ -21,7 +21,11 @@ import {
 } from './types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 import { Zetkin2Area } from 'features/areas/types';
-import { ZetkinHouseholdVisit } from 'features/canvass/types';
+import {
+  ZetkinHouseholdVisit,
+  ZetkinLocationVisit,
+} from 'features/canvass/types';
+import { visitCreated } from 'features/canvass/store';
 
 export interface AreaAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
@@ -60,6 +64,19 @@ const initialState: AreaAssignmentsStoreSlice = {
 };
 
 const areaAssignmentSlice = createSlice({
+  extraReducers: (builder) =>
+    builder.addCase(
+      visitCreated,
+      (state, action: PayloadAction<ZetkinLocationVisit>) => {
+        const visit = action.payload;
+        state.locationsByAssignmentId[visit.assignment_id] ||= remoteList();
+        const item = findOrAddItem(
+          state.locationsByAssignmentId[visit.assignment_id],
+          visit.location_id
+        );
+        item.isStale = true;
+      }
+    ),
   initialState: initialState,
   name: 'areaAssignments',
   reducers: {
@@ -241,6 +258,31 @@ const areaAssignmentSlice = createSlice({
         remoteItemUpdated(list, location);
       });
     },
+    locationLoad: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, locationId] = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      const item = findOrAddItem(
+        state.locationsByAssignmentId[assignmentId],
+        locationId
+      );
+      item.isLoading = true;
+    },
+    locationLoaded: (
+      state,
+      action: PayloadAction<[number, number, ZetkinLocation]>
+    ) => {
+      const timestamp = new Date().toISOString();
+      const [assignmentId, locationId, location] = action.payload;
+      state.locationsByAssignmentId[assignmentId] ||= remoteList();
+      const item = findOrAddItem(
+        state.locationsByAssignmentId[assignmentId],
+        locationId
+      );
+      item.isLoading = false;
+      item.data = location;
+      item.loaded = timestamp;
+      item.isStale = false;
+    },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
 
@@ -356,6 +398,8 @@ export const {
   assignmentAreasLoaded,
   householdVisitCreated,
   locationCreated,
+  locationLoad,
+  locationLoaded,
   locationsInvalidated,
   locationsLoad,
   locationsLoaded,
