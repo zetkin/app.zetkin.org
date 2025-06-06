@@ -307,8 +307,7 @@ const ZUIPersonGridEditCell: FC<{
                         })}
 
                         {autoComplete.inputValue.length >= 3 &&
-                          !personSelect.autoCompleteProps.isLoading &&
-                          searchResults.length === 0 && (
+                          !personSelect.autoCompleteProps.isLoading && (
                             <Button
                               color="primary"
                               onClick={onCreate}

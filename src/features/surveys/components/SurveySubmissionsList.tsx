@@ -1,6 +1,5 @@
 import { Box } from '@mui/system';
 import { Link } from '@mui/material';
-import { useRouter } from 'next/router';
 import {
   DataGridPro,
   GridCellParams,
@@ -15,7 +14,9 @@ import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import { useNumericRouteParams } from 'core/hooks';
 import { usePanes } from 'utils/panes';
 import usePersonSearch from 'features/profile/hooks/usePersonSearch';
-import useSurveySubmission from '../hooks/useSurveySubmission';
+import useSurveySubmission, {
+  useSurveySubmissionResponder,
+} from '../hooks/useSurveySubmission';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -30,12 +31,16 @@ const SurveySubmissionsList = ({
   submissions: ZetkinSurveySubmission[];
 }) => {
   const messages = useMessages(messageIds);
-  const { orgId } = useRouter().query;
+  const { orgId } = useNumericRouteParams();
   const { openPane } = usePanes();
 
   const [dialogPerson, setDialogPerson] = useState<ZetkinPerson | null>(null);
   const [dialogEmail, setDialogEmail] = useState('');
-  const [createPersonOpen, setCreatePersonOpen] = useState(false);
+  const [createPersonOpen, setCreatePersonOpen] = useState<number>(-1);
+  const { setRespondentId } = useSurveySubmissionResponder(
+    orgId,
+    createPersonOpen
+  );
 
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
@@ -218,7 +223,7 @@ const SurveySubmissionsList = ({
     return (
       <ZUIPersonGridEditCell
         cell={row.respondent}
-        onCreate={() => setCreatePersonOpen(true)}
+        onCreate={() => setCreatePersonOpen(row.id)}
         onUpdate={updateCellValue}
         removePersonLabel={messages.submissions.unlink()}
         suggestedPeople={row.respondent === null ? [] : suggestedPeople} //filter anonymous
@@ -248,10 +253,7 @@ const SurveySubmissionsList = ({
             openPane({
               render() {
                 return (
-                  <SurveySubmissionPane
-                    id={params.row.id}
-                    orgId={parseInt(orgId as string)}
-                  />
+                  <SurveySubmissionPane id={params.row.id} orgId={orgId} />
                 );
               },
               width: 400,
@@ -264,8 +266,16 @@ const SurveySubmissionsList = ({
         }}
       />
       <ZUICreatePerson
-        onClose={() => setCreatePersonOpen(false)}
-        open={createPersonOpen}
+        onClose={() => {
+          setCreatePersonOpen(-1);
+        }}
+        onSubmit={(e, person) => {
+          if (createPersonOpen == -1) {
+            return;
+          }
+          setRespondentId(person.id);
+        }}
+        open={createPersonOpen != -1}
         submitLabel={messages.submissions.createPersonSubmit()}
         title={messages.submissions.createPersonTitle()}
       />
