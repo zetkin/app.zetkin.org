@@ -9,6 +9,7 @@ export default function useDuplicateEvent(orgId: number, eventId: number) {
   return () => {
     const duplicateEventPostBody: ZetkinEventPostBody = {
       activity_id: event?.activity?.id,
+      cover_file_id: event?.cover_file?.id,
       end_time: event?.end_time,
       info_text: event?.info_text,
       location_id: event?.location?.id,

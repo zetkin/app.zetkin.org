@@ -14,6 +14,7 @@ const makeZetkinEventPatchBody = (e: ZetkinEvent) => {
     campaign_id: e.campaign?.id,
     cancelled: e.cancelled,
     contact_id: e.contact?.id,
+    cover_file_id: e.cover_file?.id,
     end_time: e.end_time,
     info_text: e.info_text,
     location_id: e.location?.id,
@@ -50,7 +51,6 @@ export default function useCopyEvents() {
 
       const shiftLength = firstShiftEnd.getTime() - firstShiftStart.getTime();
       const endTime = new Date(firstShiftEnd.getTime() + shiftLength);
-
       return makeZetkinEventPatchBody({
         ...event,
         end_time: endTime.toISOString(),
