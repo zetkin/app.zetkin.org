@@ -124,7 +124,6 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const viewFuture = useView(parsedOrgId, parsedViewId);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const canConfigure = accessLevel == 'configure';
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
