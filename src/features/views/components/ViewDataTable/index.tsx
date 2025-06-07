@@ -497,8 +497,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         hideFooter={
           disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
         }
-        // TODO #2789: Decide how to do this:
-        // isCellEditable={() => false}
         localeText={{
           ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
           noRowsLabel: messages.empty.notice[contentSource](),
@@ -565,6 +563,20 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         style={{
           border: 'none',
+        }}
+        sx={{
+          ...(accessLevel === 'readonly' && {
+            '& .MuiDataGrid-cell:focus': {
+              outline: 'none',
+            },
+            '& .MuiDataGrid-cell:focus-within': {
+              outline: 'none',
+            },
+            '& .MuiDataGrid-cell:hover': {
+              backgroundColor: 'transparent',
+              cursor: 'default',
+            },
+          }),
         }}
         {...modelGridProps}
       />
