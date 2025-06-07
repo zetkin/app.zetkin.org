@@ -32,11 +32,10 @@ import MoveViewDialog from '../MoveViewDialog';
 
 interface ViewBrowserProps {
   basePath: string;
+  enableDragAndDrop?: boolean;
+  enableEllipsisMenu?: boolean;
   folderId?: number | null;
   onSelect?: (item: ViewBrowserItem, ev: MouseEvent) => void;
-  // TODO #2789: Better to separate out into
-  // `enableDragAndDrop` and `enableEllipsisMenu`?
-  readOnly?: boolean;
 }
 
 const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
@@ -49,9 +48,10 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
 
 const ViewBrowser: FC<ViewBrowserProps> = ({
   basePath,
+  enableDragAndDrop = true,
+  enableEllipsisMenu = true,
   folderId = null,
   onSelect,
-  readOnly,
 }) => {
   const { orgId } = useNumericRouteParams();
 
@@ -157,7 +157,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       },
     });
 
-    if (!readOnly) {
+    if (enableEllipsisMenu) {
       colDefs.push({
         field: 'menu',
         headerName: '',
@@ -263,7 +263,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 
         return (
           <>
-            {!readOnly && <BrowserDragLayer />}
+            {enableDragAndDrop && <BrowserDragLayer />}
             <DataGridPro
               apiRef={gridApiRef}
               autoHeight
