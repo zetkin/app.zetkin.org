@@ -5,6 +5,7 @@ import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
+import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
@@ -387,6 +388,7 @@ const viewsSlice = createSlice({
 
       if (viewItem) {
         viewItem.deleted = true;
+        invalidateDependentViews(viewId, state);
       }
     },
     viewDuplicated: (state, action: PayloadAction<[ZetkinView]>) => {
@@ -430,6 +432,7 @@ const viewsSlice = createSlice({
         // Empty view to trigger reload
         rowList.items = [];
         rowList.isStale = true;
+        invalidateDependentViews(viewId, state);
       }
     },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
@@ -531,6 +534,65 @@ function updateCallOnRelevantRows(
       }
     }
   });
+}
+
+interface Dependency {
+  from: number;
+  to: number;
+}
+
+function invalidateDependentViews(
+  viewUpdatedId: number | undefined,
+  state: ViewsStoreSlice
+) {
+  const dependencies = getViewDependencies(state);
+  const viewsVisited = [];
+  const viewsQueue = [];
+
+  while (dependencies.length > 0 && viewUpdatedId) {
+    viewsVisited.push(viewUpdatedId);
+
+    for (let i = 0; i < dependencies.length; i++) {
+      if (dependencies[i].to == viewUpdatedId) {
+        if (!viewsVisited.includes(dependencies[i].from)) {
+          viewsQueue.push(dependencies[i].from);
+        }
+
+        const updatedViewRows = state.rowsByViewId[dependencies[i].from];
+
+        if (updatedViewRows) {
+          updatedViewRows.items = [];
+          updatedViewRows.isStale = true;
+        }
+
+        dependencies.splice(i, 1);
+        i--;
+      }
+    }
+    viewUpdatedId = viewsQueue.pop();
+  }
+}
+
+function getViewDependencies(state: ViewsStoreSlice): Dependency[] {
+  const dependencies: Dependency[] = [];
+
+  state.viewList.items.forEach((viewItem) => {
+    const viewData = viewItem.data;
+    const viewQuery = viewData?.content_query;
+
+    if (viewQuery) {
+      viewQuery.filter_spec.forEach((queryType) => {
+        if (queryType.type === 'person_view') {
+          dependencies.push({
+            from: viewData.id,
+            to: (queryType.config as PersonViewFilterConfig).view,
+          });
+        }
+      });
+    }
+  });
+
+  return dependencies;
 }
 
 export default viewsSlice;

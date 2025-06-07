@@ -1,5 +1,6 @@
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
+import NextLink from 'next/link';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Theme } from '@mui/material/styles';
 import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
@@ -75,19 +76,39 @@ const BreadcrumbTrail = ({
         maxItems={smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10}
         separator={<NavigateNextIcon fontSize="small" />}
       >
-        {breadcrumbs.map((crumb, index) => {
+        {breadcrumbs.map((crumb: Breadcrumb, index: number) => {
+          const isOrganizeRegex = new RegExp('/organize/[0-9]+(?!/)');
           if (index < breadcrumbs.length - 1) {
-            return (
-              <Link
-                key={crumb.href}
-                className={classes.breadcrumb}
-                color="inherit"
-                href={crumb.href}
-                underline="hover"
-              >
-                {getLabel(crumb)}
-              </Link>
-            );
+            if (isOrganizeRegex.test(crumb.href)) {
+              return (
+                <Link
+                  key={crumb.href}
+                  className={classes.breadcrumb}
+                  color="inherit"
+                  href={crumb.href}
+                  underline="hover"
+                >
+                  {getLabel(crumb)}
+                </Link>
+              );
+            } else {
+              return (
+                <NextLink
+                  key={crumb.href}
+                  href={crumb.href}
+                  legacyBehavior
+                  passHref
+                >
+                  <Link
+                    className={classes.breadcrumb}
+                    color="inherit"
+                    underline="hover"
+                  >
+                    {getLabel(crumb)}
+                  </Link>
+                </NextLink>
+              );
+            }
           } else {
             return (
               <Typography
