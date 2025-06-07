@@ -26,39 +26,62 @@ export default makeRPCDef<Params, Result>(getAllEventsDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const [allMemberships, allOrganizations] = await Promise.all([
     apiClient.get<ZetkinMembership[]>('/api/users/me/memberships'),
-    await apiClient.get<ZetkinOrganization[]>(`/api/orgs/`),
+    apiClient.get<ZetkinOrganization[]>(`/api/orgs/`),
   ]);
-  const isMemberRoot = (membership: ZetkinMembership): boolean => {
-    // Only memberships we follow
-    if (!membership.follow) {
-      return false;
-    }
+  const getRootOrgWeAreMemberOf = (
+    org: ZetkinOrganization,
+    currentBest: ZetkinOrganization
+  ): ZetkinOrganization => {
+    let newBest = currentBest;
 
     // Find the org of the followed membership
-    const memberOrg = allOrganizations.find(
-      (org) => org.id == membership.organization.id
-    );
-    if (!memberOrg) {
-      return false;
+    if (
+      allMemberships.some(
+        (membership) =>
+          membership.organization.id == org.id && membership.follow
+      )
+    ) {
+      newBest = org;
     }
 
     // Found the root
-    if (memberOrg.parent == null) {
-      return true;
+    if (org.parent == null) {
+      return newBest;
     }
 
-    return (
-      allMemberships.findIndex(
-        (membership2) =>
-          membership2.organization.id == memberOrg?.parent?.id &&
-          isMemberRoot(membership2)
-      ) == -1
-    );
+    const parent = allOrganizations.find((org2) => org2.id == org.parent?.id);
+    if (!parent) {
+      return newBest;
+    }
+
+    return getRootOrgWeAreMemberOf(parent, newBest);
   };
-  const filteredMemberships = allMemberships.filter((membership) => {
-    // If there's a parent that we follow then ignore child as parent will give us its events
-    return isMemberRoot(membership);
-  });
+  const filteredMemberships = allMemberships.reduce<{
+    memberships: ZetkinMembership[];
+    orgs: number[];
+  }>(
+    (acc, membership) => {
+      if (!membership.follow) {
+        return acc;
+      }
+      const memberOrg = allOrganizations.find(
+        (org) => org.id == membership.organization.id
+      );
+      if (!memberOrg) {
+        return acc;
+      }
+
+      const rootOrg = getRootOrgWeAreMemberOf(memberOrg, memberOrg);
+
+      if (!acc.orgs.includes(rootOrg.id)) {
+        acc.orgs.push(rootOrg.id);
+        acc.memberships.push(membership);
+      }
+
+      return acc;
+    },
+    { memberships: [], orgs: [] }
+  ).memberships;
 
   const now = new Date().toISOString();
 
