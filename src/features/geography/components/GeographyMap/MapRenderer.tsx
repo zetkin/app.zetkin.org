@@ -12,6 +12,7 @@ import {
 import { PointData, ZetkinArea } from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import { getBoundSize } from '../../../canvass/utils/getBoundSize';
+import { useEnv } from 'core/hooks';
 
 type Props = {
   areas: ZetkinArea[];
@@ -34,6 +35,7 @@ const MapRenderer: FC<Props> = ({
   onSelectArea,
   selectedArea,
 }) => {
+  const env = useEnv();
   const [zoomed, setZoomed] = useState(false);
   const reactFGref = useRef<FeatureGroup | null>(null);
   const theme = useTheme();
@@ -75,7 +77,7 @@ const MapRenderer: FC<Props> = ({
     <>
       <TileLayer
         attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
       />
       <FeatureGroupComponent
         ref={(fgRef) => {
@@ -117,10 +119,12 @@ const MapRenderer: FC<Props> = ({
               draggable
               eventHandlers={{
                 dragend: (evt) => {
+                  const latLng = evt.target.getLatLng();
+                  const movedPoint: PointData = [latLng.lat, latLng.lng];
                   onChangeArea({
                     ...editingArea,
                     points: editingArea.points.map((oldPoint, oldIndex) =>
-                      oldIndex == index ? evt.target.getLatLng() : oldPoint
+                      oldIndex == index ? movedPoint : oldPoint
                     ),
                   });
                 },
@@ -147,10 +151,12 @@ const MapRenderer: FC<Props> = ({
           .sort((a0, a1) => {
             return a1.size - a0.size;
           })
-          .map(({ area }) => {
+          .map(({ area }, index) => {
             // The key changes when selected, to force redraw of polygon
-            // to reflect new state through visual style
-            const key = area.id + '-default';
+            // to reflect new state through visual style. Since we also
+            // care about keeping the order form above, we include that in the
+            // key as well.
+            const key = `${area.id}-${index}-default`;
 
             return (
               <Polygon
@@ -168,7 +174,7 @@ const MapRenderer: FC<Props> = ({
               />
             );
           })}
-        {selectedArea && (
+        {selectedArea && !editingArea && (
           <Polygon
             key={`${selectedArea.id}-selected`}
             color={theme.palette.primary.main}

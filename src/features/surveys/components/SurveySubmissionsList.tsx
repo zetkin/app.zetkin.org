@@ -3,10 +3,11 @@ import { Link } from '@mui/material';
 import {
   DataGridPro,
   GridCellParams,
+  GridColDef,
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import SurveyLinkDialog from './SurveyLinkDialog';
@@ -17,13 +18,17 @@ import usePersonSearch from 'features/profile/hooks/usePersonSearch';
 import useSurveySubmission, {
   useSurveySubmissionResponder,
 } from '../hooks/useSurveySubmission';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUICreatePerson from 'zui/ZUICreatePerson';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import useSurveySubmissionMutations from '../hooks/useSurveySubmissionMutations';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -41,6 +46,11 @@ const SurveySubmissionsList = ({
     orgId,
     createPersonOpen
   );
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteSurveySubmission } = useSurveySubmissionMutations(
+    Number(orgId)
+  );
 
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
@@ -50,6 +60,14 @@ const SurveySubmissionsList = ({
     });
     return sorted;
   }, [submissions]);
+
+  async function handleDeleteSurveySubmission(
+    submissionId: number,
+    surveyId: number
+  ) {
+    await deleteSurveySubmission(submissionId, surveyId);
+    showSnackbar('success', <Msg id={messageIds.submissions.deleteSuccess} />);
+  }
 
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
@@ -94,7 +112,7 @@ const SurveySubmissionsList = ({
     };
   };
 
-  const gridColumns = [
+  const gridColumns: GridColDef<ZetkinSurveySubmission>[] = [
     makeSimpleColumn('first_name', 'firstNameColumn'),
     makeSimpleColumn('last_name', 'lastNameColumn'),
     makeSimpleColumn('email', 'emailColumn'),
@@ -131,6 +149,41 @@ const SurveySubmissionsList = ({
         return <EditCell row={params.row} />;
       },
       sortable: true,
+    },
+    {
+      align: 'right',
+      editable: false,
+      field: 'menu',
+      headerName: '',
+      renderCell: (
+        params: GridRenderCellParams<
+          ZetkinSurveySubmission,
+          ZetkinSurveySubmission['respondent']
+        >
+      ) => {
+        return (
+          <ZUIEllipsisMenu
+            items={[
+              {
+                label: messages.submissions.delete(),
+                onSelect: async (ev) => {
+                  ev.stopPropagation();
+                  showConfirmDialog({
+                    onSubmit: () =>
+                      handleDeleteSurveySubmission(
+                        params.row.id,
+                        params.row.survey.id
+                      ),
+                    title: messages.submissions.deleteTitle(),
+                    warningText: messages.submissions.deleteWarningText(),
+                  });
+                },
+              },
+            ]}
+          />
+        );
+      },
+      sortable: false,
     },
   ];
 
@@ -260,6 +313,8 @@ const SurveySubmissionsList = ({
             });
           }
         }}
+        pageSizeOptions={[100, 250, 500]}
+        pagination
         rows={sortedSubmissions}
         style={{
           border: 'none',

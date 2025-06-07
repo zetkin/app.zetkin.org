@@ -8,7 +8,7 @@ import ZUIActivityStatusBadge from '../ZUIActivityStatusBadge';
 import ZUIIcon from '../ZUIIcon';
 import ZUIPercentageBar, { ZUIPercentageBarProps } from '../ZUIPercentageBar';
 import EventWarningIcons, { EventWarningIconsProps } from './EventWarningIcons';
-import ZUIAvatarGroup, { AvatarData } from '../ZUIAvatarGroup';
+import ZUIPersonAvatarGroup, { PersonAvatarData } from '../ZUIAvatarGroup';
 import ZUISuffixedNumber from '../ZUISuffixedNumber';
 import { ZUICheckboxProps } from '../ZUICheckbox';
 import ZUIMultiDataChip, { ZUIMultiDataChipProps } from '../ZUIMultiDataChip';
@@ -17,7 +17,7 @@ type ActivityListItemBase = {
   /**
    * If the list item should render avatars, send them in here.
    */
-  avatars?: AvatarData[];
+  avatars?: PersonAvatarData[];
 
   /**
    * If you want the list item to have a checkbox,
@@ -280,7 +280,11 @@ const ZUIActivityListItem: FC<ZUIActivityListItemProps> = ({
                 }}
               >
                 {showAvatars && (
-                  <ZUIAvatarGroup avatars={avatars} max={5} size="small" />
+                  <ZUIPersonAvatarGroup
+                    avatars={avatars}
+                    max={5}
+                    size="small"
+                  />
                 )}
                 <Box
                   sx={{

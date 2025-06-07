@@ -14,7 +14,7 @@ type ZUILabelProps = {
    *
    * Defaults to "primary".
    */
-  color?: ZUIPrimary | ZUISecondary;
+  color?: ZUIPrimary | ZUISecondary | 'inherit';
 
   /**
    * The element the label is rendered as.
@@ -71,15 +71,10 @@ const ZUILabel: FC<ZUILabelProps> = ({
 }) => (
   <Typography
     {...boxProps}
+    color={color == 'inherit' ? '' : color}
     component={component}
     gutterBottom={gutterBottom}
     noWrap={noWrap}
-    sx={(theme) => ({
-      color:
-        color == 'primary'
-          ? theme.palette.text.primary
-          : theme.palette.text.secondary,
-    })}
     variant={variant}
   >
     {children}

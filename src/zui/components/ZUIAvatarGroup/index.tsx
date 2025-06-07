@@ -1,20 +1,21 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 
-import ZUIAvatar from '../ZUIAvatar';
+import ZUIPersonAvatar from '../ZUIPersonAvatar';
 import { ZUISize } from '../types';
+import ZUIOrgAvatar, { ZUIOrgAvatarProps } from '../ZUIOrgAvatar';
 
-export type AvatarData = {
+export type PersonAvatarData = {
   firstName: string;
   id: number;
   lastName: string;
 };
 
-type ZUIAvatarGroupProps = {
+type ZUIPersonAvatarGroupProps = {
   /**
    * List of the people you want to display as avatars.
    */
-  avatars: AvatarData[];
+  avatars: PersonAvatarData[] | ZUIOrgAvatarProps[];
 
   /**
    * Maximum number of avatars shown.
@@ -25,11 +26,6 @@ type ZUIAvatarGroupProps = {
    * The size of the avatars. Defaults to 'medium'.
    */
   size?: ZUISize;
-
-  /**
-   * The shape of the avatars. Defaults to 'circular.
-   */
-  variant?: 'circular' | 'square';
 };
 
 const fontSizes: Record<ZUISize, string> = {
@@ -44,11 +40,16 @@ const avatarSizes: Record<ZUISize, string> = {
   small: '1.5rem',
 };
 
-const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
+const isPersonAvatar = (
+  avatarData: ZUIOrgAvatarProps | PersonAvatarData
+): avatarData is PersonAvatarData => {
+  return 'firstName' in avatarData;
+};
+
+const ZUIPersonAvatarGroup: FC<ZUIPersonAvatarGroupProps> = ({
   avatars,
   max,
   size = 'medium',
-  variant = 'circular',
 }) => {
   const showOverflowNumber = !!max && max < avatars.length;
 
@@ -58,23 +59,34 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
         if (showOverflowNumber && index > max - 2) {
           return;
         }
-        return (
-          <ZUIAvatar
-            key={avatar.id}
-            firstName={avatar.firstName}
-            id={avatar.id}
-            lastName={avatar.lastName}
-            size={size}
-            variant={variant}
-          />
-        );
+
+        if (isPersonAvatar(avatar)) {
+          return (
+            <ZUIPersonAvatar
+              key={avatar.id}
+              firstName={avatar.firstName}
+              id={avatar.id}
+              lastName={avatar.lastName}
+              size={size}
+            />
+          );
+        } else {
+          return (
+            <ZUIOrgAvatar
+              key={avatar.orgId}
+              orgId={avatar.orgId}
+              size={size}
+              title={avatar.title}
+            />
+          );
+        }
       })}
       {showOverflowNumber && (
         <Box
           sx={(theme) => ({
             alignItems: 'center',
             backgroundColor: theme.palette.grey[100],
-            borderRadius: variant == 'circular' ? 100 : '0.25rem',
+            borderRadius: isPersonAvatar(avatars[0]) ? '10rem' : '0.25rem',
             display: 'flex',
             height: avatarSizes[size],
             justifyContent: 'center',
@@ -97,4 +109,4 @@ const ZUIAvatarGroup: FC<ZUIAvatarGroupProps> = ({
   );
 };
 
-export default ZUIAvatarGroup;
+export default ZUIPersonAvatarGroup;

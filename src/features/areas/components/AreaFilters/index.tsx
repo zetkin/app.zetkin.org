@@ -1,6 +1,5 @@
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Checkbox, Typography } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Box, Checkbox, Typography, useTheme } from '@mui/material';
 
 import { ZetkinArea } from 'features/areas/types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
@@ -12,7 +11,7 @@ import messageIds from 'features/areas/l10n/messageIds';
 
 type Props = {
   areas: ZetkinArea[];
-  onFilteredIdsChange: (areaIds: string[]) => void;
+  onFilteredIdsChange: (areaIds: number[]) => void;
 };
 
 const AreaFilters: FC<Props> = ({ areas, onFilteredIdsChange }) => {

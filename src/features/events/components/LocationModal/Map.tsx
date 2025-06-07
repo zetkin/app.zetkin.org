@@ -9,6 +9,7 @@ import BasicMarker from './BasicMarker';
 import SelectedMarker from './SelectedMarker';
 import { DivIconMarker } from './DivIconMarker';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+import { useEnv } from 'core/hooks';
 
 interface MapProps {
   currentEventId: number | null;
@@ -54,6 +55,8 @@ const Map: FC<MapProps> = ({
     keys: ['title'],
     threshold: 0.4,
   });
+
+  const env = useEnv();
 
   const filteredLocations = searchString
     ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
@@ -106,7 +109,7 @@ const Map: FC<MapProps> = ({
             <>
               <TileLayer
                 attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url={env.vars.TILESERVER + '/{z}/{x}/{y}.png'}
               />
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;

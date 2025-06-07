@@ -46,6 +46,43 @@ const OrganizationsSlice = createSlice({
       state.eventsByOrgId[orgId] = remoteList(events);
       state.eventsByOrgId[orgId].loaded = new Date().toISOString();
     },
+    orgFollowed: (state, action: PayloadAction<ZetkinMembership>) => {
+      const membership = action.payload;
+
+      const existingMembership = state.userMembershipList.items.find(
+        (item) => item?.data?.organization.id === membership.organization.id
+      );
+
+      if (existingMembership?.data) {
+        existingMembership.data.follow = true;
+        existingMembership.loaded = new Date().toISOString();
+      } else {
+        const membershipWithId: ZetkinMembership & { id: number } = {
+          ...membership,
+          follow: true,
+          id: membership.organization.id,
+        };
+
+        state.userMembershipList.items.push(
+          remoteItem(membership.organization.id, {
+            data: membershipWithId,
+            loaded: new Date().toISOString(),
+          })
+        );
+      }
+    },
+    orgUnfollowed: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+
+      const membershipToUpdate = state.userMembershipList.items.find(
+        (membership) => membership.id === orgId
+      );
+
+      if (membershipToUpdate?.data) {
+        membershipToUpdate.data.follow = false;
+        membershipToUpdate.loaded = new Date().toISOString();
+      }
+    },
     organizationLoad: (state) => {
       state.orgData.isLoading = true;
     },
@@ -108,6 +145,8 @@ export const {
   orgEventsLoaded,
   organizationLoaded,
   organizationLoad,
+  orgFollowed,
+  orgUnfollowed,
   treeDataLoad,
   treeDataLoaded,
   subOrgsLoad,

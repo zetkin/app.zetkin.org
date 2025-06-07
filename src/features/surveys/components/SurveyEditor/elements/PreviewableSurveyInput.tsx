@@ -54,7 +54,7 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
             value ? theme.palette.text.primary : theme.palette.text.disabled
           }
           marginBottom={2}
-          sx={VARIANTS[variant]}
+          sx={{ ...VARIANTS[variant], wordBreak: 'break-word' }}
         >
           {value || placeholder}
         </Typography>

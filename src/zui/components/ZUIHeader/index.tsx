@@ -22,7 +22,7 @@ import { ZUIIconButtonProps } from 'zui/components/ZUIIconButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILabel from 'zui/components/ZUILabel';
 import { MUIIcon, ZUIPrimary, ZUISecondary } from '../types';
-import ZUIAvatar, { ZUIAvatarProps } from '../ZUIAvatar';
+import ZUIPersonAvatar, { ZUIPersonAvatarProps } from '../ZUIPersonAvatar';
 
 interface ZUIHeaderProps {
   /**
@@ -46,7 +46,7 @@ interface ZUIHeaderProps {
   /**
    * An object of first name, last name and id to render a ZUIAvatar
    */
-  avatar?: Omit<ZUIAvatarProps, 'variant' | 'size'>;
+  avatar?: Omit<ZUIPersonAvatarProps, 'variant' | 'size'>;
 
   /**
    * A component to be shown under the action button
@@ -164,7 +164,7 @@ const ZUIHeader: FC<ZUIHeaderProps> = ({
             )}
             {avatar && (
               <Box sx={{ marginRight: '0.75rem' }}>
-                <ZUIAvatar
+                <ZUIPersonAvatar
                   firstName={avatar.firstName}
                   id={avatar.id}
                   lastName={avatar.lastName}

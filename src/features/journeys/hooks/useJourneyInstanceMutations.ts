@@ -3,6 +3,7 @@ import {
   invalidateJourneyInstance,
   journeyInstanceUpdate,
   journeyInstanceUpdated,
+  journeyInstanceDeleted,
 } from '../store';
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
@@ -23,6 +24,7 @@ interface UseJourneyInstanceMutationsReturn {
   addSubject: (subject: ZetkinPerson) => Promise<void>;
   assignTag: (tag: Pick<ZetkinAppliedTag, 'id' | 'value'>) => Promise<void>;
   closeJourneyInstance: (closeBody: JourneyInstanceCloseBody) => Promise<void>;
+  deleteJourneyInstance: () => Promise<void>;
   removeAssignee: (assignee: ZetkinPerson) => Promise<void>;
   removeSubject: (subject: ZetkinPerson) => Promise<void>;
   unassignTag: (tagId: number) => Promise<void>;
@@ -49,6 +51,13 @@ export default function useJourneyInstanceMutations(
     );
     dispatch(journeyInstanceUpdated(updatedInstance));
     return updatedInstance;
+  }
+
+  async function deleteJourneyInstance() {
+    await apiClient.delete(
+      `/api/orgs/${orgId}/journey_instances/${instanceId}`
+    );
+    dispatch(journeyInstanceDeleted(instanceId));
   }
 
   async function closeJourneyInstance(closeBody: JourneyInstanceCloseBody) {
@@ -94,7 +103,7 @@ export default function useJourneyInstanceMutations(
   async function assignTag(tag: Pick<ZetkinAppliedTag, 'id' | 'value'>) {
     await apiClient.put<ZetkinAppliedTag>(
       `/api/orgs/${orgId}/journey_instances/${instanceId}/tags/${tag.id}`,
-      { value: tag.value }
+      tag.value ? { value: tag.value } : undefined
     );
     dispatch(invalidateJourneyInstance(instanceId));
   }
@@ -111,6 +120,7 @@ export default function useJourneyInstanceMutations(
     addSubject,
     assignTag,
     closeJourneyInstance,
+    deleteJourneyInstance,
     removeAssignee,
     removeSubject,
     unassignTag,

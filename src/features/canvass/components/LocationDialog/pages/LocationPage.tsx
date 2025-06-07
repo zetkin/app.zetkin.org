@@ -14,11 +14,11 @@ import {
 } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import uselocationVisits from 'features/canvass/hooks/useLocationVisits';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useBasicLocationStats from 'features/canvass/hooks/useBasicLocationStats';
 
 type LocationPageProps = {
   assignment: ZetkinAreaAssignment;
@@ -38,28 +38,15 @@ const LocationPage: FC<LocationPageProps> = ({
   location,
 }) => {
   const messages = useMessages(messageIds);
-  const visitsFuture = uselocationVisits(
-    assignment.organization.id,
+  const visits = uselocationVisits(
+    assignment.organization_id,
     assignment.id,
     location.id
   );
 
-  const numHouseholdsVisitedIndividually =
-    location?.households.filter((household) =>
-      household.visits.some((visit) => visit.areaAssId == assignment.id)
-    ).length ?? 0;
-
-  const numHouseholdsPerLocationVisit =
-    visitsFuture.data?.map(estimateVisitedHouseholds) ?? [];
-
-  const numVisitedHouseholds = Math.max(
-    numHouseholdsVisitedIndividually,
-    ...numHouseholdsPerLocationVisit
-  );
-
-  const numHouseholds = Math.max(
-    location.households.length,
-    numVisitedHouseholds
+  const { numHouseholds, numVisitedHouseholds } = useBasicLocationStats(
+    assignment.id,
+    location
   );
 
   return (
@@ -74,7 +61,7 @@ const LocationPage: FC<LocationPageProps> = ({
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" flexDirection="column" my={3}>
-        {!!numHouseholds && (
+        {!!numHouseholds && !!numVisitedHouseholds && (
           <>
             <Typography variant="h4">
               <Msg
@@ -107,38 +94,32 @@ const LocationPage: FC<LocationPageProps> = ({
         <Divider />
       </Box>
       <Box>
-        <ZUIFuture future={visitsFuture}>
-          {(visits) => (
-            <>
-              <Typography>
-                <Msg id={messageIds.location.page.historySectionHeader} />
-              </Typography>
-              <List>
-                {visits.map((visit) => {
-                  const households = estimateVisitedHouseholds(visit);
-                  return (
-                    <ListItem key={visit.id}>
-                      <Box
-                        display="flex"
-                        gap={1}
-                        justifyContent="space-between"
-                        width="100%"
-                      >
-                        <Typography>
-                          <Msg
-                            id={messageIds.location.page.numberOfHouseholds}
-                            values={{ numHouseholds: households }}
-                          />
-                        </Typography>
-                        <ZUIRelativeTime datetime={visit.timestamp} />
-                      </Box>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </>
-          )}
-        </ZUIFuture>
+        <Typography>
+          <Msg id={messageIds.location.page.historySectionHeader} />
+        </Typography>
+        <List>
+          {visits.map((visit) => {
+            const households = estimateVisitedHouseholds(visit);
+            return (
+              <ListItem key={visit.id}>
+                <Box
+                  display="flex"
+                  gap={1}
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Typography>
+                    <Msg
+                      id={messageIds.location.page.numberOfHouseholds}
+                      values={{ numHouseholds: households }}
+                    />
+                  </Typography>
+                  <ZUIRelativeTime datetime={visit.created} />
+                </Box>
+              </ListItem>
+            );
+          })}
+        </List>
       </Box>
     </PageBase>
   );

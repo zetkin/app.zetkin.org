@@ -80,8 +80,7 @@ export default makeMessages('feat.surveys', {
   },
   editWarning: {
     editing: {
-      header: m('Survey can be edited'),
-      lockButton: m('Lock'),
+      header: m('Survey unlocked'),
       safe: {
         bullet1: m('Fixing spelling mistakes'),
         bullet2: m('Reordering blocks'),
@@ -105,12 +104,12 @@ export default makeMessages('feat.surveys', {
       subheader: m(
         'This survey has started receiving submissions. Editing the survey now may cause problems with the data. Proceed with caution.'
       ),
-      unlockButton: m('Unlock'),
     },
   },
   layout: {
     actions: {
-      delete: m('Delete survey'),
+      delete: m('Delete'),
+      move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
       warning: m<{ surveyTitle: string }>('"{surveyTitle}" will be deleted.'),
@@ -165,6 +164,12 @@ export default makeMessages('feat.surveys', {
     createPersonSubmit: m('Save and link'),
     createPersonTitle: m('Create new person'),
     dateColumn: m('Date'),
+    delete: m('Delete'),
+    deleteSuccess: m('Successfully deleted'),
+    deleteTitle: m('Delete submission'),
+    deleteWarningText: m(
+      'Are you sure you want to delete this survey submission?'
+    ),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
@@ -172,6 +177,13 @@ export default makeMessages('feat.surveys', {
     personRecordColumn: m('Respondent'),
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
+  },
+  surveyChangeCampaignDialog: {
+    error: m('Error: Could not move the survey to the selected project'),
+    success: m<{ campaignTitle: string; surveyTitle: string }>(
+      'Survey "{surveyTitle}" moved to "{campaignTitle}"'
+    ),
+    title: m('Move survey'),
   },
   surveyDialog: {
     add: m('Add'),

@@ -36,6 +36,35 @@ export default class SurveyOptionColumnType
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
+      sortComparator: (v1: SurveyOptionViewCell, v2: SurveyOptionViewCell) => {
+        const getPriority = (cell: SurveyOptionViewCell) => {
+          if (!cell || cell.length == 0) {
+            return 1;
+          }
+
+          const hasPickedThisOption = !!cell.filter(
+            (submission) => submission.selected
+          ).length;
+
+          if (!hasPickedThisOption) {
+            return 1;
+          }
+
+          const sorted = cell.concat().sort((sub0, sub1) => {
+            const d0 = new Date(sub0.submitted);
+            const d1 = new Date(sub1.submitted);
+            return d1.getTime() - d0.getTime();
+          });
+
+          const mostRecent = sorted[0];
+
+          return mostRecent.selected ? -1 : 0;
+        };
+
+        const result = getPriority(v1) - getPriority(v2);
+
+        return result;
+      },
       type: 'boolean',
     };
   }

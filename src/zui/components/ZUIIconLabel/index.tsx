@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import { MUIIcon, ZUIPrimary, ZUISecondary, ZUISize } from '../types';
@@ -16,7 +16,7 @@ export type ZUIIconLabelProps = {
    *
    * Defaults to "primary".
    */
-  color?: ZUIPrimary | ZUISecondary | 'danger';
+  color?: ZUIPrimary | ZUISecondary | 'error';
 
   /**
    * The icon.
@@ -28,7 +28,14 @@ export type ZUIIconLabelProps = {
   /**
    * The label
    */
-  label: string | JSX.Element;
+  label: string | string[];
+
+  /**
+   * If true, the text will not overflow and end with an ellipsis.
+   *
+   * Defaults to "false".
+   */
+  noWrap?: boolean;
 
   /**
    * The size of the icon-label pair.
@@ -42,27 +49,49 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
   color = 'primary',
   icon,
   label,
+  noWrap = false,
   size = 'medium',
-}) => (
-  <Box
-    sx={{
-      alignItems: 'center',
-      display: 'flex',
-      flexShrink: 0,
-      gap: '0.5rem',
-    }}
-  >
-    <ZUIIcon color={color} icon={icon} size={size} />
-    <Typography
-      color={color == 'danger' ? 'error' : color}
+}) => {
+  const labels: ReactNode[] = [];
+
+  if (Array.isArray(label)) {
+    label.forEach((text, index) => {
+      if (index > 0) {
+        labels.push(
+          <Typography key={index} component="span" sx={{ mx: 1 }}>
+            ·
+          </Typography>
+        );
+      }
+
+      labels.push(text);
+    });
+  } else {
+    labels.push(label);
+  }
+
+  return (
+    <Box
       sx={{
+        alignItems: 'center',
+        display: 'flex',
         flexShrink: 0,
+        gap: '0.5rem',
       }}
-      variant={TextVariants[size]}
     >
-      {label}
-    </Typography>
-  </Box>
-);
+      <ZUIIcon color={color} icon={icon} size={size} />
+      <Typography
+        color={color}
+        noWrap={noWrap}
+        sx={{
+          flexShrink: noWrap ? '' : 0,
+        }}
+        variant={TextVariants[size]}
+      >
+        {labels}
+      </Typography>
+    </Box>
+  );
+};
 
 export default ZUIIconLabel;

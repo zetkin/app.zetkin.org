@@ -38,6 +38,11 @@ type ZUISelectProps = {
   error?: boolean;
 
   /**
+   * If the select should be full width.
+   */
+  fullWidth?: boolean;
+
+  /**
    * The items that will render as options in the select.
    *
    * Can be either just a list of options, or "categories" where each
@@ -70,6 +75,7 @@ type ZUISelectProps = {
 const ZUISelect: FC<ZUISelectProps> = ({
   disabled = false,
   error = false,
+  fullWidth = false,
   label,
   onChange,
   items,
@@ -79,6 +85,7 @@ const ZUISelect: FC<ZUISelectProps> = ({
   <FormControl
     disabled={disabled}
     error={error}
+    fullWidth={fullWidth}
     size={size == 'medium' ? 'small' : 'medium'}
     sx={(theme) => ({
       '& > label': {

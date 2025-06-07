@@ -91,7 +91,7 @@ feat:
         none: Inga
       type: Skriv för att filtrera innehåll
     lastDayWithEvents: Den senaste dagen med aktiviteter ägde {numEvents, plural,
-      one {ett} other {numEvents}} event rum
+      one {ett} other {#}} event rum
     loadMore: Ladda mer
     moreEvents: '{numEvents, plural, one {# event till} other {# fler event}}'
     next: NÄSTA
@@ -133,8 +133,10 @@ feat:
     today: Idag
   callAssignments:
     actions:
+      delete: Radera
       end: Avsluta ringuppdrag
       start: Starta ringuppdrag
+      warning: '"{title}" kommer raderas.'
     blocked:
       callBackLater: Bad oss att ringa tillbaka senare
       calledTooRecently: Ringda nyligen
@@ -152,6 +154,7 @@ feat:
         remove: Ta bort från uppdraget
       add:
         alreadyAdded: Redan tillagd
+        placeholder: Börja skriva för att söka eller lägga till ringare
       customize:
         exclude:
           h: Exkluderade etiketter
@@ -389,10 +392,14 @@ feat:
           o: Annat
         noValue: Inget värde
         title: Data att slå samman
+      findCandidateManually: Skriv för att hitta potentiella dubletter
       infoMessage: All historik från aktiviteter och taggar från alla personer kommer
         slås samman och visas på den sammanslagna personen.
       infoTitle: Ingen data kommer att gå förlorad
       isDuplicateButton: Inkludera
+      lists:
+        hideManual: Göm manuella sökningar
+        showManual: Visa manuella sökningar
       mergeButton: Slå samman
       notDuplicateButton: Exkludera
       peopleNotBeingMerged: Personer som inte blir sammanslagna
@@ -544,6 +551,9 @@ feat:
       lockButton: Lås för leverans
       lockDescription: Lås för att möjliggöra e-postlevereans
       locked: Låst
+      missingEmailsDescription: Det {numPeople, plural, one {är en person} other {flera
+        personer}} som saknar epostadress i målgruppen. Om du lägger till epostadresser
+        kommer de att ingå i målgruppen.
       scheduledDescription: E-posten är schemalagd för leverans. Om du vill låsa upp
         målgruppen, avbryt leveransen först.
       sentSubtitle: Målgrupp som var tillgänglig för leverans
@@ -568,10 +578,16 @@ feat:
     targets:
       defineButton: Definiera målgrupp
       editButton: Redigera målgrupp
+      loading: Laddar...
+      lockButton: Lås för leverans
       locked: Målgrupp låst för leverans
+      lockedChip: Låst
       sentSubtitle: Du kan titta på den Smarta sökningen som användes för att definiera
         mottagarna av det här utskicket
       title: Målgrupp
+      unlockAlert: Att låsa upp kan göra att personer läggs till eller tas bort från
+        målgruppen basert på resultatet i den Smarta sökningen.
+      unlockButton: Lås upp
       viewButton: Visa målgrupp
     unsubscribePage:
       consent: Jag förstår
@@ -834,6 +850,10 @@ feat:
     tooltipContent: Event utan namn kommer att få eventtypen som titel
     type:
       createType: Skapa "{type}"
+      deleteMessage: Är du säker på att du vill radera "{eventType}" eventkategorin
+        för hela organisationen?
+      deleteWarning: Är du säker på att du vill radera "{eventType}" eventkategorin
+        för hela {orgTitle}?
       tooltip: Klicka här för att byta typ
       uncategorized: Okategoriserade
   files:
@@ -841,6 +861,8 @@ feat:
       dropToUpload: Släpp fil här för att ladda upp
       instructions: eller dra en fil och släpp den här
       selectClick: Klicka för att ladda upp
+    image:
+      dimensions: '{width} × {height} pixlar'
     libraryDialog:
       preview:
         backButton: Tillbaka till bibliotek
@@ -858,6 +880,41 @@ feat:
       label: Typ
       options:
         image: Bilder
+  home:
+    activityList:
+      actions:
+        call: Börja ringa
+        signUp: Anmäl dig
+        undoSignup: Ångra anmälan
+      emptyListMessage: Du är inte anmäld till några aktiviteter
+      eventStatus:
+        booked: Du har blivit bokad på det här eventet och organisatörerna förväntar
+          sig att du kommer. Kontakta {org} om du behöver ställa in.
+        needed: Du behövs
+        signedUp: Du har anmält dig
+      filters:
+        call: Ringa
+        event: Event
+    allEventsList:
+      emptyList:
+        message: Hittade inga events
+        removeFiltersButton: Nollställ filter
+      filterButtonLabels:
+        organizations: '{numOrgs, plural,=0 {Organisationer} =1 {1 organisation} other
+          {# organisationer}}'
+        thisWeek: Den här veckan
+        today: Idag
+        tomorrow: Imorgon
+    defaultTitles:
+      callAssignment: Icke namngivet ringuppdrag
+      event: Icke namngivet event
+      noLocation: Ingen fysisk plats
+    footer:
+      privacyPolicy: Sekretesspolicy
+    tabs:
+      feed: Alla event
+      home: Mina aktiviteter
+    title: Mitt Zetkin
   import:
     actionButtons:
       back: Tillbaka
@@ -875,14 +932,19 @@ feat:
             Till exempel om dina datum är skrivna 1998.03.23, så skriver du in det
             som YYYY.MM.DD.
           customFormatLabel: Anpassat datumformat
+          dateConfigDescription: Välj format för värdena i den här kolumnen så att
+            de kan importeras som datum.
           dateInputLabel: Datumformat
           dropDownLabel: Välj format
           emptyPreview: Ogiltigt datum
           header: Konfigurera datumformat
+          invalidDateFormatWarning: Det finns värden i den här kolumnen som inte verkar
+            passa det här formatet. Är du säker på att du valt rätt format.
           listSubHeaders:
             custom: Anpassad
             dates: Datumformat
             personNumbers: Personnummer
+          noCustomFormatWarning: Du har inte valt ett anpassat datumformat.
           personNumberFormat:
             dk:
               description: Värdena i den här kolumnen kommer översättas från tiosiffriga
@@ -897,12 +959,27 @@ feat:
                 eller tolvsiffriga svenska personnummer (ÅÅMMDD-XXXX eller ÅÅÅÅMMDD-XXXX)
                 till datum.
               label: Svenskt personnummer
+        enum:
+          header: Välj värden för alternativ
+          none: Inga
+          numberOfRows: '{numRows, plural, =1 {1 rad} other {# rader}}'
+          value: Värde
+        genders:
+          label: Kön
+          selectLabels:
+            f: Kvinna
+            m: Man
+            o: Annat
+            unknown: Okänd
         ids:
           configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
             uppdatera existerande personer istället för att skapa dubletter.
           externalID: Externt ID
           externalIDExplanation: Den här kolumnen innehåller ID från vårt vanliga
             register (inte Zetkin)
+          externalIDInfo: Ett externt ID är ett ID som kommer från ett annat system
+            än Zetkin, till exempel ett separat medlemsregister. Det kan användas
+            för att hitta och identifiera personer i Zetkin.
           header: Konfigurera ID
           showOrganizationSelectButton: Välj organisation…
           wrongIDFormatWarning: Den här kolumnen verkar inte innehålla Zetkin-ID.
@@ -911,10 +988,13 @@ feat:
           zetkinID: Zetkin-ID
           zetkinIDExplanation: Den här kolumnen innehåller ID:n från en export ur
             Zetkin.
+          zetkinIDInfo: Ett Zetkin ID är ett ID på en person som redan finns i Zetkin.
+            Det bör du ha i en fil om du exporterar data från Zetkin.
         orgs:
           guess: Gissa organisationer
           header: Välj en organisation per värde
           organizations: Organisation
+          showOrganizationSelectButton: Välj organisation
           status: Status
         tags:
           empty: Tom
@@ -927,6 +1007,7 @@ feat:
         configButton: Konfigurera
         defaultColumnHeader: Kolumn {columnIndex}
         emptyStateMessage: Börja med att välja vad kolumnerna innehåller
+        externalID: Externt ID
         fileHeader: Fil
         finishedMappingDates: Översätter {numValues, plural, =1 {ett värde} other
           {# värden}} från {dateFormat, select, se {svenska personnummer} no {norska
@@ -940,6 +1021,7 @@ feat:
           till {numMappedTo, plural, =1 {en etikett} other {# etiketter}}
         header: Kolumninnehåll
         id: ID
+        infoButton: Information
         mapValuesButton: Välj
         messages:
           manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
@@ -951,6 +1033,7 @@ feat:
             {# tomma rader}}.'
           oneValueNoEmpty: '{firstValue}.'
           onlyEmpty: '{numEmpty, plural, =1 {en tom rad} other {# tomma rader}}.'
+          readOnlyField: '{title} (skrivskyddad)'
           threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} och {numEmpty,
             plural, =1 {en tom rad} other {# tomma rader}}.'
           threeValuesNoEmpty: '{firstValue}, {secondValue} och {thirdValue}.'
@@ -964,6 +1047,8 @@ feat:
         tags: Etiketter
         unfinished:
           date: Du behöver konfigurera formatet på datum
+          enum: Du behöver välja värden
+          gender: Du behöver välja värden
           id: Du behöver konfigurera ID:n
           org: Du behöver väja organisationer att importera värden som
           tag: Du behöver välja taggar att importera värden som
@@ -972,10 +1057,17 @@ feat:
           id: ID
           other: Annan
         zetkinHeader: Zetkin
+        zetkinID: Zetkin ID
       preview:
         columnHeader:
+          gender: Kön
           org: Organisation
           tags: Etiketter
+        genders:
+          f: Kvinna
+          m: Man
+          o: Annat
+          unknown: Okänt
         next: Nästa
         noOrg: Ingen organisation
         noTags: Inga etiketter
@@ -1118,6 +1210,7 @@ feat:
       labels:
         addField: Lägg till fält
         description: Beskrivning
+        requireEmailVerification: Kräv epostverifiering
         title: Titel
       title: Redigera formulär
     forms: Formulär
@@ -1139,6 +1232,8 @@ feat:
       approveButton: Godkänn
       form: Formulär
       rejectButton: Avbryt
+    submissionVerifiedPage:
+      h: Tack!
   journeys:
     instance:
       addAssigneeButton: Lägg till ansvarig
@@ -1256,6 +1351,20 @@ feat:
         timeline: Tidslinje
       title: Journeys
   organizations:
+    gen3:
+      description: Det här är den nya (generation 3) organisatörssidan. Om du är van
+        vid den gamla kommer du hitta flera nya funktioner och en förbättrad användarupplevelse.
+        Om du vill, kan du fortfarande använda den gamla organisatörssidan ett tag
+        till.
+      gen2Button: Gå till den gamla organisatörssidan
+      title: Välkommen till nya Zetkin!
+    notOrganizer:
+      description: Den här delen av Zetkin är bara tillgänglig för personer som har
+        administratörsbehörighet. Du har just nu inte rätt behörighet. Om du borde
+        ha tillgång till den här sidan kontakta någon med administratörsbehörighet
+        i din organisation eller kontakta Zetkin Foundation.
+      myPageButton: Gå till aktivistportalen
+      title: Du har inte administratörsbehörighet
     page:
       title: 'Välj organisation:'
     sidebar:
@@ -1270,6 +1379,8 @@ feat:
   profile:
     delete:
       button: Ta bort person
+      confirm: Är du säker på att du vill ta bort {name} från {org} och alla relaterade
+        organisationer? Det är permanent och går inte att ångra.
       title: Radera konto
       warning: Detta kan inte ångras!
     details:
@@ -1278,6 +1389,8 @@ feat:
     editButtonClose: Sluta redigera {title}
     editButtonLabel: Redigera personuppgifter
     editPersonHeader: Redigera {person}
+    ellipsisMenu:
+      merge: Slå samman med...
     genders:
       f: Kvinna
       m: Man
@@ -1422,8 +1535,7 @@ feat:
           description: Namn, adress, e-post och annat!
           title: Personinfo
         person_field:
-          description: Som personinfo, men sök i fält som är anpassade för den här
-            organisationen.
+          description: Hitta personer baserat på anpassade fält i den här organisationen.
           title: Anpassade fält
         person_tags:
           description: För att hitta personer med eller utan specifika etiketter
@@ -1440,10 +1552,10 @@ feat:
             sökningen
           title: Personer som matchar en sparad Smart sökning
         survey_option:
-          description: 'Använd enkätsvar i deras underbara syfte: att hitta rätt personer!'
+          description: Hitta rätt person baserat på deras enkätsvar.
           title: Svar på kryssrutor
         survey_response:
-          description: 'Använd enkätsvar i deras underbara syfte: att hitta rätt personer!'
+          description: Hitta rätt person baserat på deras enkätsvar.
           title: Svar på textfrågor
         survey_submission:
           description: Har de svarat på en enkät? Har de inte svarat på en enkät?
@@ -1560,6 +1672,9 @@ feat:
           notSent: inte blev skickade
           opened: öppnade
           sent: blev skickade
+      joinForm:
+        form: '"{title}"'
+        inputString: '{addRemoveSelect} personer som kom in via {formSelect} {timeFrame}'
       journey:
         condition:
           conditionSelect:
@@ -1599,11 +1714,11 @@ feat:
         ellipsis: '...'
         examples:
           one: Lägg till personer vars förnamn är 'Clara' och vars efternamn är 'Zetkin'.
-          two: Ta bort personer vars stad är Stockholm.
+          two: Ta bort personer vars ort är Stockholm.
         fieldMatches: '{field} matchar {value}'
         fieldSelect:
           alt_phone: annat telefonnummer
-          city: stad
+          city: ort
           co_address: c/o-adress
           email: e-post
           first_name: förnamn
@@ -1626,6 +1741,7 @@ feat:
           sub: Ta bort
         edit:
           date: '{fieldSelect} är {timeFrame}'
+          enum: '{fieldSelect} är "{selectInput}"'
           none: Organisationen har inga anpassade fält ännu.
           text: '{fieldSelect} matchar "{freeTextInput}"'
           url: '{fieldSelect} matchar "{freeTextInput}"'
@@ -1634,6 +1750,7 @@ feat:
         inputString: '{addRemoveSelect} personer vars {field}.'
         preview:
           date: '{fieldName} är {timeFrame}'
+          enum: '{fieldName} är "{searchTerm}"'
           text: '{fieldName} matchar "{searchTerm}"'
           url: '{fieldName} matchar "{searchTerm}"'
       personTags:
@@ -2002,11 +2119,14 @@ feat:
         unlockButton: Lås upp
     layout:
       actions:
+        delete: Ta bort enkät
         publish: Publicera enkät
         unpublish: Avpublicera enkät
+        warning: '"{surveyTitle}" kommer tas bort.'
       stats:
         questions: '{numQuestions, plural, one {1 fråga} other {# frågor}}'
         submissions: '{numSubmissions, plural, one {1 enkätsvar} other {# enkätsvar}}'
+      unknownTitle: Icke namngiven enkät
     optionCollapse:
       collapse: Minska
       more: '{numOfOptions, plural, one {Visa 1 alternativ till} other {Visa # alternativ
@@ -2042,6 +2162,12 @@ feat:
       personRecordColumn: Svarande
       suggestedPeople: Föreslagna personer
       unlink: Avlänka
+    surveyDialog:
+      add: Lägg till
+      cancel: Lägg inte till
+      description: Personen som du ska länka enkäten till har ingen epost men enkäten
+        innehåller en epostadress. Vill du lägga till den till personen?
+      title: Lägg till epostadress
     surveyForm:
       accept: Jag accepterar villkoren nedan.
       error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen senare.
@@ -2167,7 +2293,7 @@ feat:
         fields:
           demographic: Data att begära
           dempographicOptions:
-            city: Stad
+            city: Ort
             country: Land
             email: E-postadress
             gender: Könsidentitet
@@ -2318,8 +2444,10 @@ feat:
             att ångra. Är du säker på att du vill fortsätta?
       menu:
         delete: Radera
+        duplicate: Duplicera
         move: Flytta
         rename: Byt namn
+        viewCopy: '{viewName} - kopiera'
       moveToFolder: Flytta till {folder}
       moveToRoot: Flytta till alla listor
     browserLayout:
@@ -2401,7 +2529,7 @@ feat:
           title: Ansvarig person
         localQuery:
           columnTitle: I den Smarta sökningen?
-          description: Se om varje person finns bland resultaten av en Smart sökning
+          description: Se vilka som matchar en Smart sökning
           title: Smart sökning
         localText:
           columnTitle: Anteckningar
@@ -2409,7 +2537,7 @@ feat:
           title: Anteckningar
         personFields:
           description: Välj att lägga till kolumner för e-post, telefonnummer, etc.
-          keywords: adress postnummer stad land
+          keywords: adress postnummer ort land
           title: Valfri info om person
         phone:
           description: Lägg till en kolumn som innehåller telefonnummer
@@ -2487,7 +2615,7 @@ feat:
         searchPlaceholder: Hitta en kolumn
         searchResults: Resultat för "{searchString}"
     columnMenu:
-      configure: Ställ in kolumn
+      configure: Redigera kolumn
       confirmDelete: Är du säker på att du vill radera den här kolumnen? Den innehåller
         data som kommer försvinna permanent och du kommer inte kunna ångra dig.
       delete: Radera kolumn
@@ -2539,6 +2667,10 @@ feat:
     footer:
       addPlaceholder: Börja skriva för att lägga till person i listan
       alreadyInView: Finns redan i listan
+    moveViewDialog:
+      cancel: Avbryt
+      emptyFolder: Tom mapp
+      moveHere: Flytta hit
     newFolderTitle: Ny mapp
     newViewFields:
       title: Ny lista
@@ -2594,7 +2726,13 @@ feat:
         delete: Radera lista
         editQuery: Redigera Smart sökning
         makeDynamic: Konvertera till en lista som baseras på en Smart sökning
-        makeStatic: Konvertera till en statisk lista
+        makeStatic:
+          confirmDialogInfo: Om du omvandlar den här listan till en statisk lista
+            kommer den Smarta sökningen försvinna och alla personer som den inkluderade
+            tas bort från listan.
+          confirmDialogSubmitLabel: Omvandla
+          confirmDialogTitle: Omvandla till statisk lista
+          label: Omvandla till statisk lista
       jumpMenu:
         placeholder: Börja skriva för att hitta listan
       subtitle:
@@ -2612,9 +2750,14 @@ glob:
     configure: Redigera & konfigurera
     edit: Redigerar
     readonly: Skrivskyddad
+  genderOptions:
+    f: Kvinna
+    m: Man
+    o: Annat
+    unspecified: Ospecificerad
   personFields:
     alt_phone: Alternativt telefonnummer
-    city: Stad
+    city: Ort
     co_address: C/o-adress
     country: Land
     email: E-post
@@ -2650,6 +2793,8 @@ zui:
     cancel: Avbryt
     createBtn: Skapa
     defaultitle: Skapa person
+    enumFields:
+      noneOption: Inga
     genders:
       f: Kvinna
       m: Man
@@ -2699,10 +2844,18 @@ zui:
     multiDayToday: Idag - {endDate}
     singleDay: '{date}'
     singleDayToday: Idag
+  duration:
+    days: '{n, plural, =1 {1 dag} other {# dagar}}'
+    h: '{n}h'
+    m: '{n}m'
+    ms: '{n}ms'
+    s: '{n}s'
   editTextInPlace:
     tooltip:
       edit: Klicka för att redigera
       noEmpty: Den här får inte vara tom
+  editableImage:
+    add: Klicka för att lägga till bild
   futures:
     errorLoading: Något gick fel när datan laddades upp.
   header:
@@ -2774,6 +2927,8 @@ zui:
         from: Från
         to: Till
     expand: visa hela tidslinjen
+    fileUploadErrorMessage: Det går inte att lägga till notering. Den kan vara för
+      lång
     filter:
       byType:
         all: Alla

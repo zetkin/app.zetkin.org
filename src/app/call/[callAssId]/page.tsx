@@ -1,18 +1,22 @@
+import { Box } from '@mui/material';
 import { headers } from 'next/headers';
+import { Suspense } from 'react';
 import { notFound, redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { CALL, hasFeature } from 'utils/featureFlags';
+import CallPage from 'features/call/pages/CallPage';
+import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
+import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
+import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import AssignmentDetailsPage from 'features/call/pages/AssignmentDetailsPage';
+import { CALL, hasFeature } from 'utils/featureFlags';
 
-interface PageProps {
-  params: {
-    callAssId: string;
-  };
-}
+type Props = {
+  params: { callAssId: string };
+};
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: Props) {
+  await redirectIfLoginNeeded();
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -27,9 +31,28 @@ export default async function Page({ params }: PageProps) {
   if (!assignment) {
     return notFound();
   }
+  const { callAssId } = params;
 
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
-    return <AssignmentDetailsPage assignment={assignment} />;
+    return (
+      <HomeThemeProvider>
+        <Suspense
+          fallback={
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="column"
+              height="90dvh"
+              justifyContent="center"
+            >
+              <ZUILogoLoadingIndicator />
+            </Box>
+          }
+        >
+          <CallPage callAssId={callAssId} orgId={assignment.organization.id} />
+        </Suspense>
+      </HomeThemeProvider>
+    );
   } else {
     const callUrl = process.env.ZETKIN_GEN2_CALL_URL;
     const assignmentUrl = `${callUrl}/assignments/${params.callAssId}/call`;

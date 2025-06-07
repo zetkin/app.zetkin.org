@@ -231,6 +231,7 @@ export default makeMessages('feat.import', {
         'Your file has multiple sheets, select which one to use.'
       ),
       sheetSelectLabel: m('Sheet'),
+      skipUnknown: m('Skip rows with unknown IDs (never create new people)'),
     },
     show: m('Show'),
     statusMessage: {
@@ -283,6 +284,7 @@ export default makeMessages('feat.import', {
     people: m<{ numPeople: number; number: ReactElement }>(
       '{number} {numPeople, plural, =1 {person} other {people}}'
     ),
+    peopleToSubOrg: m<{ num: number; orgName: string }>('{orgName} ({num})'),
   },
   importStatus: {
     completed: {
@@ -324,6 +326,14 @@ export default makeMessages('feat.import', {
       invalidFormat: {
         title: m<{ field: string }>('Wrong format for field: {field}'),
       },
+      invalidOrgCountry: {
+        description: m(
+          'This makes it impossible to guess ex. phone number country codes. Contact support to fix this.'
+        ),
+        title: m<{ code: string }>(
+          'Possible invalid organization country code: {code}'
+        ),
+      },
       majorChange: {
         description: m(
           'This warning is shown when more than 30% of imported people are affected. Make sure you have configured the columns correctly'
@@ -341,6 +351,9 @@ export default makeMessages('feat.import', {
       noImpact: {
         description: m(
           'This could be because the file contains no new data, or due to an unknown error.'
+        ),
+        descriptionSkipped: m(
+          'This could be because the file contains no new data, or because all new data was skipped according to your settings. In rare occasions, it could be due to an unknown error.'
         ),
         title: m('This import would have no effect'),
       },

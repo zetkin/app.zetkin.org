@@ -1,9 +1,11 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
+import ZUIText from 'zui/components/ZUIText';
+import ZUIButton from 'zui/components/ZUIButton';
 
 type Props = {
   onClickShow: () => void;
@@ -11,6 +13,7 @@ type Props = {
 };
 
 const SubOrgEventBlurb: FC<Props> = ({ onClickShow, subOrgEvents }) => {
+  const messages = useMessages(messageIds);
   const numEvents = subOrgEvents.length;
   const numOrgs = new Set(subOrgEvents.map((event) => event.organization.id))
     .size;
@@ -27,10 +30,10 @@ const SubOrgEventBlurb: FC<Props> = ({ onClickShow, subOrgEvents }) => {
         p: 2,
       })}
     >
-      <Typography variant="h5">
+      <ZUIText variant="headingMd">
         <Msg id={messageIds.subOrgEventBlurb.headline} />
-      </Typography>
-      <Typography>
+      </ZUIText>
+      <ZUIText>
         <Msg
           id={messageIds.subOrgEventBlurb.description}
           values={{
@@ -40,10 +43,13 @@ const SubOrgEventBlurb: FC<Props> = ({ onClickShow, subOrgEvents }) => {
             orgsElem: <strong>{numOrgs}</strong>,
           }}
         />
-      </Typography>
-      <Button onClick={() => onClickShow()} variant="outlined">
-        <Msg id={messageIds.subOrgEventBlurb.showButton} />
-      </Button>
+      </ZUIText>
+      <ZUIButton
+        label={messages.subOrgEventBlurb.showButton()}
+        onClick={() => onClickShow()}
+        size="large"
+        variant="secondary"
+      />
     </Box>
   );
 };
