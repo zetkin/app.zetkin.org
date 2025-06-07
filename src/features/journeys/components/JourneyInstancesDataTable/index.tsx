@@ -1,5 +1,16 @@
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useState } from 'react';
+import {
+  DataGridPro,
+  DataGridProProps,
+  GridInitialState,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
+import {
+  FunctionComponent,
+  useCallback,
+  useLayoutEffect,
+  useState,
+} from 'react';
+import { CircularProgress } from '@mui/material';
 
 import getColumns from './getColumns';
 import { getRows } from './getRows';
@@ -33,6 +44,34 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, rawColumns);
 
+  // Set column state to persist on page reload
+  const [initialState, setInitialState] = useState<GridInitialState>();
+  const apiRef = useGridApiRef();
+
+  const saveSnapshot = useCallback(() => {
+    if (apiRef?.current?.exportState && localStorage) {
+      const currentState = apiRef.current.exportState();
+      localStorage.setItem('dataGridState', JSON.stringify(currentState));
+    }
+  }, [apiRef]);
+
+  useLayoutEffect(() => {
+    const stateFromLocalStorage = localStorage?.getItem('dataGridState');
+    setInitialState(
+      stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {}
+    );
+    window.addEventListener('beforeunload', saveSnapshot);
+
+    return () => {
+      window.removeEventListener('beforeunload', saveSnapshot);
+      saveSnapshot();
+    };
+  }, [saveSnapshot]);
+
+  if (!initialState) {
+    return <CircularProgress />;
+  }
+
   // Add localised header titles
   const columnsWithHeaderTitles = columns.map((column) => {
     const fieldName =
@@ -49,10 +88,14 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 
   return (
     <DataGridPro
+      apiRef={apiRef}
       checkboxSelection
       columns={columnsWithHeaderTitles}
       disableRowSelectionOnClick={true}
-      initialState={{ pagination: { paginationModel: { pageSize: 50 } } }}
+      initialState={{
+        pagination: { paginationModel: { pageSize: 50 } },
+        ...initialState,
+      }}
       onColumnOrderChange={(params) => {
         setColumnOrder(params.column.field, params.targetIndex - 1);
       }}
