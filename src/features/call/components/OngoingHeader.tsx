@@ -9,28 +9,27 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import { CallStep } from '../pages/CallPage';
-import useAllocateCall from '../hooks/useAllocateCall';
 
 type OngoingHeaderProps = {
   assignment: ZetkinCallAssignment;
+  forwardButtonDisabled?: boolean;
+  forwardButtonIsLoading?: boolean;
+  forwardButtonLabel: string;
   onBack?: () => void;
-  onReportCall?: () => void;
-  onSummarize?: () => void;
-  step?: CallStep;
+  onForward: () => void;
+  step: CallStep.ONGOING | CallStep.REPORT | CallStep.SUMMARY;
 };
 
 const OngoingHeader: FC<OngoingHeaderProps> = ({
   assignment,
+  forwardButtonDisabled,
+  forwardButtonLabel,
+  forwardButtonIsLoading,
   onBack,
-  onReportCall,
-  onSummarize,
+  onForward,
   step,
 }) => {
   const call = useCurrentCall();
-  const { allocateCall } = useAllocateCall(
-    assignment.organization.id,
-    assignment.id
-  );
 
   if (!call) {
     return null;
@@ -56,10 +55,10 @@ const OngoingHeader: FC<OngoingHeaderProps> = ({
               />
             </Box>
           )}
-          {(step == CallStep.ONGOING || step === CallStep.SUMMARY) && (
+          {(step == CallStep.ONGOING || step == CallStep.SUMMARY) && (
             <Box alignItems="center" display="flex" mb={2} minWidth={0}>
               <ZUIText noWrap variant="headingMd">
-                {assignment?.title || 'Untitled call assignment'}
+                {assignment.title}
               </ZUIText>
             </Box>
           )}
@@ -86,34 +85,25 @@ const OngoingHeader: FC<OngoingHeaderProps> = ({
                 }}
               >
                 <ZUIText noWrap variant="headingLg">
-                  {call.target.first_name} {call.target.last_name}
+                  {call.target.name}
                 </ZUIText>
               </Box>
             </Box>
-            {step == CallStep.ONGOING && (
-              <ZUIButton
-                label="End Call"
-                onClick={onReportCall}
-                variant="primary"
-              />
-            )}
-            {step == CallStep.SUMMARY && onSummarize && (
-              <Box display="flex" gap={1}>
+            <Box display="flex" gap={2}>
+              {step == CallStep.SUMMARY && (
                 <ZUIButton
                   label="Take a break"
                   onClick={onBack}
                   variant="secondary"
                 />
-                <ZUIButton
-                  label="Keep calling"
-                  onClick={() => {
-                    onSummarize();
-                    allocateCall();
-                  }}
-                  variant="primary"
-                />
-              </Box>
-            )}
+              )}
+              <ZUIButton
+                disabled={forwardButtonDisabled}
+                label={forwardButtonLabel}
+                onClick={() => onForward()}
+                variant={forwardButtonIsLoading ? 'loading' : 'primary'}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>

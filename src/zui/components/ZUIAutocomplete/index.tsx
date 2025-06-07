@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
 
 import { useMessages } from 'core/i18n';
 import messageIds from 'zui/l10n/messageIds';
@@ -35,6 +35,8 @@ type Option = {
    * Subtitle of the option.
    */
   subtitle?: string;
+
+  value: string;
 };
 
 type AutocompleteBaseProps = {
@@ -59,6 +61,17 @@ type AutocompleteBaseProps = {
     options: Option[],
     state: FilterOptionsState<Option>
   ) => Option[];
+
+  /**
+   * If the component should be full width or not.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
+   * Passa ref to the input element.
+   */
+  inputRef?: RefObject<HTMLInputElement>;
 
   /**
    * The label of the autocomplete.
@@ -101,6 +114,8 @@ const ZUIAutocomplete: FC<Props> = ({
   action,
   checkboxes,
   filterOptions,
+  fullWidth = false,
+  inputRef,
   label,
   multiple,
   noOptionsText,
@@ -112,6 +127,7 @@ const ZUIAutocomplete: FC<Props> = ({
   return (
     <Autocomplete
       filterOptions={filterOptions}
+      fullWidth={fullWidth}
       multiple={multiple}
       noOptionsText={
         <Typography sx={{ fontStyle: 'italic' }} variant="labelXlMedium">
@@ -135,6 +151,7 @@ const ZUIAutocomplete: FC<Props> = ({
       renderInput={(params) => (
         <TextField
           {...params}
+          inputRef={inputRef}
           label={label}
           sx={(theme) => ({
             '& > label': {

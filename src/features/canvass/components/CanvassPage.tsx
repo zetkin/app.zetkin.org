@@ -1,6 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { FC, Suspense, useState } from 'react';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { Menu } from '@mui/icons-material';
@@ -12,10 +11,7 @@ import useMyAreaAssignments from '../hooks/useMyAreaAssignments';
 import CanvassSidebar from './CanvassSidebar';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
-
-const CanvassMap = dynamic(() => import('./CanvassMap'), {
-  ssr: false,
-});
+import GLCanvassMap from './GLCanvassMap';
 
 const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
@@ -76,7 +72,7 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
               </Box>
             </Box>
             <Box flexGrow={1} sx={{ height: '200px' }}>
-              <CanvassMap areas={areas} assignment={assignment} />
+              <GLCanvassMap areas={areas} assignment={assignment} />
             </Box>
             <Box
               onClick={() => setShowMenu(false)}
