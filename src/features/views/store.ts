@@ -542,18 +542,18 @@ interface Dependency {
 }
 
 function invalidateDependentViews(
-  viewUpdated: number | undefined,
+  viewUpdatedId: number | undefined,
   state: ViewsStoreSlice
 ) {
   const dependencies = getViewDependencies(state);
   const viewsVisited = [];
   const viewsQueue = [];
 
-  while (dependencies.length > 0 && viewUpdated) {
-    viewsVisited.push(viewUpdated);
+  while (dependencies.length > 0 && viewUpdatedId) {
+    viewsVisited.push(viewUpdatedId);
 
     for (let i = 0; i < dependencies.length; i++) {
-      if (dependencies[i].to == viewUpdated) {
+      if (dependencies[i].to == viewUpdatedId) {
         if (!viewsVisited.includes(dependencies[i].from)) {
           viewsQueue.push(dependencies[i].from);
         }
@@ -569,7 +569,7 @@ function invalidateDependentViews(
         i--;
       }
     }
-    viewUpdated = viewsQueue.pop();
+    viewUpdatedId = viewsQueue.pop();
   }
 }
 
