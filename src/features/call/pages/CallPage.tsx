@@ -87,6 +87,7 @@ const CallPage: FC<Props> = ({ callAssId }) => {
             callId={currentCall.id}
             onBack={() => setActiveStep(CallStep.ONGOING)}
             onForward={() => setActiveStep(CallStep.SUMMARY)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
           <CallReport assignment={assignment} />
         </>

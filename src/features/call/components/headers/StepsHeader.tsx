@@ -22,8 +22,10 @@ import { ZetkinCall } from 'features/call/types';
 type StepButtonsProps = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
-  onActivities?: () => void;
+  forwardButtonDisabled?: boolean;
+  forwardButtonIsLoading?: boolean;
   onBack: () => void;
+  onForward?: () => void;
   onNextStep?: () => void;
   step?: CallStep;
 };
@@ -31,8 +33,10 @@ type StepButtonsProps = {
 const StepButtons: FC<StepButtonsProps> = ({
   assignment,
   call,
-  onActivities,
+  forwardButtonDisabled,
+  forwardButtonIsLoading,
   onBack,
+  onForward,
   onNextStep,
   step,
 }) => {
@@ -66,10 +70,15 @@ const StepButtons: FC<StepButtonsProps> = ({
       <>
         <ZUIButton
           label="Back to activities"
-          onClick={onActivities}
+          onClick={onBack}
           variant="secondary"
         />
-        <ZUIButton label="Finish" onClick={onNextStep} variant="primary" />
+        <ZUIButton
+          disabled={forwardButtonDisabled}
+          label="Submit report"
+          onClick={onForward}
+          variant={forwardButtonIsLoading ? 'loading' : 'primary'}
+        />
       </>
     );
   } else if (step === CallStep.SUMMARY) {
@@ -98,8 +107,10 @@ const StepButtons: FC<StepButtonsProps> = ({
 
 type StepsHeaderProps = {
   assignment: ZetkinCallAssignment;
-  onActivities?: () => void;
+  forwardButtonDisabled?: boolean;
+  forwardButtonIsLoading?: boolean;
   onBack: () => void;
+  onForward?: () => void;
   onNextStep?: () => void;
   onSwitchCall: () => void;
   step?: CallStep;
@@ -107,8 +118,10 @@ type StepsHeaderProps = {
 
 const StepsHeader: FC<StepsHeaderProps> = ({
   assignment,
-  onActivities,
+  forwardButtonDisabled,
+  forwardButtonIsLoading,
   onBack,
+  onForward,
   onNextStep,
   onSwitchCall,
   step,
@@ -186,8 +199,10 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                 {StepButtons({
                   assignment,
                   call,
-                  onActivities,
+                  forwardButtonDisabled,
+                  forwardButtonIsLoading,
                   onBack,
+                  onForward,
                   onNextStep,
                   step,
                 })}
@@ -250,8 +265,10 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                   {StepButtons({
                     assignment,
                     call,
-                    onActivities,
+                    forwardButtonDisabled,
+                    forwardButtonIsLoading,
                     onBack,
+                    onForward,
                     onNextStep,
                     step,
                   })}
