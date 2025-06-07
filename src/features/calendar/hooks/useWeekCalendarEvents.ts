@@ -1,13 +1,12 @@
 import { isSameDate } from 'utils/dateUtils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
-import { useNumericRouteParams } from 'core/hooks';
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
 } from '../utils/clusterEventsForWeekCalender';
 
 type UseWeekCalendarEventsParams = {
-  campaignId?: number;
+  campaignId: number;
   dates: Date[];
   orgId: number;
 };
@@ -18,14 +17,15 @@ type UseWeekCalendarEventsReturn = {
 }[];
 
 export default function useWeekCalendarEvents({
+  campaignId,
   dates,
+  orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
-  const { campId, orgId } = useNumericRouteParams();
   const eventActivities = useEventsFromDateRange(
     dates[0],
     dates[dates.length - 1],
     orgId,
-    campId
+    campaignId
   );
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
