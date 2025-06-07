@@ -4,15 +4,23 @@ import { Box, BoxProps } from '@mui/material';
 import { useMemo } from 'react';
 
 interface ZUICleanHtmlProps {
-  dirtyHtml: string;
+  allowTargetBlank?: boolean;
   BoxProps?: BoxProps;
+  dirtyHtml: string;
 }
 
 const ZUICleanHtml = ({
+  allowTargetBlank = false,
   BoxProps,
   dirtyHtml,
 }: ZUICleanHtmlProps): JSX.Element => {
-  const cleanHtml = useMemo(() => DOMPurify.sanitize(dirtyHtml), [dirtyHtml]);
+  const cleanHtml = useMemo(
+    () =>
+      DOMPurify.sanitize(dirtyHtml, {
+        ADD_ATTR: allowTargetBlank ? ['target', 'rel'] : [],
+      }),
+    [dirtyHtml]
+  );
   return <Box dangerouslySetInnerHTML={{ __html: cleanHtml }} {...BoxProps} />;
 };
 
