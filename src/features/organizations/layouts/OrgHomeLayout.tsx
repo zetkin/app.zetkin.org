@@ -71,7 +71,7 @@ type Props = {
 const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
-  const [showMapMobile, setShowMapMobile] = useState(false);
+  const [mobileMapVisible, setMobileMapVisible] = useState(false);
 
   const subOrgs = usePublicSubOrgs(org.id);
 
@@ -97,8 +97,10 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
     }));
   }, [orgEvents]);
 
-  const showMap = !isMobile && lastSegment != 'suborgs' && allEvents.length > 0;
-  const shouldMountMap = useDelayOnTrue(transitionDuration, showMap);
+  const showMap = lastSegment != 'suborgs' && allEvents.length > 0;
+  const showMapDesktop = !isMobile && showMap;
+  const shouldMountMap = useDelayOnTrue(transitionDuration, showMapDesktop);
+  const showMapMobile = isMobile && showMap;
 
   const navBarItems = [
     {
@@ -122,7 +124,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
       flexDirection="row"
       sx={{
         marginX: 'auto',
-        maxWidth: showMap ? '100%' : 960,
+        maxWidth: showMapDesktop ? '100%' : 960,
         minHeight: '100dvh',
         ...transitionSettings,
       }}
@@ -132,7 +134,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
         flexDirection="column"
         flexGrow={1}
         sx={{
-          maxWidth: showMap ? 480 : 960,
+          maxWidth: showMapDesktop ? 480 : 960,
           ...transitionSettings,
         }}
       >
@@ -219,13 +221,16 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             </Box>
           }
         >
-          {!showMapMobile ? (
+          {!showMapMobile || !mobileMapVisible ? (
             <Box display="flex" flexDirection="column" minHeight="90dvh">
               {children}
-              {isMobile && (
-                <Box className={classes.actionAreaContainer} sx={{ position: 'sticky' }}>
+              {showMapMobile && (
+                <Box
+                  className={classes.actionAreaContainer}
+                  sx={{ position: 'sticky' }}
+                >
                   <Button
-                    onClick={() => setShowMapMobile(true)}
+                    onClick={() => setMobileMapVisible(true)}
                     sx={{ background: 'white' }}
                     variant="outlined"
                   >
@@ -241,9 +246,12 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
                 height: '100%',
               }}
             >
-              <Box className={classes.actionAreaContainer} sx={{ position: 'fixed' }}>
+              <Box
+                className={classes.actionAreaContainer}
+                sx={{ position: 'fixed' }}
+              >
                 <Button
-                  onClick={() => setShowMapMobile(false)}
+                  onClick={() => setMobileMapVisible(false)}
                   sx={{ background: 'white' }}
                   variant="outlined"
                 >
@@ -253,7 +261,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             </OrgPageMap>
           )}
         </Suspense>
-        {!showMapMobile && (
+        {!showMapMobile && mobileMapVisible && (
           <Box
             alignItems="center"
             component="footer"
@@ -281,12 +289,12 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           <Box
             sx={{
               [theme.breakpoints.down('md')]: {
-                display: "none",
+                display: 'none',
               },
               flexGrow: 1,
-              maxWidth: showMap ? '100%' : '0px',
+              maxWidth: showMapDesktop ? '100%' : '0px',
               position: 'relative',
-              width: showMap ? '100%' : '0px',
+              width: showMapDesktop ? '100%' : '0px',
               ...transitionSettings,
             }}
           >
@@ -300,7 +308,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
                   width: '100%',
                 }}
               />
-            ) : showMap ? (
+            ) : showMapDesktop ? (
               <Box
                 alignItems="center"
                 display="flex"
