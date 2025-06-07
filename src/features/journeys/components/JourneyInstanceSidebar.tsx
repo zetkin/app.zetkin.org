@@ -86,6 +86,12 @@ const JourneyInstanceSidebar = ({
             <ClickAwayListener onClickAway={() => setAddingAssignee(false)}>
               <div>
                 <PersonSelect
+                  createPersonLabels={{
+                    submitLabel: zuiMessages.createPerson.submitLabel.assign(),
+                    title: zuiMessages.createPerson.title.assignToJourney({
+                      journey: journeyInstance.journey.singular_label,
+                    }),
+                  }}
                   data-testid="PersonSelect-add-assignee"
                   getOptionDisabled={(option) => {
                     return journeyInstance.assignees
@@ -100,10 +106,6 @@ const JourneyInstanceSidebar = ({
                   }}
                   selectedPerson={null}
                   size="small"
-                  submitLabel={zuiMessages.createPerson.submitLabel.assign()}
-                  title={zuiMessages.createPerson.title.assignToJourney({
-                    journey: journeyInstance.journey.singular_label,
-                  })}
                 />
               </div>
             </ClickAwayListener>
@@ -138,6 +140,12 @@ const JourneyInstanceSidebar = ({
             <ClickAwayListener onClickAway={() => setAddingSubject(false)}>
               <div>
                 <PersonSelect
+                  createPersonLabels={{
+                    submitLabel: zuiMessages.createPerson.submitLabel.add(),
+                    title: zuiMessages.createPerson.title.addToList({
+                      list: journeyInstance.journey.singular_label,
+                    }),
+                  }}
                   getOptionDisabled={(option) => {
                     return journeyInstance.subjects
                       .map((s) => s.id)
@@ -151,10 +159,6 @@ const JourneyInstanceSidebar = ({
                   }}
                   selectedPerson={null}
                   size="small"
-                  submitLabel={zuiMessages.createPerson.submitLabel.add()}
-                  title={zuiMessages.createPerson.title.addToJourney({
-                    journey: journeyInstance.journey.singular_label,
-                  })}
                 />
               </div>
             </ClickAwayListener>

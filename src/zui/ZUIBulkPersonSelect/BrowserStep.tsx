@@ -1,4 +1,4 @@
-import { Box, Button, DialogTitle, Divider } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 import { FC } from 'react';
 
 import ViewBrowser from 'features/views/components/ViewBrowser';
@@ -20,12 +20,10 @@ const BrowserStep: FC<Props> = ({
 }) => {
   return (
     <Box>
-      {/* TODO #2789: Add more specific headline / decide whether to have a single headline across both steps */}
-      <DialogTitle sx={{ paddingLeft: 1 }} variant="h4">
-        Select people to add
-      </DialogTitle>
       <ViewBrowser
         basePath=""
+        enableDragAndDrop={false}
+        enableEllipsisMenu={false}
         folderId={folderId}
         onSelect={(item, ev) => {
           ev.preventDefault();
@@ -38,7 +36,6 @@ const BrowserStep: FC<Props> = ({
             onViewSelect(item.data.id);
           }
         }}
-        readOnly={true}
       />
       <Box>
         <Divider />

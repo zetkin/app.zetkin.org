@@ -1,4 +1,10 @@
-import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import BrowserStep from './BrowserStep';
@@ -9,12 +15,14 @@ interface ZUICreatePersonProps {
   onClose: () => void;
   onSubmit: (ids: number[]) => void;
   open: boolean;
+  title: string;
 }
 
 const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
   open,
   onClose,
   onSubmit,
+  title,
 }) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
@@ -40,6 +48,9 @@ const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
       open={open}
     >
       <Box sx={{ p: 2 }}>
+        <DialogTitle sx={{ paddingLeft: 1 }} variant="h4">
+          {title}
+        </DialogTitle>
         {!!viewId && (
           <ViewStep
             onBack={() => setViewId(null)}

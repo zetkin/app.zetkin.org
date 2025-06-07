@@ -32,10 +32,12 @@ const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
                 columns={columns}
                 disableAdd
                 disableConfigure
-                onSelectionChange={setSelectedPersonIds}
                 rows={rows}
-                selectedIds={selectedPersonIds}
-                selectionMode="select"
+                rowSelection={{
+                  mode: 'select',
+                  onSelectionChange: setSelectedPersonIds,
+                  selectedIds: selectedPersonIds,
+                }}
                 view={view}
               />
               <Divider />
