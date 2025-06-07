@@ -7,13 +7,15 @@ export default class MarkerImageRenderer implements StyleImageInterface {
   private _rendered: boolean;
   private _selected: boolean;
   private _successPercentage: number;
+  private _text?: string;
   private _visitPercentage: number;
 
   constructor(
     successPercentage: number,
     visitPercentage: number,
     selected: boolean,
-    color: string
+    color: string,
+    text?: string
   ) {
     this.width = 21;
     this.height = 30;
@@ -23,6 +25,7 @@ export default class MarkerImageRenderer implements StyleImageInterface {
     this._selected = selected;
     this._rendered = false;
     this._successPercentage = successPercentage;
+    this._text = text;
     this._visitPercentage = visitPercentage;
 
     const canvas = document.createElement('canvas');
@@ -75,6 +78,14 @@ export default class MarkerImageRenderer implements StyleImageInterface {
       this.height,
       successHeight
     );
+
+    if (this._text) {
+      context.fillStyle = this._color;
+      context.font = 'bold 12px sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(this._text, this.width / 2, this.height / 2);
+    }
 
     this.data = context.getImageData(0, 0, this.width, this.height).data;
 
