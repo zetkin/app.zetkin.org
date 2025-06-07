@@ -27,7 +27,6 @@ import {
   pointsToBounds,
 } from 'features/canvass/components/GLCanvassMap';
 import ZUIMapControls from 'zui/ZUIMapControls';
-import oldTheme from 'theme';
 import { useEnv } from 'core/hooks';
 import MarkerImageRenderer from 'features/canvass/components/GLCanvassMap/MarkerImageRenderer';
 
@@ -190,26 +189,41 @@ export const OrgPageMap: FC<
     [events]
   );
 
-  const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
-    return {
-      features:
+  const eventCountByLocation = useMemo(
+    () =>
+      Object.values(
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .map((location) => {
-            const icon = 'marker';
+          .reduce((acc, location) => {
+            const key = `${location.lat},${location.lng}`;
+            if (!acc[key]) {
+              acc[key] = { count: 0, lat: location.lat, lng: location.lng };
+            }
+            acc[key].count += 1;
+            return acc;
+          }, {} as Record<string, { count: number; lat: number; lng: number }>)
+      ),
+    [events]
+  );
 
-            return {
-              geometry: {
-                coordinates: [location.lng, location.lat],
-                type: 'Point',
-              },
-              properties: {
-                icon,
-              },
-              type: 'Feature',
-            };
-          }) ?? [],
+  const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
+    return {
+      features:
+        eventCountByLocation.map((location) => {
+          const icon = `marker-${location.count}`;
+
+          return {
+            geometry: {
+              coordinates: [location.lng, location.lat],
+              type: 'Point',
+            },
+            properties: {
+              icon,
+            },
+            type: 'Feature',
+          };
+        }) ?? [],
       type: 'FeatureCollection',
     };
   }, [events]);
@@ -247,9 +261,13 @@ export const OrgPageMap: FC<
         onLoad={(ev) => {
           const map = ev.target;
 
-          map.addImage(
-            'marker',
-            new MarkerImageRenderer(0, 0, true, oldTheme.palette.primary.main)
+          new Set(eventCountByLocation.map(({ count }) => count)).forEach(
+            (count) => {
+              map.addImage(
+                `marker-${count}`,
+                new MarkerImageRenderer(0, 0, true, '#000000', count.toString())
+              );
+            }
           );
         }}
         style={{ height: '100%', width: '100%' }}
