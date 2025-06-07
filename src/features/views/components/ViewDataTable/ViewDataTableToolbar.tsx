@@ -15,6 +15,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/views/l10n/messageIds';
 
 export interface ViewDataTableToolbarProps {
+  disableBulkActions?: boolean;
   disableConfigure?: boolean;
   disabled: boolean;
   gridColumns: GridColDef[];
@@ -32,6 +33,7 @@ export interface ViewDataTableToolbarProps {
 const ViewDataTableToolbar: React.FunctionComponent<
   ViewDataTableToolbarProps
 > = ({
+  disableBulkActions,
   disableConfigure,
   disabled,
   gridColumns,
@@ -57,33 +59,41 @@ const ViewDataTableToolbar: React.FunctionComponent<
   };
   return (
     <Box role="toolbar">
-      <Slide direction="left" in={!!selection.length} timeout={150}>
-        <Button
-          data-testid="ViewDataTableToolbar-createFromSelection"
-          disabled={disabled || isLoading}
-          onClick={onViewCreate}
-          startIcon={isLoading ? <CircularProgress size={25} /> : <Launch />}
-        >
-          <Msg id={messageIds.toolbar.createFromSelection} />
-        </Button>
-      </Slide>
-      <Slide direction="left" in={!!selection.length} timeout={100}>
-        <Tooltip title={isSmartSearch ? messages.toolbar.removeTooltip() : ''}>
-          <span>
+      {!disableBulkActions && (
+        <>
+          <Slide direction="left" in={!!selection.length} timeout={150}>
             <Button
-              data-testid="ViewDataTableToolbar-removeFromSelection"
-              disabled={isSmartSearch || disabled}
-              onClick={onClickRemoveRows}
-              startIcon={<RemoveCircleOutline />}
+              data-testid="ViewDataTableToolbar-createFromSelection"
+              disabled={disabled || isLoading}
+              onClick={onViewCreate}
+              startIcon={
+                isLoading ? <CircularProgress size={25} /> : <Launch />
+              }
             >
-              <Msg
-                id={messageIds.toolbar.removeFromSelection}
-                values={{ numSelected: selection.length }}
-              />
+              <Msg id={messageIds.toolbar.createFromSelection} />
             </Button>
-          </span>
-        </Tooltip>
-      </Slide>
+          </Slide>
+          <Slide direction="left" in={!!selection.length} timeout={100}>
+            <Tooltip
+              title={isSmartSearch ? messages.toolbar.removeTooltip() : ''}
+            >
+              <span>
+                <Button
+                  data-testid="ViewDataTableToolbar-removeFromSelection"
+                  disabled={isSmartSearch || disabled}
+                  onClick={onClickRemoveRows}
+                  startIcon={<RemoveCircleOutline />}
+                >
+                  <Msg
+                    id={messageIds.toolbar.removeFromSelection}
+                    values={{ numSelected: selection.length }}
+                  />
+                </Button>
+              </span>
+            </Tooltip>
+          </Slide>
+        </>
+      )}
       <GridToolbarFilterButton
         componentsProps={{
           button: { color: 'secondary', size: 'medium' },

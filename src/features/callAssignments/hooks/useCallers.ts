@@ -16,12 +16,12 @@ import {
 } from '../store';
 import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 interface UseCallersReturn {
   addCaller: (callerId: number) => PromiseFuture<CallAssignmentCaller>;
   filteredCallersFuture: IFuture<CallAssignmentCaller[]>;
-  isCaller: (person: ZetkinPerson) => boolean;
+  isCaller: (personId: number) => boolean;
   removeCaller: (callerId: number) => void;
   searchString: string;
   selectedCaller: CallAssignmentCaller | null;
@@ -126,8 +126,8 @@ export default function useCallers(
       });
   };
 
-  const isCaller = (person: ZetkinPerson) =>
-    !!filteredCallersFuture.data?.find((caller) => caller.id == person.id);
+  const isCaller = (personId: number) =>
+    !!allCallersFuture.data?.find((caller) => caller.id == personId);
 
   return {
     addCaller,

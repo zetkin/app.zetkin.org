@@ -110,6 +110,10 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
 
               return (
                 <ZUIPersonSelect
+                  createPersonLabels={{
+                    submitLabel: zuiMessages.createPerson.submitLabel.add(),
+                    title: zuiMessages.createPerson.title.participant(),
+                  }}
                   getOptionDisabled={(option) =>
                     participants.some(
                       (participant) => participant.id == option.id
@@ -124,8 +128,6 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
                   }}
                   placeholder={messages.addPerson.addPlaceholder()}
                   selectedPerson={null}
-                  submitLabel={zuiMessages.createPerson.submitLabel.add()}
-                  title={zuiMessages.createPerson.title.participant()}
                   variant="outlined"
                 />
               );

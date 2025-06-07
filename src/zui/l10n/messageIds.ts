@@ -192,6 +192,17 @@ export default makeMessages('zui', {
     searchResults: m('Search results'),
   },
   personSelect: {
+    bulkAdd: {
+      backButton: m('Back'),
+      cancelButton: m('Cancel'),
+      openButton: m('Bulk add'),
+      submitButton: m<{ numSelected: number }>(
+        '{numSelected, plural, =0 {Select} =1 {Select 1 person} other {Select # people}}'
+      ),
+      title: m<{ entityToAddTo?: string }>(
+        '{entityToAddTo, select, undefined {Select people to add} other {Select people to add to {entityToAddTo}}}'
+      ),
+    },
     keepTyping: m('Keep typing to start searching'),
     noResult: m('No matching person found'),
     search: m('Type to start searching'),

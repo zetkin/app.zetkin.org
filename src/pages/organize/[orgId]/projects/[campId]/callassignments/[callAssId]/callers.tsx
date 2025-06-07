@@ -108,9 +108,26 @@ const CallersPage: PageWithLayout = () => {
         </Paper>
         <Box marginTop={2}>
           <MUIOnlyPersonSelect
-            getOptionDisabled={isCaller}
+            bulkSelection={{
+              onSelectMultiple: (ids) => {
+                // TODO #2789: Optimize this, e.g. using RPC
+                ids.forEach((id) => {
+                  if (!isCaller(id)) {
+                    addCaller(id);
+                  }
+                });
+              },
+              title: zuiMessages.personSelect.bulkAdd.title({
+                entityToAddTo: callAssignment?.title,
+              }),
+            }}
+            createPersonLabels={{
+              submitLabel: zuiMessages.createPerson.submitLabel.add(),
+              title: zuiMessages.createPerson.title.caller(),
+            }}
+            getOptionDisabled={(person) => isCaller(person.id)}
             getOptionExtraLabel={(person) =>
-              isCaller(person) ? messages.callers.add.alreadyAdded() : ''
+              isCaller(person.id) ? messages.callers.add.alreadyAdded() : ''
             }
             inputRef={selectInputRef}
             onChange={(person) => {
@@ -123,8 +140,6 @@ const CallersPage: PageWithLayout = () => {
             }}
             placeholder={messages.callers.add.placeholder()}
             selectedPerson={null}
-            submitLabel={zuiMessages.createPerson.submitLabel.add()}
-            title={zuiMessages.createPerson.title.caller()}
           />
         </Box>
         <CallerConfigDialog
