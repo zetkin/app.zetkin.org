@@ -90,17 +90,41 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         gridTemplateColumns={`${HOUR_COLUMN_WIDTH} repeat(7, 1fr)`}
         gridTemplateRows={'1fr'}
         marginBottom={dstChange === undefined ? 2 : 0}
+        position="relative"
       >
         {/* Empty */}
         <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
         {dayDates.map((weekdayDate: Date, weekday: number) => {
           return (
-            <DayHeader
-              key={`weekday-${weekday}`}
-              date={weekdayDate}
-              focused={new Date().toDateString() == weekdayDate.toDateString()}
-              onClick={() => onClickDay(weekdayDate)}
-            />
+            <Box key={`weekday-${weekday}`} position="relative">
+              <DayHeader
+                date={weekdayDate}
+                focused={
+                  new Date().toDateString() == weekdayDate.toDateString()
+                }
+                onClick={() => onClickDay(weekdayDate)}
+              />
+              <Box
+                sx={{
+                  bottom: 0,
+                  left: 0,
+                  position: 'absolute',
+                  right: 0,
+                  translate: '0 calc(100% + 4px)',
+                  zIndex: 10,
+                }}
+              >
+                {eventsByDate[weekday].multidayEvents.flatMap((lane) => {
+                  return lane.map((cluster) => {
+                    return (
+                      <Box key={`fulldaylane-${cluster.events[0].id}`}>
+                        <EventCluster cluster={cluster} height={30} />
+                      </Box>
+                    );
+                  });
+                })}
+              </Box>
+            </Box>
           );
         })}
       </Box>
