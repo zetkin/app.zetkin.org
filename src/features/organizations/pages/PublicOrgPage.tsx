@@ -1,11 +1,10 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { Box, Button, Fade } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Box, Fade, SxProps } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
-import { FC, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
 import EventListItem from 'features/home/components/EventListItem';
@@ -32,19 +31,6 @@ import oldTheme from 'theme';
 import { useEnv } from 'core/hooks';
 import MarkerImageRenderer from 'features/canvass/components/GLCanvassMap/MarkerImageRenderer';
 
-const useStyles = makeStyles(() => ({
-  actionAreaContainer: {
-    bottom: 15,
-    display: 'flex',
-    gap: 8,
-    justifyContent: 'center',
-    padding: 8,
-    position: 'sticky',
-    width: '100%',
-    zIndex: 1000,
-  },
-}));
-
 type Props = {
   orgId: number;
 };
@@ -57,9 +43,6 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const orgEvents = useUpcomingOrgEvents(orgId);
   const myEvents = useMyEvents();
   const user = useUser();
-
-  const [showMap, setShowMap] = useState(false);
-  const classes = useStyles();
 
   const allEvents = useMemo(() => {
     return orgEvents.map<ZetkinEventWithStatus>((event) => ({
@@ -116,82 +99,52 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           <NoEventsBlurb orgId={orgId} />
         </Box>
       )}
-
-      {showMap ? (
-        <OrgPageMap events={events} />
-      ) : (
-        dates.map((date, index) => (
-          <Box key={date} paddingX={1}>
+      {dates.map((date, index) => (
+        <Box key={date} paddingX={1}>
+          <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
+            <Box sx={{ mb: 2, mt: 3 }}>
+              <ZUIText variant="headingMd">
+                <ZUIDate datetime={date} />
+              </ZUIText>
+            </Box>
+          </Fade>
+          <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
+            <Box display="flex" flexDirection="column" gap={1}>
+              {eventsByDate[date].map((event) => (
+                <EventListItem
+                  key={event.id}
+                  event={event}
+                  onClickSignUp={(ev) => {
+                    if (!user) {
+                      setPostAuthEvent(event);
+                      ev.preventDefault();
+                    }
+                  }}
+                />
+              ))}
+            </Box>
+          </Fade>
+          {index == indexForSubOrgsButton && showSubOrgBlurb && (
             <Fade
               appear
               in
               mountOnEnter
               style={{ transitionDelay: nextDelay() }}
             >
-              <Box sx={{ mb: 2, mt: 3 }}>
-                <ZUIText variant="headingMd">
-                  <ZUIDate datetime={date} />
-                </ZUIText>
+              <Box sx={{ my: 4 }}>
+                <ZUIDivider />
+                <SubOrgEventBlurb
+                  onClickShow={() => setIncludeSubOrgs(true)}
+                  subOrgEvents={allEvents.filter(
+                    (event) => event.organization.id != orgId
+                  )}
+                />
+                <ZUIDivider />
               </Box>
             </Fade>
-            <Fade
-              appear
-              in
-              mountOnEnter
-              style={{ transitionDelay: nextDelay() }}
-            >
-              <Box display="flex" flexDirection="column" gap={1}>
-                {eventsByDate[date].map((event) => (
-                  <EventListItem
-                    key={event.id}
-                    event={event}
-                    onClickSignUp={(ev) => {
-                      if (!user) {
-                        setPostAuthEvent(event);
-                        ev.preventDefault();
-                      }
-                    }}
-                  />
-                ))}
-              </Box>
-            </Fade>
-            {index == indexForSubOrgsButton && showSubOrgBlurb && (
-              <Fade
-                appear
-                in
-                mountOnEnter
-                style={{ transitionDelay: nextDelay() }}
-              >
-                <Box sx={{ my: 4 }}>
-                  <ZUIDivider />
-                  <SubOrgEventBlurb
-                    onClickShow={() => setIncludeSubOrgs(true)}
-                    subOrgEvents={allEvents.filter(
-                      (event) => event.organization.id != orgId
-                    )}
-                  />
-                  <ZUIDivider />
-                </Box>
-              </Fade>
-            )}
-          </Box>
-        ))
-      )}
-      <Box className={classes.actionAreaContainer}>
-        <Button
-          onClick={() => setShowMap(!showMap)}
-          sx={{ background: 'white' }}
-          variant="outlined"
-        >
-          <Msg
-            id={
-              showMap
-                ? messageIds.home.map.viewInList
-                : messageIds.home.map.viewInMap
-            }
-          />
-        </Button>
-      </Box>
+          )}
+        </Box>
+      ))}
 
       <ZUIModal
         onClose={() => setPostAuthEvent(null)}
@@ -217,7 +170,12 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   );
 };
 
-const OrgPageMap: FC<{ events: ZetkinEventWithStatus[] }> = ({ events }) => {
+export const OrgPageMap: FC<
+  PropsWithChildren<{
+    events: ZetkinEventWithStatus[];
+    sx?: SxProps;
+  }>
+> = ({ children, events, sx }) => {
   const [map, setMap] = useState<MapType | null>(null);
 
   const env = useEnv();
@@ -257,7 +215,9 @@ const OrgPageMap: FC<{ events: ZetkinEventWithStatus[] }> = ({ events }) => {
   }, [events]);
 
   return (
-    <Box sx={{ flexGrow: 1, height: '100px', position: 'relative' }}>
+    <Box
+      sx={{ flexGrow: 1, height: '100px', position: 'relative', ...(sx ?? {}) }}
+    >
       <ZUIMapControls
         onFitBounds={() => {
           if (map && bounds) {
@@ -292,7 +252,6 @@ const OrgPageMap: FC<{ events: ZetkinEventWithStatus[] }> = ({ events }) => {
             new MarkerImageRenderer(0, 0, true, oldTheme.palette.primary.main)
           );
         }}
-        // onMoveEnd={() => saveBounds()}
         style={{ height: '100%', width: '100%' }}
       >
         <Source data={locationsGeoJson} id="locations" type="geojson">
@@ -309,6 +268,7 @@ const OrgPageMap: FC<{ events: ZetkinEventWithStatus[] }> = ({ events }) => {
           />
         </Source>
       </Map>
+      {children}
     </Box>
   );
 };
