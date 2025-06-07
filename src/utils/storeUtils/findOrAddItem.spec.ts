@@ -8,7 +8,6 @@ describe('findOrAddItem', () => {
 
   afterEach(() => {
     jest.clearAllTimers();
-    jest.clearAllMocks();
   });
 
   it('Creates a new item in list if none exist', () => {
