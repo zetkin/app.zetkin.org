@@ -17,9 +17,9 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { CallStep } from 'features/call/pages/CallPage';
 import useAllocateCall from 'features/call/hooks/useAllocateCall';
 import { ZetkinCall } from 'features/call/types';
+import { useRouter } from 'next/navigation';
 
 type StepButtonsProps = {
-  allocateCall: () => void;
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
   onActivities?: () => void;
@@ -29,7 +29,6 @@ type StepButtonsProps = {
 };
 
 const StepButtons: FC<StepButtonsProps> = ({
-  allocateCall,
   assignment,
   call,
   onActivities,
@@ -37,6 +36,12 @@ const StepButtons: FC<StepButtonsProps> = ({
   onNextStep,
   step,
 }) => {
+  const { allocateCall } = useAllocateCall(
+    assignment.organization.id,
+    assignment.id
+  );
+  const router = useRouter();
+
   if (step === CallStep.PREPARE) {
     return (
       <>
@@ -67,9 +72,14 @@ const StepButtons: FC<StepButtonsProps> = ({
         <ZUIButton label="Take a break" onClick={onBack} variant="secondary" />
         <ZUIButton
           label="Keep calling"
-          onClick={() => {
-            onNextStep?.();
-            allocateCall();
+          onClick={async () => {
+            const result = await allocateCall();
+            if (result) {
+              onBack();
+              router.push(`/call/${assignment.id}`);
+            } else {
+              onNextStep?.();
+            }
           }}
           variant="primary"
         />
@@ -172,7 +182,6 @@ const StepsHeader: FC<StepsHeaderProps> = ({
               </Box>
               <Box display="flex" gap={2} justifyContent="flex-end">
                 {StepButtons({
-                  allocateCall,
                   assignment,
                   call,
                   onActivities,
@@ -237,7 +246,6 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                 </Box>
                 <Box display="flex" gap={2} justifyContent="flex-end">
                   {StepButtons({
-                    allocateCall,
                     assignment,
                     call,
                     onActivities,
