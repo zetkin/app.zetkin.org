@@ -91,9 +91,9 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
               index={index}
             >
               <AreaAssignmentListItem
+                activity={activity}
                 caId={activity.data.id}
                 orgId={orgId}
-                activity={activity}
               />
             </LazyActivitiesBox>
           );

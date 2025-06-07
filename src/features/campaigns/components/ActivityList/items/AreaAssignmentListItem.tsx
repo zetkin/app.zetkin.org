@@ -2,16 +2,16 @@ import { FC } from 'react';
 import { Map, Person } from '@mui/icons-material';
 
 import { AreaAssignmentActivity } from 'features/campaigns/types';
-import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
+import ActivityListItem from './ActivityListItem';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 import getStatusColor from 'features/campaigns/utils/getStatusColor';
 
 type Props = {
+  activity: AreaAssignmentActivity;
   caId: number;
   orgId: number;
-  activity: AreaAssignmentActivity;
 };
 
 const AreaAssignmentListItem: FC<Props> = ({ caId, orgId, activity }) => {
