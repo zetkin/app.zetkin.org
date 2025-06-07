@@ -50,7 +50,7 @@ export function remoteListLoaded<DataType extends RemoteData>(
 }
 
 /**
- * When recieving response from backend that a remote list has been invalidated, this method should be used to update the redux store (cache).
+ * When user action prompts the invalidation of a list, this method should be used to update the redux store (cache).
  * It receives a RemoteList and sets it to stale. Returns the list.
  * This is a utility method for manipulating the cache, and should only be used in this context.
  *
