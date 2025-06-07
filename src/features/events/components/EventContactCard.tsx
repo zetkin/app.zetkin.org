@@ -90,11 +90,13 @@ const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
   return (
     <Box m={1} mb={5} mt={3}>
       <ZUIPersonSelect
+        createPersonLabels={{
+          submitLabel: zuiMessages.createPerson.submitLabel.assign(),
+          title: zuiMessages.createPerson.title.contact(),
+        }}
         onChange={(person) => handleSelectedPerson(person.id)}
         placeholder={messages.eventContactCard.selectPlaceholder()}
         selectedPerson={null}
-        submitLabel={zuiMessages.createPerson.submitLabel.assign()}
-        title={zuiMessages.createPerson.title.contact()}
         variant="outlined"
       />
     </Box>

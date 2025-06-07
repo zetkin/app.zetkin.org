@@ -68,11 +68,16 @@ interface UsePersonSelectReturn {
 type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
+  bulkSelection?: {
+    onSelectMultiple: (ids: number[]) => void;
+    title: string;
+  };
+  createPersonLabels?: {
+    submitLabel?: string;
+    title?: string;
+  };
   disabled?: boolean;
-  onSelectMultiple?: (ids: number[]) => void;
   size?: 'small' | 'medium';
-  submitLabel?: string;
-  title?: string;
   variant?: 'filled' | 'outlined' | 'standard';
 };
 
@@ -186,13 +191,12 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props
 ) => {
   const {
+    bulkSelection,
+    createPersonLabels,
     disabled,
     label,
-    onSelectMultiple,
     size,
     variant,
-    submitLabel,
-    title,
     ...restComponentProps
   } = props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
@@ -214,7 +218,7 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
     }
   }, [autoCompleteProps.isLoading]);
 
-  const showBulkButton = !!onSelectMultiple;
+  const showBulkButton = !!bulkSelection;
   const showAddButton = !disabled && wasLoading;
   const showButtonBar = showBulkButton || showAddButton;
 
@@ -300,17 +304,18 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         onClose={() => setCreatePersonOpen(false)}
         onSubmit={(e, person) => onChange(e, person)}
         open={createPersonOpen}
-        submitLabel={submitLabel}
-        title={title}
+        submitLabel={createPersonLabels?.submitLabel}
+        title={createPersonLabels?.title}
       />
       {showBulkButton && (
         <ZUIBulkPersonSelect
           onClose={() => setBulkDialogOpen(false)}
           onSubmit={(ids) => {
-            onSelectMultiple?.(ids);
+            bulkSelection.onSelectMultiple(ids);
             setBulkDialogOpen(false);
           }}
           open={bulkDialogOpen}
+          title={bulkSelection.title}
         />
       )}
     </>

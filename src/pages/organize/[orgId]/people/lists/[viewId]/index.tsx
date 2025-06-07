@@ -105,7 +105,9 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
               <ViewDataTable
                 columns={cols}
                 rows={rows}
-                selectionMode="selectWithBulkActions"
+                rowSelection={{
+                  mode: 'selectWithBulkActions',
+                }}
                 view={view}
               />
             ) : null}

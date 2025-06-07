@@ -126,22 +126,21 @@ interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
   disableAdd?: boolean;
   disableConfigure?: boolean;
-  // TODO #2789: Nest selection props?
-  onSelectionChange?: (selectedIds: number[]) => void;
   rows: ZetkinViewRow[];
-  selectedIds?: number[];
-  selectionMode?: 'select' | 'selectWithBulkActions';
+  rowSelection?: {
+    mode: 'select' | 'selectWithBulkActions';
+    onSelectionChange?: (selectedIds: number[]) => void;
+    selectedIds?: number[];
+  };
   view: ZetkinView;
 }
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
   disableAdd = false,
-  selectionMode,
   disableConfigure,
-  onSelectionChange,
   rows,
-  selectedIds,
+  rowSelection: selectionModel,
   view,
 }) => {
   const theme = useTheme();
@@ -156,13 +155,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(
     null
   );
-  const [selection, setSelection] = useState<number[]>(selectedIds ?? []);
+  const [selection, setSelection] = useState<number[]>(
+    selectionModel?.selectedIds ?? []
+  );
   useEffect(() => {
     if (
-      onSelectionChange &&
-      JSON.stringify(selection) !== JSON.stringify(selectedIds)
+      selectionModel?.onSelectionChange &&
+      JSON.stringify(selection) !== JSON.stringify(selectionModel.selectedIds)
     ) {
-      -onSelectionChange(selection);
+      selectionModel.onSelectionChange(selection);
     }
   }, [selection]);
   const [waiting, setWaiting] = useState(false);
@@ -458,7 +459,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       },
     },
     toolbar: {
-      disableBulkActions: selectionMode !== 'selectWithBulkActions',
+      disableBulkActions: selectionModel?.mode !== 'selectWithBulkActions',
       disableConfigure,
       disabled: waiting,
       gridColumns,
@@ -487,7 +488,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       <DataGridPro
         apiRef={gridApiRef}
         autoHeight={empty}
-        checkboxSelection={!!selectionMode}
+        checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
         disableRowSelectionOnClick={true}
         getRowClassName={(params) =>
