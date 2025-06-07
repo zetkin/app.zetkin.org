@@ -102,7 +102,7 @@ const ProjHomeLayout: FC<Props> = ({ children, org, proj }) => {
         >
           <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
             <ZUIText variant="headingLg">{proj.title}</ZUIText>
-            <ZUIText>{proj.info_text}</ZUIText>
+            {proj.info_text ? <ZUIText>{proj.info_text}</ZUIText> : null}
           </Box>
         </Box>
       </Box>

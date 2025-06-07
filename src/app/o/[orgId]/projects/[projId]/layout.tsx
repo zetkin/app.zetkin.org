@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import ProjHomeLayout from 'features/campaigns/layout/ProjHomeLayout';
@@ -38,21 +39,25 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const org = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${params.orgId}`
-  );
+  try {
+    const org = await apiClient.get<ZetkinOrganization>(
+      `/api/orgs/${params.orgId}`
+    );
 
-  const proj = await apiClient.get<ZetkinCampaign>(
-    `/api/orgs/${params.orgId}/campaigns/${params.projId}`
-  );
+    const proj = await apiClient.get<ZetkinCampaign>(
+      `/api/orgs/${params.orgId}/campaigns/${params.projId}`
+    );
 
-  return (
-    <HomeThemeProvider>
-      <ProjHomeLayout org={org} proj={proj}>
-        {children}
-      </ProjHomeLayout>
-    </HomeThemeProvider>
-  );
+    return (
+      <HomeThemeProvider>
+        <ProjHomeLayout org={org} proj={proj}>
+          {children}
+        </ProjHomeLayout>
+      </HomeThemeProvider>
+    );
+  } catch (err) {
+    return notFound();
+  }
 };
 
 export default MyHomeLayout;
