@@ -7,6 +7,7 @@ import { Msg } from 'core/i18n';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIFutures from 'zui/ZUIFutures';
 import ViewDataTable from 'features/views/components/ViewDataTable';
+import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 
 type Props = {
   onBack: () => void;
@@ -28,18 +29,20 @@ const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
         {({ data: { columns, rows, view } }) => {
           return (
             <Box>
-              <ViewDataTable
-                columns={columns}
-                disableAdd
-                disableConfigure
-                rows={rows}
-                rowSelection={{
-                  mode: 'select',
-                  onSelectionChange: setSelectedPersonIds,
-                  selectedIds: selectedPersonIds,
-                }}
-                view={view}
-              />
+              <AccessLevelProvider accessLevel="readonly" isRestricted={true}>
+                <ViewDataTable
+                  columns={columns}
+                  disableAdd
+                  disableConfigure
+                  rows={rows}
+                  rowSelection={{
+                    mode: 'select',
+                    onSelectionChange: setSelectedPersonIds,
+                    selectedIds: selectedPersonIds,
+                  }}
+                  view={view}
+                />
+              </AccessLevelProvider>
               <Divider />
               <Box
                 sx={{
