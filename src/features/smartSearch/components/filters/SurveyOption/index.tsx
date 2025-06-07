@@ -58,6 +58,9 @@ const SurveyOption = ({
   const { orgId } = useNumericRouteParams();
   const surveysWithElementsFuture = useSurveysWithElements(orgId);
   const surveys = surveysWithElementsFuture.data ?? [];
+  const surveysSorted = surveys.sort((s1, s2) => {
+    return s1.title.localeCompare(s2.title);
+  });
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<InternalConfig>(
     initialFilter,
@@ -92,6 +95,9 @@ const SurveyOption = ({
           e.type === ELEMENT_TYPE.QUESTION &&
           e.question.response_type === RESPONSE_TYPE.OPTIONS
       ) as ZetkinSurveyQuestionElement[]) || [];
+  const validQuestionsSorted = validQuestions.sort((vq1, vq2) => {
+    return vq1.question.question.localeCompare(vq2.question.question);
+  });
 
   const selectedElement = surveys
     .find((s) => s.id === filter.config.survey)
@@ -285,7 +291,7 @@ const SurveyOption = ({
                     <Msg id={localMessageIds.questionSelect.none} />
                   </MenuItem>
                 )}
-                {validQuestions.map((q) => (
+                {validQuestionsSorted.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
                     <Tooltip
                       placement="right-start"
@@ -328,7 +334,7 @@ const SurveyOption = ({
                     <Msg id={localMessageIds.surveySelect.none} />
                   </MenuItem>
                 )}
-                {surveys.map((s) => (
+                {surveysSorted.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
                     <Tooltip
                       placement="right-start"

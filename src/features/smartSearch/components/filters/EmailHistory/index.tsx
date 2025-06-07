@@ -49,6 +49,9 @@ const EmailHistory = ({
 }: EmailHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emailsFuture = useEmails(orgId).data || [];
+  const emailsFutureSorted = emailsFuture.sort((ef1, ef2) => {
+    return ef1.title!.localeCompare(ef2.title!);
+  });
   const projectsFuture = useCampaigns(orgId).data || [];
 
   const { filter, setConfig, setOp } =
@@ -153,7 +156,7 @@ const EmailHistory = ({
                   }
                   value={filter.config.email || ''}
                 >
-                  {emailsFuture?.map((email) => (
+                  {emailsFutureSorted?.map((email) => (
                     <MenuItem key={`email-${email.id}`} value={email.id}>
                       <Tooltip
                         placement="right-start"
