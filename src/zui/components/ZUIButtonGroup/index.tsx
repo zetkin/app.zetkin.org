@@ -17,6 +17,12 @@ interface ZUIButtonGroupProps {
   buttons: (ZUIButtonProps | ZUIIconButtonProps)[];
 
   /**
+   * If the component is full-width or not.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
    * The orientation of the button group.
    *
    * Defaults to "horizontal".
@@ -40,11 +46,13 @@ interface ZUIButtonGroupProps {
 
 const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   buttons,
+  fullWidth = false,
   orientation = 'horizontal',
   size = 'medium',
   variant = 'primary',
 }) => (
   <ButtonGroup
+    fullWidth={fullWidth}
     orientation={orientation}
     size={size}
     sx={{
@@ -77,9 +85,9 @@ const ZUIButtonGroup: FC<ZUIButtonGroupProps> = ({
   >
     {buttons.map((button) => {
       if ('icon' in button) {
-        return <ZUIIconButton {...button} />;
+        return <ZUIIconButton key={button.icon.name} {...button} />;
       } else {
-        return <ZUIButton {...button} />;
+        return <ZUIButton key={button.label} {...button} />;
       }
     })}
   </ButtonGroup>

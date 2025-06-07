@@ -1,6 +1,10 @@
-import { FC } from 'react';
+import { FC, RefObject, useState } from 'react';
 import { Dayjs } from 'dayjs';
-import { DatePicker, PickersDay } from '@mui/x-date-pickers';
+import {
+  DatePicker,
+  DateValidationError,
+  PickersDay,
+} from '@mui/x-date-pickers';
 
 import { ZUIDatePickerProps } from '../ZUIDatePicker';
 import { ZUILarge, ZUIMedium } from '../types';
@@ -9,6 +13,17 @@ type ZUIDateFieldProps = Pick<
   ZUIDatePickerProps,
   'datesToMark' | 'disablePast'
 > & {
+  /**
+   * If the field should be full width or not.
+   * Defaults to "false".
+   */
+  fullWidth?: boolean;
+
+  /**
+   * Pass a ref to the input element.
+   */
+  inputRef?: RefObject<HTMLInputElement>;
+
   /**
    * The label of the date field.
    */
@@ -23,23 +38,32 @@ type ZUIDateFieldProps = Pick<
   /**
    * The size of the component.
    */
-  size: ZUIMedium | ZUILarge;
+  size?: ZUIMedium | ZUILarge;
+
+  /**
+   * The value of the date field.
+   */
   value: Dayjs | null;
 };
 
 const ZUIDateField: FC<ZUIDateFieldProps> = ({
   disablePast = false,
   datesToMark = [],
+  fullWidth = false,
+  inputRef,
   label,
   onChange,
   size = 'medium',
   value,
 }) => {
+  const [error, setError] = useState<DateValidationError | null>(null);
   return (
     <DatePicker
       disablePast={disablePast}
+      inputRef={inputRef}
       label={label}
       onChange={(newDate) => onChange(newDate)}
+      onError={(newError) => setError(newError)}
       slotProps={{
         openPickerIcon: {
           sx: {
@@ -81,6 +105,7 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
           }),
         },
         textField: {
+          fullWidth: fullWidth,
           sx: (theme) => ({
             '& > label': {
               fontFamily: theme.typography.fontFamily,
@@ -92,7 +117,9 @@ const ZUIDateField: FC<ZUIDateFieldProps> = ({
               })`,
             },
             '& > label[data-shrink="true"]': {
-              color: theme.palette.secondary.main,
+              color: error
+                ? theme.palette.error.main
+                : theme.palette.secondary.main,
               fontSize: '0.813rem',
               transform: 'translate(0.813rem, -0.625rem)',
             },

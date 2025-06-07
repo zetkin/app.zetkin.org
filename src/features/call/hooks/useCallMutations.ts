@@ -16,7 +16,7 @@ export default function useCallMutations(orgId: number) {
   };
 
   const updateCall = (callId: number, data: ZetkinCallPatchBody) => {
-    return apiClient.patch<ZetkinCall>(
+    return apiClient.patch<ZetkinCall, ZetkinCallPatchBody>(
       `/api/orgs/${orgId}/calls/${callId}`,
       data
     );
