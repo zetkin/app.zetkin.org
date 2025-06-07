@@ -388,8 +388,8 @@ const viewsSlice = createSlice({
 
       if (viewItem) {
         viewItem.deleted = true;
+        invalidateDependentViews(viewId, state);
       }
-      invalidateDependentViews(getViewDependencies(state), viewId, state);
     },
     viewDuplicated: (state, action: PayloadAction<[ZetkinView]>) => {
       const [view] = action.payload;
@@ -432,8 +432,8 @@ const viewsSlice = createSlice({
         // Empty view to trigger reload
         rowList.items = [];
         rowList.isStale = true;
+        invalidateDependentViews(viewId, state);
       }
-      invalidateDependentViews(getViewDependencies(state), viewId, state);
     },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -541,6 +541,38 @@ interface Dependency {
   to: number;
 }
 
+function invalidateDependentViews(
+  viewUpdated: number | undefined,
+  state: ViewsStoreSlice
+) {
+  const dependencies = getViewDependencies(state);
+  const viewsVisited = [];
+  const viewsQueue = [];
+
+  while (dependencies.length > 0 && viewUpdated) {
+    viewsVisited.push(viewUpdated);
+
+    for (let i = 0; i < dependencies.length; i++) {
+      if (dependencies[i].to == viewUpdated) {
+        if (!viewsVisited.includes(dependencies[i].from)) {
+          viewsQueue.push(dependencies[i].from);
+        }
+
+        const updatedViewRows = state.rowsByViewId[dependencies[i].from];
+
+        if (updatedViewRows) {
+          updatedViewRows.items = [];
+          updatedViewRows.isStale = true;
+        }
+
+        dependencies.splice(i, 1);
+        i--;
+      }
+    }
+    viewUpdated = viewsQueue.pop();
+  }
+}
+
 function getViewDependencies(state: ViewsStoreSlice): Dependency[] {
   const dependencies: Dependency[] = [];
 
@@ -561,28 +593,6 @@ function getViewDependencies(state: ViewsStoreSlice): Dependency[] {
   });
 
   return dependencies;
-}
-
-function invalidateDependentViews(
-  dependencies: Dependency[],
-  updatedViewId: number,
-  state: ViewsStoreSlice
-) {
-  for (let i = 0; i < dependencies.length; i++) {
-    if (dependencies[i].to == updatedViewId) {
-      const newUpdatedViewId = dependencies[i].from;
-      dependencies.splice(i, 1);
-      i--;
-
-      const updatedViewRows = state.rowsByViewId[newUpdatedViewId];
-
-      if (updatedViewRows) {
-        updatedViewRows.items = [];
-        updatedViewRows.isStale = true;
-      }
-      invalidateDependentViews(dependencies, newUpdatedViewId, state);
-    }
-  }
 }
 
 export default viewsSlice;
