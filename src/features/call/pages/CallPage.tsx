@@ -11,6 +11,8 @@ import CallPrepare from '../components/CallPrepare';
 import CallOngoing from '../components/CallOngoing';
 import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
+import useCurrentCall from '../hooks/useCurrentCall';
+import ReportHeader from '../components/ReportHeader';
 
 type Props = {
   callAssId: string;
@@ -27,13 +29,19 @@ export enum CallStep {
 const CallPage: FC<Props> = ({ callAssId }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
+  const currentCall = useCurrentCall();
+
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
   );
 
+  if (!assignment) {
+    return null;
+  }
+
   return (
     <Box>
-      {activeStep == CallStep.STATS && assignment && (
+      {activeStep == CallStep.STATS && (
         <>
           <StatsHeader
             assignment={assignment}
@@ -46,7 +54,7 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           />
         </>
       )}
-      {activeStep == CallStep.PREPARE && assignment && (
+      {activeStep == CallStep.PREPARE && (
         <>
           <StepsHeader
             assignment={assignment}
@@ -59,7 +67,7 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <CallPrepare assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.ONGOING && assignment && (
+      {activeStep == CallStep.ONGOING && (
         <>
           <StepsHeader
             assignment={assignment}
@@ -72,24 +80,18 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <CallOngoing assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.REPORT && assignment && (
+      {activeStep == CallStep.REPORT && currentCall && (
         <>
-          <StepsHeader
+          <ReportHeader
             assignment={assignment}
-            onActivities={() => setActiveStep(CallStep.ONGOING)}
-            onBack={() => setActiveStep(CallStep.STATS)}
-            onNextStep={() => setActiveStep(CallStep.SUMMARY)}
-            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-            step={CallStep.REPORT}
+            callId={currentCall.id}
+            onBack={() => setActiveStep(CallStep.ONGOING)}
+            onForward={() => setActiveStep(CallStep.SUMMARY)}
           />
-
-          <CallReport
-            assignment={assignment}
-            onSummarize={() => setActiveStep(CallStep.SUMMARY)}
-          />
+          <CallReport assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.SUMMARY && assignment && (
+      {activeStep == CallStep.SUMMARY && (
         <>
           <StepsHeader
             assignment={assignment}

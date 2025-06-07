@@ -10,7 +10,8 @@ type IconColor =
   | 'success'
   | 'info'
   | 'warning'
-  | 'error';
+  | 'error'
+  | 'white';
 
 type ZUIIconProps = {
   /**
@@ -48,6 +49,7 @@ const ZUIIcon: FC<ZUIIconProps> = ({
     secondary: theme.palette.text.secondary,
     success: theme.palette.success.main,
     warning: theme.palette.warning.main,
+    white: theme.palette.common.white,
   };
 
   const fontSizes: Record<ZUISize, string> = {

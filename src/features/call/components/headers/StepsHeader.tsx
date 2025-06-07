@@ -54,7 +54,13 @@ const StepButtons: FC<StepButtonsProps> = ({
       </>
     );
   } else if (step === CallStep.ONGOING) {
-    return <ZUIButton label="Report" onClick={onNextStep} variant="primary" />;
+    return (
+      <ZUIButton
+        label="Finish and report"
+        onClick={onNextStep}
+        variant="primary"
+      />
+    );
   } else if (step === CallStep.REPORT) {
     return (
       <>

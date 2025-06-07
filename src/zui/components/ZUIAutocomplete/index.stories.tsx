@@ -20,14 +20,17 @@ export const Basic: Story = {
   args: {
     label: 'Add assignee',
     options: [
-      { label: 'Clara Zetkin' },
-      { label: 'Angela Davis' },
-      { label: 'Maya Angelou' },
-      { label: 'Huey P Newton' },
+      { label: 'Clara Zetkin', value: '1' },
+      { label: 'Angela Davis', value: '2' },
+      { label: 'Maya Angelou', value: '3' },
+      { label: 'Huey P Newton', value: '4' },
     ],
   },
   render: function Render(args) {
-    const [selection, setSelection] = useState<{ label: string } | null>(null);
+    const [selection, setSelection] = useState<{
+      label: string;
+      value: string;
+    } | null>(null);
     return (
       <ZUIAutocomplete
         {...args}
@@ -42,7 +45,9 @@ export const Basic: Story = {
 export const Multiple: Story = {
   args: Basic.args,
   render: function Render(args) {
-    const [selection, setSelection] = useState<{ label: string }[]>([]);
+    const [selection, setSelection] = useState<
+      { label: string; value: string }[]
+    >([]);
     return (
       <ZUIAutocomplete
         {...args}
@@ -58,10 +63,10 @@ export const Subtitles: Story = {
   args: {
     ...Basic.args,
     options: [
-      { label: 'Clara Zetkin', subtitle: 'claraZzz@riseup.net' },
-      { label: 'Angela Davis', subtitle: 'angela.davis@gmail.com' },
-      { label: 'Maya Angelou', subtitle: 'maya_1975@network.net' },
-      { label: 'Huey P Newton', subtitle: 'huey@hotmail.com' },
+      { label: 'Clara Zetkin', subtitle: 'claraZzz@riseup.net', value: '1' },
+      { label: 'Angela Davis', subtitle: 'angela.davis@gmail.com', value: '2' },
+      { label: 'Maya Angelou', subtitle: 'maya_1975@network.net', value: '3' },
+      { label: 'Huey P Newton', subtitle: 'huey@hotmail.com', value: '4' },
     ],
   },
   render: Basic.render,
@@ -70,7 +75,10 @@ export const Subtitles: Story = {
 export const WithAction: Story = {
   args: Basic.args,
   render: function Render(args) {
-    const [selection, setSelection] = useState<{ label: string } | null>(null);
+    const [selection, setSelection] = useState<{
+      label: string;
+      value: string;
+    } | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     return (
       <>
@@ -103,7 +111,10 @@ export const WithAction: Story = {
 export const Checkboxes: Story = {
   args: { ...Basic.args, checkboxes: true },
   render: function Render(args) {
-    const [selection, setSelection] = useState<{ label: string } | null>(null);
+    const [selection, setSelection] = useState<{
+      label: string;
+      value: string;
+    } | null>(null);
     return (
       <ZUIAutocomplete
         {...args}
@@ -125,6 +136,7 @@ export const AvatarsAndSubtitles: Story = {
           <ZUIPersonAvatar firstName="Clara" id={12} lastName="Zetkin" />
         ),
         subtitle: 'claraZzz@riseup.net',
+        value: '1',
       },
       {
         label: 'Angela Davis',
@@ -132,16 +144,19 @@ export const AvatarsAndSubtitles: Story = {
           <ZUIPersonAvatar firstName="Angela" id={42} lastName="Davis" />
         ),
         subtitle: 'angela.davis@gmail.com',
+        value: '2',
       },
       {
         label: 'Maya Angelou',
         picture: <ZUIPersonAvatar firstName="Maya" id={5} lastName="Angelou" />,
         subtitle: 'maya_1975@network.net',
+        value: '3',
       },
       {
         label: 'Huey P Newton',
         picture: <ZUIPersonAvatar firstName="Huey" id={98} lastName="Newton" />,
         subtitle: 'huey@hotmail.com',
+        value: '4',
       },
     ],
   },
@@ -151,7 +166,10 @@ export const AvatarsAndSubtitles: Story = {
 export const WithCustomFilterFunction: Story = {
   args: Subtitles.args,
   render: function Render(args) {
-    const [selection, setSelection] = useState<{ label: string } | null>(null);
+    const [selection, setSelection] = useState<{
+      label: string;
+      value: string;
+    } | null>(null);
     return (
       <ZUIAutocomplete
         {...args}
