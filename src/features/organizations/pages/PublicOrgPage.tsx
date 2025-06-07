@@ -94,6 +94,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                 <EventListItem
                   key={event.id}
                   event={event}
+                  href={`/o/${event.organization.id}/events/${event.id}`}
                   onClickSignUp={(ev) => {
                     if (!user) {
                       setPostAuthEvent(event);

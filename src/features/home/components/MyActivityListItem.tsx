@@ -7,6 +7,7 @@ import ZUIIconLabel from 'zui/components/ZUIIconLabel';
 
 type Props = {
   actions?: JSX.Element[];
+  href?: string;
   iconTitle?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
   image?: string;
   info: {
@@ -18,6 +19,7 @@ type Props = {
 
 const MyActivityListItem: FC<Props> = ({
   actions,
+  href,
   iconTitle,
   image,
   info,
@@ -35,6 +37,7 @@ const MyActivityListItem: FC<Props> = ({
           size="small"
         />
       ))}
+      href={href}
       {...(iconTitle ? { icon: iconTitle } : {})}
       src={image}
       title={title}

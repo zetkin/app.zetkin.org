@@ -1,5 +1,5 @@
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
 import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
 
@@ -16,8 +16,59 @@ const ZUIMapControls: React.FC<Props> = ({
   onZoomIn,
   onZoomOut,
 }) => {
-  const theme = useTheme();
   const [locating, setLocating] = useState(false);
+
+  return (
+    <ZUIMapControlButtonGroup>
+      <Button onClick={() => onZoomIn()}>
+        <Add />
+      </Button>
+      <Button onClick={() => onZoomOut()}>
+        <Remove />
+      </Button>
+      <Button onClick={onFitBounds}>
+        <Home />
+      </Button>
+      <Button
+        onClick={() => {
+          if (locating) {
+            return;
+          }
+          setLocating(true);
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              setLocating(false);
+
+              const latLng: [number, number] = [
+                pos.coords.latitude,
+                pos.coords.longitude,
+              ];
+
+              onGeolocate(latLng);
+            },
+            () => {
+              setLocating(false);
+            },
+            { enableHighAccuracy: true, timeout: 5000 }
+          );
+        }}
+      >
+        {locating ? (
+          <CircularProgress color="inherit" size={24} />
+        ) : (
+          <GpsFixed />
+        )}
+      </Button>
+    </ZUIMapControlButtonGroup>
+  );
+};
+
+export default ZUIMapControls;
+
+export const ZUIMapControlButtonGroup: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
+  const theme = useTheme();
 
   return (
     <Box
@@ -41,48 +92,8 @@ const ZUIMapControls: React.FC<Props> = ({
         }}
         variant="outlined"
       >
-        <Button onClick={() => onZoomIn()}>
-          <Add />
-        </Button>
-        <Button onClick={() => onZoomOut()}>
-          <Remove />
-        </Button>
-        <Button onClick={onFitBounds}>
-          <Home />
-        </Button>
-        <Button
-          onClick={() => {
-            if (locating) {
-              return;
-            }
-            setLocating(true);
-            navigator.geolocation.getCurrentPosition(
-              (pos) => {
-                setLocating(false);
-
-                const latLng: [number, number] = [
-                  pos.coords.latitude,
-                  pos.coords.longitude,
-                ];
-
-                onGeolocate(latLng);
-              },
-              () => {
-                setLocating(false);
-              },
-              { enableHighAccuracy: true, timeout: 5000 }
-            );
-          }}
-        >
-          {locating ? (
-            <CircularProgress color="inherit" size={24} />
-          ) : (
-            <GpsFixed />
-          )}
-        </Button>
+        {children}
       </ButtonGroup>
     </Box>
   );
 };
-
-export default ZUIMapControls;
