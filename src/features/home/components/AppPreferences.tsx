@@ -75,8 +75,8 @@ const AppPreferences: FC<Props> = ({ user }) => {
               <ZUIButton
                 disabled={selectedLanguage == user.lang}
                 label={messages.settings.appPreferences.lang.saveButton()}
-                onClick={() => {
-                  updateUser({ lang: selectedLanguage });
+                onClick={async () => {
+                  await updateUser({ lang: selectedLanguage });
                   location.reload();
                 }}
                 size="large"
