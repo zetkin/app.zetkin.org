@@ -4,21 +4,18 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
-import PrepareHeader from '../components/PrepareHeader';
-import StatsHeader from '../components/StatsHeader';
+import StepsHeader from '../components/headers/StepsHeader';
+import StatsHeader from '../components/headers/StatsHeader';
 import CallStats from '../components/CallStats';
 import CallPrepare from '../components/CallPrepare';
 import CallOngoing from '../components/CallOngoing';
-import OngoingHeader from '../components/OngoingHeader';
 import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
-import useAllocateCall from '../hooks/useAllocateCall';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportHeader from '../components/ReportHeader';
 
 type Props = {
   callAssId: string;
-  orgId: number;
 };
 
 export enum CallStep {
@@ -29,7 +26,7 @@ export enum CallStep {
   SUMMARY = 4,
 }
 
-const CallPage: FC<Props> = ({ callAssId, orgId }) => {
+const CallPage: FC<Props> = ({ callAssId }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const currentCall = useCurrentCall();
@@ -37,7 +34,6 @@ const CallPage: FC<Props> = ({ callAssId, orgId }) => {
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
   );
-  const { allocateCall } = useAllocateCall(orgId, parseInt(callAssId));
 
   if (!assignment) {
     return null;
@@ -49,6 +45,7 @@ const CallPage: FC<Props> = ({ callAssId, orgId }) => {
         <>
           <StatsHeader
             assignment={assignment}
+            onBack={() => setActiveStep(CallStep.STATS)}
             onPrepareCall={() => setActiveStep(CallStep.PREPARE)}
           />
           <CallStats
@@ -59,11 +56,12 @@ const CallPage: FC<Props> = ({ callAssId, orgId }) => {
       )}
       {activeStep == CallStep.PREPARE && (
         <>
-          <PrepareHeader
+          <StepsHeader
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onStartCall={() => setActiveStep(CallStep.ONGOING)}
+            onNextStep={() => setActiveStep(CallStep.ONGOING)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+            step={CallStep.PREPARE}
           />
 
           <CallPrepare assignment={assignment} />
@@ -71,12 +69,14 @@ const CallPage: FC<Props> = ({ callAssId, orgId }) => {
       )}
       {activeStep == CallStep.ONGOING && (
         <>
-          <OngoingHeader
+          <StepsHeader
             assignment={assignment}
-            forwardButtonLabel="Finish and report"
-            onForward={() => setActiveStep(CallStep.REPORT)}
+            onBack={() => setActiveStep(CallStep.STATS)}
+            onNextStep={() => setActiveStep(CallStep.REPORT)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             step={CallStep.ONGOING}
           />
+
           <CallOngoing assignment={assignment} />
         </>
       )}
@@ -87,20 +87,18 @@ const CallPage: FC<Props> = ({ callAssId, orgId }) => {
             callId={currentCall.id}
             onBack={() => setActiveStep(CallStep.ONGOING)}
             onForward={() => setActiveStep(CallStep.SUMMARY)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
           <CallReport assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.SUMMARY && (
         <>
-          <OngoingHeader
+          <StepsHeader
             assignment={assignment}
-            forwardButtonLabel="Keep calling"
             onBack={() => setActiveStep(CallStep.STATS)}
-            onForward={() => {
-              setActiveStep(CallStep.PREPARE);
-              allocateCall();
-            }}
+            onNextStep={() => setActiveStep(CallStep.PREPARE)}
+            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             step={CallStep.SUMMARY}
           />
           <CallSummary />

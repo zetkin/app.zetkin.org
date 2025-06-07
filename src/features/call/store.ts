@@ -13,6 +13,7 @@ import { ZetkinEventWithStatus } from 'features/home/types';
 export interface CallStoreSlice {
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
+  queueHasError: unknown;
   outgoingCalls: RemoteList<ZetkinCall>;
   stateByCallId: Record<number, RemoteItem<CallState>>;
 }
@@ -21,6 +22,7 @@ const initialState: CallStoreSlice = {
   currentCallId: null,
   eventsByTargetId: {},
   outgoingCalls: remoteList(),
+  queueHasError: null,
   stateByCallId: {},
 };
 
@@ -52,17 +54,14 @@ const CallSlice = createSlice({
     },
     allocateCallError: (state, action: PayloadAction<unknown>) => {
       const error = action.payload;
-
-      state.outgoingCalls = remoteList();
-      state.outgoingCalls.error = error;
-      state.outgoingCalls.loaded = new Date().toISOString();
-      state.outgoingCalls.isLoading = false;
+      state.queueHasError = error;
     },
     allocateNewCallLoad: (state) => {
       state.outgoingCalls.isLoading = true;
     },
     allocateNewCallLoaded: (state, action: PayloadAction<ZetkinCall>) => {
       state.currentCallId = action.payload.id;
+      state.queueHasError = null;
 
       const callExists = state.outgoingCalls.items.some(
         (call) => call.id === action.payload.id
