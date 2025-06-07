@@ -1,5 +1,6 @@
 import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -17,7 +18,6 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { CallStep } from 'features/call/pages/CallPage';
 import useAllocateCall from 'features/call/hooks/useAllocateCall';
 import { ZetkinCall } from 'features/call/types';
-import { useRouter } from 'next/navigation';
 
 type StepButtonsProps = {
   assignment: ZetkinCallAssignment;
@@ -109,10 +109,6 @@ const StepsHeader: FC<StepsHeaderProps> = ({
 }) => {
   const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
-  const { allocateCall } = useAllocateCall(
-    assignment.organization.id,
-    assignment.id
-  );
   const [showModal, setShowModal] = useState(false);
   const outgoingCalls = useOutgoingCalls();
   const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
