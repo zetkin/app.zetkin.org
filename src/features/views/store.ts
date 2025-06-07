@@ -5,6 +5,7 @@ import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
+import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
@@ -388,6 +389,7 @@ const viewsSlice = createSlice({
       if (viewItem) {
         viewItem.deleted = true;
       }
+      invalidateDependentViews(getViewDependencies(state), viewId, state);
     },
     viewDuplicated: (state, action: PayloadAction<[ZetkinView]>) => {
       const [view] = action.payload;
@@ -431,6 +433,7 @@ const viewsSlice = createSlice({
         rowList.items = [];
         rowList.isStale = true;
       }
+      invalidateDependentViews(getViewDependencies(state), viewId, state);
     },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -531,6 +534,55 @@ function updateCallOnRelevantRows(
       }
     }
   });
+}
+
+interface Dependency {
+  from: number;
+  to: number;
+}
+
+function getViewDependencies(state: ViewsStoreSlice): Dependency[] {
+  const dependencies: Dependency[] = [];
+
+  state.viewList.items.forEach((viewItem) => {
+    const viewData = viewItem.data;
+    const viewQuery = viewData?.content_query;
+
+    if (viewQuery) {
+      viewQuery.filter_spec.forEach((queryType) => {
+        if (queryType.type === 'person_view') {
+          dependencies.push({
+            from: viewData.id,
+            to: (queryType.config as PersonViewFilterConfig).view,
+          });
+        }
+      });
+    }
+  });
+
+  return dependencies;
+}
+
+function invalidateDependentViews(
+  dependencies: Dependency[],
+  updatedViewId: number,
+  state: ViewsStoreSlice
+) {
+  for (let i = 0; i < dependencies.length; i++) {
+    if (dependencies[i].to == updatedViewId) {
+      const newUpdatedViewId = dependencies[i].from;
+      dependencies.splice(i, 1);
+      i--;
+
+      const updatedViewRows = state.rowsByViewId[newUpdatedViewId];
+
+      if (updatedViewRows) {
+        updatedViewRows.items = [];
+        updatedViewRows.isStale = true;
+      }
+      invalidateDependentViews(dependencies, newUpdatedViewId, state);
+    }
+  }
 }
 
 export default viewsSlice;
