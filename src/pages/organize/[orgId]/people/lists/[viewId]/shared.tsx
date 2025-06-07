@@ -15,6 +15,9 @@ import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
 import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinView } from 'features/views/components/types';
+import messageIds from 'features/views/l10n/messageIds';
+import { getBrowserLanguage } from 'utils/locale';
+import getServerMessages from 'core/i18n/server';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -42,9 +45,16 @@ async function getAccessLevel(
     return 'configure';
   }
 
-  const accessList = await apiClient.get<ZetkinObjectAccess[]>(
-    `/api/orgs/${orgId}/people/views/${viewId}/access`
-  );
+  let accessList: ZetkinObjectAccess[] = [];
+  try {
+    accessList = await apiClient.get<ZetkinObjectAccess[]>(
+      `/api/orgs/${orgId}/people/views/${viewId}/access`
+    );
+  } catch (e) {
+    if ((e as Error).message == 'Error during request: 403') {
+      return null;
+    }
+  }
   const accessObject = accessList.find(
     (obj) => obj.person.id == myMembership.profile.id
   );
@@ -57,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   // TODO: Handle this some other way with server-side models?
   const apiClient = new BackendApiClient(ctx.req.headers);
-  const accessLevel = await getAccessLevel(
+  let accessLevel = await getAccessLevel(
     apiClient,
     parseInt(orgId as string),
     parseInt(viewId as string)
@@ -67,39 +77,56 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     await apiClient.get<ZetkinView>(
       `/api/orgs/${orgId}/people/views/${viewId}`
     );
-
-    return {
-      props: {
-        accessLevel,
-        orgId,
-        viewId,
-      },
-    };
   } catch (err) {
-    return {
-      notFound: true,
-    };
+    accessLevel = null;
   }
+
+  let message = '';
+  if (accessLevel == null) {
+    const lang = getBrowserLanguage(ctx.req);
+    const messages = await getServerMessages(lang, messageIds);
+    message = messages.shareDialog.share.disallowedAccess();
+  }
+
+  return {
+    props: {
+      accessLevel,
+      message,
+      orgId,
+      viewId,
+    },
+  };
 }, scaffoldOptions);
 
 type SharedViewPageProps = {
   accessLevel: ZetkinObjectAccess['level'];
+  message: string;
   orgId: string;
   viewId: string;
 };
 
 const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   accessLevel,
+  message,
   orgId,
   viewId,
 }) => {
+  if (accessLevel === null) {
+    return <p>{message}</p>;
+  }
+
   const parsedOrgId = parseInt(orgId);
   const parsedViewId = parseInt(viewId);
 
+  // Allow conditional hooks here since `accessLevel` will never change, meaning we will not break
+  // the rules of hooks.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { columnsFuture, rowsFuture } = useViewGrid(parsedOrgId, parsedViewId);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const viewFuture = useView(parsedOrgId, parsedViewId);
   const canConfigure = accessLevel == 'configure';
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const onServer = useServerSide();
   if (onServer) {
     return null;
@@ -136,7 +163,11 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
 };
 
 SharedViewPage.getLayout = function getLayout(page) {
-  return <SharedViewLayout>{page}</SharedViewLayout>;
+  return page.props.accessLevel == null ? (
+    <div>{page}</div>
+  ) : (
+    <SharedViewLayout>{page}</SharedViewLayout>
+  );
 };
 
 export default SharedViewPage;

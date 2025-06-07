@@ -374,6 +374,9 @@ export default makeMessages('feat.views', {
       collabInstructions: m<{ viewLink: ReactElement }>(
         'After adding collaborators, copy and send them the {viewLink}'
       ),
+      disallowedAccess: m(
+        'The page does not exist or your user is not allowed to view it'
+      ),
       showOfficials: m('Show officials'),
       statusLabel: m<{ collaborators: number; officials: number }>(
         'Shared with {collaborators, plural, =1 {1 collaborator} other {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}} can access all lists.'
