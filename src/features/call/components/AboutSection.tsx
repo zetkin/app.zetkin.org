@@ -38,10 +38,10 @@ const AboutSection: FC<AboutSectionProps> = ({ call }) => {
               </ZUIText>
               {`, the most recent being `}
               <ZUIText display="inline" variant="bodyMdSemiBold">
-                {call.target.past_actions.last_action.title}
+                {call.target.past_actions.last_action?.title}
               </ZUIText>{' '}
               <ZUIRelativeTime
-                datetime={call.target.past_actions.last_action.end_time}
+                datetime={call.target.past_actions.last_action?.end_time || ''}
               />
               .
             </ZUIText>

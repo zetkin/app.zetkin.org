@@ -49,7 +49,7 @@ export default async function Page({ params }: Props) {
             </Box>
           }
         >
-          <CallPage callAssId={callAssId} />
+          <CallPage callAssId={callAssId} orgId={assignment.organization.id} />
         </Suspense>
       </HomeThemeProvider>
     );

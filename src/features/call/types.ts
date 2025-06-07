@@ -31,20 +31,22 @@ export type ZetkinCallTarget = ZetkinPerson & {
   future_actions: ZetkinEvent[];
   name: string;
   past_actions: {
-    last_action: ZetkinEvent;
+    last_action: ZetkinEvent | null;
     num_actions: number;
   };
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchBody = {
-  call_back_after?: string | null;
-  message_to_organizer: string | null;
-  notes: string | null;
-  organizer_action_needed: boolean;
-  state: number;
-};
+export type ZetkinCallPatchBody = Pick<
+  ZetkinCall,
+  'message_to_organizer' | 'notes' | 'organizer_action_needed' | 'state'
+> &
+  Partial<Pick<ZetkinCall, 'call_back_after'>>;
 
 export interface CombinedEventResponse extends ZetkinEventResponse {
   action: ZetkinEvent;
 }
+
+export type CallState = {
+  report: ZetkinCallPatchBody;
+};
