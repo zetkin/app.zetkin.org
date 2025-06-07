@@ -23,7 +23,7 @@ type PreviousCallsInfoProps = {
   call: ZetkinCall;
 };
 
-const labels: Record<number, string> = {
+export const labels: Record<number, string> = {
   1: 'Success',
   11: 'No response',
   12: 'Line busy',
@@ -33,7 +33,7 @@ const labels: Record<number, string> = {
   21: 'Wrong number',
 };
 
-const icons: Record<number, MUIIcon> = {
+export const icons: Record<number, MUIIcon> = {
   1: CallMade,
   11: CallMissedOutgoing,
   12: KeyboardTab,
@@ -43,7 +43,7 @@ const icons: Record<number, MUIIcon> = {
   21: TurnSlightLeft,
 };
 
-const colors: Record<number, 'success' | 'warning' | 'error'> = {
+export const colors: Record<number, 'success' | 'warning' | 'error'> = {
   1: 'success',
   11: 'error',
   12: 'error',

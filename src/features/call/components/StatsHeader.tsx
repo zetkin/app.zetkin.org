@@ -68,8 +68,8 @@ const StatsHeader: FC<StatsHeaderProps> = ({ assignment, onPrepareCall }) => {
               <ZUIButton
                 disabled={error !== null ? true : false}
                 label="Start calling"
-                onClick={() => {
-                  allocateCall();
+                onClick={async () => {
+                  await allocateCall();
                   onPrepareCall();
                 }}
                 variant="primary"
