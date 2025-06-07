@@ -9,20 +9,18 @@ core:
     continueButton: Ga verder naar oude Zetkin
     header: Je wordt omgeleid
     info: Je gebruikt een nog niet gelanceerde versie van Zetkin die de functie die
-      je wilt gebruiken niet ondersteunt. Je wordt doorgestuurd naar de oudere versie
-      van Zetkin die deze functie wel ondersteunt.
+      je wilt gebruiken niet ondersteunt. Je wordt doorgestuurd naar de oudere
+      versie van Zetkin die deze functie wel ondersteunt.
 feat:
   breadcrumbs:
     elements:
       activities: Activiteiten
       archive: Archief
-      areas: Omgevingen
       assignees: Verantwoordelijke personen
       calendar: Kalender
       callassignments: Bel opdrachten
       callers: Bellers
       campaigns: Projecten
-      canvassassignments: Wervingsopdrachten
       closed: Gesloten
       compose: Samenstellen
       conversation: Gesprek
@@ -93,8 +91,8 @@ feat:
         all: Alles
         none: Geen
       type: Typ om inhoud te filteren
-    lastDayWithEvents: Er {numEvents, plural, one {was one event} other {were {numEvents}
-      events}} op de laatst actieve dag
+    lastDayWithEvents: Er {numEvents, plural, one {was one event} other {were
+      {numEvents} events}} op de laatst actieve dag
     loadMore: Meer laden
     moreEvents: '{numEvents, plural, one {# more event} other {# more events}}'
     next: VOLGENDE
@@ -110,8 +108,8 @@ feat:
       editParticipants: Deelnemers beheren
       ellipsisMenu:
         cancel: Annuleren
-        cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en inschrijvers
-          te informeren dat de gebeurtenissen zijn geannuleerd!
+        cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en
+          inschrijvers te informeren dat de gebeurtenissen zijn geannuleerd!
         confirmCancel: Weet je zeker dat je de geselecteerde gebeurtenis wilt annuleren?
         confirmDelete: Weet je zeker dat je de geselecteerde gebeurtenis wilt verwijderen?
         delete: Verwijderen
@@ -171,8 +169,8 @@ feat:
       title: Bellers
     conversation:
       instructions:
-        confirm: Wil je alle niet-opgeslagen wijzigingen verwijderen en teruggaan
-          naar de opgeslagen instructies?
+        confirm: Wil je alle niet-opgeslagen wijzigingen verwijderen en teruggaan naar
+          de opgeslagen instructies?
         editorPlaceholder: Voeg instructies toe voor de bellers
         revertLink: Teruggaan naar opgeslagen versie?
         saveButton: Opslaan
@@ -186,9 +184,9 @@ feat:
             maar kan er ook toe leiden dat belangrijke informatie verloren gaat.
           title: Sta beller toe om notities te maken
         targetData:
-          message: Target-naam en telefoonnummer zijn altijd zichtbaar voor bellers.
-            Door extra target-gegevens in te schakelen worden alle persoonsgegevens-velden
-            gedeeld met bellers.
+          message: Target-naam en telefoonnummer zijn altijd zichtbaar voor bellers. Door
+            extra target-gegevens in te schakelen worden alle
+            persoonsgegevens-velden gedeeld met bellers.
           title: Toon aanvullende target gegevens
         title: Gespreksinstellingen
     done:
@@ -259,7 +257,6 @@ feat:
       create: Maak nieuw project
       filter:
         calls: Bel opdrachten
-        canvasses: Werf opdrachten
         emails: E-mails
         filter: Filter resultaten
         standalones: Op zichzelf staande gebeurtenissen
@@ -277,15 +274,14 @@ feat:
     createButton:
       createActivity: Maken
       createCallAssignment: Bel opdracht
-      createCanvassAssignment: Werf opdracht
       createEmail: E-mail
       createEvent: Gebeurtenis
       createSurvey: Vragenlijst
       createTask: Taak
     events: Gebeurtenissen
     feedback:
-      copy: Het verzamelen van feedback (tijdens bel-acties of op zichzelf staand)
-        kan je helpen efficiënter te werken
+      copy: Het verzamelen van feedback (tijdens bel-acties of op zichzelf staand) kan
+        je helpen efficiënter te werken
       create: Vragenlijst maken
       heading: Feedback en vragenlijsten (niet geconfigureerd)
     form:
@@ -295,8 +291,6 @@ feat:
         create: Project maken
         error: Er is een fout opgetreden bij het aanmaken van het project
         newCampaign: Mijn project
-      createCanvassAssignment:
-        defaultQuestion: Heb je deze missie afgerond?
       createEmail:
         newEmail: E-mail zonder titel
       createSurvey:
@@ -308,8 +302,8 @@ feat:
         error: Er is een error opgetreden tijdens het verwijderen van het project
         submitButton: Bevestig verwijdering
         title: Verwijder project
-        warning: Weet je zeker dat je dit project wilt verwijderen? Deze handeling
-          kun je niet ongedaan maken.
+        warning: Weet je zeker dat je dit project wilt verwijderen? Deze handeling kun
+          je niet ongedaan maken.
       description: Beschrijving
       edit: Bewerk project
       editCampaignTitle:
@@ -339,7 +333,6 @@ feat:
     linkGroup:
       createActivity: Voeg toe
       createCallAssignment: Bel opdracht
-      createCanvassAssignment: Werf opdracht
       createEmail: E-mail
       createEvent: Gebeurtenis
       createSurvey: Vragenlijst
@@ -347,8 +340,8 @@ feat:
       public: Openbare pagina
       settings: Instellingen bewerken
     mobilization:
-      copy: Het organiseren van een bel-actie om je leden te mobiliseren zal de deelname
-        enorm verhogen
+      copy: Het organiseren van een bel-actie om je leden te mobiliseren zal de
+        deelname enorm verhogen
       create: Bel-opdracht aanmaken
       heading: Mobilisering en outreach (niet geconfigureerd)
     noManager: Geen project manager
@@ -407,9 +400,9 @@ feat:
         phone: Telefoonnummer
       title: Voeg kopieën samen
       warningMessage: Alle gegevens met betrekking tot één van de persoonsrecords
-        worden overgedragen naar de samengevoegde persoon. Dit omvat deelname aan
-        gebeurtenissen, vragenlijst-inzendingen, tags, etc. Maar wat je in de velden
-        hierboven weglaat, gaat verloren.
+        worden overgedragen naar de samengevoegde persoon. Dit omvat deelname
+        aan gebeurtenissen, vragenlijst-inzendingen, tags, etc. Maar wat je in
+        de velden hierboven weglaat, gaat verloren.
       warningTitle: Mogelijk risico data te verliezen
     page:
       dismiss: Negeer
@@ -432,10 +425,10 @@ feat:
       noSubject: Je e-mail heeft geen onderwerp. Ga naar Instellingen in het tabblad
         Opstellen en voeg er een toe.
       notTargeted: Je e-mail heeft geen targets. Ga naar de Targets sectie in het
-        Overzicht tabblad om een Slimme Zoekopdracht aan te maken en je targets te
-        kiezen.
-      targetsNotLocked: Je targets zijn niet vastgezet. Ga naar de Targets sectie
-        in het Overzicht tabblad om dit te doen.
+        Overzicht tabblad om een Slimme Zoekopdracht aan te maken en je targets
+        te kiezen.
+      targetsNotLocked: Je targets zijn niet vastgezet. Ga naar de Targets sectie in
+        het Overzicht tabblad om dit te doen.
     deliveryStatus:
       notLocked: Niet vastgezet, niet ingepland
       notProcessed: Staat ingepland om zo snel mogelijk bezorgd te worden
@@ -443,23 +436,23 @@ feat:
       wasSent: Verzonden op {datetime}
       willSend: Zal verzonden worden op {datetime}
     editor:
-      readOnlyModeInfo: Deze e-mail staat in de alleen-lezenmodus omdat deze is gepland
-        voor bezorging of al is verzonden. Als deze is gepland voor bezorging en je
-        wil wijzigingen aanbrengen, moet je eerst de bezorging annuleren.
+      readOnlyModeInfo: Deze e-mail staat in de alleen-lezenmodus omdat deze is
+        gepland voor bezorging of al is verzonden. Als deze is gepland voor
+        bezorging en je wil wijzigingen aanbrengen, moet je eerst de bezorging
+        annuleren.
       settings:
         tabs:
           content: Inhoud
           preview:
             confirmation: Er is een voorbeeld naar je e-mailadres verzonden.
-            instructions: Hier kun je deze e-mail naar jezelf sturen, zodat je alvast
-              kunt zien hoe de e-mail er voor de ontvangers uitziet.
+            instructions: Hier kun je deze e-mail naar jezelf sturen, zodat je alvast kunt
+              zien hoe de e-mail er voor de ontvangers uitziet.
             okButton: OK!
             sendButton: Verzenden
             sendTo: 'De e-mail wordt verzonden naar dit adres:'
             title: Voorbeeld
           settings:
             senderAddressInputLabel: Adres verzender
-            senderNameInputLabel: Naam verzender
             subjectInputLabel: Onderwerp
             title: Instellingen
       tools:
@@ -499,28 +492,27 @@ feat:
       sendNow:
         alert:
           desc: Er is misschien een beter moment op de dag om te versturen. Ingeplande
-            versturing geeft collega-organisatoren ook de kans om zich aan te passen
-            aan jouw plannen.
+            versturing geeft collega-organisatoren ook de kans om zich aan te
+            passen aan jouw plannen.
           title: Nu versturen is mogelijk niet optimaal
         header: Nu versturen
       setDate: Stel bezorg datum in om verder te gaan
       timeZone: Tijdzone
-      warning: Weet je zeker dat je deze e-mail wil verwijderen? Deze actie is permanent
-        en kan niet teruggedraaid worden.
+      warning: Weet je zeker dat je deze e-mail wil verwijderen? Deze actie is
+        permanent en kan niet teruggedraaid worden.
     emailFeatureIsBlocked:
-      errorMessage: Je organisatie heeft op het moment geen toegang tot de e-mail
-        optie.
+      errorMessage: Je organisatie heeft op het moment geen toegang tot de e-mail optie.
       goBackButton: Terug gaan
     insights:
       clicked:
         descriptions:
           ctor: Click-to-open rate (CTOR) is het aantal ontvangers die de e-mail hebben
-            geopend en ook op een van de links hebben geklikt. Een hoge rate is een
-            indicator van een goed gerichte e-mail met overtuigende tekst.
-          ctr: Clickthrough rate (CTR) is het percentage ontvangers dat niet alleen
-            de e-mail heeft geopend, maar ook op een van de links heeft geklikt. Een
-            hoge rate is een indicator van een goed gerichte e-mail met overtuigende
-            tekst.
+            geopend en ook op een van de links hebben geklikt. Een hoge rate is
+            een indicator van een goed gerichte e-mail met overtuigende tekst.
+          ctr: Clickthrough rate (CTR) is het percentage ontvangers dat niet alleen de
+            e-mail heeft geopend, maar ook op een van de links heeft geklikt.
+            Een hoge rate is een indicator van een goed gerichte e-mail met
+            overtuigende tekst.
         gauge:
           headers:
             ctor: CTOR
@@ -542,14 +534,15 @@ feat:
             firstMonth: Eerste 30 dagen
             firstWeek: Eerste 7 dagen
         description: Open rate is het percentage ontvangers dat de e-mail heeft geopend.
-          Een hoge rate is een indicator van goede targeting en een overtuigende onderwerpregel.
+          Een hoge rate is een indicator van goede targeting en een overtuigende
+          onderwerpregel.
         gauge:
           header: Open rate
         header: Geopend
     ready:
       missingEmailsDescription: Er {numPeople, plural, one {is een persoon} other
-        {zijn mensen}} met een ontbrekend e-mailadres in de doelgroep. Los het op
-        door deze toe te voegen aan de doelgroep.
+        {zijn mensen}} met een ontbrekend e-mailadres in de doelgroep. Los het
+        op door deze toe te voegen aan de doelgroep.
       sentSubtitle: Targets die beschikbaar waren voor verzending
       subtitle: Targets die beschikbaar zijn voor verzending
       title: Klaar
@@ -573,16 +566,16 @@ feat:
       locked: Doelen zijn vastgezet voor verzending
       lockedChip: Vastgezet
       title: Doelen
-      unlockAlert: Aan de hand van de Smart Search zul je mensen toevoegen of verwijderen
-        van de target groep door te ontgrendelen.
+      unlockAlert: Aan de hand van de Smart Search zul je mensen toevoegen of
+        verwijderen van de target groep door te ontgrendelen.
       unlockButton: Ontgrendelen
       viewButton: Bekijk doelgroep
     unsubscribePage:
       consent: Ik begrijp het
       h: Uitschrijven van {org}
-      info: Na uitschrijving zal je geen massa e-mails meer ontvangen van deze organisatie.
-        Mogelijk ontvang je nog steeds herinneringen en andere e-mails die specifiek
-        voor jou bedoeld zijn.
+      info: Na uitschrijving zal je geen massa e-mails meer ontvangen van deze
+        organisatie. Mogelijk ontvang je nog steeds herinneringen en andere
+        e-mails die specifiek voor jou bedoeld zijn.
       unsubButton: Schrijf me uit
     unsubscribedPage:
       h: Uitgeschreven!
@@ -613,18 +606,16 @@ feat:
       warningCancel: '"{eventTitle}" zal geannuleerd worden.'
       warningRestore: '"{eventTitle}" zal hersteld worden'
     eventChangeCampaignDialog:
-      dialogTitle: Verplaats gebeurtenis
       error: 'Foutsituatie: Kan gebeurtenis niet verplaatsen naar het geselecteerde
         project'
-      moveButtonLabel: Verplaatsen
       success: Gebeurtenis verplaatst naar "{campaignTitle}"
     eventContactCard:
       header: Contacteer
       noContact: Geen contactpersoon toegewezen!
       removeButton: Verwijder
       selectPlaceholder: Selecteer contact persoon
-      warningText: '{name} zal niet langer de contactpersoon zijn, maar blijft wel
-        als deelnemer aan evenement geboekt'
+      warningText: '{name} zal niet langer de contactpersoon zijn, maar blijft wel als
+        deelnemer aan evenement geboekt'
     eventOverviewCard:
       buttonEndDate: + Eind datum
       createLocation: Creëer een nieuwe locatie
@@ -663,10 +654,11 @@ feat:
       columnPhone: Telefoon
       contactTooltip: Contactpersoon
       descriptionBooked: Dit zijn de mensen die je hebt geboekt en op wie je rekent
-        voor het evenement. Om hun deelname te annuleren, moeten ze contact met jou
-        opnemen en je kunt ze handmatig annuleren.
+        voor het evenement. Om hun deelname te annuleren, moeten ze contact met
+        jou opnemen en je kunt ze handmatig annuleren.
       descriptionCancelled: Deze mensen hebben hun deelname om een ​​of andere reden
-        geannuleerd. We houden ze hier zodat je ze niet opnieuw probeert te boeken.
+        geannuleerd. We houden ze hier zodat je ze niet opnieuw probeert te
+        boeken.
       descriptionSignups: Deze mensen hebben zich aangemeld in het activistenportaal.
         Ze kunnen hun aanmelding op elk moment annuleren.
       dropDownAttended: Bevestigde aanwezigheid
@@ -679,8 +671,8 @@ feat:
       backToShifts: Terug naar shift lijst
       booked: Geboekt
       cancel: Annuleren
-      cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en inschrijvers
-        te informeren dat het evenement is geannuleerd!
+      cancelWarning: Als je dit doet, vergeet dan niet om alle deelnemers en
+        inschrijvers te informeren dat het evenement is geannuleerd!
       confirmCancel: Weet je zeker dat dit evenement wil annuleren?
       confirmDelete: Weet je zeker dat dit evenement wil verwijderen?
       contactPerson: Contactpersoon
@@ -703,8 +695,8 @@ feat:
       reminded: Herinnerd
       shifts: Shift
       signups: Aanmeldingen
-      unsentReminders: '{numMissing, plural, =1 {One participant} other {# participants}}
-        hebben nog geen herinnering ontvangen'
+      unsentReminders: '{numMissing, plural, =1 {One participant} other {#
+        participants}} hebben nog geen herinnering ontvangen'
     eventRelatedCard:
       header: Gerelateerde events
     eventShiftModal:
@@ -752,8 +744,8 @@ feat:
       cancel: Annuleer
       createLocation: Maak nieuwe locatie
       description: Omschrijving
-      infoText: Je kunt klikken en slepen om de kaart te verschuiven en scrollen of
-        je vingers naar elkaar toe bewegen om te vergroten. Om een ​​nieuwe locatie
+      infoText: Je kunt klikken en slepen om de kaart te verschuiven en scrollen of je
+        vingers naar elkaar toe bewegen om te vergroten. Om een ​​nieuwe locatie
         aan te maken, kun je op een lege plek op de kaart klikken.
       move: Veplaats
       moveInstructions: Versleep de speld om een locatie te selecteren.
@@ -775,21 +767,20 @@ feat:
       pending: Pending sign-ups
       recordButton: Record attendance
       remindButton: Herinner iedereen
-      remindButtondisabledTooltip: Je moet een contactpersoon kiezen voordat je herinneringen
-        kunt uitsturen
+      remindButtondisabledTooltip: Je moet een contactpersoon kiezen voordat je herinneringen kunt uitsturen
       reqParticipantsHelperText: Minimaal aantal deelnemers
       reqParticipantsLabel: Minimale aantal deelnemers
     participantsModal:
       affected:
-        empty: Je hebt nog geen wijzigingen doorgevoerd. Kies een gebeurtenis om deelnemers
-          te verplaatsen.
+        empty: Je hebt nog geen wijzigingen doorgevoerd. Kies een gebeurtenis om
+          deelnemers te verplaatsen.
         header: Personen geraakt
       discardButton: Wijzigingen verwijderen
       emptyStates:
         booked: Niemand is geboekt voor dit event. Je kunt deelnemers toevoegen vanuit
           de pool.
-        pending: Er zijn geen extra deelnemers in de pool. Je kunt deelnemers van
-          een event naar de pool verplaatsen om hier met hen te werken.
+        pending: Er zijn geen extra deelnemers in de pool. Je kunt deelnemers van een
+          event naar de pool verplaatsen om hier met hen te werken.
       participants:
         buttons:
           addBack: Voeg terug toe
@@ -856,13 +847,12 @@ feat:
     activityList:
       actions:
         call: Start met bellen
-        canvass: Start canvassing
         signUp: Aanmelden
         undoSignup: Aanmelden annuleren
       emptyListMessage: Je hebt geen activiteiten
       eventStatus:
-        booked: Je bent geboekt voor deze gebeurtenis en de organizers verwachten
-          je. Neem contact op met {org} als je moet annuleren.
+        booked: Je bent geboekt voor deze gebeurtenis en de organizers verwachten je.
+          Neem contact op met {org} als je moet annuleren.
         needed: Je bent nodig
         signedUp: Je bent aangemeld
       filters:
@@ -874,14 +864,13 @@ feat:
         message: Kan geen gebeurtenissen vinden
         removeFiltersButton: Reset filters
       filterButtonLabels:
-        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other
-          {# organizations}}'
+        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {#
+          organizations}}'
         thisWeek: Deze week
         today: vandaag
         tomorrow: morgen
     defaultTitles:
       callAssignment: Belopdracht zonder titel
-      canvassAssignment: Canvasopdracht zonder titel
       event: Evenement zonder titel
       noLocation: Geen fysieke locatie
     footer:
@@ -917,16 +906,16 @@ feat:
           noCustomFormatWarning: Je hebt geen aangepaste datumnotatie aangeleverd
           personNumberFormat:
             dk:
-              description: The values in this column will be parsed from 10 digit
-                Danish CPR-numbers (DDMMYY-XXXX or DDMMYYXXXX) into dates
+              description: The values in this column will be parsed from 10 digit Danish
+                CPR-numbers (DDMMYY-XXXX or DDMMYYXXXX) into dates
               label: Danish CPR-number
-            'no':
-              description: The values in this column will be parsed from 11 digit
-                Norwegian fødselsnummer (DDMMYYXXXXX or DDMMYY-XXXXX) into dates.
+            no:
+              description: The values in this column will be parsed from 11 digit Norwegian
+                fødselsnummer (DDMMYYXXXXX or DDMMYY-XXXXX) into dates.
               label: Norwegian fødselsnummer
             se:
-              description: The values in this column will be parsed from 10 or 12
-                digit Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.
+              description: The values in this column will be parsed from 10 or 12 digit
+                Swedish personnummer (YYMMDD-XXXX or YYYYMMDD-XXXX) into dates.
               label: Swedish Personnummer
         enum:
           header: Wijs waarden toe aan opties
@@ -936,8 +925,8 @@ feat:
           externalID: Extern ID
           externalIDInfo: Een extern ID is een ID van een ander systeem. Je kunt het
             gebruiken om personen te vinden in Zetkin.
-          wrongIDFormatWarning: De waarde in deze kolom zijn geen of voldoen niet
-            aan de standaard voor Zetkin ID's (cijfers).
+          wrongIDFormatWarning: De waarde in deze kolom zijn geen of voldoen niet aan de
+            standaard voor Zetkin ID's (cijfers).
           zetkinID: Zetkin ID
           zetkinIDInfo: Zetkin ID is de ID van een persoon in Zetkin. Zit in het bestand
             als je een export hebt gemaakt.
@@ -961,33 +950,35 @@ feat:
         externalID: Externe ID
         fileHeader: bestand
         finishedMappingDates: Mapping {numValues, plural, =1 {1 value} other {# values}}
-          from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer}
-          dk {Danish CPR-number} other {{dateFormat}}} into dates
+          from {dateFormat, select, se {Swedish personnummer} no {Norwegian
+          fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates
         finishedMappingIds: Mapping {numValues, plural, =1 {1 value} other {# values}}
           to {idField, select, id {Zetkin ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {1 person} other {#
-          people}} mapped to {numMappedTo, plural, =1 {1 organization} other {# organizations}}'
-        finishedMappingTags: Mapping {numRows, plural, =1 {1 row} other {# rows}}
-          to {numMappedTo, plural, =1 {1 tag} other {# tags}}
+          people}} mapped to {numMappedTo, plural, =1 {1 organization} other {#
+          organizations}}'
+        finishedMappingTags: Mapping {numRows, plural, =1 {1 row} other {# rows}} to
+          {numMappedTo, plural, =1 {1 tag} other {# tags}}
         header: In kaart brengen
         infoButton: Info
         mapValuesButton: Wijs waarden toe
         messages:
           manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
-            plural, =1 {one other value} other {# other values}} and {numEmpty, plural,
-            =1 {one empty row} other {# empty rows}}.'
-          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} and {numMoreValues,
-            plural, =1 {one other value} other {# other values}}.'
-          oneValueAndEmpty: '{firstValue} and {numEmpty, plural, =1 {one empty row}
-            other {# empty rows}}.'
+            plural, =1 {one other value} other {# other values}} and {numEmpty,
+            plural, =1 {one empty row} other {# empty rows}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} and
+            {numMoreValues, plural, =1 {one other value} other {# other
+            values}}.'
+          oneValueAndEmpty: '{firstValue} and {numEmpty, plural, =1 {one empty row} other
+            {# empty rows}}.'
           oneValueNoEmpty: '{firstValue}.'
           onlyEmpty: '{numEmpty, plural, =1 {one empty row} other {# empty rows}}.'
           readOnlyField: '{title} (alleen lezen)'
           threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} and {numEmpty,
             plural, =1 {one empty row} other {# empty rows}}.'
           threeValuesNoEmpty: '{firstValue}, {secondValue} and {thirdValue}.'
-          twoValuesAndEmpty: '{firstValue}, {secondValue} and {numEmpty, plural, =1
-            {one empty row} other {# empty rows}}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} and {numEmpty, plural, =1 {one
+            empty row} other {# empty rows}}.'
           twoValuesNoEmpty: '{firstValue} and {secondValue}.'
         organization: Organisatie
         selectZetkinField: Importeren als...
@@ -1022,8 +1013,8 @@ feat:
         sheetSelectLabel: Blad
       show: Toon
       statusMessage:
-        done: Configureert import van {numConfiguredPeople, plural, =1 {1 person}
-          other {# people}}
+        done: Configureert import van {numConfiguredPeople, plural, =1 {1 person} other
+          {# people}}
         notDone: Je configuratie is incompleet
       title: Importeer personen
     impactSummary:
@@ -1045,7 +1036,8 @@ feat:
         orgs: '{numPeople} zijn toegevoegd aan {org}'
         tags: Tags
         tagsDesc: '{numPeople} hebben {tags} gekregen'
-        updated: '{number} {numPeople, plural, =1 {person} other {people}} zijn geüpdatet'
+        updated: '{number} {numPeople, plural, =1 {person} other {people}} zijn
+          geüpdatet'
       people: '{number} {numPeople, plural, =1 {person} other {people}}'
     importStatus:
       completed:
@@ -1074,23 +1066,23 @@ feat:
         invalidFormat:
           title: 'Verkeerd formaat of veld:  {field}'
         majorChange:
-          description: Let op! Minimaal 30% worden aangepast. Check of de kolommen
-            juist zijn geconfigureerd.
+          description: Let op! Minimaal 30% worden aangepast. Check of de kolommen juist
+            zijn geconfigureerd.
           title: Deze import overschrijft "{field}" voor {amount} personen
         missingIdAndName:
-          description: Elke rij moet minimaal een volledige naam hebben of een ID
-            van een persoon in Zetkin.
+          description: Elke rij moet minimaal een volledige naam hebben of een ID van een
+            persoon in Zetkin.
           title: Niet alle rijen hebben identifiers
         noImpact:
-          description: Dit kan gebeuren omdat er geen nieuwe data in het bestand zit,
-            of wegens een onbekende fout.
+          description: Dit kan gebeuren omdat er geen nieuwe data in het bestand zit, of
+            wegens een onbekende fout.
           title: Deze import heeft geen effect
         ok:
           description: Zorg dat de samenvatting er goed uit ziet en klik dan op 'import'.
           title: Geen problemen gevonden!
         unconfiguredId:
-          description: Dit zorgt voor dubbelingen in de database. Als dit je eerste
-            import is, ga dan terug en kies een externe ID om te gebruiken.
+          description: Dit zorgt voor dubbelingen in de database. Als dit je eerste import
+            is, ga dan terug en kies een externe ID om te gebruiken.
           title: Je hebt geen ID kolom gekozen
         unconfiguredIdAndName:
           description: Bij elke import moeten minimaal de volledige namen of de ID's
@@ -1098,16 +1090,16 @@ feat:
           title: Je hebt kolommen niet geconfigureerd
         unexpectedError:
           description: Er zijn geen personen geïmporteerd. Check settings of selecteer
-            nieuw bestand. Er waren fouten in het formulier. Mail info@zetkin.org
-            als het probleem zich blijft voordoen.
+            nieuw bestand. Er waren fouten in het formulier. Mail
+            info@zetkin.org als het probleem zich blijft voordoen.
           title: Er is iets fout gegaan. Import afgebroken.
         unknownError:
           description: Contact support als je vragen hebt
           title: Onbekende fout opgetreden
         unknownPerson:
           description: Je hebt een kolom geconfigureerd als Zetkin ID's, maar de kolom
-            bevat ID's die niet bestaan. Bedoelde je een externe ID, of zijn er mogelijk
-            personen verwijderd sinds het bestand is aangemaakt?
+            bevat ID's die niet bestaan. Bedoelde je een externe ID, of zijn er
+            mogelijk personen verwijderd sinds het bestand is aangemaakt?
           title: Je probeert niet-bestaande bestanden te updaten.
         validating: Valideren
     steps:
@@ -1131,10 +1123,12 @@ feat:
       statusMessages:
         create: Deze import zorgt voor {numCreated, plural, =1 {1 person} other {#
           people}}.
-        createAndUpdate: Deze import creëert {numCreated, plural, =1 {1 person} other
-          {# people}} en updatet {numUpdated, plural, =1 {1 person} other {# people}}.
+        createAndUpdate: Deze import creëert {numCreated, plural, =1 {1 person} other {#
+          people}} en updatet {numUpdated, plural, =1 {1 person} other {#
+          people}}.
         error: Je moet de fouten herstellen voordat je kunt importeren
-        update: This import updatet {numUpdated, plural, =1 {1 person} other {# people}}.
+        update: This import updatet {numUpdated, plural, =1 {1 person} other {#
+          people}}.
   joinForms:
     defaultTitle: Naamloos formulier
     embedding:
@@ -1171,7 +1165,8 @@ feat:
       rejectButton: Afwijzen
     submissionVerifiedPage:
       h: Dankjewel!
-      info: Je toevoeging is bevestigd en organisers in {org} beoordelen het binnenkort.
+      info: Je toevoeging is bevestigd en organisers in {org} beoordelen het
+        binnenkort.
   journeys:
     instance:
       addAssigneeButton: Wijs toe
@@ -1290,17 +1285,18 @@ feat:
       title: journeys
   organizations:
     gen3:
-      description: Dit is de nieuwe (generatie 3) organizer-webapp. Als je gewend
-        bent aan de oude, vind je hier veel nieuwe functies en een verbeterde gebruikersinterface.
-        Maar als je wilt, kun je de oude organizer-app nog even blijven gebruiken.
+      description: Dit is de nieuwe (generatie 3) organizer-webapp. Als je gewend bent
+        aan de oude, vind je hier veel nieuwe functies en een verbeterde
+        gebruikersinterface. Maar als je wilt, kun je de oude organizer-app nog
+        even blijven gebruiken.
       gen2Button: Ga naar de oude interface
       title: Welkom bij de nieuwe Zetkin!
     notOrganizer:
-      description: Dit onderdeel van Zetkin is alleen beschikbaar voor gebruikers
-        die organisatortoegang hebben gekregen van een andere medewerker van de organisatie.
-        Je beschikt momenteel niet over voldoende toegang. Als je denkt dat dit niet
-        klopt, neem dan contact op met je lokale Zetkin-medewerker of met de Zetkin
-        Foundation.
+      description: Dit onderdeel van Zetkin is alleen beschikbaar voor gebruikers die
+        organisatortoegang hebben gekregen van een andere medewerker van de
+        organisatie. Je beschikt momenteel niet over voldoende toegang. Als je
+        denkt dat dit niet klopt, neem dan contact op met je lokale
+        Zetkin-medewerker of met de Zetkin Foundation.
       myPageButton: Ga naar activisten-portaal
       title: Je hebt geen toegang als organizer
     page:
@@ -1382,8 +1378,8 @@ feat:
         columns:
           inheritance: Rol overerving
           name: Naam
-        description: Organisatoren hebben voldoende rechten om bijvoorbeeld campagnes
-          te organiseren en bestaande oproeptoewijzingen te beheren.
+        description: Organisatoren hebben voldoende rechten om bijvoorbeeld campagnes te
+          organiseren en bestaande oproeptoewijzingen te beheren.
         roleInheritance: Organizer in
         title: Organisers
       settingsLayout:
@@ -1395,8 +1391,8 @@ feat:
         remove: Verwijder
       urlCard:
         linkToPub: Link naar publieke organisatie
-        subTitle: Gebruikers moeten verbinding maken met de organisatie voordat ze
-          als functionaris toegang krijgen tot Zetkin.
+        subTitle: Gebruikers moeten verbinding maken met de organisatie voordat ze als
+          functionaris toegang krijgen tot Zetkin.
       you: Jij
   smartSearch:
     buttonLabels:
@@ -1415,8 +1411,7 @@ feat:
           description: Selectie gebaseerd op lijsten en slim zoeken
           title: kruisverwijzing
         email:
-          description: Vind mensen op basis van de gegevens die zijn verzameld via
-            e-mails.
+          description: Vind mensen op basis van de gegevens die zijn verzameld via e-mails.
           title: E-mails
         events:
           description: Selectie gebaseerd op datums van gebeurtenissen
@@ -1438,8 +1433,7 @@ feat:
           title: Taken
       filters:
         call_history:
-          description: Zoek naar mensen die gebeld, bereikt of geprobeerd zijn te
-            bereiken.
+          description: Zoek naar mensen die gebeld, bereikt of geprobeerd zijn te bereiken.
           title: Belgeschiedenis
         campaign_participation:
           description: Wie heeft zich aangemeld? Geboekt? Wie niet? Vind ze!
@@ -1488,8 +1482,7 @@ feat:
           description: Hebben ze een vragenlijst ingevoerd? Vind ze hier.
           title: Ingevoerde vragenlijst
         task:
-          description: Voeg toe of verwijder personen gebaseerd op hun deelname aan
-            taken
+          description: Voeg toe of verwijder personen gebaseerd op hun deelname aan taken
           title: Taken
         user:
           description: Vind personen die wel of geen Zetkin-account hebben
@@ -1516,8 +1509,8 @@ feat:
           one: Voeg personen toe die minimaal 2 keer zijn bereikt wanneer dan ook.
           two: Verwijder personen die minimaal 1 keer zijn gebeld in opdracht 'activeer
             oud-leden' in de afgelopen 30 dagen.
-        inputString: '{addRemoveSelect} personen die {callSelect} {minTimes} in {assignmentSelect}
-          {timeFrame}.'
+        inputString: '{addRemoveSelect} personen die {callSelect} {minTimes} in
+          {assignmentSelect} {timeFrame}.'
         minTimes: '{minTimes, plural, one {once} other {# times}}'
         minTimesInput: tenminste {input} {minTimes, plural, one {time} other {times}}
       campaignParticipation:
@@ -1531,16 +1524,17 @@ feat:
           any: elk project
           campaign: project "{campaign}"
         examples:
-          one: Voeg mensen toe die zich aanmeldden voor gebeurtenissen in elk project
-            of van elk type op locatie 'De Dam' op elke tijd mogelijk
-          two: Verwijder personen die tot vandaag nog niet geboekt zijn voor gebeurtenissen
-            in een project van het type 'Posters ophangen' op een locatie.
+          one: Voeg mensen toe die zich aanmeldden voor gebeurtenissen in elk project of
+            van elk type op locatie 'De Dam' op elke tijd mogelijk
+          two: Verwijder personen die tot vandaag nog niet geboekt zijn voor
+            gebeurtenissen in een project van het type 'Posters ophangen' op een
+            locatie.
         haveSelect:
           in: heeft
           notin: heeft niet
         inputString: '{addRemoveSelect} mensen die {haveSelect} {bookedSelect} voor
-          gebeurtenissen in {campaignSelect} van {activitySelect} op {locationSelect}
-          {timeFrame}'
+          gebeurtenissen in {campaignSelect} van {activitySelect} op
+          {locationSelect} {timeFrame}'
         locationSelect:
           any: welke locatie dan ook
           location: locatie "{location}"
@@ -1566,8 +1560,8 @@ feat:
           any: elke e-mail
           email: de specifieke e-mail
           project: elke mail van dit project
-        inputString: '{addRemoveSelect} people who have {operatorSelect} {emailScopeSelect}
-          {emailSelect} {projectSelect} {timeFrame}'
+        inputString: '{addRemoveSelect} people who have {operatorSelect}
+          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
         operatorSelect:
           notOpened: niet geopend
           notSent: niet verstuurd
@@ -1594,8 +1588,8 @@ feat:
             some: en hebben ten minste {minMatching}
         followingTags: van de volgende tags
         inputString: '{addRemoveSelect} people who are part of {journeySelect} that
-          opened {openedTimeFrame} and {stateSelect} {closedTimeFrame} {condition}
-          {tagsDesc} {tags}'
+          opened {openedTimeFrame} and {stateSelect} {closedTimeFrame}
+          {condition} {tagsDesc} {tags}'
         stateOptions:
           closed: gesloten
           open: nog open
@@ -1609,7 +1603,7 @@ feat:
         numPeople: '{numPeople, plural, one {person} other {people}}'
         numPeopleSelect: '{numPeopleSelect}'
       personData:
-        ellipsis: '...'
+        ellipsis: ...
         examples:
           one: Voeg alle personen toe met voornaam 'Clara' en met achtenaam 'Zetkin'.
           two: Verwijder iedereen uit Stockholm
@@ -1660,10 +1654,9 @@ feat:
             none: geen
             some: ten minste {minMatching}
         examples:
-          one: 'Voeg mensen toe met minstens één van de volgende tags: ''Lid'', ''Activist'''
-          two: 'Verwijder personen met alle volgende tags: ''Bestuurslid'''
-        inputString: '{addRemoveSelect} mensen met {condition} van de volgende tags:
-          {tags}'
+          one: "Voeg mensen toe met minstens één van de volgende tags: 'Lid', 'Activist'"
+          two: "Verwijder personen met alle volgende tags: 'Bestuurslid'"
+        inputString: '{addRemoveSelect} mensen met {condition} van de volgende tags: {tags}'
       personView:
         examples:
           one: Voeg personen toe die in de lijst 'actieve leden 2022' voorkomen
@@ -1701,10 +1694,8 @@ feat:
             none: '{querySelect}'
             standalone: '{querySelect} "{titleSelect}"'
           preview:
-            callassignment_goal: De doelgroep  (purpose group) van van bel-opdracht
-              "{queryTitle}"
-            callassignment_target: De doelgroep (target group) van van bel-opdracht
-              "{queryTitle}"
+            callassignment_goal: De doelgroep  (purpose group) van van bel-opdracht "{queryTitle}"
+            callassignment_target: De doelgroep (target group) van van bel-opdracht "{queryTitle}"
             none: '{queryTitle}'
             standalone: Slim Zoeken opdracht "{queryTitle}"
           selectLabel:
@@ -1724,12 +1715,10 @@ feat:
           none: geen
           some: enkele
         examples:
-          one: 'Verwijder alle personen die alle volgende opties hebben gekozen in
-            de enquête ''Ledenenquête 2020'' (vraag ''Vraag één''): ''Soms'', ''Nooit'''
-          two: 'Voeg alle mensen toe die een van de volgende opties hebben gekozen
-            in de enquête ''Ledenenquête'' (vraag ''Vraag twee''): ''Optie twee'''
-        inputString: '{addRemoveSelect} people who have chosen {conditionSelect} of
-          the following options in {surveySelect} ({questionSelect}): {options}'
+          one: "Verwijder alle personen die alle volgende opties hebben gekozen in de enquête 'Ledenenquête 2020' (vraag 'Vraag één'): 'Soms', 'Nooit'"
+          two: "Voeg alle mensen toe die een van de volgende opties hebben gekozen in de enquête 'Ledenenquête' (vraag 'Vraag twee'): 'Optie twee'"
+        inputString: '{addRemoveSelect} people who have chosen {conditionSelect} of the
+          following options in {surveySelect} ({questionSelect}): {options}'
         questionSelect:
           any: een vraag
           none: Er zijn geen keuzevragen in deze vragenlijst
@@ -1743,8 +1732,8 @@ feat:
           one: vragenlijst "{surveyTitle}"
           two: Mensen wiens antwoorden op vragenlijst 'Ledenenquête' (question 'Question
             one') matchen met 'organize'.
-        inputString: '{addRemoveSelect} personen wiens antwoord {surveySelect} ({questionSelect})
-          {matchSelect} "{freeTextInput}"'
+        inputString: '{addRemoveSelect} personen wiens antwoord {surveySelect}
+          ({questionSelect}) {matchSelect} "{freeTextInput}"'
         matchSelect:
           eq: komt exact overeen met
           in: bevat
@@ -1762,10 +1751,10 @@ feat:
         examples:
           one: Mensen die vóór vandaag reacties op de vragenlijst 'Ledenenquête 2020'
             hebben ingezonden.
-          two: Personen die in de afgelopen 30 dagen reacties hebben ingediend op
-            de vragenlijst 'Ledenenquête 2020'.
-        inputString: '{addRemoveSelect} mensen die reacties hebben ingediend op {surveySelect}
-          {timeFrame}.'
+          two: Personen die in de afgelopen 30 dagen reacties hebben ingediend op de
+            vragenlijst 'Ledenenquête 2020'.
+        inputString: '{addRemoveSelect} mensen die reacties hebben ingediend op
+          {surveySelect} {timeFrame}.'
         surveySelect:
           any: een vragenlijst
           none: Deze organisatie heeft nog geen vragenlijsten
@@ -1780,8 +1769,8 @@ feat:
             hebben voltooid
           two: Voeg mensen toe die vóór vandaag 2 tot 5 keer een taak in een project
             hebben genegeerd
-        inputString: '{addRemoveSelect} people who have {taskStatusSelect} {taskSelect}{campaignSelect}
-          {matchingSelect} {timeFrame}'
+        inputString: '{addRemoveSelect} people who have {taskStatusSelect}
+          {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}'
         taskSelect:
           any: elke taak
           task: taak "{task}"
@@ -1824,8 +1813,8 @@ feat:
         once: ten minste een maal
     misc:
       noOptions: Geen overeenkomende tags
-      noOptionsEmailNotSent: E-mail niet verzonden. Links in de e-mail worden toegevoegd
-        nadat deze is verzonden.
+      noOptionsEmailNotSent: E-mail niet verzonden. Links in de e-mail worden
+        toegevoegd nadat deze is verzonden.
       noOptionsInvalidEmail: Ongeldige mail. Selecteer eerst een e-mail
       noOptionsLinks: No matching links
     operators:
@@ -1859,8 +1848,8 @@ feat:
     statsPopper:
       change: verander
       details: Slim zoeken is dynamisch. Dat betekent dat het aantal matches in de
-        loop van de tijd kan variëren. Andere gebruikers kunnen andere resultaten
-        zien als ze toegang hebben tot meer of minder mensen.
+        loop van de tijd kan variëren. Andere gebruikers kunnen andere
+        resultaten zien als ze toegang hebben tot meer of minder mensen.
       exit: Resultaat
       headline: Impact selectie
       info: Dit is een dynamische selectie en de aantallen kunnen in de loop van de
@@ -1950,8 +1939,7 @@ feat:
         header: Title
     chart:
       header: Vragenlijst Invoeringen
-      placeholder: Begin met het verzamelen van inzendingen om hier de voortgang te
-        zien
+      placeholder: Begin met het verzamelen van inzendingen om hier de voortgang te zien
       subheader: Verzamelde inzendingen gedurende de laatste {dagen, meervoud, =1
         {dag} andere {# dagen}}
       tooltip:
@@ -1959,25 +1947,23 @@ feat:
     editWarning:
       editing:
         header: Vragenlijst kan worden bewerkt
-        lockButton: Zet op slot
         safe:
           bullet1: Spelfouten herstellen
           bullet2: Aanpassen volgorde blokken
           bullet3: Verberg vragen
           bullet4: toevoegen vragen of opties
           header: Veilig
-        subheader: Pas op dat je geen wijzigingen aanbrengt die ertoe kunnen leiden
-          dat antwoordgegevens verloren gaan of beschadigd raken.
+        subheader: Pas op dat je geen wijzigingen aanbrengt die ertoe kunnen leiden dat
+          antwoordgegevens verloren gaan of beschadigd raken.
         unsafe:
           bullet1: Vragen verwijderen (in plaats daarvan verbergen)
           bullet2: Vragen of opties hernoemen op een manier die hun betekenis verandert
           header: Onveilig
       locked:
         header: Vragenlijst op slot gezet
-        subheader: Er zijn inzendingen ontvangen voor deze vragenlijst. Het bewerken
-          van de vragenlijst kan problemen met de gegevens veroorzaken. Wees daarom
+        subheader: Er zijn inzendingen ontvangen voor deze vragenlijst. Het bewerken van
+          de vragenlijst kan problemen met de gegevens veroorzaken. Wees daarom
           voorzichtig.
-        unlockButton: Ontgrendel
     layout:
       actions:
         delete: Verwijder vragenlijst
@@ -1990,7 +1976,8 @@ feat:
       unknownTitle: Vragenlijst zonder titel
     optionCollapse:
       collapse: Inklappen
-      more: '{numOfOptions, plural, one {Show 1 more option} other {Show # more options}}'
+      more: '{numOfOptions, plural, one {Show 1 more option} other {Show # more
+        options}}'
     organizerActionPane:
       subtitle: Aantekeningen over telefoontjes naar {person}
       title: Actie van organiser nodig
@@ -2000,8 +1987,8 @@ feat:
         title: Er zijn nog geen vragen toegevoegd
     shareSuborgsCard:
       caption: Wanneer dit is ingeschakeld, kunnen functionarissen in sub-organisaties
-        vragenlijsten lezen en doorzoeken die zijn ingediend door personen die verbonden
-        zijn met hun organisatie.
+        vragenlijsten lezen en doorzoeken die zijn ingediend door personen die
+        verbonden zijn met hun organisatie.
       title: Deel met sub-organisaties
     state:
       draft: Draft
@@ -2026,8 +2013,8 @@ feat:
     surveyDialog:
       add: Voeg toe
       cancel: Voeg niet toe
-      description: De persoon die je wil koppelen, heeft geen e-mailadres, terwijl
-        de vragenlijst-antwoorden dat wel hebben. Wil je de persoon toevoegen?
+      description: De persoon die je wil koppelen, heeft geen e-mailadres, terwijl de
+        vragenlijst-antwoorden dat wel hebben. Wil je de persoon toevoegen?
       title: Voeg mailadres toe
     surveyForm:
       accept: Ik accepteer de voorwaarden hieronder
@@ -2043,8 +2030,8 @@ feat:
       submit: Indienen
       terms:
         description: Wanneer je deze vragenlijst indient, worden uw gegevens door
-          {organisatie} opgeslagen en verwerkt in Zetkin om het activisme te organiseren
-          en in overeenstemming met het privacybeleid van Zetkin.
+          {organisatie} opgeslagen en verwerkt in Zetkin om het activisme te
+          organiseren en in overeenstemming met het privacybeleid van Zetkin.
         title: Privacy Policy
     surveyFormSubmitted:
       text: Je reacties op "{title}" zijn verzonden.
@@ -2065,18 +2052,15 @@ feat:
       submissions: Inzendingen
     unlinkedCard:
       description: Wanneer iemand een vragenlijst indient zonder in te loggen, wordt
-        de koppeling met die vragenlijst verbroken. Zoeken naar mensen in Zetkin op
-        basis van hun antwoorden op de vragenlijst werkt niet met niet-gekoppelde
-        inzendingen.
+        de koppeling met die vragenlijst verbroken. Zoeken naar mensen in Zetkin
+        op basis van hun antwoorden op de vragenlijst werkt niet met
+        niet-gekoppelde inzendingen.
       header: Niet-gekoppelde inzendingen
       openLink: '{numUnlink, plural, one {Link submission now} other {Link submissions
         now}}'
     unlinkedWarningAlert:
       default:
-        description: '{numUnlink, plural, one {One survey submission has not been
-          linked to a Zetkin profile, which means that it won''t be included when
-          searching.} other {There are survey submissions that have not been linked
-          to Zetkin profiles, which means that they won''t be included when searching.}}'
+        description: "{numUnlink, plural, one {One survey submission has not been linked to a Zetkin profile, which means that it won't be included when searching.} other {There are survey submissions that have not been linked to Zetkin profiles, which means that they won't be included when searching.}}"
         header: Niet-gekoppelde inzendingen
         viewUnlinked: Bekijk alleen niet-gekoppelde inzendingen
       filtered:
@@ -2120,8 +2104,8 @@ feat:
       title: Tags
       ungroupedHeader: Geen groep
       valueTagForm:
-        typeHint: '{type, select, text {Enter some text} other {Enter a value}} om
-          bij de tag te passen.'
+        typeHint: '{type, select, text {Enter some text} other {Enter a value}} om bij
+          de tag te passen.'
     tagsPage:
       createTagButton: Maak
       noTags: Jouw organisatie heeft nog geen tags
@@ -2143,8 +2127,9 @@ feat:
           Zoeken-opdracht
         editable: Zodra deze is gepubliceerd, wordt deze taak toegewezen aan de personen
           die voldoen aan de beoogde Slim Zoeken-opdracht
-        new: Deze taak is gericht op mensen die voldoen aan een Slim Zoeken-zoekopdracht.
-          Voordat u kunt publiceren, moet u een doelgroep aanmaken met Slim Zoeken-opdracht
+        new: Deze taak is gericht op mensen die voldoen aan een Slim
+          Zoeken-zoekopdracht. Voordat u kunt publiceren, moet u een doelgroep
+          aanmaken met Slim Zoeken-opdracht
         published: Deze taak wordt momenteel toegewezen aan alle personen die voldoen
           aan de Slim Zoeken-opdracht
       title: Toegewezen aan {numPeople, plural, one {# person} other {# people}}
@@ -2198,8 +2183,8 @@ feat:
           lessThanOneMinute: Minder dan een minuut
           noEstimate: Geen inschatting
         timeValidationErrors:
-          deadlineNotSecond: Dit moet worden ingepland na de publicatiedatum en vóór
-            de vervaldatum
+          deadlineNotSecond: Dit moet worden ingepland na de publicatiedatum en vóór de
+            vervaldatum
           expiresNotThird: Deze als laatste inplannen
           publishedNotFirst: Deze als eerste inplannen
         title: Titel
@@ -2243,11 +2228,12 @@ feat:
       publishedTime: Publiceertijdstip
       reassignInterval:
         label: Interval voor opnieuw toewijzen
-        value: Wijst opnieuw toe {value, plural, =1{one hour} other{# hours}} na voltooiing
+        value: Wijst opnieuw toe {value, plural, =1{one hour} other{# hours}} na
+          voltooiing
       reassignLimit:
         label: Limiet aan toewijzingen
-        value: Herhaalt op zijn hoogst {value, plural, =1{one time} other{# times}}
-          per persoon
+        value: Herhaalt op zijn hoogst {value, plural, =1{one time} other{# times}} per
+          persoon
       statusLabel: Status
       timeEstimateLabel: Verwachte voltooiingstijd
       title: Taakdetails
@@ -2340,16 +2326,15 @@ feat:
             willekeurig of op basis van gegevens in Zetkin.
           title: Categoriseren
         crossReferencing:
-          description: Kruisverwijzingen met gegevens in Zetkin met behulp van Slim
-            Zoeken.
+          description: Kruisverwijzingen met gegevens in Zetkin met behulp van Slim Zoeken.
           title: Kruisverwijzen
         outreach:
           description: Plan, delegeer en voer benader-werk uit, en rapporteer terug
             wanneer je klaar bent
           title: Benaderen
         surveys:
-          description: Ontdek, zoek en filter op basis van de reacties van mensen
-            op vragenlijsten.
+          description: Ontdek, zoek en filter op basis van de reacties van mensen op
+            vragenlijsten.
           title: Vragenlijsten
         utility:
           description: Betrouwbare kolommen die je in veel situaties opnieuw wil gebruiken
@@ -2360,8 +2345,8 @@ feat:
           columnTitleContacted: Contact opgenomen
           columnTitleNotes: Aantekeningen
           columnTitleResponded: Geantwoord
-          description: Voegt een reeks kolommen toe die doorgaans worden gebruikt
-            om benader-werk te delegeren aan een bepaalde persoon.
+          description: Voegt een reeks kolommen toe die doorgaans worden gebruikt om
+            benader-werk te delegeren aan een bepaalde persoon.
           title: Delegeer
         email:
           description: Voeg kolom toe met mailadressen
@@ -2375,7 +2360,7 @@ feat:
           columnTitleCheckbox: Checkbox
           columnTitleNotes: Aantekeningen
           description: Voegt een selectievakjekolom en een notitiekolom toe
-          keywords: '...'
+          keywords: ...
           title: Follow-up
         fullName:
           description: Twee kolommen met voornaam en achternaam
@@ -2388,17 +2373,17 @@ feat:
         localPerson:
           columnTitle: Verantwoordelijke persoon
           description: Laat je een verantwoordelijke persoon kiezen op elke rij
-          keywords: '....'
+          keywords: ....
           title: Toegewezen persoon
         localQuery:
           columnTitle: In Slim Zoeken?
           description: Kijk of een persoon kan worden gevonden met Slim Zoeken
-          keywords: '...'
+          keywords: ...
           title: Specifieke kruisverwijzing
         localText:
           columnTitle: Aantekeningen
           description: Voeg kolom toe voor aantekeningen over een persoon
-          keywords: '...'
+          keywords: ...
           title: Aantekeningen
         personFields:
           description: Voeg kolom(men) naar keuze toe
@@ -2443,17 +2428,17 @@ feat:
           title: Meerdere vragen
         surveySubmitDate:
           description: Bekijk of en wanneer iemand een vragenlijst heeft toegevoegd
-          keywords: '...'
+          keywords: ...
           noSurveys: Je organisatie heeft geen vragenlijsten
           title: Vragenlijst invoerdatum
         tag:
           description: Schakel een tag in voor elke persoon in de lijst
-          keywords: '...'
+          keywords: ...
           title: Tag
         toggle:
           columnTitle: Schakelaar
           description: Checkbox kolom
-          keywords: '...'
+          keywords: ...
           title: Schakelaar
       commonHeaders:
         email: E-mailadres
@@ -2483,8 +2468,8 @@ feat:
         searchResults: Resultaten voor "{searchString}"
     columnMenu:
       configure: Configureer kolom
-      confirmDelete: Weet je zeker dat je de kolom wil verwijderen? Dit kan niet ongedaan
-        worden gemaakt.
+      confirmDelete: Weet je zeker dat je de kolom wil verwijderen? Dit kan niet
+        ongedaan worden gemaakt.
       delete: Verwijder kolom
       rename: Hernoem kolom
     columnRenameDialog:
@@ -2549,17 +2534,17 @@ feat:
           xlsx: Download Excel bestand
         shareLink: data veilig delen
         tabLabel: Downloaden
-        warning1: Vermijd het exporteren van gegevens vanuit Zetkin indien mogelijk,
-          om ervoor te zorgen dat alle gegevens op orde blijven.
+        warning1: Vermijd het exporteren van gegevens vanuit Zetkin indien mogelijk, om
+          ervoor te zorgen dat alle gegevens op orde blijven.
         warning2: Je kunt {shareLink} gebruiken binnen Zetkin. Exporteren is handig
           wanneer je gegevens naar een ander systeem wilt kopiëren.
       share:
         addPlaceholder: Bijdrager toevoegen
         collabInstructions: Na toevoegen samenwerker, stuur ze de {viewLink}
         showOfficials: Toon functionarissen
-        statusLabel: Gedeeld met {collaborators, plural, =1 {1 collaborator} other
-          {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}}
-          can access all lists.
+        statusLabel: Gedeeld met {collaborators, plural, =1 {1 collaborator} other {#
+          collaborators}}, {officials, plural, =1 {1 official} other {#
+          officials}} can access all lists.
         tabLabel: Deel
         viewLink: Beperkte link
       title: Deel "{title}"
@@ -2579,8 +2564,8 @@ feat:
     toolbar:
       createColumn: Nieuwe kolom
       createFromSelection: Maak lijst van selectie
-      removeFromSelection: Verwijder {numSelected, plural, one {1 person} other {{numSelected}
-        people} } uit de lijst
+      removeFromSelection: Verwijder {numSelected, plural, one {1 person} other
+        {{numSelected} people} } uit de lijst
       removeTooltip: In Slim Zoeken lijsten kun je momenteel geen rijen verwijderen
     viewLayout:
       actions:
@@ -2590,8 +2575,8 @@ feat:
         editQuery: Bewerk slim zoeken vraag
         makeDynamic: Omzetten naar slim zoeken lijst
         makeStatic:
-          confirmDialogInfo: Als je deze lijst omzet naar een statische lijst zal
-            de slimme lijst worden verwijderd en zullen de personen uit de slimme
+          confirmDialogInfo: Als je deze lijst omzet naar een statische lijst zal de
+            slimme lijst worden verwijderd en zullen de personen uit de slimme
             lijst er niet meer zijn.
           confirmDialogSubmitLabel: Omzetten
           confirmDialogTitle: Omzetten naar statische lijst
@@ -2609,35 +2594,53 @@ feat:
         owner: Eigenaar
         title: Titel
       empty: Je hebt nog geen lijsten aangemaakt.
-glob:
-  accessLevels:
-    configure: Wijzigen en configureren
-    edit: Wijzigen
-    readonly: Alleen lezen
-  genderOptions:
-    f: Vrouw
-    m: Man
-    o: Anders
-    unspecified: Niet gespecificeerd
-  personFields:
-    alt_phone: Alternatief telefoonnummer
-    city: Plaats
-    co_address: Per adres
-    country: Land
-    email: Email
-    ext_id: Externe ID
-    first_name: Voornaam
-    gender: Gender
-    id: ID
-    is_user: Is een gebruiker
-    last_name: Achternaam
-    phone: Telefoonnummer
-    street_address: Adres
-    zip_code: Postcode
-  roles:
-    admin: Administrator
-    organizer: Organisator
 zui:
+  timeline:
+    addNotePlaceholder: Laat hier een notitie achter
+    email:
+      headers:
+        cc: CC
+        from: Van
+        to: Aan
+    expand: laat hele tijdlijn zien
+    fileUploadErrorMessage: Notitie toevoegen is niet gelukt. Het kan te lang zijn.
+    filter:
+      byType:
+        all: Alles
+        files: Bestanden
+        journey: Reis
+        milestones: Mijlpalen
+        notes: Notities
+        people: Mensen
+        tags: Tags
+      filterSelectLabel: Laat {filter} zien
+      warning: De tijdlijn wordt nu gefilterd. Klik hier om het filter te verwijderen.
+    updates:
+      any:
+        addtags: '{actor} voegde {count, plural, =1 {a tag} other {# tags}} toe'
+        removetags: '{actor} verwijderde {count, plural, =1 {a tag} other {# tags}}'
+      journeyinstance:
+        addassignee: '{actor} wees {assignee} toe'
+        addnote: '{actor} voegde een notitie toe'
+        addsubject: '{actor} voegde {subject} toe'
+        close:
+          header: '{actor} sloot de reis'
+        convert: '{actor} wijzigde label {oldLabel} in {newLabel}'
+        create:
+          header: '{actor} startte een nieuwe reis'
+        open: '{actor} opende de reis opnieuw'
+        removeassignee: '{actor} wees {assignee} niet meer toe'
+        removesubject: '{actor} verwijderde {subject}'
+        update:
+          readMore: Lees meer
+          summary: '{actor} wijzigde de samenvatting'
+          title: '{actor} wijzigde de naam'
+        updatemilestone:
+          complete: '{actor} rondde een mijlpaal af'
+          deadline: '{actor} wijzigde deadline van een mijlpaal'
+          deadlineRemove: deadline is verwijderd
+          deadlineUpdate: deadline is nu {datetime}
+          incomplete: '{actor} markeerde een mijlpaal als niet compleet'
   accessList:
     added: Toegevoegd door {sharer} {updated}
     removeAccess: Toegang verwijderen
@@ -2673,7 +2676,6 @@ zui:
     title:
       addToJourney: Maak een persoon aan en voeg deze toe aan {journey}
       addToList: Maak een persoon aan en voeg deze toe aan {list}
-      assignToCanvassAssignment: Maak een persoon aan en wijs deze toe aan {canvassAss}
       assignToJourney: Maak een persoon aan en wijs deze toe aan {journey}
       caller: Maak een persoon aan en voeg deze als beller toe
       contact: Maak een persoon aan en wijs deze aan als contactpersoon
@@ -2738,7 +2740,6 @@ zui:
       suborgs: Alleen sub-organisaties
       this: Alleen {org}
   organizeSidebar:
-    areas: Gebieden
     filter: Typ om te filteren
     home: Thuis
     journeys: Reizen
@@ -2762,7 +2763,7 @@ zui:
     searching: Aan het zoeken...
   snackbar:
     error: Oh nee, er ging iets mis
-    info: '...'
+    info: ...
     success: Gelukt!
     warning: Let op!
   submitOrCancel:
@@ -2777,53 +2778,3 @@ zui:
     singleDay: '{date}, {start} - {end}'
     singleDayAllDay: Hele dag vandaag
     singleDayToday: Vandaag, {start} - {end}
-  timeline:
-    addNotePlaceholder: Laat hier een notitie achter
-    email:
-      headers:
-        cc: CC
-        from: Van
-        to: Aan
-    expand: laat hele tijdlijn zien
-    fileUploadErrorMessage: Notitie toevoegen is niet gelukt. Het kan te lang zijn.
-    filter:
-      byType:
-        all: Alles
-        files: Bestanden
-        journey: Reis
-        milestones: Mijlpalen
-        notes: Notities
-        people: Mensen
-        tags: Tags
-      filterSelectLabel: Laat {filter} zien
-      warning: De tijdlijn wordt nu gefilterd. Klik hier om het filter te verwijderen.
-    updates:
-      any:
-        addtags: '{actor} voegde {count, plural, =1 {a tag} other {# tags}} toe'
-        removetags: '{actor} verwijderde {count, plural, =1 {a tag} other {# tags}}'
-      journeyinstance:
-        addassignee: '{actor} wees {assignee} toe'
-        addnote: '{actor} voegde een notitie toe'
-        addsubject: '{actor} voegde {subject} toe'
-        close:
-          header: '{actor} sloot de reis'
-        convert: '{actor} wijzigde label {oldLabel} in {newLabel}'
-        create:
-          header: '{actor} startte een nieuwe reis'
-        open: '{actor} opende de reis opnieuw'
-        removeassignee: '{actor} wees {assignee} niet meer toe'
-        removesubject: '{actor} verwijderde {subject}'
-        update:
-          readMore: Lees meer
-          summary: '{actor} wijzigde de samenvatting'
-          title: '{actor} wijzigde de naam'
-        updatemilestone:
-          complete: '{actor} rondde een mijlpaal af'
-          deadline: '{actor} wijzigde deadline van een mijlpaal'
-          deadlineRemove: deadline is verwijderd
-          deadlineUpdate: deadline is nu {datetime}
-          incomplete: '{actor} markeerde een mijlpaal als niet compleet'
-  timezonePicker:
-    gmt: GMT
-    placeholder: Begin met typen om locatie te zoeken
-    timezone: Tijdzone
