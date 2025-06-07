@@ -54,9 +54,11 @@ const DuplicatesPage: PageWithLayout = () => {
           >
             {messages.page.possibleDuplicates()}
           </Typography>
-          {list.data.map((cluster) => (
-            <DuplicateCard key={cluster.id} cluster={cluster} />
-          ))}
+          {list.data
+            .filter((cluster) => cluster.status === 'pending')
+            .map((cluster) => (
+              <DuplicateCard key={cluster.id} cluster={cluster} />
+            ))}
         </Box>
       )}
     </>
