@@ -84,7 +84,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     };
   }
 
-
   return {
     props: {
       accessLevel,
