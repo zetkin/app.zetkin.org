@@ -22,8 +22,9 @@ export default function useToggleDebounce(
     // Capture start-point of hovering to evaluate if the user has hovered > minHoverDuration
     hoverStartTime.current = Date.now();
 
+    // If hoverStartTime is not null after minHoverDuration, we should trigger the Open()
     window.setTimeout(() => {
-      if (hoverStartTime.current && Date.now() - hoverStartTime.current > minHoverDuration) {
+      if (hoverStartTime.current) {
         hoverStartTime.current = null;
         open({
           ...ev,
