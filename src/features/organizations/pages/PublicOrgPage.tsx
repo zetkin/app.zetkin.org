@@ -22,13 +22,10 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import notEmpty from 'utils/notEmpty';
-import {
-  flipLatLng,
-  pointsToBounds,
-} from 'features/canvass/components/GLCanvassMap';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
-import MarkerImageRenderer from 'features/canvass/components/GLCanvassMap/MarkerImageRenderer';
+import { markerImage } from './markerImage';
+import { flipLatLng, pointsToBounds } from 'utils/mapUtils';
 
 type Props = {
   orgId: number;
@@ -265,7 +262,7 @@ export const OrgPageMap: FC<
             (count) => {
               map.addImage(
                 `marker-${count}`,
-                new MarkerImageRenderer(0, 0, true, '#000000', count.toString())
+                markerImage('#000000', count.toString())
               );
             }
           );

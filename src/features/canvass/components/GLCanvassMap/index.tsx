@@ -5,7 +5,7 @@ import { GpsNotFixed } from '@mui/icons-material';
 import { LngLatBounds, Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { PointData, Zetkin2Area } from 'features/areas/types';
+import { Zetkin2Area } from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
@@ -16,6 +16,7 @@ import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
+import { flipLatLng, pointsToBounds } from 'utils/mapUtils';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -71,7 +72,6 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     if (localStorageBounds) {
       return { initialBounds: localStorageBounds, padding: 0 };
     }
-
     return {
       // If no bounds can be calculated, return a default bounding box that covers the entire world
       initialBounds: bounds ?? new LngLatBounds([180, 90], [-180, -90]),
@@ -163,23 +163,27 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       if (map && crosshair) {
         const markerPos = getCrosshairPositionOnMap(map, crosshair);
 
-        const nearestLocation = locations.data
-          ?.map((location) => {
-            const screenPos = map.project([
-              location.longitude,
-              location.latitude,
-            ]);
-            const dx = screenPos.x - markerPos.markerX;
-            const dy = screenPos.y - markerPos.markerY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+        let nearestLocation: number | null = null;
+        let nearestDistance = Infinity;
 
-            return { dist, id: location.id };
-          })
-          .toSorted((a, b) => a.dist - b.dist)[0];
+        locations.data?.forEach((location) => {
+          const screenPos = map.project([
+            location.longitude,
+            location.latitude,
+          ]);
+          const dx = screenPos.x - markerPos.markerX;
+          const dy = screenPos.y - markerPos.markerY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (nearestLocation && nearestLocation.dist < 20) {
-          if (nearestLocation.id != selectedLocationId) {
-            setSelectedLocationId(nearestLocation.id);
+          if (dist < nearestDistance) {
+            nearestDistance = dist;
+            nearestLocation = location.id;
+          }
+        });
+
+        if (nearestDistance < 20) {
+          if (nearestLocation != selectedLocation) {
+            setSelectedLocationId(nearestLocation);
           }
         } else {
           setSelectedLocationId(null);
@@ -376,25 +380,3 @@ const getCrosshairPositionOnMap = (
 
   return { markerX, markerY };
 };
-
-export function flipLatLng(latLng: [number, number]): [number, number] {
-  const [lat, lng] = latLng;
-  return [lng, lat];
-}
-
-export function pointsToBounds(coordinates: Array<PointData>) {
-  if (coordinates.length === 0) {
-    return null;
-  }
-
-  const [firstPoint, ...restPoints] = coordinates;
-
-  const bounds = new LngLatBounds(
-    flipLatLng(firstPoint),
-    flipLatLng(firstPoint)
-  );
-  for (const point of restPoints) {
-    bounds.extend(flipLatLng(point));
-  }
-  return bounds;
-}

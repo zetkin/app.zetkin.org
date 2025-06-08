@@ -133,8 +133,10 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
         display="flex"
         flexDirection="column"
         flexGrow={1}
+        flexShrink={0}
         sx={{
           maxWidth: showMapDesktop ? 480 : 960,
+          width: '100%',
           ...transitionSettings,
         }}
       >
