@@ -77,38 +77,23 @@ const BreadcrumbTrail = ({
         separator={<NavigateNextIcon fontSize="small" />}
       >
         {breadcrumbs.map((crumb: Breadcrumb, index: number) => {
-          const isOrganizeRegex = new RegExp('/organize/[0-9]+(?!/)');
           if (index < breadcrumbs.length - 1) {
-            if (isOrganizeRegex.test(crumb.href)) {
-              return (
+            return (
+              <NextLink
+                key={crumb.href}
+                href={crumb.href}
+                legacyBehavior
+                passHref
+              >
                 <Link
-                  key={crumb.href}
                   className={classes.breadcrumb}
                   color="inherit"
-                  href={crumb.href}
                   underline="hover"
                 >
                   {getLabel(crumb)}
                 </Link>
-              );
-            } else {
-              return (
-                <NextLink
-                  key={crumb.href}
-                  href={crumb.href}
-                  legacyBehavior
-                  passHref
-                >
-                  <Link
-                    className={classes.breadcrumb}
-                    color="inherit"
-                    underline="hover"
-                  >
-                    {getLabel(crumb)}
-                  </Link>
-                </NextLink>
-              );
-            }
+              </NextLink>
+            );
           } else {
             return (
               <Typography

@@ -86,7 +86,7 @@ async function fetchElements(
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
     return [
       {
-        href: basePath + '/' + fieldValue,
+        href: basePath + '/' + fieldValue + '/projects',
         label: org.data.title,
       },
     ];
