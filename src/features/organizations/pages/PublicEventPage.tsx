@@ -1,13 +1,17 @@
 'use client';
 
-import { FC, Fragment, useMemo } from 'react';
+import { FC, Fragment, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import { Button, Link, useTheme } from '@mui/material';
 import {
   CalendarMonth,
+  EmailOutlined,
+  ExpandLess,
+  ExpandMore,
   Fullscreen,
   Link as LinkIcon,
   LocationPin,
+  Phone,
 } from '@mui/icons-material';
 import { Map, Marker } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -29,6 +33,8 @@ import messageIds from '../l10n/messageIds';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { EventSignupButton } from 'features/home/components/EventSignupButton';
+import ZUISignUpChip from 'zui/components/ZUISignUpChip';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
 
 export const PublicEventPage: FC<{
   eventId: number;
@@ -38,27 +44,23 @@ export const PublicEventPage: FC<{
   const user = useUser();
   const myEvents = useMyEvents();
 
-  const event = useMemo(
+  const baseEvent = useMemo(
     () =>
       events
-        .map<ZetkinEventWithStatus>((event) => ({
+        .map((event) => ({
           ...event,
-          status:
-            myEvents.find((userEvent) => userEvent.id == event.id)?.status ||
-            null,
+          status: null,
         }))
         .find((e) => e.id === eventId),
     [events, myEvents, eventId]
   );
+  const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
+  const event = myEvent || baseEvent;
 
   return (
     <>
       <HeaderSection event={event} org={org} user={user} />
-      {event ? (
-        <BodySection event={event} org={org} user={user} />
-      ) : (
-        'Not found'
-      )}
+      {event ? <BodySection event={event} /> : 'Not found'}
     </>
   );
 };
@@ -127,17 +129,7 @@ export const HeaderSection: FC<{
 
 const BodySection: FC<{
   event: ZetkinEventWithStatus;
-  org: ZetkinOrganization;
-  user: ZetkinUser | null;
-}> = ({ event, org, user }) => {
-  // TODO: remove mock data
-  event = {
-    ...event,
-    // location: { id: 33, lat: 55.912747, lng: 13.489711, title: 'Stora torget' },
-    location: { id: 33, lat: 55.91202, lng: 13.485029, title: 'Stora torget' },
-    url: 'www.mysite.com',
-  };
-
+}> = ({ event }) => {
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
   const paragraphs = event.info_text
@@ -168,7 +160,7 @@ const BodySection: FC<{
       paddingX={2}
       paddingY={3}
     >
-      <SignUpPart event={event} org={org} user={user} />
+      <SignUpSection event={event} />
       <DateAndLocation event={event} />
       <Box display="flex" flexDirection="column" gap={1}>
         {paragraphs}
@@ -177,13 +169,74 @@ const BodySection: FC<{
   );
 };
 
-const SignUpPart: FC<{
+const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
-  org: ZetkinOrganization;
-  user: ZetkinUser | null;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-}> = ({ event, org, user }) => {
-  return <EventSignupButton event={event} />;
+}> = ({ event }) => {
+  const hasContactMethods =
+    event.status === 'booked' && (event.contact?.email || event.contact?.phone);
+  const [expandContactMethods, setExpandContactMethods] = useState(false);
+
+  return (
+    <Box display="flex" flexDirection="column" gap={1}>
+      {event.status === 'booked' && (
+        <>
+          <Box alignItems="center" display="flex" gap={1}>
+            <Button color="secondary" disabled variant="outlined">
+              <Msg id={messageIds.eventPage.cancelSignup} />
+            </Button>
+            <ZUISignUpChip status="booked" />
+          </Box>
+          {event.contact && (
+            <>
+              <Box alignItems="center" display="flex" gap={1}>
+                <ZUIUserAvatar personId={event.contact.id} size="sm" />
+                <ZUIText variant="bodyMdSemiBold">
+                  <Msg
+                    id={messageIds.eventPage.contactPerson}
+                    values={{ name: event.contact.name }}
+                  />
+                </ZUIText>
+                {hasContactMethods && (
+                  <Box marginLeft="auto">
+                    <ZUIIconButton
+                      icon={expandContactMethods ? ExpandLess : ExpandMore}
+                      onClick={() =>
+                        setExpandContactMethods(!expandContactMethods)
+                      }
+                      size="small"
+                    />
+                  </Box>
+                )}
+              </Box>
+              {hasContactMethods && expandContactMethods && (
+                <>
+                  {event.contact.phone && (
+                    <Box alignItems="center" display="flex" gap={1}>
+                      <ZUIIcon icon={Phone} size="small" />
+                      <ZUIText variant="bodyMdRegular">
+                        {event.contact.phone}
+                      </ZUIText>
+                    </Box>
+                  )}
+                  {event.contact.email && (
+                    <Box alignItems="center" display="flex" gap={1}>
+                      <ZUIIcon icon={EmailOutlined} size="small" />
+                      <ZUIText variant="bodyMdRegular">
+                        {event.contact.email}
+                      </ZUIText>
+                    </Box>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </>
+      )}
+      <Box alignItems="center" display="flex" gap={1}>
+        <EventSignupButton event={event} />
+      </Box>
+    </Box>
+  );
 };
 
 const DateAndLocation: FC<{

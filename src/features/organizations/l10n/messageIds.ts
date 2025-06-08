@@ -10,6 +10,8 @@ export default makeMessages('feat.organizations', {
     loginButton: m('Log in & come back'),
   },
   eventPage: {
+    cancelSignup: m('Cancel signup'),
+    contactPerson: m<{ name: string }>('{name} is the ontact person'),
     loading: m('Loading...'),
     today: m('Today'),
   },

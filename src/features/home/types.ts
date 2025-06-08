@@ -24,6 +24,18 @@ export type MyActivity =
   | MyCallAssignmentActivity
   | MyAreaAssignmentActivity;
 
-export type ZetkinEventWithStatus = ZetkinEvent & {
-  status: 'signedUp' | 'booked' | null;
-};
+export type ZetkinEventWithStatus = ZetkinEvent &
+  (
+    | {
+        status: 'signedUp' | null;
+      }
+    | {
+        contact?: null | {
+          email?: string;
+          id: number;
+          name: string;
+          phone?: string;
+        };
+        status: 'booked';
+      }
+  );

@@ -211,6 +211,7 @@ export default makeMessages('zui', {
     ),
   },
   signUpChip: {
+    booked: m('You are booked'),
     needed: m('You are needed'),
     signedUp: m('You have signed up'),
   },

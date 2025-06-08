@@ -3,7 +3,7 @@
 import { Box } from '@mui/system';
 import { FC, PropsWithChildren, Suspense } from 'react';
 
-import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILogo from 'zui/ZUILogo';
@@ -12,6 +12,7 @@ import { useMessages } from 'core/i18n';
 import { useEnv } from 'core/hooks';
 import { HeaderSection } from '../pages/PublicEventPage';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
+import { ZetkinEventWithStatus } from 'features/home/types';
 
 type Props = PropsWithChildren<{
   eventId: number;
@@ -32,7 +33,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, org }) => {
                 {
                   id: eventId,
                   title: messages.eventPage.loading(),
-                } as ZetkinEvent
+                } as ZetkinEventWithStatus
               }
               org={org}
               user={null}
