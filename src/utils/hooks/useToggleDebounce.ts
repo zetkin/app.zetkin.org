@@ -6,12 +6,12 @@ import { MouseEvent, useRef } from 'react';
 export default function useToggleDebounce(
   open: (ev: MouseEvent<HTMLElement>) => void,
   close: (ev: MouseEvent<HTMLElement>) => void,
-  delay = 250,
-  minHoverDuration = 250
+  delay = 50,
+  minHoverDuration = 100
 ) {
-  const targetRef = useRef<HTMLElement | null>(null);
+  const targetRef = useRef<HTMLElement | null>();
   const timeoutId = useRef<number | undefined>();
-  let hoverStartTime = useRef<number | null>(null);
+  const hoverStartTime = useRef<number | null>();
 
   function openDebounced(ev: MouseEvent<HTMLElement>) {
     clearTimeout(timeoutId.current);
@@ -20,11 +20,11 @@ export default function useToggleDebounce(
     targetRef.current = ev.currentTarget;
 
     // Capture start-point of hovering to evaluate if the user has hovered > minHoverDuration
-    hoverStartTime = Date.now();
+    hoverStartTime.current = Date.now();
 
     window.setTimeout(() => {
-      if (hoverStartTime && Date.now() - hoverStartTime > minHoverDuration) {
-        hoverStartTime = null;
+      if (hoverStartTime.current && Date.now() - hoverStartTime.current > minHoverDuration) {
+        hoverStartTime.current = null;
         open({
           ...ev,
           currentTarget: targetRef.current,
@@ -34,7 +34,7 @@ export default function useToggleDebounce(
   }
 
   function closeDebounced(ev: MouseEvent<HTMLElement>) {
-    hoverStartTime = null;
+    hoverStartTime.current = null;
     timeoutId.current = window.setTimeout(() => {
       close(ev);
     }, delay);
