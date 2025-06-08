@@ -33,12 +33,17 @@ export enum CallStep {
 const CallPage: FC<Props> = ({ callAssId, jwt }) => {
   const sipRef = useRef<SimpleUser | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const ringbackRef = useRef<HTMLAudioElement | null>();
   const [callState, setCallState] = useState<VoipCallState>('idle');
   const [callStartTime, setCallStartTime] = useState<Date | null>(null);
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const currentCall = useCurrentCall();
   const user = useUser();
+
+  useEffect(() => {
+    ringbackRef.current = new Audio('/ringback.ogg');
+  }, []);
 
   useEffect(() => {
     setCallState('idle');
@@ -76,9 +81,11 @@ const CallPage: FC<Props> = ({ callAssId, jwt }) => {
         onCallAnswered: () => {
           setCallStartTime(new Date());
           setCallState('connected');
+          ringbackRef.current?.pause();
         },
         onCallHangup() {
           setCallState('hungup');
+          ringbackRef.current?.pause();
         },
       };
 
@@ -130,6 +137,12 @@ const CallPage: FC<Props> = ({ callAssId, jwt }) => {
 
                 if (!sipUser.isConnected) {
                   await sipUser.connect();
+                }
+
+                if (ringbackRef.current) {
+                  ringbackRef.current.currentTime = 0;
+                  ringbackRef.current.loop = true;
+                  ringbackRef.current.play();
                 }
 
                 setCallState('dialling');
