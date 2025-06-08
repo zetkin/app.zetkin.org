@@ -11,7 +11,11 @@ export default makeMessages('feat.organizations', {
   },
   eventPage: {
     cancelSignup: m('Cancel signup'),
-    contactPerson: m<{ name: string }>('{name} is the ontact person'),
+    cancelledHeader: m('This event has been cancelled'),
+    cancelledParagraph: m(
+      'You can no longer sign up for it and if you were signed up, you are no longer expected to attend.'
+    ),
+    contactPerson: m<{ name: string }>('{name} is the contact person'),
     loading: m('Loading...'),
     today: m('Today'),
   },

@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, Fragment, useMemo, useState } from 'react';
-import { Box } from '@mui/system';
+import { Box, useMediaQuery } from '@mui/system';
 import { Button, Link, useTheme } from '@mui/material';
 import {
   CalendarMonth,
@@ -28,13 +28,14 @@ import ZUIIcon from 'zui/components/ZUIIcon';
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { ZUIMapControlButtonGroup } from 'zui/ZUIMapControls';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { EventSignupButton } from 'features/home/components/EventSignupButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
+import ZUIAlert from 'zui/components/ZUIAlert';
 
 export const PublicEventPage: FC<{
   eventId: number;
@@ -130,6 +131,8 @@ export const HeaderSection: FC<{
 const BodySection: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
+  const theme = useTheme();
+
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
   const paragraphs = event.info_text
@@ -152,16 +155,27 @@ const BodySection: FC<{
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
+      display="grid"
       gap={3}
       marginX="auto"
       maxWidth={960}
       paddingX={2}
       paddingY={3}
+      sx={{
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: 'auto auto auto',
+        // On desktop, the date and location section is on the right side
+        [theme.breakpoints.up('md')]: {
+          gridTemplateColumns: '1fr 20rem',
+          gridTemplateRows: 'auto auto',
+        },
+      }}
     >
       <SignUpSection event={event} />
-      <DateAndLocation event={event} />
+      <DateAndLocation
+        event={event}
+        sx={{ [theme.breakpoints.up('md')]: { gridRow: 'span 2' } }}
+      />
       <Box display="flex" flexDirection="column" gap={1}>
         {paragraphs}
       </Box>
@@ -172,9 +186,21 @@ const BodySection: FC<{
 const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
+  const [expandContactMethods, setExpandContactMethods] = useState(false);
+  const messages = useMessages(messageIds);
+
   const hasContactMethods =
     event.status === 'booked' && (event.contact?.email || event.contact?.phone);
-  const [expandContactMethods, setExpandContactMethods] = useState(false);
+
+  if (event.cancelled) {
+    return (
+      <ZUIAlert
+        description={messages.eventPage.cancelledParagraph()}
+        severity="warning"
+        title={messages.eventPage.cancelledHeader()}
+      />
+    );
+  }
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
@@ -241,8 +267,11 @@ const SignUpSection: FC<{
 
 const DateAndLocation: FC<{
   event: ZetkinEventWithStatus;
-}> = ({ event }) => {
+  sx: React.CSSProperties;
+}> = ({ event, sx }) => {
   const env = useEnv();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const formatDate = (startDateTime: string, endDateTime: string) => {
     const sameDay = dayjs(startDateTime).isSame(dayjs(endDateTime), 'day');
@@ -282,9 +311,14 @@ const DateAndLocation: FC<{
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={1}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap={isMobile ? 1 : 2}
+      sx={{ ...sx }}
+    >
       <Box alignItems="center" display="flex" gap={1}>
-        <ZUIIcon icon={CalendarMonth} />{' '}
+        <ZUIIcon icon={CalendarMonth} />
         {formatDate(event.start_time, event.end_time)}
       </Box>
       {event.url && (
