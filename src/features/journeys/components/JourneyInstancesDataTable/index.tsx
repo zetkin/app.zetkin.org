@@ -1,16 +1,5 @@
-import {
-  DataGridPro,
-  DataGridProProps,
-  GridInitialState,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
-import {
-  FunctionComponent,
-  useCallback,
-  useLayoutEffect,
-  useState,
-} from 'react';
-import { CircularProgress } from '@mui/material';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { FunctionComponent, useState } from 'react';
 
 import getColumns from './getColumns';
 import { getRows } from './getRows';
@@ -21,6 +10,7 @@ import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useC
 import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import messageIds from 'features/journeys/l10n/messageIds';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
@@ -45,32 +35,20 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
     useConfigurableDataGridColumns(storageKey, rawColumns);
 
   // Set column state to persist on page reload
-  const [initialState, setInitialState] = useState<GridInitialState>();
-  const apiRef = useGridApiRef();
+  function visibilityModelFromColumns() {
+    const defaultVisibilityModel: { [key: string]: boolean } = {};
+    const columnFields = rawColumns.map((col) => col.field);
 
-  const saveSnapshot = useCallback(() => {
-    if (apiRef?.current?.exportState && localStorage) {
-      const currentState = apiRef.current.exportState();
-      localStorage.setItem('dataGridState', JSON.stringify(currentState));
-    }
-  }, [apiRef]);
-
-  useLayoutEffect(() => {
-    const stateFromLocalStorage = localStorage?.getItem('dataGridState');
-    setInitialState(
-      stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : {}
-    );
-    window.addEventListener('beforeunload', saveSnapshot);
-
-    return () => {
-      window.removeEventListener('beforeunload', saveSnapshot);
-      saveSnapshot();
-    };
-  }, [saveSnapshot]);
-
-  if (!initialState) {
-    return <CircularProgress />;
+    columnFields.forEach((field) => {
+      defaultVisibilityModel[field] = true;
+    });
+    return defaultVisibilityModel;
   }
+
+  const [visibleColumns, setVisibleColumns] = useLocalStorage(
+    'visibleColumns',
+    visibilityModelFromColumns()
+  );
 
   // Add localised header titles
   const columnsWithHeaderTitles = columns.map((column) => {
@@ -88,13 +66,12 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 
   return (
     <DataGridPro
-      apiRef={apiRef}
       checkboxSelection
       columns={columnsWithHeaderTitles}
+      columnVisibilityModel={visibleColumns}
       disableRowSelectionOnClick={true}
       initialState={{
         pagination: { paginationModel: { pageSize: 50 } },
-        ...initialState,
       }}
       onColumnOrderChange={(params) => {
         setColumnOrder(params.column.field, params.targetIndex - 1);
@@ -102,6 +79,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
       onColumnResize={(params) => {
         setColumnWidth(params.colDef.field, params.width);
       }}
+      onColumnVisibilityModelChange={(newModel) => setVisibleColumns(newModel)}
       rows={rows}
       slotProps={{
         toolbar: {
