@@ -1,7 +1,8 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
+import { SimpleUser, SimpleUserOptions } from 'sip.js/lib/platform/web';
 
 import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import StepsHeader from '../components/headers/StepsHeader';
@@ -13,9 +14,11 @@ import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportHeader from '../components/ReportHeader';
+import useUser from 'core/hooks/useUser';
 
 type Props = {
   callAssId: string;
+  jwt: string;
 };
 
 export enum CallStep {
@@ -26,21 +29,62 @@ export enum CallStep {
   SUMMARY = 4,
 }
 
-const CallPage: FC<Props> = ({ callAssId }) => {
+const CallPage: FC<Props> = ({ callAssId, jwt }) => {
+  const sipRef = useRef<SimpleUser | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const currentCall = useCurrentCall();
+  const user = useUser();
+
+  useEffect(() => {
+    const audioElem = audioRef.current;
+    if (user && audioElem) {
+      // TODO: Externalize these
+      const server = 'wss://192.168.64.2:7443';
+      const aor = 'sip:+19342470964@international.twilio';
+      const authorizationUsername = user.id.toString();
+      const authorizationPassword = '12345'; // TODO: Generate this
+
+      // Configuration Options
+      const options: SimpleUserOptions = {
+        aor,
+        media: {
+          remote: {
+            audio: audioElem,
+          },
+        },
+        userAgentOptions: {
+          authorizationPassword,
+          authorizationUsername,
+        },
+      };
+
+      // Construct a SimpleUser instance
+      const simpleUser = new SimpleUser(server, options);
+      simpleUser.connect();
+
+      sipRef.current = simpleUser;
+    } else {
+      sipRef.current = null;
+    }
+  }, [audioRef.current]);
 
   const assignment = assignments.find(
     (assignment) => assignment.id === parseInt(callAssId)
   );
 
-  if (!assignment) {
+  if (!assignment || !user) {
     return null;
   }
 
   return (
     <Box>
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption*/}
+      <audio ref={audioRef}>
+        {/* TODO: Replace with modal saying VoIP won't work */}
+        <p>Your browser doesnt support HTML5 audio.</p>
+      </audio>
       {activeStep == CallStep.STATS && (
         <>
           <StatsHeader
@@ -59,7 +103,21 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <StepsHeader
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onNextStep={() => setActiveStep(CallStep.ONGOING)}
+            onNextStep={async () => {
+              const sipUser = sipRef.current;
+              if (sipUser) {
+                const destination = 'sip:+46704007858@external';
+
+                if (!sipUser.isConnected) {
+                  await sipUser.connect();
+                }
+
+                await sipUser.call(destination, {
+                  extraHeaders: [`X-Zetkin-JWT: ${jwt}`],
+                });
+              }
+              setActiveStep(CallStep.ONGOING);
+            }}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             step={CallStep.PREPARE}
           />

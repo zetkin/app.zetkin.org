@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
+import { getIronSession } from 'iron-session';
 import { Suspense } from 'react';
 import { notFound, redirect } from 'next/navigation';
 
@@ -10,6 +11,8 @@ import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { CALL, hasFeature } from 'utils/featureFlags';
+import requiredEnvVar from 'utils/requiredEnvVar';
+import { AppSession } from 'utils/types';
 
 type Props = {
   params: { callAssId: string };
@@ -28,7 +31,15 @@ export default async function Page({ params }: Props) {
     (assignment) => assignment.id == parseInt(params.callAssId)
   );
 
-  if (!assignment) {
+  const cookieStore = await cookies();
+  const session = await getIronSession<AppSession>(cookieStore, {
+    cookieName: 'zsid',
+    password: requiredEnvVar('SESSION_PASSWORD'),
+  });
+
+  const jwt = session.tokenData?.access_token;
+
+  if (!assignment || !jwt) {
     return notFound();
   }
   const { callAssId } = params;
@@ -49,7 +60,7 @@ export default async function Page({ params }: Props) {
             </Box>
           }
         >
-          <CallPage callAssId={callAssId} />
+          <CallPage callAssId={callAssId} jwt={jwt} />
         </Suspense>
       </HomeThemeProvider>
     );
