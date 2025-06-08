@@ -12,9 +12,12 @@ import {
   ZetkinSurveySubmissionPatchBody,
 } from 'utils/types/zetkin';
 
-type UseSurveySubmissionReturn = IFuture<ZetkinSurveySubmission> & {
+type UseSurveySubmissionResponderReturn = {
   setRespondentId: (id: number | null) => void;
 };
+
+type UseSurveySubmissionReturn = IFuture<ZetkinSurveySubmission> &
+  UseSurveySubmissionResponderReturn;
 
 export default function useSurveySubmission(
   orgId: number,
@@ -22,6 +25,7 @@ export default function useSurveySubmission(
 ): UseSurveySubmissionReturn {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+  const { setRespondentId } = useSurveySubmissionResponder(orgId, submissionId);
 
   const submissionItem = useAppSelector((state) =>
     state.surveys.submissionList.items.find((item) => item.id == submissionId)
@@ -36,6 +40,18 @@ export default function useSurveySubmission(
 
   return {
     ...futureToObject(future),
+    setRespondentId,
+  };
+}
+
+export function useSurveySubmissionResponder(
+  orgId: number,
+  submissionId: number
+): UseSurveySubmissionResponderReturn {
+  const apiClient = useApiClient();
+  const dispatch = useAppDispatch();
+
+  return {
     setRespondentId(id) {
       dispatch(surveySubmissionUpdate([submissionId, ['respondent_id']]));
       apiClient

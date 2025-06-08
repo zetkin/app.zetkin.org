@@ -56,7 +56,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     <Box>
       {unfinishedCallList.map((call) => (
         <>
-          <Box key={call.id} sx={{ my: 1 }}>
+          <Box key={call.id} mt={1}>
             <Box
               alignItems="flex-start"
               display="flex"
@@ -68,16 +68,16 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 alignItems="center"
                 display="flex"
                 gap={1}
+                mt={1}
                 sx={{ flex: 1, minWidth: 0 }}
               >
-                <Box>
-                  <ZUIPersonAvatar
-                    firstName={call.target.first_name}
-                    id={call.target.id}
-                    lastName={call.target.last_name}
-                    size="medium"
-                  />
-                </Box>
+                <ZUIPersonAvatar
+                  firstName={call.target.first_name}
+                  id={call.target.id}
+                  lastName={call.target.last_name}
+                  size="medium"
+                />
+
                 <ZUIText noWrap variant="bodyMdSemiBold">
                   {call.target.first_name + ' ' + call.target.last_name}
                 </ZUIText>
@@ -88,6 +88,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 flexDirection="column"
                 gap={0.5}
                 justifyContent="center"
+                my={1}
               >
                 <Box display="flex" gap={1}>
                   <ZUIButton
@@ -120,7 +121,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
         </>
       ))}
       {previousCallsList.map((call) => (
-        <Box key={call.id} mt={1}>
+        <Box key={call.id} mt={2}>
           <Box
             alignItems="center"
             display="flex"
@@ -132,15 +133,12 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
               gap={1}
               sx={{ flex: 1, minWidth: 0 }}
             >
-              <Box>
-                <ZUIPersonAvatar
-                  firstName={call.target.first_name}
-                  id={call.target.id}
-                  lastName={call.target.last_name}
-                  size="medium"
-                />
-              </Box>
-
+              <ZUIPersonAvatar
+                firstName={call.target.first_name}
+                id={call.target.id}
+                lastName={call.target.last_name}
+                size="medium"
+              />
               <ZUIText noWrap variant="bodyMdSemiBold">
                 {call.target.first_name + ' ' + call.target.last_name}
               </ZUIText>
@@ -162,7 +160,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
             gap={1}
             justifyContent="space-between"
             ml="2.5rem"
-            my={0.5}
+            my={1}
           >
             <ZUIText variant="bodyMdRegular">{call.target.phone}</ZUIText>
             <Box

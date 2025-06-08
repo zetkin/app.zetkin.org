@@ -162,7 +162,7 @@ const CallStats: FC<CallStatsProps> = ({ assignment, onSwitchCall }) => {
                   width: '100%',
                 }}
               >
-                <Box mt={1}>
+                <Box my={1}>
                   <PreviousCallsSearch
                     onDebouncedChange={(value) => {
                       setDebouncedInput(value);

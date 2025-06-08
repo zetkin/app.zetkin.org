@@ -40,7 +40,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           width: '100%',
         }}
       >
-        <Box mt={2}>
+        <Box mb={1} mt={3}>
           <PreviousCallsSearch
             onDebouncedChange={(value) => {
               setDebouncedInput(value);
