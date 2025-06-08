@@ -15,6 +15,7 @@ import CallSummary from '../components/CallSummary';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportHeader from '../components/ReportHeader';
 import useUser from 'core/hooks/useUser';
+import { VoipCallState } from '../types';
 
 type Props = {
   callAssId: string;
@@ -32,10 +33,17 @@ export enum CallStep {
 const CallPage: FC<Props> = ({ callAssId, jwt }) => {
   const sipRef = useRef<SimpleUser | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [callState, setCallState] = useState<VoipCallState>('idle');
+  const [callStartTime, setCallStartTime] = useState<Date | null>(null);
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
   const assignments = useMyCallAssignments();
   const currentCall = useCurrentCall();
   const user = useUser();
+
+  useEffect(() => {
+    setCallState('idle');
+    setCallStartTime(null);
+  }, [currentCall?.id]);
 
   useEffect(() => {
     const audioElem = audioRef.current;
@@ -63,6 +71,16 @@ const CallPage: FC<Props> = ({ callAssId, jwt }) => {
       // Construct a SimpleUser instance
       const simpleUser = new SimpleUser(server, options);
       simpleUser.connect();
+
+      simpleUser.delegate = {
+        onCallAnswered: () => {
+          setCallStartTime(new Date());
+          setCallState('connected');
+        },
+        onCallHangup() {
+          setCallState('hungup');
+        },
+      };
 
       sipRef.current = simpleUser;
     } else {
@@ -102,6 +120,8 @@ const CallPage: FC<Props> = ({ callAssId, jwt }) => {
         <>
           <StepsHeader
             assignment={assignment}
+            callStartTime={callStartTime}
+            callState={callState}
             onBack={() => setActiveStep(CallStep.STATS)}
             onNextStep={async () => {
               const sipUser = sipRef.current;
@@ -112,7 +132,8 @@ const CallPage: FC<Props> = ({ callAssId, jwt }) => {
                   await sipUser.connect();
                 }
 
-                await sipUser.call(destination, {
+                setCallState('dialling');
+                sipUser.call(destination, {
                   extraHeaders: [`X-Zetkin-JWT: ${jwt}`],
                 });
               }
@@ -129,6 +150,8 @@ const CallPage: FC<Props> = ({ callAssId, jwt }) => {
         <>
           <StepsHeader
             assignment={assignment}
+            callStartTime={callStartTime}
+            callState={callState}
             onBack={() => setActiveStep(CallStep.STATS)}
             onNextStep={() => setActiveStep(CallStep.REPORT)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}

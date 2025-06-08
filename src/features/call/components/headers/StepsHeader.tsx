@@ -17,7 +17,8 @@ import useOutgoingCalls from '../../hooks/useOutgoingCalls';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import { CallStep } from 'features/call/pages/CallPage';
 import useAllocateCall from 'features/call/hooks/useAllocateCall';
-import { ZetkinCall } from 'features/call/types';
+import { VoipCallState, ZetkinCall } from 'features/call/types';
+import CallStateIndicator from '../CallStateIndicator';
 
 type StepButtonsProps = {
   assignment: ZetkinCallAssignment;
@@ -98,6 +99,8 @@ const StepButtons: FC<StepButtonsProps> = ({
 
 type StepsHeaderProps = {
   assignment: ZetkinCallAssignment;
+  callStartTime?: Date | null;
+  callState?: VoipCallState;
   onActivities?: () => void;
   onBack: () => void;
   onNextStep?: () => void;
@@ -107,6 +110,8 @@ type StepsHeaderProps = {
 
 const StepsHeader: FC<StepsHeaderProps> = ({
   assignment,
+  callStartTime,
+  callState,
   onActivities,
   onBack,
   onNextStep,
@@ -246,7 +251,18 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                     </ZUIBadge>
                   </Box>
                 </Box>
-                <Box display="flex" gap={2} justifyContent="flex-end">
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  gap={2}
+                  justifyContent="flex-end"
+                >
+                  {callState && (
+                    <CallStateIndicator
+                      startTime={callStartTime}
+                      state={callState}
+                    />
+                  )}
                   {StepButtons({
                     assignment,
                     call,
