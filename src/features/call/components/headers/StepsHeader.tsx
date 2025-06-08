@@ -147,7 +147,7 @@ const StepsHeader: FC<StepsHeaderProps> = ({
         <Box p={2}>
           {isMobile && (
             <>
-              <Box alignItems="center" display="flex" mb={0.5} minWidth={0}>
+              <Box alignItems="center" display="flex" minWidth={0}>
                 <ZUIButton
                   label={assignment.title}
                   noWrap
@@ -163,7 +163,7 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                 display="flex"
                 justifyContent="space-between"
               >
-                <Box display="flex" flexDirection="column" minWidth={0}>
+                <Box display="flex" flexDirection="column" mb={1} minWidth={0}>
                   <ZUIText noWrap variant="headingLg">
                     {call.target.phone}
                   </ZUIText>
@@ -211,7 +211,7 @@ const StepsHeader: FC<StepsHeaderProps> = ({
           )}
           {!isMobile && (
             <>
-              <Box mb={1} minWidth={0}>
+              <Box minWidth={0}>
                 <ZUIButton
                   label={assignment.title}
                   noWrap
