@@ -35,19 +35,9 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
     useConfigurableDataGridColumns(storageKey, rawColumns);
 
   // Set column state to persist on page reload
-  function visibilityModelFromColumns() {
-    const defaultVisibilityModel: { [key: string]: boolean } = {};
-    const columnFields = rawColumns.map((col) => col.field);
-
-    columnFields.forEach((field) => {
-      defaultVisibilityModel[field] = true;
-    });
-    return defaultVisibilityModel;
-  }
-
   const [visibleColumns, setVisibleColumns] = useLocalStorage(
     'visibleColumns',
-    visibilityModelFromColumns()
+    {}
   );
 
   // Add localised header titles
