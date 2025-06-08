@@ -5,6 +5,8 @@ import {
   ZetkinTag,
 } from 'utils/types/zetkin';
 
+export type VoipCallState = 'idle' | 'dialling' | 'connected' | 'hungup';
+
 export type ZetkinCall = {
   allocation_time: string;
   assignment_id: number;

@@ -225,6 +225,10 @@ export default makeMessages('feat.call', {
       editButtonLabel: m('Edit'),
     },
   },
+  stateIndicator: {
+    calling: m('Calling'),
+    hungup: m('Hung up'),
+  },
   stats: {
     callsMade: m('calls made'),
     callsReached: m('successful calls'),
