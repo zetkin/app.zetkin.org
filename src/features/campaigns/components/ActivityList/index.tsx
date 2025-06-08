@@ -90,7 +90,11 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
               key={`areaassignment-${activity.data.id}`}
               index={index}
             >
-              <AreaAssignmentListItem caId={activity.data.id} orgId={orgId} />
+              <AreaAssignmentListItem
+                activity={activity}
+                caId={activity.data.id}
+                orgId={orgId}
+              />
             </LazyActivitiesBox>
           );
         } else if (isEventCluster(activity)) {
