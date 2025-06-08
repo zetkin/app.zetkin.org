@@ -40,6 +40,7 @@ const StepButtons: FC<StepButtonsProps> = ({
   onNextStep,
   step,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { allocateCall } = useAllocateCall(
     assignment.organization.id,
     assignment.id
@@ -86,17 +87,21 @@ const StepButtons: FC<StepButtonsProps> = ({
       <>
         <ZUIButton label="Take a break" onClick={onBack} variant="secondary" />
         <ZUIButton
+          disabled={isLoading}
           label="Keep calling"
           onClick={async () => {
+            setIsLoading(true);
             const result = await allocateCall();
             if (result) {
+              setIsLoading(false);
               onBack();
               router.push(`/call/${assignment.id}`);
             } else {
+              setIsLoading(false);
               onNextStep?.();
             }
           }}
-          variant="primary"
+          variant={isLoading ? 'loading' : 'primary'}
         />
       </>
     );

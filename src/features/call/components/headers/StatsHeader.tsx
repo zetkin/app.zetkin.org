@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -21,6 +21,7 @@ const StatsHeader: FC<StatsHeaderProps> = ({
   onBack,
   onPrepareCall,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { allocateCall, error } = useAllocateCall(
     assignment.organization.id,
     assignment.id
@@ -74,18 +75,21 @@ const StatsHeader: FC<StatsHeaderProps> = ({
               </Link>
 
               <ZUIButton
-                disabled={error !== null ? true : false}
+                disabled={isLoading || error !== null}
                 label="Start calling"
                 onClick={async () => {
+                  setIsLoading(true);
                   const result = await allocateCall();
                   if (result) {
+                    setIsLoading(false);
                     onBack();
                     router.push(`/call/${assignment.id}`);
                   } else {
+                    setIsLoading(false);
                     onPrepareCall();
                   }
                 }}
-                variant="primary"
+                variant={isLoading ? 'loading' : 'primary'}
               />
             </Box>
           </Box>
