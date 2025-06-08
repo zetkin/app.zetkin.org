@@ -25,7 +25,7 @@ import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
 import useMembership from '../hooks/useMembership';
 import useFollowOrgMutations from '../hooks/useFollowOrgMutations';
 import useConnectOrg from '../hooks/useConnectOrg';
-import { OrgPageMap } from '../pages/PublicOrgPage';
+import { OrgPageMap } from '../components/PublicOrgPageMap';
 import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
 
