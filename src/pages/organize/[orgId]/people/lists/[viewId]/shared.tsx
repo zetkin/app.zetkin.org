@@ -42,9 +42,14 @@ async function getAccessLevel(
     return 'configure';
   }
 
-  const accessList = await apiClient.get<ZetkinObjectAccess[]>(
-    `/api/orgs/${orgId}/people/views/${viewId}/access`
-  );
+  let accessList: ZetkinObjectAccess[] = [];
+  try {
+    accessList = await apiClient.get<ZetkinObjectAccess[]>(
+      `/api/orgs/${orgId}/people/views/${viewId}/access`
+    );
+  } catch (e) {
+    return null;
+  }
   const accessObject = accessList.find(
     (obj) => obj.person.id == myMembership.profile.id
   );
@@ -63,23 +68,30 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
+  if (accessLevel == null) {
+    return {
+      notFound: true,
+    };
+  }
+
   try {
     await apiClient.get<ZetkinView>(
       `/api/orgs/${orgId}/people/views/${viewId}`
     );
-
-    return {
-      props: {
-        accessLevel,
-        orgId,
-        viewId,
-      },
-    };
   } catch (err) {
     return {
       notFound: true,
     };
   }
+
+
+  return {
+    props: {
+      accessLevel,
+      orgId,
+      viewId,
+    },
+  };
 }, scaffoldOptions);
 
 type SharedViewPageProps = {
