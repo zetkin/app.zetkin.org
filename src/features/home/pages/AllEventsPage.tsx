@@ -5,8 +5,10 @@ import { FC, Suspense } from 'react';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import AllEventsList from '../components/AllEventsList';
+import useAllEvents from '../../events/hooks/useAllEvents';
 
 const AllEventsPage: FC = () => {
+  const allEvents = useAllEvents();
   return (
     <Suspense
       fallback={
@@ -21,7 +23,7 @@ const AllEventsPage: FC = () => {
         </Box>
       }
     >
-      <AllEventsList />
+      <AllEventsList events={allEvents} />
     </Suspense>
   );
 };

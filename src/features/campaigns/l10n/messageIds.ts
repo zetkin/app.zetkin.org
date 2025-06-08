@@ -58,6 +58,12 @@ export default makeMessages('feat.campaigns', {
     viewArchive: m('View archive'),
   },
   assigneeActions: m('Assignee actions'),
+  authDialog: {
+    cancelButton: m('Cancel'),
+    content: m('You need a Zetkin account to sign up for events.'),
+    label: m('Sign up'),
+    loginButton: m('Log in & come back'),
+  },
   calendarView: m('See all in calendar'),
   changeCampaignDialog: {
     moveButtonLabel: m('Move'),

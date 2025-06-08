@@ -37,6 +37,12 @@ export default makeMessages('feat.home', {
       tomorrow: m('Tomorrow'),
     },
   },
+  authDialog: {
+    cancelButton: m('Cancel'),
+    content: m('You need a Zetkin account to sign up for events.'),
+    label: m('Sign up'),
+    loginButton: m('Log in & come back'),
+  },
   defaultTitles: {
     areaAssignment: m('Untitled area assignment'),
     callAssignment: m('Untitled call assignment'),

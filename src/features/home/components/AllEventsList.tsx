@@ -29,9 +29,18 @@ import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
+import ZUIModal from '../../../zui/components/ZUIModal';
+import { ZetkinEvent } from '../../../utils/types/zetkin';
+import useUser from '../../../core/hooks/useUser';
+import ZUIDivider from '../../../zui/components/ZUIDivider';
+import SubOrgEventBlurb from '../../organizations/components/SubOrgEventBlurb';
 
-const AllEventsList: FC = () => {
+const AllEventsList: FC<{
+  events: ZetkinEventWithStatus[];
+  orgId?: number;
+}> = ({ orgId, events }) => {
   const intl = useIntl();
+  const user = useUser();
   const messages = useMessages(messageIds);
   const allEvents = useAllEvents();
   const nextDelay = useIncrementalDelay();
@@ -39,6 +48,8 @@ const AllEventsList: FC = () => {
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | null
   >(null);
+  const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
+  const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
   const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
     DateRange<Dayjs>
@@ -47,11 +58,13 @@ const AllEventsList: FC = () => {
     'today' | 'tomorrow' | 'thisWeek' | 'custom' | null
   >(null);
 
+  const topOrgEvents = orgId
+    ? events.filter((event) => event.organization.id == orgId)
+    : events;
+
   const orgs = [
     ...new Map(
-      allEvents
-        .map((event) => event.organization)
-        .map((org) => [org['id'], org])
+      events.map((event) => event.organization).map((org) => [org['id'], org])
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
@@ -83,7 +96,7 @@ const AllEventsList: FC = () => {
     }
   };
 
-  const filteredEvents = allEvents
+  const filteredEvents = events
     .filter((event) => {
       if (orgIdsToFilterBy.length == 0) {
         return true;
@@ -142,6 +155,12 @@ const AllEventsList: FC = () => {
   }, {});
 
   const dates = Object.keys(eventsByDate).sort();
+  const indexForSubOrgsButton = Math.min(1, dates.length - 1);
+  const showSubOrgBlurb =
+    orgId &&
+    orgIdsToFilterBy.length === 0 &&
+    !includeSubOrgs &&
+    topOrgEvents.length !== events.length;
 
   const orgIdsWithEvents = allEvents.reduce<number[]>((orgIds, event) => {
     if (!orgIds.includes(event.organization.id)) {
@@ -283,7 +302,7 @@ const AllEventsList: FC = () => {
           )}
         </Box>
       )}
-      {dates.map((date) => (
+      {dates.map((date, index) => (
         <Box key={date} paddingX={1}>
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <div>
@@ -295,10 +314,40 @@ const AllEventsList: FC = () => {
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <Box display="flex" flexDirection="column" gap={1}>
               {eventsByDate[date].map((event) => (
-                <EventListItem key={event.id} event={event} />
+                <EventListItem
+                  key={event.id}
+                  event={event}
+                  onClickSignUp={(ev) => {
+                    if (!user) {
+                      setPostAuthEvent(event);
+                      ev.preventDefault();
+                    }
+                  }}
+                />
               ))}
             </Box>
           </Fade>
+          {showSubOrgBlurb &&
+            index == indexForSubOrgsButton &&
+            showSubOrgBlurb && (
+              <Fade
+                appear
+                in
+                mountOnEnter
+                style={{ transitionDelay: nextDelay() }}
+              >
+                <Box sx={{ my: 4 }}>
+                  <ZUIDivider />
+                  <SubOrgEventBlurb
+                    onClickShow={() => setIncludeSubOrgs(true)}
+                    subOrgEvents={allEvents.filter(
+                      (event) => event.organization.id != orgId
+                    )}
+                  />
+                  <ZUIDivider />
+                </Box>
+              </Fade>
+            )}
         </Box>
       ))}
       <ZUIDrawerModal
@@ -390,6 +439,28 @@ const AllEventsList: FC = () => {
           ))}
         </List>
       </ZUIDrawerModal>
+      {orgId && (
+        <ZUIModal
+          onClose={() => setPostAuthEvent(null)}
+          open={!!postAuthEvent}
+          primaryButton={{
+            href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
+            label: messages.authDialog.loginButton(),
+          }}
+          secondaryButton={{
+            label: messages.authDialog.cancelButton(),
+            onClick: () => setPostAuthEvent(null),
+          }}
+          size="small"
+          title={messages.authDialog.label()}
+        >
+          <Box sx={{ paddingTop: '0.75rem' }}>
+            <ZUIText>
+              <Msg id={messageIds.authDialog.content} />
+            </ZUIText>
+          </Box>
+        </ZUIModal>
+      )}
     </Box>
   );
 };

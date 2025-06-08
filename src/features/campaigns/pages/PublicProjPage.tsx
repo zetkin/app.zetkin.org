@@ -13,7 +13,7 @@ import SubOrgEventBlurb from '../../organizations/components/SubOrgEventBlurb';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../../organizations/l10n/messageIds';
+import messageIds from '../l10n/messageIds';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import NoEventsBlurb from '../../organizations/components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
