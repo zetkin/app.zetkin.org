@@ -36,6 +36,7 @@ import { EventSignupButton } from 'features/home/components/EventSignupButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import { randomizerFromSeed } from 'utils/colorUtils';
 
 export const PublicEventPage: FC<{
   eventId: number;
@@ -78,8 +79,14 @@ export const HeaderSection: FC<{
 
   const subheaderText = [projectName, eventType].filter(Boolean).join(', ');
 
+  const gradient = useMemo(() => {
+    const { getColor, seededRand } = randomizerFromSeed(`${org.id}org`);
+    const degrees = seededRand(360);
+    return `linear-gradient(${degrees}deg, ${getColor()}, ${getColor()})`;
+  }, [org.id]);
+
   return (
-    <Box sx={{ background: 'linear-gradient(to right, #6ADDD2, #B62993)' }}>
+    <Box sx={{ background: gradient }}>
       <Box
         display="flex"
         flexDirection="column"
