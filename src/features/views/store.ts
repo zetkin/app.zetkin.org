@@ -542,34 +542,39 @@ interface Dependency {
 }
 
 function invalidateDependentViews(
-  viewUpdatedId: number | undefined,
+  updatedViewId: number | undefined,
   state: ViewsStoreSlice
 ) {
   const dependencies = getViewDependencies(state);
-  const viewsVisited = [];
+  const viewsCheckedForDependencies = [];
   const viewsQueue = [];
 
-  while (dependencies.length > 0 && viewUpdatedId) {
-    viewsVisited.push(viewUpdatedId);
+  while (dependencies.length > 0 && updatedViewId) {
+    viewsCheckedForDependencies.push(updatedViewId);
 
     for (let i = 0; i < dependencies.length; i++) {
-      if (dependencies[i].to == viewUpdatedId) {
-        if (!viewsVisited.includes(dependencies[i].from)) {
-          viewsQueue.push(dependencies[i].from);
+
+      const dependency = dependencies[i];
+      const isDependentOnUpdatedView = dependency.to == updatedViewId
+
+      if (isDependentOnUpdatedView) {
+        const alreadyChecked = viewsCheckedForDependencies.includes(dependency.from)
+
+        if (!alreadyChecked) {
+          viewsQueue.push(dependency.from);
         }
 
-        const updatedViewRows = state.rowsByViewId[dependencies[i].from];
-
-        if (updatedViewRows) {
-          updatedViewRows.items = [];
-          updatedViewRows.isStale = true;
+        const viewRowsToInvalidate = state.rowsByViewId[dependency.from];
+        if (viewRowsToInvalidate) {
+          viewRowsToInvalidate.items = [];
+          viewRowsToInvalidate.isStale = true;
         }
 
         dependencies.splice(i, 1);
         i--;
       }
     }
-    viewUpdatedId = viewsQueue.pop();
+    updatedViewId = viewsQueue.pop();
   }
 }
 
