@@ -553,12 +553,13 @@ function invalidateDependentViews(
     viewsCheckedForDependencies.push(updatedViewId);
 
     for (let i = 0; i < dependencies.length; i++) {
-
       const dependency = dependencies[i];
-      const isDependentOnUpdatedView = dependency.to == updatedViewId
+      const isDependentOnUpdatedView = dependency.to == updatedViewId;
 
       if (isDependentOnUpdatedView) {
-        const alreadyChecked = viewsCheckedForDependencies.includes(dependency.from)
+        const alreadyChecked = viewsCheckedForDependencies.includes(
+          dependency.from
+        );
 
         if (!alreadyChecked) {
           viewsQueue.push(dependency.from);
