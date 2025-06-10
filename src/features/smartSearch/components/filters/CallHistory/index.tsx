@@ -54,7 +54,7 @@ const CallHistory = ({
     });
 
   // only submit if assignments exist
-  const submittable = !!sortedAssignments?.length;
+  const submittable = !!sortedAssignments.length;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

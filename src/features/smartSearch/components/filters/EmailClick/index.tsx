@@ -56,8 +56,8 @@ const EmailClick = ({
   const emailsSorted = emails.sort((e1, e2) => {
     return e1.title!.localeCompare(e2.title!);
   });
-  const projectsFuture = useCampaigns(orgId).data || [];
-  const projectsFutureSorted = projectsFuture.sort((pf1, pf2) => {
+  const projects = useCampaigns(orgId).data || [];
+  const projectsSorted = projects.sort((pf1, pf2) => {
     return pf1.title.localeCompare(pf2.title);
   });
 
@@ -65,8 +65,8 @@ const EmailClick = ({
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
-  const linkList = useEmailLinks(orgId, filter.config?.email).data;
-  const linkListSorted = linkList?.sort((l1, l2) => {
+  const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
+  const linkListSorted = linkList.sort((l1, l2) => {
     return l1.url.localeCompare(l2.url);
   });
 
@@ -203,7 +203,7 @@ const EmailClick = ({
                 >
                   :
                   {linkListSorted
-                    ?.filter((item) => filter.config.links?.includes(item.id))
+                    .filter((item) => filter.config.links?.includes(item.id))
                     .map((link) => {
                       return (
                         <Tooltip key={`link-${link.id}`} title={link.url}>
@@ -285,7 +285,7 @@ const EmailClick = ({
                   }
                   value={filter.config.campaign || ''}
                 >
-                  {projectsFutureSorted?.map((project) => (
+                  {projectsSorted.map((project) => (
                     <MenuItem key={`project-${project.id}`} value={project.id}>
                       {`"${project.title}"`}
                     </MenuItem>

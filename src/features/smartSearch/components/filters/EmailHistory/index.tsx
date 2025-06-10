@@ -48,11 +48,14 @@ const EmailHistory = ({
   onSubmit,
 }: EmailHistoryProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
-  const emailsFuture = useEmails(orgId).data || [];
-  const emailsFutureSorted = emailsFuture.sort((ef1, ef2) => {
-    return ef1.title!.localeCompare(ef2.title!);
+  const emails = useEmails(orgId).data || [];
+  const emailsSorted = emails.sort((e1, e2) => {
+    return e1.title!.localeCompare(e2.title!);
   });
-  const projectsFuture = useCampaigns(orgId).data || [];
+  const projects = useCampaigns(orgId).data || [];
+  const projectsSorted = projects.sort((p1, p2) => {
+    return p1.title.localeCompare(p2.title);
+  });
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailHistoryFilterConfig>(initialFilter, {
@@ -156,7 +159,7 @@ const EmailHistory = ({
                   }
                   value={filter.config.email || ''}
                 >
-                  {emailsFutureSorted?.map((email) => (
+                  {emailsSorted.map((email) => (
                     <MenuItem key={`email-${email.id}`} value={email.id}>
                       <Tooltip
                         placement="right-start"
@@ -201,7 +204,7 @@ const EmailHistory = ({
                   }
                   value={filter.config.campaign || ''}
                 >
-                  {projectsFuture?.map((project) => (
+                  {projectsSorted.map((project) => (
                     <MenuItem key={`proejct-${project.id}`} value={project.id}>
                       {`"${project.title}"`}
                     </MenuItem>

@@ -51,8 +51,8 @@ const Task = ({
     return t1.title.localeCompare(t2.title);
   });
 
-  const { data: campaigns } = useCampaigns(orgId);
-  const campaignsSorted = campaigns?.sort((c1, c2) => {
+  const campaigns = useCampaigns(orgId).data || [];
+  const campaignsSorted = campaigns.sort((c1, c2) => {
     return c1.title.localeCompare(c2.title);
   });
 
@@ -174,7 +174,7 @@ const Task = ({
                   <MenuItem key={ANY_CAMPAIGN} value={ANY_CAMPAIGN}>
                     <Msg id={localMessageIds.campaignSelect.any} />
                   </MenuItem>
-                  {campaignsSorted?.map((c) => (
+                  {campaignsSorted.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       <Msg
                         id={localMessageIds.campaignSelect.campaign}
