@@ -147,6 +147,9 @@ const StepsHeader: FC<StepsHeaderProps> = ({
       <Box
         sx={(theme) => ({
           backgroundColor: theme.palette.common.white,
+          position: 'sticky',
+          top: 0,
+          zIndex: 1100,
         })}
       >
         <Box p={2}>
@@ -282,6 +285,7 @@ const StepsHeader: FC<StepsHeaderProps> = ({
             </>
           )}
         </Box>
+        <ZUIDivider />
       </Box>
       <CallSwitchModal
         assignment={assignment}
@@ -289,7 +293,6 @@ const StepsHeader: FC<StepsHeaderProps> = ({
         onSwitchCall={onSwitchCall}
         open={showModal}
       />
-      <ZUIDivider />
     </>
   );
 };
