@@ -3,6 +3,20 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.organizations', {
+  allEventsList: {
+    emptyList: {
+      message: m('Could not find any events'),
+      removeFiltersButton: m('Clear filters'),
+    },
+    filterButtonLabels: {
+      organizations: m<{ numOrgs: number }>(
+        '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
+      ),
+      thisWeek: m('This week'),
+      today: m('Today'),
+      tomorrow: m('Tomorrow'),
+    },
+  },
   authDialog: {
     cancelButton: m('Cancel'),
     content: m('You need a Zetkin account to sign up for events.'),
