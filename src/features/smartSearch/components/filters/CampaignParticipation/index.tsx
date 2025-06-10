@@ -80,8 +80,14 @@ const CampaignParticipation = ({
 
   // TODO: Show loading indicator instead of empty arrays?
   const activities = useEventTypes(orgId).data || [];
+  const sortedActivities = activities.sort((act1, act2) => {
+    return act1.title.localeCompare(act2.title);
+  });
   const campaigns = useCampaigns(orgId, orgIds).data || [];
   const locations = useEventLocations(orgId) || [];
+  const locationsSorted = locations.sort((l1, l2) => {
+    return l1.title.localeCompare(l2.title);
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -160,7 +166,8 @@ const CampaignParticipation = ({
                         id={localMessageIds.activitySelect.activity}
                         values={{
                           activity: truncateOnMiddle(
-                            activities.find((l) => l.id === value)?.title ?? '',
+                            sortedActivities.find((l) => l.id === value)
+                              ?.title ?? '',
                             40
                           ),
                         }}
@@ -173,7 +180,7 @@ const CampaignParticipation = ({
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
                   <Msg id={localMessageIds.activitySelect.any} />
                 </MenuItem>
-                {activities.map((a) => (
+                {sortedActivities.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
                     <Tooltip
                       placement="right-start"
@@ -282,7 +289,7 @@ const CampaignParticipation = ({
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
                   <Msg id={localMessageIds.locationSelect.any} />
                 </MenuItem>
-                {locations.map((l) => (
+                {locationsSorted.map((l) => (
                   <MenuItem key={l.id} value={l.id}>
                     {l.title}
                   </MenuItem>

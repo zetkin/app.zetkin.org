@@ -52,6 +52,9 @@ const SurveyResponse = ({
 }: SurveyResponseProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveysWithElements(orgId).data || [];
+  const surveysSorted = surveys.sort((s1, s2) => {
+    return s1.title.localeCompare(s2.title);
+  });
 
   const getSurveyIdfromQuestionId = (questionId?: number) => {
     return questionId
@@ -100,6 +103,9 @@ const SurveyResponse = ({
           e.type === ELEMENT_TYPE.QUESTION &&
           e.question.response_type === RESPONSE_TYPE.TEXT
       ) as ZetkinSurveyTextQuestionElement[]) || [];
+  const validQuestionsSorted = validQuestions.sort((vq1, vq2) => {
+    return vq1.question.question.localeCompare(vq2.question.question);
+  });
 
   //submit if there is valid survey, valid questions and search field filled in
   const submittable =
@@ -246,7 +252,7 @@ const SurveyResponse = ({
                     <Msg id={localMessageIds.questionSelect.any} />
                   </MenuItem>
                 )}
-                {validQuestions.map((q) => (
+                {validQuestionsSorted.map((q) => (
                   <MenuItem key={q.id} value={q.id}>
                     <Tooltip
                       placement="right-start"
@@ -289,7 +295,7 @@ const SurveyResponse = ({
                     <Msg id={localMessageIds.surveySelect.none} />
                   </MenuItem>
                 )}
-                {surveys.map((s) => (
+                {surveysSorted.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
                     <Tooltip
                       placement="right-start"
