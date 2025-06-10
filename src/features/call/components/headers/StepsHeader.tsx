@@ -1,7 +1,7 @@
 import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
@@ -18,6 +18,31 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import { CallStep } from 'features/call/pages/CallPage';
 import useAllocateCall from 'features/call/hooks/useAllocateCall';
 import { ZetkinCall } from 'features/call/types';
+
+type IconTextLinkProps = {
+  icon: ReactNode;
+  label: string;
+  onClick: () => void;
+};
+
+const IconTextLink: FC<IconTextLinkProps> = ({ icon, label, onClick }) => {
+  return (
+    <Box
+      alignItems="center"
+      display="flex"
+      gap={0.5}
+      mb={1}
+      minWidth={0}
+      onClick={onClick}
+      sx={{ cursor: 'pointer' }}
+    >
+      {icon}
+      <ZUIText noWrap variant="bodyMdRegular">
+        {label}
+      </ZUIText>
+    </Box>
+  );
+};
 
 type StepButtonsProps = {
   assignment: ZetkinCallAssignment;
@@ -155,17 +180,14 @@ const StepsHeader: FC<StepsHeaderProps> = ({
         <Box p={2}>
           {isMobile && (
             <>
-              <Box alignItems="center" display="flex" minWidth={0}>
-                <ZUIButton
-                  label={assignment.title}
-                  noWrap
-                  onClick={() => {
-                    deleteCall(call.id);
-                    onBack();
-                  }}
-                  startIcon={ArrowBackIos}
-                />
-              </Box>
+              <IconTextLink
+                icon={<ArrowBackIos sx={{ fontSize: 16 }} />}
+                label={assignment.title}
+                onClick={() => {
+                  deleteCall(call.id);
+                  onBack();
+                }}
+              />
               <Box
                 alignItems="flex-start"
                 display="flex"
@@ -219,17 +241,14 @@ const StepsHeader: FC<StepsHeaderProps> = ({
           )}
           {!isMobile && (
             <>
-              <Box minWidth={0}>
-                <ZUIButton
-                  label={assignment.title}
-                  noWrap
-                  onClick={() => {
-                    deleteCall(call.id);
-                    onBack();
-                  }}
-                  startIcon={ArrowBackIos}
-                />
-              </Box>
+              <IconTextLink
+                icon={<ArrowBackIos sx={{ fontSize: 16 }} />}
+                label={assignment.title}
+                onClick={() => {
+                  deleteCall(call.id);
+                  onBack();
+                }}
+              />
               <Box
                 alignItems="flex-start"
                 display="flex"
