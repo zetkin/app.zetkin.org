@@ -13,13 +13,13 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 type StatsHeaderProps = {
   assignment: ZetkinCallAssignment;
   onBack: () => void;
-  onPrepareCall: () => void;
+  onPrimaryAction: () => void;
 };
 
 const StatsHeader: FC<StatsHeaderProps> = ({
   assignment,
   onBack,
-  onPrepareCall,
+  onPrimaryAction,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { allocateCall, error } = useAllocateCall(
@@ -88,7 +88,7 @@ const StatsHeader: FC<StatsHeaderProps> = ({
                   router.push(`/call/${assignment.id}`);
                 } else {
                   setIsLoading(false);
-                  onPrepareCall();
+                  onPrimaryAction();
                 }
               }}
               variant={isLoading ? 'loading' : 'primary'}

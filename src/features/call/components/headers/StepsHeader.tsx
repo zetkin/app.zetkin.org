@@ -1,12 +1,10 @@
 import { ArrowBackIos } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
-import useCurrentCall from '../../hooks/useCurrentCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import SkipCallDialog from '../SkipCallDialog';
 import useCallMutations from '../../hooks/useCallMutations';
@@ -15,8 +13,6 @@ import CallSwitchModal from '../CallSwitchModal';
 import ZUIBadge from 'zui/components/ZUIBadge';
 import useOutgoingCalls from '../../hooks/useOutgoingCalls';
 import useIsMobile from 'utils/hooks/useIsMobile';
-import { CallStep } from 'features/call/pages/CallPage';
-import useAllocateCall from 'features/call/hooks/useAllocateCall';
 import { ZetkinCall } from 'features/call/types';
 
 type IconTextLinkProps = {
@@ -44,128 +40,36 @@ const IconTextLink: FC<IconTextLinkProps> = ({ icon, label, onClick }) => {
   );
 };
 
-type StepButtonsProps = {
+type StepsHeaderProps = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
   forwardButtonDisabled?: boolean;
   forwardButtonIsLoading?: boolean;
   onBack: () => void;
-  onForward?: () => void;
-  onNextStep?: () => void;
-  step?: CallStep;
+  onPrimaryAction: () => void;
+  onPrimaryActionLabel: string;
+  onSecondaryAction?: () => void;
+  onSecondaryActionLabel?: string;
+  onSwitchCall: () => void;
 };
 
-const StepButtons: FC<StepButtonsProps> = ({
+const StepsHeader: FC<StepsHeaderProps> = ({
   assignment,
   call,
   forwardButtonDisabled,
   forwardButtonIsLoading,
   onBack,
-  onForward,
-  onNextStep,
-  step,
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { allocateCall } = useAllocateCall(
-    assignment.organization.id,
-    assignment.id
-  );
-  const router = useRouter();
-
-  if (step === CallStep.PREPARE) {
-    return (
-      <>
-        <SkipCallDialog
-          assignment={assignment}
-          callId={call.id}
-          targetName={`${call.target.first_name} ${call.target.last_name}`}
-        />
-        <ZUIButton label="Call" onClick={onNextStep} variant="primary" />
-      </>
-    );
-  } else if (step === CallStep.ONGOING) {
-    return (
-      <ZUIButton
-        label="Finish and report"
-        onClick={onNextStep}
-        variant="primary"
-      />
-    );
-  } else if (step === CallStep.REPORT) {
-    return (
-      <>
-        <ZUIButton
-          label="Back to activities"
-          onClick={onBack}
-          variant="secondary"
-        />
-        <ZUIButton
-          disabled={forwardButtonDisabled}
-          label="Submit report"
-          onClick={onForward}
-          variant={forwardButtonIsLoading ? 'loading' : 'primary'}
-        />
-      </>
-    );
-  } else if (step === CallStep.SUMMARY) {
-    return (
-      <>
-        <ZUIButton label="Take a break" onClick={onBack} variant="secondary" />
-        <ZUIButton
-          disabled={isLoading}
-          label="Keep calling"
-          onClick={async () => {
-            setIsLoading(true);
-            const result = await allocateCall();
-            if (result) {
-              setIsLoading(false);
-              onBack();
-              router.push(`/call/${assignment.id}`);
-            } else {
-              setIsLoading(false);
-              onNextStep?.();
-            }
-          }}
-          variant={isLoading ? 'loading' : 'primary'}
-        />
-      </>
-    );
-  }
-
-  return null;
-};
-
-type StepsHeaderProps = {
-  assignment: ZetkinCallAssignment;
-  forwardButtonDisabled?: boolean;
-  forwardButtonIsLoading?: boolean;
-  onBack: () => void;
-  onForward?: () => void;
-  onNextStep?: () => void;
-  onSwitchCall: () => void;
-  step?: CallStep;
-};
-
-const StepsHeader: FC<StepsHeaderProps> = ({
-  assignment,
-  forwardButtonDisabled,
-  forwardButtonIsLoading,
-  onBack,
-  onForward,
-  onNextStep,
+  onPrimaryAction,
+  onPrimaryActionLabel,
+  onSecondaryAction,
+  onSecondaryActionLabel,
   onSwitchCall,
-  step,
 }) => {
-  const call = useCurrentCall();
   const { deleteCall } = useCallMutations(assignment.organization.id);
   const [showModal, setShowModal] = useState(false);
   const outgoingCalls = useOutgoingCalls();
   const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
   const isMobile = useIsMobile();
-
-  if (!call) {
-    return null;
-  }
 
   return (
     <>
@@ -226,16 +130,26 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                 </Box>
               </Box>
               <Box display="flex" gap={2} justifyContent="flex-end">
-                {StepButtons({
-                  assignment,
-                  call,
-                  forwardButtonDisabled,
-                  forwardButtonIsLoading,
-                  onBack,
-                  onForward,
-                  onNextStep,
-                  step,
-                })}
+                {onPrimaryActionLabel === 'Call' && (
+                  <SkipCallDialog
+                    assignment={assignment}
+                    callId={call.id}
+                    targetName={`${call.target.first_name} ${call.target.last_name}`}
+                  />
+                )}
+                {onSecondaryAction && onSecondaryActionLabel && (
+                  <ZUIButton
+                    label={onSecondaryActionLabel}
+                    onClick={onSecondaryAction}
+                    variant="secondary"
+                  />
+                )}
+                <ZUIButton
+                  disabled={forwardButtonDisabled}
+                  label={onPrimaryActionLabel}
+                  onClick={onPrimaryAction}
+                  variant={forwardButtonIsLoading ? 'loading' : 'primary'}
+                />
               </Box>
             </>
           )}
@@ -289,16 +203,26 @@ const StepsHeader: FC<StepsHeaderProps> = ({
                   </Box>
                 </Box>
                 <Box display="flex" gap={2} justifyContent="flex-end">
-                  {StepButtons({
-                    assignment,
-                    call,
-                    forwardButtonDisabled,
-                    forwardButtonIsLoading,
-                    onBack,
-                    onForward,
-                    onNextStep,
-                    step,
-                  })}
+                  {onPrimaryActionLabel === 'Call' && (
+                    <SkipCallDialog
+                      assignment={assignment}
+                      callId={call.id}
+                      targetName={`${call.target.first_name} ${call.target.last_name}`}
+                    />
+                  )}
+                  {onSecondaryAction && onSecondaryActionLabel && (
+                    <ZUIButton
+                      label={onSecondaryActionLabel}
+                      onClick={onSecondaryAction}
+                      variant="secondary"
+                    />
+                  )}
+                  <ZUIButton
+                    disabled={forwardButtonDisabled}
+                    label={onPrimaryActionLabel}
+                    onClick={onPrimaryAction}
+                    variant={forwardButtonIsLoading ? 'loading' : 'primary'}
+                  />
                 </Box>
               </Box>
             </>

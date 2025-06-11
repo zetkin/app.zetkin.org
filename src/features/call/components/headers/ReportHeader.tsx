@@ -1,50 +1,59 @@
 import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import { CallStep } from '../../pages/CallPage';
 import { useAppSelector } from 'core/hooks';
 import useCallMutations from '../../hooks/useCallMutations';
 import StepsHeader from './StepsHeader';
+import { ZetkinCall } from 'features/call/types';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  callId: number;
+  call: ZetkinCall;
   onBack: () => void;
-  onForward: () => void;
+  onPrimaryAction: () => void;
+  onPrimaryActionLabel: string;
+  onSecondaryAction?: () => void;
+  onSecondaryActionLabel?: string;
   onSwitchCall: () => void;
 };
 
 const ReportHeader: FC<Props> = ({
   assignment,
-  callId,
+  call,
   onBack,
-  onForward,
+  onPrimaryAction,
+  onPrimaryActionLabel,
+  onSecondaryAction,
+  onSecondaryActionLabel,
   onSwitchCall,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { updateCall } = useCallMutations(assignment.organization.id);
   const stateList = useAppSelector((state) => state.call.stateByCallId);
-  const callState = stateList[callId]?.data;
+  const callState = stateList[call.id]?.data;
   const reportIsDone = callState && !!callState.report;
 
   return (
     <StepsHeader
       assignment={assignment}
+      call={call}
       forwardButtonDisabled={!reportIsDone}
       forwardButtonIsLoading={isLoading}
       onBack={onBack}
-      onForward={async () => {
+      onPrimaryAction={async () => {
         if (reportIsDone) {
           setIsLoading(true);
-          await updateCall(callId, callState.report);
+          await updateCall(call.id, callState.report);
           sessionStorage.clear();
           //TODO: Error handling
-          onForward();
+          onPrimaryAction();
           setIsLoading(false);
         }
       }}
+      onPrimaryActionLabel={onPrimaryActionLabel}
+      onSecondaryAction={onSecondaryAction}
+      onSecondaryActionLabel={onSecondaryActionLabel}
       onSwitchCall={onSwitchCall}
-      step={CallStep.REPORT}
     />
   );
 };

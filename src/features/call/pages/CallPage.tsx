@@ -1,9 +1,9 @@
 'use client';
 
 import { Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 
-import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
 import StepsHeader from '../components/headers/StepsHeader';
 import StatsHeader from '../components/headers/StatsHeader';
 import CallStats from '../components/CallStats';
@@ -13,9 +13,11 @@ import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportHeader from '../components/headers/ReportHeader';
+import useAllocateCall from '../hooks/useAllocateCall';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 type Props = {
-  callAssId: string;
+  assignment: ZetkinCallAssignment;
 };
 
 export enum CallStep {
@@ -26,18 +28,15 @@ export enum CallStep {
   SUMMARY = 4,
 }
 
-const CallPage: FC<Props> = ({ callAssId }) => {
+const CallPage: FC<Props> = ({ assignment }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
-  const assignments = useMyCallAssignments();
-  const currentCall = useCurrentCall();
-
-  const assignment = assignments.find(
-    (assignment) => assignment.id === parseInt(callAssId)
+  const [isLoading, setIsLoading] = useState(false);
+  const call = useCurrentCall();
+  const router = useRouter();
+  const { allocateCall } = useAllocateCall(
+    assignment?.organization.id,
+    assignment?.id
   );
-
-  if (!assignment) {
-    return null;
-  }
 
   return (
     <Box>
@@ -46,7 +45,7 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           <StatsHeader
             assignment={assignment}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onPrepareCall={() => setActiveStep(CallStep.PREPARE)}
+            onPrimaryAction={() => setActiveStep(CallStep.PREPARE)}
           />
           <CallStats
             assignment={assignment}
@@ -54,52 +53,72 @@ const CallPage: FC<Props> = ({ callAssId }) => {
           />
         </>
       )}
-      {activeStep == CallStep.PREPARE && (
+      {activeStep == CallStep.PREPARE && call && (
         <>
           <StepsHeader
             assignment={assignment}
+            call={call}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onNextStep={() => setActiveStep(CallStep.ONGOING)}
+            onPrimaryAction={() => setActiveStep(CallStep.ONGOING)}
+            onPrimaryActionLabel={'Call'}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-            step={CallStep.PREPARE}
           />
 
           <CallPrepare assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.ONGOING && (
+      {activeStep == CallStep.ONGOING && call && (
         <>
           <StepsHeader
             assignment={assignment}
+            call={call}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onNextStep={() => setActiveStep(CallStep.REPORT)}
+            onPrimaryAction={() => setActiveStep(CallStep.REPORT)}
+            onPrimaryActionLabel={'Finish and report'}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-            step={CallStep.ONGOING}
           />
 
           <CallOngoing assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.REPORT && currentCall && (
+      {activeStep == CallStep.REPORT && call && (
         <>
           <ReportHeader
             assignment={assignment}
-            callId={currentCall.id}
-            onBack={() => setActiveStep(CallStep.ONGOING)}
-            onForward={() => setActiveStep(CallStep.SUMMARY)}
+            call={call}
+            onBack={() => setActiveStep(CallStep.STATS)}
+            onPrimaryAction={() => setActiveStep(CallStep.SUMMARY)}
+            onPrimaryActionLabel={'Submit report'}
+            onSecondaryAction={() => setActiveStep(CallStep.ONGOING)}
+            onSecondaryActionLabel={'Back to activities'}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
           <CallReport assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.SUMMARY && (
+      {activeStep == CallStep.SUMMARY && call && (
         <>
           <StepsHeader
             assignment={assignment}
+            call={call}
+            forwardButtonIsLoading={isLoading}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onNextStep={() => setActiveStep(CallStep.PREPARE)}
+            onPrimaryAction={async () => {
+              setIsLoading(true);
+              const result = await allocateCall();
+              if (result) {
+                setIsLoading(false);
+                setActiveStep(CallStep.STATS);
+                router.push(`/call/${assignment.id}`);
+              } else {
+                setIsLoading(false);
+                setActiveStep(CallStep.PREPARE);
+              }
+            }}
+            onPrimaryActionLabel={'Keep calling'}
+            onSecondaryAction={() => setActiveStep(CallStep.STATS)}
+            onSecondaryActionLabel={'Take a break'}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-            step={CallStep.SUMMARY}
           />
           <CallSummary />
         </>
