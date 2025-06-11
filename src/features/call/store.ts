@@ -13,7 +13,7 @@ import { ZetkinEventWithStatus } from 'features/home/types';
 export interface CallStoreSlice {
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
-  queueHasError: unknown;
+  queueHasError: Error | null;
   outgoingCalls: RemoteList<ZetkinCall>;
   stateByCallId: Record<number, RemoteItem<CallState>>;
 }
@@ -52,7 +52,7 @@ const CallSlice = createSlice({
       state.eventsByTargetId[id].loaded = new Date().toISOString();
       state.eventsByTargetId[id].isLoading = false;
     },
-    allocateCallError: (state, action: PayloadAction<unknown>) => {
+    allocateCallError: (state, action: PayloadAction<Error>) => {
       const error = action.payload;
       state.queueHasError = error;
     },

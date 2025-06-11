@@ -28,7 +28,8 @@ export default function useAllocateCall(
       );
       dispatch(allocateNewCallLoaded(call));
     } catch (e) {
-      dispatch(allocateCallError([assignmentId, e]));
+      const error = e instanceof Error ? e : new Error('Empty queue error');
+      dispatch(allocateCallError(error));
       return e;
     }
   };
