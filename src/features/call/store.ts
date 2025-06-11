@@ -10,10 +10,15 @@ import {
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
 
+type SerializedError = {
+  message: string;
+  name: string;
+};
+
 export interface CallStoreSlice {
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
-  queueHasError: Error | null;
+  queueHasError: SerializedError | null;
   outgoingCalls: RemoteList<ZetkinCall>;
   stateByCallId: Record<number, RemoteItem<CallState>>;
 }
@@ -52,7 +57,7 @@ const CallSlice = createSlice({
       state.eventsByTargetId[id].loaded = new Date().toISOString();
       state.eventsByTargetId[id].isLoading = false;
     },
-    allocateCallError: (state, action: PayloadAction<Error>) => {
+    allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
       state.queueHasError = error;
     },
