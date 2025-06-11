@@ -36,6 +36,10 @@ export default makeMessages('feat.organizations', {
       login: m('Login & connect'),
       unfollow: m('Unfollow'),
     },
+    map: {
+      viewInList: m('View in list'),
+      viewInMap: m('View in map'),
+    },
     tabs: {
       calendar: m('Calendar'),
       suborgs: m('Explore'),

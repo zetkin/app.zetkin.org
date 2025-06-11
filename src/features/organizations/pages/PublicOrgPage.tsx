@@ -73,7 +73,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const showSubOrgBlurb = allEvents.length > events.length;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, my: 2 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        gap: 1,
+        height: '100%',
+        my: 2,
+      }}
+    >
       {!dates.length && (
         <Box key="empty">
           <NoEventsBlurb orgId={orgId} />
@@ -126,6 +135,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           )}
         </Box>
       ))}
+
       <ZUIModal
         onClose={() => setPostAuthEvent(null)}
         open={!!postAuthEvent}

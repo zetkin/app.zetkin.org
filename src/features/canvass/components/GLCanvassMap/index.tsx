@@ -16,6 +16,7 @@ import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
+import { flipLatLng, pointsToBounds } from 'utils/mapUtils';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -61,29 +62,21 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     };
   }, [areas]);
 
-  const bounds: [LngLatLike, LngLatLike] = useMemo(() => {
+  const bounds = useMemo(
+    () =>
+      pointsToBounds(areas.flatMap((area) => area.boundary.coordinates).flat()),
+    [areas]
+  );
+
+  const { initialBounds, padding } = useMemo(() => {
     if (localStorageBounds) {
-      return localStorageBounds;
+      return { initialBounds: localStorageBounds, padding: 0 };
     }
-
-    const min: LngLatLike = [180, 90];
-    const max: LngLatLike = [-180, -90];
-
-    areas.forEach((area) => {
-      area.boundary.coordinates.forEach((polygon) => {
-        polygon.forEach((point) => {
-          const [lat, lng] = point;
-
-          min[0] = Math.min(min[0], lng);
-          min[1] = Math.min(min[1], lat);
-
-          max[0] = Math.max(max[0], lng);
-          max[1] = Math.max(max[1], lat);
-        });
-      });
-    });
-
-    return [min, max];
+    return {
+      // If no bounds can be calculated, return a default bounding box that covers the entire world
+      initialBounds: bounds ?? new LngLatBounds([180, 90], [-180, -90]),
+      padding: 20,
+    };
   }, [areas]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
@@ -157,9 +150,6 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
   };
 
   const updateSelection = useCallback(() => {
-    let nearestLocation: number | null = null;
-    let nearestDistance = Infinity;
-
     if (isCreating) {
       if (selectedLocationId) {
         setSelectedLocationId(null);
@@ -172,6 +162,9 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     try {
       if (map && crosshair) {
         const markerPos = getCrosshairPositionOnMap(map, crosshair);
+
+        let nearestLocation: number | null = null;
+        let nearestDistance = Infinity;
 
         locations.data?.forEach((location) => {
           const screenPos = map.project([
@@ -216,25 +209,12 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       <Box sx={{ position: 'relative' }}>
         <ZUIMapControls
           onFitBounds={() => {
-            if (map) {
-              const firstPolygon = areas[0]?.boundary.coordinates[0];
-              if (firstPolygon.length) {
-                const totalBounds = new LngLatBounds(
-                  flipLatLng(firstPolygon[0]),
-                  flipLatLng(firstPolygon[0])
-                );
-
-                // Extend with all areas
-                areas.forEach((area) => {
-                  area.boundary.coordinates[0]?.forEach((latLng) =>
-                    totalBounds.extend(flipLatLng(latLng))
-                  );
-                });
-
-                if (totalBounds) {
-                  map.fitBounds(totalBounds, { animate: true, duration: 800 });
-                }
-              }
+            if (map && bounds) {
+              map.fitBounds(bounds, {
+                animate: true,
+                duration: 800,
+                padding: 20,
+              });
             }
           }}
           onGeolocate={(latLng) => {
@@ -288,7 +268,10 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       <Map
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
-          bounds,
+          bounds: initialBounds,
+          fitBoundsOptions: {
+            padding,
+          },
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
@@ -397,8 +380,3 @@ const getCrosshairPositionOnMap = (
 
   return { markerX, markerY };
 };
-
-function flipLatLng(latLng: [number, number]): [number, number] {
-  const [lat, lng] = latLng;
-  return [lng, lat];
-}
