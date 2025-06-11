@@ -2636,6 +2636,10 @@ zui:
   accessList:
     added: Lagt til av {sharer} {updated}
     removeAccess: Fjern tilgang
+  autocomplete:
+    noOptionsDefaultText: Ingen alternativer passer med søket
+  breadcrumbs:
+    showMore: '{number} flere...'
   collapse:
     collapse: Skjul
     expand: Vis
@@ -2668,6 +2672,7 @@ zui:
     title:
       addToJourney: Opprett person og legg til i {journey}
       addToList: Opprett person og legg til i {list}
+      assignToAreaAssignment: Opprett person og tildel til {areaAss}
       assignToJourney: Opprett person og tildel til {journey}
       caller: Opprett person og legg til som ringer
       contact: Opprett person og legg til som kontaktperson
@@ -2701,6 +2706,8 @@ zui:
     multiDayEndsToday: '{startDate} - i dag'
     multiDayToday: I dag - {endDate}
     singleDayToday: I dag
+  drawerModal:
+    close: Lukk
   duration:
     days: '{n, plural, =1 {en dag} other {# dager}}'
     h: '{n}t'
@@ -2711,6 +2718,16 @@ zui:
       noEmpty: Dette feltet kan ikke være tomt
   editableImage:
     add: Klikk for å legge til bilde
+  eventWarningIcons:
+    contact: Ingen kontaktperson er angitt
+    reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
+      har ikke fått påminnelse'
+    signUps: Det finnes uregistrerte påmeldinger
+  expandableText:
+    showLess: Vis mindre
+    showMore: Vism mer
+  footer:
+    privacyPolicy: Personvernerklæring
   futures:
     errorLoading: Kunne ikke laste dataen
   header:
@@ -2729,6 +2746,7 @@ zui:
       this: Bare {org}
   organizeSidebar:
     filter: Skriv for å filtrere
+    geography: Dør til dør
     home: Hjem
     journeys: Planer
     people: Folk
@@ -2749,10 +2767,28 @@ zui:
     noResult: Ingen person ble funnet
     search: Skriv for å søke
     searching: Søker...
+  publicFooter:
+    hostingOrganization: Denne delen av Zetkin drives av {name}.
+    links:
+      foundation: stiftelsen Zetkin
+      privacy: Personvern
+    text: Zetkin er en platform for å organisere aktivisme, utviklet av stiftelsen
+      Zetkin. Målet er å jobbe for radikal samfunnsforandring i en sosialistisk,
+      feministisk, antirasistisk, og bærekraftig retning.
+  signUpChip:
+    needed: Du trengs her
+    signedUp: Du har meldt deg på
   snackbar:
     error: Å nei! Noe gikk galt.
     success: Suksess!
     warning: Advarsel!
+  statusChip:
+    cancelled: Avlyst
+    closed: Stengt
+    draft: Utkast
+    ended: Avsluttet
+    published: Publisert
+    scheduled: Planlagt
   submitOrCancel:
     cancel: Avbryt
     submit: Lagre
@@ -2763,3 +2799,7 @@ zui:
     multiDayToday: I dag, {start} - {endDate}, {end}
     singleDayAllDay: Hele dagen i dag
     singleDayToday: I dag, {start} - {end}
+  timeZonePicker:
+    noOptionsText: Ingen steder passer med søket
+    placeholder: Skriv for å søke etter et sted
+    timeZone: Tidssone
