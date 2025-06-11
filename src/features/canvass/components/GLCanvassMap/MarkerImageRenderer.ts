@@ -15,8 +15,8 @@ export default class MarkerImageRenderer implements StyleImageInterface {
     selected: boolean,
     color: string
   ) {
-    this.width = 21;
-    this.height = 30;
+    this.width = 23;
+    this.height = 32;
     this.data = new Uint8ClampedArray(this.width * this.height * 4);
 
     this._color = color;
@@ -51,11 +51,15 @@ export default class MarkerImageRenderer implements StyleImageInterface {
     }
 
     const pinOutlinePath = new Path2D(
-      'M10.5 0C4.695 0 0 4.695 0 10.5C0 18.375 10.5 30 10.5 30C10.5 30 21 18.375 21 10.5C21 4.695 16.305 0 10.5 0Z'
+      'M11.5 1C5.695 1 1 5.695 1 11.5C1 19.375 11.5 31 11.5 31C11.5 31 22 19.375 22 11.5C21 5.695 17.305 1 11.5 1Z'
     );
     const pinInteriorPath = new Path2D(
-      'M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z'
+      'M11.5 4C7 4 4 7.5 4 11.5C4 17 11.5 28 11.5 28C11.5 28 19 17 19 11.5C19 7.5 16 4 11.5 4Z'
     );
+
+    context.strokeStyle = 'rgba(0,0,0,0.15)';
+    context.lineWidth = 2;
+    context.stroke(pinOutlinePath);
 
     context.fillStyle = this._selected ? this._color : '#ffffff';
     context.fill(pinOutlinePath);
