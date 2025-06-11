@@ -6,9 +6,14 @@ import {
 } from '../store';
 import { ZetkinCall } from '../types';
 
+export type SerializedError = {
+  message: string;
+  name: string;
+};
+
 type UseAllocateCallReturn = {
-  allocateCall: () => Promise<void | unknown>;
-  error: unknown;
+  allocateCall: () => Promise<void | SerializedError>;
+  error: SerializedError | null;
 };
 
 export default function useAllocateCall(
@@ -19,7 +24,7 @@ export default function useAllocateCall(
   const dispatch = useAppDispatch();
   const error = useAppSelector((state) => state.call.queueHasError);
 
-  const allocateCall = async (): Promise<void | unknown> => {
+  const allocateCall = async (): Promise<void | SerializedError> => {
     dispatch(allocateNewCallLoad());
     try {
       const call = await apiClient.post<ZetkinCall>(
@@ -29,13 +34,12 @@ export default function useAllocateCall(
       dispatch(allocateNewCallLoaded(call));
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Empty queue error');
-      dispatch(
-        allocateCallError({
-          message: error.message,
-          name: error.name,
-        })
-      );
-      return e;
+      const serialized = {
+        message: error.message,
+        name: error.name,
+      };
+      dispatch(allocateCallError(serialized));
+      return error;
     }
   };
 

@@ -9,11 +9,7 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
-
-type SerializedError = {
-  message: string;
-  name: string;
-};
+import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
   currentCallId: number | null;
