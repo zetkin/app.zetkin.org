@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import { CallStep } from '../pages/CallPage';
+import { CallStep } from '../../pages/CallPage';
 import { useAppSelector } from 'core/hooks';
-import useCallMutations from '../hooks/useCallMutations';
-import StepsHeader from './headers/StepsHeader';
+import useCallMutations from '../../hooks/useCallMutations';
+import StepsHeader from './StepsHeader';
 
 type Props = {
   assignment: ZetkinCallAssignment;

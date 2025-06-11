@@ -12,7 +12,7 @@ import CallOngoing from '../components/CallOngoing';
 import CallReport from '../components/CallReport';
 import CallSummary from '../components/CallSummary';
 import useCurrentCall from '../hooks/useCurrentCall';
-import ReportHeader from '../components/ReportHeader';
+import ReportHeader from '../components/headers/ReportHeader';
 
 type Props = {
   callAssId: string;
