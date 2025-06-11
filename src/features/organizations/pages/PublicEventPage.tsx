@@ -18,10 +18,8 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
 
-import { ZetkinOrganization, ZetkinUser } from 'utils/types/zetkin';
-import useUser from 'core/hooks/useUser';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 import { useOrgEvents } from '../hooks/useUpcomingOrgEvents';
-import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
@@ -36,14 +34,13 @@ import { EventSignupButton } from 'features/home/components/EventSignupButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
-import { randomizerFromSeed } from 'utils/colorUtils';
 
 export const PublicEventPage: FC<{
   eventId: number;
   org: ZetkinOrganization;
 }> = ({ eventId, org }) => {
+  const theme = useTheme();
   const events = useOrgEvents(org.id);
-  const user = useUser();
   const myEvents = useMyEvents();
 
   const baseEvent = useMemo(
@@ -59,86 +56,9 @@ export const PublicEventPage: FC<{
   const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
   const event = myEvent || baseEvent;
 
-  return (
-    <>
-      <HeaderSection event={event} org={org} user={user} />
-      {event ? <BodySection event={event} /> : 'Not found'}
-    </>
-  );
-};
-
-export const HeaderSection: FC<{
-  event: ZetkinEventWithStatus | undefined;
-  org: ZetkinOrganization;
-  user: ZetkinUser | null;
-}> = ({ event, org, user }) => {
-  const theme = useTheme();
-
-  const projectName = event?.campaign?.title;
-  const eventType = event?.activity?.title;
-
-  const subheaderText = [projectName, eventType].filter(Boolean).join(', ');
-
-  const gradient = useMemo(() => {
-    const { getColor, seededRand } = randomizerFromSeed(`${org.id}org`);
-    const degrees = seededRand(360);
-    return `linear-gradient(${degrees}deg, ${getColor()}, ${getColor()})`;
-  }, [org.id]);
-
-  return (
-    <Box sx={{ background: gradient }}>
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap={12}
-        marginX="auto"
-        maxWidth={960}
-        sx={
-          // Add background image if available, otherwise use a light overlay (only on desktop)
-          event?.cover_file?.url
-            ? {
-                background: `url(${event.cover_file.url})`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-              }
-            : {
-                [theme.breakpoints.up('md')]: {
-                  background: 'rgba(0, 0, 0, 0.1)',
-                },
-              }
-        }
-      >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          padding={2}
-          sx={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
-        >
-          <Box alignItems="center" display="flex" gap={0.5}>
-            <ZUIOrgLogoAvatar orgId={org.id} size="small" />
-            <ZUIText variant="headingSm">{org.title}</ZUIText>
-          </Box>
-          {user ? <ZUIUserAvatar personId={user.id} size="sm" /> : null}
-        </Box>
-        <Box
-          paddingX={2}
-          paddingY={1}
-          sx={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
-        >
-          <ZUIText variant="headingLg">{event?.title}</ZUIText>
-          {subheaderText && (
-            <ZUIText variant="headingSm">{subheaderText}</ZUIText>
-          )}
-        </Box>
-      </Box>
-    </Box>
-  );
-};
-
-const BodySection: FC<{
-  event: ZetkinEventWithStatus;
-}> = ({ event }) => {
-  const theme = useTheme();
+  if (!event) {
+    return null;
+  }
 
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
@@ -304,16 +224,16 @@ const DateAndLocation: FC<{
     const to = sameDay ? (
       endTime
     ) : (
-      <>
+      <ZUIText>
         <FormattedDate day="numeric" month="long" value={endDateTime} />,{' '}
         {endTime}
-      </>
+      </ZUIText>
     );
 
     return (
-      <>
+      <ZUIText>
         {from} — {to}
-      </>
+      </ZUIText>
     );
   };
 

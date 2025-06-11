@@ -1,18 +1,16 @@
 'use client';
 
 import { Box } from '@mui/system';
-import { FC, PropsWithChildren, Suspense } from 'react';
+import { FC, PropsWithChildren } from 'react';
+import NextLink from 'next/link';
 
+import useEvent from 'features/events/hooks/useEvent';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
+import ActivistPortalHeader from '../components/ActivistPortlHeader';
 import ZUILink from 'zui/components/ZUILink';
+import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
-import ZUILogo from 'zui/ZUILogo';
-import messageIds from '../l10n/messageIds';
-import { useMessages } from 'core/i18n';
-import { useEnv } from 'core/hooks';
-import { HeaderSection } from '../pages/PublicEventPage';
-import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import { ZetkinEventWithStatus } from 'features/home/types';
 
 type Props = PropsWithChildren<{
   eventId: number;
@@ -20,59 +18,40 @@ type Props = PropsWithChildren<{
 }>;
 
 export const PublicEventLayout: FC<Props> = ({ children, eventId, org }) => {
-  const messages = useMessages(messageIds);
-  const env = useEnv();
+  const event = useEvent(org.id, eventId)?.data;
+
+  if (!event) {
+    return null;
+  }
 
   return (
-    <>
-      <Suspense
-        fallback={
-          <>
-            <HeaderSection
-              event={
-                {
-                  id: eventId,
-                  title: messages.eventPage.loading(),
-                } as ZetkinEventWithStatus
-              }
-              org={org}
-              user={null}
-            />
-            <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              minHeight="50dvh"
-            >
-              <ZUILogoLoadingIndicator />
-            </Box>
-          </>
+    <Box sx={{ marginX: 'auto', maxWidth: 960 }}>
+      <ActivistPortalHeader
+        imageUrl={event.cover_file?.url}
+        subtitle={
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            {event.campaign && (
+              <ZUILink
+                href={`/o/${event.organization.id}/projects/${event.campaign.id}`}
+                text={event.campaign.title}
+              />
+            )}
+            {event.activity && <ZUIText>{event.activity.title}</ZUIText>}
+          </Box>
         }
-      >
-        {children}
-      </Suspense>
-      <Box
-        alignItems="center"
-        component="footer"
-        display="flex"
-        flexDirection="column"
-        mx={1}
-        my={2}
-        sx={{ opacity: 0.75 }}
-      >
-        <ZUILogo />
-        <ZUIText variant="bodySmRegular">Zetkin</ZUIText>
-        <ZUILink
-          href={
-            env.vars.ZETKIN_PRIVACY_POLICY_LINK ||
-            'https://www.zetkin.org/privacy'
-          }
-          size="small"
-          text={messages.home.footer.privacyPolicy()}
-        />
-      </Box>
-    </>
+        title={event.title || 'WHAT IF EVENT HAS NO TITLE??'}
+        topLeftComponent={
+          <NextLink href={`/o/${event.organization.id}`} passHref>
+            <Box sx={{ alignItems: 'center', display: 'inline-flex', gap: 1 }}>
+              <ZUIOrgLogoAvatar orgId={event.organization.id} size="small" />
+              <ZUIText>{event.organization.title}</ZUIText>
+            </Box>
+          </NextLink>
+        }
+      />
+      {children}
+      <ZUIPublicFooter />
+    </Box>
   );
 };
 export default PublicEventLayout;
