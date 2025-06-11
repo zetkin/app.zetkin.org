@@ -67,7 +67,7 @@ type Props = {
   org: ZetkinOrganization;
 };
 
-const OrgHomeLayout: FC<Props> = ({ children, org }) => {
+const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const messages = useMessages(messageIds);
   const env = useEnv();
   const [mobileMapVisible, setMobileMapVisible] = useState(false);
@@ -326,4 +326,4 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   );
 };
 
-export default OrgHomeLayout;
+export default PublicOrgLayout;

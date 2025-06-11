@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import OrgHomeLayout from 'features/organizations/layouts/OrgHomeLayout';
+import PublicOrgLayout from 'features/organizations/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -43,7 +43,7 @@ const OrgLayout: FC<Props> = async ({ children, params }) => {
 
   return (
     <HomeThemeProvider>
-      <OrgHomeLayout org={org}>{children}</OrgHomeLayout>
+      <PublicOrgLayout org={org}>{children}</PublicOrgLayout>
     </HomeThemeProvider>
   );
 };
