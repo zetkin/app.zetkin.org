@@ -1,4 +1,4 @@
-import { Close } from '@mui/icons-material';
+import { Close, PersonAdd } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import {
@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { FC, HTMLAttributes, useEffect, useRef, useState } from 'react';
 
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { usePersonSelect } from './ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPersonAvatar from 'zui/ZUIPersonAvatar';
@@ -26,6 +26,7 @@ import messageIds from './l10n/messageIds';
 
 const ZUIPersonGridEditCell: FC<{
   cell?: (Partial<Omit<ZetkinPerson, 'id'>> & { id: number | null }) | null;
+  onCreate: () => void;
   onUpdate: (person: ZetkinPerson | null) => void;
   removePersonLabel: string;
   restrictedMode?: boolean;
@@ -33,6 +34,7 @@ const ZUIPersonGridEditCell: FC<{
   suggestedPeopleLabel: string;
 }> = ({
   cell,
+  onCreate,
   onUpdate,
   removePersonLabel,
   restrictedMode: isRestrictedMode = false,
@@ -303,6 +305,22 @@ const ZUIPersonGridEditCell: FC<{
                             />
                           );
                         })}
+
+                        {autoComplete.inputValue.length >= 3 &&
+                          !personSelect.autoCompleteProps.isLoading && (
+                            <Button
+                              color="primary"
+                              onClick={onCreate}
+                              startIcon={<PersonAdd />}
+                              sx={{
+                                justifyContent: 'flex-start',
+                                m: 2,
+                              }}
+                              variant="outlined"
+                            >
+                              <Msg id={messageIds.createPerson.createBtn} />
+                            </Button>
+                          )}
                       </List>
                     )}
                   </List>

@@ -53,13 +53,22 @@ const EmailClick = ({
 }: EmailClickProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const emails = useEmails(orgId).data || [];
-  const projectsFuture = useCampaigns(orgId).data || [];
+  const emailsSorted = emails.sort((e1, e2) => {
+    return e1.title!.localeCompare(e2.title!);
+  });
+  const projects = useCampaigns(orgId).data || [];
+  const projectsSorted = projects.sort((pf1, pf2) => {
+    return pf1.title.localeCompare(pf2.title);
+  });
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<EmailClickFilterConfig>(initialFilter, {
       operator: 'clicked',
     });
-  const linkList = useEmailLinks(orgId, filter.config?.email).data;
+  const linkList = useEmailLinks(orgId, filter.config?.email).data || [];
+  const linkListSorted = linkList.sort((l1, l2) => {
+    return l1.url.localeCompare(l2.url);
+  });
 
   const [linkSelectScope, setLinkSelectScope] = useState<LINK_SELECT_SCOPE>(
     filter.config.campaign
@@ -150,7 +159,7 @@ const EmailClick = ({
                   }
                   value={filter.config.email || ''}
                 >
-                  {emails.map((email) => (
+                  {emailsSorted.map((email) => (
                     <MenuItem key={email.id} value={email.id}>
                       <Tooltip
                         placement="right-start"
@@ -193,7 +202,7 @@ const EmailClick = ({
                   style={{ verticalAlign: 'middle' }}
                 >
                   :
-                  {linkList
+                  {linkListSorted
                     .filter((item) => filter.config.links?.includes(item.id))
                     .map((link) => {
                       return (
@@ -276,7 +285,7 @@ const EmailClick = ({
                   }
                   value={filter.config.campaign || ''}
                 >
-                  {projectsFuture?.map((project) => (
+                  {projectsSorted.map((project) => (
                     <MenuItem key={`project-${project.id}`} value={project.id}>
                       {`"${project.title}"`}
                     </MenuItem>

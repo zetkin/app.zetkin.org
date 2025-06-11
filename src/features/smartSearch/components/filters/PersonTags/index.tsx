@@ -42,6 +42,9 @@ const PersonTags = ({
   const { orgId } = useNumericRouteParams();
   const { data } = useTags(orgId);
   const tags = data || [];
+  const tagsSorted = tags.sort((t1, t2) => {
+    return t1.title.localeCompare(t2.title);
+  });
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<PersonTagsFilterConfig>(initialFilter, {
@@ -55,7 +58,7 @@ const PersonTags = ({
 
   // preserve the order of the tag array
   const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
-    const tag = tags.find((tag) => tag.id === id);
+    const tag = tagsSorted.find((tag) => tag.id === id);
     if (tag) {
       return acc.concat(tag);
     }

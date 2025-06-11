@@ -376,7 +376,7 @@ const AllEventsList: FC = () => {
               </Box>
               <Switch
                 checked={orgIdsToFilterBy.includes(org.id)}
-                onChange={(checked) => {
+                onChange={(_event, checked) => {
                   if (checked) {
                     setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
                   } else {
