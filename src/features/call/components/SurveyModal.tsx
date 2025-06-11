@@ -27,7 +27,12 @@ const SurveyModal: FC<SurveyModalProps> = ({
 
   return (
     <ZUIModal
-      onClose={onClose}
+      onClose={() => {
+        if (formRef.current) {
+          formRef.current.requestSubmit();
+          onClose();
+        }
+      }}
       open={open}
       primaryButton={{
         label: 'Save',
