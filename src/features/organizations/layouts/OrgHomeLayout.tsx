@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Button, SxProps } from '@mui/material';
-import { FC, ReactNode, Suspense, useEffect, useMemo, useState } from 'react';
+import { FC, ReactNode, Suspense, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
 import { NorthWest } from '@mui/icons-material';
@@ -26,8 +26,7 @@ import useMembership from '../hooks/useMembership';
 import useFollowOrgMutations from '../hooks/useFollowOrgMutations';
 import useConnectOrg from '../hooks/useConnectOrg';
 import { OrgPageMap } from '../components/PublicOrgPageMap';
-import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 
 const useDelayOnTrue = (durationMs: number, value: boolean) => {
   const [delayedValue, setDelayedValue] = useState(false);
@@ -89,15 +88,9 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const orgEvents = useUpcomingOrgEvents(org.id);
-  const allEvents = useMemo(() => {
-    return orgEvents.map<ZetkinEventWithStatus>((event) => ({
-      ...event,
-      status: null,
-    }));
-  }, [orgEvents]);
+  const { filteredEvents } = useFilteredOrgEvents(org.id);
 
-  const showMap = lastSegment != 'suborgs' && allEvents.length > 0;
+  const showMap = lastSegment != 'suborgs' && filteredEvents.length > 0;
   const showMapDesktop = !isMobile && showMap;
   const shouldMountMap = useDelayOnTrue(transitionDuration, showMapDesktop);
   const showMapMobile = isMobile && showMap;
@@ -243,7 +236,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
             </Box>
           ) : (
             <OrgPageMap
-              events={allEvents}
+              events={filteredEvents}
               sx={{
                 height: '100%',
               }}
@@ -302,7 +295,7 @@ const OrgHomeLayout: FC<Props> = ({ children, org }) => {
           >
             {shouldMountMap ? (
               <OrgPageMap
-                events={allEvents}
+                events={filteredEvents}
                 sx={{
                   height: '100dvh',
                   position: 'sticky',

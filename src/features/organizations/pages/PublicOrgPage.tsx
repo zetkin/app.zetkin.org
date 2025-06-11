@@ -10,16 +10,11 @@ import {
   ListItemAvatar,
   Switch,
 } from '@mui/material';
-import { FC, useMemo, useState } from 'react';
-import {
-  DateRange,
-  DateRangeCalendar,
-  DateRangePickerDay,
-} from '@mui/x-date-pickers-pro';
+import { FC, useState } from 'react';
+import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
 
-import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
@@ -29,7 +24,6 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import useMyEvents from 'features/events/hooks/useMyEvents';
 import NoEventsBlurb from '../components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
@@ -38,6 +32,9 @@ import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from '../../../zui/components/ZUIButton';
 import ZUIDrawerModal from '../../../zui/components/ZUIDrawerModal';
 import { getContrastColor } from '../../../utils/colorUtils';
+import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { filtersUpdated } from '../store';
 
 type Props = {
   orgId: number;
@@ -46,31 +43,18 @@ type Props = {
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
+  const nextDelay = useIncrementalDelay();
+  const user = useUser();
+  const dispatch = useAppDispatch();
+  const { allEvents, filteredEvents, getDateRange } =
+    useFilteredOrgEvents(orgId);
+  const { customDatesToFilterBy, dateFilterState, orgIdsToFilterBy } =
+    useAppSelector((state) => state.organizations.filters);
+
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
-  const nextDelay = useIncrementalDelay();
-  const orgEvents = useUpcomingOrgEvents(orgId);
-  const myEvents = useMyEvents();
-  const user = useUser();
-  const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
-  const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
-    DateRange<Dayjs>
-  >([null, null]);
-
-  const allEvents = useMemo(() => {
-    return orgEvents.map<ZetkinEventWithStatus>((event) => ({
-      ...event,
-      status:
-        myEvents.find((userEvent) => userEvent.id == event.id)?.status || null,
-    }));
-  }, [orgEvents]);
-
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | null
-  >(null);
-
-  const [dateFilterState, setDateFilterState] = useState<
-    'today' | 'tomorrow' | 'thisWeek' | 'custom' | null
   >(null);
 
   const orgs = [
@@ -112,8 +96,12 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       key: 'today',
       label: messages.allEventsList.filterButtonLabels.today(),
       onClick: () => {
-        setCustomDatesToFilterBy([null, null]);
-        setDateFilterState('today');
+        dispatch(
+          filtersUpdated({
+            customDatesToFilterBy: [null, null],
+            dateFilterState: 'today',
+          })
+        );
       },
     },
     {
@@ -121,8 +109,12 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       key: 'tomorrow',
       label: messages.allEventsList.filterButtonLabels.tomorrow(),
       onClick: () => {
-        setCustomDatesToFilterBy([null, null]);
-        setDateFilterState('tomorrow');
+        dispatch(
+          filtersUpdated({
+            customDatesToFilterBy: [null, null],
+            dateFilterState: 'tomorrow',
+          })
+        );
       },
     },
     {
@@ -130,8 +122,12 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
       key: 'thisWeek',
       label: messages.allEventsList.filterButtonLabels.thisWeek(),
       onClick: () => {
-        setCustomDatesToFilterBy([null, null]);
-        setDateFilterState('thisWeek');
+        dispatch(
+          filtersUpdated({
+            customDatesToFilterBy: [null, null],
+            dateFilterState: 'thisWeek',
+          })
+        );
       },
     },
     {
@@ -170,58 +166,6 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     }
   });
 
-  const getDateRange = (): [Dayjs | null, Dayjs | null] => {
-    const today = dayjs();
-    if (!dateFilterState || dateFilterState == 'custom') {
-      return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
-      return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
-      return [today.add(1, 'day'), null];
-    } else {
-      //dateFilterState is 'thisWeek'
-      return [today.startOf('week'), today.endOf('week')];
-    }
-  };
-
-  const filteredEvents = allEvents
-    .filter((event) => {
-      if (orgIdsToFilterBy.length == 0) {
-        return true;
-      }
-      return orgIdsToFilterBy.includes(event.organization.id);
-    })
-    .filter((event) => {
-      if (
-        !dateFilterState ||
-        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
-      ) {
-        return true;
-      }
-
-      const [start, end] = getDateRange();
-      const eventStart = dayjs(event.start_time);
-      const eventEnd = dayjs(event.end_time);
-
-      if (!end) {
-        const isOngoing = eventStart.isBefore(start) && eventEnd.isAfter(start);
-        const startsOnSelectedDay = eventStart.isSame(start, 'day');
-        const endsOnSelectedDay = eventEnd.isSame(start, 'day');
-        return isOngoing || startsOnSelectedDay || endsOnSelectedDay;
-      } else {
-        const isOngoing =
-          eventStart.isBefore(start, 'day') && eventEnd.isAfter(end, 'day');
-        const startsInPeriod =
-          (eventStart.isSame(start, 'day') ||
-            eventStart.isAfter(start, 'day')) &&
-          (eventStart.isSame(end, 'day') || eventStart.isBefore(end, 'day'));
-        const endsInPeriod =
-          (eventEnd.isSame(start, 'day') || eventEnd.isAfter(start, 'day')) &&
-          (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
-        return isOngoing || startsInPeriod || endsInPeriod;
-      }
-    });
-
   const topOrgEvents = allEvents.filter(
     (event) => event.organization.id == orgId
   );
@@ -253,6 +197,8 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const showSubOrgBlurb =
     orgIdsToFilterBy.length == 0 && allEvents.length > events.length;
 
+  const showNoEventsBlurb = !allEvents.length;
+
   return (
     <Box
       sx={{
@@ -264,7 +210,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         my: 2,
       }}
     >
-      {!dates.length && (
+      {showNoEventsBlurb && (
         <Box key="empty">
           <NoEventsBlurb orgId={orgId} />
         </Box>
@@ -283,11 +229,15 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               active={true}
               circular
               label={Clear}
-              onClick={() => {
-                setDateFilterState(null);
-                setCustomDatesToFilterBy([null, null]);
-                setOrgIdsToFilterBy([]);
-              }}
+              onClick={() =>
+                dispatch(
+                  filtersUpdated({
+                    customDatesToFilterBy: [null, null],
+                    dateFilterState: null,
+                    orgIdsToFilterBy: [],
+                  })
+                )
+              }
             />
           )}
           {filters.map((filter) => (
@@ -317,11 +267,15 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           {isFiltered && (
             <ZUIButton
               label={messages.allEventsList.emptyList.removeFiltersButton()}
-              onClick={() => {
-                setCustomDatesToFilterBy([null, null]);
-                setOrgIdsToFilterBy([]);
-                setDateFilterState(null);
-              }}
+              onClick={() =>
+                dispatch(
+                  filtersUpdated({
+                    customDatesToFilterBy: [null, null],
+                    dateFilterState: null,
+                    orgIdsToFilterBy: [],
+                  })
+                )
+              }
               variant="secondary"
             />
           )}
@@ -387,10 +341,14 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           <DateRangeCalendar
             calendars={1}
             disablePast
-            onChange={(newDateRange) => {
-              setDateFilterState('custom');
-              setCustomDatesToFilterBy(newDateRange);
-            }}
+            onChange={(newDateRange) =>
+              dispatch(
+                filtersUpdated({
+                  customDatesToFilterBy: newDateRange,
+                  dateFilterState: 'custom',
+                })
+              )
+            }
             slots={{
               day: (props) => {
                 const day = props.day;
@@ -451,10 +409,18 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                 checked={orgIdsToFilterBy.includes(org.id)}
                 onChange={(_event, checked) => {
                   if (checked) {
-                    setOrgIdsToFilterBy([...orgIdsToFilterBy, org.id]);
+                    dispatch(
+                      filtersUpdated({
+                        orgIdsToFilterBy: [...orgIdsToFilterBy, org.id],
+                      })
+                    );
                   } else {
-                    setOrgIdsToFilterBy(
-                      orgIdsToFilterBy.filter((id) => id != org.id)
+                    dispatch(
+                      filtersUpdated({
+                        orgIdsToFilterBy: orgIdsToFilterBy.filter(
+                          (id) => id != org.id
+                        ),
+                      })
                     );
                   }
                 }}
