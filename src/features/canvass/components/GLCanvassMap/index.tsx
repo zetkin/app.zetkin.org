@@ -406,7 +406,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
                     'round',
                     [
                       '/',
-                      ['number', ['get', 'successPercentage']],
+                      ['number', ['get', 'visitPercentage']],
                       ['get', 'point_count'],
                     ],
                   ],
@@ -414,6 +414,14 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
                 ['literal', '%'],
               ],
               'text-size': 13,
+            }}
+            paint={{
+              'text-color': [
+                'case',
+                ['>', ['get', 'visitPercentage'], 0],
+                '#000000',
+                '#888888',
+              ],
             }}
             type="symbol"
           />

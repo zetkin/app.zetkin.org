@@ -50,8 +50,11 @@ export default class ClusterImageRenderer implements StyleImageInterface {
 
     context.beginPath();
     context.fillStyle = '#ffffff';
+    context.strokeStyle = 'rgba(0,0,0,0.15)';
+    context.lineWidth = 1;
     context.ellipse(mid, mid, mid, mid, 0, Math.PI * 2, 0);
     context.fill();
+    context.stroke();
 
     context.beginPath();
     context.arc(
