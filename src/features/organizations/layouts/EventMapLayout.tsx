@@ -2,7 +2,6 @@
 
 import { Box, Button, SxProps } from '@mui/material';
 import { FC, ReactNode, Suspense, useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { useMediaQuery, useTheme } from '@mui/system';
 
 import { Msg } from 'core/i18n';
@@ -38,21 +37,18 @@ type Props = {
   children: ReactNode;
   events: ZetkinEventWithStatus[];
   header: JSX.Element;
+  showMap: boolean;
 };
 
-const EventMapLayout: FC<Props> = ({ children, events, header }) => {
+const EventMapLayout: FC<Props> = ({ children, events, header, showMap }) => {
   const [mobileMapVisible, setMobileMapVisible] = useState(false);
-
-  const path = usePathname();
-  const lastSegment = path?.split('/')[3] ?? 'home';
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const showMap = lastSegment != 'suborgs' && events.length > 0;
+  const showMapMobile = isMobile && showMap;
   const showMapDesktop = !isMobile && showMap;
   const shouldMountMap = useDelayOnTrue(transitionDuration, showMapDesktop);
-  const showMapMobile = isMobile && showMap;
 
   return (
     <Box

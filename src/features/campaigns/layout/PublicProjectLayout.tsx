@@ -17,7 +17,7 @@ type Props = {
 };
 
 const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
-  const { filteredEvents } = useFilteredCampaignEvents(
+  const { allEvents, filteredEvents } = useFilteredCampaignEvents(
     campaign.organization.id,
     campaign.id
   );
@@ -44,6 +44,7 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           }
         />
       }
+      showMap={allEvents.length > 0}
     >
       {children}
     </EventMapLayout>

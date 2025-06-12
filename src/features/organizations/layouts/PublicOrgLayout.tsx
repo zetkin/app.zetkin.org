@@ -26,7 +26,7 @@ type Props = {
 const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const messages = useMessages(messageIds);
   const subOrgs = usePublicSubOrgs(org.id);
-  const { filteredEvents } = useFilteredOrgEvents(org.id);
+  const { allEvents, filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
 
   const lastSegment = path?.split('/')[3] ?? 'home';
@@ -75,6 +75,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
           }
         />
       }
+      showMap={lastSegment != 'suborgs' && allEvents.length > 0}
     >
       {children}
     </EventMapLayout>
