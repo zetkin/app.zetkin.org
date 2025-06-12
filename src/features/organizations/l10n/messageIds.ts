@@ -30,6 +30,7 @@ export default makeMessages('feat.organizations', {
       'You can no longer sign up for it and if you were signed up, you are no longer expected to attend.'
     ),
     contactPerson: m<{ name: string }>('{name} is the contact person'),
+    defaultTitle: m('Untitled event'),
     loading: m('Loading...'),
     today: m('Today'),
   },

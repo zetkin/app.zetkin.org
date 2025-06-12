@@ -27,7 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     icons: [{ url: '/logo-zetkin.png' }],
-    title: event.title,
+    //TODO: Fallback on something for untitled events
+    title: event.title || event.activity?.title,
   };
 }
 
