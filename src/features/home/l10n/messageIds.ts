@@ -6,6 +6,7 @@ export default makeMessages('feat.home', {
       areaAssignment: m('Join'),
       call: m('Start calling'),
       connectAndSignUp: m('Connect & sign up'),
+      details: m('Read more'),
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },

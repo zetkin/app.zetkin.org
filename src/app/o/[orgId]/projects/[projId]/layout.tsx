@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import ProjHomeLayout from 'features/campaigns/layout/ProjHomeLayout';
+import PublicProjectLayout from 'features/organizations/layouts/PublicProjectLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCampaign, ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -50,9 +50,9 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
 
     return (
       <HomeThemeProvider>
-        <ProjHomeLayout org={org} proj={proj}>
+        <PublicProjectLayout org={org} proj={proj}>
           {children}
-        </ProjHomeLayout>
+        </PublicProjectLayout>
       </HomeThemeProvider>
     );
   } catch (err) {

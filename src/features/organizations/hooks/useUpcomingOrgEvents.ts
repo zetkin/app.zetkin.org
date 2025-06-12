@@ -20,3 +20,17 @@ export default function useUpcomingOrgEvents(orgId: number): ZetkinEvent[] {
       ),
   });
 }
+
+export function useOrgEvents(orgId: number): ZetkinEvent[] {
+  const apiClient = useApiClient();
+  const list = useAppSelector(
+    (state) => state.organizations.eventsByOrgId[orgId]
+  );
+
+  return useRemoteList(list, {
+    actionOnLoad: () => orgEventsLoad(orgId),
+    actionOnSuccess: (data) => orgEventsLoaded([orgId, data]),
+    loader: () =>
+      apiClient.get<ZetkinEvent[]>(`/api/orgs/${orgId}/actions?recursive`),
+  });
+}

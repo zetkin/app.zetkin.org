@@ -6,11 +6,8 @@ import { usePathname } from 'next/navigation';
 
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
-import useUser from 'core/hooks/useUser';
-import ZUITabbedNavBar from 'zui/components/ZUITabbedNavBar';
-import ZUIText from 'zui/components/ZUIText';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
+import ActivistPortalHeader from 'features/organizations/components/ActivistPortlHeader';
 
 type Props = {
   children: ReactNode;
@@ -23,63 +20,34 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
   const path = usePathname();
   const lastSegment = path?.split('/').pop() ?? 'home';
 
-  const user = useUser();
-
   return (
     <Box
       sx={{
         marginX: 'auto',
-        maxWidth: 640,
+        maxWidth: 960,
       }}
     >
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
-          margin: 2,
-        }}
-      >
-        <ZUIText variant="headingLg">{title || messages.title()}</ZUIText>
-        {user && (
-          <Box sx={{ cursor: 'default' }}>
-            <ZUIPersonAvatar
-              firstName={user.first_name}
-              id={user.id}
-              lastName={user.last_name}
-            />
-          </Box>
-        )}
-      </Box>
-      <Box
-        sx={(theme) => ({
-          bgcolor: theme.palette.background.default,
-          position: 'sticky',
-          top: 0,
-          zIndex: 1,
-        })}
-      >
-        <ZUITabbedNavBar
-          items={[
-            {
-              href: `/my/home`,
-              label: messages.tabs.home(),
-              value: 'home',
-            },
-            {
-              href: `/my/feed`,
-              label: messages.tabs.feed(),
-              value: 'feed',
-            },
-            {
-              href: `/my/settings`,
-              label: messages.tabs.settings(),
-              value: 'settings',
-            },
-          ]}
-          selectedTab={lastSegment}
-        />
-      </Box>
+      <ActivistPortalHeader
+        selectedTab={lastSegment}
+        tabs={[
+          {
+            href: `/my/home`,
+            label: messages.tabs.home(),
+            value: 'home',
+          },
+          {
+            href: `/my/feed`,
+            label: messages.tabs.feed(),
+            value: 'feed',
+          },
+          {
+            href: `/my/settings`,
+            label: messages.tabs.settings(),
+            value: 'settings',
+          },
+        ]}
+        title={title || messages.title()}
+      />
       <Box minHeight="90dvh">{children}</Box>
       <ZUIPublicFooter />
     </Box>

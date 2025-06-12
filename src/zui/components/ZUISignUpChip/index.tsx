@@ -6,28 +6,30 @@ import messageIds from 'zui/l10n/messageIds';
 import ZUILabel from '../ZUILabel';
 
 type ZUISignUpChipProps = {
-  status: 'needed' | 'signedUp';
+  status: 'needed' | 'signedUp' | 'booked';
 };
 
 const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ status }) => {
   return (
     <Box
-      sx={(theme) => ({
-        alignItems: 'center',
-        bgcolor:
+      sx={(theme) => {
+        const colors =
           status == 'needed'
-            ? theme.palette.swatches.blue[100]
-            : theme.palette.swatches.green[100],
-        borderRadius: 4,
-        color:
-          status == 'needed'
-            ? theme.palette.swatches.blue[900]
-            : theme.palette.swatches.green[900],
-        display: 'inline-flex',
-        pointerEvents: 'none',
-        px: 1,
-        py: 0.3,
-      })}
+            ? theme.palette.swatches.yellow
+            : status == 'booked'
+            ? theme.palette.swatches.blue
+            : theme.palette.swatches.green;
+        return {
+          alignItems: 'center',
+          bgcolor: colors[100],
+          borderRadius: 4,
+          color: colors[900],
+          display: 'inline-flex',
+          pointerEvents: 'none',
+          px: 1,
+          py: 0.3,
+        };
+      }}
     >
       <ZUILabel color="inherit">
         <Msg id={messageIds.signUpChip[status]} />

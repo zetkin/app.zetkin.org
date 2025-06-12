@@ -1,10 +1,12 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import ZUIPersonAvatar, { ZUIPersonAvatarProps } from '../ZUIPersonAvatar';
 import { MUIIcon } from '../types';
 import ZUIIcon from '../ZUIIcon';
+import ZUILink from '../ZUILink';
 import ZUIText from '../ZUIText';
 
 type ItemCardBase = {
@@ -21,6 +23,11 @@ type ItemCardBase = {
    * a ZUIIconLabel and a string.
    */
   content?: (JSX.Element | string)[] | string;
+
+  /**
+   * An optional URL to link to when the title or image is clicked.
+   */
+  href?: string;
 
   /**
    * The subtitle of the card
@@ -111,7 +118,7 @@ const isCardWithActions = (itemCard: ItemCard): itemCard is CardWithActions => {
 };
 
 const ZUIItemCard: FC<ItemCard> = (props) => {
-  const { title, subtitle } = props;
+  const { href, title, subtitle } = props;
 
   const hasImageElement = isImageElementCard(props);
   const hasImageSrc = isImageSrcCard(props);
@@ -126,6 +133,10 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
 
   const hasImage = hasImageElement || hasImageSrc;
 
+  const ImageWrapper: FC<PropsWithChildren> = href
+    ? ({ children }) => <Link href={href}>{children}</Link>
+    : ({ children }) => children as JSX.Element;
+
   return (
     <Box
       sx={(theme) => ({
@@ -136,22 +147,24 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
       })}
     >
       {hasImage && (
-        <Box
-          sx={{
-            height: '9.375rem',
-          }}
-        >
-          {hasImageSrc && (
-            <Image
-              alt={props.title}
-              height={100}
-              src={props.src}
-              style={{ height: '100%', objectFit: 'cover', width: '100%' }}
-              width={100}
-            />
-          )}
-          {hasImageElement && props.imageElement}
-        </Box>
+        <ImageWrapper>
+          <Box
+            sx={{
+              height: '9.375rem',
+            }}
+          >
+            {hasImageSrc && (
+              <Image
+                alt={props.title}
+                height={100}
+                src={props.src}
+                style={{ height: '100%', objectFit: 'cover', width: '100%' }}
+                width={100}
+              />
+            )}
+            {hasImageElement && props.imageElement}
+          </Box>
+        </ImageWrapper>
       )}
       <Box
         sx={{
@@ -177,7 +190,10 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
             <Box
               sx={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}
             >
-              <Typography variant="bodyMdSemiBold">{title}</Typography>
+              <Typography variant="bodyMdSemiBold">
+                {href ? <ZUILink href={href} text={title} /> : title}
+              </Typography>
+
               {subtitle && (
                 <Typography variant="bodyMdRegular">{subtitle}</Typography>
               )}

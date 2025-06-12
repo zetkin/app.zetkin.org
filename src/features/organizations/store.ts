@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Dayjs } from 'dayjs';
+import { DateRange } from '@mui/x-date-pickers-pro';
 
 import { TreeItemData } from './types';
 import {
@@ -14,8 +16,15 @@ import {
   ZetkinSubOrganization,
 } from 'utils/types/zetkin';
 
+type OrgEventFilters = {
+  customDatesToFilterBy: DateRange<Dayjs>;
+  dateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+  orgIdsToFilterBy: number[];
+};
+
 export interface OrganizationsStoreSlice {
   eventsByOrgId: Record<number, RemoteList<ZetkinEvent>>;
+  filters: OrgEventFilters;
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   treeDataList: RemoteList<TreeItemData>;
@@ -24,6 +33,11 @@ export interface OrganizationsStoreSlice {
 
 const initialState: OrganizationsStoreSlice = {
   eventsByOrgId: {},
+  filters: {
+    customDatesToFilterBy: [null, null],
+    dateFilterState: null,
+    orgIdsToFilterBy: [],
+  },
   orgData: remoteItem(0),
   subOrgsByOrgId: {},
   treeDataList: remoteList(),
@@ -34,6 +48,13 @@ const OrganizationsSlice = createSlice({
   initialState,
   name: 'organizations',
   reducers: {
+    filtersUpdated: (
+      state,
+      action: PayloadAction<Partial<OrgEventFilters>>
+    ) => {
+      const updatedFilters = action.payload;
+      state.filters = { ...state.filters, ...updatedFilters };
+    },
     orgEventsLoad: (state, action: PayloadAction<number>) => {
       state.eventsByOrgId[action.payload] ||= remoteList();
       state.eventsByOrgId[action.payload].isLoading = true;
@@ -141,6 +162,7 @@ const OrganizationsSlice = createSlice({
 
 export default OrganizationsSlice;
 export const {
+  filtersUpdated,
   orgEventsLoad,
   orgEventsLoaded,
   organizationLoaded,
