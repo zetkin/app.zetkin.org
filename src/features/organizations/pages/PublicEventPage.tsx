@@ -1,8 +1,8 @@
 'use client';
 
 import { FC, Fragment, useState } from 'react';
-import { Box, useMediaQuery } from '@mui/system';
-import { Button, Link, useTheme } from '@mui/material';
+import { Box } from '@mui/system';
+import { useTheme } from '@mui/material';
 import {
   CalendarMonth,
   EmailOutlined,
@@ -15,10 +15,7 @@ import {
 } from '@mui/icons-material';
 import { Map, Marker } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import dayjs from 'dayjs';
-import { FormattedDate } from 'react-intl';
 
-import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { useEnv } from 'core/hooks';
@@ -32,6 +29,11 @@ import { EventSignupButton } from 'features/home/components/EventSignupButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import ZUITimeSpan from 'zui/ZUITimeSpan';
+import useIsMobile from 'utils/hooks/useIsMobile';
+import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
+import ZUILink from 'zui/components/ZUILink';
+import ZUIButton from 'zui/components/ZUIButton';
 
 export const PublicEventPage: FC<{
   baseEvent: ZetkinEventWithStatus;
@@ -113,18 +115,24 @@ const SignUpSection: FC<{
 
   return (
     <Box display="flex" flexDirection="column" gap={1}>
-      {event.status === 'booked' && (
+      {event.status == 'booked' && (
         <>
           <Box alignItems="center" display="flex" gap={1}>
-            <Button color="secondary" disabled variant="outlined">
-              <Msg id={messageIds.eventPage.cancelSignup} />
-            </Button>
+            <ZUIButton
+              disabled
+              label={messages.eventPage.cancelSignup()}
+              variant="secondary"
+            />
             <ZUISignUpChip status="booked" />
           </Box>
           {event.contact && (
             <>
               <Box alignItems="center" display="flex" gap={1}>
-                <ZUIUserAvatar personId={event.contact.id} size="sm" />
+                <ZUIPersonAvatar
+                  firstName={event.contact.name.split(' ')[0]}
+                  id={event.contact.id}
+                  lastName={event.contact.name.split(' ')[1]}
+                />
                 <ZUIText variant="bodyMdSemiBold">
                   <Msg
                     id={messageIds.eventPage.contactPerson}
@@ -179,45 +187,7 @@ const DateAndLocation: FC<{
   sx: React.CSSProperties;
 }> = ({ event, sx }) => {
   const env = useEnv();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const formatDate = (startDateTime: string, endDateTime: string) => {
-    const sameDay = dayjs(startDateTime).isSame(dayjs(endDateTime), 'day');
-    const startedToday = dayjs(startDateTime).isSame(dayjs(), 'day');
-
-    const startTime = dayjs(startDateTime).format('HH:mm');
-    const endTime = !!endDateTime && dayjs(endDateTime).format('HH:mm');
-
-    const from = startedToday ? (
-      <>
-        <Msg id={messageIds.eventPage.today} />, {startTime}
-      </>
-    ) : (
-      <>
-        <FormattedDate day="numeric" month="long" value={startDateTime} />,{' '}
-        {startTime}
-      </>
-    );
-    if (!endTime) {
-      return from;
-    }
-
-    const to = sameDay ? (
-      endTime
-    ) : (
-      <ZUIText>
-        <FormattedDate day="numeric" month="long" value={endDateTime} />,{' '}
-        {endTime}
-      </ZUIText>
-    );
-
-    return (
-      <ZUIText>
-        {from} — {to}
-      </ZUIText>
-    );
-  };
+  const isMobile = useIsMobile();
 
   return (
     <Box
@@ -228,14 +198,17 @@ const DateAndLocation: FC<{
     >
       <Box alignItems="center" display="flex" gap={1}>
         <ZUIIcon icon={CalendarMonth} />
-        {formatDate(event.start_time, event.end_time)}
+        <ZUIText>
+          <ZUITimeSpan
+            end={new Date(event.end_time)}
+            start={new Date(event.start_time)}
+          />
+        </ZUIText>
       </Box>
       {event.url && (
         <Box alignItems="center" display="flex" gap={1}>
           <ZUIIcon icon={LinkIcon} />
-          <Link href={event.url} rel="noopener noreferrer" target="_blank">
-            {event.url}
-          </Link>
+          <ZUILink href={event.url} openInNewTab text={event.url} />
         </Box>
       )}
       {event.location && (
@@ -246,14 +219,10 @@ const DateAndLocation: FC<{
           </Box>
           <Box sx={{ position: 'relative' }}>
             <ZUIMapControlButtonGroup>
-              <Button
-                // TODO: Handle full-screen map better. (open app? open modal?)
+              <ZUIIconButton
                 href={`https://www.openstreetmap.org/directions?from=&to=${event.location.lat}%2C${event.location.lng}#map=14/${event.location.lat}/${event.location.lng}`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Fullscreen />
-              </Button>
+                icon={Fullscreen}
+              />
             </ZUIMapControlButtonGroup>
             <Map
               initialViewState={{
