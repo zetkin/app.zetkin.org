@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { Box, Fade } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
-import useCampaignAllEvents from '../hooks/useCampaignAllEvents';
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
@@ -19,6 +18,7 @@ import NoEventsBlurb from '../../organizations/components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
 import ZUIDivider from 'zui/components/ZUIDivider';
+import useUpcomingPublicCampaignEvents from '../hooks/useUpcomingPublicCampaignEvents';
 
 type PublicProjPageProps = {
   orgId: number;
@@ -31,7 +31,7 @@ const PublicProjPage: FC<PublicProjPageProps> = ({ orgId, projId }) => {
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const nextDelay = useIncrementalDelay();
 
-  const projectEvents = useCampaignAllEvents(orgId, projId);
+  const projectEvents = useUpcomingPublicCampaignEvents(orgId, projId);
   const myEvents = useMyEvents();
   const user = useUser();
 
@@ -98,6 +98,7 @@ const PublicProjPage: FC<PublicProjPageProps> = ({ orgId, projId }) => {
                 <EventListItem
                   key={event.id}
                   event={event}
+                  href={`/o/${event.organization.id}/events/${event.id}`}
                   onClickSignUp={(ev) => {
                     if (!user) {
                       setPostAuthEvent(event);
