@@ -9,11 +9,10 @@ import ZUITabbedNavBar, {
 } from 'zui/components/ZUITabbedNavBar';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import useUser from 'core/hooks/useUser';
-import FollowUnfollowLoginButton from './FollowUnfollowLoginButton';
 
 type Props = {
+  button?: JSX.Element;
   imageUrl?: string;
-  orgId?: number;
   selectedTab?: string;
   subtitle?: string | JSX.Element;
   tabs?: ZUITabbedNavBarProps['items'];
@@ -24,7 +23,7 @@ type Props = {
 const ActivistPortalHeader: FC<Props> = ({
   imageUrl,
   tabs,
-  orgId,
+  button,
   selectedTab,
   subtitle,
   title,
@@ -84,7 +83,7 @@ const ActivistPortalHeader: FC<Props> = ({
               title
             )}
           </Box>
-          {orgId && <FollowUnfollowLoginButton orgId={orgId} />}
+          {button && button}
         </Box>
         {subtitle && (
           <Box>

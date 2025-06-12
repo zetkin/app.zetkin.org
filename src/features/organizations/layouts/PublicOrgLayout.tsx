@@ -20,6 +20,7 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
+import FollowUnfollowLoginButton from '../components/ActivistPortlHeader/FollowUnfollowLoginButton';
 
 const useDelayOnTrue = (durationMs: number, value: boolean) => {
   const [delayedValue, setDelayedValue] = useState(false);
@@ -120,7 +121,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
         }}
       >
         <ActivistPortalHeader
-          orgId={org.id}
+          button={<FollowUnfollowLoginButton orgId={org.id} />}
           selectedTab={lastSegment}
           tabs={navBarItems}
           title={

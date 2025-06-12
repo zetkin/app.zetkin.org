@@ -25,6 +25,7 @@ const FollowUnfollowLoginButton: FC<Props> = ({ orgId }) => {
         <ZUIButton
           label={messages.home.header.unfollow()}
           onClick={() => unfollowOrg()}
+          size="small"
           variant="secondary"
         />
       )}
@@ -32,21 +33,24 @@ const FollowUnfollowLoginButton: FC<Props> = ({ orgId }) => {
         <ZUIButton
           label={messages.home.header.follow()}
           onClick={() => followOrg(membership)}
-          variant="secondary"
+          size="small"
+          variant="primary"
         />
       )}
       {user && !membership && (
         <ZUIButton
           label={messages.home.header.connect()}
           onClick={() => connectOrg()}
-          variant="secondary"
+          size="small"
+          variant="primary"
         />
       )}
       {!user && (
         <ZUIButton
           href={`/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`}
           label={messages.home.header.login()}
-          variant="secondary"
+          size="small"
+          variant="primary"
         />
       )}
     </>
