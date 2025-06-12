@@ -14,7 +14,6 @@ import ZUIDate from 'zui/ZUIDate';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../../organizations/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
@@ -25,6 +24,9 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useFilteredCampaignEvents from '../hooks/useFilteredCampaignEvents';
 import NoEventsBlurb from 'features/organizations/components/NoEventsBlurb';
 import { filtersUpdated } from '../store';
+import messageIds from '../l10n/messageIds';
+import useCampaign from '../hooks/useCampaign';
+import orgMessageIds from 'features/organizations/l10n/messageIds';
 
 type Props = {
   campId: number;
@@ -33,11 +35,12 @@ type Props = {
 
 const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const intl = useIntl();
+  const orgMessages = useMessages(orgMessageIds);
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const user = useUser();
   const dispatch = useAppDispatch();
-
+  const campaign = useCampaign(orgId, campId).campaignFuture.data;
   const { allEvents, filteredEvents, getDateRange } = useFilteredCampaignEvents(
     orgId,
     campId
@@ -69,7 +72,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     {
       active: dateFilterState == 'today',
       key: 'today',
-      label: messages.allEventsList.filterButtonLabels.today(),
+      label: messages.publicProjectPage.eventList.filterButtonLabels.today(),
       onClick: () => {
         dispatch(
           filtersUpdated({
@@ -82,7 +85,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     {
       active: dateFilterState == 'tomorrow',
       key: 'tomorrow',
-      label: messages.allEventsList.filterButtonLabels.tomorrow(),
+      label: messages.publicProjectPage.eventList.filterButtonLabels.tomorrow(),
       onClick: () => {
         dispatch(
           filtersUpdated({
@@ -95,7 +98,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     {
       active: dateFilterState == 'thisWeek',
       key: 'thisWeek',
-      label: messages.allEventsList.filterButtonLabels.thisWeek(),
+      label: messages.publicProjectPage.eventList.filterButtonLabels.thisWeek(),
       onClick: () => {
         dispatch(
           filtersUpdated({
@@ -165,7 +168,16 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
     >
       {showNoEventsBlurb && (
         <Box key="empty">
-          <NoEventsBlurb orgId={orgId} />
+          <NoEventsBlurb
+            description={
+              campaign
+                ? messages.publicProjectPage.eventList.noEventsBlurb.description(
+                    { project: campaign.title }
+                  )
+                : undefined
+            }
+            title={messages.publicProjectPage.eventList.noEventsBlurb.headline()}
+          />
         </Box>
       )}
       {allEvents.length != 0 && (
@@ -213,12 +225,14 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           padding={2}
         >
           <ZUIText color="secondary">
-            <Msg id={messageIds.allEventsList.emptyList.message} />
+            <Msg
+              id={messageIds.publicProjectPage.eventList.emptyList.message}
+            />
           </ZUIText>
           <Search color="secondary" fontSize="large" />
           {isFiltered && (
             <ZUIButton
-              label={messages.allEventsList.emptyList.removeFiltersButton()}
+              label={messages.publicProjectPage.eventList.emptyList.removeFiltersButton()}
               onClick={() =>
                 dispatch(
                   filtersUpdated({
@@ -326,18 +340,18 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         open={!!postAuthEvent}
         primaryButton={{
           href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
-          label: messages.authDialog.loginButton(),
+          label: orgMessages.authDialog.loginButton(),
         }}
         secondaryButton={{
-          label: messages.authDialog.cancelButton(),
+          label: orgMessages.authDialog.cancelButton(),
           onClick: () => setPostAuthEvent(null),
         }}
         size="small"
-        title={messages.authDialog.label()}
+        title={orgMessages.authDialog.label()}
       >
         <Box sx={{ paddingTop: '0.75rem' }}>
           <ZUIText>
-            <Msg id={messageIds.authDialog.content} />
+            <Msg id={orgMessageIds.authDialog.content} />
           </ZUIText>
         </Box>
       </ZUIModal>

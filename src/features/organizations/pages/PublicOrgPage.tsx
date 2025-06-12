@@ -35,6 +35,7 @@ import { getContrastColor } from '../../../utils/colorUtils';
 import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
+import useOrganization from '../hooks/useOrganization';
 
 type Props = {
   orgId: number;
@@ -44,6 +45,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
+  const organization = useOrganization(orgId).data;
   const user = useUser();
   const dispatch = useAppDispatch();
   const { allEvents, filteredEvents, getDateRange } =
@@ -212,7 +214,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     >
       {showNoEventsBlurb && (
         <Box key="empty">
-          <NoEventsBlurb orgId={orgId} />
+          <NoEventsBlurb
+            description={
+              organization
+                ? messages.noEventsBlurb.description({
+                    org: organization.title,
+                  })
+                : undefined
+            }
+            title={messages.noEventsBlurb.headline()}
+          />
         </Box>
       )}
       {allEvents.length != 0 && (
