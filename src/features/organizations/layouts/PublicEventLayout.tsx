@@ -4,26 +4,18 @@ import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
-import useEvent from 'features/events/hooks/useEvent';
-import { ZetkinOrganization } from 'utils/types/zetkin';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import ActivistPortalHeader from '../components/ActivistPortlHeader';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 type Props = PropsWithChildren<{
-  eventId: number;
-  org: ZetkinOrganization;
+  event: ZetkinEvent;
 }>;
 
-export const PublicEventLayout: FC<Props> = ({ children, eventId, org }) => {
-  const event = useEvent(org.id, eventId)?.data;
-
-  if (!event) {
-    return null;
-  }
-
+export const PublicEventLayout: FC<Props> = ({ children, event }) => {
   return (
     <Box sx={{ marginX: 'auto', maxWidth: 960 }}>
       <ActivistPortalHeader

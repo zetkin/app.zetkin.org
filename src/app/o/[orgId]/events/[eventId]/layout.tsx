@@ -1,11 +1,12 @@
 import { FC, PropsWithChildren } from 'react';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicEventLayout from 'features/organizations/layouts/PublicEventLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 type Props = PropsWithChildren<{
   params: {
@@ -20,14 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const org = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${params.orgId}`
+  const event = await apiClient.get<ZetkinEvent>(
+    `/api/orgs/${params.orgId}/actions/${params.eventId}`
   );
 
   return {
     icons: [{ url: '/logo-zetkin.png' }],
-    // TODO: use event title when available
-    title: org.title,
+    title: event.title,
   };
 }
 
@@ -38,17 +38,19 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const org = await apiClient.get<ZetkinOrganization>(
-    `/api/orgs/${params.orgId}`
-  );
+  try {
+    const event = await apiClient.get<ZetkinEvent>(
+      `/api/orgs/${params.orgId}/actions/${params.eventId}`
+    );
 
-  return (
-    <HomeThemeProvider>
-      <PublicEventLayout eventId={params.eventId} org={org}>
-        {children}
-      </PublicEventLayout>
-    </HomeThemeProvider>
-  );
+    return (
+      <HomeThemeProvider>
+        <PublicEventLayout event={event}>{children}</PublicEventLayout>
+      </HomeThemeProvider>
+    );
+  } catch {
+    return notFound();
+  }
 };
 
 export default EventLayout;

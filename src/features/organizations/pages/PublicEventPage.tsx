@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Fragment, useMemo, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 import { Box, useMediaQuery } from '@mui/system';
 import { Button, Link, useTheme } from '@mui/material';
 import {
@@ -18,8 +18,6 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
 
-import { ZetkinOrganization } from 'utils/types/zetkin';
-import { useOrgEvents } from '../hooks/useUpcomingOrgEvents';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
@@ -36,29 +34,13 @@ import ZUIIconButton from 'zui/components/ZUIIconButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
 
 export const PublicEventPage: FC<{
-  eventId: number;
-  org: ZetkinOrganization;
-}> = ({ eventId, org }) => {
+  baseEvent: ZetkinEventWithStatus;
+}> = ({ baseEvent }) => {
   const theme = useTheme();
-  const events = useOrgEvents(org.id);
   const myEvents = useMyEvents();
 
-  const baseEvent = useMemo(
-    () =>
-      events
-        .map((event) => ({
-          ...event,
-          status: null,
-        }))
-        .find((e) => e.id === eventId),
-    [events, myEvents, eventId]
-  );
-  const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
+  const myEvent = myEvents.find((userEvent) => userEvent.id == baseEvent.id);
   const event = myEvent || baseEvent;
-
-  if (!event) {
-    return null;
-  }
 
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
