@@ -4,9 +4,9 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import PublicProjectLayout from 'features/organizations/layouts/PublicProjectLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinCampaign, ZetkinOrganization } from 'utils/types/zetkin';
+import { ZetkinCampaign } from 'utils/types/zetkin';
+import PublicProjectLayout from 'features/campaigns/layout/PublicProjectLayout';
 
 type Props = {
   children: ReactNode;
@@ -22,13 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const proj = await apiClient.get<ZetkinCampaign>(
+  const campaign = await apiClient.get<ZetkinCampaign>(
     `/api/orgs/${params.orgId}/campaigns/${params.projId}`
   );
 
   return {
     icons: [{ url: '/logo-zetkin.png' }],
-    title: proj.title,
+    title: campaign.title,
   };
 }
 
@@ -40,17 +40,13 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
   const apiClient = new BackendApiClient(headersObject);
 
   try {
-    const org = await apiClient.get<ZetkinOrganization>(
-      `/api/orgs/${params.orgId}`
-    );
-
-    const proj = await apiClient.get<ZetkinCampaign>(
+    const campaign = await apiClient.get<ZetkinCampaign>(
       `/api/orgs/${params.orgId}/campaigns/${params.projId}`
     );
 
     return (
       <HomeThemeProvider>
-        <PublicProjectLayout org={org} proj={proj}>
+        <PublicProjectLayout campaign={campaign}>
           {children}
         </PublicProjectLayout>
       </HomeThemeProvider>

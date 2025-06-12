@@ -160,6 +160,12 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Project Manager'),
+  publicProjectPage: {
+    map: {
+      viewInListButton: m('View in list'),
+      viewInMapButton: m('View in map'),
+    },
+  },
   shared: {
     cta: m('Go to project'),
     noActivities: m(

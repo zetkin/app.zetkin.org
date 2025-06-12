@@ -39,6 +39,10 @@ export default function mockState(overrides?: RootState) {
     campaigns: {
       campaignList: remoteList(),
       campaignsByOrgId: {},
+      filters: {
+        customDatesToFilterBy: [null, null],
+        dateFilterState: null,
+      },
       recentlyCreatedCampaign: null,
     },
     canvass: {

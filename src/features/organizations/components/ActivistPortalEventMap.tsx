@@ -10,7 +10,7 @@ import { markerImage } from '../utils/markerImage';
 import { flipLatLng, pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
 
-export const OrgPageMap: FC<
+export const ActivistPortalEventMap: FC<
   PropsWithChildren<{
     events: ZetkinEventWithStatus[];
     sx?: SxProps;

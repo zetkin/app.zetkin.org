@@ -8,7 +8,7 @@ import useRemoteList from 'core/hooks/useRemoteList';
 import getEventState from 'features/events/utils/getEventState';
 import { EventState } from 'features/events/hooks/useEventState';
 
-export default function useUpcomingPublicCampaignEvents(
+export default function useUpcomingCampaignEvents(
   orgId: number,
   campId: number
 ): ZetkinEvent[] {
