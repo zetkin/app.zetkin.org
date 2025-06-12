@@ -23,7 +23,6 @@ import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import { ZUIMapControlButtonGroup } from 'zui/ZUIMapControls';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import useMyEvents from 'features/events/hooks/useMyEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { EventSignupButton } from 'features/home/components/EventSignupButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
@@ -36,13 +35,9 @@ import ZUILink from 'zui/components/ZUILink';
 import ZUIButton from 'zui/components/ZUIButton';
 
 export const PublicEventPage: FC<{
-  baseEvent: ZetkinEventWithStatus;
-}> = ({ baseEvent }) => {
+  event: ZetkinEventWithStatus;
+}> = ({ event }) => {
   const theme = useTheme();
-  const myEvents = useMyEvents();
-
-  const myEvent = myEvents.find((userEvent) => userEvent.id == baseEvent.id);
-  const event = myEvent || baseEvent;
 
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
