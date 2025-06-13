@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 import NextLink from 'next/link';
-import Image from 'next/image';
 
 import ZUIText from 'zui/components/ZUIText';
 import ZUITabbedNavBar, {
@@ -12,7 +11,6 @@ import useUser from 'core/hooks/useUser';
 
 type Props = {
   button?: JSX.Element;
-  imageUrl?: string;
   selectedTab?: string;
   subtitle?: string | JSX.Element;
   tabs?: ZUITabbedNavBarProps['items'];
@@ -21,7 +19,6 @@ type Props = {
 };
 
 const ActivistPortalHeader: FC<Props> = ({
-  imageUrl,
   tabs,
   button,
   selectedTab,
@@ -95,19 +92,6 @@ const ActivistPortalHeader: FC<Props> = ({
           </Box>
         )}
       </Box>
-      {imageUrl && (
-        <Image
-          alt=""
-          height={480}
-          src={imageUrl}
-          style={{
-            height: '100%',
-            objectFit: 'cover',
-            width: '100%',
-          }}
-          width={960}
-        />
-      )}
       {hasNavBar && (
         <Box
           sx={{

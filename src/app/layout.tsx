@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body style={{ backgroundColor: 'white' }}>
         <AppRouterCacheProvider>
           <ClientContext
             envVars={{

@@ -2,7 +2,6 @@
 
 import { FC, Fragment, useState } from 'react';
 import { Box } from '@mui/system';
-import { useTheme } from '@mui/material';
 import {
   CalendarMonth,
   EmailOutlined,
@@ -37,7 +36,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 export const PublicEventPage: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
-  const theme = useTheme();
+  const isMobile = useIsMobile();
 
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
@@ -61,29 +60,33 @@ export const PublicEventPage: FC<{
 
   return (
     <Box
-      display="grid"
-      gap={3}
-      marginX="auto"
-      maxWidth={960}
-      paddingX={2}
-      paddingY={3}
-      sx={{
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: 'auto auto auto',
-        // On desktop, the date and location section is on the right side
-        [theme.breakpoints.up('md')]: {
-          gridTemplateColumns: '1fr 20rem',
-          gridTemplateRows: 'auto auto',
-        },
-      }}
+      display="flex"
+      flexDirection={isMobile ? 'column-reverse' : 'row'}
+      gap={2}
     >
-      <SignUpSection event={event} />
-      <DateAndLocation
-        event={event}
-        sx={{ [theme.breakpoints.up('md')]: { gridRow: 'span 2' } }}
-      />
-      <Box display="flex" flexDirection="column" gap={1}>
-        {paragraphs}
+      <Box
+        bgcolor="white"
+        borderRadius={2}
+        minHeight={!isMobile ? 400 : ''}
+        padding={2}
+        width={!isMobile ? '60%' : '100%'}
+      >
+        <Box display="flex" flexDirection="column" gap={1}>
+          {paragraphs}
+        </Box>
+      </Box>
+      <Box
+        bgcolor="white"
+        borderRadius={2}
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        minHeight={!isMobile ? 400 : ''}
+        padding={2}
+        width={!isMobile ? '40%' : '100%'}
+      >
+        <SignUpSection event={event} />
+        <DateAndLocation event={event} />
       </Box>
     </Box>
   );
@@ -179,18 +182,12 @@ const SignUpSection: FC<{
 
 const DateAndLocation: FC<{
   event: ZetkinEventWithStatus;
-  sx: React.CSSProperties;
-}> = ({ event, sx }) => {
+}> = ({ event }) => {
   const env = useEnv();
   const isMobile = useIsMobile();
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      gap={isMobile ? 1 : 2}
-      sx={{ ...sx }}
-    >
+    <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
       <Box alignItems="center" display="flex" gap={1}>
         <ZUIIcon icon={CalendarMonth} />
         <ZUIText>
