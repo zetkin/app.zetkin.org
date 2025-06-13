@@ -99,12 +99,17 @@ export const PublicEventLayout: FC<Props> = ({ children, event }) => {
           <Box
             sx={{
               '& img': {
-                '-webkit-mask-image':
-                  'linear-gradient(black 70%, transparent 100%)',
-                'mask-image': ' linear-gradient(black 70%, transparent 100%)',
+                '-webkit-mask-image': !isMobile
+                  ? 'linear-gradient(black 70%, transparent 100%)'
+                  : '',
+                'mask-image': !isMobile
+                  ? ' linear-gradient(black 70%, transparent 100%)'
+                  : '',
               },
-              height: 450,
+              height: isMobile ? 200 : 450,
+              marginY: isMobile ? 2 : '',
               maxWidth: 960,
+              paddingX: isMobile ? 2 : '',
             }}
           >
             <Image
@@ -138,7 +143,7 @@ export const PublicEventLayout: FC<Props> = ({ children, event }) => {
 
               return '';
             },
-            position: event.cover_file ? 'absolute' : '',
+            position: event.cover_file && !isMobile ? 'absolute' : '',
             top: isMobile ? 200 : 300,
           }}
         >
