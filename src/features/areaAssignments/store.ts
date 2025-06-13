@@ -231,6 +231,14 @@ const areaAssignmentSlice = createSlice({
         remoteItemUpdated(list, location);
       });
     },
+    locationLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinLocation]>
+    ) => {
+      const [assignmentId, location] = action.payload;
+
+      remoteItemUpdated(state.locationsByAssignmentId[assignmentId], location);
+    },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
 
@@ -328,6 +336,7 @@ export const {
   assignmentAreasLoaded,
   householdVisitCreated,
   locationCreated,
+  locationLoaded,
   locationsInvalidated,
   locationsLoad,
   locationsLoaded,

@@ -9,13 +9,17 @@ import {
   ZetkinLocationVisit,
   ZetkinLocationVisitPostBody,
 } from '../types';
-import { householdVisitCreated } from 'features/areaAssignments/store';
+import {
+  householdVisitCreated,
+  locationLoaded,
+} from 'features/areaAssignments/store';
 import { visitCreated, visitUpdated } from '../store';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocationVisits from './useLocationVisits';
 import useUser from 'core/hooks/useUser';
 import summarizeMetrics from '../utils/summarizeMetrics';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 type VisitByHouseholdIdMap = Record<
   number,
@@ -96,6 +100,13 @@ export default function useVisitReporting(
       return true;
     }) || null;
 
+  async function refreshLocationStats() {
+    const updatedLoc = await apiClient.get<ZetkinLocation>(
+      `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}`
+    );
+    dispatch(locationLoaded([assignmentId, updatedLoc]));
+  }
+
   return {
     currentLocationVisit,
     lastVisitByHouseholdId,
@@ -128,6 +139,7 @@ export default function useVisitReporting(
           );
 
           dispatch(visitUpdated(visit));
+          await refreshLocationStats();
         } else {
           const visit = await apiClient.post<
             ZetkinLocationVisit,
@@ -138,6 +150,7 @@ export default function useVisitReporting(
           );
 
           dispatch(visitCreated(visit));
+          await refreshLocationStats();
         }
       } else {
         const visit = await apiClient.post<
@@ -151,6 +164,7 @@ export default function useVisitReporting(
         );
 
         dispatch(householdVisitCreated(visit));
+        await refreshLocationStats();
       }
     },
     async reportLocationVisit(numHouseholdsVisited, responses) {
@@ -166,6 +180,7 @@ export default function useVisitReporting(
       );
 
       dispatch(visitCreated(visit));
+      await refreshLocationStats();
     },
   };
 }
