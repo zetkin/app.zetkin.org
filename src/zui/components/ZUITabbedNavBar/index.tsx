@@ -127,6 +127,7 @@ const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
             minWidth: '1.5rem',
             paddingY: '0.563rem',
           }}
+          tabIndex={0}
           value={tab.value}
         />
       ))}
