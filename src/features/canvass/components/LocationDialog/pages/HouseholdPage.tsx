@@ -14,10 +14,12 @@ type HouseholdPageProps = {
   onClose: () => void;
   onEdit: () => void;
   onHouseholdVisitStart: () => void;
+  showLogVisitButton: boolean;
   visitedInThisAssignment: boolean;
 };
 
 const HouseholdPage: FC<HouseholdPageProps> = ({
+  showLogVisitButton,
   householdId,
   location,
   onBack,
@@ -42,9 +44,11 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
               <Msg id={messageIds.households.single.wasVisited} />
             </Typography>
           )}
-          <Button onClick={onHouseholdVisitStart} variant="contained">
-            <Msg id={messageIds.households.single.logVisitButtonLabel} />
-          </Button>
+          {showLogVisitButton && (
+            <Button onClick={onHouseholdVisitStart} variant="contained">
+              <Msg id={messageIds.households.single.logVisitButtonLabel} />
+            </Button>
+          )}
         </Box>
       }
       onBack={onBack}
