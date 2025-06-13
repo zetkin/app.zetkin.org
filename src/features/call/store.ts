@@ -9,10 +9,12 @@ import {
 } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
+import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
+  queueHasError: SerializedError | null;
   outgoingCalls: RemoteList<ZetkinCall>;
   stateByCallId: Record<number, RemoteItem<CallState>>;
 }
@@ -21,6 +23,7 @@ const initialState: CallStoreSlice = {
   currentCallId: null,
   eventsByTargetId: {},
   outgoingCalls: remoteList(),
+  queueHasError: null,
   stateByCallId: {},
 };
 
@@ -50,19 +53,16 @@ const CallSlice = createSlice({
       state.eventsByTargetId[id].loaded = new Date().toISOString();
       state.eventsByTargetId[id].isLoading = false;
     },
-    allocateCallError: (state, action: PayloadAction<unknown>) => {
+    allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
-
-      state.outgoingCalls = remoteList();
-      state.outgoingCalls.error = error;
-      state.outgoingCalls.loaded = new Date().toISOString();
-      state.outgoingCalls.isLoading = false;
+      state.queueHasError = error;
     },
     allocateNewCallLoad: (state) => {
       state.outgoingCalls.isLoading = true;
     },
     allocateNewCallLoaded: (state, action: PayloadAction<ZetkinCall>) => {
       state.currentCallId = action.payload.id;
+      state.queueHasError = null;
 
       const callExists = state.outgoingCalls.items.some(
         (call) => call.id === action.payload.id

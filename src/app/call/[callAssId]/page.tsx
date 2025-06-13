@@ -31,7 +31,6 @@ export default async function Page({ params }: Props) {
   if (!assignment) {
     return notFound();
   }
-  const { callAssId } = params;
 
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
     return (
@@ -49,7 +48,7 @@ export default async function Page({ params }: Props) {
             </Box>
           }
         >
-          <CallPage callAssId={callAssId} orgId={assignment.organization.id} />
+          <CallPage assignment={assignment} />
         </Suspense>
       </HomeThemeProvider>
     );
