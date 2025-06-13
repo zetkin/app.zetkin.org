@@ -31,6 +31,7 @@ import messageIds from 'features/views/l10n/messageIds';
 import MoveViewDialog from '../MoveViewDialog';
 
 interface ViewBrowserProps {
+  autoHeight?: boolean; // @deprecated
   basePath: string;
   enableDragAndDrop?: boolean;
   enableEllipsisMenu?: boolean;
@@ -47,6 +48,7 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
 }
 
 const ViewBrowser: FC<ViewBrowserProps> = ({
+  autoHeight = true,
   basePath,
   enableDragAndDrop = true,
   enableEllipsisMenu = true,
@@ -266,7 +268,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
             {enableDragAndDrop && <BrowserDragLayer />}
             <DataGridPro
               apiRef={gridApiRef}
-              autoHeight
+              autoHeight={autoHeight}
               columns={colDefs}
               disableRowSelectionOnClick
               hideFooter

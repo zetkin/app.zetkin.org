@@ -19,8 +19,17 @@ const BrowserStep: FC<Props> = ({
   onViewSelect,
 }) => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        minHeight: '100%',
+        position: 'relative',
+      }}
+    >
       <ViewBrowser
+        autoHeight={false}
         basePath=""
         enableDragAndDrop={false}
         enableEllipsisMenu={false}

@@ -195,12 +195,13 @@ export default makeMessages('zui', {
     bulkAdd: {
       backButton: m('Back'),
       cancelButton: m('Cancel'),
+      fromView: m<{ viewTitle: string }>('From {viewTitle}'),
       openButton: m('Bulk add'),
       submitButton: m<{ numSelected: number }>(
         '{numSelected, plural, =0 {Select} =1 {Select 1 person} other {Select # people}}'
       ),
       title: m<{ entityToAddTo?: string }>(
-        '{entityToAddTo, select, undefined {Select people to add} other {Select people to add to {entityToAddTo}}}'
+        '{entityToAddTo, select, undefined {Add people} other {Add people to ‘{entityToAddTo}’}}'
       ),
     },
     keepTyping: m('Keep typing to start searching'),

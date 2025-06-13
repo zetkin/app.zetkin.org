@@ -47,24 +47,32 @@ const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
       }}
       open={open}
     >
-      <Box sx={{ p: 2 }}>
-        <DialogTitle sx={{ paddingLeft: 1 }} variant="h4">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          minHeight: '100%',
+          p: 2,
+        }}
+      >
+        <DialogTitle sx={{ p: 1 }} variant="h4">
           {title}
         </DialogTitle>
-        {!!viewId && (
-          <ViewStep
-            onBack={() => setViewId(null)}
-            onSubmit={(ids) => onSubmit(ids)}
-            orgId={orgId}
-            viewId={viewId}
-          />
-        )}
         {!viewId && (
           <BrowserStep
             folderId={folderId}
             onClose={onClose}
             onFolderSelect={(id) => setFolderId(id)}
             onViewSelect={(viewId) => setViewId(viewId)}
+          />
+        )}
+        {!!viewId && (
+          <ViewStep
+            onBack={() => setViewId(null)}
+            onSubmit={(ids) => onSubmit(ids)}
+            orgId={orgId}
+            viewId={viewId}
           />
         )}
       </Box>
