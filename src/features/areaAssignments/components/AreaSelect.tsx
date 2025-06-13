@@ -70,10 +70,11 @@ const AreaSelect: FC<Props> = ({
 
   const locationsInSelectedArea: ZetkinLocation[] = [];
   if (selectedArea) {
+    const points = selectedArea.boundary.coordinates[0] || [];
     locations.map((location) => {
       const isInsideArea = isPointInsidePolygon(
         locToLatLng(location),
-        selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
+        points.map((point) => ({ lat: point[0], lng: point[1] }))
       );
       if (isInsideArea) {
         locationsInSelectedArea.push(location);

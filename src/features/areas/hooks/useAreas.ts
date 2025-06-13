@@ -1,26 +1,32 @@
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { areasLoad, areasLoaded } from '../store';
-import { Zetkin2Area, ZetkinArea } from '../types';
+import { ZetkinArea } from '../types';
+import { backendToDisplayArray } from '../utils/coordinateConversion';
 
 export default function useAreas(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const list = useAppSelector((state) => state.areas.areaList);
 
-  return loadListIfNecessary(list, dispatch, {
+  const areasResult = loadListIfNecessary(list, dispatch, {
     actionOnLoad: () => areasLoad(),
     actionOnSuccess: (data) => areasLoaded(data),
     loader: () =>
-      apiClient.get<Zetkin2Area[]>(`/api2/orgs/${orgId}/areas`).then((areas) =>
+      apiClient.get<ZetkinArea[]>(`/api2/orgs/${orgId}/areas`).then((areas) =>
         areas.map<ZetkinArea>((area) => ({
-          description: area.description,
-          id: area.id,
-          organization_id: area.organization_id,
-          points: area.boundary.coordinates[0],
-          tags: [],
-          title: area.title,
+          ...area,
+          // Convert coordinates from backend format [lng, lat] to display format [lat, lng]
+          boundary: {
+            ...area.boundary,
+            coordinates: area.boundary.coordinates.map((polygon) =>
+              backendToDisplayArray(polygon)
+            ),
+          },
+          tags: area.tags || [],
         }))
       ),
   });
+
+  return areasResult;
 }

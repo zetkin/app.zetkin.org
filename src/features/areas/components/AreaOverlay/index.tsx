@@ -1,11 +1,3 @@
-import {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
 import { Close } from '@mui/icons-material';
 import {
   Box,
@@ -16,17 +8,25 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { ZetkinArea } from '../../types';
-import useAreaMutations from '../../hooks/useAreaMutations';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
-import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from 'features/areas/l10n/messageIds';
-import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import messageIds from '../../l10n/messageIds';
+import useAreaMutations from '../../hooks/useAreaMutations';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 type Props = {
   area: ZetkinArea;
@@ -44,18 +44,20 @@ const AreaOverlay: FC<Props> = ({
   onClose,
 }) => {
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const { deleteArea, updateArea } = useAreaMutations(
+    area.organization_id,
+    area.id
+  );
+
   const [title, setTitle] = useState(area.title);
   const [description, setDescription] = useState(area.description);
   const [fieldEditing, setFieldEditing] = useState<
     'title' | 'description' | null
   >(null);
-  const { deleteArea, updateArea } = useAreaMutations(
-    area.organization_id,
-    area.id
-  );
-  const tagsElement = useRef<HTMLElement>();
-  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
   const enteredEditableMode = useRef(false);
+  const tagsElement = useRef<HTMLElement>();
 
   const handleDescriptionTextAreaRef = useCallback(
     (el: HTMLTextAreaElement | null) => {
@@ -224,7 +226,7 @@ const AreaOverlay: FC<Props> = ({
               onClick={() => {
                 updateArea({
                   boundary: {
-                    coordinates: [area.points],
+                    coordinates: [area.boundary.coordinates[0]],
                     type: 'Polygon',
                   },
                 });

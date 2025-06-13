@@ -1,20 +1,23 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
 import { assignmentAreasLoad, assignmentAreasLoaded } from '../store';
-import { Zetkin2Area } from 'features/areas/types';
+import { ZetkinArea } from 'features/areas/types';
 import useRemoteList from 'core/hooks/useRemoteList';
 
-export default function useAssignmentAreas(orgId: number, areaAssId: number) {
+export default function useAssignmentAreas(
+  orgId: number,
+  areaAssignmentId: number
+) {
   const apiClient = useApiClient();
   const list = useAppSelector(
-    (state) => state.areaAssignments.areasByAssignmentId[areaAssId]
+    (state) => state.areaAssignments.areasByAssignmentId[areaAssignmentId]
   );
 
   return useRemoteList(list, {
-    actionOnLoad: () => assignmentAreasLoad(areaAssId),
-    actionOnSuccess: (data) => assignmentAreasLoaded([areaAssId, data]),
+    actionOnLoad: () => assignmentAreasLoad(areaAssignmentId),
+    actionOnSuccess: (data) => assignmentAreasLoaded([areaAssignmentId, data]),
     loader: () =>
-      apiClient.get<Zetkin2Area[]>(
-        `/api2/orgs/${orgId}/area_assignments/${areaAssId}/areas`
+      apiClient.get<ZetkinArea[]>(
+        `/api2/orgs/${orgId}/area_assignments/${areaAssignmentId}/areas`
       ),
   });
 }

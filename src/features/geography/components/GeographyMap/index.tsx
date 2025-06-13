@@ -51,8 +51,8 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
     const map = mapRef.current;
 
     if (selectedArea && map) {
-      const points = selectedArea.points.map((p) => objToLatLng(p));
-      const areaBounds = latLngBounds(points);
+      const points = selectedArea.boundary.coordinates[0] || [];
+      const areaBounds = latLngBounds(points.map((p) => objToLatLng(p)));
       const topRightOnMap = areaBounds.getNorthEast();
       const container = map.getContainer();
 
@@ -114,14 +114,12 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
     const map = mapRef.current;
     if (map) {
       if (areas.length) {
-        const totalBounds = latLngBounds(
-          areas[0].points.map((p) => objToLatLng(p))
-        );
+        const boundary = areas[0].boundary.coordinates[0] || [];
+        const totalBounds = latLngBounds(boundary.map((p) => objToLatLng(p)));
 
         areas.forEach((area) => {
-          const areaBounds = latLngBounds(
-            area.points.map((p) => objToLatLng(p))
-          );
+          const boundary = area.boundary.coordinates[0] || [];
+          const areaBounds = latLngBounds(boundary.map((p) => objToLatLng(p)));
           totalBounds.extend(areaBounds);
         });
 
@@ -253,7 +251,9 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
               areas={filteredAreas}
               drawingPoints={drawingPoints}
               editingArea={editingArea}
-              onChangeArea={(area) => setEditingArea(area)}
+              onChangeArea={(area) => {
+                setEditingArea(area);
+              }}
               onChangeDrawingPoints={(points) => setDrawingPoints(points)}
               onFinishDrawing={() => finishDrawing()}
               onSelectArea={(area) => setSelectedId(area?.id ?? 0)}

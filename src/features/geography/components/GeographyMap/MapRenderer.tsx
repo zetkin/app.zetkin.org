@@ -108,11 +108,11 @@ const MapRenderer: FC<Props> = ({
           <Polygon
             key={'editing'}
             color={theme.palette.primary.main}
-            positions={editingArea.points}
+            positions={editingArea.boundary.coordinates[0] || []}
             weight={5}
           />
         )}
-        {editingArea?.points?.map((point, index) => {
+        {editingArea?.boundary.coordinates[0]?.map((point, index) => {
           return (
             <DivIconMarker
               key={index}
@@ -121,11 +121,18 @@ const MapRenderer: FC<Props> = ({
                 dragend: (evt) => {
                   const latLng = evt.target.getLatLng();
                   const movedPoint: PointData = [latLng.lat, latLng.lng];
+                  const currentPoints =
+                    editingArea.boundary.coordinates[0] || [];
                   onChangeArea({
                     ...editingArea,
-                    points: editingArea.points.map((oldPoint, oldIndex) =>
-                      oldIndex == index ? movedPoint : oldPoint
-                    ),
+                    boundary: {
+                      ...editingArea.boundary,
+                      coordinates: [
+                        currentPoints.map((oldPoint, oldIndex) =>
+                          oldIndex == index ? movedPoint : oldPoint
+                        ),
+                      ],
+                    },
                   });
                 },
               }}
@@ -169,7 +176,7 @@ const MapRenderer: FC<Props> = ({
                     }
                   },
                 }}
-                positions={area.points}
+                positions={area.boundary.coordinates[0] || []}
                 weight={2}
               />
             );
@@ -183,7 +190,7 @@ const MapRenderer: FC<Props> = ({
                 onSelectArea(null);
               },
             }}
-            positions={selectedArea.points}
+            positions={selectedArea.boundary.coordinates[0] || []}
             weight={5}
           />
         )}

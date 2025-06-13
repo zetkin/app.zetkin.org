@@ -1,6 +1,10 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { Zetkin2Area, Zetkin2AreaPostBody } from '../types';
+import { ZetkinArea, ZetkinAreaPostBody } from '../types';
 import { areaDeleted, areaUpdated } from '../store';
+import {
+  displayToBackendArray,
+  backendToDisplayArray,
+} from '../utils/coordinateConversion';
 
 export default function useAreaMutations(orgId: number, areaId: number) {
   const apiClient = useApiClient();
@@ -11,22 +15,38 @@ export default function useAreaMutations(orgId: number, areaId: number) {
       await apiClient.delete(`/api2/orgs/${orgId}/areas/${areaId}`);
       dispatch(areaDeleted(areaId));
     },
-    async updateArea(data: Zetkin2AreaPostBody) {
-      const area = await apiClient.patch<Zetkin2Area, Zetkin2AreaPostBody>(
+    async updateArea(data: ZetkinAreaPostBody) {
+      // Convert coordinates from display format [lat, lng] to backend format [lng, lat]
+      const backendData = {
+        ...data,
+        boundary: data.boundary
+          ? {
+              ...data.boundary,
+              coordinates: data.boundary.coordinates.map((polygon) =>
+                displayToBackendArray(polygon)
+              ),
+            }
+          : undefined,
+      };
+
+      const area = await apiClient.patch<ZetkinArea, ZetkinAreaPostBody>(
         `/api2/orgs/${orgId}/areas/${areaId}`,
-        data
+        backendData
       );
 
-      dispatch(
-        areaUpdated({
-          description: area.description,
-          id: area.id,
-          organization_id: area.organization_id,
-          points: area.boundary.coordinates[0],
-          tags: [],
-          title: area.title,
-        })
-      );
+      // Convert response coordinates back to display format and store
+      const areaWithDisplayCoords = {
+        ...area,
+        boundary: {
+          ...area.boundary,
+          coordinates: area.boundary.coordinates.map((polygon) =>
+            backendToDisplayArray(polygon)
+          ),
+        },
+        tags: area.tags || [],
+      };
+
+      dispatch(areaUpdated(areaWithDisplayCoords));
     },
   };
 }
