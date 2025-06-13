@@ -1,3 +1,4 @@
+import { ZetkinSurveyCallSubmission } from 'features/surveys/hooks/useSubmitSurveySubmission';
 import {
   ZetkinEvent,
   ZetkinEventResponse,
@@ -50,3 +51,8 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
 export type CallState = {
   report: ZetkinCallPatchBody;
 };
+
+export type ZetkinSurveyCallSubmissionWithSurveyId =
+  ZetkinSurveyCallSubmission & {
+    surveyId: number;
+  };
