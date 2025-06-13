@@ -1,29 +1,50 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { Zetkin2Area, Zetkin2AreaPostBody, ZetkinArea } from '../types';
+import { ZetkinArea, ZetkinAreaPostBody } from '../types';
 import { areaCreated } from '../store';
+import {
+  displayToBackendArray,
+  backendToDisplayArray,
+} from '../utils/coordinateConversion';
 
 export default function useCreateArea(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
   return async function createArea(
-    data: Zetkin2AreaPostBody
+    data: ZetkinAreaPostBody
   ): Promise<ZetkinArea> {
-    const created = await apiClient.post<Zetkin2Area, Zetkin2AreaPostBody>(
-      `/api2/orgs/${orgId}/areas`,
-      data
-    );
-    const translated = {
-      description: created.description,
-      id: created.id,
-      organization_id: created.organization_id,
-      points: created.boundary.coordinates[0],
-      tags: [],
-      title: created.title,
+    // Convert coordinates from display format [lat, lng] to backend format [lng, lat]
+    const backendData = {
+      ...data,
+      boundary: data.boundary
+        ? {
+            ...data.boundary,
+            coordinates: data.boundary.coordinates.map((polygon) =>
+              displayToBackendArray(polygon)
+            ),
+          }
+        : undefined,
     };
 
-    dispatch(areaCreated(translated));
+    const created = await apiClient.post<ZetkinArea, ZetkinAreaPostBody>(
+      `/api2/orgs/${orgId}/areas`,
+      backendData
+    );
 
-    return translated;
+    // Convert response coordinates back to display format and store
+    const areaWithDisplayCoords = {
+      ...created,
+      boundary: {
+        ...created.boundary,
+        coordinates: created.boundary.coordinates.map((polygon) =>
+          backendToDisplayArray(polygon)
+        ),
+      },
+      tags: created.tags || [],
+    };
+
+    dispatch(areaCreated(areaWithDisplayCoords));
+
+    return areaWithDisplayCoords;
   };
 }

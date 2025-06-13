@@ -315,7 +315,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
           (area) => area.id === navigateToAreaId
         );
         if (areaToNavigate) {
-          map.fitBounds(areaToNavigate.points);
+          const boundary = areaToNavigate.boundary.coordinates[0] || [];
+          map.fitBounds(boundary);
           setZoomed(true);
         }
       } else {
@@ -365,9 +366,10 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
     locationsByAreaId[area.id] = [];
 
     locations.forEach((location) => {
+      const points = area.boundary.coordinates[0] || [];
       const isInsideArea = isPointInsidePolygon(
         locToLatLng(location),
-        area.points.map((point) => ({
+        points.map((point) => ({
           lat: point[0],
           lng: point[1],
         }))
@@ -474,6 +476,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               ? (stats.num_visited_households / stats.num_households) * 100
               : 0;
 
+            const points = area.boundary.coordinates[0] || [];
+
             return (
               <Polygon
                 key={key}
@@ -491,7 +495,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 )}
                 fillOpacity={1}
                 interactive={areaStyle != 'hide'}
-                positions={area.points}
+                positions={points}
                 weight={selected ? 5 : 2}
               />
             );
@@ -503,9 +507,10 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             //Find ids of area/s that the location is in
             const areaIds: number[] = [];
             areas.forEach((area) => {
+              const points = area.boundary.coordinates[0] || [];
               const isInsideArea = isPointInsidePolygon(
                 locToLatLng(location),
-                area.points.map((point) => ({
+                points.map((point) => ({
                   lat: point[0],
                   lng: point[1],
                 }))
@@ -568,9 +573,10 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
       )}
       <FeatureGroup>
         {filteredAreas.map((area) => {
+          const points = area.boundary.coordinates[0] || [];
           const mid: [number, number] = [0, 0];
-          if (area.points.length) {
-            area.points
+          if (points.length) {
+            points
               .map((input) => {
                 if ('lat' in input && 'lng' in input) {
                   return [input.lat as number, input.lng as number];
@@ -583,8 +589,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 mid[1] += point[1];
               });
 
-            mid[0] /= area.points.length;
-            mid[1] /= area.points.length;
+            mid[0] /= points.length;
+            mid[1] /= points.length;
           }
 
           const detailed = zoom >= 15;

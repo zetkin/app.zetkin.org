@@ -23,7 +23,7 @@ import {
   SessionDeletedPayload,
   ZetkinMetric,
 } from './types';
-import { Zetkin2Area } from 'features/areas/types';
+import { ZetkinArea } from 'features/areas/types';
 import { ZetkinHouseholdVisit } from 'features/canvass/types';
 
 export interface AreaAssignmentsStoreSlice {
@@ -36,7 +36,7 @@ export interface AreaAssignmentsStoreSlice {
     RemoteItem<ZetkinAssignmentAreaStats & { id: number }>
   >;
   areaAssignmentList: RemoteList<ZetkinAreaAssignment>;
-  areasByAssignmentId: Record<string, RemoteList<Zetkin2Area>>;
+  areasByAssignmentId: Record<string, RemoteList<ZetkinArea>>;
   assigneesByAssignmentId: Record<
     number,
     RemoteList<ZetkinAreaAssignee & { id: number }>
@@ -211,7 +211,7 @@ const areaAssignmentSlice = createSlice({
     },
     assignmentAreasLoaded: (
       state,
-      action: PayloadAction<[number, Zetkin2Area[]]>
+      action: PayloadAction<[number, ZetkinArea[]]>
     ) => {
       const [assignmentId, areas] = action.payload;
       state.areasByAssignmentId[assignmentId] = remoteListLoaded(areas);

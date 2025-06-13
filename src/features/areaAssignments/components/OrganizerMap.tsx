@@ -158,14 +158,16 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             if (map) {
               if (areas.length) {
                 // Start with first area
+                const boundary = areas[0].boundary.coordinates[0] || [];
                 const totalBounds = latLngBounds(
-                  areas[0].points.map((p) => objToLatLng(p))
+                  boundary.map((p) => objToLatLng(p))
                 );
 
                 // Extend with all areas
                 areas.forEach((area) => {
+                  const areaPoints = area.boundary.coordinates[0] || [];
                   const areaBounds = latLngBounds(
-                    area.points.map((p) => objToLatLng(p))
+                    areaPoints.map((p) => objToLatLng(p))
                   );
                   totalBounds.extend(areaBounds);
                 });
