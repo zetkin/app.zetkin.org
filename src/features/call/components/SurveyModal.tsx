@@ -6,6 +6,7 @@ import ZUIModal from 'zui/components/ZUIModal';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
+import { useSurveysKeysMutations } from '../hooks/useFilledSurveysMutations';
 
 type SurveyModalProps = {
   onClose: () => void;
@@ -25,22 +26,41 @@ const SurveyModal: FC<SurveyModalProps> = ({
   >(`formContent-${survey.id}-${targetId}`, {});
   const formRef = useRef<HTMLFormElement | null>(null);
 
+  const { addFilledSurveyKeys } = useSurveysKeysMutations();
+
+  const saveSurveyIfNotEmpty = () => {
+    if (formRef.current) {
+      formRef.current.requestSubmit();
+
+      const formData = new FormData(formRef.current);
+
+      const hasMeaningfulContent = Array.from(formData.entries()).some(
+        ([, value]) => {
+          if (typeof value === 'string') {
+            return value.trim() !== '';
+          }
+          return true;
+        }
+      );
+
+      if (hasMeaningfulContent) {
+        addFilledSurveyKeys(survey.id, targetId);
+      }
+    }
+  };
+
   return (
     <ZUIModal
       onClose={() => {
-        if (formRef.current) {
-          formRef.current.requestSubmit();
-          onClose();
-        }
+        saveSurveyIfNotEmpty();
+        onClose();
       }}
       open={open}
       primaryButton={{
         label: 'Save',
         onClick: () => {
-          if (formRef.current) {
-            formRef.current.requestSubmit();
-            onClose();
-          }
+          saveSurveyIfNotEmpty();
+          onClose();
         },
       }}
       size="medium"
