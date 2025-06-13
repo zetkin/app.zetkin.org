@@ -46,6 +46,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   const [step, setStep] = useState(0);
 
   useEffect(() => {
+    setResponseByMetricId({});
     setStep(0);
   }, [household.id]);
 
