@@ -1,11 +1,11 @@
 import { FC, useState } from 'react';
 import { Assignment, GroupWorkOutlined } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
 import MyActivityListItem from 'features/home/components/MyActivityListItem';
 import ZUIButton from 'zui/components/ZUIButton';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import SurveyModal from './SurveyModal';
-import { Box } from '@mui/material';
 import ZUILabel from 'zui/components/ZUILabel';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppSelector } from 'core/hooks';
