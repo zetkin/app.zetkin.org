@@ -24,6 +24,7 @@ export default function mockState(overrides?: RootState) {
     call: {
       currentCallId: null,
       eventsByTargetId: {},
+      filledSurveys: [],
       outgoingCalls: remoteList(),
       queueHasError: null,
       stateByCallId: {},

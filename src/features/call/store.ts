@@ -14,6 +14,7 @@ import { SerializedError } from './hooks/useAllocateCall';
 export interface CallStoreSlice {
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
+  filledSurveys: { surveyId: number; targetId: number }[];
   queueHasError: SerializedError | null;
   outgoingCalls: RemoteList<ZetkinCall>;
   stateByCallId: Record<number, RemoteItem<CallState>>;
@@ -22,6 +23,7 @@ export interface CallStoreSlice {
 const initialState: CallStoreSlice = {
   currentCallId: null,
   eventsByTargetId: {},
+  filledSurveys: [],
   outgoingCalls: remoteList(),
   queueHasError: null,
   stateByCallId: {},
@@ -53,6 +55,20 @@ const CallSlice = createSlice({
       state.eventsByTargetId[id].loaded = new Date().toISOString();
       state.eventsByTargetId[id].isLoading = false;
     },
+    addSurveyKeys: (
+      state,
+      action: PayloadAction<{ surveyId: number; targetId: number }>
+    ) => {
+      const exists = state.filledSurveys.some(
+        (entry) =>
+          entry.surveyId === action.payload.surveyId &&
+          entry.targetId === action.payload.targetId
+      );
+
+      if (!exists) {
+        state.filledSurveys.push(action.payload);
+      }
+    },
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
       state.queueHasError = error;
@@ -79,6 +95,9 @@ const CallSlice = createSlice({
       }
 
       state.outgoingCalls.isLoading = false;
+    },
+    clearSurveysKeys: (state) => {
+      state.filledSurveys = [];
     },
     currentCallDeleted: (state, action: PayloadAction<number>) => {
       const deletedCallId = action.payload;
@@ -169,7 +188,9 @@ export default CallSlice;
 export const {
   activeEventsLoad,
   activeEventsLoaded,
+  addSurveyKeys,
   allocateCallError,
+  clearSurveysKeys,
   currentCallDeleted,
   allocateNewCallLoad,
   allocateNewCallLoaded,
