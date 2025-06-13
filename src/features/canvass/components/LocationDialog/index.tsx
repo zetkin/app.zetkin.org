@@ -152,6 +152,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
               }}
+              showLogVisitButton={assignment.reporting_level == 'household'}
               visitedInThisAssignment={
                 !!lastVisitByHouseholdId[selectedHouseholdId]
               }
