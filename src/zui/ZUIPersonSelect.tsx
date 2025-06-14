@@ -13,7 +13,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { PersonAdd } from '@mui/icons-material';
+import { GroupAdd, PersonAdd } from '@mui/icons-material';
 
 import messageIds from './l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
@@ -22,6 +22,7 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUICreatePerson from './ZUICreatePerson';
 import ZUIPerson from 'zui/ZUIPerson';
 import { Msg, useMessages } from 'core/i18n';
+import ZUIBulkPersonSelect from './ZUIBulkPersonSelect';
 
 interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
@@ -67,10 +68,16 @@ interface UsePersonSelectReturn {
 type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
+  bulkSelection?: {
+    entityToAddTo?: string;
+    onSelectMultiple: (ids: number[]) => void;
+  };
+  createPersonLabels?: {
+    submitLabel?: string;
+    title?: string;
+  };
   disabled?: boolean;
   size?: 'small' | 'medium';
-  submitLabel?: string;
-  title?: string;
   variant?: 'filled' | 'outlined' | 'standard';
 };
 
@@ -184,12 +191,12 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props
 ) => {
   const {
+    bulkSelection,
+    createPersonLabels,
     disabled,
     label,
     size,
     variant,
-    submitLabel,
-    title,
     ...restComponentProps
   } = props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
@@ -199,6 +206,7 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   delete restProps.getOptionValue;
 
   const [createPersonOpen, setCreatePersonOpen] = useState(false);
+  const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
 
   const [wasLoading, setWasLoading] = useState(false);
 
@@ -209,6 +217,10 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
       setWasLoading(true);
     }
   }, [autoCompleteProps.isLoading]);
+
+  const showBulkButton = !!bulkSelection;
+  const showAddButton = !disabled && wasLoading;
+  const showButtonBar = showBulkButton || showAddButton;
 
   return (
     <>
@@ -230,26 +242,44 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
               }}
             >
               {children}
-              {!disabled && wasLoading && (
+              {showButtonBar && (
                 <>
-                  <Divider sx={{ mt: 1 }} />
-                  <Button
-                    color="primary"
-                    onClick={() => {
-                      setCreatePersonOpen(true);
-                      // If a person is added, we reset the wasLoading state to false
-                      // A new search has to be done to show the add person button again
-                      setWasLoading(false);
-                    }}
-                    startIcon={<PersonAdd />}
+                  <Divider sx={{ p: 1 }} />
+                  <Box
                     sx={{
-                      justifyContent: 'flex-start',
-                      m: 2,
+                      display: 'flex',
+                      gap: 1,
+                      p: 2,
                     }}
-                    variant="outlined"
                   >
-                    <Msg id={messageIds.createPerson.createBtn} />
-                  </Button>
+                    {showAddButton && (
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          setCreatePersonOpen(true);
+                          // If a person is added, we reset the wasLoading state to false
+                          // A new search has to be done to show the add person button again
+                          setWasLoading(false);
+                        }}
+                        startIcon={<PersonAdd />}
+                        variant="outlined"
+                      >
+                        <Msg id={messageIds.createPerson.createBtn} />
+                      </Button>
+                    )}
+                    {showBulkButton && (
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          setBulkDialogOpen(true);
+                        }}
+                        startIcon={<GroupAdd />}
+                        variant="outlined"
+                      >
+                        <Msg id={messageIds.personSelect.bulkAdd.openButton} />
+                      </Button>
+                    )}
+                  </Box>
                 </>
               )}
             </Paper>
@@ -274,9 +304,20 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
         onClose={() => setCreatePersonOpen(false)}
         onSubmit={(e, person) => onChange(e, person)}
         open={createPersonOpen}
-        submitLabel={submitLabel}
-        title={title}
+        submitLabel={createPersonLabels?.submitLabel}
+        title={createPersonLabels?.title}
       />
+      {showBulkButton && (
+        <ZUIBulkPersonSelect
+          entityToAddTo={bulkSelection?.entityToAddTo}
+          onClose={() => setBulkDialogOpen(false)}
+          onSubmit={(ids) => {
+            bulkSelection?.onSelectMultiple(ids);
+            setBulkDialogOpen(false);
+          }}
+          open={bulkDialogOpen}
+        />
+      )}
     </>
   );
 };

@@ -133,7 +133,6 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
             {!columnsFuture.isLoading ? (
               <ViewDataTable
                 columns={cols}
-                disableBulkActions
                 disableConfigure={!canConfigure}
                 rows={rows}
                 view={view}
