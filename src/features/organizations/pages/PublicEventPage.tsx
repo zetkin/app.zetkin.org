@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Fragment, useState } from 'react';
+import { FC, Fragment, Suspense, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   CalendarMonth,
@@ -14,6 +14,7 @@ import {
 } from '@mui/icons-material';
 import { Map, Marker } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import Image from 'next/image';
 
 import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
@@ -32,15 +33,37 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIButton from 'zui/components/ZUIButton';
+import { useOrgEvents } from '../hooks/useUpcomingOrgEvents';
+import useMyEvents from 'features/events/hooks/useMyEvents';
+import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 
-export const PublicEventPage: FC<{
-  event: ZetkinEventWithStatus;
-}> = ({ event }) => {
+type Props = {
+  eventId: number;
+  orgId: number;
+};
+
+export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
+
+  const events = useOrgEvents(orgId);
+  const myEvents = useMyEvents();
+
+  const baseEvent = useMemo(
+    () =>
+      events
+        .map((event) => ({
+          ...event,
+          status: null,
+        }))
+        .find((e) => e.id === eventId),
+    [events, myEvents, eventId]
+  );
+  const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
+  const event = myEvent || baseEvent;
 
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
-  const paragraphs = event.info_text
+  const paragraphs = event?.info_text
     ?.split('\n\n')
     .filter((p) => p.trim() !== '')
     .map((p, index) => {
@@ -59,36 +82,102 @@ export const PublicEventPage: FC<{
     });
 
   return (
-    <Box
-      display="flex"
-      flexDirection={isMobile ? 'column-reverse' : 'row'}
-      gap={2}
-    >
-      <Box
-        bgcolor="white"
-        borderRadius={2}
-        minHeight={!isMobile ? 400 : ''}
-        padding={2}
-        width={!isMobile ? '60%' : '100%'}
-      >
-        <Box display="flex" flexDirection="column" gap={1}>
-          {paragraphs}
+    <Suspense>
+      {event && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            paddingX: isMobile ? 2 : '',
+            position: 'relative',
+          }}
+        >
+          {event.cover_file && (
+            <Box
+              sx={{
+                '& img': {
+                  maskImage: !isMobile
+                    ? ' linear-gradient(black 70%, transparent 100%)'
+                    : '',
+                  webkitMaskImage: !isMobile
+                    ? 'linear-gradient(black 70%, transparent 100%)'
+                    : '',
+                },
+                height: isMobile ? 200 : 450,
+                marginY: isMobile ? 2 : '',
+                width: '100%',
+              }}
+            >
+              <Image
+                alt=""
+                height={480}
+                src={event.cover_file.url}
+                style={{
+                  height: '100%',
+                  objectFit: 'cover',
+                  width: '100%',
+                }}
+                width={960}
+              />
+            </Box>
+          )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              marginTop: !isMobile && !event.cover_file ? 3 : '',
+              marginX: !isMobile && event.cover_file ? 3 : '',
+              position: !isMobile && event.cover_file ? 'absolute' : '',
+              top: event.cover_file && !isMobile ? 130 : '',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: isMobile ? 'column-reverse' : 'row',
+                gap: 2,
+              }}
+            >
+              <Box
+                bgcolor="white"
+                borderRadius={2}
+                minHeight={!isMobile ? 400 : ''}
+                padding={2}
+                width={!isMobile ? '60%' : '100%'}
+              >
+                <Box display="flex" flexDirection="column" gap={1}>
+                  {paragraphs}
+                </Box>
+              </Box>
+              <Box
+                bgcolor="white"
+                borderRadius={2}
+                display="flex"
+                flexDirection="column"
+                gap={2}
+                minHeight={!isMobile ? 400 : ''}
+                padding={2}
+                width={!isMobile ? '40%' : '100%'}
+              >
+                <SignUpSection event={event} />
+                <DateAndLocation event={event} />
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                backgroundColor: 'white',
+                borderRadius: 2,
+                marginBottom: 4,
+              }}
+            >
+              <ZUIPublicFooter />
+            </Box>
+          </Box>
         </Box>
-      </Box>
-      <Box
-        bgcolor="white"
-        borderRadius={2}
-        display="flex"
-        flexDirection="column"
-        gap={2}
-        minHeight={!isMobile ? 400 : ''}
-        padding={2}
-        width={!isMobile ? '40%' : '100%'}
-      >
-        <SignUpSection event={event} />
-        <DateAndLocation event={event} />
-      </Box>
-    </Box>
+      )}
+    </Suspense>
   );
 };
 
@@ -188,6 +277,21 @@ const DateAndLocation: FC<{
 
   return (
     <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
+      {event.campaign && (
+        <ZUIText>
+          <Msg
+            id={messageIds.eventPage.partOfProject}
+            values={{
+              projectLink: (
+                <ZUILink
+                  href={`/o/${event.organization.id}/projects/${event.campaign.id}`}
+                  text={event.campaign.title}
+                />
+              ),
+            }}
+          />
+        </ZUIText>
+      )}
       <Box alignItems="center" display="flex" gap={1}>
         <ZUIIcon icon={CalendarMonth} />
         <ZUIText>

@@ -46,7 +46,9 @@ const EventLayout: FC<Props> = async ({ children, params }) => {
 
     return (
       <HomeThemeProvider>
-        <PublicEventLayout event={event}>{children}</PublicEventLayout>
+        <PublicEventLayout eventId={event.id} orgId={event.organization.id}>
+          {children}
+        </PublicEventLayout>
       </HomeThemeProvider>
     );
   } catch {
