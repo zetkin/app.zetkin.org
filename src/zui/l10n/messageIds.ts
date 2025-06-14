@@ -195,6 +195,10 @@ export default makeMessages('zui', {
     bulkAdd: {
       backButton: m('Back'),
       cancelButton: m('Cancel'),
+      confirmMessage: m<{ count: number; entityToAddTo?: string }>(
+        '{entityToAddTo, select, undefined {You are about to add {count} people. Are you sure you want to continue?} other {You are about to add {count} people to ‘{entityToAddTo}’. Are you sure you want to continue?}}'
+      ),
+      confirmTitle: m('Confirm adding people'),
       fromView: m<{ viewTitle: string }>('From {viewTitle}'),
       openButton: m('Bulk add'),
       submitButton: m<{ numSelected: number }>(

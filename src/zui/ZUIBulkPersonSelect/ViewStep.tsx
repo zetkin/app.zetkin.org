@@ -3,23 +3,50 @@ import { FC, useState } from 'react';
 
 import useView from 'features/views/hooks/useView';
 import messageIds from 'zui/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import useViewGrid from 'features/views/hooks/useViewGrid';
 import ZUIFutures from 'zui/ZUIFutures';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
+import ZUIConfirmDialog from 'zui/ZUIConfirmDialog';
 
 type Props = {
+  entityToAddTo?: string;
   onBack: () => void;
   onSubmit: (ids: number[]) => void;
   orgId: number;
   viewId: number;
 };
 
-const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
+const MIN_SELECTION_FOR_CONFIRMATION = 30;
+
+const ViewStep: FC<Props> = ({
+  entityToAddTo,
+  onBack,
+  onSubmit,
+  orgId,
+  viewId,
+}) => {
   const viewFuture = useView(orgId, viewId);
   const { columnsFuture, rowsFuture } = useViewGrid(orgId, viewId);
   const [selectedPersonIds, setSelectedPersonIds] = useState<number[]>([]);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const messages = useMessages(messageIds);
+
+  const hasSelection = selectedPersonIds.length > 0;
+
+  const handleSubmitClick = () => {
+    if (selectedPersonIds.length > MIN_SELECTION_FOR_CONFIRMATION) {
+      setIsConfirmOpen(true);
+      return;
+    }
+    onSubmit(selectedPersonIds);
+  };
+
+  const handleConfirm = () => {
+    onSubmit(selectedPersonIds);
+    setIsConfirmOpen(false);
+  };
 
   return (
     <ZUIFutures
@@ -77,10 +104,8 @@ const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
                   <Msg id={messageIds.personSelect.bulkAdd.backButton} />
                 </Button>
                 <Button
-                  disabled={selectedPersonIds.length === 0}
-                  onClick={() => {
-                    onSubmit(selectedPersonIds);
-                  }}
+                  disabled={!hasSelection}
+                  onClick={handleSubmitClick}
                   sx={{ mr: 2 }}
                   variant="contained"
                 >
@@ -91,6 +116,16 @@ const ViewStep: FC<Props> = ({ onBack, onSubmit, orgId, viewId }) => {
                 </Button>
               </Box>
             </Box>
+            <ZUIConfirmDialog
+              onCancel={() => setIsConfirmOpen(false)}
+              onSubmit={handleConfirm}
+              open={isConfirmOpen}
+              title={messages.personSelect.bulkAdd.confirmTitle()}
+              warningText={messages.personSelect.bulkAdd.confirmMessage({
+                count: selectedPersonIds.length,
+                entityToAddTo: entityToAddTo,
+              })}
+            />
           </Box>
         );
       }}

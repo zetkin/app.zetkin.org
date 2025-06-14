@@ -109,6 +109,7 @@ const CallersPage: PageWithLayout = () => {
         <Box marginTop={2}>
           <MUIOnlyPersonSelect
             bulkSelection={{
+              entityToAddTo: callAssignment?.title,
               onSelectMultiple: (ids) => {
                 // TODO #2789: Optimize this, e.g. using RPC
                 ids.forEach((id) => {
@@ -117,9 +118,6 @@ const CallersPage: PageWithLayout = () => {
                   }
                 });
               },
-              title: zuiMessages.personSelect.bulkAdd.title({
-                entityToAddTo: callAssignment?.title,
-              }),
             }}
             createPersonLabels={{
               submitLabel: zuiMessages.createPerson.submitLabel.add(),

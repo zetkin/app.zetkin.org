@@ -69,8 +69,8 @@ type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
   bulkSelection?: {
+    entityToAddTo?: string;
     onSelectMultiple: (ids: number[]) => void;
-    title: string;
   };
   createPersonLabels?: {
     submitLabel?: string;
@@ -309,13 +309,13 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
       />
       {showBulkButton && (
         <ZUIBulkPersonSelect
+          entityToAddTo={bulkSelection?.entityToAddTo}
           onClose={() => setBulkDialogOpen(false)}
           onSubmit={(ids) => {
-            bulkSelection.onSelectMultiple(ids);
+            bulkSelection?.onSelectMultiple(ids);
             setBulkDialogOpen(false);
           }}
           open={bulkDialogOpen}
-          title={bulkSelection.title}
         />
       )}
     </>

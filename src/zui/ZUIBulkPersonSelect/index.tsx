@@ -10,19 +10,21 @@ import { FC, useEffect, useState } from 'react';
 import BrowserStep from './BrowserStep';
 import ViewStep from './ViewStep';
 import { useNumericRouteParams } from 'core/hooks';
+import messageIds from 'zui/l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 interface ZUICreatePersonProps {
+  entityToAddTo?: string;
   onClose: () => void;
   onSubmit: (ids: number[]) => void;
   open: boolean;
-  title: string;
 }
 
 const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
+  entityToAddTo,
   open,
   onClose,
   onSubmit,
-  title,
 }) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
@@ -57,7 +59,10 @@ const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
         }}
       >
         <DialogTitle sx={{ p: 1 }} variant="h4">
-          {title}
+          <Msg
+            id={messageIds.personSelect.bulkAdd.title}
+            values={{ entityToAddTo }}
+          />
         </DialogTitle>
         {!viewId && (
           <BrowserStep
@@ -69,6 +74,7 @@ const ZUIBulkPersonSelect: FC<ZUICreatePersonProps> = ({
         )}
         {!!viewId && (
           <ViewStep
+            entityToAddTo={entityToAddTo}
             onBack={() => setViewId(null)}
             onSubmit={(ids) => onSubmit(ids)}
             orgId={orgId}
