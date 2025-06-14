@@ -76,12 +76,12 @@ export default makeMessages('zui', {
   },
   dataTableSearch: {
     button: m('Search'),
-    helpText: m<{ minSearchLength: number }>(
-      'Type at least {minSearchLength} characters'
+    placeholder: m<{ minSearchLength: number }>(
+      'Type to search (min {minSearchLength} chars)'
     ),
-    idSearchHelpText: m('Type an ID (numbers only)'),
-    placeholder: m('Search this table'),
-    placeholderWithIdSearch: m('Search - use # for IDs, e.g. type #123'),
+    placeholderWithIdSearch: m<{ minSearchLength: number }>(
+      'Search - use # for IDs, e.g. type #123 (min {minSearchLength} chars)'
+    ),
     title: m('Search'),
   },
   dataTableSorting: {
