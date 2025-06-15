@@ -97,6 +97,7 @@ const JourneyInstanceSummary = ({
                 overflowWrap: 'anywhere',
               },
             }}
+            forceTargetBlank={true}
             markdown={journeyInstance.summary}
           />
         </ZUICollapse>
