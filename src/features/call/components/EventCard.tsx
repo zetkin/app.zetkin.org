@@ -92,7 +92,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
           labels: [event.location?.title ?? 'No location'],
         },
       ]}
-      title={event.title ?? 'Untitled Event'}
+      title={event.title || event.activity?.title || 'Untitled event'}
     />
   );
 };
