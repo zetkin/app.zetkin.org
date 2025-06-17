@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Fragment, Suspense, useMemo, useState } from 'react';
+import { FC, Fragment, Suspense, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   CalendarMonth,
@@ -31,9 +31,9 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIButton from 'zui/components/ZUIButton';
-import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
+import useEvent from 'features/events/hooks/useEvent';
 
 type Props = {
   eventId: number;
@@ -42,22 +42,14 @@ type Props = {
 
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
-
-  const events = useUpcomingOrgEvents(orgId);
   const myEvents = useMyEvents();
 
-  const baseEvent = useMemo(
-    () =>
-      events
-        .map((event) => ({
-          ...event,
-          status: null,
-        }))
-        .find((e) => e.id === eventId),
-    [events, myEvents, eventId]
-  );
+  const baseEvent = useEvent(orgId, eventId)?.data;
+  const baseEventWithStatus: ZetkinEventWithStatus | undefined = baseEvent
+    ? { ...baseEvent, status: null }
+    : undefined;
   const myEvent = myEvents.find((userEvent) => userEvent.id == eventId);
-  const event = myEvent || baseEvent;
+  const event = myEvent || baseEventWithStatus;
 
   // Split info_text into parapgraphs based on double newlines
   // and then turn single newlines into <br /> tags
