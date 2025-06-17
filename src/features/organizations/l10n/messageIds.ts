@@ -23,6 +23,19 @@ export default makeMessages('feat.organizations', {
     label: m('Sign up'),
     loginButton: m('Log in & come back'),
   },
+  eventPage: {
+    cancelSignup: m('Cancel signup'),
+    cancelledHeader: m('This event has been cancelled'),
+    cancelledParagraph: m(
+      'You can no longer sign up for it and if you were signed up, you are no longer expected to attend.'
+    ),
+    contactPerson: m<{ name: string }>('{name} is the contact person'),
+    defaultTitle: m('Untitled event'),
+    loading: m('Loading...'),
+    noLocation: m('No physical location'),
+    partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
+    today: m('Today'),
+  },
   gen3: {
     description: m(
       'This is the new (generation 3) organizer web app. If you are used to the old one, you will find lots of new features and an improved user interface here. But if you want, you can still use the old organizer app for a while longer.'
@@ -39,6 +52,10 @@ export default makeMessages('feat.organizations', {
       follow: m('Follow'),
       login: m('Login & connect'),
       unfollow: m('Unfollow'),
+    },
+    map: {
+      viewInList: m('View in list'),
+      viewInMap: m('View in map'),
     },
     tabs: {
       calendar: m('Calendar'),

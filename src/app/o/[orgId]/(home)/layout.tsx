@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import OrgHomeLayout from 'features/organizations/layouts/OrgHomeLayout';
+import PublicOrgLayout from 'features/organizations/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
-const MyHomeLayout: FC<Props> = async ({ children, params }) => {
+const OrgLayout: FC<Props> = async ({ children, params }) => {
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -43,9 +43,9 @@ const MyHomeLayout: FC<Props> = async ({ children, params }) => {
 
   return (
     <HomeThemeProvider>
-      <OrgHomeLayout org={org}>{children}</OrgHomeLayout>
+      <PublicOrgLayout org={org}>{children}</PublicOrgLayout>
     </HomeThemeProvider>
   );
 };
 
-export default MyHomeLayout;
+export default OrgLayout;

@@ -53,6 +53,7 @@ const getPadding = (size: ZUISize, variant: ZUIButtonVariant) => {
 const ZUIIconButton: FC<ZUIIconButtonProps> = ({
   actionType,
   disabled,
+  href,
   icon: Icon,
   onClick,
   onKeyDown,
@@ -64,6 +65,7 @@ const ZUIIconButton: FC<ZUIIconButtonProps> = ({
     <Button
       color={variant ? getColor(variant) : undefined}
       disabled={disabled || isLoading}
+      href={href}
       onClick={onClick}
       onKeyDown={onKeyDown}
       size={size}
