@@ -81,6 +81,11 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
       );
     });
 
+  const hasInfoText = !!event?.info_text;
+  const hasImage = !!event?.cover_file;
+
+  const isFullScreen = !isMobile;
+
   return (
     <Suspense>
       {event && (
@@ -97,10 +102,10 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
             <Box
               sx={{
                 '& img': {
-                  maskImage: !isMobile
+                  maskImage: isFullScreen
                     ? ' linear-gradient(black 70%, transparent 100%)'
                     : '',
-                  webkitMaskImage: !isMobile
+                  webkitMaskImage: isFullScreen
                     ? 'linear-gradient(black 70%, transparent 100%)'
                     : '',
                 },
@@ -127,10 +132,11 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
               display: 'flex',
               flexDirection: 'column',
               gap: 2,
-              marginTop: !isMobile && !event.cover_file ? 3 : '',
-              marginX: !isMobile && event.cover_file ? 3 : '',
-              position: !isMobile && event.cover_file ? 'absolute' : '',
-              top: event.cover_file && !isMobile ? 130 : '',
+              marginTop: isFullScreen && !hasImage ? 3 : '',
+              paddingX: isFullScreen && hasImage ? 3 : '',
+              position: isFullScreen && hasImage ? 'absolute' : '',
+              top: isFullScreen && hasImage ? 130 : '',
+              width: '100%',
             }}
           >
             <Box
@@ -140,26 +146,28 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 gap: 2,
               }}
             >
-              <Box
-                bgcolor="white"
-                borderRadius={2}
-                minHeight={!isMobile ? 400 : ''}
-                padding={2}
-                width={!isMobile ? '60%' : '100%'}
-              >
-                <Box display="flex" flexDirection="column" gap={1}>
-                  {paragraphs}
+              {hasInfoText && (
+                <Box
+                  bgcolor="white"
+                  borderRadius={2}
+                  minHeight={isFullScreen ? 400 : ''}
+                  padding={2}
+                  width={isFullScreen ? '60%' : '100%'}
+                >
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    {paragraphs}
+                  </Box>
                 </Box>
-              </Box>
+              )}
               <Box
                 bgcolor="white"
                 borderRadius={2}
                 display="flex"
                 flexDirection="column"
                 gap={2}
-                minHeight={!isMobile ? 400 : ''}
+                minHeight={isFullScreen ? 400 : ''}
                 padding={2}
-                width={!isMobile ? '40%' : '100%'}
+                width={isFullScreen && hasInfoText ? '40%' : '100%'}
               >
                 <SignUpSection event={event} />
                 <DateAndLocation event={event} />
