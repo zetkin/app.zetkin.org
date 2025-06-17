@@ -45,16 +45,18 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
               </Typography>
               <Box marginTop={2}>
                 <PersonSelect
+                  createPersonLabels={{
+                    submitLabel: messages.createPerson.submitLabel.add(),
+                    title: messages.createPerson.title.addToList({
+                      list: view.title,
+                    }),
+                  }}
                   name="person"
                   onChange={async (person) => {
                     await deleteContentQuery();
                     await addPerson(person.id);
                   }}
                   selectedPerson={null}
-                  submitLabel={messages.createPerson.submitLabel.add()}
-                  title={messages.createPerson.title.addToList({
-                    list: view.title,
-                  })}
                   variant="outlined"
                 />
               </Box>

@@ -1,26 +1,22 @@
 import { lighten } from '@mui/material';
 import { StyleImageInterface } from 'maplibre-gl';
 
-export default class MarkerImageRenderer implements StyleImageInterface {
+export default class ClusterImageRenderer implements StyleImageInterface {
   private _color: string;
   private _context: CanvasRenderingContext2D | null;
   private _rendered: boolean;
-  private _selected: boolean;
   private _successPercentage: number;
   private _visitPercentage: number;
 
   constructor(
     successPercentage: number,
     visitPercentage: number,
-    selected: boolean,
     color: string
   ) {
-    this.width = 23;
-    this.height = 32;
+    this.width = this.height = 50;
     this.data = new Uint8ClampedArray(this.width * this.height * 4);
 
     this._color = color;
-    this._selected = selected;
     this._rendered = false;
     this._successPercentage = successPercentage;
     this._visitPercentage = visitPercentage;
@@ -38,9 +34,6 @@ export default class MarkerImageRenderer implements StyleImageInterface {
     const successRatio = this._successPercentage / 100;
     const visitRatio = this._visitPercentage / 100;
 
-    const successHeight = successRatio * this.width;
-    const visitHeight = visitRatio * this.height;
-
     if (this._rendered) {
       return false;
     }
@@ -50,35 +43,42 @@ export default class MarkerImageRenderer implements StyleImageInterface {
       return false;
     }
 
-    const pinOutlinePath = new Path2D(
-      'M11.5 1C5.695 1 1 5.695 1 11.5C1 19.375 11.5 31 11.5 31C11.5 31 22 19.375 22 11.5C21 5.695 17.305 1 11.5 1Z'
-    );
-    const pinInteriorPath = new Path2D(
-      'M11.5 4C7 4 4 7.5 4 11.5C4 17 11.5 28 11.5 28C11.5 28 19 17 19 11.5C19 7.5 16 4 11.5 4Z'
-    );
+    const mid = this.width / 2;
+    const radius = mid - 3;
 
-    context.strokeStyle = 'rgba(0,0,0,0.15)';
-    context.lineWidth = 2;
-    context.stroke(pinOutlinePath);
+    const angleOffsetToTop = -Math.PI / 2;
 
-    context.fillStyle = this._selected ? this._color : '#ffffff';
-    context.fill(pinOutlinePath);
-
-    context.clip(pinInteriorPath);
-
+    context.beginPath();
     context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, this.width, this.height);
+    context.strokeStyle = 'rgba(0,0,0,0.15)';
+    context.lineWidth = 1;
+    context.ellipse(mid, mid, mid, mid, 0, Math.PI * 2, 0);
+    context.fill();
+    context.stroke();
 
-    context.fillStyle = lighten(this._color, 0.7);
-    context.fillRect(0, this.height - visitHeight, this.height, visitHeight);
-
-    context.fillStyle = this._color;
-    context.fillRect(
-      0,
-      this.height - successHeight,
-      this.height,
-      successHeight
+    context.beginPath();
+    context.arc(
+      mid,
+      mid,
+      radius,
+      0 + angleOffsetToTop,
+      visitRatio * Math.PI * 2 + angleOffsetToTop
     );
+    context.strokeStyle = lighten(this._color, 0.7);
+    context.lineWidth = 4;
+    context.stroke();
+
+    context.beginPath();
+    context.arc(
+      mid,
+      mid,
+      radius,
+      0 + angleOffsetToTop,
+      successRatio * Math.PI * 2 + angleOffsetToTop
+    );
+    context.strokeStyle = this._color;
+    context.lineWidth = 4;
+    context.stroke();
 
     this.data = context.getImageData(0, 0, this.width, this.height).data;
 

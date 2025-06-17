@@ -2,7 +2,11 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Layer, LngLatLike, Map, Source } from '@vis.gl/react-maplibre';
 import { Box } from '@mui/material';
 import { GpsNotFixed } from '@mui/icons-material';
-import { LngLatBounds, Map as MapType } from 'maplibre-gl';
+import {
+  ExpressionSpecification,
+  LngLatBounds,
+  Map as MapType,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Zetkin2Area } from 'features/areas/types';
@@ -16,7 +20,7 @@ import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
-import { flipLatLng, pointsToBounds } from 'utils/mapUtils';
+import ClusterImageRenderer from './ClusterImageRenderer';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -48,9 +52,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       [180, 90],
     ];
 
-    const areaHoles = areas.map((area) =>
-      area.boundary.coordinates.flatMap((polygon) => polygon.map(flipLatLng))
-    );
+    const areaHoles = areas.map((area) => area.boundary.coordinates[0]);
 
     return {
       geometry: {
@@ -62,21 +64,29 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     };
   }, [areas]);
 
-  const bounds = useMemo(
-    () =>
-      pointsToBounds(areas.flatMap((area) => area.boundary.coordinates).flat()),
-    [areas]
-  );
-
-  const { initialBounds, padding } = useMemo(() => {
+  const bounds: [LngLatLike, LngLatLike] = useMemo(() => {
     if (localStorageBounds) {
-      return { initialBounds: localStorageBounds, padding: 0 };
+      return localStorageBounds;
     }
-    return {
-      // If no bounds can be calculated, return a default bounding box that covers the entire world
-      initialBounds: bounds ?? new LngLatBounds([180, 90], [-180, -90]),
-      padding: 20,
-    };
+
+    const firstPolygon = areas[0]?.boundary.coordinates[0];
+    if (firstPolygon.length) {
+      const totalBounds = new LngLatBounds(firstPolygon[0], firstPolygon[0]);
+
+      // Extend with all areas
+      areas.forEach((area) => {
+        area.boundary.coordinates[0]?.forEach((lngLat) =>
+          totalBounds.extend(lngLat)
+        );
+      });
+
+      return [totalBounds.getSouthWest(), totalBounds.getNorthEast()];
+    }
+
+    const min: LngLatLike = [180, 90];
+    const max: LngLatLike = [-180, -90];
+
+    return [min, max];
   }, [areas]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
@@ -121,6 +131,8 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             },
             properties: {
               icon,
+              successPercentage,
+              visitPercentage,
               z: renderOnTop ? 1 : 0,
             },
             type: 'Feature',
@@ -150,6 +162,9 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
   };
 
   const updateSelection = useCallback(() => {
+    let nearestLocation: number | null = null;
+    let nearestDistance = Infinity;
+
     if (isCreating) {
       if (selectedLocationId) {
         setSelectedLocationId(null);
@@ -162,9 +177,6 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     try {
       if (map && crosshair) {
         const markerPos = getCrosshairPositionOnMap(map, crosshair);
-
-        let nearestLocation: number | null = null;
-        let nearestDistance = Infinity;
 
         locations.data?.forEach((location) => {
           const screenPos = map.project([
@@ -209,16 +221,29 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       <Box sx={{ position: 'relative' }}>
         <ZUIMapControls
           onFitBounds={() => {
-            if (map && bounds) {
-              map.fitBounds(bounds, {
-                animate: true,
-                duration: 800,
-                padding: 20,
-              });
+            if (map) {
+              const firstPolygon = areas[0]?.boundary.coordinates[0];
+              if (firstPolygon.length) {
+                const totalBounds = new LngLatBounds(
+                  firstPolygon[0],
+                  firstPolygon[0]
+                );
+
+                // Extend with all areas
+                areas.forEach((area) => {
+                  area.boundary.coordinates[0]?.forEach((lngLat) =>
+                    totalBounds.extend(lngLat)
+                  );
+                });
+
+                if (totalBounds) {
+                  map.fitBounds(totalBounds, { animate: true, duration: 800 });
+                }
+              }
             }
           }}
-          onGeolocate={(latLng) => {
-            map?.panTo(flipLatLng(latLng), { animate: true, duration: 800 });
+          onGeolocate={(lngLat) => {
+            map?.panTo(lngLat, { animate: true, duration: 800 });
           }}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
@@ -268,10 +293,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       <Map
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
-          bounds: initialBounds,
-          fitBoundsOptions: {
-            padding,
-          },
+          bounds,
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
@@ -302,6 +324,14 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
                   oldTheme.palette.primary.main
                 )
               );
+              map.addImage(
+                `cluster-${successPercentage}-${visitPercentage}`,
+                new ClusterImageRenderer(
+                  successPercentage,
+                  visitPercentage,
+                  oldTheme.palette.primary.main
+                )
+              );
             });
           });
         }}
@@ -317,8 +347,20 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             type="fill"
           />
         </Source>
-        <Source data={locationsGeoJson} id="locations" type="geojson">
+        <Source
+          cluster
+          clusterMaxZoom={14}
+          clusterProperties={{
+            successPercentage: ['+', ['get', 'successPercentage']],
+            visitPercentage: ['+', ['get', 'visitPercentage']],
+          }}
+          clusterRadius={50}
+          data={locationsGeoJson}
+          id="locations"
+          type="geojson"
+        >
           <Layer
+            filter={['!=', 'cluster', true]}
             id="locationMarkers"
             layout={{
               'icon-allow-overlap': true,
@@ -326,7 +368,59 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
               'icon-offset': [0, -15],
               'symbol-sort-key': ['get', 'z'],
             }}
-            source="locations"
+            type="symbol"
+          />
+          <Layer
+            filter={['==', 'cluster', true]}
+            id="clusterMarkers"
+            layout={{
+              'icon-allow-overlap': true,
+              'icon-image': [
+                'concat',
+                'cluster-',
+                [
+                  'to-string',
+                  expressionToRoundAveragePercentage('successPercentage'),
+                ],
+                '-',
+                [
+                  'to-string',
+                  expressionToRoundAveragePercentage('visitPercentage'),
+                ],
+              ],
+              'icon-offset': [0, 0],
+            }}
+            type="symbol"
+          />
+          <Layer
+            filter={['==', 'cluster', true]}
+            id="clusterLabels"
+            layout={{
+              'text-field': [
+                'concat',
+                [
+                  'to-string',
+                  [
+                    'round',
+                    [
+                      '/',
+                      ['number', ['get', 'visitPercentage']],
+                      ['get', 'point_count'],
+                    ],
+                  ],
+                ],
+                ['literal', '%'],
+              ],
+              'text-size': 13,
+            }}
+            paint={{
+              'text-color': [
+                'case',
+                ['>', ['get', 'visitPercentage'], 0],
+                '#000000',
+                '#888888',
+              ],
+            }}
             type="symbol"
           />
         </Source>
@@ -380,3 +474,16 @@ const getCrosshairPositionOnMap = (
 
   return { markerX, markerY };
 };
+
+function expressionToRoundAveragePercentage(
+  percentagePropName: string
+): ExpressionSpecification {
+  return [
+    '*',
+    10,
+    [
+      'round',
+      ['/', ['/', ['get', percentagePropName], ['get', 'point_count']], 10],
+    ],
+  ];
+}

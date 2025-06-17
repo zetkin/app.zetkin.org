@@ -10,6 +10,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 import zuiMessageIds from 'zui/l10n/messageIds';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';
+import useEvent from '../hooks/useEvent';
 
 interface AddPersonButtonProps {
   orgId: number;
@@ -20,11 +21,19 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
+  const eventFuture = useEvent(orgId, eventId);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
   const { participantsFuture, respondentsFuture } = useEventParticipants(
     orgId,
     eventId
   );
+  const isParticipant = (personId: number): boolean => {
+    return (
+      participantsFuture?.data?.some(
+        (participant) => participant.id === personId
+      ) ?? false
+    );
+  };
 
   return (
     <>
@@ -110,6 +119,22 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
 
               return (
                 <ZUIPersonSelect
+                  bulkSelection={{
+                    entityToAddTo:
+                      eventFuture?.data?.activity?.title || undefined,
+                    onSelectMultiple: (ids) => {
+                      // TODO #2789: Optimize this, e.g. using RPC
+                      ids.forEach((id) => {
+                        if (!isParticipant(id)) {
+                          addParticipant(id);
+                        }
+                      });
+                    },
+                  }}
+                  createPersonLabels={{
+                    submitLabel: zuiMessages.createPerson.submitLabel.add(),
+                    title: zuiMessages.createPerson.title.participant(),
+                  }}
                   getOptionDisabled={(option) =>
                     participants.some(
                       (participant) => participant.id == option.id
@@ -124,8 +149,6 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
                   }}
                   placeholder={messages.addPerson.addPlaceholder()}
                   selectedPerson={null}
-                  submitLabel={zuiMessages.createPerson.submitLabel.add()}
-                  title={zuiMessages.createPerson.title.participant()}
                   variant="outlined"
                 />
               );

@@ -7,7 +7,6 @@ import {
   EmailOutlined,
   ExpandLess,
   ExpandMore,
-  Fullscreen,
   Link as LinkIcon,
   LocationPin,
   Phone,
@@ -20,7 +19,6 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
-import { ZUIMapControlButtonGroup } from 'zui/ZUIMapControls';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZetkinEventWithStatus } from 'features/home/types';
@@ -345,42 +343,34 @@ const DateAndLocation: FC<{
         </Box>
       )}
       {event.location && (
-        <>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box alignItems="center" display="flex" gap={1}>
             <ZUIIcon icon={LocationPin} />
             <ZUIText variant="bodyMdSemiBold">{event.location.title}</ZUIText>
           </Box>
-          <Box sx={{ position: 'relative' }}>
-            <ZUIMapControlButtonGroup>
-              <ZUIIconButton
-                href={`https://www.openstreetmap.org/directions?from=&to=${event.location.lat}%2C${event.location.lng}#map=14/${event.location.lat}/${event.location.lng}`}
-                icon={Fullscreen}
-              />
-            </ZUIMapControlButtonGroup>
-            <Map
-              initialViewState={{
-                latitude: event.location.lat,
-                longitude: event.location.lng,
-                zoom: 14,
-              }}
-              mapStyle={env.vars.MAPLIBRE_STYLE}
-              onClick={(ev) => {
-                ev.target.panTo(ev.lngLat, { animate: true });
-              }}
-              style={{ height: 200, width: '100%' }}
+          <Map
+            initialViewState={{
+              latitude: event.location.lat,
+              longitude: event.location.lng,
+              zoom: 14,
+            }}
+            mapStyle={env.vars.MAPLIBRE_STYLE}
+            onClick={(ev) => {
+              ev.target.panTo(ev.lngLat, { animate: true });
+            }}
+            style={{ height: 200, width: '100%' }}
+          >
+            <Marker
+              anchor="bottom"
+              draggable={false}
+              latitude={event.location.lat}
+              longitude={event.location.lng}
+              offset={[0, 6]}
             >
-              <Marker
-                anchor="bottom"
-                draggable={false}
-                latitude={event.location.lat}
-                longitude={event.location.lng}
-                offset={[0, 6]}
-              >
-                <MarkerIcon color="#000000" selected />
-              </Marker>
-            </Map>
-          </Box>
-        </>
+              <MarkerIcon color="#000000" selected />
+            </Marker>
+          </Map>
+        </Box>
       )}
     </Box>
   );

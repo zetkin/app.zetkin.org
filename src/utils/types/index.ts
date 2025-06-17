@@ -29,3 +29,7 @@ export interface Breadcrumb {
  * Stolen from: https://www.emmanuelgautier.com/blog/snippets/typescript-required-properties
  */
 export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
+declare const brand: unique symbol;
+
+export type Branded<T, Brand extends string> = T & { [brand]: Brand };

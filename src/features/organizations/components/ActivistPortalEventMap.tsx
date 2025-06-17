@@ -7,8 +7,9 @@ import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import { markerImage } from '../utils/markerImage';
-import { flipLatLng, pointsToBounds } from 'utils/mapUtils';
+import { pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
+import { Latitude, Longitude } from 'features/areas/types';
 
 export const ActivistPortalEventMap: FC<
   PropsWithChildren<{
@@ -25,7 +26,10 @@ export const ActivistPortalEventMap: FC<
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .map((location) => [location.lat, location.lng])
+          .map((location) => [
+            location.lng as Longitude,
+            location.lat as Latitude,
+          ])
       ) ?? undefined,
     [events]
   );
@@ -83,8 +87,8 @@ export const ActivistPortalEventMap: FC<
             });
           }
         }}
-        onGeolocate={(latLng) => {
-          map?.panTo(flipLatLng(latLng), { animate: true, duration: 800 });
+        onGeolocate={(lngLat) => {
+          map?.panTo(lngLat, { animate: true, duration: 800 });
         }}
         onZoomIn={() => map?.zoomIn()}
         onZoomOut={() => map?.zoomOut()}

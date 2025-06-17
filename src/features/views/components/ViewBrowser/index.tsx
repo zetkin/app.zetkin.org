@@ -6,7 +6,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, MouseEvent, useContext, useEffect, useState } from 'react';
 import { Link, Theme, useMediaQuery } from '@mui/material';
 
 import BrowserDraggableItem from './BrowserDragableItem';
@@ -31,8 +31,12 @@ import messageIds from 'features/views/l10n/messageIds';
 import MoveViewDialog from '../MoveViewDialog';
 
 interface ViewBrowserProps {
+  autoHeight?: boolean; // @deprecated
   basePath: string;
+  enableDragAndDrop?: boolean;
+  enableEllipsisMenu?: boolean;
   folderId?: number | null;
+  onSelect?: (item: ViewBrowserItem, ev: MouseEvent) => void;
 }
 
 const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
@@ -43,7 +47,14 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
-const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
+const ViewBrowser: FC<ViewBrowserProps> = ({
+  autoHeight = true,
+  basePath,
+  enableDragAndDrop = true,
+  enableEllipsisMenu = true,
+  folderId = null,
+  onSelect,
+}) => {
   const { orgId } = useNumericRouteParams();
 
   const messages = useMessages(messageIds);
@@ -87,7 +98,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
         if (item.type == 'back') {
           return (
             <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
-              <Link color="inherit">
+              <Link color="inherit" onClick={(ev) => onSelect?.(item, ev)}>
                 <BrowserItemIcon item={params.row} />
               </Link>
             </NextLink>
@@ -95,7 +106,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
         } else {
           return (
             <NextLink href={`${basePath}/${item.id}`} legacyBehavior passHref>
-              <Link color="inherit">
+              <Link color="inherit" onClick={(ev) => onSelect?.(item, ev)}>
                 <BrowserDraggableItem item={params.row}>
                   <BrowserItemIcon item={params.row} />
                 </BrowserDraggableItem>
@@ -114,7 +125,16 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
       flex: 2,
       headerName: messages.viewsList.columns.title(),
       renderCell: (params) => {
-        return <BrowserItem basePath={basePath} item={params.row} />;
+        const item = params.row;
+        return (
+          <BrowserItem
+            basePath={basePath}
+            item={params.row}
+            onClick={(ev) => {
+              onSelect?.(item, ev);
+            }}
+          />
+        );
       },
     },
   ];
@@ -139,74 +159,76 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
       },
     });
 
-    colDefs.push({
-      field: 'menu',
-      headerName: '',
-      renderCell: (params) => {
-        const item = params.row;
-        if (item.type == 'back') {
-          return null;
-        }
-        return (
-          <ZUIEllipsisMenu
-            items={[
-              {
-                label: messages.browser.menu.rename(),
-                onSelect: (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  gridApiRef.current.startCellEditMode({
-                    field: 'title',
-                    id: params.row.id,
-                  });
+    if (enableEllipsisMenu) {
+      colDefs.push({
+        field: 'menu',
+        headerName: '',
+        renderCell: (params) => {
+          const item = params.row;
+          if (item.type == 'back') {
+            return null;
+          }
+          return (
+            <ZUIEllipsisMenu
+              items={[
+                {
+                  label: messages.browser.menu.rename(),
+                  onSelect: (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    gridApiRef.current.startCellEditMode({
+                      field: 'title',
+                      id: params.row.id,
+                    });
+                  },
                 },
-              },
-              {
-                id: 'delete-item',
-                label: messages.browser.menu.delete(),
-                onSelect: (e) => {
-                  e.stopPropagation();
-                  showConfirmDialog({
-                    onSubmit: () => {
-                      if (item.type == 'folder') {
-                        deleteFolder(item.data.id);
-                      } else if (params.row.type == 'view') {
-                        deleteView(item.data.id);
-                      }
-                    },
-                    title: messages.browser.confirmDelete[item.type].title(),
-                    warningText:
-                      messages.browser.confirmDelete[item.type].warning(),
-                  });
+                {
+                  id: 'delete-item',
+                  label: messages.browser.menu.delete(),
+                  onSelect: (e) => {
+                    e.stopPropagation();
+                    showConfirmDialog({
+                      onSubmit: () => {
+                        if (item.type == 'folder') {
+                          deleteFolder(item.data.id);
+                        } else if (params.row.type == 'view') {
+                          deleteView(item.data.id);
+                        }
+                      },
+                      title: messages.browser.confirmDelete[item.type].title(),
+                      warningText:
+                        messages.browser.confirmDelete[item.type].warning(),
+                    });
+                  },
                 },
-              },
-              {
-                id: 'move-item',
-                label: messages.browser.menu.move(),
-                onSelect: (e) => {
-                  e.stopPropagation();
-                  setItemToBeMoved(item);
+                {
+                  id: 'move-item',
+                  label: messages.browser.menu.move(),
+                  onSelect: (e) => {
+                    e.stopPropagation();
+                    setItemToBeMoved(item);
+                  },
                 },
-              },
-              {
-                disabled: item.type != 'view',
-                id: 'duplicate-item',
-                label: messages.browser.menu.duplicate(),
-                onSelect: (e) => {
-                  e.stopPropagation();
-                  duplicateView(
-                    item.data.id,
-                    item.folderId,
-                    messages.browser.menu.viewCopy({ viewName: item.title })
-                  );
+                {
+                  disabled: item.type != 'view',
+                  id: 'duplicate-item',
+                  label: messages.browser.menu.duplicate(),
+                  onSelect: (e) => {
+                    e.stopPropagation();
+                    duplicateView(
+                      item.data.id,
+                      item.folderId,
+                      messages.browser.menu.viewCopy({ viewName: item.title })
+                    );
+                  },
                 },
-              },
-            ]}
-          />
-        );
-      },
-      width: 40,
-    });
+              ]}
+            />
+          );
+        },
+        width: 40,
+      });
+    }
   }
 
   return (
@@ -243,10 +265,10 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, folderId = null }) => {
 
         return (
           <>
-            <BrowserDragLayer />
+            {enableDragAndDrop && <BrowserDragLayer />}
             <DataGridPro
               apiRef={gridApiRef}
-              autoHeight
+              autoHeight={autoHeight}
               columns={colDefs}
               disableRowSelectionOnClick
               hideFooter

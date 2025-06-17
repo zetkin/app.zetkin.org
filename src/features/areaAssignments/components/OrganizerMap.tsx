@@ -22,7 +22,7 @@ import {
   ZetkinAreaAssignee,
   ZetkinLocation,
 } from '../types';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
 import OrganizerMapFilters from './OrganizerMapFilters';
 import OrganizerMapFilterBadge from './OrganizerMapFilters/OrganizerMapFilterBadge';
@@ -159,13 +159,13 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
               if (areas.length) {
                 // Start with first area
                 const totalBounds = latLngBounds(
-                  areas[0].points.map((p) => objToLatLng(p))
+                  areas[0].points.map(flipForLeaflet)
                 );
 
                 // Extend with all areas
                 areas.forEach((area) => {
                   const areaBounds = latLngBounds(
-                    area.points.map((p) => objToLatLng(p))
+                    area.points.map(flipForLeaflet)
                   );
                   totalBounds.extend(areaBounds);
                 });
