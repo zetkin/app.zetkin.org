@@ -10,7 +10,6 @@ import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import ZUIGradientBackground from 'zui/components/ZUIGradientBackground';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
 
@@ -35,15 +34,14 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
       {event && (
         <>
           <Box
-            sx={{
+            sx={(theme) => ({
+              backgroundColor: theme.palette.grey[50],
               height: '100%',
               position: 'fixed',
               width: '100%',
               zIndex: -1,
-            }}
-          >
-            <ZUIGradientBackground seed={`${event.id}event`} />
-          </Box>
+            })}
+          />
           <Box
             sx={{
               marginX: 'auto',

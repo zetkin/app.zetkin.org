@@ -165,15 +165,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 <DateAndLocation event={event} />
               </Box>
             </Box>
-            <Box
-              sx={{
-                backgroundColor: 'white',
-                borderRadius: 2,
-                marginBottom: 4,
-              }}
-            >
-              <ZUIPublicFooter />
-            </Box>
+            <ZUIPublicFooter />
           </Box>
         </Box>
       )}
