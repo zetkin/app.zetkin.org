@@ -7,6 +7,7 @@ import { ZetkinEventWithStatus } from '../types';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUISignUpChip from 'zui/components/ZUISignUpChip';
+import useUser from 'core/hooks/useUser';
 
 export const EventSignupButton = ({
   event,
@@ -16,6 +17,7 @@ export const EventSignupButton = ({
   onClickSignUp?: (ev: React.MouseEvent<HTMLButtonElement>) => void;
 }): JSX.Element => {
   const messages = useMessages(messageIds);
+  const user = useUser();
   const { requiresConnect, signUp, undoSignup } = useEventActions(
     event.organization.id,
     event.id
@@ -47,6 +49,19 @@ export const EventSignupButton = ({
           </span>
         </Fade>
       </>
+    );
+  }
+
+  if (!user) {
+    return (
+      <ZUIButton
+        href={`/login?redirect=${encodeURIComponent(
+          `/o/${event.organization.id}/events/${event.id}`
+        )}`}
+        label={messages.activityList.actions.loginToSignUp()}
+        size="large"
+        variant="primary"
+      />
     );
   }
 

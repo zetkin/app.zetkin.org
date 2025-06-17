@@ -7,6 +7,7 @@ export default makeMessages('feat.home', {
       call: m('Start calling'),
       connectAndSignUp: m('Connect & sign up'),
       details: m('Read more'),
+      loginToSignUp: m('Log in to sign up'),
       signUp: m('Sign up'),
       undoSignup: m('Undo signup'),
     },
