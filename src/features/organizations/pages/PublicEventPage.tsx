@@ -86,6 +86,9 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
 
   const isFullScreen = !isMobile;
 
+  const contactPerson = event?.contact;
+  const showContactDetails = event?.status == 'booked' && !!contactPerson;
+
   return (
     <Suspense>
       {event && (
@@ -146,17 +149,30 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 gap: 2,
               }}
             >
-              {hasInfoText && (
+              {(hasInfoText || (isFullScreen && showContactDetails)) && (
                 <Box
-                  bgcolor="white"
-                  borderRadius={2}
-                  minHeight={isFullScreen ? 400 : ''}
-                  padding={2}
-                  width={isFullScreen ? '60%' : '100%'}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    width: isFullScreen ? '60%' : '100%',
+                  }}
                 >
-                  <Box display="flex" flexDirection="column" gap={1}>
-                    {paragraphs}
-                  </Box>
+                  {isFullScreen && showContactDetails && (
+                    <ContactPersonSection contactPerson={contactPerson} />
+                  )}
+                  {hasInfoText && (
+                    <Box
+                      bgcolor="white"
+                      borderRadius={2}
+                      minHeight={isFullScreen ? 400 : ''}
+                      padding={2}
+                    >
+                      <Box display="flex" flexDirection="column" gap={1}>
+                        {paragraphs}
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
               )}
               <Box
@@ -172,6 +188,9 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 <SignUpSection event={event} />
                 <DateAndLocation event={event} />
               </Box>
+              {isMobile && showContactDetails && (
+                <ContactPersonSection contactPerson={contactPerson} />
+              )}
             </Box>
             <ZUIPublicFooter />
           </Box>
@@ -181,14 +200,69 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   );
 };
 
+const ContactPersonSection: FC<{
+  contactPerson: { email?: string; id: number; name: string; phone?: string };
+}> = ({ contactPerson }) => {
+  const [expandContactMethods, setExpandContactMethods] = useState(false);
+
+  const hasContactMethods =
+    'email' in contactPerson || 'phone' in contactPerson;
+
+  return (
+    <Box bgcolor="white" borderRadius={2} padding={2}>
+      <Box alignItems="center" display="flex" gap={1}>
+        <ZUIPersonAvatar
+          firstName={contactPerson.name.split(' ')[0]}
+          id={contactPerson.id}
+          lastName={contactPerson.name.split(' ')[1]}
+        />
+        <ZUIText variant="bodyMdSemiBold">
+          <Msg
+            id={messageIds.eventPage.contactPerson}
+            values={{ name: contactPerson.name }}
+          />
+        </ZUIText>
+        {hasContactMethods && (
+          <Box marginLeft="auto">
+            <ZUIIconButton
+              icon={expandContactMethods ? ExpandLess : ExpandMore}
+              onClick={() => setExpandContactMethods(!expandContactMethods)}
+              size="small"
+            />
+          </Box>
+        )}
+      </Box>
+      {hasContactMethods && expandContactMethods && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            paddingTop: 1,
+          }}
+        >
+          {contactPerson.phone && (
+            <Box alignItems="center" display="flex" gap={1}>
+              <ZUIIcon icon={Phone} size="small" />
+              <ZUIText variant="bodySmRegular">{contactPerson.phone}</ZUIText>
+            </Box>
+          )}
+          {contactPerson.email && (
+            <Box alignItems="center" display="flex" gap={1}>
+              <ZUIIcon icon={EmailOutlined} size="small" />
+              <ZUIText variant="bodySmRegular">{contactPerson.email}</ZUIText>
+            </Box>
+          )}
+        </Box>
+      )}
+    </Box>
+  );
+};
+
 const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
-  const [expandContactMethods, setExpandContactMethods] = useState(false);
   const messages = useMessages(messageIds);
-
-  const hasContactMethods =
-    event.status === 'booked' && (event.contact?.email || event.contact?.phone);
 
   if (event.cancelled) {
     return (
@@ -203,64 +277,14 @@ const SignUpSection: FC<{
   return (
     <Box display="flex" flexDirection="column" gap={1}>
       {event.status == 'booked' && (
-        <>
-          <Box alignItems="center" display="flex" gap={1}>
-            <ZUIButton
-              disabled
-              label={messages.eventPage.cancelSignup()}
-              variant="secondary"
-            />
-            <ZUISignUpChip status="booked" />
-          </Box>
-          {event.contact && (
-            <>
-              <Box alignItems="center" display="flex" gap={1}>
-                <ZUIPersonAvatar
-                  firstName={event.contact.name.split(' ')[0]}
-                  id={event.contact.id}
-                  lastName={event.contact.name.split(' ')[1]}
-                />
-                <ZUIText variant="bodyMdSemiBold">
-                  <Msg
-                    id={messageIds.eventPage.contactPerson}
-                    values={{ name: event.contact.name }}
-                  />
-                </ZUIText>
-                {hasContactMethods && (
-                  <Box marginLeft="auto">
-                    <ZUIIconButton
-                      icon={expandContactMethods ? ExpandLess : ExpandMore}
-                      onClick={() =>
-                        setExpandContactMethods(!expandContactMethods)
-                      }
-                      size="small"
-                    />
-                  </Box>
-                )}
-              </Box>
-              {hasContactMethods && expandContactMethods && (
-                <>
-                  {event.contact.phone && (
-                    <Box alignItems="center" display="flex" gap={1}>
-                      <ZUIIcon icon={Phone} size="small" />
-                      <ZUIText variant="bodyMdRegular">
-                        {event.contact.phone}
-                      </ZUIText>
-                    </Box>
-                  )}
-                  {event.contact.email && (
-                    <Box alignItems="center" display="flex" gap={1}>
-                      <ZUIIcon icon={EmailOutlined} size="small" />
-                      <ZUIText variant="bodyMdRegular">
-                        {event.contact.email}
-                      </ZUIText>
-                    </Box>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </>
+        <Box alignItems="center" display="flex" gap={1}>
+          <ZUIButton
+            disabled
+            label={messages.eventPage.cancelSignup()}
+            variant="secondary"
+          />
+          <ZUISignUpChip status="booked" />
+        </Box>
       )}
       <Box alignItems="center" display="flex" gap={1}>
         <EventSignupButton event={event} />
