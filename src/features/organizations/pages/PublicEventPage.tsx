@@ -87,7 +87,8 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isFullScreen = !isMobile;
 
   const contactPerson = event?.contact;
-  const showContactDetails = event?.status == 'booked' && !!contactPerson;
+  const showContactDetails =
+    !event?.cancelled && event?.status == 'booked' && !!contactPerson;
 
   return (
     <Suspense>
@@ -142,39 +143,54 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
               width: '100%',
             }}
           >
+            {/**TODO: figure out how to layout this properly for mobile and fullscreen without having this component apppear twice */}
+            {isMobile && showContactDetails && (
+              <ContactPersonSection contactPerson={contactPerson} />
+            )}
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: isMobile ? 'column-reverse' : 'row',
-                gap: 2,
+                flexDirection: isMobile || !hasInfoText ? 'column' : 'row',
+                gap: hasInfoText || (!hasInfoText && isFullScreen) ? 2 : 0,
               }}
             >
-              {(hasInfoText || (isFullScreen && showContactDetails)) && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    width: isFullScreen ? '60%' : '100%',
-                  }}
-                >
-                  {isFullScreen && showContactDetails && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: isFullScreen && hasInfoText ? 2 : 0,
+                  width: isFullScreen && hasInfoText ? '60%' : '100%',
+                }}
+              >
+                {isFullScreen && showContactDetails && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 2,
+                    }}
+                  >
                     <ContactPersonSection contactPerson={contactPerson} />
-                  )}
-                  {hasInfoText && (
-                    <Box
-                      bgcolor="white"
-                      borderRadius={2}
-                      minHeight={isFullScreen ? 400 : ''}
-                      padding={2}
-                    >
-                      <Box display="flex" flexDirection="column" gap={1}>
-                        {paragraphs}
-                      </Box>
+                  </Box>
+                )}
+                {hasInfoText && (
+                  <Box
+                    bgcolor="white"
+                    borderRadius={2}
+                    minHeight={isFullScreen ? 400 : ''}
+                    padding={2}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 2,
+                    }}
+                  >
+                    <Box display="flex" flexDirection="column" gap={1}>
+                      {paragraphs}
                     </Box>
-                  )}
-                </Box>
-              )}
+                  </Box>
+                )}
+              </Box>
               <Box
                 bgcolor="white"
                 borderRadius={2}
@@ -188,9 +204,6 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 <SignUpSection event={event} />
                 <DateAndLocation event={event} />
               </Box>
-              {isMobile && showContactDetails && (
-                <ContactPersonSection contactPerson={contactPerson} />
-              )}
             </Box>
             <ZUIPublicFooter />
           </Box>
