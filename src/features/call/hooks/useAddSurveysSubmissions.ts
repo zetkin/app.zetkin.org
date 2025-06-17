@@ -1,6 +1,6 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { ZetkinSurveyCallSubmissionWithSurveyId } from '../types';
 import { clearSurveysKeys } from '../store';
+import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
 
 type SuccessfulSubmission = {
   signature: number;
@@ -17,28 +17,32 @@ type FailedSubmission = {
 
 type SubmissionResult = SuccessfulSubmission | FailedSubmission;
 
+type CallSubmissions = {
+  submission: ZetkinSurveyApiSubmission;
+  surveyId: number;
+  targetId: number;
+}[];
+
 export default function useAddSurveysSubmissions(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const submitSurveys = async (
-    submissions: ZetkinSurveyCallSubmissionWithSurveyId[]
-  ) => {
+  const submitSurveys = async (submissions: CallSubmissions) => {
     const results = await Promise.allSettled(
-      submissions.map(({ surveyId, signature, responses }) =>
+      submissions.map(({ surveyId, targetId, submission }) =>
         apiClient
           .post(`/api/orgs/${orgId}/surveys/${surveyId}/submissions`, {
-            responses,
-            signature,
+            responses: submission.responses,
+            signature: targetId,
           })
           .then<SuccessfulSubmission>(() => ({
-            signature,
+            signature: targetId,
             success: true,
             surveyId,
           }))
           .catch<FailedSubmission>(() => ({
             error: 'Error with submission',
-            signature,
+            signature: targetId,
             success: false,
             surveyId,
           }))

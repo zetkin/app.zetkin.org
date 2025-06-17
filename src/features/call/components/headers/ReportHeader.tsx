@@ -5,9 +5,9 @@ import { useAppSelector } from 'core/hooks';
 import useCallMutations from '../../hooks/useCallMutations';
 import StepsHeader from './StepsHeader';
 import { ZetkinCall } from 'features/call/types';
-import { getAllStoredSurveys } from '../utils/getAllStoredSurveys';
 import useAddSurveysSubmissions from 'features/call/hooks/useAddSurveysSubmissions';
-import parseStoredSurveys from '../utils/parseStoredSurveys';
+import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
+import { getAllStoredSurveysAsFormData } from '../utils/getAllStoredSurveysAsFormData';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -40,7 +40,7 @@ const ReportHeader: FC<Props> = ({
   const reportIsDone = callState && !!callState.report;
 
   const surveyKeys = useAppSelector((state) => state.call.filledSurveys);
-  const filledSurveyContents = getAllStoredSurveys(surveyKeys);
+  const filledSurveysContents = getAllStoredSurveysAsFormData(surveyKeys);
 
   return (
     <StepsHeader
@@ -54,8 +54,18 @@ const ReportHeader: FC<Props> = ({
           setIsLoading(true);
           await updateCall(call.id, callState.report);
           if (sessionStorage) {
-            const surveysParsed = parseStoredSurveys(filledSurveyContents);
-            await submitSurveys(surveysParsed);
+            const submissions = Object.entries(filledSurveysContents).map(
+              ([key, formData]) => {
+                const [, surveyId, targetId] = key.split('-');
+                return {
+                  submission: prepareSurveyApiSubmission(formData),
+                  surveyId: parseInt(surveyId),
+                  targetId: parseInt(targetId),
+                };
+              }
+            );
+
+            await submitSurveys(submissions);
           }
           sessionStorage.clear();
           //TODO: Error handling
