@@ -7,6 +7,7 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicEventLayout from 'features/organizations/layouts/PublicEventLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { getBrowserLanguage, getMessages } from 'utils/locale';
 
 type Props = PropsWithChildren<{
   params: {
@@ -25,10 +26,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `/api/orgs/${params.orgId}/actions/${params.eventId}`
   );
 
+  const lang = getBrowserLanguage(headers().get('accept-language') || '');
+  const messages = await getMessages(lang);
+
   return {
     icons: [{ url: '/logo-zetkin.png' }],
-    //TODO: Fallback on something for untitled events
-    title: event.title || event.activity?.title,
+    title:
+      event.title ||
+      event.activity?.title ||
+      messages['feat.events.common.noTitle'],
   };
 }
 
