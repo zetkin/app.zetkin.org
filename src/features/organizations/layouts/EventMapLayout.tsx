@@ -3,6 +3,7 @@
 import { Box, Button, SxProps } from '@mui/material';
 import { FC, ReactNode, Suspense, useEffect, useState } from 'react';
 import { useMediaQuery, useTheme } from '@mui/system';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
