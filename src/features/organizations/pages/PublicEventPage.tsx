@@ -33,7 +33,7 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUILink from 'zui/components/ZUILink';
 import ZUIButton from 'zui/components/ZUIButton';
-import { useOrgEvents } from '../hooks/useUpcomingOrgEvents';
+import useUpcomingOrgEvents from '../hooks/useUpcomingOrgEvents';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 
@@ -45,7 +45,7 @@ type Props = {
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
 
-  const events = useOrgEvents(orgId);
+  const events = useUpcomingOrgEvents(orgId);
   const myEvents = useMyEvents();
 
   const baseEvent = useMemo(
