@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { FC } from 'react';
 
 import { Msg } from 'core/i18n';
@@ -10,25 +10,32 @@ type ZUISignUpChipProps = {
 };
 
 const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ status }) => {
+  const theme = useTheme();
+
+  const getColors = () => {
+    if (status == 'needed') {
+      return theme.palette.swatches.yellow;
+    } else if (status == 'signedUp') {
+      return theme.palette.swatches.green;
+    } else {
+      //Status must be "booked"
+      return theme.palette.swatches.blue;
+    }
+  };
+
+  const colors = getColors();
+
   return (
     <Box
-      sx={(theme) => {
-        const colors =
-          status == 'needed'
-            ? theme.palette.swatches.yellow
-            : status == 'booked'
-            ? theme.palette.swatches.blue
-            : theme.palette.swatches.green;
-        return {
-          alignItems: 'center',
-          bgcolor: colors[100],
-          borderRadius: 4,
-          color: colors[900],
-          display: 'inline-flex',
-          pointerEvents: 'none',
-          px: 1,
-          py: 0.3,
-        };
+      sx={{
+        alignItems: 'center',
+        bgcolor: colors[100],
+        borderRadius: 4,
+        color: colors[900],
+        display: 'inline-flex',
+        pointerEvents: 'none',
+        px: 1,
+        py: 0.3,
       }}
     >
       <ZUILabel color="inherit">
