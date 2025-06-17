@@ -25,6 +25,7 @@ import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import locToLatLng from 'features/geography/utils/locToLatLng';
 import oldTheme from 'theme';
+import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 
 const LocationMarker: FC<{
   location: ZetkinLocation;
@@ -315,7 +316,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
           (area) => area.id === navigateToAreaId
         );
         if (areaToNavigate) {
-          map.fitBounds(areaToNavigate.points);
+          map.fitBounds(areaToNavigate.points.map(flipForLeaflet));
           setZoomed(true);
         }
       } else {
@@ -491,7 +492,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 )}
                 fillOpacity={1}
                 interactive={areaStyle != 'hide'}
-                positions={area.points}
+                positions={area.points.map(flipForLeaflet)}
                 weight={selected ? 5 : 2}
               />
             );
@@ -579,8 +580,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
                 }
               })
               .forEach((point) => {
-                mid[0] += point[0];
-                mid[1] += point[1];
+                mid[0] += point[1];
+                mid[1] += point[0];
               });
 
             mid[0] /= area.points.length;

@@ -9,14 +9,13 @@ core:
     continueButton: Fortsätt till gamla Zetkin
     header: Du blir omdirigerad
     info: Du använder en betaversion av Zetkin som inte stödjer den funktion du vill
-      använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer den
-      funktionen.
+      använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer
+      den funktionen.
 feat:
   breadcrumbs:
     elements:
       activities: Aktiviteter
       archive: Arkiv
-      areas: Areas
       assignees: Ansvariga
       calendar: Kalender
       callassignments: Ringuppdrag
@@ -67,7 +66,8 @@ feat:
       withoutContact: '{numWithoutContact} Utan kontaktperson'
     eventFilter:
       collapse: Minska
-      expand: '{numOfOptions, plural, one {+ 1 till eventtyp} other {+ # fler eventtyper}}'
+      expand: '{numOfOptions, plural, one {+ 1 till eventtyp} other {+ # fler
+        eventtyper}}'
       filter: Filter
       filterOptions:
         actionFilters:
@@ -102,7 +102,6 @@ feat:
       month: Månad
       week: Vecka
     selectionBar:
-      copy: Kopiera
       deselect: Avmarkera
       editEvents: Redigera event
       editParticipants: Hantera deltagare
@@ -113,12 +112,10 @@ feat:
         confirmCancel: Är du säker på att du vill ställa in valda event?
         confirmDelete: Är du säker på att du vill radera valda event?
         delete: Radera
-        deleteWarning: När eventen har raderats så kommer du inte kunna återskapa
-          dem.
+        deleteWarning: När eventen har raderats så kommer du inte kunna återskapa dem.
         print: Skriv ut schema
         publish: Publicera nu
         unpublish: Avpublicera
-      move: Flytta
       moveCopyButtons:
         copy: Kopiera
         copyMenuHeader: Kopiera {numberOfEvents} event till
@@ -182,12 +179,12 @@ feat:
         unsavedMessage: Du har ändringar som inte sparats
       settings:
         notes:
-          message: Att inaktivera anteckningar kan öka samtalshastigheten men kan
-            också leda till att viktig information går förlorad.
+          message: Att inaktivera anteckningar kan öka samtalshastigheten men kan också
+            leda till att viktig information går förlorad.
           title: Tillåt ringare att göra anteckningar
         targetData:
-          message: Personens namn och telefonnummer är alltid synliga för ringare.
-            Om du aktiverar ytterligare persondata delas alla informationsfält med
+          message: Personens namn och telefonnummer är alltid synliga för ringare. Om du
+            aktiverar ytterligare persondata delas alla informationsfält med
             ringare.
           title: Visa ytterligare persondata
         title: Samtalsinställningar
@@ -195,7 +192,6 @@ feat:
       defineButton: Ändra syfte
       subtitle: Personer som uppfyller syftet
       title: Klara
-    insightsHeader: Samtal och konversationer
     organizerActionPane:
       markAsSolved: Markera som löst
       markAsUnsolved: Markera som olöst
@@ -215,13 +211,14 @@ feat:
       open: Öppen
       scheduled: Schemalagd
     stats:
-      callers: '{numCallers, plural, =0 {Inga ringare} one {1 ringare} other {# ringare}}'
-      targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {# personer}}'
+      callers: '{numCallers, plural, =0 {Inga ringare} one {1 ringare} other {#
+        ringare}}'
+      targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {#
+        personer}}'
     statusSectionTitle: Status
     tabs:
       callers: Ringare
       conversation: Samtal
-      insights: Insikter
       overview: Översikt
     targets:
       defineButton: Definiera målgrupp
@@ -253,15 +250,14 @@ feat:
       eventItem:
         contact: Ingen kontaktperson vald
         locations: '{count} platser'
-        reminders: '{numMissing, plural, =1 {en deltagare} other {# deltagare}} har
-          inte fått en påminnelse'
+        reminders: '{numMissing, plural, =1 {en deltagare} other {# deltagare}} har inte
+          fått en påminnelse'
         signups: Det finns väntande anmälningar
     all:
       cardCTA: Gå till projekt
       create: Skapa nytt projekt
       filter:
         calls: Ringuppdrag
-        canvasses: Canvassuppgifter
         emails: E-post
         filter: Filtrera resultat
         standalones: Fristående event
@@ -271,7 +267,6 @@ feat:
       unsorted: Osorterade projekt
       upcoming: '{numEvents, number} framtida event.'
     allProjects:
-      linkToSummary: Gå till mina aktiva projekt.
       noActivities: Om din organisation har aktiviteter som inte hör till ett projekt
         kommer de att visas här.
       viewArchive: Visa arkiv
@@ -286,8 +281,8 @@ feat:
       createTask: Uppgift
     events: Event
     feedback:
-      copy: Att samla in feedback (vid gemensamma ringningar eller enskilda ringuppdrag)
-        kan hjälpa dig att arbeta mer effektivt
+      copy: Att samla in feedback (vid gemensamma ringningar eller enskilda
+        ringuppdrag) kan hjälpa dig att arbeta mer effektivt
       create: Skapa enkät
       heading: Feedback och Enkäter (ingen konfiguerad)
     form:
@@ -308,8 +303,8 @@ feat:
         error: Något gick fel när projektet raderades
         submitButton: Bekräfta att du vill radera
         title: Radera projekt
-        warning: Är du säker på att du vill radera det här projektet? Du kan inte
-          ångra detta beslut.
+        warning: Är du säker på att du vill radera det här projektet? Du kan inte ångra
+          detta beslut.
       description: Beskrivning
       edit: Redigera projekt
       editCampaignTitle:
@@ -317,7 +312,6 @@ feat:
         success: Projekttiteln uppdaterades
       manager:
         label: Projektansvarig
-        selectSelf: Sätt dig själv som projektansvarig
       name: Namn
       requestError: Något blev fel. Prova igen.
       required: Obligatorisk
@@ -393,9 +387,6 @@ feat:
         noValue: Inget värde
         title: Data att slå samman
       findCandidateManually: Skriv för att hitta potentiella dubletter
-      infoMessage: All historik från aktiviteter och taggar från alla personer kommer
-        slås samman och visas på den sammanslagna personen.
-      infoTitle: Ingen data kommer att gå förlorad
       isDuplicateButton: Inkludera
       lists:
         hideManual: Göm manuella sökningar
@@ -410,16 +401,16 @@ feat:
         phone: Telefon
       title: Slå samman dubletter
       warningMessage: All relaterad data (exempelvis event-deltagande, inskickade
-        enkäter och etiketter) kommer att föras över till den person som blir kvar
-        efter sammanslagningen. Men de värden du väljer bort ovan kommer att förloras.
+        enkäter och etiketter) kommer att föras över till den person som blir
+        kvar efter sammanslagningen. Men de värden du väljer bort ovan kommer
+        att förloras.
       warningTitle: Viss data kan försvinna
     page:
       dismiss: Avfärda
       noDuplicates: Inga dubletter
       noDuplicatesDescription: Yay! Alla personer i din organisation är unika individer.
       possibleDuplicates: Eventuella dubletter
-      possibleDuplicatesDescription: De här {numPeople} personerna ser väldigt lika
-        ut
+      possibleDuplicatesDescription: De här {numPeople} personerna ser väldigt lika ut
       resolve: Slå samman
   emails:
     blocked:
@@ -446,22 +437,21 @@ feat:
       willSend: Kommer skickas {datetime}
     editor:
       readOnlyModeInfo: Det här utskicket är skrivskyddat eftersom det är schemalagt
-        eller redan har skickats. Om det är schemalagt och du vill ändra det behöver
-        du avbryta schemaläggningen först.
+        eller redan har skickats. Om det är schemalagt och du vill ändra det
+        behöver du avbryta schemaläggningen först.
       settings:
         tabs:
           content: Innehåll
           preview:
             confirmation: En förhandsvisning har skickats till din e-postadress.
-            instructions: Här kan du skicka det här utskicket till dig själv för att
-              få en förhandsvisning av hur det kommer att se ut för mottagarna.
+            instructions: Här kan du skicka det här utskicket till dig själv för att få en
+              förhandsvisning av hur det kommer att se ut för mottagarna.
             okButton: OK!
             sendButton: Skicka
             sendTo: 'Utskicket kommer att skickas till adressen:'
             title: Förhandsvisning
           settings:
             senderAddressInputLabel: Avsändarens adress
-            senderNameInputLabel: Avsändarens namn
             subjectInputLabel: Ämne
             title: Inställningar
       tools:
@@ -501,8 +491,8 @@ feat:
       sendNow:
         alert:
           desc: Det kan finnas en bättre tid att skicka det här utskicket. Att schemalägga
-            ditt utskick ger också andra organisatörer möjlighet att samordna med
-            dina planer.
+            ditt utskick ger också andra organisatörer möjlighet att samordna
+            med dina planer.
           title: Att skicka just nu är kanske inte optimalt
         header: Skicka nu
       setDate: Välj leveransdatum för att fortsätta
@@ -515,12 +505,12 @@ feat:
     insights:
       clicked:
         descriptions:
-          ctor: '"Click-to-open rate" (CTOR) är andelen av de som öppnat mailet som
-            också klickade på någon av länkarna. En hög CTOR är ett tecken på ett
+          ctor: '"Click-to-open rate" (CTOR) är andelen av de som öppnat mailet som också
+            klickade på någon av länkarna. En hög CTOR är ett tecken på ett
             välriktat mail med övertygande text.'
-          ctr: '"Clickthrough rate" (CTR) är andelen av alla mottagare som både öppnat
-            och klickat på någon av länkarna. En hög CTR indikerar ett välriktat mail
-            med övertygande text.'
+          ctr: '"Clickthrough rate" (CTR) är andelen av alla mottagare som både öppnat och
+            klickat på någon av länkarna. En hög CTR indikerar ett välriktat
+            mail med övertygande text.'
         gauge:
           headers:
             ctor: CTOR
@@ -541,28 +531,19 @@ feat:
             first48: Första 48 timmarna
             firstMonth: Första 30 dagarna
             firstWeek: Första 7 dagarn
-        description: Öppningsfrekvensen är andelen mottagare som öppnat mailet. En
-          hög "open rate" indikerar en välutformad målgrupp och övertygande ämnesrad.
+        description: Öppningsfrekvensen är andelen mottagare som öppnat mailet. En hög
+          "open rate" indikerar en välutformad målgrupp och övertygande
+          ämnesrad.
         gauge:
           header: Öppningsfrekvens
         header: Öppnade
     ready:
-      loading: Laddar...
-      lockButton: Lås för leverans
-      lockDescription: Lås för att möjliggöra e-postlevereans
-      locked: Låst
-      missingEmailsDescription: Det {numPeople, plural, one {är en person} other {flera
-        personer}} som saknar epostadress i målgruppen. Om du lägger till epostadresser
-        kommer de att ingå i målgruppen.
-      scheduledDescription: E-posten är schemalagd för leverans. Om du vill låsa upp
-        målgruppen, avbryt leveransen först.
+      missingEmailsDescription: Det {numPeople, plural, one {är en person} other
+        {flera personer}} som saknar epostadress i målgruppen. Om du lägger till
+        epostadresser kommer de att ingå i målgruppen.
       sentSubtitle: Målgrupp som var tillgänglig för leverans
       subtitle: Målgrupp tillgänglig för leverans just nu
       title: Redo
-      unlockButton: Lås upp
-      unlockDescription: Fortsätt till leverans eller lås upp mottagare för att redigera
-        målgruppen. Att låsa upp kan lägga till eller ta bort personer beroende på
-        den Smarta sökningens resultat.
     state:
       draft: Utkast
       scheduled: Schemalagt
@@ -570,7 +551,8 @@ feat:
     stats:
       lockedTargets: '{numLocked, plural, =0 {Inga låsta personer} one {1 låst person}
         other {# låsta personer}}'
-      targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {# personer}}'
+      targets: '{numTargets, plural, =0 {Inga personer} one {1 person} other {#
+        personer}}'
     tabs:
       compose: Skapa
       insights: Statistik
@@ -582,8 +564,6 @@ feat:
       lockButton: Lås för leverans
       locked: Målgrupp låst för leverans
       lockedChip: Låst
-      sentSubtitle: Du kan titta på den Smarta sökningen som användes för att definiera
-        mottagarna av det här utskicket
       title: Målgrupp
       unlockAlert: Att låsa upp kan göra att personer läggs till eller tas bort från
         målgruppen basert på resultatet i den Smarta sökningen.
@@ -593,8 +573,8 @@ feat:
       consent: Jag förstår
       h: Avregistrera från {org}
       info: Efter att du har avregistrerat dig kommer du inte längre få massutskick.
-        Du kommer kanske få påminnelser och andra typer av e-post som skickas specifikt
-        till dig som en del av ditt engagemang i organisationen.
+        Du kommer kanske få påminnelser och andra typer av e-post som skickas
+        specifikt till dig som en del av ditt engagemang i organisationen.
       unsubButton: Avregistrera mig.
     unsubscribedPage:
       h: Avregistrerad!
@@ -625,17 +605,15 @@ feat:
       warningCancel: '"{eventTitle}" kommer ställas in.'
       warningRestore: '"{eventTitle}" kommer återställas.'
     eventChangeCampaignDialog:
-      dialogTitle: Flytta event
       error: 'Fel: Eventet kunde inte flyttas till det valda projektet'
-      moveButtonLabel: Flytta
       success: Eventet flyttades till "{campaignTitle}"
     eventContactCard:
       header: Kontakt
       noContact: Ingen kontakt tilldelad!
       removeButton: Ta bort
       selectPlaceholder: Välj en kontaktperson
-      warningText: '{name} kommer inte längre vara kontaktperson, men kommer fortfarande
-        vara bokad på eventet som deltagare'
+      warningText: '{name} kommer inte längre vara kontaktperson, men kommer
+        fortfarande vara bokad på eventet som deltagare'
     eventOverviewCard:
       buttonEndDate: + Slutdatum
       createLocation: Skapa en ny plats
@@ -649,7 +627,6 @@ feat:
       startTime: Starttid
       url: Länk
     eventParticipantsCard:
-      booked: Påminnelser
       confirmed: Bekräftade deltagare
       contact: Kontakt
       header: Deltagare
@@ -674,11 +651,11 @@ feat:
       columnNotified: Påmind
       columnPhone: Telefon
       contactTooltip: Kontaktperson
-      descriptionBooked: Dessa är de personer du har bokat och räknar med ska delta
-        på eventet. För att avboka sin medverkan måste de kontakta dig och du kan
+      descriptionBooked: Dessa är de personer du har bokat och räknar med ska delta på
+        eventet. För att avboka sin medverkan måste de kontakta dig och du kan
         avboka dem manuellt.
-      descriptionCancelled: Dessa personer har av någon anledning avbokat sitt deltagande.
-        Vi behåller dem här så att du inte försöker boka dem igen.
+      descriptionCancelled: Dessa personer har av någon anledning avbokat sitt
+        deltagande. Vi behåller dem här så att du inte försöker boka dem igen.
       descriptionSignups: Dessa personer har anmält sig via aktivistportalen. De kan
         fortfarande ställa in anmälan när som helst.
       dropDownAttended: Bekräftad närvaro
@@ -757,21 +734,6 @@ feat:
       open: Öppna
       scheduled: Schemalagd
       unknown: Okänd
-    form:
-      activity: Aktivitet
-      campaign: Kampanj
-      cancel: Ställ in
-      create: Skapa nytt event
-      edit: Redigera event
-      end: Sluttid
-      info: Information vid anmälan
-      link: Länk
-      minNo: Minsta antal deltagare
-      place: Plats
-      required: Krävs
-      start: Starttid
-      submit: Spara
-      title: Titel
     list:
       events: Event
       noEvents: Inga event...
@@ -780,8 +742,8 @@ feat:
       createLocation: Skapa en ny plats
       description: Beskrivning
       infoText: Du kan klicka och dra för att flytta runt dig på kartan och nypa eller
-        scrolla för att zooma. För att skapa en ny plats klickar du på en tom plats
-        på kartan.
+        scrolla för att zooma. För att skapa en ny plats klickar du på en tom
+        plats på kartan.
       move: Flytta
       moveInstructions: Dra nålen för att välja plats
       noDescription: Ingen beskrivning
@@ -803,8 +765,7 @@ feat:
       pending: Anmälningar väntar
       recordButton: Notera närvaro
       remindButton: Påminn alla
-      remindButtondisabledTooltip: Du behöver utse en kontaktperson innan du skickar
-        ut påminnelser
+      remindButtondisabledTooltip: Du behöver utse en kontaktperson innan du skickar ut påminnelser
       reqParticipantsHelperText: Minsta antal deltagare som behövs
       reqParticipantsLabel: Minsta antal deltagare
     participantsModal:
@@ -831,8 +792,8 @@ feat:
           added: Läggs till på detta event
           pending: I poolen
           removed: Flyttas från detta event
-      statusText: '{personCount, plural, =1 {En person} other {# personer}} kommer
-        att flyttas'
+      statusText: '{personCount, plural, =1 {En person} other {# personer}} kommer att
+        flyttas'
       submitButton: Utför
       title: Hantera deltagare
     search: Sök
@@ -888,8 +849,8 @@ feat:
         undoSignup: Ångra anmälan
       emptyListMessage: Du är inte anmäld till några aktiviteter
       eventStatus:
-        booked: Du har blivit bokad på det här eventet och organisatörerna förväntar
-          sig att du kommer. Kontakta {org} om du behöver ställa in.
+        booked: Du har blivit bokad på det här eventet och organisatörerna förväntar sig
+          att du kommer. Kontakta {org} om du behöver ställa in.
         needed: Du behövs
         signedUp: Du har anmält dig
       filters:
@@ -927,13 +888,13 @@ feat:
     configuration:
       configure:
         dates:
-          customFormatDescription: Beskriv formatet av värdena i den här kolumnen
-            med bokstäverna Y, M, D och det tecken du använder för att separera dem.
-            Till exempel om dina datum är skrivna 1998.03.23, så skriver du in det
-            som YYYY.MM.DD.
+          customFormatDescription: Beskriv formatet av värdena i den här kolumnen med
+            bokstäverna Y, M, D och det tecken du använder för att separera dem.
+            Till exempel om dina datum är skrivna 1998.03.23, så skriver du in
+            det som YYYY.MM.DD.
           customFormatLabel: Anpassat datumformat
-          dateConfigDescription: Välj format för värdena i den här kolumnen så att
-            de kan importeras som datum.
+          dateConfigDescription: Välj format för värdena i den här kolumnen så att de kan
+            importeras som datum.
           dateInputLabel: Datumformat
           dropDownLabel: Välj format
           emptyPreview: Ogiltigt datum
@@ -950,14 +911,15 @@ feat:
               description: Värdena i den här kolumnen kommer översättas från tiosiffriga
                 danska CPR-nummer (DDMMÅÅ-XXXX or DDMMÅÅXXXX) till datum.
               label: Danskt CPR-nummer
-            'no':
+            no:
               description: Värdena i den här kolumnen kommer översättas från 11-siffriga
-                norska födelsenummer (DDMMÅÅXXXXX eller DDMMÅÅ-XXXXX) till datum.
+                norska födelsenummer (DDMMÅÅXXXXX eller DDMMÅÅ-XXXXX) till
+                datum.
               label: Norska fødselsnummer
             se:
-              description: Värden i den här kolumnen kommer att översättas från tio-
-                eller tolvsiffriga svenska personnummer (ÅÅMMDD-XXXX eller ÅÅÅÅMMDD-XXXX)
-                till datum.
+              description: Värden i den här kolumnen kommer att översättas från tio- eller
+                tolvsiffriga svenska personnummer (ÅÅMMDD-XXXX eller
+                ÅÅÅÅMMDD-XXXX) till datum.
               label: Svenskt personnummer
         enum:
           header: Välj värden för alternativ
@@ -972,24 +934,16 @@ feat:
             o: Annat
             unknown: Okänd
         ids:
-          configExplanation: När du importerar med ID (nu och framöver) kan Zetkin
-            uppdatera existerande personer istället för att skapa dubletter.
           externalID: Externt ID
-          externalIDExplanation: Den här kolumnen innehåller ID från vårt vanliga
-            register (inte Zetkin)
-          externalIDInfo: Ett externt ID är ett ID som kommer från ett annat system
-            än Zetkin, till exempel ett separat medlemsregister. Det kan användas
+          externalIDInfo: Ett externt ID är ett ID som kommer från ett annat system än
+            Zetkin, till exempel ett separat medlemsregister. Det kan användas
             för att hitta och identifiera personer i Zetkin.
-          header: Konfigurera ID
-          showOrganizationSelectButton: Välj organisation…
-          wrongIDFormatWarning: Den här kolumnen verkar inte innehålla Zetkin-ID.
-            Ett Zetkin-ID består bara av siffror. Om vissa celler är tomma eller innehåller
-            andra tecken kan de inte användas som Zetkin-ID.
+          wrongIDFormatWarning: Den här kolumnen verkar inte innehålla Zetkin-ID. Ett
+            Zetkin-ID består bara av siffror. Om vissa celler är tomma eller
+            innehåller andra tecken kan de inte användas som Zetkin-ID.
           zetkinID: Zetkin-ID
-          zetkinIDExplanation: Den här kolumnen innehåller ID:n från en export ur
-            Zetkin.
-          zetkinIDInfo: Ett Zetkin ID är ett ID på en person som redan finns i Zetkin.
-            Det bör du ha i en fil om du exporterar data från Zetkin.
+          zetkinIDInfo: Ett Zetkin ID är ett ID på en person som redan finns i Zetkin. Det
+            bör du ha i en fil om du exporterar data från Zetkin.
         orgs:
           guess: Gissa organisationer
           header: Välj en organisation per värde
@@ -1009,39 +963,38 @@ feat:
         emptyStateMessage: Börja med att välja vad kolumnerna innehåller
         externalID: Externt ID
         fileHeader: Fil
-        finishedMappingDates: Översätter {numValues, plural, =1 {ett värde} other
-          {# värden}} från {dateFormat, select, se {svenska personnummer} no {norska
-          födelsenummer} dk {danska CPR-nummer} other {{dateFormat}}} till datum
+        finishedMappingDates: Översätter {numValues, plural, =1 {ett värde} other {#
+          värden}} från {dateFormat, select, se {svenska personnummer} no
+          {norska födelsenummer} dk {danska CPR-nummer} other {{dateFormat}}}
+          till datum
         finishedMappingIds: Översätter {numValues, plural, =1 {ett värde} other {#
           värden}} till {idField, select, id {Zetkin-ID} other {external ID}}
         finishedMappingOrganizations: '{numPeople, plural, =1 {en person} other {#
-          personer}} läggs till i {numMappedTo, plural, =1 {en organisation} other
-          {# organisationer}}'
+          personer}} läggs till i {numMappedTo, plural, =1 {en organisation}
+          other {# organisationer}}'
         finishedMappingTags: Översätter {numRows, plural, =1 {en rad} other {# rader}}
           till {numMappedTo, plural, =1 {en etikett} other {# etiketter}}
         header: Kolumninnehåll
-        id: ID
         infoButton: Information
         mapValuesButton: Välj
         messages:
           manyValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue}, {numMoreValues,
-            plural, =1 {ett till värde} other {# andra värden}} och {numEmpty, plural,
-            =1 {en tom rad} other {# tomma rader}}.'
-          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} och {numMoreValues,
-            plural, =1 {ett till värde} other {# andra värden}}.'
-          oneValueAndEmpty: '{firstValue} och {numEmpty, plural, =1 {en tom rad} other
-            {# tomma rader}}.'
+            plural, =1 {ett till värde} other {# andra värden}} och {numEmpty,
+            plural, =1 {en tom rad} other {# tomma rader}}.'
+          manyValuesNoEmpty: '{firstValue}, {secondValue}, {thirdValue} och
+            {numMoreValues, plural, =1 {ett till värde} other {# andra
+            värden}}.'
+          oneValueAndEmpty: '{firstValue} och {numEmpty, plural, =1 {en tom rad} other {#
+            tomma rader}}.'
           oneValueNoEmpty: '{firstValue}.'
           onlyEmpty: '{numEmpty, plural, =1 {en tom rad} other {# tomma rader}}.'
           readOnlyField: '{title} (skrivskyddad)'
           threeValuesAndEmpty: '{firstValue}, {secondValue}, {thirdValue} och {numEmpty,
             plural, =1 {en tom rad} other {# tomma rader}}.'
           threeValuesNoEmpty: '{firstValue}, {secondValue} och {thirdValue}.'
-          twoValuesAndEmpty: '{firstValue}, {secondValue} och {numEmpty, plural, =1
-            {en tom rad} other {# tomma rader}}.'
+          twoValuesAndEmpty: '{firstValue}, {secondValue} och {numEmpty, plural, =1 {en
+            tom rad} other {# tomma rader}}.'
           twoValuesNoEmpty: '{firstValue} och {secondValue}.'
-        needsConfig: Du behöver göra inställningar
-        needsMapping: Du behöver välja värden
         organization: Organisation
         selectZetkinField: Importera som…
         tags: Etiketter
@@ -1081,8 +1034,8 @@ feat:
         sheetSelectLabel: Blad
       show: Visa
       statusMessage:
-        done: Förbereder import av {numConfiguredPeople, plural, =1 {en person} other
-          {# personer}}
+        done: Förbereder import av {numConfiguredPeople, plural, =1 {en person} other {#
+          personer}}
         notDone: Du har inte slutfört dina inställningar
       title: Importera personer
     impactSummary:
@@ -1103,7 +1056,8 @@ feat:
         orgs: '{numPeople} lades till i en {org}'
         tags: etiketter
         tagsDesc: '{numPeople} fick {tags}'
-        updated: '{number} {numPeople, plural, =1 {person} other {personer}} uppdaterades'
+        updated: '{number} {numPeople, plural, =1 {person} other {personer}}
+          uppdaterades'
       people: '{number} {numPeople, plural, =1 {person} other {personer}}'
     importStatus:
       completed:
@@ -1126,8 +1080,8 @@ feat:
           back: Gå tillbaka
           checkbox: Jag förstår och vill fortsätta ändå
           fewRows: Problemet finns på raderna {commaRows} och {lastRow}.
-          manyRows: Problemet finns på raderna {commaRows} och {additionalRows} ytterligare
-            rader.
+          manyRows: Problemet finns på raderna {commaRows} och {additionalRows}
+            ytterligare rader.
           singleRow: Problemet finns på rad {row}.
         invalidFormat:
           title: '{field} har fel format'
@@ -1135,20 +1089,20 @@ feat:
           description: Kontrollera att du konfigurerat kolumnerna på rätt sätt
           title: Importen kommer skriva över många personers {field}
         missingIdAndName:
-          description: Varje rad måste innehålla ett fullständigt namn eller ett ID
-            för en person som redan finns i Zetkin.
+          description: Varje rad måste innehålla ett fullständigt namn eller ett ID för en
+            person som redan finns i Zetkin.
           title: Vissa rader saknar namn eller ID
         noImpact:
-          description: Det kan beror på att filen inte innehåller någon ny data eller
-            att något gått fel.
+          description: Det kan beror på att filen inte innehåller någon ny data eller att
+            något gått fel.
           title: Importen skulle inte få någon effekt
         ok:
           description: Kontrollera att sammanställningen ser bra ut och klicka på
             "Importera" för att genomföra importen.
           title: Allt ser bra ut!
         unconfiguredId:
-          description: Den här importen kommer leda till dubletter. Om detta är din
-            första import och du vill undvika dubletter i framtiden, gå tillbaka och
+          description: Den här importen kommer leda till dubletter. Om detta är din första
+            import och du vill undvika dubletter i framtiden, gå tillbaka och
             välj ett externt ID som du kan använda framöver.
           title: Du har inte valt något ID
         unconfiguredIdAndName:
@@ -1156,19 +1110,20 @@ feat:
             personer som redan finns i Zetkin.
           title: Det saknas nödvändiga kolumner
         unexpectedError:
-          description: Inga personer har importeras. Gå tillbaka och granska importinställningarna
-            eller välj en ny fil att importera. Det var fel i formuläret du skickade
-            in. Försök igen och fyll i alla nödvändig information. Om felet kvarstår
-            kontakta info@zetkin.org för support
+          description: Inga personer har importeras. Gå tillbaka och granska
+            importinställningarna eller välj en ny fil att importera. Det var
+            fel i formuläret du skickade in. Försök igen och fyll i alla
+            nödvändig information. Om felet kvarstår kontakta info@zetkin.org
+            för support
           title: Något gick fel och importen avbröts
         unknownError:
           description: Kontakta support om du behöver hjälp med att förstå problemet.
           title: Ett okänt fel har uppstått
         unknownPerson:
           description: Du har valt att en kolumn innehåller Zetkin-ID:n men kolumnen
-            innehåller värden som inte motsvaras av en person i Zetkin. Ville du egentligen
-            använda externt ID eller kan vissa personer ha raderats ur Zetkin sedan
-            filen skapades?
+            innehåller värden som inte motsvaras av en person i Zetkin. Ville du
+            egentligen använda externt ID eller kan vissa personer ha raderats
+            ur Zetkin sedan filen skapades?
           title: ID:n saknas i Zetkin
         validating: Validerar
     steps:
@@ -1190,11 +1145,11 @@ feat:
       messages: Meddelanden
       people: '{numPeople, plural, =1 {person} other {personer}}'
       statusMessages:
-        create: Den här importen kommer skapa {numCreated, plural, =1 {en person}
-          other {# personer}}.
+        create: Den här importen kommer skapa {numCreated, plural, =1 {en person} other
+          {# personer}}.
         createAndUpdate: Den här importen kommer skapa {numCreated, plural, =1 {en
-          person} other {# personer}} och uppdatera {numUpdated, plural, =1 {en person}
-          other {# personer}}.
+          person} other {# personer}} och uppdatera {numUpdated, plural, =1 {en
+          person} other {# personer}}.
         error: Du måste lösa problemen innan du kan gå vidare
         update: Den här importen kommer uppdatera {numUpdated, plural, =1 {en person}
           other {# personer}}
@@ -1353,16 +1308,17 @@ feat:
   organizations:
     gen3:
       description: Det här är den nya (generation 3) organisatörssidan. Om du är van
-        vid den gamla kommer du hitta flera nya funktioner och en förbättrad användarupplevelse.
-        Om du vill, kan du fortfarande använda den gamla organisatörssidan ett tag
-        till.
+        vid den gamla kommer du hitta flera nya funktioner och en förbättrad
+        användarupplevelse. Om du vill, kan du fortfarande använda den gamla
+        organisatörssidan ett tag till.
       gen2Button: Gå till den gamla organisatörssidan
       title: Välkommen till nya Zetkin!
     notOrganizer:
       description: Den här delen av Zetkin är bara tillgänglig för personer som har
-        administratörsbehörighet. Du har just nu inte rätt behörighet. Om du borde
-        ha tillgång till den här sidan kontakta någon med administratörsbehörighet
-        i din organisation eller kontakta Zetkin Foundation.
+        administratörsbehörighet. Du har just nu inte rätt behörighet. Om du
+        borde ha tillgång till den här sidan kontakta någon med
+        administratörsbehörighet i din organisation eller kontakta Zetkin
+        Foundation.
       myPageButton: Gå till aktivistportalen
       title: Du har inte administratörsbehörighet
     page:
@@ -1379,8 +1335,8 @@ feat:
   profile:
     delete:
       button: Ta bort person
-      confirm: Är du säker på att du vill ta bort {name} från {org} och alla relaterade
-        organisationer? Det är permanent och går inte att ångra.
+      confirm: Är du säker på att du vill ta bort {name} från {org} och alla
+        relaterade organisationer? Det är permanent och går inte att ångra.
       title: Radera konto
       warning: Detta kan inte ångras!
     details:
@@ -1423,7 +1379,6 @@ feat:
     placeholder: Skriv för att söka
     results:
       callassignment: Ringuppdrag
-      campaign: Kampanj
       people: Människor
       person: Person
       project: Projekt
@@ -1442,8 +1397,8 @@ feat:
       administrators:
         columns:
           name: Namn
-        description: Administratörer har full tillgång till att skapa, redigera och
-          ta bort alla typer av innehåll.
+        description: Administratörer har full tillgång till att skapa, redigera och ta
+          bort alla typer av innehåll.
         roleInheritance: Administratör i
         title: Administratörer
       organizers:
@@ -1474,13 +1429,6 @@ feat:
       close: Stäng
       goBack: Tillbaka till översikten
       save: Spara
-    filterCategories:
-      campaignActivity: Projektaktivitet
-      email: E-post
-      misc: Övrigt
-      peopleDatabase: Människor
-      phoneBanking: Ringning
-      surveys: Enkäter
     filterGallery:
       categories:
         basicInformation:
@@ -1490,8 +1438,8 @@ feat:
           description: Välj baserat på listor och Smarta sökningar
           title: Korsreferera
         email:
-          description: Hitta personer baserat på information som samlats in genom
-            att göra e-postutskick.
+          description: Hitta personer baserat på information som samlats in genom att göra
+            e-postutskick.
           title: E-post
         events:
           description: Välj baserat på data från events
@@ -1513,7 +1461,8 @@ feat:
           title: Uppgifter
       filters:
         call_history:
-          description: Hitta personer som har blivit uppringda, nådda eller fått samtalsförsök.
+          description: Hitta personer som har blivit uppringda, nådda eller fått
+            samtalsförsök.
           title: Ringhistorik
         campaign_participation:
           description: Vem anmälde sig? Vem blev bokad? Vem blev det inte? Hitta dem!
@@ -1528,8 +1477,7 @@ feat:
           description: Vad skickades till vem, när?
           title: Baserat på deras e-posthistorik
         journey_subjects:
-          description: Hitta personer som är i en Journey eller redan har avslutat
-            den
+          description: Hitta personer som är i en Journey eller redan har avslutat den
           title: Personer i en Journey
         person_data:
           description: Namn, adress, e-post och annat!
@@ -1541,8 +1489,7 @@ feat:
           description: För att hitta personer med eller utan specifika etiketter
           title: Etiketter
         person_view:
-          description: När du letar efter personer som är med eller inte är med i
-            en lista
+          description: När du letar efter personer som är med eller inte är med i en lista
           title: Personer från en lista
         random:
           description: Lägg till eller ta bort personer slumpmässigt
@@ -1558,8 +1505,8 @@ feat:
           description: Hitta rätt person baserat på deras enkätsvar.
           title: Svar på textfrågor
         survey_submission:
-          description: Har de svarat på en enkät? Har de inte svarat på en enkät?
-            Hitta dem här!
+          description: Har de svarat på en enkät? Har de inte svarat på en enkät? Hitta
+            dem här!
           title: Svarat på en enkät
         task:
           description: Lägg till personer baserat på deras deltagande i uppgifter
@@ -1567,23 +1514,6 @@ feat:
         user:
           description: Hitta personer som är eller inte är anslutna till ett Zetkinkonto
           title: Zetkinanvändare
-    filterTitles:
-      all: Alla
-      call_blocked: Blockerad från att ringa
-      call_history: Baserat på deras ringhistorik
-      campaign_participation: Baserat på deltagande i event
-      most_active: Mest aktiva personerna
-      person_data: Baserat på namn, adress eller annan information
-      person_field: Baserat på anpassade fält
-      person_tags: Baserat på deras etiketter
-      person_view: Människor från en lista
-      random: Ett slumpmässigt urval
-      sub_query: Baserat på en annan Smart sökning
-      survey_option: Baserat på alternativ de har kryssat i en enkät
-      survey_response: Baserat på ett fritextsvar på en enkätfråga
-      survey_submission: Personer som har svarat på en enkät
-      task: Personer som har gjort uppgifter
-      user: Personer som har använt Zetkin
     filters:
       all:
         inputString: Börja med {startWithSelect}.
@@ -1591,15 +1521,9 @@ feat:
           'false': en tom lista
           'true': en lista på alla personer i organisationen
       callBlocked:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
-        inputString: '{addRemoveSelect} personer som är blockerade från att ringa
-          av någon som helst anledning'
+        inputString: '{addRemoveSelect} personer som är blockerade från att ringa av
+          någon som helst anledning'
       callHistory:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         assignmentSelect:
           any: något ringuppdrag
           assignment: ringuppdraget "{assignmentTitle}"
@@ -1613,17 +1537,14 @@ feat:
             närsomhelst.
           two: Ta bort personer som blivit ringda åtminstone 1 gång i uppdraget 'Aktivera
             gamla medlemmar' under de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som {callSelect} {minTimes} i {assignmentSelect}
-          {timeFrame}'
+        inputString: '{addRemoveSelect} personer som {callSelect} {minTimes} i
+          {assignmentSelect} {timeFrame}'
         minTimes: '{minTimesInput} {minTimes, plural, one {gång} other {gånger}}'
         minTimesInput: minst {input} {minTimes, plural, one {gång} other {gånger}}
       campaignParticipation:
         activitySelect:
           activity: typen "{activity}"
           any: vilken typ som helst
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         bookedSelect:
           booked: blivit bokade på
           signed_up: anmält sig till
@@ -1631,15 +1552,15 @@ feat:
           any: vilket projekt som helst
           campaign: projektet "{campaign}"
         examples:
-          one: Lägg till personer som har anmält sig till event i vilket projekt som
-            helst på platsen 'Möllevången' någonsin
-          two: Ta bort personer som inte har blivit bokade på event i vilket projekt
-            som helst av typen 'Affischera' på vilken plats som helst innan idag.
+          one: Lägg till personer som har anmält sig till event i vilket projekt som helst
+            på platsen 'Möllevången' någonsin
+          two: Ta bort personer som inte har blivit bokade på event i vilket projekt som
+            helst av typen 'Affischera' på vilken plats som helst innan idag.
         haveSelect:
           in: har
           notin: inte har
-        inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} event
-          i {campaignSelect} av {activitySelect} på {locationSelect} {timeFrame}'
+        inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} event i
+          {campaignSelect} av {activitySelect} på {locationSelect} {timeFrame}'
         locationSelect:
           any: vilken plats som helst
           location: platsen "{location}"
@@ -1650,8 +1571,9 @@ feat:
           any: av någon anledning
           unsubOrg: de har avregistrerat
       emailClick:
-        inputString: '{addRemoveSelect} personer som har {operatorSelect} {linkScopeSelect}
-          {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
+        inputString: '{addRemoveSelect} personer som har {operatorSelect}
+          {linkScopeSelect} {emailSelect} {projectSelect} {timeFrame}
+          {linkSelect}'
         linkScopeSelect:
           anyFollowingLinks: någon av följande länkar i den specifika e-posten
           anyLink: någon länk i någon e-post
@@ -1690,28 +1612,22 @@ feat:
             regardlessTags: oavsett etiketter
             some: och har minst {minMatching}
         followingTags: lägg till följande etiketter
-        inputString: '{addRemoveSelect} personer som är den del av {journeySelect}
-          som öppnade {openedTimeFrame} och {stateSelect} {closedTimeFrame} {condition}
-          {tagsDesc} {tags}'
+        inputString: '{addRemoveSelect} personer som är den del av {journeySelect} som
+          öppnade {openedTimeFrame} och {stateSelect} {closedTimeFrame}
+          {condition} {tagsDesc} {tags}'
         stateOptions:
           closed: stängd
           open: är fortfarande öppen
       mostActive:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         examples:
           one: Lägg till organisationens 100 mest aktiva medlemmar fram till idag.
           two: Ta bort organisationens 5 mest aktiva medlemmar närsomhelst i tiden.
-        inputString: '{addRemoveSelect} den {numPeopleSelect} mest aktiva{numPeople}
-          i organisationen {timeFrame}.'
+        inputString: '{addRemoveSelect} den {numPeopleSelect} mest aktiva{numPeople} i
+          organisationen {timeFrame}.'
         numPeople: '{numPeople, plural, one {person} other {personer}}'
         numPeopleSelect: '{numPeopleSelect}'
       personData:
-        addRemoveSelect:
-          add: Lägg till
-          sub: ta bort
-        ellipsis: '...'
+        ellipsis: ...
         examples:
           one: Lägg till personer vars förnamn är 'Clara' och vars efternamn är 'Zetkin'.
           two: Ta bort personer vars ort är Stockholm.
@@ -1736,9 +1652,6 @@ feat:
           unknown: okänd
         inputString: '{addRemoveSelect} personer vars {criteria}.'
       personField:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         edit:
           date: '{fieldSelect} är {timeFrame}'
           enum: '{fieldSelect} är "{selectInput}"'
@@ -1754,38 +1667,27 @@ feat:
           text: '{fieldName} matchar "{searchTerm}"'
           url: '{fieldName} matchar "{searchTerm}"'
       personTags:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         condition:
           conditionSelect:
             all: har alla
             any: har någon av
-            minMatching: har minst
             none: inte har
             some: minst
           edit:
             all: '{conditionSelect}'
             any: '{conditionSelect}'
-            minMatching: '{conditionSelect} {minMatchingInput}'
             none: '{conditionSelect}'
             some: '{conditionSelect} {minMatchingInput}'
           preview:
             all: har alla
             any: har någon av
-            minMatching: har minst {minMatching} av
             none: inte har
             some: minst {minMatching}
         examples:
-          one: 'Lägg till personer som har minst en av följande etiketter: ''Medlem'',
-            ''Aktivist'''
-          two: 'Ta bort personer som har alla följande etiketter: ''Styrelseledamot'''
-        inputString: '{addRemoveSelect} personer som {condition} följande etiketter:
-          {tags}'
+          one: "Lägg till personer som har minst en av följande etiketter: 'Medlem', 'Aktivist'"
+          two: "Ta bort personer som har alla följande etiketter: 'Styrelseledamot'"
+        inputString: '{addRemoveSelect} personer som {condition} följande etiketter: {tags}'
       personView:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         examples:
           one: Lägg till personer som finns i listan "Aktiva medlemmar 2022".
           two: Ta bort personer som inte finns i listan "Aktiva medlemmar 2022".
@@ -1800,22 +1702,15 @@ feat:
           add: Lägg slumpvis till
           limit: Begränsa slumpvis till
           sub: Ta slumpvis bort
-        addRemoveSelect:
-          add: lägg till
-          sub: ta bort
         examples:
           one: Lägg slumpvis till 20 personer i organisationen.
           two: Ta slumpvis bort 15% av personerna i organisationen.
         inputString: '{addRemoveSelect} {quantity} i organisationen.'
       subQuery:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Under
         examples:
-          one: Ta bort personer som matchar den Smarta sökningen 'Personer som bor
-            i Stockholm'
-          two: Lägg till personer som finns i målgruppen för ringuppdraget 'Uppdrag
-            ett'
+          one: Ta bort personer som matchar den Smarta sökningen 'Personer som bor i
+            Stockholm'
+          two: Lägg till personer som finns i målgruppen för ringuppdraget 'Uppdrag ett'
         inputString: '{addRemoveSelect} personer som {matchSelect} {query}.'
         matchSelect:
           in: matchar
@@ -1840,23 +1735,18 @@ feat:
           selectOptions:
             callassignment_goal: syftet i ett ringuppdrag
             callassignment_target: målgruppen i ett ringuppdrag
-            none: Den här organisationen har inga ringuppdrag eller sparade Smarta
-              sökningar än.
+            none: Den här organisationen har inga ringuppdrag eller sparade Smarta sökningar
+              än.
             standalone: en fristående Smart sökning
       surveyOption:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         conditionSelect:
           all: har valt alla
           any: har valt något
           none: inte har valt något
           some: några
         examples:
-          one: 'Ta bort personer som har valt något av alternativen i enkäten ''Medlemsenkät
-            2020'' (frågan ''Fråga ett''): ''Ibland'', ''Aldrig'''
-          two: 'Lägg till personer som har valt något av följande alternativ i enkäten
-            ''Medlemsenkäten'' (question ''Question two''): ''Alternativ två'''
+          one: "Ta bort personer som har valt något av alternativen i enkäten 'Medlemsenkät 2020' (frågan 'Fråga ett'): 'Ibland', 'Aldrig'"
+          two: "Lägg till personer som har valt något av följande alternativ i enkäten 'Medlemsenkäten' (question 'Question two'): 'Alternativ två'"
         inputString: '{addRemoveSelect} personer som {conditionSelect} av följande
           alternativ i {surveySelect} ({questionSelect}): {options}'
         questionSelect:
@@ -1868,15 +1758,12 @@ feat:
           none: Den här organisationen har inga enkäter ännu
           survey: enkäten "{surveyTitle}"
       surveyResponse:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         examples:
           one: Personer som svarat 'organisera' på någon fråga i 'Medlemsenkäten'
-          two: Personer som har svarat i enkäten 'Medlemsenkäten' (fråga 'Fråga ett')
-            som exakt matchar 'organisera'.
-        inputString: '{addRemoveSelect} personer vars svar på {surveySelect} ({questionSelect})
-          {matchSelect} "{freeTextInput}"'
+          two: Personer som har svarat i enkäten 'Medlemsenkäten' (fråga 'Fråga ett') som
+            exakt matchar 'organisera'.
+        inputString: '{addRemoveSelect} personer vars svar på {surveySelect}
+          ({questionSelect}) {matchSelect} "{freeTextInput}"'
         matchSelect:
           eq: matchar exakt
           in: innehåller
@@ -1891,24 +1778,17 @@ feat:
           none: Organisationen har inga enkäter ännu
           survey: enkät "{surveyTitle}"
       surveySubmission:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         examples:
-          one: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' innan
-            idag.
-          two: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' under
-            de senaste 30 dagarna.
-        inputString: '{addRemoveSelect} personer som har lämnat in svar på {surveySelect}
-          {timeFrame}.'
+          one: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' innan idag.
+          two: Personer som har lämnat in svar i enkäten 'Medlemsenkät 2020' under de
+            senaste 30 dagarna.
+        inputString: '{addRemoveSelect} personer som har lämnat in svar på
+          {surveySelect} {timeFrame}.'
         surveySelect:
           any: en enkät
           none: Organisationen har inga enkäter än
           survey: enkäten "{surveyTitle}"
       task:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         campaignSelect:
           any: vilket projekt som helst
           campaign: projektet "{campaign}"
@@ -1928,16 +1808,14 @@ feat:
           completed: slutfört
           ignored: ignorerat
       user:
-        addRemoveSelect:
-          add: Lägg till
-          sub: Ta bort
         connectedSelect:
           'false': inte är kopplade
           'true': är kopplade
         examples:
           one: Ta bort personer som är anslutna Zetkinanvändare.
           two: Lägg till personer som inte är anslutna Zetkinanvändare.
-        inputString: '{addRemoveSelect} personer som {connectedSelect} till en Zetkinanvändare.'
+        inputString: '{addRemoveSelect} personer som {connectedSelect} till en
+          Zetkinanvändare.'
     headers:
       examples: Exempel
       gallery: Hur vill du välja personer?
@@ -1964,8 +1842,7 @@ feat:
         once: minst en
     misc:
       noOptions: inga matchande etiketter
-      noOptionsEmailNotSent: Mailet har inte skickats än. Länkar kan väljas efter
-        att mailet skickats.
+      noOptionsEmailNotSent: Mailet har inte skickats än. Länkar kan väljas efter att mailet skickats.
       noOptionsInvalidEmail: Ogiltigt mail. Välj ett mail först.
       noOptionsLinks: Inga matchande länkar
     operators:
@@ -1999,11 +1876,12 @@ feat:
     statsPopper:
       change: förändring
       details: Smarta sökningar är dynamiska. Det betyder att antal matchningar kan
-        variera över tid. Andra användare kan se ett annat resultat om de har tillgång
-        till fler eller färre personer.
+        variera över tid. Andra användare kan se ett annat resultat om de har
+        tillgång till fler eller färre personer.
       exit: Resultat
       headline: Effekt av urval
-      info: Det här är ett dynamiskt urval och antalet personer kan förändras i framtiden.
+      info: Det här är ett dynamiskt urval och antalet personer kan förändras i
+        framtiden.
       input: innan
       matches: hittat
       output: efter
@@ -2015,7 +1893,8 @@ feat:
         between: '{timeFrameSelect} {afterDateSelect} och {beforeDateSelect}'
         ever: '{timeFrameSelect}'
         future: '{timeFrameSelect}'
-        lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dag} other {dagarna}}'
+        lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {dag} other
+          {dagarna}}'
       preview:
         afterDate: efter {afterDate}
         beforeDate: före {beforeDate}
@@ -2047,8 +1926,8 @@ feat:
       textButton: Text
       title: Välj en typ av block för att lägga till fler frågor i din enkät
     alert:
-      editable: Den här enkäten är ägd av {orgTitle} du kan bara redigera den i organisationen
-        där den skapades.
+      editable: Den här enkäten är ägd av {orgTitle} du kan bara redigera den i
+        organisationen där den skapades.
       goOriginal: Gå till original
       notEditable: Den här enkäten ägs av {orgTitle} och du kan inte redigera den.
     blocks:
@@ -2092,14 +1971,12 @@ feat:
     chart:
       header: Enkätsvar
       placeholder: Börja samla in enkätsvar för att se framsteg här.
-      subheader: Inlämnade svar under de senaste {days, plural, =1 {dag} other {#
-        dagar}}
+      subheader: Inlämnade svar under de senaste {days, plural, =1 {dag} other {# dagar}}
       tooltip:
         submissions: '{count, plural, =1 {1 enkätsvar} other {# enkätsvar}}'
     editWarning:
       editing:
         header: Enkäten kan redigeras
-        lockButton: Lås
         safe:
           bullet1: Rättar stavfel
           bullet2: Ordna om block
@@ -2114,9 +1991,8 @@ feat:
           header: Osäker
       locked:
         header: Enkät låst
-        subheader: Den här enkäten har börjat få in enkätsvar. Att ändra enkäten nu
-          kan orsaka problem med datan. Fortsätt med försiktighet.
-        unlockButton: Lås upp
+        subheader: Den här enkäten har börjat få in enkätsvar. Att ändra enkäten nu kan
+          orsaka problem med datan. Fortsätt med försiktighet.
     layout:
       actions:
         delete: Ta bort enkät
@@ -2129,8 +2005,8 @@ feat:
       unknownTitle: Icke namngiven enkät
     optionCollapse:
       collapse: Minska
-      more: '{numOfOptions, plural, one {Visa 1 alternativ till} other {Visa # alternativ
-        till}}'
+      more: '{numOfOptions, plural, one {Visa 1 alternativ till} other {Visa #
+        alternativ till}}'
     organizerActionPane:
       subtitle: Anteckningar under samtal till {person}
       title: Organisatör behövs
@@ -2140,7 +2016,8 @@ feat:
         title: Det finns inga frågor i den här enkäten än
     shareSuborgsCard:
       caption: När det här är aktiverat kan organisatörer i underorganisationer läsa
-        och söka i enkäter inlämnade av personer som är anslutna till deras organisation.
+        och söka i enkäter inlämnade av personer som är anslutna till deras
+        organisation.
       title: Dela med underorganisationer
     state:
       draft: Utkast
@@ -2170,7 +2047,8 @@ feat:
       title: Lägg till epostadress
     surveyForm:
       accept: Jag accepterar villkoren nedan.
-      error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen senare.
+      error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen
+        senare.
       policy:
         link: https://zetkin.org/sv/sekretess
         text: Klicka för att läsa sekretesspolicyn
@@ -2181,8 +2059,8 @@ feat:
       submit: Skicka in
       terms:
         description: När du skickar in den här enkäten kommer informationen att hanteras
-          i Zetkin av {organization} i syfte att organisera aktivism, och i enlighet
-          med sekretesspolicyn.
+          i Zetkin av {organization} i syfte att organisera aktivism, och i
+          enlighet med sekretesspolicyn.
         title: Sekretesspolicy
     surveyFormSubmitted:
       text: Dina svar på "{title}" har skickats in
@@ -2203,22 +2081,23 @@ feat:
       submissions: Enkätsvar
     unlinkedCard:
       description: När någon svarar på en enkät utan att vara inloggad så blir enkäten
-        olänkad. Att hitta människor i Zetkin baserat på enkätsvar kommer inte fungera
-        på olänkade enkätsvar.
+        olänkad. Att hitta människor i Zetkin baserat på enkätsvar kommer inte
+        fungera på olänkade enkätsvar.
       header: Olänkade enkätsvar
       openLink: '{numUnlink, plural, one {Länka enkätsvar nu} other {Länka enkätsvar
         nu}}'
     unlinkedWarningAlert:
       default:
-        description: '{numUnlink, plural, one {Ett enkätsvar har inte kopplats till
-          en Zetkinprofil, vilket betyder att svaren inte kommer vara med i sökningar.}
-          other {Det finns flera enkätsvar som inte kopplats till Zetkinprofiler,
-          vilket betyder att enkätsvaren inte kommer vara med i sökningar.}}'
+        description: '{numUnlink, plural, one {Ett enkätsvar har inte kopplats till en
+          Zetkinprofil, vilket betyder att svaren inte kommer vara med i
+          sökningar.} other {Det finns flera enkätsvar som inte kopplats till
+          Zetkinprofiler, vilket betyder att enkätsvaren inte kommer vara med i
+          sökningar.}}'
         header: Olänkade enkätsvar
         viewUnlinked: Visa endast olänkade
       filtered:
-        description: Detta är en filtrerad lista och visar bara signerade enkätsvar
-          som inte har blivit länkade till en profil.
+        description: Detta är en filtrerad lista och visar bara signerade enkätsvar som
+          inte har blivit länkade till en profil.
         header: Visar endast olänkade
         viewAll: Visa alla
     urlCard:
@@ -2241,7 +2120,6 @@ feat:
       groupCreatePrompt: Lägg till "{groupName}"
       groupLabel: Grupp
       groupSelectPlaceholder: Skriv för att söka efter eller skapa en grupp
-      submitCreateTagButton: Skapa och använd
       titleErrorText: Namn på etikett behövs
       titleLabel: Namn på etikett
       typeLabel: Etikettyp
@@ -2282,7 +2160,8 @@ feat:
         editable: När den här uppgiften publiceras, kommer den tilldelas alla som
           matchar den Smarta sökningen.
         new: Den här uppgiften kommer tilldelas personer som matchar en Smart sökning.
-          Innan du kan publicera, måste du skapa en målgrupp med hjälp av Smarta sökningar.
+          Innan du kan publicera, måste du skapa en målgrupp med hjälp av Smarta
+          sökningar.
         published: Den här uppgiften håller just nu på att tilldelas alla som matchar
           den Smarta sökningen
       title: Tilldelad {numPeople, plural, one {# person} other {# personer}}
@@ -2335,8 +2214,8 @@ feat:
           lessThanOneMinute: Mindre än en minut
           noEstimate: Ingen uppskattning
         timeValidationErrors:
-          deadlineNotSecond: Det här måste schemaläggas efter Publiceringsdatum, och
-            före Avslutningsdatum
+          deadlineNotSecond: Det här måste schemaläggas efter Publiceringsdatum, och före
+            Avslutningsdatum
           expiresNotThird: Det här måste schemaläggas sist
           publishedNotFirst: Det här måste schemaläggas först
         title: Titel
@@ -2363,8 +2242,8 @@ feat:
       cancel: Avbryt
       submitButton: Publicera uppgift nu
       title: Publicera uppgift
-      warning: Bekräfta att du är redo att publicera uppgiften. Den kommer skickas
-        ut till alla som tilldelats den.
+      warning: Bekräfta att du är redo att publicera uppgiften. Den kommer skickas ut
+        till alla som tilldelats den.
     showExpiredTasksPrompt: Visa utgångna uppgifter
     statuses:
       active: Aktiv
@@ -2384,8 +2263,7 @@ feat:
           slutförandet
       reassignLimit:
         label: Gräns för tilldelning på nytt
-        value: Upprepas som mest {value, plural, =1{en gång} other{# gånger}} per
-          person
+        value: Upprepas som mest {value, plural, =1{en gång} other{# gånger}} per person
       statusLabel: Status
       timeEstimateLabel: Uppskattad tidsåtgång
       title: Uppgiftsdetaljer
@@ -2407,8 +2285,8 @@ feat:
     taskPreview:
       addImage: Lägg till omslagsbild
       sectionTitle: Förhandsvisning
-      timeEstimate: '{minutes, plural, =0 {Mindre än en minut} =1 {En minut} other
-        {# minuter}}'
+      timeEstimate: '{minutes, plural, =0 {Mindre än en minut} =1 {En minut} other {#
+        minuter}}'
     taskTypeDetails:
       demographic:
         title: Inställningar för insamlande av personuppgifter
@@ -2436,12 +2314,12 @@ feat:
       confirmDelete:
         folder:
           title: Radera mapp och allt innehåll
-          warning: Att radera den här mappen är en permanent handling som inte går
-            att ångra. Är du säker på att du vill fortsätta?
+          warning: Att radera den här mappen är en permanent handling som inte går att
+            ångra. Är du säker på att du vill fortsätta?
         view:
           title: Radera lista
-          warning: Att radera den här listan är en permanent handling som inte går
-            att ångra. Är du säker på att du vill fortsätta?
+          warning: Att radera den här listan är en permanent handling som inte går att
+            ångra. Är du säker på att du vill fortsätta?
       menu:
         delete: Radera
         duplicate: Duplicera
@@ -2616,8 +2494,9 @@ feat:
         searchResults: Resultat för "{searchString}"
     columnMenu:
       configure: Redigera kolumn
-      confirmDelete: Är du säker på att du vill radera den här kolumnen? Den innehåller
-        data som kommer försvinna permanent och du kommer inte kunna ångra dig.
+      confirmDelete: Är du säker på att du vill radera den här kolumnen? Den
+        innehåller data som kommer försvinna permanent och du kommer inte kunna
+        ångra dig.
       delete: Radera kolumn
       rename: Byt namn
     columnRenameDialog:
@@ -2639,8 +2518,8 @@ feat:
     deleteDialog:
       error: Något gick fel när listan raderades
       title: Radera listan?
-      warningText: Vill du verkligen radera listan? Detta kommer radera all lokal
-        data i listan, som anteckningar och kryssrutor (men kommer inte att ta bort
+      warningText: Vill du verkligen radera listan? Detta kommer radera all lokal data
+        i listan, som anteckningar och kryssrutor (men kommer inte att ta bort
         personer ur databasen).
     editViewTitleAlert:
       error: Något gick fel. Titeln uppdaterades inte
@@ -2686,16 +2565,17 @@ feat:
         tabLabel: Ladda ner
         warning1: Undvik att exportera data från Zetkin om du inte måste, för att
           försäkra dig om att ingen data kommer på villovägar.
-        warning2: Du kan {shareLink} göra det mesta du behöver i Zetkin. Export är
-          en god idé när du vill kopiera data till ett annat system.
+        warning2: Du kan {shareLink} göra det mesta du behöver i Zetkin. Export är en
+          god idé när du vill kopiera data till ett annat system.
       share:
         addPlaceholder: Dela med person utan administratörsbehörighet
-        collabInstructions: Efter att du lagt till personer utan administratörsbehörighet,
-          kopiera och skicka {viewLink}
+        collabInstructions: Efter att du lagt till personer utan
+          administratörsbehörighet, kopiera och skicka {viewLink}
         showOfficials: Visa administratörer
-        statusLabel: Delad med {collaborators, plural, =1 {1 person utan administratörsbehörighet}
-          other {# personer utan administratörsbehörighet}}, {officials, plural, =1
-          {1 administratör} other {# administratörer}} har tillgång till alla listor.
+        statusLabel: Delad med {collaborators, plural, =1 {1 person utan
+          administratörsbehörighet} other {# personer utan
+          administratörsbehörighet}}, {officials, plural, =1 {1 administratör}
+          other {# administratörer}} har tillgång till alla listor.
         tabLabel: Dela
         viewLink: begränsad länk
       title: Dela "{title}"
@@ -2715,10 +2595,10 @@ feat:
     toolbar:
       createColumn: Ny kolumn
       createFromSelection: Skapa lista från urval
-      removeFromSelection: Ta bort {numSelected, plural, one {1 person} other {{numSelected}
-        personer} } från listan
-      removeTooltip: För tillfället går det inte att ta bort rader i listor som baseras
-        på en Smart sökning
+      removeFromSelection: Ta bort {numSelected, plural, one {1 person} other
+        {{numSelected} personer} } från listan
+      removeTooltip: För tillfället går det inte att ta bort rader i listor som
+        baseras på en Smart sökning
     viewLayout:
       actions:
         share: Dela
@@ -2727,8 +2607,8 @@ feat:
         editQuery: Redigera Smart sökning
         makeDynamic: Konvertera till en lista som baseras på en Smart sökning
         makeStatic:
-          confirmDialogInfo: Om du omvandlar den här listan till en statisk lista
-            kommer den Smarta sökningen försvinna och alla personer som den inkluderade
+          confirmDialogInfo: Om du omvandlar den här listan till en statisk lista kommer
+            den Smarta sökningen försvinna och alla personer som den inkluderade
             tas bort från listan.
           confirmDialogSubmitLabel: Omvandla
           confirmDialogTitle: Omvandla till statisk lista
@@ -2745,35 +2625,54 @@ feat:
         owner: Ägare
         title: Titel
       empty: Du har inte skapat några listor ännu.
-glob:
-  accessLevels:
-    configure: Redigera & konfigurera
-    edit: Redigerar
-    readonly: Skrivskyddad
-  genderOptions:
-    f: Kvinna
-    m: Man
-    o: Annat
-    unspecified: Ospecificerad
-  personFields:
-    alt_phone: Alternativt telefonnummer
-    city: Ort
-    co_address: C/o-adress
-    country: Land
-    email: E-post
-    ext_id: Externt ID
-    first_name: Förnamn
-    gender: Kön
-    id: ID
-    is_user: Är användare
-    last_name: Efternamn
-    phone: Telefonnummer
-    street_address: Adress
-    zip_code: Postnummer
-  roles:
-    admin: Admin
-    organizer: Organisatör
 zui:
+  timeline:
+    addNotePlaceholder: Skriv här för att lägga till en anteckning
+    email:
+      headers:
+        cc: CC
+        from: Från
+        to: Till
+    expand: visa hela tidslinjen
+    fileUploadErrorMessage: Det går inte att lägga till notering. Den kan vara för lång
+    filter:
+      byType:
+        all: Alla
+        files: Filer
+        journey: Journey
+        milestones: Milstolpar
+        notes: Anteckningar
+        people: Människor
+        tags: Taggar
+      filterSelectLabel: 'Visa: {filter}'
+      warning: Tidslinjen filtreras. Klicka här för att ta bort filtret.
+    updates:
+      any:
+        addtags: '{actor} lade till {count, plural, =1 {en etikett} other {#
+          etiketter}}'
+        removetags: '{actor} tog bort {count, plural, =1 {en etikett} other {# etiketter}}'
+      journeyinstance:
+        addassignee: '{actor} tilldelas {assignee}'
+        addnote: '{actor} lade till en anteckning'
+        addsubject: '{actor} lade till {subject}'
+        close:
+          header: '{actor} avslutade journeyn'
+        convert: '{actor} konverterad från {oldLabel} till {newLabel}'
+        create:
+          header: '{actor} starade en ny journey'
+        open: '{actor} öppnade journeyn igen'
+        removeassignee: '{actor} tog bort {assignee} som ansvarig'
+        removesubject: '{actor} tog bort {subject}'
+        update:
+          readMore: Läs mer
+          summary: '{actor} redigerade sammanfattningen'
+          title: '{actor} redigerade titeln'
+        updatemilestone:
+          complete: '{actor} klarade en milstolpe'
+          deadline: '{actor} uppdaterade en milstolpes deadline'
+          deadlineRemove: deadline togs bort
+          deadlineUpdate: ny deadline {datetime}
+          incomplete: '{actor} markerade en milstolpe som ofärdig'
   accessList:
     added: Tillagd av {sharer} {updated}
     removeAccess: Ta bort behörighet
@@ -2783,8 +2682,7 @@ zui:
   confirmDialog:
     button: Bekräfta
     defaultTitle: Bekräfta
-    defaultWarningText: Är du säker på att du vill fortsätta? Det här går inte att
-      ångra.
+    defaultWarningText: Är du säker på att du vill fortsätta? Det här går inte att ångra.
   copyToClipboard:
     copied: Kopierad
     copiedValue: Kopierade "{value}"
@@ -2862,8 +2760,6 @@ zui:
     collapseButton:
       collapse: Dölj
       expand: Expandera
-  imageSelectDialog:
-    instructions: Dra och släpp en bildfil, eller klicka för att välja
   lists:
     showMore: Visa mer...
   orgScopeSelect:
@@ -2875,8 +2771,6 @@ zui:
       suborgs: Endast underorganisationer
       this: Endast {org}
   organizeSidebar:
-    allOrganizations: Alla organisationer
-    areas: Areas
     filter: Skriv för att filtrera
     home: Hem
     journeys: Journeys
@@ -2902,11 +2796,6 @@ zui:
     error: Åh nej, något gick fel!
     success: Framgång
     warning: Varning!
-  speedDial:
-    createCampaign: Skapa kampanj
-    createEvent: Skapa event
-    createTask: Skapa uppgift
-    requestError: Det blev fel
   submitOrCancel:
     cancel: Avbryt
     submit: Spara
@@ -2919,54 +2808,3 @@ zui:
     singleDay: '{date}, {start} - {end}'
     singleDayAllDay: Hela dagen idag
     singleDayToday: Idag, {start} - {end}
-  timeline:
-    addNotePlaceholder: Skriv här för att lägga till en anteckning
-    email:
-      headers:
-        cc: CC
-        from: Från
-        to: Till
-    expand: visa hela tidslinjen
-    fileUploadErrorMessage: Det går inte att lägga till notering. Den kan vara för
-      lång
-    filter:
-      byType:
-        all: Alla
-        files: Filer
-        journey: Journey
-        milestones: Milstolpar
-        notes: Anteckningar
-        people: Människor
-        tags: Taggar
-      filterSelectLabel: 'Visa: {filter}'
-      warning: Tidslinjen filtreras. Klicka här för att ta bort filtret.
-    updates:
-      any:
-        addtags: '{actor} lade till {count, plural, =1 {en etikett} other {# etiketter}}'
-        removetags: '{actor} tog bort {count, plural, =1 {en etikett} other {# etiketter}}'
-      journeyinstance:
-        addassignee: '{actor} tilldelas {assignee}'
-        addnote: '{actor} lade till en anteckning'
-        addsubject: '{actor} lade till {subject}'
-        close:
-          header: '{actor} avslutade journeyn'
-        convert: '{actor} konverterad från {oldLabel} till {newLabel}'
-        create:
-          header: '{actor} starade en ny journey'
-        open: '{actor} öppnade journeyn igen'
-        removeassignee: '{actor} tog bort {assignee} som ansvarig'
-        removesubject: '{actor} tog bort {subject}'
-        update:
-          readMore: Läs mer
-          summary: '{actor} redigerade sammanfattningen'
-          title: '{actor} redigerade titeln'
-        updatemilestone:
-          complete: '{actor} klarade en milstolpe'
-          deadline: '{actor} uppdaterade en milstolpes deadline'
-          deadlineRemove: deadline togs bort
-          deadlineUpdate: ny deadline {datetime}
-          incomplete: '{actor} markerade en milstolpe som ofärdig'
-  timezonePicker:
-    gmt: GMT
-    placeholder: Skriv för att söka på plats
-    timezone: Tidszon

@@ -131,7 +131,8 @@ export function clusterEvents(
 }
 
 export default function useClusteredActivities(
-  activities: CampaignActivity[]
+  activities: CampaignActivity[],
+  newestFirst?: boolean
 ): ClusteredActivity[] {
   const eventActivities: EventActivity[] = [];
   const otherActivities: NonEventActivity[] = [];
@@ -162,7 +163,9 @@ export default function useClusteredActivities(
       return 1;
     }
 
-    return aStart.getTime() - bStart.getTime();
+    return newestFirst
+      ? bStart.getTime() - aStart.getTime()
+      : aStart.getTime() - bStart.getTime();
   });
 }
 

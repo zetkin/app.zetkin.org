@@ -82,6 +82,7 @@ const CampaignArchivePage: PageWithLayout = () => {
                   filters={filters}
                   orgId={orgId}
                   searchString={searchString}
+                  sortNewestFirst
                 />
               </Grid>
               <Grid size={{ sm: 4 }}>

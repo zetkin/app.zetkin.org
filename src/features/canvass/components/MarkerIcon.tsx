@@ -9,6 +9,7 @@ interface MarkerIconProps {
   totalVisits?: number;
   successfulVisits?: number;
   uniqueKey?: string;
+  color?: string;
 }
 
 const MarkerIcon: FC<MarkerIconProps> = ({
@@ -17,6 +18,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   selected,
   totalVisits = 0,
   successfulVisits = 0,
+  color = oldTheme.palette.primary.main,
 }) => {
   const pinInteriorKey = uniqueKey + '_pinInterior';
   const pinOutlinePath =
@@ -45,10 +47,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       width="21"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d={pinOutlinePath}
-        fill={selected ? oldTheme.palette.primary.main : 'white'}
-      />
+      <path d={pinOutlinePath} fill={selected ? color : 'white'} />
 
       <clipPath id={pinInteriorKey}>
         <path d={pinInteriorPath} />
@@ -64,7 +63,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       />
       <rect
         clipPath={`url(#${pinInteriorKey})`}
-        fill={lighten(oldTheme.palette.primary.main, 0.7)}
+        fill={lighten(color, 0.7)}
         height={visitsBandHeight}
         width="21"
         x="0"
@@ -72,7 +71,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       />
       <rect
         clipPath={`url(#${pinInteriorKey})`}
-        fill={oldTheme.palette.primary.main}
+        fill={color}
         height={successBandHeight}
         width="21"
         x="0"

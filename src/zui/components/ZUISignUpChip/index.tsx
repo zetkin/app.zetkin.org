@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { FC } from 'react';
 
 import { Msg } from 'core/i18n';
@@ -6,28 +6,37 @@ import messageIds from 'zui/l10n/messageIds';
 import ZUILabel from '../ZUILabel';
 
 type ZUISignUpChipProps = {
-  status: 'needed' | 'signedUp';
+  status: 'needed' | 'signedUp' | 'booked';
 };
 
 const ZUISignUpChip: FC<ZUISignUpChipProps> = ({ status }) => {
+  const theme = useTheme();
+
+  const getColors = () => {
+    if (status == 'needed') {
+      return theme.palette.swatches.yellow;
+    } else if (status == 'signedUp') {
+      return theme.palette.swatches.green;
+    } else {
+      //Status must be "booked"
+      return theme.palette.swatches.blue;
+    }
+  };
+
+  const colors = getColors();
+
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         alignItems: 'center',
-        bgcolor:
-          status == 'needed'
-            ? theme.palette.swatches.blue[100]
-            : theme.palette.swatches.green[100],
+        bgcolor: colors[100],
         borderRadius: 4,
-        color:
-          status == 'needed'
-            ? theme.palette.swatches.blue[900]
-            : theme.palette.swatches.green[900],
+        color: colors[900],
         display: 'inline-flex',
         pointerEvents: 'none',
         px: 1,
         py: 0.3,
-      })}
+      }}
     >
       <ZUILabel color="inherit">
         <Msg id={messageIds.signUpChip[status]} />

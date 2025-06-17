@@ -49,10 +49,11 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
 
   return (
     <Box
+      component="button"
       onClick={onClick}
       sx={(theme) => ({
         alignItems: 'center',
-        backgroundColor: active ? theme.palette.primary.main : '',
+        backgroundColor: active ? theme.palette.primary.main : 'transparent',
         border: `0.063rem solid ${theme.palette.primary.main}`,
         borderRadius: '2rem',
         color: active ? theme.palette.common.white : theme.palette.text.primary,

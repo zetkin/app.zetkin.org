@@ -20,6 +20,8 @@ import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCreatePerson, ZetkinPerson } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
+import zuiMessages from 'zui/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 interface ZUICreatePersonProps {
   onClose: () => void;
@@ -46,6 +48,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const [tags, setTags] = useState<number[]>([]);
 
   const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
+  const messages = useMessages(zuiMessages);
 
   return (
     <Dialog
@@ -61,7 +64,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
       <Box sx={{ padding: '40px 0 40px 40px' }}>
         <Box display="flex">
           <Typography sx={{ ml: 0.5 }} variant="h5">
-            {title}
+            {title ?? messages.createPerson.title.default()}
           </Typography>
         </Box>
         {!customFields ? (

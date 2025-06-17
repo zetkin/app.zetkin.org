@@ -9,6 +9,7 @@ import mockApiClient from 'utils/testing/mocks/mockApiClient';
 import mockHouseholdVisit from 'utils/testing/mocks/mockHouseholdVisit';
 import mockAreaAssignment from 'utils/testing/mocks/mockAreaAssignment';
 import mockLocationVisit from 'utils/testing/mocks/mockLocationVisit';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 const ASSIGNMENT_ID = 11;
 const LOCATION_ID = 101;
@@ -25,6 +26,8 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
+        remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
         new Date().toISOString();
@@ -100,6 +103,7 @@ describe('useVisitReporting()', () => {
       const store = createStore(initialState);
       const newVisit = mockHouseholdVisit();
       const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue({}),
         post: jest.fn().mockResolvedValue(newVisit),
       });
 
@@ -142,6 +146,54 @@ describe('useVisitReporting()', () => {
       const date = new Date(dateStr);
       expect(date.getTime() / 1000).toBeCloseTo(new Date().getTime() / 1000, 1);
     });
+
+    it('triggers a refresh of the location stats', async () => {
+      const mockLocation: ZetkinLocation = {
+        description: '',
+        id: LOCATION_ID,
+        latitude: 55,
+        longitude: 13,
+        num_estimated_households: 0,
+        num_households_successful: 1,
+        num_households_visited: 1,
+        num_known_households: 0,
+        num_successful_visits: 1,
+        num_visits: 1,
+        organization_id: 1,
+        title: '123 Location Street',
+      };
+
+      const store = createStore(initialState);
+      const newVisit = mockHouseholdVisit();
+      const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue(mockLocation),
+        post: jest.fn().mockResolvedValue(newVisit),
+      });
+
+      const { result } = renderHook(
+        () => useVisitReporting(1, ASSIGNMENT_ID, LOCATION_ID),
+        {
+          wrapper: makeWrapper(store, apiClient),
+        }
+      );
+
+      await act(async () => {
+        await result.current.reportHouseholdVisit(HOUSEHOLD_ID, [
+          {
+            metric_id: 10001,
+            response: 'yes',
+          },
+        ]);
+      });
+
+      const stateAfterAction = store.getState();
+      const locationItem =
+        stateAfterAction.areaAssignments.locationsByAssignmentId[
+          ASSIGNMENT_ID
+        ].items.find((item) => item.id == LOCATION_ID);
+
+      expect(locationItem?.data).toEqual(mockLocation);
+    });
   });
 
   describe('Location-level assignment', () => {
@@ -149,6 +201,8 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
+        remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
         new Date().toISOString();
@@ -235,6 +289,7 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue({}),
         post: jest.fn().mockResolvedValue(newVisit),
       });
 
@@ -276,6 +331,66 @@ describe('useVisitReporting()', () => {
       ).toEqual(newVisit);
     });
 
+    it('reportLocationVisit() triggers refresh of location stats', async () => {
+      const mockLocation: ZetkinLocation = {
+        description: '',
+        id: LOCATION_ID,
+        latitude: 55,
+        longitude: 13,
+        num_estimated_households: 0,
+        num_households_successful: 1,
+        num_households_visited: 1,
+        num_known_households: 0,
+        num_successful_visits: 1,
+        num_visits: 1,
+        organization_id: 1,
+        title: '123 Location Street',
+      };
+
+      const store = createStore(initialState);
+      const newVisit = mockLocationVisit({
+        assignment_id: ASSIGNMENT_ID,
+        metrics: [
+          {
+            metric_id: 10001,
+            num_no: 1,
+            num_yes: 1,
+          },
+        ],
+        num_households_visited: 2,
+      });
+
+      const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue(mockLocation),
+        post: jest.fn().mockResolvedValue(newVisit),
+      });
+
+      const { result } = renderHook(
+        () => useVisitReporting(1, ASSIGNMENT_ID, LOCATION_ID),
+        {
+          wrapper: makeWrapper(store, apiClient),
+        }
+      );
+
+      await act(async () => {
+        await result.current.reportLocationVisit(2, [
+          {
+            metric_id: 10001,
+            num_no: 1,
+            num_yes: 1,
+          },
+        ]);
+      });
+
+      const stateAfterAction = store.getState();
+      const locationItem =
+        stateAfterAction.areaAssignments.locationsByAssignmentId[
+          ASSIGNMENT_ID
+        ].items.find((item) => item.id == LOCATION_ID);
+
+      expect(locationItem?.data).toEqual(mockLocation);
+    });
+
     it('reportHouseholdVisit() creates new location visit when there is none', async () => {
       const store = createStore(initialState);
       const newVisit = mockLocationVisit({
@@ -291,6 +406,7 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue({}),
         post: jest.fn().mockResolvedValue(newVisit),
       });
 
@@ -394,6 +510,7 @@ describe('useVisitReporting()', () => {
       });
 
       const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue({}),
         post: jest.fn().mockResolvedValue(newVisit),
       });
 
@@ -456,6 +573,7 @@ describe('useVisitReporting()', () => {
       const store = createStore(initialState);
 
       const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue({}),
         patch: jest.fn().mockImplementation((url, data) => ({
           ...correctCurrentVisit,
           ...data,
@@ -521,6 +639,64 @@ describe('useVisitReporting()', () => {
         ],
         num_households_visited: 2,
       });
+    });
+
+    it('reportHouseholdVisit() triggers refresh of location stats', async () => {
+      const mockLocation: ZetkinLocation = {
+        description: '',
+        id: LOCATION_ID,
+        latitude: 55,
+        longitude: 13,
+        num_estimated_households: 0,
+        num_households_successful: 1,
+        num_households_visited: 1,
+        num_known_households: 0,
+        num_successful_visits: 1,
+        num_visits: 1,
+        organization_id: 1,
+        title: '123 Location Street',
+      };
+
+      const store = createStore(initialState);
+      const newVisit = mockLocationVisit({
+        assignment_id: ASSIGNMENT_ID,
+        metrics: [
+          {
+            metric_id: 10001,
+            num_values: [0, 0, 1, 0, 0],
+          },
+        ],
+        num_households_visited: 1,
+      });
+
+      const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue(mockLocation),
+        post: jest.fn().mockResolvedValue(newVisit),
+      });
+
+      const { result } = renderHook(
+        () => useVisitReporting(1, ASSIGNMENT_ID, LOCATION_ID),
+        {
+          wrapper: makeWrapper(store, apiClient),
+        }
+      );
+
+      await act(async () => {
+        await result.current.reportHouseholdVisit(HOUSEHOLD_ID, [
+          {
+            metric_id: 10001,
+            response: '3',
+          },
+        ]);
+      });
+
+      const stateAfterAction = store.getState();
+      const locationItem =
+        stateAfterAction.areaAssignments.locationsByAssignmentId[
+          ASSIGNMENT_ID
+        ].items.find((item) => item.id == LOCATION_ID);
+
+      expect(locationItem?.data).toEqual(mockLocation);
     });
   });
 });

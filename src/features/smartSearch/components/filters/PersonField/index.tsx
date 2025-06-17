@@ -45,6 +45,9 @@ const PersonField = ({
   const filteredFields = fields.filter(
     (f) => f.type !== CUSTOM_FIELD_TYPE.JSON
   );
+  const filteredFieldsSorted = filteredFields.sort((ff1, ff2) => {
+    return ff1.title.localeCompare(ff2.title);
+  });
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<Partial<PersonFieldFilterConfig>>(initialFilter);
@@ -120,7 +123,7 @@ const PersonField = ({
         onChange={(e) => handleFieldChange(e.target.value)}
         value={selectedField?.slug}
       >
-        {filteredFields.map((f) => (
+        {filteredFieldsSorted.map((f) => (
           <MenuItem key={f.slug} value={f.slug}>
             {f.title}
           </MenuItem>

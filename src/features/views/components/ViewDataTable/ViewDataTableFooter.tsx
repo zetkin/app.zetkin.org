@@ -30,6 +30,12 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
   return (
     <Box p={1}>
       <ZUIPersonSelect
+        createPersonLabels={{
+          submitLabel: zuiMessages.createPerson.submitLabel.add(),
+          title: zuiMessages.createPerson.title.addToList({
+            list: viewTitle,
+          }),
+        }}
         getOptionDisabled={(option) => rows.some((row) => row.id == option.id)}
         getOptionExtraLabel={(option) => {
           return rows.some((row) => row.id == option.id)
@@ -48,10 +54,6 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
         }}
         placeholder={messages.footer.addPlaceholder()}
         selectedPerson={null}
-        submitLabel={zuiMessages.createPerson.submitLabel.add()}
-        title={zuiMessages.createPerson.title.addToList({
-          list: viewTitle,
-        })}
         variant="outlined"
       />
     </Box>
