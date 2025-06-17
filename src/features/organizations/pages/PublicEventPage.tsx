@@ -80,6 +80,18 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const showContactDetails =
     !event?.cancelled && event?.status == 'booked' && !!contactPerson;
 
+  const getFlexDirection = () => {
+    if (isMobile) {
+      return 'column-reverse';
+    }
+
+    if (!hasInfoText) {
+      return 'column';
+    }
+
+    return 'row';
+  };
+
   return (
     <Suspense>
       {event && (
@@ -140,7 +152,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: isMobile || !hasInfoText ? 'column' : 'row',
+                flexDirection: getFlexDirection(),
                 gap: hasInfoText || (!hasInfoText && isFullScreen) ? 2 : 0,
               }}
             >
