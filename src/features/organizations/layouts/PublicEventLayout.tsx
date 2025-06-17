@@ -32,73 +32,62 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
       }}
     >
       {event && (
-        <>
-          <Box
-            sx={(theme) => ({
-              backgroundColor: theme.palette.grey[50],
-              height: '100%',
-              position: 'fixed',
-              width: '100%',
-              zIndex: -1,
-            })}
-          />
-          <Box
-            sx={{
-              marginX: 'auto',
-              maxWidth: 960,
-            }}
-          >
-            <Box bgcolor="white">
-              <ActivistPortalHeader
-                subtitle={
+        <Box
+          sx={{
+            marginX: 'auto',
+            maxWidth: 960,
+          }}
+        >
+          <Box bgcolor="white">
+            <ActivistPortalHeader
+              subtitle={
+                <Box
+                  sx={{
+                    alignItems: isMobile ? 'flex-start' : 'center',
+                    display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: 1,
+                  }}
+                >
+                  <ZUIText>
+                    <ZUITimeSpan
+                      end={new Date(event.end_time)}
+                      start={new Date(event.start_time)}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="bodySmRegular">
+                    {event.location?.title || (
+                      <Msg id={messageIds.eventPage.noLocation} />
+                    )}
+                  </ZUIText>
+                </Box>
+              }
+              title={
+                event.title ||
+                event.activity?.title ||
+                messages.eventPage.defaultTitle()
+              }
+              topLeftComponent={
+                <NextLink href={`/o/${event.organization.id}`} passHref>
                   <Box
                     sx={{
-                      alignItems: isMobile ? 'flex-start' : 'center',
-                      display: 'flex',
-                      flexDirection: isMobile ? 'column' : 'row',
+                      alignItems: 'center',
+                      display: 'inline-flex',
                       gap: 1,
                     }}
                   >
-                    <ZUIText>
-                      <ZUITimeSpan
-                        end={new Date(event.end_time)}
-                        start={new Date(event.start_time)}
-                      />
-                    </ZUIText>
-                    <ZUIText variant="bodySmRegular">
-                      {event.location?.title || (
-                        <Msg id={messageIds.eventPage.noLocation} />
-                      )}
-                    </ZUIText>
+                    <ZUIOrgLogoAvatar
+                      orgId={event.organization.id}
+                      size="small"
+                    />
+                    <ZUIText>{event.organization.title}</ZUIText>
                   </Box>
-                }
-                title={
-                  event.title ||
-                  event.activity?.title ||
-                  messages.eventPage.defaultTitle()
-                }
-                topLeftComponent={
-                  <NextLink href={`/o/${event.organization.id}`} passHref>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'inline-flex',
-                        gap: 1,
-                      }}
-                    >
-                      <ZUIOrgLogoAvatar
-                        orgId={event.organization.id}
-                        size="small"
-                      />
-                      <ZUIText>{event.organization.title}</ZUIText>
-                    </Box>
-                  </NextLink>
-                }
-              />
-            </Box>
-            {children}
+                </NextLink>
+              }
+            />
           </Box>
-        </>
+          {children}
+        </Box>
       )}
     </Box>
   );
