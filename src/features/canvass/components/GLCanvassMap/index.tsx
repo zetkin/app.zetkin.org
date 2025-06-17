@@ -52,9 +52,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       [180, 90],
     ];
 
-    const areaHoles = areas.map((area) =>
-      area.boundary.coordinates.flatMap((polygon) => polygon.map(flipLatLng))
-    );
+    const areaHoles = areas.map((area) => area.boundary.coordinates[0]);
 
     return {
       geometry: {
@@ -71,22 +69,22 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       return localStorageBounds;
     }
 
+    const firstPolygon = areas[0]?.boundary.coordinates[0];
+    if (firstPolygon.length) {
+      const totalBounds = new LngLatBounds(firstPolygon[0], firstPolygon[0]);
+
+      // Extend with all areas
+      areas.forEach((area) => {
+        area.boundary.coordinates[0]?.forEach((lngLat) =>
+          totalBounds.extend(lngLat)
+        );
+      });
+
+      return [totalBounds.getSouthWest(), totalBounds.getNorthEast()];
+    }
+
     const min: LngLatLike = [180, 90];
     const max: LngLatLike = [-180, -90];
-
-    areas.forEach((area) => {
-      area.boundary.coordinates.forEach((polygon) => {
-        polygon.forEach((point) => {
-          const [lat, lng] = point;
-
-          min[0] = Math.min(min[0], lng);
-          min[1] = Math.min(min[1], lat);
-
-          max[0] = Math.max(max[0], lng);
-          max[1] = Math.max(max[1], lat);
-        });
-      });
-    });
 
     return [min, max];
   }, [areas]);
@@ -227,14 +225,14 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
               const firstPolygon = areas[0]?.boundary.coordinates[0];
               if (firstPolygon.length) {
                 const totalBounds = new LngLatBounds(
-                  flipLatLng(firstPolygon[0]),
-                  flipLatLng(firstPolygon[0])
+                  firstPolygon[0],
+                  firstPolygon[0]
                 );
 
                 // Extend with all areas
                 areas.forEach((area) => {
-                  area.boundary.coordinates[0]?.forEach((latLng) =>
-                    totalBounds.extend(flipLatLng(latLng))
+                  area.boundary.coordinates[0]?.forEach((lngLat) =>
+                    totalBounds.extend(lngLat)
                   );
                 });
 
@@ -244,8 +242,8 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
               }
             }
           }}
-          onGeolocate={(latLng) => {
-            map?.panTo(flipLatLng(latLng), { animate: true, duration: 800 });
+          onGeolocate={(lngLat) => {
+            map?.panTo(lngLat, { animate: true, duration: 800 });
           }}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
@@ -476,11 +474,6 @@ const getCrosshairPositionOnMap = (
 
   return { markerX, markerY };
 };
-
-function flipLatLng(latLng: [number, number]): [number, number] {
-  const [lat, lng] = latLng;
-  return [lng, lat];
-}
 
 function expressionToRoundAveragePercentage(
   percentagePropName: string

@@ -15,7 +15,7 @@ import { latLngBounds, Map as MapType } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { useNumericRouteParams } from 'core/hooks';
-import objToLatLng from 'features/areas/utils/objToLatLng';
+import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 import useCreateArea from '../../../areas/hooks/useCreateArea';
 import { PointData, ZetkinArea } from '../../../areas/types';
 import AreaFilters from '../../../areas/components/AreaFilters';
@@ -51,7 +51,7 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
     const map = mapRef.current;
 
     if (selectedArea && map) {
-      const points = selectedArea.points.map((p) => objToLatLng(p));
+      const points = selectedArea.points.map(flipForLeaflet);
       const areaBounds = latLngBounds(points);
       const topRightOnMap = areaBounds.getNorthEast();
       const container = map.getContainer();
@@ -114,14 +114,10 @@ const GeographyMap: FC<MapProps> = ({ areas }) => {
     const map = mapRef.current;
     if (map) {
       if (areas.length) {
-        const totalBounds = latLngBounds(
-          areas[0].points.map((p) => objToLatLng(p))
-        );
+        const totalBounds = latLngBounds(areas[0].points.map(flipForLeaflet));
 
         areas.forEach((area) => {
-          const areaBounds = latLngBounds(
-            area.points.map((p) => objToLatLng(p))
-          );
+          const areaBounds = latLngBounds(area.points.map(flipForLeaflet));
           totalBounds.extend(areaBounds);
         });
 
