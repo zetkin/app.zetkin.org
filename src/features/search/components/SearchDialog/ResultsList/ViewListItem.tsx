@@ -27,7 +27,7 @@ const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   elements.push(messages.results.view());
 
   return (
-    <Link href={`/organize/${orgId}/people/views/${view.id}`}>
+    <Link href={`/organize/${orgId}/people/lists/${view.id}`}>
       <ListItem data-testid="SearchDialog-resultsListItem">
         <ListItemButton>
           <ListItemAvatar>
