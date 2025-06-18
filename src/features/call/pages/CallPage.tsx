@@ -16,6 +16,7 @@ import useAllocateCall from '../hooks/useAllocateCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PrepareHeader from '../components/headers/PrepareHeader';
 import CallHeader from '../components/headers/CallHeader';
+import SummaryHeader from '../components/headers/SummaryHeader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -31,7 +32,6 @@ export enum CallStep {
 
 const CallPage: FC<Props> = ({ assignment }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
-  const [isLoading, setIsLoading] = useState(false);
   const call = useCurrentCall();
   const router = useRouter();
   const { allocateCall } = useAllocateCall(
@@ -97,27 +97,19 @@ const CallPage: FC<Props> = ({ assignment }) => {
       )}
       {activeStep == CallStep.SUMMARY && call && (
         <>
-          <CallHeader
+          <SummaryHeader
             assignment={assignment}
             call={call}
-            forwardButtonLabel={'Keep calling'}
-            forwardButtonLoading={isLoading}
-            onBack={() => setActiveStep(CallStep.STATS)}
-            onForward={async () => {
-              setIsLoading(true);
+            onNextCall={async () => {
               const result = await allocateCall();
               if (result) {
-                setIsLoading(false);
                 setActiveStep(CallStep.STATS);
                 router.push(`/call/${assignment.id}`);
               } else {
-                setIsLoading(false);
                 setActiveStep(CallStep.PREPARE);
               }
             }}
-            onSecondaryAction={() => setActiveStep(CallStep.STATS)}
-            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-            secondaryActionLabel={'Take a break'}
+            onTakeBreak={() => setActiveStep(CallStep.STATS)}
           />
           <CallSummary />
         </>
