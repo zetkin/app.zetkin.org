@@ -19,12 +19,7 @@ const CampaignListItem: React.FunctionComponent<{
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
   return (
-    <Link
-      key={campaign.id}
-      href={`/organize/${orgId}/projects/${campaign.id}`}
-      legacyBehavior
-      passHref
-    >
+    <Link key={campaign.id} href={`/organize/${orgId}/projects/${campaign.id}`}>
       <ListItem data-testid="SearchDialog-resultsListItem">
         <ListItemButton>
           <ListItemAvatar>

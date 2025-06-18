@@ -20,8 +20,6 @@ const JourneyInstanceListItem: React.FunctionComponent<{
   return (
     <Link
       href={`/organize/${orgId}/journeys/${journeyInstance.journey.id}/${journeyInstance.id}`}
-      legacyBehavior
-      passHref
     >
       <ListItem data-testid="SearchDialog-resultsListItem">
         <ListItemButton>
