@@ -51,6 +51,7 @@ const breadcrumbs = async (
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
       } else {
+        curPath.push(field);
         if (
           field == 'callassignments' ||
           field == 'folders' ||
@@ -62,7 +63,6 @@ const breadcrumbs = async (
           // and shouldn't link to anything.
           continue;
         }
-        curPath.push(field);
         breadcrumbs.push({
           href: '/' + curPath.join('/'),
           labelMsg: field,
