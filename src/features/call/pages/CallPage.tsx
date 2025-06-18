@@ -111,7 +111,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
             }}
             onTakeBreak={() => setActiveStep(CallStep.STATS)}
           />
-          <CallSummary />
+          <CallSummary assignment={assignment} />
         </>
       )}
     </Box>
