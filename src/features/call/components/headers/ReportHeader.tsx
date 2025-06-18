@@ -3,28 +3,28 @@ import { FC, useState } from 'react';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { useAppSelector } from 'core/hooks';
 import useCallMutations from '../../hooks/useCallMutations';
-import StepsHeader from './StepsHeader';
 import { ZetkinCall } from 'features/call/types';
+import CallHeader from './CallHeader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
+  forwardButtonLabel: string;
   onBack: () => void;
-  onPrimaryAction: () => void;
-  onPrimaryActionLabel: string;
+  onForward: () => void;
   onSecondaryAction?: () => void;
-  onSecondaryActionLabel?: string;
   onSwitchCall: () => void;
+  secondaryActionLabel?: string;
 };
 
 const ReportHeader: FC<Props> = ({
   assignment,
   call,
   onBack,
-  onPrimaryAction,
-  onPrimaryActionLabel,
+  onForward,
+  forwardButtonLabel,
   onSecondaryAction,
-  onSecondaryActionLabel,
+  secondaryActionLabel,
   onSwitchCall,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,26 +34,26 @@ const ReportHeader: FC<Props> = ({
   const reportIsDone = callState && !!callState.report;
 
   return (
-    <StepsHeader
+    <CallHeader
       assignment={assignment}
       call={call}
       forwardButtonDisabled={!reportIsDone}
-      forwardButtonIsLoading={isLoading}
+      forwardButtonLabel={forwardButtonLabel}
+      forwardButtonLoading={isLoading}
       onBack={onBack}
-      onPrimaryAction={async () => {
+      onForward={async () => {
         if (reportIsDone) {
           setIsLoading(true);
           await updateCall(call.id, callState.report);
           sessionStorage.clear();
           //TODO: Error handling
-          onPrimaryAction();
+          onForward();
           setIsLoading(false);
         }
       }}
-      onPrimaryActionLabel={onPrimaryActionLabel}
       onSecondaryAction={onSecondaryAction}
-      onSecondaryActionLabel={onSecondaryActionLabel}
       onSwitchCall={onSwitchCall}
+      secondaryActionLabel={secondaryActionLabel}
     />
   );
 };
