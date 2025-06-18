@@ -2676,6 +2676,8 @@ zui:
   accessList:
     added: Tillagd av {sharer} {updated}
     removeAccess: Ta bort behörighet
+  breadcrumbs:
+    showMore: '{number} fler…'
   collapse:
     collapse: Dölj
     expand: Expandera
@@ -2707,6 +2709,7 @@ zui:
     title:
       addToJourney: Skapa person och lägg till i  {journey}
       addToList: Skapa person och lägg till i  {list}
+      assignToAreaAssignment: Skapa person och tilldela till {areaAss}
       assignToJourney: Skapa person och tilldela {journey}
       caller: Skapa person och lägg till som ringare
       contact: Skapa person och lägg till som kontaktperson
@@ -2754,6 +2757,9 @@ zui:
       noEmpty: Den här får inte vara tom
   editableImage:
     add: Klicka för att lägga till bild
+  eventWarningIcons:
+    reminders: '{numMissing, plural, =1 {En} other {#}} deltagare har ännu inte
+      mottagit påminnelser'
   futures:
     errorLoading: Något gick fel när datan laddades upp.
   header:
@@ -2792,6 +2798,8 @@ zui:
     noResult: Hittade ingen person som matchade
     search: Skriv för att börja söka
     searching: Söker...
+  publicFooter:
+    hostingOrganization: Denna kopia av Zetkin tillhandahålls och hanteras av {name}.
   snackbar:
     error: Åh nej, något gick fel!
     success: Framgång
