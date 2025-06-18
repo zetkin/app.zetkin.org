@@ -5,8 +5,11 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportForm from './Report';
 import ZUISection from 'zui/components/ZUISection';
-import { useAppDispatch } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { reportAdded } from '../store';
+import useIsMobile from 'utils/hooks/useIsMobile';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
+import SurveyCard from './SurveyCard';
 
 type CallReportProps = {
   assignment: ZetkinCallAssignment;
@@ -15,26 +18,68 @@ type CallReportProps = {
 const CallReport: FC<CallReportProps> = ({ assignment }) => {
   const call = useCurrentCall();
   const dispatch = useAppDispatch();
+  const isMobile = useIsMobile();
+
+  const surveyKeys = useAppSelector((state) => state.call.filledSurveys || []);
+
+  const surveys = useSurveysWithElements(assignment.organization.id).data || [];
+  const matchedSurveys = surveys
+    .map((survey) => {
+      const matchingKey = surveyKeys.find((key) => key.surveyId === survey.id);
+      if (matchingKey) {
+        return {
+          survey,
+          targetId: matchingKey.targetId,
+        };
+      }
+      return null;
+    })
+    .filter(
+      (item): item is { survey: typeof surveys[0]; targetId: number } =>
+        item !== null
+    );
 
   if (!call) {
     return null;
   }
 
   return (
-    <Box p={2}>
-      <ZUISection
-        renderContent={() => (
-          <ReportForm
-            callId={call.id}
-            disableCallerNotes={assignment.disable_caller_notes}
-            onReportFinished={(report) => {
-              dispatch(reportAdded([call.id, report]));
-            }}
-            target={call.target}
-          />
-        )}
-        title="Report"
-      />
+    <Box
+      display="flex"
+      flexDirection={isMobile ? 'column' : 'row'}
+      width="100%"
+    >
+      <Box flex={isMobile ? 'none' : '4'} order={isMobile ? 2 : 1} p={2}>
+        <ZUISection
+          renderContent={() => (
+            <Box>
+              {matchedSurveys?.map((item) => (
+                <SurveyCard
+                  key={item.survey.id}
+                  survey={item.survey}
+                  targetId={item.targetId}
+                />
+              ))}
+            </Box>
+          )}
+          title="Activities"
+        />
+      </Box>
+      <Box flex={isMobile ? 'none' : '6'} order={isMobile ? 1 : 2} p={2}>
+        <ZUISection
+          renderContent={() => (
+            <ReportForm
+              callId={call.id}
+              disableCallerNotes={assignment.disable_caller_notes}
+              onReportFinished={(report) => {
+                dispatch(reportAdded([call.id, report]));
+              }}
+              target={call.target}
+            />
+          )}
+          title="Report"
+        />
+      </Box>
     </Box>
   );
 };
