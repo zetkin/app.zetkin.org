@@ -47,8 +47,14 @@ const Task = ({
 
   const tasksQuery = useTasks(orgId);
   const tasks = tasksQuery.data || [];
+  const tasksSorted = tasks.sort((t1, t2) => {
+    return t1.title.localeCompare(t2.title);
+  });
 
-  const { data: campaigns } = useCampaigns(orgId);
+  const campaigns = useCampaigns(orgId).data || [];
+  const campaignsSorted = campaigns.sort((c1, c2) => {
+    return c1.title.localeCompare(c2.title);
+  });
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
     initialFilter,
@@ -168,7 +174,7 @@ const Task = ({
                   <MenuItem key={ANY_CAMPAIGN} value={ANY_CAMPAIGN}>
                     <Msg id={localMessageIds.campaignSelect.any} />
                   </MenuItem>
-                  {campaigns?.map((c) => (
+                  {campaignsSorted.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       <Msg
                         id={localMessageIds.campaignSelect.campaign}
@@ -210,7 +216,7 @@ const Task = ({
                 <MenuItem key={ANY_TASK} value={ANY_TASK}>
                   <Msg id={localMessageIds.taskSelect.any} />
                 </MenuItem>
-                {tasks.map((t) => (
+                {tasksSorted.map((t) => (
                   <MenuItem key={t.id} value={t.id}>
                     <Tooltip
                       placement="right-start"

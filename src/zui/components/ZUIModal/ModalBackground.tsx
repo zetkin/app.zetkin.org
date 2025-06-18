@@ -14,11 +14,11 @@ type Props = {
   width: number | string;
 };
 
-const COLORS = [
+export const COLORS = [
   0xff93e9eb, 0xaa22d3ee, 0xffb3daee, 0xccbed0f9, 0xffd8c4fa, 0x664f46e5,
 ];
 
-const PATTERNS = [
+export const PATTERNS = [
   [
     [0, 1, 0, 0],
     [0, 1, 0, 0],
@@ -47,7 +47,7 @@ const PATTERNS = [
   ],
 ];
 
-function setPixel(image: ImageData, x: number, y: number, argb: number) {
+export function setPixel(image: ImageData, x: number, y: number, argb: number) {
   const b = argb & 0xff;
   const g = (argb >> 8) & 0xff;
   const r = (argb >> 16) & 0xff;

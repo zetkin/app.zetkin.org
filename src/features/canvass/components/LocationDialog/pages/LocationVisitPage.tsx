@@ -190,7 +190,7 @@ const LocationVisitPage: FC<Props> = ({
                         <IntInput
                           label={messages.visit.location.yesInputLabel()}
                           labelPlacement="horizontal"
-                          min={1}
+                          min={0}
                           onChange={(value) => {
                             setValuesByMetricId((current) => ({
                               ...current,
@@ -202,7 +202,7 @@ const LocationVisitPage: FC<Props> = ({
                         <IntInput
                           label={messages.visit.location.noInputLabel()}
                           labelPlacement="horizontal"
-                          min={1}
+                          min={0}
                           onChange={(value) => {
                             setValuesByMetricId((current) => ({
                               ...current,
@@ -295,6 +295,7 @@ const LocationVisitPage: FC<Props> = ({
                               key={ratingValue}
                               label={ratingValue.toString()}
                               labelPlacement="horizontal"
+                              min={0}
                               onChange={(newValue) => {
                                 setValuesByMetricId((current) => ({
                                   ...current,

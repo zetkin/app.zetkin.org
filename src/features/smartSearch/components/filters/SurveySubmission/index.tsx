@@ -41,6 +41,9 @@ const SurveySubmission = ({
 }: SurveySubmissionProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const surveys = useSurveys(orgId).data || [];
+  const sortedSurveys = surveys.sort((sur1, sur2) => {
+    return sur1.title.localeCompare(sur2.title);
+  });
 
   const [submittable, setSubmittable] = useState(false);
 
@@ -146,7 +149,7 @@ const SurveySubmission = ({
                     <Msg id={localMessageIds.surveySelect.none} />
                   </MenuItem>
                 )}
-                {surveys.map((s) => (
+                {sortedSurveys.map((s) => (
                   <MenuItem key={s.id} value={s.id}>
                     <Tooltip
                       placement="right-start"

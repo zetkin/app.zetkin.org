@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { CircularProgress, Link, Theme } from '@mui/material';
-import { FC, useContext } from 'react';
+import { FC, MouseEvent, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import { Msg } from 'core/i18n';
@@ -14,6 +14,7 @@ import messageIds from 'features/views/l10n/messageIds';
 interface BrowserItemProps {
   basePath: string;
   item: ViewBrowserItem;
+  onClick: (ev: MouseEvent) => void;
 }
 
 const useStyles = makeStyles<Theme, BrowserRowDropProps>({
@@ -27,7 +28,7 @@ const useStyles = makeStyles<Theme, BrowserRowDropProps>({
   },
 });
 
-const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
+const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, onClick }) => {
   const dropProps = useContext(BrowserRowContext);
   const styles = useStyles(dropProps);
   const { orgId } = useNumericRouteParams();
@@ -38,7 +39,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
 
     return (
       <NextLink href={`${basePath}/${subPath}`} legacyBehavior passHref>
-        <Link className={styles.itemLink}>
+        <Link className={styles.itemLink} onClick={(ev) => onClick(ev)}>
           {item.title ? (
             <Msg
               id={
@@ -64,7 +65,9 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item }) => {
     return (
       <BrowserDraggableItem item={item}>
         <NextLink href={`${basePath}/${item.id}`} legacyBehavior passHref>
-          <Link className={styles.itemLink}>{item.title}</Link>
+          <Link className={styles.itemLink} onClick={(ev) => onClick(ev)}>
+            {item.title}
+          </Link>
         </NextLink>
         {itemIsRenaming(item.type, item.data.id) && (
           <CircularProgress size={20} />

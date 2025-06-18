@@ -41,7 +41,20 @@ const ZUINavStack: FC<Props> = ({ bgcolor, children, currentPage }) => {
                 zIndex: index,
               }}
             >
-              <Suspense fallback={<CircularProgress />}>{child}</Suspense>
+              <Suspense
+                fallback={
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    height="100%"
+                    justifyContent="center"
+                  >
+                    <CircularProgress />
+                  </Box>
+                }
+              >
+                {child}
+              </Suspense>
             </Box>
           </Slide>
         );

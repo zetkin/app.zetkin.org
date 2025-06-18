@@ -1,12 +1,18 @@
-import { redirect } from 'next/navigation';
+'use server';
 
-export default function Page({
-  params,
-}: {
-  params: { orgId: string; projId: string };
-}) {
-  const { orgId, projId } = params;
-  redirect(
-    `http://${process.env.ZETKIN_API_DOMAIN}/o/${orgId}/campaigns/${projId}`
-  );
-}
+import { FC } from 'react';
+
+import PublicProjPage from 'features/campaigns/pages/PublicProjPage';
+
+type Props = {
+  params: {
+    orgId: number;
+    projId: number;
+  };
+};
+
+const Page: FC<Props> = ({ params }) => {
+  return <PublicProjPage campId={params.projId} orgId={params.orgId} />;
+};
+
+export default Page;

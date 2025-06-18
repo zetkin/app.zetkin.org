@@ -1,6 +1,10 @@
+import { Branded } from 'utils/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 
-export type PointData = [number, number];
+export type Longitude = Branded<number, 'Longitude'>;
+export type Latitude = Branded<number, 'Latitude'>;
+
+export type PointData = [Longitude, Latitude];
 
 export type ZetkinArea = {
   description: string;

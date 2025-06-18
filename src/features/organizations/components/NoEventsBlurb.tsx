@@ -1,16 +1,11 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
-import useOrganization from '../hooks/useOrganization';
 import ZUIText from 'zui/components/ZUIText';
 
-type Props = { orgId: number };
+type Props = { description?: string; title: string };
 
-const NoEventsBlurb: FC<Props> = ({ orgId }) => {
-  const org = useOrganization(orgId);
-
+const NoEventsBlurb: FC<Props> = ({ description, title }) => {
   return (
     <Box
       sx={(theme) => ({
@@ -23,17 +18,8 @@ const NoEventsBlurb: FC<Props> = ({ orgId }) => {
         p: 2,
       })}
     >
-      <ZUIText variant="headingMd">
-        <Msg id={messageIds.noEventsBlurb.headline} />
-      </ZUIText>
-      {!!org.data && (
-        <ZUIText variant="bodySmRegular">
-          <Msg
-            id={messageIds.noEventsBlurb.description}
-            values={{ org: org.data.title }}
-          />
-        </ZUIText>
-      )}
+      <ZUIText variant="headingMd">{title}</ZUIText>
+      {description && <ZUIText variant="bodySmRegular">{description}</ZUIText>}
     </Box>
   );
 };

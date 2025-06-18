@@ -1,17 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Dayjs } from 'dayjs';
+import { DateRange } from '@mui/x-date-pickers-pro';
 
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 
+type CampaignEventFilters = {
+  customDatesToFilterBy: DateRange<Dayjs>;
+  dateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+};
+
 export interface CampaignsStoreSlice {
   campaignList: RemoteList<ZetkinCampaign>;
   campaignsByOrgId: Record<string, RemoteList<ZetkinCampaign>>;
+  filters: CampaignEventFilters;
   recentlyCreatedCampaign: ZetkinCampaign | null;
 }
 
 const initialCampaignsState: CampaignsStoreSlice = {
   campaignList: remoteList(),
   campaignsByOrgId: {},
+  filters: {
+    customDatesToFilterBy: [null, null],
+    dateFilterState: null,
+  },
   recentlyCreatedCampaign: null,
 };
 
@@ -114,6 +126,13 @@ const campaignsSlice = createSlice({
       state.campaignList.loaded = timestamp;
       state.campaignList.items.forEach((item) => (item.loaded = timestamp));
     },
+    filtersUpdated: (
+      state,
+      action: PayloadAction<Partial<CampaignEventFilters>>
+    ) => {
+      const updatedFilters = action.payload;
+      state.filters = { ...state.filters, ...updatedFilters };
+    },
   },
 });
 
@@ -128,4 +147,5 @@ export const {
   campaignUpdated,
   campaignsLoad,
   campaignsLoaded,
+  filtersUpdated,
 } = campaignsSlice.actions;

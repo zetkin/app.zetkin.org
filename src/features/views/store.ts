@@ -5,6 +5,7 @@ import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
 import notEmpty from 'utils/notEmpty';
+import { PersonViewFilterConfig } from 'features/smartSearch/components/types';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
@@ -387,6 +388,7 @@ const viewsSlice = createSlice({
 
       if (viewItem) {
         viewItem.deleted = true;
+        invalidateDependentViews(viewId, state);
       }
     },
     viewDuplicated: (state, action: PayloadAction<[ZetkinView]>) => {
@@ -430,6 +432,7 @@ const viewsSlice = createSlice({
         // Empty view to trigger reload
         rowList.items = [];
         rowList.isStale = true;
+        invalidateDependentViews(viewId, state);
       }
     },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
@@ -531,6 +534,71 @@ function updateCallOnRelevantRows(
       }
     }
   });
+}
+
+interface Dependency {
+  from: number;
+  to: number;
+}
+
+function invalidateDependentViews(
+  updatedViewId: number | undefined,
+  state: ViewsStoreSlice
+) {
+  const dependencies = getViewDependencies(state);
+  const viewsCheckedForDependencies = [];
+  const viewsQueue = [];
+
+  while (dependencies.length > 0 && updatedViewId) {
+    viewsCheckedForDependencies.push(updatedViewId);
+
+    for (let i = 0; i < dependencies.length; i++) {
+      const dependency = dependencies[i];
+      const isDependentOnUpdatedView = dependency.to == updatedViewId;
+
+      if (isDependentOnUpdatedView) {
+        const alreadyChecked = viewsCheckedForDependencies.includes(
+          dependency.from
+        );
+
+        if (!alreadyChecked) {
+          viewsQueue.push(dependency.from);
+        }
+
+        const viewRowsToInvalidate = state.rowsByViewId[dependency.from];
+        if (viewRowsToInvalidate) {
+          viewRowsToInvalidate.items = [];
+          viewRowsToInvalidate.isStale = true;
+        }
+
+        dependencies.splice(i, 1);
+        i--;
+      }
+    }
+    updatedViewId = viewsQueue.pop();
+  }
+}
+
+function getViewDependencies(state: ViewsStoreSlice): Dependency[] {
+  const dependencies: Dependency[] = [];
+
+  state.viewList.items.forEach((viewItem) => {
+    const viewData = viewItem.data;
+    const viewQuery = viewData?.content_query;
+
+    if (viewQuery) {
+      viewQuery.filter_spec.forEach((queryType) => {
+        if (queryType.type === 'person_view') {
+          dependencies.push({
+            from: viewData.id,
+            to: (queryType.config as PersonViewFilterConfig).view,
+          });
+        }
+      });
+    }
+  });
+
+  return dependencies;
 }
 
 export default viewsSlice;

@@ -37,6 +37,9 @@ const JoinFormFilter: FC<Props> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const forms = useJoinForms(orgId).data || [];
+  const formsSorted = forms.sort((f1, f2) => {
+    return f1.title.localeCompare(f2.title);
+  });
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<JoinFormFilterConfig>(initialFilter, {});
 
@@ -83,7 +86,7 @@ const JoinFormFilter: FC<Props> = ({
                 <MenuItem value="any">
                   <Msg id={localMessageIds.anyForm} />
                 </MenuItem>
-                {forms.map((form) => (
+                {formsSorted.map((form) => (
                   <MenuItem key={form.id} value={form.id}>
                     {form.title}
                   </MenuItem>

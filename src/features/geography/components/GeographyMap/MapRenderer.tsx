@@ -9,10 +9,16 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 
-import { PointData, ZetkinArea } from 'features/areas/types';
+import {
+  Latitude,
+  Longitude,
+  PointData,
+  ZetkinArea,
+} from 'features/areas/types';
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
 import { getBoundSize } from '../../../canvass/utils/getBoundSize';
 import { useEnv } from 'core/hooks';
+import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 
 type Props = {
   areas: ZetkinArea[];
@@ -43,10 +49,10 @@ const MapRenderer: FC<Props> = ({
   const map = useMapEvents({
     click: (evt) => {
       if (isDrawing) {
-        const lat = evt.latlng.lat;
-        const lng = evt.latlng.lng;
+        const lat = evt.latlng.lat as Latitude;
+        const lng = evt.latlng.lng as Longitude;
         const current = drawingPoints || [];
-        onChangeDrawingPoints([...current, [lat, lng]]);
+        onChangeDrawingPoints([...current, [lng, lat]]);
       }
     },
     zoom: () => {
@@ -85,10 +91,13 @@ const MapRenderer: FC<Props> = ({
         }}
       >
         {drawingPoints && (
-          <Polyline pathOptions={{ color: 'red' }} positions={drawingPoints} />
+          <Polyline
+            pathOptions={{ color: 'red' }}
+            positions={drawingPoints.map(flipForLeaflet)}
+          />
         )}
         {drawingPoints && drawingPoints.length > 0 && (
-          <DivIconMarker position={drawingPoints[0]}>
+          <DivIconMarker position={flipForLeaflet(drawingPoints[0])}>
             <Box
               onClick={(ev) => {
                 ev.stopPropagation();
@@ -108,7 +117,7 @@ const MapRenderer: FC<Props> = ({
           <Polygon
             key={'editing'}
             color={theme.palette.primary.main}
-            positions={editingArea.points}
+            positions={editingArea.points.map(flipForLeaflet)}
             weight={5}
           />
         )}
@@ -120,7 +129,9 @@ const MapRenderer: FC<Props> = ({
               eventHandlers={{
                 dragend: (evt) => {
                   const latLng = evt.target.getLatLng();
-                  const movedPoint: PointData = [latLng.lat, latLng.lng];
+                  const lat = latLng.lat as Latitude;
+                  const lng = latLng.lng as Longitude;
+                  const movedPoint: PointData = [lng, lat];
                   onChangeArea({
                     ...editingArea,
                     points: editingArea.points.map((oldPoint, oldIndex) =>
@@ -129,7 +140,7 @@ const MapRenderer: FC<Props> = ({
                   });
                 },
               }}
-              position={point}
+              position={flipForLeaflet(point)}
             >
               <Box
                 sx={{
@@ -169,7 +180,7 @@ const MapRenderer: FC<Props> = ({
                     }
                   },
                 }}
-                positions={area.points}
+                positions={area.points.map(flipForLeaflet)}
                 weight={2}
               />
             );
@@ -183,7 +194,7 @@ const MapRenderer: FC<Props> = ({
                 onSelectArea(null);
               },
             }}
-            positions={selectedArea.points}
+            positions={selectedArea.points.map(flipForLeaflet)}
             weight={5}
           />
         )}

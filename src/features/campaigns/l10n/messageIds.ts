@@ -160,6 +160,29 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Project Manager'),
+  publicProjectPage: {
+    eventList: {
+      emptyList: {
+        message: m('Could not find any events'),
+        removeFiltersButton: m('Clear filters'),
+      },
+      filterButtonLabels: {
+        thisWeek: m('This week'),
+        today: m('Today'),
+        tomorrow: m('Tomorrow'),
+      },
+      noEventsBlurb: {
+        description: m<{ project: string }>(
+          '{project} has no upcoming events.'
+        ),
+        headline: m('There are no upcoming events'),
+      },
+    },
+    map: {
+      viewInListButton: m('View in list'),
+      viewInMapButton: m('View in map'),
+    },
+  },
   shared: {
     cta: m('Go to project'),
     noActivities: m(

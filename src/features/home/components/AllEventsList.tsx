@@ -295,7 +295,11 @@ const AllEventsList: FC = () => {
           <Fade appear in mountOnEnter style={{ transitionDelay: nextDelay() }}>
             <Box display="flex" flexDirection="column" gap={1}>
               {eventsByDate[date].map((event) => (
-                <EventListItem key={event.id} event={event} />
+                <EventListItem
+                  key={event.id}
+                  event={event}
+                  href={`/o/${event.organization.id}/events/${event.id}`}
+                />
               ))}
             </Box>
           </Fade>

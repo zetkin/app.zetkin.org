@@ -13,7 +13,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useContext, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { Box, Link, useTheme } from '@mui/material';
 
 import columnTypes from './columnTypes';
@@ -124,17 +124,23 @@ const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
-  disableBulkActions?: boolean;
+  disableAdd?: boolean;
   disableConfigure?: boolean;
   rows: ZetkinViewRow[];
+  rowSelection?: {
+    mode: 'select' | 'selectWithBulkActions';
+    onSelectionChange?: (selectedIds: number[]) => void;
+    selectedIds?: number[];
+  };
   view: ZetkinView;
 }
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
-  disableBulkActions = false,
+  disableAdd = false,
   disableConfigure,
   rows,
+  rowSelection: selectionModel,
   view,
 }) => {
   const theme = useTheme();
@@ -149,7 +155,17 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(
     null
   );
-  const [selection, setSelection] = useState<number[]>([]);
+  const [selection, setSelection] = useState<number[]>(
+    selectionModel?.selectedIds ?? []
+  );
+  useEffect(() => {
+    if (
+      selectionModel?.onSelectionChange &&
+      JSON.stringify(selection) !== JSON.stringify(selectionModel.selectedIds)
+    ) {
+      selectionModel.onSelectionChange(selection);
+    }
+  }, [selection]);
   const [waiting, setWaiting] = useState(false);
 
   const { gridProps: modelGridProps } = useModelsFromQueryString();
@@ -443,6 +459,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       },
     },
     toolbar: {
+      disableBulkActions: selectionModel?.mode !== 'selectWithBulkActions',
       disableConfigure,
       disabled: waiting,
       gridColumns,
@@ -471,13 +488,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       <DataGridPro
         apiRef={gridApiRef}
         autoHeight={empty}
-        checkboxSelection={!disableBulkActions}
+        checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
         disableRowSelectionOnClick={true}
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
-        hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
+        hideFooter={
+          disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
+        }
         localeText={{
           ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
           noRowsLabel: messages.empty.notice[contentSource](),
@@ -544,6 +563,20 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         style={{
           border: 'none',
+        }}
+        sx={{
+          ...(accessLevel === 'readonly' && {
+            '& .MuiDataGrid-cell:focus': {
+              outline: 'none',
+            },
+            '& .MuiDataGrid-cell:focus-within': {
+              outline: 'none',
+            },
+            '& .MuiDataGrid-cell:hover': {
+              backgroundColor: 'transparent',
+              cursor: 'default',
+            },
+          }),
         }}
         {...modelGridProps}
       />

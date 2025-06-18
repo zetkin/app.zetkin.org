@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 
-import StepsHeader from '../components/headers/StepsHeader';
 import StatsHeader from '../components/headers/StatsHeader';
 import CallStats from '../components/CallStats';
 import CallPrepare from '../components/CallPrepare';
@@ -15,6 +14,8 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import ReportHeader from '../components/headers/ReportHeader';
 import useAllocateCall from '../hooks/useAllocateCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
+import PrepareHeader from '../components/headers/PrepareHeader';
+import CallHeader from '../components/headers/CallHeader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -55,12 +56,11 @@ const CallPage: FC<Props> = ({ assignment }) => {
       )}
       {activeStep == CallStep.PREPARE && call && (
         <>
-          <StepsHeader
+          <PrepareHeader
             assignment={assignment}
             call={call}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onPrimaryAction={() => setActiveStep(CallStep.ONGOING)}
-            onPrimaryActionLabel={'Call'}
+            onForward={() => setActiveStep(CallStep.ONGOING)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
 
@@ -69,15 +69,14 @@ const CallPage: FC<Props> = ({ assignment }) => {
       )}
       {activeStep == CallStep.ONGOING && call && (
         <>
-          <StepsHeader
+          <CallHeader
             assignment={assignment}
             call={call}
+            forwardButtonLabel={'Finish and report'}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onPrimaryAction={() => setActiveStep(CallStep.REPORT)}
-            onPrimaryActionLabel={'Finish and report'}
+            onForward={() => setActiveStep(CallStep.REPORT)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
-
           <CallOngoing assignment={assignment} />
         </>
       )}
@@ -86,24 +85,25 @@ const CallPage: FC<Props> = ({ assignment }) => {
           <ReportHeader
             assignment={assignment}
             call={call}
+            forwardButtonLabel={'Submit report'}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onPrimaryAction={() => setActiveStep(CallStep.SUMMARY)}
-            onPrimaryActionLabel={'Submit report'}
+            onForward={() => setActiveStep(CallStep.SUMMARY)}
             onSecondaryAction={() => setActiveStep(CallStep.ONGOING)}
-            onSecondaryActionLabel={'Back to activities'}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+            secondaryActionLabel={'Back to activities'}
           />
           <CallReport assignment={assignment} />
         </>
       )}
       {activeStep == CallStep.SUMMARY && call && (
         <>
-          <StepsHeader
+          <CallHeader
             assignment={assignment}
             call={call}
-            forwardButtonIsLoading={isLoading}
+            forwardButtonLabel={'Keep calling'}
+            forwardButtonLoading={isLoading}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onPrimaryAction={async () => {
+            onForward={async () => {
               setIsLoading(true);
               const result = await allocateCall();
               if (result) {
@@ -115,10 +115,9 @@ const CallPage: FC<Props> = ({ assignment }) => {
                 setActiveStep(CallStep.PREPARE);
               }
             }}
-            onPrimaryActionLabel={'Keep calling'}
             onSecondaryAction={() => setActiveStep(CallStep.STATS)}
-            onSecondaryActionLabel={'Take a break'}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+            secondaryActionLabel={'Take a break'}
           />
           <CallSummary />
         </>
