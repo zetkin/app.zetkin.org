@@ -42,3 +42,8 @@ blockquote {
 #nprogress #nprogress .bar {
   position: absolute;
 }
+
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
