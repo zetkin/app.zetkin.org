@@ -1598,6 +1598,9 @@ zui:
     error: Åh nej, noget er gået galt
     success: Success!
     warning: Advarsel!
+  statusChip:
+    cancelled: Aflyst
+    closed: Lukket
   submitOrCancel:
     cancel: Afbryd
     submit: Indsend
@@ -1609,3 +1612,5 @@ zui:
     multiDayToday: I dag, {start} - {endDate}, {end}
     singleDay: '{date}, {start} - {end}'
     singleDayToday: I dag, {start} - {end}
+  timeZonePicker:
+    timeZone: Tidszone
