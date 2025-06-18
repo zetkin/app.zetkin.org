@@ -1,21 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { clearSurveysKeys } from '../store';
 import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
-
-type SuccessfulSubmission = {
-  signature: number;
-  success: true;
-  surveyId: number;
-};
-
-type FailedSubmission = {
-  error: string;
-  signature: number;
-  success: false;
-  surveyId: number;
-};
-
-type SubmissionResult = SuccessfulSubmission | FailedSubmission;
+import submitSurveysRpc from '../rpc/submitSurveys';
 
 type CallSubmissions = {
   submission: ZetkinSurveyApiSubmission;
@@ -27,44 +13,26 @@ export default function useAddSurveysSubmissions(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const submitSurveys = async (submissions: CallSubmissions) => {
-    const results = await Promise.allSettled(
-      submissions.map(({ surveyId, targetId, submission }) =>
-        apiClient
-          .post(`/api/orgs/${orgId}/surveys/${surveyId}/submissions`, {
-            responses: submission.responses,
-            signature: targetId,
-          })
-          .then<SuccessfulSubmission>(() => ({
-            signature: targetId,
-            success: true,
-            surveyId,
-          }))
-          .catch<FailedSubmission>(() => ({
-            error: 'Error with submission',
-            signature: targetId,
-            success: false,
-            surveyId,
-          }))
-      )
-    );
+  const submitSurveys = async (
+    submissions: CallSubmissions
+  ): Promise<boolean> => {
+    try {
+      const result = await apiClient.rpc(submitSurveysRpc, {
+        orgId,
+        submissions,
+      });
 
-    const isSuccessful = (
-      result: PromiseSettledResult<SubmissionResult>
-    ): result is PromiseFulfilledResult<SuccessfulSubmission> =>
-      result.status === 'fulfilled' && result.value.success === true;
+      result.forEach(({ surveyId, targetId }) => {
+        localStorage.removeItem(`formContent-${surveyId}-${targetId}`);
+      });
 
-    const successful = results.filter(isSuccessful);
-
-    successful.forEach(({ value: { surveyId, signature } }) => {
-      localStorage.removeItem(`formContent-${surveyId}-${signature}`);
-    });
-
-    if (successful.length > 0) {
-      dispatch(clearSurveysKeys());
+      if (result.length) {
+        dispatch(clearSurveysKeys());
+      }
+      return true;
+    } catch (err) {
+      return false;
     }
-
-    return results;
   };
 
   return { submitSurveys };
