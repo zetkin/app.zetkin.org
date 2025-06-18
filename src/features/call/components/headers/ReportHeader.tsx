@@ -1,43 +1,59 @@
 import { FC, useState } from 'react';
 
-import OngoingHeader from './OngoingHeader';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import { CallStep } from '../pages/CallPage';
 import { useAppSelector } from 'core/hooks';
-import useCallMutations from '../hooks/useCallMutations';
+import useCallMutations from '../../hooks/useCallMutations';
+import { ZetkinCall } from 'features/call/types';
+import CallHeader from './CallHeader';
 
 type Props = {
   assignment: ZetkinCallAssignment;
-  callId: number;
+  call: ZetkinCall;
+  forwardButtonLabel: string;
   onBack: () => void;
   onForward: () => void;
+  onSecondaryAction?: () => void;
+  onSwitchCall: () => void;
+  secondaryActionLabel?: string;
 };
 
-const ReportHeader: FC<Props> = ({ assignment, callId, onBack, onForward }) => {
+const ReportHeader: FC<Props> = ({
+  assignment,
+  call,
+  onBack,
+  onForward,
+  forwardButtonLabel,
+  onSecondaryAction,
+  secondaryActionLabel,
+  onSwitchCall,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const { updateCall } = useCallMutations(assignment.organization.id);
   const stateList = useAppSelector((state) => state.call.stateByCallId);
-  const callState = stateList[callId]?.data;
+  const callState = stateList[call.id]?.data;
   const reportIsDone = callState && !!callState.report;
 
   return (
-    <OngoingHeader
+    <CallHeader
       assignment={assignment}
+      call={call}
       forwardButtonDisabled={!reportIsDone}
-      forwardButtonIsLoading={isLoading}
-      forwardButtonLabel="Submit report"
+      forwardButtonLabel={forwardButtonLabel}
+      forwardButtonLoading={isLoading}
       onBack={onBack}
       onForward={async () => {
         if (reportIsDone) {
           setIsLoading(true);
-          await updateCall(callId, callState.report);
+          await updateCall(call.id, callState.report);
           sessionStorage.clear();
           //TODO: Error handling
           onForward();
           setIsLoading(false);
         }
       }}
-      step={CallStep.REPORT}
+      onSecondaryAction={onSecondaryAction}
+      onSwitchCall={onSwitchCall}
+      secondaryActionLabel={secondaryActionLabel}
     />
   );
 };
