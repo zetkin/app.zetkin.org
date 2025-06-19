@@ -6,12 +6,11 @@ import {
   remoteItemUpdated,
   remoteList,
   RemoteList,
-  remoteListCreated,
   remoteListLoad,
   remoteListLoaded,
 } from 'utils/storeUtils';
 import { ZetkinArea } from './types';
-import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<ZetkinArea>;
@@ -54,42 +53,6 @@ const areasSlice = createSlice({
       const areas = action.payload;
       state.areaList = remoteListLoaded(areas);
     },
-    tagAssigned: (state, action: PayloadAction<[number, ZetkinTag]>) => {
-      const [areaId, tag] = action.payload;
-
-      state.tagsByAreaId[areaId] ||= remoteListCreated();
-      remoteItemUpdated(state.tagsByAreaId[areaId], tag);
-
-      const areaItem = state.areaList.items.find((item) => item.id == areaId);
-      if (areaItem?.data) {
-        areaItem.data.tags.push(tag);
-      }
-    },
-    tagUnassigned: (state, action: PayloadAction<[number, number]>) => {
-      const [areaId, tagId] = action.payload;
-      state.tagsByAreaId[areaId] ||= remoteListCreated();
-      state.tagsByAreaId[areaId].items = state.tagsByAreaId[
-        areaId
-      ].items.filter((item) => item.id != tagId);
-
-      const areaItem = state.areaList.items.find((item) => item.id == areaId);
-      if (areaItem?.data) {
-        areaItem.data.tags = areaItem.data.tags.filter(
-          (tag) => tag.id != tagId
-        );
-      }
-    },
-    tagsLoad: (state, action: PayloadAction<number>) => {
-      const areaId = action.payload;
-      state.tagsByAreaId[areaId] = remoteListLoad(state.tagsByAreaId[areaId]);
-    },
-    tagsLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinAppliedTag[]]>
-    ) => {
-      const [areaId, tags] = action.payload;
-      state.tagsByAreaId[areaId] = remoteListLoaded(tags);
-    },
   },
 });
 
@@ -102,8 +65,4 @@ export const {
   areasLoad,
   areasLoaded,
   areaUpdated,
-  tagAssigned,
-  tagUnassigned,
-  tagsLoad,
-  tagsLoaded,
 } = areasSlice.actions;
