@@ -39,7 +39,18 @@ const GeographyPage: PageWithLayout = () => {
         <title>{messages.page.title()}</title>
       </Head>
       <ZUIFuture future={areasFuture}>
-        {(areas) => <GeographyMap areas={areas} />}
+        {(areas) => (
+          <GeographyMap
+            areas={areas.map((area) => ({
+              description: area.description,
+              id: area.id,
+              organization_id: area.organization_id,
+              points: area.boundary.coordinates[0],
+              tags: [],
+              title: area.title,
+            }))}
+          />
+        )}
       </ZUIFuture>
     </>
   );

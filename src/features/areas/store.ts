@@ -9,11 +9,11 @@ import {
   remoteListLoad,
   remoteListLoaded,
 } from 'utils/storeUtils';
-import { ZetkinArea } from './types';
+import { Zetkin2Area } from './types';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
-  areaList: RemoteList<ZetkinArea>;
+  areaList: RemoteList<Zetkin2Area>;
   tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
@@ -26,7 +26,7 @@ const areasSlice = createSlice({
   initialState: initialState,
   name: 'areas',
   reducers: {
-    areaCreated: (state, action: PayloadAction<ZetkinArea>) => {
+    areaCreated: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
@@ -38,18 +38,18 @@ const areasSlice = createSlice({
       const areaId = action.payload;
       remoteItemLoad(state.areaList, areaId);
     },
-    areaLoaded: (state, action: PayloadAction<ZetkinArea>) => {
+    areaLoaded: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
-    areaUpdated: (state, action: PayloadAction<ZetkinArea>) => {
+    areaUpdated: (state, action: PayloadAction<Zetkin2Area>) => {
       const area = action.payload;
       remoteItemUpdated(state.areaList, area);
     },
     areasLoad: (state) => {
       state.areaList = remoteListLoad(state.areaList);
     },
-    areasLoaded: (state, action: PayloadAction<ZetkinArea[]>) => {
+    areasLoaded: (state, action: PayloadAction<Zetkin2Area[]>) => {
       const areas = action.payload;
       state.areaList = remoteListLoaded(areas);
     },
