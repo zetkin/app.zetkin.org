@@ -6,6 +6,7 @@ import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats'
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import CallSummarySentence from './CallSummarySentence';
 import { ZetkinCall } from '../types';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const CallSummary: FC<Props> = ({ assignment, call }) => {
+  const isMobile = useIsMobile();
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
     assignment.id
@@ -25,7 +27,7 @@ const CallSummary: FC<Props> = ({ assignment, call }) => {
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          minWidth: '50%',
+          minWidth: isMobile ? '100%' : '600px',
         }}
       >
         <CallSummarySentence call={call} />
