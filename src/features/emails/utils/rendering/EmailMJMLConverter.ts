@@ -34,16 +34,25 @@ export default class EmailMJMLConverter {
           content: `<p>${contentHtml}</p>`,
         });
       } else if (block.kind == 'button') {
+        let href = escapeAttribute(block.data.href);
+        if (href.match(/^https?:\/\/.*/) == null) {
+          href = '';
+        }
+
         blockChildren.push({
           tagName: 'mj-button',
           attributes: {
             ...frame?.block_attributes?.button,
             'css-class': `email-link-${block.data.tag}`,
-            href: block.data.href,
+            href: href,
           },
           content: block.data.text,
         });
       } else if (block.kind == 'header') {
+        if (typeof block.data.level != 'number') {
+          block.data.level = 1;
+        }
+
         const tagName = 'h' + block.data.level;
         const contentHtml = inlineNodesToPlainHTML(block.data.content);
         blockChildren.push({
@@ -105,7 +114,7 @@ function inlineNodesToPlainHTML(nodes: EmailContentInlineNode[]): string {
 
   nodes.forEach((node) => {
     if (node.kind == 'string') {
-      output += node.value;
+      output += escapeHTMLContent(node.value);
     } else if (node.kind == 'bold') {
       const htmlContent = inlineNodesToPlainHTML(node.content);
       output += `<b>${htmlContent}</b>`;
@@ -113,12 +122,30 @@ function inlineNodesToPlainHTML(nodes: EmailContentInlineNode[]): string {
       const htmlContent = inlineNodesToPlainHTML(node.content);
       output += `<i>${htmlContent}</i>`;
     } else if (node.kind == 'link') {
+      let href = escapeAttribute(node.href);
+      if (href.match(/^https?:\/\/.*/) == null) {
+        href = '';
+      }
       const htmlContent = inlineNodesToPlainHTML(node.content);
-      output += `<a class="email-link-${node.tag}" href="${node.href}">${htmlContent}</a>`;
+      const tag = escapeAttribute(node.tag);
+      output += `<a class="email-link-${tag}" href="${href}">${htmlContent}</a>`;
     } else if (node.kind == 'lineBreak') {
       output += '<br>';
     }
   });
 
   return output;
+}
+
+function escapeHTMLContent(content: string): string {
+  return content
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function escapeAttribute(value: string): string {
+  return value.replaceAll('"', '%22').replaceAll("'", '%27');
 }
