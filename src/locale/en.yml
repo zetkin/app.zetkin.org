@@ -127,6 +127,7 @@ feat:
         moveMenuHeader: Move {numberOfEvents} events to
         nextDay: Next day {dates}
         nextWeek: Next week {dates}
+      openEventList: Make questionnaire
     shortWeek: w {weekNumber}
     showMore: Show
     today: Today
@@ -327,6 +328,7 @@ feat:
       allCampaigns: All Projects & Activities
       archive: Archive
       calendar: Calendar
+      eventList: Event List
       insights: Insights
       overview: Overview
     linkGroup:
