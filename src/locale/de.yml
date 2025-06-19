@@ -2075,6 +2075,7 @@ feat:
     submissions:
       anonymous: Anonym
       dateColumn: Datum
+      delete: Löschen
       emailColumn: Email
       firstNameColumn: Vorname
       lastNameColumn: Nachname
@@ -2869,6 +2870,7 @@ zui:
       foundation: Zetkin Foundation
       privacy: Datenschutzerklärung
   signUpChip:
+    booked: Du bist angemeldet.
     needed: Du wirst gebraucht
     signedUp: Du hast dich angemeldet
   snackbar:
