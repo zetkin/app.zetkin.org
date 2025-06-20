@@ -55,6 +55,7 @@
     "@nivo/radial-bar": "^0.80.0",
     "@reduxjs/toolkit": "^1.8.6",
     "@storybook/addon-docs": "^8.2.9",
+    "@turf/area": "^7.2.0",
     "@types/dompurify": "^2.3.3",
     "@types/mjml": "^4.7.4",
     "@vis.gl/react-maplibre": "^8.0.4",
