@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import Map, { Layer, Source } from '@vis.gl/react-maplibre';
 import { FC, useMemo, useState } from 'react';
-import { LngLatBounds, LngLatLike, Map as MapType } from 'maplibre-gl';
+import { Map as MapType } from 'maplibre-gl';
 
 import { Zetkin2Area } from 'features/areas/types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
@@ -13,6 +13,7 @@ import oldAreaFormat from 'features/areas/utils/oldAreaFormat';
 import useAreaEditing from 'features/geography/hooks/useAreaEditing';
 import useAreaSelection from 'features/geography/hooks/useAreaSelection';
 import SelectedArea from './SelectedArea';
+import useMapBounds from 'features/geography/hooks/useMapBounds';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -21,32 +22,12 @@ type Props = {
 const GLGeographyMap: FC<Props> = ({ areas }) => {
   const env = useEnv();
   const [map, setMap] = useState<MapType | null>(null);
+  const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({ areas, map });
   const { draggingPoints, editing, editingArea, setEditing } = useAreaEditing({
     map,
     selectedArea,
   });
-
-  const bounds: [LngLatLike, LngLatLike] = useMemo(() => {
-    const firstPolygon = areas[0]?.boundary.coordinates[0];
-    if (firstPolygon?.length) {
-      const totalBounds = new LngLatBounds(firstPolygon[0], firstPolygon[0]);
-
-      // Extend with all areas
-      areas.forEach((area) => {
-        area.boundary.coordinates[0]?.forEach((lngLat) =>
-          totalBounds.extend(lngLat)
-        );
-      });
-
-      return [totalBounds.getSouthWest(), totalBounds.getNorthEast()];
-    }
-
-    const min: LngLatLike = [180, 90];
-    const max: LngLatLike = [-180, -90];
-
-    return [min, max];
-  }, [areas]);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     return {
@@ -74,24 +55,7 @@ const GLGeographyMap: FC<Props> = ({ areas }) => {
         <ZUIMapControls
           onFitBounds={() => {
             if (map) {
-              const firstPolygon = areas[0]?.boundary.coordinates[0];
-              if (firstPolygon.length) {
-                const totalBounds = new LngLatBounds(
-                  firstPolygon[0],
-                  firstPolygon[0]
-                );
-
-                // Extend with all areas
-                areas.forEach((area) => {
-                  area.boundary.coordinates[0]?.forEach((lngLat) =>
-                    totalBounds.extend(lngLat)
-                  );
-                });
-
-                if (totalBounds) {
-                  map.fitBounds(totalBounds, { animate: true, duration: 800 });
-                }
-              }
+              map.fitBounds(bounds, { animate: true, duration: 800 });
             }
           }}
           onGeolocate={(lngLat) => {
