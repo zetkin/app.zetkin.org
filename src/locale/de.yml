@@ -2075,6 +2075,7 @@ feat:
     submissions:
       anonymous: Anonym
       dateColumn: Datum
+      delete: Löschen
       emailColumn: Email
       firstNameColumn: Vorname
       lastNameColumn: Nachname
@@ -2652,6 +2653,7 @@ feat:
         share: Teilen
       ellipsisMenu:
         delete: Liste löschen
+        duplicate: Duplikat
         editQuery: Bearbeite intelligente Suche
         makeDynamic: Umwandeln in dynamische Liste (basierend auf intelligenter Suche)
         makeStatic:
@@ -2728,6 +2730,10 @@ zui:
   accessList:
     added: Hinzugefügt durch {sharer} {updated}
     removeAccess: Rechte beschränken
+  autocomplete:
+    noOptionsDefaultText: Keine Option passt zu deiner Suche
+  breadcrumbs:
+    showMore: '{number} mehr…'
   collapse:
     collapse: Ausblenden
     expand: Einblenden
@@ -2760,6 +2766,7 @@ zui:
     title:
       addToJourney: Erstelle Person und füge zu {journey} hinzu
       addToList: Erstelle Person und füge hinzu zu {list}
+      assignToAreaAssignment: Erstelle Person und weise sie {areaAss} zu
       assignToJourney: Erstelle Person und weise sie zu {journey} hinzu
       caller: Erstelle eine Person und füge sie als Anrufende hinzu
       contact: Erstelle Person und weise sie als Kontakt zu
@@ -2795,6 +2802,8 @@ zui:
     multiDayToday: Heute - {endDate}
     singleDay: '{date}'
     singleDayToday: Heute
+  drawerModal:
+    close: Schließen
   duration:
     days: '{n, plural, =1 {1 Tag} other {# Tage}}'
     h: '{n}h'
@@ -2807,6 +2816,14 @@ zui:
       noEmpty: Dieses Feld kann nicht leer bleiben
   editableImage:
     add: Klick, um ein Bild hinzuzufügen
+  eventWarningIcons:
+    contact: Keine Kontaktperson wurde zugeteilt
+    signUps: Es gibt ausstehende Anmeldungen
+  expandableText:
+    showLess: Weniger sehen
+    showMore: Mehr sehen
+  footer:
+    privacyPolicy: Datenschutzerklärung
   futures:
     errorLoading: Es ist ein Fehler aufgetreten beim Laden der Daten.
   header:
@@ -2825,6 +2842,7 @@ zui:
       this: Nur {org}
   organizeSidebar:
     filter: Tippe, um zu filtern
+    geography: Geographie
     home: Startseite
     journeys: Anfragenvermittlung
     people: Personen
@@ -2845,10 +2863,27 @@ zui:
     noResult: Keine Treffer
     search: Tippe, um zu suchen
     searching: Suche läuft...
+  privacyPolicyLink: https://zetkin.org/privacy
+  publicFooter:
+    hostingOrganization: Diese Zetkin-Instanz wird von {name} betrieben und verwaltet.
+    links:
+      foundation: Zetkin Foundation
+      privacy: Datenschutzerklärung
+  signUpChip:
+    booked: Du bist angemeldet.
+    needed: Du wirst gebraucht
+    signedUp: Du hast dich angemeldet
   snackbar:
     error: Oh nein, etwas ist schief gegangen.
     success: Erfolg!
     warning: Achtung!
+  statusChip:
+    cancelled: Abgebrochen
+    closed: Geschlossen
+    draft: Entwurf
+    ended: Beendet
+    published: Veröffentlicht
+    scheduled: Geplant
   submitOrCancel:
     cancel: Abbrechen
     submit: Erstellen
@@ -2861,3 +2896,8 @@ zui:
     singleDay: '{date}, {start} - {end}'
     singleDayAllDay: ganztägig heute
     singleDayToday: Heute, {start} - {end}
+  timeZonePicker:
+    gmt: GMT
+    noOptionsText: Kein Ort passt zu deiner Suche
+    placeholder: Tippe, um nach einem Ort zu suchen
+    timeZone: Zeitzone

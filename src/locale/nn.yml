@@ -12,10 +12,170 @@ core:
       vil bruke, du blir videresendt til den gamle versjonen av Zetkin som
       støtter denne funksjonen.
 feat:
+  areaAssignments:
+    assignees:
+      columns:
+        areas: Områder
+        name: Navn
+    default:
+      title: Dør til dør-oppdrag uten navn
+    instructions:
+      editor:
+        confirm: Vil du slette alle ulagrede endringer og gå tilbake til lagret
+          instruks?
+        editorPlaceholder: Legg til instrukser for de som skal gå
+        revertLink: Gå tilbake til lagret versjon?
+        saveButton: Lagre
+        savedMessage: Alt er oppdatert!
+        savingButton: Lagrer...
+        unsavedMessage: Du har gjort endringer som ikke er lagret
+      title: Instruks for tildelte folk
+    layout:
+      actions:
+        delete: Slett
+        deleteWarningText: Er du sikker på at du vil slette {title}?
+        end: Avslutt oppdrag
+        start: Start oppdrag
+      tabs:
+        assignees: Frivillige
+        instructions: Instruks
+        map: Kart
+        overview: Oversikt
+        report: Rapport
+    map:
+      areaInfo:
+        assignees:
+          add: Legg til frivillig
+          none: Ingen frivillige
+          title: Frivillige
+        stats:
+          households: '{numHouseholds, plural, one {Besøkt boenhet} other {Besøkte
+            boenheter}}'
+          successful: '{numSuccessfulVisits, plural, one {Vellykket besøk} other
+            {Vellykkede besøk}}'
+      filter:
+        assignees:
+          assigned: Områder som har frivillige
+          label: Tildelte folk
+          unassigned: Områder som ikke har frivillige
+        description: Definer hvilke områder som skal vises på kartet
+        header: Filtre
+        title: Legg til filtre for å bestemme hvilke områder du ser på kartet
+        ungroupedTags: Andre etiketter
+      findArea:
+        filterPlaceHolder: Filter
+        title: Områder
+      mapStyle:
+        area:
+          label: Farge
+          options:
+            assignees: Frivillige
+            hidden: Skjult
+            progress: Framgang
+        center:
+          options:
+            assignees: Frivillige
+            hidden: Skjult
+            progress: Framgang
+        markers:
+          options:
+            dot: Punkt
+            hidden: Skjult
+            households: Dører
+            progress: Framgang
+        title: Datavisualisering
+    overview:
+      empty:
+        description: Dette oppdraget har ikke blitt planlagt ennå
+        startPlanningButton: Planlegg nå
+      progress:
+        headers:
+          households: Besøkte dører
+          locations: Besøkte adresser
+          successful: Vellykkede besøk
+        statsTitle: Framgang
+        unassignedVisits:
+          description: Denne grafen viser besøk som ble gjennomført utenfor de tildelte
+            områdene
+          title: Besøk utenfor områder
+    report:
+      card:
+        definesSuccess: Definerer vellykket besøk
+        delete: Slett
+        description: Ingen beskrivelse
+        question: Spørsmål uten navn
+        tooltip: For å slette dette, lag først et nytt spørsmål som avgjør om besøket
+          var vellykket.
+      dataCard:
+        header: Datapresisjon og personvern
+        household: Per dør (mest presist)
+        info: Samle data...
+        location: per adresse (mindre presist, enklere personvernmessig)
+        subheader: Oppsettet for datalagring handler om en balanse mellom personvern og
+          presisjon.
+      delete:
+        cancel: Avbryt
+        confirm: Bekreft
+        deleteWarningText: Hvis du vil slette {title} må du velge et annet ja/nei
+          spørsmål som definerer om besøket var vellykket.
+        dialog: Er du sikker på at du vil slette spørsmålet? Dette kan ikke angres.
+        select: Velg
+      lockCard:
+        add: Legger til spørsmål
+        change: Endrer spørsmål som definerer vellykket besøk
+        description: Dette oppdraget har startet. Hvis du redigerer det nå kan det skape
+          problemer med rapportene. Utvis fornuft.
+        descriptionUnlock: Vær forsiktig sånn at du ikke gjør endringer som gjør
+          rapportene du har fått inn ubrukelige.
+        fix: Fikse skrivefeil
+        header: Rapporten er låst
+        headerUnlock: Rapporten er ulåst
+        rename: Gjøre om spørsmål sånn at de betyr noe annet
+        safe: Trygt
+        unsafe: Ikke trygt
+      metricCard:
+        choice: Ja/Nei spørsmål
+        ratingDescription: Den som gjennomfører besøk gir en vurdering fra 1 til 5
+        save: Lagre
+        scale: Skalaspørsmål
+      successCard:
+        header: Vellykket besøk
+        subheader: Velg hvilket spørsmål som skal avgjøre når et besøk er vellykket. Når
+          spørsmålet besvares med ja kommer besøket til å regnes som vellykket.
+      toolBar:
+        title: Legg til spørsmål for dør til dør-oppdrag
+  areas:
+    areas:
+      areaSettings:
+        delete: Slett
+        edit:
+          cancelButton: Avbryt
+          editButton: Rediger
+          saveButton: Lagre
+        tags:
+          title: Områdeetiketter
+      controlLabels:
+        filters: Filtre
+        layers: Datavisualisering
+        select: Velg
+      default:
+        description: Ingen beskrivelse
+        title: Område uten navn
+      draw:
+        cancelButton: Avbryt
+        saveButton: Lagre
+        startButton: Tegn
+      filter:
+        addFilterButton: Legg til filter
+        openFiltersButton: Filter
+        ungroupedTagsLabel: Andre etiketter
+    page:
+      title: Dør til dør
   breadcrumbs:
     elements:
       activities: Aktiviteter
       archive: Arkiv
+      areaassignments: Dør til dør aksjoner
       assignees: Kontaktpersoner
       calendar: Kalender
       callassignments: Ringeoppdrag
@@ -28,6 +188,7 @@ feat:
       emails: E-post
       events: Arrangementer
       folders: Lister
+      geography: Dør til dør
       incoming: Innkommende
       insights: Analyse
       instances: Forekomster
@@ -127,10 +288,157 @@ feat:
     shortWeek: uke {weekNumber}
     showMore: Vis
     today: I dag
+  call:
+    activeEvents:
+      alreadyBooked: '{name} er påmeldt fra før'
+      noBookings: '{name} har ingen påmeldinger til arrangementer'
+      signUp: Meld på
+      undoSignUp: Meld av
+    instructions:
+      title: Instruks
+    nav:
+      backToHome: Tilbake
+      startCalling: Begynn å ringe
+    prepare:
+      activeEvents: Aktive arrangementer
+      edit: Rediger denne informasjonen?
+      editDescription: Hvis noe i denne fanen må endres, skriv melding til en
+        tillitsvalgt i rapporten når du har fullført samtalen.
+      noActiveEvents: Ingen aktive arrangementer
+      noPreviousCalls: Aldri ringt
+      noPreviousEvents: '{name} har aldri deltatt på arrangementer.'
+      noSurveys: Ingen spørreundersøkelser
+      noTags: Ingen etiketter
+      previousCalls: Det finnes tidligere samtaler.
+      previousCallsOfTarget: Tidligere samtaler til {name}
+      previousEvents: Tidligere arrangementer
+      previousEventsOfTarget: '{name} har deltatt på {numEvents}, den siste var {eventTitle}.'
+      summary: Oppsummering
+      surveys: Spørreundersøkelser
+      tags: Etiketter
+      title: Personopplysninger
+    report:
+      steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Etter {hour}
+            anyTimeOptionLabel: Når som helst på dagen
+            callBackButtonLabel: Ring tilbake etter {date}
+            dateLabel: Hvilken dato
+            examples:
+              nextWeek: Neste uke
+              title: Snarveier
+              today: Senere i dag
+              tomorrow: I morgen
+            invalidDateButtonLabel: Ugyldig dato
+            timeLabel: Etter hvilket tidspunkt
+            title: Når kan vi ringe tilbake?
+          summary:
+            afterSpecificTime: Ring tilbake etter {time}
+            anyTime: Vi vil ringe tilbake etter {date}
+            subtitle: I mellomtiden til {firstName} automatisk fjernet fra ringekøen
+        callerLog:
+          question:
+            noteLabel: Legg til valgfritt notat
+            saveWithNoteButton: Lagre med notat
+            saveWithoutNoteButton: Lagre uten notat
+            shortcutHint: Når du skriver, trykk SHIFT og ENTER for å lagre med notat.
+            title: Vil du legge igjen et notat til fremtidige ringere?
+          summary:
+            withNote:
+              subtitle: 'Fremtidige ringere kan se notatet ditt: {note}'
+              title: Du la igjen et notat til fremtidige ringere
+            withoutNote: Du la ikke igjen et notat til fremtidige ringere
+        couldTalk:
+          question:
+            noButton: Nei, ringe tilbake
+            title: Kunne {firstName} snakke?
+            yesButton: Ja
+          summary:
+            couldNotTalk:
+              subtitle: Fremtidige ringere kan se at vi måtte ringe tilbake
+              title: '{firstName} kunne ikke snakke'
+            couldTalk:
+              subtitle: Fremtidige ringere kan se at du kunne fullføre
+              title: '{firstName} kunne snakke'
+        failureReason:
+          question:
+            lineBusy: Opptatt
+            noPickup: Tok ikke telefonen
+            notAvailable: Kunne ikke snakke nå
+            title: Hvorfor ikke?
+            wrongNumber: Feil nummer
+          summary:
+            lineBusy: Det var opptatt
+            noPickup: '{firstName} tok ikke telefonen'
+            notAvailable: '{firstName} kunne ikke snakke, vi må ringe tilbake.'
+            wrongNumber: Vi har feil telefonnummer for {firstName}
+        leftMessage:
+          question:
+            noButton: Nei
+            title: La du igjen beskjed på telefonsvarer?
+            yesButton: Ja
+          summary:
+            didNotLeaveMessage: La ikke igjen beskjed på telefonsvarer
+            leftMessage:
+              subtitle: Fremtidige ringere vil se at du la igjen en melding
+              title: La igjen beskjed på telefonsvarer
+        organizerAction:
+          question:
+            noButton: Nei
+            title: Skjedde det noe i samtalen som en tillitsvalgt må følge opp?
+            yesButton: Ja
+          summary:
+            orgActionNeeded:
+              subtitle: En tillitsvalgt får melding
+              title: Du vil at en tillitsvalgt skal gjennomgå denne samtalen
+            orgActionNotNeeded: Ingen handling er nødvendig
+        organizerLog:
+          question:
+            messageLabel: Legg til valgfri melding
+            shortcutHint: Når du skriver, trykk SHIFT og ENTER for å legge til melding.
+            title: Forklar problemet for tillitsvalgte
+            withMessageButton: Inkluder melding
+            withoutMessageButton: Lagre uten melding
+            wrongNumberMessages:
+              altPhone: 'Alternativt telefonnummer er feil: {altPhone}'
+              both: Begge telefonnummer er feil, {phone} og {altPhone}
+              phone: 'Feil telefonnummer: {phone}'
+          summary:
+            withMessage:
+              subtitle: 'Tillitsvalgte kommer til å se meldingen din: {message}'
+              title: Du sendte en melding til tillitsvalgte
+            withoutMessage: Du sendte ikke en melding til tillitsvalgte
+        successOrFailure:
+          question:
+            noButton: Nei
+            title: Nådde du {firstName}?
+            yesButton: Ja
+          summary:
+            failure:
+              subtitle: Fremtidige ringere kan se at du ikke snakket med {firstName}
+              title: Vi nådde ikke {firstName}
+            success:
+              subtitle: Fremtidige ringere kan se at du snakket med {firstName}
+              title: '{firstName} ble nådd'
+        wrongNumber:
+          question:
+            bothButton: Begge
+            title: Hvilket telefonnummer er feil?
+          summary:
+            phoneBoth: 'Begge telefonnummer er feil: {phone} og {altPhone}'
+            phoneSingle: 'Ett telefonnumer er feil: {phone}'
+      summary:
+        editButtonLabel: Rediger
+    stats:
+      callsMade: gjennomførte telefonoppringinger
+      callsReached: vellykkede telefonsamtaler
+      targetMatches: folk i målgruppa
   callAssignments:
     actions:
       delete: Slett
       end: Avslutt oppdrag
+      move: Flytt
       start: Start oppdrag
       warning: '"{title}" blit slettet'
     blocked:
@@ -144,6 +452,10 @@ feat:
       subtitle: Folk som ikke er klare til å ringes
       title: Blokkert
       viewSheetButton: Vis alle
+    callAssignmentChangeCampaignDialog:
+      error: 'Feil: Kunne ikke flytte oppdraget til det valgte prosjektet'
+      success: Oppdraget "{assignmentTitle}" ble flyttet til "{campaignTitle}"
+      title: Flytt oppdrag
     callers:
       actions:
         customize: Tilpass køen
@@ -256,6 +568,7 @@ feat:
       cardCTA: Gå til prosjekt
       create: Nytt prosjekt
       filter:
+        areaAssignments: Dør til dør aksjoner
         calls: Ringeoppdrag
         emails: E-poster
         filter: Filtrer resultater
@@ -271,8 +584,11 @@ feat:
       viewArchive: Vis arkiv
     assigneeActions: Klikk i appen
     calendarView: Se alle i kalender
+    changeCampaignDialog:
+      moveButtonLabel: Flytt
     createButton:
       createActivity: Opprett
+      createAreaAssignment: Dør til dør aksjon
       createCallAssignment: Ringeoppdrag
       createEmail: E-post
       createEvent: Arrangement
@@ -284,6 +600,8 @@ feat:
       create: Ny spørreundersøkelse
       heading: Tilbakemeldinger og spørreundersøkelser (ingen satt opp)
     form:
+      createAreaAssignment:
+        defaultQuestion: Fullførte du oppgaven?
       createCallAssignment:
         newCallAssignment: Mitt ringeoppdrag
       createCampaign:
@@ -330,6 +648,7 @@ feat:
       overview: Oversikt
     linkGroup:
       createActivity: Ny aktivitet
+      createAreaAssignment: Dør til dør aksjon
       createCallAssignment: Nytt ringeoppdrag
       createEmail: Ny e-post
       createEvent: Nytt arrangement
@@ -371,6 +690,101 @@ feat:
         insights: Analyse
         summary: Oppsummering
     tasks: Innhold
+  canvass:
+    default:
+      description: Ingen beskrivelse
+      floor: Ukjent etasje
+      location: Adresse uten tittel
+    households:
+      createMultiple:
+        createButtonLabel: Opprett {numHouseholds, plural, one {En dør} other {# dører}}
+        header: Opprett dører
+        numberOfFloorsInput: Antall etasjer
+        numberOfHouseholdsInput: Dører per etasje
+      edit:
+        floorLabel: Rediger etasje
+        header: Rediger {title}
+        saveButtonLabel: Lagre
+        titleLabel: Rediger tittel
+      householdDefaultTitle: Dør {householdNumber}
+      page:
+        empty: Denne adressen har ingen dører ennå
+        header: Dører
+      single:
+        logVisitButtonLabel: Registrer besøk
+        subtitle: '{floorNumber}. etasje'
+        wasVisited: Denne døra har blitt besøkt i dette oppdraget
+    instructions:
+      areas: Områder
+      instructionsHeader: Instruks
+      ready: Du er klar
+      start: Start oppdrag
+      visitedHouseholds: Besøkte dører
+      visitedLocations: Besøkte adresser
+    location:
+      edit:
+        descriptionLabel: Rediger beskrivelse
+        header: Rediger {title}
+        saveButtonLabel: Lagre
+        titleLabel: Rediger tittel
+      header: '{numVisitedHouseholds}/{numHouseholds} {numHouseholds, plural, one
+        {dør} other {dører}} visited'
+      page:
+        historySectionHeader: Historie
+        householdVisitedStatLabel: Besøkte dører
+        householdsButtonLabel: Dører
+        householdsVisitedStat: '{numVisitedHouseholds} av {numHouseholds}'
+        noHouseholds: Ingen dører registrert her ennå
+        numberOfHouseholds: '{numHouseholds, plural, one {En dør} other {# dører}}'
+        quickReportButtonLabel: Hurtigrapport
+      subheader: '{successfulVisits, plural, one {Ett vellykket besøk} other {#
+        vellykkede besøk}}'
+    map:
+      addLocation:
+        add: Legg til adresse
+        cancel: Avbryt
+        create: Opprett adresse
+        inputPlaceholder: Gi adressen et navn
+    sidebar:
+      instructions:
+        title: Instruks
+      menuOptions:
+        home: Mine aktiviteter
+        logOut: Logg ut
+      progress:
+        allTime:
+          title: All tid
+        header:
+          households: Dører
+          locations: Adresser
+          title: Framgang
+        session:
+          team: Lag
+          title: Økt (i dag)
+          you: Du
+        sync:
+          label:
+            hasLoaded: Synkronisert {timestamp}
+            neverLoaded: Aldri lastet inn
+          syncButton:
+            label: Synkroniser nå
+            loading: Synkroniserer
+    visit:
+      household:
+        header: '{householdTitle}: Registrer besøk'
+        noButtonLabel: Nei
+        skipButtonLabel: Hopp over spørsmål
+        submitReportButtonLabel: Send rapport
+        yesButtonLabel: Ja
+      location:
+        average: '{numHouseholds, plural,one {En dør} other {# dører}}, {avgFixed}
+          gjennomsnitt'
+        completed: '{numHouseholds, plural,one {En dør} other {# dører}}, {numYes} ja'
+        header: Rapporter besøk her
+        noInputLabel: Nei
+        proceedButtonLabel: Fortsett
+        submitButtonLabel: Send inn
+        yesInputLabel: Ja
   duplicates:
     modal:
       cancelButton: Avbryt
@@ -442,12 +856,16 @@ feat:
             confirmation: En forhåndsvisning har blitt sendt til din e-postadresse.
             instructions: Her kan du sende denne e-posten til deg selv for å se hvordan den
               vil se ut for mottakerne.
+            invalidEmailAddress: Dette er ikke en gyldig e-postadresse
             okButton: OK!
+            previewInBrowser: Forhåndsvis i nettleser
+            previewInBrowserInstructions: Bruk knappen under til å forhåndsvise e-posten i nettleser
             sendButton: Send
             sendTo: 'E-posten blir sendt til denne adressen:'
             title: Forhåndsvisning
           settings:
             senderAddressInputLabel: Avsenderadresse
+            senderInputLabel: Avsender
             subjectInputLabel: Emne
             title: Innstillinger
       tools:
@@ -455,6 +873,7 @@ feat:
           block:
             noButtonText: Klikk for å endre denne teksten!
           settings:
+            buttonTextWarning: Husk å legge til tekst for knappen du laget
             invalidUrl: Denne lenken er ikke gyldig
             testLink: Klikk for å teste lenken
             urlLabel: Lenkeadresse
@@ -481,6 +900,7 @@ feat:
       deliveryDate: Leveringsdato
       deliveryTime: Leveringstidspunkt
       duplicate: Kopier
+      move: Flytt
       schedule: Planlegg
       sendAnyway: Send likevel
       sendLater: Send senere
@@ -495,6 +915,10 @@ feat:
       timeZone: Tidssone
       warning: Er du sikker på at du vil slette e-posten? Handlingen er permanent og
         kan ikke angres.
+    emailChangeCampaignDialog:
+      error: 'Feil: Kunne ikke flytte e-posten til valgt prosjekt'
+      success: E-posten "{emailTitle}" ble flyttet til "{campaignTitle}"
+      title: Flytt e-post
     emailFeatureIsBlocked:
       errorMessage: Organisasjonen din har ikke tilgang til å sende e-post.
       goBackButton: Gå tilbake
@@ -561,6 +985,16 @@ feat:
       lockButton: Lås for levering
       locked: Mottakerne er låst for levering
       lockedChip: Låst
+      subtitle:
+        notTargeted: Bruk smartsøk for å definere målgruppa for denne e-posten.
+        scheduled: Denne e-posten har en planlagt levering. Hvis du vil låse opp
+          smartsøket for målgruppa må du avbryte levering først.
+        sent: Du kan se på smartsøket som ble brukt til å definere målgruppa for denne
+          e-posten.
+        targetedAndLocked: Fortsett til levering eller lås opp mottakere hvis du vil
+          redigere smartsøket som definerer målgruppa for denne e-posten.
+        targetedNotLocked: Rediger smartsøket som brukes for å velge målgruppe for denne
+          e-posten, eller lås målgruppa slik at du kan sende ut e-posten.
       title: Mottakere
       unlockAlert: Hvis du låser opp kan det bli færre eller flere folk i målgruppa,
         basert på det dynamiske smartsøket.
@@ -605,6 +1039,7 @@ feat:
     eventChangeCampaignDialog:
       error: 'Feil: Kunne ikke flytte arrangementet til det valgte prosjektet'
       success: Arrangementet ble flyttet til "{campaignTitle}"
+      title: Flytt arrangement
     eventContactCard:
       header: Kontakt
       noContact: Ingen kontaktperson tildelt!
@@ -839,7 +1274,9 @@ feat:
   home:
     activityList:
       actions:
+        areaAssignment: Bli med
         call: Begynn å ringe
+        connectAndSignUp: Koble til og meld deg på
         signUp: Meld på
         undoSignup: Meld av
       emptyListMessage: Du er ikke påmeldt noen aktiviteter
@@ -863,14 +1300,33 @@ feat:
         today: I dag
         tomorrow: I morgen
     defaultTitles:
+      areaAssignment: Dør til dør aksjon uten navn
       callAssignment: Ringeoppdrag uten navn
       event: Arrangement uten navn
       noLocation: Ingen fysisk plassering
     footer:
       privacyPolicy: Personvernerklæring
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Legg til en e-postadresse så du kan logge inn med brukernavn og
+            passord.
+          changeInstructions: Hvis du vil endre e-postadresse på du sende en e-post til
+            info@zetkin.org
+          errorText: Det oppstod en feil. Prøv igjen eller kontakt Zetkin for støtte.
+          label: E-postadresse
+          saveButton: Lagre
+        header: Kontoinnstillinger
+      appPreferences:
+        header: Appinnstillinger
+        lang:
+          auto: Automatisk (nettleserinnstilling)
+          label: Språk
+          saveButton: Lagre og last inn på nytt
     tabs:
       feed: Alle arrangementer
       home: Mine aktiviteter
+      settings: Innstillinger
     title: Min Zetkin
   import:
     actionButtons:
@@ -1025,6 +1481,7 @@ feat:
         header: Innstillinger
         sheetSelectHelpText: Filen inneholder flere regneark, velg hvilket du vil bruke.
         sheetSelectLabel: Ark
+        skipUnknown: Hopp over rader med ukjent ID(ikke opprett noen nye personer)
       show: Vis
       statusMessage:
         done: Setter opp import av {numConfiguredPeople, plural, =1 {en person} other {#
@@ -1078,6 +1535,10 @@ feat:
           singleRow: Problemet finnes på rad {row}.
         invalidFormat:
           title: 'Feil format for feltet: {field}'
+        invalidOrgCountry:
+          description: Dette gjør det umulig å gjette, f.eks. telefonnummer landskode.
+            Kontakt brukerstøtte for å fikse dette.
+          title: 'Mulig ugyldig landskode for organisasjonen: {code}'
         majorChange:
           description: Forsikre deg om at du har satt opp radene riktig
           title: Denne importen kommer til å overskrive mange folks {field}
@@ -1088,6 +1549,9 @@ feat:
         noImpact:
           description: Dette kan skyldes av fila ikke inneholder ny informasjon, eller en
             ukjent feil.
+          descriptionSkipped: Det kan hende filen ikke inneholder noe ny data, eller fordi
+            innstillingene du valgt hoppet over all ny data. I noe få tilfeller
+            kan det skyldes en ukjent feil.
           title: Denne importen vil ikke ha noen virkning
         ok:
           description: Forsikre deg om at oppsummeringen stemmer og trykk på "Import" for
@@ -1148,8 +1612,13 @@ feat:
           {# folk}}.
   joinForms:
     defaultTitle: Skjema uten tittel
+    deleteJoinForm:
+      success: '{title} ble slettet'
+      title: Slett påmeldingsskjema
+      warning: Er du sikker på at du vil slette "{title}"?
     embedding:
       copyLink: Kopier innbyggingslenke
+      delete: Slett
       formSubmitted: Skjema sendt inn
       linkCopied: Innbyggingslenke kopiert
       openLink: Besøk nå
@@ -1159,6 +1628,7 @@ feat:
         addField: Legg til felt
         description: Beskrivelse
         requireEmailVerification: Krev e-postverifisering
+        shareWithSuborgs: Del med underorganisasjoner
         title: Tittel
       title: Rediger skjema
     forms: Skjemaer
@@ -1206,6 +1676,9 @@ feat:
       editButton: Rediger
       ellipsisMenu:
         convert: Konverter til...
+        deletion:
+          delete: Slett "{instanceTitle}"
+          warning: '"{instanceTitle}" vil bli slettet. Denne handlingen kan ikke angres.'
       expandButton: Utvid
       markedCompleteLabel: Fullført {relativeTime}
       newInstance:
@@ -1300,12 +1773,39 @@ feat:
         timeline: Tidslinje
       title: Planer
   organizations:
+    allEventsList:
+      emptyList:
+        message: Finner ingen arrangementer
+        removeFiltersButton: Tøm filter
+      filterButtonLabels:
+        thisWeek: Denne uka
+        today: I dag
+        tomorrow: I morgen
+    authDialog:
+      cancelButton: Avbryt
+      content: Du må ha en Zetkinkonto for å melde deg på arrangementer
+      label: Meld på
+      loginButton: Logg inn og kom tilbake
     gen3:
       description: Dette er den nye (generasjon 3) nettapplikasjonen. Hvis du er kjent
         med den gamle så vil du finne mange nye funksjoner og forbedret design
         her. Hvis du vil kan du bruke den gamle versjonen litt til.
       gen2Button: Gå til gammel versjon
       title: Velkommen til nye Zetkin!
+    home:
+      footer:
+        privacyPolicy: Personvernerklæring
+      header:
+        connect: Koble til
+        follow: Følg
+        login: Logg inn og koble til
+        unfollow: Slutt å følge
+      tabs:
+        calendar: Kalender
+        suborgs: Utforsk
+    noEventsBlurb:
+      description: '{org} har ingen kommende arrangementer.'
+      headline: Det er ingen kommende arrangementer
     notOrganizer:
       description: Denne delen av Zetkin er bare tilgjengelige for de som har en
         administratorrolle. Du har ikke en slik rolle, hvis du skulle hatt det
@@ -1323,6 +1823,12 @@ feat:
       recent:
         clear: Fjern nylige
         title: Nylige organisasjoner
+    subOrgEventBlurb:
+      description: Det er {eventsElem} {numEvents, plural, =1 {additional event} other
+        {additional events}} i {orgsElem} {numOrgs, plural, =1 {suborganization}
+        other {suborganizations}}.
+      headline: Grav dypere
+      showButton: Vis alle arrangementer
   profile:
     delete:
       button: Fjern person
@@ -1971,6 +2477,7 @@ feat:
     layout:
       actions:
         delete: Slett undersøkelse
+        move: Flytt
         publish: Samle svar
         unpublish: Steng
         warning: '"{surveyTitle}" blir slettet'
@@ -2004,7 +2511,13 @@ feat:
       linked: Koblet
     submissions:
       anonymous: Anonym
+      createPersonSubmit: Lagre og koble
+      createPersonTitle: Opprett ny person
       dateColumn: Dato
+      delete: Slett
+      deleteSuccess: Slettet
+      deleteTitle: Slett svar
+      deleteWarningText: Er du sikker på at du vil slette dette svaret på spørreundersøkelsen?
       emailColumn: E-post
       firstNameColumn: Fornavn
       lastNameColumn: Etternavn
@@ -2012,6 +2525,10 @@ feat:
       personRecordColumn: Innsender
       suggestedPeople: Foreslåtte folk
       unlink: Fjern kobling
+    surveyChangeCampaignDialog:
+      error: 'Feil: Kunne ikke flytte undersøkelsen til valgt prosjekt'
+      success: Undersøkelsen "{surveyTitle}" ble flyttet til "{campaignTitle}"
+      title: Flytt spørreundersøkelse
     surveyDialog:
       add: Legg til
       cancel: Ikke legg til
@@ -2102,7 +2619,7 @@ feat:
       createTag: Ny etikett
       groupTags: Gruppér etiketter
       title: Etiketter
-      ungroupedHeader: Ingen gruppe
+      ungroupedHeader: Andre
       valueTagForm:
         typeHint: '{type, select, text {Legg til tekst} other {Legg til tall}} som vises
           på etiketten.'
@@ -2111,8 +2628,12 @@ feat:
       noTags: Organisasjonen din har ingen etiketter.
       overviewTabLabel: Oversikt
       title: Etiketter
-      ungroupedHeader: Ingen gruppe
+      ungroupedHeader: Andre
   tasks:
+    actions:
+      delete: Slett
+      edit: Rediger
+      move: Flytt
     assignees:
       completedStates:
         completed: Trykket fullført {time}
@@ -2217,6 +2738,10 @@ feat:
       draft: Utkast
       expired: Utløpt
       scheduled: Planlagt
+    taskChangeCampaignDialog:
+      error: 'Feil: Kunnne ikke flytte oppgaven til valgt prosjekt'
+      success: Oppgaven "{taskTitle}" ble flyttet til "{campaignTitle}"
+      title: Flytt oppgave
     taskDetails:
       deadlineTime: Frist
       editButton: Rediger
@@ -2565,6 +3090,7 @@ feat:
         share: Del
       ellipsisMenu:
         delete: Slett liste
+        duplicate: Duplikat
         editQuery: Rediger smartsøk
         makeDynamic: Konverter til smarsøkliste
         makeStatic:
