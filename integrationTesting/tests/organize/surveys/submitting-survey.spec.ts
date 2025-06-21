@@ -528,12 +528,24 @@ test.describe('User submitting a survey', () => {
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
 
+    const isEnabled = await page.isEnabled('data-testid=Survey-submit');
+    // eslint-disable-next-line no-console
+    console.log('Button is enabled', isEnabled);
+
     // eslint-disable-next-line no-console
     console.log('Clicking and listening');
 
     await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      page.click('data-testid=Survey-submit'),
+      page
+        .waitForResponse((res) => res.request().method() == 'POST')
+        .then(() => {
+          // eslint-disable-next-line no-console
+          console.log('Wait for response finished');
+        }),
+      page.click('data-testid=Survey-submit').then(() => {
+        // eslint-disable-next-line no-console
+        console.log('Click finished');
+      }),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
