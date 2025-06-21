@@ -34,7 +34,7 @@ const GeographyPage: PageWithLayout = () => {
         <title>{messages.page.title()}</title>
       </Head>
       <ZUIFuture future={areasFuture}>
-        {(areas) => <GLGeographyMap areas={areas} />}
+        {(areas) => <GLGeographyMap areas={areas} orgId={orgId} />}
       </ZUIFuture>
     </>
   );
