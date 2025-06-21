@@ -3,6 +3,7 @@ import { Close, Create, Save } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
 import { FC, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Zetkin2Area } from 'features/areas/types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
@@ -127,7 +128,6 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
             ref={(map) => setMap(map?.getMap() ?? null)}
             initialViewState={{ bounds }}
             mapStyle={env.vars.MAPLIBRE_STYLE}
-            style={{ height: '100%', width: '100%' }}
           >
             <Areas areas={areasExceptSelected} />
             {!!drawingPoints && <DrawingArea drawingPoints={drawingPoints} />}
