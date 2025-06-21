@@ -19,7 +19,7 @@ export default function hasWrongIDFormat(
     }
 
     if (!value) {
-      return true;
+      return false;
     }
     const stringValue = value.toString();
     const parsedToNumber = Number(stringValue);
