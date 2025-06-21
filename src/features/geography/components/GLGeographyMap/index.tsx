@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import Map, { Layer, Source } from '@vis.gl/react-maplibre';
+import Map from '@vis.gl/react-maplibre';
 import { FC, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
 
@@ -7,13 +7,13 @@ import { Zetkin2Area } from 'features/areas/types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
-import oldTheme from 'theme';
 import AreaOverlay from 'features/areas/components/AreaOverlay';
 import oldAreaFormat from 'features/areas/utils/oldAreaFormat';
 import useAreaEditing from 'features/geography/hooks/useAreaEditing';
 import useAreaSelection from 'features/geography/hooks/useAreaSelection';
 import SelectedArea from './SelectedArea';
 import useMapBounds from 'features/geography/hooks/useMapBounds';
+import Areas from './Areas';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -29,18 +29,10 @@ const GLGeographyMap: FC<Props> = ({ areas }) => {
     selectedArea,
   });
 
-  const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
-    return {
-      features: areas
-        .filter((area) => area.id != selectedArea?.id)
-        .map((area) => ({
-          geometry: area.boundary,
-          properties: { id: area.id },
-          type: 'Feature',
-        })),
-      type: 'FeatureCollection',
-    };
-  }, [areas, selectedArea]);
+  const areasExceptSelected = useMemo(
+    () => areas.filter((area) => area.id != selectedArea?.id),
+    [areas, selectedArea]
+  );
 
   return (
     <AreaFilterProvider>
@@ -86,24 +78,7 @@ const GLGeographyMap: FC<Props> = ({ areas }) => {
           }}
           style={{ height: '100%', width: '100%' }}
         >
-          <Source data={areasGeoJson} id="areas" type="geojson">
-            <Layer
-              id="outlines"
-              paint={{
-                'line-color': oldTheme.palette.primary.main,
-                'line-width': 2,
-              }}
-              type="line"
-            />
-            <Layer
-              id="areas"
-              paint={{
-                'fill-color': oldTheme.palette.primary.main,
-                'fill-opacity': 0.4,
-              }}
-              type="fill"
-            />
-          </Source>
+          <Areas areas={areasExceptSelected} />
           {!!selectedArea && (
             <SelectedArea
               draggingPoints={draggingPoints}
