@@ -80,7 +80,14 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
               <AssigneeFilterProvider>
                 <OrganizerMap
                   areaAssId={areaAssId}
-                  areas={areas}
+                  areas={areas.map((area) => ({
+                    description: area.description,
+                    id: area.id,
+                    organization_id: area.organization_id,
+                    points: area.boundary.coordinates[0],
+                    tags: [],
+                    title: area.title,
+                  }))}
                   areaStats={areaStats}
                   locations={locations}
                   onAddAssigneeToArea={(area, user) => {

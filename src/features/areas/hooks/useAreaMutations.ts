@@ -17,16 +17,7 @@ export default function useAreaMutations(orgId: number, areaId: number) {
         data
       );
 
-      dispatch(
-        areaUpdated({
-          description: area.description,
-          id: area.id,
-          organization_id: area.organization_id,
-          points: area.boundary.coordinates[0],
-          tags: [],
-          title: area.title,
-        })
-      );
+      dispatch(areaUpdated(area));
     },
   };
 }

@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import { scaffold } from 'utils/next';
@@ -11,6 +10,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import { AREAS } from 'utils/featureFlags';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
+import GLGeographyMap from 'features/geography/components/GLGeographyMap';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -23,11 +23,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
   };
 }, scaffoldOptions);
 
-const GeographyMap = dynamic(
-  () => import('../../../../features/geography/components/GeographyMap/index'),
-  { ssr: false }
-);
-
 const GeographyPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
@@ -39,7 +34,7 @@ const GeographyPage: PageWithLayout = () => {
         <title>{messages.page.title()}</title>
       </Head>
       <ZUIFuture future={areasFuture}>
-        {(areas) => <GeographyMap areas={areas} />}
+        {(areas) => <GLGeographyMap areas={areas} orgId={orgId} />}
       </ZUIFuture>
     </>
   );
