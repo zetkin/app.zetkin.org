@@ -37,7 +37,6 @@ import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
 import useUser from 'core/hooks/useUser';
 
-
 type Props = {
   eventId: number;
   orgId: number;
