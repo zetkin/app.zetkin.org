@@ -124,6 +124,7 @@ export default makeMessages('feat.surveys', {
     },
     unknownTitle: m('Untitled survey'),
   },
+
   optionCollapse: {
     collapse: m('Collapse'),
     more: m<{ numOfOptions: number }>(
@@ -139,6 +140,10 @@ export default makeMessages('feat.surveys', {
       button: m('Create questions'),
       title: m('There are no questions in this survey yet'),
     },
+  },
+
+  publicSurvey: {
+    surveyExpired: m('This survey is expired and can no longer be filled out.'),
   },
   shareSuborgsCard: {
     caption: m(

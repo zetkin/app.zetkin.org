@@ -4,6 +4,8 @@ import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
@@ -17,6 +19,7 @@ type Props = {
 const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
   const searchParams = useSearchParams();
   const showOrganization = searchParams?.get('hideOrganization') != 'true';
+  const isExpired = survey.access === 'expired';
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
@@ -48,14 +51,26 @@ const PublicSurveyLayout: FC<Props> = ({ children, survey }) => {
           )}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <ZUIText variant="headingLg">{survey.title}</ZUIText>
-            {survey.info_text && (
-              <ZUIText color="secondary">{survey.info_text}</ZUIText>
+            {isExpired ? (
+              <ZUIText color="secondary">
+                <Msg id={messageIds.publicSurvey.surveyExpired} />
+              </ZUIText>
+            ) : (
+              survey.info_text && (
+                <ZUIText color="secondary">{survey.info_text}</ZUIText>
+              )
             )}
           </Box>
         </Box>
       </Box>
-      <Box sx={{ flexGrow: 1 }}>{children}</Box>
-      <ZUIPublicFooter />
+
+      {/* Render children and footer only if not expired */}
+      {!isExpired && (
+        <>
+          <Box sx={{ flexGrow: 1 }}>{children}</Box>
+          <ZUIPublicFooter />
+        </>
+      )}
     </Box>
   );
 };
