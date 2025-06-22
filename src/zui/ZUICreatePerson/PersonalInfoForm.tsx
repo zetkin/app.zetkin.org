@@ -99,6 +99,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field={'first_name'}
             onChange={(field, value) => onChange(field, value)}
             required
+            value={personalInfo.first_name}
           />
         </Box>
         <Box width="50%">
@@ -106,6 +107,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field={'last_name'}
             onChange={(field, value) => onChange(field, value)}
             required
+            value={personalInfo.last_name}
           />
         </Box>
       </Box>
@@ -113,11 +115,13 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
         error={invalidFields.includes('email')}
         field={'email'}
         onChange={(field, value) => onChange(field, value)}
+        value={personalInfo.email || ''}
       />
       <PersonFieldInput
         error={invalidFields.includes('phone')}
         field={'phone'}
         onChange={(field, value) => onChange(field, value)}
+        value={personalInfo.phone || ''}
       />
       {!!showAllClickedType && (
         <Box display="flex" flexDirection="column" gap={2}>
@@ -128,6 +132,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             onChange={(field, value) =>
               onChange(field, value === ' ' ? '' : value)
             }
+            value={personalInfo.alt_phone || ''}
           />
           <FormControl fullWidth>
             <InputLabel>
@@ -153,10 +158,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           <PersonFieldInput
             field={'street_address'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.street_address || ''}
           />
           <PersonFieldInput
             field={'co_address'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.co_address || ''}
           />
           <Box>
             <PersonFieldInput
@@ -166,6 +173,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 pr: 2,
                 width: '30%',
               }}
+              value={personalInfo.zip_code || ''}
             />
             <PersonFieldInput
               field={'city'}
@@ -173,15 +181,18 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               style={{
                 width: '70%',
               }}
+              value={personalInfo.city || ''}
             />
           </Box>
           <PersonFieldInput
             field={'country'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.country || ''}
           />
           <PersonFieldInput
             field={'ext_id'}
             onChange={(field, value) => onChange(field, value)}
+            value={personalInfo.ext_id || ''}
           />
         </Box>
       )}
@@ -223,6 +234,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                   const formattedUrl = formatUrl(value as string);
                   onChange(field, formattedUrl ?? value);
                 }}
+                value={personalInfo[field.slug] || ''}
               />
             );
           } else if (
@@ -245,6 +257,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                       }
                       onChange(field.slug, value);
                     }}
+                    value={personalInfo[field.slug] || ''}
                   >
                     <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
                       <Msg id={messageIds.createPerson.enumFields.noneOption} />
@@ -265,6 +278,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 field={field.slug}
                 label={field.title}
                 onChange={(field, value) => onChange(field, value)}
+                value={personalInfo[field.slug] || ''}
               />
             );
           }
