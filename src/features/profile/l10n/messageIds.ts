@@ -52,4 +52,7 @@ export default makeMessages('feat.profile', {
     hasAccount: m('Connected to a Zetkin account'),
     noAccount: m('Not connected to a Zetkin account'),
   },
+  role: {
+    noRole: m('no role'),
+  },
 });
