@@ -35,6 +35,7 @@ import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import useUser from 'core/hooks/useUser';
+import { removeOffset } from 'utils/dateUtils';
 
 type Props = {
   eventId: number;
