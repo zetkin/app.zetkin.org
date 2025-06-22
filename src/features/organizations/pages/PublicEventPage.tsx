@@ -34,6 +34,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
+import useUser from 'core/hooks/useUser';
 
 type Props = {
   eventId: number;
@@ -219,7 +220,14 @@ const ContactPersonSection: FC<{
   contactPerson: { email?: string; id: number; name: string; phone?: string };
 }> = ({ contactPerson }) => {
   const [expandContactMethods, setExpandContactMethods] = useState(false);
-
+  const user = useUser()
+  if (user?.id===contactPerson.id){
+    return (
+      <Box bgcolor="white" borderRadius={2} padding={2}>
+        <Msg id={messageIds.eventPage.contactPersonThemself} />
+      </Box>
+    )
+  }
   const hasContactMethods =
     'email' in contactPerson || 'phone' in contactPerson;
 
