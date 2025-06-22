@@ -45,7 +45,7 @@ export const CreateLocationCard: FC<CreateLocationCardProps> = ({
           sx={{ paddingTop: 1 }}
         />
         <IntInput
-          label={messages.map.addLocation.numHouseholds()}
+          label={messages.map.addLocation.numEstimatedHouseholds()}
           min={1}
           onChange={debouncedSetHouseholds}
           value={numEstimatedHouseholds}
