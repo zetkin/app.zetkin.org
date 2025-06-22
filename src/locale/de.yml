@@ -1590,12 +1590,16 @@ feat:
         haveSelect:
           in: wurden
           notin: wurden nicht
-        inputString: '{addRemoveSelect} Personen, die {haveSelect} {bookedSelect} für
+        inputString: '{addRemoveSelect} Personen, die {haveSelect} {bookedSelect} und {statusSelect} für
           Aktionen in {campaignSelect} des Typs {activitySelect} in
           {locationSelect} {timeFrame}'
         locationSelect:
           any: irgendein Ort
           location: Ort "{location}"
+        statusSelect:
+          attended: ist erschienen
+          cancelled: hat abgesagt
+          noshow: ist nicht erschienen
       emailBlacklist:
         inputString: '{addRemoveSelect} Personen, die eine E-Mail erhalten werden, auf
           Grund von {reasonSelect}'
