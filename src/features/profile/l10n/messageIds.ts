@@ -39,6 +39,9 @@ export default makeMessages('feat.profile', {
     title: m('Organizations'),
   },
   resetButton: m('Reset'),
+  role: {
+    noRole: m('no role'),
+  },
   saveButton: m('Save'),
   tabs: {
     manage: m('Manage'),
@@ -51,8 +54,5 @@ export default makeMessages('feat.profile', {
   user: {
     hasAccount: m('Connected to a Zetkin account'),
     noAccount: m('Not connected to a Zetkin account'),
-  },
-  role: {
-    noRole: m('no role'),
   },
 });
