@@ -41,7 +41,11 @@ const removeKey = (
           }
           return result;
         },
-        { operator: config.operator, state: config.state, status: config.status }
+        {
+          operator: config.operator,
+          state: config.state,
+          status: config.status,
+        }
       )
     : config;
 };
@@ -99,8 +103,15 @@ const CampaignParticipation = ({
     after?: string;
     before?: string;
   }) => {
-    const { state, status, operator, campaign, activity, location, organizations } =
-      filter.config;
+    const {
+      state,
+      status,
+      operator,
+      campaign,
+      activity,
+      location,
+      organizations,
+    } = filter.config;
     setConfig({
       activity,
       campaign,
@@ -303,7 +314,10 @@ const CampaignParticipation = ({
                 onChange={(e) =>
                   setConfig({
                     ...filter.config,
-                    status: e.target.value as 'attended' | 'cancelled' | 'noshow',
+                    status: e.target.value as
+                      | 'attended'
+                      | 'cancelled'
+                      | 'noshow',
                   })
                 }
                 value={filter.config.status}
