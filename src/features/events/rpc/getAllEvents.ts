@@ -35,12 +35,11 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     let newBest = currentBest;
 
     // Find the org of the followed membership
-    if (
-      allMemberships.some(
-        (membership) =>
-          membership.organization.id == org.id && membership.follow
-      )
-    ) {
+    const weFollowThisOrg = allMemberships.some(
+      (membership) => membership.organization.id == org.id && membership.follow
+    );
+
+    if (weFollowThisOrg) {
       newBest = org;
     }
 
@@ -49,15 +48,15 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       return newBest;
     }
 
-    const parent = allOrganizations.find((org2) => org2.id == org.parent?.id);
+    const parent = allOrganizations.find((o) => o.id == org.parent?.id);
     if (!parent) {
       return newBest;
     }
 
     return getRootOrgWeAreMemberOf(parent, newBest);
   };
-  const filteredMemberships = allMemberships.reduce<{
-    memberships: ZetkinMembership[];
+  const { filteredMemberships } = allMemberships.reduce<{
+    filteredMemberships: ZetkinMembership[];
     orgs: number[];
   }>(
     (acc, membership) => {
@@ -75,13 +74,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
       if (!acc.orgs.includes(rootOrg.id)) {
         acc.orgs.push(rootOrg.id);
-        acc.memberships.push(membership);
+        acc.filteredMemberships.push(membership);
       }
 
       return acc;
     },
-    { memberships: [], orgs: [] }
-  ).memberships;
+    { filteredMemberships: [], orgs: [] }
+  );
 
   const now = new Date().toISOString();
 
