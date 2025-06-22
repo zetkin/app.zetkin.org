@@ -215,10 +215,10 @@ export default makeMessages('feat.smartSearch', {
       },
       examples: {
         one: m(
-          "Add people who have signed up for events in any project of any type at location 'Dorfplatz' at any point in time"
+          "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
         ),
         two: m(
-          "Remove people who have not been booked for events in any project of type 'Put up posters' at any location before today."
+          "Remove people who have not been booked and showed up for events in any project of type 'Put up posters' at any location before today."
         ),
       },
       haveSelect: {
@@ -232,15 +232,21 @@ export default makeMessages('feat.smartSearch', {
         campaignSelect: ReactElement;
         haveSelect: ReactElement;
         locationSelect: ReactElement;
+        statusSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} and {statusSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
       ),
       locationSelect: {
         any: m('any location'),
         location: m<{ location: ReactElement | string }>(
           'location "{location}"'
         ),
+      },
+      statusSelect: {
+        attended: m('showed up'),
+        cancelled: m('cancelled'),
+        noshow: m('did not show up'),
       },
     },
     emailBlacklist: {
