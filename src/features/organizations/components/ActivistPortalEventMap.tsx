@@ -97,7 +97,7 @@ export const ActivistPortalEventMap: FC<
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
           bounds,
-          fitBoundsOptions: { padding: 20 },
+          fitBoundsOptions: { padding: 200 },
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
