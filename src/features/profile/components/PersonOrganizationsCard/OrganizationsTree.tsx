@@ -14,6 +14,8 @@ import {
   ListItemText,
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/profile/l10n/messageIds';
 
 import { PersonOrganization } from 'utils/organize/people';
 
@@ -42,10 +44,10 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   onClickRemove,
   organizationTree,
 }) => {
-  const { id, is_active, sub_orgs, title } = organizationTree;
+  const { id, is_active, sub_orgs, title, role } = organizationTree;
+  const messages = useMessages(messageIds);
   const hasChildren = !!sub_orgs?.length;
   const classes = useStyles({ level });
-
   const getIcon = () => {
     if (level === 0) {
       return <AccountTree />;
@@ -62,7 +64,11 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
     <Collapse appear in>
       <ListItem className={is_active ? undefined : classes.inactive}>
         <ListItemIcon>{getIcon()}</ListItemIcon>
-        <ListItemText className={classes.listItemText} primary={title} />
+        <ListItemText
+          className={classes.listItemText}
+          primary={title}
+          secondary={role ? role : messages.role.noRole()}
+        />
         <ListItemSecondaryAction>
           <IconButton edge="end" onClick={() => onClickRemove(id)} size="large">
             <Delete />
