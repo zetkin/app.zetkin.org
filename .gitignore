@@ -53,3 +53,4 @@ tsconfig.tsbuildinfo
 # generated docs
 public/docs
 public/storybook
+package.json
