@@ -10,6 +10,7 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortlHeader';
 import EventMapLayout from 'features/organizations/layouts/EventMapLayout';
+import { useAppSelector } from 'core/hooks';
 
 type Props = {
   campaign: ZetkinCampaign;
@@ -22,9 +23,14 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
     campaign.id
   );
 
+  const { geojsonToFilterBy } = useAppSelector(
+    (state) => state.organizations.filters
+  );
+
   return (
     <EventMapLayout
       events={filteredEvents}
+      geojsonToFilterBy={geojsonToFilterBy}
       header={
         <ActivistPortalHeader
           subtitle={campaign.info_text}

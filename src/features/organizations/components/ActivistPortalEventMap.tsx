@@ -1,23 +1,61 @@
 import { Box, SxProps } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
-import { FC, PropsWithChildren, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
-import { useEnv } from 'core/hooks';
+import { useAppDispatch, useEnv } from 'core/hooks';
 import { markerImage } from '../utils/markerImage';
 import { pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { Latitude, Longitude } from 'features/areas/types';
+import { filtersUpdated } from '../store';
+import { isLocationInGeoJSONFeatures } from '../../map/utils/locationFiltering';
 
 export const ActivistPortalEventMap: FC<
   PropsWithChildren<{
     events: ZetkinEventWithStatus[];
+    geojsonToFilterBy: GeoJSON.Feature[];
     sx?: SxProps;
   }>
-> = ({ children, events, sx }) => {
+> = ({ children, events, geojsonToFilterBy, sx }) => {
   const [map, setMap] = useState<MapType | null>(null);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (map) {
+      map.on('click', 'locationMarkers', (event) => {
+        if (event.features) {
+          dispatch(
+            filtersUpdated({
+              geojsonToFilterBy: event.features.map((feature) => {
+                const location = JSON.parse(feature?.properties?.location);
+                return {
+                  geometry: {
+                    coordinates: [location.lat, location.lng],
+                    type: 'Point',
+                  },
+                  properties: {
+                    location,
+                  },
+                  type: 'Feature',
+                };
+              }),
+            })
+          );
+        }
+      });
+
+      map.on('mouseenter', 'locationMarkers', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'locationMarkers', () => {
+        map.getCanvas().style.cursor = '';
+      });
+    }
+  }, [map]);
 
   const env = useEnv();
   const bounds = useMemo(
@@ -43,7 +81,10 @@ export const ActivistPortalEventMap: FC<
           .reduce((acc, location) => {
             const key = `${location.lat},${location.lng}`;
             if (!acc[key]) {
-              acc[key] = { count: 0, lat: location.lat, lng: location.lng };
+              acc[key] = {
+                count: 0,
+                ...location,
+              };
             }
             acc[key].count += 1;
             return acc;
@@ -56,7 +97,14 @@ export const ActivistPortalEventMap: FC<
     return {
       features:
         eventCountByLocation.map((location) => {
-          const icon = `marker-${location.count}`;
+          const isHighlighted = isLocationInGeoJSONFeatures(
+            location,
+            geojsonToFilterBy
+          );
+
+          const icon = `marker-${location.count}-${
+            isHighlighted ? 'highlight' : 'regular'
+          }`;
 
           return {
             geometry: {
@@ -65,6 +113,7 @@ export const ActivistPortalEventMap: FC<
             },
             properties: {
               icon,
+              location,
             },
             type: 'Feature',
           };
@@ -109,8 +158,12 @@ export const ActivistPortalEventMap: FC<
           new Set(eventCountByLocation.map(({ count }) => count)).forEach(
             (count) => {
               map.addImage(
-                `marker-${count}`,
-                markerImage('#000000', count.toString())
+                `marker-${count}-regular`,
+                markerImage('#000000', false, count.toString())
+              );
+              map.addImage(
+                `marker-${count}-highlight`,
+                markerImage('#000000', true, count.toString())
               );
             }
           );

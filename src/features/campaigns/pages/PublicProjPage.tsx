@@ -27,6 +27,7 @@ import { filtersUpdated } from '../store';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import orgMessageIds from 'features/organizations/l10n/messageIds';
+import { getLocationLabel } from 'features/map/utils/locationFiltering';
 
 type Props = {
   campId: number;
@@ -41,18 +42,15 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const user = useUser();
   const dispatch = useAppDispatch();
   const campaign = useCampaign(orgId, campId).campaignFuture.data;
-  const { allEvents, filteredEvents, getDateRange } = useFilteredCampaignEvents(
-    orgId,
-    campId
-  );
-  const { customDatesToFilterBy, dateFilterState } = useAppSelector(
-    (state) => state.campaigns.filters
-  );
+  const { allEvents, filteredEvents, getDateRange, locationEvents } =
+    useFilteredCampaignEvents(orgId, campId);
+  const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
+    useAppSelector((state) => state.campaigns.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const isFiltered = !!dateFilterState;
+  const isFiltered = !!geojsonToFilterBy.length || !!dateFilterState;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -122,17 +120,36 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         setDrawerOpen(true);
       },
     },
-  ].sort((a, b) => {
-    if (a.active && !b.active) {
-      return -1;
-    } else if (!a.active && b.active) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+  ]
+    .concat(
+      geojsonToFilterBy.length
+        ? [
+            {
+              active: true,
+              key: 'location',
+              label: getLocationLabel(geojsonToFilterBy),
+              onClick: () => {
+                dispatch(
+                  filtersUpdated({
+                    geojsonToFilterBy: [],
+                  })
+                );
+              },
+            },
+          ]
+        : []
+    )
+    .sort((a, b) => {
+      if (a.active && !b.active) {
+        return -1;
+      } else if (!a.active && b.active) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
-  const eventsByDate = filteredEvents.reduce<
+  const eventsByDate = locationEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
   >((dates, event) => {
     const eventDate = event.start_time.slice(0, 10);

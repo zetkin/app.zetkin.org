@@ -19,6 +19,7 @@ import {
 type OrgEventFilters = {
   customDatesToFilterBy: DateRange<Dayjs>;
   dateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+  geojsonToFilterBy: GeoJSON.Feature[];
   orgIdsToFilterBy: number[];
 };
 
@@ -36,6 +37,7 @@ const initialState: OrganizationsStoreSlice = {
   filters: {
     customDatesToFilterBy: [null, null],
     dateFilterState: null,
+    geojsonToFilterBy: [],
     orgIdsToFilterBy: [],
   },
   orgData: remoteItem(0),

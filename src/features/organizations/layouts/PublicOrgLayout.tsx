@@ -17,6 +17,7 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import FollowUnfollowLoginButton from '../components/ActivistPortlHeader/FollowUnfollowLoginButton';
 import EventMapLayout from './EventMapLayout';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
+import { useAppSelector } from 'core/hooks';
 
 type Props = {
   children: ReactNode;
@@ -48,9 +49,14 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
     });
   }
 
+  const { geojsonToFilterBy } = useAppSelector(
+    (state) => state.organizations.filters
+  );
+
   return (
     <EventMapLayout
       events={filteredEvents}
+      geojsonToFilterBy={geojsonToFilterBy}
       header={
         <ActivistPortalHeader
           button={

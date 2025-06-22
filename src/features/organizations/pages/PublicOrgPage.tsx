@@ -36,6 +36,7 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
+import { getLocationLabel } from '../../map/utils/locationFiltering';
 
 type Props = {
   orgId: number;
@@ -48,10 +49,14 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const organization = useOrganization(orgId).data;
   const user = useUser();
   const dispatch = useAppDispatch();
-  const { allEvents, filteredEvents, getDateRange } =
+  const { allEvents, getDateRange, locationEvents } =
     useFilteredOrgEvents(orgId);
-  const { customDatesToFilterBy, dateFilterState, orgIdsToFilterBy } =
-    useAppSelector((state) => state.organizations.filters);
+  const {
+    customDatesToFilterBy,
+    dateFilterState,
+    geojsonToFilterBy,
+    orgIdsToFilterBy,
+  } = useAppSelector((state) => state.organizations.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
@@ -67,7 +72,10 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
+  const isFiltered =
+    !!orgIdsToFilterBy.length ||
+    !!geojsonToFilterBy.length ||
+    !!dateFilterState;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -158,15 +166,34 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           },
         ]
       : []),
-  ].sort((a, b) => {
-    if (a.active && !b.active) {
-      return -1;
-    } else if (!a.active && b.active) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+  ]
+    .concat(
+      geojsonToFilterBy.length
+        ? [
+            {
+              active: true,
+              key: 'location',
+              label: getLocationLabel(geojsonToFilterBy),
+              onClick: () => {
+                dispatch(
+                  filtersUpdated({
+                    geojsonToFilterBy: [],
+                  })
+                );
+              },
+            },
+          ]
+        : []
+    )
+    .sort((a, b) => {
+      if (a.active && !b.active) {
+        return -1;
+      } else if (!a.active && b.active) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
   const topOrgEvents = allEvents.filter(
     (event) => event.organization.id == orgId
@@ -175,7 +202,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const events =
     includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
 
-  const eventsByDate = filteredEvents.reduce<
+  const eventsByDate = locationEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
   >((dates, event) => {
     const eventDate = event.start_time.slice(0, 10);
@@ -245,6 +272,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
+                    geojsonToFilterBy: [],
                     orgIdsToFilterBy: [],
                   })
                 )
@@ -261,7 +289,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {locationEvents.length == 0 && (
         <Box
           alignItems="center"
           display="flex"
