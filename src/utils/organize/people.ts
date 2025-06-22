@@ -4,6 +4,7 @@ export type PersonOrganization = Pick<ZetkinOrganization, 'id' | 'title'> & {
   connected?: boolean;
   is_active?: boolean;
   parent?: Pick<ZetkinOrganization, 'id' | 'title'> | null;
+  role?: string | undefined | null;
   sub_orgs: PersonOrganization[];
 };
 
@@ -15,7 +16,12 @@ export const getConnectedOrganizations = (
     .filter((org) =>
       personConnections.map((conn) => conn?.organization?.id).includes(org?.id)
     )
-    .map((org) => ({ ...org, connected: true }));
+    .map((org) => ({
+      ...org,
+      connected: true,
+      role: personConnections.find((conn) => conn.organization?.id == org.id)
+        ?.role,
+    }));
 };
 
 export const getPersonOrganizations = (
