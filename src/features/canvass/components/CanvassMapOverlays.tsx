@@ -15,7 +15,10 @@ import messageIds from '../l10n/messageIds';
 type Props = {
   assignment: ZetkinAreaAssignment;
   isCreating: boolean;
-  onCreate: (title: string) => void;
+  onCreate: (newLocation: {
+    numEstimatedHouseholds: number;
+    title: string;
+  }) => void;
   onToggleCreating: (creating: boolean) => void;
   selectedLocation: ZetkinLocation | null;
 };
@@ -53,7 +56,7 @@ const CanvassMapOverlays: FC<Props> = ({
       drawerTop = 'calc(100dvh - 5rem)';
     }
   } else if (isCreating) {
-    drawerTop = 'calc(100dvh - 9rem)';
+    drawerTop = 'calc(100dvh - 13rem)';
   }
 
   useEffect(() => {
@@ -112,8 +115,8 @@ const CanvassMapOverlays: FC<Props> = ({
               onClose={() => {
                 onToggleCreating(false);
               }}
-              onCreate={(title) => {
-                onCreate(title);
+              onCreate={(newLocation) => {
+                onCreate(newLocation);
               }}
             />
           </Box>

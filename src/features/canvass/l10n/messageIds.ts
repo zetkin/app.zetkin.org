@@ -78,6 +78,7 @@ export default makeMessages('feat.canvass', {
       cancel: m('Cancel'),
       create: m('Create location'),
       inputPlaceholder: m('Give the location a name'),
+      numHouseholds: m('Number of households'),
     },
   },
   sidebar: {
