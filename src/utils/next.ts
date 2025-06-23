@@ -210,6 +210,7 @@ export const scaffold =
           FEAT_TASKS: process.env.FEAT_TASKS,
           INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
           INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+          MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
           TILESERVER:
             process.env.TILESERVER || 'https://tile.openstreetmap.org',
