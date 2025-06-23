@@ -1,16 +1,17 @@
 import { FC } from 'react';
 
-import useCallState from '../hooks/useCallState';
 import { ZetkinCall } from '../types';
 import ZUIText from 'zui/components/ZUIText';
+import { useAppSelector } from 'core/hooks';
 
 type Props = {
   call: ZetkinCall;
 };
 
 const CallSummarySentence: FC<Props> = ({ call }) => {
-  const callState = useCallState(call.id);
-  const report = callState?.report;
+  const report = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].report
+  );
 
   const messageByStatusCode: Record<number, string> = {
     1: `You talked to ${call.target.first_name}`,

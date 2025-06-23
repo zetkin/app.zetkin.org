@@ -1,18 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {
-  CallState,
-  LaneStep,
-  LaneState,
-  ZetkinCall,
-  ZetkinCallPatchBody,
-} from './types';
-import {
-  RemoteItem,
-  remoteItem,
-  remoteList,
-  RemoteList,
-} from 'utils/storeUtils';
+import { LaneStep, LaneState, ZetkinCall, CallReport } from './types';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { SerializedError } from './hooks/useAllocateCall';
@@ -25,7 +14,6 @@ export interface CallStoreSlice {
   lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
-  stateByCallId: Record<number, RemoteItem<CallState>>;
 }
 
 const initialState: CallStoreSlice = {
@@ -36,12 +24,12 @@ const initialState: CallStoreSlice = {
   lanes: [
     {
       previousCall: null,
+      report: null,
       step: LaneStep.STATS,
     },
   ],
   outgoingCalls: remoteList(),
   queueHasError: null,
-  stateByCallId: {},
 };
 
 const CallSlice = createSlice({
@@ -157,19 +145,13 @@ const CallSlice = createSlice({
     previousCallClear: (state) => {
       state.lanes[state.activeLaneIndex].previousCall = null;
     },
-    reportAdded: (
-      state,
-      action: PayloadAction<[number, ZetkinCallPatchBody]>
-    ) => {
-      const [id, report] = action.payload;
-      state.stateByCallId[id] = remoteItem(id, {
-        data: { id, report },
-        loaded: new Date().toISOString(),
-      });
+    reportAdded: (state, action: PayloadAction<CallReport>) => {
+      const report = action.payload;
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.report = report;
     },
-    reportDeleted: (state, action: PayloadAction<number>) => {
-      const callId = action.payload;
-      delete state.stateByCallId[callId];
+    reportDeleted: (state) => {
+      state.lanes[state.activeLaneIndex].report = null;
     },
     targetSubmissionAdded: (
       state,

@@ -1,6 +1,6 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { currentCallDeleted, newCallAllocated } from '../store';
-import { ZetkinCall, ZetkinCallPatchBody } from '../types';
+import { ZetkinCall, CallReport } from '../types';
 
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
@@ -15,8 +15,8 @@ export default function useCallMutations(orgId: number) {
     dispatch(newCallAllocated(call));
   };
 
-  const updateCall = (callId: number, data: ZetkinCallPatchBody) => {
-    return apiClient.patch<ZetkinCall, ZetkinCallPatchBody>(
+  const updateCall = (callId: number, data: CallReport) => {
+    return apiClient.patch<ZetkinCall, CallReport>(
       `/api/orgs/${orgId}/calls/${callId}`,
       data
     );

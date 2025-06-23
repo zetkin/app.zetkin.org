@@ -37,7 +37,7 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchBody = Pick<
+export type CallReport = Pick<
   ZetkinCall,
   'message_to_organizer' | 'notes' | 'organizer_action_needed' | 'state'
 > &
@@ -46,10 +46,6 @@ export type ZetkinCallPatchBody = Pick<
 export interface CombinedEventResponse extends ZetkinEventResponse {
   action: ZetkinEvent;
 }
-
-export type CallState = {
-  report: ZetkinCallPatchBody;
-};
 
 export enum LaneStep {
   STATS = 0,
@@ -61,5 +57,6 @@ export enum LaneStep {
 
 export type LaneState = {
   previousCall: ZetkinCall | null;
+  report: CallReport | null;
   step: LaneStep;
 };

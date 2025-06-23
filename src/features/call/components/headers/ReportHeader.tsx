@@ -4,14 +4,14 @@ import { FC, useState } from 'react';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useCallMutations from '../../hooks/useCallMutations';
-import { ZetkinCall } from 'features/call/types';
+import { LaneStep, ZetkinCall } from 'features/call/types';
 import useAddSurveysSubmissions from 'features/call/hooks/useAddSurveysSubmissions';
 import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import { getAllStoredSurveysAsFormData } from '../utils/getAllStoredSurveysAsFormData';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import CallHeader from './CallHeader';
-import useCallState from 'features/call/hooks/useCallState';
-import { previousCallAdd } from 'features/call/store';
+import { previousCallAdd, updateLaneStep } from 'features/call/store';
+import useAllocateCall from 'features/call/hooks/useAllocateCall';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -39,8 +39,14 @@ const ReportHeader: FC<Props> = ({
   const { submitSurveys } = useAddSurveysSubmissions(
     assignment.organization.id
   );
-  const callState = useCallState(call.id);
-  const reportIsDone = callState && !!callState.report;
+  const { allocateCall } = useAllocateCall(
+    assignment.organization.id,
+    assignment.id
+  );
+
+  const report = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].report
+  );
 
   const surveyKeys = useAppSelector((state) => state.call.filledSurveys);
   const filledSurveysContents = getAllStoredSurveysAsFormData(surveyKeys);
@@ -50,12 +56,12 @@ const ReportHeader: FC<Props> = ({
       <CallHeader
         assignment={assignment}
         call={call}
-        forwardButtonDisabled={!reportIsDone}
+        forwardButtonDisabled={!report}
         forwardButtonLabel={forwardButtonLabel}
         forwardButtonLoading={isLoading}
         onBack={onBack}
         onForward={async () => {
-          if (!reportIsDone) {
+          if (!report) {
             return;
           }
           setIsLoading(true);
@@ -74,10 +80,14 @@ const ReportHeader: FC<Props> = ({
           if (!success) {
             setError(true);
           } else {
-            await updateCall(call.id, callState.report!);
-            sessionStorage.clear();
-            dispatch(previousCallAdd(call));
             setError(false);
+            await updateCall(call.id, report);
+            sessionStorage.clear();
+            const error = await allocateCall();
+            if (!error) {
+              dispatch(previousCallAdd(call));
+              dispatch(updateLaneStep(LaneStep.PREPARE));
+            }
           }
 
           setIsLoading(false);

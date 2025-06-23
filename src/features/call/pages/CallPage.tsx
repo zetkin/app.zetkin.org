@@ -17,7 +17,7 @@ import { LaneStep } from '../types';
 import ZUIModal from 'zui/components/ZUIModal';
 import CallSummarySentence from '../components/CallSummarySentence';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { previousCallClear, updateLaneStep } from '../store';
+import { previousCallClear, reportDeleted, updateLaneStep } from '../store';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -46,7 +46,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
             open={!!lane.previousCall}
             primaryButton={{
               label: 'Close',
-              onClick: () => dispatch(previousCallClear()),
+              onClick: () => {
+                dispatch(reportDeleted());
+                dispatch(previousCallClear());
+              },
             }}
             title="Summary of previous call"
           >

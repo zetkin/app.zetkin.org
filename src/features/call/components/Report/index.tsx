@@ -38,7 +38,6 @@ export type Report = {
 };
 
 type Props = {
-  callId: number;
   disableCallerNotes: boolean;
   onReportFinished: (
     report: Pick<
@@ -54,7 +53,6 @@ type Props = {
 };
 
 const ReportForm: FC<Props> = ({
-  callId,
   disableCallerNotes,
   onReportFinished,
   target,
@@ -135,7 +133,7 @@ const ReportForm: FC<Props> = ({
           return step.renderSummary(
             report,
             (updatedReport) => {
-              dispatch(reportDeleted(callId));
+              dispatch(reportDeleted());
               updateReport(updatedReport);
             },
             target
