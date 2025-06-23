@@ -35,6 +35,7 @@ const initialState: CallStoreSlice = {
   filledSurveys: [],
   lanes: [
     {
+      previousCall: null,
       step: LaneStep.STATS,
     },
   ],
@@ -149,6 +150,13 @@ const CallSlice = createSlice({
       state.outgoingCalls.loaded = new Date().toISOString();
       state.outgoingCalls.isLoading = false;
     },
+    previousCallAdd: (state, action: PayloadAction<ZetkinCall>) => {
+      const call = action.payload;
+      state.lanes[state.activeLaneIndex].previousCall = call;
+    },
+    previousCallClear: (state) => {
+      state.lanes[state.activeLaneIndex].previousCall = null;
+    },
     reportAdded: (
       state,
       action: PayloadAction<[number, ZetkinCallPatchBody]>
@@ -217,6 +225,8 @@ export const {
   newCallAllocated,
   outgoingCallsLoad,
   outgoingCallsLoaded,
+  previousCallAdd,
+  previousCallClear,
   reportAdded,
   reportDeleted,
   targetSubmissionAdded,

@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import { useAppSelector } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useCallMutations from '../../hooks/useCallMutations';
 import { ZetkinCall } from 'features/call/types';
 import useAddSurveysSubmissions from 'features/call/hooks/useAddSurveysSubmissions';
@@ -11,13 +11,13 @@ import { getAllStoredSurveysAsFormData } from '../utils/getAllStoredSurveysAsFor
 import ZUIAlert from 'zui/components/ZUIAlert';
 import CallHeader from './CallHeader';
 import useCallState from 'features/call/hooks/useCallState';
+import { previousCallAdd } from 'features/call/store';
 
 type Props = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
   forwardButtonLabel: string;
   onBack: () => void;
-  onForward: () => void;
   onSecondaryAction?: () => void;
   onSwitchCall: () => void;
   secondaryActionLabel?: string;
@@ -27,12 +27,12 @@ const ReportHeader: FC<Props> = ({
   assignment,
   call,
   onBack,
-  onForward,
   forwardButtonLabel,
   onSecondaryAction,
   secondaryActionLabel,
   onSwitchCall,
 }) => {
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const { updateCall } = useCallMutations(assignment.organization.id);
@@ -76,7 +76,7 @@ const ReportHeader: FC<Props> = ({
           } else {
             await updateCall(call.id, callState.report!);
             sessionStorage.clear();
-            onForward();
+            dispatch(previousCallAdd(call));
             setError(false);
           }
 

@@ -60,5 +60,6 @@ export enum LaneStep {
 }
 
 export type LaneState = {
+  previousCall: ZetkinCall | null;
   step: LaneStep;
 };

@@ -1,8 +1,7 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import StatsHeader from '../components/headers/StatsHeader';
 import CallStats from '../components/CallStats';
@@ -11,15 +10,14 @@ import CallOngoing from '../components/CallOngoing';
 import CallReport from '../components/CallReport';
 import useCurrentCall from '../hooks/useCurrentCall';
 import ReportHeader from '../components/headers/ReportHeader';
-import useAllocateCall from '../hooks/useAllocateCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PrepareHeader from '../components/headers/PrepareHeader';
 import CallHeader from '../components/headers/CallHeader';
-import { LaneStep, ZetkinCall } from '../types';
+import { LaneStep } from '../types';
 import ZUIModal from 'zui/components/ZUIModal';
 import CallSummarySentence from '../components/CallSummarySentence';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { updateLaneStep } from '../store';
+import { previousCallClear, updateLaneStep } from '../store';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -30,13 +28,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
   );
-  const [previousCall, setPreviousCall] = useState<ZetkinCall | null>(null);
   const call = useCurrentCall();
-  const router = useRouter();
-  const { allocateCall } = useAllocateCall(
-    assignment?.organization.id,
-    assignment?.id
-  );
 
   return (
     <Box>
@@ -51,14 +43,16 @@ const CallPage: FC<Props> = ({ assignment }) => {
           <PrepareHeader assignment={assignment} call={call} />
           <CallPrepare assignment={assignment} />
           <ZUIModal
-            open={!!previousCall}
+            open={!!lane.previousCall}
             primaryButton={{
               label: 'Close',
-              onClick: () => setPreviousCall(null),
+              onClick: () => dispatch(previousCallClear()),
             }}
             title="Summary of previous call"
           >
-            {previousCall && <CallSummarySentence call={previousCall} />}
+            {lane.previousCall && (
+              <CallSummarySentence call={lane.previousCall} />
+            )}
           </ZUIModal>
         </>
       )}
@@ -82,16 +76,6 @@ const CallPage: FC<Props> = ({ assignment }) => {
             call={call}
             forwardButtonLabel={'Submit report'}
             onBack={() => dispatch(updateLaneStep(LaneStep.STATS))}
-            onForward={async () => {
-              const result = await allocateCall();
-              if (result) {
-                dispatch(updateLaneStep(LaneStep.STATS));
-                router.push(`/call/${assignment.id}`);
-              } else {
-                setPreviousCall(call);
-                dispatch(updateLaneStep(LaneStep.PREPARE));
-              }
-            }}
             onSecondaryAction={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
             onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
             secondaryActionLabel={'Back to activities'}
