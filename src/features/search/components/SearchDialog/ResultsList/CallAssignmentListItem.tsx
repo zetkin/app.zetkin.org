@@ -20,12 +20,9 @@ const CallassigmentListItem: React.FunctionComponent<{
   const { orgId } = router.query as { orgId: string };
   return (
     <Link
-      key={callAssignment.id}
       href={`/organize/${orgId}/projects/${
         callAssignment.campaign?.id ?? 'standalone'
       }/callassignments/${callAssignment.id}`}
-      legacyBehavior
-      passHref
     >
       <ListItem data-testid="SearchDialog-resultsListItem">
         <ListItemButton>

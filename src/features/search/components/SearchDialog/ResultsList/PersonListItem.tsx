@@ -18,12 +18,7 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
   return (
-    <Link
-      key={person.id}
-      href={`/organize/${orgId}/people/${person.id}`}
-      legacyBehavior
-      passHref
-    >
+    <Link href={`/organize/${orgId}/people/${person.id}`}>
       <ListItem data-testid="SearchDialog-resultsListItem">
         <ListItemButton>
           <ListItemAvatar>

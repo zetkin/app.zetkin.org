@@ -292,4 +292,12 @@ export default makeMessages('feat.events', {
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
   },
+  urlCard: {
+    nowAccepting: m('Now accepting sign-ups at this link'),
+    open: m('Open for sign-ups'),
+    preview: m('Preview event'),
+    previewPortal: m('Preview event in activist portal'),
+    visitPortal: m('Visit event in activist portal'),
+    willAccept: m('Will accept sign-ups at this link'),
+  },
 });
