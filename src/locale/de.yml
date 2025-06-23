@@ -2677,6 +2677,34 @@ feat:
         owner: Erstellt von
         title: Überschrift
       empty: Du hast noch keine Listen erstellt.
+glob:
+  accessLevels:
+    configure: Bearbeiten & Erstellen
+    edit: In Bearbeitung
+    readonly: Schreibgeschützte Ansicht
+  genderOptions:
+    f: Weiblich
+    m: Männlich
+    o: Divers
+    unspecified: Keine Angabe
+  personFields:
+    alt_phone: Weitere Telefonnummer
+    city: Stadt
+    co_address: Adresszusatz
+    country: Land
+    email: E-Mail
+    ext_id: Externe ID
+    first_name: Vorname
+    gender: Geschlechtsidentität
+    id: ID
+    is_user: hat Profil
+    last_name: Nachname
+    phone: Telefonnummer
+    street_address: Adresse
+    zip_code: Postleitzahl
+  roles:
+    admin: Admin
+    organizer: Organizer*in
 zui:
   timeline:
     addNotePlaceholder: Tippe, um eine Notiz zu erstellen
