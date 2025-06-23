@@ -2,7 +2,7 @@ import { FC } from 'react';
 import NextLink from 'next/link';
 import { Avatar, Box, Button, Link, Typography } from '@mui/material';
 
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PaneHeader from 'utils/panes/PaneHeader';

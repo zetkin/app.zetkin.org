@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import { FC, MutableRefObject } from 'react';
 
 import FieldValidationWarning from './FieldValidationWarning';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import { useMessages } from 'core/i18n';
 import {
   ZetkinCreatePerson,
