@@ -16,6 +16,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 
 import { useMessages } from 'core/i18n';
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/profile/l10n/messageIds';
 import { PersonOrganization } from 'utils/organize/people';
 
@@ -45,6 +46,7 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   organizationTree,
 }) => {
   const { id, is_active, sub_orgs, title, role } = organizationTree;
+  const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const hasChildren = !!sub_orgs?.length;
   const classes = useStyles({ level });
@@ -67,7 +69,9 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
         <ListItemText
           className={classes.listItemText}
           primary={title}
-          secondary={role ? role : messages.role.noRole()}
+          secondary={
+            role ? globalMessages.roles[role]() : messages.role.noRole()
+          }
         />
         <ListItemSecondaryAction>
           <IconButton edge="end" onClick={() => onClickRemove(id)} size="large">
