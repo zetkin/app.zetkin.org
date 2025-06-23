@@ -5,7 +5,6 @@ import { Box } from '@mui/material';
 import { FC, useState } from 'react';
 
 import ZUISection from 'zui/components/ZUISection';
-import ZUIText from 'zui/components/ZUIText';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import InstructionsSection from './InstructionsSection';
 import useAllocateCall from '../hooks/useAllocateCall';
@@ -14,6 +13,7 @@ import useIsMobile from 'utils/hooks/useIsMobile';
 import PreviousCallsSection from './PreviousCallsSection';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import PreviousCallsSearch from './PreviousCallsSearch';
+import AssignmentStats from './AssignmentStats';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -37,7 +37,7 @@ const CallStats: FC<CallStatsProps> = ({ assignment, onSwitchCall }) => {
 
   return (
     <>
-      {error !== null && (
+      {error && (
         <Box p={2}>
           <ZUIAlert
             button={{
@@ -55,120 +55,38 @@ const CallStats: FC<CallStatsProps> = ({ assignment, onSwitchCall }) => {
       <Box
         display="flex"
         flexDirection={isMobile ? 'column' : 'row'}
+        gap={2}
+        padding={2}
         width="100%"
       >
-        <Box flex={isMobile ? 'none' : '5'} order={isMobile ? 1 : 2} p={2}>
-          <Box display="flex" flexDirection="column" gap={2}>
-            <ZUISection
-              renderContent={() => (
-                <>
-                  {isMobile && (
-                    <Box
-                      display="flex"
-                      gap={10}
-                      justifyContent="flex-start"
-                      mt={2}
-                    >
-                      <Box>
-                        <Box display="flex">
-                          <Box
-                            mr={1}
-                            sx={(theme) => ({ color: theme.palette.data.main })}
-                          >
-                            <ZUIText color="inherit">
-                              {stats.num_calls_reached}
-                            </ZUIText>
-                          </Box>
-                          <ZUIText color="secondary">
-                            / {stats.num_calls_made}
-                          </ZUIText>
-                        </Box>
-                        <ZUIText variant="headingSm">successful</ZUIText>
-                      </Box>
-                      <Box>
-                        <Box
-                          mr={1}
-                          sx={(theme) => ({ color: theme.palette.data.main })}
-                        >
-                          <ZUIText color="inherit">
-                            {stats.num_target_matches}
-                          </ZUIText>
-                        </Box>
-                        <ZUIText variant="headingSm">targets</ZUIText>
-                      </Box>
-                    </Box>
-                  )}
-                  {!isMobile && (
-                    <Box display="flex" justifyContent="space-between" mt={2}>
-                      <Box>
-                        <Box
-                          mr={1}
-                          sx={(theme) => ({ color: theme.palette.data.main })}
-                        >
-                          <ZUIText color="inherit">
-                            {stats.num_calls_reached}
-                          </ZUIText>
-                        </Box>
-                        <ZUIText variant="headingSm">successful calls </ZUIText>
-                      </Box>
-                      <Box>
-                        <Box
-                          mr={1}
-                          sx={(theme) => ({ color: theme.palette.data.main })}
-                        >
-                          <ZUIText color="inherit">
-                            {stats.num_calls_made}
-                          </ZUIText>
-                        </Box>
-                        <Box
-                          sx={(theme) => ({ color: theme.palette.data.main })}
-                        >
-                          <ZUIText variant="headingSm"> calls made</ZUIText>
-                        </Box>
-                      </Box>
-                      <Box>
-                        <Box
-                          mr={1}
-                          sx={(theme) => ({ color: theme.palette.data.main })}
-                        >
-                          <ZUIText color="inherit">
-                            {stats.num_target_matches}
-                          </ZUIText>
-                        </Box>
-                        <ZUIText variant="headingSm">
-                          people in target group
-                        </ZUIText>
-                      </Box>
-                    </Box>
-                  )}
-                </>
-              )}
-              subtitle="These are people you have interacted with during this assignment."
-              title={'Assignment'}
-            />
-            <Box mt={2}>
-              <InstructionsSection instructions={assignment.instructions} />
-            </Box>
-          </Box>
+        <Box
+          display="flex"
+          flex={isMobile ? 'none' : '5'}
+          flexDirection="column"
+          gap={2}
+          order={isMobile ? 1 : 2}
+        >
+          <AssignmentStats stats={stats} />
+          <InstructionsSection instructions={assignment.instructions} />
         </Box>
-        <Box flex={isMobile ? 'none' : '5'} order={isMobile ? 1 : 2} p={2}>
+        <Box flex={isMobile ? 'none' : '5'} order={isMobile ? 1 : 2}>
           <ZUISection
             renderContent={() => (
               <Box
                 display="flex"
                 flexDirection="column"
+                gap={1}
                 sx={{
                   overflowX: 'hidden',
+                  paddingTop: 1,
                   width: '100%',
                 }}
               >
-                <Box my={1}>
-                  <PreviousCallsSearch
-                    onDebouncedChange={(value) => {
-                      setDebouncedInput(value);
-                    }}
-                  />
-                </Box>
+                <PreviousCallsSearch
+                  onDebouncedChange={(value) => {
+                    setDebouncedInput(value);
+                  }}
+                />
                 <PreviousCallsSection
                   assingmentId={assignment.id}
                   onSwitchCall={onSwitchCall}

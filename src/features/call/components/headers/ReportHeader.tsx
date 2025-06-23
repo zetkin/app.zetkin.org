@@ -10,6 +10,7 @@ import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiS
 import { getAllStoredSurveysAsFormData } from '../utils/getAllStoredSurveysAsFormData';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import CallHeader from './CallHeader';
+import useCallState from 'features/call/hooks/useCallState';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -35,11 +36,10 @@ const ReportHeader: FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const { updateCall } = useCallMutations(assignment.organization.id);
-  const stateList = useAppSelector((state) => state.call.stateByCallId);
   const { submitSurveys } = useAddSurveysSubmissions(
     assignment.organization.id
   );
-  const callState = stateList[call.id]?.data;
+  const callState = useCallState(call.id);
   const reportIsDone = callState && !!callState.report;
 
   const surveyKeys = useAppSelector((state) => state.call.filledSurveys);
