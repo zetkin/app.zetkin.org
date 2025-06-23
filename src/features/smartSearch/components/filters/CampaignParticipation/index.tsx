@@ -44,7 +44,6 @@ const removeKey = (
         {
           operator: config.operator,
           state: config.state,
-          status: config.status,
         }
       )
     : config;
@@ -75,7 +74,7 @@ const CampaignParticipation = ({
       operator: 'in',
       organizations: [orgId],
       state: 'booked',
-      status: 'attended',
+      status: undefined,
     });
 
   const orgIds = useOrgIdsFromOrgScope(
@@ -145,6 +144,17 @@ const CampaignParticipation = ({
       setConfig(removeKey(filter.config, 'location'));
     } else {
       setConfig({ ...filter.config, location: +locationValue });
+    }
+  };
+
+  const handleStatusSelectChange = (statusValue: string) => {
+    if (statusValue === DEFAULT_VALUE) {
+      setConfig(removeKey(filter.config, 'status'));
+    } else {
+      setConfig({
+        ...filter.config,
+        status: statusValue as 'attended' | 'cancelled' | 'noshow',
+      });
     }
   };
 
@@ -311,17 +321,12 @@ const CampaignParticipation = ({
             ),
             statusSelect: (
               <StyledSelect
-                onChange={(e) =>
-                  setConfig({
-                    ...filter.config,
-                    status: e.target.value as
-                      | 'attended'
-                      | 'cancelled'
-                      | 'noshow',
-                  })
-                }
-                value={filter.config.status}
+                onChange={(e) => handleStatusSelectChange(e.target.value)}
+                value={filter.config.status || DEFAULT_VALUE}
               >
+                <MenuItem key="any" value={DEFAULT_VALUE}>
+                  <Msg id={localMessageIds.statusSelect.any} />
+                </MenuItem>
                 <MenuItem key="attended" value="attended">
                   <Msg id={localMessageIds.statusSelect.attended} />
                 </MenuItem>

@@ -62,8 +62,10 @@ const DisplayCampaignParticipation = ({
         ) : (
           <UnderlinedMsg id={localMessageIds.locationSelect.any} />
         ),
-        statusSelect: (
+        statusSelect: status ? (
           <UnderlinedMsg id={localMessageIds.statusSelect[status]} />
+        ) : (
+          <UnderlinedMsg id={localMessageIds.statusSelect.any} />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
