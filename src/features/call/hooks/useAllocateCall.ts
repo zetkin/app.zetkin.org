@@ -1,9 +1,5 @@
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  allocateCallError,
-  allocateNewCallLoad,
-  allocateNewCallLoaded,
-} from '../store';
+import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
 import { ZetkinCall } from '../types';
 
 export type SerializedError = {
@@ -25,13 +21,13 @@ export default function useAllocateCall(
   const error = useAppSelector((state) => state.call.queueHasError);
 
   const allocateCall = async (): Promise<void | SerializedError> => {
-    dispatch(allocateNewCallLoad());
+    dispatch(allocateNewCall());
     try {
       const call = await apiClient.post<ZetkinCall>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
         {}
       );
-      dispatch(allocateNewCallLoaded(call));
+      dispatch(newCallAllocated(call));
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {

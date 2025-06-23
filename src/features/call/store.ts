@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { CallState, ZetkinCall, ZetkinCallPatchBody } from './types';
+import {
+  CallState,
+  LaneStep,
+  LaneState,
+  ZetkinCall,
+  ZetkinCallPatchBody,
+} from './types';
 import {
   RemoteItem,
   remoteItem,
@@ -12,18 +18,26 @@ import { ZetkinEventWithStatus } from 'features/home/types';
 import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
+  activeLaneIndex: number;
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
   filledSurveys: { surveyId: number; targetId: number }[];
-  queueHasError: SerializedError | null;
+  lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
+  queueHasError: SerializedError | null;
   stateByCallId: Record<number, RemoteItem<CallState>>;
 }
 
 const initialState: CallStoreSlice = {
+  activeLaneIndex: 0,
   currentCallId: null,
   eventsByTargetId: {},
   filledSurveys: [],
+  lanes: [
+    {
+      step: LaneStep.STATS,
+    },
+  ],
   outgoingCalls: remoteList(),
   queueHasError: null,
   stateByCallId: {},
@@ -73,10 +87,26 @@ const CallSlice = createSlice({
       const error = action.payload;
       state.queueHasError = error;
     },
-    allocateNewCallLoad: (state) => {
+    allocateNewCall: (state) => {
       state.outgoingCalls.isLoading = true;
     },
-    allocateNewCallLoaded: (state, action: PayloadAction<ZetkinCall>) => {
+    clearSurveysKeys: (state) => {
+      state.filledSurveys = [];
+    },
+    currentCallDeleted: (state, action: PayloadAction<number>) => {
+      const deletedCallId = action.payload;
+
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id !== deletedCallId
+      );
+
+      const nextCall = state.outgoingCalls.items.find(
+        (item) => item.data?.state === 0
+      );
+
+      state.currentCallId = nextCall ? Number(nextCall.id) : null;
+    },
+    newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
       state.currentCallId = action.payload.id;
       state.queueHasError = null;
 
@@ -95,22 +125,6 @@ const CallSlice = createSlice({
       }
 
       state.outgoingCalls.isLoading = false;
-    },
-    clearSurveysKeys: (state) => {
-      state.filledSurveys = [];
-    },
-    currentCallDeleted: (state, action: PayloadAction<number>) => {
-      const deletedCallId = action.payload;
-
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id !== deletedCallId
-      );
-
-      const nextCall = state.outgoingCalls.items.find(
-        (item) => item.data?.state === 0
-      );
-
-      state.currentCallId = nextCall ? Number(nextCall.id) : null;
     },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
@@ -181,6 +195,12 @@ const CallSlice = createSlice({
         };
       }
     },
+    updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
+      const step = action.payload;
+
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.step = step;
+    },
   },
 });
 
@@ -192,12 +212,13 @@ export const {
   allocateCallError,
   clearSurveysKeys,
   currentCallDeleted,
-  allocateNewCallLoad,
-  allocateNewCallLoaded,
+  allocateNewCall,
+  newCallAllocated,
   outgoingCallsLoad,
   outgoingCallsLoaded,
   reportAdded,
   reportDeleted,
   targetSubmissionAdded,
   targetSubmissionDeleted,
+  updateLaneStep,
 } = CallSlice.actions;

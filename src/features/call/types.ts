@@ -50,3 +50,15 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
 export type CallState = {
   report: ZetkinCallPatchBody;
 };
+
+export enum LaneStep {
+  STATS = 0,
+  PREPARE = 1,
+  ONGOING = 2,
+  REPORT = 3,
+  SUMMARY = 4,
+}
+
+export type LaneState = {
+  step: LaneStep;
+};

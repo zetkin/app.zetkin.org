@@ -9,18 +9,16 @@ import useAllocateCall from '../../hooks/useAllocateCall';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import HeaderBase from './HeaderBase';
+import { updateLaneStep } from 'features/call/store';
+import { LaneStep } from 'features/call/types';
+import { useAppDispatch } from 'core/hooks';
 
 type StatsHeaderProps = {
   assignment: ZetkinCallAssignment;
-  onBack: () => void;
-  onPrimaryAction: () => void;
 };
 
-const StatsHeader: FC<StatsHeaderProps> = ({
-  assignment,
-  onBack,
-  onPrimaryAction,
-}) => {
+const StatsHeader: FC<StatsHeaderProps> = ({ assignment }) => {
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { allocateCall, error } = useAllocateCall(
     assignment.organization.id,
@@ -39,11 +37,11 @@ const StatsHeader: FC<StatsHeaderProps> = ({
             const result = await allocateCall();
             if (result) {
               setIsLoading(false);
-              onBack();
+              dispatch(updateLaneStep(LaneStep.STATS));
               router.push(`/call/${assignment.id}`);
             } else {
               setIsLoading(false);
-              onPrimaryAction();
+              dispatch(updateLaneStep(LaneStep.PREPARE));
             }
           }}
           variant={isLoading ? 'loading' : 'primary'}

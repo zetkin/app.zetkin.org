@@ -15,24 +15,21 @@ import useAllocateCall from '../hooks/useAllocateCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PrepareHeader from '../components/headers/PrepareHeader';
 import CallHeader from '../components/headers/CallHeader';
-import { ZetkinCall } from '../types';
+import { LaneStep, ZetkinCall } from '../types';
 import ZUIModal from 'zui/components/ZUIModal';
 import CallSummarySentence from '../components/CallSummarySentence';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { updateLaneStep } from '../store';
 
 type Props = {
   assignment: ZetkinCallAssignment;
 };
 
-export enum CallStep {
-  STATS = 0,
-  PREPARE = 1,
-  ONGOING = 2,
-  REPORT = 3,
-  SUMMARY = 4,
-}
-
 const CallPage: FC<Props> = ({ assignment }) => {
-  const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
+  const dispatch = useAppDispatch();
+  const lane = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex]
+  );
   const [previousCall, setPreviousCall] = useState<ZetkinCall | null>(null);
   const call = useCurrentCall();
   const router = useRouter();
@@ -43,28 +40,15 @@ const CallPage: FC<Props> = ({ assignment }) => {
 
   return (
     <Box>
-      {activeStep == CallStep.STATS && (
+      {lane.step == LaneStep.STATS && (
         <>
-          <StatsHeader
-            assignment={assignment}
-            onBack={() => setActiveStep(CallStep.STATS)}
-            onPrimaryAction={() => setActiveStep(CallStep.PREPARE)}
-          />
-          <CallStats
-            assignment={assignment}
-            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-          />
+          <StatsHeader assignment={assignment} />
+          <CallStats assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.PREPARE && call && (
+      {lane.step == LaneStep.PREPARE && call && (
         <>
-          <PrepareHeader
-            assignment={assignment}
-            call={call}
-            onBack={() => setActiveStep(CallStep.STATS)}
-            onForward={() => setActiveStep(CallStep.ONGOING)}
-            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
-          />
+          <PrepareHeader assignment={assignment} call={call} />
           <CallPrepare assignment={assignment} />
           <ZUIModal
             open={!!previousCall}
@@ -78,38 +62,38 @@ const CallPage: FC<Props> = ({ assignment }) => {
           </ZUIModal>
         </>
       )}
-      {activeStep == CallStep.ONGOING && call && (
+      {lane.step == LaneStep.ONGOING && call && (
         <>
           <CallHeader
             assignment={assignment}
             call={call}
             forwardButtonLabel={'Finish and report'}
-            onBack={() => setActiveStep(CallStep.STATS)}
-            onForward={() => setActiveStep(CallStep.REPORT)}
-            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+            onBack={() => dispatch(updateLaneStep(LaneStep.STATS))}
+            onForward={() => dispatch(updateLaneStep(LaneStep.REPORT))}
+            onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
           />
           <CallOngoing assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.REPORT && call && (
+      {lane.step == LaneStep.REPORT && call && (
         <>
           <ReportHeader
             assignment={assignment}
             call={call}
             forwardButtonLabel={'Submit report'}
-            onBack={() => setActiveStep(CallStep.STATS)}
+            onBack={() => dispatch(updateLaneStep(LaneStep.STATS))}
             onForward={async () => {
               const result = await allocateCall();
               if (result) {
-                setActiveStep(CallStep.STATS);
+                dispatch(updateLaneStep(LaneStep.STATS));
                 router.push(`/call/${assignment.id}`);
               } else {
                 setPreviousCall(call);
-                setActiveStep(CallStep.PREPARE);
+                dispatch(updateLaneStep(LaneStep.PREPARE));
               }
             }}
-            onSecondaryAction={() => setActiveStep(CallStep.ONGOING)}
-            onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
+            onSecondaryAction={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
+            onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
             secondaryActionLabel={'Back to activities'}
           />
           <CallReport assignment={assignment} />

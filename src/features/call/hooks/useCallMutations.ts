@@ -1,5 +1,5 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { currentCallDeleted, allocateNewCallLoaded } from '../store';
+import { currentCallDeleted, newCallAllocated } from '../store';
 import { ZetkinCall, ZetkinCallPatchBody } from '../types';
 
 export default function useCallMutations(orgId: number) {
@@ -12,7 +12,7 @@ export default function useCallMutations(orgId: number) {
   };
 
   const switchCurrentCall = async (call: ZetkinCall) => {
-    dispatch(allocateNewCallLoaded(call));
+    dispatch(newCallAllocated(call));
   };
 
   const updateCall = (callId: number, data: ZetkinCallPatchBody) => {
