@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Fragment, Suspense, useState } from 'react';
+import { FC, Fragment, Suspense, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   CalendarMonth,
@@ -34,6 +34,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
+import { removeOffset } from 'utils/dateUtils';
 
 type Props = {
   eventId: number;
@@ -313,6 +314,14 @@ const DateAndLocation: FC<{
 }> = ({ event }) => {
   const env = useEnv();
   const isMobile = useIsMobile();
+  const startTime = useMemo(
+    () => new Date(removeOffset(event.start_time)),
+    [event]
+  );
+  const endTime = useMemo(
+    () => new Date(removeOffset(event.end_time)),
+    [event]
+  );
 
   return (
     <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
@@ -334,10 +343,7 @@ const DateAndLocation: FC<{
       <Box alignItems="center" display="flex" gap={1}>
         <ZUIIcon icon={CalendarMonth} />
         <ZUIText>
-          <ZUITimeSpan
-            end={new Date(event.end_time)}
-            start={new Date(event.start_time)}
-          />
+          <ZUITimeSpan end={endTime} start={startTime} />
         </ZUIText>
       </Box>
       {event.url && (
