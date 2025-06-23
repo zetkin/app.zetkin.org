@@ -285,6 +285,10 @@ const SurveySubmissionsList = ({
     );
   };
 
+  const creatingFromSubmission = submissions.find(
+    (sub) => sub.id == createPersonOpen
+  );
+
   return (
     <Box
       sx={{
@@ -320,20 +324,27 @@ const SurveySubmissionsList = ({
           border: 'none',
         }}
       />
-      <ZUICreatePerson
-        onClose={() => {
-          setCreatePersonOpen(-1);
-        }}
-        onSubmit={(e, person) => {
-          if (createPersonOpen == -1) {
-            return;
-          }
-          setRespondentId(person.id);
-        }}
-        open={createPersonOpen != -1}
-        submitLabel={messages.submissions.createPersonSubmit()}
-        title={messages.submissions.createPersonTitle()}
-      />
+      {creatingFromSubmission && (
+        <ZUICreatePerson
+          initialValues={{
+            email: creatingFromSubmission.respondent?.email || '',
+            first_name: creatingFromSubmission.respondent?.first_name || '',
+            last_name: creatingFromSubmission.respondent?.last_name || '',
+          }}
+          onClose={() => {
+            setCreatePersonOpen(-1);
+          }}
+          onSubmit={(e, person) => {
+            if (createPersonOpen == -1) {
+              return;
+            }
+            setRespondentId(person.id);
+          }}
+          open={createPersonOpen != -1}
+          submitLabel={messages.submissions.createPersonSubmit()}
+          title={messages.submissions.createPersonTitle()}
+        />
+      )}
       {dialogPerson && (
         <SurveyLinkDialog
           email={dialogEmail}
