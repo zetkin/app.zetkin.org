@@ -1,6 +1,11 @@
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
-import { ZetkinCall } from '../types';
+import {
+  allocateCallError,
+  allocateNewCall,
+  newCallAllocated,
+  updateLaneStep,
+} from '../store';
+import { LaneStep, ZetkinCall } from '../types';
 
 export type SerializedError = {
   message: string;
@@ -10,6 +15,7 @@ export type SerializedError = {
 type UseAllocateCallReturn = {
   allocateCall: () => Promise<void | SerializedError>;
   error: SerializedError | null;
+  isLoading: boolean;
 };
 
 export default function useAllocateCall(
@@ -19,6 +25,9 @@ export default function useAllocateCall(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const error = useAppSelector((state) => state.call.queueHasError);
+  const isLoading = useAppSelector(
+    (state) => state.call.outgoingCalls.isLoading
+  );
 
   const allocateCall = async (): Promise<void | SerializedError> => {
     dispatch(allocateNewCall());
@@ -28,6 +37,7 @@ export default function useAllocateCall(
         {}
       );
       dispatch(newCallAllocated(call));
+      dispatch(updateLaneStep(LaneStep.PREPARE));
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {
@@ -35,6 +45,7 @@ export default function useAllocateCall(
         name: error.name,
       };
       dispatch(allocateCallError(serialized));
+      dispatch(updateLaneStep(LaneStep.STATS));
       return error;
     }
   };
@@ -42,5 +53,6 @@ export default function useAllocateCall(
   return {
     allocateCall,
     error,
+    isLoading,
   };
 }

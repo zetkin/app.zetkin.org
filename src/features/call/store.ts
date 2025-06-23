@@ -86,6 +86,7 @@ const CallSlice = createSlice({
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
       state.queueHasError = error;
+      state.outgoingCalls.isLoading = false;
     },
     allocateNewCall: (state) => {
       state.outgoingCalls.isLoading = true;
