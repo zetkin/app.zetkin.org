@@ -40,7 +40,7 @@ export default makeMessages('feat.profile', {
   },
   resetButton: m('Reset'),
   role: {
-    noRole: m('no role'),
+    noRole: m('No role'),
   },
   saveButton: m('Save'),
   tabs: {
