@@ -15,7 +15,7 @@ import { CountryCode } from 'libphonenumber-js';
 
 import checkInvalidFields from './checkInvalidFields';
 import formatUrl from 'utils/formatUrl';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import PersonFieldInput from './PersonFieldInput';
