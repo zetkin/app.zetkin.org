@@ -17,6 +17,9 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PrepareHeader from '../components/headers/PrepareHeader';
 import CallHeader from '../components/headers/CallHeader';
 import SummaryHeader from '../components/headers/SummaryHeader';
+import { ZetkinCall } from '../types';
+import ZUIModal from 'zui/components/ZUIModal';
+import CallSummarySentence from '../components/CallSummarySentence';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -32,6 +35,7 @@ export enum CallStep {
 
 const CallPage: FC<Props> = ({ assignment }) => {
   const [activeStep, setActiveStep] = useState<CallStep>(CallStep.STATS);
+  const [previousCall, setPreviousCall] = useState<ZetkinCall | null>(null);
   const call = useCurrentCall();
   const router = useRouter();
   const { allocateCall } = useAllocateCall(
@@ -63,8 +67,17 @@ const CallPage: FC<Props> = ({ assignment }) => {
             onForward={() => setActiveStep(CallStep.ONGOING)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
           />
-
           <CallPrepare assignment={assignment} />
+          <ZUIModal
+            open={!!previousCall}
+            primaryButton={{
+              label: 'Close',
+              onClick: () => setPreviousCall(null),
+            }}
+            title="Summary of previous call"
+          >
+            {previousCall && <CallSummarySentence call={previousCall} />}
+          </ZUIModal>
         </>
       )}
       {activeStep == CallStep.ONGOING && call && (
@@ -87,7 +100,17 @@ const CallPage: FC<Props> = ({ assignment }) => {
             call={call}
             forwardButtonLabel={'Submit report'}
             onBack={() => setActiveStep(CallStep.STATS)}
-            onForward={() => setActiveStep(CallStep.SUMMARY)}
+            onForward={async () => {
+              const result = await allocateCall();
+              if (result) {
+                setActiveStep(CallStep.STATS);
+                router.push(`/call/${assignment.id}`);
+              } else {
+                console.log('set prev call', call);
+                setPreviousCall(call);
+                setActiveStep(CallStep.PREPARE);
+              }
+            }}
             onSecondaryAction={() => setActiveStep(CallStep.ONGOING)}
             onSwitchCall={() => setActiveStep(CallStep.PREPARE)}
             secondaryActionLabel={'Back to activities'}
@@ -95,7 +118,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
           <CallReport assignment={assignment} />
         </>
       )}
-      {activeStep == CallStep.SUMMARY && call && (
+      {/* {activeStep == CallStep.SUMMARY && call && (
         <>
           <SummaryHeader
             assignment={assignment}
@@ -113,7 +136,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
           />
           <CallSummary assignment={assignment} call={call} />
         </>
-      )}
+      )} */}
     </Box>
   );
 };

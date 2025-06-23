@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import useCallState from '../hooks/useCallState';
 import { ZetkinCall } from '../types';
-import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 
 type Props = {
@@ -28,14 +27,9 @@ const CallSummarySentence: FC<Props> = ({ call }) => {
   }
 
   return (
-    <ZUISection
-      renderContent={() => (
-        <ZUIText variant="bodyMdSemiBold">
-          {messageByStatusCode[report.state]}
-        </ZUIText>
-      )}
-      title="Summary"
-    />
+    <ZUIText variant="bodyMdSemiBold">
+      {messageByStatusCode[report.state]}
+    </ZUIText>
   );
 };
 
