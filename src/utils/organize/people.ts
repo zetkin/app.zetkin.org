@@ -4,7 +4,7 @@ export type PersonOrganization = Pick<ZetkinOrganization, 'id' | 'title'> & {
   connected?: boolean;
   is_active?: boolean;
   parent?: Pick<ZetkinOrganization, 'id' | 'title'> | null;
-  role?: string | undefined | null;
+  role: 'organizer' | 'admin' | null;
   sub_orgs: PersonOrganization[];
 };
 
@@ -19,8 +19,7 @@ export const getConnectedOrganizations = (
     .map((org) => ({
       ...org,
       connected: true,
-      role: personConnections.find((conn) => conn.organization?.id == org.id)
-        ?.role,
+      role: findRole(personConnections, org),
     }));
 };
 
@@ -49,10 +48,19 @@ export const getPersonOrganizations = (
         personOrgs.push({
           ...unconnectedOrg,
           connected: false,
+          role: findRole(unconnectedOrgs, unconnectedOrg),
         });
       });
     }
   });
 
   return personOrgs;
+};
+
+const findRole = (
+  orgs: Partial<ZetkinMembership>[],
+  org: PersonOrganization
+) => {
+  const connection = orgs.find((conn) => conn.organization?.id == org.id);
+  return (connection?.role ?? null) as 'organizer' | 'admin' | null;
 };
