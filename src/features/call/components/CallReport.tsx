@@ -10,6 +10,7 @@ import { reportAdded } from '../store';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import SurveyCard from './SurveyCard';
+import ZUIText from 'zui/components/ZUIText';
 
 type CallReportProps = {
   assignment: ZetkinCallAssignment;
@@ -53,12 +54,18 @@ const CallReport: FC<CallReportProps> = ({ assignment }) => {
         <ZUISection
           renderContent={() => (
             <Box>
+              {matchedSurveys.length == 0 && (
+                <ZUIText>{'No surveys were filled.'}</ZUIText>
+              )}
               {matchedSurveys?.map((item) => (
-                <SurveyCard
-                  key={item.survey.id}
-                  survey={item.survey}
-                  targetId={item.targetId}
-                />
+                <Box key={item.survey.id} mb={1}>
+                  <SurveyCard
+                    key={item.survey.id}
+                    isReport={true}
+                    survey={item.survey}
+                    targetId={item.targetId}
+                  />
+                </Box>
               ))}
             </Box>
           )}

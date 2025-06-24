@@ -6,7 +6,7 @@ import ZUIModal from 'zui/components/ZUIModal';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
-import { useSurveysKeysMutations } from '../hooks/useFilledSurveysMutations';
+import { useSurveysKeysMutations } from '../hooks/useSurveysKeysMutations';
 
 type SurveyModalProps = {
   onClose: () => void;
