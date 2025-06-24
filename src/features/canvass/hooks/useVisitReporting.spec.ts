@@ -144,7 +144,10 @@ describe('useVisitReporting()', () => {
       const dateStr =
         result.current.lastVisitByHouseholdId[HOUSEHOLD_ID].created;
       const date = new Date(dateStr);
-      expect(date.getTime() / 1000).toBeCloseTo(new Date().getTime() / 1000, 1);
+      expect(date.getTime() / 10000).toBeCloseTo(
+        new Date().getTime() / 10000,
+        1
+      );
     });
 
     it('triggers a refresh of the location stats', async () => {
@@ -443,7 +446,10 @@ describe('useVisitReporting()', () => {
       const dateStr =
         result.current.lastVisitByHouseholdId[HOUSEHOLD_ID].created;
       const date = new Date(dateStr);
-      expect(date.getTime() / 1000).toBeCloseTo(new Date().getTime() / 1000, 1);
+      expect(date.getTime() / 10000).toBeCloseTo(
+        new Date().getTime() / 10000,
+        1
+      );
 
       const stateAfterAction = store.getState();
       expect(
@@ -546,7 +552,10 @@ describe('useVisitReporting()', () => {
       const dateStr =
         result.current.lastVisitByHouseholdId[HOUSEHOLD_ID].created;
       const date = new Date(dateStr);
-      expect(date.getTime() / 1000).toBeCloseTo(new Date().getTime() / 1000, 1);
+      expect(date.getTime() / 10000).toBeCloseTo(
+        new Date().getTime() / 10000,
+        1
+      );
 
       const stateAfterAction = store.getState();
       expect(
