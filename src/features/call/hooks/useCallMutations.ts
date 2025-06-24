@@ -1,6 +1,14 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { currentCallDeleted, newCallAllocated } from '../store';
-import { ZetkinCall, CallReport } from '../types';
+import {
+  allocateNewCall,
+  clearEventResponses,
+  clearSurveyResponses,
+  currentCallDeleted,
+  newCallAllocated,
+  reportDeleted,
+  updateLaneStep,
+} from '../store';
+import { ZetkinCall, CallReport, LaneStep } from '../types';
 
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
@@ -11,8 +19,19 @@ export default function useCallMutations(orgId: number) {
     dispatch(currentCallDeleted(callId));
   };
 
-  const switchCurrentCall = async (call: ZetkinCall) => {
+  const logNewCall = async (assignmentId: number, targetId: number) => {
+    dispatch(allocateNewCall());
+    const call = await apiClient.post<ZetkinCall, { target_id: number }>(
+      `/api/orgs/${orgId}/call_assignments/${assignmentId}/calls`,
+      {
+        target_id: targetId,
+      }
+    );
     dispatch(newCallAllocated(call));
+    dispatch(updateLaneStep(LaneStep.PREPARE));
+    dispatch(clearSurveyResponses());
+    dispatch(clearEventResponses());
+    dispatch(reportDeleted());
   };
 
   const updateCall = (callId: number, data: CallReport) => {
@@ -22,5 +41,5 @@ export default function useCallMutations(orgId: number) {
     );
   };
 
-  return { deleteCall, switchCurrentCall, updateCall };
+  return { deleteCall, logNewCall, updateCall };
 }

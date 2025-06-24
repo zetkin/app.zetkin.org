@@ -50,6 +50,9 @@ const CallSlice = createSlice({
     allocateNewCall: (state) => {
       state.outgoingCalls.isLoading = true;
     },
+    clearEventResponses: (state) => {
+      state.lanes[state.activeLaneIndex].respondedEventIds = [];
+    },
     clearSurveyResponses: (state) => {
       state.lanes[state.activeLaneIndex].responseBySurveyId = {};
     },
@@ -90,20 +93,16 @@ const CallSlice = createSlice({
       state.currentCallId = action.payload.id;
       state.queueHasError = null;
 
-      const callExists = state.outgoingCalls.items.some(
-        (call) => call.id === action.payload.id
+      state.outgoingCalls.items.push(
+        remoteItem(action.payload.id, {
+          data: action.payload,
+          isLoading: false,
+          isStale: false,
+          loaded: new Date().toISOString(),
+        })
       );
-      if (!callExists) {
-        state.outgoingCalls.items.push(
-          remoteItem(action.payload.id, {
-            data: action.payload,
-            isLoading: false,
-            isStale: false,
-            loaded: new Date().toISOString(),
-          })
-        );
-      }
 
+      state.outgoingCalls.loaded = new Date().toISOString();
       state.outgoingCalls.isLoading = false;
     },
     outgoingCallsLoad: (state) => {
@@ -170,6 +169,7 @@ export const {
   eventsLoad,
   eventsLoaded,
   allocateCallError,
+  clearEventResponses,
   clearSurveyResponses,
   currentCallDeleted,
   eventResponseAdded,

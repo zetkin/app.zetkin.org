@@ -2,6 +2,7 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
   allocateCallError,
   allocateNewCall,
+  clearEventResponses,
   clearSurveyResponses,
   newCallAllocated,
   updateLaneStep,
@@ -40,6 +41,7 @@ export default function useAllocateCall(
       dispatch(newCallAllocated(call));
       dispatch(updateLaneStep(LaneStep.PREPARE));
       dispatch(clearSurveyResponses());
+      dispatch(clearEventResponses());
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {
@@ -49,6 +51,7 @@ export default function useAllocateCall(
       dispatch(allocateCallError(serialized));
       dispatch(updateLaneStep(LaneStep.STATS));
       dispatch(clearSurveyResponses());
+      dispatch(clearEventResponses());
       return error;
     }
   };
