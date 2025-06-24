@@ -1579,16 +1579,9 @@ feat:
         campaignSelect:
           any: vilket projekt som helst
           campaign: projektet "{campaign}"
-        examples:
-          one: Lägg till personer som har anmält sig till event i vilket projekt som helst
-            på platsen 'Möllevången' någonsin
-          two: Ta bort personer som inte har blivit bokade på event i vilket projekt som
-            helst av typen 'Affischera' på vilken plats som helst innan idag.
         haveSelect:
           in: har
           notin: inte har
-        inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} event i
-          {campaignSelect} av {activitySelect} på {locationSelect} {timeFrame}'
         locationSelect:
           any: vilken plats som helst
           location: platsen "{location}"

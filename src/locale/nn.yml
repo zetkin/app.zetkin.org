@@ -2079,17 +2079,9 @@ feat:
         campaignSelect:
           any: et prosjekt
           campaign: Prosjektet "{campaign}"
-        examples:
-          one: Legg til folk som har meldt seg på arrangementer i et prosjekt med en
-            aktivitet på plassen 'Torget' når som helst.
-          two: Fjern folk som ikke har blitt registrert på arrangementer i et prosjekt med
-            aktiviteten "Stå på stand" hvor som helst før i dag.
         haveSelect:
           in: har
           notin: ikke har
-        inputString: '{addRemoveSelect} folk som {haveSelect} {bookedSelect}
-          arrangementer i {campaignSelect} med {activitySelect} på
-          {locationSelect} {timeFrame}'
         locationSelect:
           any: et sted
           location: stedet "{location}"
