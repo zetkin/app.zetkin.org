@@ -1557,9 +1557,17 @@ feat:
         campaignSelect:
           any: any project
           campaign: project "{campaign}"
+        examples:
+          one: Add people who have signed up for events in any project of any type at
+            location 'Dorfplatz' at any point in time
+          two: Remove people who have not been booked for events in any project of type
+            'Put up posters' at any location before today.
         haveSelect:
           in: have
           notin: have not
+        inputString: '{addRemoveSelect} people who {haveSelect} {bookedSelect} for
+          events in {campaignSelect} of {activitySelect} at {locationSelect}
+          {timeFrame}'
         locationSelect:
           any: any location
           location: location "{location}"
