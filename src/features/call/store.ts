@@ -50,24 +50,20 @@ const CallSlice = createSlice({
     allocateNewCall: (state) => {
       state.outgoingCalls.isLoading = true;
     },
+    callDeleted: (state, action: PayloadAction<number>) => {
+      const deletedCallId = action.payload;
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id != deletedCallId
+      );
+    },
+    clearCurrentCall: (state) => {
+      state.currentCallId = null;
+    },
     clearEventResponses: (state) => {
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
     },
     clearSurveyResponses: (state) => {
       state.lanes[state.activeLaneIndex].responseBySurveyId = {};
-    },
-    currentCallDeleted: (state, action: PayloadAction<number>) => {
-      const deletedCallId = action.payload;
-
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id !== deletedCallId
-      );
-
-      const nextCall = state.outgoingCalls.items.find(
-        (item) => item.data?.state === 0
-      );
-
-      state.currentCallId = nextCall ? Number(nextCall.id) : null;
     },
     eventResponseAdded: (state, action: PayloadAction<number>) => {
       const eventIdToAdd = action.payload;
@@ -169,9 +165,10 @@ export const {
   eventsLoad,
   eventsLoaded,
   allocateCallError,
+  clearCurrentCall,
   clearEventResponses,
   clearSurveyResponses,
-  currentCallDeleted,
+  callDeleted,
   eventResponseAdded,
   eventResponseRemoved,
   allocateNewCall,

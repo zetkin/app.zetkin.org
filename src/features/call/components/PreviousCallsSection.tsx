@@ -10,6 +10,7 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 import { labels, colors } from './PreviousCallsInfo';
 import { ZetkinCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import useCurrentCall from '../hooks/useCurrentCall';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
@@ -26,8 +27,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   orgId,
   searchTerm,
 }) => {
-  assingmentId;
   const { deleteCall, logNewCall } = useCallMutations(orgId);
+  const currentCall = useCurrentCall();
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
 
@@ -46,13 +47,21 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     );
   };
 
-  const previousCalls = outgoingCalls.filter(
-    (call) => call.state !== 0 && matchesSearch(call)
-  );
+  const previousCalls = outgoingCalls.filter((call) => {
+    const matches = matchesSearch(call);
+    const isFinishedCall = call.state != 0;
+    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
 
-  const unfinishedCalls = outgoingCalls.filter(
-    (call) => call.state === 0 && matchesSearch(call)
-  );
+    return matches && isFinishedCall && isNotCurrentCall;
+  });
+
+  const unfinishedCalls = outgoingCalls.filter((call) => {
+    const matches = matchesSearch(call);
+    const isUnfinishedCall = call.state == 0;
+    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
+
+    return matches && isUnfinishedCall && isNotCurrentCall;
+  });
 
   return (
     <Box>
@@ -99,9 +108,6 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                     label="Abandon"
                     onClick={async () => {
                       await deleteCall(unfinishedCall.id);
-                      if (unfinishedCalls.length <= 1) {
-                        window.location.reload();
-                      }
                     }}
                     variant="tertiary"
                   />

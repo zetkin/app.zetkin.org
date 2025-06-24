@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Box } from '@mui/material';
-import { FC, useState } from 'react';
+import { Box, Skeleton } from '@mui/material';
+import { FC, Suspense, useState } from 'react';
 
 import ZUISection from 'zui/components/ZUISection';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
@@ -90,14 +90,16 @@ const CallStats: FC<CallStatsProps> = ({ assignment }) => {
                     setDebouncedInput(value);
                   }}
                 />
-                <PreviousCallsSection
-                  assingmentId={assignment.id}
-                  onSwitchCall={() =>
-                    dispatch(updateLaneStep(LaneStep.PREPARE))
-                  }
-                  orgId={assignment.organization.id}
-                  searchTerm={debouncedInput}
-                />
+                <Suspense fallback={<Skeleton variant="rounded" />}>
+                  <PreviousCallsSection
+                    assingmentId={assignment.id}
+                    onSwitchCall={() =>
+                      dispatch(updateLaneStep(LaneStep.PREPARE))
+                    }
+                    orgId={assignment.organization.id}
+                    searchTerm={debouncedInput}
+                  />
+                </Suspense>
               </Box>
             )}
             title="Your calls"
