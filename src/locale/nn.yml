@@ -51,19 +51,24 @@ feat:
       editor:
         confirm: Vil du slette alle ulagrede endringer og gå tilbake til lagret
           instruks?
-        editorPlaceholder: Legg til instrukser for de som skal gå
+        editorPlaceholder: Legg til instrukser for de frivillige
         revertLink: Gå tilbake til lagret versjon?
         saveButton: Lagre
         savedMessage: Alt er oppdatert!
         savingButton: Lagrer...
         unsavedMessage: Du har gjort endringer som ikke er lagret
-      title: Instruks for tildelte folk
+      title: Instruks for frivillige
     layout:
       actions:
         delete: Slett
         deleteWarningText: Er du sikker på at du vil slette {title}?
         end: Avslutt oppdrag
         start: Start oppdrag
+      basicAssignmentStats:
+        areas: '{numAreas, plural, =0 {Ingen områder} one {Ett område} other {#
+          områder}}'
+        assignees: '{numAssignees, plural, =0 {Ingen frivillige} one {En frivillig}
+          other {# frivillige}}'
       tabs:
         assignees: Frivillige
         instructions: Instruks
@@ -77,14 +82,14 @@ feat:
           none: Ingen frivillige
           title: Frivillige
         stats:
-          households: '{numHouseholds, plural, one {Besøkt boenhet} other {Besøkte
-            boenheter}}'
+          households: '{numHouseholds, plural, one {Besøkt dør} other {Besøkte dører}}'
+          locations: '{numLocations, plural, one {Adresse} other {Adresser}}'
           successful: '{numSuccessfulVisits, plural, one {Vellykket besøk} other
             {Vellykkede besøk}}'
       filter:
         assignees:
           assigned: Områder som har frivillige
-          label: Tildelte folk
+          label: Frivillilge
           unassigned: Områder som ikke har frivillige
         description: Definer hvilke områder som skal vises på kartet
         header: Filtre
@@ -99,11 +104,13 @@ feat:
           options:
             assignees: Frivillige
             hidden: Skjult
+            households: Dører
             progress: Framgang
         center:
           options:
             assignees: Frivillige
             hidden: Skjult
+            households: Dører og adresser
             progress: Framgang
         markers:
           options:
