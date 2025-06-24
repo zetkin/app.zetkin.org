@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import PaneHeader from 'utils/panes/PaneHeader';

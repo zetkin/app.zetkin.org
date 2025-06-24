@@ -1,3 +1,31 @@
+glob:
+  accessLevels:
+    configure: Rediger og sett opp
+    edit: Redigering
+    readonly: Skrivebeskyttet
+  genderOptions:
+    f: Kvinne
+    m: Mann
+    o: Annet
+    unspecified: Uspesifisert
+  personFields:
+    alt_phone: Alternativt telefonnummer
+    city: Poststed
+    co_address: Alternativ adresse
+    country: Land
+    email: E-post
+    ext_id: Medlemsnummer
+    first_name: Fornavn
+    gender: Kjønn
+    id: Zetkin ID
+    is_user: Har bruker
+    last_name: Etternavn
+    phone: Telefonnummer
+    street_address: Adresse
+    zip_code: Postnummer
+  roles:
+    admin: Admin
+    organizer: Koordinator
 core:
   err404:
     backToHomePage: Tilbake til startsiden

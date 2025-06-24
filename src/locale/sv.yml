@@ -1,3 +1,31 @@
+glob:
+  accessLevels:
+    configure: Redigera & konfigurera
+    edit: Redigerar
+    readonly: Skrivskyddad
+  genderOptions:
+    f: Kvinna
+    m: Man
+    o: Annat
+    unspecified: Ospecificerad
+  personFields:
+    alt_phone: Alternativt telefonnummer
+    city: Ort
+    co_address: C/o-adress
+    country: Land
+    email: E-post
+    ext_id: Externt ID
+    first_name: Förnamn
+    gender: Kön
+    id: ID
+    is_user: Är användare
+    last_name: Efternamn
+    phone: Telefonnummer
+    street_address: Adress
+    zip_code: Postnummer
+  roles:
+    admin: Admin
+    organizer: Organisatör
 core:
   err404:
     backToHomePage: Tillbaka till startsidan
@@ -2816,3 +2844,5 @@ zui:
     singleDay: '{date}, {start} - {end}'
     singleDayAllDay: Hela dagen idag
     singleDayToday: Idag, {start} - {end}
+  timeZonePicker:
+    timeZone: Tidszon
