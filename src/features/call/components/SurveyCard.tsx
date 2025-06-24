@@ -8,21 +8,25 @@ import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import SurveyModal from './SurveyModal';
 import ZUILabel from 'zui/components/ZUILabel';
 import ZUIText from 'zui/components/ZUIText';
-import { useAppSelector } from 'core/hooks';
+import ClearResponsesModal from './ClearResponsesModal';
+import useLocalStorage from 'zui/hooks/useLocalStorage';
 
 type SurveyCardProps = {
+  isReport?: boolean;
   survey: ZetkinSurveyExtended;
   targetId: number;
 };
 
-const SurveyCard: FC<SurveyCardProps> = ({ survey, targetId }) => {
+const SurveyCard: FC<SurveyCardProps> = ({ isReport, survey, targetId }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [clearResponsesModal, setClearResponsesModal] = useState(false);
 
-  const surveyList = useAppSelector((state) => state.call.filledSurveys || []);
-
-  const isSurveyInProgress = surveyList.some(
-    (item) => item.surveyId === survey.id && item.targetId === targetId
+  const [formContent] = useLocalStorage<Record<string, string | string[]>>(
+    `formContent-${survey.id}-${targetId}`,
+    {}
   );
+
+  const hasResponses = Object.keys(formContent).length > 0;
 
   return (
     <>
@@ -31,23 +35,32 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, targetId }) => {
           <>
             <ZUIButton
               key={survey.id}
-              label={'Fill out'}
+              label={hasResponses ? 'Edit responses' : 'Fill out'}
               onClick={() => setModalOpen(true)}
               variant="primary"
             />
-            {isSurveyInProgress && (
-              //TODO: Create ZUIComponent
+            {isReport && hasResponses && (
+              <ZUIButton
+                key={survey.id}
+                label={'Clear responses'}
+                onClick={() => setClearResponsesModal(true)}
+                variant="secondary"
+              />
+            )}
+
+            {hasResponses && (
+              //TODO: Create ZUI Component for Survey in progress label
               <Box
                 sx={(theme) => ({
                   alignItems: 'center',
                   bgcolor: theme.palette.swatches.blue[100],
-
                   borderRadius: 4,
                   color: theme.palette.swatches.blue[900],
                   display: 'inline-flex',
                   pointerEvents: 'none',
                   px: 1,
                   py: 0.3,
+                  textAlign: 'center',
                 })}
               >
                 <ZUILabel color="inherit">
@@ -74,6 +87,12 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, targetId }) => {
       <SurveyModal
         onClose={() => setModalOpen(false)}
         open={modalOpen}
+        survey={survey}
+        targetId={targetId}
+      />
+      <ClearResponsesModal
+        onClose={() => setClearResponsesModal(false)}
+        open={clearResponsesModal}
         survey={survey}
         targetId={targetId}
       />
