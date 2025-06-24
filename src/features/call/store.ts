@@ -9,13 +9,12 @@ import {
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { ZetkinEventWithStatus } from 'features/home/types';
 import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
   activeLaneIndex: number;
   currentCallId: number | null;
-  eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
+  upcomingEventsList: RemoteList<ZetkinEvent>;
   lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
@@ -24,11 +23,11 @@ export interface CallStoreSlice {
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
   currentCallId: null,
-  eventsByTargetId: {},
   lanes: [
     {
       previousCall: null,
       report: null,
+      respondedEventIds: [],
       responseBySurveyId: {},
       step: LaneStep.STATS,
       surveySubmissionError: false,
@@ -36,34 +35,13 @@ const initialState: CallStoreSlice = {
   ],
   outgoingCalls: remoteList(),
   queueHasError: null,
+  upcomingEventsList: remoteList(),
 };
 
 const CallSlice = createSlice({
   initialState,
   name: 'call',
   reducers: {
-    activeEventsLoad: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      if (!state.eventsByTargetId[id]) {
-        state.eventsByTargetId[id] = remoteList();
-      }
-
-      state.eventsByTargetId[id].isLoading = true;
-    },
-    activeEventsLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinEventWithStatus[]]>
-    ) => {
-      const [id, events] = action.payload;
-      const eventsWithStatus = events.map((event) => ({
-        ...event,
-        status: null,
-      }));
-
-      state.eventsByTargetId[id] = remoteList(eventsWithStatus);
-      state.eventsByTargetId[id].loaded = new Date().toISOString();
-      state.eventsByTargetId[id].isLoading = false;
-    },
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
       state.queueHasError = error;
@@ -87,6 +65,26 @@ const CallSlice = createSlice({
       );
 
       state.currentCallId = nextCall ? Number(nextCall.id) : null;
+    },
+    eventResponseAdded: (state, action: PayloadAction<number>) => {
+      const eventIdToAdd = action.payload;
+      const eventIds = state.lanes[state.activeLaneIndex].respondedEventIds;
+      eventIds.push(eventIdToAdd);
+    },
+    eventResponseRemoved: (state, action: PayloadAction<number>) => {
+      const eventIdToRemove = action.payload;
+      const eventIds = state.lanes[state.activeLaneIndex].respondedEventIds;
+
+      state.lanes[state.activeLaneIndex].respondedEventIds = eventIds.filter(
+        (id) => id != eventIdToRemove
+      );
+    },
+    eventsLoad: (state) => {
+      state.upcomingEventsList.isLoading = true;
+    },
+    eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.upcomingEventsList = remoteList(action.payload);
+      state.upcomingEventsList.loaded = new Date().toISOString();
     },
     newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
       state.currentCallId = action.payload.id;
@@ -158,39 +156,6 @@ const CallSlice = createSlice({
 
       responsesBySurveyId[surveyId] = response;
     },
-    targetSubmissionAdded: (
-      state,
-      action: PayloadAction<[number, ZetkinEvent]>
-    ) => {
-      const [targetId, event] = action.payload;
-
-      const eventList = state.eventsByTargetId[targetId];
-      const existingItem = eventList.items.find((item) => item.id === event.id);
-
-      if (existingItem && existingItem.data) {
-        existingItem.data = {
-          ...existingItem.data,
-          status: 'signedUp',
-        };
-      }
-    },
-    targetSubmissionDeleted: (
-      state,
-      action: PayloadAction<[number, number]>
-    ) => {
-      const [targetId, eventId] = action.payload;
-
-      const eventList = state.eventsByTargetId[targetId];
-
-      const existingItem = eventList.items.find((item) => item.id === eventId);
-
-      if (existingItem && existingItem.data) {
-        existingItem.data = {
-          ...existingItem.data,
-          status: null,
-        };
-      }
-    },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
 
@@ -202,11 +167,13 @@ const CallSlice = createSlice({
 
 export default CallSlice;
 export const {
-  activeEventsLoad,
-  activeEventsLoaded,
+  eventsLoad,
+  eventsLoaded,
   allocateCallError,
   clearSurveyResponses,
   currentCallDeleted,
+  eventResponseAdded,
+  eventResponseRemoved,
   allocateNewCall,
   newCallAllocated,
   outgoingCallsLoad,
@@ -217,7 +184,5 @@ export const {
   reportDeleted,
   setSurveySubmissionError,
   surveyResponseAdded,
-  targetSubmissionAdded,
-  targetSubmissionDeleted,
   updateLaneStep,
 } = CallSlice.actions;

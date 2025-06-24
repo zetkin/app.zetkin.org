@@ -24,10 +24,10 @@ export default function mockState(overrides?: RootState) {
     call: {
       activeLaneIndex: 0,
       currentCallId: null,
-      eventsByTargetId: {},
       lanes: [],
       outgoingCalls: remoteList(),
       queueHasError: null,
+      upcomingEventsList: remoteList(),
     },
     callAssignments: {
       assignmentList: remoteList(),

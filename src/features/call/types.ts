@@ -60,6 +60,7 @@ export type SurveyResponse = Record<string, string | string[]>;
 export type LaneState = {
   previousCall: ZetkinCall | null;
   report: CallReport | null;
+  respondedEventIds: number[];
   responseBySurveyId: Record<number, SurveyResponse>;
   step: LaneStep;
   surveySubmissionError: boolean;

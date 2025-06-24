@@ -83,7 +83,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
             onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
             secondaryActionLabel={'Back to activities'}
           />
-          <CallReport assignment={assignment} />
+          <CallReport assignment={assignment} call={call} />
         </>
       )}
     </Box>

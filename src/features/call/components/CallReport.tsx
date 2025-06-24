@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import useCurrentCall from '../hooks/useCurrentCall';
 import ReportForm from './Report';
 import ZUISection from 'zui/components/ZUISection';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
@@ -12,13 +11,15 @@ import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElement
 import SurveyCard from './SurveyCard';
 import notEmpty from 'utils/notEmpty';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import EventCard from './EventCard';
+import { ZetkinCall } from '../types';
 
 type CallReportProps = {
   assignment: ZetkinCallAssignment;
+  call: ZetkinCall;
 };
 
-const CallReport: FC<CallReportProps> = ({ assignment }) => {
-  const call = useCurrentCall();
+const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
   const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
 
@@ -40,6 +41,17 @@ const CallReport: FC<CallReportProps> = ({ assignment }) => {
     })
     .map((surveyId) => {
       return allSurveys.find((s) => s.id == Number(surveyId));
+    })
+    .filter(notEmpty);
+
+  const respondedEventIds = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
+  );
+  const events = useAppSelector((state) => state.call.upcomingEventsList).items;
+
+  const respondedEvents = respondedEventIds
+    .map((eventId) => {
+      return events.find((event) => event.id == eventId);
     })
     .filter(notEmpty);
 
@@ -69,6 +81,18 @@ const CallReport: FC<CallReportProps> = ({ assignment }) => {
                 {surveys.map((survey) => (
                   <SurveyCard key={survey.id} survey={survey} />
                 ))}
+                {respondedEvents.map((e) => {
+                  const event = e.data;
+                  if (event) {
+                    return (
+                      <EventCard
+                        key={e.id}
+                        event={event}
+                        target={call.target}
+                      />
+                    );
+                  }
+                })}
               </Box>
             )}
             title="Activities"
