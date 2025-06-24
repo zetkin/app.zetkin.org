@@ -2,7 +2,7 @@
 
 import { headers } from 'next/headers';
 import { Metadata } from 'next';
-import { FC, ReactElement, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
@@ -20,9 +20,21 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { orgId, surveyId } = params;
   const apiClient = new BackendApiClient({});
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
+
+  let survey: ZetkinSurveyExtended | null = null;
+  try {
+    survey = await apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    );
+  } catch (error) {
+    if (!survey) {
+      return {
+        description: 'This survey does not exist or you have no access.',
+        title: 'Survey not found',
+      };
+    }
+  }
+
   return {
     description: survey.info_text,
     openGraph: {
@@ -33,26 +45,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
-const SurveyLayout: FC<Props> = async ({
+// Async Server Component (no FC typing needed)
+const SurveyLayout = async ({
   children,
   params,
-}): Promise<ReactElement> => {
+}: Props): Promise<ReactNode> => {
   const headersList = headers();
-  const headersEntries = headersList.entries();
-  const headersObject = Object.fromEntries(headersEntries);
+  const headersObject = Object.fromEntries(headersList.entries());
   const apiClient = new BackendApiClient(headersObject);
 
   const { orgId, surveyId } = params;
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
+
+  let survey: ZetkinSurveyExtended | null = null;
+  try {
+    survey = await apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    );
+  } catch (error) {
+    if (!survey) {
+      return (
+        <HomeThemeProvider>
+          <div>Survey not found or access denied.</div>
+        </HomeThemeProvider>
+      );
+    }
+  }
 
   return (
     <HomeThemeProvider>
       <PublicSurveyLayout survey={survey}>{children}</PublicSurveyLayout>
     </HomeThemeProvider>
   );
+  return <h1>Hallo</h1>;
 };
 
 export default SurveyLayout;
