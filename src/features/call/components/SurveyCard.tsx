@@ -12,17 +12,16 @@ import { useAppSelector } from 'core/hooks';
 
 type SurveyCardProps = {
   survey: ZetkinSurveyExtended;
-  targetId: number;
 };
 
-const SurveyCard: FC<SurveyCardProps> = ({ survey, targetId }) => {
+const SurveyCard: FC<SurveyCardProps> = ({ survey }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const surveyList = useAppSelector((state) => state.call.filledSurveys || []);
-
-  const isSurveyInProgress = surveyList.some(
-    (item) => item.surveyId === survey.id && item.targetId === targetId
+  const responseBySurveyId = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
   );
+
+  const isSurveyInProgress = !!responseBySurveyId[survey.id];
 
   return (
     <>
@@ -75,7 +74,6 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, targetId }) => {
         onClose={() => setModalOpen(false)}
         open={modalOpen}
         survey={survey}
-        targetId={targetId}
       />
     </>
   );

@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { LaneStep, LaneState, ZetkinCall, CallReport } from './types';
+import {
+  LaneStep,
+  LaneState,
+  ZetkinCall,
+  CallReport,
+  SurveyResponse,
+} from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ZetkinEventWithStatus } from 'features/home/types';
@@ -10,7 +16,6 @@ export interface CallStoreSlice {
   activeLaneIndex: number;
   currentCallId: number | null;
   eventsByTargetId: Record<number, RemoteList<ZetkinEventWithStatus>>;
-  filledSurveys: { surveyId: number; targetId: number }[];
   lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
@@ -20,12 +25,13 @@ const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
   currentCallId: null,
   eventsByTargetId: {},
-  filledSurveys: [],
   lanes: [
     {
       previousCall: null,
       report: null,
+      responseBySurveyId: {},
       step: LaneStep.STATS,
+      surveySubmissionError: false,
     },
   ],
   outgoingCalls: remoteList(),
@@ -58,20 +64,6 @@ const CallSlice = createSlice({
       state.eventsByTargetId[id].loaded = new Date().toISOString();
       state.eventsByTargetId[id].isLoading = false;
     },
-    addSurveyKeys: (
-      state,
-      action: PayloadAction<{ surveyId: number; targetId: number }>
-    ) => {
-      const exists = state.filledSurveys.some(
-        (entry) =>
-          entry.surveyId === action.payload.surveyId &&
-          entry.targetId === action.payload.targetId
-      );
-
-      if (!exists) {
-        state.filledSurveys.push(action.payload);
-      }
-    },
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
       state.queueHasError = error;
@@ -80,8 +72,8 @@ const CallSlice = createSlice({
     allocateNewCall: (state) => {
       state.outgoingCalls.isLoading = true;
     },
-    clearSurveysKeys: (state) => {
-      state.filledSurveys = [];
+    clearSurveyResponses: (state) => {
+      state.lanes[state.activeLaneIndex].responseBySurveyId = {};
     },
     currentCallDeleted: (state, action: PayloadAction<number>) => {
       const deletedCallId = action.payload;
@@ -153,6 +145,19 @@ const CallSlice = createSlice({
     reportDeleted: (state) => {
       state.lanes[state.activeLaneIndex].report = null;
     },
+    setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
+      state.lanes[state.activeLaneIndex].surveySubmissionError = action.payload;
+    },
+    surveyResponseAdded: (
+      state,
+      action: PayloadAction<[number, SurveyResponse]>
+    ) => {
+      const [surveyId, response] = action.payload;
+      const responsesBySurveyId =
+        state.lanes[state.activeLaneIndex].responseBySurveyId;
+
+      responsesBySurveyId[surveyId] = response;
+    },
     targetSubmissionAdded: (
       state,
       action: PayloadAction<[number, ZetkinEvent]>
@@ -199,9 +204,8 @@ export default CallSlice;
 export const {
   activeEventsLoad,
   activeEventsLoaded,
-  addSurveyKeys,
   allocateCallError,
-  clearSurveysKeys,
+  clearSurveyResponses,
   currentCallDeleted,
   allocateNewCall,
   newCallAllocated,
@@ -211,6 +215,8 @@ export const {
   previousCallClear,
   reportAdded,
   reportDeleted,
+  setSurveySubmissionError,
+  surveyResponseAdded,
   targetSubmissionAdded,
   targetSubmissionDeleted,
   updateLaneStep,

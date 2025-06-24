@@ -5,28 +5,45 @@ import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import ZUIModal from 'zui/components/ZUIModal';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
-import useLocalStorage from 'zui/hooks/useLocalStorage';
-import { useSurveysKeysMutations } from '../hooks/useFilledSurveysMutations';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { surveyResponseAdded } from '../store';
 
 type SurveyModalProps = {
   onClose: () => void;
   open: boolean;
   survey: ZetkinSurveyExtended;
-  targetId: number;
 };
 
-const SurveyModal: FC<SurveyModalProps> = ({
-  onClose,
-  open,
-  survey,
-  targetId,
-}) => {
-  const [formContent, setFormContent] = useLocalStorage<
-    Record<string, string | string[]>
-  >(`formContent-${survey.id}-${targetId}`, {});
+const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
+  const dispatch = useAppDispatch();
+  const responseBySurveyId = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
+  );
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  const { addFilledSurveyKeys } = useSurveysKeysMutations();
+  const formDataToSurveyResponse = (formData: FormData) => {
+    const submittedFormContent: Record<string, string | string[]> = {};
+    Array.from(formData.entries()).forEach((entry) => {
+      const [nameOfQuestion, newValue] = entry;
+      const existingValue = submittedFormContent[nameOfQuestion];
+
+      if (!existingValue) {
+        submittedFormContent[nameOfQuestion] = newValue as string;
+      } else {
+        if (Array.isArray(existingValue)) {
+          existingValue.push(newValue as string);
+        } else {
+          const multiChoiceArray: string[] = [];
+
+          multiChoiceArray.push(existingValue);
+          multiChoiceArray.push(newValue as string);
+
+          submittedFormContent[nameOfQuestion] = multiChoiceArray;
+        }
+      }
+    });
+    return submittedFormContent;
+  };
 
   const saveSurveyIfNotEmpty = () => {
     if (formRef.current) {
@@ -44,7 +61,8 @@ const SurveyModal: FC<SurveyModalProps> = ({
       );
 
       if (hasMeaningfulContent) {
-        addFilledSurveyKeys(survey.id, targetId);
+        const surveyResponse = formDataToSurveyResponse(formData);
+        dispatch(surveyResponseAdded([survey.id, surveyResponse]));
       }
     }
   };
@@ -80,36 +98,16 @@ const SurveyModal: FC<SurveyModalProps> = ({
           ref={formRef}
           id={`survey-${survey.id}`}
           onSubmit={(ev) => {
-            const formContent: Record<string, string | string[]> = {};
             if (formRef.current) {
               ev.preventDefault();
-              const formData = new FormData(formRef.current);
-
-              Array.from(formData.entries()).forEach((entry) => {
-                const [nameOfQuestion, newValue] = entry;
-                const existingValue = formContent[nameOfQuestion];
-
-                if (!existingValue) {
-                  formContent[nameOfQuestion] = newValue as string;
-                } else {
-                  if (Array.isArray(existingValue)) {
-                    existingValue.push(newValue as string);
-                  } else {
-                    const multiChoiceArray: string[] = [];
-
-                    multiChoiceArray.push(existingValue);
-                    multiChoiceArray.push(newValue as string);
-
-                    formContent[nameOfQuestion] = multiChoiceArray;
-                  }
-                }
-              });
-
-              setFormContent(formContent);
+              saveSurveyIfNotEmpty();
             }
           }}
         >
-          <SurveyForm initialValues={formContent} survey={survey} />
+          <SurveyForm
+            initialValues={responseBySurveyId[survey.id]}
+            survey={survey}
+          />
         </form>
       </Box>
     </ZUIModal>

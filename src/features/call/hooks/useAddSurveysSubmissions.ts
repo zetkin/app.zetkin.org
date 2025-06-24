@@ -1,7 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { clearSurveysKeys } from '../store';
 import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
 import submitSurveysRpc from '../rpc/submitSurveys';
+import { setSurveySubmissionError } from '../store';
 
 type CallSubmissions = {
   submission: ZetkinSurveyApiSubmission;
@@ -13,25 +13,15 @@ export default function useAddSurveysSubmissions(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const submitSurveys = async (
-    submissions: CallSubmissions
-  ): Promise<boolean> => {
+  const submitSurveys = async (submissions: CallSubmissions) => {
     try {
-      const result = await apiClient.rpc(submitSurveysRpc, {
+      await apiClient.rpc(submitSurveysRpc, {
         orgId,
         submissions,
       });
-
-      result.forEach(({ surveyId, targetId }) => {
-        localStorage.removeItem(`formContent-${surveyId}-${targetId}`);
-      });
-
-      if (result.length) {
-        dispatch(clearSurveysKeys());
-      }
-      return true;
+      dispatch(setSurveySubmissionError(false));
     } catch (err) {
-      return false;
+      dispatch(setSurveySubmissionError(true));
     }
   };
 

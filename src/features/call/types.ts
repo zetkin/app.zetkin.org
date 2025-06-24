@@ -55,8 +55,12 @@ export enum LaneStep {
   SUMMARY = 4,
 }
 
+export type SurveyResponse = Record<string, string | string[]>;
+
 export type LaneState = {
   previousCall: ZetkinCall | null;
   report: CallReport | null;
+  responseBySurveyId: Record<number, SurveyResponse>;
   step: LaneStep;
+  surveySubmissionError: boolean;
 };
