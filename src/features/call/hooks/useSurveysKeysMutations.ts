@@ -12,8 +12,14 @@ export function useSurveysKeysMutations() {
     dispatch(clearSurveysKeys());
   };
 
+  const clearSurveyResponses = (surveyId: number, targetId: number) => {
+    const surveyKey = `formContent-${surveyId}-${targetId}`;
+    localStorage.removeItem(surveyKey);
+  };
+
   return {
     addFilledSurveyKeys,
     clearFilledSurveysKeys,
+    clearSurveyResponses,
   };
 }
