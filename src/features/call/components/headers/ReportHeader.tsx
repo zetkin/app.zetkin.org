@@ -45,6 +45,21 @@ const ReportHeader: FC<Props> = ({
   const surveyKeys = useAppSelector((state) => state.call.filledSurveys);
   const filledSurveysContents = getAllStoredSurveysAsFormData(surveyKeys);
 
+  function isFormDataMeaningful(fd: FormData): boolean {
+    for (const val of fd.values()) {
+      if (val instanceof File) {
+        if (val.size > 0) {
+          return true;
+        }
+        continue;
+      }
+      if (typeof val === 'string' && val.trim().length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   return (
     <>
       <CallHeader
@@ -60,16 +75,25 @@ const ReportHeader: FC<Props> = ({
           }
           setIsLoading(true);
 
-          const submissions = Object.entries(filledSurveysContents).map(
-            ([key, formData]) => {
-              const [, surveyId, targetId] = key.split('-');
-              return {
-                submission: prepareSurveyApiSubmission(formData),
-                surveyId: Number(surveyId),
-                targetId: Number(targetId),
-              };
-            }
+          const nonEmpty = Object.entries(filledSurveysContents).filter(
+            ([, formData]) => isFormDataMeaningful(formData)
           );
+
+          const submissions = nonEmpty.map(([key, formData]) => {
+            const [, surveyId, targetId] = key.split('-');
+            return {
+              submission: prepareSurveyApiSubmission(formData),
+              surveyId: Number(surveyId),
+              targetId: Number(targetId),
+            };
+          });
+
+          if (submissions.length === 0) {
+            setIsLoading(false);
+            onForward();
+            return;
+          }
+
           const success = await submitSurveys(submissions);
           if (!success) {
             setError(true);
