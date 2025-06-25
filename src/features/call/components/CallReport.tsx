@@ -33,15 +33,26 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
 
+  const idsOfSurveysWithSubmission = Object.entries(surveySubmissions)
+    .filter(([, surveySubmissionData]) => {
+      return Object.entries(surveySubmissionData).some(([, value]) => {
+        if (typeof value == 'string') {
+          return value.trim() !== '';
+        }
+        return true;
+      });
+    })
+    .map(([surveyId]) => Number(surveyId));
+
   const allSurveys =
     useSurveysWithElements(assignment.organization.id).data || [];
 
-  const surveys = Object.keys(surveySubmissions)
+  const surveys = idsOfSurveysWithSubmission
     .filter((surveyId) => {
-      return allSurveys.find((s) => s.id == Number(surveyId));
+      return allSurveys.find((s) => s.id == surveyId);
     })
     .map((surveyId) => {
-      return allSurveys.find((s) => s.id == Number(surveyId));
+      return allSurveys.find((s) => s.id == surveyId);
     })
     .filter(notEmpty);
 
