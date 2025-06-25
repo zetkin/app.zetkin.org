@@ -72,7 +72,8 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
     return null;
   }
 
-  const noActivitesRespondedTo = surveys.length == 0 && events.length == 0;
+  const noActivitesRespondedTo =
+    surveys.length == 0 && respondedEvents.length == 0;
 
   return (
     <>
