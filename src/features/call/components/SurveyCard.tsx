@@ -21,7 +21,15 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey }) => {
     (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
   );
 
-  const isSurveyInProgress = !!responseBySurveyId[survey.id];
+  const response = responseBySurveyId[survey.id];
+  const hasMeaningfulContent =
+    !!response &&
+    Object.entries(response).some(([, value]) => {
+      if (typeof value === 'string') {
+        return value.trim() !== '';
+      }
+      return true;
+    });
 
   return (
     <>
@@ -34,7 +42,7 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey }) => {
               onClick={() => setModalOpen(true)}
               variant="primary"
             />
-            {isSurveyInProgress && (
+            {hasMeaningfulContent && (
               //TODO: Create ZUIComponent
               <Box
                 sx={(theme) => ({

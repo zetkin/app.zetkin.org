@@ -21,6 +21,7 @@ const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
   );
   const formRef = useRef<HTMLFormElement | null>(null);
 
+  //TODO: think about what form data we save where
   const formDataToSurveyResponse = (formData: FormData) => {
     const submittedFormContent: Record<string, string | string[]> = {};
     Array.from(formData.entries()).forEach((entry) => {
@@ -45,39 +46,28 @@ const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
     return submittedFormContent;
   };
 
-  const saveSurveyIfNotEmpty = () => {
+  const saveSurveySubmission = () => {
     if (formRef.current) {
       formRef.current.requestSubmit();
 
       const formData = new FormData(formRef.current);
 
-      const hasMeaningfulContent = Array.from(formData.entries()).some(
-        ([, value]) => {
-          if (typeof value === 'string') {
-            return value.trim() !== '';
-          }
-          return true;
-        }
-      );
-
-      if (hasMeaningfulContent) {
-        const surveyResponse = formDataToSurveyResponse(formData);
-        dispatch(surveyResponseAdded([survey.id, surveyResponse]));
-      }
+      const surveyResponse = formDataToSurveyResponse(formData);
+      dispatch(surveyResponseAdded([survey.id, surveyResponse]));
     }
   };
 
   return (
     <ZUIModal
       onClose={() => {
-        saveSurveyIfNotEmpty();
+        saveSurveySubmission();
         onClose();
       }}
       open={open}
       primaryButton={{
         label: 'Save',
         onClick: () => {
-          saveSurveyIfNotEmpty();
+          saveSurveySubmission();
           onClose();
         },
       }}
@@ -100,7 +90,6 @@ const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
           onSubmit={(ev) => {
             if (formRef.current) {
               ev.preventDefault();
-              saveSurveyIfNotEmpty();
             }
           }}
         >
