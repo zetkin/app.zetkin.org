@@ -15,7 +15,9 @@ export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  const abandonCurrentCall = () => {
+  const quitCurrentCall = async (callId: number) => {
+    await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
+    dispatch(callDeleted(callId));
     dispatch(clearCurrentCall());
     dispatch(updateLaneStep(LaneStep.STATS));
     dispatch(clearSurveyResponses());
@@ -50,5 +52,10 @@ export default function useCallMutations(orgId: number) {
     );
   };
 
-  return { abandonCurrentCall, deleteCall, logNewCall, updateCall };
+  return {
+    deleteCall,
+    logNewCall,
+    quitCurrentCall,
+    updateCall,
+  };
 }

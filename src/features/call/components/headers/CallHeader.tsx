@@ -68,7 +68,7 @@ const CallHeader: FC<Props> = ({
   secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState(false);
-  const { abandonCurrentCall } = useCallMutations(assignment.organization.id);
+  const { quitCurrentCall } = useCallMutations(assignment.organization.id);
   const outgoingCalls = useOutgoingCalls();
   const unfinishedCalls = outgoingCalls.filter(
     (c) => c.state == 0 && c.id != call.id
@@ -137,7 +137,7 @@ const CallHeader: FC<Props> = ({
             icon={<ZUIIcon color="primary" icon={ArrowBackIos} size="small" />}
             label={assignment.title}
             onClick={() => {
-              abandonCurrentCall();
+              quitCurrentCall(call.id);
               onBack();
             }}
           />
