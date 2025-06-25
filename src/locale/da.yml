@@ -603,9 +603,18 @@ feat:
         campaignSelect:
           any: hvilket som helst projekt
           campaign: projekt "{campaign}"
+        examples:
+          one: Tilføj personer, der har tilmeldt sig begivenheder på lokationen
+            'Dorfplatz' uanset type, projekt eller tidspunkt
+          two: Fjern personer, der til dags dato ikke er blevet booket til begivenheder af
+            typen 'Sæt plakater op' i et hvilket som helst projekt, på en
+            hvilken som helst lokation.
         haveSelect:
           in: har
           notin: har ikke
+        inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} til
+          begivenheden i {campaignSelect} af {activitySelect} på
+          {locationSelect} {timeFrame}'
         locationSelect:
           any: enhver lokation
           location: lokation "{location}"
