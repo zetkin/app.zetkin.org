@@ -2,7 +2,7 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   allocateNewCall,
   clearEventResponses,
-  clearSurveyResponses,
+  clearSurveySubmissions,
   callDeleted,
   newCallAllocated,
   reportDeleted,
@@ -20,7 +20,7 @@ export default function useCallMutations(orgId: number) {
     dispatch(callDeleted(callId));
     dispatch(clearCurrentCall());
     dispatch(updateLaneStep(LaneStep.STATS));
-    dispatch(clearSurveyResponses());
+    dispatch(clearSurveySubmissions());
     dispatch(clearEventResponses());
     dispatch(reportDeleted());
   };
@@ -40,7 +40,7 @@ export default function useCallMutations(orgId: number) {
     );
     dispatch(newCallAllocated(call));
     dispatch(updateLaneStep(LaneStep.PREPARE));
-    dispatch(clearSurveyResponses());
+    dispatch(clearSurveySubmissions());
     dispatch(clearEventResponses());
     dispatch(reportDeleted());
   };

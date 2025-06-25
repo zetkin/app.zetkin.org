@@ -5,7 +5,7 @@ import {
   LaneState,
   ZetkinCall,
   CallReport,
-  SurveyResponse,
+  SurveySubmissionData,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -28,8 +28,8 @@ const initialState: CallStoreSlice = {
       previousCall: null,
       report: null,
       respondedEventIds: [],
-      responseBySurveyId: {},
       step: LaneStep.STATS,
+      submissionDataBySurveyId: {},
       surveySubmissionError: false,
     },
   ],
@@ -62,8 +62,8 @@ const CallSlice = createSlice({
     clearEventResponses: (state) => {
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
     },
-    clearSurveyResponses: (state) => {
-      state.lanes[state.activeLaneIndex].responseBySurveyId = {};
+    clearSurveySubmissions: (state) => {
+      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
     },
     eventResponseAdded: (state, action: PayloadAction<number>) => {
       const eventIdToAdd = action.payload;
@@ -141,13 +141,13 @@ const CallSlice = createSlice({
     setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
       state.lanes[state.activeLaneIndex].surveySubmissionError = action.payload;
     },
-    surveyResponseAdded: (
+    surveySubmissionAdded: (
       state,
-      action: PayloadAction<[number, SurveyResponse]>
+      action: PayloadAction<[number, SurveySubmissionData]>
     ) => {
       const [surveyId, response] = action.payload;
       const responsesBySurveyId =
-        state.lanes[state.activeLaneIndex].responseBySurveyId;
+        state.lanes[state.activeLaneIndex].submissionDataBySurveyId;
 
       responsesBySurveyId[surveyId] = response;
     },
@@ -167,7 +167,7 @@ export const {
   allocateCallError,
   clearCurrentCall,
   clearEventResponses,
-  clearSurveyResponses,
+  clearSurveySubmissions,
   callDeleted,
   eventResponseAdded,
   eventResponseRemoved,
@@ -180,6 +180,6 @@ export const {
   reportAdded,
   reportDeleted,
   setSurveySubmissionError,
-  surveyResponseAdded,
+  surveySubmissionAdded,
   updateLaneStep,
 } = CallSlice.actions;

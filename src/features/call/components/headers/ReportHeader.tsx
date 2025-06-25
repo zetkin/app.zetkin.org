@@ -45,7 +45,8 @@ const ReportHeader: FC<Props> = ({
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
   const filledInSurveys = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
 
   return (
@@ -63,10 +64,13 @@ const ReportHeader: FC<Props> = ({
         setIsLoading(true);
 
         const submissions = Object.entries(filledInSurveys).map(
-          ([surveyId, surveyResponse]) => {
-            const surveyResponseAsFormData = objectToFormData(surveyResponse);
+          ([surveyId, surveySubmissionData]) => {
+            const surveySubmissionDataAsFormData =
+              objectToFormData(surveySubmissionData);
             return {
-              submission: prepareSurveyApiSubmission(surveyResponseAsFormData),
+              submission: prepareSurveyApiSubmission(
+                surveySubmissionDataAsFormData
+              ),
               surveyId: Number(surveyId),
               targetId: call.target.id,
             };

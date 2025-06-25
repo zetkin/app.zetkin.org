@@ -28,14 +28,15 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
       state.call.lanes[state.call.activeLaneIndex].surveySubmissionError
   );
 
-  const surveyResponses = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
+  const surveySubmissions = useAppSelector(
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
 
   const allSurveys =
     useSurveysWithElements(assignment.organization.id).data || [];
 
-  const surveys = Object.keys(surveyResponses)
+  const surveys = Object.keys(surveySubmissions)
     .filter((surveyId) => {
       return allSurveys.find((s) => s.id == Number(surveyId));
     })

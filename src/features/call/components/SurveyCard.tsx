@@ -18,7 +18,8 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const responseBySurveyId = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
 
   const response = responseBySurveyId[survey.id];

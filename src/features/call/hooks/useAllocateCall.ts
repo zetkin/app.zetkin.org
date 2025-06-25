@@ -3,7 +3,7 @@ import {
   allocateCallError,
   allocateNewCall,
   clearEventResponses,
-  clearSurveyResponses,
+  clearSurveySubmissions,
   newCallAllocated,
   updateLaneStep,
 } from '../store';
@@ -40,7 +40,7 @@ export default function useAllocateCall(
       );
       dispatch(newCallAllocated(call));
       dispatch(updateLaneStep(LaneStep.PREPARE));
-      dispatch(clearSurveyResponses());
+      dispatch(clearSurveySubmissions());
       dispatch(clearEventResponses());
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Empty queue error');
@@ -50,7 +50,7 @@ export default function useAllocateCall(
       };
       dispatch(allocateCallError(serialized));
       dispatch(updateLaneStep(LaneStep.STATS));
-      dispatch(clearSurveyResponses());
+      dispatch(clearSurveySubmissions());
       dispatch(clearEventResponses());
       return error;
     }

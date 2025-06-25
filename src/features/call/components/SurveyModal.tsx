@@ -6,7 +6,7 @@ import ZUIModal from 'zui/components/ZUIModal';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { surveyResponseAdded } from '../store';
+import { surveySubmissionAdded } from '../store';
 
 type SurveyModalProps = {
   onClose: () => void;
@@ -17,12 +17,13 @@ type SurveyModalProps = {
 const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
   const dispatch = useAppDispatch();
   const responseBySurveyId = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex].responseBySurveyId
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
   const formRef = useRef<HTMLFormElement | null>(null);
 
   //TODO: think about what form data we save where
-  const formDataToSurveyResponse = (formData: FormData) => {
+  const formDataToSurveySubmissionData = (formData: FormData) => {
     const submittedFormContent: Record<string, string | string[]> = {};
     Array.from(formData.entries()).forEach((entry) => {
       const [nameOfQuestion, newValue] = entry;
@@ -46,28 +47,28 @@ const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
     return submittedFormContent;
   };
 
-  const saveSurveySubmission = () => {
+  const saveSurveySubmissionData = () => {
     if (formRef.current) {
       formRef.current.requestSubmit();
 
       const formData = new FormData(formRef.current);
 
-      const surveyResponse = formDataToSurveyResponse(formData);
-      dispatch(surveyResponseAdded([survey.id, surveyResponse]));
+      const surveySubmissionData = formDataToSurveySubmissionData(formData);
+      dispatch(surveySubmissionAdded([survey.id, surveySubmissionData]));
     }
   };
 
   return (
     <ZUIModal
       onClose={() => {
-        saveSurveySubmission();
+        saveSurveySubmissionData();
         onClose();
       }}
       open={open}
       primaryButton={{
         label: 'Save',
         onClick: () => {
-          saveSurveySubmission();
+          saveSurveySubmissionData();
           onClose();
         },
       }}
