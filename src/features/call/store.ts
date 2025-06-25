@@ -151,6 +151,14 @@ const CallSlice = createSlice({
 
       responsesBySurveyId[surveyId] = response;
     },
+    surveySubmissionDeleted: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+
+      const responsesBySurveyId =
+        state.lanes[state.activeLaneIndex].submissionDataBySurveyId;
+
+      delete responsesBySurveyId[surveyId];
+    },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
 
@@ -181,5 +189,6 @@ export const {
   reportDeleted,
   setSurveySubmissionError,
   surveySubmissionAdded,
+  surveySubmissionDeleted,
   updateLaneStep,
 } = CallSlice.actions;

@@ -13,6 +13,7 @@ import notEmpty from 'utils/notEmpty';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import EventCard from './EventCard';
 import { ZetkinCall } from '../types';
+import ZUIText from 'zui/components/ZUIText';
 
 type CallReportProps = {
   assignment: ZetkinCallAssignment;
@@ -71,6 +72,8 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
     return null;
   }
 
+  const noActivitesRespondedTo = surveys.length == 0 && events.length == 0;
+
   return (
     <>
       {surveySubmissionError && (
@@ -90,6 +93,9 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
           <ZUISection
             renderContent={() => (
               <Box>
+                {noActivitesRespondedTo && (
+                  <ZUIText>No activites were responded to</ZUIText>
+                )}
                 {surveys.map((survey) => (
                   <SurveyCard key={survey.id} survey={survey} />
                 ))}
