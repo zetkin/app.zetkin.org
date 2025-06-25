@@ -44,7 +44,7 @@ const ReportHeader: FC<Props> = ({
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
-  const filledInSurveys = useAppSelector(
+  const submissionDataBySurveyId = useAppSelector(
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
@@ -63,8 +63,16 @@ const ReportHeader: FC<Props> = ({
         }
         setIsLoading(true);
 
-        const submissions = Object.entries(filledInSurveys).map(
-          ([surveyId, surveySubmissionData]) => {
+        const submissions = Object.entries(submissionDataBySurveyId)
+          .filter(([, surveySubmissionData]) => {
+            return Object.entries(surveySubmissionData).some(([, value]) => {
+              if (typeof value == 'string') {
+                return value.trim() !== '';
+              }
+              return true;
+            });
+          })
+          .map(([surveyId, surveySubmissionData]) => {
             const surveySubmissionDataAsFormData =
               objectToFormData(surveySubmissionData);
             return {
@@ -74,8 +82,7 @@ const ReportHeader: FC<Props> = ({
               surveyId: Number(surveyId),
               targetId: call.target.id,
             };
-          }
-        );
+          });
 
         //TODO: Make all below happen in one hook
         await submitSurveys(submissions);
