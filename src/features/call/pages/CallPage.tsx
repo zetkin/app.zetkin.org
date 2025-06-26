@@ -18,6 +18,8 @@ import ZUIModal from 'zui/components/ZUIModal';
 import CallSummarySentence from '../components/CallSummarySentence';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { previousCallClear, reportDeleted, updateLaneStep } from '../store';
+import useServerSide from 'core/useServerSide';
+import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -29,6 +31,22 @@ const CallPage: FC<Props> = ({ assignment }) => {
     (state) => state.call.lanes[state.call.activeLaneIndex]
   );
   const call = useCurrentCall();
+  const onServer = useServerSide();
+
+  if (onServer) {
+    return (
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          height: '100dvh',
+          justifyContent: 'center',
+        }}
+      >
+        <ZUILogoLoadingIndicator />
+      </Box>
+    );
+  }
 
   return (
     <Box>
