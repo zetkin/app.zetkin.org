@@ -5,6 +5,8 @@ import {
   clearEventResponses,
   clearSurveySubmissions,
   newCallAllocated,
+  outgoingCallsLoad,
+  outgoingCallsLoaded,
   updateLaneStep,
 } from '../store';
 import { LaneStep, ZetkinCall } from '../types';
@@ -39,6 +41,14 @@ export default function useAllocateCall(
         {}
       );
       dispatch(newCallAllocated(call));
+
+      dispatch(outgoingCallsLoad());
+      const outgoingCalls = await apiClient.get<
+        ZetkinCall[]
+      >(`/api/users/me/outgoing_calls?p=0&pp=200
+        `);
+      dispatch(outgoingCallsLoaded(outgoingCalls));
+
       dispatch(updateLaneStep(LaneStep.PREPARE));
       dispatch(clearSurveySubmissions());
       dispatch(clearEventResponses());

@@ -105,23 +105,8 @@ const CallSlice = createSlice({
       state.outgoingCalls.isLoading = true;
     },
     outgoingCallsLoaded: (state, action: PayloadAction<ZetkinCall[]>) => {
-      const payloadItems = action.payload.map((call) =>
-        remoteItem(call.id, {
-          data: call,
-          isLoading: false,
-          isStale: false,
-          loaded: new Date().toISOString(),
-        })
-      );
-
-      state.outgoingCalls.items = state.outgoingCalls.items
-        .filter(
-          (item) => !payloadItems.some((newItem) => newItem.id === item.id)
-        )
-        .concat(payloadItems);
-
+      state.outgoingCalls = remoteList(action.payload);
       state.outgoingCalls.loaded = new Date().toISOString();
-      state.outgoingCalls.isLoading = false;
     },
     previousCallAdd: (state, action: PayloadAction<ZetkinCall>) => {
       const call = action.payload;
