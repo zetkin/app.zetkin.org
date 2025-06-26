@@ -1560,6 +1560,9 @@ feat:
         haveSelect:
           in: heeft
           notin: heeft niet
+        inputString: '{addRemoveSelect} mensen die {haveSelect} {bookedSelect} voor
+          gebeurtenissen in {campaignSelect} van {activitySelect} op
+          {locationSelect} {timeFrame}'
         locationSelect:
           any: welke locatie dan ook
           location: locatie "{location}"
