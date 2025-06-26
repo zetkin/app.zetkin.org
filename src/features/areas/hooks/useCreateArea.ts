@@ -1,5 +1,5 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
-import { Zetkin2Area, Zetkin2AreaPostBody, ZetkinArea } from '../types';
+import { Zetkin2Area, Zetkin2AreaPostBody } from '../types';
 import { areaCreated } from '../store';
 
 export default function useCreateArea(orgId: number) {
@@ -8,22 +8,14 @@ export default function useCreateArea(orgId: number) {
 
   return async function createArea(
     data: Zetkin2AreaPostBody
-  ): Promise<ZetkinArea> {
+  ): Promise<Zetkin2Area> {
     const created = await apiClient.post<Zetkin2Area, Zetkin2AreaPostBody>(
       `/api2/orgs/${orgId}/areas`,
       data
     );
-    const translated = {
-      description: created.description,
-      id: created.id,
-      organization_id: created.organization_id,
-      points: created.boundary.coordinates[0],
-      tags: [],
-      title: created.title,
-    };
 
-    dispatch(areaCreated(translated));
+    dispatch(areaCreated(created));
 
-    return translated;
+    return created;
   };
 }

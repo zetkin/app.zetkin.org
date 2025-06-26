@@ -1,3 +1,31 @@
+glob:
+  accessLevels:
+    configure: Bearbeiten & Erstellen
+    edit: In Bearbeitung
+    readonly: Schreibgeschützte Ansicht
+  genderOptions:
+    f: Weiblich
+    m: Männlich
+    o: Divers
+    unspecified: Keine Angabe
+  personFields:
+    alt_phone: Weitere Telefonnummer
+    city: Stadt
+    co_address: Adresszusatz
+    country: Land
+    email: E-Mail
+    ext_id: Externe ID
+    first_name: Vorname
+    gender: Geschlechtsidentität
+    id: ID
+    is_user: hat Profil
+    last_name: Nachname
+    phone: Telefonnummer
+    street_address: Adresse
+    zip_code: Postleitzahl
+  roles:
+    admin: Admin
+    organizer: Organizer*in
 core:
   err404:
     backToHomePage: zurück zur Startseite
@@ -1582,17 +1610,9 @@ feat:
         campaignSelect:
           any: irgendein Projekt
           campaign: Projekt "{campaign}"
-        examples:
-          one: Füge Personen hinzu, die sich für irgendein Projekt irgendeiner Art
-            irgendwann am Ort 'Dorfplatz' angemeldet haben.
-          two: Entferne Personen, die nicht für Events der Art 'Poster aufhängen' in
-            irgendeinem Projekt an irgendeinem Ort bis heute gebucht wurden
         haveSelect:
           in: wurden
           notin: wurden nicht
-        inputString: '{addRemoveSelect} Personen, die {haveSelect} {bookedSelect} für
-          Aktionen in {campaignSelect} des Typs {activitySelect} in
-          {locationSelect} {timeFrame}'
         locationSelect:
           any: irgendein Ort
           location: Ort "{location}"
@@ -2301,6 +2321,8 @@ feat:
       draft: Entwurf
       expired: Abgelaufen
       scheduled: Geplant
+    taskChangeCampaignDialog:
+      title: Aufgabe verschieben
     taskDetails:
       deadlineTime: Frist
       editButton: Bearbeiten
@@ -2859,6 +2881,9 @@ zui:
     restrictedMode: Kann in geteilten Listen nicht bearbeitet werden.
     searchResults: Suchergebnisse
   personSelect:
+    bulkAdd:
+      backButton: Zurück
+      cancelButton: Rückgängig
     keepTyping: Tippe weiter, um Suche zu starten
     noResult: Keine Treffer
     search: Tippe, um zu suchen

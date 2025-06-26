@@ -1,3 +1,31 @@
+glob:
+  accessLevels:
+    configure: Rediger og sett opp
+    edit: Redigering
+    readonly: Skrivebeskyttet
+  genderOptions:
+    f: Kvinne
+    m: Mann
+    o: Annet
+    unspecified: Uspesifisert
+  personFields:
+    alt_phone: Alternativt telefonnummer
+    city: Poststed
+    co_address: Alternativ adresse
+    country: Land
+    email: E-post
+    ext_id: Medlemsnummer
+    first_name: Fornavn
+    gender: Kjønn
+    id: Zetkin ID
+    is_user: Har bruker
+    last_name: Etternavn
+    phone: Telefonnummer
+    street_address: Adresse
+    zip_code: Postnummer
+  roles:
+    admin: Admin
+    organizer: Koordinator
 core:
   err404:
     backToHomePage: Tilbake til startsiden
@@ -2051,17 +2079,9 @@ feat:
         campaignSelect:
           any: et prosjekt
           campaign: Prosjektet "{campaign}"
-        examples:
-          one: Legg til folk som har meldt seg på arrangementer i et prosjekt med en
-            aktivitet på plassen 'Torget' når som helst.
-          two: Fjern folk som ikke har blitt registrert på arrangementer i et prosjekt med
-            aktiviteten "Stå på stand" hvor som helst før i dag.
         haveSelect:
           in: har
           notin: ikke har
-        inputString: '{addRemoveSelect} folk som {haveSelect} {bookedSelect}
-          arrangementer i {campaignSelect} med {activitySelect} på
-          {locationSelect} {timeFrame}'
         locationSelect:
           any: et sted
           location: stedet "{location}"
