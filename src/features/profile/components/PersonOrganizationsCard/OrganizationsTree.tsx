@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/profile/l10n/messageIds';
 import { PersonOrganization } from 'utils/organize/people';
