@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 
 import useCallMutations from '../hooks/useCallMutations';
 import useOutgoingCalls from '../hooks/useOutgoingCalls';
@@ -66,8 +66,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   return (
     <Box>
       {unfinishedCalls.map((unfinishedCall) => (
-        <>
-          <Box key={unfinishedCall.id} mt={1}>
+        <Fragment key={unfinishedCall.id}>
+          <Box mt={1}>
             <Box
               alignItems="flex-start"
               display="flex"
@@ -128,7 +128,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
             </Box>
           </Box>
           <ZUIDivider />
-        </>
+        </Fragment>
       ))}
       {previousCalls.map((previousCall) => (
         <Box key={previousCall.id} mt={2}>
