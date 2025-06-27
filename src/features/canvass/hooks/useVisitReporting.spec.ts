@@ -149,6 +149,8 @@ describe('useVisitReporting()', () => {
 
     it('triggers a refresh of the location stats', async () => {
       const mockLocation: ZetkinLocation = {
+        created: new Date().toISOString(),
+        created_by_user_id: 1,
         description: '',
         id: LOCATION_ID,
         latitude: 55,
@@ -333,6 +335,8 @@ describe('useVisitReporting()', () => {
 
     it('reportLocationVisit() triggers refresh of location stats', async () => {
       const mockLocation: ZetkinLocation = {
+        created: new Date().toISOString(),
+        created_by_user_id: 1,
         description: '',
         id: LOCATION_ID,
         latitude: 55,
@@ -643,6 +647,8 @@ describe('useVisitReporting()', () => {
 
     it('reportHouseholdVisit() triggers refresh of location stats', async () => {
       const mockLocation: ZetkinLocation = {
+        created: new Date().toISOString(),
+        created_by_user_id: 1,
         description: '',
         id: LOCATION_ID,
         latitude: 55,
