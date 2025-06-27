@@ -4,8 +4,8 @@ import {
   LaneStep,
   LaneState,
   ZetkinCall,
-  CallReport,
   SurveySubmissionData,
+  Report,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -26,7 +26,19 @@ const initialState: CallStoreSlice = {
   lanes: [
     {
       previousCall: null,
-      report: null,
+      report: {
+        callBackAfter: null,
+        callerLog: '',
+        completed: false,
+        failureReason: null,
+        leftMessage: false,
+        organizerActionNeeded: false,
+        organizerLog: '',
+        step: 'successOrFailure',
+        success: false,
+        targetCouldTalk: false,
+        wrongNumber: null,
+      },
       respondedEventIds: [],
       step: LaneStep.STATS,
       submissionDataBySurveyId: {},
@@ -61,6 +73,21 @@ const CallSlice = createSlice({
     },
     clearEventResponses: (state) => {
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
+    },
+    clearReport: (state) => {
+      state.lanes[state.activeLaneIndex].report = {
+        callBackAfter: null,
+        callerLog: '',
+        completed: false,
+        failureReason: null,
+        leftMessage: false,
+        organizerActionNeeded: false,
+        organizerLog: '',
+        step: 'successOrFailure',
+        success: false,
+        targetCouldTalk: false,
+        wrongNumber: null,
+      };
     },
     clearSurveySubmissions: (state) => {
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
@@ -115,13 +142,10 @@ const CallSlice = createSlice({
     previousCallClear: (state) => {
       state.lanes[state.activeLaneIndex].previousCall = null;
     },
-    reportAdded: (state, action: PayloadAction<CallReport>) => {
+    reportUpdated: (state, action: PayloadAction<Report>) => {
       const report = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
       lane.report = report;
-    },
-    reportDeleted: (state) => {
-      state.lanes[state.activeLaneIndex].report = null;
     },
     setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
       state.lanes[state.activeLaneIndex].surveySubmissionError = action.payload;
@@ -155,6 +179,7 @@ const CallSlice = createSlice({
 
 export default CallSlice;
 export const {
+  clearReport,
   eventsLoad,
   eventsLoaded,
   allocateCallError,
@@ -170,8 +195,7 @@ export const {
   outgoingCallsLoaded,
   previousCallAdd,
   previousCallClear,
-  reportAdded,
-  reportDeleted,
+  reportUpdated,
   setSurveySubmissionError,
   surveySubmissionAdded,
   surveySubmissionDeleted,

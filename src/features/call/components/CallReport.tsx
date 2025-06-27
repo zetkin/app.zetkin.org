@@ -5,7 +5,7 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import ReportForm from './Report';
 import ZUISection from 'zui/components/ZUISection';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { reportAdded } from '../store';
+import { reportUpdated } from '../store';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import SurveyCard from './SurveyCard';
@@ -24,16 +24,17 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
   const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
 
+  const report = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].report
+  );
   const surveySubmissionError = useAppSelector(
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].surveySubmissionError
   );
-
   const surveySubmissions = useAppSelector(
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
-
   const idsOfSurveysWithSubmission = Object.entries(surveySubmissions)
     .filter(([, surveySubmissionData]) => {
       return Object.entries(surveySubmissionData).some(([, value]) => {
@@ -122,9 +123,10 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
             renderContent={() => (
               <ReportForm
                 disableCallerNotes={assignment.disable_caller_notes}
-                onReportFinished={(report) => {
-                  dispatch(reportAdded(report));
+                onReportChange={(updatedReport) => {
+                  dispatch(reportUpdated(updatedReport));
                 }}
+                report={report}
                 target={call.target}
               />
             )}

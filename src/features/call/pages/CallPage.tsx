@@ -17,7 +17,7 @@ import { LaneStep } from '../types';
 import ZUIModal from 'zui/components/ZUIModal';
 import CallSummarySentence from '../components/CallSummarySentence';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { previousCallClear, reportDeleted, updateLaneStep } from '../store';
+import { previousCallClear, clearReport, updateLaneStep } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
@@ -65,7 +65,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
             primaryButton={{
               label: 'Close',
               onClick: () => {
-                dispatch(reportDeleted());
+                dispatch(clearReport());
                 dispatch(previousCallClear());
               },
             }}

@@ -37,6 +37,37 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
+export type Step =
+  | 'callBack'
+  | 'callerLog'
+  | 'couldTalk'
+  | 'failureReason'
+  | 'leftMessage'
+  | 'organizerAction'
+  | 'organizerLog'
+  | 'successOrFailure'
+  | 'summary'
+  | 'wrongNumber';
+
+export type Report = {
+  callBackAfter: string | null;
+  callerLog: string;
+  completed: boolean;
+  failureReason:
+    | 'lineBusy'
+    | 'noPickup'
+    | 'wrongNumber'
+    | 'notAvailable'
+    | null;
+  leftMessage: boolean;
+  organizerActionNeeded: boolean;
+  organizerLog: string;
+  step: Step;
+  success: boolean;
+  targetCouldTalk: boolean;
+  wrongNumber: 'altPhone' | 'phone' | 'both' | null;
+};
+
 export type CallReport = Pick<
   ZetkinCall,
   'message_to_organizer' | 'notes' | 'organizer_action_needed' | 'state'
@@ -59,7 +90,7 @@ export type SurveySubmissionData = Record<string, string | string[]>;
 
 export type LaneState = {
   previousCall: ZetkinCall | null;
-  report: CallReport | null;
+  report: Report;
   respondedEventIds: number[];
   step: LaneStep;
   submissionDataBySurveyId: Record<number, SurveySubmissionData>;

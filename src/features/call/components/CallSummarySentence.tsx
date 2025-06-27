@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { ZetkinCall } from '../types';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppSelector } from 'core/hooks';
+import calculateReportState from './Report/utils/calculateReportState';
 
 type Props = {
   call: ZetkinCall;
@@ -12,6 +13,8 @@ const CallSummarySentence: FC<Props> = ({ call }) => {
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
+
+  const reportState = calculateReportState(report);
 
   const messageByStatusCode: Record<number, string> = {
     1: `You talked to ${call.target.first_name}`,
@@ -29,7 +32,7 @@ const CallSummarySentence: FC<Props> = ({ call }) => {
 
   return (
     <ZUIText variant="bodyMdSemiBold">
-      {messageByStatusCode[report.state]}
+      {messageByStatusCode[reportState]}
     </ZUIText>
   );
 };

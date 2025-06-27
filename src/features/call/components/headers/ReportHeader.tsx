@@ -10,6 +10,7 @@ import CallHeader from './CallHeader';
 import { previousCallAdd } from 'features/call/store';
 import useAllocateCall from 'features/call/hooks/useAllocateCall';
 import { objectToFormData } from '../utils/objectToFormData';
+import calculateReportState from '../Report/utils/calculateReportState';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -53,7 +54,7 @@ const ReportHeader: FC<Props> = ({
     <CallHeader
       assignment={assignment}
       call={call}
-      forwardButtonDisabled={!report}
+      forwardButtonDisabled={!report.completed}
       forwardButtonLabel={forwardButtonLabel}
       forwardButtonLoading={isLoading}
       onBack={onBack}
@@ -86,9 +87,20 @@ const ReportHeader: FC<Props> = ({
 
         //TODO: Make all below happen in one hook
         await submitSurveys(submissions);
-        await updateCall(call.id, report);
 
-        sessionStorage.clear();
+        const state = calculateReportState(report);
+        const reportData = {
+          call_back_after:
+            state == 13 || state == 14 ? report.callBackAfter : null,
+          message_to_organizer:
+            report.organizerActionNeeded && report.organizerLog
+              ? report.organizerLog
+              : null,
+          notes: report.callerLog || null,
+          organizer_action_needed: report.organizerActionNeeded,
+          state: state,
+        };
+        await updateCall(call.id, reportData);
 
         const error = await allocateCall();
 

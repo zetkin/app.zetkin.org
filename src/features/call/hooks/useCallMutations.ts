@@ -5,7 +5,7 @@ import {
   clearSurveySubmissions,
   callDeleted,
   newCallAllocated,
-  reportDeleted,
+  clearReport,
   updateLaneStep,
   clearCurrentCall,
 } from '../store';
@@ -22,7 +22,7 @@ export default function useCallMutations(orgId: number) {
     dispatch(updateLaneStep(LaneStep.STATS));
     dispatch(clearSurveySubmissions());
     dispatch(clearEventResponses());
-    dispatch(reportDeleted());
+    dispatch(clearReport());
   };
 
   const deleteCall = async (callId: number) => {
@@ -42,7 +42,7 @@ export default function useCallMutations(orgId: number) {
     dispatch(updateLaneStep(LaneStep.PREPARE));
     dispatch(clearSurveySubmissions());
     dispatch(clearEventResponses());
-    dispatch(reportDeleted());
+    dispatch(clearReport());
   };
 
   const updateCall = (callId: number, data: CallReport) => {

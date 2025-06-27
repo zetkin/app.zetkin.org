@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-import { Report, Step } from './index';
 import SuccessOrFailure from './steps/SuccessOrFailure';
 import FailureReason from './steps/FailureReason';
 import CouldTalk from './steps/CouldTalk';
@@ -10,7 +9,7 @@ import OrganizerAction from './steps/OrganizerAction';
 import OrganizerLog from './steps/OrganizerLog';
 import CallerLog from './steps/CallerLog';
 import WrongNumber from './steps/WrongNumber';
-import { ZetkinCallTarget } from 'features/call/types';
+import { Report, Step, ZetkinCallTarget } from 'features/call/types';
 import Summary from './steps/Summary';
 import messageIds from 'features/call/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -28,7 +27,6 @@ type ReportStep = {
     report: Report,
     onReportUpdate: (updatedReport: Report) => void,
     target: ZetkinCallTarget,
-    onReportFinished: () => void,
     disableCallerNotes: boolean
   ) => ReactNode;
   renderSummary: (
@@ -63,6 +61,7 @@ export const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
+            completed: false,
             failureReason: null,
             leftMessage: false,
             organizerActionNeeded: false,
@@ -120,6 +119,7 @@ export const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
+            completed: false,
             failureReason: null,
             leftMessage: false,
             organizerActionNeeded: false,
@@ -185,6 +185,7 @@ export const reportSteps: ReportStep[] = [
               onReportUpdate({
                 ...report,
                 callBackAfter: null,
+                completed: false,
                 failureReason: null,
                 leftMessage: false,
                 step: 'failureReason',
@@ -237,6 +238,7 @@ export const reportSteps: ReportStep[] = [
           onReportUpdate({
             ...report,
             callBackAfter: null,
+            completed: false,
             leftMessage: false,
             organizerActionNeeded: false,
             step: 'leftMessage',
@@ -302,6 +304,7 @@ export const reportSteps: ReportStep[] = [
             onReportUpdate({
               ...report,
               callerLog: '',
+              completed: false,
               organizerActionNeeded: false,
               organizerLog: '',
               step: 'callBack',
@@ -387,6 +390,7 @@ export const reportSteps: ReportStep[] = [
           onEdit={() =>
             onReportUpdate({
               ...report,
+              completed: false,
               organizerActionNeeded: false,
               step: 'wrongNumber',
               wrongNumber: null,
@@ -417,16 +421,10 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'organizerAction' ? 'question' : 'summary';
     },
     name: 'organizerAction',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      onReportFinished,
-      disableCallerNotes
-    ) => (
+    renderQuestion: (report, onReportUpdate, target, disableCallerNotes) => (
       <OrganizerAction
         key="organizerAction"
-        onReportFinished={disableCallerNotes ? onReportFinished : undefined}
+        disableCallerNotes={disableCallerNotes}
         onReportUpdate={onReportUpdate}
         report={report}
       />
@@ -437,6 +435,7 @@ export const reportSteps: ReportStep[] = [
         onEdit={() =>
           onReportUpdate({
             ...report,
+            completed: false,
             leftMessage: false,
             organizerActionNeeded: false,
             step: 'organizerAction',
@@ -476,17 +475,11 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'organizerLog' ? 'question' : 'summary';
     },
     name: 'organizerLog',
-    renderQuestion: (
-      report,
-      onReportUpdate,
-      target,
-      onReportFinished,
-      disableCallerNotes
-    ) => {
+    renderQuestion: (report, onReportUpdate, target, disableCallerNotes) => {
       return (
         <OrganizerLog
           key="organizerLog"
-          onReportFinished={disableCallerNotes ? onReportFinished : undefined}
+          disableCallerNotes={disableCallerNotes}
           onReportUpdate={onReportUpdate}
           report={report}
           target={target}
@@ -536,10 +529,9 @@ export const reportSteps: ReportStep[] = [
       return report.step == 'callerLog' ? 'question' : 'summary';
     },
     name: 'callerLog',
-    renderQuestion: (report, onReportUpdate, target, onReportFinished) => (
+    renderQuestion: (report, onReportUpdate) => (
       <CallerLog
         key="callerLog"
-        onReportFinished={onReportFinished}
         onReportUpdate={onReportUpdate}
         report={report}
       />

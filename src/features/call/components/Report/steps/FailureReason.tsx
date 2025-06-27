@@ -7,12 +7,12 @@ import {
   LooksTwoOutlined,
 } from '@mui/icons-material';
 
-import { Report } from '..';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { Report } from 'features/call/types';
 
 type Props = {
   nextStepIfWrongNumber: 'wrongNumber' | 'organizerLog';
