@@ -8,8 +8,14 @@ import {
   clearReport,
   updateLaneStep,
   clearCurrentCall,
+  callUpdated,
 } from '../store';
-import { ZetkinCall, CallReport, LaneStep } from '../types';
+import {
+  ZetkinCall,
+  CallReport,
+  LaneStep,
+  ZetkinCallPatchResponse,
+} from '../types';
 
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
@@ -45,11 +51,12 @@ export default function useCallMutations(orgId: number) {
     dispatch(clearReport());
   };
 
-  const updateCall = (callId: number, data: CallReport) => {
-    return apiClient.patch<ZetkinCall, CallReport>(
-      `/api/orgs/${orgId}/calls/${callId}`,
-      data
-    );
+  const updateCall = async (callId: number, data: CallReport) => {
+    const updatedCall = await apiClient.patch<
+      ZetkinCallPatchResponse,
+      CallReport
+    >(`/api/orgs/${orgId}/calls/${callId}`, data);
+    dispatch(callUpdated(updatedCall));
   };
 
   return {

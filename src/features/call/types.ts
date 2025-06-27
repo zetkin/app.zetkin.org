@@ -37,6 +37,15 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
+export type ZetkinCallPatchResponse = Omit<ZetkinCall, 'target'> & {
+  target: {
+    alt_phone: string | null;
+    id: number;
+    name: string;
+    phone: string;
+  };
+};
+
 export type Step =
   | 'callBack'
   | 'callerLog'
@@ -89,6 +98,7 @@ export enum LaneStep {
 export type SurveySubmissionData = Record<string, string | string[]>;
 
 export type LaneState = {
+  callIsBeingAllocated: boolean;
   previousCall: ZetkinCall | null;
   report: Report;
   respondedEventIds: number[];

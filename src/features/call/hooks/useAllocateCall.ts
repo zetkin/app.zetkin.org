@@ -5,8 +5,6 @@ import {
   clearEventResponses,
   clearSurveySubmissions,
   newCallAllocated,
-  outgoingCallsLoad,
-  outgoingCallsLoaded,
   updateLaneStep,
 } from '../store';
 import { LaneStep, ZetkinCall } from '../types';
@@ -29,8 +27,8 @@ export default function useAllocateCall(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const error = useAppSelector((state) => state.call.queueHasError);
-  const isLoading = useAppSelector(
-    (state) => state.call.outgoingCalls.isLoading
+  const callIsBeingAllocated = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].callIsBeingAllocated
   );
 
   const allocateCall = async (): Promise<void | SerializedError> => {
@@ -41,14 +39,6 @@ export default function useAllocateCall(
         {}
       );
       dispatch(newCallAllocated(call));
-
-      dispatch(outgoingCallsLoad());
-      const outgoingCalls = await apiClient.get<
-        ZetkinCall[]
-      >(`/api/users/me/outgoing_calls?p=0&pp=200
-        `);
-      dispatch(outgoingCallsLoaded(outgoingCalls));
-
       dispatch(updateLaneStep(LaneStep.PREPARE));
       dispatch(clearSurveySubmissions());
       dispatch(clearEventResponses());
@@ -69,6 +59,6 @@ export default function useAllocateCall(
   return {
     allocateCall,
     error,
-    isLoading,
+    isLoading: callIsBeingAllocated,
   };
 }

@@ -6,6 +6,7 @@ import {
   ZetkinCall,
   SurveySubmissionData,
   Report,
+  ZetkinCallPatchResponse,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -25,6 +26,7 @@ const initialState: CallStoreSlice = {
   currentCallId: null,
   lanes: [
     {
+      callIsBeingAllocated: false,
       previousCall: null,
       report: {
         callBackAfter: null,
@@ -60,13 +62,42 @@ const CallSlice = createSlice({
       state.outgoingCalls.isLoading = false;
     },
     allocateNewCall: (state) => {
-      state.outgoingCalls.isLoading = true;
+      state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
     },
     callDeleted: (state, action: PayloadAction<number>) => {
       const deletedCallId = action.payload;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
         (item) => item.id != deletedCallId
       );
+    },
+    callUpdated: (state, action: PayloadAction<ZetkinCallPatchResponse>) => {
+      const updatedCall = action.payload;
+
+      const callItem = state.outgoingCalls.items.find(
+        (item) => item.id == updatedCall.id
+      );
+
+      if (callItem) {
+        const data = callItem.data;
+
+        if (data) {
+          state.outgoingCalls.items = state.outgoingCalls.items.filter(
+            (call) => call.id != updatedCall.id
+          );
+          state.outgoingCalls.items.push({
+            ...callItem,
+            data: {
+              ...data,
+              call_back_after: updatedCall.call_back_after,
+              message_to_organizer: updatedCall.message_to_organizer,
+              notes: updatedCall.notes,
+              organizer_action_needed: updatedCall.organizer_action_needed,
+              state: updatedCall.state,
+              update_time: new Date().toISOString(),
+            },
+          });
+        }
+      }
     },
     clearCurrentCall: (state) => {
       state.currentCallId = null;
@@ -125,8 +156,7 @@ const CallSlice = createSlice({
         })
       );
 
-      state.outgoingCalls.loaded = new Date().toISOString();
-      state.outgoingCalls.isLoading = false;
+      state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
     },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
@@ -179,6 +209,7 @@ const CallSlice = createSlice({
 
 export default CallSlice;
 export const {
+  callUpdated,
   clearReport,
   eventsLoad,
   eventsLoaded,
