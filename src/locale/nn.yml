@@ -1223,7 +1223,7 @@ feat:
       events: Arrangementer
       noEvents: Ingen arrangementer...
     locationModal:
-      cancel: Avlys
+      cancel: Avbryt
       createLocation: Nytt sted
       description: Beskrivelse
       infoText: Klikk på kartet for å lage et nytt sted. Klikk og dra for å flytte
