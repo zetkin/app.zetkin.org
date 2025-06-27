@@ -9,7 +9,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM node:lts-alpine3.19
+        FROM node:lts-alpine3.21
         COPY . /build/src/
         WORKDIR /build/src
         RUN yarn install
@@ -29,7 +29,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM node:lts-alpine3.19
+        FROM node:lts-alpine3.21
         WORKDIR /repo
         ENTRYPOINT yarn install && yarn devserver
     profiles: ["dev"]
@@ -46,7 +46,7 @@ services:
     build:
       context: .
       dockerfile_inline: |
-        FROM node:lts-alpine3.19
+        FROM node:lts-alpine3.21
         USER node
         WORKDIR /repo
         RUN yarn install
