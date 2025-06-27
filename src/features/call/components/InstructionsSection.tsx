@@ -14,7 +14,7 @@ const InstructionsSection: FC<Props> = ({ instructions }) => {
       renderContent={() => (
         <ZUIText>
           {instructions ? (
-            <ZUIMarkdown markdown={instructions} />
+            <ZUIMarkdown forceTargetBlank={true} markdown={instructions} />
           ) : (
             "This assignment doesn't have instructions."
           )}
