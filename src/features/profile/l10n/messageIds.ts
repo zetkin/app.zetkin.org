@@ -39,6 +39,9 @@ export default makeMessages('feat.profile', {
     title: m('Organizations'),
   },
   resetButton: m('Reset'),
+  role: {
+    noRole: m('No role'),
+  },
   saveButton: m('Save'),
   tabs: {
     manage: m('Manage'),
