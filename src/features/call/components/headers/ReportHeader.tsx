@@ -2,15 +2,13 @@ import { FC, useState } from 'react';
 
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import useCallMutations from '../../hooks/useCallMutations';
 import { ZetkinCall } from 'features/call/types';
-import useAddSurveysSubmissions from 'features/call/hooks/useAddSurveysSubmissions';
+import useSubmitReport from 'features/call/hooks/useSubmitReport';
 import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import CallHeader from './CallHeader';
 import { previousCallAdd } from 'features/call/store';
 import useAllocateCall from 'features/call/hooks/useAllocateCall';
 import { objectToFormData } from '../utils/objectToFormData';
-import calculateReportState from '../Report/utils/calculateReportState';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -33,10 +31,7 @@ const ReportHeader: FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const { updateCall } = useCallMutations(assignment.organization.id);
-  const { submitSurveys } = useAddSurveysSubmissions(
-    assignment.organization.id
-  );
+  const { submitReport } = useSubmitReport(assignment.organization.id);
   const { allocateCall } = useAllocateCall(
     assignment.organization.id,
     assignment.id
@@ -85,27 +80,13 @@ const ReportHeader: FC<Props> = ({
             };
           });
 
-        //TODO: Make all below happen in one hook
-        await submitSurveys(submissions);
+        const result = await submitReport(call.id, report, submissions);
 
-        const state = calculateReportState(report);
-        const reportData = {
-          call_back_after:
-            state == 13 || state == 14 ? report.callBackAfter : null,
-          message_to_organizer:
-            report.organizerActionNeeded && report.organizerLog
-              ? report.organizerLog
-              : null,
-          notes: report.callerLog || null,
-          organizer_action_needed: report.organizerActionNeeded,
-          state: state,
-        };
-        await updateCall(call.id, reportData);
-
-        const error = await allocateCall();
-
-        if (!error) {
-          dispatch(previousCallAdd(call));
+        if (result.kind === 'success') {
+          const error = await allocateCall();
+          if (!error) {
+            dispatch(previousCallAdd(call));
+          }
         }
         setIsLoading(false);
       }}

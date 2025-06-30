@@ -31,6 +31,9 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].surveySubmissionError
   );
+  const updateCallError = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].updateCallError
+  );
   const surveySubmissions = useAppSelector(
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
@@ -78,11 +81,15 @@ const CallReport: FC<CallReportProps> = ({ assignment, call }) => {
 
   return (
     <>
-      {surveySubmissionError && (
+      {(surveySubmissionError || updateCallError) && (
         <Box p={2}>
           <ZUIAlert
-            severity={'error'}
-            title="There was an error submitting surveys"
+            severity="error"
+            title={
+              surveySubmissionError
+                ? 'Something went wrong while submitting the survey responses.'
+                : 'An error occurred while submitting the report.'
+            }
           />
         </Box>
       )}

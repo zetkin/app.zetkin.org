@@ -23,7 +23,7 @@ import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbed
 import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 import { connectToOrgDef } from 'features/organizations/rpc/connectToOrg';
-import { submitSurveysDef } from 'features/call/rpc/submitSurveys';
+import { submitSurveysDef } from 'features/call/rpc/submitSurveysAndUpdateCall';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();

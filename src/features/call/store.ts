@@ -45,6 +45,7 @@ const initialState: CallStoreSlice = {
       step: LaneStep.STATS,
       submissionDataBySurveyId: {},
       surveySubmissionError: false,
+      updateCallError: false,
     },
   ],
   outgoingCalls: remoteList(),
@@ -180,6 +181,9 @@ const CallSlice = createSlice({
     setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
       state.lanes[state.activeLaneIndex].surveySubmissionError = action.payload;
     },
+    setUpdateCallError: (state, action: PayloadAction<boolean>) => {
+      state.lanes[state.activeLaneIndex].updateCallError = action.payload;
+    },
     surveySubmissionAdded: (
       state,
       action: PayloadAction<[number, SurveySubmissionData]>
@@ -228,6 +232,7 @@ export const {
   previousCallClear,
   reportUpdated,
   setSurveySubmissionError,
+  setUpdateCallError,
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,

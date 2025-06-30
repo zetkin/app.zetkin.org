@@ -105,4 +105,5 @@ export type LaneState = {
   step: LaneStep;
   submissionDataBySurveyId: Record<number, SurveySubmissionData>;
   surveySubmissionError: boolean;
+  updateCallError: boolean;
 };
