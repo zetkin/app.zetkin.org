@@ -1648,9 +1648,7 @@ feat:
         haveSelect:
           in: wurden
           notin: wurden nicht
-        inputString: '{addRemoveSelect} Personen, die {haveSelect} {bookedSelect} für
-          Aktionen in {campaignSelect} des Typs {activitySelect} in
-          {locationSelect} {timeFrame}'
+        inputString: ''
         locationSelect:
           any: irgendein Ort
           location: Ort "{location}"
