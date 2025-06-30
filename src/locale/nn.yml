@@ -2139,9 +2139,7 @@ feat:
         haveSelect:
           in: har
           notin: ikke har
-        inputString: '{addRemoveSelect} folk som {haveSelect} {bookedSelect}
-          arrangementer i {campaignSelect} med {activitySelect} på
-          {locationSelect} {timeFrame}'
+        inputString: ''
         locationSelect:
           any: et sted
           location: stedet "{location}"

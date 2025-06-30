@@ -1587,8 +1587,7 @@ feat:
         haveSelect:
           in: har
           notin: inte har
-        inputString: '{addRemoveSelect} personer som {haveSelect} {bookedSelect} event i
-          {campaignSelect} av {activitySelect} på {locationSelect} {timeFrame}'
+        inputString: ''
         locationSelect:
           any: vilken plats som helst
           location: platsen "{location}"
