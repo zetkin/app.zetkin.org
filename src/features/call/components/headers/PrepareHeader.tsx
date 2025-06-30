@@ -21,7 +21,6 @@ const PrepareHeader: FC<Props> = ({ assignment, call }) => {
         assignment={assignment}
         call={call}
         forwardButtonLabel="Call"
-        onBack={() => dispatch(updateLaneStep(LaneStep.STATS))}
         onForward={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
         onSecondaryAction={() => setOpen(true)}
         onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}

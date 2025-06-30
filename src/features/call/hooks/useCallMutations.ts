@@ -7,8 +7,8 @@ import {
   newCallAllocated,
   clearReport,
   updateLaneStep,
-  clearCurrentCall,
   callUpdated,
+  quitCall,
 } from '../store';
 import {
   ZetkinCall,
@@ -23,12 +23,7 @@ export default function useCallMutations(orgId: number) {
 
   const quitCurrentCall = async (callId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
-    dispatch(callDeleted(callId));
-    dispatch(clearCurrentCall());
-    dispatch(updateLaneStep(LaneStep.STATS));
-    dispatch(clearSurveySubmissions());
-    dispatch(clearEventResponses());
-    dispatch(clearReport());
+    dispatch(quitCall(callId));
   };
 
   const deleteCall = async (callId: number) => {

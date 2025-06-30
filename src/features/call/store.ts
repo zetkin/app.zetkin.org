@@ -173,6 +173,33 @@ const CallSlice = createSlice({
     previousCallClear: (state) => {
       state.lanes[state.activeLaneIndex].previousCall = null;
     },
+    quitCall: (state, action: PayloadAction<number>) => {
+      const deletedCallId = action.payload;
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id != deletedCallId
+      );
+
+      state.currentCallId = null;
+
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.step = LaneStep.STATS;
+
+      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
+      state.lanes[state.activeLaneIndex].respondedEventIds = [];
+      state.lanes[state.activeLaneIndex].report = {
+        callBackAfter: null,
+        callerLog: '',
+        completed: false,
+        failureReason: null,
+        leftMessage: false,
+        organizerActionNeeded: false,
+        organizerLog: '',
+        step: 'successOrFailure',
+        success: false,
+        targetCouldTalk: false,
+        wrongNumber: null,
+      };
+    },
     reportUpdated: (state, action: PayloadAction<Report>) => {
       const report = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
@@ -236,4 +263,5 @@ export const {
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,
+  quitCall,
 } = CallSlice.actions;

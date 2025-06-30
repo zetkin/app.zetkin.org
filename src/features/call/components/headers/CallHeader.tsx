@@ -48,7 +48,6 @@ type Props = {
   forwardButtonDisabled?: boolean;
   forwardButtonLabel: string;
   forwardButtonLoading?: boolean;
-  onBack: () => void;
   onForward: () => void;
   onSecondaryAction?: () => void;
   onSwitchCall: () => void;
@@ -61,7 +60,6 @@ const CallHeader: FC<Props> = ({
   forwardButtonDisabled,
   forwardButtonLabel,
   forwardButtonLoading,
-  onBack,
   onForward,
   onSecondaryAction,
   onSwitchCall,
@@ -138,7 +136,6 @@ const CallHeader: FC<Props> = ({
             label={assignment.title}
             onClick={() => {
               quitCurrentCall(call.id);
-              onBack();
             }}
           />
         }

@@ -83,7 +83,6 @@ const CallPage: FC<Props> = ({ assignment }) => {
             assignment={assignment}
             call={call}
             forwardButtonLabel={'Finish and report'}
-            onBack={() => dispatch(updateLaneStep(LaneStep.STATS))}
             onForward={() => dispatch(updateLaneStep(LaneStep.REPORT))}
             onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
           />
@@ -96,7 +95,6 @@ const CallPage: FC<Props> = ({ assignment }) => {
             assignment={assignment}
             call={call}
             forwardButtonLabel={'Submit report'}
-            onBack={() => dispatch(updateLaneStep(LaneStep.STATS))}
             onSecondaryAction={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
             onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
             secondaryActionLabel={'Back to activities'}

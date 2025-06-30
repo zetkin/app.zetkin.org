@@ -14,7 +14,6 @@ type Props = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
   forwardButtonLabel: string;
-  onBack: () => void;
   onSecondaryAction?: () => void;
   onSwitchCall: () => void;
   secondaryActionLabel?: string;
@@ -23,7 +22,6 @@ type Props = {
 const ReportHeader: FC<Props> = ({
   assignment,
   call,
-  onBack,
   forwardButtonLabel,
   onSecondaryAction,
   secondaryActionLabel,
@@ -52,7 +50,6 @@ const ReportHeader: FC<Props> = ({
       forwardButtonDisabled={!report.completed}
       forwardButtonLabel={forwardButtonLabel}
       forwardButtonLoading={isLoading}
-      onBack={onBack}
       onForward={async () => {
         if (!report) {
           return;
