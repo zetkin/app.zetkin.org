@@ -99,6 +99,7 @@ export type SurveySubmissionData = Record<string, string | string[]>;
 
 export type LaneState = {
   callIsBeingAllocated: boolean;
+  currentCallId: number | null;
   previousCall: ZetkinCall | null;
   report: Report;
   respondedEventIds: number[];

@@ -14,7 +14,6 @@ import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
   activeLaneIndex: number;
-  currentCallId: number | null;
   upcomingEventsList: RemoteList<ZetkinEvent>;
   lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
@@ -23,10 +22,10 @@ export interface CallStoreSlice {
 
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
-  currentCallId: null,
   lanes: [
     {
       callIsBeingAllocated: false,
+      currentCallId: null,
       previousCall: null,
       report: {
         callBackAfter: null,
@@ -87,7 +86,7 @@ const CallSlice = createSlice({
       );
 
       state.queueHasError = null;
-      state.currentCallId = newCall.id;
+      state.lanes[state.activeLaneIndex].currentCallId = newCall.id;
 
       state.outgoingCalls.items.push(
         remoteItem(newCall.id, {
@@ -135,7 +134,7 @@ const CallSlice = createSlice({
       }
     },
     clearCurrentCall: (state) => {
-      state.currentCallId = null;
+      state.lanes[state.activeLaneIndex].currentCallId = null;
     },
     clearEventResponses: (state) => {
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
@@ -179,7 +178,7 @@ const CallSlice = createSlice({
       state.upcomingEventsList.loaded = new Date().toISOString();
     },
     newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
-      state.currentCallId = action.payload.id;
+      state.lanes[state.activeLaneIndex].currentCallId = action.payload.id;
       state.queueHasError = null;
 
       state.outgoingCalls.items.push(
@@ -217,7 +216,7 @@ const CallSlice = createSlice({
         (item) => item.id != deletedCallId
       );
 
-      state.currentCallId = null;
+      state.lanes[state.activeLaneIndex].currentCallId = null;
 
       const lane = state.lanes[state.activeLaneIndex];
       lane.step = LaneStep.STATS;
