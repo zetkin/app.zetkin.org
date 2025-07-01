@@ -60,7 +60,13 @@ const CallSlice = createSlice({
     allocateCallError: (state, action: PayloadAction<SerializedError>) => {
       const error = action.payload;
       state.queueHasError = error;
+
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.step = LaneStep.STATS;
+      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
+      state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.outgoingCalls.isLoading = false;
+      state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
     },
     allocateNewCall: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
@@ -70,6 +76,34 @@ const CallSlice = createSlice({
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
         (item) => item.id != deletedCallId
       );
+    },
+    callSkippedLoad: (state) => {
+      state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
+    },
+    callSkippedLoaded: (state, action: PayloadAction<[number, ZetkinCall]>) => {
+      const [skippedCallId, newCall] = action.payload;
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id != skippedCallId
+      );
+
+      state.queueHasError = null;
+      state.currentCallId = newCall.id;
+
+      state.outgoingCalls.items.push(
+        remoteItem(newCall.id, {
+          data: newCall,
+          isLoading: false,
+          isStale: false,
+          loaded: new Date().toISOString(),
+        })
+      );
+
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.step = LaneStep.PREPARE;
+
+      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
+      state.lanes[state.activeLaneIndex].respondedEventIds = [];
+      state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
     },
     callUpdated: (state, action: PayloadAction<ZetkinCallPatchResponse>) => {
       const updatedCall = action.payload;
@@ -246,6 +280,8 @@ const CallSlice = createSlice({
 
 export default CallSlice;
 export const {
+  callSkippedLoad,
+  callSkippedLoaded,
   callUpdated,
   clearReport,
   eventsLoad,
@@ -263,12 +299,12 @@ export const {
   outgoingCallsLoaded,
   previousCallAdd,
   previousCallClear,
+  quitCall,
   reportUpdated,
   setSurveySubmissionError,
   setUpdateCallError,
   surveySubmissionAdded,
   surveySubmissionDeleted,
   updateLaneStep,
-  quitCall,
   unfinishedCallAbandoned,
 } = CallSlice.actions;

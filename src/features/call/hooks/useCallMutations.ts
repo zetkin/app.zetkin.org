@@ -10,6 +10,9 @@ import {
   callUpdated,
   quitCall,
   unfinishedCallAbandoned,
+  callSkippedLoaded,
+  callSkippedLoad,
+  allocateCallError,
 } from '../store';
 import {
   ZetkinCall,
@@ -52,6 +55,29 @@ export default function useCallMutations(orgId: number) {
     dispatch(clearReport());
   };
 
+  const skipCurrentCall = async (
+    assignmentId: number,
+    skippedCallId: number
+  ) => {
+    dispatch(callSkippedLoad());
+    await apiClient.delete(`/api/orgs/${orgId}/calls/${skippedCallId}`);
+    try {
+      const newCall = await apiClient.post<ZetkinCall>(
+        `/api/orgs/${orgId}/call_assignments/${assignmentId}/queue/head`,
+        {}
+      );
+      dispatch(callSkippedLoaded([skippedCallId, newCall]));
+    } catch (e) {
+      const error = e instanceof Error ? e : new Error('Error skipping call');
+      const serialized = {
+        message: error.message,
+        name: error.name,
+      };
+      dispatch(allocateCallError(serialized));
+      return error;
+    }
+  };
+
   const updateCall = async (callId: number, data: CallReport) => {
     const updatedCall = await apiClient.patch<
       ZetkinCallPatchResponse,
@@ -65,6 +91,7 @@ export default function useCallMutations(orgId: number) {
     deleteCall,
     logNewCall,
     quitCurrentCall,
+    skipCurrentCall,
     updateCall,
   };
 }
