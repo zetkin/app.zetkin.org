@@ -1,13 +1,6 @@
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  allocateCallError,
-  allocateNewCall,
-  clearEventResponses,
-  clearSurveySubmissions,
-  newCallAllocated,
-  updateLaneStep,
-} from '../store';
-import { LaneStep, ZetkinCall } from '../types';
+import { allocateCallError, allocateNewCall, newCallAllocated } from '../store';
+import { ZetkinCall } from '../types';
 
 export type SerializedError = {
   message: string;
@@ -39,9 +32,6 @@ export default function useAllocateCall(
         {}
       );
       dispatch(newCallAllocated(call));
-      dispatch(updateLaneStep(LaneStep.PREPARE));
-      dispatch(clearSurveySubmissions());
-      dispatch(clearEventResponses());
     } catch (e) {
       const error = e instanceof Error ? e : new Error('Empty queue error');
       const serialized = {
@@ -49,9 +39,6 @@ export default function useAllocateCall(
         name: error.name,
       };
       dispatch(allocateCallError(serialized));
-      dispatch(updateLaneStep(LaneStep.STATS));
-      dispatch(clearSurveySubmissions());
-      dispatch(clearEventResponses());
       return error;
     }
   };

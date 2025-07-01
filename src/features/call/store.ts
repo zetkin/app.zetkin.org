@@ -191,6 +191,10 @@ const CallSlice = createSlice({
         })
       );
 
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.step = LaneStep.PREPARE;
+      state.lanes[state.activeLaneIndex].respondedEventIds = [];
+      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
     },
     outgoingCallsLoad: (state) => {
