@@ -229,6 +229,12 @@ const CallSlice = createSlice({
 
       delete responsesBySurveyId[surveyId];
     },
+    unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
+      const abandonedCallId = action.payload;
+      state.outgoingCalls.items = state.outgoingCalls.items.filter(
+        (item) => item.id != abandonedCallId
+      );
+    },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
 
@@ -264,4 +270,5 @@ export const {
   surveySubmissionDeleted,
   updateLaneStep,
   quitCall,
+  unfinishedCallAbandoned,
 } = CallSlice.actions;

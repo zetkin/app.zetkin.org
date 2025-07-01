@@ -27,7 +27,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   orgId,
   searchTerm,
 }) => {
-  const { deleteCall, logNewCall } = useCallMutations(orgId);
+  const { abandonUnfinishedCall, logNewCall } = useCallMutations(orgId);
   const currentCall = useCurrentCall();
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
@@ -106,8 +106,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 <Box display="flex" gap={1}>
                   <ZUIButton
                     label="Abandon"
-                    onClick={async () => {
-                      await deleteCall(unfinishedCall.id);
+                    onClick={() => {
+                      abandonUnfinishedCall(unfinishedCall.id);
                     }}
                     variant="tertiary"
                   />

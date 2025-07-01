@@ -9,6 +9,7 @@ import {
   updateLaneStep,
   callUpdated,
   quitCall,
+  unfinishedCallAbandoned,
 } from '../store';
 import {
   ZetkinCall,
@@ -20,6 +21,11 @@ import {
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
+
+  const abandonUnfinishedCall = async (callId: number) => {
+    await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
+    dispatch(unfinishedCallAbandoned(callId));
+  };
 
   const quitCurrentCall = async (callId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
@@ -55,6 +61,7 @@ export default function useCallMutations(orgId: number) {
   };
 
   return {
+    abandonUnfinishedCall,
     deleteCall,
     logNewCall,
     quitCurrentCall,
