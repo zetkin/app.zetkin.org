@@ -315,6 +315,17 @@ const CallSlice = createSlice({
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
         (item) => item.id != abandonedCallId
       );
+
+      const indexToRemove = state.lanes.findIndex(
+        (lane) => lane.currentCallId == abandonedCallId
+      );
+      if (indexToRemove != -1) {
+        state.lanes.splice(indexToRemove, 1);
+
+        if (state.activeLaneIndex >= indexToRemove) {
+          state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
+        }
+      }
     },
     unfinishedCallSwitched: (state, action: PayloadAction<ZetkinCall>) => {
       const unfinishedCall = action.payload;
