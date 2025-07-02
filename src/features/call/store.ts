@@ -122,12 +122,6 @@ const CallSlice = createSlice({
         })
       );
     },
-    callDeleted: (state, action: PayloadAction<number>) => {
-      const deletedCallId = action.payload;
-      state.outgoingCalls.items = state.outgoingCalls.items.filter(
-        (item) => item.id != deletedCallId
-      );
-    },
     callSkippedLoad: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
     },
@@ -156,41 +150,6 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
     },
-    callUpdated: (state, action: PayloadAction<ZetkinCallPatchResponse>) => {
-      const updatedCall = action.payload;
-
-      const callItem = state.outgoingCalls.items.find(
-        (item) => item.id == updatedCall.id
-      );
-
-      if (callItem) {
-        const data = callItem.data;
-
-        if (data) {
-          state.outgoingCalls.items = state.outgoingCalls.items.filter(
-            (call) => call.id != updatedCall.id
-          );
-          state.outgoingCalls.items.push({
-            ...callItem,
-            data: {
-              ...data,
-              call_back_after: updatedCall.call_back_after,
-              message_to_organizer: updatedCall.message_to_organizer,
-              notes: updatedCall.notes,
-              organizer_action_needed: updatedCall.organizer_action_needed,
-              state: updatedCall.state,
-              update_time: new Date().toISOString(),
-            },
-          });
-        }
-      }
-    },
-    clearCurrentCall: (state) => {
-      state.lanes[state.activeLaneIndex].currentCallId = null;
-    },
-    clearEventResponses: (state) => {
-      state.lanes[state.activeLaneIndex].respondedEventIds = [];
-    },
     clearReport: (state) => {
       state.lanes[state.activeLaneIndex].report = {
         callBackAfter: null,
@@ -205,9 +164,6 @@ const CallSlice = createSlice({
         targetCouldTalk: false,
         wrongNumber: null,
       };
-    },
-    clearSurveySubmissions: (state) => {
-      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
     },
     eventResponseAdded: (state, action: PayloadAction<number>) => {
       const eventIdToAdd = action.payload;
@@ -425,15 +381,10 @@ export default CallSlice;
 export const {
   callSkippedLoad,
   callSkippedLoaded,
-  callUpdated,
   clearReport,
   eventsLoad,
   eventsLoaded,
   allocateCallError,
-  clearCurrentCall,
-  clearEventResponses,
-  clearSurveySubmissions,
-  callDeleted,
   eventResponseAdded,
   eventResponseRemoved,
   allocatePreviousCall,

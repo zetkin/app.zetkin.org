@@ -1,27 +1,14 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
-  allocateNewCall,
-  clearEventResponses,
-  clearSurveySubmissions,
-  newCallAllocated,
-  clearReport,
-  updateLaneStep,
   quitCall,
   unfinishedCallAbandoned,
   callSkippedLoaded,
   callSkippedLoad,
   allocateCallError,
   unfinishedCallSwitched,
-  callDeleted,
-  callUpdated,
   allocatePreviousCall,
 } from '../store';
-import {
-  ZetkinCall,
-  LaneStep,
-  CallReport,
-  ZetkinCallPatchResponse,
-} from '../types';
+import { ZetkinCall } from '../types';
 
 export default function useCallMutations(orgId: number) {
   const apiClient = useApiClient();
@@ -35,26 +22,6 @@ export default function useCallMutations(orgId: number) {
   const quitCurrentCall = async (callId: number) => {
     await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
     dispatch(quitCall(callId));
-  };
-
-  const deleteCall = async (callId: number) => {
-    await apiClient.delete(`/api/orgs/${orgId}/calls/${callId}`);
-    dispatch(callDeleted(callId));
-  };
-
-  const logNewCall = async (assignmentId: number, targetId: number) => {
-    dispatch(allocateNewCall());
-    const call = await apiClient.post<ZetkinCall, { target_id: number }>(
-      `/api/orgs/${orgId}/call_assignments/${assignmentId}/calls`,
-      {
-        target_id: targetId,
-      }
-    );
-    dispatch(newCallAllocated(call));
-    dispatch(updateLaneStep(LaneStep.PREPARE));
-    dispatch(clearSurveySubmissions());
-    dispatch(clearEventResponses());
-    dispatch(clearReport());
   };
 
   const skipCurrentCall = async (
@@ -97,22 +64,11 @@ export default function useCallMutations(orgId: number) {
     dispatch(unfinishedCallSwitched(unfinishedCallId));
   };
 
-  const updateCall = async (callId: number, data: CallReport) => {
-    const updatedCall = await apiClient.patch<
-      ZetkinCallPatchResponse,
-      CallReport
-    >(`/api/orgs/${orgId}/calls/${callId}`, data);
-    dispatch(callUpdated(updatedCall));
-  };
-
   return {
     abandonUnfinishedCall,
-    deleteCall,
-    logNewCall,
     quitCurrentCall,
     skipCurrentCall,
     switchToPreviousCall,
     switchToUnfinishedCall,
-    updateCall,
   };
 }
