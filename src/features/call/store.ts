@@ -71,6 +71,57 @@ const CallSlice = createSlice({
     allocateNewCall: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
     },
+    allocatePreviousCall: (state, action: PayloadAction<ZetkinCall>) => {
+      const newCall = action.payload;
+      state.queueHasError = null;
+
+      const currentLaneIndex = state.activeLaneIndex;
+      const currentLane = state.lanes[currentLaneIndex];
+
+      if (currentLane && currentLane.currentCallId == null) {
+        const filteredLanes = state.lanes.filter(
+          (lane) => lane.currentCallId !== null
+        );
+
+        state.lanes = filteredLanes;
+      }
+
+      const newLane = {
+        callIsBeingAllocated: false,
+        currentCallId: newCall.id,
+        previousCall: null,
+        report: {
+          callBackAfter: null,
+          callerLog: '',
+          completed: false,
+          failureReason: null,
+          leftMessage: false,
+          organizerActionNeeded: false,
+          organizerLog: '',
+          step: 'successOrFailure' as Step,
+          success: false,
+          targetCouldTalk: false,
+          wrongNumber: null,
+        },
+        respondedEventIds: [],
+        step: LaneStep.PREPARE,
+        submissionDataBySurveyId: {},
+        surveySubmissionError: false,
+        updateCallError: false,
+      };
+
+      state.lanes.push(newLane);
+      state.activeLaneIndex = state.lanes.length - 1;
+
+      state.outgoingCalls.items.push(
+        remoteItem(action.payload.id, {
+          data: action.payload,
+          isLoading: false,
+          isStale: false,
+          loaded: new Date().toISOString(),
+        })
+      );
+    },
     callDeleted: (state, action: PayloadAction<number>) => {
       const deletedCallId = action.payload;
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
@@ -349,6 +400,7 @@ export const {
   callDeleted,
   eventResponseAdded,
   eventResponseRemoved,
+  allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,
   outgoingCallsLoad,

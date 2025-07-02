@@ -15,7 +15,6 @@ import useCurrentCall from '../hooks/useCurrentCall';
 type PreviousCallsSectionProps = {
   assingmentId: number;
   onClose?: () => void;
-  onSwitchCall?: () => void;
   orgId: number;
   searchTerm?: string;
 };
@@ -23,12 +22,14 @@ type PreviousCallsSectionProps = {
 const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   assingmentId,
   onClose,
-  onSwitchCall,
   orgId,
   searchTerm,
 }) => {
-  const { abandonUnfinishedCall, logNewCall, switchToUnfinishedCall } =
-    useCallMutations(orgId);
+  const {
+    abandonUnfinishedCall,
+    switchToPreviousCall,
+    switchToUnfinishedCall,
+  } = useCallMutations(orgId);
   const currentCall = useCurrentCall();
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
@@ -159,9 +160,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
             <ZUIButton
               label="Log another call"
               onClick={() => {
-                logNewCall(assingmentId, previousCall.target.id);
+                switchToPreviousCall(assingmentId, previousCall.target.id);
                 onClose?.();
-                onSwitchCall?.();
               }}
               variant="secondary"
             />

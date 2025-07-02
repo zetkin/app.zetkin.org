@@ -14,6 +14,7 @@ import {
   unfinishedCallSwitched,
   callDeleted,
   callUpdated,
+  allocatePreviousCall,
 } from '../store';
 import {
   ZetkinCall,
@@ -79,6 +80,19 @@ export default function useCallMutations(orgId: number) {
     }
   };
 
+  const switchToPreviousCall = async (
+    assignmentId: number,
+    targetId: number
+  ) => {
+    const call = await apiClient.post<ZetkinCall, { target_id: number }>(
+      `/api/orgs/${orgId}/call_assignments/${assignmentId}/calls`,
+      {
+        target_id: targetId,
+      }
+    );
+    dispatch(allocatePreviousCall(call));
+  };
+
   const switchToUnfinishedCall = async (unfinishedCallId: ZetkinCall) => {
     dispatch(unfinishedCallSwitched(unfinishedCallId));
   };
@@ -97,6 +111,7 @@ export default function useCallMutations(orgId: number) {
     logNewCall,
     quitCurrentCall,
     skipCurrentCall,
+    switchToPreviousCall,
     switchToUnfinishedCall,
     updateCall,
   };
