@@ -82,6 +82,8 @@ const ReportHeader: FC<Props> = ({
           if (!error) {
             dispatch(previousCallAdd(call));
           }
+        } else {
+          setIsLoading(false);
         }
         setIsLoading(false);
       }}

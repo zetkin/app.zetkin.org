@@ -2,7 +2,7 @@ import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinSurveyApiSubmission } from 'utils/types/zetkin';
 import submitSurveysRpc, { Result } from '../rpc/submitSurveysAndUpdateCall';
 import {
-  callUpdated,
+  reportSubmitted,
   setSurveySubmissionError,
   setUpdateCallError,
 } from '../store';
@@ -43,17 +43,13 @@ export default function useSubmitReport(orgId: number) {
       submissions,
     });
     if (result.kind == 'success') {
-      dispatch(setSurveySubmissionError(false));
-      dispatch(setUpdateCallError(false));
-      dispatch(callUpdated(result.updatedCall));
+      dispatch(reportSubmitted(result.updatedCall));
       return result;
     } else if (result.kind == 'submissionError') {
       dispatch(setSurveySubmissionError(true));
-      dispatch(setUpdateCallError(false));
       return result;
     } else if (result.kind == 'updateError') {
       dispatch(setUpdateCallError(true));
-      dispatch(setSurveySubmissionError(false));
       return result;
     } else {
       // This should never happen, but we return the result to satisfy TypeScript's checker

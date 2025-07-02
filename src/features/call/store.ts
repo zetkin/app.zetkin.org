@@ -289,6 +289,40 @@ const CallSlice = createSlice({
         wrongNumber: null,
       };
     },
+    reportSubmitted: (
+      state,
+      action: PayloadAction<ZetkinCallPatchResponse>
+    ) => {
+      state.lanes[state.activeLaneIndex].surveySubmissionError = false;
+      state.lanes[state.activeLaneIndex].updateCallError = false;
+      const updatedCall = action.payload;
+
+      const callItem = state.outgoingCalls.items.find(
+        (item) => item.id == updatedCall.id
+      );
+
+      if (callItem) {
+        const data = callItem.data;
+
+        if (data) {
+          state.outgoingCalls.items = state.outgoingCalls.items.filter(
+            (call) => call.id != updatedCall.id
+          );
+          state.outgoingCalls.items.push({
+            ...callItem,
+            data: {
+              ...data,
+              call_back_after: updatedCall.call_back_after,
+              message_to_organizer: updatedCall.message_to_organizer,
+              notes: updatedCall.notes,
+              organizer_action_needed: updatedCall.organizer_action_needed,
+              state: updatedCall.state,
+              update_time: new Date().toISOString(),
+            },
+          });
+        }
+      }
+    },
     reportUpdated: (state, action: PayloadAction<Report>) => {
       const report = action.payload;
       const lane = state.lanes[state.activeLaneIndex];
@@ -296,9 +330,11 @@ const CallSlice = createSlice({
     },
     setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
       state.lanes[state.activeLaneIndex].surveySubmissionError = action.payload;
+      state.lanes[state.activeLaneIndex].updateCallError = false;
     },
     setUpdateCallError: (state, action: PayloadAction<boolean>) => {
       state.lanes[state.activeLaneIndex].updateCallError = action.payload;
+      state.lanes[state.activeLaneIndex].surveySubmissionError = false;
     },
     surveySubmissionAdded: (
       state,
@@ -408,6 +444,7 @@ export const {
   previousCallAdd,
   previousCallClear,
   quitCall,
+  reportSubmitted,
   reportUpdated,
   setSurveySubmissionError,
   setUpdateCallError,
