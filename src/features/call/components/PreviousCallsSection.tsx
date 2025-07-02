@@ -27,7 +27,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   orgId,
   searchTerm,
 }) => {
-  const { abandonUnfinishedCall, logNewCall } = useCallMutations(orgId);
+  const { abandonUnfinishedCall, logNewCall, switchToUnfinishedCall } =
+    useCallMutations(orgId);
   const currentCall = useCurrentCall();
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
@@ -114,9 +115,8 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                   <ZUIButton
                     label="Switch to"
                     onClick={() => {
-                      logNewCall(assingmentId, unfinishedCall.target.id);
+                      switchToUnfinishedCall(unfinishedCall);
                       onClose?.();
-                      onSwitchCall?.();
                     }}
                     variant="primary"
                   />

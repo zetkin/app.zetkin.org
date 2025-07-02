@@ -50,7 +50,6 @@ type Props = {
   forwardButtonLoading?: boolean;
   onForward: () => void;
   onSecondaryAction?: () => void;
-  onSwitchCall: () => void;
   secondaryActionLabel?: string;
 };
 
@@ -62,7 +61,6 @@ const CallHeader: FC<Props> = ({
   forwardButtonLoading,
   onForward,
   onSecondaryAction,
-  onSwitchCall,
   secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -143,7 +141,6 @@ const CallHeader: FC<Props> = ({
       <CallSwitchModal
         assignment={assignment}
         onClose={() => setShowModal(false)}
-        onSwitchCall={onSwitchCall}
         open={showModal}
       />
     </>

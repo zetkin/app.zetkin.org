@@ -7,6 +7,7 @@ import {
   SurveySubmissionData,
   Report,
   ZetkinCallPatchResponse,
+  Step,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -272,6 +273,58 @@ const CallSlice = createSlice({
         (item) => item.id != abandonedCallId
       );
     },
+    unfinishedCallSwitched: (state, action: PayloadAction<ZetkinCall>) => {
+      const unfinishedCall = action.payload;
+
+      const currentLaneIndex = state.activeLaneIndex;
+      const currentLane = state.lanes[currentLaneIndex];
+
+      if (currentLane && currentLane.currentCallId == null) {
+        const filteredLanes = state.lanes.filter(
+          (lane) => lane.currentCallId !== null
+        );
+
+        state.lanes = filteredLanes;
+      }
+
+      const unfinishedCallLineIndex = state.lanes.findIndex(
+        (lane) => lane.currentCallId == unfinishedCall.id
+      );
+      const unfinishedCallLane = state.lanes.find(
+        (lane) => lane.currentCallId == unfinishedCall.id
+      );
+
+      if (unfinishedCallLane && unfinishedCallLineIndex !== -1) {
+        state.activeLaneIndex = unfinishedCallLineIndex;
+      } else {
+        const newLane = {
+          callIsBeingAllocated: false,
+          currentCallId: unfinishedCall.id,
+          previousCall: null,
+          report: {
+            callBackAfter: null,
+            callerLog: '',
+            completed: false,
+            failureReason: null,
+            leftMessage: false,
+            organizerActionNeeded: false,
+            organizerLog: '',
+            step: 'successOrFailure' as Step,
+            success: false,
+            targetCouldTalk: false,
+            wrongNumber: null,
+          },
+          respondedEventIds: [],
+          step: LaneStep.PREPARE,
+          submissionDataBySurveyId: {},
+          surveySubmissionError: false,
+          updateCallError: false,
+        };
+
+        state.lanes.push(newLane);
+        state.activeLaneIndex = state.lanes.length - 1;
+      }
+    },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
 
@@ -310,4 +363,5 @@ export const {
   surveySubmissionDeleted,
   updateLaneStep,
   unfinishedCallAbandoned,
+  unfinishedCallSwitched,
 } = CallSlice.actions;

@@ -23,7 +23,6 @@ const PrepareHeader: FC<Props> = ({ assignment, call }) => {
         forwardButtonLabel="Call"
         onForward={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
         onSecondaryAction={() => setOpen(true)}
-        onSwitchCall={() => dispatch(updateLaneStep(LaneStep.PREPARE))}
         secondaryActionLabel="Skip"
       />
       <SkipCallDialog

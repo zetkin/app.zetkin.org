@@ -3,21 +3,22 @@ import {
   allocateNewCall,
   clearEventResponses,
   clearSurveySubmissions,
-  callDeleted,
   newCallAllocated,
   clearReport,
   updateLaneStep,
-  callUpdated,
   quitCall,
   unfinishedCallAbandoned,
   callSkippedLoaded,
   callSkippedLoad,
   allocateCallError,
+  unfinishedCallSwitched,
+  callDeleted,
+  callUpdated,
 } from '../store';
 import {
   ZetkinCall,
-  CallReport,
   LaneStep,
+  CallReport,
   ZetkinCallPatchResponse,
 } from '../types';
 
@@ -78,6 +79,10 @@ export default function useCallMutations(orgId: number) {
     }
   };
 
+  const switchToUnfinishedCall = async (unfinishedCallId: ZetkinCall) => {
+    dispatch(unfinishedCallSwitched(unfinishedCallId));
+  };
+
   const updateCall = async (callId: number, data: CallReport) => {
     const updatedCall = await apiClient.patch<
       ZetkinCallPatchResponse,
@@ -92,6 +97,7 @@ export default function useCallMutations(orgId: number) {
     logNewCall,
     quitCurrentCall,
     skipCurrentCall,
+    switchToUnfinishedCall,
     updateCall,
   };
 }

@@ -15,7 +15,6 @@ type Props = {
   call: ZetkinCall;
   forwardButtonLabel: string;
   onSecondaryAction?: () => void;
-  onSwitchCall: () => void;
   secondaryActionLabel?: string;
 };
 
@@ -25,7 +24,6 @@ const ReportHeader: FC<Props> = ({
   forwardButtonLabel,
   onSecondaryAction,
   secondaryActionLabel,
-  onSwitchCall,
 }) => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +86,6 @@ const ReportHeader: FC<Props> = ({
         setIsLoading(false);
       }}
       onSecondaryAction={onSecondaryAction}
-      onSwitchCall={onSwitchCall}
       secondaryActionLabel={secondaryActionLabel}
     />
   );

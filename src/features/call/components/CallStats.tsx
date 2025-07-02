@@ -14,9 +14,6 @@ import PreviousCallsSection from './PreviousCallsSection';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import PreviousCallsSearch from './PreviousCallsSearch';
 import AssignmentStats from './AssignmentStats';
-import { updateLaneStep } from '../store';
-import { LaneStep } from '../types';
-import { useAppDispatch } from 'core/hooks';
 
 export type EventsByProject = {
   campaign: { id: number; title: string };
@@ -28,7 +25,6 @@ type CallStatsProps = {
 };
 
 const CallStats: FC<CallStatsProps> = ({ assignment }) => {
-  const dispatch = useAppDispatch();
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
     assignment.id
@@ -93,9 +89,6 @@ const CallStats: FC<CallStatsProps> = ({ assignment }) => {
                 <Suspense fallback={<Skeleton variant="rounded" />}>
                   <PreviousCallsSection
                     assingmentId={assignment.id}
-                    onSwitchCall={() =>
-                      dispatch(updateLaneStep(LaneStep.PREPARE))
-                    }
                     orgId={assignment.organization.id}
                     searchTerm={debouncedInput}
                   />
