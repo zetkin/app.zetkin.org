@@ -28,8 +28,13 @@ type Props = {
 };
 
 const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
+  const areaIds = areas.map((area) => area.id);
   const env = useEnv();
-  const locations = useLocations(assignment.organization_id, assignment.id);
+  const locations = useLocations(
+    assignment.organization_id,
+    assignment.id,
+    areaIds
+  );
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const createLocation = useCreateLocation(assignment.organization_id);
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
