@@ -32,7 +32,12 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
         (keysPressed['Enter'] && ev.key == 'Shift');
 
       if (ev.key == '1' && inputRef.current != document.activeElement) {
-        onReportUpdate({ ...report, callerLog: message, step: 'summary' });
+        onReportUpdate({
+          ...report,
+          callerLog: message,
+          completed: true,
+          step: 'summary',
+        });
       } else if (
         shiftAndEnterPressedTogether &&
         inputRef.current == document.activeElement
@@ -40,6 +45,7 @@ const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
         onReportUpdate({
           ...report,
           callerLog: message,
+          completed: true,
           step: 'summary',
         });
       }
