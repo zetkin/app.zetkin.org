@@ -276,6 +276,7 @@ const CallSlice = createSlice({
               update_time: new Date().toISOString(),
             },
           });
+          sortOutgoingCalls(state.outgoingCalls);
         }
       }
     },
@@ -378,6 +379,7 @@ const CallSlice = createSlice({
         state.lanes.push(newLane);
         state.activeLaneIndex = state.lanes.length - 1;
       }
+      sortOutgoingCalls(state.outgoingCalls);
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
       const step = action.payload;
@@ -387,6 +389,18 @@ const CallSlice = createSlice({
     },
   },
 });
+
+const sortOutgoingCalls = (list: RemoteList<ZetkinCall>) => {
+  list.items.sort((a, b) => {
+    if (a.data && b.data) {
+      return (
+        new Date(b.data.update_time).getTime() -
+        new Date(a.data.update_time).getTime()
+      );
+    }
+    return 0;
+  });
+};
 
 export default CallSlice;
 export const {
