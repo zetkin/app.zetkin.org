@@ -18,7 +18,7 @@ import {
   ZetkinViewColumn,
 } from '../types';
 import { Msg, useMessages } from 'core/i18n';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/views/l10n/messageIds';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useNumericRouteParams } from 'core/hooks';

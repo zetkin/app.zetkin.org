@@ -5,7 +5,7 @@ import { scaffold } from 'utils/next';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/views/l10n/messageIds';
 import {
   CallBlockedFilterConfig,

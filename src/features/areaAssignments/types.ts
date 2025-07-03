@@ -56,6 +56,8 @@ export type Household = {
 };
 
 export type ZetkinLocation = {
+  created: string;
+  created_by_user_id: number | null;
   description: string;
   id: number;
   latitude: number;

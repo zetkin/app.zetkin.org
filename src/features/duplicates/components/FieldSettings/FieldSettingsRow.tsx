@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import { Msg, useMessages } from 'core/i18n';
