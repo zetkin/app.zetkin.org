@@ -1,20 +1,22 @@
 import { FC, useEffect } from 'react';
 import { LooksOneOutlined, LooksTwoOutlined } from '@mui/icons-material';
 
-import { Report } from '..';
 import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import messageIds from 'features/call/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import StepBase from './StepBase';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { Report } from 'features/call/types';
 
 type Props = {
+  disableCallerNotes: boolean;
   onReportFinished?: () => void;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
 const OrganizerAction: FC<Props> = ({
+  disableCallerNotes,
   onReportFinished,
   onReportUpdate,
   report,
@@ -77,6 +79,7 @@ const OrganizerAction: FC<Props> = ({
             onClick: () => {
               onReportUpdate({
                 ...report,
+                completed: disableCallerNotes ? true : false,
                 organizerActionNeeded: false,
                 step: 'callerLog',
               });

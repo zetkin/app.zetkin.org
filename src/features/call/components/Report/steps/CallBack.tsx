@@ -8,7 +8,6 @@ import {
   LooksTwoOutlined,
 } from '@mui/icons-material';
 
-import { Report } from '..';
 import ZUIAutocomplete from 'zui/components/ZUIAutocomplete';
 import ZUIDateField from 'zui/components/ZUIDateField';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -19,6 +18,7 @@ import ZUIDate from 'zui/ZUIDate';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import StepBase from './StepBase';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { Report } from 'features/call/types';
 
 type Props = {
   onReportUpdate: (updatedReport: Report) => void;

@@ -1,6 +1,5 @@
 import useCallMutations from '../hooks/useCallMutations';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import useAllocateCall from '../hooks/useAllocateCall';
 import ZUIModal from 'zui/components/ZUIModal';
 
 type SkipCallDialogProps = {
@@ -18,11 +17,7 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
   onClose,
   targetName,
 }) => {
-  const { deleteCall } = useCallMutations(assignment.organization.id);
-  const { allocateCall } = useAllocateCall(
-    assignment.organization.id,
-    assignment.id
-  );
+  const { skipCurrentCall } = useCallMutations(assignment.organization.id);
 
   return (
     <ZUIModal
@@ -30,9 +25,8 @@ const SkipCallDialog: React.FC<SkipCallDialogProps> = ({
       primaryButton={{
         label: 'Skip',
         onClick: () => {
+          skipCurrentCall(assignment.id, callId);
           onClose();
-          deleteCall(callId);
-          allocateCall();
         },
       }}
       secondaryButton={{

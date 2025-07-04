@@ -72,7 +72,7 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
         callLog.map((call, index) => {
           return (
             <Box key={call.id}>
-              <Box>
+              <Box mb={1}>
                 <Box
                   alignItems="center"
                   display="flex"
@@ -132,10 +132,12 @@ const PreviousCallsInfo: FC<PreviousCallsInfoProps> = ({ call }) => {
                   </Box>
                 )}
                 {call.call_back_after && (
-                  <ZUIText>
-                    Call {call.target.first_name} back after:{' '}
-                    <ZUIDateTime datetime={call.call_back_after} />
-                  </ZUIText>
+                  <Box display="flex" ml="1.75rem">
+                    <ZUIText>
+                      Call {call.target.first_name} back after:{' '}
+                      <ZUIDateTime datetime={call.call_back_after} />
+                    </ZUIText>
+                  </Box>
                 )}
               </Box>
               {index < callLog.length - 1 && <ZUIDivider />}

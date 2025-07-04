@@ -48,10 +48,8 @@ type Props = {
   forwardButtonDisabled?: boolean;
   forwardButtonLabel: string;
   forwardButtonLoading?: boolean;
-  onBack: () => void;
   onForward: () => void;
   onSecondaryAction?: () => void;
-  onSwitchCall: () => void;
   secondaryActionLabel?: string;
 };
 
@@ -61,16 +59,16 @@ const CallHeader: FC<Props> = ({
   forwardButtonDisabled,
   forwardButtonLabel,
   forwardButtonLoading,
-  onBack,
   onForward,
   onSecondaryAction,
-  onSwitchCall,
   secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState(false);
-  const { deleteCall } = useCallMutations(assignment.organization.id);
+  const { quitCurrentCall } = useCallMutations(assignment.organization.id);
   const outgoingCalls = useOutgoingCalls();
-  const unfinishedCallList = outgoingCalls.filter((call) => call.state === 0);
+  const unfinishedCalls = outgoingCalls.filter(
+    (c) => c.state == 0 && c.id != call.id
+  );
 
   const hasSecondaryButton = secondaryActionLabel && onSecondaryAction;
 
@@ -120,7 +118,7 @@ const CallHeader: FC<Props> = ({
               </Box>
             </Box>
             <Box sx={{ marginLeft: 1 }}>
-              <ZUIBadge color="warning" number={unfinishedCallList.length}>
+              <ZUIBadge color="warning" number={unfinishedCalls.length}>
                 <ZUIButton
                   label="Switch"
                   onClick={() => setShowModal(true)}
@@ -135,8 +133,7 @@ const CallHeader: FC<Props> = ({
             icon={<ZUIIcon color="primary" icon={ArrowBackIos} size="small" />}
             label={assignment.title}
             onClick={() => {
-              deleteCall(call.id);
-              onBack();
+              quitCurrentCall(call.id);
             }}
           />
         }
@@ -144,7 +141,6 @@ const CallHeader: FC<Props> = ({
       <CallSwitchModal
         assignment={assignment}
         onClose={() => setShowModal(false)}
-        onSwitchCall={onSwitchCall}
         open={showModal}
       />
     </>

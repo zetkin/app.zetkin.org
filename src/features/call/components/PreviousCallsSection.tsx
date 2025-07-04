@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 
 import useCallMutations from '../hooks/useCallMutations';
 import useOutgoingCalls from '../hooks/useOutgoingCalls';
@@ -10,11 +10,11 @@ import ZUIDivider from 'zui/components/ZUIDivider';
 import { labels, colors } from './PreviousCallsInfo';
 import { ZetkinCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import useCurrentCall from '../hooks/useCurrentCall';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
   onClose?: () => void;
-  onSwitchCall?: () => void;
   orgId: number;
   searchTerm?: string;
 };
@@ -22,12 +22,15 @@ type PreviousCallsSectionProps = {
 const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   assingmentId,
   onClose,
-  onSwitchCall,
   orgId,
   searchTerm,
 }) => {
-  assingmentId;
-  const { deleteCall, switchCurrentCall } = useCallMutations(orgId);
+  const {
+    abandonUnfinishedCall,
+    switchToPreviousCall,
+    switchToUnfinishedCall,
+  } = useCallMutations(orgId);
+  const currentCall = useCurrentCall();
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
 
@@ -46,17 +49,27 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     );
   };
 
-  const previousCallsList = outgoingCalls.filter(
-    (call) => call.state !== 0 && matchesSearch(call)
-  );
-  const unfinishedCallList = outgoingCalls.filter(
-    (call) => call.state === 0 && matchesSearch(call)
-  );
+  const previousCalls = outgoingCalls.filter((call) => {
+    const matches = matchesSearch(call);
+    const isFinishedCall = call.state != 0;
+    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
+
+    return matches && isFinishedCall && isNotCurrentCall;
+  });
+
+  const unfinishedCalls = outgoingCalls.filter((call) => {
+    const matches = matchesSearch(call);
+    const isUnfinishedCall = call.state == 0;
+    const isNotCurrentCall = currentCall ? currentCall.id != call.id : true;
+
+    return matches && isUnfinishedCall && isNotCurrentCall;
+  });
+
   return (
     <Box>
-      {unfinishedCallList.map((call) => (
-        <>
-          <Box key={call.id} mt={1}>
+      {unfinishedCalls.map((unfinishedCall) => (
+        <Fragment key={unfinishedCall.id}>
+          <Box mt={1}>
             <Box
               alignItems="flex-start"
               display="flex"
@@ -72,14 +85,16 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 sx={{ flex: 1, minWidth: 0 }}
               >
                 <ZUIPersonAvatar
-                  firstName={call.target.first_name}
-                  id={call.target.id}
-                  lastName={call.target.last_name}
+                  firstName={unfinishedCall.target.first_name}
+                  id={unfinishedCall.target.id}
+                  lastName={unfinishedCall.target.last_name}
                   size="medium"
                 />
 
                 <ZUIText noWrap variant="bodyMdSemiBold">
-                  {call.target.first_name + ' ' + call.target.last_name}
+                  {unfinishedCall.target.first_name +
+                    ' ' +
+                    unfinishedCall.target.last_name}
                 </ZUIText>
               </Box>
               <Box
@@ -93,35 +108,31 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 <Box display="flex" gap={1}>
                   <ZUIButton
                     label="Abandon"
-                    onClick={async () => {
-                      await deleteCall(call.id);
-                      if (unfinishedCallList.length <= 1) {
-                        window.location.reload();
-                      }
+                    onClick={() => {
+                      abandonUnfinishedCall(unfinishedCall.id);
                     }}
                     variant="tertiary"
                   />
                   <ZUIButton
                     label="Switch to"
                     onClick={() => {
-                      switchCurrentCall(call);
+                      switchToUnfinishedCall(unfinishedCall);
                       onClose?.();
-                      onSwitchCall?.();
                     }}
                     variant="primary"
                   />
                 </Box>
                 <ZUIText color="secondary" noWrap>
-                  <ZUIRelativeTime datetime={call.update_time} />
+                  <ZUIRelativeTime datetime={unfinishedCall.update_time} />
                 </ZUIText>
               </Box>
             </Box>
           </Box>
           <ZUIDivider />
-        </>
+        </Fragment>
       ))}
-      {previousCallsList.map((call) => (
-        <Box key={call.id} mt={2}>
+      {previousCalls.map((previousCall) => (
+        <Box key={previousCall.id} mt={2}>
           <Box
             alignItems="center"
             display="flex"
@@ -134,22 +145,23 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
               sx={{ flex: 1, minWidth: 0 }}
             >
               <ZUIPersonAvatar
-                firstName={call.target.first_name}
-                id={call.target.id}
-                lastName={call.target.last_name}
+                firstName={previousCall.target.first_name}
+                id={previousCall.target.id}
+                lastName={previousCall.target.last_name}
                 size="medium"
               />
               <ZUIText noWrap variant="bodyMdSemiBold">
-                {call.target.first_name + ' ' + call.target.last_name}
+                {previousCall.target.first_name +
+                  ' ' +
+                  previousCall.target.last_name}
               </ZUIText>
             </Box>
 
             <ZUIButton
               label="Log another call"
               onClick={() => {
-                switchCurrentCall(call);
+                switchToPreviousCall(assingmentId, previousCall.target.id);
                 onClose?.();
-                onSwitchCall?.();
               }}
               variant="secondary"
             />
@@ -162,13 +174,15 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
             ml="2.5rem"
             my={1}
           >
-            <ZUIText variant="bodyMdRegular">{call.target.phone}</ZUIText>
+            <ZUIText variant="bodyMdRegular">
+              {previousCall.target.phone}
+            </ZUIText>
             <Box
               alignItems="center"
               display="flex"
               gap={1}
               sx={(theme) => {
-                const color = colors[call.state];
+                const color = colors[previousCall.state];
                 return {
                   color:
                     color === 'warning'
@@ -179,10 +193,10 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
               }}
             >
               <ZUIText color="inherit" noWrap>
-                {labels[call.state]}
+                {labels[previousCall.state]}
               </ZUIText>
               <ZUIText color="secondary" noWrap>
-                <ZUIRelativeTime datetime={call.update_time} />
+                <ZUIRelativeTime datetime={previousCall.update_time} />
               </ZUIText>
             </Box>
           </Box>

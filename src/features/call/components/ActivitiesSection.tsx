@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import EventCard from './EventCard';
-import useActiveEvents from '../hooks/useActiveEvents';
+import useUpcomingEvents from '../hooks/useUpcomingEvents';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUISection from 'zui/components/ZUISection';
 import { ZetkinCallTarget } from '../types';
@@ -18,9 +18,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
   target,
 }) => {
-  const events = useActiveEvents(assignment.organization.id, target.id).filter(
-    (event) => !!event.published
-  );
+  const events = useUpcomingEvents(assignment.organization.id);
   const surveys = useSurveysWithElements(assignment.organization.id).data || [];
   const today = new Date();
 
@@ -37,7 +35,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
             <EventCard key={index} event={event} target={target} />
           ))}
           {activeSurveys.map((survey, index) => (
-            <SurveyCard key={index} survey={survey} targetId={target.id} />
+            <SurveyCard key={index} survey={survey} />
           ))}
         </Box>
       )}

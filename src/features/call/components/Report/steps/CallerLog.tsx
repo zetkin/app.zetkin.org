@@ -2,21 +2,20 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
 import { LooksOneOutlined } from '@mui/icons-material';
 
-import { Report } from '..';
 import ZUITextField from 'zui/components/ZUITextField';
 import ZUIButton from 'zui/components/ZUIButton';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/call/l10n/messageIds';
 import StepBase from './StepBase';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { Report } from 'features/call/types';
 
 type Props = {
-  onReportFinished: () => void;
   onReportUpdate: (updatedReport: Report) => void;
   report: Report;
 };
 
-const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
+const CallerLog: FC<Props> = ({ onReportUpdate, report }) => {
   const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const messages = useMessages(messageIds);
@@ -33,8 +32,12 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
         (keysPressed['Enter'] && ev.key == 'Shift');
 
       if (ev.key == '1' && inputRef.current != document.activeElement) {
-        onReportUpdate({ ...report, callerLog: message, step: 'summary' });
-        onReportFinished();
+        onReportUpdate({
+          ...report,
+          callerLog: message,
+          completed: true,
+          step: 'summary',
+        });
       } else if (
         shiftAndEnterPressedTogether &&
         inputRef.current == document.activeElement
@@ -42,11 +45,9 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
         onReportUpdate({
           ...report,
           callerLog: message,
+          completed: true,
           step: 'summary',
         });
-        if (onReportFinished) {
-          onReportFinished();
-        }
       }
     };
 
@@ -87,8 +88,12 @@ const CallerLog: FC<Props> = ({ onReportFinished, onReportUpdate, report }) => {
             message ? 'saveWithNoteButton' : 'saveWithoutNoteButton'
           ]()}
           onClick={() => {
-            onReportUpdate({ ...report, callerLog: message, step: 'summary' });
-            onReportFinished();
+            onReportUpdate({
+              ...report,
+              callerLog: message,
+              completed: true,
+              step: 'summary',
+            });
           }}
           variant="secondary"
         />
