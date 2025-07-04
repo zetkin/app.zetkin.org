@@ -23,6 +23,7 @@ import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbed
 import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 import { connectToOrgDef } from 'features/organizations/rpc/connectToOrg';
+import { loadEventLocationsDef } from 'features/events/rpc/loadEventLocations';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -51,6 +52,7 @@ export function createRPCRouter() {
   rpcRouter.register(getJoinFormEmbedDataDef);
   rpcRouter.register(createHouseholdsDef);
   rpcRouter.register(connectToOrgDef);
+  rpcRouter.register(loadEventLocationsDef);
 
   return rpcRouter;
 }
