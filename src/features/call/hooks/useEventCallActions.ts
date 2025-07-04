@@ -1,6 +1,6 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { targetSubmissionAdded, targetSubmissionDeleted } from '../store';
+import { eventResponseAdded, eventResponseRemoved } from '../store';
 
 export default function useEventCallActions(
   orgId: number,
@@ -13,10 +13,10 @@ export default function useEventCallActions(
   return {
     async signUp() {
       if (participantId) {
-        const response = await apiClient.put<{ action: ZetkinEvent }>(
+        await apiClient.put<{ action: ZetkinEvent }>(
           `/api/orgs/${orgId}/actions/${eventId}/responses/${participantId}`
         );
-        dispatch(targetSubmissionAdded([participantId, response.action]));
+        dispatch(eventResponseAdded(eventId));
       }
     },
     async undoSignup() {
@@ -25,7 +25,7 @@ export default function useEventCallActions(
           `/api/orgs/${orgId}/actions/${eventId}/responses/${participantId}`
         );
       }
-      dispatch(targetSubmissionDeleted([participantId, eventId]));
+      dispatch(eventResponseRemoved(eventId));
     },
   };
 }

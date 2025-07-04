@@ -24,6 +24,7 @@ import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/serve
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 import { connectToOrgDef } from 'features/organizations/rpc/connectToOrg';
 import { loadEventLocationsDef } from 'features/events/rpc/loadEventLocations';
+import { submitSurveysDef } from 'features/call/rpc/submitSurveysAndUpdateCall';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -53,6 +54,7 @@ export function createRPCRouter() {
   rpcRouter.register(createHouseholdsDef);
   rpcRouter.register(connectToOrgDef);
   rpcRouter.register(loadEventLocationsDef);
+  rpcRouter.register(submitSurveysDef);
 
   return rpcRouter;
 }
