@@ -4,13 +4,12 @@ import { ZetkinCall } from '../types';
 
 export default function useCurrentCall(): ZetkinCall | null {
   const state = useAppSelector((state) => state.call);
+  const activeLane = state.lanes[state.activeLaneIndex];
+  const currentCallId = activeLane.currentCallId;
+
   const currentCall = state.outgoingCalls.items.find(
-    (item: RemoteItem<ZetkinCall>) => item.id == state.currentCallId
+    (item: RemoteItem<ZetkinCall>) => item.id === currentCallId
   );
 
-  if (currentCall) {
-    return currentCall.data;
-  } else {
-    return null;
-  }
+  return currentCall?.data ?? null;
 }

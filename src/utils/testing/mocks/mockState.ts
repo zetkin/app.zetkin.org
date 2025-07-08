@@ -22,11 +22,11 @@ export default function mockState(overrides?: RootState) {
       crumbsByPath: {},
     },
     call: {
-      currentCallId: null,
-      eventsByTargetId: {},
+      activeLaneIndex: 0,
+      lanes: [],
       outgoingCalls: remoteList(),
       queueHasError: null,
-      stateByCallId: {},
+      upcomingEventsList: remoteList(),
     },
     callAssignments: {
       assignmentList: remoteList(),

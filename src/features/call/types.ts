@@ -37,7 +37,47 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchBody = Pick<
+export type ZetkinCallPatchResponse = Omit<ZetkinCall, 'target'> & {
+  target: {
+    alt_phone: string | null;
+    id: number;
+    name: string;
+    phone: string;
+  };
+};
+
+export type Step =
+  | 'callBack'
+  | 'callerLog'
+  | 'couldTalk'
+  | 'failureReason'
+  | 'leftMessage'
+  | 'organizerAction'
+  | 'organizerLog'
+  | 'successOrFailure'
+  | 'summary'
+  | 'wrongNumber';
+
+export type Report = {
+  callBackAfter: string | null;
+  callerLog: string;
+  completed: boolean;
+  failureReason:
+    | 'lineBusy'
+    | 'noPickup'
+    | 'wrongNumber'
+    | 'notAvailable'
+    | null;
+  leftMessage: boolean;
+  organizerActionNeeded: boolean;
+  organizerLog: string;
+  step: Step;
+  success: boolean;
+  targetCouldTalk: boolean;
+  wrongNumber: 'altPhone' | 'phone' | 'both' | null;
+};
+
+export type CallReport = Pick<
   ZetkinCall,
   'message_to_organizer' | 'notes' | 'organizer_action_needed' | 'state'
 > &
@@ -47,6 +87,24 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
   action: ZetkinEvent;
 }
 
-export type CallState = {
-  report: ZetkinCallPatchBody;
+export enum LaneStep {
+  STATS = 0,
+  PREPARE = 1,
+  ONGOING = 2,
+  REPORT = 3,
+  SUMMARY = 4,
+}
+
+export type SurveySubmissionData = Record<string, string | string[]>;
+
+export type LaneState = {
+  callIsBeingAllocated: boolean;
+  currentCallId: number | null;
+  previousCall: ZetkinCall | null;
+  report: Report;
+  respondedEventIds: number[];
+  step: LaneStep;
+  submissionDataBySurveyId: Record<number, SurveySubmissionData>;
+  surveySubmissionError: boolean;
+  updateCallError: boolean;
 };

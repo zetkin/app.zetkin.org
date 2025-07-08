@@ -2,24 +2,18 @@ import { FC, useState } from 'react';
 
 import SkipCallDialog from '../SkipCallDialog';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import { ZetkinCall } from 'features/call/types';
+import { LaneStep, ZetkinCall } from 'features/call/types';
 import CallHeader from './CallHeader';
+import { useAppDispatch } from 'core/hooks';
+import { updateLaneStep } from 'features/call/store';
 
 type Props = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall;
-  onBack: () => void;
-  onForward: () => void;
-  onSwitchCall: () => void;
 };
 
-const PrepareHeader: FC<Props> = ({
-  assignment,
-  call,
-  onBack,
-  onForward,
-  onSwitchCall,
-}) => {
+const PrepareHeader: FC<Props> = ({ assignment, call }) => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -27,10 +21,8 @@ const PrepareHeader: FC<Props> = ({
         assignment={assignment}
         call={call}
         forwardButtonLabel="Call"
-        onBack={() => onBack()}
-        onForward={() => onForward()}
+        onForward={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
         onSecondaryAction={() => setOpen(true)}
-        onSwitchCall={() => onSwitchCall()}
         secondaryActionLabel="Skip"
       />
       <SkipCallDialog

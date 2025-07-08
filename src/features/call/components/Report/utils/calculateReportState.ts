@@ -1,7 +1,8 @@
-import { ZetkinCall } from 'features/call/types';
-import { Report } from '..';
+import { Report, ZetkinCall } from 'features/call/types';
 
-export default function calculateState(report: Report): ZetkinCall['state'] {
+export default function calculateReportState(
+  report: Report
+): ZetkinCall['state'] {
   const wasReached = report.success;
   const couldTalk = report.targetCouldTalk;
 

@@ -32,16 +32,13 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
   );
 
   const isTargetBooked = target.future_actions.some(
-    (futureEvent) => futureEvent.id === event.id
-  );
-  const eventList = useAppSelector(
-    (state) => state.call.eventsByTargetId[target.id].items || []
+    (futureEvent) => futureEvent.id == event.id
   );
 
-  const isSignup = eventList.some(
-    (eventInList) =>
-      eventInList.data?.status == 'signedUp' && eventInList.data.id == event.id
+  const idsOfEventsRespondedTo = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
   );
+  const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
 
   return (
     <MyActivityListItem
@@ -56,14 +53,14 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
               <>
                 <ZUIButton
                   key={event.id}
-                  label={isSignup ? 'Undo sign up' : 'Sign up'}
-                  onClick={() => (isSignup ? undoSignup() : signUp())}
+                  label={isSignedUp ? 'Undo sign up' : 'Sign up'}
+                  onClick={() => (isSignedUp ? undoSignup() : signUp())}
                   variant="primary"
                 />
                 {event.num_participants_available <
                   event.num_participants_required &&
-                  !isSignup && <ZUISignUpChip status="needed" />}
-                {isSignup && <ZUISignUpChip status="signedUp" />}
+                  !isSignedUp && <ZUISignUpChip status="needed" />}
+                {isSignedUp && <ZUISignUpChip status="signedUp" />}
               </>,
             ]
       }
@@ -92,7 +89,7 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
           labels: [event.location?.title ?? 'No location'],
         },
       ]}
-      title={event.title ?? 'Untitled Event'}
+      title={event.title || event.activity?.title || 'Untitled event'}
     />
   );
 };
