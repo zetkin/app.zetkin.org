@@ -327,8 +327,8 @@ feat:
     today: I dag
   call:
     activeEvents:
-      alreadyBooked: '{name} er påmeldt fra før'
-      noBookings: '{name} har ingen påmeldinger til arrangementer'
+      alreadyBooked: '{name} er registrert'
+      noBookings: '{name} er ikke registrert på noen arrangementer'
       signUp: Meld på
       undoSignUp: Meld av
     instructions:
