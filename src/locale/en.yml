@@ -103,7 +103,7 @@ feat:
       month: Month
       week: Week
     selectionBar:
-      deselect: Deselect
+      deselect: Deselect all
       editEvents: Edit events
       editParticipants: Manage participants
       ellipsisMenu:
