@@ -65,7 +65,7 @@ feat:
         end: Auftrag beenden
         start: Auftrag starten
       basicAssignmentStats:
-        areas: '{numAreas, plural, =0 {No areas} ein*e {1 area} andere*s {# areas}}'
+        areas: ''
       tabs:
         instructions: Anleitung
         map: Karte
