@@ -15,6 +15,7 @@ import useServerSide from 'core/useServerSide';
 import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Msg, useMessages } from 'core/i18n';
+import { SETTINGS } from 'utils/featureFlags';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -24,6 +25,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
+    featuresRequired: [SETTINGS],
   }
 );
 
