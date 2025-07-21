@@ -21,7 +21,7 @@ import IApiClient from 'core/api/client/IApiClient';
  */
 export type EnvVars = {
   FEAT_AREAS?: string;
-  FEAT_SETTINGS?: string;
+  FEAT_OFFICIALS?: string;
   FEAT_TASKS?: string;
   INSTANCE_OWNER_HREF?: string;
   INSTANCE_OWNER_NAME?: string;
