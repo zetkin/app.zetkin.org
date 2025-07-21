@@ -156,10 +156,10 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
             {hasImageSrc && (
               <Image
                 alt={props.title}
-                height={100}
+                height={480}
                 src={props.src}
                 style={{ height: '100%', objectFit: 'cover', width: '100%' }}
-                width={100}
+                width={960}
               />
             )}
             {hasImageElement && props.imageElement}
