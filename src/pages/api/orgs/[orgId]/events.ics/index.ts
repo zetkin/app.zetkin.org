@@ -6,7 +6,10 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 
 const timeStamp = (t: Dayjs): string => t.format('YYYYMMDDTHHmmss');
 const formatString = (str: string): string =>
-  str.match(/.{1,75}/g)?.join('\n\t') ?? '';
+  str
+    .replaceAll('\n', '\\n')
+    .match(/.{1,75}/g)
+    ?.join('\n\t') ?? '';
 
 export default async function handle(
   req: NextApiRequest,
@@ -41,7 +44,8 @@ export default async function handle(
       vEvents.push(`DTSTAMP:${timeStamp(dayjs(event.published))}`);
       vEvents.push(`DTSTART:${timeStamp(dayjs(event.start_time))}`);
       vEvents.push(`DTEND:${timeStamp(dayjs(event.end_time))}`);
-      vEvents.push(`SUMMARY:${event.title?.replace('\n', ' ') ?? ''}`);
+      vEvents.push(`SUMMARY:${event.title ?? ''}`);
+      vEvents.push(`DESCRIPTION:${event.info_text ?? ''}`);
       vEvents.push(
         `URL:${process.env.ZETKIN_APP_HOST}/o/${orgId}/events/${event.id}`
       );
