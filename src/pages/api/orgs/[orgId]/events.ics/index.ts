@@ -63,10 +63,6 @@ export default async function handle(
 
   res
     .setHeader('Content-Type', 'text/calendar')
-    .setHeader(
-      'Cache-Control',
-      'public, s-maxage=10, stale-while-revalidate=59'
-    )
     .status(200).send(`BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Zetkin Foundation//Zetkin App//EN
