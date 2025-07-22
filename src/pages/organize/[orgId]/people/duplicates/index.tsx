@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { useRef, useState } from 'react';
+import { Box, CircularProgress, Pagination, Typography } from '@mui/material';
 
 import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import messageIds from 'features/duplicates/l10n/messageIds';
@@ -23,10 +24,23 @@ const DuplicatesPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const list = useDuplicates(orgId);
   const messages = useMessages(messageIds);
+  const [page, setPage] = useState(1);
+  const pageSize = 100;
+  const containerRef = useRef<HTMLDivElement>(null);
 
   if (onServer) {
     return null;
   }
+
+  const filteredData =
+    list.data?.filter((cluster) => cluster.status === 'pending') ?? [];
+  const totalItems = filteredData.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  const paginatedData = filteredData.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   return (
     <>
@@ -45,8 +59,17 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
         </Box>
       )}
-      {list.data && list.data.length > 0 && (
-        <Box p={1.5}>
+      {totalItems > 0 && (
+        <Box
+          ref={totalPages > 1 ? containerRef : undefined}
+          sx={{
+            p: 1.5,
+            ...(totalPages > 1 && {
+              maxHeight: '80vh',
+              overflowY: 'auto',
+            }),
+          }}
+        >
           <Typography
             color={oldTheme.palette.grey[500]}
             sx={{ mb: 2, textTransform: 'uppercase' }}
@@ -54,11 +77,21 @@ const DuplicatesPage: PageWithLayout = () => {
           >
             {messages.page.possibleDuplicates()}
           </Typography>
-          {list.data
-            .filter((cluster) => cluster.status === 'pending')
-            .map((cluster) => (
-              <DuplicateCard key={cluster.id} cluster={cluster} />
-            ))}
+
+          {paginatedData.map((cluster) => (
+            <DuplicateCard key={cluster.id} cluster={cluster} />
+          ))}
+
+          <Box display="flex" justifyContent="center" mt={3}>
+            <Pagination
+              count={totalPages}
+              onChange={(_, value) => {
+                setPage(value);
+                containerRef.current?.scrollTo({ behavior: 'smooth', top: 0 });
+              }}
+              page={page}
+            />
+          </Box>
         </Box>
       )}
     </>
