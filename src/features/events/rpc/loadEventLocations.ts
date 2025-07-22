@@ -22,19 +22,33 @@ export default makeRPCDef<Params, Result>(loadEventLocationsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId } = params;
-  const locations: ZetkinEventLocation[] = await apiClient
-    .get<ZetkinLocation[]>(`/api2/orgs/${orgId}/locations`)
-    .then((locations) =>
-      locations
-        .filter(excludeLocationsCreatedWhileCanvassing)
-        .map((location) => ({
-          id: location.id,
-          info_text: location.description,
-          lat: location.latitude,
-          lng: location.longitude,
-          title: location.title,
-        }))
+  const listOfLocations: ZetkinLocation[] = [];
+
+  const BATCH_SIZE = 100;
+
+  async function loadNextBatch(page: number = 1) {
+    const batchLocations = await apiClient.get<ZetkinLocation[]>(
+      `/api2/orgs/${orgId}/locations?size=${BATCH_SIZE}&page=${page}`
     );
+
+    listOfLocations.push(...batchLocations);
+
+    if (batchLocations.length >= BATCH_SIZE) {
+      await loadNextBatch(page + 1);
+    }
+  }
+
+  await loadNextBatch();
+
+  const locations = listOfLocations
+    .filter(excludeLocationsCreatedWhileCanvassing)
+    .map((location) => ({
+      id: location.id,
+      info_text: location.description,
+      lat: location.latitude,
+      lng: location.longitude,
+      title: location.title,
+    }));
 
   return locations;
 }
