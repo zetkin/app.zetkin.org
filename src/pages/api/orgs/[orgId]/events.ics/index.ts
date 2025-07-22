@@ -61,9 +61,8 @@ export default async function handle(
 
   const eventsStr = vEvents.map((s) => formatString(s)).join('\n');
 
-  res
-    .setHeader('Content-Type', 'text/calendar')
-    .status(200).send(`BEGIN:VCALENDAR
+  res.setHeader('Content-Type', 'text/calendar').status(200)
+    .send(`BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Zetkin Foundation//Zetkin App//EN
 ${eventsStr}
