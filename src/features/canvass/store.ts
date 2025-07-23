@@ -48,6 +48,13 @@ const canvassSlice = createSlice({
         })
       );
     },
+    householdDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [locationId, householdId] = action.payload;
+      state.householdsByLocationId[locationId].items =
+        state.householdsByLocationId[locationId].items.filter(
+          (item) => item.id != householdId
+        );
+    },
     householdLoad: (state, action: PayloadAction<[number, number]>) => {
       const [locationId, householdId] = action.payload;
 
@@ -195,6 +202,7 @@ const canvassSlice = createSlice({
 export default canvassSlice;
 export const {
   householdCreated,
+  householdDeleted,
   householdLoad,
   householdLoaded,
   householdVisitCreated,
