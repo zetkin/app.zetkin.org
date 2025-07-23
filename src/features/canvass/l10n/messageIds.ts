@@ -17,6 +17,12 @@ export default makeMessages('feat.canvass', {
       numberOfFloorsInput: m('Number of floors'),
       numberOfHouseholdsInput: m('Households per floor'),
     },
+    delete: {
+      title: m('Confirm deletion of household'),
+      warningText: m<{ household: string }>(
+        'Are you sure you want to delete the household {household}? It can not be undone.'
+      ),
+    },
     edit: {
       floorLabel: m('Edit floor'),
       header: m<{ title: string }>('Edit {title}'),

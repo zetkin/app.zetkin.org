@@ -50,10 +50,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
     assignment.organization_id,
     assignment.id
   );
-  const { updateHousehold, updateLocation } = useLocationMutations(
-    orgId,
-    location.id
-  );
+  const { deleteHousehold, updateHousehold, updateLocation } =
+    useLocationMutations(orgId, location.id);
   const { lastVisitByHouseholdId, reportHouseholdVisit, reportLocationVisit } =
     useVisitReporting(orgId, assignment.id, location.id);
 
@@ -148,6 +146,11 @@ const LocationDialog: FC<LocationDialogProps> = ({
               location={location}
               onBack={() => back()}
               onClose={onClose}
+              onDelete={() => {
+                deleteHousehold(selectedHouseholdId);
+                setSelectedHouseholdId(null);
+                back();
+              }}
               onEdit={() => goto('editHousehold')}
               onHouseholdVisitStart={() => {
                 goto('householdVisit');
