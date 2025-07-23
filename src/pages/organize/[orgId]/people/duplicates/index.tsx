@@ -61,13 +61,9 @@ const DuplicatesPage: PageWithLayout = () => {
       )}
       {totalItems > 0 && (
         <Box
-          ref={totalPages > 1 ? containerRef : undefined}
+          ref={containerRef}
           sx={{
             p: 1.5,
-            ...(totalPages > 1 && {
-              maxHeight: '80vh',
-              overflowY: 'auto',
-            }),
           }}
         >
           <Typography
@@ -87,7 +83,7 @@ const DuplicatesPage: PageWithLayout = () => {
               count={totalPages}
               onChange={(_, value) => {
                 setPage(value);
-                containerRef.current?.scrollTo({ behavior: 'smooth', top: 0 });
+                containerRef?.current?.scrollIntoView({ behavior: 'smooth' });
               }}
               page={page}
             />
