@@ -4,7 +4,7 @@ import {
   Zetkin2Household,
   ZetkinLocationPatchBody,
 } from '../types';
-import { householdCreated, householdUpdated } from '../store';
+import { householdCreated, householdDeleted, householdUpdated } from '../store';
 import { locationUpdated } from '../../areaAssignments/store';
 import createHouseholds from '../rpc/createHouseholds/client';
 import { ZetkinLocation } from 'features/areaAssignments/types';
@@ -33,6 +33,12 @@ export default function useLocationMutations(
       });
 
       created.forEach((household) => dispatch(householdCreated(household)));
+    },
+    deleteHousehold: async (householdId: number) => {
+      await apiClient.delete(
+        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`
+      );
+      dispatch(householdDeleted([locationId, householdId]));
     },
     updateHousehold: async (householdId: number, data: HouseholdPatchBody) => {
       const household = await apiClient.patch<
