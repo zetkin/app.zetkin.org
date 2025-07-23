@@ -43,7 +43,7 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS } from 'utils/featureFlags';
+import { AREAS, OFFICIALS } from 'utils/featureFlags';
 import oldTheme from 'theme';
 
 const drawerWidth = 300;
@@ -97,6 +97,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [searchString, setSearchString] = useState('');
   const organizationFuture = useOrganization(orgId);
   const hasAreas = useFeature(AREAS, orgId);
+  const hasSettings = useFeature(OFFICIALS, orgId);
 
   const handleExpansion = () => {
     setChecked(!checked);
@@ -288,6 +289,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               />
               {menuItemsMap.map(({ name, icon }) => {
                 if (name == 'geography' && !hasAreas) {
+                  return null;
+                }
+                if (name == 'settings' && !hasSettings) {
                   return null;
                 }
 
