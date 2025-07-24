@@ -1,6 +1,16 @@
-export function getLocationLabel(geojson: Array<GeoJSON.Feature>) {
+import { IntlShape } from 'react-intl';
+
+import { injectIntl } from 'core/i18n/useMessages';
+import messageIds from 'features/events/l10n/messageIds';
+
+export function getLocationLabel(
+  geojson: Array<GeoJSON.Feature>,
+  intl: IntlShape
+) {
   // Need decision on how to handle multiple locations and unnamed locations to do this properly.
-  let locationTitle = 'Unknown location';
+  const commonMessages = injectIntl(messageIds.common, intl);
+  let locationTitle = commonMessages.noLocation();
+
   if (geojson.length > 1) {
     locationTitle = geojson[0]?.properties?.location?.title + ' + ...';
   } else if (geojson.length === 1) {

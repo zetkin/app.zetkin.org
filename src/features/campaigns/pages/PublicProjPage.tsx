@@ -127,7 +127,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             {
               active: true,
               key: 'location',
-              label: getLocationLabel(geojsonToFilterBy),
+              label: getLocationLabel(geojsonToFilterBy, intl),
               onClick: () => {
                 dispatch(
                   filtersUpdated({
