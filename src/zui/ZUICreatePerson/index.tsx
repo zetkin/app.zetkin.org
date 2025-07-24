@@ -24,6 +24,7 @@ import zuiMessages from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 interface ZUICreatePersonProps {
+  initialValues?: ZetkinCreatePerson;
   onClose: () => void;
   onSubmit?: (e: MouseEvent<HTMLButtonElement>, person: ZetkinPerson) => void;
   open: boolean;
@@ -32,6 +33,7 @@ interface ZUICreatePersonProps {
 }
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
+  initialValues,
   open,
   onClose,
   onSubmit,
@@ -47,7 +49,9 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   const countryCode = organization?.country as CountryCode;
   const [tags, setTags] = useState<number[]>([]);
 
-  const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({});
+  const [personalInfo, setPersonalInfo] = useState<ZetkinCreatePerson>({
+    ...initialValues,
+  });
   const messages = useMessages(zuiMessages);
 
   return (

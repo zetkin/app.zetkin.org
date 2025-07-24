@@ -27,6 +27,7 @@ const DisplayCampaignParticipation = ({
   const {
     operator,
     state,
+    status,
     campaign: campId,
     activity: activityId,
     location: locationId,
@@ -60,6 +61,11 @@ const DisplayCampaignParticipation = ({
           <UnderlinedLocationTitle locationId={locationId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.locationSelect.any} />
+        ),
+        statusSelect: status ? (
+          <UnderlinedMsg id={localMessageIds.statusSelect[status]} />
+        ) : (
+          <UnderlinedMsg id={localMessageIds.statusSelect.any} />
         ),
         timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}

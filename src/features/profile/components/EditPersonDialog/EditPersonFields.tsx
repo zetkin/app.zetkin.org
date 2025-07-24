@@ -13,7 +13,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import EditPersonField from './EditPersonField';
 import formatUrl from 'utils/formatUrl';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';

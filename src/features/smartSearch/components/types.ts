@@ -267,6 +267,7 @@ export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
 
 export interface CampaignParticipationConfig {
   state: 'booked' | 'signed_up';
+  status?: 'attended' | 'cancelled' | 'noshow';
   operator: 'in' | 'notin';
   organizations?: FilterConfigOrgOptions;
   campaign?: number;

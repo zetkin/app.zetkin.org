@@ -45,6 +45,7 @@ const AreaOverlay: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(area.title);
+  const areaId = useRef(area.id);
   const [description, setDescription] = useState(area.description);
   const [fieldEditing, setFieldEditing] = useState<
     'title' | 'description' | null
@@ -77,8 +78,11 @@ const AreaOverlay: FC<Props> = ({
   );
 
   useEffect(() => {
-    setTitle(area.title);
-    setDescription(area.description);
+    if (area.id !== areaId.current) {
+      setTitle(area.title);
+      setDescription(area.description);
+      areaId.current = area.id;
+    }
   }, [area]);
 
   return (
@@ -125,10 +129,9 @@ const AreaOverlay: FC<Props> = ({
                 );
               }}
               renderInput={(props) => (
-                <TextField
-                  fullWidth
-                  inputProps={props}
-                  onBlur={() => {
+                <form
+                  onSubmit={(ev) => {
+                    ev.preventDefault();
                     if (fieldEditing === 'title') {
                       setFieldEditing(null);
                       updateArea({
@@ -136,10 +139,24 @@ const AreaOverlay: FC<Props> = ({
                       });
                     }
                   }}
-                  onChange={(ev) => setTitle(ev.target.value)}
-                  sx={{ marginBottom: 2 }}
-                  value={title}
-                />
+                >
+                  <TextField
+                    fullWidth
+                    inputProps={props}
+                    onBlur={() => {
+                      if (fieldEditing === 'title') {
+                        setFieldEditing(null);
+                        updateArea({
+                          title:
+                            title?.trim() || messages.areas.default.title(),
+                        });
+                      }
+                    }}
+                    onChange={(ev) => setTitle(ev.target.value)}
+                    sx={{ marginBottom: 2 }}
+                    value={title}
+                  />
+                </form>
               )}
               renderPreview={() => (
                 <Typography variant="h5">

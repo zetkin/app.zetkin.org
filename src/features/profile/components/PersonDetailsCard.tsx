@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 
 import EditPersonDialog from './EditPersonDialog';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIDate from 'zui/ZUIDate';
