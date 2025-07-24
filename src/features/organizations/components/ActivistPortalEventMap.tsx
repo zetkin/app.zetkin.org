@@ -27,21 +27,45 @@ export const ActivistPortalEventMap: FC<
     if (map) {
       map.on('click', 'locationMarkers', (event) => {
         if (event.features) {
+          const geojsonFeatures = event.features.map((feature) => {
+            const location = JSON.parse(feature?.properties?.location);
+            return {
+              geometry: {
+                coordinates: [location.lat, location.lng],
+                type: 'Point',
+              },
+              properties: {
+                location,
+              },
+              type: 'Feature',
+            };
+          }) as GeoJSON.Feature[];
+
+          const bounds = pointsToBounds(
+            geojsonFeatures.map((feature) => {
+              if (feature.geometry.type === 'Point') {
+                return [
+                  feature.geometry.coordinates[1] as Longitude,
+                  feature.geometry.coordinates[0] as Latitude,
+                ];
+              } else {
+                return [0 as Longitude, 0 as Latitude];
+              }
+            })
+          );
+
+          if (bounds) {
+            map.fitBounds(bounds, {
+              animate: true,
+              duration: 1200,
+              maxZoom: 16,
+              padding: 20,
+            });
+          }
+
           dispatch(
             filtersUpdated({
-              geojsonToFilterBy: event.features.map((feature) => {
-                const location = JSON.parse(feature?.properties?.location);
-                return {
-                  geometry: {
-                    coordinates: [location.lat, location.lng],
-                    type: 'Point',
-                  },
-                  properties: {
-                    location,
-                  },
-                  type: 'Feature',
-                };
-              }),
+              geojsonToFilterBy: geojsonFeatures,
             })
           );
         }
