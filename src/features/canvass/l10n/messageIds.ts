@@ -19,8 +19,8 @@ export default makeMessages('feat.canvass', {
     },
     delete: {
       title: m('Confirm deletion of household'),
-      warningText: m<{ household: string }>(
-        'Are you sure you want to delete the household {household}? It can not be undone.'
+      warningText: m(
+        'Are you sure you want to delete the household? It can not be undone.'
       ),
     },
     edit: {

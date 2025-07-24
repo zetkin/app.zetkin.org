@@ -1,4 +1,11 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Box } from '@mui/material';
 
 import HouseholdVisitPage from './pages/HouseholdVisitPage';
@@ -20,6 +27,9 @@ import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssi
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { ZetkinLocationVisit } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import messageIds from 'features/canvass/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -56,6 +66,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
     useVisitReporting(orgId, assignment.id, location.id);
 
   const pushedRef = useRef(false);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const messages = useMessages(messageIds);
 
   const goto = useCallback(
     (step: LocationDialogStep) => {
@@ -147,9 +159,15 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onBack={() => back()}
               onClose={onClose}
               onDelete={() => {
-                deleteHousehold(selectedHouseholdId);
-                setSelectedHouseholdId(null);
-                back();
+                showConfirmDialog({
+                  onSubmit: () => {
+                    deleteHousehold(selectedHouseholdId);
+                    setSelectedHouseholdId(null);
+                    back();
+                  },
+                  title: messages.households.delete.title(),
+                  warningText: messages.households.delete.warningText(),
+                });
               }}
               onEdit={() => goto('editHousehold')}
               onHouseholdVisitStart={() => {
