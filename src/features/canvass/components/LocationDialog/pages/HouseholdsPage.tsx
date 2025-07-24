@@ -84,7 +84,7 @@ const HouseholdsPage: FC<Props> = ({
         <List sx={{ overflowY: 'visible' }}>
           {sortedHouseholds.map((household, index) => {
             const prevFloor = sortedHouseholds[index - 1]?.level ?? null;
-            const curFloor = household.level || null;
+            const curFloor = household.level ?? null;
             const firstOnFloor = index == 0 || curFloor != prevFloor;
 
             const mostRecentVisit = lastVisitByHouseholdId[household.id];
