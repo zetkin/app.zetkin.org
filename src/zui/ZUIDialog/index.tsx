@@ -11,7 +11,6 @@ import {
 interface ZUIDialogProps {
   children: React.ReactNode;
   contentHeight?: number | string;
-  indexValue?: number;
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -25,7 +24,6 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   open,
   onClose,
   title,
-  indexValue,
 }): JSX.Element => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -37,7 +35,7 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
       maxWidth={maxWidth || 'sm'}
       onClose={onClose}
       open={open}
-      sx={indexValue != null ? { zIndex: indexValue } : undefined}
+      sx={{ zIndex: 99999 }}
     >
       <Box p={2}>
         {title && <DialogTitle>{title}</DialogTitle>}
