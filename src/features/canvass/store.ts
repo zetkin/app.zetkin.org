@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
+import {
+  remoteItem,
+  remoteItemDeleted,
+  RemoteList,
+  remoteList,
+} from 'utils/storeUtils';
 import { Zetkin2Household, ZetkinLocationVisit } from './types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
@@ -33,10 +38,7 @@ const canvassSlice = createSlice({
     },
     householdDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [locationId, householdId] = action.payload;
-      state.householdsByLocationId[locationId].items =
-        state.householdsByLocationId[locationId].items.filter(
-          (item) => item.id != householdId
-        );
+      remoteItemDeleted(state.householdsByLocationId[locationId], householdId);
     },
     householdLoad: (state, action: PayloadAction<[number, number]>) => {
       const [locationId, householdId] = action.payload;
