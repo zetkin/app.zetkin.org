@@ -2,6 +2,7 @@ import useRemoteList from 'core/hooks/useRemoteList';
 import { ZetkinOrgUser } from '../types';
 import { useApiClient, useAppSelector } from 'core/hooks';
 import { orgUsersLoad, orgUsersLoaded } from '../store';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useOrgUsers(orgId: number): ZetkinOrgUser[] {
   const apiClient = useApiClient();
@@ -11,25 +12,9 @@ export default function useOrgUsers(orgId: number): ZetkinOrgUser[] {
     actionOnSuccess: (data) => orgUsersLoaded(data),
     // TODO: Use search API instead of loading all users
     loader: async () => {
-      const users: ZetkinOrgUser[] = [];
-
-      const BATCH_SIZE = 100;
-
-      async function loadNextBatch(page: number = 1) {
-        const batchUsers = await apiClient.get<ZetkinOrgUser[]>(
-          `/api2/orgs/${orgId}/users?size=${BATCH_SIZE}&page=${page}`
-        );
-
-        users.push(...batchUsers);
-
-        if (batchUsers.length >= BATCH_SIZE) {
-          await loadNextBatch(page + 1);
-        }
-      }
-
-      await loadNextBatch();
-
-      return users;
+      return await fetchAllPaginated<ZetkinOrgUser>((page) =>
+        apiClient.get(`/api2/orgs/${orgId}/users?size=100&page=${page}`)
+      );
     },
   });
 }
