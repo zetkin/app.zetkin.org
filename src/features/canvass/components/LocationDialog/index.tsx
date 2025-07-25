@@ -160,6 +160,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onClose={onClose}
               onDelete={() => {
                 showConfirmDialog({
+                  disablePortal: true,
                   onSubmit: () => {
                     deleteHousehold(selectedHouseholdId);
                     setSelectedHouseholdId(null);
