@@ -11,6 +11,7 @@ import { CreateLocationCard } from './CreateLocationCard';
 import ContractedHeader from './LocationDialog/ContractedHeader';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -96,14 +97,16 @@ const CanvassMapOverlays: FC<Props> = ({
         )}
         {selectedLocation && expanded && (
           <Suspense>
-            <LocationDialog
-              assignment={assignment}
-              location={selectedLocation}
-              onClose={() => {
-                setExpanded(false);
-              }}
-              orgId={assignment.organization_id}
-            />
+            <ZUIConfirmDialogProvider>
+              <LocationDialog
+                assignment={assignment}
+                location={selectedLocation}
+                onClose={() => {
+                  setExpanded(false);
+                }}
+                orgId={assignment.organization_id}
+              />
+            </ZUIConfirmDialogProvider>
           </Suspense>
         )}
         {isCreating && (
