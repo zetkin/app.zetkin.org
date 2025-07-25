@@ -25,7 +25,7 @@ const Areas: FC<Props> = ({ areas }) => {
       <Layer
         id="outlines"
         paint={{
-          'line-color': oldTheme.palette.primary.main,
+          'line-color': oldTheme.palette.secondary.main,
           'line-width': 2,
         }}
         type="line"
@@ -33,7 +33,7 @@ const Areas: FC<Props> = ({ areas }) => {
       <Layer
         id="areas"
         paint={{
-          'fill-color': oldTheme.palette.primary.main,
+          'fill-color': oldTheme.palette.secondary.main,
           'fill-opacity': 0.4,
         }}
         type="fill"
