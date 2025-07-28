@@ -9,6 +9,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
+import { Undo } from '@mui/icons-material';
 import { FC, useEffect, useState } from 'react';
 
 import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
@@ -122,23 +123,36 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   '& span': {
                     overflow: 'hidden',
                   },
+                  display: 'block',
                 }}
               >
-                <Typography
-                  sx={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
-                  }}
-                >
-                  {metric.question}
-                </Typography>
+                <Box sx={{ width: '100%' }}>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
+                      }}
+                    >
+                      {metric.question}
+                    </Typography>
+                    {!stepIsCurrent && completed && <Undo />}
+                  </Box>
 
-                {completed && step != index && (
-                  <Typography variant="body2">
-                    {responseByMetricId[metric.id].response}
-                  </Typography>
-                )}
+                  {completed && step != index && (
+                    <Typography variant="body2">
+                      {responseByMetricId[metric.id].response}
+                    </Typography>
+                  )}
+                </Box>
               </StepButton>
               <StepContent>
                 <Box
