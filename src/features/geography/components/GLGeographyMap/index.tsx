@@ -1,8 +1,8 @@
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { Close, Create, Save } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
-import { FC, useMemo, useState } from 'react';
-import { Map as MapType } from 'maplibre-gl';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { Map as MapType, Point } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Zetkin2Area } from 'features/areas/types';
@@ -49,6 +49,28 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
     () => areas.filter((area) => area.id != selectedArea?.id),
     [areas, selectedArea]
   );
+
+  useEffect(() => {
+    if (map && selectedArea) {
+      const coords = selectedArea.boundary.coordinates[0];
+      const lats = coords.map((c) => c[1]);
+      const lngs = coords.map((c) => c[0]);
+
+      const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+      const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+
+      const projected = map.project([centerLng, centerLat]);
+      const adjusted = {
+        x: projected.x - 200,
+        y: projected.y,
+      };
+
+      const adjustedPoint = new Point(adjusted.x, adjusted.y);
+      const adjustedCenter = map.unproject(adjustedPoint);
+
+      map.easeTo({ center: adjustedCenter, duration: 500 });
+    }
+  }, [map, selectedArea]);
 
   return (
     <AreaFilterProvider>
