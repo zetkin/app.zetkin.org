@@ -105,7 +105,19 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           return (
             <Step key={index}>
               <StepButton
-                onClick={() => setStep(index)}
+                onClick={() => {
+                  if (index < step) {
+                    const newResponses: Record<number, MetricResponse> = {};
+                    metrics.forEach((m, i) => {
+                      if (i < index && responseByMetricId[m.id]) {
+                        newResponses[m.id] = responseByMetricId[m.id];
+                      }
+                    });
+                    setResponseByMetricId(newResponses);
+                  }
+
+                  setStep(index);
+                }}
                 sx={{
                   '& span': {
                     overflow: 'hidden',
