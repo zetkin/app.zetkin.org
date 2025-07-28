@@ -120,6 +120,9 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                   setStep(index);
                 }}
                 sx={{
+                  '& .MuiStepLabel-vertical': {
+                    alignItems: 'start',
+                  },
                   '& span': {
                     overflow: 'hidden',
                   },
