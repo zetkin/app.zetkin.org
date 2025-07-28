@@ -65,10 +65,27 @@ feat:
         end: Auftrag beenden
         start: Auftrag starten
       basicAssignmentStats:
-        areas: '{numAreas, plural, =0 {No areas} ein*e {1 area} andere*s {# areas}}'
+        areas: ''
       tabs:
         instructions: Anleitung
         map: Karte
+        overview: Übersicht
+    map:
+      filter:
+        assignees:
+          assigned: Nur zugewiesene Gebiete
+          unassigned: Nur nicht zugewiesene Gebiete
+        header: Filter
+        title: Füge Filter hinzu, um Gebiete in der Karte sichtbar zu machen
+        ungroupedTags: Schlagworte ohne Gruppe
+      findArea:
+        filterPlaceHolder: Filter
+        title: Gebiete
+      mapStyle:
+        area:
+          label: Farbe des Gebiets
+          options:
+            households: Haushalte
     report:
       lockCard:
         safe: Sicher
@@ -216,9 +233,54 @@ feat:
     activeEvents:
       alreadyBooked: '{name} ist schon gebucht'
       noBookings: '{name} ist nirgendwo angemeldet'
+    nav:
+      startCalling: Anrufen beginnen
+    prepare:
+      activeEvents: Aktive Veranstaltungen
+      edit: Diese Information bearbeiten?
+      editDescription: Wenn in dieser Spalte Änderungen erforderlich sind, füge eine
+        Nachricht an Organizer*in im Anrufbericht hinzu.
+      noActiveEvents: Keine aktiven Veranstaltungen.
+      noPreviousCalls: Noch nie angerufen
+      noPreviousEvents: '{name} hat bisher an keinen Veranstaltungen teilgenommeen.'
+      noSurveys: Keine Umfragen
+      noTags: Keine Schlagworte
+      previousCallsOfTarget: Vorherige Anrufe bei {name}.
+      previousEventsOfTarget: '{name} hat teilgenommen an {numEvents} Veranstaltungen,
+        zuletzt an {eventTitle} .'
+      summary: Zusammenfassung
+      surveys: Umfragen
+      tags: Schlagworte
+      title: Persönliche Angaben
     report:
       steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Nach {hour}
+            anyTimeOptionLabel: Zu irgendeiner Tageszeit
+            callBackButtonLabel: Rückruf ab {date}
+            dateLabel: An welchem Tag
+            examples:
+              nextWeek: Nächste Woche
+              today: Heute später
+            invalidDateButtonLabel: Ungültiges Datum
+            timeLabel: Nach welcher Uhrzeit
+            title: Wann sollen wir zurückrufen?
+        callerLog:
+          question:
+            saveWithNoteButton: Mit Notiz speichern
+            saveWithoutNoteButton: Ohne Notiz speichern
+        organizerAction:
+          question:
+            title: Soll eine wichtige Information an die Organizer*in weitergegeben werden?
+          summary:
+            orgActionNeeded:
+              subtitle: Ein*e Organizer*in wird benachrichtigt.
         organizerLog:
+          question:
+            title: Erkläre der*m Organizer*in das Problem
+            withMessageButton: Nachricht speichern
+            withoutMessageButton: Weiter
           summary:
             withMessage:
               title: Du hast eine Nachricht an die Organizer*innen hinterlassen
@@ -427,7 +489,7 @@ feat:
       visibility:
         heading: Sichtbarkeit
         private: Verborgen
-        public: Öffentlich
+        public: Sichtbar
     indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
