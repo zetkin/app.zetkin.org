@@ -108,6 +108,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const [selectedHouseholsdIds, setSelectedHouseholdsIds] = useState<number[]>(
     []
   );
+  const [resetHouseholdsSelection, setResetHouseholdsSelection] =
+    useState(false);
 
   return (
     <Box height="100%">
@@ -153,6 +155,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdsIds(households);
             goto('householdsVisit');
           }}
+          resetSelection={resetHouseholdsSelection}
         />
         <Box key="household" height="100%">
           {selectedHouseholdId && (
@@ -237,6 +240,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 await reportHouseholdVisits(selectedHouseholsdIds, responses);
                 setShowSparkle(true);
                 setSelectedHouseholdsIds([]);
+                setResetHouseholdsSelection((prev) => !prev);
                 goto('households');
               }}
               selectedHouseholsdIds={selectedHouseholsdIds}

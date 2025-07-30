@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -36,6 +36,7 @@ type Props = {
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
   onStartHouseholdsVisit: (households: number[]) => void;
+  resetSelection: boolean;
 };
 
 const HouseholdsPage: FC<Props> = ({
@@ -47,6 +48,7 @@ const HouseholdsPage: FC<Props> = ({
   onSelectHousehold,
   onStartHouseholdsVisit,
   location,
+  resetSelection,
 }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
@@ -74,6 +76,11 @@ const HouseholdsPage: FC<Props> = ({
 
     return floor0 - floor1;
   });
+
+  useEffect(() => {
+    setSelectedHouseholds([]);
+    setReportMany(false);
+  }, [resetSelection]);
 
   return (
     <PageBase
