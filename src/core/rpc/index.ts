@@ -21,6 +21,7 @@ import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
 import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
+import { submitHouseholdVisitsDef } from 'features/canvass/rpc/submitHouseholdVisits';
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 import { connectToOrgDef } from 'features/organizations/rpc/connectToOrg';
 import { loadEventLocationsDef } from 'features/events/rpc/loadEventLocations';
@@ -55,6 +56,7 @@ export function createRPCRouter() {
   rpcRouter.register(connectToOrgDef);
   rpcRouter.register(loadEventLocationsDef);
   rpcRouter.register(submitSurveysDef);
+  rpcRouter.register(submitHouseholdVisitsDef);
 
   return rpcRouter;
 }
