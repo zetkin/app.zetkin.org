@@ -35,7 +35,7 @@ type Props = {
   onClose: () => void;
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
-  onStartHouseholdsVisit: (households: number[]) => void; //change this to households
+  onStartHouseholdsVisit: (households: number[]) => void;
 };
 
 const HouseholdsPage: FC<Props> = ({
@@ -120,6 +120,7 @@ const HouseholdsPage: FC<Props> = ({
             onClick={() => {
               onStartHouseholdsVisit(selectedHouseholds);
             }}
+            startIcon={<Add />}
             variant="outlined"
           >
             <Typography color="primary">Report</Typography>

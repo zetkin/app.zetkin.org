@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Step,
   StepButton,
   StepContent,
@@ -37,6 +38,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
     Record<number, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(false);
   location;
 
   useEffect(() => {
@@ -49,8 +51,10 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       actions={
         step >= metrics.length && (
           <Button
+            disabled={loading}
             fullWidth
-            onClick={() => {
+            onClick={async () => {
+              setLoading(true);
               const responses = Object.values(responseByMetricId).map(
                 (response) => response
               );
@@ -58,8 +62,14 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
               const filteredResponses = responses.filter(
                 (response) => !!response.response
               );
-              onLogVisit(filteredResponses);
+              await onLogVisit(filteredResponses);
+              setLoading(false);
             }}
+            startIcon={
+              loading ? (
+                <CircularProgress color="secondary" size="20px" />
+              ) : null
+            }
             variant="contained"
           >
             {`Submit report for  ${selectedHouseholsdIds.length} households`}
