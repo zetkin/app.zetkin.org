@@ -20,6 +20,7 @@ import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssi
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { ZetkinLocationVisit } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import HouseholdsVisitPage from './pages/HouseholdsVisitPage';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -36,7 +37,8 @@ type LocationDialogStep =
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
-  | 'householdVisit';
+  | 'householdVisit'
+  | 'householdsVisit';
 
 const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
@@ -99,6 +101,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
   );
+  const [selectedHouseholsdIds, setSelectedHouseholdsIds] = useState<number[]>(
+    []
+  );
 
   return (
     <Box height="100%">
@@ -139,6 +144,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onSelectHousehold={(householdId: number) => {
             setSelectedHouseholdId(householdId);
             goto('household');
+          }}
+          onStartHouseholdsVisit={(households) => {
+            setSelectedHouseholdsIds(households);
+            goto('householdsVisit');
           }}
         />
         <Box key="household" height="100%">
@@ -211,6 +220,20 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 setShowSparkle(true);
                 goto('households');
               }}
+            />
+          )}
+        </Box>
+        <Box key="householdsVisit" height="100%">
+          {selectedHouseholsdIds.length > 0 && (
+            <HouseholdsVisitPage
+              location={location}
+              metrics={metrics}
+              onBack={() => back()}
+              onLogVisit={() => {
+                setShowSparkle(true);
+                goto('households');
+              }}
+              selectedHouseholsdIds={selectedHouseholsdIds}
             />
           )}
         </Box>
