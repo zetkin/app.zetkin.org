@@ -11,6 +11,7 @@ import {
 } from '../types';
 import {
   householdVisitCreated,
+  householdVisitsCreated,
   locationLoaded,
 } from 'features/areaAssignments/store';
 import { visitCreated, visitUpdated } from '../store';
@@ -20,6 +21,7 @@ import useLocationVisits from './useLocationVisits';
 import useUser from 'core/hooks/useUser';
 import summarizeMetrics from '../utils/summarizeMetrics';
 import { ZetkinLocation } from 'features/areaAssignments/types';
+import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
 
 type VisitByHouseholdIdMap = Record<
   number,
@@ -34,6 +36,10 @@ export type UseVisitReportingReturn = {
   lastVisitByHouseholdId: VisitByHouseholdIdMap;
   reportHouseholdVisit: (
     householdId: number,
+    responses: MetricResponse[]
+  ) => Promise<void>;
+  reportHouseholdVisits: (
+    householdsId: number[],
     responses: MetricResponse[]
   ) => Promise<void>;
   reportLocationVisit: (
@@ -164,6 +170,21 @@ export default function useVisitReporting(
         );
 
         dispatch(householdVisitCreated(visit));
+        await refreshLocationStats();
+      }
+    },
+    async reportHouseholdVisits(
+      householdIds: number[],
+      responses: MetricResponse[]
+    ) {
+      if (assignment?.reporting_level === 'household') {
+        const result = await apiClient.rpc(submitHouseholdVisits, {
+          assignmentId: assignmentId,
+          households: householdIds,
+          orgId: orgId,
+          responses: responses,
+        });
+        dispatch(householdVisitsCreated(result.visits));
         await refreshLocationStats();
       }
     },

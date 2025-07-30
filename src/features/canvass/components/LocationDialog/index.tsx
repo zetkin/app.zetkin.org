@@ -56,8 +56,12 @@ const LocationDialog: FC<LocationDialogProps> = ({
     orgId,
     location.id
   );
-  const { lastVisitByHouseholdId, reportHouseholdVisit, reportLocationVisit } =
-    useVisitReporting(orgId, assignment.id, location.id);
+  const {
+    lastVisitByHouseholdId,
+    reportHouseholdVisit,
+    reportHouseholdVisits,
+    reportLocationVisit,
+  } = useVisitReporting(orgId, assignment.id, location.id);
 
   const pushedRef = useRef(false);
 
@@ -229,8 +233,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
               location={location}
               metrics={metrics}
               onBack={() => back()}
-              onLogVisit={() => {
+              onLogVisit={async (responses) => {
+                await reportHouseholdVisits(selectedHouseholsdIds, responses);
                 setShowSparkle(true);
+                setSelectedHouseholdsIds([]);
                 goto('households');
               }}
               selectedHouseholsdIds={selectedHouseholsdIds}
