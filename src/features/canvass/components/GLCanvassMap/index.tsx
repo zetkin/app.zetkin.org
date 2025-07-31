@@ -447,6 +447,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
                 latitude: point.lat,
                 longitude: point.lng,
                 title,
+                type: 'assignment',
               });
             }
           }

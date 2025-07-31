@@ -70,6 +70,7 @@ export type ZetkinLocation = {
   num_visits: number;
   organization_id: number;
   title: string;
+  type: 'assignment' | 'event';
 };
 
 export type ZetkinAreaAssignee = {

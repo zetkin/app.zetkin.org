@@ -163,6 +163,7 @@ describe('useVisitReporting()', () => {
         num_visits: 1,
         organization_id: 1,
         title: '123 Location Street',
+        type: 'assignment',
       };
 
       const store = createStore(initialState);
@@ -349,6 +350,7 @@ describe('useVisitReporting()', () => {
         num_visits: 1,
         organization_id: 1,
         title: '123 Location Street',
+        type: 'assignment',
       };
 
       const store = createStore(initialState);
@@ -661,6 +663,7 @@ describe('useVisitReporting()', () => {
         num_visits: 1,
         organization_id: 1,
         title: '123 Location Street',
+        type: 'assignment',
       };
 
       const store = createStore(initialState);
