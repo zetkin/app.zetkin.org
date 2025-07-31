@@ -21,7 +21,7 @@ export default function useLocations(
     actionOnSuccess: (data) => locationsLoaded([assignmentId, data]),
     loader: () =>
       apiClient.get<ZetkinLocation[]>(
-        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations?within_areas=${commaSeparatedAreaIds}&buffer_meters=50`
+        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations?within_areas=${commaSeparatedAreaIds}&buffer_meters=50&type=assignment`
       ),
   });
 }

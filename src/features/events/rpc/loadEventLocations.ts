@@ -24,7 +24,9 @@ export default makeRPCDef<Params, Result>(loadEventLocationsDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId } = params;
   const listOfLocations = await fetchAllPaginated<ZetkinLocation>((page) =>
-    apiClient.get(`/api2/orgs/${orgId}/locations?size=100&page=${page}`)
+    apiClient.get(
+      `/api2/orgs/${orgId}/locations?size=100&page=${page}&type=event`
+    )
   );
 
   const locations = listOfLocations
