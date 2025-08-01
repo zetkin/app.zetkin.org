@@ -177,7 +177,47 @@ export default function useVisitReporting(
       householdIds: number[],
       responses: MetricResponse[]
     ) {
-      if (assignment?.reporting_level === 'household') {
+      if (assignment?.reporting_level == 'location') {
+        const nowStr = new Date().toISOString();
+        const updated: VisitByHouseholdIdMap = { ...lastVisitByHouseholdId };
+        householdIds.forEach((householdId) => {
+          updated[householdId] = {
+            created: nowStr,
+            metrics: responses,
+          };
+        });
+
+        setLastVisitByHouseholdId(updated);
+
+        const visitData = summarizeMetrics(
+          Object.entries(updated).map(([id, info]) => ({
+            household_id: parseInt(id),
+            metrics: info.metrics,
+          }))
+        );
+
+        if (currentLocationVisit) {
+          const visit = await apiClient.patch<
+            ZetkinLocationVisit,
+            ZetkinLocationVisitPostBody
+          >(
+            `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits/${currentLocationVisit.id}`,
+            visitData
+          );
+          dispatch(visitUpdated(visit));
+        } else {
+          const visit = await apiClient.post<
+            ZetkinLocationVisit,
+            ZetkinLocationVisitPostBody
+          >(
+            `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits`,
+            visitData
+          );
+          dispatch(visitCreated(visit));
+        }
+
+        await refreshLocationStats();
+      } else {
         const result = await apiClient.rpc(submitHouseholdVisits, {
           assignmentId: assignmentId,
           households: householdIds,
