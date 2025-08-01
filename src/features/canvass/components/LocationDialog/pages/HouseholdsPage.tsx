@@ -1,7 +1,8 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   Divider,
   List,
@@ -9,6 +10,7 @@ import {
   ListItemText,
   ListSubheader,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 
@@ -33,6 +35,8 @@ type Props = {
   onClose: () => void;
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
+  onStartHouseholdsVisit: (households: number[]) => void;
+  resetSelection: boolean;
 };
 
 const HouseholdsPage: FC<Props> = ({
@@ -42,11 +46,16 @@ const HouseholdsPage: FC<Props> = ({
   onClose,
   onCreateHousehold,
   onSelectHousehold,
+  onStartHouseholdsVisit,
   location,
+  resetSelection,
 }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
   const households = useHouseholds(location.organization_id, location.id);
   const [adding, setAdding] = useState(false);
+  const [reportMany, setReportMany] = useState(false);
+  const [selectedHouseholds, setSelectedHouseholds] = useState<number[]>([]);
   const { addHousehold } = useLocationMutations(
     location.organization_id,
     location.id
@@ -68,6 +77,11 @@ const HouseholdsPage: FC<Props> = ({
     return floor0 - floor1;
   });
 
+  useEffect(() => {
+    setSelectedHouseholds([]);
+    setReportMany(false);
+  }, [resetSelection]);
+
   return (
     <PageBase
       onBack={onBack}
@@ -75,7 +89,52 @@ const HouseholdsPage: FC<Props> = ({
       subtitle={location.title}
       title={messages.households.page.header()}
     >
-      <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
+      {reportMany && selectedHouseholds.length > 0 && (
+        <Box
+          alignItems="center"
+          bgcolor={theme.palette.background.paper}
+          borderBottom="1px solid"
+          borderColor="divider"
+          boxShadow={1}
+          display="flex"
+          justifyContent="space-between"
+          p={1}
+          position="sticky"
+          top={0}
+          zIndex={1200}
+        >
+          <Box alignItems="center" display="flex" gap={0.5}>
+            <Checkbox
+              checked={selectedHouseholds.length == sortedHouseholds.length}
+              indeterminate={
+                selectedHouseholds.length > 0 &&
+                selectedHouseholds.length < sortedHouseholds.length
+              }
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setSelectedHouseholds(sortedHouseholds.map((h) => h.id));
+                } else {
+                  setSelectedHouseholds([]);
+                }
+              }}
+            />
+            <Typography color="primary">
+              {selectedHouseholds.length} households
+            </Typography>
+          </Box>
+
+          <Button
+            onClick={() => {
+              onStartHouseholdsVisit(selectedHouseholds);
+            }}
+            startIcon={<Add />}
+            variant="outlined"
+          >
+            <Typography color="primary">Report</Typography>
+          </Button>
+        </Box>
+      )}
+      <Box display="flex" flexDirection="column" flexGrow={2}>
         {location.num_known_households == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             <Msg id={messageIds.households.page.empty} />
@@ -104,8 +163,34 @@ const HouseholdsPage: FC<Props> = ({
                   onClick={() => {
                     onSelectHousehold(household.id);
                   }}
+                  sx={{ px: 0 }}
                 >
-                  <Box flexGrow={1}>
+                  <Box alignItems="center" display="flex" flexGrow={1}>
+                    <Checkbox
+                      checked={selectedHouseholds.includes(household.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setReportMany(true);
+
+                        const isSelected = selectedHouseholds.includes(
+                          household.id
+                        );
+
+                        if (isSelected) {
+                          setSelectedHouseholds(
+                            selectedHouseholds.filter(
+                              (id) => id != household.id
+                            )
+                          );
+                        } else {
+                          setSelectedHouseholds([
+                            ...selectedHouseholds,
+                            household.id,
+                          ]);
+                        }
+                      }}
+                      size="small"
+                    />
                     <ListItemText>{household.title}</ListItemText>
                   </Box>
                   {mostRecentVisit && (
