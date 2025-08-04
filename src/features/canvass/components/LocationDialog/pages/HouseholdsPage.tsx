@@ -127,10 +127,9 @@ const HouseholdsPage: FC<Props> = ({
             onClick={() => {
               onStartHouseholdsVisit(selectedHouseholds);
             }}
-            startIcon={<Add />}
             variant="outlined"
           >
-            <Typography color="primary">Report</Typography>
+            <Typography color="primary">Visit</Typography>
           </Button>
         </Box>
       )}
