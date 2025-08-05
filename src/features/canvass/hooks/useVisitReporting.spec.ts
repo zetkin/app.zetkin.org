@@ -705,4 +705,82 @@ describe('useVisitReporting()', () => {
       expect(locationItem?.data).toEqual(mockLocation);
     });
   });
+
+  describe('Location-level reportHouseholdVisits()', () => {
+    let initialState: RootState;
+
+    beforeEach(() => {
+      initialState = mockState();
+      initialState.areaAssignments.areaAssignmentList.items.push(
+        remoteItem(ASSIGNMENT_ID, {
+          data: mockAreaAssignment({
+            id: ASSIGNMENT_ID,
+            reporting_level: 'location',
+          }),
+          loaded: new Date().toISOString(),
+        })
+      );
+
+      initialState.areaAssignments.visitsByHouseholdId = {};
+      initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
+        remoteList();
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
+        new Date().toISOString();
+    });
+
+    it('Trigger a PATCH call when a currentLocationVisit already exists', async () => {
+      const todayVisit = mockLocationVisit({
+        assignment_id: ASSIGNMENT_ID,
+        id: 77,
+        location_id: LOCATION_ID,
+      });
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList([
+        todayVisit,
+      ]);
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
+        new Date().toISOString();
+
+      const store = createStore(initialState);
+      const updatedVisit = {
+        ...todayVisit,
+        metrics: [
+          { metric_id: 99, response: 'no' },
+          { metric_id: 99, response: 'no' },
+          { metric_id: 99, response: 'no' },
+        ],
+        num_households_visited: 3,
+      };
+      const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue({ id: LOCATION_ID, title: 'Loc' }),
+        patch: jest.fn().mockResolvedValue(updatedVisit),
+      });
+
+      const { result } = renderHook(
+        () => useVisitReporting(1, ASSIGNMENT_ID, LOCATION_ID),
+        { wrapper: makeWrapper(store, apiClient) }
+      );
+
+      await act(async () => {
+        await result.current.reportHouseholdVisits(
+          [1, 2, 3],
+          [
+            { metric_id: 99, response: 'no' },
+            { metric_id: 99, response: 'no' },
+            { metric_id: 99, response: 'no' },
+          ]
+        );
+      });
+
+      expect(apiClient.patch).toHaveBeenCalledWith(
+        `/api2/orgs/1/area_assignments/${ASSIGNMENT_ID}/locations/${LOCATION_ID}/visits/${todayVisit.id}`,
+        expect.objectContaining({ metrics: expect.any(Array) })
+      );
+
+      const patched =
+        store.getState().canvass.visitsByAssignmentId[ASSIGNMENT_ID].items[0]
+          .data;
+      expect(patched).toEqual(updatedVisit);
+    });
+  });
 });
