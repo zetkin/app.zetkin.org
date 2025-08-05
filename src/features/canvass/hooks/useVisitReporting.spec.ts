@@ -10,6 +10,7 @@ import mockHouseholdVisit from 'utils/testing/mocks/mockHouseholdVisit';
 import mockAreaAssignment from 'utils/testing/mocks/mockAreaAssignment';
 import mockLocationVisit from 'utils/testing/mocks/mockLocationVisit';
 import { ZetkinLocation } from 'features/areaAssignments/types';
+import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
 
 const ASSIGNMENT_ID = 11;
 const LOCATION_ID = 101;
@@ -782,6 +783,7 @@ describe('useVisitReporting()', () => {
           .data;
       expect(patched).toEqual(updatedVisit);
     });
+
     it('reportHouseholdVisits() triggers a POST call when no location visit exists', async () => {
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList([]);
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
@@ -829,6 +831,101 @@ describe('useVisitReporting()', () => {
         store.getState().canvass.visitsByAssignmentId[ASSIGNMENT_ID].items[0]
           .data;
       expect(created).toEqual(newVisit);
+    });
+  });
+
+  describe('Household-level reportHouseholdVisits()', () => {
+    let initialState: RootState;
+    const ORG_ID = 1;
+
+    beforeEach(() => {
+      initialState = mockState();
+      initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
+        remoteList();
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
+        new Date().toISOString();
+      initialState.areaAssignments.areaAssignmentList.items.push(
+        remoteItem(ASSIGNMENT_ID, {
+          data: mockAreaAssignment({
+            id: ASSIGNMENT_ID,
+            reporting_level: 'household',
+          }),
+          loaded: new Date().toISOString(),
+        })
+      );
+    });
+
+    it('reportHouseholdVisits() triggers RPC call when reporting level is not location', async () => {
+      const store = createStore(initialState);
+
+      const mockRpcResult = {
+        visits: [
+          mockHouseholdVisit({
+            assignment_id: ASSIGNMENT_ID,
+            household_id: 1,
+            id: 20001,
+          }),
+          mockHouseholdVisit({
+            assignment_id: ASSIGNMENT_ID,
+            household_id: 2,
+            id: 20002,
+          }),
+          mockHouseholdVisit({
+            assignment_id: ASSIGNMENT_ID,
+            household_id: 3,
+            id: 20003,
+          }),
+        ],
+      };
+
+      const mockLocation = {
+        id: LOCATION_ID,
+        num_visits: 3,
+        title: 'Test Location',
+      };
+
+      const apiClient = mockApiClient({
+        get: jest.fn().mockResolvedValue(mockLocation),
+        rpc: jest.fn().mockResolvedValue(mockRpcResult),
+      });
+
+      const { result } = renderHook(
+        () => useVisitReporting(ORG_ID, ASSIGNMENT_ID, LOCATION_ID),
+        { wrapper: makeWrapper(store, apiClient) }
+      );
+
+      const householdIds = [1, 2, 3];
+      const responses = [
+        { metric_id: 99, response: 'yes' },
+        { metric_id: 100, response: 'no' },
+      ];
+
+      await act(async () => {
+        await result.current.reportHouseholdVisits(householdIds, responses);
+      });
+
+      expect(apiClient.rpc).toHaveBeenCalledWith(submitHouseholdVisits, {
+        assignmentId: ASSIGNMENT_ID,
+        households: householdIds,
+        orgId: ORG_ID,
+        responses: responses,
+      });
+
+      expect(apiClient.get).toHaveBeenCalledWith(
+        `/api2/orgs/${ORG_ID}/area_assignments/${ASSIGNMENT_ID}/locations/${LOCATION_ID}`
+      );
+
+      const stateAfterAction = store.getState();
+      expect(
+        stateAfterAction.areaAssignments.visitsByHouseholdId[1].items[0].data
+      ).toEqual(mockRpcResult.visits[0]);
+      expect(
+        stateAfterAction.areaAssignments.visitsByHouseholdId[2].items[0].data
+      ).toEqual(mockRpcResult.visits[1]);
+      expect(
+        stateAfterAction.areaAssignments.visitsByHouseholdId[3].items[0].data
+      ).toEqual(mockRpcResult.visits[2]);
     });
   });
 });
