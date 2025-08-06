@@ -53,6 +53,7 @@ import {
 } from 'features/areaAssignments/types';
 import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 import ZUILockCard from 'zui/ZUILockCard';
+import sortMetrics from 'features/canvass/utils/sortMetrics';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -87,11 +88,7 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   const messages = useMessages(messagesIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const metricsList = useAreaAssignmentMetrics(parseInt(orgId), areaAssId);
-  const metrics = metricsList
-    ?.slice()
-    .sort(
-      (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime()
-    );
+  const metrics = sortMetrics(metricsList);
 
   const [metricBeingCreated, setMetricBeingCreated] =
     useState<Partial<ZetkinMetric> | null>(null);
