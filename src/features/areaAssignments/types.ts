@@ -7,6 +7,7 @@ export type AreaAssigneeInfo = {
 
 export type ZetkinMetric = {
   area_assignment_id: number;
+  created: string;
   defines_success: boolean;
   description?: string;
   id: number;

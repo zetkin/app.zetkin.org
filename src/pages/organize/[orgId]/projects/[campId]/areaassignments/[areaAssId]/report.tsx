@@ -86,7 +86,12 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
   ).data;
   const messages = useMessages(messagesIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const metrics = useAreaAssignmentMetrics(parseInt(orgId), areaAssId);
+  const metricsList = useAreaAssignmentMetrics(parseInt(orgId), areaAssId);
+  const metrics = metricsList
+    ?.slice()
+    .sort(
+      (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime()
+    );
 
   const [metricBeingCreated, setMetricBeingCreated] =
     useState<Partial<ZetkinMetric> | null>(null);
