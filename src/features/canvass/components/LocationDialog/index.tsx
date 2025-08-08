@@ -20,6 +20,7 @@ import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssi
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { ZetkinLocationVisit } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import sortMetrics from 'features/canvass/utils/sortMetrics';
 import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 
 type LocationDialogProps = {
@@ -48,10 +49,11 @@ const LocationDialog: FC<LocationDialogProps> = ({
 }) => {
   const [dialogStep, setDialogStep] = useState<LocationDialogStep>('location');
   const [showSparkle, setShowSparkle] = useState(false);
-  const metrics = useAreaAssignmentMetrics(
+  const metricsList = useAreaAssignmentMetrics(
     assignment.organization_id,
     assignment.id
   );
+  const metrics = sortMetrics(metricsList);
   const { updateHousehold, updateLocation } = useLocationMutations(
     orgId,
     location.id
