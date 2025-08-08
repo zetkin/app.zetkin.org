@@ -20,6 +20,7 @@ import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssi
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { ZetkinLocationVisit } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -36,7 +37,8 @@ type LocationDialogStep =
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
-  | 'householdVisit';
+  | 'householdVisit'
+  | 'bulkHouseholdVisits';
 
 const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
@@ -54,8 +56,12 @@ const LocationDialog: FC<LocationDialogProps> = ({
     orgId,
     location.id
   );
-  const { lastVisitByHouseholdId, reportHouseholdVisit, reportLocationVisit } =
-    useVisitReporting(orgId, assignment.id, location.id);
+  const {
+    lastVisitByHouseholdId,
+    reportHouseholdVisit,
+    reportHouseholdVisits,
+    reportLocationVisit,
+  } = useVisitReporting(orgId, assignment.id, location.id);
 
   const pushedRef = useRef(false);
 
@@ -99,6 +105,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
   );
+  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<number[]>(
+    []
+  );
 
   return (
     <Box height="100%">
@@ -140,6 +149,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
+          onSelectHouseholds={(householdIds: number[]) =>
+            setSelectedHouseholdIds(householdIds)
+          }
+          onStartHouseholdsVisit={(households) => {
+            setSelectedHouseholdIds(households);
+            goto('bulkHouseholdVisits');
+          }}
+          selectedHouseholdIds={selectedHouseholdIds}
         />
         <Box key="household" height="100%">
           {selectedHouseholdId && (
@@ -211,6 +228,22 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 setShowSparkle(true);
                 goto('households');
               }}
+            />
+          )}
+        </Box>
+        <Box key="bulkHouseholdVisits" height="100%">
+          {selectedHouseholdIds.length > 0 && (
+            <BulkHouseholdVisitsPage
+              location={location}
+              metrics={metrics}
+              onBack={() => back()}
+              onLogVisit={async (responses) => {
+                await reportHouseholdVisits(selectedHouseholdIds, responses);
+                setShowSparkle(true);
+                setSelectedHouseholdIds([]);
+                goto('households');
+              }}
+              selectedHouseholsdIds={selectedHouseholdIds}
             />
           )}
         </Box>
