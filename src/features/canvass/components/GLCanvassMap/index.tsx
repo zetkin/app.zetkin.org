@@ -434,40 +434,40 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
         </Source>
         {geoMarker && (
           <Source
-            id="geolocation-marker"
-            type="geojson"
             data={{
-              type: 'FeatureCollection',
               features: [
                 {
-                  type: 'Feature',
                   geometry: {
-                    type: 'Point',
                     coordinates: geoMarker,
+                    type: 'Point',
                   },
                   properties: {},
+                  type: 'Feature',
                 },
               ],
+              type: 'FeatureCollection',
             }}
+            id="geolocation-marker"
+            type="geojson"
           >
             <Layer
               id="geolocation-marker-halo"
-              type="circle"
               paint={{
-                'circle-radius': 12,
                 'circle-color': alpha(theme.palette.primary.dark, 0.4),
+                'circle-radius': 12,
               }}
+              type="circle"
             />
             <Layer
               id="geolocation-marker-layer"
-              type="circle"
               paint={{
+                'circle-color': theme.palette.primary.main,
                 'circle-radius': 6,
                 'circle-stroke-color': theme.palette.primary.light,
                 'circle-stroke-width': 1,
-                'circle-color': theme.palette.primary.main,
               }}
               source="point"
+              type="circle"
             />
           </Source>
         )}
