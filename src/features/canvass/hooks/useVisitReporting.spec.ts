@@ -746,9 +746,15 @@ describe('useVisitReporting()', () => {
       const updatedVisit = {
         ...todayVisit,
         metrics: [
+          {
+            metric_id: 10001,
+            num_values: [0, 0, 1, 0, 0],
+          },
+          {
+            metric_id: 10002,
+            num_values: [0, 0, 0, 1, 0],
+          },
           { metric_id: 97, response: 'no' },
-          { metric_id: 98, response: 'yes' },
-          { metric_id: 99, response: 'no' },
         ],
         num_households_visited: 3,
       };
@@ -766,9 +772,15 @@ describe('useVisitReporting()', () => {
         await result.current.reportHouseholdVisits(
           [1, 2, 3],
           [
+            {
+              metric_id: 10001,
+              response: '3',
+            },
+            {
+              metric_id: 10002,
+              response: '4',
+            },
             { metric_id: 97, response: 'no' },
-            { metric_id: 98, response: 'yes' },
-            { metric_id: 99, response: 'no' },
           ]
         );
       });
