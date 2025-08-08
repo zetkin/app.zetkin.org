@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Layer, LngLatLike, Map, Source } from '@vis.gl/react-maplibre';
-import { Box } from '@mui/material';
+import { alpha, Box, useTheme } from '@mui/material';
 import { GpsNotFixed } from '@mui/icons-material';
 import {
   ExpressionSpecification,
@@ -47,6 +47,8 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [geoMarker, setGeoMarker] = useState<[number, number] | null>(null);
+  const theme = useTheme();
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -249,6 +251,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
           }}
           onGeolocate={(lngLat) => {
             map?.panTo(lngLat, { animate: true, duration: 800 });
+            setGeoMarker(lngLat);
           }}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
@@ -429,6 +432,45 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             type="symbol"
           />
         </Source>
+        {geoMarker && (
+          <Source
+            id="geolocation-marker"
+            type="geojson"
+            data={{
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  geometry: {
+                    type: 'Point',
+                    coordinates: geoMarker,
+                  },
+                  properties: {},
+                },
+              ],
+            }}
+          >
+            <Layer
+              id="geolocation-marker-halo"
+              type="circle"
+              paint={{
+                'circle-radius': 12,
+                'circle-color': alpha(theme.palette.primary.dark, 0.4),
+              }}
+            />
+            <Layer
+              id="geolocation-marker-layer"
+              type="circle"
+              paint={{
+                'circle-radius': 6,
+                'circle-stroke-color': theme.palette.primary.light,
+                'circle-stroke-width': 1,
+                'circle-color': theme.palette.primary.main,
+              }}
+              source="point"
+            />
+          </Source>
+        )}
       </Map>
       <CanvassMapOverlays
         assignment={assignment}
