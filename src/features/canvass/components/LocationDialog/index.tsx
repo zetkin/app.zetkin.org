@@ -105,7 +105,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
   );
-  const [selectedHouseholsdIds, setSelectedHouseholdsIds] = useState<number[]>(
+  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<number[]>(
     []
   );
   const [resetHouseholdsSelection, setResetHouseholdsSelection] =
@@ -152,7 +152,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
             goto('household');
           }}
           onStartHouseholdsVisit={(households) => {
-            setSelectedHouseholdsIds(households);
+            setSelectedHouseholdIds(households);
             goto('bulkHouseholdVisits');
           }}
           resetSelection={resetHouseholdsSelection}
@@ -231,19 +231,19 @@ const LocationDialog: FC<LocationDialogProps> = ({
           )}
         </Box>
         <Box key="bulkHouseholdVisits" height="100%">
-          {selectedHouseholsdIds.length > 0 && (
+          {selectedHouseholdIds.length > 0 && (
             <BulkHouseholdVisitsPage
               location={location}
               metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses) => {
-                await reportHouseholdVisits(selectedHouseholsdIds, responses);
+                await reportHouseholdVisits(selectedHouseholdIds, responses);
                 setShowSparkle(true);
-                setSelectedHouseholdsIds([]);
+                setSelectedHouseholdIds([]);
                 setResetHouseholdsSelection((prev) => !prev);
                 goto('households');
               }}
-              selectedHouseholsdIds={selectedHouseholsdIds}
+              selectedHouseholsdIds={selectedHouseholdIds}
             />
           )}
         </Box>
