@@ -746,8 +746,8 @@ describe('useVisitReporting()', () => {
       const updatedVisit = {
         ...todayVisit,
         metrics: [
-          { metric_id: 99, response: 'no' },
-          { metric_id: 99, response: 'no' },
+          { metric_id: 97, response: 'no' },
+          { metric_id: 98, response: 'yes' },
           { metric_id: 99, response: 'no' },
         ],
         num_households_visited: 3,
@@ -766,8 +766,8 @@ describe('useVisitReporting()', () => {
         await result.current.reportHouseholdVisits(
           [1, 2, 3],
           [
-            { metric_id: 99, response: 'no' },
-            { metric_id: 99, response: 'no' },
+            { metric_id: 97, response: 'no' },
+            { metric_id: 98, response: 'yes' },
             { metric_id: 99, response: 'no' },
           ]
         );
@@ -795,8 +795,8 @@ describe('useVisitReporting()', () => {
         id: 88,
         location_id: LOCATION_ID,
         metrics: [
-          { metric_id: 99, response: 'no' },
-          { metric_id: 99, response: 'no' },
+          { metric_id: 97, response: 'no' },
+          { metric_id: 98, response: 'yes' },
           { metric_id: 99, response: 'no' },
         ],
         num_households_visited: 3,
@@ -816,8 +816,8 @@ describe('useVisitReporting()', () => {
         await result.current.reportHouseholdVisits(
           [1, 2, 3],
           [
-            { metric_id: 99, response: 'no' },
-            { metric_id: 99, response: 'no' },
+            { metric_id: 97, response: 'no' },
+            { metric_id: 98, response: 'yes' },
             { metric_id: 99, response: 'no' },
           ]
         );
