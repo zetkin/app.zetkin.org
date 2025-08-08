@@ -12,10 +12,9 @@ export default function useAreas(orgId: number) {
   return loadListIfNecessary(list, dispatch, {
     actionOnLoad: () => areasLoad(),
     actionOnSuccess: (data) => areasLoaded(data),
-    loader: async () => {
-      return await fetchAllPaginated<Zetkin2Area>((page) =>
+    loader: async () =>
+      fetchAllPaginated<Zetkin2Area>((page) =>
         apiClient.get(`/api2/orgs/${orgId}/areas?size=100&page=${page}`)
-      );
-    },
+      ),
   });
 }

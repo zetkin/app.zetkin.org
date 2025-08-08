@@ -224,6 +224,18 @@ const areaAssignmentSlice = createSlice({
       state.visitsByHouseholdId[visit.household_id] ||= remoteListCreated();
       remoteItemUpdated(state.visitsByHouseholdId[visit.household_id], visit);
     },
+    householdVisitsCreated: (
+      state,
+      action: PayloadAction<ZetkinHouseholdVisit[]>
+    ) => {
+      const visits = action.payload;
+
+      for (const visit of visits) {
+        const householdId = visit.household_id;
+        state.visitsByHouseholdId[householdId] ||= remoteListCreated();
+        remoteItemUpdated(state.visitsByHouseholdId[householdId], visit);
+      }
+    },
     locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
 
@@ -335,6 +347,7 @@ export const {
   assignmentAreasLoad,
   assignmentAreasLoaded,
   householdVisitCreated,
+  householdVisitsCreated,
   locationCreated,
   locationLoaded,
   locationsInvalidated,

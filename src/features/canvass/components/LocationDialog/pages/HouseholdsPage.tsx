@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   CircularProgress,
   Divider,
   List,
@@ -9,6 +10,7 @@ import {
   ListItemText,
   ListSubheader,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
 
@@ -33,6 +35,9 @@ type Props = {
   onClose: () => void;
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
+  onSelectHouseholds: (householdIds: number[]) => void;
+  onStartHouseholdsVisit: (households: number[]) => void;
+  selectedHouseholdIds: number[];
 };
 
 const HouseholdsPage: FC<Props> = ({
@@ -42,9 +47,13 @@ const HouseholdsPage: FC<Props> = ({
   onClose,
   onCreateHousehold,
   onSelectHousehold,
+  onSelectHouseholds,
+  onStartHouseholdsVisit,
   location,
+  selectedHouseholdIds,
 }) => {
   const messages = useMessages(messageIds);
+  const theme = useTheme();
   const households = useHouseholds(location.organization_id, location.id);
   const [adding, setAdding] = useState(false);
   const { addHousehold } = useLocationMutations(
@@ -75,7 +84,51 @@ const HouseholdsPage: FC<Props> = ({
       subtitle={location.title}
       title={messages.households.page.header()}
     >
-      <Box display="flex" flexDirection="column" flexGrow={2} gap={1}>
+      {selectedHouseholdIds.length > 0 && (
+        <Box
+          alignItems="center"
+          bgcolor={theme.palette.background.paper}
+          borderBottom="1px solid"
+          borderColor="divider"
+          boxShadow={1}
+          display="flex"
+          justifyContent="space-between"
+          p={1}
+          position="sticky"
+          top={0}
+          zIndex={1200}
+        >
+          <Box alignItems="center" display="flex" gap={0.5}>
+            <Checkbox
+              checked={selectedHouseholdIds.length == sortedHouseholds.length}
+              indeterminate={
+                selectedHouseholdIds.length > 0 &&
+                selectedHouseholdIds.length < sortedHouseholds.length
+              }
+              onChange={(e) => {
+                if (e.target.checked) {
+                  onSelectHouseholds(sortedHouseholds.map((h) => h.id));
+                } else {
+                  onSelectHouseholds([]);
+                }
+              }}
+            />
+            <Typography color="primary">
+              {selectedHouseholdIds.length} households
+            </Typography>
+          </Box>
+
+          <Button
+            onClick={() => {
+              onStartHouseholdsVisit(selectedHouseholdIds);
+            }}
+            variant="outlined"
+          >
+            <Typography color="primary">Visit</Typography>
+          </Button>
+        </Box>
+      )}
+      <Box display="flex" flexDirection="column" flexGrow={2}>
         {location.num_known_households == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             <Msg id={messageIds.households.page.empty} />
@@ -104,8 +157,33 @@ const HouseholdsPage: FC<Props> = ({
                   onClick={() => {
                     onSelectHousehold(household.id);
                   }}
+                  sx={{ px: 0 }}
                 >
-                  <Box flexGrow={1}>
+                  <Box alignItems="center" display="flex" flexGrow={1}>
+                    <Checkbox
+                      checked={selectedHouseholdIds.includes(household.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        const isSelected = selectedHouseholdIds.includes(
+                          household.id
+                        );
+
+                        if (isSelected) {
+                          onSelectHouseholds(
+                            selectedHouseholdIds.filter(
+                              (id) => id !== household.id
+                            )
+                          );
+                        } else {
+                          onSelectHouseholds([
+                            ...selectedHouseholdIds,
+                            household.id,
+                          ]);
+                        }
+                      }}
+                      size="small"
+                    />
                     <ListItemText>{household.title}</ListItemText>
                   </Box>
                   {mostRecentVisit && (
