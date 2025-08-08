@@ -147,7 +147,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
                     >
                       {metric.question}
                     </Typography>
-                    {!stepIsCurrent && completed && <Undo />}
+                    {!stepIsCurrent && index < step && <Undo />}
                   </Box>
 
                   {completed && step != index && (
