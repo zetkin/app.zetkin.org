@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Box,
   Button,
@@ -35,8 +35,9 @@ type Props = {
   onClose: () => void;
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
+  onSelectHouseholds: (householdIds: number[]) => void;
   onStartHouseholdsVisit: (households: number[]) => void;
-  resetSelection: boolean;
+  selectedHouseholdIds: number[];
 };
 
 const HouseholdsPage: FC<Props> = ({
@@ -46,16 +47,15 @@ const HouseholdsPage: FC<Props> = ({
   onClose,
   onCreateHousehold,
   onSelectHousehold,
+  onSelectHouseholds,
   onStartHouseholdsVisit,
   location,
-  resetSelection,
+  selectedHouseholdIds,
 }) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const households = useHouseholds(location.organization_id, location.id);
   const [adding, setAdding] = useState(false);
-  const [reportMany, setReportMany] = useState(false);
-  const [selectedHouseholds, setSelectedHouseholds] = useState<number[]>([]);
   const { addHousehold } = useLocationMutations(
     location.organization_id,
     location.id
@@ -77,11 +77,6 @@ const HouseholdsPage: FC<Props> = ({
     return floor0 - floor1;
   });
 
-  useEffect(() => {
-    setSelectedHouseholds([]);
-    setReportMany(false);
-  }, [resetSelection]);
-
   return (
     <PageBase
       onBack={onBack}
@@ -89,7 +84,7 @@ const HouseholdsPage: FC<Props> = ({
       subtitle={location.title}
       title={messages.households.page.header()}
     >
-      {reportMany && selectedHouseholds.length > 0 && (
+      {selectedHouseholdIds.length > 0 && (
         <Box
           alignItems="center"
           bgcolor={theme.palette.background.paper}
@@ -105,27 +100,27 @@ const HouseholdsPage: FC<Props> = ({
         >
           <Box alignItems="center" display="flex" gap={0.5}>
             <Checkbox
-              checked={selectedHouseholds.length == sortedHouseholds.length}
+              checked={selectedHouseholdIds.length == sortedHouseholds.length}
               indeterminate={
-                selectedHouseholds.length > 0 &&
-                selectedHouseholds.length < sortedHouseholds.length
+                selectedHouseholdIds.length > 0 &&
+                selectedHouseholdIds.length < sortedHouseholds.length
               }
               onChange={(e) => {
                 if (e.target.checked) {
-                  setSelectedHouseholds(sortedHouseholds.map((h) => h.id));
+                  onSelectHouseholds(sortedHouseholds.map((h) => h.id));
                 } else {
-                  setSelectedHouseholds([]);
+                  onSelectHouseholds([]);
                 }
               }}
             />
             <Typography color="primary">
-              {selectedHouseholds.length} households
+              {selectedHouseholdIds.length} households
             </Typography>
           </Box>
 
           <Button
             onClick={() => {
-              onStartHouseholdsVisit(selectedHouseholds);
+              onStartHouseholdsVisit(selectedHouseholdIds);
             }}
             variant="outlined"
           >
@@ -166,24 +161,23 @@ const HouseholdsPage: FC<Props> = ({
                 >
                   <Box alignItems="center" display="flex" flexGrow={1}>
                     <Checkbox
-                      checked={selectedHouseholds.includes(household.id)}
+                      checked={selectedHouseholdIds.includes(household.id)}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setReportMany(true);
 
-                        const isSelected = selectedHouseholds.includes(
+                        const isSelected = selectedHouseholdIds.includes(
                           household.id
                         );
 
                         if (isSelected) {
-                          setSelectedHouseholds(
-                            selectedHouseholds.filter(
-                              (id) => id != household.id
+                          onSelectHouseholds(
+                            selectedHouseholdIds.filter(
+                              (id) => id !== household.id
                             )
                           );
                         } else {
-                          setSelectedHouseholds([
-                            ...selectedHouseholds,
+                          onSelectHouseholds([
+                            ...selectedHouseholdIds,
                             household.id,
                           ]);
                         }
