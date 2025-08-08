@@ -20,7 +20,7 @@ import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssi
 import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHouseholds';
 import { ZetkinLocationVisit } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
-import HouseholdsVisitPage from './pages/HouseholdsVisitPage';
+import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -38,7 +38,7 @@ type LocationDialogStep =
   | 'editHousehold'
   | 'locationVisit'
   | 'householdVisit'
-  | 'householdsVisit';
+  | 'bulkHouseholdVisits';
 
 const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
@@ -153,7 +153,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           }}
           onStartHouseholdsVisit={(households) => {
             setSelectedHouseholdsIds(households);
-            goto('householdsVisit');
+            goto('bulkHouseholdVisits');
           }}
           resetSelection={resetHouseholdsSelection}
         />
@@ -230,9 +230,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
             />
           )}
         </Box>
-        <Box key="householdsVisit" height="100%">
+        <Box key="bulkHouseholdVisits" height="100%">
           {selectedHouseholsdIds.length > 0 && (
-            <HouseholdsVisitPage
+            <BulkHouseholdVisitsPage
               location={location}
               metrics={metrics}
               onBack={() => back()}
