@@ -73,7 +73,8 @@ export default function useVisitReporting(
     };
 
     Object.entries(visitsByHouseholdId).forEach(([id, list]) => {
-      const sortedItems = list.items.sort(
+      const itemsCopy = list.items.concat();
+      const sortedItems = itemsCopy.sort(
         (a, b) =>
           new Date(b.data?.created ?? 0).getTime() -
           new Date(a.data?.created ?? 0).getTime()
