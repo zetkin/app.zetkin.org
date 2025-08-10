@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Step,
   StepButton,
   StepContent,
@@ -9,55 +10,51 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { Undo } from '@mui/icons-material';
 import { FC, useEffect, useState } from 'react';
 
 import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
-import useHousehold from 'features/canvass/hooks/useHousehold';
 import { MetricResponse } from 'features/canvass/types';
 
 type HouseholdVisitPageProps = {
-  householdId: number;
   location: ZetkinLocation;
   metrics: ZetkinMetric[];
   onBack: () => void;
   onLogVisit: (metrics: MetricResponse[]) => void;
+  selectedHouseholsdIds: number[];
 };
 
 const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
-  householdId,
+  selectedHouseholsdIds,
   location,
   metrics,
   onBack,
   onLogVisit,
 }) => {
   const messages = useMessages(messageIds);
-  const household = useHousehold(
-    location.organization_id,
-    location.id,
-    householdId
-  );
-
   const [responseByMetricId, setResponseByMetricId] = useState<
     Record<number, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  location;
 
   useEffect(() => {
     setResponseByMetricId({});
     setStep(0);
-  }, [household.id]);
+  }, []);
 
   return (
     <PageBase
       actions={
         step >= metrics.length && (
           <Button
+            disabled={loading}
             fullWidth
-            onClick={() => {
+            onClick={async () => {
+              setLoading(true);
               const responses = Object.values(responseByMetricId).map(
                 (response) => response
               );
@@ -65,18 +62,22 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
               const filteredResponses = responses.filter(
                 (response) => !!response.response
               );
-              onLogVisit(filteredResponses);
+              await onLogVisit(filteredResponses);
+              setLoading(false);
             }}
+            startIcon={
+              loading ? (
+                <CircularProgress color="secondary" size="20px" />
+              ) : null
+            }
             variant="contained"
           >
-            <Msg id={messageIds.visit.household.submitReportButtonLabel} />
+            {`Submit report for  ${selectedHouseholsdIds.length} households`}
           </Button>
         )
       }
       onBack={onBack}
-      title={messages.visit.household.header({
-        householdTitle: household.title,
-      })}
+      title={`Selected ${selectedHouseholsdIds.length} households`}
     >
       <Stepper activeStep={step} orientation="vertical">
         {metrics.map((metric, index) => {
@@ -106,56 +107,28 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           return (
             <Step key={index}>
               <StepButton
-                onClick={() => {
-                  if (index < step) {
-                    const newResponses: Record<number, MetricResponse> = {};
-                    metrics.forEach((m, i) => {
-                      if (i < index && responseByMetricId[m.id]) {
-                        newResponses[m.id] = responseByMetricId[m.id];
-                      }
-                    });
-                    setResponseByMetricId(newResponses);
-                  }
-
-                  setStep(index);
-                }}
+                onClick={() => setStep(index)}
                 sx={{
-                  '& .MuiStepLabel-vertical': {
-                    alignItems: 'start',
-                  },
                   '& span': {
                     overflow: 'hidden',
                   },
-                  display: 'block',
                 }}
               >
-                <Box sx={{ width: '100%' }}>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
-                      }}
-                    >
-                      {metric.question}
-                    </Typography>
-                    {!stepIsCurrent && index < step && <Undo />}
-                  </Box>
+                <Typography
+                  sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: stepIsCurrent ? 'normal' : 'nowrap',
+                  }}
+                >
+                  {metric.question}
+                </Typography>
 
-                  {completed && step != index && (
-                    <Typography variant="body2">
-                      {responseByMetricId[metric.id].response}
-                    </Typography>
-                  )}
-                </Box>
+                {completed && step != index && (
+                  <Typography variant="body2">
+                    {responseByMetricId[metric.id].response}
+                  </Typography>
+                )}
               </StepButton>
               <StepContent>
                 <Box
