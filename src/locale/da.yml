@@ -1550,8 +1550,6 @@ zui:
     button: Søg
     helpText: Indtast mindst {minSearchLength} tegn
     idSearchHelpText: Skriv et ID-nummer (kun tal)
-    placeholder: Søg i denne tabel
-    placeholderWithIdSearch: "Søg - brug # til ID'er, f.eks. type #123"
     title: Søg
   dataTableSorting:
     addButton: Tilføj sorteringskolonne
