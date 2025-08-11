@@ -243,7 +243,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 await reportHouseholdVisits(selectedHouseholdIds, responses);
                 setShowSparkle(true);
                 setSelectedHouseholdIds([]);
-                goto('households');
+                back();
               }}
               selectedHouseholsdIds={selectedHouseholdIds}
             />
