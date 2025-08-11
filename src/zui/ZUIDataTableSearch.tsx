@@ -1,4 +1,4 @@
-import { Box, Fade, IconButton, TextField } from '@mui/material';
+import { Fade, IconButton, TextField } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
 import {
   ReactEventHandler,
@@ -65,33 +65,33 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
   }, [open]);
 
   return (
-    <Box display="flex" flexDirection="column">
-      <TextField
-        InputProps={{
+    <TextField
+      inputRef={textFieldInputRef}
+      onChange={handleChange as ReactEventHandler<unknown>}
+      placeholder={
+        searchById
+          ? messages.dataTableSearch.placeholderWithIdSearch({
+              minSearchLength,
+            })
+          : messages.dataTableSearch.placeholder({ minSearchLength })
+      }
+      size="small"
+      slotProps={{
+        input: {
           endAdornment: (
             <Fade in={isActive}>
-              <IconButton onClick={() => handleClear(true)} size="large">
+              <IconButton onClick={() => handleClear(true)}>
                 <Close />
               </IconButton>
             </Fade>
           ),
           startAdornment: <Search color="secondary" sx={{ mr: 1 }} />,
-        }}
-        inputRef={textFieldInputRef}
-        onChange={handleChange as ReactEventHandler<unknown>}
-        placeholder={
-          searchById
-            ? messages.dataTableSearch.placeholderWithIdSearch({
-                minSearchLength,
-              })
-            : messages.dataTableSearch.placeholder({ minSearchLength })
-        }
-        size="small"
-        sx={{ minWidth: '400px' }}
-        value={searchString}
-        variant="outlined"
-      />
-    </Box>
+        },
+      }}
+      sx={{ minWidth: '400px' }}
+      value={searchString}
+      variant="outlined"
+    />
   );
 };
 
