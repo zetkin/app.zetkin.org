@@ -6,7 +6,6 @@ import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import messageIds from 'zui/l10n/messageIds';
 
 export interface ZUIConfirmDialogProps {
-  disablePortal?: boolean;
   open: boolean;
   onCancel: () => void;
   onSubmit: () => void;
@@ -16,7 +15,6 @@ export interface ZUIConfirmDialogProps {
 }
 
 const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
-  disablePortal,
   open,
   onCancel,
   onSubmit,
@@ -27,7 +25,6 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
   const messages = useMessages(messageIds);
   return (
     <ZUIDialog
-      disablePortal={disablePortal}
       onClose={() => onCancel()}
       open={open}
       title={title || messages.confirmDialog.defaultTitle()}

@@ -11,7 +11,6 @@ import {
 interface ZUIDialogProps {
   children: React.ReactNode;
   contentHeight?: number | string;
-  disablePortal?: boolean;
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -21,7 +20,6 @@ interface ZUIDialogProps {
 const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   children,
   contentHeight,
-  disablePortal = false,
   maxWidth,
   open,
   onClose,
@@ -32,12 +30,14 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
 
   return (
     <Dialog
-      disablePortal={disablePortal}
       fullScreen={fullScreen}
       fullWidth
       maxWidth={maxWidth || 'sm'}
       onClose={onClose}
       open={open}
+      sx={{
+        zIndex: 999999999,
+      }}
     >
       <Box p={2}>
         {title && <DialogTitle>{title}</DialogTitle>}
