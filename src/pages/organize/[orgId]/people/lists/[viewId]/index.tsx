@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import getUserMemberships from 'utils/getUserMemberships';
-import getSuperUser from 'utils/getSuperUser';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
@@ -38,14 +37,17 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     // Check if user is an official
     // TODO: Consider moving this to some more general-purpose utility
     const officialMemberships = await getUserMemberships(ctx, false);
+    const isOfficialMember = officialMemberships.includes(
+      parseInt(orgId as string)
+    );
 
-    const isSuperUser = await getSuperUser(ctx, false);
+    const isSuperUser = !!ctx.user?.is_superuser;
 
-    if (
-      !officialMemberships.includes(parseInt(orgId as string)) &&
-      !isSuperUser
-    ) {
+    const notAllowedAccess = !isOfficialMember && !isSuperUser;
+
+    if (notAllowedAccess) {
       // The user does NOT have this organization among it's official memberships
+      // and they are not a super user,
       // but they did have access to the view, so the view must have been shared
       // with them.
       return {
