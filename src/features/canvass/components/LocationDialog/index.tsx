@@ -185,6 +185,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
                     setSelectedHouseholdId(null);
                     back();
                   },
+                  onTop: true,
                   title: messages.households.delete.title(),
                   warningText: messages.households.delete.warningText(),
                 });
