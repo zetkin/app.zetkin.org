@@ -13,6 +13,7 @@ interface ZUIDialogProps {
   contentHeight?: number | string;
   open: boolean;
   onClose: () => void;
+  onTop?: boolean;
   title?: string;
   maxWidth?: false | 'sm' | 'md' | 'lg' | 'xl';
 }
@@ -22,6 +23,7 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   contentHeight,
   maxWidth,
   open,
+  onTop,
   onClose,
   title,
 }): JSX.Element => {
@@ -36,7 +38,7 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
       onClose={onClose}
       open={open}
       sx={{
-        zIndex: 999999999,
+        zIndex: onTop ? theme.zIndex.tooltip + 9999 : theme.zIndex.modal,
       }}
     >
       <Box p={2}>
