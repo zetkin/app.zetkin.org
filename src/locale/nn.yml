@@ -2139,7 +2139,9 @@ feat:
         haveSelect:
           in: har
           notin: ikke har
-        inputString: ''
+        inputString: '{addRemoveSelect} folk som {haveSelect} {bookedSelect}
+          {statusSelect} på arrangementer {campaignSelect} av typen
+          {activitySelect} på stedet {locationSelect} {timeFrame}'
         locationSelect:
           any: et sted
           location: stedet "{location}"
@@ -3384,6 +3386,8 @@ zui:
       openButton: Legg til flere
       submitButton: '{numSelected, plural, =0 {Select} =1 {Velg en person} other
         {Velg{numSelected, number, integer} folk}}'
+      title: '{entityToAddTo, select, undefined {Legg til folk} other {Legg til folk i
+        ‘{entityToAddTo}’}}'
     keepTyping: Fortsett å skrive eller start søk
     noResult: Ingen person ble funnet
     search: Skriv for å søke
