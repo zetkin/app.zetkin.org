@@ -18,7 +18,7 @@ export default makeMessages('feat.canvass', {
       numberOfHouseholdsInput: m('Households per floor'),
     },
     delete: {
-      title: m('Confirm deletion of household'),
+      title: m('Delete household'),
       warningText: m(
         'Are you sure you want to delete the household? It can not be undone.'
       ),
