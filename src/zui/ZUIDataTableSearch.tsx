@@ -10,7 +10,7 @@ import {
 
 import messageIds from './l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 
 export const ID_SEARCH_CHAR = '#';
 
@@ -86,10 +86,10 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
               })
             : messages.dataTableSearch.placeholder({ minSearchLength })
         }
-        value={searchString}
-        variant="outlined"
         size="small"
         sx={{ minWidth: '400px' }}
+        value={searchString}
+        variant="outlined"
       />
     </Box>
   );
