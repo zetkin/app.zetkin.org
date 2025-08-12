@@ -2749,8 +2749,8 @@ zui:
       url: Lägg till en giltig URL
   dataTableSearch:
     button: Sök
-    helpText: Skriv minst {minSearchLength} antal tecken
-    idSearchHelpText: Skriv ett ID (endast siffror)
+    placeholder: Sök i den här tabellen
+    placeholderWithIdSearch: 'Sök - använd # för ID, t.ex. skriv #123'
     title: Sök
   dataTableSorting:
     addButton: Lägg till kolumn för sortering

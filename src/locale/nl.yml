@@ -2714,8 +2714,8 @@ zui:
       url: Vul alsjeblieft een valide URL in
   dataTableSearch:
     button: Zoeken
-    helpText: Typ tenminste {minSearchLength} karakters
-    idSearchHelpText: Typ een ID (alleen nummers)
+    placeholder: Zoeken in deze tabel
+    placeholderWithIdSearch: 'Zoeken - gebruik # voor IDs, bijvoorbeeld: type #123'
     title: Zoeken
   dataTableSorting:
     addButton: Voeg een kolom waarop je wilt sorteren toe
