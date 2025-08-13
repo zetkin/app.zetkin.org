@@ -3296,8 +3296,8 @@ zui:
       url: Legg til en gyldig lenke
   dataTableSearch:
     button: Søk
-    helpText: Skriv minst {minSearchLength} tegn
-    idSearchHelpText: Skriv en Zetkin ID (kun tall)
+    placeholder: Søk
+    placeholderWithIdSearch: 'Søk - bruk # for Zetkin IDer, skriv f.eks #123'
     title: Søk
   dataTableSorting:
     addButton: Legg til sorteringskolonne
