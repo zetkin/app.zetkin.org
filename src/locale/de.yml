@@ -3153,8 +3153,6 @@ zui:
     button: Suche
     helpText: Tippe mindestens {minSearchLength} Buchstaben
     idSearchHelpText: Gib eine ID ein (nur Ziffern)
-    placeholder: Tabelle durchsuchen
-    placeholderWithIdSearch: 'Suche - nutze # für ID, z.B. #123'
     title: Suche
   dataTableSorting:
     addButton: Füge Sortierspalte hinzu
