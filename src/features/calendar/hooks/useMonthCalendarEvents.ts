@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
 
-import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
-import { getActivitiesByDay } from '../components/utils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import { useNumericRouteParams } from 'core/hooks';
@@ -9,13 +7,14 @@ import {
   CLUSTER_TYPE,
   clusterEvents,
 } from 'features/campaigns/hooks/useClusteredActivities';
+import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
+import { getActivitiesByDay } from '../components/utils';
+import { useMonthDates } from './useMonthDates';
 
 type UseMonthCalendarEventsParams = {
   campaignId?: number;
-  endDate: Date | undefined;
   maxPerDay: number;
   orgId: number;
-  startDate: Date | undefined;
 };
 
 type UseMonthCalendarEventsReturn = {
@@ -24,11 +23,11 @@ type UseMonthCalendarEventsReturn = {
 }[];
 
 export default function useMonthCalendarEvents({
-  endDate,
   maxPerDay,
-  startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
   const { campId, orgId } = useNumericRouteParams();
+  const { firstDayOfCalendar: startDate, lastDayOfCalendar: endDate } =
+    useMonthDates();
   const eventActivities = useEventsFromDateRange(
     startDate,
     endDate,

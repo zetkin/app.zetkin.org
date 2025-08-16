@@ -6,10 +6,10 @@ import useFilteredEventActivities from 'features/events/hooks/useFilteredEventAc
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
 } from '../utils/clusterEventsForWeekCalender';
+import { useWeekDates } from './useWeekDates';
 
 type UseWeekCalendarEventsParams = {
   campaignId: number;
-  dates: Date[];
   orgId: number;
 };
 
@@ -21,9 +21,9 @@ type UseWeekCalendarEventsReturn = {
 
 export default function useWeekCalendarEvents({
   campaignId,
-  dates,
   orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
+  const { weekDates: dates } = useWeekDates();
   const eventActivities = useEventsFromDateRange(
     dates[0],
     dates[dates.length - 1],

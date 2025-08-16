@@ -24,12 +24,7 @@ export default function mockState(overrides?: RootState) {
     calendar: {
       focusDate: '',
       maxMonthEventsPerDay: 0,
-      monthViewSpan: {
-        endDate: '',
-        startDate: '',
-      },
       timeScale: '',
-      weekViewDates: [],
     },
     call: {
       activeLaneIndex: 0,
