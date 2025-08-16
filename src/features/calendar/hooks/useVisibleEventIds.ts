@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-
 import { useAppSelector, useNumericRouteParams } from 'core/hooks';
 import { RootState } from 'core/store';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
+
 import useDayCalendarEvents from './useDayCalendarEvents';
 import useMonthCalendarEvents from './useMonthCalendarEvents';
 import useWeekCalendarEvents from './useWeekCalendarEvents';
-import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 export default function useVisibleEventIds() {
   const [visibleEventIds, setVisibleEventIds] = useState<number[]>([]);
@@ -26,7 +26,7 @@ export default function useVisibleEventIds() {
   });
 
   const { activities: dayCalendarEvents } = useDayCalendarEvents(
-    focusDate.focusDate,
+    focusDate.focusDate
   );
 
   function getIdsToSelect() {

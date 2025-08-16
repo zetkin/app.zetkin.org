@@ -1,7 +1,4 @@
 import dayjs from 'dayjs';
-
-import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
-import { getActivitiesByDay } from '../components/utils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import { useNumericRouteParams } from 'core/hooks';
@@ -9,6 +6,9 @@ import {
   CLUSTER_TYPE,
   clusterEvents,
 } from 'features/campaigns/hooks/useClusteredActivities';
+
+import { AnyClusteredEvent } from '../utils/clusterEventsForWeekCalender';
+import { getActivitiesByDay } from '../components/utils';
 import { useMonthDates } from './useMonthDates';
 
 type UseMonthCalendarEventsParams = {
@@ -32,7 +32,7 @@ export default function useMonthCalendarEvents({
     startDate,
     endDate,
     orgId,
-    campId,
+    campId
   );
 
   // Filter events based on user filters

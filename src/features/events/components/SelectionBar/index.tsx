@@ -9,17 +9,17 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import { eventsSelected, resetSelection } from 'features/events/store';
+import useParticipantPool from 'features/events/hooks/useParticipantPool';
+import { RootState } from 'core/store';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { Msg } from 'core/i18n';
+import useVisibleEventIds from 'features/calendar/hooks/useVisibleEventIds';
 
 import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
-import { Msg } from 'core/i18n';
-import { eventsSelected, resetSelection } from 'features/events/store';
-import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
-import useParticipantPool from 'features/events/hooks/useParticipantPool';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
-import useVisibleEventIds from 'features/calendar/hooks/useVisibleEventIds';
 
 const SelectionBar = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ const SelectionBar = () => {
 
   const visibleEventIds = useVisibleEventIds();
   const selectedEventIds = useAppSelector(
-    (state: RootState) => state.events.selectedEventIds,
+    (state: RootState) => state.events.selectedEventIds
   );
 
   const handleDeselect = () => {
@@ -44,7 +44,7 @@ const SelectionBar = () => {
       return true;
     }
     const canSelect = !visibleEventIds.every((v) =>
-      selectedEventIds.includes(v),
+      selectedEventIds.includes(v)
     );
     return canSelect;
   }, [selectedEventIds]);

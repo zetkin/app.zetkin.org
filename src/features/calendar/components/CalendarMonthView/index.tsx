@@ -2,16 +2,16 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
-import Day from './Day';
-import range from 'utils/range';
-import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
-import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
-import WeekNumber from './WeekNumber';
-import { getWeekNumber } from './utils';
-import { setMaxMonthEventsPerDay } from 'features/calendar/store';
+import range from 'utils/range';
 import { useFocusDate } from 'utils/hooks/useFocusDate';
+import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
 import { useMonthDates } from 'features/calendar/hooks/useMonthDates';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
+import { setMaxMonthEventsPerDay } from 'features/calendar/store';
+import { getWeekNumber } from './utils';
+import WeekNumber from './WeekNumber';
+import Day from './Day';
 
 const gridGap = 8;
 const numberOfRows = 6;

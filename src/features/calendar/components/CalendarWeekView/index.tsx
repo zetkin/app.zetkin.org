@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
@@ -11,25 +12,24 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
 
+import { isSameDate } from 'utils/dateUtils';
+import messageIds from 'features/calendar/l10n/messageIds';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
+import { useWeekDates } from 'features/calendar/hooks/useWeekDates';
+import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import range from 'utils/range';
 import DayHeader from './DayHeader';
 import EventCluster from '../EventCluster';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
 import HeaderWeekNumber from './HeaderWeekNumber';
-import { isSameDate } from 'utils/dateUtils';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
-import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import { getDstChangeAtDate } from '../utils';
-import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useNumericRouteParams } from 'core/hooks';
-import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
-import { useFocusDate } from 'utils/hooks/useFocusDate';
-import { useWeekDates } from 'features/calendar/hooks/useWeekDates';
 
 dayjs.extend(isoWeek);
 

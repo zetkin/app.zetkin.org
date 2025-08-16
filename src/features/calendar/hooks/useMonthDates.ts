@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-
 import { useFocusDate } from 'utils/hooks/useFocusDate';
+
 import { getDaysBeforeFirstDay } from '../components/CalendarMonthView/utils';
 
 export const useMonthDates = () => {
@@ -10,8 +10,8 @@ export const useMonthDates = () => {
     Date.UTC(
       focusDate.focusDate.getFullYear(),
       focusDate.focusDate.getMonth(),
-      1,
-    ),
+      1
+    )
   );
   const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
     .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')

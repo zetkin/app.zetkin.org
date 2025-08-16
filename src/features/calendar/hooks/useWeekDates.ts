@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { range } from 'lodash';
-
 import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 export const useWeekDates = () => {
@@ -12,7 +11,7 @@ export const useWeekDates = () => {
       : dayjs(focusDate.focusDate);
 
   const weekDates = range(7).map((weekday) =>
-    focusWeekStartDay.day(weekday + 1).toDate(),
+    focusWeekStartDay.day(weekday + 1).toDate()
   );
   return {
     weekDates,
