@@ -1,21 +1,32 @@
 import { CheckBoxOutlined } from '@mui/icons-material';
-import { useState } from 'react';
-import { Badge, Box, Button, Divider, Paper, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
+import {
+  Badge,
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  Paper,
+  Typography,
+} from '@mui/material';
+import { eventsSelected, resetSelection } from 'features/events/store';
+import useParticipantPool from 'features/events/hooks/useParticipantPool';
+import { RootState } from 'core/store';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { Msg } from 'core/i18n';
+import useVisibleEventIds from 'features/calendar/hooks/useVisibleEventIds';
 
 import EventParticipantsModal from '../EventParticipantsModal';
 import messageIds from '../../../calendar/l10n/messageIds';
 import MoveCopyButtons from './MoveCopyButtons';
-import { Msg } from 'core/i18n';
-import { resetSelection } from 'features/events/store';
-import { RootState } from 'core/store';
 import SelectionBarEllipsis from '../SelectionBarEllipsis';
-import useParticipantPool from 'features/events/hooks/useParticipantPool';
-import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 const SelectionBar = () => {
   const dispatch = useAppDispatch();
   const [participantsDialogOpen, setParticipantsDialogOpen] = useState(false);
   const { affectedParticipantIds } = useParticipantPool();
+
+  const visibleEventIds = useVisibleEventIds();
   const selectedEventIds = useAppSelector(
     (state: RootState) => state.events.selectedEventIds
   );
@@ -23,6 +34,20 @@ const SelectionBar = () => {
   const handleDeselect = () => {
     dispatch(resetSelection());
   };
+
+  const handleSelectAll = () => {
+    dispatch(eventsSelected(visibleEventIds));
+  };
+
+  const canSelectAll = useMemo(() => {
+    if (selectedEventIds.length !== visibleEventIds.length) {
+      return true;
+    }
+    const canSelect = !visibleEventIds.every((v) =>
+      selectedEventIds.includes(v)
+    );
+    return canSelect;
+  }, [selectedEventIds]);
 
   return (
     <Box
@@ -49,9 +74,18 @@ const SelectionBar = () => {
                 <Typography color="primary" sx={{ px: 0.4 }}>
                   {selectedEventIds.length}
                 </Typography>
-                <Button color="primary" onClick={handleDeselect} sx={{ mr: 1 }}>
-                  <Msg id={messageIds.selectionBar.deselect} />
-                </Button>
+                <ButtonGroup sx={{ marginLeft: '4px' }}>
+                  <Button
+                    disabled={!canSelectAll}
+                    onClick={handleSelectAll}
+                    variant={'outlined'}
+                  >
+                    <Msg id={messageIds.selectionBar.selectAll} />
+                  </Button>
+                  <Button onClick={handleDeselect} variant={'outlined'}>
+                    <Msg id={messageIds.selectionBar.deselect} />
+                  </Button>
+                </ButtonGroup>
                 <Divider orientation="vertical" variant="fullWidth" />
                 {/* TODO: Implement edit events                
                 <Button

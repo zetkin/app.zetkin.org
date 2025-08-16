@@ -1,14 +1,17 @@
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
-import Day from './Day';
-import range from 'utils/range';
-import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
-import { useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
+import range from 'utils/range';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
+import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEvents';
+import { useMonthDates } from 'features/calendar/hooks/useMonthDates';
+import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
+import { setMaxMonthEventsPerDay } from 'features/calendar/store';
+import { getWeekNumber } from './utils';
 import WeekNumber from './WeekNumber';
-import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
+import Day from './Day';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -16,39 +19,34 @@ const numberOfDayColumns = 7;
 const numberOfGridColumns = 8;
 
 type CalendarMonthViewProps = {
-  focusDate: Date;
   onClickDay: (date: Date) => void;
   onClickWeek: (date: Date) => void;
 };
 
 const CalendarMonthView = ({
-  focusDate,
   onClickDay,
   onClickWeek,
 }: CalendarMonthViewProps) => {
   const itemHeight = 25;
   const { gridRef, maxPerDay } = useFlexibleMaxPerDay(itemHeight);
+  const dispatch = useAppDispatch();
 
-  const firstDayOfMonth: Date = new Date(
-    Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)
-  );
-  const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
-    .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
-    .toDate();
+  const { focusDate } = useFocusDate();
+  const { firstDayOfCalendar } = useMonthDates();
+
+  useEffect(() => {
+    dispatch(setMaxMonthEventsPerDay(maxPerDay));
+  }, [maxPerDay]);
 
   function onClickWeekHandler(rowIndex: number) {
     onClickWeek(dayjs(firstDayOfCalendar).add(rowIndex, 'week').toDate());
   }
-  const lastDayOfCalendar = new Date(firstDayOfCalendar);
-  lastDayOfCalendar.setDate(lastDayOfCalendar.getDate() + 6 * 7);
 
   const { orgId, campId } = useNumericRouteParams();
   const clustersByDate = useMonthCalendarEvents({
     campaignId: campId,
-    endDate: lastDayOfCalendar,
     maxPerDay,
     orgId,
-    startDate: firstDayOfCalendar,
   });
 
   return (
@@ -99,7 +97,7 @@ const CalendarMonthView = ({
                 onClick={onClickDay}
               />
             );
-          })
+          }),
         )
       }
     </Box>
