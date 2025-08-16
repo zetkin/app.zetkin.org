@@ -37,18 +37,11 @@ const transitionSettings: SxProps = {
 type Props = {
   children: ReactNode;
   events: ZetkinEventWithStatus[];
-  geojsonToFilterBy: GeoJSON.Feature[];
   header: JSX.Element;
   showMap: boolean;
 };
 
-const EventMapLayout: FC<Props> = ({
-  children,
-  events,
-  geojsonToFilterBy,
-  header,
-  showMap,
-}) => {
+const EventMapLayout: FC<Props> = ({ children, events, header, showMap }) => {
   const [mobileMapVisible, setMobileMapVisible] = useState(false);
 
   const theme = useTheme();
@@ -122,7 +115,6 @@ const EventMapLayout: FC<Props> = ({
           ) : (
             <ActivistPortalEventMap
               events={events}
-              geojsonToFilterBy={geojsonToFilterBy}
               sx={{
                 height: '100%',
               }}
@@ -169,7 +161,6 @@ const EventMapLayout: FC<Props> = ({
             {shouldMountMap ? (
               <ActivistPortalEventMap
                 events={events}
-                geojsonToFilterBy={geojsonToFilterBy}
                 sx={{
                   height: '100dvh',
                   position: 'sticky',
