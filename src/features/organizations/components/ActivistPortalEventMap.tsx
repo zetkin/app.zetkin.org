@@ -5,11 +5,13 @@ import { FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
-import { useEnv } from 'core/hooks';
+import { useAppSelector, useEnv } from 'core/hooks';
 import { markerImage } from '../utils/markerImage';
 import { pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { Latitude, Longitude } from 'features/areas/types';
+import { isLocationInGeoJSONFeatures } from '../../map/utils/locationFiltering';
+import useMapClickFiltering from '../hooks/useMapClickFiltering';
 
 export const ActivistPortalEventMap: FC<
   PropsWithChildren<{
@@ -18,6 +20,12 @@ export const ActivistPortalEventMap: FC<
   }>
 > = ({ children, events, sx }) => {
   const [map, setMap] = useState<MapType | null>(null);
+
+  const { geojsonToFilterBy } = useAppSelector(
+    (state) => state.organizations.filters
+  );
+
+  useMapClickFiltering(map);
 
   const env = useEnv();
   const bounds = useMemo(
@@ -43,7 +51,10 @@ export const ActivistPortalEventMap: FC<
           .reduce((acc, location) => {
             const key = `${location.lat},${location.lng}`;
             if (!acc[key]) {
-              acc[key] = { count: 0, lat: location.lat, lng: location.lng };
+              acc[key] = {
+                count: 0,
+                ...location,
+              };
             }
             acc[key].count += 1;
             return acc;
@@ -56,7 +67,14 @@ export const ActivistPortalEventMap: FC<
     return {
       features:
         eventCountByLocation.map((location) => {
-          const icon = `marker-${location.count}`;
+          const isHighlighted = isLocationInGeoJSONFeatures(
+            location,
+            geojsonToFilterBy
+          );
+
+          const icon = `marker-${location.count}-${
+            isHighlighted ? 'highlight' : 'regular'
+          }`;
 
           return {
             geometry: {
@@ -65,6 +83,7 @@ export const ActivistPortalEventMap: FC<
             },
             properties: {
               icon,
+              location,
             },
             type: 'Feature',
           };
@@ -109,8 +128,12 @@ export const ActivistPortalEventMap: FC<
           new Set(eventCountByLocation.map(({ count }) => count)).forEach(
             (count) => {
               map.addImage(
-                `marker-${count}`,
-                markerImage('#000000', count.toString())
+                `marker-${count}-regular`,
+                markerImage('#000000', false, count.toString())
+              );
+              map.addImage(
+                `marker-${count}-highlight`,
+                markerImage('#000000', true, count.toString())
               );
             }
           );
