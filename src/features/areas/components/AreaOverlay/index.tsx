@@ -45,7 +45,6 @@ const AreaOverlay: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(area.title);
-  const areaId = useRef(area.id);
   const [description, setDescription] = useState(area.description);
   const [fieldEditing, setFieldEditing] = useState<
     'title' | 'description' | null
@@ -78,12 +77,9 @@ const AreaOverlay: FC<Props> = ({
   );
 
   useEffect(() => {
-    if (area.id !== areaId.current) {
-      setTitle(area.title);
-      setDescription(area.description);
-      areaId.current = area.id;
-    }
-  }, [area]);
+    setTitle(area.title);
+    setDescription(area.description);
+  }, [area.id]);
 
   return (
     <Paper
