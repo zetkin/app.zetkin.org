@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 import Day from './Day';
@@ -8,12 +8,10 @@ import useMonthCalendarEvents from 'features/calendar/hooks/useMonthCalendarEven
 import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import WeekNumber from './WeekNumber';
-import { getDaysBeforeFirstDay, getWeekNumber } from './utils';
-import {
-  setMaxMonthEventsPerDay,
-  setMonthViewSpan,
-} from 'features/calendar/store';
+import { getWeekNumber } from './utils';
+import { setMaxMonthEventsPerDay } from 'features/calendar/store';
 import { useFocusDate } from 'utils/hooks/useFocusDate';
+import { useMonthDates } from 'features/calendar/hooks/useMonthDates';
 
 const gridGap = 8;
 const numberOfRows = 6;
@@ -34,30 +32,7 @@ const CalendarMonthView = ({
   const dispatch = useAppDispatch();
 
   const { focusDate } = useFocusDate();
-  const { firstDayOfCalendar, lastDayOfCalendar } = useMemo(() => {
-    const firstDayOfMonth: Date = new Date(
-      Date.UTC(focusDate.getFullYear(), focusDate.getMonth(), 1)
-    );
-    const firstDayOfCalendar: Date = dayjs(firstDayOfMonth)
-      .subtract(getDaysBeforeFirstDay(firstDayOfMonth), 'day')
-      .toDate();
-    const lastDayOfCalendar = new Date(firstDayOfCalendar);
-    lastDayOfCalendar.setDate(lastDayOfCalendar.getDate() + 6 * 7);
-
-    return {
-      firstDayOfCalendar,
-      lastDayOfCalendar,
-    };
-  }, [focusDate]);
-
-  useEffect(() => {
-    dispatch(
-      setMonthViewSpan({
-        endDate: lastDayOfCalendar.toISOString(),
-        startDate: firstDayOfCalendar.toISOString(),
-      })
-    );
-  }, [firstDayOfCalendar, lastDayOfCalendar]);
+  const { firstDayOfCalendar } = useMonthDates();
 
   useEffect(() => {
     dispatch(setMaxMonthEventsPerDay(maxPerDay));
@@ -70,10 +45,8 @@ const CalendarMonthView = ({
   const { orgId, campId } = useNumericRouteParams();
   const clustersByDate = useMonthCalendarEvents({
     campaignId: campId,
-    endDate: lastDayOfCalendar,
     maxPerDay,
     orgId,
-    startDate: firstDayOfCalendar,
   });
 
   return (
@@ -124,7 +97,7 @@ const CalendarMonthView = ({
                 onClick={onClickDay}
               />
             );
-          })
+          }),
         )
       }
     </Box>

@@ -6,10 +6,10 @@ import useFilteredEventActivities from 'features/events/hooks/useFilteredEventAc
 import clusterEventsForWeekCalender, {
   AnyClusteredEvent,
 } from '../utils/clusterEventsForWeekCalender';
+import { useWeekDates } from './useWeekDates';
 
 type UseWeekCalendarEventsParams = {
   campaignId: number;
-  dates: Date[];
   orgId: number;
 };
 
@@ -21,14 +21,14 @@ type UseWeekCalendarEventsReturn = {
 
 export default function useWeekCalendarEvents({
   campaignId,
-  dates,
   orgId,
 }: UseWeekCalendarEventsParams): UseWeekCalendarEventsReturn {
+  const { weekDates: dates } = useWeekDates();
   const eventActivities = useEventsFromDateRange(
     dates[0],
     dates[dates.length - 1],
     orgId,
-    campaignId
+    campaignId,
   );
   const filteredActivities = useFilteredEventActivities(eventActivities);
 
@@ -47,13 +47,13 @@ export default function useWeekCalendarEvents({
         activity,
         isMultipleDays: !isSameDate(
           new Date(activity.data.start_time),
-          new Date(activity.data.end_time)
+          new Date(activity.data.end_time),
         ),
       }));
 
     const [multidayActivities, singleDayActivities] = partition(
       relevantActivities,
-      (activity) => activity.isMultipleDays
+      (activity) => activity.isMultipleDays,
     ).map((l) => l.map((act) => act.activity));
 
     const lanes = clusterEventsForWeekCalender(singleDayActivities);

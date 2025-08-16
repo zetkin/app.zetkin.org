@@ -9,13 +9,12 @@ import {
   CLUSTER_TYPE,
   clusterEvents,
 } from 'features/campaigns/hooks/useClusteredActivities';
+import { useMonthDates } from './useMonthDates';
 
 type UseMonthCalendarEventsParams = {
   campaignId?: number;
-  endDate: Date | undefined;
   maxPerDay: number;
   orgId: number;
-  startDate: Date | undefined;
 };
 
 type UseMonthCalendarEventsReturn = {
@@ -24,16 +23,16 @@ type UseMonthCalendarEventsReturn = {
 }[];
 
 export default function useMonthCalendarEvents({
-  endDate,
   maxPerDay,
-  startDate,
 }: UseMonthCalendarEventsParams): UseMonthCalendarEventsReturn {
   const { campId, orgId } = useNumericRouteParams();
+  const { firstDayOfCalendar: startDate, lastDayOfCalendar: endDate } =
+    useMonthDates();
   const eventActivities = useEventsFromDateRange(
     startDate,
     endDate,
     orgId,
-    campId
+    campId,
   );
 
   // Filter events based on user filters

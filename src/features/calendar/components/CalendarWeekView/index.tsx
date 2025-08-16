@@ -11,7 +11,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import DayHeader from './DayHeader';
 import EventCluster from '../EventCluster';
@@ -26,10 +26,10 @@ import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import { getDstChangeAtDate } from '../utils';
 import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useAppDispatch, useNumericRouteParams } from 'core/hooks';
+import { useNumericRouteParams } from 'core/hooks';
 import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
-import { setWeekViewDates } from 'features/calendar/store';
 import { useFocusDate } from 'utils/hooks/useFocusDate';
+import { useWeekDates } from 'features/calendar/hooks/useWeekDates';
 
 dayjs.extend(isoWeek);
 
@@ -41,43 +41,23 @@ export interface CalendarWeekViewProps {
 }
 const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
   const theme = useTheme();
-  const dispatch = useAppDispatch();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [pendingEvent, setPendingEvent] = useState<[Date, Date] | null>(null);
   const [ghostAnchorEl, setGhostAnchorEl] = useState<HTMLDivElement | null>(
-    null
+    null,
   );
   const { orgId, campId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
   const { focusDate } = useFocusDate();
-  const focusWeekStartDay = useMemo(() => {
-    return dayjs(focusDate).isoWeekday() == 7
-      ? dayjs(focusDate).add(-1, 'day')
-      : dayjs(focusDate);
-  }, [focusDate]);
+  const { weekDates } = useWeekDates();
 
-  const weekViewDates = useMemo(() => {
-    return range(7).map((weekday) =>
-      focusWeekStartDay.day(weekday + 1).toDate()
-    );
-  }, [focusWeekStartDay]);
-
-  useEffect(() => {
-    dispatch(setWeekViewDates(weekViewDates.map((d) => d.toISOString())));
-  }, [weekViewDates]);
-
-  const dstChange = useMemo(
-    () =>
-      weekViewDates
-        .map((d) => dayjs(d))
-        .find((date) => getDstChangeAtDate(date)),
-    [weekViewDates]
-  );
+  const dstChange = weekDates
+    .map((d) => dayjs(d))
+    .find((date) => getDstChangeAtDate(date));
 
   const eventsByDate = useWeekCalendarEvents({
     campaignId: campId,
-    dates: weekViewDates,
     orgId,
   });
 
@@ -88,7 +68,7 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
     scrollToEarliestEvent(
       weekGridRef.current,
       laneHeight,
-      eventsByDate.map((a) => a.lanes)
+      eventsByDate.map((a) => a.lanes),
     );
   }, [focusDate]);
 
@@ -105,8 +85,8 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
         position="relative"
       >
         {/* Empty */}
-        <HeaderWeekNumber weekNr={dayjs(weekViewDates[0]).isoWeek()} />
-        {weekViewDates.map((weekdayDate: Date, weekday: number) => {
+        <HeaderWeekNumber weekNr={dayjs(weekDates[0]).isoWeek()} />
+        {weekDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <Box key={`weekday-${weekday}`} position="relative">
               <DayHeader
@@ -169,7 +149,7 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
           })}
         </Box>
         {/* Day columns */}
-        {weekViewDates.map((date: Date, index: number) => {
+        {weekDates.map((date: Date, index: number) => {
           const pendingTop = pendingEvent
             ? (pendingEvent[0].getUTCHours() * 60 +
                 pendingEvent[0].getMinutes()) /
@@ -206,8 +186,8 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
                       date.getMonth(),
                       date.getDate(),
                       startTime[0],
-                      startTime[1]
-                    )
+                      startTime[1],
+                    ),
                   );
 
                   const endDate = new Date(
@@ -216,8 +196,8 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
                       date.getMonth(),
                       date.getDate(),
                       endTime[0] >= 24 ? 23 : endTime[0],
-                      endTime[0] >= 24 ? 59 : endTime[1]
-                    )
+                      endTime[0] >= 24 ? 59 : endTime[1],
+                    ),
                   );
 
                   setPendingEvent([startDate, endDate]);
@@ -228,7 +208,7 @@ const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
                   return lane.map((cluster) => {
                     const startTime = new Date(cluster.events[0].start_time);
                     const endTime = new Date(
-                      cluster.events[cluster.events.length - 1].end_time
+                      cluster.events[cluster.events.length - 1].end_time,
                     );
                     const startOffs =
                       (startTime.getUTCHours() +
