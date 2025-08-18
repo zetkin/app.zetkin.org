@@ -12,17 +12,10 @@ import CanvassSidebar from './CanvassSidebar';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
 import GLCanvassMap from './GLCanvassMap';
-import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
-import useCurrentUser from 'features/user/hooks/useCurrentUser';
 
 const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
-  const user = useCurrentUser();
-  const areaAssignees =
-    useAreaAssignees(assignment.organization_id, assignment.id).data ?? [];
-  const areasData = areas ?? [];
-  const currentUserId = user?.id;
 
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
@@ -30,15 +23,6 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
   if (isServer) {
     return null;
   }
-
-  const visibleAreas = currentUserId
-    ? areasData.filter((area) =>
-        areaAssignees.some(
-          (assignee) =>
-            assignee.area_id == area.id && assignee.user_id == currentUserId
-        )
-      )
-    : [];
 
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
@@ -90,7 +74,7 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
               </Box>
             </Box>
             <Box flexGrow={1} sx={{ height: '200px' }}>
-              <GLCanvassMap areas={visibleAreas} assignment={assignment} />
+              <GLCanvassMap areas={areas} assignment={assignment} />
             </Box>
             <Box
               onClick={() => setShowMenu(false)}
