@@ -182,6 +182,7 @@ export default makeMessages('feat.campaigns', {
       viewInListButton: m('View in list'),
       viewInMapButton: m('View in map'),
     },
+    unnamedLocation: m('Unnamed location'),
   },
   shared: {
     cta: m('Go to project'),

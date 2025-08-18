@@ -27,7 +27,6 @@ import { filtersUpdated } from '../store';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import orgMessageIds from 'features/organizations/l10n/messageIds';
-import { getLocationLabel } from 'features/map/utils/locationFiltering';
 
 type Props = {
   campId: number;
@@ -51,6 +50,23 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isFiltered = !!geojsonToFilterBy.length || !!dateFilterState;
+
+  const locationFilters = geojsonToFilterBy.map((feature) => {
+    return {
+      active: true,
+      key: 'location',
+      label:
+        feature.properties?.location?.title ||
+        messageIds.publicProjectPage.unnamedLocation,
+      onClick: () => {
+        dispatch(
+          filtersUpdated({
+            geojsonToFilterBy: [],
+          })
+        );
+      },
+    };
+  });
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -121,24 +137,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       },
     },
   ]
-    .concat(
-      geojsonToFilterBy.length
-        ? [
-            {
-              active: true,
-              key: 'location',
-              label: getLocationLabel(geojsonToFilterBy, intl),
-              onClick: () => {
-                dispatch(
-                  filtersUpdated({
-                    geojsonToFilterBy: [],
-                  })
-                );
-              },
-            },
-          ]
-        : []
-    )
+    .concat(locationFilters)
     .sort((a, b) => {
       if (a.active && !b.active) {
         return -1;
