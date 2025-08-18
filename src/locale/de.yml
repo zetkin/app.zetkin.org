@@ -219,14 +219,14 @@ feat:
         unpublish: Verbergen
       moveCopyButtons:
         copy: Kopieren
-        copyMenuHeader: Kopiere {numberOfEvents} Aktionen zu
+        copyMenuHeader: Kopiere {numberOfEvents} Aktionen nach
         createShift: Nach jeder Aktion (create shift)
         duplicate: Zeit und Datum schicken (duplicate)
         move: Verschieben
-        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen zu
+        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen nach
         nextDay: Nächster Tag {dates}
         nextWeek: Nächste Woche
-    shortWeek: w {weekNumber}
+    shortWeek: W {weekNumber}
     showMore: Mehr
     today: Heute
   call:
@@ -272,10 +272,12 @@ feat:
             saveWithoutNoteButton: Ohne Notiz speichern
         organizerAction:
           question:
-            title: Soll eine wichtige Information an die Organizer*in weitergegeben werden?
+            noButton: Nein
+            title: Soll eine wichtige Information an Organizer*in weitergegeben werden?
+            yesButton: Ja
           summary:
             orgActionNeeded:
-              subtitle: Ein*e Organizer*in wird benachrichtigt.
+              subtitle: Organizer*in wird benachrichtigt.
         organizerLog:
           question:
             title: Erkläre der*m Organizer*in das Problem
@@ -283,13 +285,16 @@ feat:
             withoutMessageButton: Weiter
           summary:
             withMessage:
-              title: Du hast eine Nachricht an die Organizer*innen hinterlassen
-            withoutMessage: Du hast keine Nachricht an die Organizer*innen hinterlassen
+              title: Du hast eine Nachricht an Organizer*in hinterlassen
+            withoutMessage: Du hast keine Nachricht an Organizer*in hinterlassen
         successOrFailure:
           question:
             noButton: Nein
             title: Hast du {firstName} erreicht?
             yesButton: Ja
+          summary:
+            success:
+              title: '{firstName} wurde erfolgreich angerufen'
   callAssignments:
     actions:
       delete: Löschen
@@ -346,7 +351,7 @@ feat:
             gehen.
           title: Notizfeld für Telefonierer*innen erlauben
         targetData:
-          message: Name und Telefonnummer der Zielperson sind immer sichtbar für
+          message: Name, Telefonnummer und Email der Zielperson sind immer sichtbar für
             Telefonierer*innen. Zusätzliche Informationen einzublenden bedeutet
             alle verfügbaren Felder anzuzeigen.
           title: Zusätzliche Informationen einblenden
@@ -559,6 +564,13 @@ feat:
   canvass:
     default:
       description: Leere Beschreibung
+    households:
+      edit:
+        header: Bearbeiten
+        saveButtonLabel: Sichern
+        titleLabel: Titel bearbeiten
+      single:
+        subtitle: Etage
     instructions:
       areas: Gebiete
       visitedHouseholds: Besuchte Türen
@@ -606,6 +618,7 @@ feat:
     visit:
       household:
         noButtonLabel: Nein
+        skipButtonLabel: Frage überspringen
         yesButtonLabel: Ja
       location:
         noInputLabel: Nein
@@ -691,6 +704,8 @@ feat:
             invalidEmailAddress: Dies ist keine gültige E-Mail-Adresse
             okButton: OK!
             previewInBrowser: Im Browser anzeigen
+            previewInBrowserInstructions: Klicke auf das Feld unten, um die Email–Vorschau
+              im Browser anzuzeigen.
             sendButton: Versenden
             sendTo: 'Die E-Mail wird an diese Adresse gesendet:'
             title: Vorschau
@@ -1083,6 +1098,7 @@ feat:
       tooltip: Klicke, um Typ zu ändern
       uncategorized: Nicht kategorisiert
     urlCard:
+      nowAccepting: Anmeldungen über diesen Link möglich
       open: Anmeldungen noch möglich
   files:
     fileUpload:
@@ -1937,7 +1953,9 @@ feat:
         haveSelect:
           in: wurden
           notin: wurden nicht
-        inputString: ''
+        inputString: '{addRemoveSelect} Personen die {haveSelect} {bookedSelect}
+          {statusSelect} für Veranstaltungen in {campaignSelect} der Kategorie
+          {activitySelect} in {locationSelect} {timeFrame}'
         locationSelect:
           any: irgendein Ort
           location: Ort "{location}"
@@ -1947,33 +1965,33 @@ feat:
           cancelled: und abgesagt haben
           noshow: und ist nicht erschienen
       emailBlacklist:
-        inputString: '{addRemoveSelect} Personen, die eine E-Mail erhalten werden, auf
+        inputString: '{addRemoveSelect} Personen, die keine E-Mails erhalten können, auf
           Grund von {reasonSelect}'
         reasonSelect:
           any: aus irgendeinem Grund
           unsubOrg: sie haben sich abgemeldet
       emailClick:
         inputString: '{addRemoveSelect} Personen, die {operatorSelect} {linkScopeSelect}
-          {emailSelect} {projectSelect} {timeFrame} {linkSelect} haben'
+          {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
         linkScopeSelect:
           anyFollowingLinks: irgendeinen der folgenden Links in der spezifischen E-Mail
           anyLink: irgendeinen Link in irgendeiner E-Mail
           anyLinkInEmail: irgendeinen Link in einer spezifischen E-Mail
           linkInEmailFromProject: irgendeinen Link in irgendeiner E-Mail in einem spezifischen Projekt
         operatorSelect:
-          clicked: geklickt
-          notClicked: nicht geklickt
+          clicked: haben geklickt
+          notClicked: haben nicht geklickt
       emailHistory:
         emailScopeSelect:
           any: irgendeine E-Mail
           email: die spezifische E-Mail
           project: irgendeine E-Mail vom Projekt
-        inputString: '{addRemoveSelect} Personen, die {operatorSelect}
-          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame} haben'
+        inputString: '{addRemoveSelect} Personen, (an) die {operatorSelect}
+          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
         operatorSelect:
-          notOpened: nicht geöffnet
-          notSent: nicht gesendet
-          opened: geöffnet
+          notOpened: nicht geöffnet haben
+          notSent: nicht gesendet wurde
+          opened: geöffnet haben
           sent: wurde gesendet
       joinForm:
         anyForm: jedes Zetkin-Beitrittsformular
@@ -2015,7 +2033,7 @@ feat:
         examples:
           one: Füge alle Personen hinzu, deren Vorname 'Clara' und deren Nachname 'Zetkin'
             ist.
-          two: Entferne alle Personen, deren Ort Stockholm ist.
+          two: Entferne alle Personen, deren Ort 'Stockholm' ist.
         fieldMatches: '{field} ist {value}'
         fieldSelect:
           alt_phone: Weitere Telefonnummer
@@ -2734,12 +2752,12 @@ feat:
       confirmDelete:
         folder:
           title: Ordner löschen
-          warning: Diesen Ordner und alle Listen darin zu löschen kann nicht rückgängig
+          warning: Das Löschen des Ordners und aller Listen darin kann nicht rückgängig
             gemacht werden. Möchtest du fortfahren?
         view:
           title: Liste löschen
-          warning: Diese Liste zu löschen kann nicht rückgängig gemacht werden. Möchtest
-            du fortfahren?
+          warning: Das Löschen der Liste kann nicht rückgängig gemacht werden. Möchtest du
+            fortfahren?
       menu:
         delete: Löschen
         duplicate: Dupliziere
@@ -2747,7 +2765,7 @@ feat:
         rename: Umbenennen
         viewCopy: '{viewName} - kopiere'
       moveToFolder: verschieben zu {folder}
-      moveToRoot: Verschieben zu alle Listen
+      moveToRoot: Verschieben zu 'alle Listen'
     browserLayout:
       tabs:
         duplicates: Duplikate
@@ -2869,7 +2887,7 @@ feat:
             dargestellt.
           title: Einzelne Umfrageantwort
         surveyResponses:
-          description: Mehrere Umfrageantworten einbeziehen
+          description: Mehrere Umfrageantworten einbeziehen.
           keywords: Feld mehrere
           questionField: Fragen
           surveyField: Umfragen
@@ -3151,8 +3169,8 @@ zui:
       url: Bitte füge eine gültige URL hinzu
   dataTableSearch:
     button: Suche
-    helpText: Tippe mindestens {minSearchLength} Buchstaben
-    idSearchHelpText: Gib eine ID ein (nur Ziffern)
+    placeholder: Tabelle durchsuchen
+    placeholderWithIdSearch: 'Suche - nutze # für ID, z.B. #123'
     title: Suche
   dataTableSorting:
     addButton: Füge Sortierspalte hinzu
