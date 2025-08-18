@@ -26,8 +26,7 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
 
   const visibleAreas = areas.filter((area) =>
     areaAssignees.data?.some(
-      (assignee) =>
-        assignee.area_id === area.id && assignee.user_id === user?.id
+      (assignee) => assignee.area_id == area.id && assignee.user_id == user?.id
     )
   );
 
