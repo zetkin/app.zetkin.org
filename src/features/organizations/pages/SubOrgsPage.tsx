@@ -15,11 +15,15 @@ type Props = {
 
 const SubOrgsPage: FC<Props> = ({ orgId }) => {
   const allSubOrgs = usePublicSubOrgs(orgId);
-  const subOrgs = allSubOrgs.filter((org) => org.parent?.id == orgId);
+  const subOrgsSorted = allSubOrgs
+    .filter((org) => org.parent?.id == orgId)
+    .sort((so1, so2) => {
+      return so1.title.localeCompare(so2.title);
+    });
 
   return (
     <List>
-      {subOrgs.map((org) => {
+      {subOrgsSorted.map((org) => {
         const hasSubOrgs = !!allSubOrgs.find(
           (subOrg) => subOrg.parent?.id == org.id
         );
