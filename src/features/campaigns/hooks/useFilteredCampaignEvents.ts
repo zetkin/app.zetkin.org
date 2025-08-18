@@ -5,7 +5,7 @@ import { useAppSelector } from 'core/hooks';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import useUpcomingCampaignEvents from './useUpcomingCampaignEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
-import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
+import { isLocationInGeoJSONFeatures } from 'features/map/utils/locationFiltering';
 
 export default function useFilteredCampaignEvents(
   campId: number,
@@ -73,17 +73,7 @@ export default function useFilteredCampaignEvents(
     if (geojsonToFilterBy.length === 0) {
       return true;
     }
-
-    if (!event?.location) {
-      return false;
-    }
-
-    const features = getGeoJSONFeaturesAtLocations(
-      geojsonToFilterBy,
-      event.location
-    );
-
-    return features.length > 0;
+    return isLocationInGeoJSONFeatures(event.location, geojsonToFilterBy);
   });
 
   return { allEvents, filteredEvents, getDateRange, locationEvents };

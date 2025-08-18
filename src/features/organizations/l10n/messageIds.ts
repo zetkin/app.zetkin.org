@@ -23,9 +23,6 @@ export default makeMessages('feat.organizations', {
     label: m('Sign up'),
     loginButton: m('Log in & come back'),
   },
-  common: {
-    unnamedLocation: m('Unnamed location'),
-  },
   eventPage: {
     cancelSignup: m('Cancel signup'),
     cancelledHeader: m('This event has been cancelled'),

@@ -36,6 +36,7 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
+import { getLocationLabel } from '../../map/utils/locationFiltering';
 
 type Props = {
   orgId: number;
@@ -98,26 +99,6 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-
-  const locationFilters = geojsonToFilterBy.map((feature) => {
-    return {
-      active: true,
-      key: `location-${feature.properties?.location?.id}`,
-      label:
-        feature.properties?.location?.title ||
-        messageIds.common.unnamedLocation,
-      onClick: () => {
-        dispatch(
-          filtersUpdated({
-            geojsonToFilterBy: geojsonToFilterBy.filter(
-              (f) =>
-                f.properties?.location?.id !== feature.properties?.location?.id
-            ),
-          })
-        );
-      },
-    };
-  });
 
   const filters = [
     {
@@ -186,7 +167,24 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         ]
       : []),
   ]
-    .concat(locationFilters)
+    .concat(
+      geojsonToFilterBy.length
+        ? [
+            {
+              active: true,
+              key: 'location',
+              label: getLocationLabel(geojsonToFilterBy, intl),
+              onClick: () => {
+                dispatch(
+                  filtersUpdated({
+                    geojsonToFilterBy: [],
+                  })
+                );
+              },
+            },
+          ]
+        : []
+    )
     .sort((a, b) => {
       if (a.active && !b.active) {
         return -1;
