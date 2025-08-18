@@ -90,7 +90,7 @@ export const ActivistPortalEventMap: FC<
         }) ?? [],
       type: 'FeatureCollection',
     };
-  }, [events]);
+  }, [events, geojsonToFilterBy]);
 
   return (
     <Box
