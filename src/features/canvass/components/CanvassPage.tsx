@@ -19,16 +19,10 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
   const user = useCurrentUser();
-  const areaAssignees = useAreaAssignees(
-    assignment.organization_id,
-    assignment.id
-  );
-
-  const visibleAreas = areas.filter((area) =>
-    areaAssignees.data?.some(
-      (assignee) => assignee.area_id == area.id && assignee.user_id == user?.id
-    )
-  );
+  const areaAssignees =
+    useAreaAssignees(assignment.organization_id, assignment.id).data ?? [];
+  const areasData = areas ?? [];
+  const currentUserId = user?.id;
 
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
@@ -36,6 +30,16 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
   if (isServer) {
     return null;
   }
+
+  const visibleAreas = currentUserId
+    ? areasData.filter((area) =>
+        areaAssignees.some(
+          (assignee) =>
+            assignee.area_id == area.id && assignee.user_id == currentUserId
+        )
+      )
+    : [];
+
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
       {({ data: { org } }) => (
