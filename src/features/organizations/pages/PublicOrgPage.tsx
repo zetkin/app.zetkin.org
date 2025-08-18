@@ -36,7 +36,6 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
-import { getLocationLabel } from '../../map/utils/locationFiltering';
 
 type Props = {
   orgId: number;
@@ -99,6 +98,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
+
+  let locationFilterLabel = '';
+  if (geojsonToFilterBy.length > 1) {
+    locationFilterLabel = messages.allEventsList.filterButtonLabels.locations({
+      count: geojsonToFilterBy.length,
+    });
+  } else if (geojsonToFilterBy.length === 1) {
+    locationFilterLabel = geojsonToFilterBy[0]?.properties?.location
+      ?.title as string;
+  }
 
   const filters = [
     {
@@ -173,7 +182,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
             {
               active: true,
               key: 'location',
-              label: getLocationLabel(geojsonToFilterBy, intl),
+              label: locationFilterLabel,
               onClick: () => {
                 dispatch(
                   filtersUpdated({

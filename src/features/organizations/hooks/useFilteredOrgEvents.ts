@@ -5,7 +5,7 @@ import { ZetkinEventWithStatus } from 'features/home/types';
 import useUpcomingOrgEvents from './useUpcomingOrgEvents';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import { useAppSelector } from 'core/hooks';
-import { isLocationInGeoJSONFeatures } from '../../map/utils/locationFiltering';
+import { getGeoJSONFeaturesAtLocations } from '../../map/utils/locationFiltering';
 
 export default function useFilteredOrgEvents(orgId: number) {
   const orgEvents = useUpcomingOrgEvents(orgId);
@@ -82,7 +82,17 @@ export default function useFilteredOrgEvents(orgId: number) {
     if (geojsonToFilterBy.length === 0) {
       return true;
     }
-    return isLocationInGeoJSONFeatures(event.location, geojsonToFilterBy);
+
+    if (!event?.location) {
+      return false;
+    }
+
+    const features = getGeoJSONFeaturesAtLocations(
+      geojsonToFilterBy,
+      event.location
+    );
+
+    return features.length > 0;
   });
 
   return { allEvents, filteredEvents, getDateRange, locationEvents };

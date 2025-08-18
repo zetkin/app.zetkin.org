@@ -10,7 +10,7 @@ import { markerImage } from '../utils/markerImage';
 import { pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { Latitude, Longitude } from 'features/areas/types';
-import { isLocationInGeoJSONFeatures } from '../../map/utils/locationFiltering';
+import { getGeoJSONFeaturesAtLocations } from '../../map/utils/locationFiltering';
 import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
 export const ActivistPortalEventMap: FC<
@@ -80,7 +80,7 @@ export const ActivistPortalEventMap: FC<
             }
             acc[key].count += 1;
             return acc;
-          }, {} as Record<string, { count: number; lat: number; lng: number }>)
+          }, {} as Record<string, { count: number; id: number; lat: number; lng: number }>)
       ),
     [events]
   );
@@ -89,13 +89,13 @@ export const ActivistPortalEventMap: FC<
     return {
       features:
         eventCountByLocation.map((location) => {
-          const isHighlighted = isLocationInGeoJSONFeatures(
-            location,
-            locationFilter
+          const features = getGeoJSONFeaturesAtLocations(
+            locationFilter,
+            location
           );
 
           const icon = `marker-${location.count}-${
-            isHighlighted ? 'highlight' : 'regular'
+            features.length > 0 ? 'highlight' : 'regular'
           }`;
 
           return {

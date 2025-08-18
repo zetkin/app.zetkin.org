@@ -27,7 +27,6 @@ import { filtersUpdated } from '../store';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import orgMessageIds from 'features/organizations/l10n/messageIds';
-import { getLocationLabel } from 'features/map/utils/locationFiltering';
 
 type Props = {
   campId: number;
@@ -65,6 +64,17 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       });
     }
   };
+
+  let locationFilterLabel = '';
+  if (geojsonToFilterBy.length > 1) {
+    locationFilterLabel =
+      messages.publicProjectPage.eventList.filterButtonLabels.locations({
+        count: geojsonToFilterBy.length,
+      });
+  } else if (geojsonToFilterBy.length === 1) {
+    locationFilterLabel = geojsonToFilterBy[0]?.properties?.location
+      ?.title as string;
+  }
 
   const filters = [
     {
@@ -127,7 +137,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             {
               active: true,
               key: 'location',
-              label: getLocationLabel(geojsonToFilterBy, intl),
+              label: locationFilterLabel,
               onClick: () => {
                 dispatch(
                   filtersUpdated({
