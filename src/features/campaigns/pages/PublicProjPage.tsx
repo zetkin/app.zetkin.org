@@ -226,6 +226,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
+                    geojsonToFilterBy: [],
                   })
                 )
               }
