@@ -449,7 +449,6 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
                 num_estimated_households: newLocation.numEstimatedHouseholds,
                 title: newLocation.title,
                 type: 'assignment',
-
               });
             }
           }
