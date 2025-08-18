@@ -5,27 +5,49 @@ import { FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
-import { useAppSelector, useEnv } from 'core/hooks';
+import { useEnv } from 'core/hooks';
 import { markerImage } from '../utils/markerImage';
 import { pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { Latitude, Longitude } from 'features/areas/types';
 import { isLocationInGeoJSONFeatures } from '../../map/utils/locationFiltering';
-import useMapClickFiltering from '../hooks/useMapClickFiltering';
+import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
 export const ActivistPortalEventMap: FC<
   PropsWithChildren<{
     events: ZetkinEventWithStatus[];
+    locationFilter: GeoJSON.Feature[];
+    setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
     sx?: SxProps;
   }>
-> = ({ children, events, sx }) => {
+> = ({ children, events, locationFilter, setLocationFilter, sx }) => {
   const [map, setMap] = useState<MapType | null>(null);
 
-  const { geojsonToFilterBy } = useAppSelector(
-    (state) => state.organizations.filters
-  );
+  useMapMarkerClick(map, (geojsonFeatures) => {
+    const bounds = pointsToBounds(
+      geojsonFeatures.map((feature) => {
+        if (feature.geometry.type === 'Point') {
+          return [
+            feature.geometry.coordinates[1] as Longitude,
+            feature.geometry.coordinates[0] as Latitude,
+          ];
+        } else {
+          return [0 as Longitude, 0 as Latitude];
+        }
+      })
+    );
 
-  useMapClickFiltering(map);
+    if (map && bounds) {
+      map.fitBounds(bounds, {
+        animate: true,
+        duration: 1200,
+        maxZoom: 16,
+        padding: 20,
+      });
+    }
+
+    setLocationFilter(geojsonFeatures);
+  });
 
   const env = useEnv();
   const bounds = useMemo(
@@ -69,7 +91,7 @@ export const ActivistPortalEventMap: FC<
         eventCountByLocation.map((location) => {
           const isHighlighted = isLocationInGeoJSONFeatures(
             location,
-            geojsonToFilterBy
+            locationFilter
           );
 
           const icon = `marker-${location.count}-${
@@ -90,7 +112,7 @@ export const ActivistPortalEventMap: FC<
         }) ?? [],
       type: 'FeatureCollection',
     };
-  }, [events, geojsonToFilterBy]);
+  }, [events, locationFilter]);
 
   return (
     <Box
