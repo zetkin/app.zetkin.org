@@ -1,6 +1,11 @@
 import { partition } from 'lodash';
 
-import { dateIsAfter, isSameDate, dateIsBefore } from 'utils/dateUtils';
+import {
+  dateIsAfter,
+  dateIsBefore,
+  isSameDate,
+  removeOffset,
+} from 'utils/dateUtils';
 import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange';
 import useFilteredEventActivities from 'features/events/hooks/useFilteredEventActivities';
 import clusterEventsForWeekCalender, {
@@ -35,8 +40,8 @@ export default function useWeekCalendarEvents({
   return dates.map((date) => {
     const relevantActivities = filteredActivities
       .filter((activity) => {
-        const start = new Date(activity.data.start_time);
-        const end = new Date(activity.data.end_time);
+        const start = new Date(removeOffset(activity.data.start_time));
+        const end = new Date(removeOffset(activity.data.end_time));
         return (
           isSameDate(start, date) ||
           isSameDate(end, date) ||
@@ -46,8 +51,8 @@ export default function useWeekCalendarEvents({
       .map((activity) => ({
         activity,
         isMultipleDays: !isSameDate(
-          new Date(activity.data.start_time),
-          new Date(activity.data.end_time)
+          new Date(removeOffset(activity.data.start_time)),
+          new Date(removeOffset(activity.data.end_time))
         ),
       }));
 

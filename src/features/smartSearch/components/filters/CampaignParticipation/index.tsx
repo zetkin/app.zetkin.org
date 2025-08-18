@@ -41,7 +41,10 @@ const removeKey = (
           }
           return result;
         },
-        { operator: config.operator, state: config.state }
+        {
+          operator: config.operator,
+          state: config.state,
+        }
       )
     : config;
 };
@@ -71,6 +74,7 @@ const CampaignParticipation = ({
       operator: 'in',
       organizations: [orgId],
       state: 'booked',
+      status: undefined,
     });
 
   const orgIds = useOrgIdsFromOrgScope(
@@ -98,8 +102,15 @@ const CampaignParticipation = ({
     after?: string;
     before?: string;
   }) => {
-    const { state, operator, campaign, activity, location, organizations } =
-      filter.config;
+    const {
+      state,
+      status,
+      operator,
+      campaign,
+      activity,
+      location,
+      organizations,
+    } = filter.config;
     setConfig({
       activity,
       campaign,
@@ -107,6 +118,7 @@ const CampaignParticipation = ({
       operator,
       organizations,
       state,
+      status,
       ...range,
     });
   };
@@ -132,6 +144,17 @@ const CampaignParticipation = ({
       setConfig(removeKey(filter.config, 'location'));
     } else {
       setConfig({ ...filter.config, location: +locationValue });
+    }
+  };
+
+  const handleStatusSelectChange = (statusValue: string) => {
+    if (statusValue === DEFAULT_VALUE) {
+      setConfig(removeKey(filter.config, 'status'));
+    } else {
+      setConfig({
+        ...filter.config,
+        status: statusValue as 'attended' | 'cancelled' | 'noshow',
+      });
     }
   };
 
@@ -294,6 +317,25 @@ const CampaignParticipation = ({
                     {l.title}
                   </MenuItem>
                 ))}
+              </StyledSelect>
+            ),
+            statusSelect: (
+              <StyledSelect
+                onChange={(e) => handleStatusSelectChange(e.target.value)}
+                value={filter.config.status || DEFAULT_VALUE}
+              >
+                <MenuItem key="any" value={DEFAULT_VALUE}>
+                  <Msg id={localMessageIds.statusSelect.any} />
+                </MenuItem>
+                <MenuItem key="attended" value="attended">
+                  <Msg id={localMessageIds.statusSelect.attended} />
+                </MenuItem>
+                <MenuItem key="cancelled" value="cancelled">
+                  <Msg id={localMessageIds.statusSelect.cancelled} />
+                </MenuItem>
+                <MenuItem key="noshow" value="noshow">
+                  <Msg id={localMessageIds.statusSelect.noshow} />
+                </MenuItem>
               </StyledSelect>
             ),
             timeFrame: (

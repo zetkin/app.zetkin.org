@@ -79,7 +79,7 @@ const AreaOverlay: FC<Props> = ({
   useEffect(() => {
     setTitle(area.title);
     setDescription(area.description);
-  }, [area]);
+  }, [area.id]);
 
   return (
     <Paper
@@ -125,10 +125,9 @@ const AreaOverlay: FC<Props> = ({
                 );
               }}
               renderInput={(props) => (
-                <TextField
-                  fullWidth
-                  inputProps={props}
-                  onBlur={() => {
+                <form
+                  onSubmit={(ev) => {
+                    ev.preventDefault();
                     if (fieldEditing === 'title') {
                       setFieldEditing(null);
                       updateArea({
@@ -136,10 +135,24 @@ const AreaOverlay: FC<Props> = ({
                       });
                     }
                   }}
-                  onChange={(ev) => setTitle(ev.target.value)}
-                  sx={{ marginBottom: 2 }}
-                  value={title}
-                />
+                >
+                  <TextField
+                    fullWidth
+                    inputProps={props}
+                    onBlur={() => {
+                      if (fieldEditing === 'title') {
+                        setFieldEditing(null);
+                        updateArea({
+                          title:
+                            title?.trim() || messages.areas.default.title(),
+                        });
+                      }
+                    }}
+                    onChange={(ev) => setTitle(ev.target.value)}
+                    sx={{ marginBottom: 2 }}
+                    value={title}
+                  />
+                </form>
               )}
               renderPreview={() => (
                 <Typography variant="h5">

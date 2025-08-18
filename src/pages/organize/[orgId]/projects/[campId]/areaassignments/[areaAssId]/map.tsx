@@ -11,13 +11,13 @@ import useAreas from 'features/areas/hooks/useAreas';
 import useServerSide from 'core/useServerSide';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import { AREAS } from 'utils/featureFlags';
-import useLocations from 'features/areaAssignments/hooks/useLocations';
 import useAssignmentAreaStats from 'features/areaAssignments/hooks/useAssignmentAreaStats';
 import ZUIFutures from 'zui/ZUIFutures';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import AssigneeFilterProvider from 'features/areaAssignments/components/OrganizerMapFilters/AssigneeFilterContext';
 import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 const OrganizerMap = dynamic(
   () =>
@@ -49,7 +49,9 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
   orgId,
 }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
-  const locations = useLocations(parseInt(orgId), areaAssId).data || [];
+  // TODO: Re-enable this
+  //const locations = useLocations(parseInt(orgId), areaAssId).data || [];
+  const locations: ZetkinLocation[] = [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
@@ -80,7 +82,14 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
               <AssigneeFilterProvider>
                 <OrganizerMap
                   areaAssId={areaAssId}
-                  areas={areas}
+                  areas={areas.map((area) => ({
+                    description: area.description,
+                    id: area.id,
+                    organization_id: area.organization_id,
+                    points: area.boundary.coordinates[0],
+                    tags: [],
+                    title: area.title,
+                  }))}
                   areaStats={areaStats}
                   locations={locations}
                   onAddAssigneeToArea={(area, user) => {

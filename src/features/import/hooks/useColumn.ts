@@ -1,6 +1,6 @@
 import { columnUpdate } from '../store';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';

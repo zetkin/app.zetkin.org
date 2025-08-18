@@ -1,3 +1,31 @@
+glob:
+  accessLevels:
+    configure: Wijzigen en configureren
+    edit: Wijzigen
+    readonly: Alleen lezen
+  genderOptions:
+    f: Vrouw
+    m: Man
+    o: Anders
+    unspecified: Niet gespecificeerd
+  personFields:
+    alt_phone: Alternatief telefoonnummer
+    city: Plaats
+    co_address: Per adres
+    country: Land
+    email: Email
+    ext_id: Externe ID
+    first_name: Voornaam
+    gender: Gender
+    id: ID
+    is_user: Is een gebruiker
+    last_name: Achternaam
+    phone: Telefoonnummer
+    street_address: Adres
+    zip_code: Postcode
+  roles:
+    admin: Administrator
+    organizer: Organisator
 core:
   err404:
     backToHomePage: Terug naar de startpagina
@@ -1532,9 +1560,7 @@ feat:
         haveSelect:
           in: heeft
           notin: heeft niet
-        inputString: '{addRemoveSelect} mensen die {haveSelect} {bookedSelect} voor
-          gebeurtenissen in {campaignSelect} van {activitySelect} op
-          {locationSelect} {timeFrame}'
+        inputString: ''
         locationSelect:
           any: welke locatie dan ook
           location: locatie "{location}"
@@ -2688,8 +2714,6 @@ zui:
       url: Vul alsjeblieft een valide URL in
   dataTableSearch:
     button: Zoeken
-    helpText: Typ tenminste {minSearchLength} karakters
-    idSearchHelpText: Typ een ID (alleen nummers)
     placeholder: Zoeken in deze tabel
     placeholderWithIdSearch: 'Zoeken - gebruik # voor IDs, bijvoorbeeld: type #123'
     title: Zoeken

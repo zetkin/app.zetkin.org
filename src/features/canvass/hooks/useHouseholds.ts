@@ -2,6 +2,7 @@ import useRemoteList from 'core/hooks/useRemoteList';
 import { Zetkin2Household } from '../types';
 import { useApiClient, useAppSelector } from 'core/hooks';
 import { householdsLoad, householdsLoaded } from '../store';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useHouseholds(
   orgId: number,
@@ -14,9 +15,11 @@ export default function useHouseholds(
   return useRemoteList(list, {
     actionOnLoad: () => householdsLoad(locationId),
     actionOnSuccess: (data) => householdsLoaded([locationId, data]),
-    loader: () =>
-      apiClient.get<Zetkin2Household[]>(
-        `/api2/orgs/${orgId}/locations/${locationId}/households`
+    loader: async () =>
+      fetchAllPaginated<Zetkin2Household>((page) =>
+        apiClient.get(
+          `/api2/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
+        )
       ),
   });
 }

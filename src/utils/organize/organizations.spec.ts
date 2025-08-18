@@ -4,30 +4,35 @@ import { flattenTree, nestByParentId } from './organizations';
 export const flatOrgs: PersonOrganization[] = [
   {
     id: 1,
+    role: null,
     sub_orgs: [],
     title: 'Root Org',
   },
   {
     id: 2,
     parent: { id: 1, title: 'Root org' },
+    role: null,
     sub_orgs: [],
     title: 'First sub-org',
   },
   {
     id: 3,
     parent: { id: 1, title: 'Root org' },
+    role: null,
     sub_orgs: [],
     title: 'Second sub-org',
   },
   {
     id: 4,
     parent: { id: 1, title: 'Root org' },
+    role: null,
     sub_orgs: [],
     title: 'Third sub-org',
   },
   {
     id: 33,
     parent: { id: 3, title: 'Second sub-org' },
+    role: null,
     sub_orgs: [],
     title: 'Child of second sub-org',
   },
@@ -36,10 +41,12 @@ export const flatOrgs: PersonOrganization[] = [
 const orgTree: PersonOrganization = {
   id: 3,
   parent: { id: 1, title: 'Root org' },
+  role: null,
   sub_orgs: [
     {
       id: 33,
       parent: { id: 3, title: 'Second sub-org' },
+      role: null,
       sub_orgs: [],
       title: 'Child of second sub-org',
     },

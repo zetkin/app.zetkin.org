@@ -16,12 +16,14 @@ import GLCanvassMap from './GLCanvassMap';
 const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
+
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
 
   if (isServer) {
     return null;
   }
+
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
       {({ data: { org } }) => (

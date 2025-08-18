@@ -1,3 +1,31 @@
+glob:
+  accessLevels:
+    configure: Bearbeiten & Erstellen
+    edit: In Bearbeitung
+    readonly: Schreibgeschützte Ansicht
+  genderOptions:
+    f: Weiblich
+    m: Männlich
+    o: Divers
+    unspecified: Keine Angabe
+  personFields:
+    alt_phone: Weitere Telefonnummer
+    city: Stadt
+    co_address: Adresszusatz
+    country: Land
+    email: E-Mail
+    ext_id: Externe ID
+    first_name: Vorname
+    gender: Geschlechtsidentität
+    id: ID
+    is_user: hat Profil
+    last_name: Nachname
+    phone: Telefonnummer
+    street_address: Adresse
+    zip_code: Postleitzahl
+  roles:
+    admin: Admin
+    organizer: Organizer*in
 core:
   err404:
     backToHomePage: zurück zur Startseite
@@ -11,6 +39,80 @@ core:
     info: Du nutzt eine vorläufige Version von Zetkin, in der diese Funktion nicht
       verfügbar ist. Deswegen wirst du nun zur Vorgängerversion weitergeleitet.
 feat:
+  areaAssignments:
+    assignees:
+      columns:
+        areas: Gebiet
+        name: |
+          Name
+    default:
+      title: Unbenannte Gebietszuordnung
+    instructions:
+      editor:
+        confirm: Möchtest du alle nicht gespeicherten Änderungen löschen und zu den
+          gespeicherten Anweisungen zurückkehren?
+        editorPlaceholder: Hinweise für deine Aktivist*innen hinzufügen
+        revertLink: Zu gespeicherter Version zurückkehren?
+        saveButton: Speichern
+        savedMessage: Alles ist aktuell!
+        savingButton: Speichern...
+        unsavedMessage: Du hast Änderungen noch nicht gespeichert.
+      title: Anleitung für die Verantwortlichen
+    layout:
+      actions:
+        delete: Löschen
+        deleteWarningText: Bist du sicher, dass du {title} löschen möchtest?
+        end: Auftrag beenden
+        start: Auftrag starten
+      basicAssignmentStats:
+        areas: ''
+      tabs:
+        instructions: Anleitung
+        map: Karte
+        overview: Übersicht
+    map:
+      filter:
+        assignees:
+          assigned: Nur zugewiesene Gebiete
+          unassigned: Nur nicht zugewiesene Gebiete
+        header: Filter
+        title: Füge Filter hinzu, um Gebiete in der Karte sichtbar zu machen
+        ungroupedTags: Schlagworte ohne Gruppe
+      findArea:
+        filterPlaceHolder: Filter
+        title: Gebiete
+      mapStyle:
+        area:
+          label: Farbe des Gebiets
+          options:
+            households: Haushalte
+    report:
+      lockCard:
+        safe: Sicher
+        unsafe: Unsicher
+      metricCard:
+        save: Speichern
+  areas:
+    areas:
+      areaSettings:
+        delete: Löschen
+        edit:
+          cancelButton: Rückgängig
+          editButton: Bearbeiten
+          saveButton: Speichern
+      controlLabels:
+        filters: Filter
+        select: Auswählen
+      default:
+        description: Leere Beschreibung
+        title: Unbenanntes Gebiet
+      draw:
+        cancelButton: Rückgängig
+        saveButton: Speichern
+        startButton: Zeichnen
+      filter:
+        addFilterButton: Filter hinzufügen
+        openFiltersButton: Filter
   breadcrumbs:
     elements:
       activities: Aktivitäten
@@ -117,16 +219,82 @@ feat:
         unpublish: Verbergen
       moveCopyButtons:
         copy: Kopieren
-        copyMenuHeader: Kopiere {numberOfEvents} Aktionen zu
+        copyMenuHeader: Kopiere {numberOfEvents} Aktionen nach
         createShift: Nach jeder Aktion (create shift)
         duplicate: Zeit und Datum schicken (duplicate)
         move: Verschieben
-        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen zu
+        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen nach
         nextDay: Nächster Tag {dates}
         nextWeek: Nächste Woche
-    shortWeek: w {weekNumber}
+    shortWeek: W {weekNumber}
     showMore: Mehr
     today: Heute
+  call:
+    activeEvents:
+      alreadyBooked: '{name} ist schon gebucht'
+      noBookings: '{name} ist nirgendwo angemeldet'
+    nav:
+      startCalling: Anrufen beginnen
+    prepare:
+      activeEvents: Aktive Veranstaltungen
+      edit: Diese Information bearbeiten?
+      editDescription: Wenn in dieser Spalte Änderungen erforderlich sind, füge eine
+        Nachricht an Organizer*in im Anrufbericht hinzu.
+      noActiveEvents: Keine aktiven Veranstaltungen.
+      noPreviousCalls: Noch nie angerufen
+      noPreviousEvents: '{name} hat bisher an keinen Veranstaltungen teilgenommeen.'
+      noSurveys: Keine Umfragen
+      noTags: Keine Schlagworte
+      previousCallsOfTarget: Vorherige Anrufe bei {name}.
+      previousEventsOfTarget: '{name} hat teilgenommen an {numEvents} Veranstaltungen,
+        zuletzt an {eventTitle} .'
+      summary: Zusammenfassung
+      surveys: Umfragen
+      tags: Schlagworte
+      title: Persönliche Angaben
+    report:
+      steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Nach {hour}
+            anyTimeOptionLabel: Zu irgendeiner Tageszeit
+            callBackButtonLabel: Rückruf ab {date}
+            dateLabel: An welchem Tag
+            examples:
+              nextWeek: Nächste Woche
+              today: Heute später
+            invalidDateButtonLabel: Ungültiges Datum
+            timeLabel: Nach welcher Uhrzeit
+            title: Wann sollen wir zurückrufen?
+        callerLog:
+          question:
+            saveWithNoteButton: Mit Notiz speichern
+            saveWithoutNoteButton: Ohne Notiz speichern
+        organizerAction:
+          question:
+            noButton: Nein
+            title: Soll eine wichtige Information an Organizer*in weitergegeben werden?
+            yesButton: Ja
+          summary:
+            orgActionNeeded:
+              subtitle: Organizer*in wird benachrichtigt.
+        organizerLog:
+          question:
+            title: Erkläre der*m Organizer*in das Problem
+            withMessageButton: Nachricht speichern
+            withoutMessageButton: Weiter
+          summary:
+            withMessage:
+              title: Du hast eine Nachricht an Organizer*in hinterlassen
+            withoutMessage: Du hast keine Nachricht an Organizer*in hinterlassen
+        successOrFailure:
+          question:
+            noButton: Nein
+            title: Hast du {firstName} erreicht?
+            yesButton: Ja
+          summary:
+            success:
+              title: '{firstName} wurde erfolgreich angerufen'
   callAssignments:
     actions:
       delete: Löschen
@@ -183,7 +351,7 @@ feat:
             gehen.
           title: Notizfeld für Telefonierer*innen erlauben
         targetData:
-          message: Name und Telefonnummer der Zielperson sind immer sichtbar für
+          message: Name, Telefonnummer und Email der Zielperson sind immer sichtbar für
             Telefonierer*innen. Zusätzliche Informationen einzublenden bedeutet
             alle verfügbaren Felder anzuzeigen.
           title: Zusätzliche Informationen einblenden
@@ -272,8 +440,11 @@ feat:
       viewArchive: Archiv anzeigen
     assigneeActions: Aktionen von Beauftragten
     calendarView: Alles einblenden
+    changeCampaignDialog:
+      moveButtonLabel: Verschieben
     createButton:
       createActivity: Erstelle
+      createAreaAssignment: Gebiets Zuordnung
       createCallAssignment: Telefonaktion
       createEmail: E-Mail
       createEvent: Veranstaltung
@@ -285,6 +456,8 @@ feat:
       create: Umfrage erstellen
       heading: Feedback und Umfragen (nicht eingestellt)
     form:
+      createAreaAssignment:
+        defaultQuestion: Hast du diese Aufgabe beendet?
       createCallAssignment:
         newCallAssignment: Meine Telefonaktionen
       createCampaign:
@@ -321,7 +494,7 @@ feat:
       visibility:
         heading: Sichtbarkeit
         private: Verborgen
-        public: Öffentlich
+        public: Sichtbar
     indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
@@ -345,6 +518,21 @@ feat:
       create: Telefonaktion erstellen
       heading: Mobilisierung
     noManager: kein*e Verantwortliche*r
+    publicProjectPage:
+      eventList:
+        emptyList:
+          message: Es konnten keine Veranstaltungen gefunden werden
+          removeFiltersButton: Filter entfernen
+        filterButtonLabels:
+          thisWeek: Diese Woche
+          today: Heute
+          tomorrow: Morgen
+        noEventsBlurb:
+          description: In {project} gibt keine anstehenden Veranstaltungen.
+          headline: Es gibt keine anstehenden Veranstaltungen
+      map:
+        viewInListButton: In Liste anzeigen
+        viewInMapButton: Auf Karte anzeigen
     shared:
       cta: Gehe zum Projekt
       noActivities: Aktuelle Aktivitäten, die mit deiner Organisation geteilt wurden,
@@ -373,6 +561,70 @@ feat:
         insights: Statistiken
         summary: Überblick
     tasks: Aufgaben
+  canvass:
+    default:
+      description: Leere Beschreibung
+    households:
+      edit:
+        header: Bearbeiten
+        saveButtonLabel: Sichern
+        titleLabel: Titel bearbeiten
+      single:
+        subtitle: Etage
+    instructions:
+      areas: Gebiete
+      visitedHouseholds: Besuchte Türen
+      visitedLocations: Besuchte Orte
+    location:
+      edit:
+        descriptionLabel: Beschreibung bearbeiten
+        header: '{title} bearbeiten'
+        saveButtonLabel: Speichern
+        titleLabel: Titel bearbeiten
+      header: '{numVisitedHouseholds}/{numHouseholds} {numHouseholds, plural, one
+        {household} other {households}} besucht'
+      page:
+        historySectionHeader: Historie
+        householdVisitedStatLabel: Besuchte Türen
+        householdsButtonLabel: Haushalte
+        householdsVisitedStat: '{numVisitedHouseholds} von {numHouseholds}'
+        noHouseholds: Hier wurden noch keine Haushalte registriert
+        numberOfHouseholds: '{numHouseholds, plural, one {1 household} other {# households}}'
+        quickReportButtonLabel: Kurzbericht
+      subheader: '{successfulVisits, plural, one {1 successful visit} other {#
+        successful visits}}'
+    map:
+      addLocation:
+        add: Ort hinzufügen
+        cancel: Abbrechen
+        create: Ort erstellen
+        inputPlaceholder: Gib dem Ort einen Namen
+    sidebar:
+      instructions:
+        title: Hinweise
+      menuOptions:
+        home: Meine Teilnahmen
+        logOut: Ausloggen
+      progress:
+        allTime:
+          title: Jederzeit
+        header:
+          households: Haushalte
+          locations: Orte
+          title: Fortschritt
+        session:
+          team: Team
+          you: Du
+    visit:
+      household:
+        noButtonLabel: Nein
+        skipButtonLabel: Frage überspringen
+        yesButtonLabel: Ja
+      location:
+        noInputLabel: Nein
+        proceedButtonLabel: Fortfahren
+        submitButtonLabel: Einreichen
+        yesInputLabel: Ja
   duplicates:
     modal:
       cancelButton: Abbrechen
@@ -449,12 +701,17 @@ feat:
             confirmation: Eine Vorschau wurde an deine E-Mail-Adresse gesendet.
             instructions: Hier kannst du diese E-Mail an dich selbst senden, um vorab zu
               prüfen, wie sie für die Empfänger aussehen wird.
+            invalidEmailAddress: Dies ist keine gültige E-Mail-Adresse
             okButton: OK!
+            previewInBrowser: Im Browser anzeigen
+            previewInBrowserInstructions: Klicke auf das Feld unten, um die Email–Vorschau
+              im Browser anzuzeigen.
             sendButton: Versenden
             sendTo: 'Die E-Mail wird an diese Adresse gesendet:'
             title: Vorschau
           settings:
             senderAddressInputLabel: Absender Adresse
+            senderInputLabel: Absender
             subjectInputLabel: Betreff
             title: Einstellungen
       tools:
@@ -462,6 +719,7 @@ feat:
           block:
             noButtonText: Klick um den Text zu ändern.
           settings:
+            buttonTextWarning: Denk daran deiner Schaltfläche Text hinzuzufügen
             invalidUrl: Das ist kein gültiger Link
             testLink: Klick um den Link zu testen.
             urlLabel: Link URL
@@ -488,6 +746,7 @@ feat:
       deliveryDate: Zustellungsdatum
       deliveryTime: Zustellungszeit
       duplicate: Duplikat
+      move: Verschieben
       schedule: Zeitplan
       sendAnyway: Trotzdem senden
       sendLater: Später senden
@@ -502,6 +761,11 @@ feat:
       timeZone: Zeitzone
       warning: Willst du wirklich diese E-Mail löschen? Wenn sie gelöscht ist, kann
         sie nicht wieder hergestellt werden.
+    emailChangeCampaignDialog:
+      error: 'Error: Die Email konnte nicht in das ausgewählte Projekt verschoben
+        werden.'
+      success: Email "{emailTitle}" nach "{campaignTitle}" verschoben
+      title: Mail verschieben
     emailFeatureIsBlocked:
       errorMessage: Deine Organisation hat momentan keinen Zugang zur E-Mail Funktionalität.
       goBackButton: Gehe zurück
@@ -569,6 +833,14 @@ feat:
       lockButton: Sperren, um zu Versenden
       locked: Ziele sind für den Versand gesperrt.
       lockedChip: Gesperrt
+      subtitle:
+        notTargeted: Verwenden die intelligente Suche, um die Empfänger dieser E-Mail zu
+          definieren.
+        scheduled: Diese E-Mail ist für die Zustellung vorgesehen. Wenn du die Empfänger
+          entsperren willst, um die intelligente Suche zu bearbeiten, musst du
+          die Zustellung zuerst abbrechen.
+        sent: Du kannst dir die intelligente Suche ansehen, die verwendet wurde, um die
+          Empfänger dieser E-Mail zu definieren
       title: Ziele
       unlockAlert: Entsperren kann Personen von der Zielgruppe hinzufügen oder
         entfernen, je nachdem welches Ergebnis die smarte Suche haben wird.
@@ -614,6 +886,7 @@ feat:
       error: 'Fehler: Konnte die Aktivität nicht in das ausgewählte Projekt
         verschieben.'
       success: Aktivität wurde zu "{campaignTitle}" verschoben.
+      title: Veranstalltung verschieben
     eventContactCard:
       header: Kontakt
       noContact: Kein Kontakt hinzugefügt!
@@ -824,6 +1097,9 @@ feat:
         für die gesamte {orgTitle} löschen möchtest?
       tooltip: Klicke, um Typ zu ändern
       uncategorized: Nicht kategorisiert
+    urlCard:
+      nowAccepting: Anmeldungen über diesen Link möglich
+      open: Anmeldungen noch möglich
   files:
     fileUpload:
       dropToUpload: Hier die Datei hineinziehen, um sie hochzuladen.
@@ -851,7 +1127,11 @@ feat:
   home:
     activityList:
       actions:
+        areaAssignment: Teilnehmen
         call: Beginne mit dem Anrufen
+        connectAndSignUp: Verbinden & anmelden
+        details: Mehr lesen
+        loginToSignUp: Zum Anmelden einloggen
         signUp: Anmelden
         undoSignup: Abmelden
       emptyListMessage: Du bist für keine Aktivitäten angemeldet
@@ -875,14 +1155,33 @@ feat:
         today: Heute
         tomorrow: Morgen
     defaultTitles:
+      areaAssignment: Unbenannte Gebietszuordnung
       callAssignment: Unbenannte Anruf-Aufgabe
       event: Unbenannte Veranstaltung
       noLocation: Kein Ort.
     footer:
       privacyPolicy: Datenschutzhinweise
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Fügen deinem Konto eine E-Mail-Adresse hinzu, um dich mit einem
+            Passwort anmelden zu können.
+          changeInstructions: Wenn du deine E-Mail-Adresse ändern möchtest, wende dich
+            bitte an info@zetkin.org.
+          errorText: Es ist ein Fehler aufgetreten. Versuche es noch einmal oder wenden
+            dich an die Zetkin-Stiftung für Unterstützung.
+          label: E-Mail Adresse
+          saveButton: Speichern
+        header: Account Einstellungen
+      appPreferences:
+        lang:
+          auto: Automatisch (im Browser konfiguriert)
+          label: Sprache
+          saveButton: Speichern & Neu laden
     tabs:
       feed: Alle Veranstaltungen
       home: Meine Aktivitäten
+      settings: Einstellungen
     title: Mein Zetkin
   import:
     actionButtons:
@@ -1044,6 +1343,7 @@ feat:
         sheetSelectHelpText: Deine Datei hat mehrere Datenblätter. Wähle aus, welches
           benutzt werden soll.
         sheetSelectLabel: Datenblatt
+        skipUnknown: Zeilen mit unbekannten IDs überspringen (nie neue Personen anlegen)
       show: zeige
       statusMessage:
         done: Konfiguriere den Import von  {numConfiguredPeople, plural, =1 {1 Person}
@@ -1072,6 +1372,7 @@ feat:
         updated: '{number} {numPeople, plural, =1 {Person} other {Personen}} wurden
           aktualisiert'
       people: '{number} {numPeople, plural, =1 {Person} other {Personen}}'
+      peopleToSubOrg: '{orgName} ({num})'
     importStatus:
       completed:
         desc: Deine Daten wurden in Zetkin importiert
@@ -1100,6 +1401,8 @@ feat:
           singleRow: Dieses Problem existiert bei Zeile {row}.
         invalidFormat:
           title: 'Falsches Format für das Feld: {field}'
+        invalidOrgCountry:
+          title: 'Möglicherweise ungültiger Ländercode der Organisation: {code}'
         majorChange:
           description: Diese Warnung wird eingeblendet, wenn mehr als 30% der importierten
             Personen betroffen sind. Stelle sicher, dass du die Spalten richtig
@@ -1112,6 +1415,10 @@ feat:
         noImpact:
           description: Grund kann sein, dass die Datei keine neue Daten beinhaltet oder
             dass es einen unbekannten Fehler gibt.
+          descriptionSkipped: Dies könnte daran liegen, dass die Datei keine neuen Daten
+            enthält oder dass alle neuen Daten gemäß Ihren Einstellungen
+            übersprungen wurden. In seltenen Fällen kann es sich um einen
+            unbekannten Fehler handeln.
           title: Dieser Import würde keinen Effekt haben.
         ok:
           description: Stelle sicher, dass die Zusammenfassung gut aussieht und klicke
@@ -1175,8 +1482,13 @@ feat:
           aktualisieren.
   joinForms:
     defaultTitle: Unbenanntes Formular
+    deleteJoinForm:
+      success: '{title} wurde gelöscht'
+      title: Beitrittsformular löschen
+      warning: Bist du dir sicher, dass du "{title}" löschen möchtest?
     embedding:
       copyLink: Kopiere die einzubettende URL
+      delete: Löschen
       formSubmitted: Formular wurde übermittelt.
       linkCopied: Die einzubettende URL wurde kopiert.
       openLink: Link-Adresse aufrufen.
@@ -1186,6 +1498,7 @@ feat:
         addField: Feld hinzufügen
         description: Beschreibung
         requireEmailVerification: E-Mail-Bestätigung ist notwendig.
+        shareWithSuborgs: Mit Unter-Organisation teilen
         title: Titel
       title: Formular bearbeiten
     forms: Formular
@@ -1234,6 +1547,10 @@ feat:
       editButton: Bearbeiten
       ellipsisMenu:
         convert: Konvertieren in ...
+        deletion:
+          delete: '"{instanceTitle}" löschen'
+          warning: '"{instanceTitle}" wird gelöscht. Diese Aktion kann nicht rückgängig
+            gemacht werden.'
       expandButton: Erweitern
       markedCompleteLabel: Markiert als erledigt {relativeTime}
       newInstance:
@@ -1326,8 +1643,32 @@ feat:
         open: Offen
         overview: Übersicht
         timeline: Zeitleiste
-      title: Anfragen
+      title: Journeys
   organizations:
+    allEventsList:
+      emptyList:
+        message: Konnte keine Veranstaltungen finden
+        removeFiltersButton: Filter entfernen
+      filterButtonLabels:
+        thisWeek: Diese Woche
+        today: Heute
+        tomorrow: Morgen
+    authDialog:
+      cancelButton: Abbrechen
+      content: Du brauchst einen Zetkin-Account, um dich für Veranstaltungen anzumelden.
+      label: Anmelden
+      loginButton: Anmelden & zurückkommen
+    eventPage:
+      cancelSignup: Anmeldung absagen
+      cancelledHeader: Diese Veranstaltung wurde abgesagt
+      cancelledParagraph: Du kannst dich nicht mehr anmelden, und wenn du bereits
+        angemeldet warst, wird nicht mehr mit deiner Anwesenheit gerechnet.
+      contactPerson: '{name} ist die Kontaktperson'
+      defaultTitle: Unbenannte Veranstaltung
+      loading: Laden...
+      noLocation: Kein physischer Standort
+      partOfProject: Teil von {projectLink}
+      today: Heute
     gen3:
       description: Das ist die neue (generation 3) Web App für Organisator*innen. Wenn
         du an die alte Version gewöhnt bist, wirst du hier viele neue Funktionen
@@ -1335,6 +1676,23 @@ feat:
         immernoch die alte App für Organisator*innen benutzen.
       gen2Button: Gehe zur alten Oberfläche
       title: Willkommen im neuen Zetkin!
+    home:
+      footer:
+        privacyPolicy: Datenschutzbestimmungen
+      header:
+        connect: Verbinden
+        follow: Folgen
+        login: Anmelden & Verbinden
+        unfollow: Entfolgen
+      map:
+        viewInList: In Liste anzeigen
+        viewInMap: Auf Karte anzeigen
+      tabs:
+        calendar: Kalender
+        suborgs: Erkunden
+    noEventsBlurb:
+      description: '{org} hat keine kommenden Veranstaltungen.'
+      headline: Es sind keine Veranstaltungen geplant
     notOrganizer:
       description: Dieser Teil von Zetkin ist nur für Benutzer_innen verfügbar, die
         Zugang durch einen Zetkin-Administrator bekommen haben. Du hast momentan
@@ -1354,6 +1712,9 @@ feat:
       recent:
         clear: Löschen
         title: Letzte Organisationen
+    subOrgEventBlurb:
+      headline: Tiefer eindringen
+      showButton: Alle Veranstaltungen anzeigen
   profile:
     delete:
       button: Person entfernen
@@ -1384,6 +1745,8 @@ feat:
       removeError: Diese Organisation konnte nicht gelöscht werden
       title: Organisationen
     resetButton: Zurücksetzen
+    role:
+      noRole: Keine Rolle
     saveButton: Speichern
     tabs:
       manage: Verwalten
@@ -1590,40 +1953,45 @@ feat:
         haveSelect:
           in: wurden
           notin: wurden nicht
-        inputString: '{addRemoveSelect} Personen, die {haveSelect} {bookedSelect} für
-          Aktionen in {campaignSelect} des Typs {activitySelect} in
-          {locationSelect} {timeFrame}'
+        inputString: '{addRemoveSelect} Personen die {haveSelect} {bookedSelect}
+          {statusSelect} für Veranstaltungen in {campaignSelect} der Kategorie
+          {activitySelect} in {locationSelect} {timeFrame}'
         locationSelect:
           any: irgendein Ort
           location: Ort "{location}"
+        statusSelect:
+          any: unabhängig von ihrer Anwesenheit
+          attended: und Anwesend waren
+          cancelled: und abgesagt haben
+          noshow: und ist nicht erschienen
       emailBlacklist:
-        inputString: '{addRemoveSelect} Personen, die eine E-Mail erhalten werden, auf
+        inputString: '{addRemoveSelect} Personen, die keine E-Mails erhalten können, auf
           Grund von {reasonSelect}'
         reasonSelect:
           any: aus irgendeinem Grund
           unsubOrg: sie haben sich abgemeldet
       emailClick:
         inputString: '{addRemoveSelect} Personen, die {operatorSelect} {linkScopeSelect}
-          {emailSelect} {projectSelect} {timeFrame} {linkSelect} haben'
+          {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
         linkScopeSelect:
           anyFollowingLinks: irgendeinen der folgenden Links in der spezifischen E-Mail
           anyLink: irgendeinen Link in irgendeiner E-Mail
           anyLinkInEmail: irgendeinen Link in einer spezifischen E-Mail
           linkInEmailFromProject: irgendeinen Link in irgendeiner E-Mail in einem spezifischen Projekt
         operatorSelect:
-          clicked: geklickt
-          notClicked: nicht geklickt
+          clicked: haben geklickt
+          notClicked: haben nicht geklickt
       emailHistory:
         emailScopeSelect:
           any: irgendeine E-Mail
           email: die spezifische E-Mail
           project: irgendeine E-Mail vom Projekt
-        inputString: '{addRemoveSelect} Personen, die {operatorSelect}
-          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame} haben'
+        inputString: '{addRemoveSelect} Personen, (an) die {operatorSelect}
+          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
         operatorSelect:
-          notOpened: nicht geöffnet
-          notSent: nicht gesendet
-          opened: geöffnet
+          notOpened: nicht geöffnet haben
+          notSent: nicht gesendet wurde
+          opened: geöffnet haben
           sent: wurde gesendet
       joinForm:
         anyForm: jedes Zetkin-Beitrittsformular
@@ -1665,7 +2033,7 @@ feat:
         examples:
           one: Füge alle Personen hinzu, deren Vorname 'Clara' und deren Nachname 'Zetkin'
             ist.
-          two: Entferne alle Personen, deren Ort Stockholm ist.
+          two: Entferne alle Personen, deren Ort 'Stockholm' ist.
         fieldMatches: '{field} ist {value}'
         fieldSelect:
           alt_phone: Weitere Telefonnummer
@@ -2040,6 +2408,7 @@ feat:
     layout:
       actions:
         delete: Mitgliederumfrage löschen
+        move: Verschieben
         publish: Umfrage veröffentlichen
         unpublish: Umfrage deaktivieren
         warning: '"{surveyTitle}" wird gelöscht.'
@@ -2074,8 +2443,13 @@ feat:
       subtitle: '{person} {date}'
     submissions:
       anonymous: Anonym
+      createPersonSubmit: Speichern und Verknüpfen
+      createPersonTitle: Neue Person erstellen
       dateColumn: Datum
       delete: Löschen
+      deleteSuccess: Erfolgreich gelöscht
+      deleteTitle: Antwort löschen
+      deleteWarningText: Bist du sicher, dass du diese Umfrage löschen möchtest?
       emailColumn: Email
       firstNameColumn: Vorname
       lastNameColumn: Nachname
@@ -2083,6 +2457,11 @@ feat:
       personRecordColumn: Befragte*r
       suggestedPeople: Vorgeschlagene Personen
       unlink: Link entfernen
+    surveyChangeCampaignDialog:
+      error: 'Error: Die Umfrage konnte nicht in das ausgewählte Projekt verschoben
+        werden'
+      success: Umfrage "{surveyTitle}" nach "{campaignTitle}" bewegt
+      title: Umfrage verschieben
     surveyDialog:
       add: hinzufügen
       cancel: Nicht hinzufügen
@@ -2192,6 +2571,10 @@ feat:
       title: Schlagworte
       ungroupedHeader: Keine Gruppe
   tasks:
+    actions:
+      delete: Löschen
+      edit: Bearbeiten
+      move: verschieben
     assignees:
       completedStates:
         completed: abgeschlossen {time}
@@ -2301,6 +2684,11 @@ feat:
       draft: Entwurf
       expired: Abgelaufen
       scheduled: Geplant
+    taskChangeCampaignDialog:
+      error: 'Error: Die Aufgabe konnte nicht in das ausgewählte Projekt verschoben
+        werden'
+      success: Aufgabe "{taskTitle}" nach "{campaignTitle}" bewegt
+      title: Aufgabe verschieben
     taskDetails:
       deadlineTime: Frist
       editButton: Bearbeiten
@@ -2364,12 +2752,12 @@ feat:
       confirmDelete:
         folder:
           title: Ordner löschen
-          warning: Diesen Ordner und alle Listen darin zu löschen kann nicht rückgängig
+          warning: Das Löschen des Ordners und aller Listen darin kann nicht rückgängig
             gemacht werden. Möchtest du fortfahren?
         view:
           title: Liste löschen
-          warning: Diese Liste zu löschen kann nicht rückgängig gemacht werden. Möchtest
-            du fortfahren?
+          warning: Das Löschen der Liste kann nicht rückgängig gemacht werden. Möchtest du
+            fortfahren?
       menu:
         delete: Löschen
         duplicate: Dupliziere
@@ -2377,7 +2765,7 @@ feat:
         rename: Umbenennen
         viewCopy: '{viewName} - kopiere'
       moveToFolder: verschieben zu {folder}
-      moveToRoot: Verschieben zu alle Listen
+      moveToRoot: Verschieben zu 'alle Listen'
     browserLayout:
       tabs:
         duplicates: Duplikate
@@ -2499,7 +2887,7 @@ feat:
             dargestellt.
           title: Einzelne Umfrageantwort
         surveyResponses:
-          description: Mehrere Umfrageantworten einbeziehen
+          description: Mehrere Umfrageantworten einbeziehen.
           keywords: Feld mehrere
           questionField: Fragen
           surveyField: Umfragen
@@ -2510,10 +2898,12 @@ feat:
           title: Teilnahmedatum
         tag:
           description: Setze ein Schlagwort für jede Person in der Liste
+          keywords: ' '
           title: Schlagwort
         toggle:
           columnTitle: Kontrollkästchen
           description: Häkchen setzen
+          keywords: ' '
           title: Kontrollkästchen
       commonHeaders:
         email: Email
@@ -2542,7 +2932,7 @@ feat:
         searchPlaceholder: Spalte finden
         searchResults: Treffer für "{searchString}"
     columnMenu:
-      configure: Spalte erstellen
+      configure: Spalte bearbeiten
       confirmDelete: Bist du sicher, dass du diese Spalte löschen möchtest? Die
         enthaltenen Daten werden gelöscht. Diese Aktion kann nicht rückgängig
         gemacht werden.
@@ -2779,8 +3169,6 @@ zui:
       url: Bitte füge eine gültige URL hinzu
   dataTableSearch:
     button: Suche
-    helpText: Tippe mindestens {minSearchLength} Buchstaben
-    idSearchHelpText: Gib eine ID ein (nur Ziffern)
     placeholder: Tabelle durchsuchen
     placeholderWithIdSearch: 'Suche - nutze # für ID, z.B. #123'
     title: Suche
@@ -2818,6 +3206,8 @@ zui:
     add: Klick, um ein Bild hinzuzufügen
   eventWarningIcons:
     contact: Keine Kontaktperson wurde zugeteilt
+    reminders: '{numMissing, plural, =1 {One participant} other {# participants}}
+      haben noch keine Erinnerung erhalten'
     signUps: Es gibt ausstehende Anmeldungen
   expandableText:
     showLess: Weniger sehen
@@ -2859,6 +3249,21 @@ zui:
     restrictedMode: Kann in geteilten Listen nicht bearbeitet werden.
     searchResults: Suchergebnisse
   personSelect:
+    bulkAdd:
+      backButton: Zurück
+      cancelButton: Rückgängig
+      confirmMessage: '{entityToAddTo, select, undefined {Du bist dabei {count,
+        number, integer} Menschen hinzuzufügen. Bist du sicher, dass du
+        weitermachen möchtest?} other {Du bist dabei {count, number, integer}
+        Menschen zu ‘{entityToAddTo}’ hinzuzufügen. Bist du sicher, dass du
+        weitermachen möchtest?}}'
+      confirmTitle: Bestätigen Sie das Hinzufügen von Personen
+      fromView: Aus ‘{viewTitle}’
+      openButton: Gruppe hinzufügen
+      submitButton: '{numSelected, plural, =0 {Select} =1 {Select 1 person} other
+        {Select {numSelected, number, integer} people}}'
+      title: '{entityToAddTo, select, undefined {Add people} other {Add people to
+        ‘{entityToAddTo}’}}'
     keepTyping: Tippe weiter, um Suche zu starten
     noResult: Keine Treffer
     search: Tippe, um zu suchen
@@ -2869,12 +3274,17 @@ zui:
     links:
       foundation: Zetkin Foundation
       privacy: Datenschutzerklärung
+    text: Zetkin ist eine Plattform für organisierenden Aktivismus. Zetkin wird von
+      der Zetkin-Stiftung entwickelt, die sich für einen radikalen Wandel der
+      Gesellschaft in eine sozialistische, feministische, antirassistische und
+      nachhaltige Richtung einsetzt.
   signUpChip:
     booked: Du bist angemeldet.
     needed: Du wirst gebraucht
     signedUp: Du hast dich angemeldet
   snackbar:
     error: Oh nein, etwas ist schief gegangen.
+    info: ' '
     success: Erfolg!
     warning: Achtung!
   statusChip:

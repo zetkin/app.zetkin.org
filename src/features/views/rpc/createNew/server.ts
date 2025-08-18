@@ -11,7 +11,7 @@ import {
   ZetkinViewColumn,
 } from '../../components/types';
 import { Params, paramsSchema, Result } from './client';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
 export const createNewViewRouteDef = {

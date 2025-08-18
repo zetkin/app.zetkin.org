@@ -12,7 +12,7 @@ const InstructionsSection: FC<Props> = ({ instructions }) => {
   return (
     <ZUISection
       renderContent={() => (
-        <ZUIText>
+        <ZUIText component="div">
           {instructions ? (
             <ZUIMarkdown markdown={instructions} />
           ) : (

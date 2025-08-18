@@ -20,16 +20,13 @@ const HeaderBase: FC<Props> = ({
   const isMobile = useIsMobile();
 
   return (
-    <Box>
+    <Box sx={{ position: 'sticky', top: 0, zIndex: 1100 }}>
       <Box
         sx={(theme) => ({
           backgroundColor: theme.palette.common.white,
           display: 'flex',
           flexDirection: 'column',
           padding: 2,
-          position: 'sticky',
-          top: 0,
-          zIndex: 1100,
         })}
       >
         <Box sx={{ paddingBottom: !isMobile ? 1 : 0 }}>{topLeft}</Box>

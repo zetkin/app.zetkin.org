@@ -1,3 +1,26 @@
+glob:
+  accessLevels:
+    configure: Rediger
+    edit: Redigerer
+    readonly: Skrivebeskyttet
+  personFields:
+    alt_phone: Andet telefonnummer
+    city: By
+    co_address: C/O Adresse
+    country: Land
+    email: Email
+    ext_id: Eksternt ID
+    first_name: Fornavn
+    gender: Køn
+    id: ID
+    is_user: Er bruger
+    last_name: Efternavn
+    phone: Telefonnummer
+    street_address: Adresse
+    zip_code: Postnummer
+  roles:
+    admin: Administrator
+    organizer: Organisator
 core:
   err404:
     backToHomePage: Tilbage til forsiden
@@ -1548,8 +1571,6 @@ zui:
     copy: Kopiér
   dataTableSearch:
     button: Søg
-    helpText: Indtast mindst {minSearchLength} tegn
-    idSearchHelpText: Skriv et ID-nummer (kun tal)
     placeholder: Søg i denne tabel
     placeholderWithIdSearch: "Søg - brug # til ID'er, f.eks. type #123"
     title: Søg
