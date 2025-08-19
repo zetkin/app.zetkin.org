@@ -9,6 +9,7 @@ export interface ZUIConfirmDialogProps {
   open: boolean;
   onCancel: () => void;
   onSubmit: () => void;
+  onTop?: boolean;
   title?: string;
   warningText?: string;
   submitDisabled?: boolean;
@@ -18,6 +19,7 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
   open,
   onCancel,
   onSubmit,
+  onTop,
   title,
   warningText,
   submitDisabled,
@@ -26,6 +28,7 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
   return (
     <ZUIDialog
       onClose={() => onCancel()}
+      onTop={onTop}
       open={open}
       title={title || messages.confirmDialog.defaultTitle()}
     >
