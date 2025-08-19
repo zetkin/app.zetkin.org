@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
 
 const timeStamp = (t: Dayjs): string => t.format('YYYYMMDDTHHmmss');
 const formatString = (str: string): string =>
@@ -29,17 +29,18 @@ export default async function handle(
     `/api/orgs/${orgId}/actions?frecursive&ilter=start_time>=${startTime}`
   );
 
+  const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
+
   const vEvents: string[] = [];
   events
     .filter((event) => !event.cancelled && event.published)
     .forEach((event) => {
       vEvents.push(`BEGIN:VEVENT`);
-      vEvents.push(`UID:${event.id}@zetkin.org`);
+      vEvents.push(`UID:${event.id}@${process.env.ZETKIN_APP_HOST}`);
       vEvents.push(
-        `ORGANIZER;CN=${event.organization.title.replace(
-          '\n',
-          ' '
-        )}:MAILTO:noreply@zetkin.org`
+        `ORGANIZER;CN=${event.organization.title.replace('\n', ' ')}:MAILTO:${
+          org.email ?? 'noreply@zetkin.org'
+        }`
       );
       vEvents.push(`DTSTAMP:${timeStamp(dayjs(event.published))}`);
       vEvents.push(`DTSTART:${timeStamp(dayjs(event.start_time))}`);
