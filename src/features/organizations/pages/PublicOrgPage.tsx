@@ -233,7 +233,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const dates = Object.keys(eventsByDate).sort();
   const indexForSubOrgsButton = Math.min(1, dates.length - 1);
   const showSubOrgBlurb =
-    orgIdsToFilterBy.length == 0 && allEvents.length > events.length;
+    orgIdsToFilterBy.length == 0 && locationEvents.length > events.length;
 
   const showNoEventsBlurb = !allEvents.length;
 
