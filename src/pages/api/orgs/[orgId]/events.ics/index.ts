@@ -8,8 +8,8 @@ const timeStamp = (t: Dayjs): string => t.format('YYYYMMDDTHHmmss');
 const formatString = (str: string): string =>
   str
     .replaceAll('\n', '\\n')
-    .match(/.{1,75}/g)
-    ?.join('\n\t') ?? '';
+    .match(/.{1,74}/g)
+    ?.join('\r\n\t') ?? '';
 
 export default async function handle(
   req: NextApiRequest,
@@ -63,12 +63,12 @@ export default async function handle(
       vEvents.push('END:VEVENT');
     });
 
-  const eventsStr = vEvents.map((s) => formatString(s)).join('\n');
+  const eventsStr = vEvents.map((s) => formatString(s)).join('\r\n');
 
   res.setHeader('Content-Type', 'text/calendar').status(200)
-    .send(`BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Zetkin Foundation//Zetkin App//EN
-${eventsStr}
+    .send(`BEGIN:VCALENDAR\r
+VERSION:2.0\r
+PRODID:-//Zetkin Foundation//Zetkin App//EN\r
+${eventsStr}\r
 END:VCALENDAR`);
 }
