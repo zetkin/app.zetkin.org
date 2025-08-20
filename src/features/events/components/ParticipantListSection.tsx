@@ -132,9 +132,11 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       headerName: '',
       hideSortIcons: true,
       renderCell: (params) => (
-        <ZUIPersonHoverCard personId={params.row.id}>
-          <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
-        </ZUIPersonHoverCard>
+        <Link href={`/organize/${orgId}/people/${params.row.id}`}>
+          <ZUIPersonHoverCard personId={params.row.id}>
+            <ZUIPersonAvatar orgId={orgId} personId={params.row.id} />
+          </ZUIPersonHoverCard>
+        </Link>
       ),
       resizable: false,
       sortable: false,
