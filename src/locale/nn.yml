@@ -207,7 +207,7 @@ feat:
         openFiltersButton: Filter
         ungroupedTagsLabel: Andre etiketter
     page:
-      title: Dør til dør
+      title: Kart
   breadcrumbs:
     elements:
       activities: Aktiviteter

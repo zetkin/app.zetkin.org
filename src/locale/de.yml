@@ -488,13 +488,13 @@ feat:
       requestError: Ein Fehler ist aufgetreten. Bitte versuche es noch einmal.
       required: Pflichtfeld
       status:
-        draft: Entwurf
+        draft: Entwurf (sichtbar nur für Admins)
         heading: Status
         published: Veröffentlicht
       visibility:
         heading: Sichtbarkeit
-        private: Verborgen
-        public: Sichtbar
+        private: Nur nach Login sichtbar
+        public: Öffentlich sichtbar ohne Login
     indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
