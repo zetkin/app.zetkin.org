@@ -117,7 +117,17 @@ const MyActivitiesList: FC = () => {
                   variant="secondary"
                 />,
               ]}
-              info={[]}
+              info={[
+                {
+                  Icon: GroupWorkOutlined,
+                  labels: activity.data.instructions
+                    ? [
+                        activity.data.instructions,
+                        activity.data.reporting_level,
+                      ]
+                    : [activity.data.reporting_level],
+                },
+              ]}
               title={
                 activity.data.title || messages.defaultTitles.areaAssignment()
               }
