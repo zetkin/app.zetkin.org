@@ -12,23 +12,21 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
+import { ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { MetricResponse } from 'features/canvass/types';
 
-type HouseholdVisitPageProps = {
-  location: ZetkinLocation;
+type BulkHouseholdVisitsPageProps = {
   metrics: ZetkinMetric[];
   onBack: () => void;
   onLogVisit: (metrics: MetricResponse[]) => void;
   selectedHouseholsdIds: number[];
 };
 
-const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
+const BulkHouseholdVisitsPage: FC<BulkHouseholdVisitsPageProps> = ({
   selectedHouseholsdIds,
-  location,
   metrics,
   onBack,
   onLogVisit,
@@ -39,7 +37,6 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   >({});
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  location;
 
   useEffect(() => {
     setResponseByMetricId({});
@@ -182,4 +179,4 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   );
 };
 
-export default HouseholdVisitPage;
+export default BulkHouseholdVisitsPage;

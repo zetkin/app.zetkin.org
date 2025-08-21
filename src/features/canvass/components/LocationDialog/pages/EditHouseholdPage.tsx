@@ -50,12 +50,12 @@ const EditHouseholdPage: FC<Props> = ({
           }}
           variant="contained"
         >
-          <Msg id={messageIds.households.edit.saveButtonLabel} />
+          <Msg id={messageIds.households.editSingleHousehold.saveButtonLabel} />
         </Button>
       }
       onBack={onBack}
       onClose={onClose}
-      title={messages.households.edit.header({
+      title={messages.households.editSingleHousehold.header({
         title: household.title,
       })}
     >
@@ -68,13 +68,13 @@ const EditHouseholdPage: FC<Props> = ({
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
             fullWidth
-            label={messages.households.edit.titleLabel()}
+            label={messages.households.editSingleHousehold.titleLabel()}
             onChange={(ev) => setTitle(ev.target.value)}
             value={title}
           />
           <TextField
             fullWidth
-            label={messages.households.edit.floorLabel()}
+            label={messages.households.editSingleHousehold.floorLabel()}
             onChange={(ev) => setFloor(parseInt(ev.target.value))}
             type="number"
             value={floor}

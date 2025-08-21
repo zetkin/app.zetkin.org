@@ -40,7 +40,7 @@ export default function useLocationMutations(
         HouseholdPatchBody
       >(
         `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
-        { ...data, colorCode: '#caf15e' }
+        data
       );
       dispatch(householdUpdated([locationId, household]));
     },

@@ -9,6 +9,15 @@ export default makeMessages('feat.canvass', {
     location: m('Untitled location'),
   },
   households: {
+    bulkEditHouseholds: {
+      floorLabel: m('Edit floor'),
+      header: m<{ numHouseholds: number }>(
+        'Edit {numHouseholds, plural, one {1 household} other {# households}}'
+      ),
+      saveButtonLabel: m<{ numHouseholds: number }>(
+        'Save {numHouseholds, plural, one {1 household} other {# households}}'
+      ),
+    },
     createMultiple: {
       createButtonLabel: m<{ numHouseholds: number }>(
         'Create {numHouseholds, plural, one {1 household} other {# households}}'
@@ -17,7 +26,7 @@ export default makeMessages('feat.canvass', {
       numberOfFloorsInput: m('Number of floors'),
       numberOfHouseholdsInput: m('Households per floor'),
     },
-    edit: {
+    editSingleHousehold: {
       floorLabel: m('Edit floor'),
       header: m<{ title: string }>('Edit {title}'),
       saveButtonLabel: m('Save'),

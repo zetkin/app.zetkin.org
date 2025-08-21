@@ -50,20 +50,26 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
     {
       colorCode: payload.colorCode,
     },
-    { new: true }
+    { new: true, upsert: true }
   );
 
   const headers: IncomingHttpHeaders = {};
   request.headers.forEach((value, key) => (headers[key] = value));
   const apiClient = new BackendApiClient(headers);
 
-  const household = await apiClient.patch<APIHousehold, HouseholdPatchBody>(
-    `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`,
-    {
-      level: payload.level,
-      location_id: payload.location_id,
-      title: payload.title,
-    }
+  if (payload.level || payload.title || payload.location_id) {
+    await apiClient.patch<APIHousehold, HouseholdPatchBody>(
+      `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`,
+      {
+        level: payload.level,
+        location_id: payload.location_id,
+        title: payload.title,
+      }
+    );
+  }
+
+  const household = await apiClient.get<APIHousehold>(
+    `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`
   );
 
   const householdWithColor: Zetkin2Household = {
