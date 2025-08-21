@@ -42,6 +42,7 @@ export interface AreaAssignmentsStoreSlice {
     RemoteList<ZetkinAreaAssignee & { id: number }>
   >;
   locationsByAssignmentId: Record<number, RemoteList<ZetkinLocation>>;
+  locationsByAssignmentIdAndAreaId: Record<string, RemoteList<ZetkinLocation>>; //string will be the key assignmentId:areaId
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByAreaAssId: Record<
     number,
@@ -57,6 +58,7 @@ const initialState: AreaAssignmentsStoreSlice = {
   areasByAssignmentId: {},
   assigneesByAssignmentId: {},
   locationsByAssignmentId: {},
+  locationsByAssignmentIdAndAreaId: {},
   metricsByAssignmentId: {},
   statsByAreaAssId: {},
   visitsByHouseholdId: {},
@@ -264,18 +266,20 @@ const areaAssignmentSlice = createSlice({
         state.locationsByAssignmentId[assignmentId]
       );
     },
-    locationsLoad: (state, action: PayloadAction<number>) => {
-      const assignmentId = action.payload;
-      state.locationsByAssignmentId[assignmentId] = remoteListLoad(
-        state.locationsByAssignmentId[assignmentId]
+    locationsLoad: (state, action: PayloadAction<string>) => {
+      const key = action.payload;
+
+      state.locationsByAssignmentIdAndAreaId[key] = remoteListLoad(
+        state.locationsByAssignmentIdAndAreaId[key]
       );
     },
     locationsLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinLocation[]]>
+      action: PayloadAction<[string, ZetkinLocation[]]>
     ) => {
-      const [assignmentId, locations] = action.payload;
-      state.locationsByAssignmentId[assignmentId] = remoteListLoaded(locations);
+      const [key, locations] = action.payload;
+
+      state.locationsByAssignmentIdAndAreaId[key] = remoteListLoaded(locations);
     },
     metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
       const [assignmentId, metric] = action.payload;
