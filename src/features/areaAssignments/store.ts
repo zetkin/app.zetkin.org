@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   remoteListCreated,
-  remoteListInvalidated,
   remoteListLoad,
   remoteListLoaded,
   remoteItemLoad,
@@ -279,12 +278,6 @@ const areaAssignmentSlice = createSlice({
         remoteItemUpdated(list, location);
       });
     },
-    locationsInvalidated: (state, action: PayloadAction<number>) => {
-      const assignmentId = action.payload;
-      state.locationsByAssignmentId[assignmentId] = remoteListInvalidated(
-        state.locationsByAssignmentId[assignmentId]
-      );
-    },
     locationsLoad: (state, action: PayloadAction<string>) => {
       const key = action.payload;
 
@@ -385,7 +378,6 @@ export const {
   householdVisitsCreated,
   locationCreated,
   locationLoaded,
-  locationsInvalidated,
   locationsLoad,
   locationsLoaded,
   locationUpdated,
