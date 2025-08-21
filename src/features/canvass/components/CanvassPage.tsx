@@ -13,9 +13,13 @@ import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
 import GLCanvassMap from './GLCanvassMap';
 
-const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
+const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
+  areaId,
+  assignment,
+}) => {
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
+  const selectedArea = areas.find((area) => area.id == areaId);
 
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
@@ -74,7 +78,13 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
               </Box>
             </Box>
             <Box flexGrow={1} sx={{ height: '200px' }}>
-              <GLCanvassMap areas={areas} assignment={assignment} />
+              {selectedArea && (
+                <GLCanvassMap
+                  areas={areas}
+                  assignment={assignment}
+                  selectedArea={selectedArea}
+                />
+              )}
             </Box>
             <Box
               onClick={() => setShowMenu(false)}
@@ -113,9 +123,10 @@ const Page: FC<{ assignment: ZetkinAreaAssignment }> = ({ assignment }) => {
 
 type CanvassPageProps = {
   areaAssId: number;
+  areaId: number;
 };
 
-const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
+const CanvassPage: FC<CanvassPageProps> = ({ areaAssId, areaId }) => {
   const myAssignments = useMyAreaAssignments();
   const assignment = myAssignments.find(
     (assignment) => assignment.id == areaAssId
@@ -127,7 +138,7 @@ const CanvassPage: FC<CanvassPageProps> = ({ areaAssId }) => {
 
   return (
     <Suspense>
-      <Page assignment={assignment} />
+      <Page areaId={areaId} assignment={assignment} />
     </Suspense>
   );
 };

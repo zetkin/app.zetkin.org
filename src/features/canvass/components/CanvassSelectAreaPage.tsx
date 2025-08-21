@@ -1,19 +1,31 @@
 'use client';
 
-import { FC } from 'react';
-import { HomeWork } from '@mui/icons-material';
-import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
+import { FC, useState } from 'react';
+import React from 'react';
+import { Pentagon } from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
-import ZUIMarkdown from 'zui/ZUIMarkdown';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
 import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
+import { Zetkin2Area } from 'features/areas/types';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
@@ -21,7 +33,7 @@ const Page: FC<{
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
-
+  const [selectedArea, setSelectedArea] = useState<Zetkin2Area | null>(null);
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
       {({ data: { org } }) => (
@@ -59,39 +71,33 @@ const Page: FC<{
               paddingBottom: 8,
             }}
           >
-            {assignment.instructions ? (
-              <Card sx={{ mt: 2, mx: 1 }}>
-                <Typography m={2}>
-                  <Msg id={messageIds.instructions.instructionsHeader} />
-                </Typography>
-                <Divider />
-                <Box
-                  sx={{
-                    mx: 1,
-                  }}
-                >
-                  <ZUIMarkdown markdown={assignment.instructions} />
-                </Box>
-              </Card>
+            {areas.length > 0 ? (
+              <List>
+                <Typography>{'Select one area:'}</Typography>
+                {areas.map((area) => (
+                  <React.Fragment key={area.id}>
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        onClick={() => setSelectedArea(area)}
+                        selected={selectedArea == area}
+                      >
+                        <ListItemAvatar>
+                          <Avatar>
+                            <Pentagon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={area.title}
+                          secondary={area.description ?? ''}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))}
+              </List>
             ) : (
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  bottom: 80,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  left: 0,
-                  position: 'absolute',
-                  right: 0,
-                }}
-              >
-                <HomeWork
-                  sx={{ color: oldTheme.palette.grey[400], fontSize: 100 }}
-                />
-                <Typography color="secondary" variant="body1">
-                  <Msg id={messageIds.instructions.ready} />
-                </Typography>
-              </Box>
+              <Typography>{'No areas available'}</Typography>
             )}
           </Box>
           <Box
@@ -108,16 +114,16 @@ const Page: FC<{
             <Button
               fullWidth
               onClick={() =>
-                areas.length > 1
-                  ? router.push(`/canvass/${assignment.id}/area`)
-                  : router.push(`/canvass/${assignment.id}/area/${areas[0].id}`)
+                router.push(
+                  `/canvass/${assignment.id}/area/${selectedArea?.id}`
+                )
               }
               sx={{
                 width: '50%',
               }}
               variant="contained"
             >
-              {areas.length > 1 ? 'Select Area' : 'Begin assignment'}
+              <Msg id={messageIds.instructions.start} />
             </Button>
           </Box>
         </Box>
@@ -126,11 +132,11 @@ const Page: FC<{
   );
 };
 
-type CanvassInstructionsPageProps = {
+type CanvassSelectAreaPageProps = {
   areaAssId: number;
 };
 
-const CanvassInstructionsPage: FC<CanvassInstructionsPageProps> = ({
+const CanvassSelectAreaPage: FC<CanvassSelectAreaPageProps> = ({
   areaAssId,
 }) => {
   const myAssignments = useMyCanvassAssignments() || [];
@@ -145,4 +151,4 @@ const CanvassInstructionsPage: FC<CanvassInstructionsPageProps> = ({
   return <Page assignment={assignment} />;
 };
 
-export default CanvassInstructionsPage;
+export default CanvassSelectAreaPage;
