@@ -256,6 +256,18 @@ const areaAssignmentSlice = createSlice({
       const [assignmentId, location] = action.payload;
 
       remoteItemUpdated(state.locationsByAssignmentId[assignmentId], location);
+
+      Object.keys(state.locationsByAssignmentIdAndAreaId).forEach((key) => {
+        const [keyAssignmentIdStr] = key.split(':');
+        const keyAssignmentId = Number(keyAssignmentIdStr);
+
+        if (keyAssignmentId == assignmentId) {
+          const list = state.locationsByAssignmentIdAndAreaId[key];
+          if (list.items.some((item) => item.id == location.id)) {
+            remoteItemUpdated(list, location);
+          }
+        }
+      });
     },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
@@ -279,6 +291,12 @@ const areaAssignmentSlice = createSlice({
       state.locationsByAssignmentIdAndAreaId[key] = remoteListLoad(
         state.locationsByAssignmentIdAndAreaId[key]
       );
+
+      const [assignmentIdStr] = key.split(':');
+      const assignmentId = Number(assignmentIdStr);
+      state.locationsByAssignmentId[assignmentId] = remoteListLoad(
+        state.locationsByAssignmentId[assignmentId]
+      );
     },
     locationsLoaded: (
       state,
@@ -287,6 +305,12 @@ const areaAssignmentSlice = createSlice({
       const [key, locations] = action.payload;
 
       state.locationsByAssignmentIdAndAreaId[key] = remoteListLoaded(locations);
+
+      const [assignmentIdStr] = key.split(':');
+      const assignmentId = Number(assignmentIdStr);
+      state.locationsByAssignmentId[assignmentId] = remoteListLoad(
+        state.locationsByAssignmentId[assignmentId]
+      );
     },
     metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
       const [assignmentId, metric] = action.payload;
