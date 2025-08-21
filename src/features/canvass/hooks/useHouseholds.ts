@@ -18,7 +18,7 @@ export default function useHouseholds(
     loader: async () =>
       fetchAllPaginated<Zetkin2Household>((page) =>
         apiClient.get(
-          `/api2/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
+          `/beta/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
         )
       ),
   });
