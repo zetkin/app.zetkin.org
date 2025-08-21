@@ -39,8 +39,8 @@ export default function useLocationMutations(
         Zetkin2Household,
         HouseholdPatchBody
       >(
-        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
-        data
+        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
+        { ...data, colorCode: '#caf15e' }
       );
       dispatch(householdUpdated([locationId, household]));
     },

@@ -20,7 +20,7 @@ export default function useHousehold(
     actionOnSuccess: (data) => householdLoaded([locationId, data]),
     loader: () =>
       apiClient.get<Zetkin2Household>(
-        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`
+        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`
       ),
   });
 }
