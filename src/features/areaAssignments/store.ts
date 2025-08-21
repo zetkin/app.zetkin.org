@@ -42,7 +42,7 @@ export interface AreaAssignmentsStoreSlice {
     RemoteList<ZetkinAreaAssignee & { id: number }>
   >;
   locationsByAssignmentId: Record<number, RemoteList<ZetkinLocation>>;
-  locationsByAssignmentIdAndAreaId: Record<string, RemoteList<ZetkinLocation>>; //string will be the key assignmentId:areaId
+  locationsByAssignmentIdAndAreaId: Record<string, RemoteList<ZetkinLocation>>;
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByAreaAssId: Record<
     number,
@@ -244,6 +244,10 @@ const areaAssignmentSlice = createSlice({
       Object.values(state.locationsByAssignmentId).forEach((list) => {
         remoteItemUpdated(list, location);
       });
+
+      Object.values(state.locationsByAssignmentIdAndAreaId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
     },
     locationLoaded: (
       state,
@@ -257,6 +261,9 @@ const areaAssignmentSlice = createSlice({
       const location = action.payload;
 
       Object.values(state.locationsByAssignmentId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
+      Object.values(state.locationsByAssignmentIdAndAreaId).forEach((list) => {
         remoteItemUpdated(list, location);
       });
     },
