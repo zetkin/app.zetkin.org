@@ -80,6 +80,9 @@ export default makeMessages('feat.canvass', {
       inputPlaceholder: m('Give the location a name'),
     },
   },
+  selectArea: {
+    noAreas: m('No areas available'),
+  },
   sidebar: {
     instructions: {
       title: m('Instructions'),

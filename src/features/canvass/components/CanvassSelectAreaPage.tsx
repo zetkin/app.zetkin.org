@@ -2,17 +2,15 @@
 
 import { FC, useState } from 'react';
 import React from 'react';
-import { Pentagon } from '@mui/icons-material';
+import { ArrowForwardIos } from '@mui/icons-material';
 import {
   Avatar,
   Box,
-  Button,
+  CircularProgress,
   Divider,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemButton,
-  ListItemText,
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -25,7 +23,6 @@ import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
-import { Zetkin2Area } from 'features/areas/types';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
@@ -33,7 +30,7 @@ const Page: FC<{
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
-  const [selectedArea, setSelectedArea] = useState<Zetkin2Area | null>(null);
+  const [loadingAreaId, setLoadingAreaId] = useState<number | null>(null);
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
       {({ data: { org } }) => (
@@ -64,32 +61,49 @@ const Page: FC<{
             </Box>
           </Box>
           <Divider />
-          <Box
-            sx={{
-              overflowY: 'auto',
-              padding: 2,
-              paddingBottom: 8,
-            }}
-          >
+          <Box>
             {areas.length > 0 ? (
-              <List>
-                <Typography>{'Select one area:'}</Typography>
+              <List disablePadding>
                 {areas.map((area) => (
                   <React.Fragment key={area.id}>
-                    <ListItem disablePadding>
+                    <ListItem key={area.id} disablePadding>
                       <ListItemButton
-                        onClick={() => setSelectedArea(area)}
-                        selected={selectedArea == area}
+                        onClick={async () => {
+                          setLoadingAreaId(area.id);
+                          await router.push(
+                            `/canvass/${assignment.id}/area/${area.id}`
+                          );
+                        }}
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          height: 64,
+                          justifyContent: 'space-between',
+                          px: 2,
+                        }}
                       >
-                        <ListItemAvatar>
-                          <Avatar>
-                            <Pentagon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={area.title}
-                          secondary={area.description ?? ''}
-                        />
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100%',
+                            justifyContent: area.description
+                              ? 'flex-start'
+                              : 'center',
+                          }}
+                        >
+                          <Typography variant="body1">{area.title}</Typography>
+                          {area.description && (
+                            <Typography color="text.secondary" variant="body2">
+                              {area.description}
+                            </Typography>
+                          )}
+                        </Box>
+                        {loadingAreaId === area.id ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          <ArrowForwardIos fontSize="small" />
+                        )}
                       </ListItemButton>
                     </ListItem>
                     <Divider />
@@ -97,34 +111,10 @@ const Page: FC<{
                 ))}
               </List>
             ) : (
-              <Typography>{'No areas available'}</Typography>
+              <Typography>
+                <Msg id={messageIds.selectArea.noAreas} />
+              </Typography>
             )}
-          </Box>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="center"
-            sx={{
-              bottom: 16,
-              left: 0,
-              position: 'absolute',
-              right: 0,
-            }}
-          >
-            <Button
-              fullWidth
-              onClick={() =>
-                router.push(
-                  `/canvass/${assignment.id}/area/${selectedArea?.id}`
-                )
-              }
-              sx={{
-                width: '50%',
-              }}
-              variant="contained"
-            >
-              <Msg id={messageIds.instructions.start} />
-            </Button>
           </Box>
         </Box>
       )}
