@@ -3,6 +3,8 @@
 import { FC, Suspense, useState } from 'react';
 import { Avatar, Box, IconButton, Typography } from '@mui/material';
 import { Menu } from '@mui/icons-material';
+import { ArrowLeftIcon } from '@mui/x-date-pickers';
+import { useRouter } from 'next/navigation';
 
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -20,7 +22,7 @@ const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const orgFuture = useOrganization(assignment.organization_id);
   const selectedArea = areas.find((area) => area.id == areaId);
-
+  const router = useRouter();
   const isServer = useServerSide();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -55,27 +57,33 @@ const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
             <Box
               alignItems="center"
               display="flex"
-              gap={1}
               justifyContent="space-between"
-              padding={2}
+              py={2}
             >
-              <Box>
-                <Box display="flex" flexDirection="column">
+              <Box display="flex">
+                <ArrowLeftIcon
+                  fontSize="large"
+                  onClick={() => router.push(`/canvass/${assignment.id}/area`)}
+                  sx={{ alignSelf: 'center', cursor: 'pointer', mr: 1 }}
+                />
+                <Box
+                  alignItems="flex-start"
+                  display="flex"
+                  flexDirection="column"
+                >
                   <Typography variant="body1">{assignment.title}</Typography>
-                </Box>
-                <Box alignItems="center" display="flex" gap={1}>
-                  <Avatar
-                    src={`/api/orgs/${org.id}/avatar`}
-                    sx={{ height: 24, width: 24 }}
-                  />
-                  <Typography variant="body2">{org.title}</Typography>
+                  <Box alignItems="center" display="flex" gap={1}>
+                    <Avatar
+                      src={`/api/orgs/${org.id}/avatar`}
+                      sx={{ height: 24, width: 24 }}
+                    />
+                    <Typography variant="body2">{org.title}</Typography>
+                  </Box>
                 </Box>
               </Box>
-              <Box>
-                <IconButton onClick={() => setShowMenu(!showMenu)}>
-                  <Menu />
-                </IconButton>
-              </Box>
+              <IconButton onClick={() => setShowMenu(!showMenu)}>
+                <Menu />
+              </IconButton>
             </Box>
             <Box flexGrow={1} sx={{ height: '200px' }}>
               {selectedArea && (
