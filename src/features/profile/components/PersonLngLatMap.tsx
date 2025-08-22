@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Box, BoxProps } from '@mui/material';
 import Map, { Marker } from '@vis.gl/react-maplibre';
-import { LngLatBounds } from 'maplibre-gl';
+import { LngLatBounds, Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import {
@@ -13,6 +13,7 @@ import {
 } from 'utils/types/zetkin';
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
+import ZUIMapControls from 'zui/ZUIMapControls';
 
 type Props = {
   customFields: ZetkinCustomField[];
@@ -39,6 +40,7 @@ const PersonLngLatMap: FC<Props> = ({
   width = '100%',
 }) => {
   const env = useEnv();
+  const [map, setMap] = useState<MapType | null>(null);
 
   const lngLatFields = customFields.filter(
     (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
@@ -70,10 +72,32 @@ const PersonLngLatMap: FC<Props> = ({
     <Box
       sx={{
         height,
+        position: 'relative',
         width,
       }}
     >
+      <ZUIMapControls
+        onFitBounds={() => {
+          if (bounds) {
+            map?.fitBounds(bounds, {
+              animate: true,
+              maxZoom: 13,
+              speed: 2,
+            });
+          }
+        }}
+        onGeolocate={(lngLat) => {
+          map?.flyTo({
+            animate: true,
+            center: lngLat,
+            speed: 2,
+          });
+        }}
+        onZoomIn={() => map?.zoomIn()}
+        onZoomOut={() => map?.zoomOut()}
+      />
       <Map
+        ref={(mapRef) => setMap(mapRef?.getMap() ?? null)}
         initialViewState={{
           latitude: bounds?.getCenter().lat,
           longitude: bounds?.getCenter().lng,
