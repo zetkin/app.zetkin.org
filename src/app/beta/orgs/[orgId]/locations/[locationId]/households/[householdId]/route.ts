@@ -44,21 +44,21 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
   const payload = await request.json();
+  const { colorCode, ...zetkinPayload } = payload;
 
-  const householdColorModel = await HouseholdColorModel.findOneAndUpdate(
-    { householdId: params.householdId },
-    {
-      colorCode: payload.colorCode,
-    },
-    { new: true, upsert: true }
-  );
+  if (colorCode) {
+    await HouseholdColorModel.findOneAndUpdate(
+      { householdId: params.householdId },
+      {
+        colorCode: payload.colorCode,
+      },
+      { new: true, upsert: true }
+    );
+  }
 
   const headers: IncomingHttpHeaders = {};
   request.headers.forEach((value, key) => (headers[key] = value));
   const apiClient = new BackendApiClient(headers);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { colorCode, ...zetkinPayload } = payload;
 
   const household =
     Object.keys(zetkinPayload).length > 0
@@ -72,7 +72,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const householdWithColor: Zetkin2Household = {
     ...household,
-    colorCode: householdColorModel?.colorCode ?? null,
+    colorCode: colorCode ?? null,
   };
 
   return NextResponse.json({
