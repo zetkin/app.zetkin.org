@@ -57,11 +57,9 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
       [180, 90],
     ];
 
-    const areaHoles = [selectedArea.boundary.coordinates[0]];
-
     return {
       geometry: {
-        coordinates: [earthCover, ...areaHoles],
+        coordinates: [earthCover, selectedArea.boundary.coordinates[0]],
         type: 'Polygon',
       },
       properties: {},
