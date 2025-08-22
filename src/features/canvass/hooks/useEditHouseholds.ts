@@ -19,7 +19,7 @@ export default function useEditHouseholds(orgId: number, locationId: number) {
     });
 
     updatedHouseholds.forEach((household) =>
-      dispatch(householdUpdated([household.id, household]))
+      dispatch(householdUpdated([locationId, household]))
     );
   };
 }

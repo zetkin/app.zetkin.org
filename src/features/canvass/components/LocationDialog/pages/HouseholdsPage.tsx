@@ -171,8 +171,15 @@ const HouseholdsPage: FC<Props> = ({
                   onClick={() => {
                     onSelectHousehold(household.id);
                   }}
-                  sx={{ px: 0 }}
+                  sx={{ paddingLeft: 0 }}
                 >
+                  <Box
+                    sx={{
+                      backgroundColor: household.colorCode,
+                      height: '20px',
+                      width: '20px',
+                    }}
+                  />
                   <Box alignItems="center" display="flex" flexGrow={1}>
                     <Checkbox
                       checked={selectedHouseholdIds.includes(household.id)}

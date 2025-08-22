@@ -1,14 +1,16 @@
-import { Box, Button, Input, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Input, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
+type HouseholdUpdate = { colorCode?: string | null; level?: number };
+
 type Props = {
   householdIds: number[];
   onBack: () => void;
-  onSave: (updates: { colorCode?: string | null; floor?: number }) => void;
+  onSave: (updates: HouseholdUpdate) => void;
 };
 
 const BulkEditHouseholdsPage: FC<Props> = ({
@@ -18,6 +20,7 @@ const BulkEditHouseholdsPage: FC<Props> = ({
 }) => {
   const messages = useMessages(messageIds);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [floor, setFloor] = useState<number | null>(null);
   const [colorCode, setColorCode] = useState<string | null>(null);
 
@@ -32,14 +35,22 @@ const BulkEditHouseholdsPage: FC<Props> = ({
     <PageBase
       actions={
         <Button
-          disabled={nothingHasBeenEdited}
+          disabled={nothingHasBeenEdited || isLoading}
+          loading={isLoading}
           onClick={() => {
-            const updates = {
+            setIsLoading(true);
+            const updates: HouseholdUpdate = {
               colorCode,
-              floor: floor ?? undefined,
+              level: floor ?? undefined,
             };
             onSave(updates);
+            setIsLoading(false);
           }}
+          startIcon={
+            isLoading ? (
+              <CircularProgress color="secondary" size="20px" />
+            ) : null
+          }
           variant="contained"
         >
           <Msg
@@ -56,11 +67,13 @@ const BulkEditHouseholdsPage: FC<Props> = ({
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          const updates = {
+          setIsLoading(true);
+          const updates: HouseholdUpdate = {
             colorCode,
-            floor: floor ?? undefined,
+            level: floor ?? undefined,
           };
           onSave(updates);
+          setIsLoading(false);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>

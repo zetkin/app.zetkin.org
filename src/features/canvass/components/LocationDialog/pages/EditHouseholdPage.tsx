@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, Input, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
@@ -12,7 +12,7 @@ type Props = {
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string, level: number) => void;
+  onSave: (title: string, level: number, colorCode: string | null) => void;
 };
 
 const EditHouseholdPage: FC<Props> = ({
@@ -31,6 +31,9 @@ const EditHouseholdPage: FC<Props> = ({
 
   const [title, setTitle] = useState(household.title || '');
   const [floor, setFloor] = useState(household.level ?? 0);
+  const [colorCode, setColorCode] = useState<string | null>(
+    household.colorCode ?? null
+  );
 
   useEffect(() => {
     setTitle(household.title || '');
@@ -38,7 +41,9 @@ const EditHouseholdPage: FC<Props> = ({
   }, [household]);
 
   const nothingHasBeenEdited =
-    title == household.title && floor == household.level;
+    title == household.title &&
+    floor == household.level &&
+    colorCode == household.colorCode;
 
   return (
     <PageBase
@@ -46,7 +51,7 @@ const EditHouseholdPage: FC<Props> = ({
         <Button
           disabled={nothingHasBeenEdited || title.length === 0}
           onClick={() => {
-            onSave(title, floor || 0);
+            onSave(title, floor || 0, colorCode);
           }}
           variant="contained"
         >
@@ -62,7 +67,7 @@ const EditHouseholdPage: FC<Props> = ({
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title, floor);
+          onSave(title, floor, colorCode);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>
@@ -78,6 +83,11 @@ const EditHouseholdPage: FC<Props> = ({
             onChange={(ev) => setFloor(parseInt(ev.target.value))}
             type="number"
             value={floor}
+          />
+          <Input
+            onChange={(ev) => setColorCode(ev.target.value)}
+            type="color"
+            value={colorCode}
           />
         </Box>
       </form>
