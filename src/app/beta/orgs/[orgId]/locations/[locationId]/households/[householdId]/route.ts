@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
   const householdWithColor: Zetkin2Household = {
     ...household,
-    colorCode: householdColorModel?.colorCode ?? null,
+    color: householdColorModel?.color ?? null,
   };
 
   return NextResponse.json({ data: householdWithColor });
@@ -44,13 +44,13 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
   const payload = await request.json();
-  const { colorCode, ...zetkinPayload } = payload;
+  const { color, ...zetkinPayload } = payload;
 
-  if (colorCode) {
+  if (color) {
     await HouseholdColorModel.findOneAndUpdate(
       { householdId: params.householdId },
       {
-        colorCode: payload.colorCode,
+        color: payload.color,
       },
       { new: true, upsert: true }
     );
@@ -72,7 +72,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const householdWithColor: Zetkin2Household = {
     ...household,
-    colorCode: colorCode ?? null,
+    color: color ?? null,
   };
 
   return NextResponse.json({

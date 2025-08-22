@@ -175,7 +175,7 @@ const HouseholdsPage: FC<Props> = ({
                 >
                   <Box
                     sx={{
-                      backgroundColor: household.colorCode,
+                      backgroundColor: household.color,
                       height: '20px',
                       width: '20px',
                     }}

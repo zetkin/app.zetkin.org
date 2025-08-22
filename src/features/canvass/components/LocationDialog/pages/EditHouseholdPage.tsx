@@ -12,7 +12,7 @@ type Props = {
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string, level: number, colorCode: string | null) => void;
+  onSave: (title: string, level: number, color: string | null) => void;
 };
 
 const EditHouseholdPage: FC<Props> = ({
@@ -31,9 +31,7 @@ const EditHouseholdPage: FC<Props> = ({
 
   const [title, setTitle] = useState(household.title || '');
   const [floor, setFloor] = useState(household.level ?? 0);
-  const [colorCode, setColorCode] = useState<string | null>(
-    household.colorCode ?? null
-  );
+  const [color, setcolor] = useState<string | null>(household.color ?? null);
 
   useEffect(() => {
     setTitle(household.title || '');
@@ -43,7 +41,7 @@ const EditHouseholdPage: FC<Props> = ({
   const nothingHasBeenEdited =
     title == household.title &&
     floor == household.level &&
-    colorCode == household.colorCode;
+    color == household.color;
 
   return (
     <PageBase
@@ -51,7 +49,7 @@ const EditHouseholdPage: FC<Props> = ({
         <Button
           disabled={nothingHasBeenEdited || title.length === 0}
           onClick={() => {
-            onSave(title, floor || 0, colorCode);
+            onSave(title, floor || 0, color);
           }}
           variant="contained"
         >
@@ -67,7 +65,7 @@ const EditHouseholdPage: FC<Props> = ({
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          onSave(title, floor, colorCode);
+          onSave(title, floor, color);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>
@@ -85,9 +83,9 @@ const EditHouseholdPage: FC<Props> = ({
             value={floor}
           />
           <Input
-            onChange={(ev) => setColorCode(ev.target.value)}
+            onChange={(ev) => setcolor(ev.target.value)}
             type="color"
-            value={colorCode}
+            value={color}
           />
         </Box>
       </form>

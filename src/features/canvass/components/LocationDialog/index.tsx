@@ -200,10 +200,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
               location={location}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title, level, colorCode) => {
+              onSave={async (title, level, color) => {
                 if (selectedHouseholdId) {
                   await updateHousehold(selectedHouseholdId, {
-                    colorCode,
+                    color: color,
                     level,
                     title,
                   });

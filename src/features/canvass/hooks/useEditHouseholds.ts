@@ -8,10 +8,10 @@ export default function useEditHouseholds(orgId: number, locationId: number) {
 
   return async (
     householdIds: number[],
-    updates: { colorCode?: string | null; level?: number }
+    updates: { color?: string | null; level?: number }
   ) => {
     const { updatedHouseholds } = await apiClient.rpc(editHouseholds, {
-      colorCode: updates.colorCode,
+      color: updates.color,
       householdIds,
       level: updates.level,
       locationId,

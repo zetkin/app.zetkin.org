@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 type HouseholdColorModelType = {
-  colorCode: string | null;
+  color: string | null;
   householdId: number;
 };
 
 const householdColorSchema = new mongoose.Schema<HouseholdColorModelType>({
-  colorCode: String,
+  color: String,
   householdId: Number,
 });
 

@@ -5,7 +5,7 @@ import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 
-type HouseholdUpdate = { colorCode?: string | null; level?: number };
+type HouseholdUpdate = { color?: string | null; level?: number };
 
 type Props = {
   householdIds: number[];
@@ -22,14 +22,14 @@ const BulkEditHouseholdsPage: FC<Props> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [floor, setFloor] = useState<number | null>(null);
-  const [colorCode, setColorCode] = useState<string | null>(null);
+  const [color, setcolor] = useState<string | null>(null);
 
   useEffect(() => {
     setFloor(null);
-    setColorCode(null);
+    setcolor(null);
   }, []);
 
-  const nothingHasBeenEdited = floor == null && colorCode == null;
+  const nothingHasBeenEdited = floor == null && color == null;
 
   return (
     <PageBase
@@ -40,7 +40,7 @@ const BulkEditHouseholdsPage: FC<Props> = ({
           onClick={() => {
             setIsLoading(true);
             const updates: HouseholdUpdate = {
-              colorCode,
+              color,
               level: floor ?? undefined,
             };
             onSave(updates);
@@ -69,7 +69,7 @@ const BulkEditHouseholdsPage: FC<Props> = ({
           ev.preventDefault();
           setIsLoading(true);
           const updates: HouseholdUpdate = {
-            colorCode,
+            color,
             level: floor ?? undefined,
           };
           onSave(updates);
@@ -85,9 +85,9 @@ const BulkEditHouseholdsPage: FC<Props> = ({
             value={floor}
           />
           <Input
-            onChange={(ev) => setColorCode(ev.target.value)}
+            onChange={(ev) => setcolor(ev.target.value)}
             type="color"
-            value={colorCode}
+            value={color}
           />
         </Box>
       </form>
