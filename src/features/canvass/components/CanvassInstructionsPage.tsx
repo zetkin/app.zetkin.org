@@ -21,6 +21,7 @@ const Page: FC<{
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
+  const userMustSelectArea = areas.length > 1;
 
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
@@ -108,7 +109,7 @@ const Page: FC<{
             <Button
               fullWidth
               onClick={() =>
-                areas.length > 1
+                userMustSelectArea
                   ? router.push(`/canvass/${assignment.id}/areas`)
                   : router.push(
                       `/canvass/${assignment.id}/areas/${areas[0].id}`
@@ -119,7 +120,11 @@ const Page: FC<{
               }}
               variant="contained"
             >
-              {areas.length > 1 ? 'Select Area' : 'Begin assignment'}
+              {userMustSelectArea ? (
+                <Msg id={messageIds.instructions.selectArea} />
+              ) : (
+                <Msg id={messageIds.instructions.start} />
+              )}
             </Button>
           </Box>
         </Box>
