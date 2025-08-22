@@ -1,4 +1,3 @@
-import 'leaflet/dist/leaflet.css';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
