@@ -25,15 +25,15 @@ import ClusterImageRenderer from './ClusterImageRenderer';
 type Props = {
   areas: Zetkin2Area[];
   assignment: ZetkinAreaAssignment;
+  selectedArea: Zetkin2Area;
 };
 
-const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
-  const areaIds = areas.map((area) => area.id);
+const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
   const env = useEnv();
   const locations = useLocations(
     assignment.organization_id,
     assignment.id,
-    areaIds
+    selectedArea.id
   );
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const createLocation = useCreateLocation(assignment.organization_id);
@@ -57,11 +57,9 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       [180, 90],
     ];
 
-    const areaHoles = areas.map((area) => area.boundary.coordinates[0]);
-
     return {
       geometry: {
-        coordinates: [earthCover, ...areaHoles],
+        coordinates: [earthCover, selectedArea.boundary.coordinates[0]],
         type: 'Polygon',
       },
       properties: {},
@@ -213,6 +211,22 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       // Do nothing for now
     }
   }, [map, selectedLocationId, locations]);
+
+  useEffect(() => {
+    if (!map || !selectedArea) {
+      return;
+    }
+
+    const coords = selectedArea.boundary.coordinates[0];
+    const bounds = new LngLatBounds(coords[0], coords[0]);
+    coords.forEach((lngLat) => bounds.extend(lngLat));
+
+    map.fitBounds(bounds, {
+      animate: true,
+      duration: 800,
+      padding: 40,
+    });
+  }, [map, selectedArea]);
 
   useEffect(() => {
     if (created) {
