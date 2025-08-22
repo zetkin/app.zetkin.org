@@ -45,8 +45,6 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const payload = await request.json();
 
-  console.log('API ROUTE', payload, params);
-
   const householdColorModel = await HouseholdColorModel.findOneAndUpdate(
     { householdId: params.householdId },
     {
@@ -55,22 +53,22 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
     { new: true, upsert: true }
   );
 
-  console.log('API ROUTE HOUSEHOLD COLOR MODEL', householdColorModel);
-
   const headers: IncomingHttpHeaders = {};
   request.headers.forEach((value, key) => (headers[key] = value));
   const apiClient = new BackendApiClient(headers);
 
-  console.log('API ROUTE headers & apiclient', headers, apiClient);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { colorCode, ...zetkinPayload } = payload;
 
-  const household = await apiClient.patch<APIHousehold, HouseholdPatchBody>(
-    `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`,
-    {
-      level: payload.level,
-      location_id: payload.location_id,
-      title: payload.title,
-    }
-  );
+  const household =
+    Object.keys(zetkinPayload).length > 0
+      ? await apiClient.patch<APIHousehold, HouseholdPatchBody>(
+          `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`,
+          zetkinPayload
+        )
+      : await apiClient.get<APIHousehold>(
+          `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`
+        );
 
   const householdWithColor: Zetkin2Household = {
     ...household,

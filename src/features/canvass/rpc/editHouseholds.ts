@@ -28,8 +28,6 @@ export default makeRPCDef<Params, Result>(editHouseholdsDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { locationId, colorCode, level, householdIds, orgId } = params;
 
-  console.log('RPC start', params, apiClient);
-
   const updatedHouseholds: Zetkin2Household[] = [];
 
   for (const householdId of householdIds) {
