@@ -121,8 +121,11 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             successRatio = successfulVisits / totalVisits;
           }
 
-          const visitPercentage = Math.round(visitRatio * 10) * 10;
-          const successPercentage = Math.round(successRatio * 10) * 10;
+          const roundToPercentage = (value: number) =>
+            Math.min(100, Math.round(value / 10) * 10);
+
+          const visitPercentage = roundToPercentage(visitRatio * 100);
+          const successPercentage = roundToPercentage(successRatio * 100);
           const icon =
             `marker-${successPercentage}-${visitPercentage}` +
             (selected ? '-selected' : '');
