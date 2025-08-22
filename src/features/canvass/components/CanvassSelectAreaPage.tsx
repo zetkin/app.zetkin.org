@@ -80,11 +80,9 @@ const Page: FC<{
                   <React.Fragment key={area.id}>
                     <ListItem key={area.id} disablePadding>
                       <ListItemButton
-                        onClick={async () => {
+                        href={`/canvass/${assignment.id}/areas/${area.id}`}
+                        onClick={() => {
                           setLoadingAreaId(area.id);
-                          await router.push(
-                            `/canvass/${assignment.id}/areas/${area.id}`
-                          );
                         }}
                         sx={{
                           alignItems: 'center',

@@ -3,7 +3,6 @@
 import { FC } from 'react';
 import { HomeWork } from '@mui/icons-material';
 import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
@@ -19,7 +18,6 @@ const Page: FC<{
   assignment: ZetkinAreaAssignment;
 }> = ({ assignment }) => {
   const orgFuture = useOrganization(assignment.organization_id);
-  const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const userMustSelectArea = areas.length > 1;
 
@@ -108,12 +106,10 @@ const Page: FC<{
           >
             <Button
               fullWidth
-              onClick={() =>
+              href={
                 userMustSelectArea
-                  ? router.push(`/canvass/${assignment.id}/areas`)
-                  : router.push(
-                      `/canvass/${assignment.id}/areas/${areas[0].id}`
-                    )
+                  ? `/canvass/${assignment.id}/areas`
+                  : `/canvass/${assignment.id}/areas/${areas[0].id}`
               }
               sx={{
                 width: '50%',
