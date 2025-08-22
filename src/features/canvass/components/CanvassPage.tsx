@@ -63,7 +63,7 @@ const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
               <Box display="flex">
                 <ArrowLeftIcon
                   fontSize="large"
-                  onClick={() => router.push(`/canvass/${assignment.id}/area`)}
+                  onClick={() => router.push(`/canvass/${assignment.id}/areas`)}
                   sx={{ alignSelf: 'center', cursor: 'pointer', mr: 1 }}
                 />
                 <Box

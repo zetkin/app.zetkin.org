@@ -24,6 +24,6 @@ export default async function Page({ params }: PageProps) {
 
     return <CanvassPage areaAssId={areaAssId} areaId={areaId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/canvass/${areaAssId}/area`);
+    return redirect(`/login?redirect=/canvass/${areaAssId}/areas/${areaId}`);
   }
 }

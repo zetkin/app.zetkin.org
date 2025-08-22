@@ -71,7 +71,7 @@ const Page: FC<{
                         onClick={async () => {
                           setLoadingAreaId(area.id);
                           await router.push(
-                            `/canvass/${assignment.id}/area/${area.id}`
+                            `/canvass/${assignment.id}/areas/${area.id}`
                           );
                         }}
                         sx={{

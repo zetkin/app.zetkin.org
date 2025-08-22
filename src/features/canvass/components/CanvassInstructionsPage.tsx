@@ -109,8 +109,10 @@ const Page: FC<{
               fullWidth
               onClick={() =>
                 areas.length > 1
-                  ? router.push(`/canvass/${assignment.id}/area`)
-                  : router.push(`/canvass/${assignment.id}/area/${areas[0].id}`)
+                  ? router.push(`/canvass/${assignment.id}/areas`)
+                  : router.push(
+                      `/canvass/${assignment.id}/areas/${areas[0].id}`
+                    )
               }
               sx={{
                 width: '50%',
