@@ -13,6 +13,7 @@ import {
   ListItemButton,
   Typography,
 } from '@mui/material';
+import { ArrowLeftIcon } from '@mui/x-date-pickers';
 import { useRouter } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
@@ -47,16 +48,27 @@ const Page: FC<{
             bgcolor={oldTheme.palette.background.paper}
             display="flex"
             justifyContent="space-between"
-            padding={2}
+            py={2}
           >
-            <Box>
-              <Typography variant="body1">{assignment.title}</Typography>
-              <Box alignItems="center" display="flex" gap={1}>
-                <Avatar
-                  src={`/api/orgs/${org.id}/avatar`}
-                  sx={{ height: 24, width: 24 }}
-                />
-                <Typography variant="body2">{org.title}</Typography>
+            <Box display="flex">
+              <ArrowLeftIcon
+                fontSize="large"
+                onClick={() => router.push(`/canvass/${assignment.id}`)}
+                sx={{ alignSelf: 'center', cursor: 'pointer', mr: 1 }}
+              />
+              <Box
+                alignItems="flex-start"
+                display="flex"
+                flexDirection="column"
+              >
+                <Typography variant="body1">{assignment.title}</Typography>
+                <Box alignItems="center" display="flex" gap={1}>
+                  <Avatar
+                    src={`/api/orgs/${org.id}/avatar`}
+                    sx={{ height: 24, width: 24 }}
+                  />
+                  <Typography variant="body2">{org.title}</Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
