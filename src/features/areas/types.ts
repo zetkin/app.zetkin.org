@@ -1,4 +1,4 @@
-import { Branded } from 'utils/types';
+import { Branded } from 'utils/types/branded';
 import { ZetkinTag } from 'utils/types/zetkin';
 
 export type Longitude = Branded<number, 'Longitude'>;
