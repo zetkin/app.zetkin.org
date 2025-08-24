@@ -273,11 +273,13 @@ feat:
         organizerAction:
           question:
             noButton: Nein
-            title: Soll eine wichtige Information an Organizer*in weitergegeben werden?
+            title: Soll der*m Organizer*in eine wichtige Information (Datenänderung, Wegzug,
+              Austrit, o.Ä.) mitgeteilt werden?
             yesButton: Ja
           summary:
             orgActionNeeded:
               subtitle: Organizer*in wird benachrichtigt.
+              title: 'Du hast dem*r Organizerin eine Information hinterlassen. '
         organizerLog:
           question:
             title: Erkläre der*m Organizer*in das Problem
@@ -488,13 +490,13 @@ feat:
       requestError: Ein Fehler ist aufgetreten. Bitte versuche es noch einmal.
       required: Pflichtfeld
       status:
-        draft: Entwurf
+        draft: Entwurf (sichtbar nur für Admins)
         heading: Status
         published: Veröffentlicht
       visibility:
         heading: Sichtbarkeit
-        private: Verborgen
-        public: Sichtbar
+        private: Nur nach Login sichtbar
+        public: Öffentlich sichtbar ohne Login
     indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
