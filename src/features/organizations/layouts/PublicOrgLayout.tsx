@@ -17,6 +17,8 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import FollowUnfollowLoginButton from '../components/ActivistPortlHeader/FollowUnfollowLoginButton';
 import EventMapLayout from './EventMapLayout';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { filtersUpdated } from '../store';
 
 type Props = {
   children: ReactNode;
@@ -24,6 +26,8 @@ type Props = {
 };
 
 const PublicOrgLayout: FC<Props> = ({ children, org }) => {
+  const dispatch = useAppDispatch();
+
   const messages = useMessages(messageIds);
   const subOrgs = usePublicSubOrgs(org.id);
   const { allEvents, filteredEvents } = useFilteredOrgEvents(org.id);
@@ -47,6 +51,18 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       value: 'suborgs',
     });
   }
+
+  const { geojsonToFilterBy } = useAppSelector(
+    (state) => state.organizations.filters
+  );
+
+  const setLocationFilter = (geojsonToFilterBy: GeoJSON.Feature[]) => {
+    dispatch(
+      filtersUpdated({
+        geojsonToFilterBy,
+      })
+    );
+  };
 
   return (
     <EventMapLayout
@@ -79,6 +95,8 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
           }
         />
       }
+      locationFilter={geojsonToFilterBy}
+      setLocationFilter={setLocationFilter}
       showMap={lastSegment != 'suborgs' && allEvents.length > 0}
     >
       {children}
