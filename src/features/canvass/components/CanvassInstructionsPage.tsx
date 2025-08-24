@@ -3,7 +3,6 @@
 import { FC } from 'react';
 import { HomeWork } from '@mui/icons-material';
 import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
@@ -13,12 +12,14 @@ import ZUIFutures from 'zui/ZUIFutures';
 import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
 }> = ({ assignment }) => {
   const orgFuture = useOrganization(assignment.organization_id);
-  const router = useRouter();
+  const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
+  const userMustSelectArea = areas.length > 1;
 
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
@@ -105,13 +106,21 @@ const Page: FC<{
           >
             <Button
               fullWidth
-              onClick={() => router.push(`/canvass/${assignment.id}/map`)}
+              href={
+                userMustSelectArea
+                  ? `/canvass/${assignment.id}/areas`
+                  : `/canvass/${assignment.id}/areas/${areas[0].id}`
+              }
               sx={{
                 width: '50%',
               }}
               variant="contained"
             >
-              <Msg id={messageIds.instructions.start} />
+              {userMustSelectArea ? (
+                <Msg id={messageIds.instructions.selectArea} />
+              ) : (
+                <Msg id={messageIds.instructions.start} />
+              )}
             </Button>
           </Box>
         </Box>

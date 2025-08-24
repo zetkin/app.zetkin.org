@@ -3,16 +3,17 @@ import { redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import CanvassInstructionsPage from 'features/canvass/components/CanvassInstructionsPage';
+import CanvassPage from 'features/canvass/components/CanvassPage';
 
 interface PageProps {
   params: {
     areaAssId: number;
+    areaId: number;
   };
 }
 
 export default async function Page({ params }: PageProps) {
-  const { areaAssId } = params;
+  const { areaAssId, areaId } = params;
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -21,8 +22,8 @@ export default async function Page({ params }: PageProps) {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <CanvassInstructionsPage areaAssId={areaAssId} />;
+    return <CanvassPage areaAssId={areaAssId} areaId={areaId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/canvass/${areaAssId}`);
+    return redirect(`/login?redirect=/canvass/${areaAssId}/areas/${areaId}`);
   }
 }
