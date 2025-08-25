@@ -73,28 +73,62 @@ const HouseholdColorPicker: FC<Props> = ({ color, onChange }) => {
               },
             },
           },
-          sx: { zIndex: 600000000 },
+          sx: { li: { flex: 1, minWidth: 48 }, zIndex: 600000000 },
         }}
         onChange={(ev) => onChange(ev.target.value)}
         renderValue={() => (
-          <Typography color={color ? getContrastColor(color) : 'primary'}>
+          <Typography
+            color={color ? getContrastColor(color) : 'primary'}
+            sx={{ backgroundColor: color, padding: 0.5 }}
+          >
             {color}
           </Typography>
         )}
-        sx={{ backgroundColor: color }}
         value={color}
       >
-        <MenuItem key="clear" sx={{ flex: 1, minWidth: 48 }} value="clear">
-          <Close />
+        <MenuItem
+          key="clear"
+          sx={{
+            '&.Mui-selected': {
+              '& span::before': {
+                border: '2px solid black',
+                content: '""',
+                display: 'flex',
+                height: '40px',
+                left: '4px',
+                position: 'absolute',
+                top: '4px',
+                width: '40px',
+              },
+              backgroundColor: 'white',
+            },
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+          value="clear"
+        >
+          <Close color="secondary" />
         </MenuItem>
         {colors.map((color) => (
           <MenuItem
             key={color}
             sx={{
+              '&.Mui-selected': {
+                '& span::before': {
+                  border: `2px solid ${getContrastColor(color)}`,
+                  content: '""',
+                  display: 'flex',
+                  height: '40px',
+                  left: '4px',
+                  position: 'absolute',
+                  top: '4px',
+                  width: '40px',
+                },
+                backgroundColor: color,
+              },
               '&:hover': { backgroundColor: color },
               backgroundColor: color,
-              flex: 1,
-              minWidth: 48,
             }}
             value={color}
           />
