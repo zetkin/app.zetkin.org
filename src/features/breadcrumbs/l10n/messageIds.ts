@@ -6,6 +6,7 @@ export default makeMessages('feat.breadcrumbs', {
     archive: m('Archive'),
     areaassignments: m('Area assignments'),
     assignees: m('Assignees'),
+    automations: m('Automations'),
     calendar: m('Calendar'),
     callassignments: m('Call assignments'),
     callers: m('Callers'),
