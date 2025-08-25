@@ -1,14 +1,13 @@
 import { FC } from 'react';
 import { Close } from '@mui/icons-material';
 import {
+  Box,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Typography,
 } from '@mui/material';
-
-import { getContrastColor } from 'utils/colorUtils';
 
 type Props = {
   onChange: (newColor: string | null) => void;
@@ -85,14 +84,23 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
           }
         }}
         renderValue={(value) => (
-          <Typography
-            color={value == 'clear' ? '' : getContrastColor(value)}
-            sx={{ backgroundColor: selectedColor, padding: 0.5 }}
-          >
-            {value == 'clear'
-              ? 'No color'
-              : colors.find((color) => color.value == selectedColor)?.label}
-          </Typography>
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            {value != 'clear' && (
+              <Box
+                sx={{
+                  backgroundColor: value,
+                  borderRadius: '4px',
+                  height: '30px',
+                  width: '30px',
+                }}
+              />
+            )}
+            <Typography>
+              {value == 'clear'
+                ? 'No color'
+                : colors.find((color) => color.value == selectedColor)?.label}
+            </Typography>
+          </Box>
         )}
         value={selectedColor ?? 'clear'}
       >
