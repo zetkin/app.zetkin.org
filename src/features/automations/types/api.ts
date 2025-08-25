@@ -16,3 +16,7 @@ export type ZetkinBulkAutomation = {
 export type ZetkinBulkAutomationPostBody = Partial<
   Pick<ZetkinBulkAutomation, 'bulk_ops' | 'description' | 'interval' | 'title'>
 >;
+
+export type ZetkinBulkAutomationPatchBody = Partial<
+  Pick<ZetkinBulkAutomation, 'bulk_ops' | 'description' | 'interval' | 'title'>
+>;

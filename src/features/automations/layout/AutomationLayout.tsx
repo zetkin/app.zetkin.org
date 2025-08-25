@@ -4,6 +4,8 @@ import SimpleLayout from 'utils/layout/SimpleLayout';
 import { useNumericRouteParams } from 'core/hooks';
 import useAutomation from '../hooks/useAutomation';
 import AutomationStatusChip from '../components/AutomationStatusChip';
+import useAutomationMutations from '../hooks/useAutomationMutations';
+import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 
 type Props = {
   children: ReactNode;
@@ -12,11 +14,17 @@ type Props = {
 const AutomationLayout: FC<Props> = ({ children }) => {
   const { orgId, automationId } = useNumericRouteParams();
   const automation = useAutomation(orgId, automationId);
+  const { updateAutomation } = useAutomationMutations(orgId, automationId);
 
   return (
     <SimpleLayout
       subtitle={<AutomationStatusChip automation={automation} />}
-      title={automation.title}
+      title={
+        <ZUIEditTextinPlace
+          onChange={(title) => updateAutomation({ title })}
+          value={automation.title}
+        />
+      }
     >
       {children}
     </SimpleLayout>

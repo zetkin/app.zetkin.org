@@ -31,6 +31,9 @@ const automationsSlice = createSlice({
     automationLoaded: (state, action: PayloadAction<ZetkinBulkAutomation>) => {
       remoteItemUpdated(state.automationList, action.payload);
     },
+    automationUpdated: (state, action: PayloadAction<ZetkinBulkAutomation>) => {
+      remoteItemUpdated(state.automationList, action.payload);
+    },
     automationsLoad: (state) => {
       state.automationList = remoteListLoad(state.automationList);
     },
@@ -48,6 +51,7 @@ export const {
   automationCreated,
   automationLoad,
   automationLoaded,
+  automationUpdated,
   automationsLoad,
   automationsLoaded,
 } = automationsSlice.actions;
