@@ -73,6 +73,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
           </Button>
         )
       }
+      color={household.color}
       onBack={onBack}
       title={messages.visit.household.header({
         householdTitle: household.title,

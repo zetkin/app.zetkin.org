@@ -18,24 +18,45 @@ const PageBaseHeader: FC<Props> = ({
   title,
 }) => {
   return (
-    <Box display="flex" justifyContent="space-between" width="100%">
-      {color && <Box bgcolor={color} height={40} width={40} />}
-      <Box alignItems="center" display="flex">
-        {onBack && (
-          <IconButton onClick={() => onBack()}>
-            <ArrowBackIos />
-          </IconButton>
-        )}
-        <Box>
-          <Typography variant="h6">{title}</Typography>
-          {subtitle && (
-            <Typography color="secondary" variant="body2">
-              {subtitle}
-            </Typography>
+    <Box
+      sx={{
+        display: 'flex',
+        height: '54px',
+        paddingBottom: 1,
+        paddingX: 2,
+        position: 'relative',
+      }}
+    >
+      {color && (
+        <Box
+          sx={{
+            backgroundColor: color,
+            height: '70px',
+            left: -16,
+            position: 'absolute',
+            top: -16,
+            width: '32px',
+          }}
+        />
+      )}
+      <Box display="flex" justifyContent="space-between" width="100%">
+        <Box alignItems="center" display="flex">
+          {onBack && (
+            <IconButton onClick={() => onBack()}>
+              <ArrowBackIos />
+            </IconButton>
           )}
+          <Box>
+            <Typography variant="h6">{title}</Typography>
+            {subtitle && (
+              <Typography color="secondary" variant="body2">
+                {subtitle}
+              </Typography>
+            )}
+          </Box>
         </Box>
+        <Box>{iconButtons}</Box>
       </Box>
-      <Box>{iconButtons}</Box>
     </Box>
   );
 };

@@ -57,6 +57,7 @@ const EditHouseholdPage: FC<Props> = ({
           <Msg id={messageIds.households.editSingleHousehold.saveButtonLabel} />
         </Button>
       }
+      color={household.color}
       onBack={onBack}
       onClose={onClose}
       title={messages.households.editSingleHousehold.header({

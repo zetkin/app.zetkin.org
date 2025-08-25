@@ -27,36 +27,26 @@ const PageBase: FC<Props> = ({
 }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%" pt={2}>
-      <Box
-        paddingBottom={1}
-        px={2}
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <PageBaseHeader
-          color={color}
-          iconButtons={
-            <>
-              {onEdit && (
-                <IconButton onClick={onEdit}>
-                  <Edit />
-                </IconButton>
-              )}
-              {onClose && (
-                <IconButton onClick={onClose}>
-                  <Close />
-                </IconButton>
-              )}
-            </>
-          }
-          onBack={onBack}
-          subtitle={subtitle}
-          title={title}
-        />
-      </Box>
+      <PageBaseHeader
+        color={color}
+        iconButtons={
+          <>
+            {onEdit && (
+              <IconButton onClick={onEdit}>
+                <Edit />
+              </IconButton>
+            )}
+            {onClose && (
+              <IconButton onClick={onClose}>
+                <Close />
+              </IconButton>
+            )}
+          </>
+        }
+        onBack={onBack}
+        subtitle={subtitle}
+        title={title}
+      />
       <Divider />
       <Box flexGrow={1} p={2} sx={{ overflowY: 'auto', position: 'relative' }}>
         {children}

@@ -171,12 +171,14 @@ const HouseholdsPage: FC<Props> = ({
                   onClick={() => {
                     onSelectHousehold(household.id);
                   }}
-                  sx={{ paddingLeft: 0 }}
+                  sx={{ paddingLeft: 0, position: 'relative' }}
                 >
                   <Box
                     sx={{
                       backgroundColor: household.color,
-                      height: '20px',
+                      height: '54px',
+                      left: -16,
+                      position: 'absolute',
                       width: '20px',
                     }}
                   />
