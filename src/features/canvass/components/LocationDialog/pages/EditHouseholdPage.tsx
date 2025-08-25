@@ -37,6 +37,7 @@ const EditHouseholdPage: FC<Props> = ({
   useEffect(() => {
     setTitle(household.title || '');
     setFloor(household.level ?? 0);
+    setcolor(household.color);
   }, [household]);
 
   const nothingHasBeenEdited =
