@@ -39,7 +39,7 @@ export default function useLocationMutations(
         Zetkin2Household,
         HouseholdPatchBody
       >(
-        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
+        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
         data
       );
       dispatch(householdUpdated([locationId, household]));

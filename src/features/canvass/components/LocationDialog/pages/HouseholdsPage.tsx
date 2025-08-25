@@ -31,24 +31,26 @@ type Props = {
   assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onBack: () => void;
-  onBulk: () => void;
+  onBulkCreate: () => void;
+  onBulkEdit: (householdIds: number[]) => void;
+  onBulkVisit: (households: number[]) => void;
   onClose: () => void;
   onCreateHousehold: (householdId: Zetkin2Household) => void;
   onSelectHousehold: (householdId: number) => void;
   onSelectHouseholds: (householdIds: number[]) => void;
-  onStartHouseholdsVisit: (households: number[]) => void;
   selectedHouseholdIds: number[];
 };
 
 const HouseholdsPage: FC<Props> = ({
   assignment,
   onBack,
-  onBulk,
+  onBulkCreate,
+  onBulkEdit,
   onClose,
   onCreateHousehold,
   onSelectHousehold,
   onSelectHouseholds,
-  onStartHouseholdsVisit,
+  onBulkVisit: onBulkVisit,
   location,
   selectedHouseholdIds,
 }) => {
@@ -118,14 +120,26 @@ const HouseholdsPage: FC<Props> = ({
             </Typography>
           </Box>
 
-          <Button
-            onClick={() => {
-              onStartHouseholdsVisit(selectedHouseholdIds);
-            }}
-            variant="outlined"
-          >
-            <Typography color="primary">Visit</Typography>
-          </Button>
+          <Box display="flex" gap={1}>
+            <Button
+              onClick={() => {
+                onBulkVisit(selectedHouseholdIds);
+              }}
+              size="small"
+              variant="outlined"
+            >
+              Visit
+            </Button>
+            <Button
+              onClick={() => {
+                onBulkEdit(selectedHouseholdIds);
+              }}
+              size="small"
+              variant="outlined"
+            >
+              Edit
+            </Button>
+          </Box>
         </Box>
       )}
       <Box display="flex" flexDirection="column" flexGrow={2}>
@@ -157,8 +171,17 @@ const HouseholdsPage: FC<Props> = ({
                   onClick={() => {
                     onSelectHousehold(household.id);
                   }}
-                  sx={{ px: 0 }}
+                  sx={{ paddingLeft: 0, position: 'relative' }}
                 >
+                  <Box
+                    sx={{
+                      backgroundColor: household.color,
+                      height: '54px',
+                      left: -16,
+                      position: 'absolute',
+                      width: '20px',
+                    }}
+                  />
                   <Box alignItems="center" display="flex" flexGrow={1}>
                     <Checkbox
                       checked={selectedHouseholdIds.includes(household.id)}
@@ -235,7 +258,7 @@ const HouseholdsPage: FC<Props> = ({
           >
             Add new household
           </Button>
-          <Button onClick={onBulk} startIcon={<Apps />} variant="text">
+          <Button onClick={onBulkCreate} startIcon={<Apps />} variant="text">
             Create many
           </Button>
         </Box>
