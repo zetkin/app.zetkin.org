@@ -16,6 +16,7 @@ export default makeMessages('feat.automations', {
     },
   },
   listPage: {
+    createButton: m('Create automation'),
     subtitle: m<{ numActive: number; numTotal: number }>(
       '{numActive, plural, =1 {# active automation} other {# active automations}} ({numTotal} total)'
     ),

@@ -12,3 +12,7 @@ export type ZetkinBulkAutomation = {
   organization_id: number;
   title: string;
 };
+
+export type ZetkinBulkAutomationPostBody = Partial<
+  Pick<ZetkinBulkAutomation, 'bulk_ops' | 'description' | 'interval' | 'title'>
+>;
