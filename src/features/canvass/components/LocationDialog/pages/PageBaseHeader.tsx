@@ -3,6 +3,7 @@ import { Box, IconButton, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 type Props = {
+  color?: string | null;
   iconButtons: ReactNode;
   onBack?: () => void;
   subtitle?: string | ReactNode;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const PageBaseHeader: FC<Props> = ({
+  color,
   iconButtons,
   onBack,
   subtitle,
@@ -17,6 +19,7 @@ const PageBaseHeader: FC<Props> = ({
 }) => {
   return (
     <Box display="flex" justifyContent="space-between" width="100%">
+      {color && <Box bgcolor={color} height={40} width={40} />}
       <Box alignItems="center" display="flex">
         {onBack && (
           <IconButton onClick={() => onBack()}>

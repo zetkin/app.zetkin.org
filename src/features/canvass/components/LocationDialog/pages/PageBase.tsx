@@ -7,6 +7,7 @@ import PageBaseHeader from './PageBaseHeader';
 type Props = {
   actions?: ReactNode;
   children?: ReactNode;
+  color?: string | null;
   onBack?: () => void;
   onClose?: () => void;
   onEdit?: () => void;
@@ -17,6 +18,7 @@ type Props = {
 const PageBase: FC<Props> = ({
   actions,
   children,
+  color,
   onBack,
   onClose,
   onEdit,
@@ -35,6 +37,7 @@ const PageBase: FC<Props> = ({
         }}
       >
         <PageBaseHeader
+          color={color}
           iconButtons={
             <>
               {onEdit && (

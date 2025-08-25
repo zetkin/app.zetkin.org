@@ -1,4 +1,4 @@
-import { Box, Button, Input, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
@@ -6,6 +6,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import useHousehold from 'features/canvass/hooks/useHousehold';
 import { ZetkinLocation } from 'features/areaAssignments/types';
+import HouseholdColorPicker from '../../HouseholdColorPicker';
 
 type Props = {
   householdId: number;
@@ -82,10 +83,9 @@ const EditHouseholdPage: FC<Props> = ({
             type="number"
             value={floor}
           />
-          <Input
-            onChange={(ev) => setcolor(ev.target.value)}
-            type="color"
-            value={color}
+          <HouseholdColorPicker
+            color={color}
+            onChange={(newColor) => setcolor(newColor)}
           />
         </Box>
       </form>
