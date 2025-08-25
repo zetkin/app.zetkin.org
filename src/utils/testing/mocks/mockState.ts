@@ -19,6 +19,9 @@ export default function mockState(overrides?: RootState) {
       areaList: remoteList(),
       tagsByAreaId: {},
     },
+    automations: {
+      automationList: remoteList(),
+    },
     breadcrumbs: {
       crumbsByPath: {},
     },
