@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 
@@ -33,9 +34,12 @@ const AutomationListPage: PageWithLayout<{ orgId: number }> = ({ orgId }) => {
   return (
     <Grid container spacing={2}>
       {automations.map((automation) => {
+        const url = `/organize/${orgId}/settings/automations/${automation.id}`;
         return (
           <Grid key={automation.id} size={{ lg: 4, md: 6, sm: 12, xl: 3 }}>
-            <AutomationCard automation={automation} />
+            <Link href={url}>
+              <AutomationCard automation={automation} />
+            </Link>
           </Grid>
         );
       })}

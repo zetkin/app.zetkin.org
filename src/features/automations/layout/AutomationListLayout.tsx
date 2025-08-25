@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { useRouter } from 'next/router';
 import { FC, ReactNode } from 'react';
 
 import { useMessages } from 'core/i18n';
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const AutomationListLayout: FC<Props> = ({ children }) => {
+  const router = useRouter();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const automations = useAutomations(orgId);
@@ -28,12 +30,15 @@ const AutomationListLayout: FC<Props> = ({ children }) => {
       actionButtons={
         <Button
           onClick={async () => {
-            await createAutomation({
+            const newAutomation = await createAutomation({
               bulk_ops: [],
               description: '',
               interval: 60 * 60 * 24,
               title: messages.defaultTitle(),
             });
+
+            const url = `/organize/${orgId}/settings/automations/${newAutomation.id}`;
+            router.push(url);
           }}
           variant="contained"
         >

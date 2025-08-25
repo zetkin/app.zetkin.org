@@ -1,19 +1,18 @@
 import { FC } from 'react';
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { ZetkinBulkAutomation } from '../types/api';
 import ZUICard from 'zui/ZUICard';
-import { Msg, useMessages } from 'core/i18n';
+import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import AutomationStatusChip from './AutomationStatusChip';
 
 type Props = {
   automation: ZetkinBulkAutomation;
 };
 
 const AutomationCard: FC<Props> = ({ automation }) => {
-  const messages = useMessages(messageIds);
-
   return (
     <ZUICard header={automation.title}>
       <Box
@@ -54,15 +53,7 @@ const AutomationCard: FC<Props> = ({ automation }) => {
             justifyContent: 'space-between',
           }}
         >
-          <Chip
-            color={automation.active ? 'success' : 'secondary'}
-            label={
-              automation.active
-                ? messages.labels.status.active()
-                : messages.labels.status.inactive()
-            }
-            size="small"
-          />
+          <AutomationStatusChip automation={automation} />
           <Typography color="secondary" variant="body2">
             {!automation.last_run && (
               <Msg id={messageIds.labels.lastRun.never} />

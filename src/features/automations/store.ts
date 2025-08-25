@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
+  remoteItemLoad,
   remoteItemUpdated,
   remoteList,
   RemoteList,
@@ -24,6 +25,12 @@ const automationsSlice = createSlice({
     automationCreated: (state, action: PayloadAction<ZetkinBulkAutomation>) => {
       remoteItemUpdated(state.automationList, action.payload);
     },
+    automationLoad: (state, action: PayloadAction<number>) => {
+      remoteItemLoad(state.automationList, action.payload);
+    },
+    automationLoaded: (state, action: PayloadAction<ZetkinBulkAutomation>) => {
+      remoteItemUpdated(state.automationList, action.payload);
+    },
     automationsLoad: (state) => {
       state.automationList = remoteListLoad(state.automationList);
     },
@@ -37,5 +44,10 @@ const automationsSlice = createSlice({
 });
 
 export default automationsSlice;
-export const { automationCreated, automationsLoad, automationsLoaded } =
-  automationsSlice.actions;
+export const {
+  automationCreated,
+  automationLoad,
+  automationLoaded,
+  automationsLoad,
+  automationsLoaded,
+} = automationsSlice.actions;
