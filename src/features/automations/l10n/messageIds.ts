@@ -2,6 +2,25 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.automations', {
   defaultTitle: m('Untitled automation'),
+  itemPage: {
+    pauseButton: m('Pause'),
+    scheduling: {
+      activateButton: m('Activate'),
+      interval: {
+        description: m(
+          'The job will repeat indefintely, waiting for this amount of time between each iteration.'
+        ),
+        unitLabel: m('Unit'),
+        units: {
+          days: m('days'),
+          hours: m('hours'),
+          minutes: m('minutes'),
+        },
+        valueLabel: m('Interval'),
+      },
+    },
+    schedulingButton: m('Schedule'),
+  },
   labels: {
     lastRun: {
       never: m('Not run yet'),

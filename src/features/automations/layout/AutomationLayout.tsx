@@ -6,6 +6,7 @@ import useAutomation from '../hooks/useAutomation';
 import AutomationStatusChip from '../components/AutomationStatusChip';
 import useAutomationMutations from '../hooks/useAutomationMutations';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import SchedulingButton from '../components/SchedulingButton';
 
 type Props = {
   children: ReactNode;
@@ -18,6 +19,7 @@ const AutomationLayout: FC<Props> = ({ children }) => {
 
   return (
     <SimpleLayout
+      actionButtons={<SchedulingButton automation={automation} />}
       subtitle={<AutomationStatusChip automation={automation} />}
       title={
         <ZUIEditTextinPlace
