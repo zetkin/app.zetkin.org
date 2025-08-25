@@ -86,8 +86,8 @@ const BulkEditHouseholdsPage: FC<Props> = ({
             value={floor}
           />
           <HouseholdColorPicker
-            color={color}
             onChange={(newColor) => setcolor(newColor)}
+            selectedColor={color}
           />
         </Box>
       </form>
