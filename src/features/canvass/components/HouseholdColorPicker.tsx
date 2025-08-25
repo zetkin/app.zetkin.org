@@ -100,17 +100,9 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
           key="clear"
           sx={{
             '&.Mui-selected': {
-              '& span::before': {
-                border: '2px solid black',
-                content: '""',
-                display: 'flex',
-                height: '40px',
-                left: '4px',
-                position: 'absolute',
-                top: '4px',
-                width: '40px',
-              },
               backgroundColor: 'white',
+              border: '2px solid black',
+              borderRadius: '4px',
             },
             alignItems: 'center',
             display: 'flex',
@@ -126,19 +118,22 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
             sx={{
               '&.Mui-selected': {
                 '& span::before': {
-                  border: `2px solid ${getContrastColor(color.value)}`,
+                  backgroundColor: color.value,
+                  borderRadius: '4px',
                   content: '""',
                   display: 'flex',
-                  height: '40px',
-                  left: '4px',
+                  height: '32px',
+                  left: '8px',
                   position: 'absolute',
-                  top: '4px',
-                  width: '40px',
+                  top: '7px',
+                  width: '32px',
                 },
-                backgroundColor: color.value,
+                backgroundColor: 'white',
+                border: '2px solid black',
               },
               '&:hover': { backgroundColor: color.value },
               backgroundColor: color.value,
+              borderRadius: '4px',
             }}
             value={color.value}
           />
