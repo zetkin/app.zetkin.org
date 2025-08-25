@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   remoteListCreated,
-  remoteListInvalidated,
   remoteListLoad,
   remoteListLoaded,
   remoteItemLoad,
@@ -42,6 +41,7 @@ export interface AreaAssignmentsStoreSlice {
     RemoteList<ZetkinAreaAssignee & { id: number }>
   >;
   locationsByAssignmentId: Record<number, RemoteList<ZetkinLocation>>;
+  locationsByAssignmentIdAndAreaId: Record<string, RemoteList<ZetkinLocation>>;
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByAreaAssId: Record<
     number,
@@ -57,6 +57,7 @@ const initialState: AreaAssignmentsStoreSlice = {
   areasByAssignmentId: {},
   assigneesByAssignmentId: {},
   locationsByAssignmentId: {},
+  locationsByAssignmentIdAndAreaId: {},
   metricsByAssignmentId: {},
   statsByAreaAssId: {},
   visitsByHouseholdId: {},
@@ -242,6 +243,10 @@ const areaAssignmentSlice = createSlice({
       Object.values(state.locationsByAssignmentId).forEach((list) => {
         remoteItemUpdated(list, location);
       });
+
+      Object.values(state.locationsByAssignmentIdAndAreaId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
     },
     locationLoaded: (
       state,
@@ -250,6 +255,18 @@ const areaAssignmentSlice = createSlice({
       const [assignmentId, location] = action.payload;
 
       remoteItemUpdated(state.locationsByAssignmentId[assignmentId], location);
+
+      Object.keys(state.locationsByAssignmentIdAndAreaId).forEach((key) => {
+        const [keyAssignmentIdStr] = key.split(':');
+        const keyAssignmentId = Number(keyAssignmentIdStr);
+
+        if (keyAssignmentId == assignmentId) {
+          const list = state.locationsByAssignmentIdAndAreaId[key];
+          if (list.items.some((item) => item.id == location.id)) {
+            remoteItemUpdated(list, location);
+          }
+        }
+      });
     },
     locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
@@ -257,25 +274,36 @@ const areaAssignmentSlice = createSlice({
       Object.values(state.locationsByAssignmentId).forEach((list) => {
         remoteItemUpdated(list, location);
       });
+      Object.values(state.locationsByAssignmentIdAndAreaId).forEach((list) => {
+        remoteItemUpdated(list, location);
+      });
     },
-    locationsInvalidated: (state, action: PayloadAction<number>) => {
-      const assignmentId = action.payload;
-      state.locationsByAssignmentId[assignmentId] = remoteListInvalidated(
-        state.locationsByAssignmentId[assignmentId]
+    locationsLoad: (state, action: PayloadAction<string>) => {
+      const key = action.payload;
+
+      state.locationsByAssignmentIdAndAreaId[key] = remoteListLoad(
+        state.locationsByAssignmentIdAndAreaId[key]
       );
-    },
-    locationsLoad: (state, action: PayloadAction<number>) => {
-      const assignmentId = action.payload;
+
+      const [assignmentIdStr] = key.split(':');
+      const assignmentId = Number(assignmentIdStr);
       state.locationsByAssignmentId[assignmentId] = remoteListLoad(
         state.locationsByAssignmentId[assignmentId]
       );
     },
     locationsLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinLocation[]]>
+      action: PayloadAction<[string, ZetkinLocation[]]>
     ) => {
-      const [assignmentId, locations] = action.payload;
-      state.locationsByAssignmentId[assignmentId] = remoteListLoaded(locations);
+      const [key, locations] = action.payload;
+
+      state.locationsByAssignmentIdAndAreaId[key] = remoteListLoaded(locations);
+
+      const [assignmentIdStr] = key.split(':');
+      const assignmentId = Number(assignmentIdStr);
+      state.locationsByAssignmentId[assignmentId] = remoteListLoad(
+        state.locationsByAssignmentId[assignmentId]
+      );
     },
     metricCreated: (state, action: PayloadAction<[number, ZetkinMetric]>) => {
       const [assignmentId, metric] = action.payload;
@@ -350,7 +378,6 @@ export const {
   householdVisitsCreated,
   locationCreated,
   locationLoaded,
-  locationsInvalidated,
   locationsLoad,
   locationsLoaded,
   locationUpdated,

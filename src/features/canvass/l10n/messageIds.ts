@@ -49,6 +49,7 @@ export default makeMessages('feat.canvass', {
     areas: m('Areas'),
     instructionsHeader: m('Instructions'),
     ready: m('You are ready to go'),
+    selectArea: m('Select area'),
     start: m('Begin assignment'),
     visitedHouseholds: m('Households visited'),
     visitedLocations: m('Locations visited'),
@@ -88,6 +89,9 @@ export default makeMessages('feat.canvass', {
       create: m('Create location'),
       inputPlaceholder: m('Give the location a name'),
     },
+  },
+  selectArea: {
+    noAreas: m('No areas available'),
   },
   sidebar: {
     instructions: {

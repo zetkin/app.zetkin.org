@@ -207,7 +207,7 @@ feat:
         openFiltersButton: Filter
         ungroupedTagsLabel: Andre etiketter
     page:
-      title: Dør til dør
+      title: Kart
   breadcrumbs:
     elements:
       activities: Aktiviteter
@@ -225,7 +225,7 @@ feat:
       emails: E-post
       events: Arrangementer
       folders: Lister
-      geography: Dør til dør
+      geography: Kart
       incoming: Innkommende
       insights: Analyse
       instances: Forekomster

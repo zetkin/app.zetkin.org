@@ -1,10 +1,9 @@
-import 'leaflet/dist/leaflet.css';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import CanvassPage from 'features/canvass/components/CanvassPage';
+import CanvassSelectAreaPage from 'features/canvass/components/CanvassSelectAreaPage';
 
 interface PageProps {
   params: {
@@ -22,8 +21,8 @@ export default async function Page({ params }: PageProps) {
   try {
     await apiClient.get<ZetkinOrganization>(`/api/users/me`);
 
-    return <CanvassPage areaAssId={areaAssId} />;
+    return <CanvassSelectAreaPage areaAssId={areaAssId} />;
   } catch (err) {
-    return redirect(`/login?redirect=/canvass/${areaAssId}/map`);
+    return redirect(`/login?redirect=/canvass/${areaAssId}`);
   }
 }
