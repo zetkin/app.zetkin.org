@@ -20,6 +20,10 @@ export default makeMessages('feat.automations', {
       },
     },
     schedulingButton: m('Schedule'),
+    targeting: {
+      header: m('Targeting'),
+      smartSearchButton: m('Configure'),
+    },
   },
   labels: {
     lastRun: {

@@ -10,6 +10,7 @@ export type ZetkinBulkAutomation = {
   interval: number;
   last_run: string | null;
   organization_id: number;
+  query_id: number;
   title: string;
 };
 
