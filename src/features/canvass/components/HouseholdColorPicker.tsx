@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 type Props = {
-  onChange: (newColor: string | null) => void;
+  onChange: (newColor: string) => void;
   selectedColor: string | null;
 };
 
@@ -56,9 +56,9 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
 
   return (
     <FormControl sx={{ minWidth: 200 }}>
-      <InputLabel>Household color</InputLabel>
+      <InputLabel>Edit household color</InputLabel>
       <Select
-        label="Household color"
+        label="Edit household color"
         MenuProps={{
           slotProps: {
             paper: {
@@ -74,35 +74,29 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
           },
           sx: { li: { flex: 1, minWidth: 48 }, zIndex: 600000000 },
         }}
-        onChange={(ev) => {
-          const newValue = ev.target.value;
-
-          if (newValue == 'clear') {
-            onChange(null);
-          } else {
-            onChange(newValue);
-          }
+        onChange={(ev) => onChange(ev.target.value)}
+        renderValue={(value) => {
+          return (
+            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+              {value != 'clear' && (
+                <Box
+                  sx={{
+                    backgroundColor: value,
+                    borderRadius: '4px',
+                    height: '30px',
+                    width: '30px',
+                  }}
+                />
+              )}
+              <Typography>
+                {value == 'clear'
+                  ? 'No color'
+                  : colors.find((color) => color.value == selectedColor)?.label}
+              </Typography>
+            </Box>
+          );
         }}
-        renderValue={(value) => (
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            {value != 'clear' && (
-              <Box
-                sx={{
-                  backgroundColor: value,
-                  borderRadius: '4px',
-                  height: '30px',
-                  width: '30px',
-                }}
-              />
-            )}
-            <Typography>
-              {value == 'clear'
-                ? 'No color'
-                : colors.find((color) => color.value == selectedColor)?.label}
-            </Typography>
-          </Box>
-        )}
-        value={selectedColor ?? 'clear'}
+        value={selectedColor ?? ''}
       >
         <MenuItem
           key="clear"

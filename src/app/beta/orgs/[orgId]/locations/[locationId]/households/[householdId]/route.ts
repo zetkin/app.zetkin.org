@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
   const householdWithColor: Zetkin2Household = {
     ...household,
-    color: householdColorModel?.color ?? null,
+    color: householdColorModel?.color ?? 'clear',
   };
 
   return NextResponse.json({ data: householdWithColor });

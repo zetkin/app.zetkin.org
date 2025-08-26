@@ -61,7 +61,7 @@ export type ZetkinLocationPostBody = Partial<Omit<ZetkinLocation, 'id'>>;
 export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 export type Zetkin2Household = {
-  color: string | null;
+  color: string;
   id: number;
   level: number;
   location_id: number;

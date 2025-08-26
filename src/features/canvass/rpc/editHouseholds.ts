@@ -35,7 +35,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       Zetkin2Household,
       HouseholdPatchBody
     >(`/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`, {
-      color: color,
+      color: color ?? 'clear',
       level,
     });
 

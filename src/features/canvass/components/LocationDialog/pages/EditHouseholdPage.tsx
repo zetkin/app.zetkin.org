@@ -13,7 +13,7 @@ type Props = {
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string, level: number, color: string | null) => void;
+  onSave: (title: string, level: number, color: string) => void;
 };
 
 const EditHouseholdPage: FC<Props> = ({
@@ -32,7 +32,7 @@ const EditHouseholdPage: FC<Props> = ({
 
   const [title, setTitle] = useState(household.title || '');
   const [floor, setFloor] = useState(household.level ?? 0);
-  const [color, setcolor] = useState<string | null>(household.color ?? null);
+  const [color, setcolor] = useState(household.color);
 
   useEffect(() => {
     setTitle(household.title || '');
