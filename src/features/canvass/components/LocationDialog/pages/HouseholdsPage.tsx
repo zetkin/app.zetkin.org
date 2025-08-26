@@ -173,15 +173,6 @@ const HouseholdsPage: FC<Props> = ({
                   }}
                   sx={{ paddingLeft: 0, position: 'relative' }}
                 >
-                  <Box
-                    sx={{
-                      backgroundColor: household.color,
-                      height: '54px',
-                      left: -16,
-                      position: 'absolute',
-                      width: '20px',
-                    }}
-                  />
                   <Box alignItems="center" display="flex" flexGrow={1}>
                     <Checkbox
                       checked={selectedHouseholdIds.includes(household.id)}
@@ -214,6 +205,15 @@ const HouseholdsPage: FC<Props> = ({
                       <ZUIRelativeTime datetime={mostRecentVisit.created} />
                     </Typography>
                   )}
+                  <Box
+                    sx={{
+                      backgroundColor: household.color,
+                      borderRadius: '3em',
+                      height: '20px',
+                      marginRight: 1,
+                      width: '20px',
+                    }}
+                  />
                   <KeyboardArrowRight />
                 </ListItem>
               </Box>
