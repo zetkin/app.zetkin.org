@@ -31,9 +31,13 @@ const AutomationListPage: PageWithLayout<{ orgId: number }> = ({ orgId }) => {
     return null;
   }
 
+  const sortedAutomations = automations
+    .concat()
+    .sort((item0, item1) => Number(item1.active) - Number(item0.active));
+
   return (
     <Grid container spacing={2}>
-      {automations.map((automation) => {
+      {sortedAutomations.map((automation) => {
         const url = `/organize/${orgId}/settings/automations/${automation.id}`;
         return (
           <Grid key={automation.id} size={{ lg: 4, md: 6, sm: 12, xl: 3 }}>
