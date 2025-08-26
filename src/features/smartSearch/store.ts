@@ -5,6 +5,8 @@ import { ZetkinSmartSearchFilterStats } from './types';
 import {
   RemoteItem,
   remoteItem,
+  remoteItemLoad,
+  remoteItemUpdated,
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
@@ -38,6 +40,15 @@ const smartSearchSlice = createSlice({
       state.queryList = remoteList(action.payload);
       state.queryList.loaded = new Date().toISOString();
     },
+    queryLoad: (state, action: PayloadAction<number>) => {
+      remoteItemLoad(state.queryList, action.payload);
+    },
+    queryLoaded: (state, action: PayloadAction<ZetkinQuery>) => {
+      remoteItemUpdated(state.queryList, action.payload);
+    },
+    queryUpdated: (state, action: PayloadAction<ZetkinQuery>) => {
+      remoteItemUpdated(state.queryList, action.payload);
+    },
     statsLoad: (state, action: PayloadAction<string>) => {
       const key = action.payload;
       if (!state.statsByFilterSpec[key]) {
@@ -61,5 +72,12 @@ const smartSearchSlice = createSlice({
 });
 
 export default smartSearchSlice;
-export const { queriesLoad, queriesLoaded, statsLoad, statsLoaded } =
-  smartSearchSlice.actions;
+export const {
+  queriesLoad,
+  queriesLoaded,
+  queryLoad,
+  queryLoaded,
+  queryUpdated,
+  statsLoad,
+  statsLoaded,
+} = smartSearchSlice.actions;
