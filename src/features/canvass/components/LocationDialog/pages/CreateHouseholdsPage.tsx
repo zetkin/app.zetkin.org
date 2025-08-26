@@ -68,6 +68,7 @@ const CreateHouseholdsPage: FC<Props> = ({
       actions={
         <Button
           disabled={isEmpty || creating}
+          loading={creating}
           onClick={async () => {
             setCreating(true);
 

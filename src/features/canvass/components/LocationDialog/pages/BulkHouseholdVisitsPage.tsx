@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CircularProgress,
   Step,
   StepButton,
   StepContent,
@@ -48,8 +47,8 @@ const BulkHouseholdVisitsPage: FC<BulkHouseholdVisitsPageProps> = ({
       actions={
         step >= metrics.length && (
           <Button
-            disabled={loading}
             fullWidth
+            loading={loading}
             onClick={async () => {
               setLoading(true);
               const responses = Object.values(responseByMetricId).map(
@@ -62,11 +61,6 @@ const BulkHouseholdVisitsPage: FC<BulkHouseholdVisitsPageProps> = ({
               await onLogVisit(filteredResponses);
               setLoading(false);
             }}
-            startIcon={
-              loading ? (
-                <CircularProgress color="secondary" size="20px" />
-              ) : null
-            }
             variant="contained"
           >
             {`Submit report for  ${selectedHouseholsdIds.length} households`}

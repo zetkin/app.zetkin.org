@@ -45,6 +45,7 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
     Record<number, MetricResponse>
   >({});
   const [step, setStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setResponseByMetricId({});
@@ -57,7 +58,9 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
         step >= metrics.length && (
           <Button
             fullWidth
-            onClick={() => {
+            loading={isLoading}
+            onClick={async () => {
+              setIsLoading(true);
               const responses = Object.values(responseByMetricId).map(
                 (response) => response
               );
@@ -65,7 +68,8 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
               const filteredResponses = responses.filter(
                 (response) => !!response.response
               );
-              onLogVisit(filteredResponses);
+              await onLogVisit(filteredResponses);
+              setIsLoading(false);
             }}
             variant="contained"
           >
