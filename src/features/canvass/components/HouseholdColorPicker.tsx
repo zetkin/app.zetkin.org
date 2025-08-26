@@ -67,9 +67,10 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
             paper: {
               sx: {
                 '& ul': {
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 0.5,
+                  display: 'grid',
+                  gridGap: '4px',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(48px, 1fr))',
+                  listStyle: 'none',
                   padding: 1,
                 },
               },
@@ -110,8 +111,12 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
               borderRadius: '4px',
             },
             alignItems: 'center',
+            borderRadius: '4px',
             display: 'flex',
             justifyContent: 'center',
+            span: {
+              padding: '0 0 100%',
+            },
           }}
           value="clear"
         >
@@ -138,6 +143,9 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
               borderRadius: '4px',
               display: 'flex',
               justifyContent: 'center',
+              span: {
+                padding: '0 0 100%',
+              },
             }}
             value={color.value}
           >
@@ -145,8 +153,8 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
               sx={{
                 backgroundColor: color.value,
                 borderRadius: '4px',
-                height: '30px',
-                width: '30px',
+                minHeight: '30px',
+                minWidth: '30px',
               }}
             />
           </MenuItem>
