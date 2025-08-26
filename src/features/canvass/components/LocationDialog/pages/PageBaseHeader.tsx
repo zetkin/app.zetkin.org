@@ -17,28 +17,17 @@ const PageBaseHeader: FC<Props> = ({
   subtitle,
   title,
 }) => {
+  const subtitleIsAString = subtitle && typeof subtitle == 'string';
+
   return (
     <Box
       sx={{
         display: 'flex',
-        height: '54px',
         paddingBottom: 1,
         paddingX: 2,
         position: 'relative',
       }}
     >
-      {color && (
-        <Box
-          sx={{
-            backgroundColor: color,
-            height: '70px',
-            left: -16,
-            position: 'absolute',
-            top: -16,
-            width: '32px',
-          }}
-        />
-      )}
       <Box display="flex" justifyContent="space-between" width="100%">
         <Box alignItems="center" display="flex">
           {onBack && (
@@ -48,10 +37,25 @@ const PageBaseHeader: FC<Props> = ({
           )}
           <Box>
             <Typography variant="h6">{title}</Typography>
-            {subtitle && (
-              <Typography color="secondary" variant="body2">
-                {subtitle}
-              </Typography>
+            {!subtitleIsAString && subtitle}
+            {subtitleIsAString && (
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                {color && (
+                  <Box
+                    sx={{
+                      backgroundColor: color,
+                      borderRadius: '3em',
+                      height: '20px',
+                      width: '20px',
+                    }}
+                  />
+                )}
+                {subtitle && (
+                  <Typography color="secondary" variant="body2">
+                    {subtitle}
+                  </Typography>
+                )}
+              </Box>
             )}
           </Box>
         </Box>

@@ -61,6 +61,13 @@ const EditHouseholdPage: FC<Props> = ({
       color={household.color}
       onBack={onBack}
       onClose={onClose}
+      subtitle={
+        household.level
+          ? messages.households.single.subtitle({
+              floorNumber: household.level,
+            })
+          : messages.default.floor()
+      }
       title={messages.households.editSingleHousehold.header({
         title: household.title,
       })}

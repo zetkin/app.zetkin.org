@@ -75,6 +75,13 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       }
       color={household.color}
       onBack={onBack}
+      subtitle={
+        household.level
+          ? messages.households.single.subtitle({
+              floorNumber: household.level,
+            })
+          : messages.default.floor()
+      }
       title={messages.visit.household.header({
         householdTitle: household.title,
       })}
