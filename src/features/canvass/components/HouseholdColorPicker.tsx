@@ -2,11 +2,13 @@ import { FC } from 'react';
 import { Close } from '@mui/icons-material';
 import {
   Box,
+  darken,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 type Props = {
@@ -15,6 +17,7 @@ type Props = {
 };
 
 const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
+  const theme = useTheme();
   //TODO: use from theme object, when canvass is moved to ZUI
   const colors = [
     { label: 'Light red', value: '#F1A8A8' },
@@ -72,7 +75,7 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
               },
             },
           },
-          sx: { li: { flex: 1, minWidth: 48 }, zIndex: 600000000 },
+          sx: { zIndex: 100000 },
         }}
         onChange={(ev) => onChange(ev.target.value)}
         renderValue={(value) => {
@@ -102,8 +105,8 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
           key="clear"
           sx={{
             '&.Mui-selected': {
-              backgroundColor: 'white',
-              border: '2px solid black',
+              backgroundColor: theme.palette.common.white,
+              border: `2px solid ${theme.palette.common.black}`,
               borderRadius: '4px',
             },
             alignItems: 'center',
@@ -119,26 +122,34 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
             key={color.value}
             sx={{
               '&.Mui-selected': {
-                '& span::before': {
-                  backgroundColor: color.value,
-                  borderRadius: '4px',
-                  content: '""',
-                  display: 'flex',
-                  height: '32px',
-                  left: '8px',
-                  position: 'absolute',
-                  top: '7px',
-                  width: '32px',
+                '&:focus-visible': {
+                  backgroundColor: darken(theme.palette.common.white, 0.25),
                 },
-                backgroundColor: 'white',
-                border: '2px solid black',
+                '&:hover': {
+                  backgroundColor: darken(theme.palette.common.white, 0.5),
+                },
+                backgroundColor: theme.palette.common.white,
+                border: `2px solid ${theme.palette.common.black}`,
               },
-              '&:hover': { backgroundColor: color.value },
+              '&:focus-visible': { backgroundColor: darken(color.value, 0.25) },
+              '&:hover': { backgroundColor: darken(color.value, 0.5) },
+              alignItems: 'center',
               backgroundColor: color.value,
               borderRadius: '4px',
+              display: 'flex',
+              justifyContent: 'center',
             }}
             value={color.value}
-          />
+          >
+            <Box
+              sx={{
+                backgroundColor: color.value,
+                borderRadius: '4px',
+                height: '30px',
+                width: '30px',
+              }}
+            />
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
