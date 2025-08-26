@@ -210,7 +210,7 @@ const HouseholdsPage: FC<Props> = ({
                       backgroundColor: household.color,
                       borderRadius: '3em',
                       height: '20px',
-                      marginRight: 1,
+                      marginX: 1,
                       width: '20px',
                     }}
                   />
