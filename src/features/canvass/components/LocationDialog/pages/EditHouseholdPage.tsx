@@ -33,6 +33,7 @@ const EditHouseholdPage: FC<Props> = ({
   const [title, setTitle] = useState(household.title || '');
   const [floor, setFloor] = useState(household.level ?? 0);
   const [color, setcolor] = useState(household.color);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setTitle(household.title || '');
@@ -50,8 +51,11 @@ const EditHouseholdPage: FC<Props> = ({
       actions={
         <Button
           disabled={nothingHasBeenEdited || title.length === 0}
-          onClick={() => {
-            onSave(title, floor || 0, color);
+          loading={isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+            await onSave(title, floor || 0, color);
+            setIsLoading(false);
           }}
           variant="contained"
         >
@@ -73,9 +77,11 @@ const EditHouseholdPage: FC<Props> = ({
       })}
     >
       <form
-        onSubmit={(ev) => {
+        onSubmit={async (ev) => {
+          setIsLoading(true);
           ev.preventDefault();
-          onSave(title, floor, color);
+          await onSave(title, floor, color);
+          setIsLoading(false);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>

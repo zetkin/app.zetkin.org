@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import PageBase from './PageBase';
@@ -36,22 +36,17 @@ const BulkEditHouseholdsPage: FC<Props> = ({
     <PageBase
       actions={
         <Button
-          disabled={nothingHasBeenEdited || isLoading}
+          disabled={nothingHasBeenEdited}
           loading={isLoading}
-          onClick={() => {
+          onClick={async () => {
             setIsLoading(true);
             const updates: HouseholdUpdate = {
               color: color ?? undefined,
               level: floor ?? undefined,
             };
-            onSave(updates);
+            await onSave(updates);
             setIsLoading(false);
           }}
-          startIcon={
-            isLoading ? (
-              <CircularProgress color="secondary" size="20px" />
-            ) : null
-          }
           variant="contained"
         >
           <Msg
@@ -66,14 +61,14 @@ const BulkEditHouseholdsPage: FC<Props> = ({
       })}
     >
       <form
-        onSubmit={(ev) => {
+        onSubmit={async (ev) => {
           ev.preventDefault();
           setIsLoading(true);
           const updates: HouseholdUpdate = {
             color: color ?? undefined,
             level: floor ?? undefined,
           };
-          onSave(updates);
+          await onSave(updates);
           setIsLoading(false);
         }}
       >
