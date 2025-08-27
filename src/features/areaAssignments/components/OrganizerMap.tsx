@@ -39,7 +39,6 @@ import { ZetkinOrgUser } from 'features/user/types';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 type OrganizerMapProps = {
-  areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
@@ -59,7 +58,6 @@ type SettingName = 'layers' | 'filters' | 'select';
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
-  areaAssId,
   assignment,
   onAddAssigneeToArea,
   locations,
@@ -68,7 +66,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const [mapStyle, setMapStyle] = useLocalStorage<MapStyle>(
-    `mapStyle-${areaAssId}`,
+    `mapStyle-${assignment.id}`,
     {
       area: 'assignees',
       location: 'dot',
@@ -282,7 +280,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 >
                   <AreaSelect
                     key={selectedArea?.id}
-                    areaAssId={areaAssId}
                     areas={areas}
                     assignment={assignment}
                     filterAreas={filterAreas}

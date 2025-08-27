@@ -32,7 +32,6 @@ import UserItem from 'features/user/components/UserItem';
 import AreaStats from './AreaStats';
 
 type Props = {
-  areaAssId: number;
   areas: ZetkinArea[];
   assignment: ZetkinAreaAssignment;
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
@@ -49,7 +48,6 @@ type Props = {
 
 const AreaSelect: FC<Props> = ({
   areas,
-  areaAssId,
   assignment,
   filterAreas,
   filterText,
@@ -67,7 +65,7 @@ const AreaSelect: FC<Props> = ({
   const theme = useTheme();
 
   const { orgId } = useNumericRouteParams();
-  const { unassignArea } = useAreaAssignmentMutations(orgId, areaAssId);
+  const { unassignArea } = useAreaAssignmentMutations(orgId, assignment.id);
   const selectedAreaAssignees = sessions
     .filter((session) => session.area_id == selectedArea?.id)
     .map((session) => session.user_id);

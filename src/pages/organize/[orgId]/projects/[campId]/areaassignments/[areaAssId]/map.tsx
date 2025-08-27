@@ -82,7 +82,6 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
             <AreaFilterProvider>
               <AssigneeFilterProvider>
                 <OrganizerMap
-                  areaAssId={areaAssId}
                   areas={areas.map((area) => ({
                     description: area.description,
                     id: area.id,
