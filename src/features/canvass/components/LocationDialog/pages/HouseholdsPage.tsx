@@ -12,7 +12,12 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
+import {
+  Add,
+  Apps,
+  CheckCircle,
+  KeyboardArrowRight,
+} from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import {
@@ -26,6 +31,7 @@ import { Msg, useMessages } from 'core/i18n';
 import useHouseholds from 'features/canvass/hooks/useHouseholds';
 import { Zetkin2Household } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -76,6 +82,13 @@ const HouseholdsPage: FC<Props> = ({
 
     return floor0 - floor1;
   });
+
+  const metrics = useAreaAssignmentMetrics(
+    location.organization_id,
+    assignment.id
+  );
+
+  const successMetric = metrics?.find((m) => m.defines_success);
 
   return (
     <PageBase
@@ -142,6 +155,15 @@ const HouseholdsPage: FC<Props> = ({
 
             const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
+            const isSuccessful =
+              !!mostRecentVisit &&
+              !!successMetric &&
+              mostRecentVisit.metrics.some(
+                (metric) =>
+                  metric.metric_id == successMetric.id &&
+                  metric.response == 'yes'
+              );
+
             return (
               <Box key={household.id}>
                 {firstOnFloor && (
@@ -187,9 +209,18 @@ const HouseholdsPage: FC<Props> = ({
                     <ListItemText>{household.title}</ListItemText>
                   </Box>
                   {mostRecentVisit && (
-                    <Typography color="secondary">
-                      <ZUIRelativeTime datetime={mostRecentVisit.created} />
-                    </Typography>
+                    <>
+                      <Typography color="secondary">
+                        <ZUIRelativeTime datetime={mostRecentVisit.created} />
+                      </Typography>
+                      {isSuccessful && (
+                        <CheckCircle
+                          color="secondary"
+                          fontSize="small"
+                          sx={{ ml: 1 }}
+                        />
+                      )}
+                    </>
                   )}
                   <KeyboardArrowRight />
                 </ListItem>
