@@ -5,6 +5,7 @@ import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import HouseholdColorPicker from '../../HouseholdColorPicker';
+import { HouseholdColor } from 'features/canvass/types';
 
 type HouseholdUpdate = { color?: string; level?: number };
 
@@ -23,7 +24,7 @@ const BulkEditHouseholdsPage: FC<Props> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [floor, setFloor] = useState<number | null>(null);
-  const [color, setcolor] = useState<string | null>(null);
+  const [color, setcolor] = useState<HouseholdColor | null>(null);
 
   useEffect(() => {
     setFloor(null);

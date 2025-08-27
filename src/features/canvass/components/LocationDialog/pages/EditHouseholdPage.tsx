@@ -7,13 +7,14 @@ import messageIds from 'features/canvass/l10n/messageIds';
 import useHousehold from 'features/canvass/hooks/useHousehold';
 import { ZetkinLocation } from 'features/areaAssignments/types';
 import HouseholdColorPicker from '../../HouseholdColorPicker';
+import { HouseholdColor } from 'features/canvass/types';
 
 type Props = {
   householdId: number;
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string, level: number, color: string) => void;
+  onSave: (title: string, level: number, color: HouseholdColor) => void;
 };
 
 const EditHouseholdPage: FC<Props> = ({

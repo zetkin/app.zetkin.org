@@ -4,6 +4,7 @@ import { IncomingHttpHeaders } from 'http';
 
 import {
   APIHousehold,
+  HouseholdColor,
   HouseholdPatchBody,
   Zetkin2Household,
 } from 'features/canvass/types';
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
   const householdWithColor: Zetkin2Household = {
     ...household,
-    color: householdColorModel?.color ?? 'clear',
+    color: (householdColorModel?.color ?? 'clear') as HouseholdColor,
   };
 
   return NextResponse.json({ data: householdWithColor });

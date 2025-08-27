@@ -2,7 +2,11 @@ import { IncomingHttpHeaders } from 'http';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { APIHousehold, Zetkin2Household } from 'features/canvass/types';
+import {
+  APIHousehold,
+  HouseholdColor,
+  Zetkin2Household,
+} from 'features/canvass/types';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { HouseholdColorModel } from 'features/areaAssignments/models';
 
@@ -31,7 +35,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
     const householdWithColor: Zetkin2Household = {
       ...household,
-      color: householdColorModel?.color ?? 'clear',
+      color: (householdColorModel?.color ?? 'clear') as HouseholdColor,
     };
     householdsWithColor.push(householdWithColor);
   }

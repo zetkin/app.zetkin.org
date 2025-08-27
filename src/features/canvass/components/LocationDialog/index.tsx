@@ -203,7 +203,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
               onSave={async (title, level, color) => {
                 if (selectedHouseholdId) {
                   await updateHousehold(selectedHouseholdId, {
-                    color: color,
+                    color,
                     level,
                     title,
                   });

@@ -2,7 +2,11 @@ import { z } from 'zod';
 
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
-import { HouseholdPatchBody, Zetkin2Household } from 'features/canvass/types';
+import {
+  HouseholdColor,
+  HouseholdPatchBody,
+  Zetkin2Household,
+} from 'features/canvass/types';
 
 const paramsSchema = z.object({
   color: z.optional(z.nullable(z.string())),
@@ -35,7 +39,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       Zetkin2Household,
       HouseholdPatchBody
     >(`/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`, {
-      color: color ?? 'clear',
+      color: (color ?? 'clear') as HouseholdColor,
       level,
     });
 
