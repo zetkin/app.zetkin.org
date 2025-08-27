@@ -284,7 +284,6 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     assignment={assignment}
                     filterAreas={filterAreas}
                     filterText={filterText}
-                    locations={locations}
                     onAddAssignee={(user) => {
                       if (selectedArea) {
                         onAddAssigneeToArea(selectedArea, user);

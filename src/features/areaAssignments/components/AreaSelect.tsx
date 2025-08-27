@@ -14,17 +14,14 @@ import { ZetkinArea } from 'features/areas/types';
 import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignee,
-  ZetkinLocation,
   ZetkinAreaAssignment,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
-import locToLatLng from 'features/geography/utils/locToLatLng';
 import UserAutocomplete from 'features/user/components/UserAutocomplete';
 import { ZetkinOrgUser } from 'features/user/types';
 import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
@@ -36,7 +33,6 @@ type Props = {
   assignment: ZetkinAreaAssignment;
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
-  locations: ZetkinLocation[];
   onAddAssignee: (user: ZetkinOrgUser) => void;
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
@@ -55,7 +51,6 @@ const AreaSelect: FC<Props> = ({
   onClose,
   onFilterTextChange,
   onSelectArea,
-  locations,
   selectedArea,
   selectedAreaStats,
   sessions,
@@ -69,19 +64,6 @@ const AreaSelect: FC<Props> = ({
   const selectedAreaAssignees = sessions
     .filter((session) => session.area_id == selectedArea?.id)
     .map((session) => session.user_id);
-
-  const locationsInSelectedArea: ZetkinLocation[] = [];
-  if (selectedArea) {
-    locations.map((location) => {
-      const isInsideArea = isPointInsidePolygon(
-        locToLatLng(location),
-        selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
-      );
-      if (isInsideArea) {
-        locationsInSelectedArea.push(location);
-      }
-    });
-  }
 
   return (
     <Box
