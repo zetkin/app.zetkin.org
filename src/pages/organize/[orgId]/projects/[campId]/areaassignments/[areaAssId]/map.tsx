@@ -74,10 +74,11 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
         <ZUIFutures
           futures={{
             areaStats: areaStatsFuture,
+            assignment: assignmentFuture,
             sessions: sessionsFuture,
           }}
         >
-          {({ data: { areaStats, sessions } }) => (
+          {({ data: { areaStats, assignment, sessions } }) => (
             <AreaFilterProvider>
               <AssigneeFilterProvider>
                 <OrganizerMap
@@ -91,6 +92,7 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
                     title: area.title,
                   }))}
                   areaStats={areaStats}
+                  assignment={assignment}
                   locations={locations}
                   onAddAssigneeToArea={(area, user) => {
                     assignUserToArea(user.id, area.id);

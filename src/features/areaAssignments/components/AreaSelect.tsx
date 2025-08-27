@@ -15,6 +15,7 @@ import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignee,
   ZetkinLocation,
+  ZetkinAreaAssignment,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
@@ -28,10 +29,12 @@ import UserAutocomplete from 'features/user/components/UserAutocomplete';
 import { ZetkinOrgUser } from 'features/user/types';
 import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
 import UserItem from 'features/user/components/UserItem';
+import AreaStats from './AreaStats';
 
 type Props = {
   areaAssId: number;
   areas: ZetkinArea[];
+  assignment: ZetkinAreaAssignment;
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
   locations: ZetkinLocation[];
@@ -47,6 +50,7 @@ type Props = {
 const AreaSelect: FC<Props> = ({
   areas,
   areaAssId,
+  assignment,
   filterAreas,
   filterText,
   onAddAssignee,
@@ -80,13 +84,6 @@ const AreaSelect: FC<Props> = ({
       }
     });
   }
-
-  const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
-    .map(
-      (location) =>
-        location.num_known_households || location.num_estimated_households
-    )
-    .reduce((prev, curr) => prev + curr, 0);
 
   return (
     <Box
@@ -262,37 +259,7 @@ const AreaSelect: FC<Props> = ({
               </Typography>
             </Box>
           )}
-          <Box alignItems="start" display="flex" flexDirection="column" gap={1}>
-            <Box alignItems="center" display="flex">
-              <Typography
-                color="secondary"
-                sx={(theme) => ({ color: theme.palette.primary.main })}
-                variant="h5"
-              >
-                {selectedAreaStats?.num_visited_households || 0}
-              </Typography>
-              <Typography color="secondary" ml={0.5} variant="h5">
-                / {numberOfHouseholdsInSelectedArea}
-              </Typography>
-            </Box>
-            <Typography color="secondary" textAlign="center" variant="caption">
-              <Msg
-                id={areaAssignmentMessageIds.map.areaInfo.stats.households}
-                values={{ numHouseholds: numberOfHouseholdsInSelectedArea }}
-              />
-            </Typography>
-          </Box>
-          <Box alignItems="start" display="flex" flexDirection="column" gap={1}>
-            <Typography color="secondary" variant="h5">
-              {locationsInSelectedArea.length}
-            </Typography>
-            <Typography color="secondary" textAlign="center" variant="caption">
-              <Msg
-                id={areaAssignmentMessageIds.map.areaInfo.stats.locations}
-                values={{ numLocations: locationsInSelectedArea.length }}
-              />
-            </Typography>
-          </Box>
+          <AreaStats assignment={assignment} selectedArea={selectedArea.id} />
           <Divider />
           <Box mt={2}>
             <Typography variant="h6">

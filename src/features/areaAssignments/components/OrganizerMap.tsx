@@ -21,6 +21,7 @@ import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignee,
   ZetkinLocation,
+  ZetkinAreaAssignment,
 } from '../types';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
@@ -41,6 +42,7 @@ type OrganizerMapProps = {
   areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
+  assignment: ZetkinAreaAssignment;
   locations: ZetkinLocation[];
   onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
   sessions: ZetkinAreaAssignee[];
@@ -58,6 +60,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
   areaAssId,
+  assignment,
   onAddAssigneeToArea,
   locations,
   sessions,
@@ -281,6 +284,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     key={selectedArea?.id}
                     areaAssId={areaAssId}
                     areas={areas}
+                    assignment={assignment}
                     filterAreas={filterAreas}
                     filterText={filterText}
                     locations={locations}
