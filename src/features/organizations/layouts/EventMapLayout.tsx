@@ -38,10 +38,19 @@ type Props = {
   children: ReactNode;
   events: ZetkinEventWithStatus[];
   header: JSX.Element;
+  locationFilter: GeoJSON.Feature[];
+  setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
   showMap: boolean;
 };
 
-const EventMapLayout: FC<Props> = ({ children, events, header, showMap }) => {
+const EventMapLayout: FC<Props> = ({
+  children,
+  events,
+  header,
+  locationFilter,
+  setLocationFilter,
+  showMap,
+}) => {
   const [mobileMapVisible, setMobileMapVisible] = useState(false);
 
   const theme = useTheme();
@@ -115,6 +124,8 @@ const EventMapLayout: FC<Props> = ({ children, events, header, showMap }) => {
           ) : (
             <ActivistPortalEventMap
               events={events}
+              locationFilter={locationFilter}
+              setLocationFilter={setLocationFilter}
               sx={{
                 height: '100%',
               }}
@@ -161,6 +172,8 @@ const EventMapLayout: FC<Props> = ({ children, events, header, showMap }) => {
             {shouldMountMap ? (
               <ActivistPortalEventMap
                 events={events}
+                locationFilter={locationFilter}
+                setLocationFilter={setLocationFilter}
                 sx={{
                   height: '100dvh',
                   position: 'sticky',

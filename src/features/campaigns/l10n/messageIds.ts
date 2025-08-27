@@ -167,6 +167,7 @@ export default makeMessages('feat.campaigns', {
         removeFiltersButton: m('Clear filters'),
       },
       filterButtonLabels: {
+        locations: m<{ count: number }>('{count} locations'),
         thisWeek: m('This week'),
         today: m('Today'),
         tomorrow: m('Tomorrow'),

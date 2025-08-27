@@ -5,13 +5,18 @@ import { ZetkinEventWithStatus } from 'features/home/types';
 import useUpcomingOrgEvents from './useUpcomingOrgEvents';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import { useAppSelector } from 'core/hooks';
+import { getGeoJSONFeaturesAtLocations } from '../../map/utils/locationFiltering';
 
 export default function useFilteredOrgEvents(orgId: number) {
   const orgEvents = useUpcomingOrgEvents(orgId);
   const myEvents = useMyEvents();
 
-  const { orgIdsToFilterBy, customDatesToFilterBy, dateFilterState } =
-    useAppSelector((state) => state.organizations.filters);
+  const {
+    customDatesToFilterBy,
+    dateFilterState,
+    geojsonToFilterBy,
+    orgIdsToFilterBy,
+  } = useAppSelector((state) => state.organizations.filters);
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
@@ -73,5 +78,22 @@ export default function useFilteredOrgEvents(orgId: number) {
       }
     });
 
-  return { allEvents, filteredEvents, getDateRange };
+  const locationEvents = filteredEvents.filter((event) => {
+    if (geojsonToFilterBy.length === 0) {
+      return true;
+    }
+
+    if (!event?.location) {
+      return false;
+    }
+
+    const features = getGeoJSONFeaturesAtLocations(
+      geojsonToFilterBy,
+      event.location
+    );
+
+    return features.length > 0;
+  });
+
+  return { allEvents, filteredEvents, getDateRange, locationEvents };
 }

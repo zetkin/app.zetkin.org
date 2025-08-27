@@ -1,6 +1,10 @@
 import { StyleImageInterface } from 'maplibre-gl';
 
-export function markerImage(color: string, text?: string): StyleImageInterface {
+export function markerImage(
+  color: string,
+  invert: boolean = false,
+  text?: string
+): StyleImageInterface {
   const width = 21;
   const height = 30;
 
@@ -24,16 +28,16 @@ export function markerImage(color: string, text?: string): StyleImageInterface {
     'M10.5 3C6 3 3 6.5 3 10.5C3 16 10.5 27 10.5 27C10.5 27 18 16 18 10.5C18 6.5 15 3 10.5 3Z'
   );
 
-  context.fillStyle = color;
+  context.fillStyle = !invert ? color : '#ffffff';
   context.fill(pinOutlinePath);
 
   context.clip(pinInteriorPath);
 
-  context.fillStyle = '#ffffff';
+  context.fillStyle = invert ? color : '#ffffff';
   context.fillRect(0, 0, width, height);
 
   if (text) {
-    context.fillStyle = color;
+    context.fillStyle = !invert ? color : '#ffffff';
     context.font = 'bold 12px sans-serif';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
