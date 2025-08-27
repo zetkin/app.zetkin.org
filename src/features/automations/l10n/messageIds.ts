@@ -45,4 +45,23 @@ export default makeMessages('feat.automations', {
     ),
     title: m('Automation'),
   },
+  opConfig: {
+    header: m('Actions'),
+    opTypeLabel: m('Action type'),
+    opTypes: {
+      addToOrg: {
+        subOrgLabel: m('Sub-organization'),
+        typeLabel: m('Add to sub-organization'),
+      },
+      setFields: {
+        fieldLabel: m('Field to update'),
+        typeLabel: m('Set field'),
+        valueLabel: m('New value'),
+      },
+      tag: {
+        tagLabel: m('Tag'),
+        typeLabel: m('Apply tag'),
+      },
+    },
+  },
 });

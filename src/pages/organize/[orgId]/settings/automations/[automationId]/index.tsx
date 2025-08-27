@@ -7,6 +7,7 @@ import useServerSide from 'core/useServerSide';
 import useAutomation from 'features/automations/hooks/useAutomation';
 import AutomationLayout from 'features/automations/layout/AutomationLayout';
 import AutomationTargetConfig from 'features/automations/components/AutomationTargetConfig';
+import AutomationOpsConfig from 'features/automations/components/AutomationOpsConfig';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -36,7 +37,12 @@ const AutomationPage: PageWithLayout<{
 
   return (
     <Grid container spacing={2}>
-      <AutomationTargetConfig automation={automation} />
+      <Grid size={{ md: 6, sm: 12 }}>
+        <AutomationTargetConfig automation={automation} />
+      </Grid>
+      <Grid size={{ md: 6, sm: 12 }}>
+        <AutomationOpsConfig automation={automation} />
+      </Grid>
     </Grid>
   );
 };
