@@ -6,7 +6,7 @@ const filterCategoryColors = oldTheme.palette.filterCategoryColors;
 export const GROUPED_FILTERS: {
   [key in FILTER_CATEGORY]: {
     colors: { pale: string; strong: string };
-    filters: Exclude<FILTER_TYPE, 'all' | 'call_blocked' | 'most_active'>[];
+    filters: Exclude<FILTER_TYPE, 'call_blocked' | 'most_active'>[];
   };
 } = {
   [FILTER_CATEGORY.BASIC]: {
@@ -15,6 +15,7 @@ export const GROUPED_FILTERS: {
       strong: filterCategoryColors.lightBlue.strong,
     },
     filters: [
+      FILTER_TYPE.ALL,
       FILTER_TYPE.PERSON_DATA,
       FILTER_TYPE.PERSON_FIELD,
       FILTER_TYPE.PERSON_TAGS,

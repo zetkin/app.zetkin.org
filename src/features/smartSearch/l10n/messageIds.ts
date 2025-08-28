@@ -53,6 +53,10 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     filters: {
+      all: {
+        description: m('Testing the new filter'),
+        title: m('All in a sub-organization'),
+      },
       call_history: {
         description: m('Find people who were called, reached or tried.'),
         title: m('Call history'),
@@ -153,6 +157,39 @@ export default makeMessages('feat.smartSearch', {
       startWithSelect: {
         false: m('an empty list'),
         true: m('a list of all the people in the organization'),
+      },
+    },
+    allInSuborg: {
+      examples: {
+        one: m(
+          'Add people in the specific sub-organization My Third Organization.'
+        ),
+        two: m('Remove people in any sub-organization.'),
+      },
+      inputString: {
+        any: m<{
+          addRemoveSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>('{addRemoveSelect} people in {suborgScopeSelect}.'),
+        multiple: m<{
+          addRemoveSelect: ReactElement;
+          multipleSuborgsSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>(
+          '{addRemoveSelect} people in {suborgScopeSelect} {multipleSuborgsSelect}'
+        ),
+        single: m<{
+          addRemoveSelect: ReactElement;
+          singleSuborgSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>(
+          '{addRemoveSelect} people in {suborgScopeSelect} {singleSuborgSelect}'
+        ),
+      },
+      suborgScopeSelect: {
+        any: m('any sub-organization'),
+        multiple: m('any of the following sub-organizations'),
+        single: m('the specific sub-organization'),
       },
     },
     callBlocked: {
