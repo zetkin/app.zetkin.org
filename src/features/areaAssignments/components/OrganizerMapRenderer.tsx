@@ -167,10 +167,26 @@ function HouseholdOverlayMarker({
   );
 }
 
-function ProgressOverlayMarker(props: {
-  successfulVisitsColorPercent: number;
-  visitsColorPercent: number;
+function ProgressOverlayMarker({
+  area,
+  assignment,
+}: {
+  area: ZetkinArea;
+  assignment: ZetkinAreaAssignment;
 }) {
+  const locationsInArea =
+    useLocations(assignment.organization_id, assignment.id, area.id).data ?? [];
+
+  const totalVisits = locationsInArea.reduce(
+    (sum, location) => sum + (location.num_visits || 0),
+    0
+  );
+
+  const totalSuccessfulVisits = locationsInArea.reduce(
+    (sum, location) => sum + (location.num_successful_visits || 0),
+    0
+  );
+
   return (
     <Box
       bgcolor="white"
@@ -184,13 +200,14 @@ function ProgressOverlayMarker(props: {
       <div
         style={{
           alignItems: 'center',
-          background: `conic-gradient(${oldTheme.palette.primary.main} ${
-            props.successfulVisitsColorPercent
-          }%, ${lighten(oldTheme.palette.primary.main, 0.7)} ${
-            props.successfulVisitsColorPercent
-          }% ${props.visitsColorPercent}%, ${oldTheme.palette.grey[400]} ${
-            props.visitsColorPercent
-          }%)`,
+          background: `conic-gradient(${
+            oldTheme.palette.primary.main
+          } ${totalSuccessfulVisits}%, ${lighten(
+            oldTheme.palette.primary.main,
+            0.7
+          )} ${totalSuccessfulVisits}% ${totalVisits}%, ${
+            oldTheme.palette.grey[400]
+          } ${totalVisits}%)`,
           borderRadius: '2em',
           display: 'flex',
           flexDirection: 'row',
@@ -609,17 +626,6 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             .filter((session) => session.area_id == area.id)
             .map((session) => session.user_id);
 
-          const stats = areaStats.stats.find((stat) => stat.area_id == area.id);
-
-          const visitsColorPercent = stats?.num_households
-            ? (stats.num_visited_households / stats.num_households) * 100
-            : 0;
-
-          const successfulVisitsColorPercent = stats?.num_households
-            ? (stats.num_successful_visited_households / stats.num_households) *
-              100
-            : 0;
-
           const markerToRender = () => {
             if (overlayStyle === 'households') {
               return (
@@ -628,10 +634,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             }
             if (overlayStyle == 'progress') {
               return (
-                <ProgressOverlayMarker
-                  successfulVisitsColorPercent={successfulVisitsColorPercent}
-                  visitsColorPercent={visitsColorPercent}
-                />
+                <ProgressOverlayMarker area={area} assignment={assignment} />
               );
             }
             if (overlayStyle === 'assignees' && area.hasPeople) {
