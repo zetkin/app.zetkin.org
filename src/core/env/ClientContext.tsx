@@ -23,6 +23,7 @@ import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -73,8 +74,10 @@ const ClientContext: FC<ClientContextProps> = ({
                     locale={lang}
                     messages={messages}
                   >
-                    <CssBaseline />
-                    {children}
+                    <ZUIConfirmDialogProvider>
+                      <CssBaseline />
+                      {children}
+                    </ZUIConfirmDialogProvider>
                   </IntlProvider>
                 </LocalizationProvider>
               </UserProvider>
