@@ -355,6 +355,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
+            assignment={assignment}
             locations={locations}
             locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {
