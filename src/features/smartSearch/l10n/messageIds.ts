@@ -162,9 +162,9 @@ export default makeMessages('feat.smartSearch', {
     allInSuborg: {
       examples: {
         one: m(
-          'Add people in the specific sub-organization My Third Organization.'
+          'Add everyone who is in the specific sub-organization My Third Organization.'
         ),
-        two: m('Remove people in any sub-organization.'),
+        two: m('Remove everyone who is in any sub-organization.'),
       },
       inputString: {
         any: m<{
@@ -176,14 +176,14 @@ export default makeMessages('feat.smartSearch', {
           multipleSuborgsSelect: ReactElement;
           suborgScopeSelect: ReactElement;
         }>(
-          '{addRemoveSelect} people in {suborgScopeSelect} {multipleSuborgsSelect}'
+          '{addRemoveSelect} everyone who is in {suborgScopeSelect}: {multipleSuborgsSelect}'
         ),
         single: m<{
           addRemoveSelect: ReactElement;
           singleSuborgSelect: ReactElement;
           suborgScopeSelect: ReactElement;
         }>(
-          '{addRemoveSelect} people in {suborgScopeSelect} {singleSuborgSelect}'
+          '{addRemoveSelect} everyone who is in {suborgScopeSelect} {singleSuborgSelect}'
         ),
       },
       suborgScopeSelect: {
