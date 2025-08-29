@@ -7,6 +7,7 @@ import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import AutomationStatusChip from './AutomationStatusChip';
+import AutomationInterval from './AutomationInterval';
 
 type Props = {
   automation: ZetkinBulkAutomation;
@@ -40,10 +41,17 @@ const AutomationCard: FC<Props> = ({ automation }) => {
             {automation.description}
           </Typography>
           <Typography color="secondary" variant="body2">
-            <Msg
-              id={messageIds.labels.schedule.interval}
-              values={{ seconds: automation.interval }}
-            />
+            {!automation.last_run && (
+              <Msg id={messageIds.labels.lastRun.never} />
+            )}
+            {automation.last_run && (
+              <Msg
+                id={messageIds.labels.lastRun.relative}
+                values={{
+                  relative: <ZUIRelativeTime datetime={automation.last_run} />,
+                }}
+              />
+            )}
           </Typography>
         </Box>
         <Box
@@ -55,16 +63,11 @@ const AutomationCard: FC<Props> = ({ automation }) => {
         >
           <AutomationStatusChip automation={automation} />
           <Typography color="secondary" variant="body2">
-            {!automation.last_run && (
-              <Msg id={messageIds.labels.lastRun.never} />
+            {automation.active && (
+              <AutomationInterval seconds={automation.interval} />
             )}
-            {automation.last_run && (
-              <Msg
-                id={messageIds.labels.lastRun.relative}
-                values={{
-                  relative: <ZUIRelativeTime datetime={automation.last_run} />,
-                }}
-              />
+            {!automation.active && (
+              <Msg id={messageIds.labels.schedule.notScheduled} />
             )}
           </Typography>
         </Box>

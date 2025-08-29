@@ -31,7 +31,18 @@ export default makeMessages('feat.automations', {
       relative: m<{ relative: JSX.Element }>('Last run {relative}'),
     },
     schedule: {
-      interval: m<{ seconds: number }>('Every {seconds} seconds'),
+      interval: {
+        days: m<{ value: number }>(
+          'Runs every {value, plural, =1 {day} other {# days}}'
+        ),
+        hours: m<{ value: number }>(
+          'Runs every {value, plural, =1 {hour} other {# hours}}'
+        ),
+        minutes: m<{ value: number }>(
+          'Runs every {value, plural, =1 {minute} other {# minutes}}'
+        ),
+      },
+      notScheduled: m('Not scheduled to run'),
     },
     status: {
       active: m('Active'),
