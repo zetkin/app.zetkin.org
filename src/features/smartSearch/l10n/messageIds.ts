@@ -54,8 +54,10 @@ export default makeMessages('feat.smartSearch', {
     },
     filters: {
       all: {
-        description: m('Testing the new filter'),
-        title: m('All in a sub-organization'),
+        description: m(
+          'Find people based on what sub-organization they are in.'
+        ),
+        title: m('Everyone in a sub-org'),
       },
       call_history: {
         description: m('Find people who were called, reached or tried.'),

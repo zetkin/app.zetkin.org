@@ -15,7 +15,6 @@ export const GROUPED_FILTERS: {
       strong: filterCategoryColors.lightBlue.strong,
     },
     filters: [
-      FILTER_TYPE.ALL,
       FILTER_TYPE.PERSON_DATA,
       FILTER_TYPE.PERSON_FIELD,
       FILTER_TYPE.PERSON_TAGS,
@@ -83,6 +82,11 @@ export const GROUPED_FILTERS: {
       pale: filterCategoryColors.red.pale,
       strong: filterCategoryColors.red.strong,
     },
-    filters: [FILTER_TYPE.JOINFORM, FILTER_TYPE.RANDOM, FILTER_TYPE.USER],
+    filters: [
+      FILTER_TYPE.ALL,
+      FILTER_TYPE.JOINFORM,
+      FILTER_TYPE.RANDOM,
+      FILTER_TYPE.USER,
+    ],
   },
 };
