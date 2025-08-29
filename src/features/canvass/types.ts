@@ -100,7 +100,7 @@ export const householdColors = [
 ] as const;
 export type HouseholdColor = typeof householdColors[number] | 'clear';
 
-export type Zetkin2Household = {
+export type HouseholdWithColor = {
   color: HouseholdColor;
   id: number;
   level: number;
@@ -108,6 +108,6 @@ export type Zetkin2Household = {
   title: string;
 };
 
-export type APIHousehold = Omit<Zetkin2Household, 'color'>;
+export type Zetkin2Household = Omit<HouseholdWithColor, 'color'>;
 
-export type HouseholdPatchBody = Partial<Omit<Zetkin2Household, 'id'>>;
+export type HouseholdPatchBody = Partial<Omit<HouseholdWithColor, 'id'>>;

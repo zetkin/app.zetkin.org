@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
-import { Zetkin2Household, ZetkinLocationVisit } from './types';
+import { HouseholdWithColor, ZetkinLocationVisit } from './types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface CanvassStoreSlice {
-  householdsByLocationId: Record<number, RemoteList<Zetkin2Household>>;
+  householdsByLocationId: Record<number, RemoteList<HouseholdWithColor>>;
   myAssignmentsList: RemoteList<ZetkinAreaAssignment>;
   visitsByAssignmentId: Record<string, RemoteList<ZetkinLocationVisit>>;
 }
@@ -21,7 +21,7 @@ const canvassSlice = createSlice({
   initialState: initialState,
   name: 'canvass',
   reducers: {
-    householdCreated: (state, action: PayloadAction<Zetkin2Household>) => {
+    householdCreated: (state, action: PayloadAction<HouseholdWithColor>) => {
       const household = action.payload;
       state.householdsByLocationId[household.location_id] ||= remoteList();
       state.householdsByLocationId[household.location_id].items.push(
@@ -44,7 +44,7 @@ const canvassSlice = createSlice({
     },
     householdLoaded: (
       state,
-      action: PayloadAction<[number, Zetkin2Household]>
+      action: PayloadAction<[number, HouseholdWithColor]>
     ) => {
       const [locationId, household] = action.payload;
       state.householdsByLocationId[locationId] ||= remoteList();
@@ -58,7 +58,7 @@ const canvassSlice = createSlice({
     },
     householdUpdated: (
       state,
-      action: PayloadAction<[number, Zetkin2Household]>
+      action: PayloadAction<[number, HouseholdWithColor]>
     ) => {
       const [locationId, household] = action.payload;
       state.householdsByLocationId[locationId] ||= remoteList();
@@ -77,7 +77,7 @@ const canvassSlice = createSlice({
     },
     householdsLoaded: (
       state,
-      action: PayloadAction<[number, Zetkin2Household[]]>
+      action: PayloadAction<[number, HouseholdWithColor[]]>
     ) => {
       const [locationId, households] = action.payload;
       state.householdsByLocationId[locationId] = remoteList(households);

@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { IncomingHttpHeaders } from 'http';
 
 import {
-  APIHousehold,
+  Zetkin2Household,
   HouseholdColor,
   HouseholdPatchBody,
-  Zetkin2Household,
+  HouseholdWithColor,
 } from 'features/canvass/types';
 import { HouseholdColorModel } from 'features/areaAssignments/models';
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
   request.headers.forEach((value, key) => (headers[key] = value));
   const apiClient = new BackendApiClient(headers);
 
-  const household = await apiClient.get<APIHousehold>(
+  const household = await apiClient.get<Zetkin2Household>(
     `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`
   );
 
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     householdId: params.householdId,
   });
 
-  const householdWithColor: Zetkin2Household = {
+  const householdWithColor: HouseholdWithColor = {
     ...household,
     color: (householdColorModel?.color ?? 'clear') as HouseholdColor,
   };
@@ -63,15 +63,15 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const household =
     Object.keys(zetkinPayload).length > 0
-      ? await apiClient.patch<APIHousehold, HouseholdPatchBody>(
+      ? await apiClient.patch<Zetkin2Household, HouseholdPatchBody>(
           `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`,
           zetkinPayload
         )
-      : await apiClient.get<APIHousehold>(
+      : await apiClient.get<Zetkin2Household>(
           `/api2/orgs/${params.orgId}/locations/${params.locationId}/households/${params.householdId}`
         );
 
-  const householdWithColor: Zetkin2Household = {
+  const householdWithColor: HouseholdWithColor = {
     ...household,
     color: color ?? null,
   };

@@ -5,7 +5,7 @@ import { makeRPCDef } from 'core/rpc/types';
 import {
   HouseholdColor,
   HouseholdPatchBody,
-  Zetkin2Household,
+  HouseholdWithColor,
 } from 'features/canvass/types';
 
 const paramsSchema = z.object({
@@ -18,7 +18,7 @@ const paramsSchema = z.object({
 
 type Params = z.input<typeof paramsSchema>;
 type Result = {
-  updatedHouseholds: Zetkin2Household[];
+  updatedHouseholds: HouseholdWithColor[];
 };
 
 export const editHouseholdsDef = {
@@ -32,11 +32,11 @@ export default makeRPCDef<Params, Result>(editHouseholdsDef.name);
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { locationId, color, level, householdIds, orgId } = params;
 
-  const updatedHouseholds: Zetkin2Household[] = [];
+  const updatedHouseholds: HouseholdWithColor[] = [];
 
   for (const householdId of householdIds) {
     const updatedHousehold = await apiClient.patch<
-      Zetkin2Household,
+      HouseholdWithColor,
       HouseholdPatchBody
     >(`/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`, {
       color: (color ?? 'clear') as HouseholdColor,

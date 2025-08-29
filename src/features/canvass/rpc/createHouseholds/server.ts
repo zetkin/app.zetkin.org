@@ -1,5 +1,5 @@
 import { paramsSchema, Params, Result } from './client';
-import { Zetkin2Household } from 'features/canvass/types';
+import { HouseholdWithColor } from 'features/canvass/types';
 import IApiClient from 'core/api/client/IApiClient';
 
 export const createHouseholdsDef = {
@@ -14,7 +14,7 @@ async function handle(
 ): Promise<Result> {
   return Promise.all(
     households.map((input) =>
-      apiClient.post<Zetkin2Household>(
+      apiClient.post<HouseholdWithColor>(
         `/api2/orgs/${orgId}/locations/${locationId}/households`,
         {
           level: input.level,

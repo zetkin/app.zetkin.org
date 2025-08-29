@@ -24,7 +24,7 @@ import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import useHouseholds from 'features/canvass/hooks/useHouseholds';
-import { Zetkin2Household } from 'features/canvass/types';
+import { HouseholdWithColor } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
   onBulkEdit: (householdIds: number[]) => void;
   onBulkVisit: (households: number[]) => void;
   onClose: () => void;
-  onCreateHousehold: (householdId: Zetkin2Household) => void;
+  onCreateHousehold: (householdId: HouseholdWithColor) => void;
   onSelectHousehold: (householdId: number) => void;
   onSelectHouseholds: (householdIds: number[]) => void;
   selectedHouseholdIds: number[];

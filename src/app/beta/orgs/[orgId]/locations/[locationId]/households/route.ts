@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  APIHousehold,
-  HouseholdColor,
   Zetkin2Household,
+  HouseholdColor,
+  HouseholdWithColor,
 } from 'features/canvass/types';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { HouseholdColorModel } from 'features/areaAssignments/models';
@@ -23,17 +23,17 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
   request.headers.forEach((value, key) => (headers[key] = value));
   const apiClient = new BackendApiClient(headers);
 
-  const households = await apiClient.get<APIHousehold[]>(
+  const households = await apiClient.get<Zetkin2Household[]>(
     `/api2/orgs/${params.orgId}/locations/${params.locationId}/households`
   );
 
-  const householdsWithColor: Zetkin2Household[] = [];
+  const householdsWithColor: HouseholdWithColor[] = [];
   for (const household of households) {
     const householdColorModel = await HouseholdColorModel.findOne({
       householdId: household.id,
     });
 
-    const householdWithColor: Zetkin2Household = {
+    const householdWithColor: HouseholdWithColor = {
       ...household,
       color: (householdColorModel?.color ?? 'clear') as HouseholdColor,
     };
