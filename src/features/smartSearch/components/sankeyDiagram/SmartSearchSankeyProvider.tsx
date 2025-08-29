@@ -5,6 +5,7 @@ import oldTheme from 'theme';
 import useSmartSearchStats from 'features/smartSearch/hooks/useSmartSearchStats';
 import { ZetkinSmartSearchFilter } from '../types';
 import { SankeyConfig, SankeySegment } from './types';
+import { useNumericRouteParams } from 'core/hooks';
 
 type SmartSearchSankeyProviderProps = {
   arrowDepth?: number;
@@ -34,8 +35,9 @@ const SmartSearchSankeyProvider: FC<SmartSearchSankeyProviderProps> = ({
   margin = 30,
   filters,
 }) => {
+  const { orgId } = useNumericRouteParams();
   const stats = useSmartSearchStats(filters);
-  const segments = stats ? makeSankeySegments(stats) : [];
+  const segments = stats ? makeSankeySegments(stats, orgId) : [];
   const config: SankeyConfig = {
     arrowDepth,
     arrowWidth,

@@ -7,6 +7,7 @@ import QueryOverviewListItem from './QueryOverviewListItem';
 import { SmartSearchSankeyFilterSegment } from '../../sankeyDiagram';
 import {
   AnyFilterConfig,
+  FILTER_TYPE,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
 
@@ -53,7 +54,7 @@ const QueryOverviewFilterListItem: FC<QueryOverviewFilterListItemProps> = ({
         onClickDelete={() => onDeleteFilter(filter)}
         onClickEdit={() => onEditFilter(filter)}
         organizations={
-          'organizations' in filter.config
+          filter.type != FILTER_TYPE.ALL && 'organizations' in filter.config
             ? filter.config.organizations
             : undefined
         }
