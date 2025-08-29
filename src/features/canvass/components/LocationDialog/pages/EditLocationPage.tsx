@@ -23,6 +23,7 @@ const EditLocationPage: FC<EditLocationPageProps> = ({
 
   const [title, setTitle] = useState(location.title || '');
   const [description, setDescription] = useState(location.description || '');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setTitle(location.title || '');
@@ -39,8 +40,11 @@ const EditLocationPage: FC<EditLocationPageProps> = ({
       actions={
         <Button
           disabled={nothingHasBeenEdited || title.length === 0}
-          onClick={() => {
-            onSave(title, description);
+          loading={isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+            await onSave(title, description);
+            setIsLoading(false);
           }}
           variant="contained"
         >
@@ -55,8 +59,10 @@ const EditLocationPage: FC<EditLocationPageProps> = ({
     >
       <form
         onSubmit={(ev) => {
+          setIsLoading(true);
           ev.preventDefault();
           onSave(title, description);
+          setIsLoading(false);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2} height="100%">

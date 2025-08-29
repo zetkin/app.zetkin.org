@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  CircularProgress,
   Step,
   StepButton,
   StepContent,
@@ -71,7 +70,7 @@ const LocationVisitPage: FC<Props> = ({
       actions={
         step >= metrics.length - 1 && (
           <Button
-            disabled={submitting}
+            loading={submitting}
             onClick={async () => {
               const metricIds = Object.keys(valuesByMetricId).map((key) =>
                 parseInt(key)
@@ -102,11 +101,6 @@ const LocationVisitPage: FC<Props> = ({
               setSubmitting(false);
               onClose();
             }}
-            startIcon={
-              submitting ? (
-                <CircularProgress color="secondary" size={24} />
-              ) : null
-            }
             variant="contained"
           >
             <Msg id={messageIds.visit.location.submitButtonLabel} />
