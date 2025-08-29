@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CircularProgress,
   Step,
   StepButton,
   StepContent,
@@ -12,23 +11,21 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import { ZetkinLocation, ZetkinMetric } from 'features/areaAssignments/types';
+import { ZetkinMetric } from 'features/areaAssignments/types';
 import PageBase from './PageBase';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { MetricResponse } from 'features/canvass/types';
 
-type HouseholdVisitPageProps = {
-  location: ZetkinLocation;
+type BulkHouseholdVisitsPageProps = {
   metrics: ZetkinMetric[];
   onBack: () => void;
   onLogVisit: (metrics: MetricResponse[]) => void;
   selectedHouseholsdIds: number[];
 };
 
-const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
+const BulkHouseholdVisitsPage: FC<BulkHouseholdVisitsPageProps> = ({
   selectedHouseholsdIds,
-  location,
   metrics,
   onBack,
   onLogVisit,
@@ -39,7 +36,6 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   >({});
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  location;
 
   useEffect(() => {
     setResponseByMetricId({});
@@ -51,8 +47,8 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
       actions={
         step >= metrics.length && (
           <Button
-            disabled={loading}
             fullWidth
+            loading={loading}
             onClick={async () => {
               setLoading(true);
               const responses = Object.values(responseByMetricId).map(
@@ -65,11 +61,6 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
               await onLogVisit(filteredResponses);
               setLoading(false);
             }}
-            startIcon={
-              loading ? (
-                <CircularProgress color="secondary" size="20px" />
-              ) : null
-            }
             variant="contained"
           >
             {`Submit report for  ${selectedHouseholsdIds.length} households`}
@@ -182,4 +173,4 @@ const HouseholdVisitPage: FC<HouseholdVisitPageProps> = ({
   );
 };
 
-export default HouseholdVisitPage;
+export default BulkHouseholdVisitsPage;

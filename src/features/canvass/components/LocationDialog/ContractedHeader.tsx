@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, IconButton, lighten, useTheme } from '@mui/material';
+import { Box, IconButton, lighten, Typography, useTheme } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
 
 import PageBaseHeader from './pages/PageBaseHeader';
@@ -42,10 +42,12 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
                   width: 10,
                 }}
               />
-              <Msg
-                id={messageIds.location.header}
-                values={{ numHouseholds, numVisitedHouseholds }}
-              />
+              <Typography color="secondary" variant="body2">
+                <Msg
+                  id={messageIds.location.header}
+                  values={{ numHouseholds, numVisitedHouseholds }}
+                />
+              </Typography>
             </>
           )}
 
@@ -61,9 +63,11 @@ const ContractedHeader: FC<Props> = ({ assignment, location }) => {
                   width: 10,
                 }}
               />
-              {messages.location.subheader({
-                successfulVisits: numSuccessfulHouseholds,
-              })}
+              <Typography color="secondary" variant="body2">
+                {messages.location.subheader({
+                  successfulVisits: numSuccessfulHouseholds,
+                })}
+              </Typography>
             </>
           )}
         </Box>

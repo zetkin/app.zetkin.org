@@ -22,6 +22,8 @@ import { ZetkinLocationVisit } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
 import sortMetrics from 'features/canvass/utils/sortMetrics';
 import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
+import BulkEditHouseholdsPage from './pages/BulkEditHouseholdsPage';
+import useEditHouseholds from 'features/canvass/hooks/useEditHouseholds';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -39,7 +41,8 @@ type LocationDialogStep =
   | 'editHousehold'
   | 'locationVisit'
   | 'householdVisit'
-  | 'bulkHouseholdVisits';
+  | 'bulkHouseholdVisits'
+  | 'bulkEditHouseholds';
 
 const LocationDialog: FC<LocationDialogProps> = ({
   assignment,
@@ -64,6 +67,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
     reportHouseholdVisits,
     reportLocationVisit,
   } = useVisitReporting(orgId, assignment.id, location.id);
+  const editHouseholds = useEditHouseholds(orgId, location.id);
 
   const pushedRef = useRef(false);
 
@@ -141,7 +145,15 @@ const LocationDialog: FC<LocationDialogProps> = ({
           assignment={assignment}
           location={location}
           onBack={() => back()}
-          onBulk={() => goto('createHouseholds')}
+          onBulkCreate={() => goto('createHouseholds')}
+          onBulkEdit={(householdIds) => {
+            setSelectedHouseholdIds(householdIds);
+            goto('bulkEditHouseholds');
+          }}
+          onBulkVisit={(households) => {
+            setSelectedHouseholdIds(households);
+            goto('bulkHouseholdVisits');
+          }}
           onClose={onClose}
           onCreateHousehold={(household) => {
             setSelectedHouseholdId(household.id);
@@ -154,10 +166,6 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onSelectHouseholds={(householdIds: number[]) =>
             setSelectedHouseholdIds(householdIds)
           }
-          onStartHouseholdsVisit={(households) => {
-            setSelectedHouseholdIds(households);
-            goto('bulkHouseholdVisits');
-          }}
           selectedHouseholdIds={selectedHouseholdIds}
         />
         <Box key="household" height="100%">
@@ -192,9 +200,13 @@ const LocationDialog: FC<LocationDialogProps> = ({
               location={location}
               onBack={() => back()}
               onClose={onClose}
-              onSave={async (title, level) => {
+              onSave={async (title, level, color) => {
                 if (selectedHouseholdId) {
-                  await updateHousehold(selectedHouseholdId, { level, title });
+                  await updateHousehold(selectedHouseholdId, {
+                    color,
+                    level,
+                    title,
+                  });
                   back();
                 }
               }}
@@ -236,7 +248,6 @@ const LocationDialog: FC<LocationDialogProps> = ({
         <Box key="bulkHouseholdVisits" height="100%">
           {selectedHouseholdIds.length > 0 && (
             <BulkHouseholdVisitsPage
-              location={location}
               metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses) => {
@@ -246,6 +257,19 @@ const LocationDialog: FC<LocationDialogProps> = ({
                 back();
               }}
               selectedHouseholsdIds={selectedHouseholdIds}
+            />
+          )}
+        </Box>
+        <Box key="bulkEditHouseholds" height="100%">
+          {selectedHouseholdIds.length > 0 && (
+            <BulkEditHouseholdsPage
+              householdIds={selectedHouseholdIds}
+              onBack={() => back()}
+              onSave={async (updates) => {
+                await editHouseholds(selectedHouseholdIds, updates);
+                setSelectedHouseholdIds([]);
+                goto('households');
+              }}
             />
           )}
         </Box>
