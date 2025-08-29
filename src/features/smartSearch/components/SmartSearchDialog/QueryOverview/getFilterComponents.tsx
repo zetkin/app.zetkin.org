@@ -11,6 +11,7 @@ import {
   Event,
   ExploreOutlined,
   FilterAlt,
+  GroupWorkOutlined,
   LocalOfferOutlined,
   MarkEmailReadOutlined,
   PersonAddAlt,
@@ -20,7 +21,6 @@ import {
   Search,
   ShuffleOutlined,
   SpeakerNotesOutlined,
-  Surfing,
   ViewListOutlined,
 } from '@mui/icons-material';
 
@@ -241,7 +241,7 @@ export default function getFilterComponents(
         filter={filter as SmartSearchFilterWithId<AllInSuborgFilterConfig>}
       />
     );
-    filterTypeIcon = <Surfing color="secondary" fontSize="small" />;
+    filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
   }
 
   return {
