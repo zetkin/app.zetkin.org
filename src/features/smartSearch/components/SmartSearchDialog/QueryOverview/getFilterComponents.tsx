@@ -20,6 +20,7 @@ import {
   Search,
   ShuffleOutlined,
   SpeakerNotesOutlined,
+  Surfing,
   ViewListOutlined,
 } from '@mui/icons-material';
 
@@ -43,6 +44,7 @@ import DisplaySurveySubmission from '../../filters/SurveySubmission/DisplaySurve
 import DisplayTask from '../../filters/Task/DisplayTask';
 import DisplayUser from '../../filters/User/DisplayUser';
 import {
+  AllInSuborgFilterConfig,
   AnyFilterConfig,
   CallBlockedFilterConfig,
   CallHistoryFilterConfig,
@@ -69,6 +71,7 @@ import {
   UserFilterConfig,
 } from 'features/smartSearch/components/types';
 import DisplayJoinForm from '../../filters/JoinForm/DisplayJoinForm';
+import DisplayAllInSuborg from '../../filters/AllInSubOrg/DisplayAllInSuborg';
 
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>
@@ -229,6 +232,16 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <DoorFrontOutlined color="secondary" fontSize="small" />;
+  } else if (
+    filter.type == FILTER_TYPE.ALL &&
+    'organizations' in filter.config
+  ) {
+    displayFilter = (
+      <DisplayAllInSuborg
+        filter={filter as SmartSearchFilterWithId<AllInSuborgFilterConfig>}
+      />
+    );
+    filterTypeIcon = <Surfing color="secondary" fontSize="small" />;
   }
 
   return {
