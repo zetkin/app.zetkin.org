@@ -1,7 +1,7 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.automations', {
-  defaultTitle: m('Untitled automation'),
+  defaultTitle: m('Untitled job'),
   itemPage: {
     pauseButton: m('Pause'),
     scheduling: {
@@ -39,9 +39,9 @@ export default makeMessages('feat.automations', {
     },
   },
   listPage: {
-    createButton: m('Create automation'),
+    createButton: m('Create job'),
     subtitle: m<{ numActive: number; numTotal: number }>(
-      '{numActive, plural, =1 {# active automation} other {# active automations}} ({numTotal} total)'
+      '{numActive, plural, =1 {# active job} other {# active jobs}} ({numTotal} total)'
     ),
     title: m('Automation'),
   },
