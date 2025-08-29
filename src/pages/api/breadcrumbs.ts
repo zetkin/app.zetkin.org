@@ -32,6 +32,7 @@ const breadcrumbs = async (
     }
 
     const apiFetch = createApiFetch(req.headers);
+    const apiFetch2 = createApiFetch(req.headers, '/api2');
     const pathFields = pathname.split('/').slice(1);
     const breadcrumbs: BreadcrumbElement[] = [];
     const curPath = [];
@@ -46,7 +47,8 @@ const breadcrumbs = async (
           fieldName,
           fieldValue,
           orgId,
-          apiFetch
+          apiFetch,
+          apiFetch2
         );
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
@@ -78,7 +80,8 @@ async function fetchElements(
   fieldName: string,
   fieldValue: string,
   orgId: string,
-  apiFetch: ApiFetch
+  apiFetch: ApiFetch,
+  apiFetch2: ApiFetch
 ): Promise<BreadcrumbElement[]> {
   if (fieldName === 'orgId') {
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
@@ -86,6 +89,17 @@ async function fetchElements(
       {
         href: basePath + '/' + fieldValue + '/projects',
         label: org.data.title,
+      },
+    ];
+  } else if (fieldName == 'automationId') {
+    const automation = await apiFetch2(
+      `/orgs/${orgId}/bulk/automations/${fieldValue}`
+    ).then((res) => res.json());
+
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: automation.data.title,
       },
     ];
   } else if (fieldName === 'personId') {
