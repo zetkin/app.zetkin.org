@@ -21,6 +21,7 @@ import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignee,
   ZetkinLocation,
+  ZetkinAreaAssignment,
 } from '../types';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 import { assigneesFilterContext } from './OrganizerMapFilters/AssigneeFilterContext';
@@ -38,9 +39,9 @@ import { ZetkinOrgUser } from 'features/user/types';
 import { useAutoResizeMap } from 'features/map/hooks/useResizeMap';
 
 type OrganizerMapProps = {
-  areaAssId: number;
   areaStats: ZetkinAssignmentAreaStats;
   areas: ZetkinArea[];
+  assignment: ZetkinAreaAssignment;
   locations: ZetkinLocation[];
   onAddAssigneeToArea: (area: ZetkinArea, user: ZetkinOrgUser) => void;
   sessions: ZetkinAreaAssignee[];
@@ -57,7 +58,7 @@ type SettingName = 'layers' | 'filters' | 'select';
 const OrganizerMap: FC<OrganizerMapProps> = ({
   areas,
   areaStats,
-  areaAssId,
+  assignment,
   onAddAssigneeToArea,
   locations,
   sessions,
@@ -65,7 +66,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const [mapStyle, setMapStyle] = useLocalStorage<MapStyle>(
-    `mapStyle-${areaAssId}`,
+    `mapStyle-${assignment.id}`,
     {
       area: 'assignees',
       location: 'dot',
@@ -279,11 +280,10 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 >
                   <AreaSelect
                     key={selectedArea?.id}
-                    areaAssId={areaAssId}
                     areas={areas}
+                    assignment={assignment}
                     filterAreas={filterAreas}
                     filterText={filterText}
-                    locations={locations}
                     onAddAssignee={(user) => {
                       if (selectedArea) {
                         onAddAssigneeToArea(selectedArea, user);
@@ -355,6 +355,7 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             areas={filteredAreas}
             areaStats={areaStats}
             areaStyle={mapStyle.area}
+            assignment={assignment}
             locations={locations}
             locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {

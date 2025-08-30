@@ -14,27 +14,25 @@ import { ZetkinArea } from 'features/areas/types';
 import {
   ZetkinAssignmentAreaStatsItem,
   ZetkinAreaAssignee,
-  ZetkinLocation,
+  ZetkinAreaAssignment,
 } from '../types';
 import ZUIAvatar from 'zui/ZUIAvatar';
-import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
 import areaAssignmentMessageIds from '../l10n/messageIds';
 import areasMessageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
-import locToLatLng from 'features/geography/utils/locToLatLng';
 import UserAutocomplete from 'features/user/components/UserAutocomplete';
 import { ZetkinOrgUser } from 'features/user/types';
 import useAreaAssignmentMutations from '../hooks/useAreaAssignmentMutations';
 import UserItem from 'features/user/components/UserItem';
+import AreaStats from './AreaStats';
 
 type Props = {
-  areaAssId: number;
   areas: ZetkinArea[];
+  assignment: ZetkinAreaAssignment;
   filterAreas: (areas: ZetkinArea[], matchString: string) => ZetkinArea[];
   filterText: string;
-  locations: ZetkinLocation[];
   onAddAssignee: (user: ZetkinOrgUser) => void;
   onClose: () => void;
   onFilterTextChange: (newValue: string) => void;
@@ -46,14 +44,13 @@ type Props = {
 
 const AreaSelect: FC<Props> = ({
   areas,
-  areaAssId,
+  assignment,
   filterAreas,
   filterText,
   onAddAssignee,
   onClose,
   onFilterTextChange,
   onSelectArea,
-  locations,
   selectedArea,
   selectedAreaStats,
   sessions,
@@ -63,30 +60,10 @@ const AreaSelect: FC<Props> = ({
   const theme = useTheme();
 
   const { orgId } = useNumericRouteParams();
-  const { unassignArea } = useAreaAssignmentMutations(orgId, areaAssId);
+  const { unassignArea } = useAreaAssignmentMutations(orgId, assignment.id);
   const selectedAreaAssignees = sessions
     .filter((session) => session.area_id == selectedArea?.id)
     .map((session) => session.user_id);
-
-  const locationsInSelectedArea: ZetkinLocation[] = [];
-  if (selectedArea) {
-    locations.map((location) => {
-      const isInsideArea = isPointInsidePolygon(
-        locToLatLng(location),
-        selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
-      );
-      if (isInsideArea) {
-        locationsInSelectedArea.push(location);
-      }
-    });
-  }
-
-  const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
-    .map(
-      (location) =>
-        location.num_known_households || location.num_estimated_households
-    )
-    .reduce((prev, curr) => prev + curr, 0);
 
   return (
     <Box
@@ -262,37 +239,7 @@ const AreaSelect: FC<Props> = ({
               </Typography>
             </Box>
           )}
-          <Box alignItems="start" display="flex" flexDirection="column" gap={1}>
-            <Box alignItems="center" display="flex">
-              <Typography
-                color="secondary"
-                sx={(theme) => ({ color: theme.palette.primary.main })}
-                variant="h5"
-              >
-                {selectedAreaStats?.num_visited_households || 0}
-              </Typography>
-              <Typography color="secondary" ml={0.5} variant="h5">
-                / {numberOfHouseholdsInSelectedArea}
-              </Typography>
-            </Box>
-            <Typography color="secondary" textAlign="center" variant="caption">
-              <Msg
-                id={areaAssignmentMessageIds.map.areaInfo.stats.households}
-                values={{ numHouseholds: numberOfHouseholdsInSelectedArea }}
-              />
-            </Typography>
-          </Box>
-          <Box alignItems="start" display="flex" flexDirection="column" gap={1}>
-            <Typography color="secondary" variant="h5">
-              {locationsInSelectedArea.length}
-            </Typography>
-            <Typography color="secondary" textAlign="center" variant="caption">
-              <Msg
-                id={areaAssignmentMessageIds.map.areaInfo.stats.locations}
-                values={{ numLocations: locationsInSelectedArea.length }}
-              />
-            </Typography>
-          </Box>
+          <AreaStats assignment={assignment} selectedArea={selectedArea.id} />
           <Divider />
           <Box mt={2}>
             <Typography variant="h6">

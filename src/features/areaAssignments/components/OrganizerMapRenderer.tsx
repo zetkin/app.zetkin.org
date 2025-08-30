@@ -19,6 +19,7 @@ import {
   ZetkinAssignmentAreaStats,
   ZetkinAreaAssignee,
   ZetkinLocation,
+  ZetkinAreaAssignment,
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
 import { useEnv } from 'core/hooks';
@@ -26,6 +27,7 @@ import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import locToLatLng from 'features/geography/utils/locToLatLng';
 import oldTheme from 'theme';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
+import useLocations from '../hooks/useLocations';
 
 const LocationMarker: FC<{
   location: ZetkinLocation;
@@ -107,6 +109,7 @@ type OrganizerMapRendererProps = {
   areaStats: ZetkinAssignmentAreaStats;
   areaStyle: 'households' | 'progress' | 'hide' | 'assignees' | 'outlined';
   areas: ZetkinArea[];
+  assignment: ZetkinAreaAssignment;
   locationStyle: 'dot' | 'households' | 'progress' | 'hide';
   locations: ZetkinLocation[];
   navigateToAreaId?: number;
@@ -116,10 +119,22 @@ type OrganizerMapRendererProps = {
   sessions: ZetkinAreaAssignee[];
 };
 
-function HouseholdOverlayMarker(props: {
-  numberOfHouseholds: number;
-  numberOfLocations: number;
+function HouseholdOverlayMarker({
+  area,
+  assignment,
+}: {
+  area: ZetkinArea;
+  assignment: ZetkinAreaAssignment;
 }) {
+  const locationsInArea =
+    useLocations(assignment.organization_id, assignment.id, area.id).data ?? [];
+
+  const totalHouseholds = locationsInArea.reduce(
+    (sum, loc) =>
+      sum + (loc.num_known_households || loc.num_estimated_households || 0),
+    0
+  );
+
   return (
     <Box
       alignItems="center"
@@ -137,7 +152,7 @@ function HouseholdOverlayMarker(props: {
           fontSize="small"
           sx={{ color: oldTheme.palette.grey[300] }}
         />
-        {props.numberOfHouseholds}
+        {totalHouseholds}
       </Typography>
       <Divider
         sx={{
@@ -146,17 +161,32 @@ function HouseholdOverlayMarker(props: {
       />
       <Typography alignItems="center" display="flex" fontSize="14px">
         <Place fontSize="small" sx={{ color: oldTheme.palette.grey[300] }} />
-
-        {props.numberOfLocations}
+        {locationsInArea.length}
       </Typography>
     </Box>
   );
 }
 
-function ProgressOverlayMarker(props: {
-  successfulVisitsColorPercent: number;
-  visitsColorPercent: number;
+function ProgressOverlayMarker({
+  area,
+  assignment,
+}: {
+  area: ZetkinArea;
+  assignment: ZetkinAreaAssignment;
 }) {
+  const locationsInArea =
+    useLocations(assignment.organization_id, assignment.id, area.id).data ?? [];
+
+  const totalVisits = locationsInArea.reduce(
+    (sum, location) => sum + (location.num_visits || 0),
+    0
+  );
+
+  const totalSuccessfulVisits = locationsInArea.reduce(
+    (sum, location) => sum + (location.num_successful_visits || 0),
+    0
+  );
+
   return (
     <Box
       bgcolor="white"
@@ -170,13 +200,14 @@ function ProgressOverlayMarker(props: {
       <div
         style={{
           alignItems: 'center',
-          background: `conic-gradient(${oldTheme.palette.primary.main} ${
-            props.successfulVisitsColorPercent
-          }%, ${lighten(oldTheme.palette.primary.main, 0.7)} ${
-            props.successfulVisitsColorPercent
-          }% ${props.visitsColorPercent}%, ${oldTheme.palette.grey[400]} ${
-            props.visitsColorPercent
-          }%)`,
+          background: `conic-gradient(${
+            oldTheme.palette.primary.main
+          } ${totalSuccessfulVisits}%, ${lighten(
+            oldTheme.palette.primary.main,
+            0.7
+          )} ${totalSuccessfulVisits}% ${totalVisits}%, ${
+            oldTheme.palette.grey[400]
+          } ${totalVisits}%)`,
           borderRadius: '2em',
           display: 'flex',
           flexDirection: 'row',
@@ -281,6 +312,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   areas,
   areaStats,
   areaStyle,
+  assignment,
   locations,
   selectedId,
   sessions,
@@ -594,41 +626,15 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             .filter((session) => session.area_id == area.id)
             .map((session) => session.user_id);
 
-          const stats = areaStats.stats.find((stat) => stat.area_id == area.id);
-
-          let numberOfHouseholds = 0;
-          locationsByAreaId[area.id].forEach(
-            (location) =>
-              (numberOfHouseholds +=
-                location.num_known_households ||
-                location.num_estimated_households)
-          );
-          const numberOfLocations = locationsByAreaId[area.id].length;
-
-          const visitsColorPercent = stats?.num_households
-            ? (stats.num_visited_households / stats.num_households) * 100
-            : 0;
-
-          const successfulVisitsColorPercent = stats?.num_households
-            ? (stats.num_successful_visited_households / stats.num_households) *
-              100
-            : 0;
-
           const markerToRender = () => {
             if (overlayStyle === 'households') {
               return (
-                <HouseholdOverlayMarker
-                  numberOfHouseholds={numberOfHouseholds}
-                  numberOfLocations={numberOfLocations}
-                />
+                <HouseholdOverlayMarker area={area} assignment={assignment} />
               );
             }
             if (overlayStyle == 'progress') {
               return (
-                <ProgressOverlayMarker
-                  successfulVisitsColorPercent={successfulVisitsColorPercent}
-                  visitsColorPercent={visitsColorPercent}
-                />
+                <ProgressOverlayMarker area={area} assignment={assignment} />
               );
             }
             if (overlayStyle === 'assignees' && area.hasPeople) {
