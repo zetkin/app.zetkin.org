@@ -66,6 +66,7 @@ export default makeMessages('feat.campaigns', {
     createActivity: m('Create'),
     createAreaAssignment: m('Area assignment'),
     createCallAssignment: m('Call assignment'),
+    createDoorAssignment: m('Door Assignment'),
     createEmail: m('Email'),
     createEvent: m('Event'),
     createSurvey: m('Survey'),

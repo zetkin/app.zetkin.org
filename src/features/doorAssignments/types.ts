@@ -8,3 +8,9 @@ export type ZetkinDoorAssignment = {
   };
   title: string | null;
 };
+
+export type ZetkinDoorAssignmentPostBody = Partial<
+  Omit<ZetkinDoorAssignment, 'id' | 'campaign' | 'organization'>
+> & {
+  campaign_id: number;
+};

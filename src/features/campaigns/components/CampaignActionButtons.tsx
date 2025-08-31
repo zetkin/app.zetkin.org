@@ -8,6 +8,7 @@ import {
   Event,
   HeadsetMic,
   Map,
+  MeetingRoom,
   OpenInNew,
   Settings,
 } from '@mui/icons-material';
@@ -29,8 +30,9 @@ import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
+import useCreateDoorAssignment from 'features/doorAssignments/hooks/useCreateDoorAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, TASKS } from 'utils/featureFlags';
+import { AREAS, DOORS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
@@ -52,6 +54,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
+  const hasDoorAssignments = useFeature(DOORS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -59,6 +62,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
+  const createDoorAssignment = useCreateDoorAssignment(orgId, campId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -155,6 +159,30 @@ const CampaignActionButtons: React.FunctionComponent<
           config_id: configs[0].id,
           theme_id: themes[0].id,
           title: campaginMessages.form.createEmail.newEmail(),
+        }),
+    });
+  }
+
+  if (hasDoorAssignments) {
+    menuItems.push({
+      icon: <MeetingRoom />,
+      label: campaginMessages.createButton.createDoorAssignment(),
+      onClick: () =>
+        createDoorAssignment({
+          instructions: '',
+          /*
+          metrics: [
+            {
+              definesDone: true,
+              description: '',
+              kind: 'boolean',
+              question:
+                campaginMessages.form.createAreaAssignment.defaultQuestion(),
+            },
+          ],
+          */
+          reporting_level: 'location',
+          title: areaAssignmentMessages.default.title(),
         }),
     });
   }
