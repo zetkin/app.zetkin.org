@@ -36,15 +36,7 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
-
-// Assumes that eventType === 'Uncategorized' is semantically the same as a 'null' eventType
-const eventTypeToLabel = (eventType: string | null) =>
-  eventType === null ? 'Uncategorized' : eventType;
-
-const eventToEventType = (event: { activity: { title: string } | null }) =>
-  event.activity?.title ?? null;
-
-const initializeEventTypesToFilterBy: () => Array<string | null> = () => [];
+import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
 type Props = {
   orgId: number;
@@ -62,12 +54,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const {
     customDatesToFilterBy,
     dateFilterState,
-    eventTypesToFilterBy: eventTypesToFilterByArray,
+    eventTypesToFilterBy,
     geojsonToFilterBy,
     orgIdsToFilterBy,
   } = useAppSelector((state) => state.organizations.filters);
 
-  const eventTypesToFilterBy = new Set(eventTypesToFilterByArray);
+  const eventTypeFilter = useEventTypeFilter(allEvents, {
+    eventTypesToFilterBy,
+    setEventTypesToFilterBy: (newArray) =>
+      dispatch(filtersUpdated({ eventTypesToFilterBy: newArray })),
+  });
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
@@ -83,25 +79,11 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const eventTypes = [
-    ...new Set(allEvents.map((event) => eventToEventType(event))),
-  ].sort((a, b) => {
-    // null (Uncategorized) goes to end
-    if (a === null) {
-      return 1;
-    }
-    if (b === null) {
-      return -1;
-    }
-
-    return a.localeCompare(b);
-  });
-
   const isFiltered =
-    orgIdsToFilterBy.length ||
-    !!geojsonToFilterBy.length ||
     !!dateFilterState ||
-    eventTypesToFilterBy.size > 0;
+    eventTypeFilter.isFiltered ||
+    !!geojsonToFilterBy.length ||
+    orgIdsToFilterBy.length;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -202,13 +184,13 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           },
         ]
       : []),
-    ...(eventTypes.length > 1
+    ...(eventTypeFilter.shouldShowFilter
       ? [
           {
-            active: eventTypesToFilterBy.size > 0,
+            active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
             label: messages.allEventsList.filterButtonLabels.eventTypes({
-              numEventTypes: eventTypesToFilterBy.size,
+              numEventTypes: eventTypeFilter.filterCount,
             }),
             onClick: () => setDrawerContent('eventTypes'),
           },
@@ -315,17 +297,17 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               active={true}
               circular
               label={Clear}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
                     geojsonToFilterBy: [],
-                    eventTypesToFilterBy: initializeEventTypesToFilterBy(),
                     orgIdsToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypes();
+              }}
             />
           )}
           {filters.map((filter) => (
@@ -355,16 +337,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           {isFiltered && (
             <ZUIButton
               label={messages.allEventsList.emptyList.removeFiltersButton()}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
-                    eventTypesToFilterBy: initializeEventTypesToFilterBy(),
                     orgIdsToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypes();
+              }}
               variant="secondary"
             />
           )}
@@ -523,26 +505,20 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         open={drawerContent == 'eventTypes'}
       >
         <List>
-          {eventTypes.map((eventType) => (
+          {eventTypeFilter.eventTypes.map((eventType) => (
             <ListItem
-              key={eventTypeToLabel(eventType)}
+              key={eventTypeFilter.getLabelFromEventType(eventType)}
               sx={{ justifyContent: 'space-between' }}
             >
               <Box alignItems="center" display="flex">
-                <ZUIText>{eventTypeToLabel(eventType)}</ZUIText>
+                <ZUIText>
+                  {eventTypeFilter.getLabelFromEventType(eventType)}
+                </ZUIText>
               </Box>
               <Switch
-                checked={eventTypesToFilterBy.has(eventType)}
-                onChange={(_event, checked) => {
-                  dispatch(
-                    filtersUpdated({
-                      eventTypesToFilterBy: checked
-                        ? [...eventTypesToFilterByArray, eventType]
-                        : eventTypesToFilterByArray.filter(
-                            (t) => t !== eventType
-                          ),
-                    })
-                  );
+                checked={eventTypesToFilterBy.includes(eventType)}
+                onChange={() => {
+                  eventTypeFilter.toggleEventType(eventType);
                 }}
               />
             </ListItem>
