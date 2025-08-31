@@ -1,5 +1,6 @@
+import { IncomingHttpHeaders } from 'http';
 import dayjs, { Dayjs } from 'dayjs';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
@@ -11,13 +12,18 @@ const formatString = (str: string): string =>
     .match(/.{1,74}/g)
     ?.join('\r\n\t') ?? '';
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<void> {
-  const { orgId } = req.query;
+export async function GET({ params }: { params: Promise<{ orgId: string }> }) {
+  const headerList = await headers();
 
-  const apiClient = new BackendApiClient(req.headers);
+  const { orgId } = await params;
+
+  // Convert ReadonlyHeaders to IncomingHttpHeaders
+  const apiHeaders: IncomingHttpHeaders = headerList.keys().reduce((hs, h) => {
+    hs[h] = headerList.get(h) as string;
+    return hs;
+  }, {} as IncomingHttpHeaders);
+
+  const apiClient = new BackendApiClient(apiHeaders);
 
   const startTime = dayjs()
     .subtract(2, 'month')
@@ -45,8 +51,12 @@ export default async function handle(
       vEvents.push(`DTSTAMP:${timeStamp(dayjs(event.published))}`);
       vEvents.push(`DTSTART:${timeStamp(dayjs(event.start_time))}`);
       vEvents.push(`DTEND:${timeStamp(dayjs(event.end_time))}`);
-      vEvents.push(`SUMMARY:${event.title ?? ''}`);
-      vEvents.push(`DESCRIPTION:${event.info_text ?? ''}`);
+      if (event.title) {
+        vEvents.push(`SUMMARY:${event.title ?? ''}`);
+      }
+      if (event.info_text) {
+        vEvents.push(`DESCRIPTION:${event.info_text ?? ''}`);
+      }
       vEvents.push(
         `URL:${process.env.ZETKIN_APP_HOST}/o/${orgId}/events/${event.id}`
       );
@@ -65,11 +75,11 @@ export default async function handle(
     });
 
   const eventsStr = vEvents.map((s) => formatString(s)).join('\r\n');
-
-  res.setHeader('Content-Type', 'text/calendar').status(200)
-    .send(`BEGIN:VCALENDAR\r
+  const body = `BEGIN:VCALENDAR\r
 VERSION:2.0\r
 PRODID:-//Zetkin Foundation//Zetkin App//EN\r
 ${eventsStr}\r
-END:VCALENDAR`);
+END:VCALENDAR`;
+
+  return new Response(body, { headers: { 'Content-Type': 'text/calendar' } });
 }
