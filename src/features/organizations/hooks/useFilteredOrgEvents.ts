@@ -14,9 +14,13 @@ export default function useFilteredOrgEvents(orgId: number) {
   const {
     customDatesToFilterBy,
     dateFilterState,
+    eventTypesToFilterBy,
     geojsonToFilterBy,
     orgIdsToFilterBy,
   } = useAppSelector((state) => state.organizations.filters);
+
+  const eventToEventType = (event: { activity: { title: string } | null }) =>
+    event.activity?.title ?? null;
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
@@ -76,6 +80,12 @@ export default function useFilteredOrgEvents(orgId: number) {
           (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
         return isOngoing || startsInPeriod || endsInPeriod;
       }
+    })
+    .filter((event) => {
+      if (eventTypesToFilterBy.length === 0) {
+        return true;
+      }
+      return eventTypesToFilterBy.includes(eventToEventType(event));
     });
 
   const locationEvents = filteredEvents.filter((event) => {
