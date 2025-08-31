@@ -30,6 +30,15 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 
+// Assumes that eventType === 'Uncategorized' is semantically the same as a 'null' eventType
+const eventTypeToLabel = (eventType: string | null) =>
+  eventType === null ? 'Uncategorized' : eventType;
+
+const eventToEventType = (event: { activity: { title: string } | null }) =>
+  event.activity?.title ?? null;
+
+const initializeEventTypesToFilterBy = () => new Set() as Set<null | string>;
+
 const AllEventsList: FC = () => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
@@ -37,9 +46,12 @@ const AllEventsList: FC = () => {
   const nextDelay = useIncrementalDelay();
 
   const [drawerContent, setDrawerContent] = useState<
-    'orgs' | 'calendar' | null
+    'orgs' | 'calendar' | 'eventTypes' | null
   >(null);
   const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
+  const [eventTypesToFilterBy, setEventTypesToFilterBy] = useState(
+    initializeEventTypesToFilterBy()
+  );
   const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
     DateRange<Dayjs>
   >([null, null]);
@@ -68,6 +80,20 @@ const AllEventsList: FC = () => {
       return [today.startOf('week'), today.endOf('week')];
     }
   };
+
+  const eventTypes = [
+    ...new Set(allEvents.map((event) => eventToEventType(event))),
+  ].sort((a, b) => {
+    // null (Uncategorized) goes to end
+    if (a === null) {
+      return 1;
+    }
+    if (b === null) {
+      return -1;
+    }
+
+    return a.localeCompare(b);
+  });
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -119,6 +145,12 @@ const AllEventsList: FC = () => {
           (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
         return isOngoing || startsInPeriod || endsInPeriod;
       }
+    })
+    .filter((event) => {
+      if (eventTypesToFilterBy.size === 0) {
+        return true;
+      }
+      return eventTypesToFilterBy.has(eventToEventType(event));
     });
 
   const eventsByDate = filteredEvents.reduce<
@@ -151,7 +183,8 @@ const AllEventsList: FC = () => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-  const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
+  const isFiltered =
+    orgIdsToFilterBy.length || !!dateFilterState || eventTypesToFilterBy.size;
 
   const filters = [
     {
@@ -207,6 +240,18 @@ const AllEventsList: FC = () => {
           },
         ]
       : []),
+    ...(eventTypes.length > 1
+      ? [
+          {
+            active: !!eventTypesToFilterBy.size,
+            key: 'eventTypes',
+            label: messages.allEventsList.filterButtonLabels.eventTypes({
+              numEventTypes: eventTypesToFilterBy.size,
+            }),
+            onClick: () => setDrawerContent('eventTypes'),
+          },
+        ]
+      : []),
   ].sort((a, b) => {
     if (a.active && !b.active) {
       return -1;
@@ -243,6 +288,7 @@ const AllEventsList: FC = () => {
                 setDateFilterState(null);
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
+                setEventTypesToFilterBy(initializeEventTypesToFilterBy());
               }}
             />
           )}
@@ -276,6 +322,7 @@ const AllEventsList: FC = () => {
               onClick={() => {
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
+                setEventTypesToFilterBy(initializeEventTypesToFilterBy());
                 setDateFilterState(null);
               }}
               variant="secondary"
@@ -388,6 +435,39 @@ const AllEventsList: FC = () => {
                       orgIdsToFilterBy.filter((id) => id != org.id)
                     );
                   }
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'eventTypes'}
+      >
+        <List>
+          {eventTypes.map((eventType) => (
+            <ListItem
+              key={eventTypeToLabel(eventType)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIText>{eventTypeToLabel(eventType)}</ZUIText>
+              </Box>
+              <Switch
+                checked={eventTypesToFilterBy.has(eventType)}
+                onChange={(_event, checked) => {
+                  setEventTypesToFilterBy((prev) => {
+                    const updated = new Set(prev);
+
+                    if (checked) {
+                      updated.add(eventType);
+                    } else {
+                      updated.delete(eventType);
+                    }
+
+                    return updated;
+                  });
                 }}
               />
             </ListItem>

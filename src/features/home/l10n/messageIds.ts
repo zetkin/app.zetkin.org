@@ -31,6 +31,9 @@ export default makeMessages('feat.home', {
       removeFiltersButton: m('Clear filters'),
     },
     filterButtonLabels: {
+      eventTypes: m<{ numEventTypes: number }>(
+        '{numEventTypes, plural,=0 {Event types} =1 {1 event type} other {# event types}}'
+      ),
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
