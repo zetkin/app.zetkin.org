@@ -10,11 +10,11 @@ type ZUITimeSpanProps = {
   start: Date;
 };
 
-const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
+const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => { 
   const isToday = start.toDateString() === new Date().toDateString();
   const endsOnSameDay = start.toDateString() === end.toDateString();
   const endsOnToday = end.toDateString() === new Date().toDateString();
-
+  
   const startTime = <FormattedTime value={start} />;
   const endTime = <FormattedTime value={end} />;
 
@@ -38,7 +38,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
               values={{
                 end: endTime,
                 endDate: (
-                  <FormattedDate day="numeric" month="long" value={end} />
+                  <FormattedDate dateStyle='medium' value={end} />
                 ),
                 start: startTime,
               }}
@@ -53,7 +53,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
               id={messageIds.timeSpan.singleDay}
               values={{
                 date: (
-                  <FormattedDate day="numeric" month="long" value={start} />
+                  <FormattedDate day="numeric" month="long" year='2-digit' value={start} />
                 ),
                 end: endTime,
                 start: startTime,
@@ -69,7 +69,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
                     end: endTime,
                     start: startTime,
                     startDate: (
-                      <FormattedDate day="numeric" month="long" value={start} />
+                      <FormattedDate day="numeric" month="long" year='2-digit' value={start} />
                     ),
                   }}
                 />
@@ -80,11 +80,11 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
                   values={{
                     end: endTime,
                     endDate: (
-                      <FormattedDate day="numeric" month="long" value={end} />
+                      <FormattedDate day="numeric" month="long" year='2-digit' value={end} />
                     ),
                     start: startTime,
                     startDate: (
-                      <FormattedDate day="numeric" month="long" value={start} />
+                      <FormattedDate day="numeric" month="long" year='2-digit' value={start} />
                     ),
                   }}
                 />
