@@ -8,11 +8,11 @@ import icsFromEvents from 'features/events/utils/icsFromEvents';
 
 export async function GET(
   _req: Request,
-  { params }: { params: Promise<{ orgId: string }> }
+  { params }: { params: Promise<{ orgId: string; projId: string }> }
 ) {
   const headerList = await headers();
 
-  const { orgId } = await params;
+  const { orgId, projId } = await params;
 
   // Convert ReadonlyHeaders to IncomingHttpHeaders
   const apiHeaders: IncomingHttpHeaders = headerList.keys().reduce((hs, h) => {
@@ -29,7 +29,7 @@ export async function GET(
     .slice(0, 10);
 
   const events = await apiClient.get<ZetkinEvent[]>(
-    `/api/orgs/${orgId}/actions?frecursive&ilter=start_time>=${startTime}`
+    `/api/orgs/${orgId}/campaigns/${projId}/actions?filter=start_time>=${startTime}`
   );
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
