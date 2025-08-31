@@ -15,10 +15,10 @@ export async function GET(
   const { orgId } = await params;
 
   // Convert ReadonlyHeaders to IncomingHttpHeaders
-  const apiHeaders: IncomingHttpHeaders = headerList.keys().reduce((hs, h) => {
-    hs[h] = headerList.get(h) as string;
-    return hs;
-  }, {} as IncomingHttpHeaders);
+  const apiHeaders: IncomingHttpHeaders = {};
+  for (const h in headerList.keys()) {
+    apiHeaders[h] = headerList.get(h) as string;
+  }
 
   const apiClient = new BackendApiClient(apiHeaders);
 
