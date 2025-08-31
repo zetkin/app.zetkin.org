@@ -5,6 +5,7 @@ import { useAppSelector } from 'core/hooks';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import useUpcomingCampaignEvents from './useUpcomingCampaignEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
+import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 
 export default function useFilteredCampaignEvents(
   campId: number,
@@ -13,9 +14,8 @@ export default function useFilteredCampaignEvents(
   const events = useUpcomingCampaignEvents(campId, orgId);
   const myEvents = useMyEvents();
 
-  const { customDatesToFilterBy, dateFilterState } = useAppSelector(
-    (state) => state.campaigns.filters
-  );
+  const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
+    useAppSelector((state) => state.campaigns.filters);
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
@@ -69,5 +69,22 @@ export default function useFilteredCampaignEvents(
     }
   });
 
-  return { allEvents, filteredEvents, getDateRange };
+  const locationEvents = filteredEvents.filter((event) => {
+    if (geojsonToFilterBy.length === 0) {
+      return true;
+    }
+
+    if (!event?.location) {
+      return false;
+    }
+
+    const features = getGeoJSONFeaturesAtLocations(
+      geojsonToFilterBy,
+      event.location
+    );
+
+    return features.length > 0;
+  });
+
+  return { allEvents, filteredEvents, getDateRange, locationEvents };
 }
