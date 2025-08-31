@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs, { Dayjs } from 'dayjs';
-import { Box, Fade } from '@mui/material';
+import { Box, Fade, List, ListItem, Switch } from '@mui/material';
 import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
@@ -28,6 +28,15 @@ import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import orgMessageIds from 'features/organizations/l10n/messageIds';
 
+// Assumes that eventType === 'Uncategorized' is semantically the same as a 'null' eventType
+const eventTypeToLabel = (eventType: string | null) =>
+  eventType === null ? 'Uncategorized' : eventType;
+
+const eventToEventType = (event: { activity: { title: string } | null }) =>
+  event.activity?.title ?? null;
+
+const initializeEventTypesToFilterBy: () => Array<string | null> = () => [];
+
 type Props = {
   campId: number;
   orgId: number;
@@ -43,13 +52,37 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const campaign = useCampaign(orgId, campId).campaignFuture.data;
   const { allEvents, filteredEvents, getDateRange, locationEvents } =
     useFilteredCampaignEvents(orgId, campId);
-  const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
-    useAppSelector((state) => state.campaigns.filters);
+  const {
+    customDatesToFilterBy,
+    dateFilterState,
+    geojsonToFilterBy,
+    eventTypesToFilterBy: eventTypesToFilterByArray,
+  } = useAppSelector((state) => state.campaigns.filters);
+
+  const eventTypesToFilterBy = new Set(eventTypesToFilterByArray);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerContent, setDrawerContent] = useState<
+    'calendar' | 'eventTypes' | null
+  >(null);
 
-  const isFiltered = !!geojsonToFilterBy.length || !!dateFilterState;
+  const isFiltered =
+    !!geojsonToFilterBy.length ||
+    !!dateFilterState ||
+    eventTypesToFilterBy.size > 0;
+  const eventTypes = [
+    ...new Set(allEvents.map((event) => eventToEventType(event))),
+  ].sort((a, b) => {
+    // null (Uncategorized) goes to end
+    if (a === null) {
+      return 1;
+    }
+    if (b === null) {
+      return -1;
+    }
+
+    return a.localeCompare(b);
+  });
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -127,9 +160,24 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerOpen(true);
+        setDrawerContent('calendar');
       },
     },
+    ...(eventTypes.length > 1
+      ? [
+          {
+            active: eventTypesToFilterBy.size > 0,
+            key: 'eventTypes',
+            label:
+              messages.publicProjectPage.eventList.filterButtonLabels.eventTypes(
+                {
+                  numEventTypes: eventTypesToFilterBy.size,
+                }
+              ),
+            onClick: () => setDrawerContent('eventTypes'),
+          },
+        ]
+      : []),
   ]
     .concat(
       geojsonToFilterBy.length
@@ -226,6 +274,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
+                    eventTypesToFilterBy: initializeEventTypesToFilterBy(),
                     geojsonToFilterBy: [],
                   })
                 )
@@ -266,6 +315,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
+                    eventTypesToFilterBy: initializeEventTypesToFilterBy(),
                   })
                 )
               }
@@ -302,7 +352,10 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           </Fade>
         </Box>
       ))}
-      <ZUIDrawerModal onClose={() => setDrawerOpen(false)} open={drawerOpen}>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'calendar'}
+      >
         <Box
           alignItems="center"
           display="flex"
@@ -362,6 +415,37 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             value={getDateRange()}
           />
         </Box>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'eventTypes'}
+      >
+        <List>
+          {eventTypes.map((eventType) => (
+            <ListItem
+              key={eventTypeToLabel(eventType)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIText>{eventTypeToLabel(eventType)}</ZUIText>
+              </Box>
+              <Switch
+                checked={eventTypesToFilterBy.has(eventType)}
+                onChange={(_event, checked) => {
+                  dispatch(
+                    filtersUpdated({
+                      eventTypesToFilterBy: checked
+                        ? [...eventTypesToFilterByArray, eventType]
+                        : eventTypesToFilterByArray.filter(
+                            (t) => t !== eventType
+                          ),
+                    })
+                  );
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
       </ZUIDrawerModal>
       <ZUIModal
         onClose={() => setPostAuthEvent(null)}
