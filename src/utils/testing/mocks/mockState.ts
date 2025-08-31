@@ -22,6 +22,11 @@ export default function mockState(overrides?: RootState) {
     breadcrumbs: {
       crumbsByPath: {},
     },
+    calendar: {
+      focusDate: '',
+      maxMonthEventsPerDay: 0,
+      timeScale: '',
+    },
     call: {
       activeLaneIndex: 0,
       lanes: [],
