@@ -10,10 +10,11 @@ const formatString = (str: string): string =>
     ?.join('\r\n\t') ?? '';
 
 export default function icsFromEvents(
+  name: string,
   events: ZetkinEvent[],
   org: ZetkinOrganization
 ): string {
-  const vLines: string[] = [];
+  const vLines: string[] = ['NAME:' + name, 'X-WR-CALNAME:' + name];
   events
     .filter((event) => !event.cancelled && event.published)
     .forEach((event) => {
@@ -54,8 +55,6 @@ export default function icsFromEvents(
   const body = `BEGIN:VCALENDAR\r
 VERSION:2.0\r
 PRODID:-//Zetkin Foundation//Zetkin App//EN\r
-NAME:My Calendar Name\r
-X-WR-CALNAME:My Calendar Name\r
 ${eventsStr}\r
 END:VCALENDAR`;
 

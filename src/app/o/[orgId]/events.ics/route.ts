@@ -34,7 +34,7 @@ export async function GET(
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
 
-  return new Response(icsFromEvents(events, org), {
+  return new Response(icsFromEvents(org.title, events, org), {
     headers: { 'Content-Type': 'text/calendar' },
   });
 }

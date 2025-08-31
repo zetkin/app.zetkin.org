@@ -3,7 +3,11 @@ import dayjs from 'dayjs';
 import { headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinEvent, ZetkinOrganization } from 'utils/types/zetkin';
+import {
+  ZetkinCampaign,
+  ZetkinEvent,
+  ZetkinOrganization,
+} from 'utils/types/zetkin';
 import icsFromEvents from 'features/events/utils/icsFromEvents';
 
 export async function GET(
@@ -33,8 +37,11 @@ export async function GET(
   );
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
+  const campaign = await apiClient.get<ZetkinCampaign>(
+    `/api/orgs/${orgId}/campaigns/${projId}`
+  );
 
-  return new Response(icsFromEvents(events, org), {
+  return new Response(icsFromEvents(campaign.title, events, org), {
     headers: { 'Content-Type': 'text/calendar' },
   });
 }
