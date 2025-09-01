@@ -83,7 +83,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     !!dateFilterState ||
     eventTypeFilter.isFiltered ||
     !!geojsonToFilterBy.length ||
-    orgIdsToFilterBy.length;
+    !!orgIdsToFilterBy.length;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
