@@ -12,12 +12,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import {
-  Add,
-  Apps,
-  CheckCircle,
-  KeyboardArrowRight,
-} from '@mui/icons-material';
+import { Add, Apps, Check, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import {
@@ -195,56 +190,61 @@ const HouseholdsPage: FC<Props> = ({
                   }}
                   sx={{ paddingLeft: 0, position: 'relative' }}
                 >
-                  <Box alignItems="center" display="flex" flexGrow={1}>
-                    <Checkbox
-                      checked={selectedHouseholdIds.includes(household.id)}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                  <Checkbox
+                    checked={selectedHouseholdIds.includes(household.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
 
-                        const isSelected = selectedHouseholdIds.includes(
-                          household.id
+                      const isSelected = selectedHouseholdIds.includes(
+                        household.id
+                      );
+
+                      if (isSelected) {
+                        onSelectHouseholds(
+                          selectedHouseholdIds.filter(
+                            (id) => id !== household.id
+                          )
                         );
-
-                        if (isSelected) {
-                          onSelectHouseholds(
-                            selectedHouseholdIds.filter(
-                              (id) => id !== household.id
-                            )
-                          );
-                        } else {
-                          onSelectHouseholds([
-                            ...selectedHouseholdIds,
-                            household.id,
-                          ]);
-                        }
-                      }}
-                      size="small"
-                    />
-                    <ListItemText>{household.title}</ListItemText>
-                  </Box>
-                  {mostRecentVisit && (
-                    <>
-                      <Typography color="secondary">
-                        <ZUIRelativeTime datetime={mostRecentVisit.created} />
-                      </Typography>
-                      {isSuccessful && (
-                        <CheckCircle
-                          color="secondary"
-                          fontSize="small"
-                          sx={{ ml: 1 }}
-                        />
-                      )}
-                    </>
-                  )}
-                  <Box
-                    sx={{
-                      backgroundColor: household.color,
-                      borderRadius: '3em',
-                      height: '20px',
-                      marginX: 1,
-                      width: '20px',
+                      } else {
+                        onSelectHouseholds([
+                          ...selectedHouseholdIds,
+                          household.id,
+                        ]);
+                      }
                     }}
+                    size="small"
                   />
+                  <ListItemText
+                    primary={household.title}
+                    secondary={
+                      <Box alignItems="center" display="flex" gap={1}>
+                        {household.color !== 'clear' && (
+                          <Box
+                            sx={{
+                              backgroundColor: household.color,
+                              borderRadius: '3em',
+                              height: '10px',
+                              mt: !mostRecentVisit ? 1 : 0,
+                              width: '10px',
+                            }}
+                          />
+                        )}
+                        {mostRecentVisit && (
+                          <>
+                            {isSuccessful && (
+                              <Check color="secondary" fontSize="small" />
+                            )}
+                            <Typography color="secondary" variant="body2">
+                              <ZUIRelativeTime
+                                datetime={mostRecentVisit.created}
+                              />
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
+                    }
+                  />
+
                   <KeyboardArrowRight />
                 </ListItem>
               </Box>
