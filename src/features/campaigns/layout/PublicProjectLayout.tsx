@@ -10,6 +10,8 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortlHeader';
 import EventMapLayout from 'features/organizations/layouts/EventMapLayout';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { filtersUpdated } from '../store';
 
 type Props = {
   campaign: ZetkinCampaign;
@@ -17,10 +19,24 @@ type Props = {
 };
 
 const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
+  const dispatch = useAppDispatch();
+
   const { allEvents, filteredEvents } = useFilteredCampaignEvents(
     campaign.organization.id,
     campaign.id
   );
+
+  const { geojsonToFilterBy } = useAppSelector(
+    (state) => state.campaigns.filters
+  );
+
+  const setLocationFilter = (geojsonToFilterBy: GeoJSON.Feature[]) => {
+    dispatch(
+      filtersUpdated({
+        geojsonToFilterBy,
+      })
+    );
+  };
 
   return (
     <EventMapLayout
@@ -44,6 +60,8 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           }
         />
       }
+      locationFilter={geojsonToFilterBy}
+      setLocationFilter={setLocationFilter}
       showMap={allEvents.length > 0}
     >
       {children}

@@ -1,5 +1,5 @@
 import { range } from 'lodash';
-import { Box, Button, CircularProgress, Slide } from '@mui/material';
+import { Box, Button, Slide } from '@mui/material';
 import { FC, useCallback, useState } from 'react';
 import { DoorFrontOutlined } from '@mui/icons-material';
 
@@ -68,6 +68,7 @@ const CreateHouseholdsPage: FC<Props> = ({
       actions={
         <Button
           disabled={isEmpty || creating}
+          loading={creating}
           onClick={async () => {
             setCreating(true);
 
@@ -85,9 +86,6 @@ const CreateHouseholdsPage: FC<Props> = ({
             setCreating(false);
             onBack();
           }}
-          startIcon={
-            creating ? <CircularProgress color="secondary" size="20px" /> : null
-          }
           variant="contained"
         >
           <Msg

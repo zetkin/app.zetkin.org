@@ -1,4 +1,4 @@
-import { Zetkin2Household } from '../types';
+import { HouseholdWithColor } from '../types';
 import { useApiClient, useAppSelector } from 'core/hooks';
 import { householdLoad, householdLoaded } from '../store';
 import useRemoteItem from 'core/hooks/useRemoteItem';
@@ -7,7 +7,7 @@ export default function useHousehold(
   orgId: number,
   locationId: number,
   householdId: number
-): Zetkin2Household {
+): HouseholdWithColor {
   const apiClient = useApiClient();
   const item = useAppSelector((state) =>
     state.canvass.householdsByLocationId[locationId].items.find(
@@ -19,8 +19,8 @@ export default function useHousehold(
     actionOnLoad: () => householdLoad([locationId, householdId]),
     actionOnSuccess: (data) => householdLoaded([locationId, data]),
     loader: () =>
-      apiClient.get<Zetkin2Household>(
-        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`
+      apiClient.get<HouseholdWithColor>(
+        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`
       ),
   });
 }
