@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { Chip, MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
@@ -36,22 +36,37 @@ const AllInSuborg: FC<Props> = ({
 }) => {
   const { orgId } = useNumericRouteParams();
   const suborgs = useSubOrganizations(orgId).data || [];
-  const [scope, setScope] = useState<'any' | 'single' | 'multiple'>('any');
-  const [selectedSuborgIds, setSelectedSuborgIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    setSelectedSuborgIds([]);
-  }, [scope]);
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<AllInSuborgFilterConfig>(initialFilter, {
       organizations: 'suborgs',
     });
 
+  const organizationsConfig = filter.config.organizations;
+  const organizationsConfigIsArray = Array.isArray(organizationsConfig);
+
+  let initialScope: 'any' | 'single' | 'multiple' = 'any';
+  if (organizationsConfigIsArray) {
+    if (organizationsConfig.length == 1) {
+      initialScope = 'single';
+    } else {
+      initialScope = 'multiple';
+    }
+  }
+
+  const [scope, setScope] = useState<'any' | 'single' | 'multiple'>(
+    initialScope
+  );
+
   const activeSuborgs = suborgs
     .filter((suborg) => suborg.id != orgId)
     .filter((suborg) => suborg.is_active)
     .sort((a, b) => a.title.localeCompare(b.title));
+
+  const selectedSuborgs = activeSuborgs.filter(
+    (suborg) =>
+      organizationsConfigIsArray && organizationsConfig.includes(suborg.id)
+  );
 
   const addRemoveSelect = (
     <StyledSelect
@@ -72,12 +87,10 @@ const AllInSuborg: FC<Props> = ({
         const newValue = e.target.value as 'any' | 'single' | 'multiple';
         setScope(newValue);
 
-        if (newValue == 'any') {
-          setConfig({
-            ...filter.config,
-            organizations: 'suborgs',
-          });
-        }
+        setConfig({
+          ...filter.config,
+          organizations: newValue == 'any' ? 'suborgs' : [],
+        });
       }}
       value={scope}
     >
@@ -95,9 +108,9 @@ const AllInSuborg: FC<Props> = ({
 
   const singleSuborgSelect = (
     <StyledSelect
+      defaultValue={selectedSuborgs[0]?.id}
       onChange={(ev) => {
         const selectedSuborgId = parseInt(ev.target.value);
-        setSelectedSuborgIds([selectedSuborgId]);
         setConfig({
           ...filter.config,
           organizations: [selectedSuborgId],
@@ -107,17 +120,16 @@ const AllInSuborg: FC<Props> = ({
       {activeSuborgs.map((suborg) => (
         <MenuItem
           key={suborg.id}
-          disabled={selectedSuborgIds.includes(suborg.id)}
+          disabled={
+            organizationsConfigIsArray &&
+            organizationsConfig.includes(suborg.id)
+          }
           value={suborg.id}
         >
           {suborg.title}
         </MenuItem>
       ))}
     </StyledSelect>
-  );
-
-  const selectedSuborgs = activeSuborgs.filter((suborg) =>
-    selectedSuborgIds.includes(suborg.id)
   );
 
   const multipleSuborgsSelect = (
@@ -128,41 +140,40 @@ const AllInSuborg: FC<Props> = ({
             key={suborg.id}
             label={suborg.title}
             onDelete={() => {
-              setSelectedSuborgIds(
-                selectedSuborgIds.filter((id) => id != suborg.id)
-              );
-              setConfig({
-                ...filter.config,
-                organizations: selectedSuborgIds.filter(
-                  (id) => id != suborg.id
-                ),
-              });
+              if (organizationsConfigIsArray) {
+                setConfig({
+                  ...filter.config,
+                  organizations: organizationsConfig.filter(
+                    (id) => id != suborg.id
+                  ),
+                });
+              }
             }}
             style={{ margin: '3px' }}
             variant="outlined"
           />
         );
       })}
-      {selectedSuborgIds.length < activeSuborgs.length && (
-        <StyledItemSelect
-          getOptionDisabled={(item) =>
-            selectedSuborgIds.some((id) => id == item.id) || false
-          }
-          onChange={(_, items) => {
-            const ids = items.map((item) => item.id);
-            setSelectedSuborgIds(ids);
-            setConfig({
-              ...filter.config,
-              organizations: ids,
-            });
-          }}
-          options={activeSuborgs.map((org) => ({
-            id: org.id,
-            title: org.title,
-          }))}
-          value={selectedSuborgs}
-        />
-      )}
+      {organizationsConfigIsArray &&
+        organizationsConfig.length < activeSuborgs.length && (
+          <StyledItemSelect
+            getOptionDisabled={(item) =>
+              selectedSuborgs.some((s) => s.id == item.id) || false
+            }
+            onChange={(_, items) => {
+              const ids = items.map((item) => item.id);
+              setConfig({
+                ...filter.config,
+                organizations: ids,
+              });
+            }}
+            options={activeSuborgs.map((org) => ({
+              id: org.id,
+              title: org.title,
+            }))}
+            value={selectedSuborgs}
+          />
+        )}
     </>
   );
 
