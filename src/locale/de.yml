@@ -567,10 +567,6 @@ feat:
     default:
       description: Leere Beschreibung
     households:
-      edit:
-        header: Bearbeiten
-        saveButtonLabel: Sichern
-        titleLabel: Titel bearbeiten
       single:
         subtitle: Etage
     instructions:
