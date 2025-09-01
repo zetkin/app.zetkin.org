@@ -63,7 +63,7 @@ const QueryOverview = ({
     .filter(
       (f) =>
         f.type !== FILTER_TYPE.ALL ||
-        (f.type == FILTER_TYPE.ALL && 'organizations' in f.config)
+        (f.type == FILTER_TYPE.ALL && f.config && 'organizations' in f.config)
     )
     .map((filter, index) => ({
       id: filter.id,

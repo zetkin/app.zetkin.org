@@ -26,7 +26,8 @@ const useSmartSearch = (
   // correctly configure legacy queries to only have the All filter in the first position with op: 'add'
   const indexOfAllFilter = initialFilters.findLastIndex(
     (filter) =>
-      filter.type == FILTER_TYPE.ALL && !('organizations' in filter.config)
+      filter.type == FILTER_TYPE.ALL &&
+      (!('config' in filter) || !('organizations' in filter.config))
   );
 
   const normalizedFiltersWithIds = initialFilters
@@ -76,10 +77,16 @@ const useSmartSearch = (
     };
   });
 
+  const firstFilter = filtersWithIds[0];
+  const firstFilterHasConfig = firstFilter && 'config' in firstFilter;
+
+  const firstFilterHasOrgConfig =
+    firstFilterHasConfig && 'organizations' in firstFilter.config;
+
   const startsWithAll =
-    filtersWithIds[0] &&
-    filtersWithIds[0].type === FILTER_TYPE.ALL &&
-    !('organizations' in filtersWithIds[0].config);
+    firstFilter &&
+    firstFilter.type === FILTER_TYPE.ALL &&
+    (!firstFilterHasConfig || !firstFilterHasOrgConfig);
 
   const setStartsWithAll = (shouldStartWithAll: boolean) => {
     if (startsWithAll && !shouldStartWithAll) {
