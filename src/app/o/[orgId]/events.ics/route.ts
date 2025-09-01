@@ -29,7 +29,7 @@ export async function GET(
     .slice(0, 10);
 
   const events = await apiClient.get<ZetkinEvent[]>(
-    `/api/orgs/${orgId}/actions?recursive&ilter=start_time>=${startTime}`
+    `/api/orgs/${orgId}/actions?recursive&filter=start_time>=${startTime}`
   );
 
   const org = await apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`);
