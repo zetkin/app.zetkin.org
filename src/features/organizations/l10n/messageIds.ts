@@ -57,6 +57,10 @@ export default makeMessages('feat.organizations', {
       viewInList: m('View in list'),
       viewInMap: m('View in map'),
     },
+    menu: {
+      logout: m('Logout'),
+      myZetkin: m('My Zetkin'),
+    },
     tabs: {
       calendar: m('Calendar'),
       suborgs: m('Explore'),
