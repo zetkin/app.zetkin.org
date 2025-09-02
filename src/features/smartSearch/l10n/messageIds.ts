@@ -172,7 +172,7 @@ export default makeMessages('feat.smartSearch', {
         any: m<{
           addRemoveSelect: ReactElement;
           suborgScopeSelect: ReactElement;
-        }>('{addRemoveSelect} people in {suborgScopeSelect}.'),
+        }>('{addRemoveSelect} everyone who is in {suborgScopeSelect}.'),
         multiple: m<{
           addRemoveSelect: ReactElement;
           multipleSuborgsSelect: ReactElement;
