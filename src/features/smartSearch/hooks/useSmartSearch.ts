@@ -84,7 +84,7 @@ const useSmartSearch = (
     firstFilterHasConfig && 'organizations' in firstFilter.config;
 
   const startsWithAll =
-    firstFilter &&
+    !!firstFilter &&
     firstFilter.type === FILTER_TYPE.ALL &&
     (!firstFilterHasConfig || !firstFilterHasOrgConfig);
 
