@@ -55,9 +55,9 @@ export default makeMessages('feat.smartSearch', {
     filters: {
       all: {
         description: m(
-          'Find people based on what sub-organization they are in.'
+          'Find people based on what sub-organizations they are in.'
         ),
-        title: m('Everyone in a sub-org'),
+        title: m('Everyone in a sub-organization'),
       },
       call_history: {
         description: m('Find people who were called, reached or tried.'),
@@ -164,7 +164,7 @@ export default makeMessages('feat.smartSearch', {
     allInSuborg: {
       examples: {
         one: m(
-          'Add everyone who is in the specific sub-organization My Third Organization.'
+          'Add everyone who is in the specific sub-organization Littleton Local Branch'
         ),
         two: m('Remove everyone who is in any sub-organization.'),
       },
