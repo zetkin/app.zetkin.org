@@ -217,18 +217,7 @@ const HouseholdsPage: FC<Props> = ({
                   <ListItemText
                     primary={household.title}
                     secondary={
-                      <Box alignItems="center" display="flex" gap={1}>
-                        {household.color !== 'clear' && (
-                          <Box
-                            sx={{
-                              backgroundColor: household.color,
-                              borderRadius: '3em',
-                              height: '10px',
-                              mt: !mostRecentVisit ? 1 : 0,
-                              width: '10px',
-                            }}
-                          />
-                        )}
+                      <Box alignItems="center" display="flex" gap={0.5}>
                         {mostRecentVisit && (
                           <>
                             {isSuccessful && (
@@ -244,7 +233,17 @@ const HouseholdsPage: FC<Props> = ({
                       </Box>
                     }
                   />
-
+                  {household.color !== 'clear' && (
+                    <Box
+                      sx={{
+                        backgroundColor: household.color,
+                        borderRadius: '3em',
+                        height: '20px',
+                        marginX: 1,
+                        width: '20px',
+                      }}
+                    />
+                  )}
                   <KeyboardArrowRight />
                 </ListItem>
               </Box>
