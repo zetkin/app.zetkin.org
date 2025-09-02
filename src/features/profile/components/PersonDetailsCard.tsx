@@ -78,7 +78,11 @@ const PersonDetailsCard: React.FunctionComponent<{
   });
 
   const customFieldsConfig = customFields
-    .filter((field) => field.type !== CUSTOM_FIELD_TYPE.JSON)
+    .filter(
+      (field) =>
+        field.type != CUSTOM_FIELD_TYPE.JSON &&
+        field.type != CUSTOM_FIELD_TYPE.LNGLAT
+    )
     .map((field) => {
       // Object type is filtered above
       let value: string | React.ReactNode = person[field.slug] as

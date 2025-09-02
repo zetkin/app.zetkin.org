@@ -27,6 +27,7 @@ const VALIDATORS: Record<CUSTOM_FIELD_TYPE, (value: string) => boolean> = {
   },
   enum: () => true,
   json: () => true,
+  lnglat: () => true,
   text: () => true,
   url: (value) => isURL(value),
 };
