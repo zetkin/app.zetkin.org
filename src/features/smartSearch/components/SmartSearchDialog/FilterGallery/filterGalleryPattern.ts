@@ -119,6 +119,8 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern14;
   } else if (slug === FILTER_TYPE.JOURNEY) {
     pattern = PATTERN_TEMPLATES.pattern16;
+  } else if (slug == FILTER_TYPE.ALL) {
+    pattern = PATTERN_TEMPLATES.pattern13;
   } else {
     pattern = PATTERN_TEMPLATES.pattern15;
   }
