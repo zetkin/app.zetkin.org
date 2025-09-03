@@ -28,8 +28,8 @@ export default function icsFromEvents(
       vLines.push(`DTSTAMP:${timeStamp(dayjs(event.published))}`);
       vLines.push(`DTSTART:${timeStamp(dayjs(event.start_time))}`);
       vLines.push(`DTEND:${timeStamp(dayjs(event.end_time))}`);
-      if (event.title) {
-        vLines.push(`SUMMARY:${event.title ?? ''}`);
+      if (event.title || event.activity?.title) {
+        vLines.push(`SUMMARY:${event.title || event.activity?.title || ''}`);
       }
       if (event.info_text) {
         vLines.push(`DESCRIPTION:${event.info_text ?? ''}`);
