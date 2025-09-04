@@ -1,19 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
-import { HouseholdWithColor, ZetkinLocationVisit } from './types';
+import {
+  remoteItem,
+  remoteItemUpdated,
+  RemoteList,
+  remoteList,
+  remoteListCreated,
+  remoteListLoad,
+  remoteListLoaded,
+} from 'utils/storeUtils';
+import {
+  HouseholdWithColor,
+  ZetkinHouseholdVisit,
+  ZetkinLocationVisit,
+} from './types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { findOrAddItem } from 'utils/storeUtils/findOrAddItem';
 
 export interface CanvassStoreSlice {
   householdsByLocationId: Record<number, RemoteList<HouseholdWithColor>>;
   myAssignmentsList: RemoteList<ZetkinAreaAssignment>;
+  visitsByAssignmentAndLocationId: Record<
+    number,
+    Record<number, RemoteList<ZetkinHouseholdVisit>>
+  >;
   visitsByAssignmentId: Record<string, RemoteList<ZetkinLocationVisit>>;
 }
 
 const initialState: CanvassStoreSlice = {
   householdsByLocationId: {},
   myAssignmentsList: remoteList(),
+  visitsByAssignmentAndLocationId: {},
   visitsByAssignmentId: {},
 };
 
@@ -69,6 +86,37 @@ const canvassSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
       item.data = household;
+    },
+    householdVisitCreated: (
+      state,
+      action: PayloadAction<[number, ZetkinHouseholdVisit]>
+    ) => {
+      const [locationId, visit] = action.payload;
+      state.visitsByAssignmentAndLocationId[visit.assignment_id] ||= {};
+      state.visitsByAssignmentAndLocationId[visit.assignment_id][locationId] ||=
+        remoteListCreated();
+
+      remoteItemUpdated(
+        state.visitsByAssignmentAndLocationId[visit.assignment_id][locationId],
+        visit
+      );
+    },
+    householdVisitsLoad: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, locationId] = action.payload;
+      state.visitsByAssignmentAndLocationId[assignmentId] ||= {};
+      state.visitsByAssignmentAndLocationId[assignmentId][locationId] =
+        remoteListLoad(
+          state.visitsByAssignmentAndLocationId[assignmentId][locationId]
+        );
+    },
+    householdVisitsLoaded: (
+      state,
+      action: PayloadAction<[number, number, ZetkinHouseholdVisit[]]>
+    ) => {
+      const [assignmentId, locationId, visits] = action.payload;
+      state.visitsByAssignmentAndLocationId[assignmentId] ||= {};
+      state.visitsByAssignmentAndLocationId[assignmentId][locationId] =
+        remoteListLoaded(visits);
     },
     householdsLoad: (state, action: PayloadAction<number>) => {
       const locationId = action.payload;
@@ -149,6 +197,9 @@ export const {
   householdCreated,
   householdLoad,
   householdLoaded,
+  householdVisitCreated,
+  householdVisitsLoad,
+  householdVisitsLoaded,
   householdUpdated,
   householdsLoad,
   householdsLoaded,
