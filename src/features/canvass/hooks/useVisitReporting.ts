@@ -16,14 +16,14 @@ import {
 } from 'features/areaAssignments/store';
 import { visitCreated, visitUpdated } from '../store';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
-import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocationVisits from './useLocationVisits';
 import useUser from 'core/hooks/useUser';
 import summarizeMetrics from '../utils/summarizeMetrics';
 import { ZetkinLocation } from 'features/areaAssignments/types';
 import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
+import { useIndexedDB } from 'features/canvass/hooks/useIndexedDB';
 
-type VisitByHouseholdIdMap = Record<
+export type VisitByHouseholdIdMap = Record<
   number,
   {
     created: string;
@@ -61,13 +61,17 @@ export default function useVisitReporting(
   const visitsByHouseholdId = useAppSelector(
     (state) => state.areaAssignments.visitsByHouseholdId
   );
-  const [lastVisitByHouseholdId, setLastVisitByHouseholdId] =
-    useLocalStorage<VisitByHouseholdIdMap>(
+
+  const [lastVisitByHouseholdId, setLastVisitByHouseholdId, isLoadingVisits] =
+    useIndexedDB(
       `visitsInAssignmentAndLocation-${assignmentId}-${locationId}`,
       {}
     );
 
   useEffect(() => {
+    if (isLoadingVisits) {
+      return;
+    }
     const updated: VisitByHouseholdIdMap = {
       ...lastVisitByHouseholdId,
     };

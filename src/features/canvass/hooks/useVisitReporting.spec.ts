@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
-import useVisitReporting from './useVisitReporting';
+import useVisitReporting, { VisitByHouseholdIdMap } from './useVisitReporting';
 import { makeWrapper } from 'utils/testing';
 import mockState from 'utils/testing/mocks/mockState';
 import createStore, { RootState } from 'core/store';
@@ -16,10 +16,79 @@ const ASSIGNMENT_ID = 11;
 const LOCATION_ID = 101;
 const HOUSEHOLD_ID = 1001;
 
+// Extend Node.js globalThis so TypeScript knows about indexedDB
+declare global {
+  // eslint-disable-next-line no-var
+  var indexedDB: IDBFactory;
+}
+
+const mockIndexedDBStore: Record<string, VisitByHouseholdIdMap> = {};
+
+jest.mock('features/canvass/hooks/useIndexedDB', () => {
+  return {
+    useIndexedDB: (key: string, defaultValue: VisitByHouseholdIdMap) => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { useState, useCallback } = require('react');
+
+      const initial = Object.prototype.hasOwnProperty.call(
+        mockIndexedDBStore,
+        key
+      )
+        ? mockIndexedDBStore[key]
+        : defaultValue;
+
+      const [val, setVal] = useState(initial);
+
+      const setter = useCallback(
+        (
+          next:
+            | VisitByHouseholdIdMap
+            | ((prev: VisitByHouseholdIdMap) => VisitByHouseholdIdMap)
+        ) => {
+          setVal((prev: VisitByHouseholdIdMap) => {
+            const nextVal = typeof next == 'function' ? next(prev) : next;
+            mockIndexedDBStore[key] = nextVal;
+            return nextVal;
+          });
+        },
+        [key]
+      );
+
+      return [val, setter, false] as const;
+    },
+  };
+});
+
+let mockDB: Record<string, VisitByHouseholdIdMap> = {};
+
+jest.mock('features/canvass/utils/indexedDB', () => ({
+  IndexedDB: jest.fn().mockImplementation(() => ({
+    getItem: jest.fn().mockImplementation(async (key) => mockDB[key] ?? null),
+    openDB: jest.fn().mockResolvedValue({}),
+    setItem: jest.fn().mockImplementation(async (key, value) => {
+      mockDB[key] = value;
+    }),
+  })),
+}));
+
 describe('useVisitReporting()', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
-    window.localStorage.clear();
+    for (const key of Object.keys(mockIndexedDBStore)) {
+      delete mockIndexedDBStore[key];
+    }
+    mockDB = {};
+
+    globalThis.indexedDB = {
+      open: jest.fn().mockImplementation(() => {
+        return {
+          error: null,
+          onerror: null,
+          onsuccess: null,
+          onupgradeneeded: null,
+          result: {},
+        } as unknown as IDBOpenDBRequest;
+      }),
+    } as unknown as IDBFactory;
   });
 
   describe('Household-level assignment', () => {
