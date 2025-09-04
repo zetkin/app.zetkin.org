@@ -13,7 +13,6 @@ export default function mockState(overrides?: RootState) {
       locationsByAssignmentIdAndAreaId: {},
       metricsByAssignmentId: {},
       statsByAreaAssId: {},
-      visitsByHouseholdId: {},
     },
     areas: {
       areaList: remoteList(),
@@ -51,6 +50,7 @@ export default function mockState(overrides?: RootState) {
     canvass: {
       householdsByLocationId: {},
       myAssignmentsList: remoteList(),
+      visitsByAssignmentAndLocationId: {},
       visitsByAssignmentId: {},
     },
     duplicates: {

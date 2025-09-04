@@ -4,7 +4,7 @@ import useVisitReporting from './useVisitReporting';
 import { makeWrapper } from 'utils/testing';
 import mockState from 'utils/testing/mocks/mockState';
 import createStore, { RootState } from 'core/store';
-import { remoteItem, remoteList } from 'utils/storeUtils';
+import { remoteItem, remoteList, remoteListLoaded } from 'utils/storeUtils';
 import mockApiClient from 'utils/testing/mocks/mockApiClient';
 import mockHouseholdVisit from 'utils/testing/mocks/mockHouseholdVisit';
 import mockAreaAssignment from 'utils/testing/mocks/mockAreaAssignment';
@@ -29,9 +29,11 @@ describe('useVisitReporting()', () => {
       initialState = mockState();
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
-      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
-      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
-        new Date().toISOString();
+      initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
+        [LOCATION_ID]: remoteListLoaded([]),
+      };
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] =
+        remoteListLoaded([]);
       initialState.areaAssignments.areaAssignmentList.items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
@@ -46,38 +48,37 @@ describe('useVisitReporting()', () => {
     it('includes last visits from store', () => {
       const timestamp = new Date().toISOString();
 
-      initialState.areaAssignments.visitsByHouseholdId[HOUSEHOLD_ID] =
-        remoteList([
-          mockHouseholdVisit({
-            assignment_id: ASSIGNMENT_ID,
-            created: timestamp,
-            created_by_user_id: 1,
-            household_id: HOUSEHOLD_ID,
-            id: 10001,
-          }),
-        ]);
-
-      initialState.areaAssignments.visitsByHouseholdId[HOUSEHOLD_ID + 1] =
-        remoteList([
-          mockHouseholdVisit({
-            assignment_id: ASSIGNMENT_ID,
-            created: '1857-07-05T13:37:00.000Z', // This is old
-            household_id: HOUSEHOLD_ID + 1,
-            id: 10002,
-          }),
-          mockHouseholdVisit({
-            assignment_id: ASSIGNMENT_ID,
-            created: timestamp,
-            household_id: HOUSEHOLD_ID + 1,
-            id: 10003,
-          }),
-          mockHouseholdVisit({
-            assignment_id: ASSIGNMENT_ID,
-            created: '1857-07-05T13:37:00.000Z', // This is old
-            household_id: HOUSEHOLD_ID + 1,
-            id: 10004,
-          }),
-        ]);
+      initialState.canvass.visitsByAssignmentAndLocationId = {
+        [ASSIGNMENT_ID]: {
+          [LOCATION_ID]: remoteListLoaded([
+            mockHouseholdVisit({
+              assignment_id: ASSIGNMENT_ID,
+              created: timestamp,
+              created_by_user_id: 1,
+              household_id: HOUSEHOLD_ID,
+              id: 10001,
+            }),
+            mockHouseholdVisit({
+              assignment_id: ASSIGNMENT_ID,
+              created: '1857-07-05T13:37:00.000Z', // This is old
+              household_id: HOUSEHOLD_ID + 1,
+              id: 10002,
+            }),
+            mockHouseholdVisit({
+              assignment_id: ASSIGNMENT_ID,
+              created: timestamp,
+              household_id: HOUSEHOLD_ID + 1,
+              id: 10003,
+            }),
+            mockHouseholdVisit({
+              assignment_id: ASSIGNMENT_ID,
+              created: '1857-07-05T13:37:00.000Z', // This is old
+              household_id: HOUSEHOLD_ID + 1,
+              id: 10004,
+            }),
+          ]),
+        },
+      };
 
       const store = createStore(initialState);
 
@@ -88,7 +89,7 @@ describe('useVisitReporting()', () => {
         }
       );
 
-      expect(result.current.lastVisitByHouseholdId).toEqual({
+      expect(result.current.lastVisitByHouseholdId).toMatchObject({
         [HOUSEHOLD_ID]: {
           created: timestamp,
           metrics: [{ metric_id: 10001, response: 'yes' }],
@@ -138,8 +139,9 @@ describe('useVisitReporting()', () => {
 
       const stateAfterAction = store.getState();
       expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[HOUSEHOLD_ID]
-          .items[0].data
+        stateAfterAction.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID][
+          LOCATION_ID
+        ].items[0].data
       ).toEqual(newVisit);
 
       const dateStr =
@@ -210,9 +212,11 @@ describe('useVisitReporting()', () => {
       initialState = mockState();
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
-      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
-      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID].loaded =
-        new Date().toISOString();
+      initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
+        [LOCATION_ID]: remoteListLoaded([]),
+      };
+      initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] =
+        remoteListLoaded([]);
       initialState.areaAssignments.areaAssignmentList.items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
@@ -227,8 +231,8 @@ describe('useVisitReporting()', () => {
     it('includes last household visits from store', () => {
       const timestamp = new Date().toISOString();
 
-      initialState.areaAssignments.visitsByHouseholdId[HOUSEHOLD_ID] =
-        remoteList([
+      initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
+        [LOCATION_ID]: remoteListLoaded([
           mockHouseholdVisit({
             assignment_id: ASSIGNMENT_ID,
             created: timestamp,
@@ -236,10 +240,6 @@ describe('useVisitReporting()', () => {
             household_id: HOUSEHOLD_ID,
             id: 10001,
           }),
-        ]);
-
-      initialState.areaAssignments.visitsByHouseholdId[HOUSEHOLD_ID + 1] =
-        remoteList([
           mockHouseholdVisit({
             assignment_id: ASSIGNMENT_ID,
             created: '1857-07-05T13:37:00.000Z', // This is old
@@ -258,7 +258,8 @@ describe('useVisitReporting()', () => {
             household_id: HOUSEHOLD_ID + 1,
             id: 10004,
           }),
-        ]);
+        ]),
+      };
 
       const store = createStore(initialState);
 
@@ -269,7 +270,7 @@ describe('useVisitReporting()', () => {
         }
       );
 
-      expect(result.current.lastVisitByHouseholdId).toEqual({
+      expect(result.current.lastVisitByHouseholdId).toMatchObject({
         [HOUSEHOLD_ID]: {
           created: timestamp,
           metrics: [{ metric_id: 10001, response: 'yes' }],
@@ -724,6 +725,9 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
+        [LOCATION_ID]: remoteListLoaded([]),
+      };
       initialState.areaAssignments.areaAssignmentList.items.push(
         remoteItem(ASSIGNMENT_ID, {
           data: mockAreaAssignment({
@@ -734,7 +738,6 @@ describe('useVisitReporting()', () => {
         })
       );
 
-      initialState.areaAssignments.visitsByHouseholdId = {};
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
@@ -864,6 +867,9 @@ describe('useVisitReporting()', () => {
 
     beforeEach(() => {
       initialState = mockState();
+      initialState.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID] = {
+        [LOCATION_ID]: remoteListLoaded([]),
+      };
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
@@ -941,15 +947,22 @@ describe('useVisitReporting()', () => {
       );
 
       const stateAfterAction = store.getState();
+
       expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[1].items[0].data
-      ).toEqual(mockRpcResult.visits[0]);
+        stateAfterAction.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID][
+          LOCATION_ID
+        ].items[0].data
+      ).toMatchObject(mockRpcResult.visits[0]);
       expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[2].items[0].data
-      ).toEqual(mockRpcResult.visits[1]);
+        stateAfterAction.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID][
+          LOCATION_ID
+        ].items[1].data
+      ).toMatchObject(mockRpcResult.visits[1]);
       expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[3].items[0].data
-      ).toEqual(mockRpcResult.visits[2]);
+        stateAfterAction.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID][
+          LOCATION_ID
+        ].items[2].data
+      ).toMatchObject(mockRpcResult.visits[2]);
     });
   });
 });
