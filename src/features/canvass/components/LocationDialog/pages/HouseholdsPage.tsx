@@ -225,7 +225,9 @@ const HouseholdsPage: FC<Props> = ({
                             )}
                             <Typography color="secondary" variant="body2">
                               <ZUIRelativeTime
-                                datetime={mostRecentVisit.created}
+                                datetime={addOffsetIfNecessary(
+                                  mostRecentVisit.created
+                                )}
                               />
                             </Typography>
                           </>
@@ -296,5 +298,11 @@ const HouseholdsPage: FC<Props> = ({
     </PageBase>
   );
 };
+
+function addOffsetIfNecessary(originalTimestamp: string): string {
+  return originalTimestamp.includes('Z')
+    ? originalTimestamp
+    : originalTimestamp.concat('Z');
+}
 
 export default HouseholdsPage;
