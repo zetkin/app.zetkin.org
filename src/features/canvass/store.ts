@@ -87,6 +87,20 @@ const canvassSlice = createSlice({
       item.loaded = new Date().toISOString();
       item.data = household;
     },
+    householdVisitCreated: (
+      state,
+      action: PayloadAction<[number, ZetkinHouseholdVisit]>
+    ) => {
+      const [locationId, visit] = action.payload;
+      state.visitsByAssignmentAndLocationId[visit.assignment_id] ||= {};
+      state.visitsByAssignmentAndLocationId[visit.assignment_id][locationId] ||=
+        remoteListCreated();
+
+      remoteItemUpdated(
+        state.visitsByAssignmentAndLocationId[visit.assignment_id][locationId],
+        visit
+      );
+    },
     householdVisitsLoad: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, locationId] = action.payload;
       state.visitsByAssignmentAndLocationId[assignmentId] ||= {};
@@ -183,6 +197,7 @@ export const {
   householdCreated,
   householdLoad,
   householdLoaded,
+  householdVisitCreated,
   householdVisitsLoad,
   householdVisitsLoaded,
   householdUpdated,
