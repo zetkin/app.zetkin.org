@@ -139,8 +139,9 @@ describe('useVisitReporting()', () => {
 
       const stateAfterAction = store.getState();
       expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[HOUSEHOLD_ID]
-          .items[0].data
+        stateAfterAction.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID][
+          LOCATION_ID
+        ].items[0].data
       ).toEqual(newVisit);
 
       const dateStr =
@@ -737,7 +738,6 @@ describe('useVisitReporting()', () => {
         })
       );
 
-      initialState.areaAssignments.visitsByHouseholdId = {};
       initialState.areaAssignments.locationsByAssignmentId[ASSIGNMENT_ID] =
         remoteList();
       initialState.canvass.visitsByAssignmentId[ASSIGNMENT_ID] = remoteList();
@@ -947,15 +947,6 @@ describe('useVisitReporting()', () => {
       );
 
       const stateAfterAction = store.getState();
-      expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[1].items[0].data
-      ).toEqual(mockRpcResult.visits[0]);
-      expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[2].items[0].data
-      ).toEqual(mockRpcResult.visits[1]);
-      expect(
-        stateAfterAction.areaAssignments.visitsByHouseholdId[3].items[0].data
-      ).toEqual(mockRpcResult.visits[2]);
 
       expect(
         stateAfterAction.canvass.visitsByAssignmentAndLocationId[ASSIGNMENT_ID][

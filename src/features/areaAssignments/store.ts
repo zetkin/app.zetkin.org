@@ -23,7 +23,6 @@ import {
   ZetkinMetric,
 } from './types';
 import { Zetkin2Area } from 'features/areas/types';
-import { ZetkinHouseholdVisit } from 'features/canvass/types';
 
 export interface AreaAssignmentsStoreSlice {
   areaGraphByAssignmentId: Record<
@@ -47,7 +46,6 @@ export interface AreaAssignmentsStoreSlice {
     number,
     RemoteItem<ZetkinAreaAssignmentStats & { id: number }>
   >;
-  visitsByHouseholdId: Record<number, RemoteList<ZetkinHouseholdVisit>>;
 }
 
 const initialState: AreaAssignmentsStoreSlice = {
@@ -60,7 +58,6 @@ const initialState: AreaAssignmentsStoreSlice = {
   locationsByAssignmentIdAndAreaId: {},
   metricsByAssignmentId: {},
   statsByAreaAssId: {},
-  visitsByHouseholdId: {},
 };
 
 const areaAssignmentSlice = createSlice({
@@ -217,26 +214,6 @@ const areaAssignmentSlice = createSlice({
       const [assignmentId, areas] = action.payload;
       state.areasByAssignmentId[assignmentId] = remoteListLoaded(areas);
     },
-    householdVisitCreated: (
-      state,
-      action: PayloadAction<ZetkinHouseholdVisit>
-    ) => {
-      const visit = action.payload;
-      state.visitsByHouseholdId[visit.household_id] ||= remoteListCreated();
-      remoteItemUpdated(state.visitsByHouseholdId[visit.household_id], visit);
-    },
-    householdVisitsCreated: (
-      state,
-      action: PayloadAction<ZetkinHouseholdVisit[]>
-    ) => {
-      const visits = action.payload;
-
-      for (const visit of visits) {
-        const householdId = visit.household_id;
-        state.visitsByHouseholdId[householdId] ||= remoteListCreated();
-        remoteItemUpdated(state.visitsByHouseholdId[householdId], visit);
-      }
-    },
     locationCreated: (state, action: PayloadAction<ZetkinLocation>) => {
       const location = action.payload;
 
@@ -374,8 +351,6 @@ export const {
   assigneesLoaded,
   assignmentAreasLoad,
   assignmentAreasLoaded,
-  householdVisitCreated,
-  householdVisitsCreated,
   locationCreated,
   locationLoaded,
   locationsLoad,

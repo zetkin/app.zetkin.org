@@ -7,14 +7,10 @@ import {
   ZetkinLocationVisit,
   ZetkinLocationVisitPostBody,
 } from '../types';
-import {
-  householdVisitCreated,
-  householdVisitsCreated,
-  locationLoaded,
-} from 'features/areaAssignments/store';
+import { locationLoaded } from 'features/areaAssignments/store';
 import {
   visitCreated,
-  householdVisitCreated as canvassHouseholdVisitCreated,
+  householdVisitCreated as householdVisitCreated,
   visitUpdated,
 } from '../store';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
@@ -159,8 +155,7 @@ export default function useVisitReporting(
           }
         );
 
-        dispatch(householdVisitCreated(visit));
-        dispatch(canvassHouseholdVisitCreated([locationId, visit]));
+        dispatch(householdVisitCreated([locationId, visit]));
         await refreshLocationStats();
       }
     },
@@ -215,9 +210,8 @@ export default function useVisitReporting(
           orgId: orgId,
           responses: responses,
         });
-        dispatch(householdVisitsCreated(result.visits));
         result.visits.forEach((visit) =>
-          dispatch(canvassHouseholdVisitCreated([locationId, visit]))
+          dispatch(householdVisitCreated([locationId, visit]))
         );
         await refreshLocationStats();
       }
