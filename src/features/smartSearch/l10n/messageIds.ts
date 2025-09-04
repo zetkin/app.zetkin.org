@@ -53,6 +53,12 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     filters: {
+      all: {
+        description: m(
+          'Find people based on what sub-organizations they are in.'
+        ),
+        title: m('Everyone in a sub-organization'),
+      },
       call_history: {
         description: m('Find people who were called, reached or tried.'),
         title: m('Call history'),
@@ -153,6 +159,39 @@ export default makeMessages('feat.smartSearch', {
       startWithSelect: {
         false: m('an empty list'),
         true: m('a list of all the people in the organization'),
+      },
+    },
+    allInSuborg: {
+      examples: {
+        one: m(
+          'Add everyone who is in the specific sub-organization Littleton Local Branch'
+        ),
+        two: m('Remove everyone who is in any sub-organization.'),
+      },
+      inputString: {
+        any: m<{
+          addRemoveSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>('{addRemoveSelect} everyone who is in {suborgScopeSelect}.'),
+        multiple: m<{
+          addRemoveSelect: ReactElement;
+          multipleSuborgsSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>(
+          '{addRemoveSelect} everyone who is in {suborgScopeSelect}: {multipleSuborgsSelect}'
+        ),
+        single: m<{
+          addRemoveSelect: ReactElement;
+          singleSuborgSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>(
+          '{addRemoveSelect} everyone who is in {suborgScopeSelect} {singleSuborgSelect}'
+        ),
+      },
+      suborgScopeSelect: {
+        any: m('any sub-organization'),
+        multiple: m('any of the following sub-organizations'),
+        single: m('the specific sub-organization'),
       },
     },
     callBlocked: {

@@ -265,6 +265,10 @@ export interface UserFilterConfig {
 
 export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
 
+export type AllInSuborgFilterConfig = {
+  organizations: FilterConfigOrgOptions;
+};
+
 export interface CampaignParticipationConfig {
   state: 'booked' | 'signed_up';
   status?: 'attended' | 'cancelled' | 'noshow';

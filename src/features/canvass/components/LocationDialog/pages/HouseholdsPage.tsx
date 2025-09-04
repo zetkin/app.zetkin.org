@@ -12,7 +12,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
+import { Add, Apps, Check, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import {
@@ -26,6 +26,7 @@ import { Msg, useMessages } from 'core/i18n';
 import useHouseholds from 'features/canvass/hooks/useHouseholds';
 import { HouseholdWithColor } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -78,6 +79,13 @@ const HouseholdsPage: FC<Props> = ({
 
     return floor0 - floor1;
   });
+
+  const metrics = useAreaAssignmentMetrics(
+    location.organization_id,
+    assignment.id
+  );
+
+  const successMetric = metrics?.find((m) => m.defines_success);
 
   return (
     <PageBase
@@ -156,6 +164,15 @@ const HouseholdsPage: FC<Props> = ({
 
             const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
+            const isSuccessful =
+              !!mostRecentVisit &&
+              !!successMetric &&
+              mostRecentVisit.metrics.some(
+                (metric) =>
+                  metric.metric_id == successMetric.id &&
+                  metric.response == 'yes'
+              );
+
             return (
               <Box key={household.id}>
                 {firstOnFloor && (
@@ -173,47 +190,62 @@ const HouseholdsPage: FC<Props> = ({
                   }}
                   sx={{ paddingLeft: 0, position: 'relative' }}
                 >
-                  <Box alignItems="center" display="flex" flexGrow={1}>
-                    <Checkbox
-                      checked={selectedHouseholdIds.includes(household.id)}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                  <Checkbox
+                    checked={selectedHouseholdIds.includes(household.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
 
-                        const isSelected = selectedHouseholdIds.includes(
-                          household.id
+                      const isSelected = selectedHouseholdIds.includes(
+                        household.id
+                      );
+
+                      if (isSelected) {
+                        onSelectHouseholds(
+                          selectedHouseholdIds.filter(
+                            (id) => id !== household.id
+                          )
                         );
-
-                        if (isSelected) {
-                          onSelectHouseholds(
-                            selectedHouseholdIds.filter(
-                              (id) => id !== household.id
-                            )
-                          );
-                        } else {
-                          onSelectHouseholds([
-                            ...selectedHouseholdIds,
-                            household.id,
-                          ]);
-                        }
-                      }}
-                      size="small"
-                    />
-                    <ListItemText>{household.title}</ListItemText>
-                  </Box>
-                  {mostRecentVisit && (
-                    <Typography color="secondary">
-                      <ZUIRelativeTime datetime={mostRecentVisit.created} />
-                    </Typography>
-                  )}
-                  <Box
-                    sx={{
-                      backgroundColor: household.color,
-                      borderRadius: '3em',
-                      height: '20px',
-                      marginX: 1,
-                      width: '20px',
+                      } else {
+                        onSelectHouseholds([
+                          ...selectedHouseholdIds,
+                          household.id,
+                        ]);
+                      }
                     }}
+                    size="small"
                   />
+                  <ListItemText
+                    primary={household.title}
+                    secondary={
+                      <Box alignItems="center" display="flex" gap={0.5}>
+                        {mostRecentVisit && (
+                          <>
+                            {isSuccessful && (
+                              <Check color="secondary" fontSize="small" />
+                            )}
+                            <Typography color="secondary" variant="body2">
+                              <ZUIRelativeTime
+                                datetime={addOffsetIfNecessary(
+                                  mostRecentVisit.created
+                                )}
+                              />
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
+                    }
+                  />
+                  {household.color !== 'clear' && (
+                    <Box
+                      sx={{
+                        backgroundColor: household.color,
+                        borderRadius: '3em',
+                        height: '20px',
+                        marginX: 1,
+                        width: '20px',
+                      }}
+                    />
+                  )}
                   <KeyboardArrowRight />
                 </ListItem>
               </Box>
@@ -266,5 +298,11 @@ const HouseholdsPage: FC<Props> = ({
     </PageBase>
   );
 };
+
+function addOffsetIfNecessary(originalTimestamp: string): string {
+  return originalTimestamp.includes('Z')
+    ? originalTimestamp
+    : originalTimestamp.concat('Z');
+}
 
 export default HouseholdsPage;
