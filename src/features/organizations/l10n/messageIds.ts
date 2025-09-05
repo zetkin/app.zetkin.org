@@ -9,9 +9,6 @@ export default makeMessages('feat.organizations', {
       removeFiltersButton: m('Clear filters'),
     },
     filterButtonLabels: {
-      eventTypes: m<{ numEventTypes: number }>(
-        '{numEventTypes, plural,=0 {Event types} =1 {1 event type} other {# event types}}'
-      ),
       locations: m<{ count: number }>('{count} locations'),
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'

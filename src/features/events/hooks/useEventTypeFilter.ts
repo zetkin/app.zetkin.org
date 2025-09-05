@@ -1,5 +1,8 @@
 import { useMemo, useCallback } from 'react';
 
+import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
+
 interface EventWithActivity {
   activity: { title: string } | null;
 }
@@ -22,6 +25,7 @@ export const useEventTypeFilter = (
     setEventTypesToFilterBy: (eventTypes: (string | null)[]) => void;
   }
 ) => {
+  const messages = useMessages(messageIds.filterButtonLabels);
   const eventTypes = useMemo(() => {
     const uniqueTypes = new Set(events.map(getEventTypeFromEvent));
     return Array.from(uniqueTypes).sort((a, b) => {
@@ -34,6 +38,10 @@ export const useEventTypeFilter = (
       return a.localeCompare(b);
     });
   }, [events, getEventTypeFromEvent]);
+
+  const filterButtonLabel = messages.eventTypes({
+    numEventTypes: state.eventTypesToFilterBy.length,
+  });
 
   const toggleEventType = useCallback(
     (eventType: string | null) => {
@@ -52,7 +60,7 @@ export const useEventTypeFilter = (
   return {
     clearEventTypes,
     eventTypes,
-    filterCount: state.eventTypesToFilterBy.length,
+    filterButtonLabel,
     getLabelFromEventType,
     isFiltered: state.eventTypesToFilterBy.length > 0,
     shouldShowFilter: eventTypes.length > 1,

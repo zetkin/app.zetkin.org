@@ -189,9 +189,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
-            label: messages.allEventsList.filterButtonLabels.eventTypes({
-              numEventTypes: eventTypeFilter.filterCount,
-            }),
+            label: eventTypeFilter.filterButtonLabel,
             onClick: () => setDrawerContent('eventTypes'),
           },
         ]

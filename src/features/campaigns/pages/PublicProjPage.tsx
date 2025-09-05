@@ -152,12 +152,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           {
             active: eventTypeFilter.isFiltered,
             key: 'eventTypes',
-            label:
-              messages.publicProjectPage.eventList.filterButtonLabels.eventTypes(
-                {
-                  numEventTypes: eventTypeFilter.filterCount,
-                }
-              ),
+            label: eventTypeFilter.filterButtonLabel,
             onClick: () => setDrawerContent('eventTypes'),
           },
         ]
