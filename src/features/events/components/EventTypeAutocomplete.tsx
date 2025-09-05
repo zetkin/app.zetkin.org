@@ -7,6 +7,7 @@ import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import oldTheme from 'theme';
+import { toSentenceCase } from 'utils/stringUtils';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import useDeleteType from '../hooks/useDeleteType';
@@ -145,10 +146,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
           const inputStartWithCapital = inputValue
-            ? `${inputValue[0].toUpperCase()}${inputValue.substring(
-                1,
-                inputValue.length
-              )}`
+            ? toSentenceCase(inputValue)
             : '';
 
           const filteredResult: EventTypeOption[] = [

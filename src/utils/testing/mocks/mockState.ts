@@ -43,6 +43,7 @@ export default function mockState(overrides?: RootState) {
       filters: {
         customDatesToFilterBy: [null, null],
         dateFilterState: null,
+        eventTypesToFilterBy: [],
         geojsonToFilterBy: [],
       },
       recentlyCreatedCampaign: null,
@@ -114,6 +115,7 @@ export default function mockState(overrides?: RootState) {
       filters: {
         customDatesToFilterBy: [null, null],
         dateFilterState: null,
+        eventTypesToFilterBy: [],
         geojsonToFilterBy: [],
         orgIdsToFilterBy: [],
       },
