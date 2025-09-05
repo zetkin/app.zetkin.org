@@ -1,6 +1,7 @@
 import { useMemo, useCallback } from 'react';
 
 import messageIds from '../l10n/messageIds';
+import { toSentenceCase } from 'utils/stringUtils';
 import { useMessages } from 'core/i18n';
 
 interface EventWithActivity {
@@ -11,8 +12,10 @@ const getLabelFromEventType = (eventType: string | null) => {
   return eventType === null ? 'Uncategorized' : eventType;
 };
 
-const getEventTypeFromEvent = (event: EventWithActivity) =>
-  event.activity?.title ?? null;
+const getEventTypeFromEvent = (event: EventWithActivity) => {
+  const title = event.activity?.title ?? null;
+  return title ? toSentenceCase(title) : null;
+};
 
 /**
  * @param events - Array of events with activity titles to extract types from
