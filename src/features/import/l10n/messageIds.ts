@@ -114,7 +114,7 @@ export default makeMessages('feat.import', {
         'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
       ),
       finishedMappingIds: m<{
-        idField: 'ext_id' | 'id';
+        idField: 'ext_id' | 'id' | 'email';
         numValues: number;
       }>(
         'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} other {external ID}}'
