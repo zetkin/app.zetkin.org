@@ -27,7 +27,6 @@ import { filtersUpdated } from '../store';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
 import orgMessageIds from 'features/organizations/l10n/messageIds';
-import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
 type Props = {
   campId: number;
@@ -43,20 +42,15 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const dispatch = useAppDispatch();
   const campaign = useCampaign(orgId, campId).campaignFuture.data;
 
-  const { allEvents, filteredEvents, getDateRange, locationEvents } =
-    useFilteredCampaignEvents(orgId, campId);
   const {
-    customDatesToFilterBy,
-    dateFilterState,
-    eventTypesToFilterBy,
-    geojsonToFilterBy,
-  } = useAppSelector((state) => state.campaigns.filters);
-
-  const eventTypeFilter = useEventTypeFilter(allEvents, {
-    eventTypesToFilterBy,
-    setEventTypesToFilterBy: (newArray) =>
-      dispatch(filtersUpdated({ eventTypesToFilterBy: newArray })),
-  });
+    allEvents,
+    eventTypeFilter,
+    filteredEvents,
+    getDateRange,
+    locationEvents,
+  } = useFilteredCampaignEvents(orgId, campId);
+  const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
+    useAppSelector((state) => state.campaigns.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [drawerContent, setDrawerContent] = useState<
@@ -411,7 +405,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                 </ZUIText>
               </Box>
               <Switch
-                checked={eventTypesToFilterBy.includes(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
                 onChange={() => {
                   eventTypeFilter.toggleEventType(eventType);
                 }}

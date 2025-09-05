@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { useAppSelector } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import useUpcomingCampaignEvents from './useUpcomingCampaignEvents';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
-import { getShouldShowEvent } from 'features/events/hooks/useEventTypeFilter';
+import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
+import { filtersUpdated } from '../store';
 
 export default function useFilteredCampaignEvents(
   campId: number,
@@ -44,6 +45,13 @@ export default function useFilteredCampaignEvents(
     }));
   }, [events]);
 
+  const dispatch = useAppDispatch();
+  const eventTypeFilter = useEventTypeFilter(allEvents, {
+    eventTypesToFilterBy,
+    setEventTypesToFilterBy: (newArray) =>
+      dispatch(filtersUpdated({ eventTypesToFilterBy: newArray })),
+  });
+
   const filteredEvents = allEvents
     .filter((event) => {
       if (
@@ -75,7 +83,7 @@ export default function useFilteredCampaignEvents(
         return isOngoing || startsInPeriod || endsInPeriod;
       }
     })
-    .filter((event) => getShouldShowEvent(event, eventTypesToFilterBy));
+    .filter(eventTypeFilter.getShouldShowEvent);
 
   const locationEvents = filteredEvents.filter((event) => {
     if (geojsonToFilterBy.length === 0) {
@@ -94,5 +102,11 @@ export default function useFilteredCampaignEvents(
     return features.length > 0;
   });
 
-  return { allEvents, filteredEvents, getDateRange, locationEvents };
+  return {
+    allEvents,
+    eventTypeFilter,
+    filteredEvents,
+    getDateRange,
+    locationEvents,
+  };
 }

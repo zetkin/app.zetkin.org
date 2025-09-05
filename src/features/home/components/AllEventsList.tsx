@@ -29,10 +29,7 @@ import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
-import {
-  getShouldShowEvent,
-  useEventTypeFilter,
-} from 'features/events/hooks/useEventTypeFilter';
+import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
 const initializeEventTypesToFilterBy = () => [] as (string | null)[];
 
@@ -134,7 +131,7 @@ const AllEventsList: FC = () => {
         return isOngoing || startsInPeriod || endsInPeriod;
       }
     })
-    .filter((event) => getShouldShowEvent(event, eventTypesToFilterBy));
+    .filter(eventTypeFilter.getShouldShowEvent);
 
   const eventsByDate = filteredEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
@@ -438,7 +435,7 @@ const AllEventsList: FC = () => {
                 </ZUIText>
               </Box>
               <Switch
-                checked={eventTypesToFilterBy.includes(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
                 onChange={() => {
                   eventTypeFilter.toggleEventType(eventType);
                 }}

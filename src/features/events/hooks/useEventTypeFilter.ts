@@ -28,7 +28,6 @@ export const useEventTypeFilter = (
     setEventTypesToFilterBy: (eventTypes: (string | null)[]) => void;
   }
 ) => {
-  const messages = useMessages(messageIds.filterButtonLabels);
   const eventTypes = useMemo(() => {
     const uniqueTypes = new Set(events.map(getEventTypeFromEvent));
     return Array.from(uniqueTypes).sort((a, b) => {
@@ -42,6 +41,7 @@ export const useEventTypeFilter = (
     });
   }, [events, getEventTypeFromEvent]);
 
+  const messages = useMessages(messageIds.filterButtonLabels);
   const filterButtonLabel = messages.eventTypes({
     numEventTypes: state.eventTypesToFilterBy.length,
     singleEventType:
@@ -49,6 +49,22 @@ export const useEventTypeFilter = (
         ? getLabelFromEventType(state.eventTypesToFilterBy[0])
         : '',
   });
+
+  const getShouldShowEvent = useCallback(
+    (event: EventWithActivity) => {
+      if (state.eventTypesToFilterBy.length === 0) {
+        return true;
+      }
+      return state.eventTypesToFilterBy.includes(getEventTypeFromEvent(event));
+    },
+    [state.eventTypesToFilterBy]
+  );
+
+  const getIsCheckedEventType = useCallback(
+    (eventType: string | null) =>
+      state.eventTypesToFilterBy.includes(eventType),
+    [state.eventTypesToFilterBy]
+  );
 
   const toggleEventType = useCallback(
     (eventType: string | null) => {
@@ -68,24 +84,11 @@ export const useEventTypeFilter = (
     clearEventTypes,
     eventTypes,
     filterButtonLabel,
+    getIsCheckedEventType,
     getLabelFromEventType,
+    getShouldShowEvent,
     isFiltered: state.eventTypesToFilterBy.length > 0,
     shouldShowFilter: eventTypes.length > 1,
     toggleEventType,
   };
-};
-
-/*  
-  Filter logic for a single event.
-  We need to export this for reuse in the redux stores
-  where the return of the hook is not available 
-*/
-export const getShouldShowEvent = (
-  event: EventWithActivity,
-  eventTypesToFilterBy: (string | null)[]
-) => {
-  if (eventTypesToFilterBy.length === 0) {
-    return true;
-  }
-  return eventTypesToFilterBy.includes(getEventTypeFromEvent(event));
 };

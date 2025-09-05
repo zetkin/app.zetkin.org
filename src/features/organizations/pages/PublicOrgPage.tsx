@@ -36,7 +36,6 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
-import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
 type Props = {
   orgId: number;
@@ -49,21 +48,14 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const organization = useOrganization(orgId).data;
   const user = useUser();
   const dispatch = useAppDispatch();
-  const { allEvents, getDateRange, locationEvents } =
+  const { allEvents, getDateRange, locationEvents, eventTypeFilter } =
     useFilteredOrgEvents(orgId);
   const {
     customDatesToFilterBy,
     dateFilterState,
-    eventTypesToFilterBy,
     geojsonToFilterBy,
     orgIdsToFilterBy,
   } = useAppSelector((state) => state.organizations.filters);
-
-  const eventTypeFilter = useEventTypeFilter(allEvents, {
-    eventTypesToFilterBy,
-    setEventTypesToFilterBy: (newArray) =>
-      dispatch(filtersUpdated({ eventTypesToFilterBy: newArray })),
-  });
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
@@ -514,7 +506,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                 </ZUIText>
               </Box>
               <Switch
-                checked={eventTypesToFilterBy.includes(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
                 onChange={() => {
                   eventTypeFilter.toggleEventType(eventType);
                 }}
