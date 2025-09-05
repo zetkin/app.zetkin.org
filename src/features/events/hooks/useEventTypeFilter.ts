@@ -41,6 +41,10 @@ export const useEventTypeFilter = (
 
   const filterButtonLabel = messages.eventTypes({
     numEventTypes: state.eventTypesToFilterBy.length,
+    singleEventType:
+      state.eventTypesToFilterBy.length === 1
+        ? getLabelFromEventType(state.eventTypesToFilterBy[0])
+        : '',
   });
 
   const toggleEventType = useCallback(

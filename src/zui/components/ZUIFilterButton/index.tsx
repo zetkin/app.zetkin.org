@@ -40,7 +40,19 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
 
   const renderContent = () => {
     if (hasTextLabel) {
-      return <Typography variant="bodySmRegular">{label}</Typography>;
+      return (
+        <Typography
+          sx={{
+            maxWidth: '180px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+          variant="bodySmRegular"
+        >
+          {label}
+        </Typography>
+      );
     }
 
     const Icon = label;
