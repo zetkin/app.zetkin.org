@@ -74,9 +74,27 @@ export default makeMessages('feat.import', {
         },
       },
       ids: {
+        email: m('Email'),
         externalID: m('External ID'),
         externalIDInfo: m(
           'An external ID is an ID that comes from another system than Zetkin, such as a separate member database. It can be used to find and identify people in Zetkin.'
+        ),
+        importCheckboxDescription: m(
+          'The field will be used to find people that already exist in Zetkin, each row should ideally be unique'
+        ),
+        importCheckboxLabel: m<{ importID: string }>(
+          'Use {importID} as Import ID'
+        ),
+        importID: m('Import ID'),
+        importIDDescription: m<{ importID: string }>(
+          '{importID} can be used to find and idenfity people in Zetkin'
+        ),
+        skipRowDescription: m('No new people will be created'),
+        warningUsedImportID: m<{ importID: string }>(
+          '{importID} is currently set as the Import ID. To choose a different Import ID, first deselect {importID}'
+        ),
+        wrongEmailFormatWarning: m(
+          'The values in this column don’t look like valid emails. An email address must contain an ‘@’ symbol.'
         ),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
@@ -114,7 +132,7 @@ export default makeMessages('feat.import', {
         'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
       ),
       finishedMappingIds: m<{
-        idField: 'ext_id' | 'id';
+        idField: 'ext_id' | 'id' | 'email';
         numValues: number;
       }>(
         'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} other {external ID}}'
