@@ -25,6 +25,8 @@ const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
         ? globalMessages.personFields.id()
         : fieldKey === 'ext_id'
         ? globalMessages.personFields.ext_id()
+        : fieldKey === 'email'
+        ? globalMessages.personFields.email()
         : '';
   }
 
