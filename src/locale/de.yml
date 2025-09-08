@@ -285,8 +285,12 @@ feat:
             title: Erkläre der*m Organizer*in das Problem
             withMessageButton: Nachricht speichern
             withoutMessageButton: Weiter
+            wrongNumberMessages:
+              both: Beide Telefonnummern sind falsch.
+              phone: Die Telefonnummer ist falsch.
           summary:
             withMessage:
+              subtitle: Die*der Organizer*in wird deine Nachricht sehen.
               title: Du hast eine Nachricht an Organizer*in hinterlassen
             withoutMessage: Du hast keine Nachricht an Organizer*in hinterlassen
         successOrFailure:
@@ -567,10 +571,6 @@ feat:
     default:
       description: Leere Beschreibung
     households:
-      edit:
-        header: Bearbeiten
-        saveButtonLabel: Sichern
-        titleLabel: Titel bearbeiten
       single:
         subtitle: Etage
     instructions:
