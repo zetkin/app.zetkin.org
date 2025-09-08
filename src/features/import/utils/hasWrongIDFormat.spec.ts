@@ -105,4 +105,46 @@ describe('hasWrongIDFormat()', () => {
 
     expect(wrongIDFormat).toBe(true);
   });
+
+  it('returns false if all email values contain "@"', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'email',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Email', 'user@example.com', 'test@test.org'],
+      true
+    );
+
+    expect(wrongIDFormat).toBe(false);
+  });
+
+  it('returns true if any email value does not contain "@"', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'email',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Email', 'not-an-email', 'valid@example.com'],
+      true
+    );
+
+    expect(wrongIDFormat).toBe(true);
+  });
+
+  it('returns true if email value is empty', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'email',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Email', '', 'another@example.com'],
+      true
+    );
+
+    expect(wrongIDFormat).toBe(true);
+  });
 });

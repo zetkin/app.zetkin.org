@@ -28,6 +28,10 @@ export default function hasWrongIDFormat(
     }
     const stringValue = value.toString();
 
+    if (column.idField === 'email') {
+      return !stringValue.includes('@');
+    }
+
     const parsedToNumber = Number(stringValue);
     if (isNaN(parsedToNumber)) {
       return true;
