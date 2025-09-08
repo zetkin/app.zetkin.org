@@ -11,7 +11,7 @@ import { BadgeOutlined } from '@mui/icons-material';
 import { IDFieldColumn, ImportID } from 'features/import/utils/types';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useIDConfig from 'features/import/hooks/useIDConfig';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/import/l10n/messageIds';
 import useSheets from 'features/import/hooks/useSheets';
 import useImportID from 'features/import/hooks/useImportID';
@@ -27,6 +27,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   );
   const { importID, updateImportID } = useImportID();
   const { skipUnknown, updateSheetSettings } = useSheets();
+  const messages = useMessages(messageIds);
   const getIdLabel = (idField: ImportID) => {
     if (idField == 'id') {
       return 'Zetkin ID';
@@ -38,10 +39,6 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
       return '';
     }
   };
-
-  if (uiDataColumn.originalColumn.idField == 'id' && importID !== 'id') {
-    updateImportID('id');
-  }
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -66,7 +63,21 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
           </>
         )}
         {uiDataColumn.originalColumn.idField == 'email' && (
-          <Typography variant="h5">Email</Typography>
+          <>
+            <Typography variant="h5">
+              <Msg id={messageIds.configuration.configure.ids.email} />
+            </Typography>
+            {wrongIDFormat && (
+              <Alert severity="error">
+                <Msg
+                  id={
+                    messageIds.configuration.configure.ids
+                      .wrongEmailFormatWarning
+                  }
+                />
+              </Alert>
+            )}
+          </>
         )}
         {uiDataColumn.originalColumn.idField == 'ext_id' && (
           <>
@@ -80,19 +91,28 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
         )}
         <Box mt={2}>
           <Box alignItems="center" display="flex" gap={1}>
-            <Typography variant="h5">Import ID</Typography>
+            <Typography variant="h5">
+              <Msg id={messageIds.configuration.configure.ids.importID} />
+            </Typography>
             <BadgeOutlined color="secondary" fontSize="small" />
           </Box>
           <Typography>
-            {getIdLabel(uiDataColumn.originalColumn.idField) +
-              ' can be used to find and idenfity people in Zetkin.'}
+            <Msg
+              id={messageIds.configuration.configure.ids.importIDDescription}
+              values={{
+                importID: getIdLabel(uiDataColumn.originalColumn.idField),
+              }}
+            />
           </Typography>
         </Box>
         {importID && importID !== uiDataColumn.originalColumn.idField && (
           <Alert severity="error">
-            {getIdLabel(importID) +
-              ' is currently set as the Import ID. To choose a different Import ID, first deselect ' +
-              getIdLabel(importID)}
+            <Msg
+              id={messageIds.configuration.configure.ids.warningUsedImportID}
+              values={{
+                importID: getIdLabel(importID),
+              }}
+            />
           </Alert>
         )}
         <Box ml={2}>
@@ -107,13 +127,17 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   }
                 />
               }
-              label={`Use ${getIdLabel(
-                uiDataColumn.originalColumn.idField
-              )} as Import ID`}
+              label={messages.configuration.configure.ids.importCheckboxLabel({
+                importID: getIdLabel(uiDataColumn.originalColumn.idField),
+              })}
             />
             <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
-              The field will be used to find people that already exist in
-              Zetkin, each row should ideally be unique
+              <Msg
+                id={
+                  messageIds.configuration.configure.ids
+                    .importCheckboxDescription
+                }
+              />
             </Typography>
           </Box>
           <Box display="flex" flexDirection="column">
@@ -129,7 +153,9 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
               label={<Msg id={messageIds.configuration.settings.skipUnknown} />}
             />
             <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
-              No new people will be created
+              <Msg
+                id={messageIds.configuration.configure.ids.skipRowDescription}
+              />
             </Typography>
           </Box>
         </Box>
