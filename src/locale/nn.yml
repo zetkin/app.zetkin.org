@@ -753,11 +753,6 @@ feat:
         header: Opprett dører
         numberOfFloorsInput: Antall etasjer
         numberOfHouseholdsInput: Dører per etasje
-      edit:
-        floorLabel: Rediger etasje
-        header: Rediger {title}
-        saveButtonLabel: Lagre
-        titleLabel: Rediger tittel
       householdDefaultTitle: Dør {householdNumber}
       page:
         empty: Denne adressen har ingen dører ennå
