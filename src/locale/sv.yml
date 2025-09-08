@@ -751,11 +751,15 @@ feat:
     households:
       bulkEditHouseholds:
         floorLabel: Redigera våning
-        saveButtonLabel: Spara {numHouseholds, plural, one {1 household} andra {# households}}
+        header: Redigera {numHouseholds} hushåll
+        saveButtonLabel: Spara {numHouseholds} hushåll
       colorPicker:
-        inputLabel: Redigera hushållsfärg
+        colorNames:
+          undefined: ''
+        inputLabel: Redigera hushållets färg
         noColor: Ingen färg
       createMultiple:
+        createButtonLabel: Skapa {numHouseholds} hushåll
         header: Skapa hushåll
         numberOfFloorsInput: Antal våningar
         numberOfHouseholdsInput: Hushåll per våning
@@ -766,35 +770,38 @@ feat:
         titleLabel: Redigera titel
       householdDefaultTitle: Hushåll {householdNumber}
       page:
-        empty: Denna plats har ännu inga hushåll
+        empty: Denna plats har inga hushåll än
         header: Hushåll
       single:
         logVisitButtonLabel: Logga besök
         subtitle: Våning {floorNumber}
-        wasVisited: Detta hushåll har besökts i detta uppdrag
+        wasVisited: Detta hushåll har besökts i det här uppdraget
     instructions:
       areas: Områden
       instructionsHeader: Instruktioner
       ready: Du är redo att börja
       selectArea: Välj område
       start: Starta uppdrag
-      visitedHouseholds: Hushåll besökta
-      visitedLocations: Platser besökta
+      visitedHouseholds: Besökta hushåll
+      visitedLocations: Besökta platser
     location:
       edit:
         descriptionLabel: Redigera beskrivning
         header: Redigera {title}
         saveButtonLabel: Spara
         titleLabel: Redigera titel
-      header: '{numVisitedHouseholds}/{numHouseholds} {numHouseholds, plural, one
-        {household} andra {households}} besökta'
+      header: '{numVisitedHouseholds}/{numHouseholds} hushåll har besökts'
       page:
         historySectionHeader: Historik
-        householdVisitedStatLabel: hushåll besökta
+        householdVisitedStatLabel: besökta hushåll
         householdsButtonLabel: Hushåll
         householdsVisitedStat: '{numVisitedHouseholds} av {numHouseholds}'
         noHouseholds: Inga hushåll är registrerade här ännu
+        numberOfHouseholds: '{numHouseholds} hushåll'
         quickReportButtonLabel: Snabbrapport
+      subheader: '{successfulVisits, plural, one {1 lyckat besök} other {# lyckade
+        besök}}'
+
     map:
       addLocation:
         add: Lägg till plats
@@ -821,11 +828,12 @@ feat:
           you: Du
         sync:
           label:
-            hasLoaded: Synkroniserad {timestamp}
+            hasLoaded: Synkad {timestamp}
             neverLoaded: Aldrig inläst
           syncButton:
-            label: Synkronisera nu
-            loading: Synkroniserar
+            label: Synka nu
+            loading: Synkar
+
     visit:
       household:
         header: '{householdTitle}: Logga besök'
@@ -834,6 +842,8 @@ feat:
         submitReportButtonLabel: Skicka rapport
         yesButtonLabel: Ja
       location:
+        average: '{numHouseholds} hushåll, {avgFixed} i genomsnitt'
+        completed: '{numHouseholds} hushåll, {numYes} ja'
         header: Rapportera besök här
         noInputLabel: Nej
         proceedButtonLabel: Fortsätt
@@ -1850,8 +1860,9 @@ feat:
         removeFiltersButton: Rensa filter
       filterButtonLabels:
         locations: '{count} platser'
-        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} annan {#
-          organizations}}'
+        organizations: '{numOrgs, plural,=0 {Organisationer} =1 {1 organisation} other
+          {# organisationer}}'
+
         thisWeek: Denna vecka
         today: Idag
         tomorrow: Imorgon
@@ -1915,9 +1926,9 @@ feat:
         clear: Rensa
         title: Senaste organisationerna
     subOrgEventBlurb:
-      description: Det finns {eventsElem} {numEvents, plural, =1 {additional event}
-        andra {additional events}} i {orgsElem} {numOrgs, plural, =1
-        {suborganization} andra {suborganizations}}.
+      description: Det finns {eventsElem} {numEvents, plural, =1 {till event} other
+        {andra event}} i {orgsElem} {numOrgs, plural, =1 {underorganisation}
+        other {underorganisationer}}.
       headline: Utforska mer
       showButton: Visa alla events
   profile:
@@ -2061,7 +2072,7 @@ feat:
           description: Vem anmälde sig? Vem blev bokad? Vem blev det inte? Hitta dem!
           title: Deltagande i events
         email_blacklist:
-          description: Studsade, felaktig adress, ej mottaget - här är dem.
+          description: Studsade, felaktig adress, ej mottaget - här är de.
           title: Personer som är blockerade från e-post
         email_click:
           description: Klickade de? Klickade de inte?
@@ -2117,6 +2128,8 @@ feat:
           'true': en lista på alla personer i organisationen
       allInSuborg:
         examples:
+          one: Lägg till alla i den specifika underorganisationen Lillstads
+            lokalavdelning.
           two: Ta bort alla som finns i någon underorganisation.
         inputString:
           any: '{addRemoveSelect} alla som finns i {suborgScopeSelect}.'
@@ -2130,7 +2143,7 @@ feat:
           single: den specifika underorganisationen
       callBlocked:
         inputString: '{addRemoveSelect} personer som är blockerade från att ringa av
-          någon som helst anledning'
+          vilken anledning som helst'
       callHistory:
         assignmentSelect:
           any: något ringuppdrag
@@ -2167,7 +2180,9 @@ feat:
         haveSelect:
           in: har
           notin: inte har
-        inputString: ''
+        inputString: '{addRemoveSelect} alla som {haveSelect} {bookedSelect}
+          {statusSelect} på event i {campaignSelect} av typen {activitySelect}
+          på {locationSelect} {timeFrame}'
         locationSelect:
           any: vilken plats som helst
           location: platsen "{location}"
