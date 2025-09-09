@@ -29,6 +29,9 @@ import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
+import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
+
+const initializeEventTypesToFilterBy = () => [] as (string | null)[];
 
 const AllEventsList: FC = () => {
   const intl = useIntl();
@@ -37,15 +40,23 @@ const AllEventsList: FC = () => {
   const nextDelay = useIncrementalDelay();
 
   const [drawerContent, setDrawerContent] = useState<
-    'orgs' | 'calendar' | null
+    'orgs' | 'calendar' | 'eventTypes' | null
   >(null);
   const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
+  const [eventTypesToFilterBy, setEventTypesToFilterBy] = useState(
+    initializeEventTypesToFilterBy()
+  );
   const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
     DateRange<Dayjs>
   >([null, null]);
   const [dateFilterState, setDateFilterState] = useState<
     'today' | 'tomorrow' | 'thisWeek' | 'custom' | null
   >(null);
+
+  const eventTypeFilter = useEventTypeFilter(allEvents, {
+    eventTypesToFilterBy,
+    setEventTypesToFilterBy,
+  });
 
   const orgs = [
     ...new Map(
@@ -119,7 +130,8 @@ const AllEventsList: FC = () => {
           (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
         return isOngoing || startsInPeriod || endsInPeriod;
       }
-    });
+    })
+    .filter(eventTypeFilter.getShouldShowEvent);
 
   const eventsByDate = filteredEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
@@ -151,7 +163,8 @@ const AllEventsList: FC = () => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-  const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
+  const isFiltered =
+    orgIdsToFilterBy.length || !!dateFilterState || eventTypeFilter.isFiltered;
 
   const filters = [
     {
@@ -207,6 +220,16 @@ const AllEventsList: FC = () => {
           },
         ]
       : []),
+    ...(eventTypeFilter.shouldShowFilter
+      ? [
+          {
+            active: eventTypeFilter.isFiltered,
+            key: 'eventTypes',
+            label: eventTypeFilter.filterButtonLabel,
+            onClick: () => setDrawerContent('eventTypes'),
+          },
+        ]
+      : []),
   ].sort((a, b) => {
     if (a.active && !b.active) {
       return -1;
@@ -243,6 +266,7 @@ const AllEventsList: FC = () => {
                 setDateFilterState(null);
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
+                eventTypeFilter.clearEventTypes();
               }}
             />
           )}
@@ -276,6 +300,7 @@ const AllEventsList: FC = () => {
               onClick={() => {
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
+                eventTypeFilter.clearEventTypes();
                 setDateFilterState(null);
               }}
               variant="secondary"
@@ -388,6 +413,31 @@ const AllEventsList: FC = () => {
                       orgIdsToFilterBy.filter((id) => id != org.id)
                     );
                   }
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'eventTypes'}
+      >
+        <List>
+          {eventTypeFilter.eventTypes.map((eventType) => (
+            <ListItem
+              key={eventTypeFilter.getLabelFromEventType(eventType)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIText>
+                  {eventTypeFilter.getLabelFromEventType(eventType)}
+                </ZUIText>
+              </Box>
+              <Switch
+                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                onChange={() => {
+                  eventTypeFilter.toggleEventType(eventType);
                 }}
               />
             </ListItem>

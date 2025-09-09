@@ -48,7 +48,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const organization = useOrganization(orgId).data;
   const user = useUser();
   const dispatch = useAppDispatch();
-  const { allEvents, getDateRange, locationEvents } =
+  const { allEvents, getDateRange, locationEvents, eventTypeFilter } =
     useFilteredOrgEvents(orgId);
   const {
     customDatesToFilterBy,
@@ -60,7 +60,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const [drawerContent, setDrawerContent] = useState<
-    'orgs' | 'calendar' | null
+    'orgs' | 'calendar' | 'eventTypes' | null
   >(null);
 
   const orgs = [
@@ -72,9 +72,10 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   ].sort((a, b) => a.title.localeCompare(b.title));
 
   const isFiltered =
-    !!orgIdsToFilterBy.length ||
+    !!dateFilterState ||
+    eventTypeFilter.isFiltered ||
     !!geojsonToFilterBy.length ||
-    !!dateFilterState;
+    !!orgIdsToFilterBy.length;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -172,6 +173,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               numOrgs: orgIdsToFilterBy.length,
             }),
             onClick: () => setDrawerContent('orgs'),
+          },
+        ]
+      : []),
+    ...(eventTypeFilter.shouldShowFilter
+      ? [
+          {
+            active: eventTypeFilter.isFiltered,
+            key: 'eventTypes',
+            label: eventTypeFilter.filterButtonLabel,
+            onClick: () => setDrawerContent('eventTypes'),
           },
         ]
       : []),
@@ -276,7 +287,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
               active={true}
               circular
               label={Clear}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
@@ -284,8 +295,9 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                     geojsonToFilterBy: [],
                     orgIdsToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypes();
+              }}
             />
           )}
           {filters.map((filter) => (
@@ -315,15 +327,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           {isFiltered && (
             <ZUIButton
               label={messages.allEventsList.emptyList.removeFiltersButton()}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
                     orgIdsToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypes();
+              }}
               variant="secondary"
             />
           )}
@@ -471,6 +484,31 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                       })
                     );
                   }
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'eventTypes'}
+      >
+        <List>
+          {eventTypeFilter.eventTypes.map((eventType) => (
+            <ListItem
+              key={eventTypeFilter.getLabelFromEventType(eventType)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIText>
+                  {eventTypeFilter.getLabelFromEventType(eventType)}
+                </ZUIText>
+              </Box>
+              <Switch
+                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                onChange={() => {
+                  eventTypeFilter.toggleEventType(eventType);
                 }}
               />
             </ListItem>

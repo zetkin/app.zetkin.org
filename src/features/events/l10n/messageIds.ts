@@ -182,6 +182,11 @@ export default makeMessages('feat.events', {
     scheduled: m('Scheduled'),
     unknown: m('Unknown'),
   },
+  filterButtonLabels: {
+    eventTypes: m<{ numEventTypes: number; singleEventType: string }>(
+      '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}} other {# event types}}'
+    ),
+  },
   list: {
     events: m('Events'),
     noEvents: m('No events...'),
