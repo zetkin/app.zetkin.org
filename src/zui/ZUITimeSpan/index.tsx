@@ -10,13 +10,16 @@ type ZUITimeSpanProps = {
   start: Date;
 };
 
-const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => { 
+const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
   const isToday = start.toDateString() === new Date().toDateString();
   const endsOnSameDay = start.toDateString() === end.toDateString();
   const endsOnToday = end.toDateString() === new Date().toDateString();
-  
+
   const startTime = <FormattedTime value={start} />;
   const endTime = <FormattedTime value={end} />;
+
+  const startDate = <FormattedDate dateStyle="medium" value={start} />;
+  const endDate = <FormattedDate dateStyle="medium" value={end} />;
 
   if (isToday && isAllDay(start.toISOString(), end.toDateString())) {
     return <Msg id={messageIds.timeSpan.singleDayAllDay} />;
@@ -37,9 +40,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
               id={messageIds.timeSpan.multiDayToday}
               values={{
                 end: endTime,
-                endDate: (
-                  <FormattedDate dateStyle='medium' value={end} />
-                ),
+                endDate: endDate,
                 start: startTime,
               }}
             />
@@ -52,9 +53,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
             <Msg
               id={messageIds.timeSpan.singleDay}
               values={{
-                date: (
-                  <FormattedDate day="numeric" month="long" year='2-digit' value={start} />
-                ),
+                date: startDate,
                 end: endTime,
                 start: startTime,
               }}
@@ -68,9 +67,7 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
                   values={{
                     end: endTime,
                     start: startTime,
-                    startDate: (
-                      <FormattedDate day="numeric" month="long" year='2-digit' value={start} />
-                    ),
+                    startDate: startDate,
                   }}
                 />
               )}
@@ -79,13 +76,9 @@ const ZUITimeSpan: FC<ZUITimeSpanProps> = ({ end, start }) => {
                   id={messageIds.timeSpan.multiDay}
                   values={{
                     end: endTime,
-                    endDate: (
-                      <FormattedDate day="numeric" month="long" year='2-digit' value={end} />
-                    ),
+                    endDate: endDate,
                     start: startTime,
-                    startDate: (
-                      <FormattedDate day="numeric" month="long" year='2-digit' value={start} />
-                    ),
+                    startDate: startDate,
                   }}
                 />
               )}
