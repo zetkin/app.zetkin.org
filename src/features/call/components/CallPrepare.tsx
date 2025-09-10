@@ -4,10 +4,11 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import useCurrentCall from '../hooks/useCurrentCall';
-import InstructionsSection from './InstructionsSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import AboutSection from './AboutSection';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import ZUIDivider from 'zui/components/ZUIDivider';
+import InstructionsSection from './InstructionsSection';
 
 type CallPrepareProps = {
   assignment: ZetkinCallAssignment;
@@ -25,14 +26,19 @@ const CallPrepare: FC<CallPrepareProps> = ({ assignment }) => {
     <Box
       display="flex"
       flexDirection={isMobile ? 'column' : 'row'}
-      width="100%"
+      height="calc(100% - 127px)" //TODO: Change this if/when header height is updated
+      maxWidth="100%"
     >
-      <Box flex={isMobile ? 'none' : '6'} order={isMobile ? 1 : 2} p={2}>
-        <AboutSection call={call} />
-      </Box>
-
-      <Box flex={isMobile ? 'none' : '4'} order={isMobile ? 2 : 1} p={2}>
+      <Box
+        sx={{ flex: 1, height: '100%', maxHeight: '100%', overflowY: 'auto' }}
+      >
         <InstructionsSection instructions={assignment.instructions} />
+      </Box>
+      <ZUIDivider flexItem orientation="vertical" />
+      <Box
+        sx={{ flex: 1, height: '100%', maxHeight: '100%', overflowY: 'auto' }}
+      >
+        <AboutSection call={call} />
       </Box>
     </Box>
   );

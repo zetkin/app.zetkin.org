@@ -11,6 +11,8 @@ type Props = {
 const InstructionsSection: FC<Props> = ({ instructions }) => {
   return (
     <ZUISection
+      borders={false}
+      fullHeight
       renderContent={() => (
         <ZUIText component="div">
           {instructions ? (

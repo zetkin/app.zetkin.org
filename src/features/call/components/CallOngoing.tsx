@@ -9,9 +9,7 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import AboutSection from './AboutSection';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIDivider from 'zui/components/ZUIDivider';
-import ZUISection from 'zui/components/ZUISection';
-import ZUIText from 'zui/components/ZUIText';
-import ZUIMarkdown from 'zui/ZUIMarkdown';
+import InstructionsSection from './InstructionsSection';
 
 type CallOngoingProps = {
   assignment: ZetkinCallAssignment;
@@ -36,20 +34,7 @@ const CallOngoing: FC<CallOngoingProps> = ({ assignment }) => {
       <Box
         sx={{ flex: 1, height: '100%', maxHeight: '100%', overflowY: 'auto' }}
       >
-        <ZUISection
-          borders={false}
-          fullHeight
-          renderContent={() => (
-            <ZUIText component="div">
-              {assignment.instructions ? (
-                <ZUIMarkdown markdown={assignment.instructions} />
-              ) : (
-                "This assignment doesn't have instructions."
-              )}
-            </ZUIText>
-          )}
-          title={'Instructions'}
-        />{' '}
+        <InstructionsSection instructions={assignment.instructions} />
       </Box>
       <ZUIDivider flexItem orientation="vertical" />
       <Box
