@@ -29,8 +29,16 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   return (
     <ZUISection
+      borders={false}
+      fullHeight
       renderContent={() => (
-        <Box display="flex" flexDirection="column" gap={1}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+          }}
+        >
           {events.map((event, index) => (
             <EventCard key={index} event={event} target={target} />
           ))}

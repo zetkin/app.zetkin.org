@@ -16,6 +16,8 @@ type AboutSectionProps = {
 const AboutSection: FC<AboutSectionProps> = ({ call }) => {
   return (
     <ZUISection
+      borders={false}
+      fullHeight
       renderContent={() => (
         <>
           <TargetInfo call={call} />

@@ -6,9 +6,12 @@ import { Box } from '@mui/system';
 import ActivitiesSection from './ActivitiesSection';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import useCurrentCall from '../hooks/useCurrentCall';
-import InstructionsSection from './InstructionsSection';
 import AboutSection from './AboutSection';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import ZUIDivider from 'zui/components/ZUIDivider';
+import ZUISection from 'zui/components/ZUISection';
+import ZUIText from 'zui/components/ZUIText';
+import ZUIMarkdown from 'zui/ZUIMarkdown';
 
 type CallOngoingProps = {
   assignment: ZetkinCallAssignment;
@@ -27,16 +30,38 @@ const CallOngoing: FC<CallOngoingProps> = ({ assignment }) => {
     <Box
       display="flex"
       flexDirection={isMobile ? 'column' : 'row'}
-      width="100%"
+      height="calc(100% - 127px)" //TODO: Change this if/when header height is updated
+      maxWidth="100%"
     >
-      <Box flex={isMobile ? 'none' : '6'} order={isMobile ? 1 : 2} p={2}>
-        <ActivitiesSection assignment={assignment} target={call.target} />
+      <Box
+        sx={{ flex: 1, height: '100%', maxHeight: '100%', overflowY: 'auto' }}
+      >
+        <ZUISection
+          borders={false}
+          fullHeight
+          renderContent={() => (
+            <ZUIText component="div">
+              {assignment.instructions ? (
+                <ZUIMarkdown markdown={assignment.instructions} />
+              ) : (
+                "This assignment doesn't have instructions."
+              )}
+            </ZUIText>
+          )}
+          title={'Instructions'}
+        />{' '}
       </Box>
-      <Box flex={isMobile ? 'none' : '4'} order={isMobile ? 2 : 1} p={2}>
+      <ZUIDivider flexItem orientation="vertical" />
+      <Box
+        sx={{ flex: 1, height: '100%', maxHeight: '100%', overflowY: 'auto' }}
+      >
         <AboutSection call={call} />
-        <Box mt={2}>
-          <InstructionsSection instructions={assignment.instructions} />
-        </Box>
+      </Box>
+      <ZUIDivider flexItem orientation="vertical" />
+      <Box
+        sx={{ flex: 1, maxHeight: '100%', maxWidth: 1 / 3, overflowY: 'auto' }}
+      >
+        <ActivitiesSection assignment={assignment} target={call.target} />
       </Box>
     </Box>
   );

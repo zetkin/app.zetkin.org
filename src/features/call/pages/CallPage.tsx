@@ -49,7 +49,12 @@ const CallPage: FC<Props> = ({ assignment }) => {
   }
 
   return (
-    <Box>
+    <Box
+      sx={{
+        height: '100dvh',
+        overflow: 'hidden',
+      }}
+    >
       {lane.step == LaneStep.STATS && (
         <>
           <StatsHeader assignment={assignment} />
