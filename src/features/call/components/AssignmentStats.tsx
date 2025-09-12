@@ -14,6 +14,8 @@ const AssignmentStats: FC<Props> = ({ stats }) => {
   const isMobile = useIsMobile();
   return (
     <ZUISection
+      borders={false}
+      fullHeight
       renderContent={() => (
         <>
           {isMobile && (

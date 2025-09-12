@@ -11,7 +11,7 @@ import SurveyCard from './SurveyCard';
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
-  target: ZetkinCallTarget;
+  target: ZetkinCallTarget | null;
 };
 
 const ActivitiesSection: FC<ActivitiesSectionProps> = ({
@@ -31,23 +31,28 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     <ZUISection
       borders={false}
       fullHeight
-      renderContent={() => (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1,
-          }}
-        >
-          {events.map((event, index) => (
-            <EventCard key={index} event={event} target={target} />
-          ))}
-          {activeSurveys.map((survey, index) => (
-            <SurveyCard key={index} survey={survey} />
-          ))}
-        </Box>
-      )}
-      subtitle={`Acting as ${target.first_name}`}
+      renderContent={() => {
+        if (!target) {
+          return <Box sx={{ height: '200px' }} />;
+        }
+        return (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+            }}
+          >
+            {events.map((event, index) => (
+              <EventCard key={index} event={event} target={target} />
+            ))}
+            {activeSurveys.map((survey, index) => (
+              <SurveyCard key={index} survey={survey} />
+            ))}
+          </Box>
+        );
+      }}
+      subtitle={`Acting as ${target?.first_name}`}
       title="Activities"
     />
   );
