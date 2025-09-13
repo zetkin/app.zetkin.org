@@ -1,6 +1,10 @@
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import {
+  asLatitude,
+  asLongitude,
+} from '../../../features/areas/utils/asLongitudeLatitude';
 
 const event: ZetkinEvent = {
   activity: {
@@ -19,8 +23,8 @@ const event: ZetkinEvent = {
   info_text: 'Info text is informational',
   location: {
     id: 1,
-    lat: 51.192702,
-    lng: 12.284873,
+    lat: asLatitude(51.192702),
+    lng: asLongitude(12.284873),
     title: 'Dorfplatz',
   },
   num_participants_available: 3,

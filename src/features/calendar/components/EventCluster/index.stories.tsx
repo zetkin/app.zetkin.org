@@ -5,6 +5,10 @@ import mockEvent from 'utils/testing/mocks/mockEvent';
 import MultiLocation from './MultiLocation';
 import MultiShift from './MultiShift';
 import Single from './Single';
+import {
+  asLatitude,
+  asLongitude,
+} from 'features/areas/utils/asLongitudeLatitude';
 
 export default {
   component: Single,
@@ -60,8 +64,8 @@ singleEvent.args = {
     cancelled: '2023-01-01',
     location: {
       id: 1,
-      lat: 51.192702,
-      lng: 12.284873,
+      lat: asLatitude(51.192702),
+      lng: asLongitude(12.284873),
       title: 'Hööööör',
     },
     num_participants_available: 16,
@@ -80,8 +84,8 @@ multiLocationEvent.args = {
     mockEvent({
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,
@@ -91,8 +95,8 @@ multiLocationEvent.args = {
     mockEvent({
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Malmö',
       },
       num_participants_available: 16,
@@ -113,8 +117,8 @@ multiShiftEvent.args = {
       end_time: '2022-06-16T11:00:00+00:00',
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,
@@ -126,8 +130,8 @@ multiShiftEvent.args = {
       end_time: '2022-06-16T13:00:00+00:00',
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,
@@ -139,8 +143,8 @@ multiShiftEvent.args = {
       end_time: '2022-06-16T15:00:00+00:00',
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,
@@ -162,8 +166,8 @@ arbitraryCluster.args = {
       end_time: '2022-06-16T11:00:00+00:00',
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,
@@ -175,8 +179,8 @@ arbitraryCluster.args = {
       end_time: '2022-06-16T13:00:00+00:00',
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,
@@ -188,8 +192,8 @@ arbitraryCluster.args = {
       end_time: '2022-06-16T15:00:00+00:00',
       location: {
         id: 1,
-        lat: 51.192702,
-        lng: 12.284873,
+        lat: asLatitude(51.192702),
+        lng: asLongitude(12.284873),
         title: 'Hööööör',
       },
       num_participants_available: 16,

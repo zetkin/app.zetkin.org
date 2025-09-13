@@ -2,6 +2,7 @@ import { CLUSTER_TYPE } from 'features/campaigns/hooks/useClusteredActivities';
 import clusterEventsForWeekCalender from './clusterEventsForWeekCalender';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
+import { asLatitude, asLongitude } from '../../areas/utils/asLongitudeLatitude';
 
 const mockEventData: ZetkinEvent = {
   activity: {
@@ -20,8 +21,8 @@ const mockEventData: ZetkinEvent = {
   info_text: '',
   location: {
     id: 1,
-    lat: 0,
-    lng: 0,
+    lat: asLatitude(0),
+    lng: asLongitude(0),
     title: 'Dorfplatz',
   },
   num_participants_available: 0,
@@ -163,49 +164,49 @@ describe('doArbitraryClustering()', () => {
       mockEvent(1, {
         // 10:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 1, lat: 0, lng: 0, title: '' },
+        location: { id: 1, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T10:00:00.000Z',
       }),
       mockEvent(2, {
         // 10:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 2, lat: 0, lng: 0, title: '' },
+        location: { id: 2, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T10:00:00.000Z',
       }),
       mockEvent(3, {
         // 11:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 3, lat: 0, lng: 0, title: '' },
+        location: { id: 3, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T11:00:00.000Z',
       }),
       mockEvent(4, {
         // 11:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 4, lat: 0, lng: 0, title: '' },
+        location: { id: 4, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T11:00:00.000Z',
       }),
       mockEvent(5, {
         // 12:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 5, lat: 0, lng: 0, title: '' },
+        location: { id: 5, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T12:00:00.000Z',
       }),
       mockEvent(6, {
         // 12:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 6, lat: 0, lng: 0, title: '' },
+        location: { id: 6, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T12:00:00.000Z',
       }),
       mockEvent(7, {
         // 13:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 7, lat: 0, lng: 0, title: '' },
+        location: { id: 7, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T13:00:00.000Z',
       }),
       mockEvent(8, {
         // 13:00 - 14:00
         end_time: '1857-07-05T14:00:00.000Z',
-        location: { id: 8, lat: 0, lng: 0, title: '' },
+        location: { id: 8, lat: asLatitude(0), lng: asLongitude(0), title: '' },
         start_time: '1857-07-05T13:00:00.000Z',
       }),
     ]);

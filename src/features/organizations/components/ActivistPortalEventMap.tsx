@@ -56,10 +56,7 @@ export const ActivistPortalEventMap: FC<
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .map((location) => [
-            location.lng as Longitude,
-            location.lat as Latitude,
-          ])
+          .map((location) => [location.lng, location.lat])
       ) ?? undefined,
     [events]
   );
@@ -80,7 +77,7 @@ export const ActivistPortalEventMap: FC<
             }
             acc[key].count += 1;
             return acc;
-          }, {} as Record<string, { count: number; id: number; lat: number; lng: number }>)
+          }, {} as Record<string, { count: number; id: number; lat: Latitude; lng: Longitude }>)
       ),
     [events]
   );
