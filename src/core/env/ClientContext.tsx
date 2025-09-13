@@ -23,6 +23,7 @@ import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -73,8 +74,16 @@ const ClientContext: FC<ClientContextProps> = ({
                     locale={lang}
                     messages={messages}
                   >
-                    <CssBaseline />
-                    {children}
+                    <ZUISnackbarProvider>
+                      <IntlProvider
+                        defaultLocale="en"
+                        locale={lang}
+                        messages={messages}
+                      >
+                        <CssBaseline />
+                        {children}
+                      </IntlProvider>
+                    </ZUISnackbarProvider>
                   </IntlProvider>
                 </LocalizationProvider>
               </UserProvider>

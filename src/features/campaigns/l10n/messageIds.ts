@@ -161,6 +161,8 @@ export default makeMessages('feat.campaigns', {
   },
   noManager: m('No Project Manager'),
   publicProjectPage: {
+    calendarLinkCopied: m('Successfully copied calendar link'),
+    copyIcsUrl: m('Copy calendar subscription URL'),
     eventList: {
       emptyList: {
         message: m('Could not find any events'),
