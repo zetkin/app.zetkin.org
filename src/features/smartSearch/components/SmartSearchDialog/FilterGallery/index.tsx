@@ -19,6 +19,9 @@ import {
   FILTER_CATEGORY,
   FILTER_TYPE,
 } from 'features/smartSearch/components/types';
+import useCustomFields from 'features/profile/hooks/useCustomFields';
+import { useNumericRouteParams } from 'core/hooks';
+import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 
 interface FilterGalleryProps {
   onCancelAddNewFilter: () => void;
@@ -31,8 +34,18 @@ const FilterGallery = ({
 }: FilterGalleryProps): JSX.Element => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { orgId } = useNumericRouteParams();
+  const customFields = useCustomFields(orgId);
 
   const choiceContainerRef = useRef<HTMLDivElement>();
+
+  const showFilter = (filter: FILTER_TYPE) => {
+    if (filter == FILTER_TYPE.AREA) {
+      return customFields.data?.some(e => e.type == CUSTOM_FIELD_TYPE.LNGLAT);
+    }
+    
+    return true;
+  }
 
   return (
     <>
@@ -123,7 +136,7 @@ const FilterGallery = ({
                 </Typography>
 
                 <Grid container paddingTop={2} spacing={3}>
-                  {categoryData.filters.map((filter) => (
+                  {categoryData.filters.filter(showFilter).map((filter) => (
                     <Grid key={filter} size={{ lg: 4, sm: 6, xs: 12 }}>
                       <FilterGalleryCard
                         colors={categoryData.colors}

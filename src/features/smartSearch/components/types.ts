@@ -132,11 +132,6 @@ export enum TASK_STATUS {
  */
 export type DefaultFilterConfig = Record<string, never>; // Default filter config is an empty object
 
-export interface Area {
-  operator: AREA_OPERATOR;
-  area: number;
-}
-
 export interface CallBlockedFilterConfig {
   organizations?: FilterConfigOrgOptions;
   reason:
