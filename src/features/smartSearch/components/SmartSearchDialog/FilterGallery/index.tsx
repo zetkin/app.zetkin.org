@@ -41,11 +41,11 @@ const FilterGallery = ({
 
   const showFilter = (filter: FILTER_TYPE) => {
     if (filter == FILTER_TYPE.AREA) {
-      return customFields.data?.some(e => e.type == CUSTOM_FIELD_TYPE.LNGLAT);
+      return customFields.data?.some((e) => e.type == CUSTOM_FIELD_TYPE.LNGLAT);
     }
-    
+
     return true;
-  }
+  };
 
   return (
     <>

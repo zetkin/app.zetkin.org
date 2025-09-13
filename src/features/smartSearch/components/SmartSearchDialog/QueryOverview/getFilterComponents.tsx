@@ -252,7 +252,6 @@ export default function getFilterComponents(
     );
     filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
   }
-  console.log(filter.type);
 
   return {
     displayFilter,

@@ -205,17 +205,18 @@ export default makeMessages('feat.smartSearch', {
         one: m('Add everyone who is within Malmö'),
         two: m('Remove everyone who is outside Copenhagen'),
       },
-      slice: {
-        in: m('within'),
-        out: m('outside'),
-      },
       inputString: m<{
+        addRemoveSelect: ReactElement;
         areaSelect: ReactElement;
         lnglatFieldSelect: ReactElement;
         withinOutsideSelect: ReactElement;
       }>(
-        'Select everyone who is {withinOutsideSelect} {areaSelect} based on their {lnglatFieldSelect}'
+        '{addRemoveSelect} everyone who is {withinOutsideSelect} {areaSelect} based on their {lnglatFieldSelect}'
       ),
+      slice: {
+        in: m('within'),
+        out: m('outside'),
+      },
     },
     callBlocked: {
       inputString: m<{ addRemoveSelect: ReactElement }>(

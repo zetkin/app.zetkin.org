@@ -1,23 +1,20 @@
-import { FC, useState } from 'react';
-import { Chip, MenuItem } from '@mui/material';
+import { FC } from 'react';
+import { MenuItem } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
 import {
-  AllInSuborgFilterConfig,
   NewSmartSearchFilter,
-  OPERATION,
   SmartSearchFilterWithId,
   AREA_OPERATOR,
   ZetkinSmartSearchFilter,
   AreaFilterConfig,
+  OPERATION,
 } from '../../types';
 import StyledSelect from '../../inputs/StyledSelect';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { useNumericRouteParams } from 'core/hooks';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
-import StyledItemSelect from '../../inputs/StyledItemSelect';
 import useAreas from 'features/areas/hooks/useAreas';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
@@ -45,7 +42,6 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
       operator: AREA_OPERATOR.IN,
     }
   );
-  console.log(filter, areas, customFields);
 
   const lnglatFields =
     customFields.filter((e) => e.type == CUSTOM_FIELD_TYPE.LNGLAT) || [];
@@ -55,8 +51,21 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
     setConfig({
       ...filter.config,
       field: initialLnglatField,
-    })
+    });
   }
+
+  const addRemoveSelect = (
+    <StyledSelect
+      onChange={(e) => setOp(e.target.value as OPERATION)}
+      value={filter.op}
+    >
+      {Object.values(OPERATION).map((o) => (
+        <MenuItem key={o} value={o}>
+          <Msg id={messageIds.operators[o]} />
+        </MenuItem>
+      ))}
+    </StyledSelect>
+  );
 
   const withinOutsideSelect = (
     <StyledSelect
@@ -78,7 +87,6 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
 
   const areaSelect = (
     <StyledSelect
-      value={filter.config.area}
       onChange={(ev) => {
         const areaId = parseInt(ev.target.value);
         setConfig({
@@ -86,6 +94,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
           area: areaId,
         });
       }}
+      value={filter.config.area}
     >
       {areas.map((area) => (
         <MenuItem key={area.id} value={area.id}>
@@ -97,13 +106,13 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
 
   const lnglatFieldSelect = (
     <StyledSelect
-      value={filter.config.field}
       onChange={(ev) => {
         setConfig({
           ...filter.config,
           field: ev.target.value,
         });
       }}
+      value={filter.config.field}
     >
       {lnglatFields.map((field) => (
         <MenuItem key={field.slug} value={field.slug}>
@@ -133,6 +142,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
           <Msg
             id={messageIds.filters.area.inputString}
             values={{
+              addRemoveSelect,
               areaSelect,
               lnglatFieldSelect,
               withinOutsideSelect,
