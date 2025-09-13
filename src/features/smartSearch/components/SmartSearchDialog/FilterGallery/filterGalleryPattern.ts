@@ -43,7 +43,8 @@ const PATTERN_TEMPLATES = {
   },
   pattern17: {
     background:
-      'conic-gradient(from -45deg,#28D4D7 90deg,#0000 0 180deg,#93E9EB 0 270deg,#0000 0) 0 calc(30px/2)/30px 15px',
+      'conic-gradient(at 32px 32px, $strongColor 0deg, $strongColor 25deg, transparent 25deg) 0 32px, conic-gradient(at 32px 32px, transparent 0deg, transparent 336deg, $strongColor 336deg, $strongColor 360deg) 0 32px, linear-gradient(transparent 0%,transparent 50%, $paleColor 50%, $paleColor 100%), radial-gradient(circle at 32px 32px, $strongColor 32%, transparent 16%), $paleColor',
+    backgroundSize: 'calc(2*32px) calc(2*32px)',
   },
   pattern2: {
     background:
