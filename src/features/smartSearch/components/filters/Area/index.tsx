@@ -36,21 +36,27 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
   const { orgId } = useNumericRouteParams();
   const areas = useAreas(orgId).data || [];
   const customFields = useCustomFields(orgId).data || [];
-  console.log(areas, customFields);
 
   const { filter, setConfig, setOp } = useSmartSearchFilter<AreaFilterConfig>(
     initialFilter,
     {
-      area: -1,
+      area: 0,
       field: '',
       operator: AREA_OPERATOR.IN,
     }
   );
+  console.log(filter, areas, customFields);
 
   const lnglatFields =
     customFields.filter((e) => e.type == CUSTOM_FIELD_TYPE.LNGLAT) || [];
   const initialLnglatField: string =
     lnglatFields && lnglatFields?.length != 0 ? lnglatFields[0].slug : '';
+  if (!filter.config.field) {
+    setConfig({
+      ...filter.config,
+      field: initialLnglatField,
+    })
+  }
 
   const withinOutsideSelect = (
     <StyledSelect
@@ -72,7 +78,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
 
   const areaSelect = (
     <StyledSelect
-      defaultValue={areas[0]?.id}
+      value={filter.config.area}
       onChange={(ev) => {
         const areaId = parseInt(ev.target.value);
         setConfig({
@@ -91,7 +97,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
 
   const lnglatFieldSelect = (
     <StyledSelect
-      defaultValue={initialLnglatField}
+      value={filter.config.field}
       onChange={(ev) => {
         setConfig({
           ...filter.config,
@@ -109,6 +115,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
 
   return (
     <FilterForm
+      disableSubmit={filter.config.area == 0}
       onCancel={() => onCancel()}
       onSubmit={(ev) => {
         ev.preventDefault();
