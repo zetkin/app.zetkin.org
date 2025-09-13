@@ -46,6 +46,7 @@ import DisplayUser from '../../filters/User/DisplayUser';
 import {
   AllInSuborgFilterConfig,
   AnyFilterConfig,
+  AreaFilterConfig,
   CallBlockedFilterConfig,
   CallHistoryFilterConfig,
   CampaignParticipationConfig,
@@ -72,6 +73,7 @@ import {
 } from 'features/smartSearch/components/types';
 import DisplayJoinForm from '../../filters/JoinForm/DisplayJoinForm';
 import DisplayAllInSuborg from '../../filters/AllInSubOrg/DisplayAllInSuborg';
+import DisplayInArea from '../../filters/Area/DisplayInArea';
 
 export default function getFilterComponents(
   filter: SmartSearchFilterWithId<AnyFilterConfig>
@@ -242,7 +244,15 @@ export default function getFilterComponents(
       />
     );
     filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
+  } else if (filter.type == FILTER_TYPE.AREA) {
+    displayFilter = (
+      <DisplayInArea
+        filter={filter as SmartSearchFilterWithId<AreaFilterConfig>}
+      />
+    );
+    filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
   }
+  console.log(filter.type);
 
   return {
     displayFilter,

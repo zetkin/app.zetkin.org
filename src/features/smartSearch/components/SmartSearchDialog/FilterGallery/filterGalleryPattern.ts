@@ -41,6 +41,10 @@ const PATTERN_TEMPLATES = {
     background:
       'repeating-linear-gradient(45deg, transparent, transparent 22px, $strongColor 22px, $strongColor 44px), $paleColor',
   },
+  pattern17: {
+    background:
+      'conic-gradient(from -45deg,#28D4D7 90deg,#0000 0 180deg,#93E9EB 0 270deg,#0000 0) 0 calc(30px/2)/30px 15px',
+  },
   pattern2: {
     background:
       'conic-gradient(from 116.56deg at calc(100%/3) 0, #0000 90deg,$paleColor 0), conic-gradient(from -63.44deg at calc(200%/3) 100%, #0000 90deg,$paleColor 0) $strongColor',
@@ -119,6 +123,8 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern14;
   } else if (slug === FILTER_TYPE.JOURNEY) {
     pattern = PATTERN_TEMPLATES.pattern16;
+  } else if (slug === FILTER_TYPE.AREA) {
+    pattern = PATTERN_TEMPLATES.pattern17;
   } else if (slug == FILTER_TYPE.ALL) {
     pattern = PATTERN_TEMPLATES.pattern13;
   } else {
