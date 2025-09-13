@@ -202,8 +202,10 @@ export default makeMessages('feat.smartSearch', {
     },
     area: {
       examples: {
-        one: m('Add everyone who is within Malmö'),
-        two: m('Remove everyone who is outside Copenhagen'),
+        one: m('Add everyone who is within Malmö based on their Home location'),
+        two: m(
+          'Remove everyone who is outside Copenhagen based on their HQ address'
+        ),
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
