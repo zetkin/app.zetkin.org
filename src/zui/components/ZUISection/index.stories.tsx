@@ -241,3 +241,34 @@ export const VerticalWithSubSections: Story = {
     title: 'Section',
   },
 };
+
+export const FullHeight: Story = {
+  args: {
+    fullHeight: true,
+    renderContent: () => (
+      <Box sx={{ backgroundColor: 'peachpuff', height: '200px' }}>
+        <ZUIText>Content</ZUIText>
+      </Box>
+    ),
+    title: 'Activists',
+  },
+  render: function Render(args) {
+    return (
+      <Box sx={{ height: '500px' }}>
+        <ZUISection {...args} />
+      </Box>
+    );
+  },
+};
+
+export const NoBorders: Story = {
+  args: {
+    borders: false,
+    renderContent: () => (
+      <Box sx={{ backgroundColor: 'peachpuff', height: '200px' }}>
+        <ZUIText>Content</ZUIText>
+      </Box>
+    ),
+    title: 'Activists',
+  },
+};
