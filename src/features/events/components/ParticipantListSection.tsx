@@ -229,6 +229,32 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       sortingOrder: ['asc', 'desc', null],
     },
     {
+      disableColumnMenu: true,
+      field: type == 'signups' ? 'signups' : 'notified',
+      flex: 1,
+      headerName:
+        type == 'signups'
+          ? messages.eventParticipantsList.columnSignedUp()
+          : messages.eventParticipantsList.columnNotified(),
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <ZUIRelativeTime datetime={params.row.response_date} />;
+        } else {
+          return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
+        }
+      },
+      resizable: false,
+      sortingOrder: ['asc', 'desc', null],
+      type: 'date',
+      valueGetter: (params) => {
+        if (params.row.person) {
+          return new Date(params.row.response_date);
+        } else {
+          return new Date(params.row.reminder_sent);
+        }
+      },
+    },
+    {
       align: 'right',
       disableColumnMenu: true,
       field: 'cancel',
@@ -361,58 +387,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       },
     },
   ];
-
-  if (type == 'signups') {
-    columns.splice(4, 0, {
-      disableColumnMenu: true,
-      field: 'signed up',
-      flex: 1,
-      headerName: messages.addPerson.status.signedUp(),
-      renderCell: (params) => {
-        if (params.row.person) {
-          return <ZUIRelativeTime datetime={params.row.response_date} />;
-        } else {
-          return;
-        }
-      },
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
-      type: 'date',
-      valueGetter: (params) => {
-        if (params.row.person) {
-          return new Date(params.row.response_date);
-        } else {
-          return;
-        }
-      },
-    });
-  }
-
-  if (type == 'booked' || type == 'cancelled') {
-    columns.splice(4, 0, {
-      disableColumnMenu: true,
-      field: 'notified',
-      flex: 1,
-      headerName: messages.eventParticipantsList.columnNotified(),
-      renderCell: (params) => {
-        if (params.row.person) {
-          return <ZUIRelativeTime datetime={params.row.response_date} />;
-        } else {
-          return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
-        }
-      },
-      resizable: false,
-      sortingOrder: ['asc', 'desc', null],
-      type: 'date',
-      valueGetter: (params) => {
-        if (params.row.person) {
-          return new Date(params.row.response_date);
-        } else {
-          return new Date(params.row.reminder_sent);
-        }
-      },
-    });
-  }
 
   return (
     <>
