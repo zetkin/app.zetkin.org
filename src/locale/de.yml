@@ -662,7 +662,7 @@ feat:
     page:
       dismiss: ablehnen
       noDuplicates: keine Duplikate
-      noDuplicatesDescription: Ja! All deine Mitglieder scheinen einzelne Individuen zu sein.
+      noDuplicatesDescription: "Zetkin hat in dem Personendatensatz keine wahrscheinlichen Duplikate gefunden. Der Datensatz wird täglich gescannt und potenzielle Duplikate werden hier angezeigt.\n\nWenn Sie feststellen, dass der Abgleichsalgorithmus nicht genügend Duplikate findet, kontaktieren Sie bitte die Zetkin Foundation, um uns über Ihren Anwendungsfall zu informieren.
       possibleDuplicates: Mögliche Duplikate
       possibleDuplicatesDescription: Diese {numPeople} Personen sehen sehr ähnlich aus.
       resolve: Beheben

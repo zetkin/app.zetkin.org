@@ -55,7 +55,15 @@ const DuplicatesPage: PageWithLayout = () => {
             {messages.page.noDuplicates()}
           </Typography>
           <Typography variant="body1">
-            {messages.page.noDuplicatesDescription()}
+            {messages.page
+              .noDuplicatesDescription()
+              .split('\n')
+              .map((line, i) => (
+                <span key={i}>
+                  {line}
+                  <br />
+                </span>
+              ))}
           </Typography>
         </Box>
       )}
