@@ -128,7 +128,10 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
             `marker-${successPercentage}-${visitPercentage}` +
             (selected ? '-selected' : '');
 
-          const renderOnTop = selected;
+          let z = visitRatio === 1.0 ? 1 : 2;
+          if (selected) {
+            z = 3;
+          }
 
           return {
             geometry: {
@@ -139,7 +142,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
               icon,
               successPercentage,
               visitPercentage,
-              z: renderOnTop ? 1 : 0,
+              z,
             },
             type: 'Feature',
           };
