@@ -21,33 +21,33 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
 
   return (
     <ZUIModal
-      open={open}
-      primaryButton={{
-        label: 'Close',
-        onClick: () => {
-          onClose();
-        },
+      onClose={() => {
+        setDebouncedInput('');
+        onClose();
       }}
-      title="Your calls"
+      open={open}
+      size="medium"
+      title="Call log"
     >
       <Box
-        display="flex"
-        flexDirection="column"
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
           overflowX: 'hidden',
+          paddingRight: 1,
+          paddingTop: 2,
           width: '100%',
         }}
       >
-        <Box mb={1} mt={3}>
-          <PreviousCallsSearch
-            onDebouncedChange={(value) => {
-              setDebouncedInput(value);
-            }}
-          />
-        </Box>
+        <PreviousCallsSearch
+          onDebouncedChange={(value) => {
+            setDebouncedInput(value);
+          }}
+        />
         <PreviousCallsSection
           assingmentId={assignment.id}
-          onClose={onClose}
+          onCall={() => onClose()}
           orgId={assignment.organization.id}
           searchTerm={debouncedInput}
         />
