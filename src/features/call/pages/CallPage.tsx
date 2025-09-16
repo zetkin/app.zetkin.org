@@ -85,226 +85,228 @@ const CallPage: FC<Props> = ({ assignment }) => {
   }
 
   return (
-    <Box
-      sx={{
-        height: '100dvh',
-        overflow: 'hidden',
-      }}
-    >
-      {lane.step == LaneStep.STATS && <StatsHeader assignment={assignment} />}
-      {lane.step == LaneStep.PREPARE && call && (
-        <>
-          <PrepareHeader assignment={assignment} call={call} />
-          <ZUIModal
-            open={!!lane.previousCall}
-            primaryButton={{
-              label: 'Close',
-              onClick: () => {
-                dispatch(clearReport());
-                dispatch(previousCallClear());
-              },
-            }}
-            title="Summary of previous call"
-          >
-            {lane.previousCall && (
-              <CallSummarySentence call={lane.previousCall} />
-            )}
-          </ZUIModal>
-        </>
-      )}
-      {lane.step == LaneStep.ONGOING && call && (
-        <CallHeader
-          assignment={assignment}
-          call={call}
-          forwardButtonLabel={'Finish and report'}
-          onForward={() => dispatch(updateLaneStep(LaneStep.REPORT))}
-        />
-      )}
-      {lane.step == LaneStep.REPORT && call && (
-        <ReportHeader
-          assignment={assignment}
-          call={call}
-          forwardButtonLabel={'Submit report'}
-          onSecondaryAction={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
-          secondaryActionLabel={'Back to activities'}
-        />
-      )}
-      {/**TODO: Change height of this Box once header is remade with a constant height */}
-      <Box height="calc(100dvh - 127px)" position="relative" width="100%">
-        <Box
-          sx={(theme) => ({
-            borderRight: `1px solid ${theme.palette.dividers.main}`,
-            height: '100%',
-            left: lane.step == LaneStep.STATS ? 0 : 'calc(-100% / 3)',
-            maxHeight: '100%',
-            overflowY: 'auto',
-            position: 'absolute',
-            transition: '0.5s',
-            width: 1 / 3,
-          })}
-        >
-          <ZUISection
-            borders={false}
-            fullHeight
-            renderContent={() => (
-              <ZUIText>Some general info about calling</ZUIText>
-            )}
-            title="Info about calling"
-          />
-        </Box>
-        <Box
-          sx={(theme) => ({
-            borderRight: `1px solid ${theme.palette.dividers.main}`,
-            height: '100%',
-            left:
-              lane.step == LaneStep.STATS
-                ? 'calc(100% / 3)'
-                : 'calc(-100% / 3)',
-            maxHeight: '100%',
-            overflowY: 'auto',
-            position: 'absolute',
-            transition: '0.5s',
-            width: 1 / 3,
-          })}
-        >
-          <AssignmentStats stats={stats} />
-        </Box>
-        <Box
-          sx={(theme) => ({
-            borderRight: `1px solid ${theme.palette.dividers.main}`,
-            height: '100%',
-            left: lane.step != LaneStep.STATS ? 0 : 'calc((100% / 3) * 2)',
-            maxHeight: '100%',
-            overflowY: 'auto',
-            position: 'absolute',
-            transition: '0.5s',
-            width: 1 / 3,
-            zIndex: lane.step == LaneStep.REPORT || LaneStep.ONGOING ? 2 : '',
-          })}
-        >
-          <InstructionsSection
+    <>
+      <Box
+        sx={{
+          height: '100dvh',
+          overflow: 'hidden',
+        }}
+      >
+        {lane.step == LaneStep.STATS && <StatsHeader assignment={assignment} />}
+        {lane.step == LaneStep.PREPARE && call && (
+          <>
+            <PrepareHeader assignment={assignment} call={call} />
+            <ZUIModal
+              open={!!lane.previousCall}
+              primaryButton={{
+                label: 'Close',
+                onClick: () => {
+                  dispatch(clearReport());
+                  dispatch(previousCallClear());
+                },
+              }}
+              title="Summary of previous call"
+            >
+              {lane.previousCall && (
+                <CallSummarySentence call={lane.previousCall} />
+              )}
+            </ZUIModal>
+          </>
+        )}
+        {lane.step == LaneStep.ONGOING && call && (
+          <CallHeader
+            assignment={assignment}
             call={call}
-            instructions={assignment.instructions}
-            step={lane.step}
+            forwardButtonLabel={'Finish and report'}
+            onForward={() => dispatch(updateLaneStep(LaneStep.REPORT))}
           />
-        </Box>
-        <Box
-          sx={(theme) => ({
-            borderRight: `1px solid ${theme.palette.dividers.main}`,
-            height: '100%',
-            overflowY: 'auto',
-            position: 'absolute',
-            right:
-              lane.step == LaneStep.STATS
-                ? 'calc(-100% / 3)'
-                : lane.step == LaneStep.REPORT
-                ? 'calc((100% / 3) * 2)'
-                : 'calc(100% / 3)',
-            transition: '0.5s',
-            width: 1 / 3,
-          })}
-        >
-          <AboutSection call={call} />
-        </Box>
-        <Box
-          sx={(theme) => ({
-            borderRight: `1px solid ${theme.palette.dividers.main}`,
-            height: '100%',
-            overflowY: 'auto',
-            position: 'absolute',
-            right:
-              lane.step == LaneStep.STATS
-                ? 'calc(-100% / 3)'
-                : lane.step == LaneStep.REPORT
-                ? 'calc(100% / 3)'
-                : 0,
-            transition: '0.5s',
-            width: 1 / 3,
-          })}
-        >
-          <ActivitiesSection
+        )}
+        {lane.step == LaneStep.REPORT && call && (
+          <ReportHeader
             assignment={assignment}
-            target={call?.target ?? null}
+            call={call}
+            forwardButtonLabel={'Submit report'}
+            onSecondaryAction={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
+            secondaryActionLabel={'Back to activities'}
           />
-        </Box>
-        <Box
-          sx={(theme) => ({
-            borderRight: `1px solid ${theme.palette.dividers.main}`,
-            height: '100%',
-            overflowY: 'auto',
-            position: 'absolute',
-            right: lane.step == LaneStep.REPORT ? 0 : -500,
-            transition: '0.5s',
-            width: 1 / 3,
-          })}
-        >
-          <ZUISection
-            borders={false}
-            fullHeight
-            renderContent={() => {
-              if (!call) {
-                return <Box sx={{ height: '200px' }} />;
-              }
-              return (
-                <ReportForm
-                  disableCallerNotes={assignment.disable_caller_notes}
-                  onReportChange={(updatedReport) => {
-                    dispatch(reportUpdated(updatedReport));
-                  }}
-                  report={report}
-                  target={call.target}
-                />
-              );
+        )}
+        {/**TODO: Change height of this Box once header is remade with a constant height */}
+        <Box height="calc(100dvh - 127px)" position="relative" width="100%">
+          <Box
+            sx={(theme) => ({
+              borderRight: `1px solid ${theme.palette.dividers.main}`,
+              height: '100%',
+              left: lane.step == LaneStep.STATS ? 0 : 'calc(-100% / 3)',
+              maxHeight: '100%',
+              overflowY: 'auto',
+              position: 'absolute',
+              transition: '0.5s',
+              width: 1 / 3,
+            })}
+          >
+            <ZUISection
+              borders={false}
+              fullHeight
+              renderContent={() => (
+                <ZUIText>Some general info about calling</ZUIText>
+              )}
+              title="Info about calling"
+            />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              borderRight: `1px solid ${theme.palette.dividers.main}`,
+              height: '100%',
+              left:
+                lane.step == LaneStep.STATS
+                  ? 'calc(100% / 3)'
+                  : 'calc(-100% / 3)',
+              maxHeight: '100%',
+              overflowY: 'auto',
+              position: 'absolute',
+              transition: '0.5s',
+              width: 1 / 3,
+            })}
+          >
+            <AssignmentStats stats={stats} />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              borderRight: `1px solid ${theme.palette.dividers.main}`,
+              height: '100%',
+              left: lane.step != LaneStep.STATS ? 0 : 'calc((100% / 3) * 2)',
+              maxHeight: '100%',
+              overflowY: 'auto',
+              position: 'absolute',
+              transition: '0.5s',
+              width: 1 / 3,
+              zIndex: lane.step == LaneStep.REPORT || LaneStep.ONGOING ? 2 : '',
+            })}
+          >
+            <InstructionsSection
+              call={call}
+              instructions={assignment.instructions}
+              step={lane.step}
+            />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              borderRight: `1px solid ${theme.palette.dividers.main}`,
+              height: '100%',
+              overflowY: 'auto',
+              position: 'absolute',
+              right:
+                lane.step == LaneStep.STATS
+                  ? 'calc(-100% / 3)'
+                  : lane.step == LaneStep.REPORT
+                  ? 'calc((100% / 3) * 2)'
+                  : 'calc(100% / 3)',
+              transition: '0.5s',
+              width: 1 / 3,
+            })}
+          >
+            <AboutSection call={call} />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              borderRight: `1px solid ${theme.palette.dividers.main}`,
+              height: '100%',
+              overflowY: 'auto',
+              position: 'absolute',
+              right:
+                lane.step == LaneStep.STATS
+                  ? 'calc(-100% / 3)'
+                  : lane.step == LaneStep.REPORT
+                  ? 'calc(100% / 3)'
+                  : 0,
+              transition: '0.5s',
+              width: 1 / 3,
+            })}
+          >
+            <ActivitiesSection
+              assignment={assignment}
+              target={call?.target ?? null}
+            />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              borderRight: `1px solid ${theme.palette.dividers.main}`,
+              height: '100%',
+              overflowY: 'auto',
+              position: 'absolute',
+              right: lane.step == LaneStep.REPORT ? 0 : -500,
+              transition: '0.5s',
+              width: 1 / 3,
+            })}
+          >
+            <ZUISection
+              borders={false}
+              fullHeight
+              renderContent={() => {
+                if (!call) {
+                  return <Box sx={{ height: '200px' }} />;
+                }
+                return (
+                  <ReportForm
+                    disableCallerNotes={assignment.disable_caller_notes}
+                    onReportChange={(updatedReport) => {
+                      dispatch(reportUpdated(updatedReport));
+                    }}
+                    report={report}
+                    target={call.target}
+                  />
+                );
+              }}
+              title="Report"
+            />
+          </Box>
+          <Box
+            sx={{
+              alignItems: 'center',
+              bottom: 0,
+              display: 'flex',
+              gap: 1,
+              left: 0,
+              padding: 1,
+              position: 'absolute',
+              width: '100%',
+              zIndex: 3,
             }}
-            title="Report"
-          />
-        </Box>
-        <Box
-          sx={{
-            alignItems: 'center',
-            bottom: 0,
-            display: 'flex',
-            gap: 1,
-            left: 0,
-            padding: 1,
-            position: 'absolute',
-            width: '100%',
-            zIndex: 3,
-          }}
-        >
-          <ZUIButton
-            label="Call log"
-            onClick={() => setCallLogOpen(true)}
-            variant="secondary"
-          />
-          <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-            {unfinishedCalls.map((c) => (
-              <ListItem
-                key={c.id}
-                onClick={() => switchToUnfinishedCall(c.id)}
-                sx={{
-                  borderRadius: '2rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  padding: 0,
-                }}
-              >
-                <ZUIPersonAvatar
-                  firstName={c.target.first_name}
-                  id={c.target.id}
-                  lastName={c.target.last_name}
-                />
-              </ListItem>
-            ))}
-          </List>
-          <CallSwitchModal
-            assignment={assignment}
-            onClose={() => setCallLogOpen(false)}
-            open={callLogOpen}
-          />
+          >
+            <ZUIButton
+              label="Call log"
+              onClick={() => setCallLogOpen(true)}
+              variant="secondary"
+            />
+            <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+              {unfinishedCalls.map((c) => (
+                <ListItem
+                  key={c.id}
+                  onClick={() => switchToUnfinishedCall(c.id)}
+                  sx={{
+                    borderRadius: '2rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    padding: 0,
+                  }}
+                >
+                  <ZUIPersonAvatar
+                    firstName={c.target.first_name}
+                    id={c.target.id}
+                    lastName={c.target.last_name}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
         </Box>
       </Box>
-    </Box>
+      <CallSwitchModal
+        assignment={assignment}
+        onClose={() => setCallLogOpen(false)}
+        open={callLogOpen}
+      />
+    </>
   );
 };
 
