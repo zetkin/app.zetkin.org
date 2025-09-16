@@ -1,7 +1,7 @@
 'use client';
 
-import { Box } from '@mui/material';
-import { FC } from 'react';
+import { Box, List, ListItem } from '@mui/material';
+import { FC, useState } from 'react';
 
 import StatsHeader from '../components/headers/StatsHeader';
 import useCurrentCall from '../hooks/useCurrentCall';
@@ -29,6 +29,11 @@ import ActivitiesSection from '../components/ActivitiesSection';
 import ZUISection from 'zui/components/ZUISection';
 import ReportForm from '../components/Report';
 import ZUIText from 'zui/components/ZUIText';
+import ZUIButton from 'zui/components/ZUIButton';
+import useOutgoingCalls from '../hooks/useOutgoingCalls';
+import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
+import useCallMutations from '../hooks/useCallMutations';
+import CallSwitchModal from '../components/CallSwitchModal';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -41,15 +46,28 @@ const CallPage: FC<Props> = ({ assignment }) => {
   );
   const call = useCurrentCall();
   const onServer = useServerSide();
+  const [callLogOpen, setCallLogOpen] = useState(false);
 
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
     assignment.id
   );
+  const { switchToUnfinishedCall } = useCallMutations(
+    assignment.organization.id
+  );
 
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
+
+  const outgoingCalls = useOutgoingCalls();
+
+  const unfinishedCalls = outgoingCalls.filter((c) => {
+    const isUnfinishedCall = c.state == 0;
+    const isNotCurrentCall = call ? call.id != c.id : true;
+
+    return isUnfinishedCall && isNotCurrentCall;
+  });
 
   if (onServer) {
     return (
@@ -111,6 +129,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
           secondaryActionLabel={'Back to activities'}
         />
       )}
+      {/**TODO: Change height of this Box once header is remade with a constant height */}
       <Box height="calc(100dvh - 127px)" position="relative" width="100%">
         <Box
           sx={(theme) => ({
@@ -238,6 +257,50 @@ const CallPage: FC<Props> = ({ assignment }) => {
               );
             }}
             title="Report"
+          />
+        </Box>
+        <Box
+          sx={{
+            alignItems: 'center',
+            bottom: 0,
+            display: 'flex',
+            gap: 1,
+            left: 0,
+            padding: 1,
+            position: 'absolute',
+            width: '100%',
+            zIndex: 3,
+          }}
+        >
+          <ZUIButton
+            label="Call log"
+            onClick={() => setCallLogOpen(true)}
+            variant="secondary"
+          />
+          <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+            {unfinishedCalls.map((c) => (
+              <ListItem
+                key={c.id}
+                onClick={() => switchToUnfinishedCall(c.id)}
+                sx={{
+                  borderRadius: '2rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  padding: 0,
+                }}
+              >
+                <ZUIPersonAvatar
+                  firstName={c.target.first_name}
+                  id={c.target.id}
+                  lastName={c.target.last_name}
+                />
+              </ListItem>
+            ))}
+          </List>
+          <CallSwitchModal
+            assignment={assignment}
+            onClose={() => setCallLogOpen(false)}
+            open={callLogOpen}
           />
         </Box>
       </Box>
