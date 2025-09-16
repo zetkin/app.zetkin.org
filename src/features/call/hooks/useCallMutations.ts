@@ -60,7 +60,7 @@ export default function useCallMutations(orgId: number) {
     dispatch(allocatePreviousCall(call));
   };
 
-  const switchToUnfinishedCall = async (unfinishedCallId: ZetkinCall) => {
+  const switchToUnfinishedCall = async (unfinishedCallId: number) => {
     dispatch(unfinishedCallSwitched(unfinishedCallId));
   };
 
