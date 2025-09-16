@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, List, ListItem } from '@mui/material';
+import { Box, List, ListItem, Snackbar } from '@mui/material';
 import { FC, useState } from 'react';
 
 import StatsHeader from '../components/headers/StatsHeader';
@@ -47,6 +47,9 @@ const CallPage: FC<Props> = ({ assignment }) => {
   const call = useCurrentCall();
   const onServer = useServerSide();
   const [callLogOpen, setCallLogOpen] = useState(false);
+  const [unfinishedCallSwitchedTo, setUnfinishedCallSwitchedTo] = useState<
+    number | null
+  >(null);
 
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
@@ -68,6 +71,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
 
     return isUnfinishedCall && isNotCurrentCall;
   });
+
+  const switchedTo = outgoingCalls.find(
+    (oc) => oc.id == unfinishedCallSwitchedTo
+  );
 
   if (onServer) {
     return (
@@ -282,7 +289,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
               {unfinishedCalls.map((c) => (
                 <ListItem
                   key={c.id}
-                  onClick={() => switchToUnfinishedCall(c.id)}
+                  onClick={() => {
+                    switchToUnfinishedCall(c.id);
+                    setUnfinishedCallSwitchedTo(c.id);
+                  }}
                   sx={{
                     borderRadius: '2rem',
                     cursor: 'pointer',
@@ -305,6 +315,28 @@ const CallPage: FC<Props> = ({ assignment }) => {
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}
         open={callLogOpen}
+      />
+      <Snackbar
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        autoHideDuration={5000}
+        message={
+          switchedTo ? (
+            <ZUIText>{`Switched to call with ${switchedTo.target.name}`}</ZUIText>
+          ) : (
+            ''
+          )
+        }
+        onClose={(ev, reason) => {
+          if (reason == 'clickaway') {
+            return;
+          } else {
+            setUnfinishedCallSwitchedTo(null);
+          }
+        }}
+        open={!!unfinishedCallSwitchedTo}
+        sx={(theme) => ({
+          '& div': { backgroundColor: theme.palette.common.white },
+        })}
       />
     </>
   );
