@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, List, ListItem, Snackbar } from '@mui/material';
+import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
@@ -99,12 +100,22 @@ const CallPage: FC<Props> = ({ assignment }) => {
     if (lane.step == LaneStep.STATS) {
       return 'Call';
     } else if (lane.step == LaneStep.CALL) {
-      return 'Report';
+      return 'Finish & report';
     } else if (lane.step == LaneStep.REPORT) {
-      return 'Finish';
+      return 'Send report';
     } else {
       //Lane step must be "Summary"
       return 'Next call';
+    }
+  };
+
+  const getHeaderSecondaryButtonLabel = () => {
+    if (lane.step == LaneStep.STATS) {
+      return 'Quit';
+    } else if (lane.step == LaneStep.SUMMARY) {
+      return 'Take a break';
+    } else {
+      return 'Skip';
     }
   };
 
@@ -151,7 +162,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               right: 16,
             }}
           >
-            {lane.step != LaneStep.STATS && (
+            {lane.step != LaneStep.STATS && lane.step != LaneStep.SUMMARY && (
               <ZUIButton
                 label="Stop"
                 onClick={() => {
@@ -163,11 +174,21 @@ const CallPage: FC<Props> = ({ assignment }) => {
               />
             )}
             <ZUIButton
+              endIcon={
+                lane.step != LaneStep.STATS && lane.step != LaneStep.SUMMARY
+                  ? SkipNext
+                  : undefined
+              }
               href={lane.step == LaneStep.STATS ? '/my/home' : undefined}
-              label={lane.step == LaneStep.STATS ? 'Quit' : 'Skip'}
+              label={getHeaderSecondaryButtonLabel()}
               onClick={() => {
-                if (lane.step != LaneStep.STATS) {
+                if (
+                  lane.step != LaneStep.STATS &&
+                  lane.step != LaneStep.SUMMARY
+                ) {
                   setSkipCallModalOpen(true);
+                } else if (lane.step == LaneStep.SUMMARY) {
+                  dispatch(updateLaneStep(LaneStep.STATS));
                 }
               }}
               variant="secondary"
