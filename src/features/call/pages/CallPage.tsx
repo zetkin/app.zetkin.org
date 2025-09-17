@@ -92,7 +92,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
   }
 
   return (
-    <>
+    <main>
       <Box
         sx={{
           height: '100dvh',
@@ -338,7 +338,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
           '& div': { backgroundColor: theme.palette.common.white },
         })}
       />
-    </>
+    </main>
   );
 };
 
