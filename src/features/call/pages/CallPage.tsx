@@ -3,22 +3,11 @@
 import { Box, List, ListItem, Snackbar } from '@mui/material';
 import { FC, useState } from 'react';
 
-import StatsHeader from '../components/headers/StatsHeader';
 import useCurrentCall from '../hooks/useCurrentCall';
-import ReportHeader from '../components/headers/ReportHeader';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
-import PrepareHeader from '../components/headers/PrepareHeader';
-import CallHeader from '../components/headers/CallHeader';
 import { LaneStep } from '../types';
-import ZUIModal from 'zui/components/ZUIModal';
-import CallSummarySentence from '../components/CallSummarySentence';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import {
-  previousCallClear,
-  clearReport,
-  updateLaneStep,
-  reportUpdated,
-} from '../store';
+import { updateLaneStep, reportUpdated, previousCallAdd } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import AssignmentStats from '../components/AssignmentStats';
@@ -34,6 +23,11 @@ import useOutgoingCalls from '../hooks/useOutgoingCalls';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import useCallMutations from '../hooks/useCallMutations';
 import CallSwitchModal from '../components/CallSwitchModal';
+import useAllocateCall from '../hooks/useAllocateCall';
+import ZUIModal from 'zui/components/ZUIModal';
+import { objectToFormData } from '../components/utils/objectToFormData';
+import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
+import useSubmitReport from '../hooks/useSubmitReport';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -50,17 +44,27 @@ const CallPage: FC<Props> = ({ assignment }) => {
   const [unfinishedCallSwitchedTo, setUnfinishedCallSwitchedTo] = useState<
     number | null
   >(null);
-
+  const [skipCallModalOpen, setSkipCallModalOpen] = useState(false);
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const {
+    allocateCall,
+    error: errorAllocatingCall,
+    isLoading: isAllocatingCall,
+  } = useAllocateCall(assignment.organization.id, assignment.id);
   const stats = useSimpleCallAssignmentStats(
     assignment.organization.id,
     assignment.id
   );
-  const { switchToUnfinishedCall } = useCallMutations(
-    assignment.organization.id
-  );
+  const { quitCurrentCall, skipCurrentCall, switchToUnfinishedCall } =
+    useCallMutations(assignment.organization.id);
+  const { submitReport } = useSubmitReport(assignment.organization.id);
 
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
+  );
+  const submissionDataBySurveyId = useAppSelector(
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
 
   const outgoingCalls = useOutgoingCalls();
@@ -91,6 +95,19 @@ const CallPage: FC<Props> = ({ assignment }) => {
     );
   }
 
+  const getHeaderPrimaryButtonLabel = () => {
+    if (lane.step == LaneStep.STATS) {
+      return 'Call';
+    } else if (lane.step == LaneStep.CALL) {
+      return 'Report';
+    } else if (lane.step == LaneStep.REPORT) {
+      return 'Finish';
+    } else {
+      //Lane step must be "Summary"
+      return 'Next call';
+    }
+  };
+
   return (
     <main>
       <Box
@@ -99,46 +116,128 @@ const CallPage: FC<Props> = ({ assignment }) => {
           overflow: 'hidden',
         }}
       >
-        {lane.step == LaneStep.STATS && <StatsHeader assignment={assignment} />}
-        {lane.step == LaneStep.PREPARE && call && (
-          <>
-            <PrepareHeader assignment={assignment} call={call} />
-            <ZUIModal
-              open={!!lane.previousCall}
-              primaryButton={{
-                label: 'Close',
-                onClick: () => {
-                  dispatch(clearReport());
-                  dispatch(previousCallClear());
-                },
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.palette.common.white,
+            borderBottom: `1px solid ${theme.palette.dividers.main}`,
+            height: '100px',
+            padding: 2,
+            position: 'sticky',
+            top: 0,
+            zIndex: 1100,
+          })}
+        >
+          {/*   <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              gap: 1,
+              position: 'absolute',
+            }}
+          >
+            <ZUIOrgLogoAvatar orgId={assignment.organization.id} />
+            <ZUIText>{assignment.organization.title}</ZUIText>
+          </Box>
+          <Box sx={{ bottom: 16, position: 'absolute' }}>
+            <ZUIText variant="headingLg">{assignment.title}</ZUIText>
+          </Box> */}
+
+          <Box
+            sx={{
+              bottom: 16,
+              display: 'flex',
+              gap: 1,
+              position: 'absolute',
+              right: 16,
+            }}
+          >
+            {lane.step != LaneStep.STATS && (
+              <ZUIButton
+                label="Stop"
+                onClick={() => {
+                  if (call) {
+                    quitCurrentCall(call.id);
+                  }
+                }}
+                variant="tertiary"
+              />
+            )}
+            <ZUIButton
+              href={lane.step == LaneStep.STATS ? '/my/home' : undefined}
+              label={lane.step == LaneStep.STATS ? 'Quit' : 'Skip'}
+              onClick={() => {
+                if (lane.step != LaneStep.STATS) {
+                  setSkipCallModalOpen(true);
+                }
               }}
-              title="Summary of previous call"
-            >
-              {lane.previousCall && (
-                <CallSummarySentence call={lane.previousCall} />
-              )}
-            </ZUIModal>
-          </>
-        )}
-        {lane.step == LaneStep.ONGOING && call && (
-          <CallHeader
-            assignment={assignment}
-            call={call}
-            forwardButtonLabel={'Finish and report'}
-            onForward={() => dispatch(updateLaneStep(LaneStep.REPORT))}
-          />
-        )}
-        {lane.step == LaneStep.REPORT && call && (
-          <ReportHeader
-            assignment={assignment}
-            call={call}
-            forwardButtonLabel={'Submit report'}
-            onSecondaryAction={() => dispatch(updateLaneStep(LaneStep.ONGOING))}
-            secondaryActionLabel={'Back to activities'}
-          />
-        )}
-        {/**TODO: Change height of this Box once header is remade with a constant height */}
-        <Box height="calc(100dvh - 127px)" position="relative" width="100%">
+              variant="secondary"
+            />
+            <ZUIButton
+              disabled={
+                !!errorAllocatingCall ||
+                (lane.step == LaneStep.REPORT && !report.completed)
+              }
+              label={getHeaderPrimaryButtonLabel()}
+              onClick={async () => {
+                if (lane.step == LaneStep.STATS) {
+                  await allocateCall();
+                  dispatch(updateLaneStep(LaneStep.CALL));
+                } else if (lane.step == LaneStep.CALL) {
+                  dispatch(updateLaneStep(LaneStep.REPORT));
+                } else if (lane.step == LaneStep.REPORT) {
+                  if (!report || !call) {
+                    return;
+                  }
+                  setSubmittingReport(true);
+
+                  const submissions = Object.entries(submissionDataBySurveyId)
+                    .filter(([, surveySubmissionData]) => {
+                      return Object.entries(surveySubmissionData).some(
+                        ([, value]) => {
+                          if (typeof value == 'string') {
+                            return value.trim() !== '';
+                          }
+                          return true;
+                        }
+                      );
+                    })
+                    .map(([surveyId, surveySubmissionData]) => {
+                      const surveySubmissionDataAsFormData =
+                        objectToFormData(surveySubmissionData);
+                      return {
+                        submission: prepareSurveyApiSubmission(
+                          surveySubmissionDataAsFormData
+                        ),
+                        surveyId: Number(surveyId),
+                        targetId: call.target.id,
+                      };
+                    });
+
+                  const result = await submitReport(
+                    call.id,
+                    report,
+                    submissions
+                  );
+
+                  if (result.kind === 'success') {
+                    dispatch(previousCallAdd(call));
+                  } else {
+                    setSubmittingReport(false);
+                  }
+                  setSubmittingReport(false);
+                  dispatch(updateLaneStep(LaneStep.SUMMARY));
+                } else {
+                  //Lane step must be Summary
+                  await allocateCall();
+                }
+              }}
+              variant={
+                isAllocatingCall || submittingReport ? 'loading' : 'primary'
+              }
+            />
+          </Box>
+        </Box>
+        <Box height="calc(100dvh - 100px)" position="relative" width="100%">
           <Box
             sx={(theme) => ({
               borderRight: `1px solid ${theme.palette.dividers.main}`,
@@ -147,7 +246,6 @@ const CallPage: FC<Props> = ({ assignment }) => {
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
-              transition: '0.5s',
               width: 1 / 3,
             })}
           >
@@ -171,7 +269,6 @@ const CallPage: FC<Props> = ({ assignment }) => {
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
-              transition: '0.5s',
               width: 1 / 3,
             })}
           >
@@ -181,13 +278,17 @@ const CallPage: FC<Props> = ({ assignment }) => {
             sx={(theme) => ({
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
-              left: lane.step != LaneStep.STATS ? 0 : 'calc((100% / 3) * 2)',
+              left:
+                lane.step == LaneStep.STATS
+                  ? 'calc((100% / 3) * 2)'
+                  : lane.step == LaneStep.SUMMARY
+                  ? '100%'
+                  : 0,
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
-              transition: '0.5s',
               width: 1 / 3,
-              zIndex: lane.step == LaneStep.REPORT || LaneStep.ONGOING ? 2 : '',
+              zIndex: lane.step == LaneStep.REPORT || LaneStep.CALL ? 2 : '',
             })}
           >
             <InstructionsSection
@@ -200,15 +301,17 @@ const CallPage: FC<Props> = ({ assignment }) => {
             sx={(theme) => ({
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
+              left:
+                lane.step == LaneStep.STATS
+                  ? '100%'
+                  : lane.step == LaneStep.CALL
+                  ? 'calc(100% / 3)'
+                  : lane.step == LaneStep.REPORT
+                  ? 0
+                  : '',
+
               overflowY: 'auto',
               position: 'absolute',
-              right:
-                lane.step == LaneStep.STATS
-                  ? 'calc(-100% / 3)'
-                  : lane.step == LaneStep.REPORT
-                  ? 'calc((100% / 3) * 2)'
-                  : 'calc(100% / 3)',
-              transition: '0.5s',
               width: 1 / 3,
             })}
           >
@@ -218,16 +321,18 @@ const CallPage: FC<Props> = ({ assignment }) => {
             sx={(theme) => ({
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
-              overflowY: 'auto',
-              position: 'absolute',
-              right:
+              left:
                 lane.step == LaneStep.STATS
-                  ? 'calc(-100% / 3)'
+                  ? '100%'
+                  : lane.step == LaneStep.CALL
+                  ? 'calc((100% / 3) * 2)'
                   : lane.step == LaneStep.REPORT
                   ? 'calc(100% / 3)'
-                  : 0,
-              transition: '0.5s',
+                  : 'calc((100% / 3) * -1)',
+              overflowY: 'auto',
+              position: 'absolute',
               width: 1 / 3,
+              zIndex: lane.step == LaneStep.STATS ? -1 : 0,
             })}
           >
             <ActivitiesSection
@@ -239,11 +344,19 @@ const CallPage: FC<Props> = ({ assignment }) => {
             sx={(theme) => ({
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
+              left:
+                lane.step == LaneStep.REPORT
+                  ? 'calc(100% - (100% / 3))'
+                  : lane.step == LaneStep.SUMMARY
+                  ? 'calc((100% / 3) * -1)'
+                  : '100%',
               overflowY: 'auto',
               position: 'absolute',
-              right: lane.step == LaneStep.REPORT ? 0 : -500,
-              transition: '0.5s',
               width: 1 / 3,
+              zIndex:
+                lane.step == LaneStep.REPORT || lane.step == LaneStep.SUMMARY
+                  ? 0
+                  : -1,
             })}
           >
             <ZUISection
@@ -266,6 +379,28 @@ const CallPage: FC<Props> = ({ assignment }) => {
               }}
               title="Report"
             />
+          </Box>
+          <Box
+            bgcolor="white"
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              height: '100%',
+              justifyContent: 'center',
+              left:
+                lane.step == LaneStep.SUMMARY
+                  ? 0
+                  : lane.step == LaneStep.REPORT
+                  ? '100%'
+                  : lane.step == LaneStep.CALL
+                  ? '-100%'
+                  : '100%',
+              position: 'relative',
+              width: '100%',
+              zIndex: lane.step == LaneStep.SUMMARY ? 0 : -1,
+            }}
+          >
+            SUMMARY
           </Box>
           <Box
             sx={{
@@ -315,6 +450,27 @@ const CallPage: FC<Props> = ({ assignment }) => {
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}
         open={callLogOpen}
+      />
+      <ZUIModal
+        open={skipCallModalOpen}
+        primaryButton={{
+          label: 'No, resume call',
+          onClick: () => {
+            setSkipCallModalOpen(false);
+          },
+        }}
+        secondaryButton={{
+          label: `Yes, skip ${call?.target.name}`,
+          onClick: () => {
+            if (call) {
+              skipCurrentCall(assignment.id, call.id);
+              dispatch(updateLaneStep(LaneStep.CALL));
+              setSkipCallModalOpen(false);
+            }
+          },
+        }}
+        size="small"
+        title={`Skip call to ${call?.target.name}?`}
       />
       <Snackbar
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}

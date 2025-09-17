@@ -104,7 +104,7 @@ const CallSlice = createSlice({
           wrongNumber: null,
         },
         respondedEventIds: [],
-        step: LaneStep.PREPARE,
+        step: LaneStep.CALL,
         submissionDataBySurveyId: {},
         surveySubmissionError: false,
         updateCallError: false,
@@ -144,7 +144,7 @@ const CallSlice = createSlice({
       );
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.PREPARE;
+      lane.step = LaneStep.CALL;
 
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
@@ -199,7 +199,7 @@ const CallSlice = createSlice({
       );
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.PREPARE;
+      lane.step = LaneStep.CALL;
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
@@ -370,7 +370,7 @@ const CallSlice = createSlice({
             wrongNumber: null,
           },
           respondedEventIds: [],
-          step: LaneStep.PREPARE,
+          step: LaneStep.CALL,
           submissionDataBySurveyId: {},
           surveySubmissionError: false,
           updateCallError: false,
