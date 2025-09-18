@@ -11,6 +11,7 @@ import { labels, colors } from './PreviousCallsInfo';
 import { ZetkinCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useCurrentCall from '../hooks/useCurrentCall';
+import UnfinishedCall from './UnfinishedCall';
 
 type PreviousCallsSectionProps = {
   assingmentId: number;
@@ -69,82 +70,14 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     <Box>
       {unfinishedCalls.map((unfinishedCall) => (
         <Fragment key={unfinishedCall.id}>
-          <Box
-            key={unfinishedCall.id}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0.5,
-              paddingY: 1,
+          <UnfinishedCall
+            onAbandonCall={() => abandonUnfinishedCall(unfinishedCall.id)}
+            onSwitchToCall={() => {
+              switchToUnfinishedCall(unfinishedCall.id);
+              onCall();
             }}
-          >
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-              }}
-            >
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flex: 1,
-                  gap: 1,
-                  minWidth: 0,
-                }}
-              >
-                <ZUIPersonAvatar
-                  firstName={unfinishedCall.target.first_name}
-                  id={unfinishedCall.target.id}
-                  lastName={unfinishedCall.target.last_name}
-                  size="medium"
-                />
-
-                <ZUIText noWrap variant="bodyMdSemiBold">
-                  {unfinishedCall.target.first_name +
-                    ' ' +
-                    unfinishedCall.target.last_name}
-                </ZUIText>
-              </Box>
-              <Box display="flex" gap={1}>
-                <ZUIButton
-                  label="Abandon"
-                  onClick={() => {
-                    abandonUnfinishedCall(unfinishedCall.id);
-                  }}
-                  size="small"
-                  variant="tertiary"
-                />
-                <ZUIButton
-                  label="Switch to"
-                  onClick={() => {
-                    switchToUnfinishedCall(unfinishedCall.id);
-                    onCall();
-                  }}
-                  size="small"
-                  variant="primary"
-                />
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-                paddingLeft: 5,
-                width: '100%',
-              }}
-            >
-              <ZUIText variant="bodyMdRegular">
-                {unfinishedCall.target.phone}
-              </ZUIText>
-              <ZUIText color="secondary" noWrap>
-                <ZUIRelativeTime datetime={unfinishedCall.update_time} />
-              </ZUIText>
-            </Box>
-          </Box>
+            unfinishedCall={unfinishedCall}
+          />
           <ZUIDivider />
         </Fragment>
       ))}

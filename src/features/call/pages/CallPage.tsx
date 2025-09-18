@@ -2,7 +2,7 @@
 
 import { Alert, Box, List, ListItem, Slide, Snackbar } from '@mui/material';
 import { SkipNext } from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, Fragment, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { updateLaneStep, reportUpdated, previousCallAdd } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import AssignmentStats from '../components/AssignmentStats';
+import AssignmentStats, { DesktopStats } from '../components/AssignmentStats';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import InstructionsSection from '../components/InstructionsSection';
 import AboutSection from '../components/AboutSection';
@@ -30,6 +30,9 @@ import { objectToFormData } from '../components/utils/objectToFormData';
 import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import useSubmitReport from '../hooks/useSubmitReport';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
+import UnfinishedCall from '../components/UnfinishedCall';
+import ZUIDivider from 'zui/components/ZUIDivider';
+import callSummarySentence from '../components/utils/callSummarySentence';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -37,17 +40,16 @@ type Props = {
 
 const CallPage: FC<Props> = ({ assignment }) => {
   const dispatch = useAppDispatch();
-  const lane = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex]
-  );
-  const call = useCurrentCall();
   const onServer = useServerSide();
+
   const [callLogOpen, setCallLogOpen] = useState(false);
   const [unfinishedCallSwitchedTo, setUnfinishedCallSwitchedTo] = useState<
     number | null
   >(null);
   const [skipCallModalOpen, setSkipCallModalOpen] = useState(false);
   const [submittingReport, setSubmittingReport] = useState(false);
+
+  const call = useCurrentCall();
   const {
     allocateCall,
     error: errorAllocatingCall,
@@ -57,10 +59,18 @@ const CallPage: FC<Props> = ({ assignment }) => {
     assignment.organization.id,
     assignment.id
   );
-  const { quitCurrentCall, skipCurrentCall, switchToUnfinishedCall } =
-    useCallMutations(assignment.organization.id);
+  const {
+    abandonUnfinishedCall,
+    quitCurrentCall,
+    skipCurrentCall,
+    switchToUnfinishedCall,
+  } = useCallMutations(assignment.organization.id);
   const { submitReport } = useSubmitReport(assignment.organization.id);
+  const outgoingCalls = useOutgoingCalls();
 
+  const lane = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex]
+  );
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
@@ -68,8 +78,6 @@ const CallPage: FC<Props> = ({ assignment }) => {
     (state) =>
       state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
   );
-
-  const outgoingCalls = useOutgoingCalls();
 
   const unfinishedCalls = outgoingCalls.filter((c) => {
     const isUnfinishedCall = c.state == 0;
@@ -123,10 +131,11 @@ const CallPage: FC<Props> = ({ assignment }) => {
   return (
     <main>
       <Box
-        sx={{
+        sx={(theme) => ({
+          backgroundColor: theme.palette.common.white,
           height: '100dvh',
           overflow: 'hidden',
-        }}
+        })}
       >
         <Box
           sx={(theme) => ({
@@ -145,7 +154,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
               gap: 1,
               left: 16,
               position: 'absolute',
-              top: lane.step == LaneStep.STATS ? 16 : -50,
+              top:
+                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                  ? 16
+                  : -50,
               transition: '0.5s',
             }}
           >
@@ -154,7 +166,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box
             sx={{
-              bottom: lane.step == LaneStep.STATS ? 16 : 60,
+              bottom:
+                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                  ? 16
+                  : 60,
               left: 16,
               position: 'absolute',
               transition: '0.5s',
@@ -162,7 +177,9 @@ const CallPage: FC<Props> = ({ assignment }) => {
           >
             <ZUIText
               variant={
-                lane.step == LaneStep.STATS ? 'headingLg' : 'bodyMdRegular'
+                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                  ? 'headingLg'
+                  : 'bodyMdRegular'
               }
             >
               {assignment.title}
@@ -174,7 +191,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
               bottom: 16,
               display: 'flex',
               gap: 1,
-              left: lane.step == LaneStep.STATS ? '-100%' : 16,
+              left:
+                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                  ? '-100%'
+                  : 16,
               position: 'absolute',
               transition: '0.5s',
             }}
@@ -286,7 +306,11 @@ const CallPage: FC<Props> = ({ assignment }) => {
                 }
               }}
               variant={
-                isAllocatingCall || submittingReport ? 'loading' : 'primary'
+                isAllocatingCall || submittingReport
+                  ? 'loading'
+                  : lane.step == LaneStep.SUMMARY && unfinishedCalls.length > 0
+                  ? 'secondary'
+                  : 'primary'
               }
             />
           </Box>
@@ -362,7 +386,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
                   ? 'calc(100% / 3)'
                   : lane.step == LaneStep.REPORT
                   ? 0
-                  : '',
+                  : 'calc((100% / 3) * -1)',
 
               overflowY: 'auto',
               position: 'absolute',
@@ -435,26 +459,68 @@ const CallPage: FC<Props> = ({ assignment }) => {
             />
           </Box>
           <Box
-            bgcolor="white"
             sx={{
               alignItems: 'center',
               display: 'flex',
+              flexDirection: 'column',
               height: '100%',
-              justifyContent: 'center',
+              justifyContent: 'space-evenly',
               left:
                 lane.step == LaneStep.SUMMARY
-                  ? 0
+                  ? 'calc(100% / 3)'
                   : lane.step == LaneStep.REPORT
                   ? '100%'
                   : lane.step == LaneStep.CALL
                   ? '-100%'
                   : '100%',
+              padding: 2,
               position: 'relative',
-              width: '100%',
+              width: 1 / 3,
               zIndex: lane.step == LaneStep.SUMMARY ? 0 : -1,
             }}
           >
-            SUMMARY
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+              }}
+            >
+              <ZUIText variant="headingLg">Woop woop!</ZUIText>
+              <ZUIText color="secondary" variant="headingSm">
+                {unfinishedCalls.length == 0
+                  ? callSummarySentence(call?.target.first_name ?? '', report)
+                  : 'But, before you move on: you have unfinished calls, deal with them!'}
+              </ZUIText>
+            </Box>
+            {unfinishedCalls.length == 0 && <DesktopStats stats={stats} />}
+            {unfinishedCalls.length > 0 && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                }}
+              >
+                <Box>
+                  {unfinishedCalls.map((unfinishedCall, index) => (
+                    <Fragment key={unfinishedCall.id}>
+                      <UnfinishedCall
+                        onAbandonCall={() =>
+                          abandonUnfinishedCall(unfinishedCall.id)
+                        }
+                        onSwitchToCall={() => {
+                          switchToUnfinishedCall(unfinishedCall.id);
+                        }}
+                        unfinishedCall={unfinishedCall}
+                      />
+                      {index != unfinishedCalls.length - 1 && <ZUIDivider />}
+                    </Fragment>
+                  ))}
+                </Box>
+              </Box>
+            )}
           </Box>
           <Box
             sx={{
@@ -472,29 +538,31 @@ const CallPage: FC<Props> = ({ assignment }) => {
               onClick={() => setCallLogOpen(true)}
               variant="secondary"
             />
-            <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              {unfinishedCalls.map((c) => (
-                <ListItem
-                  key={c.id}
-                  onClick={() => {
-                    switchToUnfinishedCall(c.id);
-                    setUnfinishedCallSwitchedTo(c.id);
-                  }}
-                  sx={{
-                    borderRadius: '2rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    padding: 0,
-                  }}
-                >
-                  <ZUIPersonAvatar
-                    firstName={c.target.first_name}
-                    id={c.target.id}
-                    lastName={c.target.last_name}
-                  />
-                </ListItem>
-              ))}
-            </List>
+            {lane.step != LaneStep.SUMMARY && (
+              <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                {unfinishedCalls.map((c) => (
+                  <ListItem
+                    key={c.id}
+                    onClick={() => {
+                      switchToUnfinishedCall(c.id);
+                      setUnfinishedCallSwitchedTo(c.id);
+                    }}
+                    sx={{
+                      borderRadius: '2rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      padding: 0,
+                    }}
+                  >
+                    <ZUIPersonAvatar
+                      firstName={c.target.first_name}
+                      id={c.target.id}
+                      lastName={c.target.last_name}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            )}
           </Box>
         </Box>
       </Box>

@@ -10,6 +10,39 @@ type Props = {
   stats: ZetkinCallAssignmentStats;
 };
 
+export const DesktopStats: FC<Props> = ({ stats }) => {
+  return (
+    <Box
+      display="flex"
+      gap={2}
+      justifyContent="space-between"
+      mt={2}
+      width="100%"
+    >
+      <Box sx={{ width: 1 / 3 }}>
+        <Box mr={1} sx={(theme) => ({ color: theme.palette.data.main })}>
+          <ZUIText color="inherit">{stats.num_calls_reached}</ZUIText>
+        </Box>
+        <ZUIText variant="headingSm">successful calls </ZUIText>
+      </Box>
+      <Box sx={{ width: 1 / 3 }}>
+        <Box mr={1} sx={(theme) => ({ color: theme.palette.data.main })}>
+          <ZUIText color="inherit">{stats.num_calls_made}</ZUIText>
+        </Box>
+        <Box sx={(theme) => ({ color: theme.palette.data.main })}>
+          <ZUIText variant="headingSm"> calls made</ZUIText>
+        </Box>
+      </Box>
+      <Box sx={{ width: 1 / 3 }}>
+        <Box mr={1} sx={(theme) => ({ color: theme.palette.data.main })}>
+          <ZUIText color="inherit">{stats.num_target_matches}</ZUIText>
+        </Box>
+        <ZUIText variant="headingSm">people in target group</ZUIText>
+      </Box>
+    </Box>
+  );
+};
+
 const AssignmentStats: FC<Props> = ({ stats }) => {
   const isMobile = useIsMobile();
   return (
@@ -43,39 +76,7 @@ const AssignmentStats: FC<Props> = ({ stats }) => {
               </Box>
             </Box>
           )}
-          {!isMobile && (
-            <Box display="flex" justifyContent="space-between" mt={2}>
-              <Box>
-                <Box
-                  mr={1}
-                  sx={(theme) => ({ color: theme.palette.data.main })}
-                >
-                  <ZUIText color="inherit">{stats.num_calls_reached}</ZUIText>
-                </Box>
-                <ZUIText variant="headingSm">successful calls </ZUIText>
-              </Box>
-              <Box>
-                <Box
-                  mr={1}
-                  sx={(theme) => ({ color: theme.palette.data.main })}
-                >
-                  <ZUIText color="inherit">{stats.num_calls_made}</ZUIText>
-                </Box>
-                <Box sx={(theme) => ({ color: theme.palette.data.main })}>
-                  <ZUIText variant="headingSm"> calls made</ZUIText>
-                </Box>
-              </Box>
-              <Box>
-                <Box
-                  mr={1}
-                  sx={(theme) => ({ color: theme.palette.data.main })}
-                >
-                  <ZUIText color="inherit">{stats.num_target_matches}</ZUIText>
-                </Box>
-                <ZUIText variant="headingSm">people in target group</ZUIText>
-              </Box>
-            </Box>
-          )}
+          {!isMobile && <DesktopStats stats={stats} />}
         </>
       )}
       subtitle="This is how the assignment is going."
