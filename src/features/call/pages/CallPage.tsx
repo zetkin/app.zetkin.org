@@ -527,6 +527,13 @@ const CallPage: FC<Props> = ({ assignment }) => {
       <Snackbar
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         autoHideDuration={5000}
+        onClose={(ev, reason) => {
+          if (reason == 'clickaway') {
+            return;
+          } else {
+            setUnfinishedCallSwitchedTo(null);
+          }
+        }}
         open={!!unfinishedCallSwitchedTo}
         slots={{
           transition: (props) => {
