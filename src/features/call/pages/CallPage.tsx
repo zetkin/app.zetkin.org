@@ -324,6 +324,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
+              transition: 'left 0.5s',
               width: 1 / 3,
             })}
           >
@@ -347,6 +348,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
+              transition: 'left 0.5s',
               width: 1 / 3,
             })}
           >
@@ -354,6 +356,14 @@ const CallPage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box
             sx={(theme) => ({
+              '@keyframes instructionsOut': {
+                '0%': { left: 0 },
+                '100%': { left: 'calc((-100% / 3) * 2)' },
+              },
+              animationDuration: '0.5s',
+              animationFillMode: 'backwards',
+              animationName:
+                lane.step == LaneStep.SUMMARY ? 'instructionsOut' : '',
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
@@ -365,6 +375,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
+              transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
               width: 1 / 3,
               zIndex: lane.step == LaneStep.REPORT || LaneStep.CALL ? 2 : '',
             })}
@@ -386,10 +397,12 @@ const CallPage: FC<Props> = ({ assignment }) => {
                   ? 'calc(100% / 3)'
                   : lane.step == LaneStep.REPORT
                   ? 0
-                  : 'calc((100% / 3) * -1)',
+                  : 'calc(100% + (100% / 3))',
 
               overflowY: 'auto',
               position: 'absolute',
+              transition: 'left 0.5s',
+              visibility: lane.step == LaneStep.SUMMARY ? 'hidden' : '',
               width: 1 / 3,
             })}
           >
@@ -397,6 +410,14 @@ const CallPage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box
             sx={(theme) => ({
+              '@keyframes activitiesOut': {
+                '0%': { left: 'calc(100% / 3)' },
+                '100%': { left: 'calc(-100% / 3)' },
+              },
+              animationDuration: '0.5s',
+              animationFillMode: 'backwards',
+              animationName:
+                lane.step == LaneStep.SUMMARY ? 'activitiesOut' : '',
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
@@ -406,9 +427,10 @@ const CallPage: FC<Props> = ({ assignment }) => {
                   ? 'calc((100% / 3) * 2)'
                   : lane.step == LaneStep.REPORT
                   ? 'calc(100% / 3)'
-                  : 'calc((100% / 3) * -1)',
+                  : 'calc(100% + (100% / 3) * 2)',
               overflowY: 'auto',
               position: 'absolute',
+              transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
               width: 1 / 3,
               zIndex: lane.step == LaneStep.STATS ? -1 : 0,
             })}
@@ -420,21 +442,21 @@ const CallPage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box
             sx={(theme) => ({
+              '@keyframes reportOut': {
+                '0%': { left: 'calc((100% / 3) * 2)' },
+                '100%': { left: 'calc(-100% / 3)' },
+              },
+              animationDuration: '0.5s',
+              animationFillMode: 'backwards',
+              animationName: lane.step == LaneStep.SUMMARY ? 'reportOut' : '',
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
-                lane.step == LaneStep.REPORT
-                  ? 'calc(100% - (100% / 3))'
-                  : lane.step == LaneStep.SUMMARY
-                  ? 'calc((100% / 3) * -1)'
-                  : '100%',
+                lane.step == LaneStep.REPORT ? 'calc((100% / 3) * 2)' : '100%',
               overflowY: 'auto',
               position: 'absolute',
+              transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
               width: 1 / 3,
-              zIndex:
-                lane.step == LaneStep.REPORT || lane.step == LaneStep.SUMMARY
-                  ? 0
-                  : -1,
             })}
           >
             <ZUISection
@@ -460,23 +482,23 @@ const CallPage: FC<Props> = ({ assignment }) => {
           </Box>
           <Box
             sx={{
+              '@keyframes summaryOut': {
+                '0%': { left: 'calc(100% / 3)' },
+                '100%': { left: 'calc(-100% / 3)' },
+              },
               alignItems: 'center',
+              animationDuration: '0.5s',
+              animationFillMode: 'backwards',
+              animationName: lane.step == LaneStep.CALL ? 'summaryOut' : '',
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
               justifyContent: 'space-evenly',
-              left:
-                lane.step == LaneStep.SUMMARY
-                  ? 'calc(100% / 3)'
-                  : lane.step == LaneStep.REPORT
-                  ? '100%'
-                  : lane.step == LaneStep.CALL
-                  ? '-100%'
-                  : '100%',
+              left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 3)' : '100%',
               padding: 2,
               position: 'relative',
+              transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
               width: 1 / 3,
-              zIndex: lane.step == LaneStep.SUMMARY ? 0 : -1,
             }}
           >
             <Box
