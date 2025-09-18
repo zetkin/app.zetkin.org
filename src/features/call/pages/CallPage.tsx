@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, List, ListItem, Snackbar } from '@mui/material';
+import { Alert, Box, List, ListItem, Slide, Snackbar } from '@mui/material';
 import { SkipNext } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
@@ -29,6 +29,7 @@ import ZUIModal from 'zui/components/ZUIModal';
 import { objectToFormData } from '../components/utils/objectToFormData';
 import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
 import useSubmitReport from '../hooks/useSubmitReport';
+import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -132,27 +133,59 @@ const CallPage: FC<Props> = ({ assignment }) => {
             backgroundColor: theme.palette.common.white,
             borderBottom: `1px solid ${theme.palette.dividers.main}`,
             height: '100px',
-            padding: 2,
             position: 'sticky',
             top: 0,
             zIndex: 1100,
           })}
         >
-          {/*   <Box
+          <Box
             sx={{
               alignItems: 'center',
               display: 'flex',
               gap: 1,
+              left: 16,
               position: 'absolute',
+              top: lane.step == LaneStep.STATS ? 16 : -50,
+              transition: '0.5s',
             }}
           >
             <ZUIOrgLogoAvatar orgId={assignment.organization.id} />
             <ZUIText>{assignment.organization.title}</ZUIText>
           </Box>
-          <Box sx={{ bottom: 16, position: 'absolute' }}>
-            <ZUIText variant="headingLg">{assignment.title}</ZUIText>
-          </Box> */}
-
+          <Box
+            sx={{
+              bottom: lane.step == LaneStep.STATS ? 16 : 60,
+              left: 16,
+              position: 'absolute',
+              transition: '0.5s',
+            }}
+          >
+            <ZUIText
+              variant={
+                lane.step == LaneStep.STATS ? 'headingLg' : 'bodyMdRegular'
+              }
+            >
+              {assignment.title}
+            </ZUIText>
+          </Box>
+          <Box
+            sx={{
+              alignItems: 'center',
+              bottom: 16,
+              display: 'flex',
+              gap: 1,
+              left: lane.step == LaneStep.STATS ? '-100%' : 16,
+              position: 'absolute',
+              transition: '0.5s',
+            }}
+          >
+            <ZUIText variant="headingLg">{call?.target.name}</ZUIText>
+            <ZUIText color="secondary" variant="headingLg">{`${
+              call?.target.phone
+            }${
+              call?.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
+            }`}</ZUIText>
+          </Box>
           <Box
             sx={{
               bottom: 16,
@@ -496,25 +529,37 @@ const CallPage: FC<Props> = ({ assignment }) => {
       <Snackbar
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         autoHideDuration={5000}
-        message={
-          switchedTo ? (
-            <ZUIText>{`Switched to call with ${switchedTo.target.name}`}</ZUIText>
-          ) : (
-            ''
-          )
-        }
-        onClose={(ev, reason) => {
-          if (reason == 'clickaway') {
-            return;
-          } else {
-            setUnfinishedCallSwitchedTo(null);
-          }
-        }}
         open={!!unfinishedCallSwitchedTo}
-        sx={(theme) => ({
-          '& div': { backgroundColor: theme.palette.common.white },
-        })}
-      />
+        slots={{
+          transition: (props) => {
+            return (
+              <Slide
+                {...props}
+                direction="left"
+                timeout={{
+                  enter: 500,
+                  exit: 300,
+                }}
+              />
+            );
+          },
+        }}
+      >
+        <Alert
+          icon={false}
+          onClose={() => setUnfinishedCallSwitchedTo(null)}
+          severity="success"
+          sx={(theme) => ({
+            backgroundColor: theme.palette.common.white,
+            borderLeft: `4px solid ${theme.palette.success.main}`,
+            boxShadow: theme.elevation.bottom.big.medium,
+          })}
+        >
+          {switchedTo && (
+            <ZUIText>{`Switched to call with ${switchedTo.target.name}`}</ZUIText>
+          )}
+        </Alert>
+      </Snackbar>
     </main>
   );
 };
