@@ -459,13 +459,11 @@ const CallPage: FC<Props> = ({ assignment }) => {
           <Box
             sx={{
               alignItems: 'center',
-              bottom: 0,
+              bottom: 16,
               display: 'flex',
               gap: 1,
-              left: 0,
-              padding: 1,
+              left: 16,
               position: 'absolute',
-              width: '100%',
               zIndex: 3,
             }}
           >
