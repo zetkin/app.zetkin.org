@@ -2,23 +2,33 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { useAppSelector } from 'core/hooks';
 import useUpcomingEvents from './useUpcomingEvents';
+import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 
 export default function useFilteredActivities(orgId: number) {
   const events = useUpcomingEvents(orgId);
+  const surveys = useSurveysWithElements(orgId).data || [];
+
+  const today = new Date();
+
+  const activeSurveys = surveys.filter(
+    ({ published, expires }) =>
+      published && (!expires || new Date(expires) >= today)
+  );
 
   const {
-    customDatesToFilterEventsBy: customDatesToFilterBy,
-    eventDateFilterState: dateFilterState,
-    orgIdsToFilterEventsBy: orgIdsToFilterBy,
+    customDatesToFilterEventsBy,
+    eventDateFilterState,
+    orgIdsToFilterEventsBy,
+    projectIdsToFilterSurveysBy,
   } = useAppSelector((state) => state.call.filters);
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
-    if (!dateFilterState || dateFilterState == 'custom') {
-      return customDatesToFilterBy;
-    } else if (dateFilterState == 'today') {
+    if (!eventDateFilterState || eventDateFilterState == 'custom') {
+      return customDatesToFilterEventsBy;
+    } else if (eventDateFilterState == 'today') {
       return [today, null];
-    } else if (dateFilterState == 'tomorrow') {
+    } else if (eventDateFilterState == 'tomorrow') {
       return [today.add(1, 'day'), null];
     } else {
       //dateFilterState is 'thisWeek'
@@ -28,15 +38,15 @@ export default function useFilteredActivities(orgId: number) {
 
   const filteredEvents = events
     .filter((event) => {
-      if (orgIdsToFilterBy.length == 0) {
+      if (orgIdsToFilterEventsBy.length == 0) {
         return true;
       }
-      return orgIdsToFilterBy.includes(event.organization.id);
+      return orgIdsToFilterEventsBy.includes(event.organization.id);
     })
     .filter((event) => {
       if (
-        !dateFilterState ||
-        (dateFilterState == 'custom' && !customDatesToFilterBy[0])
+        !eventDateFilterState ||
+        (eventDateFilterState == 'custom' && !customDatesToFilterEventsBy[0])
       ) {
         return true;
       }
@@ -64,5 +74,21 @@ export default function useFilteredActivities(orgId: number) {
       }
     });
 
-  return { events, filteredEvents, getDateRange };
+  const filteredSurveys = activeSurveys.filter((survey) => {
+    if (projectIdsToFilterSurveysBy.length == 0) {
+      return true;
+    }
+    return (
+      survey.campaign &&
+      projectIdsToFilterSurveysBy.includes(survey.campaign.id)
+    );
+  });
+
+  return {
+    events,
+    filteredEvents,
+    filteredSurveys,
+    getDateRange,
+    surveys: activeSurveys,
+  };
 }

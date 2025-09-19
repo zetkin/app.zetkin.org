@@ -20,6 +20,7 @@ type ActivityFilters = {
   eventDateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
   filterState: { events: boolean; surveys: boolean };
   orgIdsToFilterEventsBy: number[];
+  projectIdsToFilterSurveysBy: (number | 'noProject')[];
 };
 
 export interface CallStoreSlice {
@@ -38,6 +39,7 @@ const initialState: CallStoreSlice = {
     eventDateFilterState: null,
     filterState: { events: false, surveys: false },
     orgIdsToFilterEventsBy: [],
+    projectIdsToFilterSurveysBy: [],
   },
   lanes: [
     {

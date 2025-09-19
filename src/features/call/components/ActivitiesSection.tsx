@@ -9,11 +9,10 @@ import {
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
-import { CalendarMonthOutlined, Clear } from '@mui/icons-material';
+import { CalendarMonthOutlined, Clear, GroupWork } from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 
 import EventCard from './EventCard';
-import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
 import ZUISection from 'zui/components/ZUISection';
 import { ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
@@ -25,6 +24,7 @@ import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
+import notEmpty from 'utils/notEmpty';
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
@@ -37,22 +37,20 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 }) => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
-  const { events, filteredEvents, getDateRange } = useFilteredActivities(
-    assignment.organization.id
-  );
-  const surveys = useSurveysWithElements(assignment.organization.id).data || [];
+  const { events, filteredEvents, filteredSurveys, getDateRange, surveys } =
+    useFilteredActivities(assignment.organization.id);
   const {
     filterState,
     customDatesToFilterEventsBy,
     eventDateFilterState,
     orgIdsToFilterEventsBy,
+    projectIdsToFilterSurveysBy,
   } = useAppSelector((state) => state.call.filters);
-  const today = new Date();
   const isFiltered = filterState.events || filterState.surveys;
   const showAll = !filterState.events && !filterState.surveys;
 
   const [drawerContent, setDrawerContent] = useState<
-    'orgs' | 'calendar' | null
+    'orgs' | 'calendar' | 'projects' | null
   >(null);
 
   const orgs = [
@@ -60,6 +58,21 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       events.map((event) => event.organization).map((org) => [org['id'], org])
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
+
+  const surveysWithCampaign = surveys.filter((survey) => !!survey.campaign);
+
+  const projects: { id: 'noProject' | number; title: string }[] = [
+    ...new Map(
+      surveysWithCampaign
+        .map((survey) => survey.campaign)
+        .filter(notEmpty)
+        .map((campaign) => [campaign['title'], campaign])
+    ).values(),
+  ].sort((a, b) => a.title.localeCompare(b.title));
+
+  if (surveysWithCampaign.length != surveys.length) {
+    projects.push({ id: 'noProject', title: 'noProject' });
+  }
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -82,7 +95,20 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     return orgIds;
   }, []);
 
+  const projectIdsWithSurveys = surveys.reduce<(number | 'noProject')[]>(
+    (projectIds, survey) => {
+      if (survey.campaign && !projectIds.includes(survey.campaign.id)) {
+        projectIds = [...projectIds, survey.campaign.id];
+      } else if (!survey.campaign && !projectIds.includes('noProject')) {
+        projectIds = [...projectIds, 'noProject'];
+      }
+      return projectIds;
+    },
+    []
+  );
+
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
+  const moreThanOneProjectHasSurveys = projectIdsWithSurveys.length > 1;
 
   const showEventFilter = filterState.events || showAll;
   const showSurveysFilter = filterState.surveys || showAll;
@@ -125,7 +151,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       : []),
   ];
 
-  const eventDateFilters = [
+  const eventFilters = [
     {
       active: eventDateFilterState == 'today',
       key: 'today',
@@ -204,8 +230,34 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     orgIdsToFilterEventsBy: [],
                   })
                 );
+              } else {
+                setDrawerContent('orgs');
               }
-              setDrawerContent('orgs');
+            },
+          },
+        ]
+      : []),
+  ];
+
+  const surveyFilters = [
+    ...(moreThanOneProjectHasSurveys
+      ? [
+          {
+            active: !!projectIdsToFilterSurveysBy.length,
+            key: 'projects',
+            label: projectIdsToFilterSurveysBy.length
+              ? `${projectIdsToFilterSurveysBy.length} projects`
+              : 'Projects',
+            onClick: () => {
+              if (projectIdsToFilterSurveysBy.length) {
+                dispatch(
+                  filtersUpdated({
+                    projectIdsToFilterSurveysBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('projects');
+              }
             },
           },
         ]
@@ -233,11 +285,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   );
 
   const dates = Object.keys(eventsByDate).sort();
-
-  const activeSurveys = surveys.filter(
-    ({ published, expires }) =>
-      published && (!expires || new Date(expires) >= today)
-  );
 
   return (
     <>
@@ -293,7 +340,16 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     />
                   ))}
                   {filterState.events &&
-                    eventDateFilters.map((filter) => (
+                    eventFilters.map((filter) => (
+                      <ZUIFilterButton
+                        key={filter.key}
+                        active={filter.active}
+                        label={filter.label}
+                        onClick={filter.onClick}
+                      />
+                    ))}
+                  {filterState.surveys &&
+                    surveyFilters.map((filter) => (
                       <ZUIFilterButton
                         key={filter.key}
                         active={filter.active}
@@ -304,30 +360,17 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 </Box>
               )}
               {(showAll || filterState.events) &&
-                dates.map((date, index) => {
-                  return index > 0 ? null : (
-                    <Box
-                      key={date}
-                      display="flex"
-                      flexDirection="column"
-                      gap={1}
-                    >
-                      {eventsByDate[date].map((event) => (
-                        <EventCard
-                          key={event.id}
-                          event={event}
-                          target={target}
-                        />
-                      ))}
-                    </Box>
-                  );
-                })}
+                dates.map((date) => (
+                  <Box key={date} display="flex" flexDirection="column" gap={1}>
+                    {eventsByDate[date].map((event) => (
+                      <EventCard key={event.id} event={event} target={target} />
+                    ))}
+                  </Box>
+                ))}
               {(showAll || filterState.surveys) &&
-                activeSurveys.map((survey, index) => {
-                  return index > 0 ? null : (
-                    <SurveyCard key={index} survey={survey} />
-                  );
-                })}
+                filteredSurveys.map((survey, index) => (
+                  <SurveyCard key={index} survey={survey} />
+                ))}
             </Box>
           );
         }}
@@ -429,6 +472,49 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                         orgIdsToFilterEventsBy: orgIdsToFilterEventsBy.filter(
                           (id) => id != org.id
                         ),
+                      })
+                    );
+                  }
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'projects'}
+      >
+        <List>
+          {projects.map((project) => (
+            <ListItem key={project.id} sx={{ justifyContent: 'space-between' }}>
+              <Box alignItems="center" display="flex">
+                <ListItemAvatar>
+                  <GroupWork />
+                </ListItemAvatar>
+                <ZUIText>
+                  {project.id == 'noProject' ? 'No project' : project.title}
+                </ZUIText>
+              </Box>
+              <Switch
+                checked={projectIdsToFilterSurveysBy.includes(project.id)}
+                onChange={(_event, checked) => {
+                  if (checked) {
+                    dispatch(
+                      filtersUpdated({
+                        projectIdsToFilterSurveysBy: [
+                          ...projectIdsToFilterSurveysBy,
+                          project.id,
+                        ],
+                      })
+                    );
+                  } else {
+                    dispatch(
+                      filtersUpdated({
+                        projectIdsToFilterSurveysBy:
+                          projectIdsToFilterSurveysBy.filter(
+                            (id) => id != project.id
+                          ),
                       })
                     );
                   }
