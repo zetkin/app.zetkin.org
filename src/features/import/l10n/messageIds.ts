@@ -186,6 +186,9 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
+      notEnoughRows: m(
+        'Your file does not contain enough rows to import any data'
+      ),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),

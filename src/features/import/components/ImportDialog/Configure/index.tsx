@@ -15,6 +15,7 @@ import useImportConfigState from 'features/import/hooks/useUIDataColumns';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
+import useRowCountValidation from '../../../hooks/useRowCountValidation';
 
 interface ConfigureProps {
   onClose: () => void;
@@ -29,6 +30,7 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
   >(null);
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
+  const { hasData } = useRowCountValidation();
   const { configIsIncomplete, numColumns, numRows } = useImportConfigState();
   const getPreflightStats = useConfigure(orgId);
   const [loading, setLoading] = useState(false);
@@ -98,7 +100,13 @@ const Configure: FC<ConfigureProps> = ({ onClose, onRestart, onValidate }) => {
               )}
             </Box>
           </Box>
-          <Preview />
+          {hasData ? (
+            <Preview />
+          ) : (
+            <ZUIEmptyState
+              message={messages.configuration.mapping.notEnoughRows()}
+            />
+          )}
           <ImportFooter
             onClickPrimary={async () => {
               setLoading(true);
