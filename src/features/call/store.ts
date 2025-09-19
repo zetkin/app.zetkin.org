@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Dayjs } from 'dayjs';
+import { DateRange } from '@mui/x-date-pickers-pro';
 
 import {
   LaneStep,
@@ -13,8 +15,16 @@ import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { SerializedError } from './hooks/useAllocateCall';
 
+type ActivityFilters = {
+  customDatesToFilterEventsBy: DateRange<Dayjs>;
+  eventDateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+  filterState: { events: boolean; surveys: boolean };
+  orgIdsToFilterEventsBy: number[];
+};
+
 export interface CallStoreSlice {
   activeLaneIndex: number;
+  filters: ActivityFilters;
   upcomingEventsList: RemoteList<ZetkinEvent>;
   lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
@@ -23,6 +33,12 @@ export interface CallStoreSlice {
 
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
+  filters: {
+    customDatesToFilterEventsBy: [null, null],
+    eventDateFilterState: null,
+    filterState: { events: false, surveys: false },
+    orgIdsToFilterEventsBy: [],
+  },
   lanes: [
     {
       callIsBeingAllocated: false,
@@ -184,6 +200,13 @@ const CallSlice = createSlice({
     eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
       state.upcomingEventsList = remoteList(action.payload);
       state.upcomingEventsList.loaded = new Date().toISOString();
+    },
+    filtersUpdated: (
+      state,
+      action: PayloadAction<Partial<ActivityFilters>>
+    ) => {
+      const updatedFilters = action.payload;
+      state.filters = { ...state.filters, ...updatedFilters };
     },
     newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
       state.lanes[state.activeLaneIndex].currentCallId = action.payload.id;
@@ -412,6 +435,7 @@ export const {
   allocateCallError,
   eventResponseAdded,
   eventResponseRemoved,
+  filtersUpdated,
   allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,

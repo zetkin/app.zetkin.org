@@ -23,6 +23,12 @@ export default function mockState(overrides?: RootState) {
     },
     call: {
       activeLaneIndex: 0,
+      filters: {
+        customDatesToFilterEventsBy: [null, null],
+        eventDateFilterState: null,
+        filterState: { events: false, surveys: false },
+        orgIdsToFilterEventsBy: [],
+      },
       lanes: [],
       outgoingCalls: remoteList(),
       queueHasError: null,
