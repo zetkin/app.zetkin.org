@@ -26,7 +26,7 @@ export default function mockState(overrides?: RootState) {
       filters: {
         customDatesToFilterEventsBy: [null, null],
         eventDateFilterState: null,
-        filterState: { events: false, surveys: false },
+        filterState: { alreadyIn: false, events: false, surveys: false },
         orgIdsToFilterEventsBy: [],
         projectIdsToFilterSurveysBy: [],
       },

@@ -18,7 +18,7 @@ import { SerializedError } from './hooks/useAllocateCall';
 type ActivityFilters = {
   customDatesToFilterEventsBy: DateRange<Dayjs>;
   eventDateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
-  filterState: { events: boolean; surveys: boolean };
+  filterState: { alreadyIn: boolean; events: boolean; surveys: boolean };
   orgIdsToFilterEventsBy: number[];
   projectIdsToFilterSurveysBy: (number | 'noProject')[];
 };
@@ -37,7 +37,7 @@ const initialState: CallStoreSlice = {
   filters: {
     customDatesToFilterEventsBy: [null, null],
     eventDateFilterState: null,
-    filterState: { events: false, surveys: false },
+    filterState: { alreadyIn: false, events: false, surveys: false },
     orgIdsToFilterEventsBy: [],
     projectIdsToFilterSurveysBy: [],
   },

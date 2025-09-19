@@ -46,8 +46,13 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     orgIdsToFilterEventsBy,
     projectIdsToFilterSurveysBy,
   } = useAppSelector((state) => state.call.filters);
-  const isFiltered = filterState.events || filterState.surveys;
-  const showAll = !filterState.events && !filterState.surveys;
+  const idsOfEventsRespondedTo = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
+  );
+  const isFiltered =
+    filterState.alreadyIn || filterState.events || filterState.surveys;
+  const showAll =
+    !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | 'projects' | null
@@ -114,6 +119,18 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const showSurveysFilter = filterState.surveys || showAll;
 
   const baseFilters = [
+    {
+      active: filterState.alreadyIn,
+      key: 'alreadyIn',
+      label: 'Already in',
+      onClick: () => {
+        dispatch(
+          filtersUpdated({
+            filterState: { ...filterState, alreadyIn: !filterState.alreadyIn },
+          })
+        );
+      },
+    },
     ...(showEventFilter
       ? [
           {
@@ -264,8 +281,24 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       : []),
   ];
 
-  const eventsByDate = filteredEvents.reduce<Record<string, ZetkinEvent[]>>(
-    (dates, event) => {
+  const eventsByDate = filteredEvents
+    .filter((event) => {
+      if (!filterState.alreadyIn) {
+        return true;
+      }
+
+      if (!target) {
+        return false;
+      }
+      const isBooked = target.future_actions.some(
+        (futureEvent) => futureEvent.id == event.id
+      );
+
+      const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
+
+      return isSignedUp || isBooked;
+    })
+    .reduce<Record<string, ZetkinEvent[]>>((dates, event) => {
       const eventDate = event.start_time.slice(0, 10);
       const existingEvents = dates[eventDate] || [];
 
@@ -280,9 +313,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
         ...dates,
         [dateToSortAs]: [...existingEvents, event],
       };
-    },
-    {}
-  );
+    }, {});
 
   const dates = Object.keys(eventsByDate).sort();
 
@@ -322,6 +353,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                             customDatesToFilterEventsBy: [null, null],
                             eventDateFilterState: null,
                             filterState: {
+                              alreadyIn: false,
                               events: false,
                               surveys: false,
                             },
@@ -359,7 +391,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     ))}
                 </Box>
               )}
-              {(showAll || filterState.events) &&
+              {(showAll || filterState.events || filterState.alreadyIn) &&
                 dates.map((date) => (
                   <Box key={date} display="flex" flexDirection="column" gap={1}>
                     {eventsByDate[date].map((event) => (
