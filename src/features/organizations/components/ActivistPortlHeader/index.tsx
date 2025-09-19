@@ -1,13 +1,16 @@
-import { Box } from '@mui/material';
-import { FC } from 'react';
-import NextLink from 'next/link';
+import { Box, Button } from '@mui/material';
+import { FC, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
+import messageIds from 'features/organizations/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITabbedNavBar, {
   ZUITabbedNavBarProps,
 } from 'zui/components/ZUITabbedNavBar';
 import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import useUser from 'core/hooks/useUser';
+import { useMessages } from 'core/i18n';
+import ZUIMenu, { MenuItem } from 'zui/components/ZUIMenu';
 
 type Props = {
   button?: JSX.Element;
@@ -27,8 +30,27 @@ const ActivistPortalHeader: FC<Props> = ({
   topLeftComponent,
 }) => {
   const user = useUser();
+  const messages = useMessages(messageIds);
 
   const hasNavBar = selectedTab && tabs;
+  const [logoutMenuAnchorEl, setLogoutMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
+  const router = useRouter();
+  const path = usePathname();
+
+  const menuItems: MenuItem[] = [
+    {
+      label: messages.home.menu.logout(),
+      onClick: () => router.push('/logout'),
+    },
+  ];
+  if (!path?.startsWith('/my')) {
+    menuItems.unshift({
+      divider: true,
+      label: process.env.HOME_TITLE || messages.home.menu.myZetkin(),
+      onClick: () => router.push('/my'),
+    });
+  }
 
   return (
     <Box
@@ -56,14 +78,23 @@ const ActivistPortalHeader: FC<Props> = ({
         >
           {topLeftComponent}
           {user && (
-            <NextLink href="/my">
-              <ZUIPersonAvatar
-                firstName={user.first_name}
-                id={user.id}
-                isUser
-                lastName={user.last_name}
+            <>
+              <Button
+                onClick={(event) => setLogoutMenuAnchorEl(event.currentTarget)}
+              >
+                <ZUIPersonAvatar
+                  firstName={user.first_name}
+                  id={user.id}
+                  isUser
+                  lastName={user.last_name}
+                />
+              </Button>
+              <ZUIMenu
+                anchorEl={logoutMenuAnchorEl}
+                menuItems={menuItems}
+                onClose={() => setLogoutMenuAnchorEl(null)}
               />
-            </NextLink>
+            </>
           )}
         </Box>
         <Box
