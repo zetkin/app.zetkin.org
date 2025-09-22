@@ -128,9 +128,13 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
             `marker-${successPercentage}-${visitPercentage}` +
             (selected ? '-selected' : '');
 
-          let z = visitRatio === 1.0 ? 1 : 2;
+          let zIndex;
           if (selected) {
-            z = 3;
+            zIndex = 3;
+          } else if (visitRatio < 1.0) {
+            zIndex = 2;
+          } else {
+            zIndex = 1;
           }
 
           return {
@@ -142,7 +146,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
               icon,
               successPercentage,
               visitPercentage,
-              z,
+              z: zIndex,
             },
             type: 'Feature',
           };
