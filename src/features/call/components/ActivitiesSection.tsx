@@ -9,13 +9,19 @@ import {
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { useIntl } from 'react-intl';
-import { CalendarMonthOutlined, Clear, GroupWork } from '@mui/icons-material';
+import {
+  CalendarMonthOutlined,
+  Chair,
+  Clear,
+  GroupWork,
+  Hotel,
+} from '@mui/icons-material';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 
 import EventCard from './EventCard';
 import ZUISection from 'zui/components/ZUISection';
 import { ZetkinCallTarget } from '../types';
-import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
 import useFilteredActivities from '../hooks/useFilteredActivities';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
@@ -25,6 +31,8 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
+import { ACTIVITIES } from 'features/campaigns/types';
+import ZUIIcon from 'zui/components/ZUIIcon';
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
@@ -37,7 +45,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 }) => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
-  const { events, filteredEvents, filteredSurveys, getDateRange, surveys } =
+  const { events, filteredActivities, filteredEvents, getDateRange, surveys } =
     useFilteredActivities(assignment.organization.id);
   const {
     filterState,
@@ -46,9 +54,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     orgIdsToFilterEventsBy,
     projectIdsToFilterSurveysBy,
   } = useAppSelector((state) => state.call.filters);
-  const idsOfEventsRespondedTo = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
-  );
   const isFiltered =
     filterState.alreadyIn || filterState.events || filterState.surveys;
   const showAll =
@@ -93,42 +98,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     }
   };
 
-  const eventsByDate = filteredEvents
-    .filter((event) => {
-      if (!filterState.alreadyIn) {
-        return true;
-      }
-
-      if (!target) {
-        return false;
-      }
-      const isBooked = target.future_actions.some(
-        (futureEvent) => futureEvent.id == event.id
-      );
-
-      const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
-
-      return isSignedUp || isBooked;
-    })
-    .reduce<Record<string, ZetkinEvent[]>>((dates, event) => {
-      const eventDate = event.start_time.slice(0, 10);
-      const existingEvents = dates[eventDate] || [];
-
-      const firstFilterDate = dayjs().format('YYYY-MM-DD');
-
-      const dateToSortAs =
-        firstFilterDate && eventDate < firstFilterDate
-          ? firstFilterDate
-          : eventDate;
-
-      return {
-        ...dates,
-        [dateToSortAs]: [...existingEvents, event],
-      };
-    }, {});
-
-  const dates = Object.keys(eventsByDate).sort();
-
   const orgIdsWithEvents = events.reduce<number[]>((orgIds, event) => {
     if (!orgIds.includes(event.organization.id)) {
       orgIds = [...orgIds, event.organization.id];
@@ -153,7 +122,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   const showEventFilter =
     filterState.events ||
-    (filterState.alreadyIn && dates.length > 0) ||
+    (filterState.alreadyIn && filteredEvents.length > 0) ||
     showAll;
   const showSurveysFilter = filterState.surveys || showAll;
   const showAlreadyInFilter =
@@ -343,6 +312,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
+                flexGrow: 1,
                 gap: 1,
               }}
             >
@@ -403,18 +373,51 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     ))}
                 </Box>
               )}
-              {(showAll || filterState.events || filterState.alreadyIn) &&
-                dates.map((date) => (
-                  <Box key={date} display="flex" flexDirection="column" gap={1}>
-                    {eventsByDate[date].map((event) => (
-                      <EventCard key={event.id} event={event} target={target} />
-                    ))}
-                  </Box>
-                ))}
-              {(showAll || filterState.surveys) &&
-                filteredSurveys.map((survey, index) => (
-                  <SurveyCard key={index} survey={survey} />
-                ))}
+              {filteredActivities.length == 0 && !filterState.alreadyIn && (
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ZUIIcon color="secondary" icon={Chair} size="large" />
+                  <ZUIText color="secondary">No activities</ZUIText>
+                </Box>
+              )}
+              {filteredActivities.length == 0 && filterState.alreadyIn && (
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ZUIIcon color="secondary" icon={Hotel} size="large" />
+                  <ZUIText color="secondary">{`${target.first_name} is not booked or signed up for any events.`}</ZUIText>
+                </Box>
+              )}
+              {filteredActivities.map((activity) => {
+                if (activity.kind == ACTIVITIES.EVENT) {
+                  return (
+                    <EventCard
+                      key={activity.data.id}
+                      event={activity.data}
+                      target={target}
+                    />
+                  );
+                }
+
+                if (activity.kind == ACTIVITIES.SURVEY) {
+                  return (
+                    <SurveyCard key={activity.data.id} survey={activity.data} />
+                  );
+                }
+              })}
             </Box>
           );
         }}

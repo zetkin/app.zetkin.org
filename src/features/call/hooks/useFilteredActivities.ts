@@ -3,24 +3,47 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useAppSelector } from 'core/hooks';
 import useUpcomingEvents from './useUpcomingEvents';
 import useSurveysWithElements from 'features/surveys/hooks/useSurveysWithElements';
+import { getUTCDateWithoutTime } from 'utils/dateUtils';
+import useCurrentCall from './useCurrentCall';
+import { ZetkinEvent, ZetkinSurveyExtended } from 'utils/types/zetkin';
+
+type ActivityBase = {
+  visibleFrom: Date | null;
+  visibleUntil: Date | null;
+};
+
+type EventActivity = ActivityBase & {
+  data: ZetkinEvent;
+  kind: 'event';
+};
+
+type SurveyActivity = ActivityBase & {
+  data: ZetkinSurveyExtended;
+  kind: 'survey';
+};
+
+type Activity = EventActivity | SurveyActivity;
 
 export default function useFilteredActivities(orgId: number) {
   const events = useUpcomingEvents(orgId);
   const surveys = useSurveysWithElements(orgId).data || [];
-
-  const today = new Date();
-
-  const activeSurveys = surveys.filter(
-    ({ published, expires }) =>
-      published && (!expires || new Date(expires) >= today)
-  );
-
   const {
+    filterState,
     customDatesToFilterEventsBy,
     eventDateFilterState,
     orgIdsToFilterEventsBy,
     projectIdsToFilterSurveysBy,
   } = useAppSelector((state) => state.call.filters);
+  const idsOfEventsRespondedTo = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
+  );
+  const target = useCurrentCall()?.target ?? null;
+
+  const today = new Date();
+  const activeSurveys = surveys.filter(
+    ({ published, expires }) =>
+      published && (!expires || new Date(expires) >= today)
+  );
 
   const getDateRange = (): [Dayjs | null, Dayjs | null] => {
     const today = dayjs();
@@ -36,12 +59,28 @@ export default function useFilteredActivities(orgId: number) {
     }
   };
 
-  const filteredEvents = events
+  const filteredEvents: EventActivity[] = events
     .filter((event) => {
       if (orgIdsToFilterEventsBy.length == 0) {
         return true;
       }
       return orgIdsToFilterEventsBy.includes(event.organization.id);
+    })
+    .filter((event) => {
+      if (!filterState.alreadyIn) {
+        return true;
+      }
+
+      if (!target) {
+        return false;
+      }
+      const isBooked = target.future_actions.some(
+        (futureEvent) => futureEvent.id == event.id
+      );
+
+      const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
+
+      return isSignedUp || isBooked;
     })
     .filter((event) => {
       if (
@@ -72,20 +111,65 @@ export default function useFilteredActivities(orgId: number) {
           (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
         return isOngoing || startsInPeriod || endsInPeriod;
       }
-    });
+    })
+    .map((event) => ({
+      data: event,
+      kind: 'event',
+      visibleFrom: getUTCDateWithoutTime(event.published || null),
+      visibleUntil: getUTCDateWithoutTime(event.end_time || null),
+    }));
 
-  const filteredSurveys = activeSurveys.filter((survey) => {
-    if (projectIdsToFilterSurveysBy.length == 0) {
+  const filteredSurveys: SurveyActivity[] = activeSurveys
+    .filter((survey) => {
+      if (projectIdsToFilterSurveysBy.length == 0) {
+        return true;
+      }
+      return (
+        survey.campaign &&
+        projectIdsToFilterSurveysBy.includes(survey.campaign.id)
+      );
+    })
+    .map((survey) => ({
+      data: survey,
+      kind: 'survey',
+      visibleFrom: getUTCDateWithoutTime(survey.published || null),
+      visibleUntil: getUTCDateWithoutTime(survey.expires || null),
+    }));
+
+  const filteredActivities: Activity[] = [...filteredEvents, ...filteredSurveys]
+    .filter((activity) => {
+      if (filterState.alreadyIn && activity.kind == 'survey') {
+        return false;
+      }
+
+      if (filterState.events && activity.kind == 'survey') {
+        return false;
+      }
+
+      if (filterState.surveys && activity.kind == 'event') {
+        return false;
+      }
+
       return true;
-    }
-    return (
-      survey.campaign &&
-      projectIdsToFilterSurveysBy.includes(survey.campaign.id)
-    );
-  });
+    })
+    .sort((a, b) => {
+      const aStart = a.visibleFrom;
+      const bStart = b.visibleFrom;
+
+      if (!aStart && !bStart) {
+        return 0;
+      } else if (!aStart) {
+        return -1;
+      } else if (!bStart) {
+        return 1;
+      }
+
+      return bStart.getTime() - aStart.getTime();
+    });
 
   return {
     events,
+    filteredActivities,
     filteredEvents,
     filteredSurveys,
     getDateRange,
