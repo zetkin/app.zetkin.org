@@ -93,6 +93,42 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     }
   };
 
+  const eventsByDate = filteredEvents
+    .filter((event) => {
+      if (!filterState.alreadyIn) {
+        return true;
+      }
+
+      if (!target) {
+        return false;
+      }
+      const isBooked = target.future_actions.some(
+        (futureEvent) => futureEvent.id == event.id
+      );
+
+      const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
+
+      return isSignedUp || isBooked;
+    })
+    .reduce<Record<string, ZetkinEvent[]>>((dates, event) => {
+      const eventDate = event.start_time.slice(0, 10);
+      const existingEvents = dates[eventDate] || [];
+
+      const firstFilterDate = dayjs().format('YYYY-MM-DD');
+
+      const dateToSortAs =
+        firstFilterDate && eventDate < firstFilterDate
+          ? firstFilterDate
+          : eventDate;
+
+      return {
+        ...dates,
+        [dateToSortAs]: [...existingEvents, event],
+      };
+    }, {});
+
+  const dates = Object.keys(eventsByDate).sort();
+
   const orgIdsWithEvents = events.reduce<number[]>((orgIds, event) => {
     if (!orgIds.includes(event.organization.id)) {
       orgIds = [...orgIds, event.organization.id];
@@ -115,26 +151,38 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
   const moreThanOneProjectHasSurveys = projectIdsWithSurveys.length > 1;
 
-  const showEventFilter = filterState.events || showAll;
+  const showEventFilter =
+    filterState.events ||
+    (filterState.alreadyIn && dates.length > 0) ||
+    showAll;
   const showSurveysFilter = filterState.surveys || showAll;
+  const showAlreadyInFilter =
+    filterState.alreadyIn || filterState.events || showAll;
 
   const baseFilters = [
-    {
-      active: filterState.alreadyIn,
-      key: 'alreadyIn',
-      label: 'Already in',
-      onClick: () => {
-        dispatch(
-          filtersUpdated({
-            filterState: { ...filterState, alreadyIn: !filterState.alreadyIn },
-          })
-        );
-      },
-    },
+    ...(showAlreadyInFilter
+      ? [
+          {
+            active: filterState.alreadyIn,
+            key: 'alreadyIn',
+            label: 'Already in',
+            onClick: () => {
+              dispatch(
+                filtersUpdated({
+                  filterState: {
+                    ...filterState,
+                    alreadyIn: !filterState.alreadyIn,
+                  },
+                })
+              );
+            },
+          },
+        ]
+      : []),
     ...(showEventFilter
       ? [
           {
-            active: filterState.events,
+            active: filterState.events || filterState.alreadyIn,
             key: 'events',
             label: 'Events',
             onClick: () => {
@@ -280,42 +328,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
         ]
       : []),
   ];
-
-  const eventsByDate = filteredEvents
-    .filter((event) => {
-      if (!filterState.alreadyIn) {
-        return true;
-      }
-
-      if (!target) {
-        return false;
-      }
-      const isBooked = target.future_actions.some(
-        (futureEvent) => futureEvent.id == event.id
-      );
-
-      const isSignedUp = idsOfEventsRespondedTo.includes(event.id);
-
-      return isSignedUp || isBooked;
-    })
-    .reduce<Record<string, ZetkinEvent[]>>((dates, event) => {
-      const eventDate = event.start_time.slice(0, 10);
-      const existingEvents = dates[eventDate] || [];
-
-      const firstFilterDate = dayjs().format('YYYY-MM-DD');
-
-      const dateToSortAs =
-        firstFilterDate && eventDate < firstFilterDate
-          ? firstFilterDate
-          : eventDate;
-
-      return {
-        ...dates,
-        [dateToSortAs]: [...existingEvents, event],
-      };
-    }, {});
-
-  const dates = Object.keys(eventsByDate).sort();
 
   return (
     <>
