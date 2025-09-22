@@ -2441,7 +2441,7 @@ feat:
     submissionPane:
       anonymous: Anonym
       hidden: Verborgen
-      linked: verlinkt
+      linked: Verknüpft
       subtitle: '{person} {date}'
     submissions:
       anonymous: Anonym
@@ -2455,7 +2455,7 @@ feat:
       emailColumn: Email
       firstNameColumn: Vorname
       lastNameColumn: Nachname
-      link: Verbinden
+      link: Verknüpfen
       personRecordColumn: Befragte*r
       suggestedPeople: Vorgeschlagene Personen
       unlink: Link entfernen
