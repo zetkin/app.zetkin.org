@@ -56,8 +56,8 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
           <Typography variant="body1">
             {messages.page.noDuplicatesDescription()}
-            <br/>
-            <br/>
+            <br />
+            <br />
             {messages.page.noDuplicatesContactUs()}
           </Typography>
         </Box>
