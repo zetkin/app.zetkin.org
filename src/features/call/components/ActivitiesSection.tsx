@@ -187,6 +187,10 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     orgIdsToFilterEventsBy,
     projectIdsToFilterActivitiesBy,
   } = useAppSelector((state) => state.call.filters);
+  const { respondedEventIds, submissionDataBySurveyId } = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex]
+  );
+  const respondedSurveyIds = Object.keys(submissionDataBySurveyId);
 
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | 'context' | null
@@ -307,8 +311,29 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const showSurveysFilter = filterState.surveys || showAll;
   const showAlreadyInFilter =
     filterState.alreadyIn || filterState.events || showAll;
+  const showThisCallFilter =
+    respondedEventIds.length > 0 || respondedSurveyIds.length > 0;
 
   const baseFilters = [
+    ...(showThisCallFilter
+      ? [
+          {
+            active: filterState.thisCall,
+            key: 'thisCall',
+            label: 'This call',
+            onClick: () => {
+              dispatch(
+                filtersUpdated({
+                  filterState: {
+                    ...filterState,
+                    thisCall: !filterState.thisCall,
+                  },
+                })
+              );
+            },
+          },
+        ]
+      : []),
     ...(showAlreadyInFilter
       ? [
           {
@@ -504,6 +529,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                             alreadyIn: false,
                             events: false,
                             surveys: false,
+                            thisCall: false,
                           },
                           orgIdsToFilterEventsBy: [],
                         })
@@ -557,6 +583,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                       alreadyIn: false,
                       events: false,
                       surveys: false,
+                      thisCall: false,
                     },
                     orgIdsToFilterEventsBy: [],
                   })

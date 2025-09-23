@@ -37,6 +37,10 @@ export default function useFilteredActivities(orgId: number) {
   const idsOfEventsRespondedTo = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
   );
+  const surveySubmissionBySubmissionId = useAppSelector(
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
+  );
   const target = useCurrentCall()?.target ?? null;
 
   const today = new Date();
@@ -158,6 +162,21 @@ export default function useFilteredActivities(orgId: number) {
         activity.data.campaign &&
         projectIdsToFilterActivitiesBy.includes(activity.data.campaign.id)
       );
+    })
+    .filter((activity) => {
+      if (!filterState.thisCall) {
+        return true;
+      }
+
+      if (activity.kind == 'event') {
+        return idsOfEventsRespondedTo.includes(activity.data.id);
+      }
+
+      if (activity.kind == 'survey') {
+        return Object.keys(surveySubmissionBySubmissionId).includes(
+          activity.data.id.toString()
+        );
+      }
     })
     .sort((a, b) => {
       const aStart = a.visibleFrom;
