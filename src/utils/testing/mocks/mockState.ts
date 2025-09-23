@@ -28,7 +28,7 @@ export default function mockState(overrides?: RootState) {
         eventDateFilterState: null,
         filterState: { alreadyIn: false, events: false, surveys: false },
         orgIdsToFilterEventsBy: [],
-        projectIdsToFilterSurveysBy: [],
+        projectIdsToFilterActivitiesBy: [],
       },
       lanes: [],
       outgoingCalls: remoteList(),

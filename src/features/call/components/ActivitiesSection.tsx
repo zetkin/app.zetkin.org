@@ -55,7 +55,6 @@ type ActivitiesProps = {
   onSelectSurvey: (surveyId: number) => void;
   showNoActivities: boolean;
   showNoSignups: boolean;
-  surveyFilters: Filter[];
   target: ZetkinCallTarget | null;
 };
 
@@ -63,7 +62,6 @@ const Activities: FC<ActivitiesProps> = ({
   activities,
   baseFilters,
   eventFilters,
-  surveyFilters,
   isFiltered,
   onClearFilters,
   onSelectSurvey,
@@ -108,14 +106,6 @@ const Activities: FC<ActivitiesProps> = ({
           />
         ))}
         {eventFilters.map((filter) => (
-          <ZUIFilterButton
-            key={filter.key}
-            active={filter.active}
-            label={filter.label}
-            onClick={filter.onClick}
-          />
-        ))}
-        {surveyFilters.map((filter) => (
           <ZUIFilterButton
             key={filter.key}
             active={filter.active}
@@ -195,11 +185,11 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     customDatesToFilterEventsBy,
     eventDateFilterState,
     orgIdsToFilterEventsBy,
-    projectIdsToFilterSurveysBy,
+    projectIdsToFilterActivitiesBy,
   } = useAppSelector((state) => state.call.filters);
 
   const [drawerContent, setDrawerContent] = useState<
-    'orgs' | 'calendar' | 'projects' | null
+    'orgs' | 'calendar' | 'context' | null
   >(null);
   const [selectedTab, setSelectedTab] = useState<'activities' | 'survey'>(
     'activities'
@@ -245,8 +235,20 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   ].sort((a, b) => a.title.localeCompare(b.title));
 
   const surveysWithCampaign = surveys.filter((survey) => !!survey.campaign);
+  const eventsWithCampaign = events.filter((event) => !!event.campaign);
+
+  const activitiesWithCampaign = [
+    ...surveysWithCampaign,
+    ...eventsWithCampaign,
+  ];
 
   const projects: { id: 'noProject' | number; title: string }[] = [
+    ...new Map(
+      eventsWithCampaign
+        .map((event) => event.campaign)
+        .filter(notEmpty)
+        .map((campaign) => [campaign['title'], campaign])
+    ).values(),
     ...new Map(
       surveysWithCampaign
         .map((survey) => survey.campaign)
@@ -255,7 +257,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  if (surveysWithCampaign.length != surveys.length) {
+  if (activitiesWithCampaign.length != surveys.length + events.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
 
@@ -278,8 +280,25 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     []
   );
 
+  const projectIdsWithEvents = events.reduce<(number | 'noProject')[]>(
+    (projectIds, event) => {
+      if (event.campaign && !projectIds.includes(event.campaign.id)) {
+        projectIds = [...projectIds, event.campaign.id];
+      } else if (!event.campaign && !projectIds.includes('noProject')) {
+        projectIds = [...projectIds, 'noProject'];
+      }
+      return projectIds;
+    },
+    []
+  );
+
+  const projectIdsWithActivities = [
+    ...projectIdsWithEvents,
+    ...projectIdsWithSurveys,
+  ];
+
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
-  const moreThanOneProjectHasSurveys = projectIdsWithSurveys.length > 1;
+  const moreThanOneProjectHasActivities = projectIdsWithActivities.length > 1;
 
   const showEventFilter =
     filterState.events ||
@@ -340,6 +359,28 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   },
                 })
               );
+            },
+          },
+        ]
+      : []),
+    ...(moreThanOneProjectHasActivities
+      ? [
+          {
+            active: !!projectIdsToFilterActivitiesBy.length,
+            key: 'context',
+            label: projectIdsToFilterActivitiesBy.length
+              ? `${projectIdsToFilterActivitiesBy.length} projects`
+              : 'Context',
+            onClick: () => {
+              if (projectIdsToFilterActivitiesBy.length) {
+                dispatch(
+                  filtersUpdated({
+                    projectIdsToFilterActivitiesBy: [],
+                  })
+                );
+              } else {
+                setDrawerContent('context');
+              }
             },
           },
         ]
@@ -434,31 +475,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       : []),
   ];
 
-  const surveyFilters = [
-    ...(moreThanOneProjectHasSurveys
-      ? [
-          {
-            active: !!projectIdsToFilterSurveysBy.length,
-            key: 'projects',
-            label: projectIdsToFilterSurveysBy.length
-              ? `${projectIdsToFilterSurveysBy.length} projects`
-              : 'Projects',
-            onClick: () => {
-              if (projectIdsToFilterSurveysBy.length) {
-                dispatch(
-                  filtersUpdated({
-                    projectIdsToFilterSurveysBy: [],
-                  })
-                );
-              } else {
-                setDrawerContent('projects');
-              }
-            },
-          },
-        ]
-      : []),
-  ];
-
   return (
     <>
       {selectedSurvey && (
@@ -500,7 +516,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                     showNoSignups={
                       filteredActivities.length == 0 && filterState.alreadyIn
                     }
-                    surveyFilters={filterState.surveys ? surveyFilters : []}
                     target={target}
                   />
                 ),
@@ -554,7 +569,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
               showNoSignups={
                 filteredActivities.length == 0 && filterState.alreadyIn
               }
-              surveyFilters={filterState.surveys ? surveyFilters : []}
               target={target}
             />
           )}
@@ -668,7 +682,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       </ZUIDrawerModal>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
-        open={drawerContent == 'projects'}
+        open={drawerContent == 'context'}
       >
         <List>
           {projects.map((project) => (
@@ -682,13 +696,13 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 </ZUIText>
               </Box>
               <Switch
-                checked={projectIdsToFilterSurveysBy.includes(project.id)}
+                checked={projectIdsToFilterActivitiesBy.includes(project.id)}
                 onChange={(_event, checked) => {
                   if (checked) {
                     dispatch(
                       filtersUpdated({
-                        projectIdsToFilterSurveysBy: [
-                          ...projectIdsToFilterSurveysBy,
+                        projectIdsToFilterActivitiesBy: [
+                          ...projectIdsToFilterActivitiesBy,
                           project.id,
                         ],
                       })
@@ -696,8 +710,8 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   } else {
                     dispatch(
                       filtersUpdated({
-                        projectIdsToFilterSurveysBy:
-                          projectIdsToFilterSurveysBy.filter(
+                        projectIdsToFilterActivitiesBy:
+                          projectIdsToFilterActivitiesBy.filter(
                             (id) => id != project.id
                           ),
                       })

@@ -32,7 +32,7 @@ export default function useFilteredActivities(orgId: number) {
     customDatesToFilterEventsBy,
     eventDateFilterState,
     orgIdsToFilterEventsBy,
-    projectIdsToFilterSurveysBy,
+    projectIdsToFilterActivitiesBy,
   } = useAppSelector((state) => state.call.filters);
   const idsOfEventsRespondedTo = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
@@ -119,22 +119,12 @@ export default function useFilteredActivities(orgId: number) {
       visibleUntil: getUTCDateWithoutTime(event.end_time || null),
     }));
 
-  const filteredSurveys: SurveyActivity[] = activeSurveys
-    .filter((survey) => {
-      if (projectIdsToFilterSurveysBy.length == 0) {
-        return true;
-      }
-      return (
-        survey.campaign &&
-        projectIdsToFilterSurveysBy.includes(survey.campaign.id)
-      );
-    })
-    .map((survey) => ({
-      data: survey,
-      kind: 'survey',
-      visibleFrom: getUTCDateWithoutTime(survey.published || null),
-      visibleUntil: getUTCDateWithoutTime(survey.expires || null),
-    }));
+  const filteredSurveys: SurveyActivity[] = activeSurveys.map((survey) => ({
+    data: survey,
+    kind: 'survey',
+    visibleFrom: getUTCDateWithoutTime(survey.published || null),
+    visibleUntil: getUTCDateWithoutTime(survey.expires || null),
+  }));
 
   const filteredActivities: Activity[] = [...filteredEvents, ...filteredSurveys]
     .filter((activity) => {
@@ -151,6 +141,23 @@ export default function useFilteredActivities(orgId: number) {
       }
 
       return true;
+    })
+    .filter((activity) => {
+      if (projectIdsToFilterActivitiesBy.length == 0) {
+        return true;
+      }
+
+      if (
+        !activity.data.campaign &&
+        projectIdsToFilterActivitiesBy.includes('noProject')
+      ) {
+        return true;
+      }
+
+      return (
+        activity.data.campaign &&
+        projectIdsToFilterActivitiesBy.includes(activity.data.campaign.id)
+      );
     })
     .sort((a, b) => {
       const aStart = a.visibleFrom;
