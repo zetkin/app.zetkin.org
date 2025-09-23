@@ -52,8 +52,11 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
         >
           <Box
             sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 'auto',
               maxHeight: 'calc(100dvh - 3.75rem)',
-              overflowY: 'hidden',
+              overflow: 'hidden',
             }}
           >
             {children}
