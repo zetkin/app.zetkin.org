@@ -2,19 +2,16 @@ import { Box } from '@mui/system';
 import { FC, useRef } from 'react';
 
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
-import ZUIModal from 'zui/components/ZUIModal';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { surveySubmissionAdded } from '../store';
 
-type SurveyModalProps = {
-  onClose: () => void;
-  open: boolean;
+type Props = {
   survey: ZetkinSurveyExtended;
 };
 
-const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
+const Survey: FC<Props> = ({ survey }) => {
   const dispatch = useAppDispatch();
   const responseBySurveyId = useAppSelector(
     (state) =>
@@ -59,49 +56,32 @@ const SurveyModal: FC<SurveyModalProps> = ({ onClose, open, survey }) => {
   };
 
   return (
-    <ZUIModal
-      onClose={() => {
-        saveSurveySubmissionData();
-        onClose();
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        paddingRight: '0.5rem',
+        width: '100%',
       }}
-      open={open}
-      primaryButton={{
-        label: 'Save',
-        onClick: () => {
-          saveSurveySubmissionData();
-          onClose();
-        },
-      }}
-      size="medium"
-      title={survey.title || ''}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          paddingRight: '0.5rem',
-          width: '100%',
+      {survey.info_text && <ZUIText>{survey.info_text}</ZUIText>}
+      <form
+        ref={formRef}
+        id={`survey-${survey.id}`}
+        onSubmit={(ev) => {
+          if (formRef.current) {
+            ev.preventDefault();
+          }
         }}
       >
-        {survey.info_text && <ZUIText>{survey.info_text}</ZUIText>}
-        <form
-          ref={formRef}
-          id={`survey-${survey.id}`}
-          onSubmit={(ev) => {
-            if (formRef.current) {
-              ev.preventDefault();
-            }
-          }}
-        >
-          <SurveyForm
-            initialValues={responseBySurveyId[survey.id]}
-            survey={survey}
-          />
-        </form>
-      </Box>
-    </ZUIModal>
+        <SurveyForm
+          initialValues={responseBySurveyId[survey.id]}
+          survey={survey}
+        />
+      </form>
+    </Box>
   );
 };
 
-export default SurveyModal;
+export default Survey;

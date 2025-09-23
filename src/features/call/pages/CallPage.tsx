@@ -15,7 +15,6 @@ import AssignmentStats, { DesktopStats } from '../components/AssignmentStats';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import InstructionsSection from '../components/InstructionsSection';
 import AboutSection from '../components/AboutSection';
-import ActivitiesSection from '../components/ActivitiesSection';
 import ZUISection from 'zui/components/ZUISection';
 import ReportForm from '../components/Report';
 import ZUIText from 'zui/components/ZUIText';
@@ -33,6 +32,7 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import UnfinishedCall from '../components/UnfinishedCall';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import callSummarySentence from '../components/utils/callSummarySentence';
+import ActivitiesSection from '../components/ActivitiesSection';
 
 type Props = {
   assignment: ZetkinCallAssignment;

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -23,7 +23,9 @@ import ZUISection from 'zui/components/ZUISection';
 import { ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
-import useFilteredActivities from '../hooks/useFilteredActivities';
+import useFilteredActivities, {
+  Activity,
+} from '../hooks/useFilteredActivities';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
@@ -33,6 +35,147 @@ import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
 import { ACTIVITIES } from 'features/campaigns/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
+import ZUITabView from 'zui/components/ZUITabView';
+import { MUIIcon } from 'zui/components/types';
+import Survey from './Survey';
+
+type Filter = {
+  active: boolean;
+  key: string;
+  label: string | MUIIcon;
+  onClick: () => void;
+};
+
+type ActivitiesProps = {
+  activities: Activity[];
+  baseFilters: Filter[];
+  eventFilters: Filter[];
+  isFiltered: boolean;
+  onClearFilters: () => void;
+  onSelectSurvey: (surveyId: number) => void;
+  showNoActivities: boolean;
+  showNoSignups: boolean;
+  surveyFilters: Filter[];
+  target: ZetkinCallTarget | null;
+};
+
+const Activities: FC<ActivitiesProps> = ({
+  activities,
+  baseFilters,
+  eventFilters,
+  surveyFilters,
+  isFiltered,
+  onClearFilters,
+  onSelectSurvey,
+  showNoActivities,
+  showNoSignups,
+  target,
+}) => {
+  if (!target) {
+    return null;
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        gap: 1,
+      }}
+    >
+      <Box
+        alignItems="center"
+        display="flex"
+        flexWrap="wrap"
+        gap={1}
+        maxWidth="100%"
+      >
+        {isFiltered && (
+          <ZUIFilterButton
+            active={true}
+            circular
+            label={Clear}
+            onClick={() => onClearFilters()}
+          />
+        )}
+        {baseFilters.map((filter) => (
+          <ZUIFilterButton
+            key={filter.key}
+            active={filter.active}
+            label={filter.label}
+            onClick={filter.onClick}
+          />
+        ))}
+        {eventFilters.map((filter) => (
+          <ZUIFilterButton
+            key={filter.key}
+            active={filter.active}
+            label={filter.label}
+            onClick={filter.onClick}
+          />
+        ))}
+        {surveyFilters.map((filter) => (
+          <ZUIFilterButton
+            key={filter.key}
+            active={filter.active}
+            label={filter.label}
+            onClick={filter.onClick}
+          />
+        ))}
+      </Box>
+      {showNoActivities && (
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <ZUIIcon color="secondary" icon={Chair} size="large" />
+          <ZUIText color="secondary">No activities</ZUIText>
+        </Box>
+      )}
+      {showNoSignups && (
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <ZUIIcon color="secondary" icon={Hotel} size="large" />
+          <ZUIText color="secondary">{`${target.first_name} is not booked or signed up for any events.`}</ZUIText>
+        </Box>
+      )}
+      {activities.map((activity) => {
+        if (activity.kind == ACTIVITIES.EVENT) {
+          return (
+            <EventCard
+              key={activity.data.id}
+              event={activity.data}
+              target={target}
+            />
+          );
+        }
+
+        if (activity.kind == ACTIVITIES.SURVEY) {
+          return (
+            <SurveyCard
+              key={activity.data.id}
+              onSelectSurvey={(surveyId) => onSelectSurvey(surveyId)}
+              survey={activity.data}
+            />
+          );
+        }
+      })}
+    </Box>
+  );
+};
 
 type ActivitiesSectionProps = {
   assignment: ZetkinCallAssignment;
@@ -54,14 +197,46 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     orgIdsToFilterEventsBy,
     projectIdsToFilterSurveysBy,
   } = useAppSelector((state) => state.call.filters);
-  const isFiltered =
-    filterState.alreadyIn || filterState.events || filterState.surveys;
-  const showAll =
-    !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | 'projects' | null
   >(null);
+  const [selectedTab, setSelectedTab] = useState<'activities' | 'survey'>(
+    'activities'
+  );
+  const [selectedSurveyId, setSelectedSurveyId] = useState<number | null>(null);
+  const selectedSurvey =
+    surveys.find((survey) => survey.id == selectedSurveyId) || null;
+
+  useEffect(() => {
+    if (selectedSurveyId) {
+      setSelectedTab('activities');
+      setTimeout(() => {
+        setSelectedTab('survey');
+      }, 600);
+    } else {
+      setSelectedTab('activities');
+    }
+  }, [selectedSurveyId]);
+
+  const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
+    if (!end) {
+      return intl.formatDate(start.toDate(), {
+        day: 'numeric',
+        month: 'short',
+      });
+    } else {
+      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
+        day: 'numeric',
+        month: 'short',
+      });
+    }
+  };
+
+  const isFiltered =
+    filterState.alreadyIn || filterState.events || filterState.surveys;
+  const showAll =
+    !filterState.alreadyIn && !filterState.events && !filterState.surveys;
 
   const orgs = [
     ...new Map(
@@ -83,20 +258,6 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   if (surveysWithCampaign.length != surveys.length) {
     projects.push({ id: 'noProject', title: 'noProject' });
   }
-
-  const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
-    if (!end) {
-      return intl.formatDate(start.toDate(), {
-        day: 'numeric',
-        month: 'short',
-      });
-    } else {
-      return intl.formatDateTimeRange(start.toDate(), end.toDate(), {
-        day: 'numeric',
-        month: 'short',
-      });
-    }
-  };
 
   const orgIdsWithEvents = events.reduce<number[]>((orgIds, event) => {
     if (!orgIds.includes(event.organization.id)) {
@@ -300,130 +461,107 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   return (
     <>
-      <ZUISection
-        borders={false}
-        fullHeight
-        renderContent={() => {
-          if (!target) {
-            return <Box sx={{ height: '200px' }} />;
-          }
-          return (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                gap: 1,
-              }}
-            >
-              {events.length != 0 && (
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  flexWrap="wrap"
-                  gap={1}
-                  maxWidth="100%"
-                >
-                  {isFiltered && (
-                    <ZUIFilterButton
-                      active={true}
-                      circular
-                      label={Clear}
-                      onClick={() =>
-                        dispatch(
-                          filtersUpdated({
-                            customDatesToFilterEventsBy: [null, null],
-                            eventDateFilterState: null,
-                            filterState: {
-                              alreadyIn: false,
-                              events: false,
-                              surveys: false,
-                            },
-                            orgIdsToFilterEventsBy: [],
-                          })
-                        )
-                      }
-                    />
-                  )}
-                  {baseFilters.map((filter) => (
-                    <ZUIFilterButton
-                      key={filter.key}
-                      active={filter.active}
-                      label={filter.label}
-                      onClick={filter.onClick}
-                    />
-                  ))}
-                  {filterState.events &&
-                    eventFilters.map((filter) => (
-                      <ZUIFilterButton
-                        key={filter.key}
-                        active={filter.active}
-                        label={filter.label}
-                        onClick={filter.onClick}
-                      />
-                    ))}
-                  {filterState.surveys &&
-                    surveyFilters.map((filter) => (
-                      <ZUIFilterButton
-                        key={filter.key}
-                        active={filter.active}
-                        label={filter.label}
-                        onClick={filter.onClick}
-                      />
-                    ))}
-                </Box>
-              )}
-              {filteredActivities.length == 0 && !filterState.alreadyIn && (
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <ZUIIcon color="secondary" icon={Chair} size="large" />
-                  <ZUIText color="secondary">No activities</ZUIText>
-                </Box>
-              )}
-              {filteredActivities.length == 0 && filterState.alreadyIn && (
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <ZUIIcon color="secondary" icon={Hotel} size="large" />
-                  <ZUIText color="secondary">{`${target.first_name} is not booked or signed up for any events.`}</ZUIText>
-                </Box>
-              )}
-              {filteredActivities.map((activity) => {
-                if (activity.kind == ACTIVITIES.EVENT) {
-                  return (
-                    <EventCard
-                      key={activity.data.id}
-                      event={activity.data}
-                      target={target}
-                    />
-                  );
-                }
-
-                if (activity.kind == ACTIVITIES.SURVEY) {
-                  return (
-                    <SurveyCard key={activity.data.id} survey={activity.data} />
-                  );
-                }
-              })}
-            </Box>
-          );
-        }}
-        subtitle={`Acting as ${target?.first_name}`}
-        title="Activities"
-      />
+      {selectedSurvey && (
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.palette.common.white,
+            minHeight: '100%',
+          })}
+        >
+          <ZUITabView
+            fullWidth
+            items={[
+              {
+                label: 'Activities',
+                render: () => (
+                  <Activities
+                    activities={filteredActivities}
+                    baseFilters={baseFilters}
+                    eventFilters={filterState.events ? eventFilters : []}
+                    isFiltered={isFiltered}
+                    onClearFilters={() =>
+                      dispatch(
+                        filtersUpdated({
+                          customDatesToFilterEventsBy: [null, null],
+                          eventDateFilterState: null,
+                          filterState: {
+                            alreadyIn: false,
+                            events: false,
+                            surveys: false,
+                          },
+                          orgIdsToFilterEventsBy: [],
+                        })
+                      )
+                    }
+                    onSelectSurvey={(surveyId) => setSelectedSurveyId(surveyId)}
+                    showNoActivities={
+                      filteredActivities.length == 0 && !filterState.alreadyIn
+                    }
+                    showNoSignups={
+                      filteredActivities.length == 0 && filterState.alreadyIn
+                    }
+                    surveyFilters={filterState.surveys ? surveyFilters : []}
+                    target={target}
+                  />
+                ),
+                value: 'activities',
+              },
+              {
+                label: selectedSurvey.title,
+                render: () => {
+                  return <Survey survey={selectedSurvey} />;
+                },
+                value: 'survey',
+              },
+            ]}
+            onSelectTab={() =>
+              setSelectedTab(
+                selectedTab == 'activities' ? 'survey' : 'activities'
+              )
+            }
+            selectedTab={selectedTab}
+          />
+        </Box>
+      )}
+      {!selectedSurveyId && (
+        <ZUISection
+          borders={false}
+          fullHeight
+          renderContent={() => (
+            <Activities
+              activities={filteredActivities}
+              baseFilters={baseFilters}
+              eventFilters={filterState.events ? eventFilters : []}
+              isFiltered={isFiltered}
+              onClearFilters={() =>
+                dispatch(
+                  filtersUpdated({
+                    customDatesToFilterEventsBy: [null, null],
+                    eventDateFilterState: null,
+                    filterState: {
+                      alreadyIn: false,
+                      events: false,
+                      surveys: false,
+                    },
+                    orgIdsToFilterEventsBy: [],
+                  })
+                )
+              }
+              onSelectSurvey={(surveyId) => setSelectedSurveyId(surveyId)}
+              showNoActivities={
+                filteredActivities.length == 0 && !filterState.alreadyIn
+              }
+              showNoSignups={
+                filteredActivities.length == 0 && filterState.alreadyIn
+              }
+              surveyFilters={filterState.surveys ? surveyFilters : []}
+              target={target}
+            />
+          )}
+          subtitle={`Acting as ${target?.first_name}`}
+          title="Activities"
+        />
+      )}
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
         open={drawerContent == 'calendar'}

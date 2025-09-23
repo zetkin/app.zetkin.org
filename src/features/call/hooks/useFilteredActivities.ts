@@ -22,7 +22,7 @@ type SurveyActivity = ActivityBase & {
   kind: 'survey';
 };
 
-type Activity = EventActivity | SurveyActivity;
+export type Activity = EventActivity | SurveyActivity;
 
 export default function useFilteredActivities(orgId: number) {
   const events = useUpcomingEvents(orgId);
