@@ -9,7 +9,6 @@ import {
   SurveySubmissionData,
   Report,
   ZetkinCallPatchResponse,
-  Step,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinEvent } from 'utils/types/zetkin';
@@ -37,38 +36,42 @@ export interface CallStoreSlice {
   queueHasError: SerializedError | null;
 }
 
+const emptyFilters: ActivityFilters = {
+  customDatesToFilterEventsBy: [null, null],
+  eventDateFilterState: null,
+  filterState: {
+    alreadyIn: false,
+    events: false,
+    surveys: false,
+    thisCall: false,
+  },
+  orgIdsToFilterEventsBy: [],
+  projectIdsToFilterActivitiesBy: [],
+};
+
+const emptyReport: Report = {
+  callBackAfter: null,
+  callerLog: '',
+  completed: false,
+  failureReason: null,
+  leftMessage: false,
+  organizerActionNeeded: false,
+  organizerLog: '',
+  step: 'successOrFailure',
+  success: false,
+  targetCouldTalk: false,
+  wrongNumber: null,
+};
+
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
-  filters: {
-    customDatesToFilterEventsBy: [null, null],
-    eventDateFilterState: null,
-    filterState: {
-      alreadyIn: false,
-      events: false,
-      surveys: false,
-      thisCall: false,
-    },
-    orgIdsToFilterEventsBy: [],
-    projectIdsToFilterActivitiesBy: [],
-  },
+  filters: emptyFilters,
   lanes: [
     {
       callIsBeingAllocated: false,
       currentCallId: null,
       previousCall: null,
-      report: {
-        callBackAfter: null,
-        callerLog: '',
-        completed: false,
-        failureReason: null,
-        leftMessage: false,
-        organizerActionNeeded: false,
-        organizerLog: '',
-        step: 'successOrFailure',
-        success: false,
-        targetCouldTalk: false,
-        wrongNumber: null,
-      },
+      report: emptyReport,
       respondedEventIds: [],
       step: LaneStep.START,
       submissionDataBySurveyId: {},
@@ -118,19 +121,7 @@ const CallSlice = createSlice({
         callIsBeingAllocated: false,
         currentCallId: newCall.id,
         previousCall: null,
-        report: {
-          callBackAfter: null,
-          callerLog: '',
-          completed: false,
-          failureReason: null,
-          leftMessage: false,
-          organizerActionNeeded: false,
-          organizerLog: '',
-          step: 'successOrFailure' as Step,
-          success: false,
-          targetCouldTalk: false,
-          wrongNumber: null,
-        },
+        report: emptyReport,
         respondedEventIds: [],
         step: LaneStep.CALL,
         submissionDataBySurveyId: {},
@@ -140,6 +131,7 @@ const CallSlice = createSlice({
 
       state.lanes.push(newLane);
       state.activeLaneIndex = state.lanes.length - 1;
+      state.filters = emptyFilters;
 
       state.outgoingCalls.items.push(
         remoteItem(action.payload.id, {
@@ -177,21 +169,11 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
+      state.lanes[state.activeLaneIndex].report = emptyReport;
+      state.filters = emptyFilters;
     },
     clearReport: (state) => {
-      state.lanes[state.activeLaneIndex].report = {
-        callBackAfter: null,
-        callerLog: '',
-        completed: false,
-        failureReason: null,
-        leftMessage: false,
-        organizerActionNeeded: false,
-        organizerLog: '',
-        step: 'successOrFailure',
-        success: false,
-        targetCouldTalk: false,
-        wrongNumber: null,
-      };
+      state.lanes[state.activeLaneIndex].report = emptyReport;
     },
     eventResponseAdded: (state, action: PayloadAction<number>) => {
       const eventIdToAdd = action.payload;
@@ -238,6 +220,8 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
+      state.lanes[state.activeLaneIndex].report = emptyReport;
+      state.filters = emptyFilters;
     },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
@@ -266,19 +250,8 @@ const CallSlice = createSlice({
 
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
-      state.lanes[state.activeLaneIndex].report = {
-        callBackAfter: null,
-        callerLog: '',
-        completed: false,
-        failureReason: null,
-        leftMessage: false,
-        organizerActionNeeded: false,
-        organizerLog: '',
-        step: 'successOrFailure',
-        success: false,
-        targetCouldTalk: false,
-        wrongNumber: null,
-      };
+      state.lanes[state.activeLaneIndex].report = emptyReport;
+      state.filters = emptyFilters;
     },
     reportSubmitted: (
       state,
@@ -391,19 +364,7 @@ const CallSlice = createSlice({
           callIsBeingAllocated: false,
           currentCallId: unfinishedCallId,
           previousCall: null,
-          report: {
-            callBackAfter: null,
-            callerLog: '',
-            completed: false,
-            failureReason: null,
-            leftMessage: false,
-            organizerActionNeeded: false,
-            organizerLog: '',
-            step: 'successOrFailure' as Step,
-            success: false,
-            targetCouldTalk: false,
-            wrongNumber: null,
-          },
+          report: emptyReport,
           respondedEventIds: [],
           step: LaneStep.CALL,
           submissionDataBySurveyId: {},
@@ -414,6 +375,7 @@ const CallSlice = createSlice({
         state.lanes.push(newLane);
         state.activeLaneIndex = state.lanes.length - 1;
       }
+      state.filters = emptyFilters;
       sortOutgoingCalls(state.outgoingCalls);
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
