@@ -90,22 +90,24 @@ const ModalContent: FC<ModalContentProps> = ({
             variant="secondary"
           />
         )}
-        <ZUIButton
-          href={
-            'href' in primaryButton && !!primaryButton.href
-              ? primaryButton.href
-              : undefined
-          }
-          label={primaryButton.label}
-          onClick={
-            'onClick' in primaryButton ? primaryButton.onClick : undefined
-          }
-          variant={
-            'isLoading' in primaryButton && primaryButton.isLoading
-              ? 'loading'
-              : 'primary'
-          }
-        />
+        {primaryButton && (
+          <ZUIButton
+            href={
+              'href' in primaryButton && !!primaryButton.href
+                ? primaryButton.href
+                : undefined
+            }
+            label={primaryButton.label}
+            onClick={
+              'onClick' in primaryButton ? primaryButton.onClick : undefined
+            }
+            variant={
+              'isLoading' in primaryButton && primaryButton.isLoading
+                ? 'loading'
+                : 'primary'
+            }
+          />
+        )}
       </Box>
     </Box>
   );

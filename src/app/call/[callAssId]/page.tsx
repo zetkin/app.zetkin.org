@@ -1,5 +1,6 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import { Metadata } from 'next';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import CallPage from 'features/call/pages/CallPage';
@@ -11,6 +12,26 @@ import { CALL, hasFeature } from 'utils/featureFlags';
 type Props = {
   params: { callAssId: string };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const headersList = headers();
+  const headersEntries = headersList.entries();
+  const headersObject = Object.fromEntries(headersEntries);
+  const apiClient = new BackendApiClient(headersObject);
+
+  const assignments = await apiClient.get<ZetkinCallAssignment[]>(
+    '/api/users/me/call_assignments'
+  );
+
+  const assignment = assignments.find(
+    (assignment) => assignment.id == parseInt(params.callAssId)
+  );
+
+  return {
+    icons: [{ url: '/logo-zetkin.png' }],
+    title: assignment?.title || 'Untitled call assignment',
+  };
+}
 
 export default async function Page({ params }: Props) {
   await redirectIfLoginNeeded();

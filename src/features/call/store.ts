@@ -104,7 +104,7 @@ const CallSlice = createSlice({
           wrongNumber: null,
         },
         respondedEventIds: [],
-        step: LaneStep.PREPARE,
+        step: LaneStep.CALL,
         submissionDataBySurveyId: {},
         surveySubmissionError: false,
         updateCallError: false,
@@ -144,7 +144,7 @@ const CallSlice = createSlice({
       );
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.PREPARE;
+      lane.step = LaneStep.CALL;
 
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
@@ -199,7 +199,7 @@ const CallSlice = createSlice({
       );
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.PREPARE;
+      lane.step = LaneStep.CALL;
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
@@ -328,8 +328,8 @@ const CallSlice = createSlice({
         }
       }
     },
-    unfinishedCallSwitched: (state, action: PayloadAction<ZetkinCall>) => {
-      const unfinishedCall = action.payload;
+    unfinishedCallSwitched: (state, action: PayloadAction<number>) => {
+      const unfinishedCallId = action.payload;
 
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
@@ -342,19 +342,19 @@ const CallSlice = createSlice({
         state.lanes = filteredLanes;
       }
 
-      const unfinishedCallLineIndex = state.lanes.findIndex(
-        (lane) => lane.currentCallId == unfinishedCall.id
+      const unfinishedCallLaneIndex = state.lanes.findIndex(
+        (lane) => lane.currentCallId == unfinishedCallId
       );
       const unfinishedCallLane = state.lanes.find(
-        (lane) => lane.currentCallId == unfinishedCall.id
+        (lane) => lane.currentCallId == unfinishedCallId
       );
 
-      if (unfinishedCallLane && unfinishedCallLineIndex !== -1) {
-        state.activeLaneIndex = unfinishedCallLineIndex;
+      if (unfinishedCallLane && unfinishedCallLaneIndex !== -1) {
+        state.activeLaneIndex = unfinishedCallLaneIndex;
       } else {
         const newLane = {
           callIsBeingAllocated: false,
-          currentCallId: unfinishedCall.id,
+          currentCallId: unfinishedCallId,
           previousCall: null,
           report: {
             callBackAfter: null,
@@ -370,7 +370,7 @@ const CallSlice = createSlice({
             wrongNumber: null,
           },
           respondedEventIds: [],
-          step: LaneStep.PREPARE,
+          step: LaneStep.CALL,
           submissionDataBySurveyId: {},
           surveySubmissionError: false,
           updateCallError: false,
