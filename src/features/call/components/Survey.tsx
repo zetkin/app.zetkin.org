@@ -6,6 +6,7 @@ import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { surveySubmissionAdded } from '../store';
+import ZUIButton from 'zui/components/ZUIButton';
 
 type Props = {
   survey: ZetkinSurveyExtended;
@@ -65,6 +66,7 @@ const Survey: FC<Props> = ({ survey }) => {
         width: '100%',
       }}
     >
+      <ZUIButton label="Save" onClick={() => saveSurveySubmissionData()} />
       {survey.info_text && <ZUIText>{survey.info_text}</ZUIText>}
       <form
         ref={formRef}
