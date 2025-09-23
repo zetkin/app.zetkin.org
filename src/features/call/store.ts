@@ -60,7 +60,7 @@ const initialState: CallStoreSlice = {
         wrongNumber: null,
       },
       respondedEventIds: [],
-      step: LaneStep.STATS,
+      step: LaneStep.START,
       submissionDataBySurveyId: {},
       surveySubmissionError: false,
       updateCallError: false,
@@ -80,7 +80,7 @@ const CallSlice = createSlice({
       state.queueHasError = error;
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.STATS;
+      lane.step = LaneStep.START;
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.outgoingCalls.isLoading = false;
@@ -252,7 +252,7 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].currentCallId = null;
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.STATS;
+      lane.step = LaneStep.START;
 
       state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
