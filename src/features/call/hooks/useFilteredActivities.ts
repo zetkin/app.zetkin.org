@@ -119,7 +119,7 @@ export default function useFilteredActivities(orgId: number) {
     .map((event) => ({
       data: event,
       kind: 'event',
-      visibleFrom: getUTCDateWithoutTime(event.published || null),
+      visibleFrom: getUTCDateWithoutTime(event.start_time || null),
       visibleUntil: getUTCDateWithoutTime(event.end_time || null),
     }));
 
@@ -190,7 +190,7 @@ export default function useFilteredActivities(orgId: number) {
         return 1;
       }
 
-      return bStart.getTime() - aStart.getTime();
+      return aStart.getTime() - bStart.getTime();
     });
 
   return {
