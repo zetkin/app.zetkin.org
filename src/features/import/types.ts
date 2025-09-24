@@ -23,7 +23,7 @@ type PersonCreateBulkOp = {
 
 type PersonGetBulkOp = {
   if_none?: 'create' | 'skip';
-  key: { id: number } | { ext_id: string };
+  key: { id: number } | { ext_id: string } | { email: string };
   op: 'person.get';
   ops: BulkSubOp[];
 };

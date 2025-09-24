@@ -90,6 +90,7 @@ export default function mockState(overrides?: RootState) {
       fileList: remoteList(),
     },
     import: {
+      importID: null,
       importResult: null,
       pendingFile: {
         selectedSheetIndex: 0,
