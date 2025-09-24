@@ -38,6 +38,7 @@ export default function mockState(overrides?: RootState) {
       lanes: [],
       outgoingCalls: remoteList(),
       queueHasError: null,
+      selectedSurveyId: null,
       upcomingEventsList: remoteList(),
     },
     callAssignments: {

@@ -27,7 +27,7 @@ import useFilteredActivities, {
   Activity,
 } from '../hooks/useFilteredActivities';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from '../store';
+import { filtersUpdated, surveyDeselected, surveySelected } from '../store';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
@@ -190,6 +190,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const { respondedEventIds, submissionDataBySurveyId } = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
   );
+  const selectedSurveyId = useAppSelector(
+    (state) => state.call.selectedSurveyId
+  );
   const respondedSurveyIds = Object.keys(submissionDataBySurveyId);
 
   const [drawerContent, setDrawerContent] = useState<
@@ -198,16 +201,12 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const [selectedTab, setSelectedTab] = useState<'activities' | 'survey'>(
     'activities'
   );
-  const [selectedSurveyId, setSelectedSurveyId] = useState<number | null>(null);
   const selectedSurvey =
     surveys.find((survey) => survey.id == selectedSurveyId) || null;
 
   useEffect(() => {
     if (selectedSurveyId) {
-      setSelectedTab('activities');
-      setTimeout(() => {
-        setSelectedTab('survey');
-      }, 600);
+      setSelectedTab('survey');
     } else {
       setSelectedTab('activities');
     }
@@ -535,7 +534,10 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                         })
                       )
                     }
-                    onSelectSurvey={(surveyId) => setSelectedSurveyId(surveyId)}
+                    onSelectSurvey={(surveyId) => {
+                      dispatch(surveySelected(surveyId));
+                      setSelectedTab('survey');
+                    }}
                     showNoActivities={
                       filteredActivities.length == 0 && !filterState.alreadyIn
                     }
@@ -548,9 +550,14 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 value: 'activities',
               },
               {
-                label: selectedSurvey.title,
+                label: 'Survey',
                 render: () => {
-                  return <Survey survey={selectedSurvey} />;
+                  return (
+                    <Survey
+                      onSave={() => dispatch(surveyDeselected())}
+                      survey={selectedSurvey}
+                    />
+                  );
                 },
                 value: 'survey',
               },
@@ -589,7 +596,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   })
                 )
               }
-              onSelectSurvey={(surveyId) => setSelectedSurveyId(surveyId)}
+              onSelectSurvey={(surveyId) => dispatch(surveySelected(surveyId))}
               showNoActivities={
                 filteredActivities.length == 0 && !filterState.alreadyIn
               }

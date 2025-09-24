@@ -34,6 +34,7 @@ export interface CallStoreSlice {
   lanes: LaneState[];
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
+  selectedSurveyId: number | null;
 }
 
 const emptyFilters: ActivityFilters = {
@@ -81,6 +82,7 @@ const initialState: CallStoreSlice = {
   ],
   outgoingCalls: remoteList(),
   queueHasError: null,
+  selectedSurveyId: null,
   upcomingEventsList: remoteList(),
 };
 
@@ -171,6 +173,7 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
       state.lanes[state.activeLaneIndex].report = emptyReport;
       state.filters = emptyFilters;
+      state.selectedSurveyId = null;
     },
     clearReport: (state) => {
       state.lanes[state.activeLaneIndex].report = emptyReport;
@@ -222,6 +225,7 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
       state.lanes[state.activeLaneIndex].report = emptyReport;
       state.filters = emptyFilters;
+      state.selectedSurveyId = null;
     },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
@@ -252,6 +256,7 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].respondedEventIds = [];
       state.lanes[state.activeLaneIndex].report = emptyReport;
       state.filters = emptyFilters;
+      state.selectedSurveyId = null;
     },
     reportSubmitted: (
       state,
@@ -301,6 +306,12 @@ const CallSlice = createSlice({
       state.lanes[state.activeLaneIndex].updateCallError = action.payload;
       state.lanes[state.activeLaneIndex].surveySubmissionError = false;
     },
+    surveyDeselected: (state) => {
+      state.selectedSurveyId = null;
+    },
+    surveySelected: (state, action: PayloadAction<number>) => {
+      state.selectedSurveyId = action.payload;
+    },
     surveySubmissionAdded: (
       state,
       action: PayloadAction<[number, SurveySubmissionData]>
@@ -318,6 +329,7 @@ const CallSlice = createSlice({
         state.lanes[state.activeLaneIndex].submissionDataBySurveyId;
 
       delete responsesBySurveyId[surveyId];
+      state.selectedSurveyId = null;
     },
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
@@ -376,6 +388,7 @@ const CallSlice = createSlice({
         state.activeLaneIndex = state.lanes.length - 1;
       }
       state.filters = emptyFilters;
+      state.selectedSurveyId = null;
       sortOutgoingCalls(state.outgoingCalls);
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
@@ -420,6 +433,8 @@ export const {
   quitCall,
   reportSubmitted,
   reportUpdated,
+  surveyDeselected,
+  surveySelected,
   setSurveySubmissionError,
   setUpdateCallError,
   surveySubmissionAdded,

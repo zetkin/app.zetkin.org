@@ -1,18 +1,21 @@
 import { Box } from '@mui/system';
 import { FC, useRef } from 'react';
+import { Delete } from '@mui/icons-material';
 
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { surveySubmissionAdded } from '../store';
+import { surveySubmissionAdded, surveySubmissionDeleted } from '../store';
 import ZUIButton from 'zui/components/ZUIButton';
+import ZUIIconButton from 'zui/components/ZUIIconButton';
 
 type Props = {
+  onSave: () => void;
   survey: ZetkinSurveyExtended;
 };
 
-const Survey: FC<Props> = ({ survey }) => {
+const Survey: FC<Props> = ({ onSave, survey }) => {
   const dispatch = useAppDispatch();
   const responseBySurveyId = useAppSelector(
     (state) =>
@@ -66,7 +69,19 @@ const Survey: FC<Props> = ({ survey }) => {
         width: '100%',
       }}
     >
-      <ZUIButton label="Save" onClick={() => saveSurveySubmissionData()} />
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <ZUIText variant="headingMd">{survey.title}</ZUIText>
+        <ZUIIconButton
+          icon={Delete}
+          onClick={() => dispatch(surveySubmissionDeleted(survey.id))}
+        />
+      </Box>
       {survey.info_text && <ZUIText>{survey.info_text}</ZUIText>}
       <form
         ref={formRef}
@@ -82,6 +97,14 @@ const Survey: FC<Props> = ({ survey }) => {
           survey={survey}
         />
       </form>
+      <ZUIButton
+        label="Save and close"
+        onClick={() => {
+          saveSurveySubmissionData();
+          onSave();
+        }}
+        variant="secondary"
+      />
     </Box>
   );
 };
