@@ -191,7 +191,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         )}
         <ZUIReorderable
           centerWidgets
-          disableClick
+          disableClick={!editable}
           disableDrag={!editable}
           items={optionsToShow.map((option, index) => ({
             hidden: index > 2 && !expand && !editable,
