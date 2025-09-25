@@ -59,6 +59,12 @@ export default makeMessages('feat.smartSearch', {
         ),
         title: m('Everyone in a sub-organization'),
       },
+      area: {
+        description: m(
+          'Search based on location fields inside or outside of a geographical area'
+        ),
+        title: m('Location (area)'),
+      },
       call_history: {
         description: m('Find people who were called, reached or tried.'),
         title: m('Call history'),
@@ -192,6 +198,24 @@ export default makeMessages('feat.smartSearch', {
         any: m('any sub-organization'),
         multiple: m('any of the following sub-organizations'),
         single: m('the specific sub-organization'),
+      },
+    },
+    area: {
+      examples: {
+        one: m('Add people whose Home location is within the area Malmö'),
+        two: m('Remove people whose HQ address is outside the area Copenhagen'),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        areaSelect: ReactElement;
+        lnglatFieldSelect: ReactElement;
+        withinOutsideSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people whose {lnglatFieldSelect} is {withinOutsideSelect} the area {areaSelect}'
+      ),
+      slice: {
+        in: m('within'),
+        out: m('outside'),
       },
     },
     callBlocked: {
