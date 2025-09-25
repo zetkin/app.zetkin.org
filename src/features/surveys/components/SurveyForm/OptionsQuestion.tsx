@@ -57,6 +57,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
   const hasRadios = !widgetType || widgetType == 'radio';
   const hasCheckboxes = widgetType === 'checkbox';
   const hasDropdown = widgetType == 'select';
+
   return (
     <FormControl fullWidth>
       {hasRadios && (

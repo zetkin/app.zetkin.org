@@ -12,7 +12,6 @@ import { useIntl } from 'react-intl';
 import {
   CalendarMonthOutlined,
   Chair,
-  ChevronLeft,
   Clear,
   GroupWork,
   Hotel,
@@ -27,7 +26,7 @@ import useFilteredActivities, {
   Activity,
 } from '../hooks/useFilteredActivities';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated, surveyDeselected, surveySelected } from '../store';
+import { filtersUpdated, surveySelected } from '../store';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
@@ -37,8 +36,7 @@ import { ACTIVITIES } from 'features/campaigns/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
-import ZUIButton from 'zui/components/ZUIButton';
-import ZUIDivider from 'zui/components/ZUIDivider';
+import ZUISection from 'zui/components/ZUISection';
 
 type Filter = {
   active: boolean;
@@ -491,99 +489,47 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   return (
     <>
-      <Box
-        sx={{
-          position: 'relative',
-        }}
-      >
-        <Box
-          sx={{
-            left: selectedSurvey ? '-100%' : 20,
-            position: 'absolute',
-            top: 20,
-            transition: 'left 0.5s',
-          }}
-        >
-          <ZUIText noWrap variant="headingMd">
-            Activities
-          </ZUIText>
-        </Box>
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            gap: 1,
-            left: selectedSurvey ? 20 : '100%',
-            position: 'absolute',
-            top: 16,
-            transition: 'left 0.5s',
-          }}
-        >
-          <ZUIButton
-            label="Back to activities"
-            onClick={() => dispatch(surveyDeselected())}
-            startIcon={ChevronLeft}
+      <Box id="accctivitiesSecitonOuter" sx={{ height: '100%', width: '100%' }}>
+        {selectedSurvey && <Survey survey={selectedSurvey} />}
+        {!selectedSurvey && (
+          <ZUISection
+            renderContent={() => (
+              <Activities
+                activities={filteredActivities}
+                baseFilters={baseFilters}
+                eventFilters={filterState.events ? eventFilters : []}
+                isFiltered={isFiltered}
+                onClearFilters={() =>
+                  dispatch(
+                    filtersUpdated({
+                      customDatesToFilterEventsBy: [null, null],
+                      eventDateFilterState: null,
+                      filterState: {
+                        alreadyIn: false,
+                        events: false,
+                        surveys: false,
+                        thisCall: false,
+                      },
+                      orgIdsToFilterEventsBy: [],
+                    })
+                  )
+                }
+                onSelectSurvey={(surveyId) => {
+                  dispatch(surveySelected(surveyId));
+                }}
+                showNoActivities={
+                  filteredActivities.length == 0 && !filterState.alreadyIn
+                }
+                showNoSignups={
+                  filteredActivities.length == 0 && filterState.alreadyIn
+                }
+                target={target}
+              />
+            )}
+            subtitle={`Acting as ${target?.first_name}`}
+            title="Activities"
           />
-        </Box>
-        <Box sx={{ paddingX: 2, position: 'absolute', top: 60, width: '100%' }}>
-          <ZUIDivider />
-        </Box>
-        <Box
-          sx={{
-            left: selectedSurvey ? 0 : '100%',
-            paddingX: 2,
-            position: 'absolute',
-            top: 60,
-            transition: 'left 0.5s',
-            width: '100%',
-          }}
-        >
-          {selectedSurvey && <Survey survey={selectedSurvey} />}
-        </Box>
-        <Box
-          sx={{
-            left: selectedSurvey ? '-100%' : 0,
-            maxWidth: '100%',
-            paddingX: 2,
-            position: 'absolute',
-            top: 60,
-            transition: 'left 0.5s',
-          }}
-        >
-          <Box sx={{ paddingTop: 2 }}>
-            <Activities
-              activities={filteredActivities}
-              baseFilters={baseFilters}
-              eventFilters={filterState.events ? eventFilters : []}
-              isFiltered={isFiltered}
-              onClearFilters={() =>
-                dispatch(
-                  filtersUpdated({
-                    customDatesToFilterEventsBy: [null, null],
-                    eventDateFilterState: null,
-                    filterState: {
-                      alreadyIn: false,
-                      events: false,
-                      surveys: false,
-                      thisCall: false,
-                    },
-                    orgIdsToFilterEventsBy: [],
-                  })
-                )
-              }
-              onSelectSurvey={(surveyId) => {
-                dispatch(surveySelected(surveyId));
-              }}
-              showNoActivities={
-                filteredActivities.length == 0 && !filterState.alreadyIn
-              }
-              showNoSignups={
-                filteredActivities.length == 0 && filterState.alreadyIn
-              }
-              target={target}
-            />
-          </Box>
-        </Box>
+        )}
       </Box>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}

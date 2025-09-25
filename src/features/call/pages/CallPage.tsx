@@ -428,6 +428,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
             <AboutSection call={call} />
           </Box>
           <Box
+            id="boxContainingActivities"
             sx={(theme) => ({
               '@keyframes activitiesOut': {
                 '0%': { left: 'calc(100% / 3)' },
