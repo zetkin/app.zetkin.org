@@ -1,7 +1,7 @@
 import shouldLoad from 'core/caching/shouldLoad';
 import { ZetkinSmartSearchFilter } from '../components/types';
 import { ZetkinSmartSearchFilterStats } from '../types';
-import { statsLoad, statsLoaded } from '../store';
+import { ephemeralStatsLoad, ephemeralStatsLoaded } from '../store';
 import {
   useApiClient,
   useAppDispatch,
@@ -21,7 +21,7 @@ export default function useSmartSearchStats(
   const dispatch = useAppDispatch();
 
   if (shouldLoad(statsItem)) {
-    dispatch(statsLoad(key));
+    dispatch(ephemeralStatsLoad(key));
     apiClient
       .post<
         ZetkinSmartSearchFilterStats[],
@@ -30,7 +30,7 @@ export default function useSmartSearchStats(
         filter_spec: filters,
       })
       .then((stats) => {
-        dispatch(statsLoaded([key, stats]));
+        dispatch(ephemeralStatsLoaded([key, stats]));
       });
   }
 

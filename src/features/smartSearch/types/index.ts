@@ -1,4 +1,4 @@
-import { ZetkinSmartSearchFilter } from './components/types';
+import { ZetkinSmartSearchFilter } from '../components/types';
 
 export type ZetkinSmartSearchFilterStats = {
   change: number;
