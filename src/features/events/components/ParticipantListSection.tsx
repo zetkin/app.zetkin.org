@@ -232,9 +232,12 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
     },
     {
       disableColumnMenu: true,
-      field: 'notified',
+      field: type == 'signups' ? 'signups' : 'notified',
       flex: 1,
-      headerName: messages.eventParticipantsList.columnNotified(),
+      headerName:
+        type == 'signups'
+          ? messages.eventParticipantsList.columnSignedUp()
+          : messages.eventParticipantsList.columnNotified(),
       renderCell: (params) => {
         if (params.row.person) {
           return <ZUIRelativeTime datetime={params.row.response_date} />;
