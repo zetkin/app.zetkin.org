@@ -203,9 +203,7 @@ export default makeMessages('feat.smartSearch', {
     area: {
       examples: {
         one: m('Add people whose Home location is within the area Malmö'),
-        two: m(
-          'Remove people whose HQ address is outside the area Copenhagen'
-        ),
+        two: m('Remove people whose HQ address is outside the area Copenhagen'),
       },
       inputString: m<{
         addRemoveSelect: ReactElement;
