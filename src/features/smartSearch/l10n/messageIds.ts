@@ -202,9 +202,9 @@ export default makeMessages('feat.smartSearch', {
     },
     area: {
       examples: {
-        one: m('Add everyone who is within Malmö based on their Home location'),
+        one: m('Add people whose Home location is within the area Malmö'),
         two: m(
-          'Remove everyone who is outside Copenhagen based on their HQ address'
+          'Remove people whose HQ address is outside the area Copenhagen'
         ),
       },
       inputString: m<{
@@ -213,7 +213,7 @@ export default makeMessages('feat.smartSearch', {
         lnglatFieldSelect: ReactElement;
         withinOutsideSelect: ReactElement;
       }>(
-        '{addRemoveSelect} everyone who is {withinOutsideSelect} {areaSelect} based on their {lnglatFieldSelect}'
+        '{addRemoveSelect} people whose {lnglatFieldSelect} is {withinOutsideSelect} the area {areaSelect}'
       ),
       slice: {
         in: m('within'),
