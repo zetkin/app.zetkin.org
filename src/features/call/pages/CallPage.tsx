@@ -8,7 +8,12 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { LaneStep } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { updateLaneStep, reportUpdated, previousCallAdd } from '../store';
+import {
+  updateLaneStep,
+  reportUpdated,
+  previousCallAdd,
+  filtersUpdated,
+} from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import AssignmentStats, { DesktopStats } from '../components/AssignmentStats';
@@ -258,6 +263,20 @@ const CallPage: FC<Props> = ({ assignment }) => {
                   dispatch(updateLaneStep(LaneStep.CALL));
                 } else if (lane.step == LaneStep.CALL) {
                   dispatch(updateLaneStep(LaneStep.REPORT));
+                  dispatch(
+                    filtersUpdated({
+                      customDatesToFilterEventsBy: [null, null],
+                      eventDateFilterState: null,
+                      filterState: {
+                        alreadyIn: false,
+                        events: false,
+                        surveys: false,
+                        thisCall: true,
+                      },
+                      orgIdsToFilterEventsBy: [],
+                      projectIdsToFilterActivitiesBy: [],
+                    })
+                  );
                 } else if (lane.step == LaneStep.REPORT) {
                   if (!report || !call) {
                     return;
