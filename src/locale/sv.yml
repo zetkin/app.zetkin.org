@@ -1524,6 +1524,8 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} och {numEmpty, plural, =1 {en
             tom rad} other {# tomma rader}}.'
           twoValuesNoEmpty: '{firstValue} och {secondValue}.'
+        notEnoughRows: Din fil innehåller inte tillräckligt många rader för att
+          importera någon data
         organization: Organisation
         selectZetkinField: Importera som…
         tags: Etiketter
@@ -1897,6 +1899,8 @@ feat:
       map:
         viewInList: Visa i lista
         viewInMap: Visa på karta
+      menu:
+        logout: Logga ut
       tabs:
         calendar: Kalender
         suborgs: Utforska
