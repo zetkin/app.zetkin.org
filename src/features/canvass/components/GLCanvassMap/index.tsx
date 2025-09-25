@@ -131,7 +131,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
           let zIndex;
           if (selected) {
             zIndex = 3;
-          } else if (visitRatio < 1.0) {
+          } else if (visitRatio === 0.0) {
             zIndex = 2;
           } else {
             zIndex = 1;
