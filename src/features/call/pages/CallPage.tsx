@@ -196,7 +196,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
                   ? '-100%'
                   : 16,
               position: 'absolute',
-              transition: '0.5s',
+              transition: 'left 0.5s',
             }}
           >
             <ZUIText variant="headingLg">{call?.target.name}</ZUIText>

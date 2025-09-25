@@ -7,15 +7,13 @@ import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { surveySubmissionAdded, surveySubmissionDeleted } from '../store';
-import ZUIButton from 'zui/components/ZUIButton';
 import ZUIIconButton from 'zui/components/ZUIIconButton';
 
 type Props = {
-  onSave: () => void;
   survey: ZetkinSurveyExtended;
 };
 
-const Survey: FC<Props> = ({ onSave, survey }) => {
+const Survey: FC<Props> = ({ survey }) => {
   const dispatch = useAppDispatch();
   const responseBySurveyId = useAppSelector(
     (state) =>
@@ -23,49 +21,13 @@ const Survey: FC<Props> = ({ onSave, survey }) => {
   );
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  //TODO: think about what form data we save where
-  const formDataToSurveySubmissionData = (formData: FormData) => {
-    const submittedFormContent: Record<string, string | string[]> = {};
-    Array.from(formData.entries()).forEach((entry) => {
-      const [nameOfQuestion, newValue] = entry;
-      const existingValue = submittedFormContent[nameOfQuestion];
-
-      if (!existingValue) {
-        submittedFormContent[nameOfQuestion] = newValue as string;
-      } else {
-        if (Array.isArray(existingValue)) {
-          existingValue.push(newValue as string);
-        } else {
-          const multiChoiceArray: string[] = [];
-
-          multiChoiceArray.push(existingValue);
-          multiChoiceArray.push(newValue as string);
-
-          submittedFormContent[nameOfQuestion] = multiChoiceArray;
-        }
-      }
-    });
-    return submittedFormContent;
-  };
-
-  const saveSurveySubmissionData = () => {
-    if (formRef.current) {
-      formRef.current.requestSubmit();
-
-      const formData = new FormData(formRef.current);
-
-      const surveySubmissionData = formDataToSurveySubmissionData(formData);
-      dispatch(surveySubmissionAdded([survey.id, surveySubmissionData]));
-    }
-  };
-
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
-        paddingRight: '0.5rem',
+        paddingTop: 2,
         width: '100%',
       }}
     >
@@ -94,17 +56,18 @@ const Survey: FC<Props> = ({ onSave, survey }) => {
       >
         <SurveyForm
           initialValues={responseBySurveyId[survey.id]}
+          onChange={(name, newValue) => {
+            const updatedSurveySubmission = {
+              ...responseBySurveyId[survey.id],
+              ...{ [name]: newValue },
+            };
+            dispatch(
+              surveySubmissionAdded([survey.id, updatedSurveySubmission])
+            );
+          }}
           survey={survey}
         />
       </form>
-      <ZUIButton
-        label="Save and close"
-        onClick={() => {
-          saveSurveySubmissionData();
-          onSave();
-        }}
-        variant="secondary"
-      />
     </Box>
   );
 };

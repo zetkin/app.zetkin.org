@@ -11,7 +11,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import {
@@ -26,12 +26,14 @@ export type OptionsQuestionProps = {
   element: ZetkinSurveyOptionsQuestionElement;
   initialValue?: string | string[];
   name: string;
+  onChange?: (newValue: string | string[]) => void;
 };
 
 const OptionsQuestion: FC<OptionsQuestionProps> = ({
   element,
   initialValue,
   name,
+  onChange,
 }) => {
   const messages = useMessages(messageIds);
   const [dropdownValue, setDropdownValue] = useState(
@@ -40,6 +42,13 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
   const handleDropdownChange = useCallback((ev: SelectChangeEvent) => {
     setDropdownValue(ev.target.value);
   }, []);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(selectedCheckboxes);
+    }
+  }, [selectedCheckboxes]);
 
   const question = element.question;
   const widgetType = question.response_config.widget_type;
@@ -48,7 +57,6 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
   const hasRadios = !widgetType || widgetType == 'radio';
   const hasCheckboxes = widgetType === 'checkbox';
   const hasDropdown = widgetType == 'select';
-
   return (
     <FormControl fullWidth>
       {hasRadios && (
@@ -57,6 +65,11 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
           aria-labelledby={`label-${element.id}`}
           defaultValue={initialValue}
           name={name}
+          onChange={(ev, newValue) => {
+            if (onChange) {
+              onChange(newValue);
+            }
+          }}
           sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
         >
           <Box
@@ -117,7 +130,12 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                 aria-describedby={`description-${element.id}`}
                 aria-labelledby={`label-${element.id}`}
                 name={name}
-                onChange={handleDropdownChange}
+                onChange={(ev) => {
+                  handleDropdownChange(ev);
+                  if (onChange) {
+                    onChange(ev.target.value);
+                  }
+                }}
                 required={question.required}
                 sx={{
                   '& p': {
@@ -158,6 +176,22 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                     />
                   }
                   label={option.text}
+                  onChange={(ev, checked) => {
+                    if (checked) {
+                      if (!selectedCheckboxes.includes(option.id.toString())) {
+                        setSelectedCheckboxes([
+                          ...selectedCheckboxes,
+                          option.id.toString(),
+                        ]);
+                      }
+                    } else {
+                      setSelectedCheckboxes(
+                        selectedCheckboxes.filter(
+                          (id) => id != option.id.toString()
+                        )
+                      );
+                    }
+                  }}
                   value={option.id}
                 />
               ))}

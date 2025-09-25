@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -12,6 +12,7 @@ import { useIntl } from 'react-intl';
 import {
   CalendarMonthOutlined,
   Chair,
+  ChevronLeft,
   Clear,
   GroupWork,
   Hotel,
@@ -19,7 +20,6 @@ import {
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 
 import EventCard from './EventCard';
-import ZUISection from 'zui/components/ZUISection';
 import { ZetkinCallTarget } from '../types';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import SurveyCard from './SurveyCard';
@@ -35,9 +35,10 @@ import { getContrastColor } from 'utils/colorUtils';
 import notEmpty from 'utils/notEmpty';
 import { ACTIVITIES } from 'features/campaigns/types';
 import ZUIIcon from 'zui/components/ZUIIcon';
-import ZUITabView from 'zui/components/ZUITabView';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIDivider from 'zui/components/ZUIDivider';
 
 type Filter = {
   active: boolean;
@@ -198,19 +199,8 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const [drawerContent, setDrawerContent] = useState<
     'orgs' | 'calendar' | 'context' | null
   >(null);
-  const [selectedTab, setSelectedTab] = useState<'activities' | 'survey'>(
-    'activities'
-  );
   const selectedSurvey =
     surveys.find((survey) => survey.id == selectedSurveyId) || null;
-
-  useEffect(() => {
-    if (selectedSurveyId) {
-      setSelectedTab('survey');
-    } else {
-      setSelectedTab('activities');
-    }
-  }, [selectedSurveyId]);
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -501,81 +491,66 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
 
   return (
     <>
-      {selectedSurvey && (
+      <Box
+        sx={{
+          position: 'relative',
+        }}
+      >
         <Box
-          sx={(theme) => ({
-            backgroundColor: theme.palette.common.white,
-            minHeight: '100%',
-          })}
+          sx={{
+            left: selectedSurvey ? '-100%' : 20,
+            position: 'absolute',
+            top: 20,
+            transition: 'left 0.5s',
+          }}
         >
-          <ZUITabView
-            fullWidth
-            items={[
-              {
-                label: 'Activities',
-                render: () => (
-                  <Activities
-                    activities={filteredActivities}
-                    baseFilters={baseFilters}
-                    eventFilters={filterState.events ? eventFilters : []}
-                    isFiltered={isFiltered}
-                    onClearFilters={() =>
-                      dispatch(
-                        filtersUpdated({
-                          customDatesToFilterEventsBy: [null, null],
-                          eventDateFilterState: null,
-                          filterState: {
-                            alreadyIn: false,
-                            events: false,
-                            surveys: false,
-                            thisCall: false,
-                          },
-                          orgIdsToFilterEventsBy: [],
-                        })
-                      )
-                    }
-                    onSelectSurvey={(surveyId) => {
-                      dispatch(surveySelected(surveyId));
-                      setSelectedTab('survey');
-                    }}
-                    showNoActivities={
-                      filteredActivities.length == 0 && !filterState.alreadyIn
-                    }
-                    showNoSignups={
-                      filteredActivities.length == 0 && filterState.alreadyIn
-                    }
-                    target={target}
-                  />
-                ),
-                value: 'activities',
-              },
-              {
-                label: 'Survey',
-                render: () => {
-                  return (
-                    <Survey
-                      onSave={() => dispatch(surveyDeselected())}
-                      survey={selectedSurvey}
-                    />
-                  );
-                },
-                value: 'survey',
-              },
-            ]}
-            onSelectTab={() =>
-              setSelectedTab(
-                selectedTab == 'activities' ? 'survey' : 'activities'
-              )
-            }
-            selectedTab={selectedTab}
+          <ZUIText noWrap variant="headingMd">
+            Activities
+          </ZUIText>
+        </Box>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            left: selectedSurvey ? 20 : '100%',
+            position: 'absolute',
+            top: 16,
+            transition: 'left 0.5s',
+          }}
+        >
+          <ZUIButton
+            label="Back to activities"
+            onClick={() => dispatch(surveyDeselected())}
+            startIcon={ChevronLeft}
           />
         </Box>
-      )}
-      {!selectedSurveyId && (
-        <ZUISection
-          borders={false}
-          fullHeight
-          renderContent={() => (
+        <Box sx={{ paddingX: 2, position: 'absolute', top: 60, width: '100%' }}>
+          <ZUIDivider />
+        </Box>
+        <Box
+          sx={{
+            left: selectedSurvey ? 0 : '100%',
+            paddingX: 2,
+            position: 'absolute',
+            top: 60,
+            transition: 'left 0.5s',
+            width: '100%',
+          }}
+        >
+          {selectedSurvey && <Survey survey={selectedSurvey} />}
+        </Box>
+        <Box
+          sx={{
+            left: selectedSurvey ? '-100%' : 0,
+            maxWidth: '100%',
+            paddingX: 2,
+            position: 'absolute',
+            top: 60,
+            transition: 'left 0.5s',
+          }}
+        >
+          <Box sx={{ paddingTop: 2 }}>
             <Activities
               activities={filteredActivities}
               baseFilters={baseFilters}
@@ -596,7 +571,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   })
                 )
               }
-              onSelectSurvey={(surveyId) => dispatch(surveySelected(surveyId))}
+              onSelectSurvey={(surveyId) => {
+                dispatch(surveySelected(surveyId));
+              }}
               showNoActivities={
                 filteredActivities.length == 0 && !filterState.alreadyIn
               }
@@ -605,11 +582,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
               }
               target={target}
             />
-          )}
-          subtitle={`Acting as ${target?.first_name}`}
-          title="Activities"
-        />
-      )}
+          </Box>
+        </Box>
+      </Box>
       <ZUIDrawerModal
         onClose={() => setDrawerContent(null)}
         open={drawerContent == 'calendar'}
