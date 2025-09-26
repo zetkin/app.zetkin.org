@@ -122,7 +122,7 @@ function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
   return {
     items,
     ...(!!items.length && {
-      linkOperator:
+      logicOperator:
         query.filterOperator == 'or'
           ? GridLogicOperator.Or
           : GridLogicOperator.And,

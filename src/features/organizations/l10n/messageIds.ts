@@ -49,7 +49,9 @@ export default makeMessages('feat.organizations', {
       privacyPolicy: m('Privacy policy'),
     },
     header: {
+      calendarLinkCopied: m('Successfully copied calendar link'),
       connect: m('Connect'),
+      copyIcsUrl: m('Copy calendar subscription URL'),
       follow: m('Follow'),
       login: m('Login & connect'),
       unfollow: m('Unfollow'),
@@ -57,6 +59,10 @@ export default makeMessages('feat.organizations', {
     map: {
       viewInList: m('View in list'),
       viewInMap: m('View in map'),
+    },
+    menu: {
+      logout: m('Logout'),
+      myZetkin: m('My Zetkin'),
     },
     tabs: {
       calendar: m('Calendar'),

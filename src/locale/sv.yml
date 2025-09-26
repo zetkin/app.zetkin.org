@@ -801,7 +801,6 @@ feat:
         quickReportButtonLabel: Snabbrapport
       subheader: '{successfulVisits, plural, one {1 lyckat besök} other {# lyckade
         besök}}'
-
     map:
       addLocation:
         add: Lägg till plats
@@ -833,7 +832,6 @@ feat:
           syncButton:
             label: Synka nu
             loading: Synkar
-
     visit:
       household:
         header: '{householdTitle}: Logga besök'
@@ -1859,10 +1857,9 @@ feat:
         message: Kunde inte hitta några events
         removeFiltersButton: Rensa filter
       filterButtonLabels:
-        locations: '{count} platser'
+        locations: '{count, plural, =1 {1 plats} other {# platser}}'
         organizations: '{numOrgs, plural,=0 {Organisationer} =1 {1 organisation} other
           {# organisationer}}'
-
         thisWeek: Denna vecka
         today: Idag
         tomorrow: Imorgon
@@ -2138,7 +2135,7 @@ feat:
           single: '{addRemoveSelect} alla som finns i {suborgScopeSelect}
             {singleSuborgSelect}'
         suborgScopeSelect:
-          any: någon underorganisation
+          any: alla underorganisationer
           multiple: någon av följande underorganisationer
           single: den specifika underorganisationen
       callBlocked:

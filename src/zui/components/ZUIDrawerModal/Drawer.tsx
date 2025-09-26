@@ -54,7 +54,6 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              height: 'auto',
               maxHeight: 'calc(100dvh - 3.75rem)',
               overflow: 'hidden',
             }}

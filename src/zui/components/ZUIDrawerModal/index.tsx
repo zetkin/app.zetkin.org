@@ -77,7 +77,8 @@ const ZUIDrawerModal: FC<Props> = ({
           alignItems: 'flex-start',
           borderBottom: `0.063rem solid ${theme.palette.dividers.lighter}`,
           display: 'flex',
-          justifyContent: 'space-between',
+          flexDirection: 'column',
+          minHeight: 0,
           padding: '1.25rem',
         })}
       >

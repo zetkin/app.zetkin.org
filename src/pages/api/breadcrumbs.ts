@@ -157,7 +157,7 @@ async function fetchElements(
     return [
       {
         href: basePath + '/' + fieldValue,
-        label: journey.data.plural_label,
+        label: journey.data.title,
       },
     ];
   } else if (fieldName == 'callAssId') {

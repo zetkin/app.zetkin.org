@@ -46,11 +46,6 @@ const PATTERN_TEMPLATES = {
       'conic-gradient(from 116.56deg at calc(100%/3) 0, #0000 90deg,$paleColor 0), conic-gradient(from -63.44deg at calc(200%/3) 100%, #0000 90deg,$paleColor 0) $strongColor',
     backgroundSize: '32px 32px',
   },
-  pattern3: {
-    background:
-      'conic-gradient(at 10% 50%,#0000 75%,$strongColor 0), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(1*32px) calc(3*32px), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(2*32px) calc(1*32px), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(3*32px) calc(4*32px), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(4*32px) calc(2*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) 0 calc(4*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(1*32px) calc(2*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(2*32px) 0, conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(3*32px) calc(3*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(4*32px) calc(1*32px), $paleColor',
-    backgroundSize: '160px 160px',
-  },
   pattern4: {
     background:
       'radial-gradient(25% 25% at 25% 25%,$strongColor 99%,#0000 101%) 32px 32px/calc(2*32px) calc(2*32px), radial-gradient(25% 25% at 25% 25%,$strongColor 99%,#0000 101%) 0 0/calc(2*32px) calc(2*32px), radial-gradient(50% 50%,$paleColor 98%,#0000) 0 0/32px 32px, repeating-conic-gradient($paleColor 0 25%,$strongColor 0 50%) calc(.5*32px) 0/calc(2*32px) 32px',
@@ -94,7 +89,7 @@ export default function filterGalleryPattern(
   } else if (slug === FILTER_TYPE.PERSON_DATA) {
     pattern = PATTERN_TEMPLATES.pattern2;
   } else if (slug === FILTER_TYPE.PERSON_FIELD) {
-    pattern = PATTERN_TEMPLATES.pattern3;
+    pattern = PATTERN_TEMPLATES.pattern15;
   } else if (slug === FILTER_TYPE.PERSON_TAGS) {
     pattern = PATTERN_TEMPLATES.pattern4;
   } else if (slug === FILTER_TYPE.PERSON_VIEW) {
