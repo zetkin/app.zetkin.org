@@ -11,7 +11,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { useMessages } from 'core/i18n';
 import {
@@ -43,12 +43,6 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
     setDropdownValue(ev.target.value);
   }, []);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (onChange) {
-      onChange(selectedCheckboxes);
-    }
-  }, [selectedCheckboxes]);
 
   const question = element.question;
   const widgetType = question.response_config.widget_type;
@@ -184,6 +178,12 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                           ...selectedCheckboxes,
                           option.id.toString(),
                         ]);
+                        if (onChange) {
+                          onChange([
+                            ...selectedCheckboxes,
+                            option.id.toString(),
+                          ]);
+                        }
                       }
                     } else {
                       setSelectedCheckboxes(
@@ -191,6 +191,13 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                           (id) => id != option.id.toString()
                         )
                       );
+                      if (onChange) {
+                        onChange(
+                          selectedCheckboxes.filter(
+                            (id) => id != option.id.toString()
+                          )
+                        );
+                      }
                     }
                   }}
                   value={option.id}

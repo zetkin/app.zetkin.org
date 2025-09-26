@@ -25,6 +25,7 @@ const SurveyCard: FC<SurveyCardProps> = ({ survey, onSelectSurvey }) => {
   );
 
   const response = responseBySurveyId[survey.id];
+
   const hasMeaningfulContent =
     !!response &&
     Object.entries(response).some(([, value]) => {

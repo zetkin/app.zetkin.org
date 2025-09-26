@@ -493,6 +493,8 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
         {selectedSurvey && <Survey survey={selectedSurvey} />}
         {!selectedSurvey && (
           <ZUISection
+            borders={false}
+            fullHeight
             renderContent={() => (
               <Activities
                 activities={filteredActivities}

@@ -6,7 +6,11 @@ import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import SurveyForm from 'features/surveys/components/SurveyForm';
 import ZUIText from 'zui/components/ZUIText';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { surveyDeselected, surveySubmissionAdded } from '../store';
+import {
+  surveyDeselected,
+  surveySubmissionAdded,
+  surveySubmissionDeleted,
+} from '../store';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIDivider from 'zui/components/ZUIDivider';
 
@@ -34,7 +38,24 @@ const Survey: FC<Props> = ({ survey }) => {
       <Box sx={{ left: 20, position: 'absolute', top: 16 }}>
         <ZUIButton
           label="Back to activities"
-          onClick={() => dispatch(surveyDeselected())}
+          onClick={() => {
+            const response = responseBySurveyId[survey.id];
+
+            const hasMeaningfulContent =
+              !!response &&
+              Object.entries(response).some(([, value]) => {
+                if (typeof value === 'string') {
+                  return value.trim() !== '';
+                }
+                return value.length > 0;
+              });
+
+            if (hasMeaningfulContent) {
+              dispatch(surveyDeselected());
+            } else {
+              dispatch(surveySubmissionDeleted(survey.id));
+            }
+          }}
           startIcon={ChevronLeft}
         />
       </Box>
@@ -82,6 +103,7 @@ const Survey: FC<Props> = ({ survey }) => {
                   ...responseBySurveyId[survey.id],
                   ...{ [name]: newValue },
                 };
+
                 dispatch(
                   surveySubmissionAdded([survey.id, updatedSurveySubmission])
                 );
