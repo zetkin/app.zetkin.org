@@ -263,20 +263,27 @@ const CallPage: FC<Props> = ({ assignment }) => {
                   dispatch(updateLaneStep(LaneStep.CALL));
                 } else if (lane.step == LaneStep.CALL) {
                   dispatch(updateLaneStep(LaneStep.REPORT));
-                  dispatch(
-                    filtersUpdated({
-                      customDatesToFilterEventsBy: [null, null],
-                      eventDateFilterState: null,
-                      filterState: {
-                        alreadyIn: false,
-                        events: false,
-                        surveys: false,
-                        thisCall: true,
-                      },
-                      orgIdsToFilterEventsBy: [],
-                      projectIdsToFilterActivitiesBy: [],
-                    })
-                  );
+
+                  const hasSurveySubmissions =
+                    Object.entries(submissionDataBySurveyId).length > 0;
+                  const hasEventSignups = lane.respondedEventIds.length > 0;
+
+                  if (hasSurveySubmissions || hasEventSignups) {
+                    dispatch(
+                      filtersUpdated({
+                        customDatesToFilterEventsBy: [null, null],
+                        eventDateFilterState: null,
+                        filterState: {
+                          alreadyIn: false,
+                          events: false,
+                          surveys: false,
+                          thisCall: true,
+                        },
+                        orgIdsToFilterEventsBy: [],
+                        projectIdsToFilterActivitiesBy: [],
+                      })
+                    );
+                  }
                 } else if (lane.step == LaneStep.REPORT) {
                   if (!report || !call) {
                     return;
