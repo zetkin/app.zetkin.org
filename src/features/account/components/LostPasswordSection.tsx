@@ -12,6 +12,8 @@ import ZUITextField from 'zui/components/ZUITextField';
 import ZUILogo from 'zui/ZUILogo';
 import { useSendPasswordResetToken } from '../hooks/useSendPasswordResetToken';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messagesIds';
 
 type LostPasswordSectionProps = {
   onSuccess: () => void;
@@ -19,6 +21,7 @@ type LostPasswordSectionProps = {
 
 const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
   const isMobile = useIsMobile();
+  const messages = useMessages(messageIds);
   const { sendPasswordResetToken, loading } = useSendPasswordResetToken();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -67,33 +70,29 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                 }}
               >
                 <ZUIText variant="bodyMdRegular">
-                  Have you forgotten your password for Zetkin? Give us your
-                  e-mail address and we will send out a link where you can pick
-                  a new password.
+                  <Msg id={messageIds.lostPassword.description} />
                 </ZUIText>
                 {emailError == 'USER_NOT_FOUND' && (
                   <ZUIAlert
                     appear
                     severity={'error'}
-                    title={'No user exists with that e-mail address.'}
+                    title={messages.lostPassword.errors.noUser()}
                   />
                 )}
                 {emailError == 'UNKNOWN_ERROR' && (
                   <ZUIAlert
                     appear
-                    description={
-                      'Something went wrong. Please try again later.'
-                    }
+                    description={messages.lostPassword.errors.unknownError()}
                     severity={'error'}
-                    title={'Unexpected Error'}
+                    title={messages.lostPassword.errors.unknownErrorTitle()}
                   />
                 )}
                 {emailError == 'INVALID_EMAIL' && (
                   <ZUIAlert
                     appear
-                    description={'Please enter a valid email address.'}
+                    description={messages.lostPassword.errors.invalidEmail()}
                     severity={'error'}
-                    title={'Invalid Email'}
+                    title={messages.lostPassword.errors.invalidEmailTitle()}
                   />
                 )}
                 <ZUITextField
@@ -107,7 +106,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                 <ZUIButton
                   actionType="submit"
                   disabled={loading || !email}
-                  label={'Send Email'}
+                  label={messages.lostPassword.actions.sendEmail()}
                   size="large"
                   variant={loading ? 'loading' : 'primary'}
                 />
@@ -131,7 +130,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
               <NextLink href={`https://login.zetk.in/`}>
                 <ZUIButton
                   fullWidth
-                  label={'Sign in'}
+                  label={messages.lostPassword.actions.signIn()}
                   size="large"
                   variant="secondary"
                 />
@@ -146,7 +145,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                   <ZUILink
                     href={'https://zetkin.org/privacy'}
                     openInNewTab
-                    text="Read our privacy policy"
+                    text={messages.lostPassword.footer.readPolicy()}
                   />
                 </ZUIText>
                 <ZUIText>
@@ -164,7 +163,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
       renderRightHeaderContent={() => {
         return <ZUILogo />;
       }}
-      title={'Recover your Zetkin account'}
+      title={messages.lostPassword.title()}
     />
   );
 };
