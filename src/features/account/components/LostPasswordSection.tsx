@@ -13,12 +13,15 @@ import ZUILogo from 'zui/ZUILogo';
 import { useSendPasswordResetToken } from '../hooks/useSendPasswordResetToken';
 import ZUIAlert from 'zui/components/ZUIAlert';
 
-const LostPasswordSection: FC = () => {
+type LostPasswordSectionProps = {
+  onSuccess: () => void;
+};
+
+const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
   const isMobile = useIsMobile();
-  const { sendPasswordResetToken, loading, error } =
-    useSendPasswordResetToken();
+  const { sendPasswordResetToken, loading } = useSendPasswordResetToken();
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
   return (
     <ZUISection
       borders={isMobile ? false : true}
@@ -35,12 +38,23 @@ const LostPasswordSection: FC = () => {
             <form
               onSubmit={async (ev) => {
                 ev.preventDefault();
+
                 if (!email.includes('@')) {
-                  setEmailError(true);
+                  setEmailError('INVALID_EMAIL');
                   return;
                 }
-                setEmailError(false);
-                sendPasswordResetToken(email);
+                setEmailError(null);
+
+                const result = await sendPasswordResetToken(email);
+                if (result.success) {
+                  onSuccess();
+                } else {
+                  if (result.errorCode == 'USER_NOT_FOUND') {
+                    setEmailError('USER_NOT_FOUND');
+                  } else {
+                    setEmailError('UNKNOWN_ERROR');
+                  }
+                }
               }}
             >
               <Box
@@ -57,7 +71,24 @@ const LostPasswordSection: FC = () => {
                   e-mail address and we will send out a link where you can pick
                   a new password.
                 </ZUIText>
-                {emailError && (
+                {emailError == 'USER_NOT_FOUND' && (
+                  <ZUIAlert
+                    appear
+                    severity={'error'}
+                    title={'No user exists with that e-mail address.'}
+                  />
+                )}
+                {emailError == 'UNKNOWN_ERROR' && (
+                  <ZUIAlert
+                    appear
+                    description={
+                      'Something went wrong. Please try again later.'
+                    }
+                    severity={'error'}
+                    title={'Unexpected Error'}
+                  />
+                )}
+                {emailError == 'INVALID_EMAIL' && (
                   <ZUIAlert
                     appear
                     description={'Please enter a valid email address.'}
@@ -65,18 +96,17 @@ const LostPasswordSection: FC = () => {
                     title={'Invalid Email'}
                   />
                 )}
-                {error && <ZUIAlert appear severity={'error'} title={error} />}
                 <ZUITextField
                   label={'Email'}
                   onChange={(newValue) => {
                     setEmail(newValue);
-                    setEmailError(false);
+                    setEmailError(null);
                   }}
                   size="large"
                 />
                 <ZUIButton
                   actionType="submit"
-                  disabled={loading || !!emailError || !email}
+                  disabled={loading || !email}
                   label={'Send Email'}
                   size="large"
                   variant={loading ? 'loading' : 'primary'}
