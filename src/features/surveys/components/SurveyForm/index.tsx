@@ -13,6 +13,7 @@ import useServerSide from 'core/useServerSide';
 
 type SurveyFormProps = {
   initialValues?: Record<string, string | string[]>;
+  onChange?: (name: string, value: string | string[]) => void;
   survey: ZetkinSurveyExtended;
 };
 
@@ -22,7 +23,11 @@ const isTextQuestionType = (
   return question.question.response_type == 'text';
 };
 
-const SurveyForm: FC<SurveyFormProps> = ({ initialValues = {}, survey }) => {
+const SurveyForm: FC<SurveyFormProps> = ({
+  initialValues = {},
+  onChange,
+  survey,
+}) => {
   const isServer = useServerSide();
 
   if (isServer) {
@@ -67,6 +72,11 @@ const SurveyForm: FC<SurveyFormProps> = ({ initialValues = {}, survey }) => {
                   element={element}
                   initialValue={initialValues[`${element.id}.text`] as string}
                   name={`${element.id}.text`}
+                  onChange={(newValue) => {
+                    if (onChange) {
+                      onChange(`${element.id}.text`, newValue);
+                    }
+                  }}
                 />
               )}
               {isOptionsQuestion && (
@@ -74,6 +84,11 @@ const SurveyForm: FC<SurveyFormProps> = ({ initialValues = {}, survey }) => {
                   element={element}
                   initialValue={initialValues[`${element.id}.options`]}
                   name={`${element.id}.options`}
+                  onChange={(newValue) => {
+                    if (onChange) {
+                      onChange(`${element.id}.options`, newValue);
+                    }
+                  }}
                 />
               )}
             </Box>

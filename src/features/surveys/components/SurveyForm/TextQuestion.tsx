@@ -11,12 +11,14 @@ export type SurveyTextQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;
   initialValue?: string;
   name: string;
+  onChange?: (newValue: string) => void;
 };
 
 const TextQuestion: FC<SurveyTextQuestionProps> = ({
   element,
   initialValue,
   name,
+  onChange,
 }) => {
   const messages = useMessages(messageIds);
   return (
@@ -45,6 +47,11 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({
           maxRows={element.question.response_config.multiline ? 4 : 1}
           multiline={element.question.response_config.multiline}
           name={name}
+          onChange={(newValue) => {
+            if (onChange) {
+              onChange(newValue);
+            }
+          }}
           required={element.question.required}
           size="large"
           type="text"

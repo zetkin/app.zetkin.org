@@ -231,7 +231,9 @@ const ZUISection: FC<SectionProps> = (props) => {
         backgroundColor: theme.palette.common.white,
         border: borders ? `0.063rem solid ${theme.palette.dividers.main}` : '',
         borderRadius: borders ? '0.25rem' : '',
-        minHeight: fullHeight ? '100%' : 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        height: fullHeight ? '100%' : 'auto',
         padding: !hasSubSections ? '1.25rem' : '',
       })}
     >
@@ -334,6 +336,7 @@ const ZUISection: FC<SectionProps> = (props) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
+            height: fullHeight ? '100%' : '',
             width: '100%',
           }}
         >

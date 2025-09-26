@@ -88,7 +88,7 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
 }
 
 export enum LaneStep {
-  STATS = 0,
+  START = 0,
   CALL = 1,
   REPORT = 2,
   SUMMARY = 3,

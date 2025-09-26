@@ -8,14 +8,18 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { LaneStep } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { updateLaneStep, reportUpdated, previousCallAdd } from '../store';
+import {
+  updateLaneStep,
+  reportUpdated,
+  previousCallAdd,
+  filtersUpdated,
+} from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import AssignmentStats, { DesktopStats } from '../components/AssignmentStats';
 import useSimpleCallAssignmentStats from '../hooks/useSimpleCallAssignmentStats';
 import InstructionsSection from '../components/InstructionsSection';
 import AboutSection from '../components/AboutSection';
-import ActivitiesSection from '../components/ActivitiesSection';
 import ZUISection from 'zui/components/ZUISection';
 import ReportForm from '../components/Report';
 import ZUIText from 'zui/components/ZUIText';
@@ -33,6 +37,7 @@ import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import UnfinishedCall from '../components/UnfinishedCall';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import callSummarySentence from '../components/utils/callSummarySentence';
+import ActivitiesSection from '../components/ActivitiesSection';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -106,7 +111,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
   }
 
   const getHeaderPrimaryButtonLabel = () => {
-    if (lane.step == LaneStep.STATS) {
+    if (lane.step == LaneStep.START) {
       return 'Call';
     } else if (lane.step == LaneStep.CALL) {
       return 'Finish & report';
@@ -119,7 +124,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
   };
 
   const getHeaderSecondaryButtonLabel = () => {
-    if (lane.step == LaneStep.STATS) {
+    if (lane.step == LaneStep.START) {
       return 'Quit';
     } else if (lane.step == LaneStep.SUMMARY) {
       return 'Take a break';
@@ -155,7 +160,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               left: 16,
               position: 'absolute',
               top:
-                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
                   ? 16
                   : -50,
               transition: '0.5s',
@@ -167,7 +172,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
           <Box
             sx={{
               bottom:
-                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
                   ? 16
                   : 60,
               left: 16,
@@ -177,7 +182,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
           >
             <ZUIText
               variant={
-                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
                   ? 'headingLg'
                   : 'bodyMdRegular'
               }
@@ -192,11 +197,11 @@ const CallPage: FC<Props> = ({ assignment }) => {
               display: 'flex',
               gap: 1,
               left:
-                lane.step == LaneStep.STATS || lane.step == LaneStep.SUMMARY
+                lane.step == LaneStep.START || lane.step == LaneStep.SUMMARY
                   ? '-100%'
                   : 16,
               position: 'absolute',
-              transition: '0.5s',
+              transition: 'left 0.5s',
             }}
           >
             <ZUIText variant="headingLg">{call?.target.name}</ZUIText>
@@ -215,7 +220,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               right: 16,
             }}
           >
-            {lane.step != LaneStep.STATS && lane.step != LaneStep.SUMMARY && (
+            {lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY && (
               <ZUIButton
                 label="Stop"
                 onClick={() => {
@@ -228,20 +233,20 @@ const CallPage: FC<Props> = ({ assignment }) => {
             )}
             <ZUIButton
               endIcon={
-                lane.step != LaneStep.STATS && lane.step != LaneStep.SUMMARY
+                lane.step != LaneStep.START && lane.step != LaneStep.SUMMARY
                   ? SkipNext
                   : undefined
               }
-              href={lane.step == LaneStep.STATS ? '/my/home' : undefined}
+              href={lane.step == LaneStep.START ? '/my/home' : undefined}
               label={getHeaderSecondaryButtonLabel()}
               onClick={() => {
                 if (
-                  lane.step != LaneStep.STATS &&
+                  lane.step != LaneStep.START &&
                   lane.step != LaneStep.SUMMARY
                 ) {
                   setSkipCallModalOpen(true);
                 } else if (lane.step == LaneStep.SUMMARY) {
-                  dispatch(updateLaneStep(LaneStep.STATS));
+                  dispatch(updateLaneStep(LaneStep.START));
                 }
               }}
               variant="secondary"
@@ -253,11 +258,32 @@ const CallPage: FC<Props> = ({ assignment }) => {
               }
               label={getHeaderPrimaryButtonLabel()}
               onClick={async () => {
-                if (lane.step == LaneStep.STATS) {
+                if (lane.step == LaneStep.START) {
                   await allocateCall();
                   dispatch(updateLaneStep(LaneStep.CALL));
                 } else if (lane.step == LaneStep.CALL) {
                   dispatch(updateLaneStep(LaneStep.REPORT));
+
+                  const hasSurveySubmissions =
+                    Object.entries(submissionDataBySurveyId).length > 0;
+                  const hasEventSignups = lane.respondedEventIds.length > 0;
+
+                  if (hasSurveySubmissions || hasEventSignups) {
+                    dispatch(
+                      filtersUpdated({
+                        customDatesToFilterEventsBy: [null, null],
+                        eventDateFilterState: null,
+                        filterState: {
+                          alreadyIn: false,
+                          events: false,
+                          surveys: false,
+                          thisCall: true,
+                        },
+                        orgIdsToFilterEventsBy: [],
+                        projectIdsToFilterActivitiesBy: [],
+                      })
+                    );
+                  }
                 } else if (lane.step == LaneStep.REPORT) {
                   if (!report || !call) {
                     return;
@@ -320,7 +346,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
             sx={(theme) => ({
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
-              left: lane.step == LaneStep.STATS ? 0 : 'calc(-100% / 3)',
+              left: lane.step == LaneStep.START ? 0 : 'calc(-100% / 3)',
               maxHeight: '100%',
               overflowY: 'auto',
               position: 'absolute',
@@ -342,7 +368,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
-                lane.step == LaneStep.STATS
+                lane.step == LaneStep.START
                   ? 'calc(100% / 3)'
                   : 'calc(-100% / 3)',
               maxHeight: '100%',
@@ -367,7 +393,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
-                lane.step == LaneStep.STATS
+                lane.step == LaneStep.START
                   ? 'calc((100% / 3) * 2)'
                   : lane.step == LaneStep.SUMMARY
                   ? '100%'
@@ -391,7 +417,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
-                lane.step == LaneStep.STATS
+                lane.step == LaneStep.START
                   ? '100%'
                   : lane.step == LaneStep.CALL
                   ? 'calc(100% / 3)'
@@ -409,6 +435,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
             <AboutSection call={call} />
           </Box>
           <Box
+            id="boxContainingActivities"
             sx={(theme) => ({
               '@keyframes activitiesOut': {
                 '0%': { left: 'calc(100% / 3)' },
@@ -421,7 +448,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               borderRight: `1px solid ${theme.palette.dividers.main}`,
               height: '100%',
               left:
-                lane.step == LaneStep.STATS
+                lane.step == LaneStep.START
                   ? '100%'
                   : lane.step == LaneStep.CALL
                   ? 'calc((100% / 3) * 2)'
@@ -432,7 +459,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
               position: 'absolute',
               transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
               width: 1 / 3,
-              zIndex: lane.step == LaneStep.STATS ? -1 : 0,
+              zIndex: lane.step == LaneStep.START ? -1 : 0,
             })}
           >
             <ActivitiesSection
