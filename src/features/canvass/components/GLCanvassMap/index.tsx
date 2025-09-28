@@ -359,6 +359,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment, selectedArea }) => {
         }}
         onMove={() => updateSelection()}
         onMoveEnd={() => saveBounds()}
+        RTLTextPlugin="https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js"
         style={{ height: '100%', width: '100%' }}
       >
         <Source data={areasGeoJson} id="areas" type="geojson">
