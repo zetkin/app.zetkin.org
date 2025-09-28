@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FC, useState } from 'react';
 import {
   FolderOutlined,
@@ -30,6 +30,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
   orgId,
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const joinFormMessages = useMessages(joinFormMessageIds);
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
@@ -56,7 +57,9 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             label: messages.actions.createFolder(),
             onClick: () => {
               createFolder(messages.newFolderTitle(), folderId || undefined);
-              router.push(`/organize/${orgId}/people`);
+              if (!pathname?.includes('folders')) {
+                router.push(`/organize/${orgId}/people`);
+              }
             },
           },
           {
