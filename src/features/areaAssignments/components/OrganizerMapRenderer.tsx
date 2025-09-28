@@ -369,8 +369,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
       const isInsideArea = isPointInsidePolygon(
         locToLatLng(location),
         area.points.map((point) => ({
-          lat: point[0],
-          lng: point[1],
+          lat: point[1],
+          lng: point[0],
         }))
       );
       if (isInsideArea) {
@@ -507,8 +507,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
               const isInsideArea = isPointInsidePolygon(
                 locToLatLng(location),
                 area.points.map((point) => ({
-                  lat: point[0],
-                  lng: point[1],
+                  lat: point[1],
+                  lng: point[0],
                 }))
               );
 

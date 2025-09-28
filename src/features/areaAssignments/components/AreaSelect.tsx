@@ -73,7 +73,7 @@ const AreaSelect: FC<Props> = ({
     locations.map((location) => {
       const isInsideArea = isPointInsidePolygon(
         locToLatLng(location),
-        selectedArea.points.map((point) => ({ lat: point[0], lng: point[1] }))
+        selectedArea.points.map((point) => ({ lat: point[1], lng: point[0] }))
       );
       if (isInsideArea) {
         locationsInSelectedArea.push(location);

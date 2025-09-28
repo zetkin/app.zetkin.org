@@ -17,7 +17,7 @@ import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment'
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import AssigneeFilterProvider from 'features/areaAssignments/components/OrganizerMapFilters/AssigneeFilterContext';
 import useAreaAssignmentMutations from 'features/areaAssignments/hooks/useAreaAssignmentMutations';
-import { ZetkinLocation } from 'features/areaAssignments/types';
+import useLocations from 'features/areaAssignments/hooks/useLocations';
 
 const OrganizerMap = dynamic(
   () =>
@@ -50,8 +50,12 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
 }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
   // TODO: Re-enable this
-  //const locations = useLocations(parseInt(orgId), areaAssId).data || [];
-  const locations: ZetkinLocation[] = [];
+  const locations =
+    useLocations(
+      parseInt(orgId),
+      areaAssId,
+      areas.map((e) => e.id)
+    ).data || [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);

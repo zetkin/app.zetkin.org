@@ -6,11 +6,14 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 export default function useLocations(
   orgId: number,
   assignmentId: number,
-  areaId: number
+  areaIds: number[] | number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
-  const key = `${assignmentId}:${areaId}`;
+  if (typeof areaIds == 'number') {
+    areaIds = [areaIds];
+  }
+  const key = `${assignmentId}:${areaIds.join(',')}`;
   const locationList = useAppSelector(
     (state) => state.areaAssignments.locationsByAssignmentIdAndAreaId[key]
   );
@@ -20,7 +23,9 @@ export default function useLocations(
     actionOnSuccess: (data) => locationsLoaded([key, data]),
     loader: () =>
       apiClient.get<ZetkinLocation[]>(
-        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations?within_areas=${areaId}&buffer_meters=50&type=assignment`
+        `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations?within_areas=${areaIds.join(
+          ','
+        )}&buffer_meters=50&type=assignment`
       ),
   });
 }
