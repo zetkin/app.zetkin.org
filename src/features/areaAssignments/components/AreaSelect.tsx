@@ -269,7 +269,7 @@ const AreaSelect: FC<Props> = ({
                 sx={(theme) => ({ color: theme.palette.primary.main })}
                 variant="h5"
               >
-                {selectedAreaStats?.num_visited_households || 0}
+                {locationsInSelectedArea.reduce((v, e) => v += e?.num_households_visited || 0, 0) || 0}
               </Typography>
               <Typography color="secondary" ml={0.5} variant="h5">
                 / {numberOfHouseholdsInSelectedArea}
