@@ -1,15 +1,17 @@
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { Close, Create, Save } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
-import { FC, useMemo, useState } from 'react';
-import { Map as MapType } from 'maplibre-gl';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { LngLatBounds, Map as MapType, Point } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Zetkin2Area } from 'features/areas/types';
 import AreaFilterProvider from 'features/areas/components/AreaFilters/AreaFilterContext';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
-import AreaOverlay from 'features/areas/components/AreaOverlay';
+import AreaOverlay, {
+  AREA_OVERLAY_WIDTH,
+} from 'features/areas/components/AreaOverlay';
 import oldAreaFormat from 'features/areas/utils/oldAreaFormat';
 import useAreaEditing from 'features/geography/hooks/useAreaEditing';
 import useAreaSelection from 'features/geography/hooks/useAreaSelection';
@@ -49,6 +51,46 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
     () => areas.filter((area) => area.id != selectedArea?.id),
     [areas, selectedArea]
   );
+
+  useEffect(() => {
+    if (map && selectedArea) {
+      const firstPolygon = selectedArea.boundary.coordinates[0];
+      if (!firstPolygon?.length) {
+        return;
+      }
+
+      const areaBounds = new LngLatBounds(firstPolygon[0], firstPolygon[0]);
+      firstPolygon.forEach((lngLat) => areaBounds.extend(lngLat));
+
+      const mapWidth = map.getContainer().clientWidth;
+      const rightmostPartOfArea = map.project(areaBounds.getNorthEast()).x;
+
+      const overlayWidth = AREA_OVERLAY_WIDTH + 16; // 16 = 1rem absolute positioning
+      const overlayLeftEdge = mapWidth - overlayWidth;
+      if (rightmostPartOfArea > overlayLeftEdge) {
+        // The area is partially hidden behind the overlay
+        // Zoom out (using fitBounds) so that the entire area is visible
+
+        // The main rationale here is that we want to calculate the east point at `rightmostPartOfArea` plus have room for the overlay
+        // To keep the proportions after the zoom, we calculate the ratio and apply it to the overlay
+        const ratio = rightmostPartOfArea / overlayLeftEdge;
+        const newHiddenAreaWidth = overlayWidth * ratio;
+        const newEastPoint = map.unproject(
+          new Point(rightmostPartOfArea + newHiddenAreaWidth, 0)
+        );
+
+        const newBounds = new LngLatBounds(
+          map.getBounds().getSouthWest(),
+          map.getBounds().getNorthEast()
+        ).extend(newEastPoint);
+        map.fitBounds(newBounds, {
+          animate: true,
+          duration: 800,
+          padding: { right: 16 },
+        });
+      }
+    }
+  }, [map, selectedArea]);
 
   return (
     <AreaFilterProvider>
