@@ -49,7 +49,6 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
   orgId,
 }) => {
   const areas = useAreas(parseInt(orgId)).data || [];
-  // TODO: Re-enable this
   const locations =
     useLocations(
       parseInt(orgId),
