@@ -1,12 +1,15 @@
 'use client';
 
-import { FC, Suspense } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Box } from '@mui/material';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import LostPasswordSection from '../components/LostPasswordSection';
+import CheckEmailSection from '../components/CheckEmailSection';
 
 const LostPasswordPage: FC = () => {
+  const [success, setSuccess] = useState(true);
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   return (
     <Suspense
       fallback={
@@ -21,7 +24,19 @@ const LostPasswordPage: FC = () => {
         </Box>
       }
     >
-      <LostPasswordSection />
+      {success && submittedEmail ? (
+        <CheckEmailSection
+          email={submittedEmail}
+          onBack={() => setSuccess(false)}
+        />
+      ) : (
+        <LostPasswordSection
+          onSuccess={(email) => {
+            setSubmittedEmail(email);
+            setSuccess(true);
+          }}
+        />
+      )}
     </Suspense>
   );
 };
