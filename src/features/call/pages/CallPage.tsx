@@ -8,8 +8,8 @@ import { useAppDispatch } from 'core/hooks';
 import { initiateAssignment } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
-import useMyAssignments from '../hooks/useMyAssignments';
 import Call from '../components/Call';
+import useCurrentAssignment from '../hooks/useCurrentAssignment';
 
 type Props = {
   assignmentId: number;
@@ -23,9 +23,8 @@ const CallPage: FC<Props> = ({ assignmentId }) => {
     dispatch(initiateAssignment(assignmentId));
   }
 
+  const assignment = useCurrentAssignment();
   const onServer = useServerSide();
-  const myAssignments = useMyAssignments();
-  const assignment = myAssignments.find((a) => a.id == assignmentId);
 
   if (!assignment) {
     return notFound();

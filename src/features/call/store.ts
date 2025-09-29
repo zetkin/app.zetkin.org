@@ -114,6 +114,15 @@ const CallSlice = createSlice({
       );
       if (indexOfExistingLane != -1) {
         state.activeLaneIndex = indexOfExistingLane;
+        state.lanes[indexOfExistingLane].callIsBeingAllocated = false;
+        state.lanes[indexOfExistingLane].currentCallId = newCall.id;
+        state.lanes[indexOfExistingLane].previousCall = null;
+        state.lanes[indexOfExistingLane].report = emptyReport;
+        state.lanes[indexOfExistingLane].respondedEventIds = [];
+        state.lanes[indexOfExistingLane].step = LaneStep.CALL;
+        state.lanes[indexOfExistingLane].submissionDataBySurveyId = {};
+        state.lanes[indexOfExistingLane].surveySubmissionError = false;
+        state.lanes[indexOfExistingLane].updateCallError = false;
       } else {
         const newLane = {
           assignmentId: newCall.assignment_id,
@@ -136,8 +145,8 @@ const CallSlice = createSlice({
       state.selectedSurveyId = null;
 
       state.outgoingCalls.items.push(
-        remoteItem(action.payload.id, {
-          data: action.payload,
+        remoteItem(newCall.id, {
+          data: newCall,
           isLoading: false,
           isStale: false,
           loaded: new Date().toISOString(),
@@ -414,6 +423,15 @@ const CallSlice = createSlice({
       );
       if (indexOfExistingLane != -1) {
         state.activeLaneIndex = indexOfExistingLane;
+        state.lanes[indexOfExistingLane].callIsBeingAllocated = false;
+        state.lanes[indexOfExistingLane].currentCallId = unfinishedCallId;
+        state.lanes[indexOfExistingLane].previousCall = null;
+        state.lanes[indexOfExistingLane].report = emptyReport;
+        state.lanes[indexOfExistingLane].respondedEventIds = [];
+        state.lanes[indexOfExistingLane].step = LaneStep.CALL;
+        state.lanes[indexOfExistingLane].submissionDataBySurveyId = {};
+        state.lanes[indexOfExistingLane].surveySubmissionError = false;
+        state.lanes[indexOfExistingLane].updateCallError = false;
       } else {
         const newLane = {
           assignmentId: unfinishedCallAssignmentId,
@@ -434,6 +452,7 @@ const CallSlice = createSlice({
 
       state.filters = emptyFilters;
       state.selectedSurveyId = null;
+
       sortOutgoingCalls(state.outgoingCalls);
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
