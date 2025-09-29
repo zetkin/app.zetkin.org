@@ -180,18 +180,18 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   const { events, filteredActivities, filteredEvents, getDateRange, surveys } =
     useFilteredActivities(assignment.organization.id);
   const {
-    filterState,
-    customDatesToFilterEventsBy,
-    eventDateFilterState,
-    orgIdsToFilterEventsBy,
-    projectIdsToFilterActivitiesBy,
-  } = useAppSelector((state) => state.call.filters);
-  const { respondedEventIds, submissionDataBySurveyId } = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex]
-  );
-  const selectedSurveyId = useAppSelector(
-    (state) => state.call.selectedSurveyId
-  );
+    respondedEventIds,
+    submissionDataBySurveyId,
+    selectedSurveyId,
+    filters: {
+      filterState,
+      customDatesToFilterEventsBy,
+      eventDateFilterState,
+      orgIdsToFilterEventsBy,
+      projectIdsToFilterActivitiesBy,
+    },
+  } = useAppSelector((state) => state.call.lanes[state.call.activeLaneIndex]);
+
   const respondedSurveyIds = Object.keys(submissionDataBySurveyId);
 
   const [drawerContent, setDrawerContent] = useState<
