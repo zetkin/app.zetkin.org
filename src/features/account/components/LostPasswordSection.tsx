@@ -4,8 +4,6 @@ import React, { FC, useState } from 'react';
 
 import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIButton from 'zui/components/ZUIButton';
-import ZUIDivider from 'zui/components/ZUIDivider';
-import ZUILink from 'zui/components/ZUILink';
 import ZUISection from 'zui/components/ZUISection';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -14,9 +12,10 @@ import { useSendPasswordResetToken } from '../hooks/useSendPasswordResetToken';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messagesIds';
+import AccountFooter from './AccountFooter';
 
 type LostPasswordSectionProps = {
-  onSuccess: () => void;
+  onSuccess: (email: string) => void;
 };
 
 const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
@@ -50,7 +49,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
 
                 const result = await sendPasswordResetToken(email);
                 if (result.success) {
-                  onSuccess();
+                  onSuccess(email);
                 } else {
                   if (result.errorCode == 'USER_NOT_FOUND') {
                     setEmailError('USER_NOT_FOUND');
@@ -135,27 +134,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                   variant="secondary"
                 />
               </NextLink>
-              <ZUIDivider />
-              <Box
-                alignItems="center"
-                display="flex"
-                justifyContent="space-between"
-              >
-                <ZUIText>
-                  <ZUILink
-                    href={'https://zetkin.org/privacy'}
-                    openInNewTab
-                    text={messages.lostPassword.footer.readPolicy()}
-                  />
-                </ZUIText>
-                <ZUIText>
-                  <ZUILink
-                    href={'https://zetkin.org/'}
-                    openInNewTab
-                    text="Zetkin.org"
-                  />
-                </ZUIText>
-              </Box>
+              <AccountFooter />
             </Box>
           </Box>
         );
