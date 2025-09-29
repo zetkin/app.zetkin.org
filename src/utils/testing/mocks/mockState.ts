@@ -36,6 +36,7 @@ export default function mockState(overrides?: RootState) {
         projectIdsToFilterActivitiesBy: [],
       },
       lanes: [],
+      myAssignmentsList: remoteList(),
       outgoingCalls: remoteList(),
       queueHasError: null,
       selectedSurveyId: null,

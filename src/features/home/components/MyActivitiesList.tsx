@@ -76,7 +76,7 @@ const MyActivitiesList: FC = () => {
         let elem, href;
 
         if (activity.kind == 'call') {
-          href = `/call/${activity.data.id}`;
+          href = `/call?assignment=${activity.data.id}`;
           elem = (
             <MyActivityListItem
               actions={[

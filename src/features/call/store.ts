@@ -11,7 +11,7 @@ import {
   ZetkinCallPatchResponse,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import { SerializedError } from './hooks/useAllocateCall';
 
 type ActivityFilters = {
@@ -32,6 +32,7 @@ export interface CallStoreSlice {
   filters: ActivityFilters;
   upcomingEventsList: RemoteList<ZetkinEvent>;
   lanes: LaneState[];
+  myAssignmentsList: RemoteList<ZetkinCallAssignment>;
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
   selectedSurveyId: number | null;
@@ -67,19 +68,8 @@ const emptyReport: Report = {
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
   filters: emptyFilters,
-  lanes: [
-    {
-      callIsBeingAllocated: false,
-      currentCallId: null,
-      previousCall: null,
-      report: emptyReport,
-      respondedEventIds: [],
-      step: LaneStep.START,
-      submissionDataBySurveyId: {},
-      surveySubmissionError: false,
-      updateCallError: false,
-    },
-  ],
+  lanes: [],
+  myAssignmentsList: remoteList(),
   outgoingCalls: remoteList(),
   queueHasError: null,
   selectedSurveyId: null,
@@ -119,21 +109,31 @@ const CallSlice = createSlice({
         state.lanes = filteredLanes;
       }
 
-      const newLane = {
-        callIsBeingAllocated: false,
-        currentCallId: newCall.id,
-        previousCall: null,
-        report: emptyReport,
-        respondedEventIds: [],
-        step: LaneStep.CALL,
-        submissionDataBySurveyId: {},
-        surveySubmissionError: false,
-        updateCallError: false,
-      };
+      const indexOfExistingLane = state.lanes.findIndex(
+        (lane) => lane.assignmentId == newCall.assignment_id
+      );
+      if (indexOfExistingLane != -1) {
+        state.activeLaneIndex = indexOfExistingLane;
+      } else {
+        const newLane = {
+          assignmentId: newCall.assignment_id,
+          callIsBeingAllocated: false,
+          currentCallId: newCall.id,
+          previousCall: null,
+          report: emptyReport,
+          respondedEventIds: [],
+          step: LaneStep.CALL,
+          submissionDataBySurveyId: {},
+          surveySubmissionError: false,
+          updateCallError: false,
+        };
 
-      state.lanes.push(newLane);
-      state.activeLaneIndex = state.lanes.length - 1;
+        state.lanes.push(newLane);
+        state.activeLaneIndex = state.lanes.length - 1;
+      }
+
       state.filters = emptyFilters;
+      state.selectedSurveyId = null;
 
       state.outgoingCalls.items.push(
         remoteItem(action.payload.id, {
@@ -204,6 +204,50 @@ const CallSlice = createSlice({
     ) => {
       const updatedFilters = action.payload;
       state.filters = { ...state.filters, ...updatedFilters };
+    },
+    initiateAssignment: (state, action: PayloadAction<number>) => {
+      const assignmentId = action.payload;
+
+      const existingLane = state.lanes.find(
+        (lane) => lane.assignmentId == assignmentId
+      );
+
+      if (existingLane) {
+        const indexOfExistingLane = state.lanes.indexOf(existingLane);
+        state.activeLaneIndex = indexOfExistingLane;
+      } else {
+        const newLane = {
+          assignmentId: assignmentId,
+          callIsBeingAllocated: false,
+          currentCallId: null,
+          previousCall: null,
+          report: emptyReport,
+          respondedEventIds: [],
+          step: LaneStep.START,
+          submissionDataBySurveyId: {},
+          surveySubmissionError: false,
+          updateCallError: false,
+        };
+
+        state.lanes.push(newLane);
+        state.activeLaneIndex = state.lanes.length - 1;
+      }
+    },
+    myAssignmentsLoad: (state) => {
+      state.myAssignmentsList.isLoading = true;
+    },
+    myAssignmentsLoaded: (
+      state,
+      action: PayloadAction<ZetkinCallAssignment[]>
+    ) => {
+      const assignments = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.myAssignmentsList = remoteList(assignments);
+      state.myAssignmentsList.loaded = timestamp;
+      state.myAssignmentsList.items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
     },
     newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
       state.lanes[state.activeLaneIndex].currentCallId = action.payload.id;
@@ -348,8 +392,11 @@ const CallSlice = createSlice({
         }
       }
     },
-    unfinishedCallSwitched: (state, action: PayloadAction<number>) => {
-      const unfinishedCallId = action.payload;
+    unfinishedCallSwitched: (
+      state,
+      action: PayloadAction<[number, number]>
+    ) => {
+      const [unfinishedCallId, unfinishedCallAssignmentId] = action.payload;
 
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
@@ -362,17 +409,14 @@ const CallSlice = createSlice({
         state.lanes = filteredLanes;
       }
 
-      const unfinishedCallLaneIndex = state.lanes.findIndex(
-        (lane) => lane.currentCallId == unfinishedCallId
+      const indexOfExistingLane = state.lanes.findIndex(
+        (lane) => lane.assignmentId == unfinishedCallAssignmentId
       );
-      const unfinishedCallLane = state.lanes.find(
-        (lane) => lane.currentCallId == unfinishedCallId
-      );
-
-      if (unfinishedCallLane && unfinishedCallLaneIndex !== -1) {
-        state.activeLaneIndex = unfinishedCallLaneIndex;
+      if (indexOfExistingLane != -1) {
+        state.activeLaneIndex = indexOfExistingLane;
       } else {
         const newLane = {
+          assignmentId: unfinishedCallAssignmentId,
           callIsBeingAllocated: false,
           currentCallId: unfinishedCallId,
           previousCall: null,
@@ -387,6 +431,7 @@ const CallSlice = createSlice({
         state.lanes.push(newLane);
         state.activeLaneIndex = state.lanes.length - 1;
       }
+
       state.filters = emptyFilters;
       state.selectedSurveyId = null;
       sortOutgoingCalls(state.outgoingCalls);
@@ -423,6 +468,9 @@ export const {
   eventResponseAdded,
   eventResponseRemoved,
   filtersUpdated,
+  initiateAssignment,
+  myAssignmentsLoaded,
+  myAssignmentsLoad,
   allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,

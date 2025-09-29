@@ -97,6 +97,7 @@ export enum LaneStep {
 export type SurveySubmissionData = Record<string, string | string[]>;
 
 export type LaneState = {
+  assignmentId: number;
   callIsBeingAllocated: boolean;
   currentCallId: number | null;
   previousCall: ZetkinCall | null;

@@ -46,7 +46,6 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           }}
         />
         <PreviousCallsSection
-          assingmentId={assignment.id}
           onCall={() => onClose()}
           orgId={assignment.organization.id}
           searchTerm={debouncedInput}

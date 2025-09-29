@@ -14,14 +14,12 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import UnfinishedCall from './UnfinishedCall';
 
 type PreviousCallsSectionProps = {
-  assingmentId: number;
   onCall: () => void;
   orgId: number;
   searchTerm?: string;
 };
 
 const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
-  assingmentId,
   orgId,
   onCall,
   searchTerm,
@@ -73,7 +71,10 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
           <UnfinishedCall
             onAbandonCall={() => abandonUnfinishedCall(unfinishedCall.id)}
             onSwitchToCall={() => {
-              switchToUnfinishedCall(unfinishedCall.id);
+              switchToUnfinishedCall(
+                unfinishedCall.id,
+                unfinishedCall.assignment_id
+              );
               onCall();
             }}
             unfinishedCall={unfinishedCall}
@@ -119,10 +120,14 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                     previousCall.target.last_name}
                 </ZUIText>
               </Box>
+              {previousCall.assignment_id}
               <ZUIButton
                 label="Log another call"
                 onClick={() => {
-                  switchToPreviousCall(assingmentId, previousCall.target.id);
+                  switchToPreviousCall(
+                    previousCall.assignment_id,
+                    previousCall.target.id
+                  );
                   onCall();
                 }}
                 size="small"
