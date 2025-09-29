@@ -110,19 +110,10 @@ const CallSlice = createSlice({
       }
 
       const indexOfExistingLane = state.lanes.findIndex(
-        (lane) => lane.assignmentId == newCall.assignment_id
+        (lane) => lane.currentCallId == newCall.id
       );
       if (indexOfExistingLane != -1) {
         state.activeLaneIndex = indexOfExistingLane;
-        state.lanes[indexOfExistingLane].callIsBeingAllocated = false;
-        state.lanes[indexOfExistingLane].currentCallId = newCall.id;
-        state.lanes[indexOfExistingLane].previousCall = null;
-        state.lanes[indexOfExistingLane].report = emptyReport;
-        state.lanes[indexOfExistingLane].respondedEventIds = [];
-        state.lanes[indexOfExistingLane].step = LaneStep.CALL;
-        state.lanes[indexOfExistingLane].submissionDataBySurveyId = {};
-        state.lanes[indexOfExistingLane].surveySubmissionError = false;
-        state.lanes[indexOfExistingLane].updateCallError = false;
       } else {
         const newLane = {
           assignmentId: newCall.assignment_id,
@@ -390,13 +381,13 @@ const CallSlice = createSlice({
         (item) => item.id != abandonedCallId
       );
 
-      const indexToRemove = state.lanes.findIndex(
+      const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
         (lane) => lane.currentCallId == abandonedCallId
       );
-      if (indexToRemove != -1) {
-        state.lanes.splice(indexToRemove, 1);
+      if (indexOfLaneWithAbandonedCall != -1) {
+        state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
 
-        if (state.activeLaneIndex >= indexToRemove) {
+        if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
           state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
         }
       }
@@ -419,19 +410,10 @@ const CallSlice = createSlice({
       }
 
       const indexOfExistingLane = state.lanes.findIndex(
-        (lane) => lane.assignmentId == unfinishedCallAssignmentId
+        (lane) => lane.currentCallId == unfinishedCallId
       );
       if (indexOfExistingLane != -1) {
         state.activeLaneIndex = indexOfExistingLane;
-        state.lanes[indexOfExistingLane].callIsBeingAllocated = false;
-        state.lanes[indexOfExistingLane].currentCallId = unfinishedCallId;
-        state.lanes[indexOfExistingLane].previousCall = null;
-        state.lanes[indexOfExistingLane].report = emptyReport;
-        state.lanes[indexOfExistingLane].respondedEventIds = [];
-        state.lanes[indexOfExistingLane].step = LaneStep.CALL;
-        state.lanes[indexOfExistingLane].submissionDataBySurveyId = {};
-        state.lanes[indexOfExistingLane].surveySubmissionError = false;
-        state.lanes[indexOfExistingLane].updateCallError = false;
       } else {
         const newLane = {
           assignmentId: unfinishedCallAssignmentId,
