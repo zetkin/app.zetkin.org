@@ -4,10 +4,15 @@ export default makeMessages('feat.account', {
   lostPassword: {
     actions: {
       sendEmail: m('Send email'),
+      sendLink: m('Send link again'),
       signIn: m('Sign in'),
     },
+    checkEmail: m('Check your email'),
     description: m(
       'Have you forgotten your password for Zetkin? Give us your e-mail address and we will send out a link where you can pick a new password.'
+    ),
+    descriptionCheck: m<{ email: string }>(
+      'A message with instructions has been sent to {email}'
     ),
     errors: {
       invalidEmail: m('Please enter a valid email address.'),
