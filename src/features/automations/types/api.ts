@@ -7,20 +7,22 @@ export type ZetkinBulkAutomation = {
   created_by_user_id: number;
   description: string;
   id: number;
-  interval: number;
   last_run: string | null;
   organization_id: number;
   query_id: number;
+  schedule: {
+    interval: number;
+  };
   title: string;
 };
 
 export type ZetkinBulkAutomationPostBody = Partial<
-  Pick<ZetkinBulkAutomation, 'bulk_ops' | 'description' | 'interval' | 'title'>
+  Pick<ZetkinBulkAutomation, 'bulk_ops' | 'description' | 'schedule' | 'title'>
 >;
 
 export type ZetkinBulkAutomationPatchBody = Partial<
   Pick<
     ZetkinBulkAutomation,
-    'active' | 'bulk_ops' | 'description' | 'interval' | 'title'
+    'active' | 'bulk_ops' | 'description' | 'schedule' | 'title'
   >
 >;

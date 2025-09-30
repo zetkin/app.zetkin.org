@@ -38,7 +38,7 @@ const AutomationLayout: FC<Props> = ({ children }) => {
             <>
               <Divider orientation="vertical" sx={{ height: '1rem' }} />
               <Typography variant="body1">
-                <AutomationInterval seconds={automation.interval} />
+                <AutomationInterval seconds={automation.schedule.interval} />
               </Typography>
             </>
           )}
