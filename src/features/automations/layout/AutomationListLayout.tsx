@@ -33,7 +33,9 @@ const AutomationListLayout: FC<Props> = ({ children }) => {
             const newAutomation = await createAutomation({
               bulk_ops: [],
               description: '',
-              interval: 60 * 60 * 24,
+              schedule: {
+                interval: 60 * 60 * 24,
+              },
               title: messages.defaultTitle(),
             });
 

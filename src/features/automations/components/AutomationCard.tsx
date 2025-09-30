@@ -64,7 +64,7 @@ const AutomationCard: FC<Props> = ({ automation }) => {
           <AutomationStatusChip automation={automation} />
           <Typography color="secondary" variant="body2">
             {automation.active && (
-              <AutomationInterval seconds={automation.interval} />
+              <AutomationInterval seconds={automation.schedule.interval} />
             )}
             {!automation.active && (
               <Msg id={messageIds.labels.schedule.notScheduled} />

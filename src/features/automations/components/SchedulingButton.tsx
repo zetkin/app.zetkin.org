@@ -31,7 +31,7 @@ const SchedulingButton: FC<Props> = ({ automation }) => {
   );
 
   const { value, seconds, setUnit, setValue, unit, unitOptions } =
-    useAutomationInterval(automation.interval);
+    useAutomationInterval(automation.schedule.interval);
 
   return (
     <>
@@ -109,7 +109,9 @@ const SchedulingButton: FC<Props> = ({ automation }) => {
                     setAnchorEl(null);
                     updateAutomation({
                       active: true,
-                      interval: seconds,
+                      schedule: {
+                        interval: seconds,
+                      },
                     });
                   }}
                   variant="contained"
