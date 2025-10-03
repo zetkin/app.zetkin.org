@@ -17,7 +17,7 @@ export default makeMessages('feat.account', {
     errors: {
       invalidEmail: m('Please enter a valid email address.'),
       invalidEmailTitle: m('Invalid email'),
-      noUser: m('No user exists with that e-mail address.'),
+      noUser: m('No user exists with that email address.'),
       unknownError: m('Something went wrong. Please try again later.'),
       unknownErrorTitle: m('Unexpected error'),
     },
@@ -25,5 +25,17 @@ export default makeMessages('feat.account', {
       readPolicy: m('Read our privacy policy'),
     },
     title: m('Recover your Zetkin account'),
+  },
+  resetPassword: {
+    actions: {
+      labelPassword: m('Password'),
+      save: m('Save password'),
+    },
+    description: m('Set a new password that you wish to use going forward.'),
+    descriptionUpdated: m(
+      'Your password was updated. You can sign in using your new password.'
+    ),
+    title: m('Reset password'),
+    validation: m('Password must be at least 6 characters long.'),
   },
 });
