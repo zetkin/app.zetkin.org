@@ -66,6 +66,22 @@ const FloorHouseholdGroup: FC<Props> = ({
             </IconButton>
           </Box>
           <Box
+            onClick={() => {
+              if (selectedIds) {
+                const selectedIdsOnFloor = householdItems
+                  .map((item) => item.household.id)
+                  .filter((id) => selectedIds.includes(id));
+
+                const allSelected =
+                  selectedIdsOnFloor.length == householdItems.length;
+                const shouldSelectAll = !allSelected;
+                if (shouldSelectAll) {
+                  onSelectIds(householdItems.map((item) => item.household.id));
+                } else {
+                  onDeselectIds(selectedIdsOnFloor);
+                }
+              }
+            }}
             sx={{
               alignItems: 'center',
               border: '1px solid black',
