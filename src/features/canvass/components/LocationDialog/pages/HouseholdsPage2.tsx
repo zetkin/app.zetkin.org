@@ -20,6 +20,7 @@ type Props = {
   onBack: () => void;
   onBulkEdit: (householdIds: number[]) => void;
   onBulkVisit: (households: number[]) => void;
+  onClickVisit: (householdId: number) => void;
   onClose: () => void;
   onSelectHousehold: (householdId: number) => void;
 };
@@ -29,6 +30,7 @@ const HouseholdsPage2: FC<Props> = ({
   onBack,
   onBulkEdit,
   onBulkVisit,
+  onClickVisit,
   onClose,
   onSelectHousehold,
   location,
@@ -153,6 +155,7 @@ const HouseholdsPage2: FC<Props> = ({
                     };
                   })}
                   onClick={(householdId) => onSelectHousehold(householdId)}
+                  onClickVisit={(householdId) => onClickVisit(householdId)}
                   onDeselectIds={(ids) =>
                     setSelectedHouseholdIds(
                       selectedHouseholdIds?.filter((id) => !ids.includes(id)) ??

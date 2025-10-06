@@ -9,6 +9,7 @@ type Props = {
   floor: number;
   householdItems: HouseholdItem[];
   onClick: (householdId: number) => void;
+  onClickVisit: (householdId: number) => void;
   onDeselectIds: (ids: number[]) => void;
   onSelectIds: (ids: number[]) => void;
   selectedIds: null | number[];
@@ -18,6 +19,7 @@ const FloorHouseholdGroup: FC<Props> = ({
   floor,
   householdItems,
   onClick,
+  onClickVisit,
   onSelectIds,
   onDeselectIds,
   selectedIds,
@@ -100,6 +102,7 @@ const FloorHouseholdGroup: FC<Props> = ({
                 onClick(householdId);
               }
             }}
+            onClickVisit={(householdId) => onClickVisit(householdId)}
             selectedIds={selectedIds}
           />
         </Box>

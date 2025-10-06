@@ -1,5 +1,5 @@
 import { Check, Close } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -10,6 +10,7 @@ type Props = {
   expanded: boolean;
   item: HouseholdItem;
   onClick: () => void;
+  onClickVisit: () => void;
   selectionMode: 'default' | 'selected' | 'unselected';
 };
 
@@ -18,6 +19,7 @@ const HouseholdStackItem: FC<Props> = ({
   expanded,
   item,
   onClick,
+  onClickVisit,
   selectionMode,
 }) => {
   const { household, lastVisitSuccess, lastVisitTime } = item;
@@ -72,18 +74,38 @@ const HouseholdStackItem: FC<Props> = ({
             animationFillMode: 'backwards',
             animationName: 'enter',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            flexGrow: 1,
+            justifyContent: 'space-between',
           }}
         >
-          <Typography variant="body1">{household.title}</Typography>
-          <Box alignItems="center" display="flex" gap={0.5}>
-            {!!lastVisitTime && (
-              <Typography color="secondary" variant="body2">
-                <ZUIRelativeTime
-                  datetime={addOffsetIfNecessary(lastVisitTime)}
-                />
-              </Typography>
-            )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography variant="body1">{household.title}</Typography>
+            <Box alignItems="center" display="flex" gap={0.5}>
+              {!!lastVisitTime && (
+                <Typography color="secondary" variant="body2">
+                  <ZUIRelativeTime
+                    datetime={addOffsetIfNecessary(lastVisitTime)}
+                  />
+                </Typography>
+              )}
+            </Box>
+          </Box>
+          <Box>
+            <Button
+              onClick={(ev) => {
+                ev.stopPropagation();
+                onClickVisit();
+              }}
+              variant="outlined"
+            >
+              Visit
+            </Button>
           </Box>
         </Box>
       )}

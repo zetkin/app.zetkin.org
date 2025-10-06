@@ -8,6 +8,7 @@ type Props = {
   expanded: boolean;
   householdItems: HouseholdItem[];
   onClick: (householdId: number) => void;
+  onClickVisit: (householdId: number) => void;
   selectedIds: null | number[];
 };
 
@@ -15,6 +16,7 @@ const HouseholdStack: FC<Props> = ({
   expanded,
   householdItems,
   onClick,
+  onClickVisit,
   selectedIds,
 }) => {
   return (
@@ -29,6 +31,7 @@ const HouseholdStack: FC<Props> = ({
               height: 50,
               left: expanded ? 0 : offset,
               position: 'absolute',
+              right: expanded ? 0 : 'auto',
               top: expanded ? offset : 0,
               transition: expanded
                 ? 'left 0.2s ease-in, top 0.2s'
@@ -41,6 +44,7 @@ const HouseholdStack: FC<Props> = ({
               expanded={expanded}
               item={item}
               onClick={() => onClick(item.household.id)}
+              onClickVisit={() => onClickVisit(item.household.id)}
               selectionMode={
                 selectedIds
                   ? selectedIds.includes(item.household.id)
