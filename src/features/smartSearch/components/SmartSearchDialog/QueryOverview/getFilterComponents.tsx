@@ -14,6 +14,7 @@ import {
   GroupWorkOutlined,
   LocalOfferOutlined,
   MarkEmailReadOutlined,
+  PentagonOutlined,
   PersonAddAlt,
   PersonOutlined,
   PhoneDisabled,
@@ -250,7 +251,7 @@ export default function getFilterComponents(
         filter={filter as SmartSearchFilterWithId<AreaFilterConfig>}
       />
     );
-    filterTypeIcon = <GroupWorkOutlined color="secondary" fontSize="small" />;
+    filterTypeIcon = <PentagonOutlined color="secondary" fontSize="small" />;
   }
 
   return {
