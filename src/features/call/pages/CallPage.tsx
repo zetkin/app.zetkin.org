@@ -205,12 +205,21 @@ const CallPage: FC<Props> = ({ assignment }) => {
               transition: 'left 0.5s',
             }}
           >
-            <ZUIText variant="headingLg">{call?.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">{`${
-              call?.target.phone
-            }${
-              call?.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
-            }`}</ZUIText>
+            {call?.target && (
+              <>
+                <ZUIPersonAvatar
+                  firstName={call.target.first_name}
+                  id={call.target.id}
+                  lastName={call?.target.last_name}
+                />
+                <ZUIText variant="headingLg">{call.target.name}</ZUIText>
+                <ZUIText color="secondary" variant="headingLg">{`${
+                  call.target.phone
+                }${
+                  call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
+                }`}</ZUIText>
+              </>
+            )}
           </Box>
           <Box
             sx={{
