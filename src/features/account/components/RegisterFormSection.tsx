@@ -67,9 +67,14 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   flexGrow: 1,
                   gap: showExtraFields ? 2 : 1,
                   overflowY: { md: 'visible', xs: 'auto' },
+                  pt: 1,
                 }}
               >
-                <Box onClick={() => setShowExtraFields(true)} width="100%">
+                <Box
+                  onClick={() => setShowExtraFields(true)}
+                  sx={{ overflow: 'visible' }}
+                  width="100%"
+                >
                   <ZUITextField
                     fullWidth
                     label={messages.register.labels.email()}
@@ -87,7 +92,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                     gap: showExtraFields ? 2 : 0,
                     height: showExtraFields ? 'auto' : 0,
                     opacity: showExtraFields ? 1 : 0,
-                    overflow: 'hidden',
+                    overflow: showExtraFields ? 'visible' : 'hidden',
                     transition: 'opacity 2s ease, height 2s ease',
                   }}
                 >
