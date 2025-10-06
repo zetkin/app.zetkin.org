@@ -1,52 +1,88 @@
-import { Check, Close } from '@mui/icons-material';
-import { Box } from '@mui/material';
-import { FC } from 'react';
+import { KeyboardArrowDown } from '@mui/icons-material';
+import { Box, Divider, IconButton } from '@mui/material';
+import { FC, useState } from 'react';
 
-import { HouseholdWithColor } from 'features/canvass/types';
-
-type HouseholdItem = {
-  household: HouseholdWithColor;
-  lastVisitSuccess: boolean;
-  lastVisitTime: string;
-};
+import { HouseholdItem } from './types';
+import HouseholdStack from './HouseholdStack';
 
 type Props = {
+  floor: number;
   householdItems: HouseholdItem[];
   onClick: (householdId: number) => void;
 };
 
-const FloorHouseholdGroup: FC<Props> = ({ householdItems, onClick }) => {
+const FloorHouseholdGroup: FC<Props> = ({ floor, householdItems, onClick }) => {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <Box
       sx={{
         display: 'flex',
+        height: expanded ? 54 + householdItems.length * 54 : 54,
+        position: 'relative',
+        transition: expanded ? 'height 0.2s' : 'height 0.2s 0.1s',
+        width: '100%',
       }}
     >
-      {householdItems.map((householdItem) => {
-        const { household, lastVisitSuccess, lastVisitTime } = householdItem;
-
-        return (
+      <Divider />
+      <Box
+        sx={{
+          borderBottom: '1px solid #eee',
+          display: 'flex',
+          height: expanded ? 54 + householdItems.length * 54 : 54,
+          transition: 'height 0.2s',
+          width: '100%',
+        }}
+      >
+        <Box sx={{ display: 'flex' }}>
           <Box
-            key={household.id}
-            onClick={() => onClick(household.id)}
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              height: 50,
+              justifyContent: 'center',
+              width: 50,
+            }}
+          >
+            <IconButton onClick={() => setExpanded(!expanded)}>
+              <KeyboardArrowDown
+                sx={{
+                  transform: expanded ? 'rotate(180deg)' : 'rotate(0)',
+                  transition: 'transform 0.5s',
+                }}
+              />
+            </IconButton>
+          </Box>
+          <Box
             sx={{
               alignItems: 'center',
               border: '1px solid black',
-              borderRadius: 4,
+              borderRadius: 1,
               display: 'flex',
-              height: 40,
+              height: 50,
               justifyContent: 'center',
-              margin: '2px',
-              width: 40,
+              width: 50,
             }}
           >
-            {lastVisitSuccess && <Check color="secondary" fontSize="small" />}
-            {!!lastVisitTime && !lastVisitSuccess && (
-              <Close color="secondary" fontSize="small" />
-            )}
+            {floor}
           </Box>
-        );
-      })}
+        </Box>
+        <Box
+          sx={{
+            left: expanded ? 50 : 104,
+            position: 'absolute',
+            right: 0,
+            top: expanded ? 54 : 0,
+            transition: 'left 0.3s, top 0.3s',
+          }}
+        >
+          <HouseholdStack
+            expanded={expanded}
+            householdItems={householdItems}
+            onClick={(householdId) => onClick(householdId)}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };

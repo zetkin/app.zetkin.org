@@ -78,7 +78,13 @@ const HouseholdsPage2: FC<Props> = ({
             <Msg id={messageIds.households.page.empty} />
           </Typography>
         )}
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0.5,
+          }}
+        >
           {Object.keys(householdsByFloor)
             .map((floorStr) => parseInt(floorStr))
             .sort()
@@ -89,6 +95,7 @@ const HouseholdsPage2: FC<Props> = ({
               return (
                 <FloorHouseholdGroup
                   key={floor}
+                  floor={floor}
                   householdItems={householdsOnFloor.map((household) => {
                     const mostRecentVisit =
                       lastVisitByHouseholdId[household.id];
