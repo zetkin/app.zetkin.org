@@ -31,6 +31,7 @@ export default makeMessages('feat.account', {
       createAccount: m('Create account'),
     },
     description: m('Start organizing with Zetkin right away'),
+    instructions: m('A message with instructions has been sent to '),
     labels: {
       checkBox: m(
         'I approve that my information is processed in order to maintain a user account for Zetkin'
@@ -42,6 +43,7 @@ export default makeMessages('feat.account', {
       password: m('Password'),
     },
     title: m('Create new account'),
+    welcome: m<{ userName: string }>('Welcome, {userName}'),
   },
   resetPassword: {
     actions: {
