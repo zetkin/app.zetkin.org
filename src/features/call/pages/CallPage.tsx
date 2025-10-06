@@ -660,7 +660,7 @@ const CallPage: FC<Props> = ({ assignment }) => {
         title={`Skip call to ${call?.target.name}?`}
       />
       <Snackbar
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         autoHideDuration={5000}
         onClose={(ev, reason) => {
           if (reason == 'clickaway') {
@@ -675,13 +675,19 @@ const CallPage: FC<Props> = ({ assignment }) => {
             return (
               <Slide
                 {...props}
-                direction="left"
+                direction="right"
                 timeout={{
                   enter: 500,
                   exit: 300,
                 }}
               />
             );
+          },
+        }}
+        sx={{
+          '@media (min-width: 600px)': {
+            bottom: 68,
+            left: 16,
           },
         }}
       >
