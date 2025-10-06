@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useApiClient } from 'core/hooks';
 import { ApiClientError } from 'core/api/errors';
-import { RegisterData } from '../pages/RegisterPage';
+import { RegisterData } from '../components/RegisterFormSection';
 
 export type CreateNewAccountStatus = {
   errorCode?: string;
