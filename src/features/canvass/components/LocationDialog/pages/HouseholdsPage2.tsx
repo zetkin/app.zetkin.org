@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { FC, useState } from 'react';
+import { Box, Button, Typography } from '@mui/material';
 
 import PageBase from './PageBase';
 import {
@@ -18,6 +18,8 @@ type Props = {
   assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onBack: () => void;
+  onBulkEdit: (householdIds: number[]) => void;
+  onBulkVisit: (households: number[]) => void;
   onClose: () => void;
   onSelectHousehold: (householdId: number) => void;
 };
@@ -25,11 +27,16 @@ type Props = {
 const HouseholdsPage2: FC<Props> = ({
   assignment,
   onBack,
+  onBulkEdit,
+  onBulkVisit,
   onClose,
   onSelectHousehold,
   location,
 }) => {
   const messages = useMessages(messageIds);
+  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
+    null | number[]
+  >(null);
   const households = useHouseholds(location.organization_id, location.id);
   const { lastVisitByHouseholdId } = useVisitReporting(
     location.organization_id,
@@ -78,6 +85,36 @@ const HouseholdsPage2: FC<Props> = ({
             <Msg id={messageIds.households.page.empty} />
           </Typography>
         )}
+        <Box sx={{ display: 'flex', gap: 1, my: 2 }}>
+          <Button
+            onClick={() =>
+              setSelectedHouseholdIds(selectedHouseholdIds ? null : [])
+            }
+            variant="outlined"
+          >
+            Toggle selection
+          </Button>
+          {!!selectedHouseholdIds?.length && (
+            <Button
+              onClick={() =>
+                !!selectedHouseholdIds && onBulkEdit(selectedHouseholdIds)
+              }
+              variant="outlined"
+            >
+              Edit
+            </Button>
+          )}
+          {!!selectedHouseholdIds?.length && (
+            <Button
+              onClick={() =>
+                !!selectedHouseholdIds && onBulkVisit(selectedHouseholdIds)
+              }
+              variant="outlined"
+            >
+              Visit
+            </Button>
+          )}
+        </Box>
         <Box
           sx={{
             display: 'flex',
@@ -116,6 +153,19 @@ const HouseholdsPage2: FC<Props> = ({
                     };
                   })}
                   onClick={(householdId) => onSelectHousehold(householdId)}
+                  onDeselectIds={(ids) =>
+                    setSelectedHouseholdIds(
+                      selectedHouseholdIds?.filter((id) => !ids.includes(id)) ??
+                        null
+                    )
+                  }
+                  onSelectIds={(ids) =>
+                    setSelectedHouseholdIds((current) => [
+                      ...(current || []),
+                      ...ids,
+                    ])
+                  }
+                  selectedIds={selectedHouseholdIds}
                 />
               );
             })}

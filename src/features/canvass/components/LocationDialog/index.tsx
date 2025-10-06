@@ -147,6 +147,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
           assignment={assignment}
           location={location}
           onBack={() => back()}
+          onBulkEdit={(householdIds) => {
+            setSelectedHouseholdIds(householdIds);
+            goto('bulkEditHouseholds');
+          }}
+          onBulkVisit={(households) => {
+            setSelectedHouseholdIds(households);
+            goto('bulkHouseholdVisits');
+          }}
           onClose={onClose}
           onSelectHousehold={(householdId: number) => {
             setSelectedHouseholdId(householdId);

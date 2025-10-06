@@ -9,9 +9,19 @@ type Props = {
   floor: number;
   householdItems: HouseholdItem[];
   onClick: (householdId: number) => void;
+  onDeselectIds: (ids: number[]) => void;
+  onSelectIds: (ids: number[]) => void;
+  selectedIds: null | number[];
 };
 
-const FloorHouseholdGroup: FC<Props> = ({ floor, householdItems, onClick }) => {
+const FloorHouseholdGroup: FC<Props> = ({
+  floor,
+  householdItems,
+  onClick,
+  onSelectIds,
+  onDeselectIds,
+  selectedIds,
+}) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -79,7 +89,18 @@ const FloorHouseholdGroup: FC<Props> = ({ floor, householdItems, onClick }) => {
           <HouseholdStack
             expanded={expanded}
             householdItems={householdItems}
-            onClick={(householdId) => onClick(householdId)}
+            onClick={(householdId) => {
+              if (selectedIds) {
+                if (selectedIds.includes(householdId)) {
+                  onDeselectIds([householdId]);
+                } else {
+                  onSelectIds([householdId]);
+                }
+              } else {
+                onClick(householdId);
+              }
+            }}
+            selectedIds={selectedIds}
           />
         </Box>
       </Box>

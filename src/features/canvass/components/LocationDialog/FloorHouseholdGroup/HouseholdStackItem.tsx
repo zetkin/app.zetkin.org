@@ -10,10 +10,19 @@ type Props = {
   expanded: boolean;
   item: HouseholdItem;
   onClick: () => void;
+  selectionMode: 'default' | 'selected' | 'unselected';
 };
 
-const HouseholdStackItem: FC<Props> = ({ delay, expanded, item, onClick }) => {
+const HouseholdStackItem: FC<Props> = ({
+  delay,
+  expanded,
+  item,
+  onClick,
+  selectionMode,
+}) => {
   const { household, lastVisitSuccess, lastVisitTime } = item;
+
+  const color = item.household.color == 'clear' ? '#eee' : item.household.color;
 
   return (
     <Box
@@ -28,8 +37,13 @@ const HouseholdStackItem: FC<Props> = ({ delay, expanded, item, onClick }) => {
         sx={{
           alignItems: 'center',
           backgroundColor:
-            item.household.color == 'clear' ? '#eee' : item.household.color,
+            selectionMode == 'selected' || selectionMode == 'default'
+              ? color
+              : null,
+          borderColor: selectionMode == 'unselected' ? color : 'transparent',
           borderRadius: 1,
+          borderStyle: 'solid',
+          borderWidth: 2,
           display: 'flex',
           height: 50,
           justifyContent: 'center',
