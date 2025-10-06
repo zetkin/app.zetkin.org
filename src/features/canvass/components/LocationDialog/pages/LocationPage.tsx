@@ -25,7 +25,7 @@ type LocationPageProps = {
   location: ZetkinLocation;
   onClose: () => void;
   onEdit: () => void;
-  onHouseholds: () => void;
+  onHouseholds: (useNew: boolean) => void;
   onVisit: () => void;
 };
 
@@ -86,8 +86,11 @@ const LocationPage: FC<LocationPageProps> = ({
             <Msg id={messageIds.location.page.quickReportButtonLabel} />
           </Button>
         )}
-        <Button onClick={onHouseholds} variant="contained">
+        <Button onClick={() => onHouseholds(false)} variant="contained">
           <Msg id={messageIds.location.page.householdsButtonLabel} />
+        </Button>
+        <Button onClick={() => onHouseholds(true)} variant="contained">
+          Households v2
         </Button>
       </Box>
       <Box my={2}>
