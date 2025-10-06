@@ -26,6 +26,23 @@ export default makeMessages('feat.account', {
     },
     title: m('Recover your Zetkin account'),
   },
+  register: {
+    actions: {
+      createAccount: m('Create account'),
+    },
+    description: m('Start organizing with Zetkin right away'),
+    labels: {
+      checkBox: m(
+        'I approve that my information is processed in order to maintain a user account for Zetkin'
+      ),
+      email: m('Email address'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+      mobile: m('Mobile phone number'),
+      password: m('Password'),
+    },
+    title: m('Create new account'),
+  },
   resetPassword: {
     actions: {
       labelPassword: m('Password'),
