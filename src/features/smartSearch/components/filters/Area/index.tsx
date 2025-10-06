@@ -76,6 +76,7 @@ const Area: FC<Props> = ({ filter: initialFilter, onSubmit, onCancel }) => {
           operator: ev.target.value as AREA_OPERATOR,
         });
       }}
+      value={filter.config.operator}
     >
       {Object.values(AREA_OPERATOR).map((o) => (
         <MenuItem key={o} value={o}>
