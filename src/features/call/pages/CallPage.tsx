@@ -38,6 +38,7 @@ import UnfinishedCall from '../components/UnfinishedCall';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import callSummarySentence from '../components/utils/callSummarySentence';
 import ActivitiesSection from '../components/ActivitiesSection';
+import ZUITooltip from 'zui/components/ZUITooltip';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -582,33 +583,41 @@ const CallPage: FC<Props> = ({ assignment }) => {
               zIndex: 3,
             }}
           >
-            <ZUIButton
-              label="Call log"
-              onClick={() => setCallLogOpen(true)}
-              variant="secondary"
-            />
+            <Box
+              sx={(theme) => ({
+                bgcolor: theme.palette.common.white,
+                borderRadius: 1,
+              })}
+            >
+              <ZUIButton
+                label="Call log"
+                onClick={() => setCallLogOpen(true)}
+                variant="secondary"
+              />
+            </Box>
             {lane.step != LaneStep.SUMMARY && (
               <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
                 {unfinishedCalls.map((c) => (
-                  <ListItem
-                    key={c.id}
-                    onClick={() => {
-                      switchToUnfinishedCall(c.id);
-                      setUnfinishedCallSwitchedTo(c.id);
-                    }}
-                    sx={{
-                      borderRadius: '2rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      padding: 0,
-                    }}
-                  >
-                    <ZUIPersonAvatar
-                      firstName={c.target.first_name}
-                      id={c.target.id}
-                      lastName={c.target.last_name}
-                    />
-                  </ListItem>
+                  <ZUITooltip key={c.id} label={c.target.name}>
+                    <ListItem
+                      onClick={() => {
+                        switchToUnfinishedCall(c.id);
+                        setUnfinishedCallSwitchedTo(c.id);
+                      }}
+                      sx={{
+                        borderRadius: '2rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        padding: 0,
+                      }}
+                    >
+                      <ZUIPersonAvatar
+                        firstName={c.target.first_name}
+                        id={c.target.id}
+                        lastName={c.target.last_name}
+                      />
+                    </ListItem>
+                  </ZUITooltip>
                 ))}
               </List>
             )}
