@@ -26,6 +26,7 @@ export default makeMessages('feat.import', {
         dropDownLabel: m('Select format'),
         emptyPreview: m('Could not be parsed'),
         header: m('Configure date format'),
+        invalidDateFormatPerc: m<{ percentage: number }>(' ({percentage}%)'),
         invalidDateFormatWarning: m(
           "There are values in the column that don't seem to fit this format. Are you sure you have selected the correct format?"
         ),

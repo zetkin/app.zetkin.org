@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import {
   Alert,
   Box,
@@ -10,13 +9,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { FC } from 'react';
 
-import { DateColumn } from 'features/import/utils/types';
-import messageIds from 'features/import/l10n/messageIds';
-import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
-import useDateConfig from 'features/import/hooks/useDateConfig';
-import useDebounce from 'utils/hooks/useDebounce';
 import { Msg, useMessages } from 'core/i18n';
+import useDateConfig from 'features/import/hooks/useDateConfig';
+import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
+import messageIds from 'features/import/l10n/messageIds';
+import { DateColumn } from 'features/import/utils/types';
+import useDebounce from 'utils/hooks/useDebounce';
+import ProblemRowsText from '../../elements/ImportMessageList/ProblemRowsText';
 
 interface DateConfigProps {
   uiDataColumn: UIDataColumn<DateColumn>;
@@ -163,6 +164,12 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
             id={
               messageIds.configuration.configure.dates.invalidDateFormatWarning
             }
+          />
+          <br />
+          <ProblemRowsText rows={wrongDateFormat.problemRows} />
+          <Msg
+            id={messageIds.configuration.configure.dates.invalidDateFormatPerc}
+            values={{ percentage: wrongDateFormat.percentage }}
           />
         </Alert>
       )}
