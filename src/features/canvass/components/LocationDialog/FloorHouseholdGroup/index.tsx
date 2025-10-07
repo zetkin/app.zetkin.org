@@ -84,7 +84,6 @@ const FloorHouseholdGroup: FC<Props> = ({
             }}
             sx={{
               alignItems: 'center',
-              border: '1px solid black',
               borderRadius: 1,
               display: 'flex',
               height: 50,

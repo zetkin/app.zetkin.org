@@ -81,13 +81,25 @@ const HouseholdsPage2: FC<Props> = ({
       subtitle={location.title}
       title={messages.households.page.header()}
     >
-      <Box display="flex" flexDirection="column" flexGrow={2}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100%',
+        }}
+      >
         {location.num_known_households == 0 && (
           <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
             <Msg id={messageIds.households.page.empty} />
           </Typography>
         )}
-        <Box sx={{ display: 'flex', gap: 1, my: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            my: 2,
+          }}
+        >
           <Button
             onClick={() =>
               setSelectedHouseholdIds(selectedHouseholdIds ? null : [])
@@ -122,6 +134,7 @@ const HouseholdsPage2: FC<Props> = ({
             display: 'flex',
             flexDirection: 'column',
             gap: 0.5,
+            marginTop: 'auto',
           }}
         >
           {Object.keys(householdsByFloor)

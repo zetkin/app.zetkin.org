@@ -1,5 +1,5 @@
-import { Check, Close } from '@mui/icons-material';
-import { Box, Button, Typography } from '@mui/material';
+import { Check, Close, Edit } from '@mui/icons-material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -24,7 +24,9 @@ const HouseholdStackItem: FC<Props> = ({
 }) => {
   const { household, lastVisitSuccess, lastVisitTime } = item;
 
-  const color = item.household.color == 'clear' ? '#eee' : item.household.color;
+  const defaultColor = 'black';
+  const color =
+    item.household.color == 'clear' ? defaultColor : item.household.color;
 
   return (
     <Box
@@ -39,10 +41,12 @@ const HouseholdStackItem: FC<Props> = ({
         sx={{
           alignItems: 'center',
           backgroundColor:
-            selectionMode == 'selected' || selectionMode == 'default'
-              ? color
-              : null,
-          borderColor: selectionMode == 'unselected' ? color : 'transparent',
+            selectionMode == 'selected' || selectionMode == 'unselected'
+              ? `rgba(from ${color} r g b /${
+                  selectionMode == 'selected' ? '1.0' : '0.1'
+                })`
+              : color,
+          borderColor: color,
           borderRadius: 1,
           borderStyle: 'solid',
           borderWidth: 2,
@@ -53,9 +57,17 @@ const HouseholdStackItem: FC<Props> = ({
           width: 50,
         }}
       >
-        {lastVisitSuccess && <Check color="secondary" fontSize="small" />}
+        {lastVisitSuccess && (
+          <Check
+            fontSize="small"
+            sx={{ color: selectionMode == 'unselected' ? color : 'white' }}
+          />
+        )}
         {!!lastVisitTime && !lastVisitSuccess && (
-          <Close color="secondary" fontSize="small" />
+          <Close
+            fontSize="small"
+            sx={{ color: selectionMode == 'unselected' ? color : 'white' }}
+          />
         )}
       </Box>
       {expanded && (
@@ -69,6 +81,7 @@ const HouseholdStackItem: FC<Props> = ({
                 opacity: 1,
               },
             },
+            alignItems: 'center',
             animationDelay: delay + 's',
             animationDuration: '0.2s',
             animationFillMode: 'backwards',
@@ -96,7 +109,13 @@ const HouseholdStackItem: FC<Props> = ({
               )}
             </Box>
           </Box>
-          <Box>
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              gap: 1,
+            }}
+          >
             <Button
               onClick={(ev) => {
                 ev.stopPropagation();
@@ -106,6 +125,9 @@ const HouseholdStackItem: FC<Props> = ({
             >
               Visit
             </Button>
+            <IconButton>
+              <Edit />
+            </IconButton>
           </Box>
         </Box>
       )}
