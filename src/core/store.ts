@@ -198,4 +198,5 @@ export default function createStore(
 
 export type Store = ReturnType<typeof createStore>;
 export type AppDispatch = Store['dispatch'];
+//läsa från local storage här, och skicka in till createStore() - super mega allt på en gång, centralt
 export const store = createStore();

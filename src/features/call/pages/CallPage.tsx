@@ -1,34 +1,29 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC } from 'react';
-import { notFound, useSearchParams } from 'next/navigation';
+import { FC, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import { useAppDispatch } from 'core/hooks';
-import { initiateAssignment } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import Call from '../components/Call';
-import useCurrentAssignment from '../hooks/useCurrentAssignment';
+import useCallInitialization from '../hooks/useCallInitialization';
+import ZUIText from 'zui/components/ZUIText';
+import ZUILogo from 'zui/ZUILogo';
 
-type Props = {
-  assignmentId: number;
-};
+const CallPage: FC = () => {
+  const { initialize, canInitialize } = useCallInitialization();
 
-const CallPage: FC<Props> = ({ assignmentId }) => {
-  const queryParams = useSearchParams();
-  const dispatch = useAppDispatch();
-  if (queryParams?.get('assignment')) {
-    history.replaceState(null, '', '/call');
-    dispatch(initiateAssignment(assignmentId));
-  }
+  useEffect(() => {
+    if (canInitialize) {
+      initialize();
+    } else {
+      return redirect('/my');
+    }
+  }, []);
 
-  const assignment = useCurrentAssignment();
   const onServer = useServerSide();
-
-  if (!assignment) {
-    return notFound();
-  }
 
   if (onServer) {
     return (
@@ -47,7 +42,28 @@ const CallPage: FC<Props> = ({ assignmentId }) => {
 
   return (
     <main>
-      <Call assignment={assignment} />
+      <ErrorBoundary
+        fallback={
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100dvh',
+              justifyContent: 'center',
+            }}
+          >
+            <ZUILogo />
+            <ZUIText variant="headingMd">An unexpected error occured.</ZUIText>
+            <ZUIText>
+              Try refreshing the page. If error persists - try logging out and
+              then in again. If error still persists, contact support.
+            </ZUIText>
+          </Box>
+        }
+      >
+        <Call />
+      </ErrorBoundary>
     </main>
   );
 };

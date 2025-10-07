@@ -5,7 +5,6 @@ import { SkipNext } from '@mui/icons-material';
 import { FC, Fragment, useState } from 'react';
 
 import useCurrentCall from '../hooks/useCurrentCall';
-import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { LaneStep } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import {
@@ -38,14 +37,13 @@ import UnfinishedCall from '../components/UnfinishedCall';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import callSummarySentence from '../components/utils/callSummarySentence';
 import ActivitiesSection from '../components/ActivitiesSection';
+import ZUITooltip from 'zui/components/ZUITooltip';
+import useCurrentAssignment from '../hooks/useCurrentAssignment';
 
-type Props = {
-  assignment: ZetkinCallAssignment;
-};
-
-const Call: FC<Props> = ({ assignment }) => {
+const Call: FC = () => {
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
+  const assignment = useCurrentAssignment();
 
   const [callLogOpen, setCallLogOpen] = useState(false);
   const [unfinishedCallSwitchedTo, setUnfinishedCallSwitchedTo] = useState<
@@ -204,12 +202,21 @@ const Call: FC<Props> = ({ assignment }) => {
               transition: 'left 0.5s',
             }}
           >
-            <ZUIText variant="headingLg">{call?.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">{`${
-              call?.target.phone
-            }${
-              call?.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
-            }`}</ZUIText>
+            {call?.target && (
+              <>
+                <ZUIPersonAvatar
+                  firstName={call.target.first_name}
+                  id={call.target.id}
+                  lastName={call.target.last_name}
+                />
+                <ZUIText variant="headingLg">{call.target.name}</ZUIText>
+                <ZUIText color="secondary" variant="headingLg">{`${
+                  call.target.phone
+                }${
+                  call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
+                }`}</ZUIText>
+              </>
+            )}
           </Box>
           <Box
             sx={{
@@ -585,33 +592,41 @@ const Call: FC<Props> = ({ assignment }) => {
               zIndex: 3,
             }}
           >
-            <ZUIButton
-              label="Call log"
-              onClick={() => setCallLogOpen(true)}
-              variant="secondary"
-            />
+            <Box
+              sx={(theme) => ({
+                backgroundColor: theme.palette.common.white,
+                borderRadius: 1,
+              })}
+            >
+              <ZUIButton
+                label="Call log"
+                onClick={() => setCallLogOpen(true)}
+                variant="secondary"
+              />
+            </Box>
             {lane.step != LaneStep.SUMMARY && (
               <List sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
                 {unfinishedCalls.map((c) => (
-                  <ListItem
-                    key={c.id}
-                    onClick={() => {
-                      switchToUnfinishedCall(c.id, c.assignment_id);
-                      setUnfinishedCallSwitchedTo(c.id);
-                    }}
-                    sx={{
-                      borderRadius: '2rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      padding: 0,
-                    }}
-                  >
-                    <ZUIPersonAvatar
-                      firstName={c.target.first_name}
-                      id={c.target.id}
-                      lastName={c.target.last_name}
-                    />
-                  </ListItem>
+                  <ZUITooltip key={c.id} label={c.target.name}>
+                    <ListItem
+                      onClick={() => {
+                        switchToUnfinishedCall(c.id, c.assignment_id);
+                        setUnfinishedCallSwitchedTo(c.id);
+                      }}
+                      sx={{
+                        borderRadius: '2rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        padding: 0,
+                      }}
+                    >
+                      <ZUIPersonAvatar
+                        firstName={c.target.first_name}
+                        id={c.target.id}
+                        lastName={c.target.last_name}
+                      />
+                    </ListItem>
+                  </ZUITooltip>
                 ))}
               </List>
             )}
@@ -645,7 +660,7 @@ const Call: FC<Props> = ({ assignment }) => {
         title={`Skip call to ${call?.target.name}?`}
       />
       <Snackbar
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         autoHideDuration={5000}
         onClose={(ev, reason) => {
           if (reason == 'clickaway') {
@@ -660,13 +675,19 @@ const Call: FC<Props> = ({ assignment }) => {
             return (
               <Slide
                 {...props}
-                direction="left"
+                direction="right"
                 timeout={{
                   enter: 500,
                   exit: 300,
                 }}
               />
             );
+          },
+        }}
+        sx={{
+          '@media (min-width: 600px)': {
+            bottom: 68,
+            left: 16,
           },
         }}
       >

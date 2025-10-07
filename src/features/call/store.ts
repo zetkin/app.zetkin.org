@@ -187,15 +187,18 @@ const CallSlice = createSlice({
       const lane = state.lanes[state.activeLaneIndex];
       lane.filters = { ...lane.filters, ...updatedFilters };
     },
-    initiateAssignment: (state, action: PayloadAction<number>) => {
-      const assignmentId = action.payload;
+    initiateAssignment: (
+      state,
+      action: PayloadAction<[number, LaneState[]]>
+    ) => {
+      const [assignmentId, lanes] = action.payload;
 
-      const existingLane = state.lanes.find(
+      const indexOfExistingLane = lanes.findIndex(
         (lane) => lane.assignmentId == assignmentId
       );
 
-      if (existingLane) {
-        const indexOfExistingLane = state.lanes.indexOf(existingLane);
+      if (indexOfExistingLane != -1) {
+        state.lanes = lanes;
         state.activeLaneIndex = indexOfExistingLane;
       } else {
         const newLane = {
@@ -216,6 +219,15 @@ const CallSlice = createSlice({
         state.lanes.push(newLane);
         state.activeLaneIndex = state.lanes.length - 1;
       }
+    },
+    initiateWithoutAssignment: (
+      state,
+      action: PayloadAction<[number, LaneState[]]>
+    ) => {
+      const [activeLaneIndex, lanes] = action.payload;
+
+      state.lanes = lanes;
+      state.activeLaneIndex = activeLaneIndex;
     },
     myAssignmentsLoad: (state) => {
       state.myAssignmentsList.isLoading = true;
@@ -458,6 +470,7 @@ export const {
   eventResponseRemoved,
   filtersUpdated,
   initiateAssignment,
+  initiateWithoutAssignment,
   myAssignmentsLoaded,
   myAssignmentsLoad,
   allocatePreviousCall,

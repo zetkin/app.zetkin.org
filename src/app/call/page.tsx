@@ -27,7 +27,7 @@ export default async function Page({ searchParams }: Props) {
 
   return (
     <HomeThemeProvider>
-      <CallPage assignmentId={parseInt(assignmentId as string)} />
+      <CallPage />
     </HomeThemeProvider>
   );
 }
