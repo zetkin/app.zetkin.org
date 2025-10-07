@@ -16,13 +16,17 @@ import AccountFooter from './AccountFooter';
 
 type LostPasswordSectionProps = {
   onSuccess: (email: string) => void;
+  submittedEmail: string | null;
 };
 
-const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
+const LostPasswordSection: FC<LostPasswordSectionProps> = ({
+  submittedEmail,
+  onSuccess,
+}) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const { sendPasswordResetToken, loading } = useSendPasswordResetToken();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(submittedEmail || '');
   const [emailError, setEmailError] = useState<string | null>(null);
   return (
     <ZUISection
@@ -101,6 +105,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                     setEmailError(null);
                   }}
                   size="large"
+                  value={email}
                 />
                 <ZUIButton
                   actionType="submit"
