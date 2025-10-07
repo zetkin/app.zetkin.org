@@ -75,13 +75,6 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 <ZUIText variant="bodyMdRegular">
                   <Msg id={messageIds.lostPassword.description} />
                 </ZUIText>
-                {emailError == 'USER_NOT_FOUND' && (
-                  <ZUIAlert
-                    appear
-                    severity={'error'}
-                    title={messages.lostPassword.errors.noUser()}
-                  />
-                )}
                 {emailError == 'UNKNOWN_ERROR' && (
                   <ZUIAlert
                     appear
@@ -90,15 +83,13 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                     title={messages.lostPassword.errors.unknownErrorTitle()}
                   />
                 )}
-                {emailError == 'INVALID_EMAIL' && (
-                  <ZUIAlert
-                    appear
-                    description={messages.lostPassword.errors.invalidEmail()}
-                    severity={'error'}
-                    title={messages.lostPassword.errors.invalidEmailTitle()}
-                  />
-                )}
                 <ZUITextField
+                  error={emailError == 'INVALID_EMAIL' ? true : false}
+                  helperText={
+                    emailError == 'INVALID_EMAIL'
+                      ? messages.lostPassword.errors.invalidEmail()
+                      : ''
+                  }
                   label={'Email'}
                   onChange={(newValue) => {
                     setEmail(newValue);

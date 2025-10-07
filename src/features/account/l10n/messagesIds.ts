@@ -11,11 +11,11 @@ export default makeMessages('feat.account', {
     description: m(
       'Have you forgotten your password for Zetkin? Give us your e-mail address and we will send out a link where you can pick a new password.'
     ),
-    descriptionCheck: m('A message with instructions has been sent to '),
+    descriptionCheck: m(
+      'If an account exists with this email address, you will receive reset instructions at '
+    ),
     errors: {
       invalidEmail: m('Please enter a valid email address.'),
-      invalidEmailTitle: m('Invalid email'),
-      noUser: m('No user exists with that email address.'),
       unknownError: m('Something went wrong. Please try again later.'),
       unknownErrorTitle: m('Unexpected error'),
     },
