@@ -3,6 +3,7 @@ import { Box, Button } from '@mui/material';
 import {
   ArrowForward,
   ChatBubbleOutline,
+  ContentCopy,
   Delete,
   QuizOutlined,
 } from '@mui/icons-material';
@@ -18,6 +19,7 @@ import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
 import useSurveyStats from '../hooks/useSurveyStats';
+import useDuplicateSurvey from '../hooks/useDuplicateSurvey';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -90,6 +92,20 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     );
   };
 
+  const duplicateSurvey = useDuplicateSurvey(
+    parsedOrg,
+    parseInt(surveyId),
+    parseInt(campId)
+  );
+  const handleDuplicate = async () => {
+    const res = await duplicateSurvey();
+    if (res) {
+      showSnackbar('success', messages.surveyDuplicated.success());
+    } else {
+      showSnackbar('error', messages.surveyDuplicated.error());
+    }
+  };
+
   const handleOnCampaignSelected = async (campaignId: number) => {
     const updatedSurvey = await updateSurvey({ campaign_id: campaignId });
     await router.push(
@@ -142,6 +158,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       }
       defaultTab="/"
       ellipsisMenuItems={[
+        {
+          label: messages.layout.actions.duplicate(),
+          onSelect: handleDuplicate,
+          startIcon: <ContentCopy />,
+        },
         {
           label: messages.layout.actions.move(),
           onSelect: () => setIsMoveDialogOpen(true),

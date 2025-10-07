@@ -109,6 +109,7 @@ export default makeMessages('feat.surveys', {
   layout: {
     actions: {
       delete: m('Delete'),
+      duplicate: m('Duplicate'),
       move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
@@ -192,6 +193,11 @@ export default makeMessages('feat.surveys', {
       'The person you are about to link does not have an email address while the survey response does. Would you like to add it the person?'
     ),
     title: m('Add email address'),
+  },
+  surveyDuplicated: {
+    error: m('Error: Could not duplicate survey'),
+    success: m('Your survey has been duplicated.'),
+    title: m('Survey Duplicated'),
   },
   surveyForm: {
     accept: m('I accept the terms stated below'),
