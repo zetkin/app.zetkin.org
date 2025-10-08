@@ -50,12 +50,22 @@ const RegisterSuccessSection: FC<RegisterSuccessSectionProps> = ({
               <ZUIText variant="headingLg">
                 <Msg id={messageIds.register.welcome} values={{ userName }} />
               </ZUIText>
-              <ZUIText color="secondary" variant="bodyMdRegular">
-                <Msg id={messageIds.register.instructions} />
-              </ZUIText>
-              <ZUIText color="secondary" variant="bodyMdSemiBold">
-                {email}
-              </ZUIText>
+              <Box sx={{ textAlign: 'center' }}>
+                <ZUIText
+                  color="secondary"
+                  display="inline"
+                  variant="bodyMdRegular"
+                >
+                  <Msg id={messageIds.register.instructions} />
+                </ZUIText>
+                <ZUIText
+                  color="secondary"
+                  display="inline"
+                  variant="bodyMdSemiBold"
+                >
+                  {email}
+                </ZUIText>
+              </Box>
             </Box>
             <Box
               sx={{

@@ -24,7 +24,7 @@ const AccountLayout: FC<Props> = ({ children }) => {
           display: 'flex',
           flexDirection: 'column',
           height: { md: 'auto', xs: '100vh' },
-          maxWidth: { md: 600, xs: '100%' },
+          maxWidth: { md: 400, xs: '100%' },
           overflow: 'hidden',
           position: 'relative',
           width: '100%',
