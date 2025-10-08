@@ -41,11 +41,14 @@ export default function useCallInitialization() {
 
   const assignmentIdFromQuery = queryParams?.get('assignment');
 
-  const lanesAssignedToUser = callLanes?.lanes.filter((lane) =>
-    userCallAssignments.some((assignment) => assignment.id == lane.assignmentId)
-  );
+  const lanesAssignedToUser =
+    callLanes?.lanes.filter((lane) =>
+      userCallAssignments.some(
+        (assignment) => assignment.id == lane.assignmentId
+      )
+    ) || [];
 
-  const activeLanes = lanesAssignedToUser?.filter((lane) => {
+  const activeLanes = lanesAssignedToUser.filter((lane) => {
     const assignment = userCallAssignments.find(
       (assignment) => assignment.id == lane.assignmentId
     );
@@ -81,18 +84,12 @@ export default function useCallInitialization() {
   const initialize = () => {
     if (assignmentIdFromQuery) {
       dispatch(
-        initiateAssignment([
-          parseInt(assignmentIdFromQuery),
-          callLanes?.lanes || [],
-        ])
+        initiateAssignment([parseInt(assignmentIdFromQuery), activeLanes])
       );
       history.replaceState(null, '', '/call');
     } else if (callLanes) {
       dispatch(
-        initiateWithoutAssignment([
-          callLanes.activeLaneIndex,
-          activeLanes ?? [],
-        ])
+        initiateWithoutAssignment([callLanes.activeLaneIndex, activeLanes])
       );
     }
   };
