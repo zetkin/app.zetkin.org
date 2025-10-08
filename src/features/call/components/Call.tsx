@@ -40,8 +40,11 @@ import ActivitiesSection from '../components/ActivitiesSection';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import useCurrentAssignment from '../hooks/useCurrentAssignment';
 import useMyAssignments from '../hooks/useMyAssignments';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const Call: FC = () => {
+  const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
@@ -109,29 +112,6 @@ const Call: FC = () => {
       </Box>
     );
   }
-
-  const getHeaderPrimaryButtonLabel = () => {
-    if (lane.step == LaneStep.START) {
-      return 'Call';
-    } else if (lane.step == LaneStep.CALL) {
-      return 'Finish & report';
-    } else if (lane.step == LaneStep.REPORT) {
-      return 'Send report';
-    } else {
-      //Lane step must be "Summary"
-      return 'Next call';
-    }
-  };
-
-  const getHeaderSecondaryButtonLabel = () => {
-    if (lane.step == LaneStep.START) {
-      return 'Quit';
-    } else if (lane.step == LaneStep.SUMMARY) {
-      return 'Take a break';
-    } else {
-      return 'Skip';
-    }
-  };
 
   return (
     <>
@@ -247,7 +227,7 @@ const Call: FC = () => {
                   : undefined
               }
               href={lane.step == LaneStep.START ? '/my/home' : undefined}
-              label={getHeaderSecondaryButtonLabel()}
+              label={messages.header.secondaryButton[lane.step]()}
               onClick={() => {
                 if (
                   lane.step != LaneStep.START &&
@@ -265,7 +245,7 @@ const Call: FC = () => {
                 !!errorAllocatingCall ||
                 (lane.step == LaneStep.REPORT && !report.completed)
               }
-              label={getHeaderPrimaryButtonLabel()}
+              label={messages.header.primaryButton[lane.step]()}
               onClick={async () => {
                 if (lane.step == LaneStep.START) {
                   await allocateCall();

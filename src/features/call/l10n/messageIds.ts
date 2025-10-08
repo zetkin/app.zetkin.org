@@ -7,6 +7,20 @@ export default makeMessages('feat.call', {
     ),
     title: m('An unexpected error occured.'),
   },
+  header: {
+    primaryButton: {
+      [0]: m('Call'),
+      [1]: m('Finish & report'),
+      [2]: m('Send report'),
+      [3]: m('Next call'),
+    },
+    secondaryButton: {
+      [0]: m('Quit'),
+      [1]: m('Skip'),
+      [2]: m('Skip'),
+      [3]: m('Take a break'),
+    },
+  },
   report: {
     steps: {
       callBack: {
