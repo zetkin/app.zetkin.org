@@ -1,6 +1,20 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.call', {
+  about: {
+    events: m<{ numEvents: number }>('{numEvents} events'),
+    noParticipation: m<{ name: string }>(
+      '{name} never participated in any events.'
+    ),
+    participation: m<{
+      events: JSX.Element;
+      name: string;
+      titleAndTime: JSX.Element;
+    }>('{name} participated in {events}, the most recent being {titleAndTime}'),
+    previousActivityHeader: m('Previous activity'),
+    tagsHeader: m('Tags'),
+    title: m<{ name: string }>('About {name}'),
+  },
   error: {
     description: m(
       'Try refreshing the page. If error persists - try logging out and then in again. If error still persists, contact support.'
@@ -20,6 +34,10 @@ export default makeMessages('feat.call', {
       [2]: m('Skip'),
       [3]: m('Take a break'),
     },
+  },
+  instructions: {
+    noInstructions: m('This assignment does not have any instructions.'),
+    title: m('Instructions'),
   },
   report: {
     steps: {
