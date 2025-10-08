@@ -31,6 +31,13 @@ export default makeMessages('feat.account', {
       createAccount: m('Create account'),
     },
     description: m('Start organizing with Zetkin right away'),
+    error: {
+      conflictError: m(
+        'An account with this email or phone number already exists.'
+      ),
+      phoneError: m('Please enter a valid phone number.'),
+      unkownError: m('Registration failed. Try again later.'),
+    },
     instructions: m('A message with instructions has been sent to '),
     labels: {
       checkBox: m(
@@ -54,12 +61,6 @@ export default makeMessages('feat.account', {
     descriptionUpdated: m(
       'Your password was updated. You can sign in using your new password.'
     ),
-    error: {
-      conflictError: m(
-        'An account with this email or phone number already exists.'
-      ),
-      unkownError: m('Registration failed. Try again later.'),
-    },
     title: m('Reset password'),
     validation: m('Password must be at least 6 characters long.'),
   },

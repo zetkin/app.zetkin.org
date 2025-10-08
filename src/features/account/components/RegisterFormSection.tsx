@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 
 import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUISection from 'zui/components/ZUISection';
@@ -36,6 +37,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const [resultError, setResultError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [phoneError, setPhoneError] = useState(false);
   const [formData, setFormData] = useState<RegisterData>({
     email: '',
     first_name: '',
@@ -114,14 +116,14 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                         <ZUIAlert
                           appear
                           severity={'error'}
-                          title={messages.resetPassword.error.conflictError()}
+                          title={messages.register.error.conflictError()}
                         />
                       )}
                       {resultError == 'UNKNOWN_ERROR' && (
                         <ZUIAlert
                           appear
                           severity={'error'}
-                          title={messages.resetPassword.error.unkownError()}
+                          title={messages.register.error.unkownError()}
                         />
                       )}
                     </Box>
@@ -170,13 +172,34 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                     }
                     size="large"
                   />
-                  <ZUITextField
+                  <MuiTelInput
+                    defaultCountry="SE"
+                    error={Boolean(phoneError)}
                     fullWidth
-                    label={messages.register.labels.mobile()}
-                    onChange={(value) =>
-                      setFormData((prev) => ({ ...prev, phone: value }))
+                    helperText={
+                      phoneError ? messages.register.error.phoneError() : ''
                     }
-                    size="large"
+                    label={messages.register.labels.mobile()}
+                    onChange={(value) => {
+                      setPhoneError(!matchIsValidTel(value));
+                      setFormData((prev) => ({ ...prev, phone: value }));
+                    }}
+                    sx={(theme) => ({
+                      '& .MuiFormHelperText-root': {
+                        color: phoneError
+                          ? theme.palette.error.main
+                          : theme.palette.text.secondary,
+                        fontFamily: theme.typography.fontFamily,
+                        fontSize: '0.813rem',
+                        fontWeight: 400,
+                      },
+                      '& .MuiInputLabel-root': {
+                        fontFamily: theme.typography.fontFamily,
+                        fontSize: '1rem',
+                        fontWeight: '500',
+                      },
+                    })}
+                    value={formData.phone}
                   />
                   <ZUITextField
                     endIcon={showPassword ? VisibilityOff : Visibility}
