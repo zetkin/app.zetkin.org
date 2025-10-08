@@ -204,4 +204,13 @@ export default makeMessages('feat.call', {
       editButtonLabel: m('Edit'),
     },
   },
+  stats: {
+    callsMade: m('calls made'),
+    description: m('This is how the assignment is going'),
+    inTargetGroup: m('people in target group'),
+    successful: m('successful'),
+    successfulCalls: m('successful calls'),
+    targets: m('targets'),
+    title: m('Assignment stats'),
+  },
 });
