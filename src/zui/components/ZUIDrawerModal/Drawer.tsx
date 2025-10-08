@@ -55,7 +55,7 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
               display: 'flex',
               flexDirection: 'column',
               maxHeight: 'calc(100dvh - 3.75rem)',
-              overflowY: 'hidden',
+              overflow: 'hidden',
             }}
           >
             {children}

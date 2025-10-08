@@ -14,6 +14,16 @@ type Props = {
   step: LaneStep;
 };
 
+const Instructions = ({ instructions }: { instructions: string }) => (
+  <ZUIText component="div">
+    {instructions ? (
+      <ZUIMarkdown markdown={instructions} />
+    ) : (
+      "This assignment doesn't have instructions."
+    )}
+  </ZUIText>
+);
+
 const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
   const [selectedTab, setSelectedTab] = useState<'instructions' | 'about'>(
     'instructions'
@@ -43,15 +53,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
           items={[
             {
               label: 'Instructions',
-              render: () => (
-                <ZUIText component="div">
-                  {instructions ? (
-                    <ZUIMarkdown markdown={instructions} />
-                  ) : (
-                    "This assignment doesn't have instructions."
-                  )}
-                </ZUIText>
-              ),
+              render: () => <Instructions instructions={instructions} />,
               value: 'instructions',
             },
             {
@@ -83,15 +85,7 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
     <ZUISection
       borders={false}
       fullHeight
-      renderContent={() => (
-        <ZUIText component="div">
-          {instructions ? (
-            <ZUIMarkdown markdown={instructions} />
-          ) : (
-            "This assignment doesn't have instructions."
-          )}
-        </ZUIText>
-      )}
+      renderContent={() => <Instructions instructions={instructions} />}
       title={'Instructions'}
     />
   );
