@@ -1,5 +1,13 @@
+import { range } from 'lodash';
 import { FC, useState } from 'react';
-import { Box, Button, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  useTheme,
+} from '@mui/material';
 
 import PageBase from './PageBase';
 import {
@@ -9,6 +17,8 @@ import {
 import messageIds from 'features/canvass/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import FloorMatrix from '../FloorMatrix';
+import { EditedFloor } from '../FloorMatrix/types';
+import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -33,9 +43,24 @@ const HouseholdsPage2: FC<Props> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
+  const { addHouseholds } = useLocationMutations(
+    location.organization_id,
+    location.id
+  );
+  const [draftFloors, setDraftFloors] = useState<null | EditedFloor[]>(null);
   const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
     null | number[]
   >(null);
+
+  const mode = draftFloors
+    ? 'edit'
+    : selectedHouseholdIds
+    ? 'select'
+    : 'browse';
+
+  const numDraftHouseholds =
+    draftFloors?.reduce((sum, floor) => sum + floor.draftHouseholdCount, 0) ??
+    0;
 
   return (
     <PageBase
@@ -58,13 +83,48 @@ const HouseholdsPage2: FC<Props> = ({
         )}
         <Box
           sx={{
+            backgroundColor: theme.palette.background.paper,
+            display: 'flex',
+            gap: 1,
+            p: 2,
+            position: 'sticky',
+            top: -8,
+            zIndex: 2,
+          }}
+        >
+          <ToggleButtonGroup
+            exclusive
+            fullWidth
+            onChange={(_, value) => {
+              if (value == 'edit') {
+                setDraftFloors([]);
+              } else if (value == 'select') {
+                setSelectedHouseholdIds([]);
+              } else {
+                setDraftFloors(null);
+                setSelectedHouseholdIds(null);
+              }
+            }}
+            value={mode}
+          >
+            <ToggleButton value="browse">Browse</ToggleButton>
+            <ToggleButton value="select">Select</ToggleButton>
+            <ToggleButton value="edit">Edit</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+        <Box
+          sx={{
             marginTop: 'auto',
           }}
         >
           <FloorMatrix
             assignment={assignment}
+            draftFloors={draftFloors}
             location={location}
             onClickVisit={onClickVisit}
+            onEditChange={(drafts) => {
+              setDraftFloors(drafts);
+            }}
             onSelectHousehold={onSelectHousehold}
             onUpdateSelection={(selectedIds) =>
               setSelectedHouseholdIds(selectedIds)
@@ -82,14 +142,30 @@ const HouseholdsPage2: FC<Props> = ({
             position: 'sticky',
           }}
         >
-          <Button
-            onClick={() =>
-              setSelectedHouseholdIds(selectedHouseholdIds ? null : [])
-            }
-            variant="outlined"
-          >
-            Toggle selection
-          </Button>
+          {!!draftFloors && (
+            <>
+              <Typography>{numDraftHouseholds} new households</Typography>
+              <Button onClick={() => setDraftFloors(null)}>Cancel</Button>
+              <Button
+                onClick={async () => {
+                  const newHouseholds = draftFloors.flatMap((draft) => {
+                    const firstNewIndex = draft.existingHouseholds.length;
+                    const lastNewIndex =
+                      firstNewIndex + draft.draftHouseholdCount;
+                    return range(firstNewIndex, lastNewIndex).map((index) => ({
+                      level: draft.level,
+                      title: 'Household ' + (index + 1),
+                    }));
+                  });
+
+                  await addHouseholds(newHouseholds);
+                  setDraftFloors(null);
+                }}
+              >
+                Save
+              </Button>
+            </>
+          )}
           {!!selectedHouseholdIds?.length && (
             <Button
               onClick={() =>

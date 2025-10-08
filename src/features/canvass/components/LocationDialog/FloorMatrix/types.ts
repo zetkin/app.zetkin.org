@@ -5,3 +5,9 @@ export type HouseholdItem = {
   lastVisitSuccess: boolean;
   lastVisitTime: string;
 };
+
+export type EditedFloor = {
+  draftHouseholdCount: number;
+  existingHouseholds: HouseholdWithColor[];
+  level: number;
+};

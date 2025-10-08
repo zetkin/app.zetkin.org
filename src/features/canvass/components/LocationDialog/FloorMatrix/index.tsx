@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { range } from 'lodash';
 import { FC } from 'react';
 
 import useHouseholds from 'features/canvass/hooks/useHouseholds';
@@ -10,11 +11,15 @@ import {
   ZetkinAreaAssignment,
   ZetkinLocation,
 } from 'features/areaAssignments/types';
+import FloorEditor from './FloorEditor';
+import { EditedFloor } from './types';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
+  draftFloors: EditedFloor[] | null;
   location: ZetkinLocation;
   onClickVisit: (householdId: number) => void;
+  onEditChange: (floors: EditedFloor[]) => void;
   onSelectHousehold: (householdId: number) => void;
   onUpdateSelection: (selectedIds: number[] | null) => void;
   selectedHouseholdIds: number[] | null;
@@ -22,8 +27,10 @@ type Props = {
 
 const FloorMatrix: FC<Props> = ({
   assignment,
+  draftFloors,
   location,
   onClickVisit,
+  onEditChange,
   onSelectHousehold,
   onUpdateSelection,
   selectedHouseholdIds,
@@ -63,58 +70,137 @@ const FloorMatrix: FC<Props> = ({
     },
     {}
   );
+
+  const floorLevels = [
+    ...(draftFloors?.map((floor) => floor.level) || []),
+    ...households.map((household) => household.level),
+  ];
+
+  const minLevel = Math.min(...floorLevels);
+  const maxLevel = Math.max(...floorLevels);
+  const editing = !!draftFloors;
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 0.5,
       }}
     >
-      {Object.keys(householdsByFloor)
-        .map((floorStr) => parseInt(floorStr))
-        .sort()
+      <Button
+        onClick={() => {
+          const newFloor: EditedFloor = {
+            draftHouseholdCount: 0,
+            existingHouseholds: [],
+            level: maxLevel + 1,
+          };
+
+          onEditChange([...(draftFloors || []), newFloor]);
+        }}
+      >
+        Add floor above
+      </Button>
+      {range(minLevel, maxLevel + 1)
         .reverse()
         .map((floor) => {
           const householdsOnFloor = householdsByFloor[floor];
+          const draftFloor = draftFloors?.find((draft) => draft.level == floor);
 
-          return (
-            <FloorHouseholdGroup
-              key={floor}
-              floor={floor}
-              householdItems={householdsOnFloor.map((household) => {
-                const mostRecentVisit = lastVisitByHouseholdId[household.id];
+          if (householdsOnFloor) {
+            const householdItems = householdsOnFloor.map((household) => {
+              const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
-                const lastVisitSuccess =
-                  !!mostRecentVisit &&
-                  !!successMetric &&
-                  mostRecentVisit.metrics.some(
-                    (metric) =>
-                      metric.metric_id == successMetric.id &&
-                      metric.response == 'yes'
-                  );
+              const lastVisitSuccess =
+                !!mostRecentVisit &&
+                !!successMetric &&
+                mostRecentVisit.metrics.some(
+                  (metric) =>
+                    metric.metric_id == successMetric.id &&
+                    metric.response == 'yes'
+                );
 
-                return {
-                  household,
-                  lastVisitSuccess,
-                  lastVisitTime: mostRecentVisit?.created ?? null,
-                };
-              })}
-              onClick={(householdId) => onSelectHousehold(householdId)}
-              onClickVisit={(householdId) => onClickVisit(householdId)}
-              onDeselectIds={(ids) =>
-                onUpdateSelection(
-                  selectedHouseholdIds?.filter((id) => !ids.includes(id)) ??
-                    null
-                )
-              }
-              onSelectIds={(ids) =>
-                onUpdateSelection([...(selectedHouseholdIds || []), ...ids])
-              }
-              selectedIds={selectedHouseholdIds}
-            />
-          );
+              return {
+                household,
+                lastVisitSuccess,
+                lastVisitTime: mostRecentVisit?.created ?? null,
+              };
+            });
+
+            if (editing) {
+              return (
+                <FloorEditor
+                  draft={
+                    draftFloor || {
+                      draftHouseholdCount: 0,
+                      existingHouseholds: householdsOnFloor,
+                      level: floor,
+                    }
+                  }
+                  onChange={(newDraft) => {
+                    onEditChange([
+                      ...draftFloors.filter(
+                        (oldDraft) => newDraft.level != oldDraft.level
+                      ),
+                      newDraft,
+                    ]);
+                  }}
+                />
+              );
+            } else {
+              return (
+                <FloorHouseholdGroup
+                  key={floor}
+                  floor={floor}
+                  householdItems={householdItems}
+                  onClick={(householdId) => onSelectHousehold(householdId)}
+                  onClickVisit={(householdId) => onClickVisit(householdId)}
+                  onDeselectIds={(ids) =>
+                    onUpdateSelection(
+                      selectedHouseholdIds?.filter((id) => !ids.includes(id)) ??
+                        null
+                    )
+                  }
+                  onSelectIds={(ids) =>
+                    onUpdateSelection([...(selectedHouseholdIds || []), ...ids])
+                  }
+                  selectedIds={selectedHouseholdIds}
+                />
+              );
+            }
+          } else if (editing) {
+            const draftFloor = draftFloors.find(
+              (draft) => draft.level == floor
+            );
+
+            if (draftFloor) {
+              return (
+                <FloorEditor
+                  draft={draftFloor}
+                  onChange={(newDraft) =>
+                    onEditChange(
+                      draftFloors.map((oldDraft) =>
+                        newDraft.level == oldDraft.level ? newDraft : oldDraft
+                      )
+                    )
+                  }
+                />
+              );
+            }
+          }
         })}
+      <Button
+        onClick={() => {
+          const newFloor: EditedFloor = {
+            draftHouseholdCount: 0,
+            existingHouseholds: [],
+            level: minLevel - 1,
+          };
+
+          onEditChange([...(draftFloors || []), newFloor]);
+        }}
+      >
+        Add floor below
+      </Button>
     </Box>
   );
 };
