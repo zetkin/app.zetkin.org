@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUISection from 'zui/components/ZUISection';
@@ -11,6 +12,7 @@ import messageIds from '../l10n/messagesIds';
 import ZUILogo from 'zui/ZUILogo';
 import ZUICheckbox from 'zui/components/ZUICheckbox';
 import { useCreateNewAccount } from '../hooks/useCreateNewAccount';
+import ZUIAlert from 'zui/components/ZUIAlert';
 
 export type RegisterData = {
   email: string;
@@ -30,6 +32,10 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const { loading, createNewAccount } = useCreateNewAccount();
   const [showExtraFields, setShowExtraFields] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [resultError, setResultError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
   const [formData, setFormData] = useState<RegisterData>({
     email: '',
     first_name: '',
@@ -37,6 +43,10 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
     password: '',
     phone: '',
   });
+
+  const allFieldsFilled = Object.values(formData).every(
+    (value) => value.trim() !== ''
+  );
 
   return (
     <ZUISection
@@ -54,9 +64,31 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
             <form
               onSubmit={async (ev) => {
                 ev.preventDefault();
+                if (!formData.email.includes('@')) {
+                  setEmailError(messages.lostPassword.errors.invalidEmail());
+                  return;
+                }
+                setEmailError(null);
+
+                if (formData.password.length < 6) {
+                  setPasswordError(true);
+                  return;
+                }
+
                 if (isTermsAccepted) {
-                  await createNewAccount(formData);
-                  onSuccess(formData.first_name, formData.email);
+                  const result = await createNewAccount(formData);
+
+                  if (result.success) {
+                    onSuccess(formData.first_name, formData.email);
+                  } else {
+                    if (result.errorCode == 'REGISTRATION_FAILED') {
+                      setResultError('REGISTRATION_FAILED');
+                    } else if (result.errorCode == 'CONFLICT_ERROR') {
+                      setResultError('CONFLICT_ERROR');
+                    } else {
+                      setResultError('UNKNOWN_ERROR');
+                    }
+                  }
                 }
               }}
             >
@@ -67,7 +99,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   flexGrow: 1,
                   gap: showExtraFields ? 2 : 1,
                   overflowY: { md: 'visible', xs: 'auto' },
-                  pt: 1,
+                  pt: resultError ? 0 : 1,
                 }}
               >
                 <Box
@@ -75,12 +107,38 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   sx={{ overflow: 'visible' }}
                   width="100%"
                 >
+                  {(resultError === 'CONFLICT_ERROR' ||
+                    resultError === 'UNKNOWN_ERROR') && (
+                    <Box sx={{ mb: 2 }}>
+                      {resultError == 'CONFLICT_ERROR' && (
+                        <ZUIAlert
+                          appear
+                          severity={'error'}
+                          title={messages.resetPassword.error.conflictError()}
+                        />
+                      )}
+                      {resultError == 'UNKNOWN_ERROR' && (
+                        <ZUIAlert
+                          appear
+                          severity={'error'}
+                          title={messages.resetPassword.error.unkownError()}
+                        />
+                      )}
+                    </Box>
+                  )}
                   <ZUITextField
+                    error={Boolean(emailError)}
                     fullWidth
-                    label={messages.register.labels.email()}
-                    onChange={(value) =>
-                      setFormData((prev) => ({ ...prev, email: value }))
+                    helperText={
+                      emailError
+                        ? messages.lostPassword.errors.invalidEmail()
+                        : ''
                     }
+                    label={messages.register.labels.email()}
+                    onChange={(value) => {
+                      setFormData((prev) => ({ ...prev, email: value }));
+                      setEmailError(null);
+                    }}
                     size="large"
                   />
                 </Box>
@@ -121,12 +179,20 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                     size="large"
                   />
                   <ZUITextField
+                    endIcon={showPassword ? VisibilityOff : Visibility}
+                    error={passwordError}
                     fullWidth
-                    label={messages.register.labels.password()}
-                    onChange={(value) =>
-                      setFormData((prev) => ({ ...prev, password: value }))
+                    helperText={
+                      passwordError ? messages.resetPassword.validation() : ''
                     }
+                    label={messages.register.labels.password()}
+                    onChange={(value) => {
+                      setFormData((prev) => ({ ...prev, password: value }));
+                      setPasswordError(false);
+                    }}
+                    onEndIconClick={() => setShowPassword((prev) => !prev)}
                     size="large"
+                    type={showPassword ? 'text' : 'password'}
                   />
                   <ZUICheckbox
                     checked={isTermsAccepted}
@@ -137,7 +203,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                 </Box>
                 <ZUIButton
                   actionType="submit"
-                  disabled={loading || !isTermsAccepted}
+                  disabled={loading || !isTermsAccepted || !allFieldsFilled}
                   label={messages.register.actions.createAccount()}
                   size="large"
                   variant={'primary'}

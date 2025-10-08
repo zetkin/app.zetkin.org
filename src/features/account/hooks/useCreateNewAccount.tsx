@@ -29,21 +29,7 @@ export function useCreateNewAccount(): UseCreateNewAccountProps {
       return { success: true };
     } catch (err) {
       if (err instanceof ApiClientError) {
-        if (err.status == 404) {
-          return { errorCode: 'REGISTRATION_FAILED', success: false };
-        }
-
         if (err.status == 409) {
-          const description = err.cause;
-
-          if (description == 'duplicate_email') {
-            return { errorCode: 'EMAIL_EXISTS', success: false };
-          }
-
-          if (description == 'duplicate_phone') {
-            return { errorCode: 'PHONE_EXISTS', success: false };
-          }
-
           return { errorCode: 'CONFLICT_ERROR', success: false };
         }
       }
