@@ -39,14 +39,16 @@ import callSummarySentence from '../components/utils/callSummarySentence';
 import ActivitiesSection from '../components/ActivitiesSection';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import useCurrentAssignment from '../hooks/useCurrentAssignment';
+import useMyAssignments from '../hooks/useMyAssignments';
 
 const Call: FC = () => {
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
+  const allUserAssignments = useMyAssignments();
 
   const [callLogOpen, setCallLogOpen] = useState(false);
-  const [unfinishedCallSwitchedTo, setUnfinishedCallSwitchedTo] = useState<
+  const [assignmentSwitchedTo, setAssignmentSwitchedTo] = useState<
     number | null
   >(null);
   const [skipCallModalOpen, setSkipCallModalOpen] = useState(false);
@@ -89,8 +91,8 @@ const Call: FC = () => {
     return isUnfinishedCall && isNotCurrentCall;
   });
 
-  const switchedTo = outgoingCalls.find(
-    (oc) => oc.id == unfinishedCallSwitchedTo
+  const switchedTo = allUserAssignments.find(
+    (oc) => oc.id == assignmentSwitchedTo
   );
 
   if (onServer) {
@@ -611,7 +613,9 @@ const Call: FC = () => {
                     <ListItem
                       onClick={() => {
                         switchToUnfinishedCall(c.id, c.assignment_id);
-                        setUnfinishedCallSwitchedTo(c.id);
+                        if (c.assignment_id != assignment.id) {
+                          setAssignmentSwitchedTo(c.assignment_id);
+                        }
                       }}
                       sx={{
                         borderRadius: '2rem',
@@ -636,6 +640,11 @@ const Call: FC = () => {
       <CallSwitchModal
         assignment={assignment}
         onClose={() => setCallLogOpen(false)}
+        onSwitch={(assignmentId) => {
+          if (assignmentId != assignment.id) {
+            setAssignmentSwitchedTo(assignmentId);
+          }
+        }}
         open={callLogOpen}
       />
       <ZUIModal
@@ -666,10 +675,10 @@ const Call: FC = () => {
           if (reason == 'clickaway') {
             return;
           } else {
-            setUnfinishedCallSwitchedTo(null);
+            setAssignmentSwitchedTo(null);
           }
         }}
-        open={!!unfinishedCallSwitchedTo}
+        open={!!assignmentSwitchedTo}
         slots={{
           transition: (props) => {
             return (
@@ -693,7 +702,7 @@ const Call: FC = () => {
       >
         <Alert
           icon={false}
-          onClose={() => setUnfinishedCallSwitchedTo(null)}
+          onClose={() => setAssignmentSwitchedTo(null)}
           severity="success"
           sx={(theme) => ({
             backgroundColor: theme.palette.common.white,
@@ -702,7 +711,7 @@ const Call: FC = () => {
           })}
         >
           {switchedTo && (
-            <ZUIText>{`Switched to call with ${switchedTo.target.name}`}</ZUIText>
+            <ZUIText>{`Switched assignments. You are now calling in ${switchedTo.title}`}</ZUIText>
           )}
         </Alert>
       </Snackbar>

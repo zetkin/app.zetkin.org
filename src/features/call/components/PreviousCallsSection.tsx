@@ -14,7 +14,7 @@ import useCurrentCall from '../hooks/useCurrentCall';
 import UnfinishedCall from './UnfinishedCall';
 
 type PreviousCallsSectionProps = {
-  onCall: () => void;
+  onCall: (assignmentId: number) => void;
   orgId: number;
   searchTerm?: string;
 };
@@ -75,7 +75,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                 unfinishedCall.id,
                 unfinishedCall.assignment_id
               );
-              onCall();
+              onCall(unfinishedCall.assignment_id);
             }}
             unfinishedCall={unfinishedCall}
           />
@@ -128,7 +128,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                     previousCall.assignment_id,
                     previousCall.target.id
                   );
-                  onCall();
+                  onCall(previousCall.assignment_id);
                 }}
                 size="small"
                 variant="secondary"

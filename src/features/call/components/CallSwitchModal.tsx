@@ -9,12 +9,14 @@ import PreviousCallsSearch from './PreviousCallsSearch';
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
   onClose: () => void;
+  onSwitch: (assignmentId: number) => void;
   open: boolean;
 };
 
 const CallSwitchModal: FC<CallSwitchModalProps> = ({
   assignment,
   onClose,
+  onSwitch,
   open,
 }) => {
   const [debouncedInput, setDebouncedInput] = useState<string>('');
@@ -46,7 +48,10 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           }}
         />
         <PreviousCallsSection
-          onCall={() => onClose()}
+          onCall={(assignmentId) => {
+            onSwitch(assignmentId);
+            onClose();
+          }}
           orgId={assignment.organization.id}
           searchTerm={debouncedInput}
         />
