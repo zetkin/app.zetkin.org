@@ -120,7 +120,6 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                     previousCall.target.last_name}
                 </ZUIText>
               </Box>
-              {previousCall.assignment_id}
               <ZUIButton
                 label="Log another call"
                 onClick={() => {
