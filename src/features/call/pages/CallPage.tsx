@@ -11,6 +11,8 @@ import Call from '../components/Call';
 import useCallInitialization from '../hooks/useCallInitialization';
 import ZUIText from 'zui/components/ZUIText';
 import ZUILogo from 'zui/ZUILogo';
+import { Msg } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const CallPage: FC = () => {
   const { initialize, canInitialize } = useCallInitialization();
@@ -49,15 +51,17 @@ const CallPage: FC = () => {
               alignItems: 'center',
               display: 'flex',
               flexDirection: 'column',
+              gap: 1,
               height: '100dvh',
               justifyContent: 'center',
             }}
           >
             <ZUILogo />
-            <ZUIText variant="headingMd">An unexpected error occured.</ZUIText>
+            <ZUIText variant="headingMd">
+              <Msg id={messageIds.error.title} />
+            </ZUIText>
             <ZUIText>
-              Try refreshing the page. If error persists - try logging out and
-              then in again. If error still persists, contact support.
+              <Msg id={messageIds.error.description} />
             </ZUIText>
           </Box>
         }
