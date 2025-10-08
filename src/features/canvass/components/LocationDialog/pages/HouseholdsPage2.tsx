@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 
 import PageBase from './PageBase';
 import {
@@ -35,6 +35,7 @@ const HouseholdsPage2: FC<Props> = ({
   onSelectHousehold,
   location,
 }) => {
+  const theme = useTheme();
   const messages = useMessages(messageIds);
   const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
     null | number[]
@@ -96,42 +97,6 @@ const HouseholdsPage2: FC<Props> = ({
         <Box
           sx={{
             display: 'flex',
-            gap: 1,
-            my: 2,
-          }}
-        >
-          <Button
-            onClick={() =>
-              setSelectedHouseholdIds(selectedHouseholdIds ? null : [])
-            }
-            variant="outlined"
-          >
-            Toggle selection
-          </Button>
-          {!!selectedHouseholdIds?.length && (
-            <Button
-              onClick={() =>
-                !!selectedHouseholdIds && onBulkEdit(selectedHouseholdIds)
-              }
-              variant="outlined"
-            >
-              Edit
-            </Button>
-          )}
-          {!!selectedHouseholdIds?.length && (
-            <Button
-              onClick={() =>
-                !!selectedHouseholdIds && onBulkVisit(selectedHouseholdIds)
-              }
-              variant="outlined"
-            >
-              Visit
-            </Button>
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
             flexDirection: 'column',
             gap: 0.5,
             marginTop: 'auto',
@@ -185,6 +150,45 @@ const HouseholdsPage2: FC<Props> = ({
                 />
               );
             })}
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: theme.palette.background.paper,
+            bottom: 0,
+            display: 'flex',
+            gap: 1,
+            p: 2,
+            position: 'sticky',
+          }}
+        >
+          <Button
+            onClick={() =>
+              setSelectedHouseholdIds(selectedHouseholdIds ? null : [])
+            }
+            variant="outlined"
+          >
+            Toggle selection
+          </Button>
+          {!!selectedHouseholdIds?.length && (
+            <Button
+              onClick={() =>
+                !!selectedHouseholdIds && onBulkEdit(selectedHouseholdIds)
+              }
+              variant="outlined"
+            >
+              Edit
+            </Button>
+          )}
+          {!!selectedHouseholdIds?.length && (
+            <Button
+              onClick={() =>
+                !!selectedHouseholdIds && onBulkVisit(selectedHouseholdIds)
+              }
+              variant="outlined"
+            >
+              Visit
+            </Button>
+          )}
         </Box>
       </Box>
     </PageBase>
