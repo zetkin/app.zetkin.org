@@ -35,6 +35,9 @@ const FloorHouseholdGroup: FC<Props> = ({
         height: expanded
           ? GRID_SQUARE_WITH_GAP + householdItems.length * GRID_SQUARE_WITH_GAP
           : GRID_SQUARE_WITH_GAP + GRID_GAP,
+        maxWidth: '100%',
+        overflowX: 'auto',
+        overflowY: 'hidden',
         paddingY: GRID_GAP + 'px',
         position: 'relative',
         transition: expanded ? 'height 0.2s' : 'height 0.2s 0.1s',
