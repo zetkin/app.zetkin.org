@@ -79,6 +79,7 @@ const FloorMatrix: FC<Props> = ({
   const minLevel = Math.min(...floorLevels);
   const maxLevel = Math.max(...floorLevels);
   const editing = !!draftFloors;
+  const selecting = !!selectedHouseholdIds;
 
   return (
     <Box
@@ -87,19 +88,21 @@ const FloorMatrix: FC<Props> = ({
         flexDirection: 'column',
       }}
     >
-      <Button
-        onClick={() => {
-          const newFloor: EditedFloor = {
-            draftHouseholdCount: 0,
-            existingHouseholds: [],
-            level: maxLevel + 1,
-          };
+      {!selecting && (
+        <Button
+          onClick={() => {
+            const newFloor: EditedFloor = {
+              draftHouseholdCount: 0,
+              existingHouseholds: [],
+              level: maxLevel + 1,
+            };
 
-          onEditChange([...(draftFloors || []), newFloor]);
-        }}
-      >
-        Add floor above
-      </Button>
+            onEditChange([...(draftFloors || []), newFloor]);
+          }}
+        >
+          Add floor above
+        </Button>
+      )}
       {range(minLevel, maxLevel + 1)
         .reverse()
         .map((floor) => {
@@ -188,19 +191,21 @@ const FloorMatrix: FC<Props> = ({
             }
           }
         })}
-      <Button
-        onClick={() => {
-          const newFloor: EditedFloor = {
-            draftHouseholdCount: 0,
-            existingHouseholds: [],
-            level: minLevel - 1,
-          };
+      {!selecting && (
+        <Button
+          onClick={() => {
+            const newFloor: EditedFloor = {
+              draftHouseholdCount: 0,
+              existingHouseholds: [],
+              level: minLevel - 1,
+            };
 
-          onEditChange([...(draftFloors || []), newFloor]);
-        }}
-      >
-        Add floor below
-      </Button>
+            onEditChange([...(draftFloors || []), newFloor]);
+          }}
+        >
+          Add floor below
+        </Button>
+      )}
     </Box>
   );
 };

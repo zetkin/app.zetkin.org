@@ -24,7 +24,7 @@ const HouseholdSquare: FC<Props> = ({ active, color, content }) => {
         alignItems: 'center',
         backgroundColor: backgroundColor,
         borderRadius: 1,
-        borderTopColor: color || backgroundColor,
+        borderTopColor: color || 'transparent',
         borderTopStyle: 'solid',
         borderTopWidth: 8,
         color: 'white',
@@ -34,6 +34,7 @@ const HouseholdSquare: FC<Props> = ({ active, color, content }) => {
         height: GRID_SQUARE,
         justifyContent: 'center',
         margin: 0,
+        transition: 'background-color 0.3s',
         width: GRID_SQUARE,
       }}
     >
