@@ -15,6 +15,35 @@ export default makeMessages('feat.call', {
     tagsHeader: m('Tags'),
     title: m<{ name: string }>('About {name}'),
   },
+  activities: {
+    description: m<{ name: string }>('Acting as {name}'),
+    filters: {
+      basic: {
+        alreadyIn: m('Already in'),
+        events: m('Events'),
+        surveys: m('Surveys'),
+        thisCall: m('This call'),
+      },
+      events: {
+        thisWeek: m('This week'),
+        today: m('Today'),
+        tomorrow: m('Tomorrow'),
+      },
+      organizations: {
+        noSelected: m('Organizations'),
+        selected: m<{ numOrgs: number }>('{numOrgs} orgs'),
+      },
+      projects: {
+        noSelected: m('Context'),
+        selected: m<{ numProjects: number }>('{numOrgs} projects'),
+      },
+    },
+    projects: {
+      wihoutProjectLabel: m('No project'),
+    },
+
+    title: m('Activities'),
+  },
   error: {
     description: m(
       'Try refreshing the page. If error persists - try logging out and then in again. If error still persists, contact support.'
