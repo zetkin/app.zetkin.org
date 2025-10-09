@@ -32,8 +32,13 @@ export function useCreateNewAccount(): UseCreateNewAccountProps {
         if (err.status == 409) {
           return { errorCode: 'CONFLICT_ERROR', success: false };
         }
+        if (err.status == 400) {
+          return {
+            errorCode: 'INVALID_PARAMETER',
+            success: false,
+          };
+        }
       }
-
       return { errorCode: 'UNKNOWN_ERROR', success: false };
     } finally {
       setLoading(false);

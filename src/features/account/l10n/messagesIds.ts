@@ -35,6 +35,9 @@ export default makeMessages('feat.account', {
       conflictError: m(
         'An account with this email or phone number already exists.'
       ),
+      invalidParameter: m(
+        'Some details seem incorrect. Please review and try again.'
+      ),
       phoneError: m('Please enter a valid phone number.'),
       unkownError: m('Registration failed. Try again later.'),
     },

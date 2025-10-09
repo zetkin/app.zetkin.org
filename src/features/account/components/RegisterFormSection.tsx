@@ -87,6 +87,8 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                       setResultError('REGISTRATION_FAILED');
                     } else if (result.errorCode == 'CONFLICT_ERROR') {
                       setResultError('CONFLICT_ERROR');
+                    } else if (result.errorCode == 'INVALID_PARAMETER') {
+                      setResultError('INVALID_PARAMETER');
                     } else {
                       setResultError('UNKNOWN_ERROR');
                     }
@@ -110,6 +112,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   width="100%"
                 >
                   {(resultError === 'CONFLICT_ERROR' ||
+                    resultError === 'INVALID_PARAMETER' ||
                     resultError === 'UNKNOWN_ERROR') && (
                     <Box sx={{ mb: 2 }}>
                       {resultError == 'CONFLICT_ERROR' && (
@@ -124,6 +127,13 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                           appear
                           severity={'error'}
                           title={messages.register.error.unkownError()}
+                        />
+                      )}
+                      {resultError == 'INVALID_PARAMETER' && (
+                        <ZUIAlert
+                          appear
+                          severity={'error'}
+                          title={messages.register.error.invalidParameter()}
                         />
                       )}
                     </Box>
