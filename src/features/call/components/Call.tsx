@@ -347,9 +347,61 @@ const Call: FC = () => {
               borders={false}
               fullHeight
               renderContent={() => (
-                <ZUIText>Some general info about calling</ZUIText>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    paddingBottom: 10,
+                  }}
+                >
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.start.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.start.description}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.personInfo.title}
+                    />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={
+                        messageIds.callingInfo.tutorial.personInfo.description
+                      }
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.call.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.call.description}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.report.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.report.description}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.oldCalls.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.oldCalls.description}
+                    />
+                  </ZUIText>
+                </Box>
               )}
-              title="Info about calling"
+              title={messages.callingInfo.title()}
             />
           </Box>
           <Box

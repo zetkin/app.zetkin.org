@@ -56,6 +56,41 @@ export default makeMessages('feat.call', {
       switch: m('Switch to'),
     },
   },
+  callingInfo: {
+    title: m('How to call with Zetkin'),
+    tutorial: {
+      call: {
+        description: m(
+          'Depending on how you phonebank, you will either call using your regular phone or through the computer.'
+        ),
+        title: m('Make the phonecall'),
+      },
+      oldCalls: {
+        description: m(
+          'If you click the "Call log" button you can report a new call with a person you called before. It is particularly useful if someone calls you back.'
+        ),
+        title: m('Previous calls'),
+      },
+      personInfo: {
+        description: m(
+          "You will see the person's previous activities and details on the page."
+        ),
+        title: m('Get to know the person'),
+      },
+      report: {
+        description: m(
+          'After you have talked to the person you fill in the call report.'
+        ),
+        title: m('Report the call'),
+      },
+      start: {
+        description: m(
+          'You are about to start a calling. Read the assignment instructions and prepare. Then click "Call" to begin your first call.'
+        ),
+        title: m('Start calling'),
+      },
+    },
+  },
   error: {
     description: m(
       'Try refreshing the page. If error persists - try logging out and then in again. If error still persists, contact support.'

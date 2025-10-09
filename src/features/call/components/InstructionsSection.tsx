@@ -19,7 +19,9 @@ type Props = {
 const Instructions = ({ instructions }: { instructions: string }) => (
   <ZUIText component="div">
     {instructions ? (
-      <ZUIMarkdown markdown={instructions} />
+      <Box sx={{ paddingBottom: 10 }}>
+        <ZUIMarkdown markdown={instructions} />
+      </Box>
     ) : (
       <Msg id={messageIds.instructions.noInstructions} />
     )}
