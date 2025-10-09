@@ -60,7 +60,7 @@ const FloorMatrixToolbar: FC<Props> = ({
         gap: 1,
         p: 2,
         position: 'sticky',
-        pt: mode == 'select' ? 1 : 2,
+        pt: mode == 'select' ? 2 : 1,
       }}
     >
       {mode == 'select' && (

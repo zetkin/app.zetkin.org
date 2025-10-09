@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { range } from 'lodash';
 import { FC } from 'react';
 
@@ -13,6 +13,7 @@ import {
 } from 'features/areaAssignments/types';
 import FloorEditor from './FloorEditor';
 import { EditedFloor } from './types';
+import AddFloorButton from './AddFloorButton';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -94,7 +95,9 @@ const FloorMatrix: FC<Props> = ({
       }}
     >
       {!selecting && (
-        <Button
+        <AddFloorButton
+          label="Add floor above"
+          nextLevel={maxLevel + 1}
           onClick={() => {
             const lastDraft = draftFloors?.find(
               (draft) => draft.level == maxLevel
@@ -116,9 +119,7 @@ const FloorMatrix: FC<Props> = ({
 
             onEditChange([...(draftFloors || []), newFloor]);
           }}
-        >
-          Add floor above
-        </Button>
+        />
       )}
       {range(minLevel, maxLevel + 1)
         .reverse()
@@ -210,7 +211,9 @@ const FloorMatrix: FC<Props> = ({
           }
         })}
       {!selecting && (
-        <Button
+        <AddFloorButton
+          label="Add floor below"
+          nextLevel={minLevel - 1}
           onClick={() => {
             const lastDraft = draftFloors?.find(
               (draft) => draft.level == minLevel
@@ -231,9 +234,7 @@ const FloorMatrix: FC<Props> = ({
 
             onEditChange([...(draftFloors || []), newFloor]);
           }}
-        >
-          Add floor below
-        </Button>
+        />
       )}
     </Box>
   );

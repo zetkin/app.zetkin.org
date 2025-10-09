@@ -36,8 +36,8 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
           display: 'flex',
           gap: 0.5,
           justifyContent: 'stretch',
-          ml: GRID_SQUARE_WITH_GAP + 'px',
-          mt: GRID_GAP + 'px',
+          mb: GRID_GAP + 'px',
+          ml: GRID_SQUARE + 'px',
           paddingTop: GRID_GAP + 'px',
         }}
       >
