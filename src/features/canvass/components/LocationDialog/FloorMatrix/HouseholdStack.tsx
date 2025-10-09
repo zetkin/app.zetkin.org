@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 import { HouseholdItem } from './types';
 import HouseholdStackItem from './HouseholdStackItem';
+import { GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
 
 type Props = {
   expanded: boolean;
@@ -22,13 +23,13 @@ const HouseholdStack: FC<Props> = ({
   return (
     <Box>
       {householdItems.map((item, index) => {
-        const offset = index * 54;
+        const offset = index * GRID_SQUARE_WITH_GAP;
 
         return (
           <Box
             key={item.household.id}
             sx={{
-              height: 50,
+              height: GRID_SQUARE,
               left: expanded ? 0 : offset,
               position: 'absolute',
               right: expanded ? 0 : 'auto',
@@ -36,7 +37,7 @@ const HouseholdStack: FC<Props> = ({
               transition: expanded
                 ? 'left 0.2s ease-in, top 0.2s'
                 : 'left 0.2s, top 0.1s 0.1s',
-              width: expanded ? 'auto' : 54,
+              width: expanded ? 'auto' : GRID_SQUARE_WITH_GAP,
             }}
           >
             <HouseholdStackItem

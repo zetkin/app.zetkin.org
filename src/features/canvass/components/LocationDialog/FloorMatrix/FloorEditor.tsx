@@ -1,11 +1,12 @@
 import { Add, MoreHoriz, Remove } from '@mui/icons-material';
-import { Box, Divider, IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { FC, useState } from 'react';
 
 import range from 'utils/range';
 import { EditedFloor } from './types';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
 import HouseholdSquare from './HouseholdSquare';
+import { GRID_GAP, GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
 
 type Props = {
   draft: EditedFloor;
@@ -17,8 +18,7 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
   const { level, draftHouseholdCount, existingHouseholds } = draft;
 
   const ref = useResizeObserver((elem) => {
-    const gridUnit = 54;
-    setGridWidth(Math.floor(elem.clientWidth / gridUnit));
+    setGridWidth(Math.floor(elem.clientWidth / GRID_SQUARE_WITH_GAP));
   });
 
   const totalHouseholdCount = existingHouseholds.length + draftHouseholdCount;
@@ -29,19 +29,25 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
 
   return (
     <Box>
-      <Divider />
       <Box
         sx={{
           alignItems: 'center',
+          borderTop: '1px solid #eee',
           display: 'flex',
           gap: 0.5,
           justifyContent: 'stretch',
-          ml: '54px',
-          my: '2px',
+          ml: GRID_SQUARE_WITH_GAP + 'px',
+          mt: GRID_GAP + 'px',
+          paddingTop: GRID_GAP + 'px',
         }}
       >
         <input
-          style={{ fontSize: 20, height: 50, textAlign: 'center', width: 50 }}
+          style={{
+            fontSize: 20,
+            height: GRID_SQUARE,
+            textAlign: 'center',
+            width: GRID_SQUARE,
+          }}
           value={level}
         />
         <Box
@@ -75,9 +81,9 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
                   borderRadius: 1,
                   display: 'flex',
                   flexShrink: 0,
-                  height: 50,
+                  height: GRID_SQUARE,
                   justifyContent: 'center',
-                  width: 50,
+                  width: GRID_SQUARE,
                 }}
               >
                 <MoreHoriz />

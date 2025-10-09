@@ -1,9 +1,10 @@
 import { KeyboardArrowDown } from '@mui/icons-material';
-import { Box, Divider, IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { FC, useState } from 'react';
 
 import { HouseholdItem } from './types';
 import HouseholdStack from './HouseholdStack';
+import { GRID_GAP, GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
 
 type Props = {
   floor: number;
@@ -29,19 +30,24 @@ const FloorHouseholdGroup: FC<Props> = ({
   return (
     <Box
       sx={{
+        borderTop: '1px solid #eee',
         display: 'flex',
-        height: expanded ? 54 + householdItems.length * 54 : 54,
+        height: expanded
+          ? GRID_SQUARE_WITH_GAP + householdItems.length * GRID_SQUARE_WITH_GAP
+          : GRID_SQUARE_WITH_GAP + GRID_GAP,
+        paddingY: GRID_GAP + 'px',
         position: 'relative',
         transition: expanded ? 'height 0.2s' : 'height 0.2s 0.1s',
         width: '100%',
       }}
     >
-      <Divider />
       <Box
         sx={{
-          borderBottom: '1px solid #eee',
           display: 'flex',
-          height: expanded ? 54 + householdItems.length * 54 : 54,
+          height: expanded
+            ? GRID_SQUARE_WITH_GAP +
+              householdItems.length * GRID_SQUARE_WITH_GAP
+            : GRID_SQUARE_WITH_GAP,
           transition: 'height 0.2s',
           width: '100%',
         }}
@@ -51,9 +57,9 @@ const FloorHouseholdGroup: FC<Props> = ({
             sx={{
               alignItems: 'center',
               display: 'flex',
-              height: 50,
+              height: GRID_SQUARE,
               justifyContent: 'center',
-              width: 50,
+              width: GRID_SQUARE,
             }}
           >
             <IconButton onClick={() => setExpanded(!expanded)}>
@@ -86,9 +92,9 @@ const FloorHouseholdGroup: FC<Props> = ({
               alignItems: 'center',
               borderRadius: 1,
               display: 'flex',
-              height: 50,
+              height: GRID_SQUARE,
               justifyContent: 'center',
-              width: 50,
+              width: GRID_SQUARE,
             }}
           >
             {floor}
@@ -96,10 +102,10 @@ const FloorHouseholdGroup: FC<Props> = ({
         </Box>
         <Box
           sx={{
-            left: expanded ? 50 : 104,
+            left: expanded ? GRID_SQUARE : GRID_SQUARE + GRID_SQUARE_WITH_GAP,
             position: 'absolute',
             right: 0,
-            top: expanded ? 54 : 0,
+            top: expanded ? GRID_SQUARE_WITH_GAP : GRID_GAP,
             transition: 'left 0.3s, top 0.3s',
           }}
         >
