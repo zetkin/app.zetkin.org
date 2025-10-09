@@ -1,46 +1,119 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.call', {
-  activeEvents: {
-    alreadyBooked: m<{ name: string }>('{name} is already booked'),
-    noBookings: m<{ name: string }>('{name} has no bookings'),
-    signUp: m('Sign Up'),
-    undoSignUp: m('Undo Sign Up'),
-  },
-  instructions: {
-    title: m('Instructions'),
-  },
-  nav: {
-    backToHome: m('Back to home'),
-    startCalling: m('Start calling'),
-  },
-  prepare: {
-    activeEvents: m('Active events'),
-    edit: m('Edit this information?'),
-    editDescription: m(
-      'If something in this tab needs changing, write a message to the organizer in the report after finishing the call.'
-    ),
-    noActiveEvents: m('No active events.'),
-    noPreviousCalls: m('Never called'),
-    noPreviousEvents: m<{ name: string }>(
+  about: {
+    events: m<{ numEvents: number }>('{numEvents} events'),
+    noParticipation: m<{ name: string }>(
       '{name} never participated in any events.'
     ),
-    noSurveys: m('No surveys'),
-    noTags: m('No tags'),
-    previousCalls: m('There are previous calls.'),
-    previousCallsOfTarget: m<{ name: string }>('Previous calls to {name}.'),
-    previousEvents: m('Previous events'),
-    previousEventsOfTarget: m<{
-      eventTitle: string;
+    participation: m<{
+      events: JSX.Element;
       name: string;
-      numEvents: number;
-    }>(
-      '{name} participated in {numEvents} events, the most recent being {eventTitle} .'
+      titleAndTime: JSX.Element;
+    }>('{name} participated in {events}, the most recent being {titleAndTime}'),
+    previousActivityHeader: m('Previous activity'),
+    tagsHeader: m('Tags'),
+    title: m<{ name: string }>('About {name}'),
+  },
+  activities: {
+    description: m<{ name: string }>('Acting as {name}'),
+    filters: {
+      basic: {
+        alreadyIn: m('Already in'),
+        events: m('Events'),
+        surveys: m('Surveys'),
+        thisCall: m('This call'),
+      },
+      events: {
+        thisWeek: m('This week'),
+        today: m('Today'),
+        tomorrow: m('Tomorrow'),
+      },
+      organizations: {
+        noSelected: m('Organizations'),
+        selected: m<{ numOrgs: number }>('{numOrgs} orgs'),
+      },
+      projects: {
+        noSelected: m('Context'),
+        selected: m<{ numProjects: number }>('{numOrgs} projects'),
+      },
+    },
+    projects: {
+      wihoutProjectLabel: m('No project'),
+    },
+
+    title: m('Activities'),
+  },
+  callLog: {
+    openCallLogButton: m('Call log'),
+    previousCall: {
+      logNew: m('Log another call'),
+    },
+    searchLabel: m('Type to find'),
+    title: m('Call log'),
+    unfinishedCall: {
+      abandon: m('Abandon'),
+      switch: m('Switch to'),
+    },
+  },
+  callingInfo: {
+    title: m('How to call with Zetkin'),
+    tutorial: {
+      call: {
+        description: m(
+          'Depending on how you phonebank, you will either call using your regular phone or through the computer.'
+        ),
+        title: m('Make the phonecall'),
+      },
+      oldCalls: {
+        description: m(
+          'If you click the "Call log" button you can report a new call with a person you called before. It is particularly useful if someone calls you back.'
+        ),
+        title: m('Previous calls'),
+      },
+      personInfo: {
+        description: m(
+          "You will see the person's previous activities and details on the page."
+        ),
+        title: m('Get to know the person'),
+      },
+      report: {
+        description: m(
+          'After you have talked to the person you fill in the call report.'
+        ),
+        title: m('Report the call'),
+      },
+      start: {
+        description: m(
+          'You are about to start a calling. Read the assignment instructions and prepare. Then click "Call" to begin your first call.'
+        ),
+        title: m('Start calling'),
+      },
+    },
+  },
+  error: {
+    description: m(
+      'Try refreshing the page. If error persists - try logging out and then in again. If error still persists, contact support.'
     ),
-    summary: m('Summary'),
-    surveys: m('Surveys'),
-    tags: m('Tags'),
-    title: m('Personal info'),
+    title: m('An unexpected error occured.'),
+  },
+  header: {
+    primaryButton: {
+      [0]: m('Call'),
+      [1]: m('Finish & report'),
+      [2]: m('Send report'),
+      [3]: m('Next call'),
+    },
+    secondaryButton: {
+      [0]: m('Quit'),
+      [1]: m('Skip'),
+      [2]: m('Skip'),
+      [3]: m('Take a break'),
+    },
+  },
+  instructions: {
+    noInstructions: m('This assignment does not have any instructions.'),
+    title: m('Instructions'),
   },
   report: {
     steps: {
@@ -224,10 +297,31 @@ export default makeMessages('feat.call', {
     summary: {
       editButtonLabel: m('Edit'),
     },
+    title: m('Report'),
+  },
+  skipCallDialog: {
+    cancelButton: m('No, resume call'),
+    confirmButton: m<{ name: string }>('Yes, skip {name}?'),
+    title: m<{ name: string }>('Skip call with {name}?'),
   },
   stats: {
     callsMade: m('calls made'),
-    callsReached: m('successful calls'),
-    targetMatches: m('people in target group'),
+    description: m('This is how the assignment is going'),
+    inTargetGroup: m('people in target group'),
+    successful: m('successful'),
+    successfulCalls: m('successful calls'),
+    targets: m('targets'),
+    title: m('Assignment stats'),
+  },
+  summary: {
+    title: m('Woop woop!'),
+    unfinishedCallsMessage: m(
+      'But, before you move on: you have unfinished calls, deal with them!'
+    ),
+  },
+  switchedAssignmentsAlert: {
+    message: m<{ assignmentTitle: string }>(
+      'Switched assignments. You are now calling in {assignmentTitle}'
+    ),
   },
 });

@@ -16,6 +16,9 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import PreviousCallsInfo from './PreviousCallsInfo';
 import ZUIIcon from 'zui/components/ZUIIcon';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 
 type AboutSectionProps = {
   call: ZetkinCall | null;
@@ -26,7 +29,7 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
 
   return (
     <>
-      <Box display={isMobile ? 'block' : 'flex'} flexDirection="row" gap={2}>
+      <Box>
         <Box display="flex" flex={1} flexDirection="column" gap={1}>
           {call.target.phone && (
             <Box alignItems="center" display="flex" gap={1}>
@@ -59,16 +62,20 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
           flexDirection="column"
           gap={1}
           mt={isMobile ? 1 : 0}
+          paddingTop={1}
         >
-          {call.target.gender && (
-            <Box alignItems="center" display="flex" gap={1}>
-              <ZUIIcon color="secondary" icon={Transgender} size="small" />
-              {call.target.gender == 'm' && <ZUIText>Male</ZUIText>}
-              {call.target.gender == 'f' && <ZUIText>Female</ZUIText>}
-              {call.target.gender == 'o' && <ZUIText>Other</ZUIText>}
-              {call.target.gender == null && <ZUIText>Unknown</ZUIText>}
-            </Box>
-          )}
+          <Box alignItems="center" display="flex" gap={1}>
+            <ZUIIcon color="secondary" icon={Transgender} size="small" />
+            <ZUIText>
+              <Msg
+                id={
+                  call.target.gender
+                    ? globalMessageIds.genderOptions[call.target.gender]
+                    : globalMessageIds.genderOptions.unspecified
+                }
+              />
+            </ZUIText>
+          </Box>
           {(call.target.co_address || call.target.street_address) && (
             <Box alignItems="center" display="block" mt={isMobile ? 1 : 0}>
               <ZUIText display="flex">
@@ -88,7 +95,9 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
       </Box>
       {call.target.tags.length > 0 && (
         <>
-          <ZUIText variant="headingMd">Tags</ZUIText>
+          <ZUIText variant="headingMd">
+            <Msg id={messageIds.about.tagsHeader} />
+          </ZUIText>
           <Box alignItems="center" display="flex" gap={1}>
             {call.target.tags.map((tag) => {
               return <ZUITagChip key={tag.id} tag={tag} />;
@@ -96,25 +105,48 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
           </Box>
         </>
       )}
-      <ZUIText variant="headingMd">Previous activity</ZUIText>
+      <ZUIText variant="headingMd">
+        <Msg id={messageIds.about.previousActivityHeader} />
+      </ZUIText>
       {call.target.past_actions.num_actions > 0 && (
-        <ZUIText display="inline">
-          {`${call.target.first_name} participated in `}
-          <ZUIText display="inline" variant="bodyMdSemiBold">
-            {call.target.past_actions.num_actions} actions
-          </ZUIText>
-          {`, the most recent being `}
-          <ZUIText display="inline" variant="bodyMdSemiBold">
-            {call.target.past_actions.last_action?.title}
-          </ZUIText>{' '}
-          <ZUIRelativeTime
-            datetime={call.target.past_actions.last_action?.end_time || ''}
+        <ZUIText component="span" display="inline">
+          <Msg
+            id={messageIds.about.participation}
+            values={{
+              events: (
+                <ZUIText display="inline" variant="bodyMdSemiBold">
+                  <Msg
+                    id={messageIds.about.events}
+                    values={{
+                      numEvents: call.target.past_actions.num_actions,
+                    }}
+                  />
+                </ZUIText>
+              ),
+              name: call.target.first_name,
+              titleAndTime: (
+                <>
+                  <ZUIText display="inline" variant="bodyMdSemiBold">
+                    {call.target.past_actions.last_action?.title}
+                  </ZUIText>{' '}
+                  <ZUIRelativeTime
+                    datetime={
+                      call.target.past_actions.last_action?.end_time || ''
+                    }
+                  />
+                </>
+              ),
+            }}
           />
-          .
         </ZUIText>
       )}
       {call.target.past_actions.num_actions == 0 && (
-        <ZUIText color="secondary">{`${call.target.first_name} never participated in any actions.`}</ZUIText>
+        <ZUIText color="secondary">
+          <Msg
+            id={messageIds.about.noParticipation}
+            values={{ name: call.target.first_name }}
+          />
+        </ZUIText>
       )}
       <PreviousCallsInfo call={call} />
     </>
@@ -122,6 +154,7 @@ export const AboutContent = ({ call }: { call: ZetkinCall }) => {
 };
 
 const AboutSection: FC<AboutSectionProps> = ({ call }) => {
+  const messages = useMessages(messageIds);
   return (
     <ZUISection
       borders={false}
@@ -133,7 +166,7 @@ const AboutSection: FC<AboutSectionProps> = ({ call }) => {
 
         return <AboutContent call={call} />;
       }}
-      title={`About ${call?.target.first_name} ${call?.target.last_name}`}
+      title={messages.about.title({ name: call?.target.name || '' })}
     />
   );
 };

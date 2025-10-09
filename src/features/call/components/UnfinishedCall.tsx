@@ -6,6 +6,8 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type Props = {
   onAbandonCall: () => void;
@@ -18,6 +20,7 @@ const UnfinishedCall: FC<Props> = ({
   onSwitchToCall,
   unfinishedCall,
 }) => {
+  const messages = useMessages(messageIds);
   return (
     <Box
       key={unfinishedCall.id}
@@ -51,22 +54,19 @@ const UnfinishedCall: FC<Props> = ({
             lastName={unfinishedCall.target.last_name}
             size="medium"
           />
-
           <ZUIText noWrap variant="bodyMdSemiBold">
-            {unfinishedCall.target.first_name +
-              ' ' +
-              unfinishedCall.target.last_name}
+            {unfinishedCall.target.name}
           </ZUIText>
         </Box>
         <Box display="flex" gap={1}>
           <ZUIButton
-            label="Abandon"
+            label={messages.callLog.unfinishedCall.abandon()}
             onClick={() => onAbandonCall()}
             size="small"
             variant="tertiary"
           />
           <ZUIButton
-            label="Switch to"
+            label={messages.callLog.unfinishedCall.switch()}
             onClick={() => onSwitchToCall()}
             size="small"
             variant="primary"
