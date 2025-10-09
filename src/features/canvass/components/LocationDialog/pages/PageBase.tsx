@@ -8,6 +8,7 @@ type Props = {
   actions?: ReactNode;
   children?: ReactNode;
   color?: string | null;
+  fullWidth?: boolean;
   onBack?: () => void;
   onClose?: () => void;
   onEdit?: () => void;
@@ -19,6 +20,7 @@ const PageBase: FC<Props> = ({
   actions,
   children,
   color,
+  fullWidth = false,
   onBack,
   onClose,
   onEdit,
@@ -54,7 +56,7 @@ const PageBase: FC<Props> = ({
           overflowY: 'auto',
           position: 'relative',
           pt: 1,
-          px: 2,
+          px: fullWidth ? 0 : 2,
         }}
       >
         {children}
