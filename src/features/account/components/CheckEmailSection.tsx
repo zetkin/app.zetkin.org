@@ -13,7 +13,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 
 type CheckEmailSectionProps = {
   email: string;
-  onBack: () => void;
+  onBack: (email: string) => void;
 };
 
 const CheckEmailSection: FC<CheckEmailSectionProps> = ({ email, onBack }) => {
@@ -47,17 +47,19 @@ const CheckEmailSection: FC<CheckEmailSectionProps> = ({ email, onBack }) => {
               <ZUIText color="secondary" variant="headingLg">
                 <Msg id={messageIds.lostPassword.checkEmail} />
               </ZUIText>
-              <ZUIText color="secondary" variant="bodyMdRegular">
-                <Msg
-                  id={messageIds.lostPassword.descriptionCheck}
-                  values={{ email }}
-                />
-              </ZUIText>
+              <Box sx={{ textAlign: 'center' }}>
+                <ZUIText color="secondary" variant="bodyMdRegular">
+                  <Msg id={messageIds.lostPassword.descriptionCheck} />
+                </ZUIText>
+                <ZUIText color="secondary" variant="bodyMdSemiBold">
+                  {email}
+                </ZUIText>
+              </Box>
               <ZUIButton
                 fullWidth
                 label={messages.lostPassword.actions.sendLink()}
-                onClick={() => onBack()}
-                variant="primary"
+                onClick={() => onBack(email)}
+                variant="secondary"
               />
             </Box>
             <Box

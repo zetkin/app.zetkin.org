@@ -27,7 +27,9 @@ const LostPasswordPage: FC = () => {
       {success && submittedEmail ? (
         <CheckEmailSection
           email={submittedEmail}
-          onBack={() => setSuccess(false)}
+          onBack={(email) => {
+            setSuccess(false), setSubmittedEmail(email);
+          }}
         />
       ) : (
         <LostPasswordSection
@@ -35,6 +37,7 @@ const LostPasswordPage: FC = () => {
             setSubmittedEmail(email);
             setSuccess(true);
           }}
+          submittedEmail={submittedEmail}
         />
       )}
     </Suspense>
