@@ -5,6 +5,7 @@ import { FC, useState } from 'react';
 import range from 'utils/range';
 import { EditedFloor } from './types';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
+import HouseholdSquare from './HouseholdSquare';
 
 type Props = {
   draft: EditedFloor;
@@ -54,25 +55,16 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
         >
           {!!gridWidth &&
             range(discreetHouseholds).map((index) => {
-              const isExisting = index < existingHouseholds.length;
+              const existingHousehold = existingHouseholds[index];
+              const isDraft = !existingHousehold;
+
               return (
-                <Box
+                <HouseholdSquare
                   key={index}
-                  sx={{
-                    alignItems: 'center',
-                    backgroundColor: 'black',
-                    borderRadius: 1,
-                    color: 'white',
-                    display: 'flex',
-                    flexShrink: 0,
-                    height: 50,
-                    justifyContent: 'center',
-                    opacity: isExisting ? 0.5 : 1.0,
-                    width: 50,
-                  }}
-                >
-                  {index + 1}
-                </Box>
+                  active={isDraft}
+                  color={existingHousehold?.color}
+                  content={index + 1}
+                />
               );
             })}
           {mustUseEllipsis && (
@@ -90,22 +82,10 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
               >
                 <MoreHoriz />
               </Box>
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  backgroundColor: 'black',
-                  borderRadius: 1,
-                  color: 'white',
-                  display: 'flex',
-                  flexShrink: 0,
-                  height: 50,
-                  justifyContent: 'center',
-                  opacity: draftHouseholdCount > 0 ? 1 : 0.5,
-                  width: 50,
-                }}
-              >
-                {totalHouseholdCount}
-              </Box>
+              <HouseholdSquare
+                active={draftHouseholdCount > 0}
+                content={totalHouseholdCount}
+              />
             </>
           )}
         </Box>

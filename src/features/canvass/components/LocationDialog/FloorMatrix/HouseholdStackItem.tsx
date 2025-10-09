@@ -1,9 +1,10 @@
-import { Check, Close, Edit } from '@mui/icons-material';
+import { Edit } from '@mui/icons-material';
 import { Box, Button, IconButton, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { HouseholdItem } from './types';
+import HouseholdSquare from './HouseholdSquare';
 
 type Props = {
   delay: number;
@@ -24,10 +25,6 @@ const HouseholdStackItem: FC<Props> = ({
 }) => {
   const { household, lastVisitSuccess, lastVisitTime } = item;
 
-  const defaultColor = 'black';
-  const color =
-    item.household.color == 'clear' ? defaultColor : item.household.color;
-
   return (
     <Box
       onClick={() => onClick()}
@@ -37,39 +34,11 @@ const HouseholdStackItem: FC<Props> = ({
         gap: 1,
       }}
     >
-      <Box
-        sx={{
-          alignItems: 'center',
-          backgroundColor:
-            selectionMode == 'selected' || selectionMode == 'unselected'
-              ? `rgba(from ${color} r g b /${
-                  selectionMode == 'selected' ? '1.0' : '0.1'
-                })`
-              : color,
-          borderColor: color,
-          borderRadius: 1,
-          borderStyle: 'solid',
-          borderWidth: 2,
-          display: 'flex',
-          height: 50,
-          justifyContent: 'center',
-          margin: 0,
-          width: 50,
-        }}
-      >
-        {lastVisitSuccess && (
-          <Check
-            fontSize="small"
-            sx={{ color: selectionMode == 'unselected' ? color : 'white' }}
-          />
-        )}
-        {!!lastVisitTime && !lastVisitSuccess && (
-          <Close
-            fontSize="small"
-            sx={{ color: selectionMode == 'unselected' ? color : 'white' }}
-          />
-        )}
-      </Box>
+      <HouseholdSquare
+        active={selectionMode == 'selected' || selectionMode == 'default'}
+        color={item.household.color}
+        content={lastVisitSuccess ? 'check' : lastVisitTime ? 'cross' : null}
+      />
       {expanded && (
         <Box
           sx={{
