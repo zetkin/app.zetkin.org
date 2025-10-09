@@ -44,6 +44,18 @@ export default makeMessages('feat.call', {
 
     title: m('Activities'),
   },
+  callLog: {
+    openCallLogButton: m('Call log'),
+    previousCall: {
+      logNew: m('Log another call'),
+    },
+    searchLabel: m('Type to find'),
+    title: m('Call log'),
+    unfinishedCall: {
+      abandon: m('Abandon'),
+      switch: m('Switch to'),
+    },
+  },
   error: {
     description: m(
       'Try refreshing the page. If error persists - try logging out and then in again. If error still persists, contact support.'
@@ -250,6 +262,12 @@ export default makeMessages('feat.call', {
     summary: {
       editButtonLabel: m('Edit'),
     },
+    title: m('Report'),
+  },
+  skipCallDialog: {
+    cancelButton: m('No, resume call'),
+    confirmButton: m<{ name: string }>('Yes, skip {name}?'),
+    title: m<{ name: string }>('Skip call with {name}?'),
   },
   stats: {
     callsMade: m('calls made'),
@@ -259,5 +277,16 @@ export default makeMessages('feat.call', {
     successfulCalls: m('successful calls'),
     targets: m('targets'),
     title: m('Assignment stats'),
+  },
+  summary: {
+    title: m('Woop woop!'),
+    unfinishedCallsMessage: m(
+      'But, before you move on: you have unfinished calls, deal with them!'
+    ),
+  },
+  switchedAssignmentsAlert: {
+    message: m<{ assignmentTitle: string }>(
+      'Switched assignments. You are now calling in {assignmentTitle}'
+    ),
   },
 });

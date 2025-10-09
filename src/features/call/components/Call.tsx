@@ -40,7 +40,7 @@ import ActivitiesSection from '../components/ActivitiesSection';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import useCurrentAssignment from '../hooks/useCurrentAssignment';
 import useMyAssignments from '../hooks/useMyAssignments';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
 const Call: FC = () => {
@@ -493,7 +493,7 @@ const Call: FC = () => {
                   />
                 );
               }}
-              title="Report"
+              title={messages.report.title()}
             />
           </Box>
           <Box
@@ -529,7 +529,7 @@ const Call: FC = () => {
               <ZUIText color="secondary" variant="headingSm">
                 {unfinishedCalls.length == 0
                   ? callSummarySentence(call?.target.first_name ?? '', report)
-                  : 'But, before you move on: you have unfinished calls, deal with them!'}
+                  : messages.summary.unfinishedCallsMessage()}
               </ZUIText>
             </Box>
             {unfinishedCalls.length == 0 && <DesktopStats stats={stats} />}
@@ -581,7 +581,7 @@ const Call: FC = () => {
               })}
             >
               <ZUIButton
-                label="Call log"
+                label={messages.callLog.openCallLogButton()}
                 onClick={() => setCallLogOpen(true)}
                 variant="secondary"
               />
@@ -630,13 +630,15 @@ const Call: FC = () => {
       <ZUIModal
         open={skipCallModalOpen}
         primaryButton={{
-          label: 'No, resume call',
+          label: messages.skipCallDialog.cancelButton(),
           onClick: () => {
             setSkipCallModalOpen(false);
           },
         }}
         secondaryButton={{
-          label: `Yes, skip ${call?.target.name}`,
+          label: messages.skipCallDialog.confirmButton({
+            name: call?.target.name || '',
+          }),
           onClick: () => {
             if (call) {
               skipCurrentCall(assignment.id, call.id);
@@ -646,7 +648,7 @@ const Call: FC = () => {
           },
         }}
         size="small"
-        title={`Skip call to ${call?.target.name}?`}
+        title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
       />
       <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
@@ -691,7 +693,12 @@ const Call: FC = () => {
           })}
         >
           {switchedTo && (
-            <ZUIText>{`Switched assignments. You are now calling in ${switchedTo.title}`}</ZUIText>
+            <ZUIText>
+              <Msg
+                id={messageIds.switchedAssignmentsAlert.message}
+                values={{ assignmentTitle: switchedTo.title }}
+              />
+            </ZUIText>
           )}
         </Alert>
       </Snackbar>
