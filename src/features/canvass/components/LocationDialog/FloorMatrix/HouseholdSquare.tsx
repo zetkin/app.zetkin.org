@@ -23,10 +23,10 @@ const HouseholdSquare: FC<Props> = ({ active, color, content }) => {
       sx={{
         alignItems: 'center',
         backgroundColor: backgroundColor,
+        backgroundImage: color
+          ? `linear-gradient(to bottom, ${color} 0px, ${color} 8px, transparent 8px, transparent 100%)`
+          : null,
         borderRadius: 1,
-        borderTopColor: color || 'transparent',
-        borderTopStyle: 'solid',
-        borderTopWidth: 8,
         color: 'white',
         display: 'flex',
         flexGrow: 0,
