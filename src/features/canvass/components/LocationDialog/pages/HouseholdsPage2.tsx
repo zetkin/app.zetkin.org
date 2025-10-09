@@ -1,6 +1,6 @@
 import { range } from 'lodash';
 import { FC, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 import PageBase from './PageBase';
 import {
@@ -42,10 +42,24 @@ const HouseholdsPage2: FC<Props> = ({
     location.organization_id,
     location.id
   );
-  const [draftFloors, setDraftFloors] = useState<null | EditedFloor[]>(null);
+
+  const shouldStartInEditMode = households.length == 0;
+  const initialDraft = {
+    draftHouseholdCount: 1,
+    existingHouseholds: [],
+    level: 1,
+  };
+
+  const [draftFloors, setDraftFloors] = useState<null | EditedFloor[]>(
+    shouldStartInEditMode ? [initialDraft] : null
+  );
   const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
     null | number[]
   >(null);
+
+  const hasDrafts = !!draftFloors?.length;
+  const hasHouseholds = !!households.length;
+  const isEmpty = !hasDrafts && !hasHouseholds;
 
   return (
     <PageBase
@@ -62,61 +76,87 @@ const HouseholdsPage2: FC<Props> = ({
           minHeight: '100%',
         }}
       >
-        {location.num_known_households == 0 && (
-          <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
-            <Msg id={messageIds.households.page.empty} />
-          </Typography>
-        )}
-        <Box
-          sx={{
-            marginTop: 'auto',
-          }}
-        >
-          <FloorMatrix
-            assignment={assignment}
-            draftFloors={draftFloors}
-            location={location}
-            onClickVisit={onClickVisit}
-            onEditChange={(drafts) => {
-              setDraftFloors(drafts);
+        {households.length == 0 && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              m: 2,
+              textAlign: 'center',
             }}
-            onSelectHousehold={onSelectHousehold}
-            onUpdateSelection={(selectedIds) =>
-              setSelectedHouseholdIds(selectedIds)
+          >
+            <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
+              <Msg id={messageIds.households.page.empty} />
+            </Typography>
+            {!draftFloors?.length && (
+              <Button
+                onClick={() => setDraftFloors([initialDraft])}
+                variant="contained"
+              >
+                Add households
+              </Button>
+            )}
+          </Box>
+        )}
+        {!isEmpty && (
+          <Box
+            sx={{
+              marginTop: 'auto',
+            }}
+          >
+            <FloorMatrix
+              assignment={assignment}
+              draftFloors={draftFloors}
+              location={location}
+              onClickVisit={onClickVisit}
+              onEditChange={(drafts) => {
+                setDraftFloors(drafts);
+              }}
+              onSelectHousehold={onSelectHousehold}
+              onUpdateSelection={(selectedIds) =>
+                setSelectedHouseholdIds(selectedIds)
+              }
+              selectedHouseholdIds={selectedHouseholdIds}
+            />
+          </Box>
+        )}
+        {!isEmpty && (
+          <FloorMatrixToolbar
+            draftFloors={draftFloors}
+            onBulkEdit={(householdIds) => onBulkEdit(householdIds)}
+            onBulkVisit={(householdIds) => onBulkVisit(householdIds)}
+            onEditCancelled={() => {
+              setDraftFloors(null);
+            }}
+            onEditSave={async () => {
+              const newHouseholds = draftFloors?.flatMap((draft) => {
+                const firstNewIndex = draft.existingHouseholds.length;
+                const lastNewIndex = firstNewIndex + draft.draftHouseholdCount;
+                return range(firstNewIndex, lastNewIndex).map((index) => ({
+                  level: draft.level,
+                  title: 'Household ' + (index + 1),
+                }));
+              });
+
+              if (newHouseholds?.length) {
+                await addHouseholds(newHouseholds);
+              }
+
+              setDraftFloors(null);
+            }}
+            onEditStart={() => setDraftFloors([])}
+            onSelectAll={() =>
+              setSelectedHouseholdIds(
+                households.map((household) => household.id)
+              )
             }
+            onSelectCancelled={() => setSelectedHouseholdIds(null)}
+            onSelectNone={() => setSelectedHouseholdIds([])}
+            onSelectStart={() => setSelectedHouseholdIds([])}
             selectedHouseholdIds={selectedHouseholdIds}
           />
-        </Box>
-        <FloorMatrixToolbar
-          draftFloors={draftFloors}
-          onBulkEdit={(householdIds) => onBulkEdit(householdIds)}
-          onBulkVisit={(householdIds) => onBulkVisit(householdIds)}
-          onEditCancelled={() => setDraftFloors(null)}
-          onEditSave={async () => {
-            const newHouseholds = draftFloors?.flatMap((draft) => {
-              const firstNewIndex = draft.existingHouseholds.length;
-              const lastNewIndex = firstNewIndex + draft.draftHouseholdCount;
-              return range(firstNewIndex, lastNewIndex).map((index) => ({
-                level: draft.level,
-                title: 'Household ' + (index + 1),
-              }));
-            });
-
-            if (newHouseholds?.length) {
-              await addHouseholds(newHouseholds);
-            }
-
-            setDraftFloors(null);
-          }}
-          onEditStart={() => setDraftFloors([])}
-          onSelectAll={() =>
-            setSelectedHouseholdIds(households.map((household) => household.id))
-          }
-          onSelectCancelled={() => setSelectedHouseholdIds(null)}
-          onSelectNone={() => setSelectedHouseholdIds([])}
-          onSelectStart={() => setSelectedHouseholdIds([])}
-          selectedHouseholdIds={selectedHouseholdIds}
-        />
+        )}
       </Box>
     </PageBase>
   );

@@ -76,6 +76,11 @@ const FloorMatrix: FC<Props> = ({
     ...households.map((household) => household.level),
   ];
 
+  const hasFloors = !!floorLevels.length;
+  if (!hasFloors) {
+    return null;
+  }
+
   const minLevel = Math.min(...floorLevels);
   const maxLevel = Math.max(...floorLevels);
   const editing = !!draftFloors;
@@ -144,6 +149,7 @@ const FloorMatrix: FC<Props> = ({
             if (editing) {
               return (
                 <FloorEditor
+                  key={floor}
                   draft={
                     draftFloor || {
                       draftHouseholdCount: 0,
