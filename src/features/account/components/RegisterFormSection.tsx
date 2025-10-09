@@ -60,7 +60,9 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              height: '100%',
+              gap: 2,
+              justifyContent: 'space-between',
+              minHeight: isMobile ? '90vh' : '60vh',
             }}
           >
             <form
@@ -102,7 +104,6 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   flexDirection: 'column',
                   flexGrow: 1,
                   gap: showExtraFields ? 2 : 1,
-                  overflowY: { md: 'visible', xs: 'auto' },
                   pt: resultError ? 0 : 1,
                 }}
               >
@@ -246,16 +247,10 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
 
             <Box
               sx={{
-                bottom: { md: 'auto', xs: 0 },
                 display: 'flex',
                 flexDirection: 'column',
+                flexShrink: 0,
                 gap: 2,
-                left: { md: 'auto', xs: 0 },
-                mt: { md: 25, xs: 0 },
-                position: { md: 'static', xs: 'absolute' },
-                px: isMobile ? 2 : 0,
-                py: isMobile ? 2 : 0,
-                right: { md: 'auto', xs: 0 },
               }}
             >
               <AccountFooter />
