@@ -36,12 +36,14 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const isMobile = useIsMobile();
   const intl = useIntl();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
@@ -280,7 +282,9 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           gap={1}
           maxWidth="100%"
           padding={1}
-          sx={{ overflowX: 'auto' }}
+          sx={{
+            ...(isMobile ? { overflowX: 'auto' } : { flexWrap: 'wrap' }),
+          }}
         >
           {isFiltered && (
             <ZUIFilterButton
