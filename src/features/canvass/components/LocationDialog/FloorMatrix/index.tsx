@@ -91,8 +91,20 @@ const FloorMatrix: FC<Props> = ({
       {!selecting && (
         <Button
           onClick={() => {
+            const lastDraft = draftFloors?.find(
+              (draft) => draft.level == maxLevel
+            );
+
+            const lastLevelHouseholds = households.filter(
+              (household) => household.level == maxLevel
+            );
+
+            const numDraftsOnLastLevel = lastDraft?.draftHouseholdCount ?? 0;
+            const numHouseholdsOnLastLevel =
+              numDraftsOnLastLevel + lastLevelHouseholds.length;
+
             const newFloor: EditedFloor = {
-              draftHouseholdCount: 0,
+              draftHouseholdCount: numHouseholdsOnLastLevel,
               existingHouseholds: [],
               level: maxLevel + 1,
             };
@@ -194,8 +206,19 @@ const FloorMatrix: FC<Props> = ({
       {!selecting && (
         <Button
           onClick={() => {
+            const lastDraft = draftFloors?.find(
+              (draft) => draft.level == minLevel
+            );
+
+            const lastLevelHouseholds = households.filter(
+              (household) => household.level == minLevel
+            );
+            const numDraftsOnLastLevel = lastDraft?.draftHouseholdCount ?? 0;
+            const numHouseholdsOnLastLevel =
+              numDraftsOnLastLevel + lastLevelHouseholds.length;
+
             const newFloor: EditedFloor = {
-              draftHouseholdCount: 0,
+              draftHouseholdCount: numHouseholdsOnLastLevel,
               existingHouseholds: [],
               level: minLevel - 1,
             };
