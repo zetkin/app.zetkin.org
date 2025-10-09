@@ -24,17 +24,21 @@ type Props = {
   onClickVisit: (householdId: number) => void;
   onClose: () => void;
   onSelectHousehold: (householdId: number) => void;
+  onSelectHouseholds: (householdIds: null | number[]) => void;
+  selectedHouseholdIds: null | number[];
 };
 
 const HouseholdsPage2: FC<Props> = ({
   assignment,
+  location,
   onBack,
   onBulkEdit,
   onBulkVisit,
   onClickVisit,
   onClose,
   onSelectHousehold,
-  location,
+  onSelectHouseholds,
+  selectedHouseholdIds,
 }) => {
   const messages = useMessages(messageIds);
   const households = useHouseholds(location.organization_id, location.id);
@@ -53,9 +57,6 @@ const HouseholdsPage2: FC<Props> = ({
   const [draftFloors, setDraftFloors] = useState<null | EditedFloor[]>(
     shouldStartInEditMode ? [initialDraft] : null
   );
-  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
-    null | number[]
-  >(null);
 
   const hasDrafts = !!draftFloors?.length;
   const hasHouseholds = !!households.length;
@@ -115,7 +116,7 @@ const HouseholdsPage2: FC<Props> = ({
               }}
               onSelectHousehold={onSelectHousehold}
               onUpdateSelection={(selectedIds) =>
-                setSelectedHouseholdIds(selectedIds)
+                onSelectHouseholds(selectedIds)
               }
               selectedHouseholdIds={selectedHouseholdIds}
             />
@@ -147,13 +148,11 @@ const HouseholdsPage2: FC<Props> = ({
             }}
             onEditStart={() => setDraftFloors([])}
             onSelectAll={() =>
-              setSelectedHouseholdIds(
-                households.map((household) => household.id)
-              )
+              onSelectHouseholds(households.map((household) => household.id))
             }
-            onSelectCancelled={() => setSelectedHouseholdIds(null)}
-            onSelectNone={() => setSelectedHouseholdIds([])}
-            onSelectStart={() => setSelectedHouseholdIds([])}
+            onSelectCancelled={() => onSelectHouseholds(null)}
+            onSelectNone={() => onSelectHouseholds([])}
+            onSelectStart={() => onSelectHouseholds([])}
             selectedHouseholdIds={selectedHouseholdIds}
           />
         )}

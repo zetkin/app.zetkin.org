@@ -113,9 +113,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
   );
-  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<number[]>(
-    []
-  );
+  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
+    null | number[]
+  >(null);
 
   return (
     <Box height="100%">
@@ -164,6 +164,10 @@ const LocationDialog: FC<LocationDialogProps> = ({
             setSelectedHouseholdId(householdId);
             goto('household');
           }}
+          onSelectHouseholds={(householdIds: null | number[]) =>
+            setSelectedHouseholdIds(householdIds)
+          }
+          selectedHouseholdIds={selectedHouseholdIds}
         />
         <HouseholdsPage
           key="households"
@@ -191,7 +195,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onSelectHouseholds={(householdIds: number[]) =>
             setSelectedHouseholdIds(householdIds)
           }
-          selectedHouseholdIds={selectedHouseholdIds}
+          selectedHouseholdIds={selectedHouseholdIds || []}
         />
         <Box key="household" height="100%">
           {selectedHouseholdId && (
@@ -271,14 +275,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
           )}
         </Box>
         <Box key="bulkHouseholdVisits" height="100%">
-          {selectedHouseholdIds.length > 0 && (
+          {!!selectedHouseholdIds?.length && (
             <BulkHouseholdVisitsPage
               metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses) => {
                 await reportHouseholdVisits(selectedHouseholdIds, responses);
                 setShowSparkle(true);
-                setSelectedHouseholdIds([]);
+                setSelectedHouseholdIds(null);
                 back();
               }}
               selectedHouseholsdIds={selectedHouseholdIds}
@@ -286,14 +290,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
           )}
         </Box>
         <Box key="bulkEditHouseholds" height="100%">
-          {selectedHouseholdIds.length > 0 && (
+          {!!selectedHouseholdIds?.length && (
             <BulkEditHouseholdsPage
               householdIds={selectedHouseholdIds}
               onBack={() => back()}
               onSave={async (updates) => {
                 await editHouseholds(selectedHouseholdIds, updates);
-                setSelectedHouseholdIds([]);
-                goto('households');
+                setSelectedHouseholdIds(null);
+                back();
               }}
             />
           )}
