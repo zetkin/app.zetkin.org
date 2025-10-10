@@ -24,6 +24,7 @@ import sortMetrics from 'features/canvass/utils/sortMetrics';
 import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 import BulkEditHouseholdsPage from './pages/BulkEditHouseholdsPage';
 import useEditHouseholds from 'features/canvass/hooks/useEditHouseholds';
+import HouseholdsPage2 from './pages/HouseholdsPage2';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -37,6 +38,7 @@ type LocationDialogStep =
   | 'edit'
   | 'createHouseholds'
   | 'households'
+  | 'households2'
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
@@ -111,9 +113,9 @@ const LocationDialog: FC<LocationDialogProps> = ({
   const [selectedHouseholdId, setSelectedHouseholdId] = useState<number | null>(
     null
   );
-  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<number[]>(
-    []
-  );
+  const [selectedHouseholdIds, setSelectedHouseholdIds] = useState<
+    null | number[]
+  >(null);
 
   return (
     <Box height="100%">
@@ -127,7 +129,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           location={location}
           onClose={onClose}
           onEdit={() => goto('edit')}
-          onHouseholds={() => goto('households')}
+          onHouseholds={(useNew) => goto(useNew ? 'households2' : 'households')}
           onVisit={() => goto('locationVisit')}
         />
         <EditLocationPage
@@ -139,6 +141,33 @@ const LocationDialog: FC<LocationDialogProps> = ({
             await updateLocation({ description, title });
             back();
           }}
+        />
+        <HouseholdsPage2
+          key="households2"
+          assignment={assignment}
+          location={location}
+          onBack={() => back()}
+          onBulkEdit={(householdIds) => {
+            setSelectedHouseholdIds(householdIds);
+            goto('bulkEditHouseholds');
+          }}
+          onBulkVisit={(households) => {
+            setSelectedHouseholdIds(households);
+            goto('bulkHouseholdVisits');
+          }}
+          onClickVisit={(householdId) => {
+            setSelectedHouseholdId(householdId);
+            goto('householdVisit');
+          }}
+          onClose={onClose}
+          onSelectHousehold={(householdId: number) => {
+            setSelectedHouseholdId(householdId);
+            goto('household');
+          }}
+          onSelectHouseholds={(householdIds: null | number[]) =>
+            setSelectedHouseholdIds(householdIds)
+          }
+          selectedHouseholdIds={selectedHouseholdIds}
         />
         <HouseholdsPage
           key="households"
@@ -166,7 +195,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           onSelectHouseholds={(householdIds: number[]) =>
             setSelectedHouseholdIds(householdIds)
           }
-          selectedHouseholdIds={selectedHouseholdIds}
+          selectedHouseholdIds={selectedHouseholdIds || []}
         />
         <Box key="household" height="100%">
           {selectedHouseholdId && (
@@ -246,14 +275,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
           )}
         </Box>
         <Box key="bulkHouseholdVisits" height="100%">
-          {selectedHouseholdIds.length > 0 && (
+          {!!selectedHouseholdIds?.length && (
             <BulkHouseholdVisitsPage
               metrics={metrics}
               onBack={() => back()}
               onLogVisit={async (responses) => {
                 await reportHouseholdVisits(selectedHouseholdIds, responses);
                 setShowSparkle(true);
-                setSelectedHouseholdIds([]);
+                setSelectedHouseholdIds(null);
                 back();
               }}
               selectedHouseholsdIds={selectedHouseholdIds}
@@ -261,14 +290,14 @@ const LocationDialog: FC<LocationDialogProps> = ({
           )}
         </Box>
         <Box key="bulkEditHouseholds" height="100%">
-          {selectedHouseholdIds.length > 0 && (
+          {!!selectedHouseholdIds?.length && (
             <BulkEditHouseholdsPage
               householdIds={selectedHouseholdIds}
               onBack={() => back()}
               onSave={async (updates) => {
                 await editHouseholds(selectedHouseholdIds, updates);
-                setSelectedHouseholdIds([]);
-                goto('households');
+                setSelectedHouseholdIds(null);
+                back();
               }}
             />
           )}

@@ -8,6 +8,7 @@ type Props = {
   actions?: ReactNode;
   children?: ReactNode;
   color?: string | null;
+  fullWidth?: boolean;
   onBack?: () => void;
   onClose?: () => void;
   onEdit?: () => void;
@@ -19,6 +20,7 @@ const PageBase: FC<Props> = ({
   actions,
   children,
   color,
+  fullWidth = false,
   onBack,
   onClose,
   onEdit,
@@ -48,7 +50,15 @@ const PageBase: FC<Props> = ({
         title={title}
       />
       <Divider />
-      <Box flexGrow={1} p={2} sx={{ overflowY: 'auto', position: 'relative' }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          overflowY: 'auto',
+          position: 'relative',
+          pt: 1,
+          px: fullWidth ? 0 : 2,
+        }}
+      >
         {children}
       </Box>
       {actions && (

@@ -49,7 +49,9 @@ export default makeMessages('feat.organizations', {
       privacyPolicy: m('Privacy policy'),
     },
     header: {
+      calendarLinkCopied: m('Successfully copied calendar link'),
       connect: m('Connect'),
+      copyIcsUrl: m('Copy calendar subscription URL'),
       follow: m('Follow'),
       login: m('Login & connect'),
       unfollow: m('Unfollow'),

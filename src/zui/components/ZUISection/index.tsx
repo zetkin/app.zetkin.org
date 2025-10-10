@@ -44,6 +44,18 @@ type SubSectionType =
 
 type SectionBase = {
   /**
+   * If the section should have rounded gray borders.
+   * Defaults to "true".
+   */
+  borders?: boolean;
+
+  /**
+   * If the section should grow to the height of its parent.
+   * Defaults to "false".
+   */
+  fullHeight?: boolean;
+
+  /**
    * The subtitle of the section.
    */
   subtitle?: string;
@@ -201,7 +213,7 @@ const SubSection: FC<{ subSection: SubSectionType }> = ({ subSection }) => {
 };
 
 const ZUISection: FC<SectionProps> = (props) => {
-  const { title, subtitle } = props;
+  const { title, subtitle, fullHeight = false, borders = true } = props;
 
   const hasFullWidthHeaderContent = isSectionWithFullWidthHeaderContent(props);
   const hasRightHeaderContent = isSectionWithRightHeaderContent(props);
@@ -217,8 +229,11 @@ const ZUISection: FC<SectionProps> = (props) => {
     <Box
       sx={(theme) => ({
         backgroundColor: theme.palette.common.white,
-        border: `0.063rem solid ${theme.palette.dividers.main}`,
-        borderRadius: '0.25rem',
+        border: borders ? `0.063rem solid ${theme.palette.dividers.main}` : '',
+        borderRadius: borders ? '0.25rem' : '',
+        display: 'flex',
+        flexDirection: 'column',
+        height: fullHeight ? '100%' : 'auto',
         padding: !hasSubSections ? '1.25rem' : '',
       })}
     >
@@ -321,6 +336,7 @@ const ZUISection: FC<SectionProps> = (props) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
+            height: fullHeight ? '100%' : '',
             width: '100%',
           }}
         >

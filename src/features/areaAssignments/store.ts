@@ -37,7 +37,7 @@ export interface AreaAssignmentsStoreSlice {
   areasByAssignmentId: Record<string, RemoteList<Zetkin2Area>>;
   assigneesByAssignmentId: Record<
     number,
-    RemoteList<ZetkinAreaAssignee & { id: number }>
+    RemoteList<ZetkinAreaAssignee & { id: string }>
   >;
   locationsByAssignmentId: Record<number, RemoteList<ZetkinLocation>>;
   locationsByAssignmentIdAndAreaId: Record<string, RemoteList<ZetkinLocation>>;
@@ -156,7 +156,7 @@ const areaAssignmentSlice = createSlice({
 
       remoteItemUpdated(state.assigneesByAssignmentId[assignee.assignment_id], {
         ...assignee,
-        id: assignee.user_id,
+        id: `${assignee.user_id}/${assignee.area_id}`,
       });
 
       const hasStatsItem = !!state.areaStatsByAssignmentId[
@@ -198,7 +198,10 @@ const areaAssignmentSlice = createSlice({
       const [assignmentId, sessions] = action.payload;
 
       state.assigneesByAssignmentId[assignmentId] = remoteListLoaded(
-        sessions.map((session) => ({ ...session, id: session.user_id }))
+        sessions.map((session) => ({
+          ...session,
+          id: `${session.user_id}/${session.area_id}`,
+        }))
       );
     },
     assignmentAreasLoad: (state, action: PayloadAction<number>) => {

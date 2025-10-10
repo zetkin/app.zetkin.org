@@ -66,7 +66,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     if (errorMessageRef.current) {
       errorMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, []);
+  }, [errorMessageRef.current]);
 
   useEffect(() => {
     if (status == 'submitted' || status == 'error') {
