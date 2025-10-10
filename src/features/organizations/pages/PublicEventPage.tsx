@@ -368,7 +368,7 @@ const DateAndLocation: FC<{
             onClick={(ev) => {
               ev.target.panTo(ev.lngLat, { animate: true });
             }}
-            RTLTextPlugin="https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js"
+            RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
             style={{ height: 200, width: '100%' }}
           >
             <Marker

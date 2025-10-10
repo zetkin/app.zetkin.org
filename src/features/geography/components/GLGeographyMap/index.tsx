@@ -128,7 +128,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
             ref={(map) => setMap(map?.getMap() ?? null)}
             initialViewState={{ bounds }}
             mapStyle={env.vars.MAPLIBRE_STYLE}
-            RTLTextPlugin="https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.3.0/dist/mapbox-gl-rtl-text.js"
+            RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
           >
             <Areas areas={areasExceptSelected} />
             {!!drawingPoints && <DrawingArea drawingPoints={drawingPoints} />}
