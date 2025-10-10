@@ -166,6 +166,11 @@ const FloorMatrix: FC<Props> = ({
                       newDraft,
                     ]);
                   }}
+                  onDelete={() =>
+                    onEditChange(
+                      draftFloors.filter((oldDraft) => oldDraft.level != floor)
+                    )
+                  }
                 />
               );
             } else {
@@ -203,6 +208,11 @@ const FloorMatrix: FC<Props> = ({
                       draftFloors.map((oldDraft) =>
                         newDraft.level == oldDraft.level ? newDraft : oldDraft
                       )
+                    )
+                  }
+                  onDelete={() =>
+                    onEditChange(
+                      draftFloors.filter((oldDraft) => oldDraft.level != floor)
                     )
                   }
                 />

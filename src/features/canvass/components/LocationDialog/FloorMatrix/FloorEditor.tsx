@@ -11,9 +11,10 @@ import { GRID_GAP, GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
 type Props = {
   draft: EditedFloor;
   onChange: (draft: EditedFloor) => void;
+  onDelete: () => void;
 };
 
-const FloorEditor: FC<Props> = ({ draft, onChange }) => {
+const FloorEditor: FC<Props> = ({ draft, onChange, onDelete }) => {
   const [gridWidth, setGridWidth] = useState(3);
   const { level, draftHouseholdCount, existingHouseholds } = draft;
 
@@ -97,13 +98,20 @@ const FloorEditor: FC<Props> = ({ draft, onChange }) => {
         </Box>
         <Box sx={{ flexGrow: 0, flexShrink: 0 }}>
           <IconButton
-            disabled={draft.draftHouseholdCount == 0}
-            onClick={() =>
-              onChange({
-                ...draft,
-                draftHouseholdCount: draft.draftHouseholdCount - 1,
-              })
+            disabled={
+              draft.existingHouseholds.length > 0 &&
+              draft.draftHouseholdCount == 0
             }
+            onClick={() => {
+              if (totalHouseholdCount == 0) {
+                onDelete();
+              } else {
+                onChange({
+                  ...draft,
+                  draftHouseholdCount: draft.draftHouseholdCount - 1,
+                });
+              }
+            }}
           >
             <Remove />
           </IconButton>
