@@ -67,4 +67,11 @@ export default makeMessages('feat.account', {
     title: m('Reset password'),
     validation: m('Password must be at least 6 characters long.'),
   },
+  verify: {
+    description: m(
+      'Before you can continue using Zetkin you have to verify your email address. We have sent a message to your email containing a verification link. Click the link to verify your email address. Be sure to check your spam folder if you cannot find the email, or re-send it using the button below.'
+    ),
+    sendVerification: m('Send a new verification'),
+    title: m('Verify your email address'),
+  },
 });
