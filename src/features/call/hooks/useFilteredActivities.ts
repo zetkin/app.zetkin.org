@@ -33,7 +33,9 @@ export default function useFilteredActivities(orgId: number) {
     eventDateFilterState,
     orgIdsToFilterEventsBy,
     projectIdsToFilterActivitiesBy,
-  } = useAppSelector((state) => state.call.filters);
+  } = useAppSelector(
+    (state) => state.call.lanes[state.call.activeLaneIndex].filters
+  );
   const idsOfEventsRespondedTo = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].respondedEventIds
   );

@@ -90,6 +90,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "18.3.0-canary-763612647-20240126",
     "react-dropzone": "^14.2.1",
+    "react-error-boundary": "^6.0.0",
     "react-final-form": "^6.5.9",
     "react-intl": "^6.1.0",
     "react-leaflet": "^4.2.1",
