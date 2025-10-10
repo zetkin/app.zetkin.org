@@ -129,9 +129,13 @@ const FloorMatrix: FC<Props> = ({
       )}
       {range(minLevel, maxLevel + 1)
         .reverse()
-        .map((floor) => {
+        .map((floor, thisFloorIndex) => {
           const householdsOnFloor = householdsByFloor[floor] || [];
           const draftFloor = draftFloors?.find((draft) => draft.level == floor);
+
+          const hasNoHouseholdsFromBefore = households.length == 0;
+          const isBottomFloor = floor == minLevel;
+          const isInitialFloor = isBottomFloor && hasNoHouseholdsFromBefore;
 
           if (editing) {
             return (
@@ -144,6 +148,7 @@ const FloorMatrix: FC<Props> = ({
                     level: floor,
                   }
                 }
+                levelEnabled={isInitialFloor}
                 onChange={(newDraft) => {
                   onEditChange([
                     ...draftFloors.filter(
@@ -157,6 +162,18 @@ const FloorMatrix: FC<Props> = ({
                     draftFloors.filter((oldDraft) => oldDraft.level != floor)
                   )
                 }
+                onLevelChange={(newLevel) => {
+                  onEditChange(
+                    draftFloors.map((oldDraft, oldDraftIndex) => {
+                      const diff = oldDraftIndex - thisFloorIndex;
+                      const offsetLevel = newLevel - diff;
+                      return {
+                        ...oldDraft,
+                        level: offsetLevel,
+                      };
+                    })
+                  );
+                }}
               />
             );
           } else {

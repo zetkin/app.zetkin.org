@@ -1,6 +1,6 @@
 import { Add, MoreHoriz, Remove } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import range from 'utils/range';
 import { EditedFloor } from './types';
@@ -10,13 +10,26 @@ import { GRID_GAP, GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
 
 type Props = {
   draft: EditedFloor;
+  levelEnabled: boolean;
   onChange: (draft: EditedFloor) => void;
   onDelete: () => void;
+  onLevelChange: (newLevel: number) => void;
 };
 
-const FloorEditor: FC<Props> = ({ draft, onChange, onDelete }) => {
+const FloorEditor: FC<Props> = ({
+  draft,
+  levelEnabled,
+  onChange,
+  onDelete,
+  onLevelChange,
+}) => {
   const [gridWidth, setGridWidth] = useState(3);
-  const { level, draftHouseholdCount, existingHouseholds } = draft;
+  const [level, setLevel] = useState(draft.level);
+  const { draftHouseholdCount, existingHouseholds } = draft;
+
+  useEffect(() => {
+    setLevel(draft.level);
+  }, [draft.level]);
 
   const ref = useResizeObserver((elem) => {
     setGridWidth(Math.floor(elem.clientWidth / GRID_SQUARE_WITH_GAP));
@@ -42,15 +55,37 @@ const FloorEditor: FC<Props> = ({ draft, onChange, onDelete }) => {
           paddingTop: GRID_GAP + 'px',
         }}
       >
-        <input
-          style={{
-            fontSize: 20,
-            height: GRID_SQUARE,
-            textAlign: 'center',
-            width: GRID_SQUARE,
+        <form
+          onSubmit={(ev) => {
+            ev.preventDefault();
+            if (level != draft.level) {
+              onLevelChange(level);
+            }
           }}
-          value={level}
-        />
+        >
+          <input
+            defaultValue={level}
+            disabled={!levelEnabled}
+            onBlur={() => {
+              if (level != draft.level) {
+                onLevelChange(level);
+              }
+            }}
+            onChange={(ev) => {
+              const newLevel = parseInt(ev.currentTarget.value);
+              if (!isNaN(newLevel)) {
+                setLevel(newLevel);
+              }
+            }}
+            style={{
+              fontSize: 20,
+              height: GRID_SQUARE,
+              textAlign: 'center',
+              width: GRID_SQUARE,
+            }}
+            type="number"
+          />
+        </form>
         <Box
           ref={ref}
           sx={{
