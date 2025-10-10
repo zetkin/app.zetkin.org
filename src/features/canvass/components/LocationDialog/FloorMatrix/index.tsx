@@ -124,10 +124,36 @@ const FloorMatrix: FC<Props> = ({
       {range(minLevel, maxLevel + 1)
         .reverse()
         .map((floor) => {
-          const householdsOnFloor = householdsByFloor[floor];
+          const householdsOnFloor = householdsByFloor[floor] || [];
           const draftFloor = draftFloors?.find((draft) => draft.level == floor);
 
-          if (householdsOnFloor) {
+          if (editing) {
+            return (
+              <FloorEditor
+                key={floor}
+                draft={
+                  draftFloor || {
+                    draftHouseholdCount: 0,
+                    existingHouseholds: householdsOnFloor,
+                    level: floor,
+                  }
+                }
+                onChange={(newDraft) => {
+                  onEditChange([
+                    ...draftFloors.filter(
+                      (oldDraft) => newDraft.level != oldDraft.level
+                    ),
+                    newDraft,
+                  ]);
+                }}
+                onDelete={() =>
+                  onEditChange(
+                    draftFloors.filter((oldDraft) => oldDraft.level != floor)
+                  )
+                }
+              />
+            );
+          } else {
             const householdItems = householdsOnFloor.map((household) => {
               const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
@@ -147,77 +173,25 @@ const FloorMatrix: FC<Props> = ({
               };
             });
 
-            if (editing) {
-              return (
-                <FloorEditor
-                  key={floor}
-                  draft={
-                    draftFloor || {
-                      draftHouseholdCount: 0,
-                      existingHouseholds: householdsOnFloor,
-                      level: floor,
-                    }
-                  }
-                  onChange={(newDraft) => {
-                    onEditChange([
-                      ...draftFloors.filter(
-                        (oldDraft) => newDraft.level != oldDraft.level
-                      ),
-                      newDraft,
-                    ]);
-                  }}
-                  onDelete={() =>
-                    onEditChange(
-                      draftFloors.filter((oldDraft) => oldDraft.level != floor)
-                    )
-                  }
-                />
-              );
-            } else {
-              return (
-                <FloorHouseholdGroup
-                  key={floor}
-                  floor={floor}
-                  householdItems={householdItems}
-                  onClick={(householdId) => onSelectHousehold(householdId)}
-                  onClickVisit={(householdId) => onClickVisit(householdId)}
-                  onDeselectIds={(ids) =>
-                    onUpdateSelection(
-                      selectedHouseholdIds?.filter((id) => !ids.includes(id)) ??
-                        null
-                    )
-                  }
-                  onSelectIds={(ids) =>
-                    onUpdateSelection([...(selectedHouseholdIds || []), ...ids])
-                  }
-                  selectedIds={selectedHouseholdIds}
-                />
-              );
-            }
-          } else if (editing) {
-            const draftFloor = draftFloors.find(
-              (draft) => draft.level == floor
+            return (
+              <FloorHouseholdGroup
+                key={floor}
+                floor={floor}
+                householdItems={householdItems}
+                onClick={(householdId) => onSelectHousehold(householdId)}
+                onClickVisit={(householdId) => onClickVisit(householdId)}
+                onDeselectIds={(ids) =>
+                  onUpdateSelection(
+                    selectedHouseholdIds?.filter((id) => !ids.includes(id)) ??
+                      null
+                  )
+                }
+                onSelectIds={(ids) =>
+                  onUpdateSelection([...(selectedHouseholdIds || []), ...ids])
+                }
+                selectedIds={selectedHouseholdIds}
+              />
             );
-
-            if (draftFloor) {
-              return (
-                <FloorEditor
-                  draft={draftFloor}
-                  onChange={(newDraft) =>
-                    onEditChange(
-                      draftFloors.map((oldDraft) =>
-                        newDraft.level == oldDraft.level ? newDraft : oldDraft
-                      )
-                    )
-                  }
-                  onDelete={() =>
-                    onEditChange(
-                      draftFloors.filter((oldDraft) => oldDraft.level != floor)
-                    )
-                  }
-                />
-              );
-            }
           }
         })}
       {!selecting && (
