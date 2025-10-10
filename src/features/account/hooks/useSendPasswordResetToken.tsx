@@ -30,7 +30,7 @@ export function useSendPasswordResetToken(): UseSendPasswordResetTokenReturn {
       return { success: true };
     } catch (err) {
       if (err instanceof ApiClientError && err.status == 404) {
-        return { errorCode: 'USER_NOT_FOUND', success: false };
+        return { success: true };
       }
       return { errorCode: 'UNKNOWN_ERROR', success: false };
     } finally {

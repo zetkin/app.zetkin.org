@@ -16,13 +16,17 @@ import AccountFooter from './AccountFooter';
 
 type LostPasswordSectionProps = {
   onSuccess: (email: string) => void;
+  submittedEmail: string | null;
 };
 
-const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
+const LostPasswordSection: FC<LostPasswordSectionProps> = ({
+  submittedEmail,
+  onSuccess,
+}) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const { sendPasswordResetToken, loading } = useSendPasswordResetToken();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(submittedEmail || '');
   const [emailError, setEmailError] = useState<string | null>(null);
   return (
     <ZUISection
@@ -71,13 +75,6 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                 <ZUIText variant="bodyMdRegular">
                   <Msg id={messageIds.lostPassword.description} />
                 </ZUIText>
-                {emailError == 'USER_NOT_FOUND' && (
-                  <ZUIAlert
-                    appear
-                    severity={'error'}
-                    title={messages.lostPassword.errors.noUser()}
-                  />
-                )}
                 {emailError == 'UNKNOWN_ERROR' && (
                   <ZUIAlert
                     appear
@@ -86,21 +83,20 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({ onSuccess }) => {
                     title={messages.lostPassword.errors.unknownErrorTitle()}
                   />
                 )}
-                {emailError == 'INVALID_EMAIL' && (
-                  <ZUIAlert
-                    appear
-                    description={messages.lostPassword.errors.invalidEmail()}
-                    severity={'error'}
-                    title={messages.lostPassword.errors.invalidEmailTitle()}
-                  />
-                )}
                 <ZUITextField
+                  error={emailError == 'INVALID_EMAIL' ? true : false}
+                  helperText={
+                    emailError == 'INVALID_EMAIL'
+                      ? messages.lostPassword.errors.invalidEmail()
+                      : ''
+                  }
                   label={'Email'}
                   onChange={(newValue) => {
                     setEmail(newValue);
                     setEmailError(null);
                   }}
                   size="large"
+                  value={email}
                 />
                 <ZUIButton
                   actionType="submit"
