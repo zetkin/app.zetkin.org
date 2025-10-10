@@ -9,6 +9,7 @@ import { GRID_GAP, GRID_SQUARE, GRID_SQUARE_WITH_GAP } from './constants';
 type Props = {
   floor: number;
   householdItems: HouseholdItem[];
+  initialExpanded?: boolean;
   onClick: (householdId: number) => void;
   onClickVisit: (householdId: number) => void;
   onDeselectIds: (ids: number[]) => void;
@@ -19,13 +20,14 @@ type Props = {
 const FloorHouseholdGroup: FC<Props> = ({
   floor,
   householdItems,
+  initialExpanded = false,
   onClick,
   onClickVisit,
   onSelectIds,
   onDeselectIds,
   selectedIds,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(initialExpanded);
 
   return (
     <Box

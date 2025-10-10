@@ -87,6 +87,12 @@ const FloorMatrix: FC<Props> = ({
   const editing = !!draftFloors;
   const selecting = !!selectedHouseholdIds;
 
+  const hasOnlyLevelZero = minLevel == 0 && maxLevel == 0;
+  const unlikelyToBeSingleFloorInRealLife = households.length > 8;
+  const householdsLikelyCreatedWithoutFloors =
+    hasOnlyLevelZero && unlikelyToBeSingleFloorInRealLife;
+  const shouldStartExpanded = householdsLikelyCreatedWithoutFloors;
+
   return (
     <Box
       sx={{
@@ -178,6 +184,7 @@ const FloorMatrix: FC<Props> = ({
                 key={floor}
                 floor={floor}
                 householdItems={householdItems}
+                initialExpanded={shouldStartExpanded}
                 onClick={(householdId) => onSelectHousehold(householdId)}
                 onClickVisit={(householdId) => onClickVisit(householdId)}
                 onDeselectIds={(ids) =>
