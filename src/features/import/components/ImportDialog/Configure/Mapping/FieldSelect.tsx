@@ -1,11 +1,13 @@
 import { FC } from 'react';
-import { ListSubheader, MenuItem, Select } from '@mui/material';
+import { Box, ListSubheader, MenuItem, Select } from '@mui/material';
+import { BadgeOutlined } from '@mui/icons-material';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Option } from 'features/import/hooks/useColumn';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import { Column, ColumnKind } from 'features/import/utils/types';
 import { Msg, useMessages } from 'core/i18n';
+import useImportID from 'features/import/hooks/useImportID';
 
 interface FieldSelectProps {
   clearConfiguration: () => void;
@@ -25,6 +27,21 @@ const FieldSelect: FC<FieldSelectProps> = ({
   optionAlreadySelected,
 }) => {
   const messages = useMessages(messageIds);
+  const { importID, updateImportID, resetImportIDIfNeeded } = useImportID();
+
+  const fieldOptionsSorted = [
+    ...fieldOptions,
+    {
+      disabled: false,
+      label: messages.configuration.mapping.externalID(),
+      value: 'ext_id',
+    },
+    {
+      disabled: false,
+      label: 'Email',
+      value: 'email',
+    },
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
   const getValue = () => {
     if (column.originalColumn.kind == ColumnKind.FIELD) {
@@ -71,7 +88,17 @@ const FieldSelect: FC<FieldSelectProps> = ({
         sx={{ paddingLeft: 4 }}
         value={value}
       >
-        {label}
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <span>{label}</span>
+          {importID == value ? (
+            <BadgeOutlined color="secondary" fontSize="small" />
+          ) : undefined}
+        </Box>
       </MenuItem>
     );
   };
@@ -82,6 +109,18 @@ const FieldSelect: FC<FieldSelectProps> = ({
       label={messages.configuration.mapping.selectZetkinField()}
       onChange={(event) => {
         clearConfiguration();
+
+        if (event.target.value === '' || event.target.value === undefined) {
+          resetImportIDIfNeeded(column.originalColumn, importID);
+          onChange({
+            kind: ColumnKind.UNKNOWN,
+            selected: false,
+          });
+          return;
+        }
+
+        resetImportIDIfNeeded(column.originalColumn, importID);
+
         if (event.target.value == 'ext_id') {
           onChange({
             idField: 'ext_id',
@@ -92,6 +131,14 @@ const FieldSelect: FC<FieldSelectProps> = ({
         } else if (event.target.value == 'id') {
           onChange({
             idField: 'id',
+            kind: ColumnKind.ID_FIELD,
+            selected: true,
+          });
+          onConfigureStart();
+          updateImportID(event.target.value);
+        } else if (event.target.value == 'email') {
+          onChange({
+            idField: 'email',
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
@@ -154,18 +201,12 @@ const FieldSelect: FC<FieldSelectProps> = ({
         value: 'id',
       })}
 
-      {listOption({
-        disabled: false,
-        label: messages.configuration.mapping.externalID(),
-        value: 'ext_id',
-      })}
-
-      {fieldOptions.length > 0 && (
+      {fieldOptionsSorted.length > 0 && (
         <ListSubheader>
           <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.fields} />
         </ListSubheader>
       )}
-      {fieldOptions.map((option) => listOption(option))}
+      {fieldOptionsSorted.map((option) => listOption(option))}
 
       <ListSubheader>
         <Msg id={messageIds.configuration.mapping.zetkinFieldGroups.other} />

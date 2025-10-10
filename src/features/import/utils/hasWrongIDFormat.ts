@@ -22,8 +22,12 @@ export default function hasWrongIDFormat(
       return true;
     }
     const stringValue = value.toString();
-    const parsedToNumber = Number(stringValue);
 
+    if (column.idField === 'email') {
+      return !stringValue.includes('@');
+    }
+
+    const parsedToNumber = Number(stringValue);
     if (isNaN(parsedToNumber)) {
       return true;
     } else {
