@@ -19,7 +19,7 @@ export function UseSendVerification(): UseSendVerificationProps {
   const sendVerification = async (): Promise<SendVerificationStatus> => {
     setLoading(true);
     try {
-      await apiClient.post(`https://www.zetk.in/verify/resend`, {});
+      await apiClient.post(`/verify/resend`, {});
       return { success: true };
     } catch (err) {
       return { errorCode: 'UNKNOWN_ERROR', success: false };
