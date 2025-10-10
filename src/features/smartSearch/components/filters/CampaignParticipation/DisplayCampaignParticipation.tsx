@@ -9,6 +9,7 @@ import {
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import UnderlinedActivityTitle from './UnderlinedActivityTitle';
 import UnderlinedCampaignTitle from './UnderlinedCampaignTitle';
+import UnderlinedEventTitle from './UnderlinedEventTitle';
 import UnderlinedLocationTitle from './UnderlinedLocationTitle';
 import UnderlinedMsg from '../../UnderlinedMsg';
 import { useNumericRouteParams } from 'core/hooks';
@@ -31,6 +32,7 @@ const DisplayCampaignParticipation = ({
     campaign: campId,
     activity: activityId,
     location: locationId,
+    event: eventId,
   } = config;
   const op = filter.op || OPERATION.ADD;
   const timeFrame = getTimeFrameWithConfig({
@@ -55,6 +57,11 @@ const DisplayCampaignParticipation = ({
           <UnderlinedCampaignTitle campId={campId} orgId={orgId} />
         ) : (
           <UnderlinedMsg id={localMessageIds.campaignSelect.any} />
+        ),
+        eventSelect: eventId ? (
+          <UnderlinedEventTitle eventId={eventId} orgId={orgId} />
+        ) : (
+          <UnderlinedMsg id={localMessageIds.eventSelect.any} />
         ),
         haveSelect: <Msg id={localMessageIds.haveSelect[operator]} />,
         locationSelect: locationId ? (

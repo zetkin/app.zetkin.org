@@ -277,6 +277,7 @@ export interface CampaignParticipationConfig {
   campaign?: number;
   activity?: number;
   location?: number;
+  event?: number;
   after?: string;
   before?: string;
 }

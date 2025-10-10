@@ -7,8 +7,10 @@ import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { truncateOnMiddle } from 'utils/stringUtils';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
+import useEventActivities from 'features/campaigns/hooks/useEventActivities';
 import useEventLocations from 'features/events/hooks/useEventLocations';
 import useEventTypes from 'features/events/hooks/useEventTypes';
+import eventsMessageIds from 'features/events/l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import useOrgIdsFromOrgScope from 'features/smartSearch/hooks/useOrgIdsFromOrgScope';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -23,6 +25,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 
 const localMessageIds = messageIds.filters.campaignParticipation;
+const eventsLocalMessageIds = eventsMessageIds.common;
 
 const DEFAULT_VALUE = 'any';
 
@@ -68,9 +71,11 @@ const CampaignParticipation = ({
 }: CampaignParticipationProps): JSX.Element => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(localMessageIds);
+  const eventsMessages = useMessages(eventsLocalMessageIds);
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<CampaignParticipationConfig>(initialFilter, {
+      event: undefined,
       operator: 'in',
       organizations: [orgId],
       state: 'booked',
@@ -92,6 +97,14 @@ const CampaignParticipation = ({
   const locationsSorted = locations.sort((l1, l2) => {
     return l1.title.localeCompare(l2.title);
   });
+  const eventsActivitiesFuture = useEventActivities(orgId);
+  const events =
+    eventsActivitiesFuture.data?.map((activity) => activity.data) || [];
+  const sortedEvents = events.sort((e1, e2) => {
+    const title1 = e1.title || eventsMessages.noTitle();
+    const title2 = e2.title || eventsMessages.noTitle();
+    return title1.localeCompare(title2);
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -109,11 +122,13 @@ const CampaignParticipation = ({
       campaign,
       activity,
       location,
+      event,
       organizations,
     } = filter.config;
     setConfig({
       activity,
       campaign,
+      event,
       location,
       operator,
       organizations,
@@ -144,6 +159,14 @@ const CampaignParticipation = ({
       setConfig(removeKey(filter.config, 'location'));
     } else {
       setConfig({ ...filter.config, location: +locationValue });
+    }
+  };
+
+  const handleEventSelectChange = (eventValue: string) => {
+    if (eventValue === DEFAULT_VALUE) {
+      setConfig(removeKey(filter.config, 'event'));
+    } else {
+      setConfig({ ...filter.config, event: +eventValue });
     }
   };
 
@@ -268,6 +291,48 @@ const CampaignParticipation = ({
                 }}
                 value={filter.config.campaign || DEFAULT_VALUE}
               />
+            ),
+            eventSelect: (
+              <StyledSelect
+                onChange={(e) => handleEventSelectChange(e.target.value)}
+                SelectProps={{
+                  renderValue: function getLabel(value) {
+                    return value === DEFAULT_VALUE ? (
+                      <Msg id={localMessageIds.eventSelect.any} />
+                    ) : (
+                      <Msg
+                        id={localMessageIds.eventSelect.event}
+                        values={{
+                          event: truncateOnMiddle(
+                            sortedEvents.find((e) => e.id === value)?.title ||
+                              eventsMessages.noTitle(),
+                            40
+                          ),
+                        }}
+                      />
+                    );
+                  },
+                }}
+                value={filter.config.event || DEFAULT_VALUE}
+              >
+                <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
+                  <Msg id={localMessageIds.eventSelect.any} />
+                </MenuItem>
+                {sortedEvents.map((e) => (
+                  <MenuItem key={e.id} value={e.id}>
+                    <Tooltip
+                      placement="right-start"
+                      title={
+                        e.title && e.title.length >= 40
+                          ? e.title
+                          : e.title || ''
+                      }
+                    >
+                      <Box>{e.title || eventsMessages.noTitle()}</Box>
+                    </Tooltip>
+                  </MenuItem>
+                ))}
+              </StyledSelect>
             ),
             haveSelect: (
               <StyledSelect

@@ -252,6 +252,10 @@ export default makeMessages('feat.smartSearch', {
           'project "{campaign}"'
         ),
       },
+      eventSelect: {
+        any: m('any event'),
+        event: m<{ event: ReactElement | string }>('event "{event}"'),
+      },
       examples: {
         one: m(
           "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
@@ -269,12 +273,13 @@ export default makeMessages('feat.smartSearch', {
         addRemoveSelect: ReactElement;
         bookedSelect: ReactElement;
         campaignSelect: ReactElement;
+        eventSelect: ReactElement;
         haveSelect: ReactElement;
         locationSelect: ReactElement;
         statusSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for {eventSelect} in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
       ),
       locationSelect: {
         any: m('any location'),
