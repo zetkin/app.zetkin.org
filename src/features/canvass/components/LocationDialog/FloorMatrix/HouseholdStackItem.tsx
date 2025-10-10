@@ -1,5 +1,4 @@
-import { Edit } from '@mui/icons-material';
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -94,9 +93,6 @@ const HouseholdStackItem: FC<Props> = ({
             >
               Visit
             </Button>
-            <IconButton>
-              <Edit />
-            </IconButton>
           </Box>
         </Box>
       )}
