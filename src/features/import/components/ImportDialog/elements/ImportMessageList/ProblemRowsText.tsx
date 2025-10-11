@@ -9,14 +9,14 @@ type Props = {
   rows: number[];
 };
 
-const ProblemRowsText: FC<Props> = ({ breakpoint = 8, percentage, rows,  }) => {
+const ProblemRowsText: FC<Props> = ({ breakpoint = 8, percentage, rows }) => {
   if (rows.length == 0) {
     return null;
   } else if (rows.length == 1) {
     return percentage ? (
       <Msg
         id={messageIds.preflight.messages.common.singleRowPerc}
-        values={{ row: rows[0], percentage }}
+        values={{ percentage, row: rows[0] }}
       />
     ) : (
       <Msg
