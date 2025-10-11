@@ -27,7 +27,6 @@ export default function useLocalStorage<T>(
 }
 
 function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
-function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
   const isBrowser = typeof window !== 'undefined';
   const stringValue = isBrowser ? localStorage.getItem(key) : null;
 
@@ -35,12 +34,10 @@ function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
     const newItem: StoredValue<T> = {
       timestamp: Date.now(),
       value: defaultValue,
-    };
+    }
     if (isBrowser) {
       localStorage.setItem(key, JSON.stringify(newItem));
-      localStorage.setItem(key, JSON.stringify(newItem));
     }
-    return newItem;
     return newItem;
   }
 
