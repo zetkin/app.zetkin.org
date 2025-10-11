@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 interface StoredValue<T> {
-  value: T;
   timestamp: number;
+  value: T;
 }
 
 export default function useLocalStorage<T>(
@@ -15,8 +15,8 @@ export default function useLocalStorage<T>(
 
   const updateValue = (newValue: T) => {
     const newItem: StoredValue<T> = {
-      value: newValue,
       timestamp: Date.now(),
+      value: newValue,
     };
     localStorage.setItem(key, JSON.stringify(newItem));
     setValue(newValue);
@@ -27,17 +27,20 @@ export default function useLocalStorage<T>(
 }
 
 function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
+function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
   const isBrowser = typeof window !== 'undefined';
   const stringValue = isBrowser ? localStorage.getItem(key) : null;
 
   if (!isBrowser || !stringValue) {
     const newItem: StoredValue<T> = {
-      value: defaultValue,
       timestamp: Date.now(),
+      value: defaultValue,
     };
     if (isBrowser) {
       localStorage.setItem(key, JSON.stringify(newItem));
+      localStorage.setItem(key, JSON.stringify(newItem));
     }
+    return newItem;
     return newItem;
   }
 
@@ -47,9 +50,9 @@ function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
     if (parsed && parsed.value !== undefined && parsed.timestamp) {
       return parsed;
     } else {
-      return { value: parsed as T, timestamp: Date.now() };
+      return { timestamp: Date.now(), value: parsed as T };
     }
   } catch {
-    return { value: defaultValue, timestamp: Date.now() };
+    return { timestamp: Date.now(), value: defaultValue };
   }
 }
