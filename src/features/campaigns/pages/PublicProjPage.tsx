@@ -250,7 +250,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                     geojsonToFilterBy: [],
                   })
                 );
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
             />
           )}
@@ -290,7 +290,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
                     dateFilterState: null,
                   })
                 );
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
               variant="secondary"
             />
@@ -394,20 +394,15 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         open={drawerContent == 'eventTypes'}
       >
         <List>
-          {eventTypeFilter.eventTypes.map((eventType) => (
-            <ListItem
-              key={eventTypeFilter.getLabelFromEventType(eventType)}
-              sx={{ justifyContent: 'space-between' }}
-            >
+          {eventTypeFilter.eventTypeLabels.map((eventType) => (
+            <ListItem key={eventType} sx={{ justifyContent: 'space-between' }}>
               <Box alignItems="center" display="flex">
-                <ZUIText>
-                  {eventTypeFilter.getLabelFromEventType(eventType)}
-                </ZUIText>
+                <ZUIText>{eventType}</ZUIText>
               </Box>
               <Switch
-                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventTypeLabel(eventType)}
                 onChange={() => {
-                  eventTypeFilter.toggleEventType(eventType);
+                  eventTypeFilter.toggleEventTypeLabel(eventType);
                 }}
               />
             </ListItem>

@@ -46,8 +46,4 @@ const truncateOnMiddle = (str: string, maxLength: number) => {
 export const isInteger = (str: string): boolean =>
   Number.isInteger(parseFloat(str));
 
-const toSentenceCase = (str: string): string => {
-  return str ? `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}` : str;
-};
-
-export { getEllipsedString, stringToBool, truncateOnMiddle, toSentenceCase };
+export { getEllipsedString, stringToBool, truncateOnMiddle };

@@ -1,21 +1,22 @@
 import { useMemo, useCallback } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import { toSentenceCase } from 'utils/stringUtils';
 import { useMessages } from 'core/i18n';
 
 interface EventWithActivity {
   activity: { title: string } | null;
 }
 
-const getLabelFromEventType = (eventType: string | null) => {
-  return eventType === null ? 'Uncategorized' : eventType;
+const NULL_EVENT_TYPE = 'Uncategorized';
+
+// Get the hook's internal eventType representation from the event
+const getEventTypeFromEvent = (event: EventWithActivity) => {
+  const title = event.activity?.title ?? NULL_EVENT_TYPE;
+  return title.trim();
 };
 
-const getEventTypeFromEvent = (event: EventWithActivity) => {
-  const title = event.activity?.title ?? null;
-  return title ? toSentenceCase(title) : null;
-};
+// Lowercase strings are considered equal: "My Type", "My type" and "MY TYPE" will be deduplicated.
+const normalizeEventType = (eventType: string) => eventType.toLowerCase();
 
 /**
  * @param events - Array of events with activity titles to extract types from
@@ -24,71 +25,89 @@ const getEventTypeFromEvent = (event: EventWithActivity) => {
 export const useEventTypeFilter = (
   events: EventWithActivity[],
   state: {
-    eventTypesToFilterBy: (string | null)[];
-    setEventTypesToFilterBy: (eventTypes: (string | null)[]) => void;
+    eventTypeLabelsToFilterBy: string[];
+    setEventTypeLabelsToFilterBy: (eventTypes: string[]) => void;
   }
 ) => {
-  const eventTypes = useMemo(() => {
-    const uniqueTypes = new Set(events.map(getEventTypeFromEvent));
-    return Array.from(uniqueTypes).sort((a, b) => {
-      if (a === null) {
-        return 1;
+  // Map that translates the hook's internal eventType to the deduplicated eventTypeLabel.
+  // First occurrence wins!
+  const eventTypeToLabelMap = useMemo(() => {
+    const map = new Map<string, string>();
+    const normalizedLookup = new Map<string, string>();
+
+    for (const event of events) {
+      const eventType = getEventTypeFromEvent(event);
+
+      if (!map.has(eventType)) {
+        const normalizedKey = normalizeEventType(eventType);
+        const existingLabel = normalizedLookup.get(normalizedKey);
+
+        if (!existingLabel) {
+          normalizedLookup.set(normalizedKey, eventType);
+          map.set(eventType, eventType);
+        } else {
+          map.set(eventType, existingLabel);
+        }
       }
-      if (b === null) {
-        return -1;
-      }
-      return a.localeCompare(b);
-    });
-  }, [events, getEventTypeFromEvent]);
+    }
+
+    return map;
+  }, [events]);
+
+  const eventTypeLabels = useMemo(() => {
+    const uniqueLabels = new Set(eventTypeToLabelMap.values());
+    return Array.from(uniqueLabels).sort((a, b) => a.localeCompare(b));
+  }, [eventTypeToLabelMap]);
 
   const messages = useMessages(messageIds.filterButtonLabels);
   const filterButtonLabel = messages.eventTypes({
-    numEventTypes: state.eventTypesToFilterBy.length,
+    numEventTypes: state.eventTypeLabelsToFilterBy.length,
     singleEventType:
-      state.eventTypesToFilterBy.length === 1
-        ? getLabelFromEventType(state.eventTypesToFilterBy[0])
+      state.eventTypeLabelsToFilterBy.length === 1
+        ? state.eventTypeLabelsToFilterBy[0]
         : '',
   });
 
   const getShouldShowEvent = useCallback(
     (event: EventWithActivity) => {
-      if (state.eventTypesToFilterBy.length === 0) {
+      if (state.eventTypeLabelsToFilterBy.length === 0) {
         return true;
       }
-      return state.eventTypesToFilterBy.includes(getEventTypeFromEvent(event));
+
+      const label = eventTypeToLabelMap.get(getEventTypeFromEvent(event))!;
+      return state.eventTypeLabelsToFilterBy.includes(label);
     },
-    [state.eventTypesToFilterBy]
+    [eventTypeToLabelMap, state.eventTypeLabelsToFilterBy]
   );
 
-  const getIsCheckedEventType = useCallback(
-    (eventType: string | null) =>
-      state.eventTypesToFilterBy.includes(eventType),
-    [state.eventTypesToFilterBy]
+  const getIsCheckedEventTypeLabel = useCallback(
+    (eventTypeLabel: string) =>
+      state.eventTypeLabelsToFilterBy.includes(eventTypeLabel),
+    [state.eventTypeLabelsToFilterBy]
   );
 
-  const toggleEventType = useCallback(
-    (eventType: string | null) => {
-      const newArray = state.eventTypesToFilterBy.includes(eventType)
-        ? state.eventTypesToFilterBy.filter((t) => t !== eventType)
-        : [...state.eventTypesToFilterBy, eventType];
-      state.setEventTypesToFilterBy(newArray);
+  const toggleEventTypeLabel = useCallback(
+    (eventTypeLabel: string) => {
+      const newArray = state.eventTypeLabelsToFilterBy.includes(eventTypeLabel)
+        ? state.eventTypeLabelsToFilterBy.filter((t) => t !== eventTypeLabel)
+        : [...state.eventTypeLabelsToFilterBy, eventTypeLabel];
+      state.setEventTypeLabelsToFilterBy(newArray);
     },
     [state]
   );
 
-  const clearEventTypes = useCallback(() => {
-    state.setEventTypesToFilterBy([]);
-  }, [state.setEventTypesToFilterBy]);
+  const clearEventTypeFilter = useCallback(() => {
+    state.setEventTypeLabelsToFilterBy([]);
+  }, [state.setEventTypeLabelsToFilterBy]);
 
   return {
-    clearEventTypes,
-    eventTypes,
+    clearEventTypeFilter,
+    eventTypeLabels,
     filterButtonLabel,
-    getIsCheckedEventType,
-    getLabelFromEventType,
+    getIsCheckedEventTypeLabel,
     getShouldShowEvent,
-    isFiltered: state.eventTypesToFilterBy.length > 0,
-    shouldShowFilter: eventTypes.length > 1,
-    toggleEventType,
+    isFiltered: state.eventTypeLabelsToFilterBy.length > 0,
+    shouldShowFilter: eventTypeLabels.length > 1,
+    toggleEventTypeLabel,
   };
 };

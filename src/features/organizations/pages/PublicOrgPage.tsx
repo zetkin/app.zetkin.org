@@ -300,7 +300,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                     orgIdsToFilterBy: [],
                   })
                 );
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
             />
           )}
@@ -339,7 +339,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                     orgIdsToFilterBy: [],
                   })
                 );
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
               variant="secondary"
             />
@@ -499,20 +499,15 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         open={drawerContent == 'eventTypes'}
       >
         <List>
-          {eventTypeFilter.eventTypes.map((eventType) => (
-            <ListItem
-              key={eventTypeFilter.getLabelFromEventType(eventType)}
-              sx={{ justifyContent: 'space-between' }}
-            >
+          {eventTypeFilter.eventTypeLabels.map((eventType) => (
+            <ListItem key={eventType} sx={{ justifyContent: 'space-between' }}>
               <Box alignItems="center" display="flex">
-                <ZUIText>
-                  {eventTypeFilter.getLabelFromEventType(eventType)}
-                </ZUIText>
+                <ZUIText>{eventType}</ZUIText>
               </Box>
               <Switch
-                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventTypeLabel(eventType)}
                 onChange={() => {
-                  eventTypeFilter.toggleEventType(eventType);
+                  eventTypeFilter.toggleEventTypeLabel(eventType);
                 }}
               />
             </ListItem>
