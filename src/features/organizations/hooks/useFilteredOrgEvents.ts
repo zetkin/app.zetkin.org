@@ -45,8 +45,8 @@ export default function useFilteredOrgEvents(orgId: number) {
 
   const dispatch = useAppDispatch();
   const eventTypeFilter = useEventTypeFilter(allEvents, {
-    eventTypesToFilterBy,
-    setEventTypesToFilterBy: (newArray) =>
+    eventTypeLabelsToFilterBy: eventTypesToFilterBy,
+    setEventTypeLabelsToFilterBy: (newArray) =>
       dispatch(filtersUpdated({ eventTypesToFilterBy: newArray })),
   });
 
