@@ -13,6 +13,7 @@ import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
+import AreaAssignmentListItem from './AreaAssignmentListItem';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -107,30 +108,10 @@ const MyActivitiesList: FC = () => {
         } else if (activity.kind == 'canvass') {
           href = `/canvass/${activity.data.id}`;
           elem = (
-            <MyActivityListItem
-              actions={[
-                <ZUIButton
-                  key="mainAction"
-                  href={href}
-                  label={messages.activityList.actions.areaAssignment()}
-                  size="large"
-                  variant="secondary"
-                />,
-              ]}
-              info={[
-                {
-                  Icon: GroupWorkOutlined,
-                  labels: activity.data.instructions
-                    ? [
-                        activity.data.instructions,
-                        activity.data.reporting_level,
-                      ]
-                    : [activity.data.reporting_level],
-                },
-              ]}
-              title={
-                activity.data.title || messages.defaultTitles.areaAssignment()
-              }
+            <AreaAssignmentListItem
+              assignment={activity.data}
+              href={href}
+              messageTitle={messages.defaultTitles.areaAssignment()}
             />
           );
         } else if (activity.kind == 'event') {
