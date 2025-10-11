@@ -25,6 +25,11 @@ export default makeMessages('feat.tags', {
     },
     updateTagButton: m('Update'),
   },
+  editGroupDialog: {
+    editButton: m('Edit'),
+    editTitle: m('Edit group'),
+    titleLabel: m('Group name'),
+  },
   manager: {
     addTag: m('Add tag'),
     addValue: m<{ tag: string }>('Add value for "{tag}"'),
