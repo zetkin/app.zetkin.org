@@ -108,11 +108,7 @@ const MyActivitiesList: FC = () => {
         } else if (activity.kind == 'canvass') {
           href = `/canvass/${activity.data.id}`;
           elem = (
-            <AreaAssignmentListItem
-              assignment={activity.data}
-              href={href}
-              messageTitle={messages.defaultTitles.areaAssignment()}
-            />
+            <AreaAssignmentListItem assignment={activity.data} href={href} />
           );
         } else if (activity.kind == 'event') {
           href = `/o/${activity.data.organization.id}/events/${activity.data.id}`;
