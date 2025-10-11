@@ -24,9 +24,9 @@ export default function useRemoteItem<
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteItem);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache } = usePromiseCache(promiseKey);
+  const { cache, oldPromise } = usePromiseCache(promiseKey);
 
-  if (loadIsNecessary) {
+  if (!oldPromise && loadIsNecessary) {
     dispatch(hooks.actionOnLoad());
 
     const promise = hooks
