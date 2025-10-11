@@ -166,10 +166,9 @@ const DateConfig: FC<DateConfigProps> = ({ uiDataColumn }) => {
             }
           />
           <br />
-          <ProblemRowsText rows={wrongDateFormat.problemRows} />
-          <Msg
-            id={messageIds.configuration.configure.dates.invalidDateFormatPerc}
-            values={{ percentage: wrongDateFormat.percentage }}
+          <ProblemRowsText
+            percentage={wrongDateFormat.percentage}
+            rows={wrongDateFormat.problemRows}
           />
         </Alert>
       )}

@@ -33,18 +33,18 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     parser = parserFactory(column.dateFormat);
   }
 
-  const problemRows = cellValues.reduce<number[]>((acc, value, index) => {
-    if (index === 0 && firstRowIsHeaders) {
-      return acc;
-    }
-    if (!value) {
-      return acc;
-    }
-    if (parser && column.dateFormat && !parser.validate(value)) {
-      acc.push(index);
-    }
-    return acc;
-  }, []);
+  const problemRows = cellValues
+    .map((value, index) => ({ index, value }))
+    .filter(({ value, index }) => {
+      if (index === 0 && firstRowIsHeaders) {
+        return false;
+      }
+      if (!value) {
+        return false;
+      }
+      return parser && column.dateFormat && !parser.validate(value);
+    })
+    .map(({ index }) => index);
 
   const cellValuesLength = cellValues.length - (firstRowIsHeaders ? 1 : 0);
 

@@ -26,7 +26,6 @@ export default makeMessages('feat.import', {
         dropDownLabel: m('Select format'),
         emptyPreview: m('Could not be parsed'),
         header: m('Configure date format'),
-        invalidDateFormatPerc: m<{ percentage: number }>(' ({percentage}%)'),
         invalidDateFormatWarning: m(
           "There are values in the column that don't seem to fit this format. Are you sure you have selected the correct format?"
         ),
@@ -322,10 +321,27 @@ export default makeMessages('feat.import', {
         fewRows: m<{ commaRows: string; lastRow: number }>(
           'This problem exists on rows {commaRows} and {lastRow}.'
         ),
+        fewRowsPerc: m<{
+          commaRows: string;
+          lastRow: number;
+          percentage: number;
+        }>(
+          'This problem exists on rows {commaRows} and {lastRow}, affecting {percentage}% of the data.'
+        ),
         manyRows: m<{ additionalRows: number; commaRows: string }>(
           'This problem exists on rows {commaRows} and {additionalRows, plural, =1 {1 additional row} other {# additional rows}}.'
         ),
+        manyRowsPerc: m<{
+          additionalRows: number;
+          commaRows: string;
+          percentage: number;
+        }>(
+          'This problem exists on rows {commaRows} and {additionalRows, plural, =1 {1 additional row} other {# additional rows}}, affecting {percentage}% of the data.'
+        ),
         singleRow: m<{ row: number }>('This problem exists on row {row}.'),
+        singleRowPerc: m<{ percentage: number; row: number }>(
+          'This problem exists on row {row}, affecting {percentage}% of the data.'
+        ),
       },
       invalidFormat: {
         title: m<{ field: string }>('Wrong format for field: {field}'),
