@@ -1,7 +1,8 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme, Button } from '@mui/material';
 import { useContext, useState } from 'react';
+import { Edit } from '@mui/icons-material';
 
 import { groupTags } from 'features/tags/components/TagManager/utils';
 import messageIds from 'features/tags/l10n/messageIds';
@@ -16,9 +17,10 @@ import useServerSide from 'core/useServerSide';
 import useTagGroups from 'features/tags/hooks/useTagGroups';
 import useTagMutations from 'features/tags/hooks/useTagMutations';
 import useTags from 'features/tags/hooks/useTags';
-import { ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
+import TagGroupDialog from 'features/tags/components/TagManager/components/TagGroupDialog';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -42,6 +44,9 @@ const TagsPage: PageWithLayout = () => {
   const { updateTag } = useTagMutations(orgId);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [tagToEdit, setTagToEdit] = useState<ZetkinTag | undefined>(undefined);
+  const [groupToEdit, setGroupToEdit] = useState<ZetkinTagGroup | undefined>(
+    undefined
+  );
 
   const groupedTags = groupTags(
     tags || [],
@@ -89,6 +94,23 @@ const TagsPage: PageWithLayout = () => {
                 >
                   {group.tags.length}
                 </Typography>
+                {group.id !== 'ungrouped' && (
+                  <Button
+                    color="primary"
+                    data-testid="JourneyInstanceSummary-editButton"
+                    onClick={() =>
+                      setGroupToEdit(tagGroups.find((g) => g.id === group.id))
+                    }
+                    startIcon={<Edit />}
+                    sx={{
+                      marginLeft: 'auto',
+                      textTransform: 'uppercase',
+                    }}
+                    // style={{ textTransform: 'uppercase' }}
+                  >
+                    <Msg id={messageIds.editGroupDialog.editButton} />
+                  </Button>
+                )}
               </Box>
               <Box display="flex" flexWrap="wrap" style={{ gap: 4 }}>
                 {group.tags.map((tag) => (
@@ -120,6 +142,13 @@ const TagsPage: PageWithLayout = () => {
           }}
           open={!!tagToEdit}
           tag={tagToEdit}
+        />
+        <TagGroupDialog
+          group={groupToEdit}
+          onClose={() => setGroupToEdit(undefined)}
+          onDelete={(groupId) => {}}
+          onSubmit={(tag) => {}}
+          open={!!groupToEdit}
         />
       </Box>
     </>
