@@ -171,6 +171,11 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return locations.data?.find((loc) => loc.id == selectedLocationId) || null;
   }, [locations]);
 
+  const locationTitles = useMemo(() => {
+    const titles = locations.data?.map((l) => l.title) ?? [];
+    return Array.from(new Set(titles));
+  }, [locations.data]);
+
   const saveBounds = () => {
     const bounds = map?.getBounds();
 
@@ -457,6 +462,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         }}
         onToggleCreating={(creating) => setIsCreating(creating)}
         selectedLocation={selectedLocation}
+        suggestions={locationTitles}
       />
     </>
   );

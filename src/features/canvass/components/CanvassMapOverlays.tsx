@@ -18,6 +18,7 @@ type Props = {
   onCreate: (title: string) => void;
   onToggleCreating: (creating: boolean) => void;
   selectedLocation: ZetkinLocation | null;
+  suggestions?: string[];
 };
 
 const useStyles = makeStyles(() => ({
@@ -39,6 +40,7 @@ const CanvassMapOverlays: FC<Props> = ({
   onCreate,
   onToggleCreating,
   selectedLocation,
+  suggestions = [],
 }) => {
   const [expanded, setExpanded] = useState(false);
   const classes = useStyles();
@@ -115,6 +117,7 @@ const CanvassMapOverlays: FC<Props> = ({
               onCreate={(title) => {
                 onCreate(title);
               }}
+              suggestions={suggestions}
             />
           </Box>
         )}
