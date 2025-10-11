@@ -536,20 +536,8 @@ test.describe('User submitting a survey', () => {
     console.log('Clicking and listening');
 
     await Promise.all([
-      page
-        .waitForResponse(
-          (res) =>
-            res.request().method() == 'POST' &&
-            res.url().includes('/submissions')
-        )
-        .then(() => {
-          // eslint-disable-next-line no-console
-          console.log('Wait for response finished');
-        }),
-      page.click('data-testid=Survey-submit').then(() => {
-        // eslint-disable-next-line no-console
-        console.log('Click finished');
-      }),
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      await page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
