@@ -47,7 +47,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -172,7 +172,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -310,7 +310,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -389,7 +389,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -506,6 +506,11 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    // Navigate to survey and submit without touching the select widget (or any)
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     // Respond when survey is submitted
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
@@ -515,37 +520,19 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    // eslint-disable-next-line no-console
-    console.log('This is the flaky test');
-
-    // Navigate to survey and submit without touching the select widget (or any)
-    await page.goto(
-      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    // Wait for the select input to be visible to ensure page is loaded
+    const selectInput = await page.locator(
+      '[id="mui-component-select-3.options"]'
     );
+    await selectInput.waitFor({ state: 'visible' });
 
-    // eslint-disable-next-line no-console
-    console.log('Signing survey');
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
 
-    const isEnabled = await page.isEnabled('data-testid=Survey-submit');
-    // eslint-disable-next-line no-console
-    console.log('Button is enabled', isEnabled);
-
-    // eslint-disable-next-line no-console
-    console.log('Clicking and listening');
-
-    // eslint-disable-next-line no-console
-    console.time('waitForResponse');
-    await page.waitForResponse((res) => res.request().method() == 'POST');
-    // eslint-disable-next-line no-console
-    console.timeEnd('waitForResponse');
-
-    // eslint-disable-next-line no-console
-    console.time('page.click');
-    await page.click('data-testid=Survey-submit');
-    // eslint-disable-next-line no-console
-    console.timeEnd('page.click');
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'POST'),
+      page.click('data-testid=Survey-submit'),
+    ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
     expect(log.length).toBe(1);
@@ -584,7 +571,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -619,7 +606,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -650,7 +637,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -674,7 +661,7 @@ test.describe('User submitting a survey', () => {
 
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     await expect(page.locator('data-testid=Survey-error')).toBeVisible();
