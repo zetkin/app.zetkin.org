@@ -537,7 +537,11 @@ test.describe('User submitting a survey', () => {
 
     await Promise.all([
       page
-        .waitForResponse((res) => res.request().method() == 'POST')
+        .waitForResponse(
+          (res) =>
+            res.request().method() == 'POST' &&
+            res.url().includes('/submissions')
+        )
         .then(() => {
           // eslint-disable-next-line no-console
           console.log('Wait for response finished');
