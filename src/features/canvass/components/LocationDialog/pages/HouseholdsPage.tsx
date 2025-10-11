@@ -128,7 +128,7 @@ const HouseholdsPage: FC<Props> = ({
             </Typography>
           </Box>
 
-          <Box display="flex" gap={1}>
+          <Box display="flex" gap={3}>
             <Button
               onClick={() => {
                 onBulkVisit(selectedHouseholdIds);
