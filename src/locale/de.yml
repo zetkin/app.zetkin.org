@@ -1,8 +1,8 @@
 glob:
   accessLevels:
-    configure: Bearbeiten & Erstellen
+    configure: Bearbeiten & Konfigurieren
     edit: In Bearbeitung
-    readonly: Schreibgeschützte Ansicht
+    readonly: Schreibgeschützt
   genderOptions:
     f: Weiblich
     m: Männlich
@@ -233,7 +233,12 @@ feat:
     activeEvents:
       alreadyBooked: '{name} ist schon gebucht'
       noBookings: '{name} ist nirgendwo angemeldet'
+      signUp: Anmelden
+      undoSignUp: Abmelden
+    instructions:
+      title: Anweisungen
     nav:
+      backToHome: Zur Startseite
       startCalling: Anrufen beginnen
     prepare:
       activeEvents: Aktive Veranstaltungen
@@ -246,6 +251,7 @@ feat:
       noSurveys: Keine Umfragen
       noTags: Keine Schlagworte
       previousCallsOfTarget: Vorherige Anrufe bei {name}.
+      previousEvents: Vergangene Veranstaltungen
       previousEventsOfTarget: '{name} hat teilgenommen an {numEvents} Veranstaltungen,
         zuletzt an {eventTitle} .'
       summary: Zusammenfassung
@@ -923,7 +929,7 @@ feat:
       bookedParticipants: Gebuchte Teilnehmende
       buttonAttended: Teilgenommen
       buttonBook: Buchen
-      buttonCancel: Absagen
+      buttonCancel: Austragen
       buttonCancelled: Abgesagt
       buttonDelete: Löschen
       buttonNoshow: Nicht erschienen
@@ -932,6 +938,7 @@ feat:
       columnName: Name
       columnNotified: Benachrichtigt
       columnPhone: Telefon
+      columnSignedUp: Angemeldet
       contactTooltip: Kontaktperson
       descriptionBooked: Hier siehst du die von dir gebuchten Teilnehmenden. Um
         abzusagen müssen die Teilnehmenden dich kontaktieren und dann kannst du
@@ -1016,6 +1023,9 @@ feat:
       open: Aktiv
       scheduled: Geplant
       unknown: Unbekannt
+    filterButtonLabels:
+      eventTypes: '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}}
+        andere {# event types}}'
     list:
       events: Aktionen
       noEvents: Keine Aktionen
@@ -1102,6 +1112,9 @@ feat:
     urlCard:
       nowAccepting: Anmeldungen über diesen Link möglich
       open: Anmeldungen noch möglich
+      preview: Event-Vorschau
+      previewPortal: Veranstaltungsvorschau im Aktiven-Portal
+      visitPortal: Anmeldungen werden unter diesem Link akzeptiert.
   files:
     fileUpload:
       dropToUpload: Hier die Datei hineinziehen, um sie hochzuladen.
@@ -1176,6 +1189,7 @@ feat:
           saveButton: Speichern
         header: Account Einstellungen
       appPreferences:
+        header: App Einstellungen
         lang:
           auto: Automatisch (im Browser konfiguriert)
           label: Sprache
@@ -1307,6 +1321,7 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} und {numEmpty, plural, =1 {eine
             leere Zeile} other {# leere Zeilen}}.'
           twoValuesNoEmpty: '{firstValue} und {secondValue}.'
+        notEnoughRows: Deine Datei enthält nicht genug Zeilen um Daten zu importieren.
         organization: Organisation
         selectZetkinField: Importiere als ...
         tags: Schlagworte
@@ -1404,6 +1419,9 @@ feat:
         invalidFormat:
           title: 'Falsches Format für das Feld: {field}'
         invalidOrgCountry:
+          description: |
+            Dies macht es unmöglich den Ländercode der Telefonnummer zu erraten
+            Bitte kontaktiere den Support um das Problem zu beheben.
           title: 'Möglicherweise ungültiger Ländercode der Organisation: {code}'
         majorChange:
           description: Diese Warnung wird eingeblendet, wenn mehr als 30% der importierten
@@ -1526,6 +1544,9 @@ feat:
       h: Danke
       info: Deine Anfrage wurde bestätigt und ein_e Organisator_in wird sie in Kürze
         bearbeiten.
+    submitToken:
+      copySubmitToken: Kopiere Submit-Token
+      submitTokenCopied: Submit-Token kopiert.
   journeys:
     instance:
       addAssigneeButton: Beauftragte hinzufügen
@@ -1652,6 +1673,9 @@ feat:
         message: Konnte keine Veranstaltungen finden
         removeFiltersButton: Filter entfernen
       filterButtonLabels:
+        locations: '{count} Orte'
+        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} andere
+          {# organizations}}'
         thisWeek: Diese Woche
         today: Heute
         tomorrow: Morgen
@@ -1682,13 +1706,18 @@ feat:
       footer:
         privacyPolicy: Datenschutzbestimmungen
       header:
+        calendarLinkCopied: Kalendar-Abo-URL erfolgreich kopiert
         connect: Verbinden
+        copyIcsUrl: Kopiere Kalendar-Abo-URL
         follow: Folgen
         login: Anmelden & Verbinden
         unfollow: Entfolgen
       map:
         viewInList: In Liste anzeigen
         viewInMap: Auf Karte anzeigen
+      menu:
+        logout: Ausloggen
+        myZetkin: Mein Zetkin
       tabs:
         calendar: Kalender
         suborgs: Erkunden
@@ -1715,6 +1744,9 @@ feat:
         clear: Löschen
         title: Letzte Organisationen
     subOrgEventBlurb:
+      description: Es gibt {eventsElem} {numEvents, plural, =1 {additional event}
+        other {additional events}} in {orgsElem} {numOrgs, plural, =1
+        {suborganization} anderen {suborganizations}}.
       headline: Tiefer eindringen
       showButton: Alle Veranstaltungen anzeigen
   profile:
@@ -1847,6 +1879,14 @@ feat:
           description: Auswahl auf Grundlage von Daten aus Aufgaben
           title: Aufgaben
       filters:
+        all:
+          description: Finde Personen basierend darauf in welchen Unterorganisationen sie
+            sind.
+          title: Jede Person in einer Unterorganisation
+        area:
+          description: Suche auf Basis von Ortsfeldern innerhalb oder ausserhalb eines
+            geografischen Gebietes
+          title: Ort (Gebiet)
         call_history:
           description: Finde Personen, die angerufen wurden - erreicht oder nur versucht
           title: Anrufliste
@@ -1916,6 +1956,30 @@ feat:
         startWithSelect:
           'false': leerer Liste
           'true': Liste aller Personen in der Organisation
+      allInSuborg:
+        examples:
+          one: Füge jede Person hinzu, die in der bestimmen Unterorganisation "DIE LINKE
+            Kreisverband" ist.
+          two: Entferne jede Person, die irgendeiner Unterorganisation ist.
+        inputString:
+          any: '{addRemoveSelect} jede Person, die in {suborgScopeSelect} ist.'
+          multiple: '{addRemoveSelect} jede Person, die in {suborgScopeSelect}:
+            {multipleSuborgsSelect} ist'
+          single: '{addRemoveSelect} jede Person, die in {suborgScopeSelect}
+            {singleSuborgSelect} ist'
+        suborgScopeSelect:
+          any: irgendeine Unterorganisation
+          multiple: irgendeine der folgenden Unterorganisationen
+          single: die bestimmte Unterorganisation
+      area:
+        examples:
+          one: Füge Personen hinzu, deren Wohnort innerhalb des Gebiets Hamburg liegt.
+          two: Entferne Personen deren Büro-Adresse ausserhalb des Gebiets Berlin ist
+        inputString: '{addRemoveSelect} Personen, deren {lnglatFieldSelect}
+          {withinOutsideSelect} des Gebiets {areaSelect} ist'
+        slice:
+          in: innerhalb
+          out: ausserhalb
       callBlocked:
         inputString: '{addRemoveSelect} Personen, die zum Anrufen aus irgendwelchen
           Gründen blockiert sind'
