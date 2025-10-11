@@ -118,7 +118,7 @@ const TagGroup: React.FunctionComponent<TagGroupProps> = ({
           <ZUISubmitCancelButtons
             onCancel={closeAndClear}
             submitDisabled={!title}
-            submitText={messages.dialog.updateTagButton()}
+            submitText={submitLabel || messages.dialog.updateTagButton()}
           />
         </Box>
       </form>

@@ -152,7 +152,9 @@ const TagsPage: PageWithLayout = () => {
                 // TODO: Delete tag group
               },
               submitText: messages.editGroupDialog.deleteButton(),
-              title: messages.editGroupDialog.deleteTitle(),
+              title: messages.editGroupDialog.deleteTitle({
+                groupName: groupToEdit?.title || 'Unknown Group',
+              }),
               warningText: messages.editGroupDialog.deleteWarning(),
             });
           }}
