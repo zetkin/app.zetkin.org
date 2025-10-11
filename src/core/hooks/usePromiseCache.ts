@@ -13,6 +13,10 @@ export default function usePromiseCache(
 
   return {
     cache(promise) {
+      if (oldPromise) {
+        throw oldPromise;
+      }
+
       promises[cacheKey] = promise;
 
       promise.then(() => {
