@@ -535,10 +535,17 @@ test.describe('User submitting a survey', () => {
     // eslint-disable-next-line no-console
     console.log('Clicking and listening');
 
-    await Promise.all([
-      page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
-    ]);
+    // eslint-disable-next-line no-console
+    console.time('waitForResponse');
+    await page.waitForResponse((res) => res.request().method() == 'POST');
+    // eslint-disable-next-line no-console
+    console.timeEnd('waitForResponse');
+
+    // eslint-disable-next-line no-console
+    console.time('page.click');
+    await page.click('data-testid=Survey-submit');
+    // eslint-disable-next-line no-console
+    console.timeEnd('page.click');
 
     const log = moxy.log(`/v1${apiPostPath}`);
     expect(log.length).toBe(1);
