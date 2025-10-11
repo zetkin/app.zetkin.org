@@ -1,35 +1,55 @@
 import { useState } from 'react';
 
+interface StoredValue<T> {
+  value: T;
+  timestamp: number;
+}
+
 export default function useLocalStorage<T>(
   key: string,
   defaultValue: T
-): [T, (newValue: T) => void] {
-  const state = useState<T>(getLocalStorageValue(key, defaultValue));
-  const setValue = state[1];
+): [T, (newValue: T) => void, number] {
+  const stored = getLocalStorageValue<T>(key, defaultValue);
+  const [value, setValue] = useState<T>(stored.value);
+  const [timestamp, setTimestamp] = useState(stored.timestamp);
 
-  return [
-    getLocalStorageValue(key, defaultValue),
-    (newValue: T) => {
-      localStorage.setItem(key, JSON.stringify(newValue));
-      setValue(newValue);
-    },
-  ];
+  const updateValue = (newValue: T) => {
+    const newItem: StoredValue<T> = {
+      value: newValue,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(key, JSON.stringify(newItem));
+    setValue(newValue);
+    setTimestamp(newItem.timestamp);
+  };
+
+  return [value, updateValue, timestamp];
 }
 
-function getLocalStorageValue<T>(key: string, defaultValue: T): T {
+function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
   const isBrowser = typeof window !== 'undefined';
   const stringValue = isBrowser ? localStorage.getItem(key) : null;
 
-  if (stringValue === null || stringValue.length == 0) {
+  if (!isBrowser || !stringValue) {
+    const newItem: StoredValue<T> = {
+      value: defaultValue,
+      timestamp: Date.now(),
+    };
     if (isBrowser) {
-      localStorage.setItem(key, JSON.stringify(defaultValue));
+      localStorage.setItem(key, JSON.stringify(newItem));
     }
-    return defaultValue;
+    return newItem;
   }
 
   try {
-    return JSON.parse(stringValue);
-  } catch (err) {
-    return defaultValue;
+    const parsed = JSON.parse(stringValue) as StoredValue<T>;
+    // support old-format value stored without timestamp
+    if (parsed && parsed.value !== undefined && parsed.timestamp) {
+      return parsed;
+    } else {
+      return { value: parsed as T, timestamp: Date.now() };
+    }
+  } catch {
+    return { value: defaultValue, timestamp: Date.now() };
   }
 }
