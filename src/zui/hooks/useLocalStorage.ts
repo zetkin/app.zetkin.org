@@ -34,7 +34,7 @@ function getLocalStorageValue<T>(key: string, defaultValue: T): StoredValue<T> {
     const newItem: StoredValue<T> = {
       timestamp: Date.now(),
       value: defaultValue,
-    }
+    };
     if (isBrowser) {
       localStorage.setItem(key, JSON.stringify(newItem));
     }
