@@ -1,8 +1,8 @@
 glob:
   accessLevels:
-    configure: Bearbeiten & Erstellen
+    configure: Bearbeiten & Konfigurieren
     edit: In Bearbeitung
-    readonly: Schreibgeschützte Ansicht
+    readonly: Schreibgeschützt
   genderOptions:
     f: Weiblich
     m: Männlich
@@ -233,7 +233,12 @@ feat:
     activeEvents:
       alreadyBooked: '{name} ist schon gebucht'
       noBookings: '{name} ist nirgendwo angemeldet'
+      signUp: Anmelden
+      undoSignUp: Abmelden
+    instructions:
+      title: Anweisungen
     nav:
+      backToHome: Zur Startseite
       startCalling: Anrufen beginnen
     prepare:
       activeEvents: Aktive Veranstaltungen
@@ -246,6 +251,7 @@ feat:
       noSurveys: Keine Umfragen
       noTags: Keine Schlagworte
       previousCallsOfTarget: Vorherige Anrufe bei {name}.
+      previousEvents: Vergangene Veranstaltungen
       previousEventsOfTarget: '{name} hat teilgenommen an {numEvents} Veranstaltungen,
         zuletzt an {eventTitle} .'
       summary: Zusammenfassung
@@ -571,10 +577,35 @@ feat:
     default:
       description: Leere Beschreibung
     households:
+      colorPicker:
+        colorNames:
+          undefined: Hellgrün
+        inputLabel: Bearbeite die Haushalt-Farbe
+        noColor: Keine Farbe
+      createMultiple:
+        createButtonLabel: Anlegen {numHouseholds, plural, one {1 household} oder {# households}}
+        header: Haushalt anlegen
+        numberOfFloorsInput: Anzahl der Etagen
+        numberOfHouseholdsInput: Haushalte je Etage
+      editSingleHousehold:
+        floorLabel: Etage bearbeiten
+        header: Bearbeiten {title}
+        saveButtonLabel: Speichern
+        titleLabel: Titel bearbeiten
+      householdDefaultTitle: Haushalt {householdNumber}
+      page:
+        empty: Dieser Ort hat bisher keine Haushalte.
+        header: Haushalte
       single:
+        logVisitButtonLabel: Besuch eintragen
         subtitle: Etage
+        wasVisited: Dieser Haushalt wurde in dieser Haustür-Aktion besucht.
     instructions:
       areas: Gebiete
+      instructionsHeader: Anleitungen
+      ready: Du bist fertig zum Loslegen
+      selectArea: Gebiet auswählen
+      start: Aufgabe beginnen
       visitedHouseholds: Besuchte Türen
       visitedLocations: Besuchte Orte
     location:
@@ -601,6 +632,8 @@ feat:
         cancel: Abbrechen
         create: Ort erstellen
         inputPlaceholder: Gib dem Ort einen Namen
+    selectArea:
+      noAreas: Keine Gebiete verfügbar
     sidebar:
       instructions:
         title: Hinweise
@@ -616,13 +649,28 @@ feat:
           title: Fortschritt
         session:
           team: Team
+          title: Session (today)
           you: Du
+        sync:
+          label:
+            hasLoaded: Synchronisiert am {timestamp}
+            neverLoaded: Nie geladen
+          syncButton:
+            label: Jetzt synchronisieren
+            loading: synchronisieren
     visit:
       household:
+        header: '{householdTitle}: Besuch aufzeichnen'
         noButtonLabel: Nein
         skipButtonLabel: Frage überspringen
+        submitReportButtonLabel: Bericht einreichen
         yesButtonLabel: Ja
       location:
+        average: '{numHouseholds, plural,one {1 household} andere {# households}},
+          {avgFixed} durchschnittlich'
+        completed: '{numHouseholds, plural,one {1 household} andere {# households}},
+          {numYes} ja'
+        header: Berichte der Besuche hier
         noInputLabel: Nein
         proceedButtonLabel: Fortfahren
         submitButtonLabel: Einreichen
@@ -662,6 +710,9 @@ feat:
     page:
       dismiss: ablehnen
       noDuplicates: keine Duplikate
+      noDuplicatesContactUs: Wenn du feststellst, dass der Matching-Algorithmus nicht
+        genügend Duplikate findet, wende dich bitte an die Foundation, um uns
+        deinen konkreten Anwendungsfall mitzuteilen.
       noDuplicatesDescription: Ja! All deine Mitglieder scheinen einzelne Individuen zu sein.
       possibleDuplicates: Mögliche Duplikate
       possibleDuplicatesDescription: Diese {numPeople} Personen sehen sehr ähnlich aus.
@@ -843,6 +894,11 @@ feat:
           die Zustellung zuerst abbrechen.
         sent: Du kannst dir die intelligente Suche ansehen, die verwendet wurde, um die
           Empfänger dieser E-Mail zu definieren
+        targetedAndLocked: Fortsetzen mit dem Mail-Versand oder Zielgruppe für den
+          Mail-Versand mit der Intelligente Suchen verändern.
+        targetedNotLocked: Bearbeite die Intelligente Suche um die Zielgruppe der E-Mail
+          zu bestimmen oder speichere die Zielgruppe um den Mail-Versand zu
+          ermöglichen.
       title: Ziele
       unlockAlert: Entsperren kann Personen von der Zielgruppe hinzufügen oder
         entfernen, je nachdem welches Ergebnis die smarte Suche haben wird.
@@ -923,7 +979,7 @@ feat:
       bookedParticipants: Gebuchte Teilnehmende
       buttonAttended: Teilgenommen
       buttonBook: Buchen
-      buttonCancel: Absagen
+      buttonCancel: Austragen
       buttonCancelled: Abgesagt
       buttonDelete: Löschen
       buttonNoshow: Nicht erschienen
@@ -932,6 +988,7 @@ feat:
       columnName: Name
       columnNotified: Benachrichtigt
       columnPhone: Telefon
+      columnSignedUp: Angemeldet
       contactTooltip: Kontaktperson
       descriptionBooked: Hier siehst du die von dir gebuchten Teilnehmenden. Um
         abzusagen müssen die Teilnehmenden dich kontaktieren und dann kannst du
@@ -1016,6 +1073,9 @@ feat:
       open: Aktiv
       scheduled: Geplant
       unknown: Unbekannt
+    filterButtonLabels:
+      eventTypes: '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}}
+        andere {# event types}}'
     list:
       events: Aktionen
       noEvents: Keine Aktionen
@@ -1102,6 +1162,10 @@ feat:
     urlCard:
       nowAccepting: Anmeldungen über diesen Link möglich
       open: Anmeldungen noch möglich
+      preview: Event-Vorschau
+      previewPortal: Veranstaltungsvorschau im Aktiven-Portal
+      visitPortal: Anmeldungen werden unter diesem Link akzeptiert.
+      willAccept: Wir werden Anmeldungen unter diesem Link akzeptieren.
   files:
     fileUpload:
       dropToUpload: Hier die Datei hineinziehen, um sie hochzuladen.
@@ -1176,6 +1240,7 @@ feat:
           saveButton: Speichern
         header: Account Einstellungen
       appPreferences:
+        header: App Einstellungen
         lang:
           auto: Automatisch (im Browser konfiguriert)
           label: Sprache
@@ -1307,6 +1372,7 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} und {numEmpty, plural, =1 {eine
             leere Zeile} other {# leere Zeilen}}.'
           twoValuesNoEmpty: '{firstValue} und {secondValue}.'
+        notEnoughRows: Deine Datei enthält nicht genug Zeilen um Daten zu importieren.
         organization: Organisation
         selectZetkinField: Importiere als ...
         tags: Schlagworte
@@ -1404,6 +1470,9 @@ feat:
         invalidFormat:
           title: 'Falsches Format für das Feld: {field}'
         invalidOrgCountry:
+          description: |
+            Dies macht es unmöglich den Ländercode der Telefonnummer zu erraten
+            Bitte kontaktiere den Support um das Problem zu beheben.
           title: 'Möglicherweise ungültiger Ländercode der Organisation: {code}'
         majorChange:
           description: Diese Warnung wird eingeblendet, wenn mehr als 30% der importierten
@@ -1526,6 +1595,9 @@ feat:
       h: Danke
       info: Deine Anfrage wurde bestätigt und ein_e Organisator_in wird sie in Kürze
         bearbeiten.
+    submitToken:
+      copySubmitToken: Kopiere Submit-Token
+      submitTokenCopied: Submit-Token kopiert.
   journeys:
     instance:
       addAssigneeButton: Beauftragte hinzufügen
@@ -1652,6 +1724,9 @@ feat:
         message: Konnte keine Veranstaltungen finden
         removeFiltersButton: Filter entfernen
       filterButtonLabels:
+        locations: '{count} Orte'
+        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} andere
+          {# organizations}}'
         thisWeek: Diese Woche
         today: Heute
         tomorrow: Morgen
@@ -1682,13 +1757,18 @@ feat:
       footer:
         privacyPolicy: Datenschutzbestimmungen
       header:
+        calendarLinkCopied: Kalendar-Abo-URL erfolgreich kopiert
         connect: Verbinden
+        copyIcsUrl: Kopiere Kalendar-Abo-URL
         follow: Folgen
         login: Anmelden & Verbinden
         unfollow: Entfolgen
       map:
         viewInList: In Liste anzeigen
         viewInMap: Auf Karte anzeigen
+      menu:
+        logout: Ausloggen
+        myZetkin: Mein Zetkin
       tabs:
         calendar: Kalender
         suborgs: Erkunden
@@ -1715,6 +1795,9 @@ feat:
         clear: Löschen
         title: Letzte Organisationen
     subOrgEventBlurb:
+      description: Es gibt {eventsElem} {numEvents, plural, =1 {additional event}
+        other {additional events}} in {orgsElem} {numOrgs, plural, =1
+        {suborganization} anderen {suborganizations}}.
       headline: Tiefer eindringen
       showButton: Alle Veranstaltungen anzeigen
   profile:
@@ -1847,6 +1930,14 @@ feat:
           description: Auswahl auf Grundlage von Daten aus Aufgaben
           title: Aufgaben
       filters:
+        all:
+          description: Finde Personen basierend darauf in welchen Unterorganisationen sie
+            sind.
+          title: Jede Person in einer Unterorganisation
+        area:
+          description: Suche auf Basis von Ortsfeldern innerhalb oder ausserhalb eines
+            geografischen Gebietes
+          title: Ort (Gebiet)
         call_history:
           description: Finde Personen, die angerufen wurden - erreicht oder nur versucht
           title: Anrufliste
@@ -1916,6 +2007,30 @@ feat:
         startWithSelect:
           'false': leerer Liste
           'true': Liste aller Personen in der Organisation
+      allInSuborg:
+        examples:
+          one: Füge jede Person hinzu, die in der bestimmen Unterorganisation "DIE LINKE
+            Kreisverband" ist.
+          two: Entferne jede Person, die irgendeiner Unterorganisation ist.
+        inputString:
+          any: '{addRemoveSelect} jede Person, die in {suborgScopeSelect} ist.'
+          multiple: '{addRemoveSelect} jede Person, die in {suborgScopeSelect}:
+            {multipleSuborgsSelect} ist'
+          single: '{addRemoveSelect} jede Person, die in {suborgScopeSelect}
+            {singleSuborgSelect} ist'
+        suborgScopeSelect:
+          any: irgendeine Unterorganisation
+          multiple: irgendeine der folgenden Unterorganisationen
+          single: die bestimmte Unterorganisation
+      area:
+        examples:
+          one: Füge Personen hinzu, deren Wohnort innerhalb des Gebiets Hamburg liegt.
+          two: Entferne Personen deren Büro-Adresse ausserhalb des Gebiets Berlin ist
+        inputString: '{addRemoveSelect} Personen, deren {lnglatFieldSelect}
+          {withinOutsideSelect} des Gebiets {areaSelect} ist'
+        slice:
+          in: innerhalb
+          out: ausserhalb
       callBlocked:
         inputString: '{addRemoveSelect} Personen, die zum Anrufen aus irgendwelchen
           Gründen blockiert sind'
