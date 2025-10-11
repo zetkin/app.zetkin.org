@@ -151,6 +151,7 @@ const TagsPage: PageWithLayout = () => {
               onSubmit: () => {
                 // TODO: Delete tag group
               },
+              submitText: messages.editGroupDialog.deleteButton(),
               title: messages.editGroupDialog.deleteTitle(),
               warningText: messages.editGroupDialog.deleteWarning(),
             });
