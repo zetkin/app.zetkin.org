@@ -207,7 +207,7 @@ export const scaffold =
         ...result.props,
         envVars: omitUndefined({
           FEAT_AREAS: process.env.FEAT_AREAS,
-          FEAT_DOORS: process.env.FEAT_DOORS,
+          FEAT_HOUSEHOLDS2: process.env.FEAT_HOUSEHOLDS2,
           FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
           FEAT_TASKS: process.env.FEAT_TASKS,
           INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
