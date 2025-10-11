@@ -146,7 +146,15 @@ const TagsPage: PageWithLayout = () => {
         <TagGroupDialog
           group={groupToEdit}
           onClose={() => setGroupToEdit(undefined)}
-          onDelete={(groupId) => {}}
+          onDelete={(groupId) => {
+            showConfirmDialog({
+              onSubmit: () => {
+                // TODO: Delete tag group
+              },
+              title: messages.editGroupDialog.deleteTitle(),
+              warningText: messages.editGroupDialog.deleteWarning(),
+            });
+          }}
           onSubmit={(tag) => {}}
           open={!!groupToEdit}
         />

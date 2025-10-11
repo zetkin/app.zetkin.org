@@ -26,6 +26,10 @@ export default makeMessages('feat.tags', {
     updateTagButton: m('Update'),
   },
   editGroupDialog: {
+    deleteTitle: m('Delete group'),
+    deleteWarning: m(
+      'Are you sure you want to delete this group? Deleting a group cannot be undone.'
+    ),
     editButton: m('Edit'),
     editTitle: m('Edit group'),
     titleLabel: m('Group name'),
