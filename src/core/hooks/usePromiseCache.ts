@@ -8,14 +8,14 @@ const promises: Record<string, Promise<unknown>> = {};
 export default function usePromiseCache(
   cacheKey: string
 ): UsePromiseCacheReturn {
-  const oldPromise = promises[cacheKey];
-
-  if (oldPromise) {
-    throw oldPromise;
-  }
-
   return {
     cache(promise) {
+      const oldPromise = promises[cacheKey];
+
+      if (oldPromise) {
+        throw oldPromise;
+      }
+
       promises[cacheKey] = promise;
 
       promise.then(() => {
