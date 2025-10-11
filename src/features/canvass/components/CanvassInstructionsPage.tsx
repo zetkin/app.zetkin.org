@@ -111,7 +111,7 @@ const Page: FC<{
                 href={
                   userMustSelectArea
                     ? `/canvass/${assignment.id}/areas`
-                    : `/canvass/${assignment.id}/areas/${areas[0].id}`
+                    : `/canvass/${assignment.id}/areas/${areas?.[0]?.id}`
                 }
                 sx={{
                   width: '50%',
