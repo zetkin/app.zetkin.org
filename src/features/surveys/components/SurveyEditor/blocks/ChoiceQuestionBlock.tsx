@@ -24,7 +24,10 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
-import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
+import {
+  ZetkinSurveyOption,
+  ZetkinSurveyOptionsQuestionElement,
+} from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import ZUIReorderable from 'zui/ZUIReorderable';
@@ -140,6 +143,21 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   });
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  function trimBulkOptionsText(text: string): string {
+    const lines = text.split('\n');
+    return lines.map((line) => line.slice(0, 30)).join('\n');
+  }
+
+  useEffect(() => {
+    if (widgetType == 'select') {
+      options.map((oldOpt) => {
+        const trimmedOption = { ...oldOpt, text: oldOpt.text.slice(0, 30) };
+        updateElementOption(element.id, trimmedOption.id, trimmedOption.text);
+        return trimmedOption;
+      });
+    }
+  }, [widgetType]);
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -213,6 +231,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       {widgetTypes[widgetType].previewIcon}
                     </Box>
                     <TextField
+                      slotProps={
+                        widgetType == 'select'
+                          ? { ...{ htmlInput: { maxLength: 30 } } }
+                          : {}
+                      }
                       // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus={addedOptionId == option.id}
                       fullWidth
@@ -314,7 +337,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               />
               <Button
                 onClick={async () => {
-                  await addElementOptionsFromText(element.id, bulkOptionsText);
+                  const bulkText =
+                    widgetType == 'select'
+                      ? trimBulkOptionsText(bulkOptionsText)
+                      : bulkOptionsText;
+                  await addElementOptionsFromText(element.id, bulkText);
                   setBulkAddingOptions(false);
                   setBulkOptionsText('');
                 }}
