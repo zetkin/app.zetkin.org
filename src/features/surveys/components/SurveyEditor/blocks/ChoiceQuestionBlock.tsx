@@ -228,11 +228,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       {widgetTypes[widgetType].previewIcon}
                     </Box>
                     <TextField
-                      slotProps={
-                        widgetType == 'select'
-                          ? { ...{ htmlInput: { maxLength: 30 } } }
-                          : {}
-                      }
                       // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus={addedOptionId == option.id}
                       fullWidth
@@ -253,6 +248,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                           )
                         );
                       }}
+                      slotProps={
+                        widgetType == 'select'
+                          ? { ...{ htmlInput: { maxLength: 30 } } }
+                          : {}
+                      }
                       value={option.text}
                     />
                     <IconButton
