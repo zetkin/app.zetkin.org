@@ -48,23 +48,21 @@ const MyActivityListItem: FC<Props> = ({
         )),
         ...(description
           ? [
-              <Box>
-                <ZUIText
-                  key={'description'}
-                  color="primary"
-                  sx={{
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 3,
-                    display: '-webkit-box',
-                    overflow: 'hidden',
-                  }}
-                  variant="bodySmRegular"
-                >
+              <Box
+                key={'description'}
+                sx={{
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 3,
+                  display: '-webkit-box',
+                  overflow: 'hidden',
+                }}
+              >
+                <ZUIText color="primary" variant="bodySmRegular">
                   {description}
                 </ZUIText>
                 <ZUIButton
-                  label={messages.allEventsList.descriptionReadMore()}
                   href={href}
+                  label={messages.allEventsList.descriptionReadMore()}
                 />
               </Box>,
             ]
