@@ -1,5 +1,5 @@
 import { Box, Checkbox, useTheme } from '@mui/material';
-import { FC, KeyboardEvent } from 'react';
+import { FC, KeyboardEvent, useCallback } from 'react';
 import {
   GridColDef,
   GridRenderCellParams,
@@ -67,6 +67,12 @@ const Cell: FC<{
   const theme = useTheme();
   const { orgId, viewId } = useNumericRouteParams();
   const { setCellValue } = useViewGrid(orgId, viewId);
+  const onChange = useCallback(
+    (ev: React.ChangeEvent<HTMLInputElement>) => {
+      setCellValue(personId, column.id, !!ev.target.checked);
+    },
+    [setCellValue, personId, column.id]
+  );
 
   const checked = !!cell;
 
@@ -82,9 +88,7 @@ const Cell: FC<{
       <Checkbox
         checked={checked}
         color="success"
-        onChange={(ev) => {
-          setCellValue(personId, column.id, !!ev.target.checked);
-        }}
+        onChange={onChange}
         tabIndex={-1}
       />
     </Box>
