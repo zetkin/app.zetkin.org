@@ -30,7 +30,7 @@ import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
-import useCreateHouseholdsAssignment from 'features/householdsAssignments/hooks/useCreateHouseholdsAssignment';
+import useCreateHouseholdAssignment from 'features/householdsAssignments/hooks/useCreateHouseholdsAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS, HOUSEHOLDS2, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
@@ -62,7 +62,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
-  const createDoorAssignment = useCreateHouseholdsAssignment(orgId, campId);
+  const createHouseholdAssignment = useCreateHouseholdAssignment(orgId, campId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -166,22 +166,9 @@ const CampaignActionButtons: React.FunctionComponent<
   if (hasHouseholdAssignments) {
     menuItems.push({
       icon: <MeetingRoom />,
-      label: campaginMessages.createButton.createDoorAssignment(),
+      label: campaginMessages.createButton.createHouseholdAssignment(),
       onClick: () =>
-        createAreaAssignment({
-          instructions: '',
-          /*
-          metrics: [
-            {
-              definesDone: true,
-              description: '',
-              kind: 'boolean',
-              question:
-                campaginMessages.form.createAreaAssignment.defaultQuestion(),
-            },
-          ],
-          */
-          reporting_level: 'location',
+        createHouseholdAssignment({
           title: areaAssignmentMessages.default.title(),
         }),
     });

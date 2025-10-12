@@ -8,7 +8,7 @@ export default function useHouseholdsAssignees(orgId: number, householdsAssId: n
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const sessions = useAppSelector(
-    (state) => state.householdsAssignments.assigneesByAssignmentId[householdsAssId]
+    (state) => state.householdAssignments.assigneesByAssignmentId[householdsAssId]
   );
 
   return loadListIfNecessary(sessions, dispatch, {

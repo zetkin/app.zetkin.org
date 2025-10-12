@@ -1,9 +1,9 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
-  ZetkinDoorAssignment,
-  ZetkinDoorAssignmentPostBody,
+  ZetkinHouseholdAssignment,
+  ZetkinHouseholdAssignmentPostBody,
 } from '../types';
-import { HouseholdAssignmentCreate, HouseholdAssignmentCreated } from '../store';
+import { householdAssignmentCreated } from '../store';
 
 export default function useCreateHouseholdsAssignment(
   orgId: number,
@@ -12,9 +12,8 @@ export default function useCreateHouseholdsAssignment(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 
-  return async (data: ZetkinDoorAssignmentPostBody) => {
-    dispatch(householdAssignmentCreate());
-    const created = await apiClient.post<ZetkinDoorAssignment>(
+  return async (data: ZetkinHouseholdAssignmentPostBody) => {
+    const created = await apiClient.post<ZetkinHouseholdAssignment>(
       `/beta/orgs/${orgId}/projects/${campId}/householdsassignments`,
       data
     );

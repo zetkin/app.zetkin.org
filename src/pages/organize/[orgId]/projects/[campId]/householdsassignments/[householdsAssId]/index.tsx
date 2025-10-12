@@ -9,15 +9,15 @@ import { scaffold } from 'utils/next';
 import { PageWithLayout } from 'utils/types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/householdsAssignments/l10n/messageIds';
-import useHouseholdsAssignees from 'features/householdsAssignments/hooks/useHouseholdsAssignees';
-import useHouseholdsAssignment from 'features/householdsAssignments/hooks/useHouseholdsAssignment';
-import useHouseholdsAssignmentStats from 'features/householdsAssignments/hooks/useHouseholdsAssignmentStats';
-import useAssignmentHouseholdsStats from 'features/householdsAssignments/hooks/useAssignmentHouseholdsStats';
-import useAssignmentHouseholdsGraph from 'features/householdsAssignments/hooks/useAssignmentHouseholdsGraph';
-import HouseholdsAssignmentLayout from 'features/householdsAssignments/layouts/HouseholdsAssignmentLayout';
+import useHouseholdAssignees from 'features/householdsAssignments/hooks/useHouseholdAssignees';
+import useHouseholdAssignment from 'features/householdsAssignments/hooks/useHouseholdAssignment';
+import useHouseholdAssignmentStats from 'features/householdsAssignments/hooks/useHouseholdAssignmentStats';
+import useAssignmentHouseholdStats from 'features/householdsAssignments/hooks/useAssignmentHouseholdStats';
+import useAssignmentHouseholdGraph from 'features/householdsAssignments/hooks/useAssignmentHouseholdGraph';
+import HouseholdAssignmentLayout from 'features/householdsAssignments/layouts/HouseholdAssignmentLayout';
 import ZUIFutures from 'zui/ZUIFutures';
 import NumberCard from 'features/householdsAssignments/components/NumberCard';
-import { ZetkinAssignmentHouseholdsStatsItem } from 'features/householdsAssignments/types';
+import { ZetkinAssignmentHouseholdStatsItem } from 'features/householdsAssignments/types';
 import HouseholdCard from 'features/householdsAssignments/componentsHouseholdCard';
 
 const scaffoldOptions = {
@@ -41,30 +41,30 @@ const HouseholdsAssignmentPage: PageWithLayout<
   HouseholdsAssignmentPageProps
 > = ({ orgId, householdsAssId }) => {
   const messages = useMessages(messageIds);
-  const sessionsFuture = useHouseholdsAssignees(
+  const sessionsFuture = useHouseholdAssignees(
     parseInt(orgId),
     householdsAssId
   );
-  const assignmentFuture = useHouseholdsAssignment(
+  const assignmentFuture = useHouseholdAssignment(
     parseInt(orgId),
     householdsAssId
   );
-  const statsFuture = useHouseholdsAssignmentStats(
+  const statsFuture = useHouseholdAssignmentStats(
     parseInt(orgId),
     householdsAssId
   );
-  const householdsStats = useAssignmentHouseholdsStats(
+  const householdsStats = useAssignmentHouseholdStats(
     parseInt(orgId),
     householdsAssId
   );
-  const dataGraph = useAssignmentHouseholdsGraph(
+  const dataGraph = useAssignmentHouseholdGraph(
     parseInt(orgId),
     householdsAssId
   );
   const router = useRouter();
 
   const numHouseholds = new Set(
-    sessionsFuture.data?.map((session) => session.households_id) ?? []
+    sessionsFuture.data?.map((session) => session.household_id) ?? []
   ).size;
 
   return (
@@ -205,8 +205,8 @@ const HouseholdsAssignmentPage: PageWithLayout<
                           const num_visited_households =
                             latestEntry.householdVisits;
 
-                          const noArea: ZetkinAssignmentHouseholdsStatsItem = {
-                            area_id: null,
+                          const noArea: ZetkinAssignmentHouseholdStatsItem = {
+                            household_id: null,
                             num_households: 0,
                             num_locations: 0,
                             num_successful_visited_households,
@@ -238,9 +238,9 @@ const HouseholdsAssignmentPage: PageWithLayout<
 
 HouseholdsAssignmentPage.getLayout = function getLayout(page) {
   return (
-    <HouseholdsAssignmentLayout {...page.props}>
+    <HouseholdAssignmentLayout {...page.props}>
       {page}
-    </HouseholdsAssignmentLayout>
+    </HouseholdAssignmentLayout>
   );
 };
 

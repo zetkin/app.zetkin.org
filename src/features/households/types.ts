@@ -1,5 +1,6 @@
 import { ZetkinEvent, ZetkinPerson, ZetkinTag } from '../../utils/types/zetkin';
 import { CombinedEventResponse } from '../call/types';
+import { Zetkin2AreaLine } from '../areas/types';
 
 export type ZetkinHousehold = {
   assignment_id: number;
@@ -12,6 +13,17 @@ export type ZetkinHousehold = {
   state: number;
   target: ZetkinHouseholdTarget;
   update_time: string;
+};
+
+export type Zetkin2Area = {
+  boundary: {
+    coordinates: Zetkin2AreaLine[];
+    type: 'Polygon';
+  };
+  description: string;
+  id: number;
+  organization_id: number;
+  title: string;
 };
 
 type ZetkinCanvasser = {

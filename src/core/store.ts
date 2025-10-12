@@ -56,6 +56,7 @@ import areaAssignmentSlice, {
 } from 'features/areaAssignments/store';
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
+import { HouseholdAssignmentsStoreSlice } from 'features/householdsAssignments/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
@@ -69,6 +70,7 @@ export interface RootState {
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
+  householdAssignments: HouseholdAssignmentsStoreSlice;
   import: ImportStoreSlice;
   joinForms: JoinFormsStoreSlice;
   journeys: JourneysStoreSlice;

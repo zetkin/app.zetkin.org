@@ -21,7 +21,7 @@ import {
   SessionDeletedPayload,
   ZetkinMetric,
 } from './types';
-import { Zetkin2Household } from 'features/households/types';
+import { ZetkinHousehold } from 'features/households/types';
 
 export interface HouseholdAssignmentsStoreSlice {
   householdGraphByAssignmentId: Record<
@@ -33,7 +33,7 @@ export interface HouseholdAssignmentsStoreSlice {
     RemoteItem<ZetkinAssignmentHouseholdStats & { id: number }>
   >;
   householdAssignmentList: RemoteList<ZetkinHouseholdAssignment>;
-  householdsByAssignmentId: Record<string, RemoteList<Zetkin2Household>>;
+  householdsByAssignmentId: Record<string, RemoteList<ZetkinHousehold>>;
   assigneesByAssignmentId: Record<
     number,
     RemoteList<ZetkinHouseholdAssignee & { id: string }>
@@ -207,7 +207,7 @@ const householdAssignmentSlice = createSlice({
     },
     assignmentHouseholdsLoaded: (
       state,
-      action: PayloadAction<[number, Zetkin2Household[]]>
+      action: PayloadAction<[number, ZetkinHousehold[]]>
     ) => {
       const [assignmentId, areas] = action.payload;
       state.householdsByAssignmentId[assignmentId] = remoteListLoaded(areas);
