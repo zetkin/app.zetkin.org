@@ -16,6 +16,8 @@ import FieldSettings from './FieldSettings';
 import messageIds from '../l10n/messageIds';
 import PotentialDuplicatesLists from './PotentialDuplicatesLists';
 import useFieldSettings from '../hooks/useFieldSettings';
+import usePerson from 'features/profile/hooks/usePerson';
+import { useNumericRouteParams } from 'core/hooks';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
@@ -37,10 +39,20 @@ const MergeModal: FC<Props> = ({
   const fullScreen = useMediaQuery(oldTheme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
   const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
+  const [newPeople, setNewPeople] = useState<ZetkinPerson[]>([]);
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
     persons.map((person) => person.id) ?? []
   );
+
+  const { orgId } = useNumericRouteParams();
+  const person = usePerson(orgId, newPeople[0]?.id ?? persons[0].id).data;
+
+  useEffect(() => {
+    if (newPeople.length > 0 && person) {
+      setAdditionalPeople([...additionalPeople, person]);
+    }
+  }, [newPeople, person]);
 
   const peopleToMerge = [
     ...persons.filter((person) => selectedIds.includes(person.id)),
@@ -93,7 +105,7 @@ const MergeModal: FC<Props> = ({
                 const selectedIdsUpdated = [...selectedIds, person.id];
                 setSelectedIds(selectedIdsUpdated);
               } else {
-                setAdditionalPeople([...additionalPeople, person]);
+                setNewPeople([person]);
               }
             }}
             peopleNotToMerge={peopleNotToMerge}
