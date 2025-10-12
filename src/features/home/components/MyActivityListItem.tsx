@@ -4,9 +4,10 @@ import { FC } from 'react';
 
 import ZUIItemCard from 'zui/components/ZUIItemCard';
 import ZUIIconLabel from 'zui/components/ZUIIconLabel';
-import ZUIModal from '../../../zui/components/ZUIModal';
 import ZUIText from '../../../zui/components/ZUIText';
 import ZUIButton from '../../../zui/components/ZUIButton';
+import { useMessages } from '../../../core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type Props = {
   actions?: JSX.Element[];
@@ -30,6 +31,8 @@ const MyActivityListItem: FC<Props> = ({
   description,
   title,
 }) => {
+  const messages = useMessages(messageIds);
+
   return (
     <ZUIItemCard
       actions={actions}
@@ -59,7 +62,10 @@ const MyActivityListItem: FC<Props> = ({
                 >
                   {description}
                 </ZUIText>
-                <ZUIButton label={'read more'} href={href} />
+                <ZUIButton
+                  label={messages.allEventsList.descriptionReadMore()}
+                  href={href}
+                />
               </Box>,
             ]
           : []),
