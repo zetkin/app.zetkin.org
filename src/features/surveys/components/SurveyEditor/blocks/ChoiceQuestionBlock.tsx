@@ -24,10 +24,7 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
-import {
-  ZetkinSurveyOption,
-  ZetkinSurveyOptionsQuestionElement,
-} from 'utils/types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import ZUIReorderable from 'zui/ZUIReorderable';
