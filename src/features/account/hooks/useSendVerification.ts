@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useApiClient } from 'core/hooks';
+import { ZetkinUser } from 'utils/types/zetkin';
 
 export type SendVerificationStatus = {
   errorCode?: string;
@@ -15,12 +17,21 @@ type UseSendVerificationProps = {
 export function UseSendVerification(): UseSendVerificationProps {
   const apiClient = useApiClient();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const sendVerification = async (): Promise<SendVerificationStatus> => {
     setLoading(true);
     try {
-      await apiClient.post(`/verify/resend`, {});
-      return { success: true };
+      const user: ZetkinUser = await apiClient.get(`/api/users/me`);
+      if (user.is_verifiend) {
+        router.push('https://login.zetk.in/');
+      }
+
+      await apiClient.post(`/api/users/me/verification_codes`, {});
+
+      return {
+        success: true,
+      };
     } catch (err) {
       return { errorCode: 'UNKNOWN_ERROR', success: false };
     } finally {

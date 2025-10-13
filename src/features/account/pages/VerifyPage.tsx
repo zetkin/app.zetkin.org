@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, Suspense } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Box } from '@mui/material';
 import NextLink from 'next/link';
 
@@ -15,11 +15,13 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messagesIds';
 import messagesIds from '../l10n/messagesIds';
 import { UseSendVerification } from '../hooks/useSendVerification';
+import ZUIAlert from 'zui/components/ZUIAlert';
 
 const VerifyPage: FC = () => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const { loading, sendVerification } = UseSendVerification();
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <Suspense
@@ -41,16 +43,36 @@ const VerifyPage: FC = () => {
         renderContent={() => {
           return (
             <>
-              <ZUIText>
-                <Msg id={messagesIds.verify.description} />
-              </ZUIText>
-              <ZUIButton
-                disabled={loading}
-                label={messages.verify.sendVerification()}
-                onClick={() => sendVerification()}
-                variant={loading ? 'loading' : 'primary'}
-              />
+              <form
+                onSubmit={async (ev) => {
+                  ev.preventDefault();
 
+                  const result = await sendVerification();
+                  if (result.errorCode) {
+                    setError('UNKNOWN_ERROR');
+                  }
+                }}
+              >
+                <Box display="flex" flexDirection="column" gap={1}>
+                  <ZUIText>
+                    <Msg id={messagesIds.verify.description} />
+                  </ZUIText>
+                  {error && (
+                    <ZUIAlert
+                      severity={'error'}
+                      title={messages.verify.error()}
+                    />
+                  )}
+                  <ZUIButton
+                    actionType="submit"
+                    disabled={loading}
+                    fullWidth
+                    label={messages.verify.sendVerification()}
+                    size="large"
+                    variant={loading ? 'loading' : 'primary'}
+                  />
+                </Box>
+              </form>
               <Box
                 sx={{
                   bottom: { md: 'auto', xs: 0 },
