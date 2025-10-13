@@ -358,6 +358,7 @@ const DateAndLocation: FC<{
             <ZUIIcon icon={LocationPin} />
             {}
             <ZUILink
+              hoverUnderline={true}
               href={`https://www.google.com/maps?q=${event.location.lat.toFixed(
                 4
               )},${event.location.lng.toFixed(4)}(${encodeURIComponent(
