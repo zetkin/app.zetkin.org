@@ -356,7 +356,16 @@ const DateAndLocation: FC<{
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Box alignItems="center" display="flex" gap={1}>
             <ZUIIcon icon={LocationPin} />
-            <ZUIText variant="bodyMdSemiBold">{event.location.title}</ZUIText>
+            {}
+            <ZUILink
+              href={`https://www.google.com/maps?q=${event.location.lat.toFixed(
+                4
+              )},${event.location.lng.toFixed(4)}(${encodeURIComponent(
+                event.location.title
+              )})`}
+              openInNewTab={true}
+              text={event.location.title}
+            />
           </Box>
           <Map
             initialViewState={{

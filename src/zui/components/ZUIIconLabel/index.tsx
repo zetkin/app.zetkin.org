@@ -1,14 +1,23 @@
-import { FC, ReactNode } from 'react';
-import { Box, Typography } from '@mui/material';
+import { FC, ReactNode, useMemo } from 'react';
+import { Box, styled, Typography, useTheme } from '@mui/material';
 
 import { MUIIcon, ZUIPrimary, ZUISecondary, ZUISize } from '../types';
 import ZUIIcon from '../ZUIIcon';
+import NextLink from 'next/link';
 
 const TextVariants = {
   large: 'bodyMdRegular',
   medium: 'bodySmRegular',
   small: 'bodySmRegular',
 } as const;
+
+export type ZUILabelText =
+  | string
+  | {
+      href: string;
+      openNewTab?: boolean;
+      text: string;
+    };
 
 export type ZUIIconLabelProps = {
   /**
@@ -28,7 +37,7 @@ export type ZUIIconLabelProps = {
   /**
    * The label
    */
-  label: string | string[];
+  label: ZUILabelText | ZUILabelText[];
 
   /**
    * If true, the text will not overflow and end with an ellipsis.
@@ -43,6 +52,31 @@ export type ZUIIconLabelProps = {
    * Defaults to "medium."
    */
   size?: ZUISize;
+};
+
+const LabelTextLink = styled(NextLink)(({ theme }) => ({
+  '&:hover': {
+    textDecoration: 'underline',
+  },
+  color: theme.palette.secondary.main,
+  textDecoration: 'none',
+}));
+
+const LabelText = ({ label }: { label: ZUILabelText }) => {
+  if (typeof label === 'string') {
+    return label;
+  }
+
+  return (
+    <LabelTextLink
+      href={label.href}
+      passHref
+      rel={label.openNewTab && 'noopener noreferrer nofollow'}
+      target={label.openNewTab && '_blank'}
+    >
+      {label.text}
+    </LabelTextLink>
+  );
 };
 
 const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
@@ -64,10 +98,10 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
         );
       }
 
-      labels.push(text);
+      labels.push(<LabelText label={text} />);
     });
   } else {
-    labels.push(label);
+    labels.push(<LabelText label={label} />);
   }
 
   return (

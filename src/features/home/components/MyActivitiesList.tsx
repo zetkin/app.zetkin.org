@@ -91,12 +91,16 @@ const MyActivitiesList: FC = () => {
               info={[
                 {
                   Icon: GroupWorkOutlined,
-                  labels: activity.data.campaign
-                    ? [
-                        activity.data.campaign.title,
-                        activity.data.organization.title,
-                      ]
-                    : [activity.data.organization.title],
+                  labels: [
+                    activity.data.campaign && {
+                      href: `/o/${activity.data.organization.id}/projects/${activity.data.campaign.id}`,
+                      text: activity.data.campaign.title,
+                    },
+                    {
+                      href: `/o/${activity.data.organization.id}/`,
+                      text: activity.data.organization.title,
+                    },
+                  ].filter((label) => !!label) as string[],
                 },
               ]}
               title={
