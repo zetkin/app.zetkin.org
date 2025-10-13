@@ -515,6 +515,11 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    // Wait for the select input to be visible to ensure page is loaded
+    await page
+      .locator('[id="mui-component-select-3.options"]')
+      .waitFor({ state: 'visible' });
+
     // Navigate to survey and submit without touching the select widget (or any)
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
