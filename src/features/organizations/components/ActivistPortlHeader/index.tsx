@@ -1,6 +1,7 @@
 import { Box, Button } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { Home, Logout, Settings, Event } from '@mui/icons-material';
 
 import messageIds from 'features/organizations/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
@@ -38,21 +39,35 @@ const ActivistPortalHeader: FC<Props> = ({
   const [logoutMenuAnchorEl, setLogoutMenuAnchorEl] =
     useState<HTMLButtonElement | null>(null);
   const router = useRouter();
-  const path = usePathname();
 
-  const menuItems: MenuItem[] = [
-    {
-      label: messages.home.menu.logout(),
-      onClick: () => router.push('/logout'),
-    },
-  ];
-  if (!path?.startsWith('/my')) {
-    menuItems.unshift({
-      divider: true,
-      label: process.env.HOME_TITLE || messages.home.menu.myZetkin(),
-      onClick: () => router.push('/my'),
-    });
-  }
+  const menuItems: MenuItem[] = useMemo(
+    () => [
+      {
+        divider: true,
+        label: messages.home.menu.myActivities(),
+        onClick: () => router.push('/my/home'),
+        startIcon: Home,
+      },
+      {
+        divider: true,
+        label: messages.home.menu.allEvents(),
+        onClick: () => router.push('/my/feed'),
+        startIcon: Event,
+      },
+      {
+        divider: true,
+        label: messages.home.menu.settings(),
+        onClick: () => router.push('/my/settings'),
+        startIcon: Settings,
+      },
+      {
+        label: messages.home.menu.logout(),
+        onClick: () => router.push('/logout'),
+        startIcon: Logout,
+      },
+    ],
+    [messages, router]
+  );
 
   const memberships = useMemberships().data || [];
   const isOfficial = memberships.find((membership) => membership.role != null);
