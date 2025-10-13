@@ -37,6 +37,14 @@ type Props = {
 
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
+const getCountryName = (code: string) => {
+  try {
+    return regionNames.of(code);
+  } catch (_) {
+    return code;
+  }
+};
+
 const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const dispatch = useAppDispatch();
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -159,7 +167,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
                       })}
                     />
                   }
-                  label={regionNames.of(org.country)}
+                  label={getCountryName(org.country)}
                   size={'sm'}
                 />
               ) : null}
