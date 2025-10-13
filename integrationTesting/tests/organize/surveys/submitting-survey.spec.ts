@@ -519,7 +519,10 @@ test.describe('User submitting a survey', () => {
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
-    await page.click('input[name="sig"][value="anonymous"]');
+    const anonymousSig = await page.waitForSelector(
+      'input[name="sig"][value="anonymous"]'
+    );
+    await anonymousSig.click();
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
