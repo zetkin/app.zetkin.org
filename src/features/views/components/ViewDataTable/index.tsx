@@ -156,6 +156,10 @@ const style = {
   border: 'none',
 };
 
+type Row = Record<string, unknown> & {
+  id: number;
+};
+
 const slots = {
   columnMenu: ViewDataTableColumnMenu,
   footer: ViewDataTableFooter,
@@ -470,7 +474,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const gridRows = useMemo(() => {
     const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
     return rowsWithSearch.map((input) => {
-      const output: Record<string, unknown> = {
+      const output: Row = {
         id: input.id,
       };
       input.content.forEach((cellValue, colIndex) => {
@@ -654,7 +658,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
 
   const processRowUpdate = useCallback(
-    (after: object, before: object): object => {
+    (after: Row, before: Row): Row => {
       const changedField = Object.keys(after).find(
         (key) => after[key] != before[key]
       );
