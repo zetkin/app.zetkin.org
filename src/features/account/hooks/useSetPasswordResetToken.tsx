@@ -24,7 +24,7 @@ export function UseSetPasswordResetToken(
   ): Promise<SetPasswordResetTokenStatus> => {
     setLoading(true);
     try {
-      await apiClient.post(`/users/${userId}/password`, {
+      await apiClient.post(`/api/users/${userId}/password`, {
         new_password: password,
         reset_code: token,
       });
