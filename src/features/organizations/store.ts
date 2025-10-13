@@ -25,6 +25,7 @@ type OrgEventFilters = {
 };
 
 export interface OrganizationsStoreSlice {
+  allOrganizations: RemoteList<ZetkinOrganization>;
   eventsByOrgId: Record<number, RemoteList<ZetkinEvent>>;
   filters: OrgEventFilters;
   orgData: RemoteItem<ZetkinOrganization>;
@@ -34,6 +35,8 @@ export interface OrganizationsStoreSlice {
 }
 
 const initialState: OrganizationsStoreSlice = {
+  allOrganizations: remoteList(),
+  campaignsByOrgId: {},
   eventsByOrgId: {},
   filters: {
     customDatesToFilterBy: [null, null],
@@ -52,6 +55,34 @@ const OrganizationsSlice = createSlice({
   initialState,
   name: 'organizations',
   reducers: {
+    allOrganizationsLoad: (state) => {
+      state.allOrganizations.isLoading = true;
+    },
+    allOrganizationsLoaded: (
+      state,
+      action: PayloadAction<ZetkinOrganization[]>
+    ) => {
+      state.allOrganizations.data = action.payload;
+      state.allOrganizations.loaded = new Date().toISOString();
+      state.allOrganizations.isLoading = false;
+    },
+    campaignsLoad: (state, action: PayloadAction<number>) => {
+      const orgId = action.payload;
+      if (!state.campaignsByOrgId[orgId]) {
+        state.campaignsByOrgId[orgId] = remoteList();
+      }
+      state.campaignsByOrgId[orgId].isLoading = true;
+    },
+    campaignsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinCampaign[]]>
+    ) => {
+      const [orgId, campaigns] = action.payload;
+
+      state.campaignsByOrgId[orgId] = remoteList(campaigns);
+      state.campaignsByOrgId[orgId].loaded = new Date().toISOString();
+      state.campaignsByOrgId[orgId].isLoading = false;
+    },
     filtersUpdated: (
       state,
       action: PayloadAction<Partial<OrgEventFilters>>
@@ -166,6 +197,8 @@ const OrganizationsSlice = createSlice({
 
 export default OrganizationsSlice;
 export const {
+  allOrganizationsLoaded,
+  allOrganizationsLoad,
   filtersUpdated,
   orgEventsLoad,
   orgEventsLoaded,

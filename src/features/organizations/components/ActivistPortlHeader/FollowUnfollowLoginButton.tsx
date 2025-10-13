@@ -7,15 +7,14 @@ import messageIds from 'features/organizations/l10n/messageIds';
 import ZUIButton from 'zui/components/ZUIButton';
 import useFollowOrgMutations from 'features/organizations/hooks/useFollowOrgMutations';
 import useConnectOrg from 'features/organizations/hooks/useConnectOrg';
+import { ZetkinMembership } from 'utils/types/zetkin';
 
-type Props = {
+export const FollowUnfollowLoginButtonDirect: FC<{
+  membership: ZetkinMembership | null;
   orgId: number;
-};
-
-const FollowUnfollowLoginButton: FC<Props> = ({ orgId }) => {
-  const messages = useMessages(messageIds);
+}> = ({ orgId, membership }) => {
   const user = useUser();
-  const membership = useMembership(orgId).data;
+  const messages = useMessages(messageIds);
   const { followOrg, unfollowOrg } = useFollowOrgMutations(orgId);
   const { connectOrg } = useConnectOrg(orgId);
 
@@ -54,6 +53,18 @@ const FollowUnfollowLoginButton: FC<Props> = ({ orgId }) => {
         />
       )}
     </>
+  );
+};
+
+type Props = {
+  orgId: number;
+};
+
+const FollowUnfollowLoginButton: FC<Props> = ({ orgId }) => {
+  const membership = useMembership(orgId).data;
+
+  return (
+    <FollowUnfollowLoginButtonDirect orgId={orgId} membership={membership} />
   );
 };
 

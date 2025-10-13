@@ -4,7 +4,9 @@ import { ZetkinMembership } from 'utils/types/zetkin';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { userMembershipsLoad, userMembershipsLoaded } from '../store';
 
-export default function useMemberships(): IFuture<ZetkinMembership[]> {
+export default function useMemberships(
+  ignoreRole?: boolean
+): IFuture<ZetkinMembership[]> {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const membershipList = useAppSelector(
@@ -17,6 +19,11 @@ export default function useMemberships(): IFuture<ZetkinMembership[]> {
     loader: () =>
       apiClient
         .get<ZetkinMembership[]>(`/api/users/me/memberships`)
-        .then((response) => response.filter((m) => m.role != null)),
+        .then((response) => {
+          if (ignoreRole) {
+            return response;
+          }
+          return response.filter((m) => m.role != null);
+        }),
   });
 }
