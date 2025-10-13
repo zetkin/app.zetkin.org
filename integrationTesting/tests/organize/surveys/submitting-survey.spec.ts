@@ -520,11 +520,6 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    // Wait for the select input to be visible to ensure page is loaded
-    await page
-      .locator('[id="mui-component-select-3.options"]')
-      .waitFor({ state: 'visible' });
-
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
