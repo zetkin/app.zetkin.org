@@ -55,6 +55,12 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
     });
   }
 
+  navBarItems.push({
+    href: `/o/${org.id}/projects`,
+    label: messages.home.tabs.projects(),
+    value: 'projects',
+  });
+
   function copyUrlToClipboard() {
     const url = `${location.protocol}//${location.host}/o/${org.id}/events.ics`;
     navigator.clipboard.writeText(url);
