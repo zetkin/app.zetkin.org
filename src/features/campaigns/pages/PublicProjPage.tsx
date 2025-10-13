@@ -5,7 +5,7 @@ import { Box, Fade, List, ListItem, Switch } from '@mui/material';
 import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
-import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
+import { Clear, CalendarMonthOutlined, EventBusy } from '@mui/icons-material';
 
 import EventListItem from 'features/home/components/EventListItem';
 import { ZetkinEventWithStatus } from 'features/home/types';
@@ -201,8 +201,6 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
 
   const dates = Object.keys(eventsByDate).sort();
 
-  const showNoEventsBlurb = !allEvents.length;
-
   return (
     <Box
       sx={{
@@ -214,56 +212,40 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         my: 2,
       }}
     >
-      {showNoEventsBlurb && (
-        <Box key="empty">
-          <NoEventsBlurb
-            description={
-              campaign
-                ? messages.publicProjectPage.eventList.noEventsBlurb.description(
-                    { project: campaign.title }
-                  )
-                : undefined
-            }
-            title={messages.publicProjectPage.eventList.noEventsBlurb.headline()}
+      <Box
+        alignItems="center"
+        display="flex"
+        gap={1}
+        maxWidth="100%"
+        padding={1}
+        sx={{ overflowX: 'auto' }}
+      >
+        {isFiltered && (
+          <ZUIFilterButton
+            active={true}
+            circular
+            label={Clear}
+            onClick={() => {
+              dispatch(
+                filtersUpdated({
+                  customDatesToFilterBy: [null, null],
+                  dateFilterState: null,
+                  geojsonToFilterBy: [],
+                })
+              );
+              eventTypeFilter.clearEventTypes();
+            }}
           />
-        </Box>
-      )}
-      {allEvents.length != 0 && (
-        <Box
-          alignItems="center"
-          display="flex"
-          gap={1}
-          maxWidth="100%"
-          padding={1}
-          sx={{ overflowX: 'auto' }}
-        >
-          {isFiltered && (
-            <ZUIFilterButton
-              active={true}
-              circular
-              label={Clear}
-              onClick={() => {
-                dispatch(
-                  filtersUpdated({
-                    customDatesToFilterBy: [null, null],
-                    dateFilterState: null,
-                    geojsonToFilterBy: [],
-                  })
-                );
-                eventTypeFilter.clearEventTypes();
-              }}
-            />
-          )}
-          {filters.map((filter) => (
-            <ZUIFilterButton
-              key={filter.key}
-              active={filter.active}
-              label={filter.label}
-              onClick={filter.onClick}
-            />
-          ))}
-        </Box>
-      )}
+        )}
+        {filters.map((filter) => (
+          <ZUIFilterButton
+            key={filter.key}
+            active={filter.active}
+            label={filter.label}
+            onClick={filter.onClick}
+          />
+        ))}
+      </Box>
       {filteredEvents.length == 0 && (
         <Box
           alignItems="center"
@@ -279,7 +261,7 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
               id={messageIds.publicProjectPage.eventList.emptyList.message}
             />
           </ZUIText>
-          <Search color="secondary" fontSize="large" />
+          <EventBusy color="secondary" fontSize="large" />
           {isFiltered && (
             <ZUIButton
               label={messages.publicProjectPage.eventList.emptyList.removeFiltersButton()}

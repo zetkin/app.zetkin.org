@@ -89,7 +89,7 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
       }
       locationFilter={geojsonToFilterBy}
       setLocationFilter={setLocationFilter}
-      showMap={allEvents.length > 0}
+      showMap={true}
     >
       {children}
     </EventMapLayout>
