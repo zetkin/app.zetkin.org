@@ -23,7 +23,7 @@ export function useCreateNewAccount(): UseCreateNewAccountProps {
   ): Promise<CreateNewAccountStatus> => {
     setLoading(true);
     try {
-      await apiClient.post(`https://api.zetk.in/v1/users`, {
+      await apiClient.post(`/api/users`, {
         ...formData,
       });
       return { success: true };
