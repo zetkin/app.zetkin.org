@@ -69,21 +69,24 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                 messages.eventPage.defaultTitle()
               }
               topLeftComponent={
-                <NextLink href={`/o/${event.organization.id}`} passHref>
-                  <Box
-                    sx={{
-                      alignItems: 'center',
-                      display: 'inline-flex',
-                      gap: 1,
-                    }}
-                  >
-                    <ZUIOrgLogoAvatar
-                      orgId={event.organization.id}
-                      size="small"
-                    />
-                    <ZUIText>{event.organization.title}</ZUIText>
-                  </Box>
-                </NextLink>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'inline-flex',
+                    gap: 1,
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ZUIOrgLogoAvatar
+                    orgId={event.organization.id}
+                    size="small"
+                  />
+                  <ZUILink
+                    hoverUnderline={true}
+                    href={`/o/${event.organization.id}`}
+                    text={event.organization.title}
+                  />
+                </Box>
               }
             />
           </Box>
