@@ -88,6 +88,8 @@ const MyActivitiesList: FC = () => {
                   variant="secondary"
                 />,
               ]}
+              description={activity.data.description}
+              href={href}
               info={[
                 {
                   Icon: GroupWorkOutlined,
@@ -121,7 +123,23 @@ const MyActivitiesList: FC = () => {
                   variant="secondary"
                 />,
               ]}
-              info={[]}
+              description={activity.data.instructions}
+              href={href}
+              info={[
+                {
+                  Icon: GroupWorkOutlined,
+                  labels: [
+                    {
+                      href: `/o/${activity.data.organization_id}/projects/${activity.data.project_id}`,
+                      text: `<${activity.data.project_id}>`,
+                    },
+                    {
+                      href: `/o/${activity.data.organization_id}/`,
+                      text: `<${activity.data.organization_id}>`,
+                    },
+                  ],
+                },
+              ]}
               title={
                 activity.data.title || messages.defaultTitles.areaAssignment()
               }

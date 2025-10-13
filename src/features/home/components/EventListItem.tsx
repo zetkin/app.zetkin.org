@@ -35,6 +35,7 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
   return (
     <MyActivityListItem
       actions={actions}
+      description={event.info_text}
       href={href}
       image={event.cover_file?.url}
       info={[
