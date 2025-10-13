@@ -4,6 +4,7 @@ import { FC } from 'react';
 
 import { ZUIBadgeProps } from '../ZUIBadge';
 import { getContrastColor } from 'utils/colorUtils';
+import { MUIIcon } from '../types';
 
 type LinkTabItem = {
   /**
@@ -15,6 +16,11 @@ type LinkTabItem = {
    * The href the tab routes to.
    */
   href: string;
+
+  /**
+   * An icon in front of the tab label. Only shown if badge is not enabled
+   */
+  icon?: MUIIcon;
 
   /**
    * The label of the tab.
@@ -114,11 +120,13 @@ const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
                 number={tab.badge.number}
                 truncateLargeNumber={tab.badge.truncateLargeNumber}
               />
+            ) : tab.icon ? (
+              <tab.icon sx={{ fontSize: '1rem' }} />
             ) : (
               ''
             )
           }
-          iconPosition="end"
+          iconPosition={tab.badge ? 'end' : 'start'}
           label={tab.label}
           sx={{
             fontSize: '0.875rem',
