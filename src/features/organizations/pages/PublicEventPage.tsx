@@ -35,6 +35,8 @@ import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
+import { Typography } from '@mui/material';
+import oldTheme from '../../../theme';
 
 type Props = {
   eventId: number;
@@ -44,6 +46,7 @@ type Props = {
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
   const myEvents = useMyEvents();
+  const messages = useMessages(messageIds);
 
   const baseEvent = useEvent(orgId, eventId)?.data;
   const baseEventWithStatus: ZetkinEventWithStatus | undefined = baseEvent
@@ -188,6 +191,12 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                       gap: 2,
                     }}
                   >
+                    <Typography
+                      color={oldTheme.palette.text.secondary}
+                      variant="subtitle1"
+                    >
+                      {messages.eventPage.description().toUpperCase()}
+                    </Typography>
                     <Box display="flex" flexDirection="column" gap={1}>
                       {paragraphs}
                     </Box>

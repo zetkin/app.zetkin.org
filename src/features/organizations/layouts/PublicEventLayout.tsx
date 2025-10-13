@@ -3,6 +3,7 @@
 import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
+import { Typography } from '@mui/material';
 
 import ActivistPortalHeader from '../components/ActivistPortlHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -13,6 +14,7 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = PropsWithChildren<{
   eventId: number;
@@ -56,8 +58,21 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                       start={new Date(removeOffset(event.start_time))}
                     />
                   </ZUIText>
+                  <Typography component="span">·</Typography>
                   <ZUIText variant="bodySmRegular">
-                    {event.location?.title || (
+                    {event.location ? (
+                      <ZUILink
+                        hoverUnderline={true}
+                        href={`https://www.google.com/maps?q=${event.location.lat.toFixed(
+                          4
+                        )},${event.location.lng.toFixed(
+                          4
+                        )}(${encodeURIComponent(event.location.title)})`}
+                        openInNewTab={true}
+                        text={event.location.title}
+                        variant={'primary'}
+                      />
+                    ) : (
                       <Msg id={messageIds.eventPage.noLocation} />
                     )}
                   </ZUIText>
