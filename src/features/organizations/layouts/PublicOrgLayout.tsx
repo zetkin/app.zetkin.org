@@ -3,7 +3,7 @@
 import { Box } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
 import { usePathname } from 'next/navigation';
-import { CalendarMonth, NorthWest } from '@mui/icons-material';
+import { CalendarMonth, Email, NorthWest, Public } from '@mui/icons-material';
 import NextLink from 'next/link';
 
 import { Msg, useMessages } from 'core/i18n';
@@ -21,11 +21,15 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ZUIIconLabel from '../../../zui/ZUIIconLabel';
+import ZUILink from '../../../zui/components/ZUILink';
 
 type Props = {
   children: ReactNode;
   org: ZetkinOrganization;
 };
+
+const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
 const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const dispatch = useAppDispatch();
@@ -99,6 +103,47 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
             </>
           }
           selectedTab={lastSegment}
+          subtitle={
+            <Box>
+              {org.email ? (
+                <ZUIIconLabel
+                  color={'secondary'}
+                  icon={
+                    <Email
+                      sx={(theme) => ({
+                        color: theme.palette.text.secondary,
+                        fontSize: '1em',
+                      })}
+                    />
+                  }
+                  label={
+                    <ZUILink
+                      hoverUnderline={true}
+                      href={`mailto:${org.email}`}
+                      text={org.email}
+                      variant={'secondary'}
+                    />
+                  }
+                  size={'sm'}
+                />
+              ) : null}
+              {org.country ? (
+                <ZUIIconLabel
+                  color={'secondary'}
+                  icon={
+                    <Public
+                      sx={(theme) => ({
+                        color: theme.palette.text.secondary,
+                        fontSize: '1em',
+                      })}
+                    />
+                  }
+                  label={regionNames.of(org.country)}
+                  size={'sm'}
+                />
+              ) : null}
+            </Box>
+          }
           tabs={navBarItems}
           title={
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
