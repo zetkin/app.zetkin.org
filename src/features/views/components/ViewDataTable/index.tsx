@@ -653,21 +653,24 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setSelection]
   );
 
-  const processRowUpdate = useCallback((after: any, before: any): any => {
-    const changedField = Object.keys(after).find(
-      (key) => after[key] != before[key]
-    );
-    if (changedField) {
-      const col = colFromFieldName(changedField, columns);
-      if (col) {
-        const proc = columnTypes[col.type].processRowUpdate;
-        if (proc) {
-          proc(viewGrid, col, after.id, after[changedField]);
+  const processRowUpdate = useCallback(
+    (after: object, before: object): object => {
+      const changedField = Object.keys(after).find(
+        (key) => after[key] != before[key]
+      );
+      if (changedField) {
+        const col = colFromFieldName(changedField, columns);
+        if (col) {
+          const proc = columnTypes[col.type].processRowUpdate;
+          if (proc) {
+            proc(viewGrid, col, after.id, after[changedField]);
+          }
         }
       }
-    }
-    return after;
-  }, []);
+      return after;
+    },
+    [columns]
+  );
 
   const mainSx = useMemo(
     () => ({
