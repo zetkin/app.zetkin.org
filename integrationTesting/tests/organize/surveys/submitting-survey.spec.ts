@@ -506,6 +506,11 @@ test.describe('User submitting a survey', () => {
       }
     );
 
+    // Navigate to survey and submit without touching the select widget (or any)
+    await page.goto(
+      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
+    );
+
     // Respond when survey is submitted
     moxy.setZetkinApiMock(
       `/orgs/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}/submissions`,
@@ -520,10 +525,6 @@ test.describe('User submitting a survey', () => {
       .locator('[id="mui-component-select-3.options"]')
       .waitFor({ state: 'visible' });
 
-    // Navigate to survey and submit without touching the select widget (or any)
-    await page.goto(
-      `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
-    );
     await page.click('input[name="sig"][value="anonymous"]');
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
