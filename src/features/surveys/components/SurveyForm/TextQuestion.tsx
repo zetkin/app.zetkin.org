@@ -6,6 +6,7 @@ import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
 import messageIds from 'features/surveys/l10n/messageIds';
+import LinkifiedText from './LinkifiedText';
 
 export type SurveyTextQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;
@@ -36,7 +37,7 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({
           </FormLabel>
           {element.question.description && (
             <ZUIText id={`description-${element.id}`}>
-              {element.question.description}
+              <LinkifiedText text={element.question.description} />
             </ZUIText>
           )}
         </Box>
