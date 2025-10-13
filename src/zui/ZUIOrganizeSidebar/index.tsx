@@ -5,6 +5,7 @@ import { useState } from 'react';
 import {
   Architecture,
   Close,
+  Dashboard,
   ExpandLess,
   ExpandMore,
   Explore,
@@ -113,6 +114,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   };
 
   const menuItemsMap = [
+    { icon: <Dashboard />, name: 'overview' },
     { icon: <Groups />, name: 'people' },
     { icon: <Architecture />, name: 'projects' },
     { icon: <Explore />, name: 'journeys' },

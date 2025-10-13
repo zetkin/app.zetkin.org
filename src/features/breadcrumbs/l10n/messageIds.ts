@@ -27,6 +27,7 @@ export default makeMessages('feat.breadcrumbs', {
     milestones: m('Milestones'),
     new: m('New'),
     organize: m('Organize'),
+    overview: m('Overview'),
     participants: m('Participants'),
     people: m('People'),
     plan: m('Plan'),
