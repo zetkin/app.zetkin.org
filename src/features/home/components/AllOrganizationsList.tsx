@@ -19,6 +19,7 @@ import {
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import ZUILink from 'zui/components/ZUILink';
 import { FollowUnfollowLoginButtonDirect } from 'features/organizations/components/ActivistPortlHeader/FollowUnfollowLoginButton';
+import ZUIOrgLogoAvatar from '../../../zui/components/ZUIOrgLogoAvatar';
 
 type OrganizationTreeElement = {
   children?: OrganizationTreeElement[];
@@ -63,7 +64,7 @@ const OrganizationTreeItem = React.forwardRef(function CustomTreeItem(
             userSelect: 'none',
           }}
         >
-          {/*<Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} />*/}
+          <ZUIOrgLogoAvatar orgId={elem.organization.id} />
 
           <ZUILink
             hoverUnderline={true}
