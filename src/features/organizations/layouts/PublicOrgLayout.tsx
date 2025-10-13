@@ -3,7 +3,13 @@
 import { Box } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
 import { usePathname } from 'next/navigation';
-import { CalendarMonth, Email, NorthWest, Public } from '@mui/icons-material';
+import {
+  CalendarMonth,
+  Email,
+  NorthWest,
+  Phone,
+  Public,
+} from '@mui/icons-material';
 import NextLink from 'next/link';
 
 import { Msg, useMessages } from 'core/i18n';
@@ -124,6 +130,21 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
                       variant={'secondary'}
                     />
                   }
+                  size={'sm'}
+                />
+              ) : null}
+              {org.phone ? (
+                <ZUIIconLabel
+                  color={'secondary'}
+                  icon={
+                    <Phone
+                      sx={(theme) => ({
+                        color: theme.palette.text.secondary,
+                        fontSize: '1em',
+                      })}
+                    />
+                  }
+                  label={org.phone}
                   size={'sm'}
                 />
               ) : null}
