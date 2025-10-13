@@ -47,7 +47,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -172,7 +172,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -310,7 +310,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -389,7 +389,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -523,7 +523,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -563,7 +563,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -598,7 +598,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -629,7 +629,7 @@ test.describe('User submitting a survey', () => {
     await page.click('data-testid=Survey-acceptTerms');
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -653,7 +653,7 @@ test.describe('User submitting a survey', () => {
 
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.click('data-testid=Survey-submit'),
     ]);
 
     await expect(page.locator('data-testid=Survey-error')).toBeVisible();
