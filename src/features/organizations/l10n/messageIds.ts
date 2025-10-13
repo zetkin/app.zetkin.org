@@ -85,6 +85,9 @@ export default makeMessages('feat.organizations', {
   page: {
     title: m('Select organization:'),
   },
+  projectsList: {
+    emptyList: m('Could not find any projects'),
+  },
   sidebar: {
     allOrganizations: m('All organizations'),
     filter: {
