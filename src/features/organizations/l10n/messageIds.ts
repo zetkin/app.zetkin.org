@@ -68,7 +68,7 @@ export default makeMessages('feat.organizations', {
     },
     tabs: {
       calendar: m('Calendar'),
-      suborgs: m('Explore'),
+      suborgs: m('Sub-organizations'),
     },
   },
   noEventsBlurb: {
