@@ -1,6 +1,7 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import { orgFollowed, orgUnfollowed } from '../store';
 import { ZetkinMembership } from 'utils/types/zetkin';
+import { allEventsUnload } from '../../events/store';
 
 export default function useFollowOrgMutations(orgId: number) {
   const apiClient = useApiClient();
@@ -11,11 +12,13 @@ export default function useFollowOrgMutations(orgId: number) {
       follow: true,
     });
     dispatch(orgFollowed(membership));
+    dispatch(allEventsUnload());
   };
 
   const unfollowOrg = async () => {
     await apiClient.delete(`/api/users/me/following/${orgId}`);
     dispatch(orgUnfollowed(orgId));
+    dispatch(allEventsUnload());
   };
 
   return { followOrg, unfollowOrg };

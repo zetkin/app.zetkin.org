@@ -105,6 +105,9 @@ const eventsSlice = createSlice({
       state.allEventsList = remoteList(action.payload);
       state.allEventsList.loaded = new Date().toISOString();
     },
+    allEventsUnload: (state) => {
+      state.allEventsList = remoteList();
+    },
     campaignEventsLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       state.eventsByCampaignId[id] = remoteList<ZetkinEvent>();
@@ -733,6 +736,7 @@ export default eventsSlice;
 export const {
   allEventsLoad,
   allEventsLoaded,
+  allEventsUnload,
   campaignEventsLoad,
   campaignEventsLoaded,
   eventCreate,
