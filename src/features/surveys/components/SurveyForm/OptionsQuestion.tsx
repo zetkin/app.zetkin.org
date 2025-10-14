@@ -144,8 +144,8 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                 {options.map((option: ZetkinSurveyOption) => (
                   <MenuItem
                     key={option.id}
-                    value={option.id}
                     sx={{ whiteSpace: 'normal' }}
+                    value={option.id}
                   >
                     <Typography
                       flex="wrap"
