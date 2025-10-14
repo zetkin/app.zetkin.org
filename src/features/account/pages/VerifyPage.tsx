@@ -2,7 +2,6 @@
 
 import { FC, Suspense, useState } from 'react';
 import { Box } from '@mui/material';
-import NextLink from 'next/link';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUISection from 'zui/components/ZUISection';
