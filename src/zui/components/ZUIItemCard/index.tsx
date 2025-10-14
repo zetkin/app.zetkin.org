@@ -192,7 +192,7 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
             >
               <Typography variant="bodyMdSemiBold">
                 {href ? (
-                  <ZUILink href={href} text={title} hoverUnderline={true} />
+                  <ZUILink hoverUnderline={true} href={href} text={title} />
                 ) : (
                   title
                 )}

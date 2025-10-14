@@ -14,6 +14,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import CanvassListItem from './CanvassListItem';
+import { ZUILabelText } from '../../../zui/components/ZUIIconLabel';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -103,7 +104,7 @@ const MyActivitiesList: FC = () => {
                       href: `/o/${activity.data.organization.id}/`,
                       text: activity.data.organization.title,
                     },
-                  ].filter((label) => !!label) as string[],
+                  ].filter((label) => !!label) as ZUILabelText[],
                 },
               ]}
               title={

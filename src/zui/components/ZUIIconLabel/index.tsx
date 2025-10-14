@@ -59,13 +59,14 @@ export type ZUIIconLabelProps = {
   size?: ZUISize;
 };
 
-const LabelText = ({ label }: { label: ZUILabelText }) => {
+const getLabelText = (label: ZUILabelText, key: number | string) => {
   if (typeof label === 'string') {
     return label;
   }
 
   return (
     <ZUILink
+      key={key}
       hoverUnderline={true}
       href={label.href}
       openInNewTab={label.openNewTab ?? false}
@@ -97,11 +98,11 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
         i++;
       }
 
-      labels.push(<LabelText key={i} label={text} />);
+      labels.push(getLabelText(text, i));
       i++;
     });
   } else {
-    labels.push(<LabelText key={0} label={label} />);
+    labels.push(getLabelText(label, 0));
   }
 
   return (

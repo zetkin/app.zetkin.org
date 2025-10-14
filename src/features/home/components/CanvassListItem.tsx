@@ -20,6 +20,7 @@ import {
   organizationLoad,
   organizationLoaded,
 } from 'features/organizations/store';
+import { ZUILabelText } from 'zui/components/ZUIIconLabel';
 
 type Props = {
   activity: ZetkinAreaAssignment;
@@ -78,7 +79,10 @@ const useLoadIfNecessary = <
       actionOnSuccess: (data: DataType | typeof errorCatch) => {
         if (data === errorCatch) {
           // state updated by loader
-          return (() => {}) as PayloadAction<OnSuccessPayload>;
+          return {
+            payload: null,
+            type: 'error',
+          } as PayloadAction<OnSuccessPayload>;
         }
 
         setFutureState({
@@ -135,7 +139,7 @@ const useCampaign = (orgId: number, campId: number) => {
   const hooks = useMemo(
     () => ({
       actionOnLoad: () => campaignLoad(campId),
-      actionOnSuccess: (data) => campaignLoaded(data),
+      actionOnSuccess: (data: ZetkinCampaign) => campaignLoaded(data),
       loader: () =>
         apiClient.get<ZetkinCampaign>(`/api/orgs/${orgId}/campaigns/${campId}`),
     }),
@@ -153,7 +157,7 @@ const useOrganization = (orgId: number): IFuture<ZetkinOrganization> => {
   const hooks = useMemo(
     () => ({
       actionOnLoad: () => organizationLoad(),
-      actionOnSuccess: (data) => organizationLoaded(data),
+      actionOnSuccess: (data: ZetkinOrganization) => organizationLoaded(data),
       loader: () => apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`),
     }),
     [orgId]
@@ -182,7 +186,7 @@ const CanvassListItem: React.FC<Props> = ({ href, activity }) => {
             href: `/o/${activity.organization_id}/`,
             text: org.data ? org.data.title : `<${activity.organization_id}>`,
           },
-        ].filter((label) => !!label),
+        ].filter((label) => !!label) as ZUILabelText[],
       },
     ],
     [proj.data, org.data]

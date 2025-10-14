@@ -64,8 +64,8 @@ const ZUILink: FC<ZUILinkProps> = ({
           textDecorationColor: theme.palette.text[variant],
         },
         color: theme.palette.text[variant],
-        textDecorationColor: theme.palette.text[variant],
         textDecoration: hoverUnderline ? 'none' : 'underline',
+        textDecorationColor: theme.palette.text[variant],
       })}
       target={openInNewTab ? '_blank' : ''}
       variant={size ? linkVariants[size] : undefined}
