@@ -87,14 +87,6 @@ const VerifyPage: FC = () => {
                   right: { md: 'auto', xs: 0 },
                 }}
               >
-                <NextLink href={`https://login.zetk.in/`}>
-                  <ZUIButton
-                    fullWidth
-                    label={messages.lostPassword.actions.signIn()}
-                    size="large"
-                    variant="secondary"
-                  />
-                </NextLink>
                 <AccountFooter />
               </Box>
             </>
