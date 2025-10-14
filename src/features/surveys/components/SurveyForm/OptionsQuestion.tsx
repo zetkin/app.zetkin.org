@@ -142,9 +142,13 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                 value={dropdownValue}
               >
                 {options.map((option: ZetkinSurveyOption) => (
-                  <MenuItem key={option.id} value={option.id}>
+                  <MenuItem
+                    key={option.id}
+                    value={option.id}
+                    sx={{ whiteSpace: 'normal' }}
+                  >
                     <Typography
-                      noWrap
+                      flex="wrap"
                       sx={(theme) => ({
                         fontFamily: theme.typography.fontFamily,
                         fontSize: '1rem',
