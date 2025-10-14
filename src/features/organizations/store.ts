@@ -36,7 +36,6 @@ export interface OrganizationsStoreSlice {
 
 const initialState: OrganizationsStoreSlice = {
   allOrganizations: remoteList(),
-  campaignsByOrgId: {},
   eventsByOrgId: {},
   filters: {
     customDatesToFilterBy: [null, null],
@@ -62,26 +61,9 @@ const OrganizationsSlice = createSlice({
       state,
       action: PayloadAction<ZetkinOrganization[]>
     ) => {
-      state.allOrganizations.data = action.payload;
+      state.allOrganizations = remoteList(action.payload);
       state.allOrganizations.loaded = new Date().toISOString();
       state.allOrganizations.isLoading = false;
-    },
-    campaignsLoad: (state, action: PayloadAction<number>) => {
-      const orgId = action.payload;
-      if (!state.campaignsByOrgId[orgId]) {
-        state.campaignsByOrgId[orgId] = remoteList();
-      }
-      state.campaignsByOrgId[orgId].isLoading = true;
-    },
-    campaignsLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinCampaign[]]>
-    ) => {
-      const [orgId, campaigns] = action.payload;
-
-      state.campaignsByOrgId[orgId] = remoteList(campaigns);
-      state.campaignsByOrgId[orgId].loaded = new Date().toISOString();
-      state.campaignsByOrgId[orgId].isLoading = false;
     },
     filtersUpdated: (
       state,

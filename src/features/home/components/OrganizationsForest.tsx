@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { Box } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view';
 import {
@@ -13,24 +13,22 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 
-import useOrganizations from 'features/organizations/hooks/useOrganizations';
-import useMemberships from 'features/organizations/hooks/useMemberships';
-import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 import ZUILink from 'zui/components/ZUILink';
 import { FollowUnfollowLoginButtonDirect } from 'features/organizations/components/ActivistPortlHeader/FollowUnfollowLoginButton';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 
 export type OrganizationTreeElement = {
-  children?: OrganizationTreeElement[];
+  children: OrganizationTreeElement[];
   membership: ZetkinMembership | null;
   organization: ZetkinOrganization;
 };
 
 export interface StyledTreeItemProps
-  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+  extends Omit<UseTreeItem2Parameters, 'rootRef' & 'label'>,
     React.HTMLAttributes<HTMLLIElement> {
   elem: OrganizationTreeElement;
+  label: string;
 }
 
 const OrganizationTreeItem = React.forwardRef(function CustomTreeItem(

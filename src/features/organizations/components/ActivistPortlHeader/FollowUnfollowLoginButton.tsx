@@ -64,7 +64,7 @@ const FollowUnfollowLoginButton: FC<Props> = ({ orgId }) => {
   const membership = useMembership(orgId).data;
 
   return (
-    <FollowUnfollowLoginButtonDirect orgId={orgId} membership={membership} />
+    <FollowUnfollowLoginButtonDirect membership={membership} orgId={orgId} />
   );
 };
 

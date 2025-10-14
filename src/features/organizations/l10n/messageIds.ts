@@ -62,9 +62,9 @@ export default makeMessages('feat.organizations', {
     },
     menu: {
       events: m('Events'),
-      organizations: m('Organizations'),
       logout: m('Logout'),
       myZetkin: m('My Zetkin'),
+      organizations: m('Organizations'),
     },
     tabs: {
       calendar: m('Calendar'),

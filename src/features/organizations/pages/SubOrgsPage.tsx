@@ -64,14 +64,7 @@ const SubOrgsPage: FC<Props> = ({ orgId }) => {
           organizations: organizationsFuture,
         }}
       >
-        {({
-          data,
-        }: {
-          data: {
-            memberships: ZetkinMembership[];
-            organizations: ZetkinOrganization[];
-          };
-        }) => (
+        {({ data }) => (
           <SubOrganizationsForest
             memberships={data.memberships}
             organizations={data.organizations}

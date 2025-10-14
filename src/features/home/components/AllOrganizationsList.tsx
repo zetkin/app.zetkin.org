@@ -39,14 +39,7 @@ const AllOrganizationsList: FC = () => {
         organizations: organizationsFuture,
       }}
     >
-      {({
-        data,
-      }: {
-        data: {
-          memberships: ZetkinMembership[];
-          organizations: ZetkinOrganization[];
-        };
-      }) => (
+      {({ data }) => (
         <AllOrganizationsForest
           memberships={data.memberships}
           organizations={data.organizations}
