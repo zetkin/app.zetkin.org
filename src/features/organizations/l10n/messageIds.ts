@@ -4,6 +4,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.organizations', {
   allEventsList: {
+    descriptionReadMore: m('Read more'),
     emptyList: {
       message: m('Could not find any events'),
       removeFiltersButton: m('Clear filters'),
