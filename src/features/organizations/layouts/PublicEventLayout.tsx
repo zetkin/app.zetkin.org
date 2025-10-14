@@ -14,7 +14,6 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
-import ZUILink from 'zui/components/ZUILink';
 
 type Props = PropsWithChildren<{
   eventId: number;
@@ -60,19 +59,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                   </ZUIText>
                   <Typography component="span">·</Typography>
                   <ZUIText variant="bodySmRegular">
-                    {event.location ? (
-                      <ZUILink
-                        hoverUnderline={true}
-                        href={`https://www.google.com/maps?q=${event.location.lat.toFixed(
-                          4
-                        )},${event.location.lng.toFixed(
-                          4
-                        )}(${encodeURIComponent(event.location.title)})`}
-                        openInNewTab={true}
-                        text={event.location.title}
-                        variant={'primary'}
-                      />
-                    ) : (
+                    {event.location?.title || (
                       <Msg id={messageIds.eventPage.noLocation} />
                     )}
                   </ZUIText>
