@@ -15,8 +15,10 @@ import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
 import { UseViewGridReturn } from 'features/views/hooks/useViewGrid';
 import { ZetkinObjectAccess } from 'core/api/types';
-import { AppDispatch, RootState } from 'core/store';
+import { AppDispatch } from 'core/store';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
+import { RemoteList } from 'utils/storeUtils';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 export interface IColumnType<
   ColumnType = ZetkinViewColumn,
@@ -26,7 +28,7 @@ export interface IColumnType<
   getColDef(
     column: ColumnType,
     accessLevel: ZetkinObjectAccess['level'] | null,
-    state?: RootState,
+    tagListState?: RemoteList<ZetkinTag>,
     apiClient?: IApiClient,
     dispatch?: AppDispatch,
     orgId?: number
