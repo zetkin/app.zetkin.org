@@ -65,21 +65,21 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
         tabs={[
           {
             href: `/my/home`,
+            icon: Home,
             label: messages.tabs.home(),
             value: 'home',
-            icon: Home,
           },
           {
             href: `/my/feed`,
+            icon: Event,
             label: messages.tabs.feed(),
             value: 'feed',
-            icon: Event,
           },
           {
             href: `/my/settings`,
+            icon: Settings,
             label: messages.tabs.settings(),
             value: 'settings',
-            icon: Settings,
           },
         ]}
         topLeftComponent={
