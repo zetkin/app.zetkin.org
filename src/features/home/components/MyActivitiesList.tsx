@@ -13,6 +13,7 @@ import useIncrementalDelay from '../hooks/useIncrementalDelay';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
+import AreaAssignmentListItem from './AreaAssignmentListItem';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -107,21 +108,7 @@ const MyActivitiesList: FC = () => {
         } else if (activity.kind == 'canvass') {
           href = `/canvass/${activity.data.id}`;
           elem = (
-            <MyActivityListItem
-              actions={[
-                <ZUIButton
-                  key="mainAction"
-                  href={href}
-                  label={messages.activityList.actions.areaAssignment()}
-                  size="large"
-                  variant="secondary"
-                />,
-              ]}
-              info={[]}
-              title={
-                activity.data.title || messages.defaultTitles.areaAssignment()
-              }
-            />
+            <AreaAssignmentListItem assignment={activity.data} href={href} />
           );
         } else if (activity.kind == 'event') {
           href = `/o/${activity.data.organization.id}/events/${activity.data.id}`;
