@@ -5,8 +5,13 @@ import { FC, Suspense } from 'react';
 
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import AllOrganizationsList from '../components/AllOrganizationsList';
+import ZUIText from 'zui/components/ZUIText';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const OrganizationsPage: FC = () => {
+  const messages = useMessages(messageIds);
+
   return (
     <Suspense
       fallback={
@@ -21,7 +26,14 @@ const OrganizationsPage: FC = () => {
         </Box>
       }
     >
-      <AllOrganizationsList />
+      <Box
+        sx={{
+          p: 2,
+        }}
+      >
+        <ZUIText>{messages.organizationsList.explainer()}</ZUIText>
+        <AllOrganizationsList />
+      </Box>
     </Suspense>
   );
 };

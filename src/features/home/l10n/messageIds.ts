@@ -27,7 +27,9 @@ export default makeMessages('feat.home', {
   },
   allEventsList: {
     emptyList: {
+      followOrganizations: m('To find more events, follow more organizations:'),
       message: m('Could not find any events'),
+      organizations: m('Organizations'),
       removeFiltersButton: m('Clear filters'),
     },
     filterButtonLabels: {
@@ -47,6 +49,11 @@ export default makeMessages('feat.home', {
   },
   footer: {
     privacyPolicy: m('Privacy policy'),
+  },
+  organizationsList: {
+    explainer: m(
+      'To join an organization, click "Connect". To add events to your feed, click "Follow" afterwards.'
+    ),
   },
   settings: {
     accountSettings: {

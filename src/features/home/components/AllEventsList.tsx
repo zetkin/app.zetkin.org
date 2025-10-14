@@ -8,7 +8,7 @@ import {
   ListItemAvatar,
   Switch,
 } from '@mui/material';
-import { CalendarMonthOutlined, Clear, Search } from '@mui/icons-material';
+import { CalendarMonthOutlined, Clear, EventBusy } from '@mui/icons-material';
 import {
   DateRange,
   DateRangeCalendar,
@@ -293,7 +293,7 @@ const AllEventsList: FC = () => {
           <ZUIText color="secondary">
             <Msg id={messageIds.allEventsList.emptyList.message} />
           </ZUIText>
-          <Search color="secondary" fontSize="large" />
+          <EventBusy color="secondary" fontSize="large" />
           {isFiltered && (
             <ZUIButton
               label={messages.allEventsList.emptyList.removeFiltersButton()}
@@ -306,6 +306,14 @@ const AllEventsList: FC = () => {
               variant="secondary"
             />
           )}
+          <ZUIText>
+            {messages.allEventsList.emptyList.followOrganizations()}
+          </ZUIText>
+          <ZUIButton
+            href={'/my/organizations'}
+            label={messages.allEventsList.emptyList.organizations()}
+            variant={'secondary'}
+          />
         </Box>
       )}
       {dates.map((date) => (
