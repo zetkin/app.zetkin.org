@@ -20,6 +20,28 @@ const buildOrganizationForest = (
 
   organizations.forEach((org) => {
     if (org.parent) {
+      if (!orgMap[org.parent.id]) {
+        // add pseudo organization to still show the public subtree
+        orgMap[org.parent.id] = {
+          children: [],
+          membership: null,
+          organization: {
+            avatar_file: null,
+            country: '',
+            email: null,
+            id: org.parent.id,
+            is_active: false,
+            is_open: false,
+            is_public: false,
+            lang: null,
+            parent: null,
+            phone: null,
+            slug: null,
+            title: `<${org.parent.id}>`,
+          },
+        };
+      }
+
       orgMap[org.parent.id].children.push(orgMap[org.id]);
     } else {
       rootOrgs.push(orgMap[org.id]);
