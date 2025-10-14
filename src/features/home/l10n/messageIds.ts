@@ -82,7 +82,7 @@ export default makeMessages('feat.home', {
     },
   },
   tabs: {
-    feed: m('Events'),
+    events: m('Events'),
     home: m('My activities'),
     organizations: m('Organizations'),
     settings: m('Settings'),
