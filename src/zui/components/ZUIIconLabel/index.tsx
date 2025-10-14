@@ -85,19 +85,23 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
   const labels: ReactNode[] = [];
 
   if (Array.isArray(label)) {
+    let i = 0;
+
     label.forEach((text, index) => {
       if (index > 0) {
         labels.push(
-          <Typography key={index} component="span" sx={{ mx: 1 }}>
+          <Typography key={i} component="span" sx={{ mx: 1 }}>
             ·
           </Typography>
         );
+        i++;
       }
 
-      labels.push(<LabelText label={text} />);
+      labels.push(<LabelText key={i} label={text} />);
+      i++;
     });
   } else {
-    labels.push(<LabelText label={label} />);
+    labels.push(<LabelText key={0} label={label} />);
   }
 
   return (
