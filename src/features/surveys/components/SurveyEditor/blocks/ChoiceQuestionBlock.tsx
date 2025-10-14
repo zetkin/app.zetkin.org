@@ -140,20 +140,10 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   });
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
-  function trimBulkOptionsText(text: string): string {
+  const multiLinesTimmed = (text: string) => {
     const lines = text.split('\n');
     return lines.map((line) => line.slice(0, 30)).join('\n');
-  }
-
-  useEffect(() => {
-    if (widgetType == 'select') {
-      options.map((oldOpt) => {
-        const trimmedOption = { ...oldOpt, text: oldOpt.text.slice(0, 30) };
-        updateElementOption(element.id, trimmedOption.id, trimmedOption.text);
-        return trimmedOption;
-      });
-    }
-  }, [widgetType]);
+  };
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -336,7 +326,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                 onClick={async () => {
                   const bulkText =
                     widgetType == 'select'
-                      ? trimBulkOptionsText(bulkOptionsText)
+                      ? multiLinesTimmed(bulkOptionsText)
                       : bulkOptionsText;
                   await addElementOptionsFromText(element.id, bulkText);
                   setBulkAddingOptions(false);
