@@ -2,7 +2,6 @@
 
 import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
-import NextLink from 'next/link';
 
 import ActivistPortalHeader from '../components/ActivistPortlHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -13,6 +12,7 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = PropsWithChildren<{
   eventId: number;
