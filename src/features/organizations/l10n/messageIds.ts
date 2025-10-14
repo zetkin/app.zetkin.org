@@ -109,4 +109,7 @@ export default makeMessages('feat.organizations', {
     headline: m('Dig deeper'),
     showButton: m('Show all events'),
   },
+  subOrgsPage: {
+    showAll: m('Show all organizations'),
+  },
 });

@@ -1,22 +1,17 @@
 'use client';
 
 import React, { FC, useMemo } from 'react';
-import { Box, List, ListItem } from '@mui/material';
-import { ChevronRight } from '@mui/icons-material';
-import NextLink from 'next/link';
+import { Box } from '@mui/material';
 
-import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUIText from 'zui/components/ZUIText';
-import useOrganizations from '../hooks/useOrganizations';
-import useMemberships from '../hooks/useMemberships';
-import ZUIFutures from '../../../zui/ZUIFutures';
-import {
-  ZetkinMembership,
-  ZetkinOrganization,
-} from '../../../utils/types/zetkin';
-import buildOrganizationForest from '../../home/util/buildOrganizationForest';
-import OrganizationsForest from '../../home/components/OrganizationsForest';
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useMemberships from 'features/organizations/hooks/useMemberships';
+import ZUIFutures from 'zui/ZUIFutures';
+import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
+import buildOrganizationForest from 'features/home/util/buildOrganizationForest';
+import OrganizationsForest from 'features/home/components/OrganizationsForest';
+import ZUIButton from 'zui/components/ZUIButton';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/organizations/l10n/messageIds';
 
 type Props = {
   orgId: number;
@@ -54,29 +49,49 @@ const SubOrganizationsForest: FC<{
 const SubOrgsPage: FC<Props> = ({ orgId }) => {
   const organizationsFuture = useOrganizations();
   const membershipsFuture = useMemberships(true);
+  const messages = useMessages(messageIds);
 
   return (
-    <ZUIFutures
-      futures={{
-        memberships: membershipsFuture,
-        organizations: organizationsFuture,
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {({
-        data,
-      }: {
-        data: {
-          memberships: ZetkinMembership[];
-          organizations: ZetkinOrganization[];
-        };
-      }) => (
-        <SubOrganizationsForest
-          memberships={data.memberships}
-          organizations={data.organizations}
-          orgId={orgId}
+      <ZUIFutures
+        futures={{
+          memberships: membershipsFuture,
+          organizations: organizationsFuture,
+        }}
+      >
+        {({
+          data,
+        }: {
+          data: {
+            memberships: ZetkinMembership[];
+            organizations: ZetkinOrganization[];
+          };
+        }) => (
+          <SubOrganizationsForest
+            memberships={data.memberships}
+            organizations={data.organizations}
+            orgId={orgId}
+          />
+        )}
+      </ZUIFutures>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}
+      >
+        <ZUIButton
+          href={'/my/organizations'}
+          label={messages.subOrgsPage.showAll()}
         />
-      )}
-    </ZUIFutures>
+      </Box>
+    </Box>
   );
 };
 
