@@ -5,7 +5,8 @@ import { headers } from 'next/headers';
 
 import PublicSurveyPage from 'features/surveys/pages/PublicSurveyPage';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinSurveyExtended, ZetkinUser } from 'utils/types/zetkin';
+import { ZetkinUser } from 'utils/types/zetkin';
+import surveyFetch from 'utils/fetching/surveyFetch';
 
 type Props = {
   params: {
@@ -22,9 +23,7 @@ const Page: FC<Props> = async ({ params }) => {
   const apiClient = new BackendApiClient(headersObject);
 
   const { orgId, surveyId } = params;
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
+  const survey = await surveyFetch(apiClient, orgId, surveyId);
 
   let user: ZetkinUser | null;
   try {

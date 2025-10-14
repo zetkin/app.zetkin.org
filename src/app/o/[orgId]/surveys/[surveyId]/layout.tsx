@@ -5,9 +5,9 @@ import { Metadata } from 'next';
 import { FC, ReactElement, ReactNode } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicSurveyLayout from 'features/surveys/layouts/PublicSurveyLayout';
+import surveyFetch from 'utils/fetching/surveyFetch';
 
 type Props = {
   children: ReactNode;
@@ -20,9 +20,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { orgId, surveyId } = params;
   const apiClient = new BackendApiClient({});
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
+  const survey = await surveyFetch(apiClient, orgId, surveyId);
   return {
     description: survey.info_text,
     openGraph: {
@@ -44,9 +42,7 @@ const SurveyLayout: FC<Props> = async ({
   const apiClient = new BackendApiClient(headersObject);
 
   const { orgId, surveyId } = params;
-  const survey = await apiClient.get<ZetkinSurveyExtended>(
-    `/api/orgs/${orgId}/surveys/${surveyId}`
-  );
+  const survey = await surveyFetch(apiClient, orgId, surveyId);
 
   return (
     <HomeThemeProvider>
