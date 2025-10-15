@@ -26,6 +26,7 @@ export default makeMessages('feat.home', {
     },
   },
   allEventsList: {
+    descriptionReadMore: m('Read more'),
     emptyList: {
       message: m('Could not find any events'),
       removeFiltersButton: m('Clear filters'),
