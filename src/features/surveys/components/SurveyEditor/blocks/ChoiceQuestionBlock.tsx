@@ -27,7 +27,7 @@ import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
-import ZUIReorderable from 'zui/ZUIReorderable';
+import ZUIReorderable, { ZUIReorderableWidget } from 'zui/ZUIReorderable';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ChoiceQuestionBlockProps {
@@ -140,6 +140,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   });
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  function onDelete(elementId: number, optionId: number) {
+    showConfirmDialog({
+      onSubmit: () => deleteElementOption(elementId, optionId),
+      title: messages.blocks.deleteOptionDialog.title(),
+      warningText: messages.blocks.deleteOptionDialog.warningText(),
+    });
+  }
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -235,20 +243,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       }}
                       value={option.text}
                     />
-                    <IconButton
-                      onClick={() => {
-                        showConfirmDialog({
-                          onSubmit: () =>
-                            deleteElementOption(element.id, option.id),
-                          title: messages.blocks.deleteOptionDialog.title(),
-                          warningText:
-                            messages.blocks.deleteOptionDialog.warningText(),
-                        });
-                      }}
-                      sx={{ paddingX: 2 }}
-                    >
-                      <Close />
-                    </IconButton>
                   </Box>
                 )}
                 renderPreview={() => (
@@ -269,9 +263,13 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               />
             ),
           }))}
+          onDelete={(optionId) => {
+            onDelete(element.id, optionId as number);
+          }}
           onReorder={(ids) => {
             updateOptionOrder(element.id, ids);
           }}
+          widgets={[ZUIReorderableWidget.MENU]}
         />
         {options.length > 3 && !editable && (
           <Button
