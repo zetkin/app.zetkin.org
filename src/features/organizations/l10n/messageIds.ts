@@ -80,6 +80,11 @@ export default makeMessages('feat.organizations', {
     myPageButton: m('Go to activist portal'),
     title: m('You do not have organizer access'),
   },
+  overview: {
+    suborgs: {
+      title: m('Sub-organizations'),
+    },
+  },
   page: {
     title: m('Select organization:'),
   },

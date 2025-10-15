@@ -7,3 +7,9 @@ export interface TreeItemData {
   } | null;
   children: TreeItemData[] | [];
 }
+
+export type SuborgWithStats = {
+  id: number;
+  stats: { numPeople: number };
+  title: string;
+};

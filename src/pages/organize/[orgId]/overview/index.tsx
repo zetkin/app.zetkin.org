@@ -5,11 +5,12 @@ import { GetServerSideProps } from 'next';
 
 import useServerSide from 'core/useServerSide';
 import { PageWithLayout } from 'utils/types';
-import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import { scaffold } from 'utils/next';
-import { ZetkinSubOrganization } from 'utils/types/zetkin';
-import useSuborgStats from 'features/organizations/hooks/useSuborgStats';
+import useSuborgsWithStats from 'features/organizations/hooks/useSuborgsWithStats';
 import OverviewLayout from 'features/organizations/layouts/OverviewLayout';
+import { SuborgWithStats } from 'features/organizations/types';
+import { Msg } from 'core/i18n';
+import messageIds from 'features/organizations/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -26,20 +27,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 type SuborgProps = {
-  org: ZetkinSubOrganization;
+  orgWithStats: SuborgWithStats;
 };
-const Suborg: FC<SuborgProps> = ({ org }) => {
-  const stats = useSuborgStats(org.id);
+const Suborg: FC<SuborgProps> = ({ orgWithStats }) => {
   return (
     <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-      <Typography color={org.is_active ? 'primary' : 'secondary'}>
-        {org.title}
-      </Typography>
-      {stats && stats.length > 0 && (
-        <Typography color={org.is_active ? 'primary' : 'secondary'}>
-          {`${stats[0].result} people`}
-        </Typography>
-      )}
+      <Typography>{orgWithStats.title}</Typography>
+      <Typography>{`${orgWithStats.stats.numPeople} people`}</Typography>
     </Box>
   );
 };
@@ -51,7 +45,7 @@ interface Props {
 const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
   const parsedOrgId = parseInt(orgId);
   const onServer = useServerSide();
-  const suborgs = useSubOrganizations(parsedOrgId).data || [];
+  const suborgsWithStats = useSuborgsWithStats(parsedOrgId);
 
   if (onServer) {
     return null;
@@ -60,13 +54,13 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
   return (
     <>
       <Head>
-        <title>Suborgs</title>
+        <title>
+          <Msg id={messageIds.overview.suborgs.title} />
+        </title>
       </Head>
-      {suborgs
-        .filter((org) => org.id != parsedOrgId)
-        .map((org) => {
-          return <Suborg key={org.id} org={org} />;
-        })}
+      {suborgsWithStats.map((orgWithStats) => (
+        <Suborg key={orgWithStats.id} orgWithStats={orgWithStats} />
+      ))}
     </>
   );
 };

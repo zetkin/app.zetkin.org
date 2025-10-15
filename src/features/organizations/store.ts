@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import { TreeItemData } from './types';
+import { SuborgWithStats, TreeItemData } from './types';
 import {
   remoteItem,
   RemoteItem,
@@ -15,8 +15,6 @@ import {
   ZetkinOrganization,
   ZetkinSubOrganization,
 } from 'utils/types/zetkin';
-import { EphemeralQueryStats } from 'features/smartSearch/store';
-import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 
 type OrgEventFilters = {
   customDatesToFilterBy: DateRange<Dayjs>;
@@ -31,7 +29,7 @@ export interface OrganizationsStoreSlice {
   filters: OrgEventFilters;
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
-  statsBySuborgId: Record<number, RemoteItem<EphemeralQueryStats>>;
+  suborgsWithStats: RemoteList<SuborgWithStats>;
   treeDataList: RemoteList<TreeItemData>;
   userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
@@ -46,8 +44,8 @@ const initialState: OrganizationsStoreSlice = {
     orgIdsToFilterBy: [],
   },
   orgData: remoteItem(0),
-  statsBySuborgId: {},
   subOrgsByOrgId: {},
+  suborgsWithStats: remoteList(),
   treeDataList: remoteList(),
   userMembershipList: remoteList(),
 };
@@ -139,24 +137,18 @@ const OrganizationsSlice = createSlice({
       state.subOrgsByOrgId[orgId].loaded = new Date().toISOString();
       state.subOrgsByOrgId[orgId].isLoading = false;
     },
-    suborgStatsLoad: (state, action: PayloadAction<number>) => {
-      const orgId = action.payload;
-      if (!state.statsBySuborgId[orgId]) {
-        state.statsBySuborgId[orgId] = remoteItem<EphemeralQueryStats>(orgId);
-      }
-      state.statsBySuborgId[orgId].isLoading = true;
+    suborgsWithStatsLoad: (state) => {
+      state.suborgsWithStats.isLoading = true;
     },
-    suborgStatsLoaded: (
+    suborgsWithStatsLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinSmartSearchFilterStats[]]>
+      action: PayloadAction<SuborgWithStats[]>
     ) => {
-      const [orgId, filterStats] = action.payload;
-      state.statsBySuborgId[orgId].data = {
-        id: orgId.toString(),
-        stats: filterStats,
-      };
-      state.statsBySuborgId[orgId].isLoading = false;
-      state.statsBySuborgId[orgId].loaded = new Date().toISOString();
+      const suborgsWithStats = action.payload;
+
+      state.suborgsWithStats = remoteList(suborgsWithStats);
+      state.suborgsWithStats.loaded = new Date().toISOString();
+      state.suborgsWithStats.isLoading = false;
     },
     treeDataLoad: (state) => {
       state.treeDataList.isLoading = true;
@@ -200,8 +192,8 @@ export const {
   treeDataLoaded,
   subOrgsLoad,
   subOrgsLoaded,
-  suborgStatsLoad,
-  suborgStatsLoaded,
+  suborgsWithStatsLoad,
+  suborgsWithStatsLoaded,
   userMembershipsLoad,
   userMembershipsLoaded,
 } = OrganizationsSlice.actions;
