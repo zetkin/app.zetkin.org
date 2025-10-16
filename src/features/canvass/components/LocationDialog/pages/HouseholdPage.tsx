@@ -49,6 +49,7 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
           </Button>
         </Box>
       }
+      color={household.color}
       onBack={onBack}
       onClose={onClose}
       onDelete={onDelete}

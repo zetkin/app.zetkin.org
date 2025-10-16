@@ -38,8 +38,11 @@ export default makeMessages('feat.duplicates', {
   page: {
     dismiss: m('Dismiss'),
     noDuplicates: m('No duplicates'),
+    noDuplicatesContactUs: m(
+      'If you find that the matching algorithm does not find enough duplicates, please contact Zetkin Foundation to let us know about your use case.'
+    ),
     noDuplicatesDescription: m(
-      'Yay! all your members seem to be unique individuals.'
+      'Zetkin has not found any likely duplicates in your person database. The database is scanned daily and potential duplicates will be displayed here.'
     ),
     possibleDuplicates: m('Possible duplicates'),
     possibleDuplicatesDescription: m<{ numPeople: number }>(

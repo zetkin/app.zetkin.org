@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs, { Dayjs } from 'dayjs';
-import { Box, Fade } from '@mui/material';
+import { Box, Fade, List, ListItem, Switch } from '@mui/material';
 import { FC, useState } from 'react';
 import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
@@ -41,18 +41,26 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const user = useUser();
   const dispatch = useAppDispatch();
   const campaign = useCampaign(orgId, campId).campaignFuture.data;
-  const { allEvents, filteredEvents, getDateRange } = useFilteredCampaignEvents(
-    orgId,
-    campId
-  );
-  const { customDatesToFilterBy, dateFilterState } = useAppSelector(
-    (state) => state.campaigns.filters
-  );
+
+  const {
+    allEvents,
+    eventTypeFilter,
+    filteredEvents,
+    getDateRange,
+    locationEvents,
+  } = useFilteredCampaignEvents(orgId, campId);
+  const { customDatesToFilterBy, dateFilterState, geojsonToFilterBy } =
+    useAppSelector((state) => state.campaigns.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerContent, setDrawerContent] = useState<
+    'calendar' | 'eventTypes' | null
+  >(null);
 
-  const isFiltered = !!dateFilterState;
+  const isFiltered =
+    !!dateFilterState ||
+    eventTypeFilter.isFiltered ||
+    !!geojsonToFilterBy.length;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -67,6 +75,17 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
       });
     }
   };
+
+  let locationFilterLabel = '';
+  if (geojsonToFilterBy.length > 1) {
+    locationFilterLabel =
+      messages.publicProjectPage.eventList.filterButtonLabels.locations({
+        count: geojsonToFilterBy.length,
+      });
+  } else if (geojsonToFilterBy.length === 1) {
+    locationFilterLabel = geojsonToFilterBy[0]?.properties?.location
+      ?.title as string;
+  }
 
   const filters = [
     {
@@ -119,20 +138,49 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             )
           : CalendarMonthOutlined,
       onClick: () => {
-        setDrawerOpen(true);
+        setDrawerContent('calendar');
       },
     },
-  ].sort((a, b) => {
-    if (a.active && !b.active) {
-      return -1;
-    } else if (!a.active && b.active) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+    ...(eventTypeFilter.shouldShowFilter
+      ? [
+          {
+            active: eventTypeFilter.isFiltered,
+            key: 'eventTypes',
+            label: eventTypeFilter.filterButtonLabel,
+            onClick: () => setDrawerContent('eventTypes'),
+          },
+        ]
+      : []),
+  ]
+    .concat(
+      geojsonToFilterBy.length
+        ? [
+            {
+              active: true,
+              key: 'location',
+              label: locationFilterLabel,
+              onClick: () => {
+                dispatch(
+                  filtersUpdated({
+                    geojsonToFilterBy: [],
+                  })
+                );
+              },
+            },
+          ]
+        : []
+    )
+    .sort((a, b) => {
+      if (a.active && !b.active) {
+        return -1;
+      } else if (!a.active && b.active) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
-  const eventsByDate = filteredEvents.reduce<
+  const eventsByDate = locationEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
   >((dates, event) => {
     const eventDate = event.start_time.slice(0, 10);
@@ -194,14 +242,16 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
               active={true}
               circular
               label={Clear}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
+                    geojsonToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypes();
+              }}
             />
           )}
           {filters.map((filter) => (
@@ -233,14 +283,15 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           {isFiltered && (
             <ZUIButton
               label={messages.publicProjectPage.eventList.emptyList.removeFiltersButton()}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypes();
+              }}
               variant="secondary"
             />
           )}
@@ -274,7 +325,10 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           </Fade>
         </Box>
       ))}
-      <ZUIDrawerModal onClose={() => setDrawerOpen(false)} open={drawerOpen}>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'calendar'}
+      >
         <Box
           alignItems="center"
           display="flex"
@@ -334,6 +388,31 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
             value={getDateRange()}
           />
         </Box>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'eventTypes'}
+      >
+        <List>
+          {eventTypeFilter.eventTypes.map((eventType) => (
+            <ListItem
+              key={eventTypeFilter.getLabelFromEventType(eventType)}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              <Box alignItems="center" display="flex">
+                <ZUIText>
+                  {eventTypeFilter.getLabelFromEventType(eventType)}
+                </ZUIText>
+              </Box>
+              <Switch
+                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                onChange={() => {
+                  eventTypeFilter.toggleEventType(eventType);
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
       </ZUIDrawerModal>
       <ZUIModal
         onClose={() => setPostAuthEvent(null)}

@@ -1,5 +1,11 @@
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
-import { FILTER_TYPE, OPERATION } from '../types';
+import {
+  AllInSuborgFilterConfig,
+  AnyFilterConfig,
+  FILTER_TYPE,
+  OPERATION,
+  ZetkinSmartSearchFilter,
+} from '../types';
 import {
   SankeySegment,
   SankeySegmentStats,
@@ -9,8 +15,15 @@ import {
 
 const MAIN_MIN_WIDTH = 0.05;
 
+const isAllFilterWithOrgConfig = (
+  filter: ZetkinSmartSearchFilter<AnyFilterConfig>
+): filter is ZetkinSmartSearchFilter<AllInSuborgFilterConfig> => {
+  return filter.type == FILTER_TYPE.ALL && 'organizations' in filter.config;
+};
+
 export default function makeSankeySegments(
-  stats: ZetkinSmartSearchFilterStats[]
+  stats: ZetkinSmartSearchFilterStats[],
+  orgId: number
 ): SankeySegment[] {
   const statsCopy = stats.concat();
   const maxPeople = Math.max(...stats.map((item) => item.result));
@@ -24,9 +37,22 @@ export default function makeSankeySegments(
 
   let prevResult = 0;
 
-  // If the first filter is "all", the first segment should
-  // be an entry instead
-  if (statsCopy[0]?.filter.type == FILTER_TYPE.ALL) {
+  // If the first filter is "all" without organization config,
+  // the first segment should be an entry instead
+  const firstElement = statsCopy[0];
+
+  const allFilterWithNoOrgConfig =
+    firstElement &&
+    firstElement.filter.type == FILTER_TYPE.ALL &&
+    !('organizations' in firstElement.filter.config);
+
+  const allFilterWithThisOrgInConfig =
+    firstElement &&
+    isAllFilterWithOrgConfig(firstElement.filter) &&
+    Array.isArray(firstElement.filter.config.organizations) &&
+    firstElement.filter.config.organizations.includes(orgId);
+
+  if (allFilterWithNoOrgConfig || allFilterWithThisOrgInConfig) {
     // Remove the first filter stats, to be treated as entry
     const entryStats = statsCopy.shift();
 

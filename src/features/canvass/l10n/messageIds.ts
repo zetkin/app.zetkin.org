@@ -9,6 +9,56 @@ export default makeMessages('feat.canvass', {
     location: m('Untitled location'),
   },
   households: {
+    bulkEditHouseholds: {
+      floorLabel: m('Edit floor'),
+      header: m<{ numHouseholds: number }>(
+        'Edit {numHouseholds, plural, one {1 household} other {# households}}'
+      ),
+      saveButtonLabel: m<{ numHouseholds: number }>(
+        'Save {numHouseholds, plural, one {1 household} other {# households}}'
+      ),
+    },
+    colorPicker: {
+      colorNames: {
+        '#000000': m('Black'),
+        '#014F77': m('Dark blue'),
+        '#0284C7': m('Medium blue'),
+        '#187F81': m('Dark aqua'),
+        '#1F7F5C': m('Dark turqouise'),
+        '#28D4D7': m('Medium aqua'),
+        '#2F2A89': m('Dark indigo'),
+        '#34D399': m('Medium turqouise'),
+        '#478837': m('Dark green'),
+        '#4F46E5': m('Medium indigo'),
+        '#661B86': m('Dark purple'),
+        '#6D6D6D': m('Grey'),
+        '#73851A': m('Dark lime'),
+        '#77E25B': m('Medium green'),
+        '#831747': m('Dark pink'),
+        '#841717': m('Dark red'),
+        '#8C3507': m('Dark orange'),
+        '#93E9EB': m('Light aqua'),
+        '#977316': m('Dark yellow'),
+        '#99E9CC': m('Light turquoise'),
+        '#AA2DDF': m('Medium purple'),
+        '#B3DAEE': m('Light blue'),
+        '#BBF1AD': m('Light green'),
+        '#C0DE2B': m('Medium lime'),
+        '#CAC7F7': m('Light indigo'),
+        '#DB2777': m('Medium pink'),
+        '#DC2626': m('Medium red'),
+        '#DFEF95': m('Light lime'),
+        '#E5C0F5': m('Light purple'),
+        '#EA580C': m('Medium orange'),
+        '#F1A8A8': m('Light red'),
+        '#F1A9C9': m('Light pink'),
+        '#F7BC9E': m('Light orange'),
+        '#FBBF24': m('Medium yellow'),
+        '#FDDF91': m('Light yellow'),
+      },
+      inputLabel: m('Edit household color'),
+      noColor: m('No color'),
+    },
     createMultiple: {
       createButtonLabel: m<{ numHouseholds: number }>(
         'Create {numHouseholds, plural, one {1 household} other {# households}}'
@@ -23,7 +73,7 @@ export default makeMessages('feat.canvass', {
         'Are you sure you want to delete the household? It can not be undone.'
       ),
     },
-    edit: {
+    editSingleHousehold: {
       floorLabel: m('Edit floor'),
       header: m<{ title: string }>('Edit {title}'),
       saveButtonLabel: m('Save'),
@@ -46,6 +96,7 @@ export default makeMessages('feat.canvass', {
     areas: m('Areas'),
     instructionsHeader: m('Instructions'),
     ready: m('You are ready to go'),
+    selectArea: m('Select area'),
     start: m('Begin assignment'),
     visitedHouseholds: m('Households visited'),
     visitedLocations: m('Locations visited'),
@@ -85,6 +136,9 @@ export default makeMessages('feat.canvass', {
       create: m('Create location'),
       inputPlaceholder: m('Give the location a name'),
     },
+  },
+  selectArea: {
+    noAreas: m('No areas available'),
   },
   sidebar: {
     instructions: {

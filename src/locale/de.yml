@@ -1,8 +1,8 @@
 glob:
   accessLevels:
-    configure: Bearbeiten & Erstellen
+    configure: Bearbeiten & Konfigurieren
     edit: In Bearbeitung
-    readonly: Schreibgeschützte Ansicht
+    readonly: Schreibgeschützt
   genderOptions:
     f: Weiblich
     m: Männlich
@@ -219,21 +219,26 @@ feat:
         unpublish: Verbergen
       moveCopyButtons:
         copy: Kopieren
-        copyMenuHeader: Kopiere {numberOfEvents} Aktionen zu
+        copyMenuHeader: Kopiere {numberOfEvents} Aktionen nach
         createShift: Nach jeder Aktion (create shift)
         duplicate: Zeit und Datum schicken (duplicate)
         move: Verschieben
-        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen zu
+        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen nach
         nextDay: Nächster Tag {dates}
         nextWeek: Nächste Woche
-    shortWeek: w {weekNumber}
+    shortWeek: W {weekNumber}
     showMore: Mehr
     today: Heute
   call:
     activeEvents:
       alreadyBooked: '{name} ist schon gebucht'
       noBookings: '{name} ist nirgendwo angemeldet'
+      signUp: Anmelden
+      undoSignUp: Abmelden
+    instructions:
+      title: Anweisungen
     nav:
+      backToHome: Zur Startseite
       startCalling: Anrufen beginnen
     prepare:
       activeEvents: Aktive Veranstaltungen
@@ -246,6 +251,7 @@ feat:
       noSurveys: Keine Umfragen
       noTags: Keine Schlagworte
       previousCallsOfTarget: Vorherige Anrufe bei {name}.
+      previousEvents: Vergangene Veranstaltungen
       previousEventsOfTarget: '{name} hat teilgenommen an {numEvents} Veranstaltungen,
         zuletzt an {eventTitle} .'
       summary: Zusammenfassung
@@ -272,24 +278,35 @@ feat:
             saveWithoutNoteButton: Ohne Notiz speichern
         organizerAction:
           question:
-            title: Soll eine wichtige Information an die Organizer*in weitergegeben werden?
+            noButton: Nein
+            title: Soll der*m Organizer*in eine wichtige Information (Datenänderung, Wegzug,
+              Austrit, o.Ä.) mitgeteilt werden?
+            yesButton: Ja
           summary:
             orgActionNeeded:
-              subtitle: Ein*e Organizer*in wird benachrichtigt.
+              subtitle: Organizer*in wird benachrichtigt.
+              title: 'Du hast dem*r Organizerin eine Information hinterlassen. '
         organizerLog:
           question:
             title: Erkläre der*m Organizer*in das Problem
             withMessageButton: Nachricht speichern
             withoutMessageButton: Weiter
+            wrongNumberMessages:
+              both: Beide Telefonnummern sind falsch.
+              phone: Die Telefonnummer ist falsch.
           summary:
             withMessage:
-              title: Du hast eine Nachricht an die Organizer*innen hinterlassen
-            withoutMessage: Du hast keine Nachricht an die Organizer*innen hinterlassen
+              subtitle: Die*der Organizer*in wird deine Nachricht sehen.
+              title: Du hast eine Nachricht an Organizer*in hinterlassen
+            withoutMessage: Du hast keine Nachricht an Organizer*in hinterlassen
         successOrFailure:
           question:
             noButton: Nein
             title: Hast du {firstName} erreicht?
             yesButton: Ja
+          summary:
+            success:
+              title: '{firstName} wurde erfolgreich angerufen'
   callAssignments:
     actions:
       delete: Löschen
@@ -346,7 +363,7 @@ feat:
             gehen.
           title: Notizfeld für Telefonierer*innen erlauben
         targetData:
-          message: Name und Telefonnummer der Zielperson sind immer sichtbar für
+          message: Name, Telefonnummer und Email der Zielperson sind immer sichtbar für
             Telefonierer*innen. Zusätzliche Informationen einzublenden bedeutet
             alle verfügbaren Felder anzuzeigen.
           title: Zusätzliche Informationen einblenden
@@ -483,13 +500,13 @@ feat:
       requestError: Ein Fehler ist aufgetreten. Bitte versuche es noch einmal.
       required: Pflichtfeld
       status:
-        draft: Entwurf
+        draft: Entwurf (sichtbar nur für Admins)
         heading: Status
         published: Veröffentlicht
       visibility:
         heading: Sichtbarkeit
-        private: Verborgen
-        public: Sichtbar
+        private: Nur nach Login sichtbar
+        public: Öffentlich sichtbar ohne Login
     indefinite: unbegrenzter Zeitraum
     layout:
       activities: Aktivitäten
@@ -559,8 +576,41 @@ feat:
   canvass:
     default:
       description: Leere Beschreibung
+    households:
+      bulkEditHouseholds:
+        header: Bearbeite {numHouseholds, plural, one {1 household} andere {#
+          households}}
+        saveButtonLabel: Speichern {numHouseholds, plural, one {1 household} andere {#
+          households}}
+      colorPicker:
+        colorNames:
+          undefined: Hellgrün
+        inputLabel: Bearbeite die Haushalt-Farbe
+        noColor: Keine Farbe
+      createMultiple:
+        createButtonLabel: Anlegen {numHouseholds, plural, one {1 household} oder {# households}}
+        header: Haushalt anlegen
+        numberOfFloorsInput: Anzahl der Etagen
+        numberOfHouseholdsInput: Haushalte je Etage
+      editSingleHousehold:
+        floorLabel: Etage bearbeiten
+        header: Bearbeiten {title}
+        saveButtonLabel: Speichern
+        titleLabel: Titel bearbeiten
+      householdDefaultTitle: Haushalt {householdNumber}
+      page:
+        empty: Dieser Ort hat bisher keine Haushalte.
+        header: Haushalte
+      single:
+        logVisitButtonLabel: Besuch eintragen
+        subtitle: Etage
+        wasVisited: Dieser Haushalt wurde in dieser Haustür-Aktion besucht.
     instructions:
       areas: Gebiete
+      instructionsHeader: Anleitungen
+      ready: Du bist fertig zum Loslegen
+      selectArea: Gebiet auswählen
+      start: Aufgabe beginnen
       visitedHouseholds: Besuchte Türen
       visitedLocations: Besuchte Orte
     location:
@@ -587,6 +637,8 @@ feat:
         cancel: Abbrechen
         create: Ort erstellen
         inputPlaceholder: Gib dem Ort einen Namen
+    selectArea:
+      noAreas: Keine Gebiete verfügbar
     sidebar:
       instructions:
         title: Hinweise
@@ -602,12 +654,28 @@ feat:
           title: Fortschritt
         session:
           team: Team
+          title: Session (today)
           you: Du
+        sync:
+          label:
+            hasLoaded: Synchronisiert am {timestamp}
+            neverLoaded: Nie geladen
+          syncButton:
+            label: Jetzt synchronisieren
+            loading: synchronisieren
     visit:
       household:
+        header: '{householdTitle}: Besuch aufzeichnen'
         noButtonLabel: Nein
+        skipButtonLabel: Frage überspringen
+        submitReportButtonLabel: Bericht einreichen
         yesButtonLabel: Ja
       location:
+        average: '{numHouseholds, plural,one {1 household} andere {# households}},
+          {avgFixed} durchschnittlich'
+        completed: '{numHouseholds, plural,one {1 household} andere {# households}},
+          {numYes} ja'
+        header: Berichte der Besuche hier
         noInputLabel: Nein
         proceedButtonLabel: Fortfahren
         submitButtonLabel: Einreichen
@@ -647,6 +715,9 @@ feat:
     page:
       dismiss: ablehnen
       noDuplicates: keine Duplikate
+      noDuplicatesContactUs: Wenn du feststellst, dass der Matching-Algorithmus nicht
+        genügend Duplikate findet, wende dich bitte an die Foundation, um uns
+        deinen konkreten Anwendungsfall mitzuteilen.
       noDuplicatesDescription: Ja! All deine Mitglieder scheinen einzelne Individuen zu sein.
       possibleDuplicates: Mögliche Duplikate
       possibleDuplicatesDescription: Diese {numPeople} Personen sehen sehr ähnlich aus.
@@ -691,6 +762,8 @@ feat:
             invalidEmailAddress: Dies ist keine gültige E-Mail-Adresse
             okButton: OK!
             previewInBrowser: Im Browser anzeigen
+            previewInBrowserInstructions: Klicke auf das Feld unten, um die Email–Vorschau
+              im Browser anzuzeigen.
             sendButton: Versenden
             sendTo: 'Die E-Mail wird an diese Adresse gesendet:'
             title: Vorschau
@@ -826,6 +899,11 @@ feat:
           die Zustellung zuerst abbrechen.
         sent: Du kannst dir die intelligente Suche ansehen, die verwendet wurde, um die
           Empfänger dieser E-Mail zu definieren
+        targetedAndLocked: Fortsetzen mit dem Mail-Versand oder Zielgruppe für den
+          Mail-Versand mit der Intelligente Suchen verändern.
+        targetedNotLocked: Bearbeite die Intelligente Suche um die Zielgruppe der E-Mail
+          zu bestimmen oder speichere die Zielgruppe um den Mail-Versand zu
+          ermöglichen.
       title: Ziele
       unlockAlert: Entsperren kann Personen von der Zielgruppe hinzufügen oder
         entfernen, je nachdem welches Ergebnis die smarte Suche haben wird.
@@ -906,7 +984,7 @@ feat:
       bookedParticipants: Gebuchte Teilnehmende
       buttonAttended: Teilgenommen
       buttonBook: Buchen
-      buttonCancel: Absagen
+      buttonCancel: Austragen
       buttonCancelled: Abgesagt
       buttonDelete: Löschen
       buttonNoshow: Nicht erschienen
@@ -915,6 +993,7 @@ feat:
       columnName: Name
       columnNotified: Benachrichtigt
       columnPhone: Telefon
+      columnSignedUp: Angemeldet
       contactTooltip: Kontaktperson
       descriptionBooked: Hier siehst du die von dir gebuchten Teilnehmenden. Um
         abzusagen müssen die Teilnehmenden dich kontaktieren und dann kannst du
@@ -999,6 +1078,9 @@ feat:
       open: Aktiv
       scheduled: Geplant
       unknown: Unbekannt
+    filterButtonLabels:
+      eventTypes: '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}}
+        andere {# event types}}'
     list:
       events: Aktionen
       noEvents: Keine Aktionen
@@ -1083,7 +1165,12 @@ feat:
       tooltip: Klicke, um Typ zu ändern
       uncategorized: Nicht kategorisiert
     urlCard:
+      nowAccepting: Anmeldungen über diesen Link möglich
       open: Anmeldungen noch möglich
+      preview: Event-Vorschau
+      previewPortal: Veranstaltungsvorschau im Aktiven-Portal
+      visitPortal: Anmeldungen werden unter diesem Link akzeptiert.
+      willAccept: Wir werden Anmeldungen unter diesem Link akzeptieren.
   files:
     fileUpload:
       dropToUpload: Hier die Datei hineinziehen, um sie hochzuladen.
@@ -1158,6 +1245,7 @@ feat:
           saveButton: Speichern
         header: Account Einstellungen
       appPreferences:
+        header: App Einstellungen
         lang:
           auto: Automatisch (im Browser konfiguriert)
           label: Sprache
@@ -1289,6 +1377,7 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} und {numEmpty, plural, =1 {eine
             leere Zeile} other {# leere Zeilen}}.'
           twoValuesNoEmpty: '{firstValue} und {secondValue}.'
+        notEnoughRows: Deine Datei enthält nicht genug Zeilen um Daten zu importieren.
         organization: Organisation
         selectZetkinField: Importiere als ...
         tags: Schlagworte
@@ -1386,6 +1475,9 @@ feat:
         invalidFormat:
           title: 'Falsches Format für das Feld: {field}'
         invalidOrgCountry:
+          description: |
+            Dies macht es unmöglich den Ländercode der Telefonnummer zu erraten
+            Bitte kontaktiere den Support um das Problem zu beheben.
           title: 'Möglicherweise ungültiger Ländercode der Organisation: {code}'
         majorChange:
           description: Diese Warnung wird eingeblendet, wenn mehr als 30% der importierten
@@ -1508,6 +1600,9 @@ feat:
       h: Danke
       info: Deine Anfrage wurde bestätigt und ein_e Organisator_in wird sie in Kürze
         bearbeiten.
+    submitToken:
+      copySubmitToken: Kopiere Submit-Token
+      submitTokenCopied: Submit-Token kopiert.
   journeys:
     instance:
       addAssigneeButton: Beauftragte hinzufügen
@@ -1634,6 +1729,9 @@ feat:
         message: Konnte keine Veranstaltungen finden
         removeFiltersButton: Filter entfernen
       filterButtonLabels:
+        locations: '{count} Orte'
+        organizations: '{numOrgs, plural,=0 {Organizations} =1 {1 organization} andere
+          {# organizations}}'
         thisWeek: Diese Woche
         today: Heute
         tomorrow: Morgen
@@ -1664,13 +1762,18 @@ feat:
       footer:
         privacyPolicy: Datenschutzbestimmungen
       header:
+        calendarLinkCopied: Kalendar-Abo-URL erfolgreich kopiert
         connect: Verbinden
+        copyIcsUrl: Kopiere Kalendar-Abo-URL
         follow: Folgen
         login: Anmelden & Verbinden
         unfollow: Entfolgen
       map:
         viewInList: In Liste anzeigen
         viewInMap: Auf Karte anzeigen
+      menu:
+        logout: Ausloggen
+        myZetkin: Mein Zetkin
       tabs:
         calendar: Kalender
         suborgs: Erkunden
@@ -1697,6 +1800,9 @@ feat:
         clear: Löschen
         title: Letzte Organisationen
     subOrgEventBlurb:
+      description: Es gibt {eventsElem} {numEvents, plural, =1 {additional event}
+        other {additional events}} in {orgsElem} {numOrgs, plural, =1
+        {suborganization} anderen {suborganizations}}.
       headline: Tiefer eindringen
       showButton: Alle Veranstaltungen anzeigen
   profile:
@@ -1829,6 +1935,14 @@ feat:
           description: Auswahl auf Grundlage von Daten aus Aufgaben
           title: Aufgaben
       filters:
+        all:
+          description: Finde Personen basierend darauf in welchen Unterorganisationen sie
+            sind.
+          title: Jede Person in einer Unterorganisation
+        area:
+          description: Suche auf Basis von Ortsfeldern innerhalb oder ausserhalb eines
+            geografischen Gebietes
+          title: Ort (Gebiet)
         call_history:
           description: Finde Personen, die angerufen wurden - erreicht oder nur versucht
           title: Anrufliste
@@ -1898,6 +2012,30 @@ feat:
         startWithSelect:
           'false': leerer Liste
           'true': Liste aller Personen in der Organisation
+      allInSuborg:
+        examples:
+          one: Füge jede Person hinzu, die in der bestimmen Unterorganisation "DIE LINKE
+            Kreisverband" ist.
+          two: Entferne jede Person, die irgendeiner Unterorganisation ist.
+        inputString:
+          any: '{addRemoveSelect} jede Person, die in {suborgScopeSelect} ist.'
+          multiple: '{addRemoveSelect} jede Person, die in {suborgScopeSelect}:
+            {multipleSuborgsSelect} ist'
+          single: '{addRemoveSelect} jede Person, die in {suborgScopeSelect}
+            {singleSuborgSelect} ist'
+        suborgScopeSelect:
+          any: irgendeine Unterorganisation
+          multiple: irgendeine der folgenden Unterorganisationen
+          single: die bestimmte Unterorganisation
+      area:
+        examples:
+          one: Füge Personen hinzu, deren Wohnort innerhalb des Gebiets Hamburg liegt.
+          two: Entferne Personen deren Büro-Adresse ausserhalb des Gebiets Berlin ist
+        inputString: '{addRemoveSelect} Personen, deren {lnglatFieldSelect}
+          {withinOutsideSelect} des Gebiets {areaSelect} ist'
+        slice:
+          in: innerhalb
+          out: ausserhalb
       callBlocked:
         inputString: '{addRemoveSelect} Personen, die zum Anrufen aus irgendwelchen
           Gründen blockiert sind'
@@ -1937,7 +2075,9 @@ feat:
         haveSelect:
           in: wurden
           notin: wurden nicht
-        inputString: ''
+        inputString: '{addRemoveSelect} Personen die {haveSelect} {bookedSelect}
+          {statusSelect} für Veranstaltungen in {campaignSelect} der Kategorie
+          {activitySelect} in {locationSelect} {timeFrame}'
         locationSelect:
           any: irgendein Ort
           location: Ort "{location}"
@@ -1947,33 +2087,33 @@ feat:
           cancelled: und abgesagt haben
           noshow: und ist nicht erschienen
       emailBlacklist:
-        inputString: '{addRemoveSelect} Personen, die eine E-Mail erhalten werden, auf
+        inputString: '{addRemoveSelect} Personen, die keine E-Mails erhalten können, auf
           Grund von {reasonSelect}'
         reasonSelect:
           any: aus irgendeinem Grund
           unsubOrg: sie haben sich abgemeldet
       emailClick:
         inputString: '{addRemoveSelect} Personen, die {operatorSelect} {linkScopeSelect}
-          {emailSelect} {projectSelect} {timeFrame} {linkSelect} haben'
+          {emailSelect} {projectSelect} {timeFrame} {linkSelect}'
         linkScopeSelect:
           anyFollowingLinks: irgendeinen der folgenden Links in der spezifischen E-Mail
           anyLink: irgendeinen Link in irgendeiner E-Mail
           anyLinkInEmail: irgendeinen Link in einer spezifischen E-Mail
           linkInEmailFromProject: irgendeinen Link in irgendeiner E-Mail in einem spezifischen Projekt
         operatorSelect:
-          clicked: geklickt
-          notClicked: nicht geklickt
+          clicked: haben geklickt
+          notClicked: haben nicht geklickt
       emailHistory:
         emailScopeSelect:
           any: irgendeine E-Mail
           email: die spezifische E-Mail
           project: irgendeine E-Mail vom Projekt
-        inputString: '{addRemoveSelect} Personen, die {operatorSelect}
-          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame} haben'
+        inputString: '{addRemoveSelect} Personen, (an) die {operatorSelect}
+          {emailScopeSelect} {emailSelect} {projectSelect} {timeFrame}'
         operatorSelect:
-          notOpened: nicht geöffnet
-          notSent: nicht gesendet
-          opened: geöffnet
+          notOpened: nicht geöffnet haben
+          notSent: nicht gesendet wurde
+          opened: geöffnet haben
           sent: wurde gesendet
       joinForm:
         anyForm: jedes Zetkin-Beitrittsformular
@@ -2015,7 +2155,7 @@ feat:
         examples:
           one: Füge alle Personen hinzu, deren Vorname 'Clara' und deren Nachname 'Zetkin'
             ist.
-          two: Entferne alle Personen, deren Ort Stockholm ist.
+          two: Entferne alle Personen, deren Ort 'Stockholm' ist.
         fieldMatches: '{field} ist {value}'
         fieldSelect:
           alt_phone: Weitere Telefonnummer
@@ -2421,7 +2561,7 @@ feat:
     submissionPane:
       anonymous: Anonym
       hidden: Verborgen
-      linked: verlinkt
+      linked: Verknüpft
       subtitle: '{person} {date}'
     submissions:
       anonymous: Anonym
@@ -2435,7 +2575,7 @@ feat:
       emailColumn: Email
       firstNameColumn: Vorname
       lastNameColumn: Nachname
-      link: Verbinden
+      link: Verknüpfen
       personRecordColumn: Befragte*r
       suggestedPeople: Vorgeschlagene Personen
       unlink: Link entfernen
@@ -2734,12 +2874,12 @@ feat:
       confirmDelete:
         folder:
           title: Ordner löschen
-          warning: Diesen Ordner und alle Listen darin zu löschen kann nicht rückgängig
+          warning: Das Löschen des Ordners und aller Listen darin kann nicht rückgängig
             gemacht werden. Möchtest du fortfahren?
         view:
           title: Liste löschen
-          warning: Diese Liste zu löschen kann nicht rückgängig gemacht werden. Möchtest
-            du fortfahren?
+          warning: Das Löschen der Liste kann nicht rückgängig gemacht werden. Möchtest du
+            fortfahren?
       menu:
         delete: Löschen
         duplicate: Dupliziere
@@ -2747,7 +2887,7 @@ feat:
         rename: Umbenennen
         viewCopy: '{viewName} - kopiere'
       moveToFolder: verschieben zu {folder}
-      moveToRoot: Verschieben zu alle Listen
+      moveToRoot: Verschieben zu 'alle Listen'
     browserLayout:
       tabs:
         duplicates: Duplikate
@@ -2869,7 +3009,7 @@ feat:
             dargestellt.
           title: Einzelne Umfrageantwort
         surveyResponses:
-          description: Mehrere Umfrageantworten einbeziehen
+          description: Mehrere Umfrageantworten einbeziehen.
           keywords: Feld mehrere
           questionField: Fragen
           surveyField: Umfragen
@@ -3151,8 +3291,6 @@ zui:
       url: Bitte füge eine gültige URL hinzu
   dataTableSearch:
     button: Suche
-    helpText: Tippe mindestens {minSearchLength} Buchstaben
-    idSearchHelpText: Gib eine ID ein (nur Ziffern)
     placeholder: Tabelle durchsuchen
     placeholderWithIdSearch: 'Suche - nutze # für ID, z.B. #123'
     title: Suche

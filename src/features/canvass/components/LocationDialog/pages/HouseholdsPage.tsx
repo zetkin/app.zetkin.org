@@ -12,7 +12,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { Add, Apps, KeyboardArrowRight } from '@mui/icons-material';
+import { Add, Apps, Check, KeyboardArrowRight } from '@mui/icons-material';
 
 import PageBase from './PageBase';
 import {
@@ -24,31 +24,34 @@ import useLocationMutations from 'features/canvass/hooks/useLocationMutations';
 import messageIds from 'features/canvass/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import useHouseholds from 'features/canvass/hooks/useHouseholds';
-import { Zetkin2Household } from 'features/canvass/types';
+import { HouseholdWithColor } from 'features/canvass/types';
 import useVisitReporting from 'features/canvass/hooks/useVisitReporting';
+import useAreaAssignmentMetrics from 'features/areaAssignments/hooks/useAreaAssignmentMetrics';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
   location: ZetkinLocation;
   onBack: () => void;
-  onBulk: () => void;
+  onBulkCreate: () => void;
+  onBulkEdit: (householdIds: number[]) => void;
+  onBulkVisit: (households: number[]) => void;
   onClose: () => void;
-  onCreateHousehold: (householdId: Zetkin2Household) => void;
+  onCreateHousehold: (householdId: HouseholdWithColor) => void;
   onSelectHousehold: (householdId: number) => void;
   onSelectHouseholds: (householdIds: number[]) => void;
-  onStartHouseholdsVisit: (households: number[]) => void;
   selectedHouseholdIds: number[];
 };
 
 const HouseholdsPage: FC<Props> = ({
   assignment,
   onBack,
-  onBulk,
+  onBulkCreate,
+  onBulkEdit,
   onClose,
   onCreateHousehold,
   onSelectHousehold,
   onSelectHouseholds,
-  onStartHouseholdsVisit,
+  onBulkVisit: onBulkVisit,
   location,
   selectedHouseholdIds,
 }) => {
@@ -76,6 +79,13 @@ const HouseholdsPage: FC<Props> = ({
 
     return floor0 - floor1;
   });
+
+  const metrics = useAreaAssignmentMetrics(
+    location.organization_id,
+    assignment.id
+  );
+
+  const successMetric = metrics?.find((m) => m.defines_success);
 
   return (
     <PageBase
@@ -118,14 +128,26 @@ const HouseholdsPage: FC<Props> = ({
             </Typography>
           </Box>
 
-          <Button
-            onClick={() => {
-              onStartHouseholdsVisit(selectedHouseholdIds);
-            }}
-            variant="outlined"
-          >
-            <Typography color="primary">Visit</Typography>
-          </Button>
+          <Box display="flex" gap={3}>
+            <Button
+              onClick={() => {
+                onBulkVisit(selectedHouseholdIds);
+              }}
+              size="small"
+              variant="outlined"
+            >
+              Visit
+            </Button>
+            <Button
+              onClick={() => {
+                onBulkEdit(selectedHouseholdIds);
+              }}
+              size="small"
+              variant="outlined"
+            >
+              Edit
+            </Button>
+          </Box>
         </Box>
       )}
       <Box display="flex" flexDirection="column" flexGrow={2}>
@@ -142,6 +164,15 @@ const HouseholdsPage: FC<Props> = ({
 
             const mostRecentVisit = lastVisitByHouseholdId[household.id];
 
+            const isSuccessful =
+              !!mostRecentVisit &&
+              !!successMetric &&
+              mostRecentVisit.metrics.some(
+                (metric) =>
+                  metric.metric_id == successMetric.id &&
+                  metric.response == 'yes'
+              );
+
             return (
               <Box key={household.id}>
                 {firstOnFloor && (
@@ -157,39 +188,63 @@ const HouseholdsPage: FC<Props> = ({
                   onClick={() => {
                     onSelectHousehold(household.id);
                   }}
-                  sx={{ px: 0 }}
+                  sx={{ paddingLeft: 0, position: 'relative' }}
                 >
-                  <Box alignItems="center" display="flex" flexGrow={1}>
-                    <Checkbox
-                      checked={selectedHouseholdIds.includes(household.id)}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                  <Checkbox
+                    checked={selectedHouseholdIds.includes(household.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
 
-                        const isSelected = selectedHouseholdIds.includes(
-                          household.id
+                      const isSelected = selectedHouseholdIds.includes(
+                        household.id
+                      );
+
+                      if (isSelected) {
+                        onSelectHouseholds(
+                          selectedHouseholdIds.filter(
+                            (id) => id !== household.id
+                          )
                         );
-
-                        if (isSelected) {
-                          onSelectHouseholds(
-                            selectedHouseholdIds.filter(
-                              (id) => id !== household.id
-                            )
-                          );
-                        } else {
-                          onSelectHouseholds([
-                            ...selectedHouseholdIds,
-                            household.id,
-                          ]);
-                        }
+                      } else {
+                        onSelectHouseholds([
+                          ...selectedHouseholdIds,
+                          household.id,
+                        ]);
+                      }
+                    }}
+                    size="small"
+                  />
+                  <ListItemText
+                    primary={household.title}
+                    secondary={
+                      <Box alignItems="center" display="flex" gap={0.5}>
+                        {mostRecentVisit && (
+                          <>
+                            {isSuccessful && (
+                              <Check color="secondary" fontSize="small" />
+                            )}
+                            <Typography color="secondary" variant="body2">
+                              <ZUIRelativeTime
+                                datetime={addOffsetIfNecessary(
+                                  mostRecentVisit.created
+                                )}
+                              />
+                            </Typography>
+                          </>
+                        )}
+                      </Box>
+                    }
+                  />
+                  {household.color !== 'clear' && (
+                    <Box
+                      sx={{
+                        backgroundColor: household.color,
+                        borderRadius: '3em',
+                        height: '20px',
+                        marginX: 1,
+                        width: '20px',
                       }}
-                      size="small"
                     />
-                    <ListItemText>{household.title}</ListItemText>
-                  </Box>
-                  {mostRecentVisit && (
-                    <Typography color="secondary">
-                      <ZUIRelativeTime datetime={mostRecentVisit.created} />
-                    </Typography>
                   )}
                   <KeyboardArrowRight />
                 </ListItem>
@@ -235,7 +290,7 @@ const HouseholdsPage: FC<Props> = ({
           >
             Add new household
           </Button>
-          <Button onClick={onBulk} startIcon={<Apps />} variant="text">
+          <Button onClick={onBulkCreate} startIcon={<Apps />} variant="text">
             Create many
           </Button>
         </Box>
@@ -243,5 +298,11 @@ const HouseholdsPage: FC<Props> = ({
     </PageBase>
   );
 };
+
+function addOffsetIfNecessary(originalTimestamp: string): string {
+  return originalTimestamp.includes('Z')
+    ? originalTimestamp
+    : originalTimestamp.concat('Z');
+}
 
 export default HouseholdsPage;

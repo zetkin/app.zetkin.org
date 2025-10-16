@@ -161,12 +161,15 @@ export default makeMessages('feat.campaigns', {
   },
   noManager: m('No Project Manager'),
   publicProjectPage: {
+    calendarLinkCopied: m('Successfully copied calendar link'),
+    copyIcsUrl: m('Copy calendar subscription URL'),
     eventList: {
       emptyList: {
         message: m('Could not find any events'),
         removeFiltersButton: m('Clear filters'),
       },
       filterButtonLabels: {
+        locations: m<{ count: number }>('{count} locations'),
         thisWeek: m('This week'),
         today: m('Today'),
         tomorrow: m('Tomorrow'),

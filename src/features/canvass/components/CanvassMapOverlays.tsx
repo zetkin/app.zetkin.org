@@ -48,7 +48,7 @@ const CanvassMapOverlays: FC<Props> = ({
   let drawerTop = '100dvh';
   if (selectedLocation) {
     if (expanded) {
-      drawerTop = '6rem';
+      drawerTop = '0px';
     } else {
       drawerTop = 'calc(100dvh - 5rem)';
     }

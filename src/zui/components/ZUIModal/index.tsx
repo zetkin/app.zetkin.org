@@ -38,7 +38,7 @@ export type ZUIModalProps = {
   /**
    * The primary action button in the modal header.
    */
-  primaryButton: OnClickButton | HrefButton;
+  primaryButton?: OnClickButton | HrefButton;
 
   /**
    * The secondary action button in the modal header.

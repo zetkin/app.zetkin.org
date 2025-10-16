@@ -12,6 +12,7 @@ import {
   ZetkinViewColumn,
   ZetkinViewRow,
 } from '../../features/views/components/types';
+import { Latitude, Longitude } from 'features/areas/types';
 
 export interface ZetkinCampaign {
   color: string;
@@ -78,8 +79,8 @@ export interface ZetkinEvent {
   info_text: string;
   location: {
     id: number;
-    lat: number;
-    lng: number;
+    lat: Latitude;
+    lng: Longitude;
     title: string;
   } | null;
   num_participants_required: number;
@@ -179,8 +180,16 @@ export interface ZetkinPersonNativeFields {
   phone: string | null;
 }
 
+export type ZetkinCustomFieldValue =
+  | string
+  | number
+  | boolean
+  | ZetkinLngLatFieldValue
+  | Record<string, unknown>
+  | null;
+
 export type ZetkinPerson = ZetkinPersonNativeFields &
-  Record<string, string | number | boolean | Record<string, unknown> | null>;
+  Record<string, ZetkinCustomFieldValue>;
 
 export interface EnumChoice {
   key: string;
@@ -448,7 +457,13 @@ export enum CUSTOM_FIELD_TYPE {
   TEXT = 'text',
   JSON = 'json',
   ENUM = 'enum',
+  LNGLAT = 'lnglat',
 }
+
+export type ZetkinLngLatFieldValue = {
+  lat: Latitude;
+  lng: Longitude;
+};
 
 export interface ZetkinJourney {
   id: number;

@@ -5,6 +5,7 @@ import { GpsNotFixed } from '@mui/icons-material';
 import {
   ExpressionSpecification,
   LngLatBounds,
+  MapOptions,
   Map as MapType,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -22,18 +23,19 @@ import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
 
+const BOUNDS_PADDING = 20;
+
 type Props = {
-  areas: Zetkin2Area[];
   assignment: ZetkinAreaAssignment;
+  selectedArea: Zetkin2Area;
 };
 
-const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
-  const areaIds = areas.map((area) => area.id);
+const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const env = useEnv();
   const locations = useLocations(
     assignment.organization_id,
     assignment.id,
-    areaIds
+    selectedArea.id
   );
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const createLocation = useCreateLocation(assignment.organization_id);
@@ -57,33 +59,25 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       [180, 90],
     ];
 
-    const areaHoles = areas.map((area) => area.boundary.coordinates[0]);
-
     return {
       geometry: {
-        coordinates: [earthCover, ...areaHoles],
+        coordinates: [earthCover, selectedArea.boundary.coordinates[0]],
         type: 'Polygon',
       },
       properties: {},
       type: 'Feature',
     };
-  }, [areas]);
+  }, [selectedArea]);
 
-  const bounds: [LngLatLike, LngLatLike] = useMemo(() => {
-    if (localStorageBounds) {
-      return localStorageBounds;
-    }
-
-    const firstPolygon = areas[0]?.boundary.coordinates[0];
+  const boundsForSelectedArea: [LngLatLike, LngLatLike] = useMemo(() => {
+    const firstPolygon = selectedArea?.boundary.coordinates[0];
     if (firstPolygon.length) {
       const totalBounds = new LngLatBounds(firstPolygon[0], firstPolygon[0]);
 
-      // Extend with all areas
-      areas.forEach((area) => {
-        area.boundary.coordinates[0]?.forEach((lngLat) =>
-          totalBounds.extend(lngLat)
-        );
-      });
+      // Extend with all coordinates
+      selectedArea.boundary.coordinates[0]?.forEach((lngLat) =>
+        totalBounds.extend(lngLat)
+      );
 
       return [totalBounds.getSouthWest(), totalBounds.getNorthEast()];
     }
@@ -92,7 +86,19 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
     const max: LngLatLike = [-180, -90];
 
     return [min, max];
-  }, [areas]);
+  }, [selectedArea]);
+
+  const initialBounds: Pick<MapOptions, 'bounds' | 'fitBoundsOptions'> =
+    useMemo(() => {
+      if (localStorageBounds) {
+        // Do not add padding if using stored bounds, as each reload would zoom out a little
+        return { bounds: localStorageBounds, fitBoundsOptions: { padding: 0 } };
+      }
+      return {
+        bounds: boundsForSelectedArea,
+        fitBoundsOptions: { padding: BOUNDS_PADDING },
+      };
+    }, [boundsForSelectedArea]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
     return {
@@ -121,13 +127,23 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
             successRatio = successfulVisits / totalVisits;
           }
 
-          const visitPercentage = Math.round(visitRatio * 10) * 10;
-          const successPercentage = Math.round(successRatio * 10) * 10;
+          const roundToPercentage = (value: number) =>
+            Math.min(100, Math.round(value / 10) * 10);
+
+          const visitPercentage = roundToPercentage(visitRatio * 100);
+          const successPercentage = roundToPercentage(successRatio * 100);
           const icon =
             `marker-${successPercentage}-${visitPercentage}` +
             (selected ? '-selected' : '');
 
-          const renderOnTop = selected;
+          let zIndex;
+          if (selected) {
+            zIndex = 3;
+          } else if (visitRatio === 0.0) {
+            zIndex = 2;
+          } else {
+            zIndex = 1;
+          }
 
           return {
             geometry: {
@@ -138,7 +154,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
               icon,
               successPercentage,
               visitPercentage,
-              z: renderOnTop ? 1 : 0,
+              z: zIndex,
             },
             type: 'Feature',
           };
@@ -227,24 +243,11 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
         <ZUIMapControls
           onFitBounds={() => {
             if (map) {
-              const firstPolygon = areas[0]?.boundary.coordinates[0];
-              if (firstPolygon.length) {
-                const totalBounds = new LngLatBounds(
-                  firstPolygon[0],
-                  firstPolygon[0]
-                );
-
-                // Extend with all areas
-                areas.forEach((area) => {
-                  area.boundary.coordinates[0]?.forEach((lngLat) =>
-                    totalBounds.extend(lngLat)
-                  );
-                });
-
-                if (totalBounds) {
-                  map.fitBounds(totalBounds, { animate: true, duration: 800 });
-                }
-              }
+              map.fitBounds(boundsForSelectedArea, {
+                animate: true,
+                duration: 800,
+                padding: BOUNDS_PADDING,
+              });
             }
           }}
           onGeolocate={(lngLat) => {
@@ -298,7 +301,7 @@ const GLCanvassMap: FC<Props> = ({ areas, assignment }) => {
       <Map
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
-          bounds,
+          ...initialBounds,
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {

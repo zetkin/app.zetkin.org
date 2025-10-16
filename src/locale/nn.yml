@@ -207,7 +207,7 @@ feat:
         openFiltersButton: Filter
         ungroupedTagsLabel: Andre etiketter
     page:
-      title: Dør til dør
+      title: Kart
   breadcrumbs:
     elements:
       activities: Aktiviteter
@@ -225,7 +225,7 @@ feat:
       emails: E-post
       events: Arrangementer
       folders: Lister
-      geography: Dør til dør
+      geography: Kart
       incoming: Innkommende
       insights: Analyse
       instances: Forekomster
@@ -753,11 +753,6 @@ feat:
         header: Opprett dører
         numberOfFloorsInput: Antall etasjer
         numberOfHouseholdsInput: Dører per etasje
-      edit:
-        floorLabel: Rediger etasje
-        header: Rediger {title}
-        saveButtonLabel: Lagre
-        titleLabel: Rediger tittel
       householdDefaultTitle: Dør {householdNumber}
       page:
         empty: Denne adressen har ingen dører ennå
@@ -3296,8 +3291,6 @@ zui:
       url: Legg til en gyldig lenke
   dataTableSearch:
     button: Søk
-    helpText: Skriv minst {minSearchLength} tegn
-    idSearchHelpText: Skriv en Zetkin ID (kun tall)
     placeholder: Søk
     placeholderWithIdSearch: 'Søk - bruk # for Zetkin IDer, skriv f.eks #123'
     title: Søk
