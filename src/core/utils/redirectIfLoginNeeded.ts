@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import { ZetkinSession } from 'utils/types/zetkin';
+import { ZetkinSession, ZetkinUser } from 'utils/types/zetkin';
 
 export default async function redirectIfLoginNeeded(
   requiredAuthLevel: number = 1

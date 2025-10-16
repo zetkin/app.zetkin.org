@@ -35,11 +35,10 @@ export default async function RootLayout({
   const path = headersList.get('x-requested-path') || '';
 
   if (user && session && session.factors && !path.startsWith('/verify')) {
-    const hasPhoneAuth = session.factors.includes('phone_otp');
     const hasEmailAuth = session.factors.includes('email_password');
 
-    // Only redirect to email verification if user used email authentication
-    // and their email is not verified. Phone-only authentication is fine.
+    // Only redirect to email verification if user used email/password
+    // authentication and their email is not verified.
     if (hasEmailAuth && !user.email_is_verified) {
       redirect('/verify');
     }
