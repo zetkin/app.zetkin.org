@@ -100,6 +100,45 @@ export const householdColors = [
 ] as const;
 export type HouseholdColor = typeof householdColors[number] | 'clear';
 
+export const householdColorNames = [
+  'black',
+  'darkBlue',
+  'mediumBlue',
+  'darkAqua',
+  'darkTurqouise',
+  'mediumAqua',
+  'darkIndigo',
+  'mediumTurqouise',
+  'darkGreen',
+  'mediumIndigo',
+  'darkPurple',
+  'grey',
+  'darkLime',
+  'mediumGreen',
+  'darkPink',
+  'darkRed',
+  'darkOrange',
+  'lightAqua',
+  'darkYellow',
+  'lightTurquoise',
+  'mediumPurple',
+  'lightBlue',
+  'lightGreen',
+  'mediumLime',
+  'lightIndigo',
+  'mediumPink',
+  'mediumRed',
+  'lightLime',
+  'lightPurple',
+  'mediumOrange',
+  'lightRed',
+  'lightPink',
+  'lightOrange',
+  'mediumYellow',
+  'lightYellow',
+] as const;
+export type HouseHoldColorName = typeof householdColorNames[number];
+
 export type HouseholdWithColor = {
   color: HouseholdColor;
   id: number;
