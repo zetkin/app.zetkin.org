@@ -39,6 +39,7 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
           <Typography>{`${orgWithStats.stats.numPeople} people`}</Typography>
           <Typography>{`${orgWithStats.stats.numCallAssignments} callAssignments`}</Typography>
           <Typography>{`${orgWithStats.stats.numCalls} calls`}</Typography>
+          <Typography>{`${orgWithStats.stats.numSurveys} surveys`}</Typography>
         </Box>
       ))}
     </>

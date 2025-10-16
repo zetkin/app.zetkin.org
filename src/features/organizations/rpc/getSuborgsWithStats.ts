@@ -6,10 +6,12 @@ import {
   ZetkinCallAssignment,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
+  ZetkinSurvey,
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgWithStats } from '../types';
+import { ZetkinCall } from 'features/call/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -58,8 +60,12 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       `/api/orgs/${suborg.id}/call_assignments?recursive`
     );
 
-    const calls = await apiClient.get<ZetkinCallAssignment[]>(
+    const calls = await apiClient.get<ZetkinCall[]>(
       `/api/orgs/${suborg.id}/calls?recursive`
+    );
+
+    const surveys = await apiClient.get<ZetkinSurvey[]>(
+      `/api/orgs/${suborg.id}/surveys?recursive`
     );
 
     suborgsWithStats.push({
@@ -68,6 +74,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         numCallAssignments: callAssignments.length,
         numCalls: calls.length,
         numPeople,
+        numSurveys: surveys.length,
       },
       title: suborg.title,
     });
