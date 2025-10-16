@@ -5,7 +5,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactNode, useRef } from 'react';
+import { FC, ReactNode, Suspense, useRef } from 'react';
 import {
   StyledEngineProvider,
   Theme,
@@ -86,7 +86,7 @@ const ClientContext: FC<ClientContextProps> = ({
                         messages={messages}
                       >
                         <CssBaseline />
-                        {children}
+                        <Suspense>{children}</Suspense>
                       </IntlProvider>
                     </ZUISnackbarProvider>
                   </IntlProvider>
