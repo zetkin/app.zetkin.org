@@ -44,7 +44,7 @@ const UpdatedPasswordSection = () => {
                   width: '100%',
                 }}
               >
-                <NextLink href={`https://login.zetk.in/`}>
+                <NextLink href={`${process.env.ZETKIN_LOGIN_URL || 'https://login.zetk.in/'}`}>
                   <ZUIButton
                     fullWidth
                     label={messages.lostPassword.actions.signIn()}

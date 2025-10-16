@@ -1,9 +1,10 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
-import { ZetkinUser } from 'utils/types/zetkin';
+import { ZetkinUser, ZetkinSession } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
 export default async function RootLayout({
@@ -20,10 +21,28 @@ export default async function RootLayout({
   const apiClient = new BackendApiClient(headersObject);
 
   let user: ZetkinUser | null;
+  let session: ZetkinSession | null;
+
   try {
+    session = await apiClient.get<ZetkinSession>('/api/session');
     user = await apiClient.get<ZetkinUser>('/api/users/me');
   } catch (e) {
     user = null;
+    session = null;
+  }
+
+  // Check if user is logged in but not properly verified based on auth factors
+  const path = headersList.get('x-requested-path') || '';
+
+  if (user && session && session.factors && !path.startsWith('/verify')) {
+    const hasPhoneAuth = session.factors.includes('phone_otp');
+    const hasEmailAuth = session.factors.includes('email_password');
+
+    // Only redirect to email verification if user used email authentication
+    // and their email is not verified. Phone-only authentication is fine.
+    if (hasEmailAuth && !user.email_is_verified) {
+      redirect('/verify');
+    }
   }
 
   return (
