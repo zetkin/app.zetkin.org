@@ -58,10 +58,15 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       `/api/orgs/${suborg.id}/call_assignments?recursive`
     );
 
+    const calls = await apiClient.get<ZetkinCallAssignment[]>(
+      `/api/orgs/${suborg.id}/calls?recursive`
+    );
+
     suborgsWithStats.push({
       id: suborg.id,
       stats: {
         numCallAssignments: callAssignments.length,
+        numCalls: calls.length,
         numPeople,
       },
       title: suborg.title,
