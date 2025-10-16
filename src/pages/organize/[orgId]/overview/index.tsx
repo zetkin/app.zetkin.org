@@ -28,6 +28,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
   const suborgsWithStats = useSuborgsWithStats(orgId);
 
+  if (suborgsWithStats.length == 0) {
+    return <Typography>You have no sub-organizations</Typography>;
+  }
+
   return (
     <>
       {suborgsWithStats.map((orgWithStats) => (
