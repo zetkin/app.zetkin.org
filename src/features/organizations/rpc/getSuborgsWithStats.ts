@@ -3,6 +3,7 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
+  ZetkinCallAssignment,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
 } from 'utils/types/zetkin';
@@ -53,9 +54,14 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
     const numPeople = suborgStats[0].result;
 
+    const callAssignments = await apiClient.get<ZetkinCallAssignment[]>(
+      `/api/orgs/${suborg.id}/call_assignments?recursive`
+    );
+
     suborgsWithStats.push({
       id: suborg.id,
       stats: {
+        numCallAssignments: callAssignments.length,
         numPeople,
       },
       title: suborg.title,
