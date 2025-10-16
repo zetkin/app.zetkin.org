@@ -18,7 +18,7 @@ import HouseholdAssignmentLayout from 'features/householdsAssignments/layouts/Ho
 import ZUIFutures from 'zui/ZUIFutures';
 import NumberCard from 'features/householdsAssignments/components/NumberCard';
 import { ZetkinAssignmentHouseholdStatsItem } from 'features/householdsAssignments/types';
-import HouseholdCard from 'features/householdsAssignments/componentsHouseholdCard';
+import HouseholdCard from 'features/householdsAssignments/components/HouseholdCard';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -142,7 +142,7 @@ const HouseholdsAssignmentPage: PageWithLayout<
                     </Box>
                   </Card>
                   <Grid container spacing={2}>
-                    <ZUIFutures futures={{ householdsStats, dataGraph }}>
+                    <ZUIFutures futures={{ dataGraph, householdsStats }}>
                       {({ data: { householdsStats, dataGraph } }) => {
                         const filteredHouseholds = dataGraph
                           .map((household) => {
@@ -217,9 +217,9 @@ const HouseholdsAssignmentPage: PageWithLayout<
                         }
                         return (
                           <HouseholdCard
-                            households={sortedHouseholds}
                             assignment={assignment}
                             data={dataGraph}
+                            households={sortedHouseholds}
                             maxVisitedHouseholds={maxHouseholdVisits}
                           />
                         );

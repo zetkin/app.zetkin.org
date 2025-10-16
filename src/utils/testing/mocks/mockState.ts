@@ -102,6 +102,15 @@ export default function mockState(overrides?: RootState) {
     files: {
       fileList: remoteList(),
     },
+    householdAssignments: {
+      assigneesByAssignmentId: {},
+      householdAssignmentList: remoteList(),
+      householdGraphByAssignmentId: {},
+      householdStatsByAssignmentId: {},
+      householdsByAssignmentId: {},
+      metricsByAssignmentId: {},
+      statsByHouseholdAssId: {}
+    },
     import: {
       importResult: null,
       pendingFile: {

@@ -14,7 +14,7 @@ const householdsAssignmentSchema =
   });
 
 export const HouseholdsAssignmentModel: mongoose.Model<ZetkinHouseholdsAssignmentModelType> =
-  mongoose.models.CanvassAssignment ||
+  mongoose.models.HouseholdsAssignment ||
   mongoose.model<ZetkinHouseholdsAssignmentModelType>(
     'HouseholdsAssignment',
     householdsAssignmentSchema

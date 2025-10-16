@@ -19,7 +19,7 @@ export type ZetkinHouseholdAssignment = {
 export type ZetkinHouseholdPostBody = Partial<Omit<ZetkinHousehold, 'id'>>;
 
 export type ZetkinHouseholdAssignmentPostBody = Partial<
-  Omit<ZetkinHouseholdAssignment, 'id'>
+  Omit<ZetkinHouseholdAssignment, 'id' | 'campaign' | 'organization'>
 >;
 
 export type ZetkinHouseholdAssignmentPatchbody = Partial<

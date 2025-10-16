@@ -34,6 +34,7 @@ import useCreateHouseholdAssignment from 'features/householdsAssignments/hooks/u
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS, HOUSEHOLDS2, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
+import householdAssignmentMessageIds from 'features/householdsAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 enum CAMPAIGN_MENU_ITEMS {
@@ -51,6 +52,7 @@ const CampaignActionButtons: React.FunctionComponent<
 > = ({ campaign }) => {
   const campaginMessages = useMessages(campaignMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
+  const householdAssignmentMessages = useMessages(householdAssignmentMessageIds);
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
@@ -169,7 +171,7 @@ const CampaignActionButtons: React.FunctionComponent<
       label: campaginMessages.createButton.createHouseholdAssignment(),
       onClick: () =>
         createHouseholdAssignment({
-          title: areaAssignmentMessages.default.title(),
+          title: householdAssignmentMessages.default.title(),
         }),
     });
   }
