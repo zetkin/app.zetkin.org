@@ -12,6 +12,8 @@ import { ZetkinCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useCurrentCall from '../hooks/useCurrentCall';
 import UnfinishedCall from './UnfinishedCall';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type PreviousCallsSectionProps = {
   onCall: (assignmentId: number) => void;
@@ -24,6 +26,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   onCall,
   searchTerm,
 }) => {
+  const messages = useMessages(messageIds);
   const {
     abandonUnfinishedCall,
     switchToPreviousCall,
@@ -33,6 +36,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
 
+  //TODO: Use Fuse libray to fuzzy search.
   const matchesSearch = (call: ZetkinCall) => {
     if (!search) {
       return true;
@@ -115,13 +119,11 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
                   size="medium"
                 />
                 <ZUIText noWrap variant="bodyMdSemiBold">
-                  {previousCall.target.first_name +
-                    ' ' +
-                    previousCall.target.last_name}
+                  {previousCall.target.name}
                 </ZUIText>
               </Box>
               <ZUIButton
-                label="Log another call"
+                label={messages.callLog.previousCall.logNew()}
                 onClick={() => {
                   switchToPreviousCall(
                     previousCall.assignment_id,

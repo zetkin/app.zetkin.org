@@ -40,8 +40,11 @@ import ActivitiesSection from '../components/ActivitiesSection';
 import ZUITooltip from 'zui/components/ZUITooltip';
 import useCurrentAssignment from '../hooks/useCurrentAssignment';
 import useMyAssignments from '../hooks/useMyAssignments';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 const Call: FC = () => {
+  const messages = useMessages(messageIds);
   const dispatch = useAppDispatch();
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
@@ -109,29 +112,6 @@ const Call: FC = () => {
       </Box>
     );
   }
-
-  const getHeaderPrimaryButtonLabel = () => {
-    if (lane.step == LaneStep.START) {
-      return 'Call';
-    } else if (lane.step == LaneStep.CALL) {
-      return 'Finish & report';
-    } else if (lane.step == LaneStep.REPORT) {
-      return 'Send report';
-    } else {
-      //Lane step must be "Summary"
-      return 'Next call';
-    }
-  };
-
-  const getHeaderSecondaryButtonLabel = () => {
-    if (lane.step == LaneStep.START) {
-      return 'Quit';
-    } else if (lane.step == LaneStep.SUMMARY) {
-      return 'Take a break';
-    } else {
-      return 'Skip';
-    }
-  };
 
   return (
     <>
@@ -247,7 +227,7 @@ const Call: FC = () => {
                   : undefined
               }
               href={lane.step == LaneStep.START ? '/my/home' : undefined}
-              label={getHeaderSecondaryButtonLabel()}
+              label={messages.header.secondaryButton[lane.step]()}
               onClick={() => {
                 if (
                   lane.step != LaneStep.START &&
@@ -265,7 +245,7 @@ const Call: FC = () => {
                 !!errorAllocatingCall ||
                 (lane.step == LaneStep.REPORT && !report.completed)
               }
-              label={getHeaderPrimaryButtonLabel()}
+              label={messages.header.primaryButton[lane.step]()}
               onClick={async () => {
                 if (lane.step == LaneStep.START) {
                   await allocateCall();
@@ -367,9 +347,61 @@ const Call: FC = () => {
               borders={false}
               fullHeight
               renderContent={() => (
-                <ZUIText>Some general info about calling</ZUIText>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    paddingBottom: 10,
+                  }}
+                >
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.start.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.start.description}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.personInfo.title}
+                    />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={
+                        messageIds.callingInfo.tutorial.personInfo.description
+                      }
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.call.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.call.description}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.report.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.report.description}
+                    />
+                  </ZUIText>
+                  <ZUIText variant="headingMd">
+                    <Msg id={messageIds.callingInfo.tutorial.oldCalls.title} />
+                  </ZUIText>
+                  <ZUIText>
+                    <Msg
+                      id={messageIds.callingInfo.tutorial.oldCalls.description}
+                    />
+                  </ZUIText>
+                </Box>
               )}
-              title="Info about calling"
+              title={messages.callingInfo.title()}
             />
           </Box>
           <Box
@@ -513,7 +545,7 @@ const Call: FC = () => {
                   />
                 );
               }}
-              title="Report"
+              title={messages.report.title()}
             />
           </Box>
           <Box
@@ -549,7 +581,7 @@ const Call: FC = () => {
               <ZUIText color="secondary" variant="headingSm">
                 {unfinishedCalls.length == 0
                   ? callSummarySentence(call?.target.first_name ?? '', report)
-                  : 'But, before you move on: you have unfinished calls, deal with them!'}
+                  : messages.summary.unfinishedCallsMessage()}
               </ZUIText>
             </Box>
             {unfinishedCalls.length == 0 && <DesktopStats stats={stats} />}
@@ -601,7 +633,7 @@ const Call: FC = () => {
               })}
             >
               <ZUIButton
-                label="Call log"
+                label={messages.callLog.openCallLogButton()}
                 onClick={() => setCallLogOpen(true)}
                 variant="secondary"
               />
@@ -650,13 +682,15 @@ const Call: FC = () => {
       <ZUIModal
         open={skipCallModalOpen}
         primaryButton={{
-          label: 'No, resume call',
+          label: messages.skipCallDialog.cancelButton(),
           onClick: () => {
             setSkipCallModalOpen(false);
           },
         }}
         secondaryButton={{
-          label: `Yes, skip ${call?.target.name}`,
+          label: messages.skipCallDialog.confirmButton({
+            name: call?.target.name || '',
+          }),
           onClick: () => {
             if (call) {
               skipCurrentCall(assignment.id, call.id);
@@ -666,7 +700,7 @@ const Call: FC = () => {
           },
         }}
         size="small"
-        title={`Skip call to ${call?.target.name}?`}
+        title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
       />
       <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
@@ -711,7 +745,12 @@ const Call: FC = () => {
           })}
         >
           {switchedTo && (
-            <ZUIText>{`Switched assignments. You are now calling in ${switchedTo.title}`}</ZUIText>
+            <ZUIText>
+              <Msg
+                id={messageIds.switchedAssignmentsAlert.message}
+                values={{ assignmentTitle: switchedTo.title }}
+              />
+            </ZUIText>
           )}
         </Alert>
       </Snackbar>
