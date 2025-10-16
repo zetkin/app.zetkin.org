@@ -7,7 +7,6 @@ import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import oldTheme from 'theme';
-import { toSentenceCase } from 'utils/stringUtils';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
 import useDeleteType from '../hooks/useDeleteType';
@@ -145,9 +144,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         disableClearable
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
-          const inputStartWithCapital = inputValue
-            ? toSentenceCase(inputValue)
-            : '';
+          const sanitized = inputValue.trim();
 
           const filteredResult: EventTypeOption[] = [
             ...searchedResults.map((result) => {
@@ -170,7 +167,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
 
           filteredResult.push({
             id: 'CREATE',
-            title: inputStartWithCapital,
+            title: sanitized,
           });
           return inputValue ? filteredResult : options;
         }}

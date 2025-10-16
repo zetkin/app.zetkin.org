@@ -8,7 +8,7 @@ import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 type CampaignEventFilters = {
   customDatesToFilterBy: DateRange<Dayjs>;
   dateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
-  eventTypesToFilterBy: (string | null)[];
+  eventTypesToFilterBy: string[];
   geojsonToFilterBy: GeoJSON.Feature[];
 };
 

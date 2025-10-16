@@ -19,7 +19,7 @@ import {
 type OrgEventFilters = {
   customDatesToFilterBy: DateRange<Dayjs>;
   dateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
-  eventTypesToFilterBy: (string | null)[];
+  eventTypesToFilterBy: string[];
   geojsonToFilterBy: GeoJSON.Feature[];
   orgIdsToFilterBy: number[];
 };
