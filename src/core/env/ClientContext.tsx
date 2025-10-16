@@ -5,7 +5,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useRef } from 'react';
 import {
   StyledEngineProvider,
   Theme,
@@ -18,7 +18,7 @@ import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
-import { store } from 'core/store';
+import createStore, { Store } from 'core/store';
 import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
@@ -48,6 +48,11 @@ const ClientContext: FC<ClientContextProps> = ({
   user,
 }) => {
   const onServer = typeof window == 'undefined';
+  const storeRef = useRef<Store | null>(null);
+
+  if (!storeRef.current) {
+    storeRef.current = createStore();
+  }
 
   const apiClient = onServer
     ? new BackendApiClient(headers)
@@ -62,7 +67,7 @@ const ClientContext: FC<ClientContextProps> = ({
   }
 
   return (
-    <ReduxProvider store={store}>
+    <ReduxProvider store={storeRef.current}>
       <StyledEngineProvider injectFirst>
         <CacheProvider value={cache}>
           <ThemeProvider theme={oldThemeWithLocale(lang)}>
