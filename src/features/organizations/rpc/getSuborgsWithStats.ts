@@ -37,43 +37,42 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     `/api/orgs/${orgId}/sub_organizations`
   );
 
-  const suborgsWithStats: SuborgWithStats[] = [];
-
   const activeSuborgs = suborgs.filter((suborg) => suborg.is_active);
 
-  for (const suborg of activeSuborgs) {
-    const suborgStats = await apiClient.post<
-      ZetkinSmartSearchFilterStats[],
-      { filter_spec: ZetkinSmartSearchFilter[] }
-    >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
-      filter_spec: [
-        {
-          config: {},
-          op: OPERATION.ADD,
-          type: FILTER_TYPE.ALL,
-        },
-      ],
-    });
+  const suborgPromises = activeSuborgs.map(async (suborg) => {
+    const [suborgStats, callAssignments, calls, surveys, surveySubmissions] =
+      await Promise.all([
+        apiClient.post<
+          ZetkinSmartSearchFilterStats[],
+          { filter_spec: ZetkinSmartSearchFilter[] }
+        >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
+          filter_spec: [
+            {
+              config: {},
+              op: OPERATION.ADD,
+              type: FILTER_TYPE.ALL,
+            },
+          ],
+        }),
+
+        apiClient.get<ZetkinCallAssignment[]>(
+          `/api/orgs/${suborg.id}/call_assignments?recursive`
+        ),
+
+        apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
+
+        apiClient.get<ZetkinSurvey[]>(
+          `/api/orgs/${suborg.id}/surveys?recursive`
+        ),
+
+        apiClient.get<ZetkinSurveySubmission[]>(
+          `/api/orgs/${suborg.id}/survey_submissions?recursive`
+        ),
+      ]);
 
     const numPeople = suborgStats[0].result;
 
-    const callAssignments = await apiClient.get<ZetkinCallAssignment[]>(
-      `/api/orgs/${suborg.id}/call_assignments?recursive`
-    );
-
-    const calls = await apiClient.get<ZetkinCall[]>(
-      `/api/orgs/${suborg.id}/calls?recursive`
-    );
-
-    const surveys = await apiClient.get<ZetkinSurvey[]>(
-      `/api/orgs/${suborg.id}/surveys?recursive`
-    );
-
-    const surveySubmissions = await apiClient.get<ZetkinSurveySubmission[]>(
-      `/api/orgs/${suborg.id}/survey_submissions?recursive`
-    );
-
-    suborgsWithStats.push({
+    return {
       id: suborg.id,
       stats: {
         numCallAssignments: callAssignments.length,
@@ -83,8 +82,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         numSurveys: surveys.length,
       },
       title: suborg.title,
-    });
-  }
+    };
+  });
 
-  return suborgsWithStats;
+  /***
+   * This await is needed, although we expect to return a promsie.
+   * Background: It otherwise would resolve the promises after sending it out somehow.
+   * It caused the request to take 4 times compared to when awaiting it here
+   ***/
+  return await Promise.all(suborgPromises);
 }
