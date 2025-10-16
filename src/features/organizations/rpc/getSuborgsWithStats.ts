@@ -7,6 +7,7 @@ import {
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurvey,
+  ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
@@ -68,12 +69,17 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       `/api/orgs/${suborg.id}/surveys?recursive`
     );
 
+    const surveySubmissions = await apiClient.get<ZetkinSurveySubmission[]>(
+      `/api/orgs/${suborg.id}/survey_submissions?recursive`
+    );
+
     suborgsWithStats.push({
       id: suborg.id,
       stats: {
         numCallAssignments: callAssignments.length,
         numCalls: calls.length,
         numPeople,
+        numSubmissions: surveySubmissions.length,
         numSurveys: surveys.length,
       },
       title: suborg.title,

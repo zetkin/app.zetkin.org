@@ -14,6 +14,7 @@ export type SuborgWithStats = {
     numCallAssignments: number;
     numCalls: number;
     numPeople: number;
+    numSubmissions: number;
     numSurveys: number;
   };
   title: string;
