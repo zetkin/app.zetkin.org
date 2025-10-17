@@ -43,11 +43,11 @@ test.describe('User submitting a survey', () => {
     );
 
     await page.fill('[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -109,9 +109,9 @@ test.describe('User submitting a survey', () => {
     const requiredTextInput = await page.locator('[name="2.text"]');
     await requiredTextInput.waitFor({ state: 'visible' });
 
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
-    await page.click('data-testid=Survey-submit');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
+    await page.locator('data-testid=Survey-submit').click();
 
     const valueMissing = await requiredTextInput.evaluate(
       (element: HTMLTextAreaElement) => element.validity.valueMissing
@@ -166,13 +166,13 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    await page.click('input[name="1.options"]');
+    await page.locator('input[name="1.options"][value="1"]').click();
 
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -246,9 +246,9 @@ test.describe('User submitting a survey', () => {
     );
     await requiredRadioInput.waitFor({ state: 'visible' });
 
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
-    await page.click('data-testid=Survey-submit');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
+    await page.locator('data-testid=Survey-submit').click();
 
     const valueMissing = await requiredRadioInput.evaluate(
       (element: HTMLInputElement) => element.validity.valueMissing
@@ -303,14 +303,14 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    await page.click('input[name="3.options"][value="1"]');
-    await page.click('input[name="3.options"][value="2"]');
+    await page.locator('input[name="3.options"][value="1"]').click();
+    await page.locator('input[name="3.options"][value="2"]').click();
 
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -385,11 +385,11 @@ test.describe('User submitting a survey', () => {
     await yes.waitFor({ state: 'visible' });
     await yes.click();
 
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -456,9 +456,9 @@ test.describe('User submitting a survey', () => {
     const hiddenInput = await page.locator('input[name="3.options"]');
 
     await selectInput.waitFor({ state: 'visible' });
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
-    await page.click('data-testid=Survey-submit');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
+    await page.locator('data-testid=Survey-submit').click();
 
     const valueMissing = await hiddenInput.evaluate(
       (element: HTMLSelectElement) => element.validity.valueMissing
@@ -519,11 +519,17 @@ test.describe('User submitting a survey', () => {
     await page.goto(
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+
+    const selectInput = await page.locator(
+      '[id="mui-component-select-3.options"]'
+    );
+    await selectInput.waitFor({ state: 'visible' });
+
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -554,16 +560,16 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    await page.click('input[name="1.options"]');
+    await page.locator('input[name="1.options"][value="1"]').click();
     await page.fill('[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="email"]');
+    await page.locator('input[name="sig"][value="email"]').click();
     await page.fill('input[name="sig.email"]', 'testuser@example.org');
     await page.fill('input[name="sig.first_name"]', 'Test');
     await page.fill('input[name="sig.last_name"]', 'User');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -592,13 +598,13 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    await page.click('input[name="1.options"][value="1"]');
+    await page.locator('input[name="1.options"][value="1"]').click();
     await page.fill('[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="user"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="user"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -623,13 +629,13 @@ test.describe('User submitting a survey', () => {
       }
     );
 
-    await page.click('input[name="1.options"][value="1"]');
+    await page.locator('input[name="1.options"][value="1"]').click();
     await page.fill('[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     const log = moxy.log(`/v1${apiPostPath}`);
@@ -646,14 +652,14 @@ test.describe('User submitting a survey', () => {
       `${appUri}/o/${KPDMembershipSurvey.organization.id}/surveys/${KPDMembershipSurvey.id}`
     );
 
-    await page.click('input[name="1.options"][value="1"]');
+    await page.locator('input[name="1.options"][value="1"]').click();
     await page.fill('[name="2.text"]', 'Topple capitalism');
-    await page.click('input[name="sig"][value="anonymous"]');
-    await page.click('data-testid=Survey-acceptTerms');
+    await page.locator('input[name="sig"][value="anonymous"]').click();
+    await page.locator('data-testid=Survey-acceptTerms').click();
 
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'POST'),
-      await page.click('data-testid=Survey-submit'),
+      page.locator('data-testid=Survey-submit').click(),
     ]);
 
     await expect(page.locator('data-testid=Survey-error')).toBeVisible();

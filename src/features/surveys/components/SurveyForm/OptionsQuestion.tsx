@@ -21,6 +21,7 @@ import {
 import ZUIText from 'zui/components/ZUIText';
 import ZUIPublicSurveyOption from '../../../../zui/components/ZUIPublicSurveyOption';
 import messageIds from 'features/surveys/l10n/messageIds';
+import LinkifiedText from './LinkifiedText';
 
 export type OptionsQuestionProps = {
   element: ZetkinSurveyOptionsQuestionElement;
@@ -80,7 +81,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
             </FormLabel>
             {question.description && (
               <ZUIText id={`description-${element.id}`}>
-                {question.description}
+                <LinkifiedText text={question.description} />
               </ZUIText>
             )}
           </Box>
@@ -116,7 +117,7 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
               </FormLabel>
               {question.description && (
                 <ZUIText id={`description-${element.id}`}>
-                  {question.description}
+                  <LinkifiedText text={question.description} />
                 </ZUIText>
               )}
             </Box>
@@ -142,9 +143,13 @@ const OptionsQuestion: FC<OptionsQuestionProps> = ({
                 value={dropdownValue}
               >
                 {options.map((option: ZetkinSurveyOption) => (
-                  <MenuItem key={option.id} value={option.id}>
+                  <MenuItem
+                    key={option.id}
+                    sx={{ whiteSpace: 'normal' }}
+                    value={option.id}
+                  >
                     <Typography
-                      noWrap
+                      flex="wrap"
                       sx={(theme) => ({
                         fontFamily: theme.typography.fontFamily,
                         fontSize: '1rem',

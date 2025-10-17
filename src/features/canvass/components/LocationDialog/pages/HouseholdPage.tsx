@@ -12,6 +12,7 @@ type HouseholdPageProps = {
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
+  onDelete: () => void;
   onEdit: () => void;
   onHouseholdVisitStart: () => void;
   visitedInThisAssignment: boolean;
@@ -22,6 +23,7 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
   location,
   onBack,
   onClose,
+  onDelete,
   onEdit,
   onHouseholdVisitStart,
   visitedInThisAssignment,
@@ -50,6 +52,7 @@ const HouseholdPage: FC<HouseholdPageProps> = ({
       color={household.color}
       onBack={onBack}
       onClose={onClose}
+      onDelete={onDelete}
       onEdit={onEdit}
       subtitle={
         household.level

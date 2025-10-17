@@ -88,7 +88,6 @@ const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
             <Box flexGrow={1} sx={{ height: '200px' }}>
               {selectedArea && (
                 <GLCanvassMap
-                  areas={areas}
                   assignment={assignment}
                   selectedArea={selectedArea}
                 />

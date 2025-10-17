@@ -10,6 +10,7 @@ import ZUIText from '../../../../zui/components/ZUIText';
 import TextQuestion from './TextQuestion';
 import OptionsQuestion from './OptionsQuestion';
 import useServerSide from 'core/useServerSide';
+import LinkifiedText from './LinkifiedText';
 
 type SurveyFormProps = {
   initialValues?: Record<string, string | string[]>;
@@ -64,7 +65,9 @@ const SurveyForm: FC<SurveyFormProps> = ({
                   <ZUIText variant="headingMd">
                     {element.text_block.header}
                   </ZUIText>
-                  <ZUIText>{element.text_block.content}</ZUIText>
+                  <ZUIText>
+                    <LinkifiedText text={element.text_block.content} />
+                  </ZUIText>
                 </Box>
               )}
               {isTextQuestion && (
