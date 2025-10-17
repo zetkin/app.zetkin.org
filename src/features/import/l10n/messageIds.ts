@@ -90,9 +90,6 @@ export default makeMessages('feat.import', {
           '{importID} can be used to find and idenfity people in Zetkin'
         ),
         skipRowDescription: m('No new people will be created'),
-        warningUsedImportID: m<{ importID: string }>(
-          '{importID} is currently set as the Import ID. To choose a different Import ID, first deselect {importID}'
-        ),
         wrongEmailFormatWarning: m(
           'The values in this column don’t look like valid emails. An email address must contain an ‘@’ symbol.'
         ),
@@ -135,7 +132,7 @@ export default makeMessages('feat.import', {
         idField: 'ext_id' | 'id' | 'email';
         numValues: number;
       }>(
-        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} other {external ID}}'
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} ext_id {External ID} email {Email} other {Unknown}}'
       ),
       finishedMappingOrganizations: m<{
         numMappedTo: number;

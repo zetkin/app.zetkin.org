@@ -105,26 +105,19 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             />
           </Typography>
         </Box>
-        {importID && importID !== uiDataColumn.originalColumn.idField && (
-          <Alert severity="error">
-            <Msg
-              id={messageIds.configuration.configure.ids.warningUsedImportID}
-              values={{
-                importID: getIdLabel(importID),
-              }}
-            />
-          </Alert>
-        )}
         <Box ml={2}>
           <Box display="flex" flexDirection="column" mb={1}>
             <FormControlLabel
               control={
                 <Checkbox
                   checked={importID == uiDataColumn.originalColumn.idField}
-                  disabled={importID !== null ? true : false}
-                  onChange={() =>
-                    updateImportID(uiDataColumn.originalColumn.idField!)
-                  }
+                  onChange={() => {
+                    if (importID == uiDataColumn.originalColumn.idField) {
+                      updateImportID(null);
+                    } else {
+                      updateImportID(uiDataColumn.originalColumn.idField!);
+                    }
+                  }}
                 />
               }
               label={messages.configuration.configure.ids.importCheckboxLabel({
@@ -140,24 +133,28 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
               />
             </Typography>
           </Box>
-          <Box display="flex" flexDirection="column">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={skipUnknown}
-                  onChange={(ev, isChecked) =>
-                    updateSheetSettings({ skipUnknown: isChecked })
-                  }
-                />
-              }
-              label={<Msg id={messageIds.configuration.settings.skipUnknown} />}
-            />
-            <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
-              <Msg
-                id={messageIds.configuration.configure.ids.skipRowDescription}
+          {importID == uiDataColumn.originalColumn.idField && (
+            <Box display="flex" flexDirection="column">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={skipUnknown}
+                    onChange={(ev, isChecked) =>
+                      updateSheetSettings({ skipUnknown: isChecked })
+                    }
+                  />
+                }
+                label={
+                  <Msg id={messageIds.configuration.settings.skipUnknown} />
+                }
               />
-            </Typography>
-          </Box>
+              <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
+                <Msg
+                  id={messageIds.configuration.configure.ids.skipRowDescription}
+                />
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>
