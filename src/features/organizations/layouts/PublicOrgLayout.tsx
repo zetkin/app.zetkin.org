@@ -1,7 +1,7 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, ReactNode, useContext } from 'react';
+import { FC, ReactNode, useCallback, useContext, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   CalendarMonth,
@@ -29,20 +29,11 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIIconLabel from '../../../zui/ZUIIconLabel';
 import ZUILink from '../../../zui/components/ZUILink';
+import { useIntl } from 'react-intl';
 
 type Props = {
   children: ReactNode;
   org: ZetkinOrganization;
-};
-
-const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-
-const getCountryName = (code: string) => {
-  try {
-    return regionNames.of(code);
-  } catch (_) {
-    return code;
-  }
 };
 
 const PublicOrgLayout: FC<Props> = ({ children, org }) => {
@@ -53,6 +44,23 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const subOrgs = usePublicSubOrgs(org.id);
   const { filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
+
+  const { locale } = useIntl();
+  const regionNames = useMemo(
+    () => new Intl.DisplayNames([locale], { type: 'region' }),
+    [locale]
+  );
+
+  const getCountryName = useCallback(
+    (code: string) => {
+      try {
+        return regionNames.of(code);
+      } catch (_) {
+        return code;
+      }
+    },
+    [regionNames]
+  );
 
   const lastSegment = path?.split('/')[3] ?? 'home';
   const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
