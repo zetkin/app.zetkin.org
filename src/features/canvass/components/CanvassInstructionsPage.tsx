@@ -1,131 +1,154 @@
 'use client';
 
-import { FC } from 'react';
-import { HomeWork } from '@mui/icons-material';
-import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
+import React, { FC, useState } from 'react';
+import { ArrowForwardIos } from '@mui/icons-material';
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  Typography,
+} from '@mui/material';
 
-import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
-import { ZetkinAreaAssignment } from '../../areaAssignments/types';
+import useMyCanvassAssignments from 'features/canvass/hooks/useMyAreaAssignments';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
-import useOrganization from 'features/organizations/hooks/useOrganization';
-import ZUIFutures from 'zui/ZUIFutures';
 import oldTheme from 'theme';
-import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
+import ZUIText from 'zui/components/ZUIText';
 
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
 }> = ({ assignment }) => {
-  const orgFuture = useOrganization(assignment.organization_id);
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
-  const userMustSelectArea = areas.length > 1;
+  const messages = useMessages(messageIds);
+  const [loadingAreaId, setLoadingAreaId] = useState<number | null>(null);
 
   return (
-    <ZUIFutures futures={{ org: orgFuture }}>
-      {({ data: { org } }) => (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        sx={{
+          overflowY: 'auto',
+          paddingBottom: 8,
+        }}
+      >
         <Box
+          bgcolor="white"
+          borderRadius={2}
+          padding={2}
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            height: '100dvh',
-            width: '100vw',
+            gap: 2,
+            mt: 2,
           }}
         >
-          <Box
-            alignItems="center"
-            bgcolor={oldTheme.palette.background.paper}
-            display="flex"
-            justifyContent="space-between"
-            padding={2}
+          <Typography
+            color={oldTheme.palette.text.secondary}
+            variant="subtitle1"
           >
-            <Box>
-              <Typography variant="body1">{assignment.title}</Typography>
-              <Box alignItems="center" display="flex" gap={1}>
-                <Avatar
-                  src={`/api/orgs/${org.id}/avatar`}
-                  sx={{ height: 24, width: 24 }}
-                />
-                <Typography variant="body2">{org.title}</Typography>
-              </Box>
-            </Box>
-          </Box>
-          <Divider />
-          <Box
-            sx={{
-              overflowY: 'auto',
-              padding: 2,
-              paddingBottom: 8,
-            }}
-          >
+            {messages.instructions.instructionsHeader().toUpperCase()}
+          </Typography>
+          <Box>
             {assignment.instructions ? (
-              <Card sx={{ mt: 2, mx: 1 }}>
-                <Typography m={2}>
-                  <Msg id={messageIds.instructions.instructionsHeader} />
-                </Typography>
-                <Divider />
-                <Box
-                  sx={{
-                    mx: 1,
-                  }}
-                >
-                  <ZUIMarkdown markdown={assignment.instructions} />
-                </Box>
-              </Card>
+              <ZUIMarkdown markdown={assignment.instructions} />
             ) : (
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  bottom: 80,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  left: 0,
-                  position: 'absolute',
-                  right: 0,
-                }}
-              >
-                <HomeWork
-                  sx={{ color: oldTheme.palette.grey[400], fontSize: 100 }}
-                />
-                <Typography color="secondary" variant="body1">
-                  <Msg id={messageIds.instructions.ready} />
-                </Typography>
-              </Box>
+              <ZUIText>
+                <Msg id={messageIds.instructions.ready} />
+              </ZUIText>
             )}
           </Box>
+        </Box>
+        {areas && (
           <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="center"
+            bgcolor="white"
+            borderRadius={2}
+            padding={2}
             sx={{
-              bottom: 16,
-              left: 0,
-              position: 'absolute',
-              right: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              mt: 2,
             }}
           >
-            <Button
-              fullWidth
-              href={
-                userMustSelectArea
-                  ? `/canvass/${assignment.id}/areas`
-                  : `/canvass/${assignment.id}/areas/${areas[0].id}`
-              }
-              sx={{
-                width: '50%',
-              }}
-              variant="contained"
+            <Typography
+              color={oldTheme.palette.text.secondary}
+              variant="subtitle1"
             >
-              {userMustSelectArea ? (
-                <Msg id={messageIds.instructions.selectArea} />
+              {messages.instructions.selectArea().toUpperCase()}
+            </Typography>
+
+            <Box>
+              {areas.length > 0 ? (
+                <List disablePadding>
+                  {areas.map((area) => (
+                    <React.Fragment key={area.id}>
+                      <ListItem key={area.id} disablePadding>
+                        <ListItemButton
+                          href={`/canvass/${assignment.id}/areas/${area.id}`}
+                          onClick={() => {
+                            setLoadingAreaId(area.id);
+                          }}
+                          sx={{
+                            alignItems: 'center',
+                            display: 'flex',
+                            height: 64,
+                            justifyContent: 'space-between',
+                            px: 2,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              height: '100%',
+                              justifyContent: area.description
+                                ? 'flex-start'
+                                : 'center',
+                            }}
+                          >
+                            <Typography variant="body1">
+                              {area.title}
+                            </Typography>
+                            {area.description && (
+                              <Typography
+                                color="text.secondary"
+                                variant="body2"
+                              >
+                                {area.description}
+                              </Typography>
+                            )}
+                          </Box>
+                          {loadingAreaId === area.id ? (
+                            <CircularProgress size={20} />
+                          ) : (
+                            <ArrowForwardIos fontSize="small" />
+                          )}
+                        </ListItemButton>
+                      </ListItem>
+                      <Divider />
+                    </React.Fragment>
+                  ))}
+                </List>
               ) : (
-                <Msg id={messageIds.instructions.start} />
+                <Typography>
+                  <Msg id={messageIds.selectArea.noAreas} />
+                </Typography>
               )}
-            </Button>
+            </Box>
           </Box>
-        </Box>
-      )}
-    </ZUIFutures>
+        )}
+      </Box>
+    </Box>
   );
 };
 
