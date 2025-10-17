@@ -1,8 +1,7 @@
 'use client';
 
 import { Box } from '@mui/system';
-import { FC, PropsWithChildren, useMemo } from 'react';
-import NextLink from 'next/link';
+import React, { FC, PropsWithChildren, useMemo } from 'react';
 
 import ActivistPortalHeader from '../components/ActivistPortlHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -12,22 +11,17 @@ import messageIds from '../l10n/messageIds';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import { removeOffset } from 'utils/dateUtils';
-import useMyAreaAssignments from '../../canvass/hooks/useMyAreaAssignments';
+import useMyCanvassAssignments from 'features/canvass/hooks/useMyAreaAssignments';
 import useOrganization from '../hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
-import ZUILink from '../../../zui/components/ZUILink';
+import ZUILink from 'zui/components/ZUILink';
+import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 
-type Props = PropsWithChildren<{
-  areaAssId: number;
-}>;
-
-export const PublicCanvassLayout: FC<Props> = ({ children, areaAssId }) => {
-  const assignments = useMyAreaAssignments();
-  const assignment = useMemo(
-    () => assignments.find((assignment) => assignment.id == areaAssId),
-    [assignments, areaAssId]
-  );
-
+const Layout: FC<
+  PropsWithChildren<{
+    assignment: ZetkinAreaAssignment;
+  }>
+> = ({ children, assignment }) => {
   const orgFuture = useOrganization(assignment.organization_id);
 
   const messages = useMessages(messageIds);
@@ -105,4 +99,22 @@ export const PublicCanvassLayout: FC<Props> = ({ children, areaAssId }) => {
     </ZUIFutures>
   );
 };
+
+const PublicCanvassLayout: FC<
+  PropsWithChildren<{
+    areaAssId: number;
+  }>
+> = ({ areaAssId, children }) => {
+  const myAssignments = useMyCanvassAssignments() || [];
+  const assignment = myAssignments.find(
+    (assignment) => assignment.id == areaAssId
+  );
+
+  if (!assignment) {
+    return null;
+  }
+
+  return <Layout assignment={assignment}>{children}</Layout>;
+};
+
 export default PublicCanvassLayout;

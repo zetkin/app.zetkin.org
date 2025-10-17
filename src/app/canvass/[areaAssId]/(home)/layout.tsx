@@ -7,7 +7,7 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
-import { PublicCanvassLayout } from 'features/organizations/layouts/PublicCanvassLayout';
+import PublicCanvassLayout from 'features/organizations/layouts/PublicCanvassLayout';
 
 type Props = PropsWithChildren<{
   params: {
@@ -41,7 +41,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
 const CanvassLayout: FC<Props> = ({ children, params }) => {
   return (
     <HomeThemeProvider>
