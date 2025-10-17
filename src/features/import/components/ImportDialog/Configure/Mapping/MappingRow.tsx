@@ -21,6 +21,7 @@ import {
   ColumnKind,
   ConfigurableColumn,
 } from 'features/import/utils/types';
+import useImportID from 'features/import/hooks/useImportID';
 
 const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
   return [
@@ -54,6 +55,7 @@ const MappingRow: FC<MappingRowProps> = ({
 }) => {
   const theme = useTheme();
   const column = useUIDataColumn(columnIndex);
+  const { importID, handleColumnDeselection } = useImportID();
 
   const columnValuesMessage = useColumnValuesMessage(
     column.numberOfEmptyRows,
@@ -64,7 +66,7 @@ const MappingRow: FC<MappingRowProps> = ({
     if (column.originalColumn.kind == ColumnKind.DATE) {
       return messageIds.configuration.mapping.configButton;
     } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
-      return messageIds.configuration.mapping.infoButton;
+      return messageIds.configuration.mapping.configButton;
     } else {
       return messageIds.configuration.mapping.mapValuesButton;
     }
@@ -93,11 +95,11 @@ const MappingRow: FC<MappingRowProps> = ({
                   selected: isChecked,
                 });
               } else {
-                onChange({
-                  ...column.originalColumn,
-                  kind: ColumnKind.UNKNOWN,
-                  selected: isChecked,
-                });
+                handleColumnDeselection(
+                  column.originalColumn,
+                  importID,
+                  onChange
+                );
               }
               clearConfiguration();
             }}
