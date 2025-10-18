@@ -56,7 +56,7 @@ import areaAssignmentSlice, {
 } from 'features/areaAssignments/store';
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
-import { HouseholdAssignmentsStoreSlice } from 'features/householdsAssignments/store';
+import householdAssignmentSlice, { HouseholdAssignmentsStoreSlice } from 'features/householdsAssignments/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
@@ -98,6 +98,7 @@ const reducer = {
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
+  householdAssignments: householdAssignmentSlice.reducer,
   import: importSlice.reducer,
   joinForms: joinFormsSlice.reducer,
   journeys: journeysSlice.reducer,

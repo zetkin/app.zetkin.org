@@ -86,7 +86,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
                     onSubmit: handleDelete,
                     title: messages.layout.actions.delete(),
                     warningText: messages.layout.actions.deleteWarningText({
-                      title: householdAssignment.title,
+                      title: householdAssignment.title ?? "",
                     }),
                   });
                 },
@@ -145,7 +145,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => updateHouseholdAssignment({ title: newTitle })}
-          value={householdAssignment.title}
+          value={householdAssignment.title ?? ""}
         />
       }
     >
