@@ -61,12 +61,14 @@ export default makeMessages('feat.organizations', {
       viewInMap: m('View in map'),
     },
     menu: {
+      events: m('Events'),
       logout: m('Logout'),
       myZetkin: m('My Zetkin'),
+      organizations: m('Organizations'),
     },
     tabs: {
       calendar: m('Calendar'),
-      suborgs: m('Explore'),
+      suborgs: m('Sub-organizations'),
     },
   },
   noEventsBlurb: {
@@ -106,5 +108,8 @@ export default makeMessages('feat.organizations', {
     ),
     headline: m('Dig deeper'),
     showButton: m('Show all events'),
+  },
+  subOrgsPage: {
+    showAll: m('Show all organizations'),
   },
 });

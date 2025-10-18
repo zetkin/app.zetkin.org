@@ -1,66 +1,89 @@
 'use client';
 
-import { FC } from 'react';
-import { Box, List, ListItem } from '@mui/material';
-import { ChevronRight } from '@mui/icons-material';
-import NextLink from 'next/link';
+import React, { FC, useMemo } from 'react';
+import { Box } from '@mui/material';
 
-import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUIText from 'zui/components/ZUIText';
+import useOrganizations from 'features/organizations/hooks/useOrganizations';
+import useMemberships from 'features/organizations/hooks/useMemberships';
+import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
+import buildOrganizationForest from 'features/home/util/buildOrganizationForest';
+import OrganizationsForest from 'features/home/components/OrganizationsForest';
+import ZUIButton from 'zui/components/ZUIButton';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/organizations/l10n/messageIds';
 
 type Props = {
   orgId: number;
 };
 
+const SubOrganizationsForest: FC<{
+  memberships: ZetkinMembership[];
+  orgId: number;
+  organizations: ZetkinOrganization[];
+}> = ({ memberships, organizations, orgId }) => {
+  const { organizationForest, idList } = useMemo(() => {
+    const filteredOrgs = organizations.filter((org) => org.is_public);
+
+    const { orgMap } = buildOrganizationForest(filteredOrgs, memberships);
+
+    if (!orgMap[orgId]) {
+      return {
+        idList: [],
+        organizationForest: [],
+      };
+    }
+
+    return {
+      idList: [],
+      organizationForest: orgMap[orgId].children,
+    };
+  }, [organizations, memberships, orgId]);
+
+  if (organizationForest.length === 0) {
+    return null;
+  }
+
+  return <OrganizationsForest expanded={idList} forest={organizationForest} />;
+};
+
 const SubOrgsPage: FC<Props> = ({ orgId }) => {
-  const allSubOrgs = usePublicSubOrgs(orgId);
-  const subOrgsSorted = allSubOrgs
-    .filter((org) => org.parent?.id == orgId)
-    .sort((so1, so2) => {
-      return so1.title.localeCompare(so2.title);
-    });
+  const organizationsFuture = useOrganizations();
+  const membershipsFuture = useMemberships(true);
+  const messages = useMessages(messageIds);
+
+  if (
+    !organizationsFuture.data ||
+    !membershipsFuture.data ||
+    membershipsFuture.data.length === 0
+  ) {
+    return null;
+  }
 
   return (
-    <List>
-      {subOrgsSorted.map((org) => {
-        const hasSubOrgs = !!allSubOrgs.find(
-          (subOrg) => subOrg.parent?.id == org.id
-        );
-
-        const baseUrl = `/o/${org.id}`;
-        const url = hasSubOrgs ? baseUrl + '/suborgs' : baseUrl;
-
-        return (
-          <ListItem key={org.id}>
-            <NextLink
-              href={url}
-              style={{
-                display: 'block',
-                textDecoration: 'none',
-                width: '100%',
-              }}
-            >
-              <Box
-                sx={(theme) => ({
-                  alignItems: 'center',
-                  color: theme.palette.text.primary,
-                  display: 'flex',
-                  gap: 1,
-                  textDecoration: 'none',
-                })}
-              >
-                <ZUIAvatar size="md" url={`/api/orgs/${org.id}/avatar`} />
-                <ZUIText>{org.title}</ZUIText>
-                <Box sx={{ lineHeight: '1em', marginLeft: 'auto' }}>
-                  {hasSubOrgs && <ChevronRight />}
-                </Box>
-              </Box>
-            </NextLink>
-          </ListItem>
-        );
-      })}
-    </List>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <SubOrganizationsForest
+        memberships={membershipsFuture.data}
+        organizations={organizationsFuture.data}
+        orgId={orgId}
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}
+      >
+        <ZUIButton
+          href={'/my/organizations'}
+          label={messages.subOrgsPage.showAll()}
+        />
+      </Box>
+    </Box>
   );
 };
 

@@ -37,8 +37,14 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
           },
           {
             href: `/my/feed`,
-            label: messages.tabs.feed(),
+            label: messages.tabs.events(),
             value: 'feed',
+          },
+          {
+            href: '/my/organizations',
+            // icon: People, // add this in case https://github.com/zetkin/app.zetkin.org/pull/3123 gets merged (import from @mui/icons-material)
+            label: messages.tabs.organizations(),
+            value: 'organizations',
           },
           {
             href: `/my/settings`,
