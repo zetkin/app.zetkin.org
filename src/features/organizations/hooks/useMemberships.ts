@@ -1,4 +1,6 @@
-import { IFuture } from 'core/caching/futures';
+import { useMemo } from 'react';
+
+import { FutureBase, IFuture } from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
@@ -13,17 +15,29 @@ export default function useMemberships(
     (state) => state.organizations.userMembershipList
   );
 
-  return loadListIfNecessary(membershipList, dispatch, {
+  const membershipsFuture = loadListIfNecessary(membershipList, dispatch, {
     actionOnLoad: () => dispatch(userMembershipsLoad()),
     actionOnSuccess: (data) => dispatch(userMembershipsLoaded(data)),
     loader: () =>
-      apiClient
-        .get<ZetkinMembership[]>(`/api/users/me/memberships`)
-        .then((response) => {
-          if (ignoreRole) {
-            return response;
-          }
-          return response.filter((m) => m.role != null);
-        }),
+      apiClient.get<ZetkinMembership[]>(`/api/users/me/memberships`),
   });
+
+  return useMemo(() => {
+    if (
+      ignoreRole ||
+      !membershipsFuture.data ||
+      membershipsFuture.data.length === 0
+    ) {
+      return membershipsFuture;
+    }
+
+    const filtered = membershipsFuture.data.filter(
+      (m: ZetkinMembership) => m.role != null
+    );
+    return new FutureBase(
+      filtered,
+      membershipsFuture.error,
+      membershipsFuture.isLoading
+    );
+  }, [membershipsFuture]);
 }
