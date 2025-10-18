@@ -11,6 +11,7 @@ import {
   Public,
 } from '@mui/icons-material';
 import NextLink from 'next/link';
+import { useIntl } from 'react-intl';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -27,9 +28,8 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUIIconLabel from '../../../zui/ZUIIconLabel';
-import ZUILink from '../../../zui/components/ZUILink';
-import { useIntl } from 'react-intl';
+import ZUIIconLabel from 'zui/ZUIIconLabel';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   children: ReactNode;
@@ -54,7 +54,8 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const getCountryName = useCallback(
     (code: string) => {
       try {
-        return regionNames.of(code);
+        const regionName = regionNames.of(code);
+        return regionName ?? code;
       } catch (_) {
         return code;
       }
@@ -160,7 +161,14 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
                       })}
                     />
                   }
-                  label={org.phone}
+                  label={
+                    <ZUILink
+                      hoverUnderline={true}
+                      href={`tel:${org.phone}`}
+                      text={org.phone}
+                      variant={'secondary'}
+                    />
+                  }
                   size={'sm'}
                 />
               ) : null}
