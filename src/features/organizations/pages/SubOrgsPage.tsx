@@ -12,6 +12,7 @@ import OrganizationsForest from 'features/home/components/OrganizationsForest';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
+import buildLeveledIdList from 'features/home/util/buildLeveledIdList';
 
 type Props = {
   orgId: number;
@@ -25,10 +26,7 @@ const SubOrganizationsForest: FC<{
   const { organizationForest, idList } = useMemo(() => {
     const filteredOrgs = organizations.filter((org) => org.is_public);
 
-    const { idList, orgMap } = buildOrganizationForest(
-      filteredOrgs,
-      memberships
-    );
+    const { orgMap } = buildOrganizationForest(filteredOrgs, memberships);
 
     if (!orgMap[orgId]) {
       return {
@@ -38,10 +36,14 @@ const SubOrganizationsForest: FC<{
     }
 
     return {
-      idList: idList,
+      idList: buildLeveledIdList(orgMap[orgId].children, 1).map((i) =>
+        i.toString()
+      ),
       organizationForest: orgMap[orgId].children,
     };
   }, [organizations, memberships, orgId]);
+
+  if (!organizationForest) return null;
 
   return <OrganizationsForest expanded={idList} forest={organizationForest} />;
 };

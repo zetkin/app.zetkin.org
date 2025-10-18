@@ -6,6 +6,7 @@ import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 import OrganizationsForest from './OrganizationsForest';
 import buildOrganizationForest from '../util/buildOrganizationForest';
+import buildLeveledIdList from '../util/buildLeveledIdList';
 
 const AllOrganizationsForest: FC<{
   memberships: ZetkinMembership[];
@@ -14,16 +15,19 @@ const AllOrganizationsForest: FC<{
   const { organizationForest, idList } = useMemo(() => {
     const filteredOrgs = organizations.filter((org) => org.is_public);
 
-    const { idList, rootOrgs } = buildOrganizationForest(
-      filteredOrgs,
-      memberships
-    );
+    const { rootOrgs } = buildOrganizationForest(filteredOrgs, memberships);
+
+    const idList = buildLeveledIdList(rootOrgs, 1).map((i) => i.toString());
 
     return {
       idList: idList,
       organizationForest: rootOrgs,
     };
   }, [organizations, memberships]);
+
+  if (organizationForest.length === 0) {
+    return null;
+  }
 
   return <OrganizationsForest expanded={idList} forest={organizationForest} />;
 };
