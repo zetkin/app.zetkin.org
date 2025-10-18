@@ -5,14 +5,12 @@ import { Box } from '@mui/material';
 
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useMemberships from 'features/organizations/hooks/useMemberships';
-import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 import buildOrganizationForest from 'features/home/util/buildOrganizationForest';
 import OrganizationsForest from 'features/home/components/OrganizationsForest';
 import ZUIButton from 'zui/components/ZUIButton';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
-import buildLeveledIdList from 'features/home/util/buildLeveledIdList';
 
 type Props = {
   orgId: number;
@@ -36,14 +34,12 @@ const SubOrganizationsForest: FC<{
     }
 
     return {
-      idList: buildLeveledIdList(orgMap[orgId].children, 1).map((i) =>
-        i.toString()
-      ),
+      idList: [],
       organizationForest: orgMap[orgId].children,
     };
   }, [organizations, memberships, orgId]);
 
-  if (!organizationForest) {
+  if (organizationForest.length === 0) {
     return null;
   }
 
