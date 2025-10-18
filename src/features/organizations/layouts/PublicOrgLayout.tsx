@@ -1,10 +1,17 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, ReactNode, useContext } from 'react';
+import { FC, ReactNode, useCallback, useContext, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { CalendarMonth, NorthWest } from '@mui/icons-material';
+import {
+  CalendarMonth,
+  Email,
+  NorthWest,
+  Phone,
+  Public,
+} from '@mui/icons-material';
 import NextLink from 'next/link';
+import { useIntl } from 'react-intl';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -21,6 +28,8 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ZUIIconLabel from 'zui/ZUIIconLabel';
+import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   children: ReactNode;
@@ -33,8 +42,26 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
 
   const messages = useMessages(messageIds);
   const subOrgs = usePublicSubOrgs(org.id);
-  const { allEvents, filteredEvents } = useFilteredOrgEvents(org.id);
+  const { filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
+
+  const { locale } = useIntl();
+  const regionNames = useMemo(
+    () => new Intl.DisplayNames([locale], { type: 'region' }),
+    [locale]
+  );
+
+  const getCountryName = useCallback(
+    (code: string) => {
+      try {
+        const regionName = regionNames.of(code);
+        return regionName ?? code;
+      } catch (_) {
+        return code;
+      }
+    },
+    [regionNames]
+  );
 
   const lastSegment = path?.split('/')[3] ?? 'home';
   const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
@@ -99,6 +126,69 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
             </>
           }
           selectedTab={lastSegment}
+          subtitle={
+            <Box>
+              {org.email ? (
+                <ZUIIconLabel
+                  color={'secondary'}
+                  icon={
+                    <Email
+                      sx={(theme) => ({
+                        color: theme.palette.text.secondary,
+                        fontSize: '1em',
+                      })}
+                    />
+                  }
+                  label={
+                    <ZUILink
+                      hoverUnderline={true}
+                      href={`mailto:${org.email}`}
+                      text={org.email}
+                      variant={'secondary'}
+                    />
+                  }
+                  size={'sm'}
+                />
+              ) : null}
+              {org.phone ? (
+                <ZUIIconLabel
+                  color={'secondary'}
+                  icon={
+                    <Phone
+                      sx={(theme) => ({
+                        color: theme.palette.text.secondary,
+                        fontSize: '1em',
+                      })}
+                    />
+                  }
+                  label={
+                    <ZUILink
+                      hoverUnderline={true}
+                      href={`tel:${org.phone}`}
+                      text={org.phone}
+                      variant={'secondary'}
+                    />
+                  }
+                  size={'sm'}
+                />
+              ) : null}
+              {org.country ? (
+                <ZUIIconLabel
+                  color={'secondary'}
+                  icon={
+                    <Public
+                      sx={(theme) => ({
+                        color: theme.palette.text.secondary,
+                        fontSize: '1em',
+                      })}
+                    />
+                  }
+                  label={getCountryName(org.country)}
+                  size={'sm'}
+                />
+              ) : null}
+            </Box>
+          }
           tabs={navBarItems}
           title={
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
@@ -121,7 +211,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       }
       locationFilter={geojsonToFilterBy}
       setLocationFilter={setLocationFilter}
-      showMap={lastSegment != 'suborgs' && allEvents.length > 0}
+      showMap={true}
     >
       {children}
     </EventMapLayout>
