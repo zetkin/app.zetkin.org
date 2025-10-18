@@ -43,7 +43,9 @@ const SubOrganizationsForest: FC<{
     };
   }, [organizations, memberships, orgId]);
 
-  if (!organizationForest) return null;
+  if (!organizationForest) {
+    return null;
+  }
 
   return <OrganizationsForest expanded={idList} forest={organizationForest} />;
 };
