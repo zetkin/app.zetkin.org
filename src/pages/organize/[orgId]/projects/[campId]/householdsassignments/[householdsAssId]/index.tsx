@@ -79,7 +79,7 @@ const HouseholdsAssignmentPage: PageWithLayout<
         }}
       >
         {({ data: { assignment, stats } }) => {
-          const planUrl = `/organize/${orgId}/projects/${assignment.project_id}/householdsassignments/${assignment.id}/map`;
+          const planUrl = `/organize/${orgId}/projects/${assignment.campId}/householdsassignments/${assignment.id}/map`;
           return (
             <Box display="flex" flexDirection="column" gap={2}>
               {numHouseholds == 0 && (

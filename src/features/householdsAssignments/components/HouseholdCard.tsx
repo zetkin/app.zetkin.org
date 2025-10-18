@@ -76,7 +76,7 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
   const navigateToHousehold = (householdId: number) => {
     router.replace(
       {
-        pathname: `/organize/${orgId}/projects/${assignment.project_id}/householdassignments/${assignment.id}/map`,
+        pathname: `/organize/${orgId}/projects/${assignment.campId}/householdassignments/${assignment.id}/map`,
         query: { navigateToHouseholdId: householdId },
       },
       undefined,

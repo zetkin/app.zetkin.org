@@ -61,7 +61,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
 
   const handleDelete = () => {
     deleteHouseholdAssignment();
-    router.push(`/organize/${orgId}/projects/${householdAssignment.project_id} `);
+    router.push(`/organize/${orgId}/projects/${householdAssignment.campId} `);
   };
 
   return (

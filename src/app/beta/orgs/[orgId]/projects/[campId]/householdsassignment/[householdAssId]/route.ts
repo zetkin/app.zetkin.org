@@ -36,8 +36,10 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       const householdAssignment: ZetkinHouseholdAssignment = {
         assignees: householdAssignmentModel.assigneeIds,
         campId: householdAssignmentModel.campId,
+        end_date: householdAssignmentModel.end_date,
         id: householdAssignmentModel._id.toString(),
         orgId: orgId,
+        start_date: householdAssignmentModel.start_date,
         target: householdAssignmentModel.queryId.toString(),
         title: householdAssignmentModel.title,
       };

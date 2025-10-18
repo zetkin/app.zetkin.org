@@ -9,8 +9,10 @@ export type HouseholdAssigneeInfo = {
 export type ZetkinHouseholdAssignment = {
   assignees: number[];
   campId: number;
+  end_date: string | null;
   id: string;
   orgId: number;
+  start_date: string | null;
   target: string;
   title: string | null;
 };
