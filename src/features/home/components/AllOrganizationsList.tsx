@@ -36,20 +36,19 @@ const AllOrganizationsList: FC = () => {
   const organizationsFuture = useOrganizations();
   const membershipsFuture = useMemberships(true);
 
+  if (
+    !organizationsFuture.data ||
+    !membershipsFuture.data ||
+    membershipsFuture.data.length === 0
+  ) {
+    return null;
+  }
+
   return (
-    <ZUIFutures
-      futures={{
-        memberships: membershipsFuture,
-        organizations: organizationsFuture,
-      }}
-    >
-      {({ data }) => (
-        <AllOrganizationsForest
-          memberships={data.memberships}
-          organizations={data.organizations}
-        />
-      )}
-    </ZUIFutures>
+    <AllOrganizationsForest
+      memberships={membershipsFuture.data}
+      organizations={organizationsFuture.data}
+    />
   );
 };
 

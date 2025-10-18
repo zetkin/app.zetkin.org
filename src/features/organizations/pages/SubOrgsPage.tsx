@@ -55,6 +55,14 @@ const SubOrgsPage: FC<Props> = ({ orgId }) => {
   const membershipsFuture = useMemberships(true);
   const messages = useMessages(messageIds);
 
+  if (
+    !organizationsFuture.data ||
+    !membershipsFuture.data ||
+    membershipsFuture.data.length === 0
+  ) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
@@ -62,20 +70,11 @@ const SubOrgsPage: FC<Props> = ({ orgId }) => {
         flexDirection: 'column',
       }}
     >
-      <ZUIFutures
-        futures={{
-          memberships: membershipsFuture,
-          organizations: organizationsFuture,
-        }}
-      >
-        {({ data }) => (
-          <SubOrganizationsForest
-            memberships={data.memberships}
-            organizations={data.organizations}
-            orgId={orgId}
-          />
-        )}
-      </ZUIFutures>
+      <SubOrganizationsForest
+        memberships={membershipsFuture.data}
+        organizations={organizationsFuture.data}
+        orgId={orgId}
+      />
       <Box
         sx={{
           display: 'flex',
