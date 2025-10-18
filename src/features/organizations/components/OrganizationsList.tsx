@@ -36,7 +36,11 @@ const OrganizationsList = () => {
               </Typography>
               <Typography my={1}>
                 <NextLink
-                  href={env.vars.ZETKIN_APP_DOMAIN || ''}
+                  href={
+                    env.vars.ZETKIN_APP_DOMAIN
+                      ? `${env.vars.ZETKIN_APP_DOMAIN}/my/`
+                      : ''
+                  }
                   legacyBehavior
                   passHref
                 >
