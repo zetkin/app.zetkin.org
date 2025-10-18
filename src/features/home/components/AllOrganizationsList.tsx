@@ -2,7 +2,6 @@ import React, { FC, useMemo } from 'react';
 
 import useOrganizations from 'features/organizations/hooks/useOrganizations';
 import useMemberships from 'features/organizations/hooks/useMemberships';
-import ZUIFutures from 'zui/ZUIFutures';
 import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 import OrganizationsForest from './OrganizationsForest';
 import buildOrganizationForest from '../util/buildOrganizationForest';
