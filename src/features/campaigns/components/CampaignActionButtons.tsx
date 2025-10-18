@@ -52,7 +52,9 @@ const CampaignActionButtons: React.FunctionComponent<
 > = ({ campaign }) => {
   const campaginMessages = useMessages(campaignMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
-  const householdAssignmentMessages = useMessages(householdAssignmentMessageIds);
+  const householdAssignmentMessages = useMessages(
+    householdAssignmentMessageIds
+  );
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);

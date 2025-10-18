@@ -10,7 +10,8 @@ export default function useAssignmentHouseholdStats(
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const stats = useAppSelector(
-    (state) => state.householdAssignments.householdStatsByAssignmentId[householdAssId]
+    (state) =>
+      state.householdAssignments.householdStatsByAssignmentId[householdAssId]
   );
 
   return loadItemIfNecessary(stats, dispatch, {

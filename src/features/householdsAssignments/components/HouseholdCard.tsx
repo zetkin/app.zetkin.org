@@ -44,16 +44,18 @@ type NivoSeries = {
 };
 
 const HouseholdCard: FC<HouseholdCardProps> = ({
-                                       households,
-                                       assignment,
-                                       data,
-                                       maxVisitedHouseholds,
-                                     }) => {
+  households,
+  assignment,
+  data,
+  maxVisitedHouseholds,
+}) => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const router = useRouter();
 
-  const transformToNivoData = (householdData: HouseholdCardData): NivoSeries[] => {
+  const transformToNivoData = (
+    householdData: HouseholdCardData
+  ): NivoSeries[] => {
     const householdVisitsSeries: NivoSeries = {
       data: householdData.data.map((point) => ({
         x: point.hour !== '0' ? `${point.date} ${point.hour}` : point.date,
@@ -89,11 +91,17 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
       {households.map((household) => {
         const householdData = data.find(
           (graphData) =>
-            graphData.household_id === household.household_id || graphData.household_id == null
+            graphData.household_id === household.household_id ||
+            graphData.household_id == null
         );
-        const transformedData = householdData ? transformToNivoData(householdData) : [];
+        const transformedData = householdData
+          ? transformToNivoData(householdData)
+          : [];
         return (
-          <Grid key={household.household_id} size={{ lg: 3, md: 4, sm: 6, xs: 12 }}>
+          <Grid
+            key={household.household_id}
+            size={{ lg: 3, md: 4, sm: 6, xs: 12 }}
+          >
             <Card key={household.household_id} sx={{ height: 'auto' }}>
               <Box
                 alignItems="center"
@@ -134,7 +142,9 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
                 {household.household_id ? (
                   <IconButton
                     onClick={() =>
-                      householdData?.household_id ? navigateToHousehold(householdData.household_id) : ''
+                      householdData?.household_id
+                        ? navigateToHousehold(householdData.household_id)
+                        : ''
                     }
                   >
                     <MapIcon />
@@ -170,13 +180,13 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
                       colors={
                         householdData?.household_id
                           ? [
-                            oldTheme.palette.primary.light,
-                            oldTheme.palette.primary.dark,
-                          ]
+                              oldTheme.palette.primary.light,
+                              oldTheme.palette.primary.dark,
+                            ]
                           : [
-                            oldTheme.palette.grey[400],
-                            oldTheme.palette.grey[900],
-                          ]
+                              oldTheme.palette.grey[400],
+                              oldTheme.palette.grey[900],
+                            ]
                       }
                       data={transformedData}
                       defs={[
@@ -201,7 +211,7 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
                           <Paper
                             style={{
                               backgroundColor:
-                              oldTheme.palette.background.paper,
+                                oldTheme.palette.background.paper,
                               borderRadius: '3px',
                               padding: '5px',
                             }}
@@ -216,12 +226,12 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
                                     backgroundColor: (() => {
                                       if (householdData?.household_id) {
                                         return dataPoint.serieId ===
-                                        'householdsVisited'
+                                          'householdsVisited'
                                           ? oldTheme.palette.primary.light
                                           : oldTheme.palette.primary.dark;
                                       } else {
                                         return dataPoint.serieId ===
-                                        'householdsVisited'
+                                          'householdsVisited'
                                           ? oldTheme.palette.grey[400]
                                           : oldTheme.palette.grey[900];
                                       }
@@ -243,12 +253,12 @@ const HouseholdCard: FC<HouseholdCardProps> = ({
                       }}
                       {...(householdData?.household_id
                         ? {
-                          yScale: {
-                            max: maxVisitedHouseholds,
-                            min: 0,
-                            type: 'linear',
-                          },
-                        }
+                            yScale: {
+                              max: maxVisitedHouseholds,
+                              min: 0,
+                              type: 'linear',
+                            },
+                          }
                         : null)}
                     />
                   </div>

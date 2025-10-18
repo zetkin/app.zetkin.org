@@ -1,4 +1,3 @@
-import { ZetkinHousehold } from '../households/types';
 import { MetricBulkResponse } from '../canvass/types';
 
 export type HouseholdAssigneeInfo = {
@@ -16,8 +15,6 @@ export type ZetkinHouseholdAssignment = {
   target: string;
   title: string | null;
 };
-
-export type ZetkinHouseholdPostBody = Partial<Omit<ZetkinHousehold, 'id'>>;
 
 export type ZetkinHouseholdAssignmentPostBody = Partial<
   Omit<ZetkinHouseholdAssignment, 'id' | 'campaign' | 'organization'>

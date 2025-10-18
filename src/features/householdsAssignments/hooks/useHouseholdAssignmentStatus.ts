@@ -14,7 +14,10 @@ export default function useHouseholdAssignmentStatus(
   orgId: number,
   householdAssId: number
 ): HouseholdAssignmentState {
-  const { data: householdAssignment } = useHouseholdAssignment(orgId, householdAssId);
+  const { data: householdAssignment } = useHouseholdAssignment(
+    orgId,
+    householdAssId
+  );
 
   if (!householdAssignment) {
     return HouseholdAssignmentState.UNKNOWN;

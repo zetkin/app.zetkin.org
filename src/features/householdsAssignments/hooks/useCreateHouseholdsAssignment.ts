@@ -5,7 +5,10 @@ import {
 } from '../types';
 import { householdAssignmentCreated } from '../store';
 
-export default function useCreateHouseholdsAssignment(orgId: number, campId: number) {
+export default function useCreateHouseholdsAssignment(
+  orgId: number,
+  campId: number
+) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
 

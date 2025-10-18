@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { NextRequest, NextResponse} from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { HouseholdsAssignmentModel } from 'features/householdsAssignments/models';
@@ -7,7 +7,7 @@ import { ZetkinQuery } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
-    campId: string,
+    campId: string;
     orgId: string;
   };
 };
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         `/api/orgs/${orgId}/people/queries`,
         {
           filter_spec: [],
-          title: "Untitled Household Assignment Query",
+          title: 'Untitled Household Assignment Query',
         }
       );
 

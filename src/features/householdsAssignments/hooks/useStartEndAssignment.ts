@@ -8,7 +8,10 @@ export default function useStartEndAssignment(
   householdAssId: number
 ) {
   const householdAssignment = useHouseholdAssignment(orgId, householdAssId);
-  const { updateHouseholdAssignment } = useHouseholdAssignmentMutations(orgId, householdAssId);
+  const { updateHouseholdAssignment } = useHouseholdAssignmentMutations(
+    orgId,
+    householdAssId
+  );
 
   const endAssignment = () => {
     if (!householdAssignment.data) {

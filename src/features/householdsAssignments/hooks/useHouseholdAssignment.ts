@@ -3,7 +3,10 @@ import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinHouseholdAssignment } from '../types';
 import { householdAssignmentLoad, householdAssignmentLoaded } from '../store';
 
-export default function useHouseholdAssignment(orgId: number, householdAssId: number) {
+export default function useHouseholdAssignment(
+  orgId: number,
+  householdAssId: number
+) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const householdAssignmentList = useAppSelector(

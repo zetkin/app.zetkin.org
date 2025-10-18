@@ -71,7 +71,9 @@ export default function useHouseholdAssignmentMutations(
         })
       );
     },
-    updateHouseholdAssignment: async (data: ZetkinHouseholdAssignmentPatchbody) => {
+    updateHouseholdAssignment: async (
+      data: ZetkinHouseholdAssignmentPatchbody
+    ) => {
       const updated = await apiClient.patch<
         ZetkinHouseholdAssignment,
         ZetkinHouseholdAssignmentPatchbody

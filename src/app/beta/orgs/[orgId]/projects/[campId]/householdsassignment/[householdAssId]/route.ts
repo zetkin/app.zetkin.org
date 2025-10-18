@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { NextRequest, NextResponse} from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { HouseholdsAssignmentModel } from 'features/householdsAssignments/models';
@@ -7,8 +7,8 @@ import { ZetkinHouseholdAssignment } from 'features/householdsAssignments/types'
 
 type RouteMeta = {
   params: {
-    campId: string,
-    householdAssId: string,
+    campId: string;
+    householdAssId: string;
     orgId: string;
   };
 };
@@ -61,19 +61,20 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const payload = await request.json();
 
-      const householdAssignmentModel = await HouseholdsAssignmentModel.findOneAndUpdate(
-        {
-          _id: params.householdAssId,
-          campId: params.campId,
-          orgId,
-        },
-        {
-          assigneeIds: payload.assigneeIds,
-          queryId: payload.queryId,
-          title: payload.title,
-        },
-        { new: true }
-      );
+      const householdAssignmentModel =
+        await HouseholdsAssignmentModel.findOneAndUpdate(
+          {
+            _id: params.householdAssId,
+            campId: params.campId,
+            orgId,
+          },
+          {
+            assigneeIds: payload.assigneeIds,
+            queryId: payload.queryId,
+            title: payload.title,
+          },
+          { new: true }
+        );
 
       if (!householdAssignmentModel) {
         return new NextResponse(null, { status: 404 });

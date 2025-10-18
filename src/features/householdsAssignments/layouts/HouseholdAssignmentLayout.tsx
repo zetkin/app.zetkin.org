@@ -29,14 +29,17 @@ type HouseholdAssignmentLayoutProps = {
 };
 
 const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
-                                                               children,
-                                                               orgId,
-                                                               campId,
-                                                               householdAssId,
-                                                             }) => {
+  children,
+  orgId,
+  campId,
+  householdAssId,
+}) => {
   const messages = useMessages(messageIds);
   const path = useRouter().pathname;
-  const householdAssignment = useHouseholdAssignment(orgId, householdAssId).data;
+  const householdAssignment = useHouseholdAssignment(
+    orgId,
+    householdAssId
+  ).data;
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
     useHouseholdAssignmentMutations(orgId, householdAssId);
 
@@ -53,7 +56,9 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
 
   const isMapTab = path.endsWith('/map');
 
-  const numHouseholds = new Set(sessions.map((assignee) => assignee.household_id)).size;
+  const numHouseholds = new Set(
+    sessions.map((assignee) => assignee.household_id)
+  ).size;
 
   if (!householdAssignment) {
     return null;
@@ -86,7 +91,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
                     onSubmit: handleDelete,
                     title: messages.layout.actions.delete(),
                     warningText: messages.layout.actions.deleteWarningText({
-                      title: householdAssignment.title ?? "",
+                      title: householdAssignment.title ?? '',
                     }),
                   });
                 },
@@ -144,8 +149,10 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
       ]}
       title={
         <ZUIEditTextinPlace
-          onChange={(newTitle) => updateHouseholdAssignment({ title: newTitle })}
-          value={householdAssignment.title ?? ""}
+          onChange={(newTitle) =>
+            updateHouseholdAssignment({ title: newTitle })
+          }
+          value={householdAssignment.title ?? ''}
         />
       }
     >

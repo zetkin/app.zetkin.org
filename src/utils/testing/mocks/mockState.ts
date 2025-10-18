@@ -107,9 +107,8 @@ export default function mockState(overrides?: RootState) {
       householdAssignmentList: remoteList(),
       householdGraphByAssignmentId: {},
       householdStatsByAssignmentId: {},
-      householdsByAssignmentId: {},
       metricsByAssignmentId: {},
-      statsByHouseholdAssId: {}
+      statsByHouseholdAssId: {},
     },
     import: {
       importResult: null,

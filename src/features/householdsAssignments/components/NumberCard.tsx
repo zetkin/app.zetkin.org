@@ -10,10 +10,10 @@ type NumberCardProps = {
 };
 
 const NumberCard: FC<NumberCardProps> = ({
-                                           firstNumber,
-                                           message,
-                                           secondNumber,
-                                         }) => {
+  firstNumber,
+  message,
+  secondNumber,
+}) => {
   return (
     <Box
       sx={{
