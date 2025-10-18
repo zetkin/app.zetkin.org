@@ -124,6 +124,7 @@ export default function mockState(overrides?: RootState) {
       timelineUpdatesByInstanceId: {},
     },
     organizations: {
+      campaignsByOrgId: {},
       eventsByOrgId: {},
       filters: {
         customDatesToFilterBy: [null, null],
