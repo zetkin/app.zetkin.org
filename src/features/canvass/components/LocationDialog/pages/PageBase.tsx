@@ -1,4 +1,4 @@
-import { Close, Edit } from '@mui/icons-material';
+import { Close, Delete, Edit } from '@mui/icons-material';
 import { Box, Divider, IconButton } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
@@ -11,6 +11,7 @@ type Props = {
   fullWidth?: boolean;
   onBack?: () => void;
   onClose?: () => void;
+  onDelete?: () => void;
   onEdit?: () => void;
   subtitle?: string;
   title: string;
@@ -23,6 +24,7 @@ const PageBase: FC<Props> = ({
   fullWidth = false,
   onBack,
   onClose,
+  onDelete,
   onEdit,
   subtitle,
   title,
@@ -36,6 +38,11 @@ const PageBase: FC<Props> = ({
             {onEdit && (
               <IconButton onClick={onEdit}>
                 <Edit />
+              </IconButton>
+            )}
+            {onDelete && (
+              <IconButton onClick={onDelete}>
+                <Delete />
               </IconButton>
             )}
             {onClose && (

@@ -23,6 +23,7 @@ import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 
 declare module '@mui/styles/defaultTheme' {
@@ -85,8 +86,10 @@ const ClientContext: FC<ClientContextProps> = ({
                         locale={lang}
                         messages={messages}
                       >
-                        <CssBaseline />
-                        <Suspense>{children}</Suspense>
+                        <ZUIConfirmDialogProvider>
+                          <CssBaseline />
+                          <Suspense>{children}</Suspense>
+                        </ZUIConfirmDialogProvider>
                       </IntlProvider>
                     </ZUISnackbarProvider>
                   </IntlProvider>
