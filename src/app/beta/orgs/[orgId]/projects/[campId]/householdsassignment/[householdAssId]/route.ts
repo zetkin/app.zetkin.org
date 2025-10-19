@@ -24,8 +24,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const householdAssignmentModel = await HouseholdsAssignmentModel.findOne({
-        _id: params.householdAssId,
         campId: params.campId,
+        id: params.householdAssId,
         orgId,
       });
 
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         assignees: householdAssignmentModel.assigneeIds,
         campId: householdAssignmentModel.campId,
         end_date: householdAssignmentModel.end_date,
-        id: householdAssignmentModel._id.toString(),
+        id: householdAssignmentModel.id.toString(),
         orgId: orgId,
         start_date: householdAssignmentModel.start_date,
         target: householdAssignmentModel.queryId.toString(),
@@ -64,8 +64,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       const householdAssignmentModel =
         await HouseholdsAssignmentModel.findOneAndUpdate(
           {
-            _id: params.householdAssId,
             campId: params.campId,
+            id: params.householdAssId,
             orgId,
           },
           {
@@ -83,10 +83,10 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       return NextResponse.json({
         data: {
           campaign: { id: householdAssignmentModel.campId },
-          id: householdAssignmentModel._id.toString(),
+          id: householdAssignmentModel.id.toString(),
           organization: { id: orgId },
           title: householdAssignmentModel.title,
-        },
+      },
       });
     }
   );

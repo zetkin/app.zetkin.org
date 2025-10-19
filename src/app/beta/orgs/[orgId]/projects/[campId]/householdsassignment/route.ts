@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           campaign: {
             id: assignment.campId,
           },
-          id: assignment._id.toString(),
+          id: assignment.id.toString(),
           organization: {
             id: orgId,
           },
@@ -74,14 +74,17 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       await model.save();
 
-      return NextResponse.json({
-        data: {
-          campaign: { id: model.campId },
-          id: model._id.toString(),
-          organization: { id: orgId },
-          title: model.title,
+      return NextResponse.json(
+        {
+          data: {
+            campaign: { id: model.campId },
+            id: model.id.toString(),
+            organization: { id: orgId },
+            title: model.title,
+          },
         },
-      });
+        { status: 201 }
+      );
     }
   );
 }
