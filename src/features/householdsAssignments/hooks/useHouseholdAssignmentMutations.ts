@@ -18,8 +18,9 @@ import {
 } from '../store';
 
 export default function useHouseholdAssignmentMutations(
+  campId: number,
   orgId: number,
-  householdAssId: number
+  householdsAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -27,19 +28,19 @@ export default function useHouseholdAssignmentMutations(
   return {
     addMetric: async (metric: ZetkinMetricPostBody) => {
       const created = await apiClient.post<ZetkinMetric, ZetkinMetricPostBody>(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/metrics`,
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/metrics`,
         metric
       );
 
-      dispatch(metricCreated([householdAssId, created]));
+      dispatch(metricCreated([householdsAssId, created]));
     },
     assignHousehold: async (userId: number, householdId: number) => {
       await apiClient.put<ZetkinHouseholdAssignee>(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/households/${householdId}/assignees/${userId}`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/households/${householdId}/assignees/${userId}`
       );
 
       const assignee: ZetkinHouseholdAssignee = {
-        assignment_id: householdAssId,
+        assignment_id: householdsAssId,
         household_id: householdId,
         user_id: userId,
       };
@@ -48,25 +49,25 @@ export default function useHouseholdAssignmentMutations(
     },
     deleteHouseholdAssignment: async () => {
       await apiClient.delete(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}`
       );
-      dispatch(householdAssignmentDeleted(householdAssId));
+      dispatch(householdAssignmentDeleted(householdsAssId));
     },
     deleteMetric: async (metricId: number) => {
       await apiClient.delete(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/metrics/${metricId}`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/metrics/${metricId}`
       );
-      dispatch(metricDeleted([householdAssId, metricId]));
+      dispatch(metricDeleted([householdsAssId, metricId]));
     },
     unassignHousehold: async (userId: number, householdId: number) => {
       await apiClient.delete(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/households/${householdId}/assignees/${userId}`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/households/${householdId}/assignees/${userId}`
       );
 
       dispatch(
         assigneeDeleted({
           assigneeId: userId,
-          assignmentId: householdAssId,
+          assignmentId: householdsAssId,
           householdId,
         })
       );
@@ -77,7 +78,10 @@ export default function useHouseholdAssignmentMutations(
       const updated = await apiClient.patch<
         ZetkinHouseholdAssignment,
         ZetkinHouseholdAssignmentPatchbody
-      >(`/beta/orgs/${orgId}/householdsassignments/${householdAssId}`, data);
+      >(
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}`,
+        data
+      );
 
       dispatch(householdAssignmentUpdated(updated));
     },
@@ -86,11 +90,11 @@ export default function useHouseholdAssignmentMutations(
         ZetkinMetric,
         ZetkinMetricPatchBody
       >(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/metrics/${metricId}`,
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/metrics/${metricId}`,
         data
       );
 
-      dispatch(metricUpdated([householdAssId, updated]));
+      dispatch(metricUpdated([householdsAssId, updated]));
     },
   };
 }

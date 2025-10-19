@@ -4,22 +4,23 @@ import { householdGraphLoad, householdGraphLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useAssignmentHouseholdStats(
+  campId: number,
   orgId: number,
-  householdAssId: number
+  householdsAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const stats = useAppSelector(
     (state) =>
-      state.householdAssignments.householdGraphByAssignmentId[householdAssId]
+      state.householdAssignments.householdGraphByAssignmentId[householdsAssId]
   );
 
   return loadListIfNecessary(stats, dispatch, {
-    actionOnLoad: () => householdGraphLoad(householdAssId),
-    actionOnSuccess: (data) => householdGraphLoaded([householdAssId, data]),
+    actionOnLoad: () => householdGraphLoad(householdsAssId),
+    actionOnSuccess: (data) => householdGraphLoaded([householdsAssId, data]),
     loader: () =>
       apiClient.get<HouseholdCardData[]>(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/householdgraph`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/householdgraph`
       ),
   });
 }

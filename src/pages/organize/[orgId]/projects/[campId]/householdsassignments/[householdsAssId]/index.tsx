@@ -33,33 +33,39 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 interface HouseholdsAssignmentPageProps {
+  campId: string;
+  householdsAssId: string;
   orgId: string;
-  householdsAssId: number;
 }
 
 const HouseholdsAssignmentPage: PageWithLayout<
   HouseholdsAssignmentPageProps
-> = ({ orgId, householdsAssId }) => {
+> = ({ campId, orgId, householdsAssId }) => {
   const messages = useMessages(messageIds);
   const sessionsFuture = useHouseholdAssignees(
+    parseInt(campId),
     parseInt(orgId),
-    householdsAssId
+    parseInt(householdsAssId)
   );
   const assignmentFuture = useHouseholdAssignment(
+    parseInt(campId),
     parseInt(orgId),
-    householdsAssId
+    parseInt(householdsAssId)
   );
   const statsFuture = useHouseholdAssignmentStats(
+    parseInt(campId),
     parseInt(orgId),
-    householdsAssId
+    parseInt(householdsAssId)
   );
   const householdsStats = useAssignmentHouseholdStats(
+    parseInt(campId),
     parseInt(orgId),
-    householdsAssId
+    parseInt(householdsAssId)
   );
   const dataGraph = useAssignmentHouseholdGraph(
+    parseInt(campId),
     parseInt(orgId),
-    householdsAssId
+    parseInt(householdsAssId)
   );
   const router = useRouter();
 

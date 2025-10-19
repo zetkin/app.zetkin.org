@@ -4,21 +4,23 @@ import { ZetkinHouseholdAssignmentStats } from '../types';
 import { statsLoad, statsLoaded } from '../store';
 
 export default function useHouseholdAssignmentStats(
+  campId: number,
   orgId: number,
-  householdAssId: number
+  householdsAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
   const statsItem = useAppSelector(
-    (state) => state.householdAssignments.statsByHouseholdAssId[householdAssId]
+    (state) =>
+      state.householdAssignments.statsByHouseholdsAssId[householdsAssId]
   );
 
   return loadItemIfNecessary(statsItem, dispatch, {
-    actionOnLoad: () => statsLoad(householdAssId),
-    actionOnSuccess: (data) => statsLoaded([householdAssId, data]),
+    actionOnLoad: () => statsLoad(householdsAssId),
+    actionOnSuccess: (data) => statsLoaded([householdsAssId, data]),
     loader: () =>
       apiClient.get<ZetkinHouseholdAssignmentStats>(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}/stats`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/stats`
       ),
   });
 }

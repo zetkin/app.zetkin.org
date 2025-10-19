@@ -5,6 +5,7 @@ import { assigneesLoad, assigneesLoaded } from '../store';
 import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useHouseholdsAssignees(
+  campId: number,
   orgId: number,
   householdsAssId: number
 ) {
@@ -23,7 +24,7 @@ export default function useHouseholdsAssignees(
       fetchAllPaginated(
         (page) =>
           apiClient.get<ZetkinHouseholdAssignee[]>(
-            `/beta/orgs/${orgId}/householdsassignment/${householdsAssId}/assignees?size=100&page=${page}`
+            `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/assignees?size=100&page=${page}`
           ),
         100
       ),

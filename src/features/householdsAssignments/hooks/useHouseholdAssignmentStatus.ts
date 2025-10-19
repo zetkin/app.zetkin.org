@@ -11,12 +11,14 @@ export enum HouseholdAssignmentState {
 }
 
 export default function useHouseholdAssignmentStatus(
+  campId: number,
   orgId: number,
-  householdAssId: number
+  householdsAssId: number
 ): HouseholdAssignmentState {
   const { data: householdAssignment } = useHouseholdAssignment(
+    campId,
     orgId,
-    householdAssId
+    householdsAssId
   );
 
   if (!householdAssignment) {

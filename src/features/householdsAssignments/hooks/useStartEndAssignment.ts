@@ -4,13 +4,19 @@ import useHouseholdAssignment from './useHouseholdAssignment';
 import useHouseholdAssignmentMutations from './useHouseholdAssignmentMutations';
 
 export default function useStartEndAssignment(
+  campId: number,
   orgId: number,
-  householdAssId: number
+  householdsAssId: number
 ) {
-  const householdAssignment = useHouseholdAssignment(orgId, householdAssId);
-  const { updateHouseholdAssignment } = useHouseholdAssignmentMutations(
+  const householdAssignment = useHouseholdAssignment(
+    campId,
     orgId,
-    householdAssId
+    householdsAssId
+  );
+  const { updateHouseholdAssignment } = useHouseholdAssignmentMutations(
+    campId,
+    orgId,
+    householdsAssId
   );
 
   const endAssignment = () => {

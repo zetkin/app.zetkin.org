@@ -37,7 +37,7 @@ export interface HouseholdAssignmentsStoreSlice {
     RemoteList<ZetkinHouseholdAssignee & { id: string }>
   >;
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
-  statsByHouseholdAssId: Record<
+  statsByHouseholdsAssId: Record<
     number,
     RemoteItem<ZetkinHouseholdAssignmentStats & { id: number }>
   >;
@@ -49,7 +49,7 @@ const initialState: HouseholdAssignmentsStoreSlice = {
   householdGraphByAssignmentId: {},
   householdStatsByAssignmentId: {},
   metricsByAssignmentId: {},
-  statsByHouseholdAssId: {},
+  statsByHouseholdsAssId: {},
 };
 
 const householdAssignmentSlice = createSlice({
@@ -123,12 +123,12 @@ const householdAssignmentSlice = createSlice({
       remoteItemUpdated(state.householdAssignmentList, householdAssignment);
     },
     householdAssignmentDeleted: (state, action: PayloadAction<number>) => {
-      const householdAssId = action.payload;
-      remoteItemDeleted(state.householdAssignmentList, householdAssId);
+      const householdsAssId = action.payload;
+      remoteItemDeleted(state.householdAssignmentList, householdsAssId);
     },
     householdAssignmentLoad: (state, action: PayloadAction<number>) => {
-      const householdAssId = action.payload;
-      remoteItemLoad(state.householdAssignmentList, householdAssId);
+      const householdsAssId = action.payload;
+      remoteItemLoad(state.householdAssignmentList, householdsAssId);
     },
     householdAssignmentLoaded: (
       state,
@@ -178,16 +178,16 @@ const householdAssignmentSlice = createSlice({
       );
     },
     householdStatsLoad: (state, action: PayloadAction<number>) => {
-      const householdAssId = action.payload;
+      const householdsAssId = action.payload;
 
-      if (!state.householdStatsByAssignmentId[householdAssId]) {
-        state.householdStatsByAssignmentId[householdAssId] =
-          remoteItem(householdAssId);
+      if (!state.householdStatsByAssignmentId[householdsAssId]) {
+        state.householdStatsByAssignmentId[householdsAssId] =
+          remoteItem(householdsAssId);
       }
-      const statsItem = state.householdStatsByAssignmentId[householdAssId];
+      const statsItem = state.householdStatsByAssignmentId[householdsAssId];
 
-      state.householdStatsByAssignmentId[householdAssId] = remoteItem(
-        householdAssId,
+      state.householdStatsByAssignmentId[householdsAssId] = remoteItem(
+        householdsAssId,
         {
           data: statsItem?.data || null,
           isLoading: true,
@@ -198,12 +198,12 @@ const householdAssignmentSlice = createSlice({
       state,
       action: PayloadAction<[number, ZetkinAssignmentHouseholdStats]>
     ) => {
-      const [householdAssId, stats] = action.payload;
+      const [householdsAssId, stats] = action.payload;
 
-      state.householdStatsByAssignmentId[householdAssId] = remoteItem(
-        householdAssId,
+      state.householdStatsByAssignmentId[householdsAssId] = remoteItem(
+        householdsAssId,
         {
-          data: { id: householdAssId, ...stats },
+          data: { id: householdsAssId, ...stats },
           isLoading: false,
           isStale: false,
           loaded: new Date().toISOString(),
@@ -233,31 +233,37 @@ const householdAssignmentSlice = createSlice({
       state.metricsByAssignmentId[assignmentId] = remoteListLoaded(metrics);
     },
     statsLoad: (state, action: PayloadAction<number>) => {
-      const householdAssId = action.payload;
+      const householdsAssId = action.payload;
 
-      if (!state.statsByHouseholdAssId[householdAssId]) {
-        state.statsByHouseholdAssId[householdAssId] =
-          remoteItem(householdAssId);
+      if (!state.statsByHouseholdsAssId[householdsAssId]) {
+        state.statsByHouseholdsAssId[householdsAssId] =
+          remoteItem(householdsAssId);
       }
-      const statsItem = state.statsByHouseholdAssId[householdAssId];
+      const statsItem = state.statsByHouseholdsAssId[householdsAssId];
 
-      state.statsByHouseholdAssId[householdAssId] = remoteItem(householdAssId, {
-        data: statsItem?.data || null,
-        isLoading: true,
-      });
+      state.statsByHouseholdsAssId[householdsAssId] = remoteItem(
+        householdsAssId,
+        {
+          data: statsItem?.data || null,
+          isLoading: true,
+        }
+      );
     },
     statsLoaded: (
       state,
       action: PayloadAction<[number, ZetkinHouseholdAssignmentStats]>
     ) => {
-      const [householdAssId, stats] = action.payload;
+      const [householdsAssId, stats] = action.payload;
 
-      state.statsByHouseholdAssId[householdAssId] = remoteItem(householdAssId, {
-        data: { id: householdAssId, ...stats },
-        isLoading: false,
-        isStale: false,
-        loaded: new Date().toISOString(),
-      });
+      state.statsByHouseholdsAssId[householdsAssId] = remoteItem(
+        householdsAssId,
+        {
+          data: { id: householdsAssId, ...stats },
+          isLoading: false,
+          isStale: false,
+          loaded: new Date().toISOString(),
+        }
+      );
     },
   },
 });

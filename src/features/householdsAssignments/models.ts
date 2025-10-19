@@ -13,9 +13,10 @@ type ZetkinHouseholdsAssignmentModelType = {
 
 const counterSchema = new mongoose.Schema({
   _id: { required: true, type: String },
-  seq: { default: 0, type: Number }
+  seq: { default: 0, type: Number },
 });
-const Counter = mongoose.models.Counter || mongoose.model('Counter', counterSchema);
+const Counter =
+  mongoose.models.Counter || mongoose.model('Counter', counterSchema);
 
 const getNextHouseholdAssignmentId = async () => {
   const counter = await Counter.findOneAndUpdate(
@@ -36,12 +37,15 @@ const householdsAssignmentSchema =
     title: String,
   });
 
-householdsAssignmentSchema.pre<ZetkinHouseholdsAssignmentModelType>('save', async function (next) {
-  if (!this.id) {
-    this.id = await getNextHouseholdAssignmentId();
+householdsAssignmentSchema.pre<ZetkinHouseholdsAssignmentModelType>(
+  'save',
+  async function (next) {
+    if (!this.id) {
+      this.id = await getNextHouseholdAssignmentId();
+    }
+    next();
   }
-  next();
-});
+);
 
 export const HouseholdsAssignmentModel: mongoose.Model<ZetkinHouseholdsAssignmentModelType> =
   mongoose.models.HouseholdsAssignment ||

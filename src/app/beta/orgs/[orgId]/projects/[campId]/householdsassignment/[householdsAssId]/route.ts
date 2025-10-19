@@ -8,7 +8,7 @@ import { ZetkinHouseholdAssignment } from 'features/householdsAssignments/types'
 type RouteMeta = {
   params: {
     campId: string;
-    householdAssId: string;
+    householdsAssId: string;
     orgId: string;
   };
 };
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const householdAssignmentModel = await HouseholdsAssignmentModel.findOne({
         campId: params.campId,
-        id: params.householdAssId,
+        id: params.householdsAssId,
         orgId,
       });
 
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         await HouseholdsAssignmentModel.findOneAndUpdate(
           {
             campId: params.campId,
-            id: params.householdAssId,
+            id: params.householdsAssId,
             orgId,
           },
           {
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
           id: householdAssignmentModel.id.toString(),
           organization: { id: orgId },
           title: householdAssignmentModel.title,
-      },
+        },
       });
     }
   );

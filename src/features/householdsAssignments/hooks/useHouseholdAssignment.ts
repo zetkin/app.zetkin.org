@@ -4,8 +4,9 @@ import { ZetkinHouseholdAssignment } from '../types';
 import { householdAssignmentLoad, householdAssignmentLoaded } from '../store';
 
 export default function useHouseholdAssignment(
+  campId: number,
   orgId: number,
-  householdAssId: number
+  householdsAssId: number
 ) {
   const apiClient = useApiClient();
   const dispatch = useAppDispatch();
@@ -13,15 +14,15 @@ export default function useHouseholdAssignment(
     (state) => state.householdAssignments.householdAssignmentList.items
   );
   const householdAssignmentItem = householdAssignmentList.find(
-    (item) => item.id == householdAssId
+    (item) => item.id == householdsAssId
   );
 
   return loadItemIfNecessary(householdAssignmentItem, dispatch, {
-    actionOnLoad: () => householdAssignmentLoad(householdAssId),
+    actionOnLoad: () => householdAssignmentLoad(householdsAssId),
     actionOnSuccess: (data) => householdAssignmentLoaded(data),
     loader: () =>
       apiClient.get<ZetkinHouseholdAssignment>(
-        `/beta/orgs/${orgId}/householdsassignments/${householdAssId}`
+        `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}`
       ),
   });
 }

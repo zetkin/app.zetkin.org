@@ -24,7 +24,7 @@ import messageIds from '../l10n/messageIds';
 type HouseholdAssignmentLayoutProps = {
   campId: number;
   children: ReactNode;
-  householdAssId: number;
+  householdsAssId: number;
   orgId: number;
 };
 
@@ -32,23 +32,26 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   children,
   orgId,
   campId,
-  householdAssId,
+  householdsAssId,
 }) => {
   const messages = useMessages(messageIds);
   const path = useRouter().pathname;
   const householdAssignment = useHouseholdAssignment(
+    campId,
     orgId,
-    householdAssId
+    householdsAssId
   ).data;
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
-    useHouseholdAssignmentMutations(orgId, householdAssId);
+    useHouseholdAssignmentMutations(campId, orgId, householdsAssId);
 
-  const sessions = useHouseholdAssignees(orgId, householdAssId).data || [];
+  const sessions =
+    useHouseholdAssignees(campId, orgId, householdsAssId).data || [];
 
-  const state = useHouseholdAssignmentStatus(orgId, householdAssId);
+  const state = useHouseholdAssignmentStatus(campId, orgId, householdsAssId);
   const { startAssignment, endAssignment } = useStartEndAssignment(
+    campId,
     orgId,
-    householdAssId
+    householdsAssId
   );
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
@@ -101,7 +104,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           />
         </Box>
       }
-      baseHref={`/organize/${orgId}/projects/${campId}/householdassignments/${householdAssId}`}
+      baseHref={`/organize/${orgId}/projects/${campId}/householdassignments/${householdsAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={householdAssignment.end_date || null}
