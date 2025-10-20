@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -8,10 +7,6 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 
-type Props = {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-};
-
 export async function generateMetadata(): Promise<Metadata> {
   return {
     icons: [{ url: '/logo-zetkin.png' }],
@@ -19,14 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Page({ searchParams }: Props) {
+export default async function Page() {
   await redirectIfLoginNeeded();
-
-  const assignmentId = (await searchParams).assignment;
-
-  if (!assignmentId) {
-    return redirect('/my');
-  }
 
   return (
     <HomeThemeProvider>

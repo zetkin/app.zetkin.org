@@ -76,8 +76,7 @@ export default function useCallInitialization() {
       !!user &&
       callLanes.userId == user.id;
     const savedLanesAreFresh =
-      callLanes.timestamp > new Date().getTime() - 3600;
-
+      callLanes.timestamp > new Date().getTime() - 3_600_000;
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
 
