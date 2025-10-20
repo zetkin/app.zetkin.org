@@ -2,10 +2,9 @@ import { Box } from '@mui/system';
 import router, { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
-import { Delete, Pentagon, People } from '@mui/icons-material';
+import { Delete, People } from '@mui/icons-material';
 
 import AssignmentStatusChip from '../components/AssignmentStatusChip';
-import getHouseholdAssignees from '../utils/getHouseholdAssignees';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useHouseholdAssignment from '../hooks/useHouseholdAssignment';
 import useHouseholdAssignmentMutations from '../hooks/useHouseholdAssignmentMutations';
@@ -44,7 +43,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
     useHouseholdAssignmentMutations(campId, orgId, householdsAssId);
 
-  const sessions =
+  const householdAssignees =
     useHouseholdAssignees(campId, orgId, householdsAssId).data || [];
 
   const state = useHouseholdAssignmentStatus(campId, orgId, householdsAssId);
@@ -55,13 +54,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   );
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
-  const householdAssignees = getHouseholdAssignees(sessions);
-
   const isMapTab = path.endsWith('/map');
-
-  const numHouseholds = new Set(
-    sessions.map((assignee) => assignee.household_id)
-  ).size;
 
   if (!householdAssignment) {
     return null;
@@ -123,15 +116,6 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
         <Box alignItems="center" display="flex">
           <Box marginRight={1}>
             <AssignmentStatusChip state={state} />
-          </Box>
-          <Box display="flex" marginX={1}>
-            <Pentagon />
-            <Typography marginLeft={1}>
-              <Msg
-                id={messageIds.layout.basicAssignmentStats.households}
-                values={{ numHouseholds }}
-              />
-            </Typography>
           </Box>
           <Box display="flex" marginX={1}>
             <People />

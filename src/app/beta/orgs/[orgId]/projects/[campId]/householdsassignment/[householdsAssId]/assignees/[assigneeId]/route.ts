@@ -10,10 +10,11 @@ type RouteMeta = {
     campId: string;
     householdsAssId: string;
     orgId: string;
+    userId: string;
   };
 };
 
-export async function GET(request: NextRequest, { params }: RouteMeta) {
+export async function PUT(request: NextRequest, { params }: RouteMeta) {
   return asOrgAuthorized(
     {
       orgId: params.orgId,
@@ -30,8 +31,16 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       });
 
       if (!householdAssignmentModel) {
-        return new NextResponse(null, { status: 404 });
+        return new NextResponse(null, { status: 406 });
       }
+
+      const newAssignee = {
+        householdsAssId: parseInt(params.householdsAssId),
+        user_id: parseInt(params.userId),
+      };
+      householdAssignmentModel.assignees.push(newAssignee);
+
+      await householdAssignmentModel.save();
 
       const householdAssignment: ZetkinHouseholdAssignment = {
         assignees: householdAssignmentModel.assignees,
@@ -45,49 +54,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       };
 
       return Response.json({ data: householdAssignment });
-    }
-  );
-}
-
-export async function PATCH(request: NextRequest, { params }: RouteMeta) {
-  return asOrgAuthorized(
-    {
-      orgId: params.orgId,
-      request: request,
-      roles: ['admin'],
-    },
-    async ({ orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
-
-      const payload = await request.json();
-
-      const householdAssignmentModel =
-        await HouseholdsAssignmentModel.findOneAndUpdate(
-          {
-            campId: params.campId,
-            id: params.householdsAssId,
-            orgId,
-          },
-          {
-            assigneeIds: payload.assigneeIds,
-            queryId: payload.queryId,
-            title: payload.title,
-          },
-          { new: true }
-        );
-
-      if (!householdAssignmentModel) {
-        return new NextResponse(null, { status: 404 });
-      }
-
-      return NextResponse.json({
-        data: {
-          campaign: { id: householdAssignmentModel.campId },
-          id: householdAssignmentModel.id.toString(),
-          organization: { id: orgId },
-          title: householdAssignmentModel.title,
-        },
-      });
     }
   );
 }

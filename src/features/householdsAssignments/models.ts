@@ -1,7 +1,12 @@
 import mongoose from 'mongoose';
 
+type ZetkinHouseholdsAssigneeModelType = {
+  householdsAssId: number;
+  user_id: number;
+};
+
 type ZetkinHouseholdsAssignmentModelType = {
-  assigneeIds: number[]; // people goign to the households, look for UserAutocomplete in the AreaSelect.ts file
+  assignees: ZetkinHouseholdsAssigneeModelType[]; // people goign to the households, look for UserAutocomplete in the AreaSelect.ts file
   campId: number;
   end_date: string | null;
   id: number;
@@ -10,6 +15,12 @@ type ZetkinHouseholdsAssignmentModelType = {
   start_date: string | null;
   title: string | null;
 };
+
+const householdsAssigneeSchema =
+  new mongoose.Schema<ZetkinHouseholdsAssigneeModelType>({
+    householdsAssId: { required: true, type: Number },
+    user_id: { required: true, type: Number },
+  });
 
 const counterSchema = new mongoose.Schema({
   _id: { required: true, type: String },
@@ -29,7 +40,7 @@ const getNextHouseholdAssignmentId = async () => {
 
 const householdsAssignmentSchema =
   new mongoose.Schema<ZetkinHouseholdsAssignmentModelType>({
-    assigneeIds: [Number],
+    assignees: [householdsAssigneeSchema],
     campId: { required: true, type: Number },
     id: { required: true, type: Number, unique: true },
     orgId: { required: true, type: Number },

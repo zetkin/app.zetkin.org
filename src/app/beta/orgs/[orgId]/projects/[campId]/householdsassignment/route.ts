@@ -26,7 +26,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return NextResponse.json({
         data: (await assignments).map((assignment) => ({
-          assignees: assignment.assigneeIds,
+          assignees: assignment.assignees,
           campaign: {
             id: assignment.campId,
           },

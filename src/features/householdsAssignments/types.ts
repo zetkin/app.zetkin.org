@@ -1,12 +1,12 @@
 import { MetricBulkResponse } from '../canvass/types';
 
-export type HouseholdAssigneeInfo = {
-  id: number;
-  sessions: ZetkinHouseholdAssignee[];
+export type ZetkinHouseholdsAssignee = {
+  householdsAssId: number;
+  user_id: number;
 };
 
 export type ZetkinHouseholdAssignment = {
-  assignees: number[];
+  assignees: ZetkinHouseholdsAssignee[];
   campId: number;
   end_date: string | null;
   id: string;
