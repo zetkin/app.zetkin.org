@@ -13,12 +13,19 @@ import { ZetkinAreaAssignment } from '../../../areaAssignments/types';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
+import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
+import ZUIFutures from 'zui/ZUIFutures';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
 };
 
 const CanvassSidebar: FC<Props> = ({ assignment }) => {
+  const statsFuture = useAreaAssignmentStats(
+    assignment.organization_id,
+    assignment.id
+  );
+
   return (
     <Box
       sx={(theme) => ({
@@ -31,19 +38,103 @@ const CanvassSidebar: FC<Props> = ({ assignment }) => {
         p: 2,
       })}
     >
-      <Box
-        sx={{
-          columnGap: 1,
-          display: 'grid',
-          gridTemplateColumns: '2fr 1fr 1fr',
-          mx: 1,
-          rowGap: 2,
+      <Box sx={{ mx: 1 }}>
+        <Typography variant="h5">{assignment.title}</Typography>
+      </Box>
+      <ZUIFutures
+        futures={{
+          stats: statsFuture,
         }}
       >
-        <Box gridColumn="span 3">
-          <Typography variant="h5">{assignment.title}</Typography>
-        </Box>
-      </Box>
+        {({ data: { stats } }) => {
+          return (
+            <Box
+              sx={{
+                columnGap: 1,
+                display: 'grid',
+                gridTemplateColumns: '2fr 1fr',
+                mx: 1,
+                rowGap: 2,
+              }}
+            >
+              <Box>
+                <Typography variant="body1">
+                  <Msg id={messageIds.sidebar.progress.header.households} />
+                </Typography>
+              </Box>
+              <Box textAlign="right">
+                <Typography variant="h5">{stats.num_households}</Typography>
+              </Box>
+              <Box gridColumn="span 2">
+                <Divider
+                  sx={(theme) => ({ bgcolor: theme.palette.grey[100] })}
+                />
+              </Box>
+              <Box>
+                <Typography variant="body1">
+                  <Msg id={messageIds.sidebar.progress.header.visits} />
+                </Typography>
+              </Box>
+              <Box textAlign="right">
+                <Typography variant="h5">{stats.num_visits}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="body1">
+                  <Msg
+                    id={messageIds.sidebar.progress.header.successfulVisits}
+                  />
+                </Typography>
+              </Box>
+              <Box textAlign="right">
+                <Typography variant="h5">
+                  {stats.num_successful_visits}
+                </Typography>
+              </Box>
+              <Box gridColumn="span 2">
+                <Divider
+                  sx={(theme) => ({ bgcolor: theme.palette.grey[100] })}
+                />
+              </Box>
+              {stats.num_households_visited != null && (
+                <>
+                  <Box>
+                    <Typography variant="body1">
+                      <Msg
+                        id={messageIds.sidebar.progress.header.householdVisits}
+                      />
+                    </Typography>
+                  </Box>
+                  <Box textAlign="right">
+                    <Typography variant="h5">
+                      {stats.num_households_visited}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body1">
+                      <Msg
+                        id={
+                          messageIds.sidebar.progress.header
+                            .successfulHouseholdVisits
+                        }
+                      />
+                    </Typography>
+                  </Box>
+                  <Box textAlign="right">
+                    <Typography variant="h5">
+                      {stats.num_households_successfully_visited}
+                    </Typography>
+                  </Box>
+                  <Box gridColumn="span 2">
+                    <Divider
+                      sx={(theme) => ({ bgcolor: theme.palette.grey[100] })}
+                    />
+                  </Box>
+                </>
+              )}
+            </Box>
+          );
+        }}
+      </ZUIFutures>
       <List>
         {assignment.instructions && (
           <ListItem sx={{ display: 'block', px: 1 }}>

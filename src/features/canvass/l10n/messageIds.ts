@@ -156,6 +156,10 @@ export default makeMessages('feat.canvass', {
         households: m('Households'),
         locations: m('Locations'),
         title: m('Progress'),
+        visits: m('Visits'),
+        successfulVisits: m('Successful Visits'),
+        householdVisits: m('Household Visits'),
+        successfulHouseholdVisits: m('Successful Household Visits'),
       },
       session: {
         team: m('Team'),
