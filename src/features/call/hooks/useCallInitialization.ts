@@ -20,7 +20,7 @@ export default function useCallInitialization() {
   const [callLanes, setLanes] = useLocalStorage<{
     activeLaneIndex: number;
     lanes: LaneState[];
-    timestamp: string;
+    timestamp: number;
     userId: number;
   } | null>('callLanes', null);
 
@@ -31,7 +31,7 @@ export default function useCallInitialization() {
         setLanes({
           activeLaneIndex: state.call.activeLaneIndex,
           lanes: state.call.lanes,
-          timestamp: new Date().toISOString(),
+          timestamp: new Date().getTime(),
           userId: user.id,
         });
       }
@@ -76,7 +76,7 @@ export default function useCallInitialization() {
       !!user &&
       callLanes.userId == user.id;
     const savedLanesAreFresh =
-      new Date(callLanes.timestamp).getTime() > new Date().getTime() - 3600;
+      callLanes.timestamp > new Date().getTime() - 3600;
 
     canInitialize = thisUserHasSavedLanes && savedLanesAreFresh;
   }
