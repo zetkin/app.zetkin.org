@@ -37,6 +37,8 @@ import ZUIIcon from 'zui/components/ZUIIcon';
 import { MUIIcon } from 'zui/components/types';
 import Survey from './Survey';
 import ZUISection from 'zui/components/ZUISection';
+import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type Filter = {
   active: boolean;
@@ -175,23 +177,24 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
   assignment,
   target,
 }) => {
+  const messages = useMessages(messageIds);
   const intl = useIntl();
   const dispatch = useAppDispatch();
   const { events, filteredActivities, filteredEvents, getDateRange, surveys } =
     useFilteredActivities(assignment.organization.id);
   const {
-    filterState,
-    customDatesToFilterEventsBy,
-    eventDateFilterState,
-    orgIdsToFilterEventsBy,
-    projectIdsToFilterActivitiesBy,
-  } = useAppSelector((state) => state.call.filters);
-  const { respondedEventIds, submissionDataBySurveyId } = useAppSelector(
-    (state) => state.call.lanes[state.call.activeLaneIndex]
-  );
-  const selectedSurveyId = useAppSelector(
-    (state) => state.call.selectedSurveyId
-  );
+    respondedEventIds,
+    submissionDataBySurveyId,
+    selectedSurveyId,
+    filters: {
+      filterState,
+      customDatesToFilterEventsBy,
+      eventDateFilterState,
+      orgIdsToFilterEventsBy,
+      projectIdsToFilterActivitiesBy,
+    },
+  } = useAppSelector((state) => state.call.lanes[state.call.activeLaneIndex]);
+
   const respondedSurveyIds = Object.keys(submissionDataBySurveyId);
 
   const [drawerContent, setDrawerContent] = useState<
@@ -307,7 +310,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           {
             active: filterState.thisCall,
             key: 'thisCall',
-            label: 'This call',
+            label: messages.activities.filters.basic.thisCall(),
             onClick: () => {
               dispatch(
                 filtersUpdated({
@@ -326,7 +329,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           {
             active: filterState.alreadyIn,
             key: 'alreadyIn',
-            label: 'Already in',
+            label: messages.activities.filters.basic.alreadyIn(),
             onClick: () => {
               dispatch(
                 filtersUpdated({
@@ -345,7 +348,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           {
             active: filterState.events || filterState.alreadyIn,
             key: 'events',
-            label: 'Events',
+            label: messages.activities.filters.basic.events(),
             onClick: () => {
               dispatch(
                 filtersUpdated({
@@ -361,7 +364,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           {
             active: filterState.surveys,
             key: 'surveys',
-            label: 'Surveys',
+            label: messages.activities.filters.basic.surveys(),
             onClick: () => {
               dispatch(
                 filtersUpdated({
@@ -380,9 +383,12 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           {
             active: !!projectIdsToFilterActivitiesBy.length,
             key: 'context',
-            label: projectIdsToFilterActivitiesBy.length
-              ? `${projectIdsToFilterActivitiesBy.length} projects`
-              : 'Context',
+            label:
+              projectIdsToFilterActivitiesBy.length > 0
+                ? messages.activities.filters.projects.selected({
+                    numProjects: projectIdsToFilterActivitiesBy.length,
+                  })
+                : messages.activities.filters.projects.noSelected(),
             onClick: () => {
               if (projectIdsToFilterActivitiesBy.length) {
                 dispatch(
@@ -403,7 +409,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     {
       active: eventDateFilterState == 'today',
       key: 'today',
-      label: 'Today',
+      label: messages.activities.filters.events.today(),
       onClick: () => {
         dispatch(
           filtersUpdated({
@@ -417,7 +423,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     {
       active: eventDateFilterState == 'tomorrow',
       key: 'tomorrow',
-      label: 'Tomorrow',
+      label: messages.activities.filters.events.tomorrow(),
       onClick: () => {
         dispatch(
           filtersUpdated({
@@ -431,7 +437,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
     {
       active: eventDateFilterState == 'thisWeek',
       key: 'thisWeek',
-      label: 'This week',
+      label: messages.activities.filters.events.thisWeek(),
       onClick: () => {
         dispatch(
           filtersUpdated({
@@ -470,7 +476,12 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
           {
             active: !!orgIdsToFilterEventsBy.length,
             key: 'orgs',
-            label: `${orgIdsToFilterEventsBy.length} orgs`,
+            label:
+              orgIdsToFilterEventsBy.length > 0
+                ? messages.activities.filters.organizations.selected({
+                    numOrgs: orgIdsToFilterEventsBy.length,
+                  })
+                : messages.activities.filters.organizations.noSelected(),
             onClick: () => {
               if (orgIdsToFilterEventsBy.length) {
                 dispatch(
@@ -528,8 +539,10 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                 target={target}
               />
             )}
-            subtitle={`Acting as ${target?.first_name}`}
-            title="Activities"
+            subtitle={messages.activities.description({
+              name: target?.first_name || '',
+            })}
+            title={messages.activities.title()}
           />
         )}
       </Box>
@@ -649,7 +662,9 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
                   <GroupWork />
                 </ListItemAvatar>
                 <ZUIText>
-                  {project.id == 'noProject' ? 'No project' : project.title}
+                  {project.id == 'noProject'
+                    ? messages.activities.projects.wihoutProjectLabel()
+                    : project.title}
                 </ZUIText>
               </Box>
               <Switch
