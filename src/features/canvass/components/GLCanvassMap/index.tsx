@@ -437,7 +437,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
       <CanvassMapOverlays
         assignment={assignment}
         isCreating={isCreating}
-        onCreate={(title) => {
+        onCreate={(newLocation) => {
           const crosshair = crosshairRef.current;
 
           if (crosshair && map) {
@@ -450,7 +450,8 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               createLocation({
                 latitude: point.lat,
                 longitude: point.lng,
-                title,
+                num_estimated_households: newLocation.numEstimatedHouseholds,
+                title: newLocation.title,
                 type: 'assignment',
               });
             }
