@@ -83,11 +83,6 @@ function useRemoteObject<
     }
 
     if (loadIsNecessary && !stateHasLoadedOnce) {
-      // on server, we don't trigger the load promise as the server can't change the redux state
-      if (typeof window === 'undefined') {
-        throw Promise.resolve();
-      }
-
       const promise = makePromise<DataType, OnLoadPayload, OnSuccessPayload>(
         dispatch,
         hooks
@@ -119,12 +114,9 @@ function useRemoteObject<
       loadIsNecessary,
       stateHasLoadedOnce,
       dispatch,
-      hooks.actionOnError,
-      hooks.actionOnLoad,
-      hooks.actionOnSuccess,
-      hooks.loader,
       cache,
       getOldPromise,
+      // intentionally omitting hooks as they are often not wrapped in useMemo or useCallback in Zetkin...
     ]);
   }
 }
