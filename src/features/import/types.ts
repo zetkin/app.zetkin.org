@@ -1,17 +1,17 @@
 import { ZetkinPerson } from 'utils/types/zetkin';
 
-type PersonSetfieldsBulkOp = {
+export type PersonSetfieldsBulkOp = {
   data: Partial<ZetkinPerson>;
   op: 'person.setfields';
 };
 
-type PersonTagBulkOp = {
+export type PersonTagBulkOp = {
   op: 'person.tag';
   tag_id: number;
   value?: string | number | null;
 };
 
-type PersonAddtoorgBulkOp = {
+export type PersonAddtoorgBulkOp = {
   op: 'person.addtoorg';
   org_id: number;
 };

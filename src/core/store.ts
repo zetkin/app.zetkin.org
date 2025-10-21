@@ -56,10 +56,14 @@ import areaAssignmentSlice, {
 } from 'features/areaAssignments/store';
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
+import automationsSlice, {
+  AutomationsStoreSlice,
+} from 'features/automations/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
   areas: AreasStoreSlice;
+  automations: AutomationsStoreSlice;
   breadcrumbs: BreadcrumbsStoreSlice;
   call: CallStoreSlice;
   callAssignments: CallAssignmentSlice;
@@ -87,6 +91,7 @@ export interface RootState {
 const reducer = {
   areaAssignments: areaAssignmentSlice.reducer,
   areas: areasSlice.reducer,
+  automations: automationsSlice.reducer,
   breadcrumbs: breadcrumbsSlice.reducer,
   call: callSlice.reducer,
   callAssignments: callAssignmentsSlice.reducer,

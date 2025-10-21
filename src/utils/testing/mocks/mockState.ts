@@ -18,6 +18,9 @@ export default function mockState(overrides?: RootState) {
       areaList: remoteList(),
       tagsByAreaId: {},
     },
+    automations: {
+      automationList: remoteList(),
+    },
     breadcrumbs: {
       crumbsByPath: {},
     },
@@ -139,6 +142,7 @@ export default function mockState(overrides?: RootState) {
     smartSearch: {
       queryList: remoteList(),
       statsByFilterSpec: {},
+      statsByQueryId: {},
     },
     surveys: {
       elementsBySurveyId: {},
