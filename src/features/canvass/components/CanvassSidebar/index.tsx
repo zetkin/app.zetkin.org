@@ -39,26 +39,26 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
       numHouseholds:
         acc.numHouseholds +
         (c.num_known_households || c.num_estimated_households),
-      numVisits: acc.numVisits + c.num_visits,
-      numSuccessfulVisits: acc.numSuccessfulVisits + c.num_successful_visits,
       numHouseholdsVisited:
         acc.numHouseholdsVisited + (c.num_households_visited ?? 0),
       numSuccessfulHouseholds:
         acc.numSuccessfulHouseholds + (c.num_households_successful ?? 0),
+      numSuccessfulVisits: acc.numSuccessfulVisits + c.num_successful_visits,
+      numVisits: acc.numVisits + c.num_visits,
     }),
     {
       numHouseholds: 0,
-      numVisits: 0,
-      numSuccessfulVisits: 0,
       numHouseholdsVisited: 0,
       numSuccessfulHouseholds: 0,
+      numSuccessfulVisits: 0,
+      numVisits: 0,
     }
   ) || {
     numHouseholds: 0,
-    numVisits: 0,
-    numSuccessfulVisits: 0,
     numHouseholdsVisited: 0,
     numSuccessfulHouseholds: 0,
+    numSuccessfulVisits: 0,
+    numVisits: 0,
   };
 
   return (
