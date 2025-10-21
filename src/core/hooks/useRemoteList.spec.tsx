@@ -18,7 +18,8 @@ describe('useRemoteList()', () => {
 
     const { queryByText } = render();
 
-    expect(queryByText('loading')).not.toBeNull();
+    expect(queryByText('loading1')).not.toBeNull();
+    expect(queryByText('loading2')).not.toBeNull();
 
     await act(async () => {
       await promise;
@@ -35,8 +36,10 @@ describe('useRemoteList()', () => {
       type: 'loaded',
     });
 
-    expect(queryByText('loading')).toBeNull();
-    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
   });
 
   it('returns data without load when the data has been loaded recently', async () => {
@@ -50,15 +53,20 @@ describe('useRemoteList()', () => {
       loaded: new Date().toISOString(),
     });
 
-    const { queryByText } = render();
+    const { queryByText, queryAllByText } = render();
 
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(hooks.loader).not.toHaveBeenCalled();
-    expect(queryByText('loading')).toBeNull();
-    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
 
-    const listItem = queryByText('Clara Zetkin');
-    expect(listItem?.tagName).toBe('LI');
+    const listItems = queryAllByText('Clara Zetkin');
+    expect(listItems).toHaveLength(2);
+    listItems.forEach((item) => {
+      expect(item?.tagName).toBe('LI');
+    });
   });
 
   it('returns stale data while re-loading', async () => {
@@ -72,9 +80,13 @@ describe('useRemoteList()', () => {
       loaded: new Date(1857, 6, 5).toISOString(),
     });
 
-    const { queryByText } = render();
+    const { queryByText, queryAllByText } = render();
 
-    expect(queryByText('Clara Zetkin')).not.toBeNull();
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
 
     await act(async () => {
       await promise;
@@ -82,6 +94,10 @@ describe('useRemoteList()', () => {
 
     expect(hooks.loader).toHaveBeenCalled();
     expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
   });
 });
 
@@ -139,7 +155,26 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
 
     return (
       <div>
-        <p>loaded</p>
+        <p>loaded1</p>
+        <ul>
+          {items.map((item) => (
+            <li key={item.id}>{item.name}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const Component2: FC = () => {
+    const list = useSelector<StoreState, RemoteList<ListObjectForTest>>(
+      (state) => state.list
+    );
+
+    const items = useRemoteList(list, hooks);
+
+    return (
+      <div>
+        <p>loaded2</p>
         <ul>
           {items.map((item) => (
             <li key={item.id}>{item.name}</li>
@@ -155,8 +190,11 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
     render: () =>
       render(
         <ReduxProvider store={store}>
-          <Suspense fallback={<p>loading</p>}>
+          <Suspense fallback={<p>loading1</p>}>
             <Component />
+          </Suspense>
+          <Suspense fallback={<p>loading2</p>}>
+            <Component2 />
           </Suspense>
         </ReduxProvider>
       ),
