@@ -7,21 +7,20 @@ import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import PreviousDayPrompt from './PreviousDayPrompt';
 import useDayCalendarEvents from 'features/calendar/hooks/useDayCalendarEvents';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 export interface CalendarDayViewProps {
-  focusDate: Date;
   onClickPreviousDay: (date: Date) => void;
   previousActivityDay: [Date, DaySummary] | null;
 }
 
 const CalendarDayView = ({
-  focusDate,
   onClickPreviousDay,
   previousActivityDay,
 }: CalendarDayViewProps) => {
+  const { focusDate } = useFocusDate();
   const { activities, hasMore, isLoadingFuture, loadMoreFuture } =
     useDayCalendarEvents(focusDate);
-
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       {previousActivityDay && (

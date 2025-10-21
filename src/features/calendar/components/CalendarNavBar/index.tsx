@@ -2,15 +2,15 @@ import { Box } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
 
+import { TimeScale } from 'features/calendar/types';
 import CalendarEventFilter from '../CalendarEventFilter';
 import messageIds from 'features/calendar/l10n/messageIds';
 import MonthSelect from './MonthSelect';
 import { Msg } from 'core/i18n';
-import { TimeScale } from '../index';
 import YearSelect from './YearSelect';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
 
 export interface CalendarNavBarProps {
-  focusDate: Date;
   onChangeFocusDate: (date: Date) => void;
   onChangeTimeScale: (timeScale: TimeScale) => void;
   onStepBackward: () => void;
@@ -20,7 +20,6 @@ export interface CalendarNavBarProps {
 }
 
 const CalendarNavBar = ({
-  focusDate,
   onChangeFocusDate,
   onChangeTimeScale,
   onStepBackward,
@@ -28,6 +27,7 @@ const CalendarNavBar = ({
   orgId,
   timeScale,
 }: CalendarNavBarProps) => {
+  const { focusDate } = useFocusDate();
   return (
     <Box display="flex" justifyContent="space-between">
       <Box alignItems="center" display="flex" gap="4px">
@@ -56,20 +56,20 @@ const CalendarNavBar = ({
       <Box>
         <ButtonGroup>
           <Button
-            onClick={() => onChangeTimeScale(TimeScale.DAY)}
-            variant={timeScale === TimeScale.DAY ? 'contained' : 'outlined'}
+            onClick={() => onChangeTimeScale('day')}
+            variant={timeScale === 'day' ? 'contained' : 'outlined'}
           >
             <Msg id={messageIds.ranges.day} />
           </Button>
           <Button
-            onClick={() => onChangeTimeScale(TimeScale.WEEK)}
-            variant={timeScale === TimeScale.WEEK ? 'contained' : 'outlined'}
+            onClick={() => onChangeTimeScale('week')}
+            variant={timeScale === 'week' ? 'contained' : 'outlined'}
           >
             <Msg id={messageIds.ranges.week} />
           </Button>
           <Button
-            onClick={() => onChangeTimeScale(TimeScale.MONTH)}
-            variant={timeScale === TimeScale.MONTH ? 'contained' : 'outlined'}
+            onClick={() => onChangeTimeScale('month')}
+            variant={timeScale === 'month' ? 'contained' : 'outlined'}
           >
             <Msg id={messageIds.ranges.month} />
           </Button>
