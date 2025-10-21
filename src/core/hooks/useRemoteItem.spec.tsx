@@ -43,11 +43,11 @@ describe('useRemoteItem()', () => {
   });
 
   it('returns data without load when the data has been loaded recently', async () => {
-    const { hooks, render, store } = setupWrapperComponent({
+    const { hooks, promise, render, store } = setupWrapperComponent({
       ...remoteItem(1, {
         data: {
           id: 1,
-          name: 'Clara Zetkin',
+          name: 'Rosa Luxemburg',
         },
       }),
       loaded: new Date().toISOString(),
@@ -62,7 +62,13 @@ describe('useRemoteItem()', () => {
     expect(queryByText('loading2')).toBeNull();
     expect(queryByText('loaded2')).not.toBeNull();
 
-    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
+
+    await act(async () => {
+      await promise;
+    });
+
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
   });
 
   it('returns stale data while re-loading', async () => {
@@ -70,7 +76,7 @@ describe('useRemoteItem()', () => {
       ...remoteItem(1, {
         data: {
           id: 1,
-          name: 'Clara Zetkin',
+          name: 'Rosa Luxemburg',
         },
       }),
       loaded: new Date(1857, 6, 5).toISOString(),
@@ -78,7 +84,7 @@ describe('useRemoteItem()', () => {
 
     const { queryByText, queryAllByText } = render();
 
-    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
     expect(queryByText('loading1')).toBeNull();
     expect(queryByText('loaded1')).not.toBeNull();
     expect(queryByText('loading2')).toBeNull();
@@ -94,6 +100,8 @@ describe('useRemoteItem()', () => {
     expect(queryByText('loaded1')).not.toBeNull();
     expect(queryByText('loading2')).toBeNull();
     expect(queryByText('loaded2')).not.toBeNull();
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(0);
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
   });
 });
 

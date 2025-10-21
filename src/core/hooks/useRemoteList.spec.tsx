@@ -43,11 +43,15 @@ describe('useRemoteList()', () => {
   });
 
   it('returns data without load when the data has been loaded recently', async () => {
-    const { hooks, render, store } = setupWrapperComponent({
+    const { hooks, promise, render, store } = setupWrapperComponent({
       ...remoteList([
         {
           id: 1,
           name: 'Clara Zetkin',
+        },
+        {
+          id: 2,
+          name: 'Rosa Luxemburg',
         },
       ]),
       loaded: new Date().toISOString(),
@@ -67,6 +71,13 @@ describe('useRemoteList()', () => {
     listItems.forEach((item) => {
       expect(item?.tagName).toBe('LI');
     });
+
+    await act(async () => {
+      await promise;
+    });
+
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
   });
 
   it('returns stale data while re-loading', async () => {
@@ -76,13 +87,18 @@ describe('useRemoteList()', () => {
           id: 1,
           name: 'Clara Zetkin',
         },
+        {
+          id: 2,
+          name: 'Rosa Luxemburg',
+        },
       ]),
       loaded: new Date(1857, 6, 5).toISOString(),
     });
 
-    const { queryByText, queryAllByText } = render();
+    const { queryByText, queryAllByText, debug } = render();
 
     expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
     expect(queryByText('loading1')).toBeNull();
     expect(queryByText('loaded1')).not.toBeNull();
     expect(queryByText('loading2')).toBeNull();
@@ -92,12 +108,16 @@ describe('useRemoteList()', () => {
       await promise;
     });
 
+    debug();
+
     expect(hooks.loader).toHaveBeenCalled();
     expect(store.dispatch).toHaveBeenCalledTimes(2);
     expect(queryByText('loading1')).toBeNull();
     expect(queryByText('loaded1')).not.toBeNull();
     expect(queryByText('loading2')).toBeNull();
     expect(queryByText('loaded2')).not.toBeNull();
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(0);
   });
 });
 
@@ -117,7 +137,7 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
       } else if (action.type == 'loaded') {
         return {
           list: {
-            ...remoteList(),
+            ...remoteList(action.payload as ListObjectForTest[]),
             isLoading: false,
             loaded: new Date().toISOString(),
           },
