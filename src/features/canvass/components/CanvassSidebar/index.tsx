@@ -13,18 +13,53 @@ import { ZetkinAreaAssignment } from '../../../areaAssignments/types';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
-import useAreaAssignmentStats from 'features/areaAssignments/hooks/useAreaAssignmentStats';
-import ZUIFutures from 'zui/ZUIFutures';
+import { Zetkin2Area } from 'features/areas/types';
+import useLocations from 'features/areaAssignments/hooks/useLocations';
 
 type Props = {
   assignment: ZetkinAreaAssignment;
+  selectedArea: Zetkin2Area;
 };
 
-const CanvassSidebar: FC<Props> = ({ assignment }) => {
-  const statsFuture = useAreaAssignmentStats(
+const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
+  const locations = useLocations(
     assignment.organization_id,
-    assignment.id
+    assignment.id,
+    selectedArea.id
   );
+
+  const {
+    numHouseholds,
+    numVisits,
+    numSuccessfulVisits,
+    numHouseholdsVisited,
+    numSuccessfulHouseholds,
+  } = locations.data?.reduce(
+    (acc, c) => ({
+      numHouseholds:
+        acc.numHouseholds +
+        (c.num_known_households || c.num_estimated_households),
+      numVisits: acc.numVisits + c.num_visits,
+      numSuccessfulVisits: acc.numSuccessfulVisits + c.num_successful_visits,
+      numHouseholdsVisited:
+        acc.numHouseholdsVisited + (c.num_households_visited ?? 0),
+      numSuccessfulHouseholds:
+        acc.numSuccessfulHouseholds + (c.num_households_successful ?? 0),
+    }),
+    {
+      numHouseholds: 0,
+      numVisits: 0,
+      numSuccessfulVisits: 0,
+      numHouseholdsVisited: 0,
+      numSuccessfulHouseholds: 0,
+    }
+  ) || {
+    numHouseholds: 0,
+    numVisits: 0,
+    numSuccessfulVisits: 0,
+    numHouseholdsVisited: 0,
+    numSuccessfulHouseholds: 0,
+  };
 
   return (
     <Box
@@ -41,100 +76,78 @@ const CanvassSidebar: FC<Props> = ({ assignment }) => {
       <Box sx={{ mx: 1 }}>
         <Typography variant="h5">{assignment.title}</Typography>
       </Box>
-      <ZUIFutures
-        futures={{
-          stats: statsFuture,
+      <Box sx={{ mx: 1 }}>
+        <Typography variant="h6">{selectedArea.title}</Typography>
+      </Box>
+      <Box
+        sx={{
+          columnGap: 1,
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr',
+          mx: 1,
+          rowGap: 2,
         }}
       >
-        {({ data: { stats } }) => {
-          return (
-            <Box
-              sx={{
-                columnGap: 1,
-                display: 'grid',
-                gridTemplateColumns: '2fr 1fr',
-                mx: 1,
-                rowGap: 2,
-              }}
-            >
-              <Box>
-                <Typography variant="body1">
-                  <Msg id={messageIds.sidebar.progress.header.households} />
-                </Typography>
-              </Box>
-              <Box textAlign="right">
-                <Typography variant="h5">{stats.num_households}</Typography>
-              </Box>
-              <Box gridColumn="span 2">
-                <Divider
-                  sx={(theme) => ({ bgcolor: theme.palette.grey[100] })}
-                />
-              </Box>
-              <Box>
-                <Typography variant="body1">
-                  <Msg id={messageIds.sidebar.progress.header.visits} />
-                </Typography>
-              </Box>
-              <Box textAlign="right">
-                <Typography variant="h5">{stats.num_visits}</Typography>
-              </Box>
-              <Box>
-                <Typography variant="body1">
-                  <Msg
-                    id={messageIds.sidebar.progress.header.successfulVisits}
-                  />
-                </Typography>
-              </Box>
-              <Box textAlign="right">
-                <Typography variant="h5">
-                  {stats.num_successful_visits}
-                </Typography>
-              </Box>
-              <Box gridColumn="span 2">
-                <Divider
-                  sx={(theme) => ({ bgcolor: theme.palette.grey[100] })}
-                />
-              </Box>
-              {stats.num_households_visited != null && (
-                <>
-                  <Box>
-                    <Typography variant="body1">
-                      <Msg
-                        id={messageIds.sidebar.progress.header.householdVisits}
-                      />
-                    </Typography>
-                  </Box>
-                  <Box textAlign="right">
-                    <Typography variant="h5">
-                      {stats.num_households_visited}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant="body1">
-                      <Msg
-                        id={
-                          messageIds.sidebar.progress.header
-                            .successfulHouseholdVisits
-                        }
-                      />
-                    </Typography>
-                  </Box>
-                  <Box textAlign="right">
-                    <Typography variant="h5">
-                      {stats.num_households_successfully_visited}
-                    </Typography>
-                  </Box>
-                  <Box gridColumn="span 2">
-                    <Divider
-                      sx={(theme) => ({ bgcolor: theme.palette.grey[100] })}
-                    />
-                  </Box>
-                </>
-              )}
+        <Box>
+          <Typography variant="body1">
+            <Msg id={messageIds.sidebar.progress.header.households} />
+          </Typography>
+        </Box>
+        <Box textAlign="right">
+          <Typography variant="h5">{numHouseholds}</Typography>
+        </Box>
+        <Box gridColumn="span 2">
+          <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
+        </Box>
+        <Box>
+          <Typography variant="body1">
+            <Msg id={messageIds.sidebar.progress.header.visits} />
+          </Typography>
+        </Box>
+        <Box textAlign="right">
+          <Typography variant="h5">{numVisits}</Typography>
+        </Box>
+        <Box>
+          <Typography variant="body1">
+            <Msg id={messageIds.sidebar.progress.header.successfulVisits} />
+          </Typography>
+        </Box>
+        <Box textAlign="right">
+          <Typography variant="h5">{numSuccessfulVisits}</Typography>
+        </Box>
+        <Box gridColumn="span 2">
+          <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
+        </Box>
+        {locations.data?.some(
+          (location) => location.num_households_visited
+        ) && (
+          <>
+            <Box>
+              <Typography variant="body1">
+                <Msg id={messageIds.sidebar.progress.header.householdVisits} />
+              </Typography>
             </Box>
-          );
-        }}
-      </ZUIFutures>
+            <Box textAlign="right">
+              <Typography variant="h5">{numHouseholdsVisited}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
+                <Msg
+                  id={
+                    messageIds.sidebar.progress.header.successfulHouseholdVisits
+                  }
+                />
+              </Typography>
+            </Box>
+            <Box textAlign="right">
+              <Typography variant="h5">{numSuccessfulHouseholds}</Typography>
+            </Box>
+            <Box gridColumn="span 2">
+              <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
+            </Box>
+          </>
+        )}
+      </Box>
       <List>
         {assignment.instructions && (
           <ListItem sx={{ display: 'block', px: 1 }}>
