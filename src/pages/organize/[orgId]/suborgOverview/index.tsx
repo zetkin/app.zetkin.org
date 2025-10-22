@@ -1,7 +1,20 @@
 import Head from 'next/head';
 import { FC, Suspense } from 'react';
-import { Avatar, Box, CircularProgress, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { GetServerSideProps } from 'next';
+import {
+  AssignmentOutlined,
+  EmailOutlined,
+  EventOutlined,
+  PhoneOutlined,
+} from '@mui/icons-material';
 
 import useServerSide from 'core/useServerSide';
 import { PageWithLayout } from 'utils/types';
@@ -33,26 +46,77 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
   }
 
   return (
-    <>
+    <Stack spacing={2}>
       {suborgsWithStats.map((orgWithStats) => (
-        <Box
-          key={orgWithStats.id}
-          sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
-        >
-          <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-          <Typography>{orgWithStats.title}</Typography>
-          <Typography>{`${orgWithStats.stats.numPeople} people`}</Typography>
-          <Typography>{`${orgWithStats.stats.numCalls} calls`}</Typography>
-          <Typography>{`${orgWithStats.stats.numSubmissions} survey submissions`}</Typography>
-          <Typography>{`${orgWithStats.stats.numEvents} events`}</Typography>
-          <Typography>{`${orgWithStats.stats.numEventParticipants} event participants`}</Typography>
-          <Typography>{`${orgWithStats.stats.numEmails} emails`}</Typography>
-          <Typography>{`${orgWithStats.stats.numEmailsSent} emails sent`}</Typography>
-          <Typography>{`${orgWithStats.stats.numLists} lists`}</Typography>
-          <Typography>{`${orgWithStats.stats.numProjects} projects`}</Typography>
-        </Box>
+        <Paper key={orgWithStats.id}>
+          <Box
+            sx={{
+              alignContent: 'center',
+              gap: 1,
+              padding: 2,
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+                <Typography variant="h5">{orgWithStats.title}</Typography>
+              </Box>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>{orgWithStats.stats.numPeople}</Typography>
+                  <Typography color="secondary">people</Typography>
+                </Box>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>{orgWithStats.stats.numLists}</Typography>
+                  <Typography color="secondary">lists</Typography>
+                </Box>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>{orgWithStats.stats.numProjects}</Typography>
+                  <Typography color="secondary">projects</Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Typography color="secondary">
+              Activity in the past 30 days:
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <PhoneOutlined color="secondary" />
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>{orgWithStats.stats.numCalls}</Typography>
+                  <Typography color="secondary">calls</Typography>
+                </Box>
+              </Box>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <AssignmentOutlined color="secondary" />
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>{orgWithStats.stats.numSubmissions}</Typography>
+                  <Typography color="secondary">submissions</Typography>
+                </Box>
+              </Box>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <EventOutlined color="secondary" />
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>
+                    {orgWithStats.stats.numEventParticipants}
+                  </Typography>
+                  <Typography color="secondary">participants</Typography>
+                </Box>
+              </Box>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                <EmailOutlined color="secondary" />
+                <Typography color="secondary">{`${orgWithStats.stats.numEmailsSent} sent`}</Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Paper>
       ))}
-    </>
+    </Stack>
   );
 };
 
