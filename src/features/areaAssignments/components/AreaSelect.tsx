@@ -336,20 +336,22 @@ const AreaSelect: FC<Props> = ({
                   </IconButton>
                 </Box>
               ))}
+              <Box mt={2}>
+                <Typography variant="h6">
+                  <Msg
+                    id={areaAssignmentMessageIds.map.areaInfo.assignees.add}
+                  />
+                </Typography>
+                <UserAutocomplete
+                  onSelect={(user) => {
+                    if (user) {
+                      onAddAssignee(user);
+                    }
+                  }}
+                  orgId={orgId}
+                />
+              </Box>
             </Suspense>
-            <Box mt={2}>
-              <Typography variant="h6">
-                <Msg id={areaAssignmentMessageIds.map.areaInfo.assignees.add} />
-              </Typography>
-              <UserAutocomplete
-                onSelect={(user) => {
-                  if (user) {
-                    onAddAssignee(user);
-                  }
-                }}
-                orgId={orgId}
-              />
-            </Box>
           </Box>
         </Box>
       )}
