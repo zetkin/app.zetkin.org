@@ -4,6 +4,8 @@ import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinCallAssignment,
+  ZetkinEvent,
+  ZetkinEventParticipant,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurvey,
@@ -40,35 +42,44 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const activeSuborgs = suborgs.filter((suborg) => suborg.is_active);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
-    const [suborgStats, callAssignments, calls, surveys, surveySubmissions] =
-      await Promise.all([
-        apiClient.post<
-          ZetkinSmartSearchFilterStats[],
-          { filter_spec: ZetkinSmartSearchFilter[] }
-        >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
-          filter_spec: [
-            {
-              config: {},
-              op: OPERATION.ADD,
-              type: FILTER_TYPE.ALL,
-            },
-          ],
-        }),
+    const [
+      suborgStats,
+      callAssignments,
+      calls,
+      surveys,
+      surveySubmissions,
+      events,
+    ] = await Promise.all([
+      apiClient.post<
+        ZetkinSmartSearchFilterStats[],
+        { filter_spec: ZetkinSmartSearchFilter[] }
+      >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
+        filter_spec: [
+          {
+            config: {},
+            op: OPERATION.ADD,
+            type: FILTER_TYPE.ALL,
+          },
+        ],
+      }),
+      apiClient.get<ZetkinCallAssignment[]>(
+        `/api/orgs/${suborg.id}/call_assignments?recursive`
+      ),
+      apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
+      apiClient.get<ZetkinSurvey[]>(`/api/orgs/${suborg.id}/surveys?recursive`),
+      apiClient.get<ZetkinSurveySubmission[]>(
+        `/api/orgs/${suborg.id}/survey_submissions?recursive`
+      ),
+      apiClient.get<ZetkinEvent[]>(`/api/orgs/${suborg.id}/actions?recursive`),
+    ]);
 
-        apiClient.get<ZetkinCallAssignment[]>(
-          `/api/orgs/${suborg.id}/call_assignments?recursive`
-        ),
-
-        apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
-
-        apiClient.get<ZetkinSurvey[]>(
-          `/api/orgs/${suborg.id}/surveys?recursive`
-        ),
-
-        apiClient.get<ZetkinSurveySubmission[]>(
-          `/api/orgs/${suborg.id}/survey_submissions?recursive`
-        ),
-      ]);
+    let numEventParticipants = 0;
+    events.map(async (event) => {
+      const participants = await apiClient.get<ZetkinEventParticipant[]>(
+        `/api/orgs/${suborg.id}/actions/${event.id}/participants`
+      );
+      numEventParticipants = numEventParticipants + participants.length;
+    });
 
     const numPeople = suborgStats[0].result;
 
@@ -77,6 +88,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       stats: {
         numCallAssignments: callAssignments.length,
         numCalls: calls.length,
+        numEventParticipants,
+        numEvents: events.length,
         numPeople,
         numSubmissions: surveySubmissions.length,
         numSurveys: surveys.length,
