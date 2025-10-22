@@ -1,4 +1,11 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  startTransition,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import { useRouter } from 'next/router';
@@ -291,7 +298,11 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     }}
                     onClose={clearAndCloseSettings}
                     onFilterTextChange={(newValue) => setFilterText(newValue)}
-                    onSelectArea={(newValue) => setSelectedId(newValue)}
+                    onSelectArea={(newValue) =>
+                      startTransition(() => {
+                        setSelectedId(newValue);
+                      })
+                    }
                     selectedArea={selectedArea}
                     selectedAreaStats={areaStats.stats.find(
                       (stat) => stat.area_id == selectedArea?.id
@@ -358,13 +369,10 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             locations={locations}
             locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {
-              setSelectedId(newId);
-
-              if (!newId) {
-                setSettingsOpen(null);
-              } else {
-                setSettingsOpen('select');
-              }
+              startTransition(() => {
+                setSelectedId(newId);
+                setSettingsOpen(newId ? 'select' : null);
+              });
             }}
             overlayStyle={mapStyle.overlay}
             selectedId={selectedId}
