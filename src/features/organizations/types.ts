@@ -18,7 +18,9 @@ export type SuborgWithStats = {
     numEmailsSent: number;
     numEventParticipants: number;
     numEvents: number;
+    numLists: number;
     numPeople: number;
+    numProjects: number;
     numSubmissions: number;
     numSurveys: number;
     numVisits: number;

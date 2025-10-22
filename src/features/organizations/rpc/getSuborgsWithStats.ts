@@ -4,6 +4,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinCallAssignment,
+  ZetkinCampaign,
   ZetkinEmail,
   ZetkinEvent,
   ZetkinEventParticipant,
@@ -11,6 +12,7 @@ import {
   ZetkinSubOrganization,
   ZetkinSurvey,
   ZetkinSurveySubmission,
+  ZetkinView,
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
@@ -54,6 +56,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       events,
       emails,
       areaAssignments,
+      lists,
+      projects,
     ] = await Promise.all([
       apiClient.post<
         ZetkinSmartSearchFilterStats[],
@@ -79,6 +83,12 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       apiClient.get<ZetkinEmail[]>(`/api/orgs/${suborg.id}/emails?recursive`),
       apiClient.get<ZetkinEmail[]>(
         `/api2/orgs/${suborg.id}/area_assignments?recursive`
+      ),
+      apiClient.get<ZetkinView[]>(
+        `/api/orgs/${suborg.id}/people/views?recursive`
+      ),
+      apiClient.get<ZetkinCampaign[]>(
+        `/api/orgs/${suborg.id}/campaigns?recursive`
       ),
     ]);
 
@@ -118,7 +128,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         numEmailsSent,
         numEventParticipants,
         numEvents: events.length,
+        numLists: lists.length,
         numPeople,
+        numProjects: projects.length,
         numSubmissions: surveySubmissions.length,
         numSurveys: surveys.length,
         numVisits,
