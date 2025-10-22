@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import { FC, Suspense } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Avatar, Box, CircularProgress, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
 import useServerSide from 'core/useServerSide';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useSuborgsWithStats from 'features/organizations/hooks/useSuborgsWithStats';
-import OverviewLayout from 'features/organizations/layouts/OverviewLayout';
+import SuborgOverviewLayout from 'features/organizations/layouts/SuborgOverviewLayout';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
 
@@ -39,6 +39,7 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
           key={orgWithStats.id}
           sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
         >
+          <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
           <Typography>{orgWithStats.title}</Typography>
           <Typography>{`${orgWithStats.stats.numPeople} people`}</Typography>
           <Typography>{`${orgWithStats.stats.numCalls} calls`}</Typography>
@@ -82,7 +83,7 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
 };
 
 SuborgsPage.getLayout = function getLayout(page) {
-  return <OverviewLayout>{page}</OverviewLayout>;
+  return <SuborgOverviewLayout>{page}</SuborgOverviewLayout>;
 };
 
 export default SuborgsPage;
