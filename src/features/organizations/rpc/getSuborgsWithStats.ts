@@ -3,14 +3,12 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
-  ZetkinCallAssignment,
   ZetkinCampaign,
   ZetkinEmail,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
-  ZetkinSurvey,
   ZetkinSurveySubmission,
   ZetkinView,
 } from 'utils/types/zetkin';
@@ -19,7 +17,6 @@ import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgWithStats } from '../types';
 import { ZetkinCall } from 'features/call/types';
 import { ZetkinEmailStats } from 'features/emails/types';
-import { ZetkinAreaAssignmentStats } from 'features/areaAssignments/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -46,16 +43,19 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const activeSuborgs = suborgs.filter((suborg) => suborg.is_active);
 
+  const now = new Date();
+  const thirtyDaysAgo = new Date(new Date().setDate(now.getDate() - 30))
+    .toISOString()
+    .slice(0, 10);
+  const today = now.toISOString().slice(0, 10);
+
   const suborgPromises = activeSuborgs.map(async (suborg) => {
     const [
       suborgStats,
-      callAssignments,
       calls,
-      surveys,
       surveySubmissions,
       events,
       emails,
-      areaAssignments,
       lists,
       projects,
     ] = await Promise.all([
@@ -71,19 +71,15 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
           },
         ],
       }),
-      apiClient.get<ZetkinCallAssignment[]>(
-        `/api/orgs/${suborg.id}/call_assignments?recursive`
-      ),
       apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
-      apiClient.get<ZetkinSurvey[]>(`/api/orgs/${suborg.id}/surveys?recursive`),
       apiClient.get<ZetkinSurveySubmission[]>(
         `/api/orgs/${suborg.id}/survey_submissions?recursive`
       ),
-      apiClient.get<ZetkinEvent[]>(`/api/orgs/${suborg.id}/actions?recursive`),
-      apiClient.get<ZetkinEmail[]>(`/api/orgs/${suborg.id}/emails?recursive`),
-      apiClient.get<ZetkinEmail[]>(
-        `/api2/orgs/${suborg.id}/area_assignments?recursive`
+      apiClient.get<ZetkinEvent[]>(
+        `/api/orgs/${suborg.id}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=start_time<=${today}`
       ),
+      //TODO: Add "recursive" flag once the API supports it for emails
+      apiClient.get<ZetkinEmail[]>(`/api/orgs/${suborg.id}/emails`),
       apiClient.get<ZetkinView[]>(
         `/api/orgs/${suborg.id}/people/views?recursive`
       ),
@@ -107,23 +103,16 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       );
       numEmailsSent = numEmailsSent + stats.num_sent;
     }
-
-    let numVisits = 0;
-    for (const areaAssignment of areaAssignments) {
-      const stats = await apiClient.get<ZetkinAreaAssignmentStats>(
-        `/api2/orgs/${suborg.id}/area_assignments/${areaAssignment.id}/stats`
-      );
-      numVisits = numVisits + stats.num_visits;
-    }
-
     const numPeople = suborgStats[0].result;
+
+    const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
 
     return {
       id: suborg.id,
       stats: {
-        numAreaAssignments: areaAssignments.length,
-        numCallAssignments: callAssignments.length,
-        numCalls: calls.length,
+        numCalls: calls.filter(
+          (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
+        ).length,
         numEmails: emails.length,
         numEmailsSent,
         numEventParticipants,
@@ -131,9 +120,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         numLists: lists.length,
         numPeople,
         numProjects: projects.length,
-        numSubmissions: surveySubmissions.length,
-        numSurveys: surveys.length,
-        numVisits,
+        numSubmissions: surveySubmissions.filter(
+          (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
+        ).length,
       },
       title: suborg.title,
     };
