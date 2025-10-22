@@ -153,10 +153,10 @@ export default makeMessages('feat.canvass', {
         title: m('All time'),
       },
       header: {
-        householdVisits: m('Household Visits'),
         households: m('Households'),
+        householdsSuccessful: m('Successfully visited'),
+        householdsVisited: m('Visited households'),
         locations: m('Locations'),
-        successfulHouseholdVisits: m('Successful Household Visits'),
         successfulVisits: m('Successful Visits'),
         title: m('Progress'),
         visits: m('Visits'),

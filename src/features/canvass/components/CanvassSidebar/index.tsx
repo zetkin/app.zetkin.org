@@ -30,33 +30,33 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
 
   const {
     numHouseholds,
-    numVisits,
-    numSuccessfulVisits,
+    numHouseholdsSuccessful,
     numHouseholdsVisited,
-    numSuccessfulHouseholds,
+    numSuccessfulVisits,
+    numVisits,
   } = locations.data?.reduce(
     (acc, c) => ({
       numHouseholds:
         acc.numHouseholds +
         (c.num_known_households || c.num_estimated_households),
+      numHouseholdsSuccessful:
+        acc.numHouseholdsSuccessful + (c.num_households_successful ?? 0),
       numHouseholdsVisited:
         acc.numHouseholdsVisited + (c.num_households_visited ?? 0),
-      numSuccessfulHouseholds:
-        acc.numSuccessfulHouseholds + (c.num_households_successful ?? 0),
       numSuccessfulVisits: acc.numSuccessfulVisits + c.num_successful_visits,
       numVisits: acc.numVisits + c.num_visits,
     }),
     {
       numHouseholds: 0,
+      numHouseholdsSuccessful: 0,
       numHouseholdsVisited: 0,
-      numSuccessfulHouseholds: 0,
       numSuccessfulVisits: 0,
       numVisits: 0,
     }
   ) || {
     numHouseholds: 0,
+    numHouseholdsSuccessful: 0,
     numHouseholdsVisited: 0,
-    numSuccessfulHouseholds: 0,
     numSuccessfulVisits: 0,
     numVisits: 0,
   };
@@ -99,32 +99,37 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
         <Box gridColumn="span 2">
           <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
         </Box>
-        <Box>
-          <Typography variant="body1">
-            <Msg id={messageIds.sidebar.progress.header.visits} />
-          </Typography>
-        </Box>
-        <Box textAlign="right">
-          <Typography variant="h5">{numVisits}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="body1">
-            <Msg id={messageIds.sidebar.progress.header.successfulVisits} />
-          </Typography>
-        </Box>
-        <Box textAlign="right">
-          <Typography variant="h5">{numSuccessfulVisits}</Typography>
-        </Box>
-        <Box gridColumn="span 2">
-          <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
-        </Box>
-        {locations.data?.some(
-          (location) => location.num_households_visited
-        ) && (
+        {assignment.reporting_level == 'location' && (
           <>
             <Box>
               <Typography variant="body1">
-                <Msg id={messageIds.sidebar.progress.header.householdVisits} />
+                <Msg id={messageIds.sidebar.progress.header.visits} />
+              </Typography>
+            </Box>
+            <Box textAlign="right">
+              <Typography variant="h5">{numVisits}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
+                <Msg id={messageIds.sidebar.progress.header.successfulVisits} />
+              </Typography>
+            </Box>
+            <Box textAlign="right">
+              <Typography variant="h5">{numSuccessfulVisits}</Typography>
+            </Box>
+            <Box gridColumn="span 2">
+              <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
+            </Box>
+          </>
+        )}
+
+        {assignment.reporting_level == 'household' && (
+          <>
+            <Box>
+              <Typography variant="body1">
+                <Msg
+                  id={messageIds.sidebar.progress.header.householdsVisited}
+                />
               </Typography>
             </Box>
             <Box textAlign="right">
@@ -133,14 +138,12 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
             <Box>
               <Typography variant="body1">
                 <Msg
-                  id={
-                    messageIds.sidebar.progress.header.successfulHouseholdVisits
-                  }
+                  id={messageIds.sidebar.progress.header.householdsSuccessful}
                 />
               </Typography>
             </Box>
             <Box textAlign="right">
-              <Typography variant="h5">{numSuccessfulHouseholds}</Typography>
+              <Typography variant="h5">{numHouseholdsSuccessful}</Typography>
             </Box>
             <Box gridColumn="span 2">
               <Divider sx={(theme) => ({ bgcolor: theme.palette.grey[100] })} />
