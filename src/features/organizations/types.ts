@@ -11,6 +11,7 @@ export interface TreeItemData {
 export type SuborgWithStats = {
   id: number;
   stats: {
+    numAreaAssignments: number;
     numCallAssignments: number;
     numCalls: number;
     numEmails: number;
@@ -20,6 +21,7 @@ export type SuborgWithStats = {
     numPeople: number;
     numSubmissions: number;
     numSurveys: number;
+    numVisits: number;
   };
   title: string;
 };

@@ -17,6 +17,7 @@ import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgWithStats } from '../types';
 import { ZetkinCall } from 'features/call/types';
 import { ZetkinEmailStats } from 'features/emails/types';
+import { ZetkinAreaAssignmentStats } from 'features/areaAssignments/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -52,6 +53,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       surveySubmissions,
       events,
       emails,
+      areaAssignments,
     ] = await Promise.all([
       apiClient.post<
         ZetkinSmartSearchFilterStats[],
@@ -75,6 +77,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       ),
       apiClient.get<ZetkinEvent[]>(`/api/orgs/${suborg.id}/actions?recursive`),
       apiClient.get<ZetkinEmail[]>(`/api/orgs/${suborg.id}/emails?recursive`),
+      apiClient.get<ZetkinEmail[]>(
+        `/api2/orgs/${suborg.id}/area_assignments?recursive`
+      ),
     ]);
 
     let numEventParticipants = 0;
@@ -93,11 +98,20 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       numEmailsSent = numEmailsSent + stats.num_sent;
     }
 
+    let numVisits = 0;
+    for (const areaAssignment of areaAssignments) {
+      const stats = await apiClient.get<ZetkinAreaAssignmentStats>(
+        `/api2/orgs/${suborg.id}/area_assignments/${areaAssignment.id}/stats`
+      );
+      numVisits = numVisits + stats.num_visits;
+    }
+
     const numPeople = suborgStats[0].result;
 
     return {
       id: suborg.id,
       stats: {
+        numAreaAssignments: areaAssignments.length,
         numCallAssignments: callAssignments.length,
         numCalls: calls.length,
         numEmails: emails.length,
@@ -107,6 +121,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         numPeople,
         numSubmissions: surveySubmissions.length,
         numSurveys: surveys.length,
+        numVisits,
       },
       title: suborg.title,
     };
