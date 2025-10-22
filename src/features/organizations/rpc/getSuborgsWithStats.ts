@@ -4,6 +4,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinCallAssignment,
+  ZetkinEmail,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinSmartSearchFilter,
@@ -15,6 +16,7 @@ import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgWithStats } from '../types';
 import { ZetkinCall } from 'features/call/types';
+import { ZetkinEmailStats } from 'features/emails/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -49,6 +51,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       surveys,
       surveySubmissions,
       events,
+      emails,
     ] = await Promise.all([
       apiClient.post<
         ZetkinSmartSearchFilterStats[],
@@ -71,6 +74,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         `/api/orgs/${suborg.id}/survey_submissions?recursive`
       ),
       apiClient.get<ZetkinEvent[]>(`/api/orgs/${suborg.id}/actions?recursive`),
+      apiClient.get<ZetkinEmail[]>(`/api/orgs/${suborg.id}/emails?recursive`),
     ]);
 
     let numEventParticipants = 0;
@@ -81,6 +85,14 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       numEventParticipants = numEventParticipants + participants.length;
     });
 
+    let numEmailsSent = 0;
+    emails.map(async (email) => {
+      const stats = await apiClient.get<ZetkinEmailStats>(
+        `/api/orgs/${suborg.id}/emails/${email.id}/stats`
+      );
+      numEmailsSent = numEmailsSent + stats.num_sent;
+    });
+
     const numPeople = suborgStats[0].result;
 
     return {
@@ -88,6 +100,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       stats: {
         numCallAssignments: callAssignments.length,
         numCalls: calls.length,
+        numEmails: emails.length,
+        numEmailsSent,
         numEventParticipants,
         numEvents: events.length,
         numPeople,
