@@ -78,20 +78,20 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     ]);
 
     let numEventParticipants = 0;
-    events.map(async (event) => {
+    for (const event of events) {
       const participants = await apiClient.get<ZetkinEventParticipant[]>(
         `/api/orgs/${suborg.id}/actions/${event.id}/participants`
       );
       numEventParticipants = numEventParticipants + participants.length;
-    });
+    }
 
     let numEmailsSent = 0;
-    emails.map(async (email) => {
+    for (const email of emails) {
       const stats = await apiClient.get<ZetkinEmailStats>(
         `/api/orgs/${suborg.id}/emails/${email.id}/stats`
       );
       numEmailsSent = numEmailsSent + stats.num_sent;
-    });
+    }
 
     const numPeople = suborgStats[0].result;
 
