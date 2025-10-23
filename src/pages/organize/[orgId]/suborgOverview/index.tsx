@@ -139,7 +139,18 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
           <Msg id={messageIds.overview.suborgs.title} />
         </title>
       </Head>
-      <Suspense fallback={<CircularProgress />}>
+      <Suspense
+        fallback={
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        }
+      >
         <SuborgsList orgId={parsedOrgId} />
       </Suspense>
     </>
