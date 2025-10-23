@@ -228,7 +228,10 @@ const ZUISection: FC<SectionProps> = (props) => {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor: theme.palette.common.white,
+        backgroundColor:
+          theme.palette.mode === 'dark'
+            ? theme.palette.grey[800]
+            : theme.palette.common.white,
         border: borders ? `0.063rem solid ${theme.palette.dividers.main}` : '',
         borderRadius: borders ? '0.25rem' : '',
         display: 'flex',

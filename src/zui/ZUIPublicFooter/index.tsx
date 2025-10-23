@@ -1,14 +1,15 @@
 import { FC, useMemo } from 'react';
-import { Box, List, ListItem, Typography } from '@mui/material';
+import { Box, List, ListItem, Typography, useTheme } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import messageIds from 'zui/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
-import oldTheme from 'theme';
 import { useEnv } from 'core/hooks';
 
 const ZUIPublicFooter: FC = () => {
+  const theme = useTheme();
+
   const env = useEnv();
   const messages = useMessages(messageIds);
 
@@ -44,7 +45,7 @@ const ZUIPublicFooter: FC = () => {
         <Box flex={1} maxWidth="sm" width="100%">
           <Box pb={4}>
             <Typography
-              color={oldTheme.palette.secondary.light}
+              color={theme.palette.secondary.light}
               component="p"
               fontSize="1rem"
               textAlign="center"
@@ -55,7 +56,7 @@ const ZUIPublicFooter: FC = () => {
           {typeof env.vars.INSTANCE_OWNER_NAME === 'string' && (
             <Box pb={4}>
               <Typography
-                color={oldTheme.palette.secondary.light}
+                color={theme.palette.secondary.light}
                 component="p"
                 fontSize="1rem"
                 textAlign="center"
@@ -80,7 +81,7 @@ const ZUIPublicFooter: FC = () => {
           </Box>
           <List
             sx={{
-              columnGap: oldTheme.spacing(1),
+              columnGap: theme.spacing(1),
               display: 'flex',
               flexDirection: 'row',
               flexWrap: 'wrap',
@@ -92,10 +93,10 @@ const ZUIPublicFooter: FC = () => {
                 key={link.href}
                 sx={{
                   '&:not(:last-child)': {
-                    borderRightColor: oldTheme.palette.divider,
+                    borderRightColor: theme.palette.divider,
                     borderRightStyle: 'solid',
                     borderRightWidth: 1,
-                    paddingRight: oldTheme.spacing(1),
+                    paddingRight: theme.spacing(1),
                   },
                   padding: 0,
                   width: 'inherit',
@@ -103,7 +104,7 @@ const ZUIPublicFooter: FC = () => {
               >
                 <Link
                   href={link.href}
-                  style={{ color: oldTheme.palette.secondary.light }}
+                  style={{ color: theme.palette.secondary.light }}
                   target="_blank"
                 >
                   {link.text}

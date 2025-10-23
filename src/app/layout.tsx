@@ -1,5 +1,5 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
@@ -26,8 +26,15 @@ export default async function RootLayout({
     user = null;
   }
 
+  const theme = cookies().get('theme')?.value || 'light';
+
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={{
+        backgroundColor: theme === 'dark' ? '#151515' : undefined,
+      }}
+    >
       <body>
         <AppRouterCacheProvider>
           <ClientContext
@@ -39,6 +46,7 @@ export default async function RootLayout({
               INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
               INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
               MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
+              MAPLIBRE_STYLE_DARK: process.env.MAPLIBRE_STYLE_DARK,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
               TILESERVER: process.env.TILESERVER,
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,

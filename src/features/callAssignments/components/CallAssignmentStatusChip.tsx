@@ -5,13 +5,12 @@ import { Box } from '@mui/material';
 import { CallAssignmentState } from '../hooks/useCallAssignmentState';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import oldTheme from 'theme';
 
 interface CallAssignmentStatusChipProps {
   state: CallAssignmentState;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   chip: {
     alignItems: 'center',
     borderRadius: '2em',
@@ -22,16 +21,16 @@ const useStyles = makeStyles(() => ({
     padding: '0.5em 0.7em',
   },
   closed: {
-    backgroundColor: oldTheme.palette.error.main,
+    backgroundColor: theme.palette.error.main,
   },
   draft: {
-    backgroundColor: oldTheme.palette.grey[500],
+    backgroundColor: theme.palette.grey[500],
   },
   open: {
-    backgroundColor: oldTheme.palette.success.main,
+    backgroundColor: theme.palette.success.main,
   },
   scheduled: {
-    backgroundColor: oldTheme.palette.statusColors.blue,
+    backgroundColor: theme.palette.statusColors.blue,
   },
 }));
 

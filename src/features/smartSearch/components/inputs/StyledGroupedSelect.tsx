@@ -8,18 +8,16 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import { FC, ReactElement } from 'react';
 
-import oldTheme from 'theme';
-
 interface StyleProps {
   minWidth?: string;
 }
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   MuiInput: {
-    fontSize: oldTheme.typography.h4.fontSize,
+    fontSize: theme.typography.h4.fontSize,
     padding: 0,
   },
   MuiSelect: {
-    fontSize: oldTheme.typography.h4.fontSize,
+    fontSize: theme.typography.h4.fontSize,
     minWidth: ({ minWidth }) => minWidth,
     padding: 0,
   },

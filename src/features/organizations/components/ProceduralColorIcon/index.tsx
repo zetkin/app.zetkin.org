@@ -4,13 +4,11 @@ import { makeStyles } from '@mui/styles';
 import randomSeed from 'random-seed';
 import { Box, Theme } from '@mui/material';
 
-import theme from '../../../../theme';
-
 interface StyleProps {
   rgbAverage: number;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   icon: {
     color: ({ rgbAverage }) =>
       rgbAverage < 180 ? 'white' : theme.palette.grey[800],

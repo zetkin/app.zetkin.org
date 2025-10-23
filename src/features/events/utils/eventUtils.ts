@@ -1,16 +1,17 @@
-import oldTheme from 'theme';
+import { Theme } from '@mui/material';
 
 export function getParticipantsStatusColor(
   reqParticipants: number,
-  availParticipants: number
+  availParticipants: number,
+  theme: Theme
 ): string {
   const diff = reqParticipants - availParticipants;
 
   if (diff <= 0) {
-    return oldTheme.palette.statusColors.green;
+    return theme.palette.statusColors.green;
   } else if (diff === 1) {
-    return oldTheme.palette.statusColors.orange;
+    return theme.palette.statusColors.orange;
   } else {
-    return oldTheme.palette.statusColors.red;
+    return theme.palette.statusColors.red;
   }
 }

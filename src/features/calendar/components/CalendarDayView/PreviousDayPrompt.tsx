@@ -1,11 +1,10 @@
 import { KeyboardArrowUp } from '@mui/icons-material';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 
 import DateLabel from './Day/DateLabel';
 import { DaySummary } from '../utils';
 import messageIds from 'features/calendar/l10n/messageIds';
 import { Msg } from 'core/i18n';
-import oldTheme from 'theme';
 
 const PreviousDayPrompt = ({
   date,
@@ -16,6 +15,8 @@ const PreviousDayPrompt = ({
   daySummary: DaySummary;
   onClickShowMore: () => void;
 }) => {
+  const theme = useTheme();
+
   return (
     <Box alignItems="center" display="flex" padding={1}>
       <DateLabel date={date} />
@@ -26,7 +27,7 @@ const PreviousDayPrompt = ({
         gap={1}
         justifyContent="center"
       >
-        <Typography color={oldTheme.palette.secondary.main}>
+        <Typography color={theme.palette.secondary.main}>
           <Msg
             id={messageIds.lastDayWithEvents}
             values={{ numEvents: daySummary.events.length }}

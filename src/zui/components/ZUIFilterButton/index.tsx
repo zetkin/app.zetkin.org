@@ -68,7 +68,11 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
         backgroundColor: active ? theme.palette.primary.main : 'transparent',
         border: `0.063rem solid ${theme.palette.primary.main}`,
         borderRadius: '2rem',
-        color: active ? theme.palette.common.white : theme.palette.text.primary,
+        color: active
+          ? theme.palette.mode === 'dark'
+            ? theme.palette.common.black
+            : theme.palette.common.white
+          : theme.palette.text.primary,
         cursor: 'pointer',
         display: 'inline-flex',
         flexShrink: 0,

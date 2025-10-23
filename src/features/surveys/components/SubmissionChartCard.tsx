@@ -151,6 +151,8 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
 };
 
 const PlaceholderVisual: FC = () => {
+  const theme = useTheme();
+
   return (
     <svg
       fill="none"
@@ -161,7 +163,7 @@ const PlaceholderVisual: FC = () => {
     >
       <path
         d="M3 165.5C3 165.5 185.485 -117.14 424.243 61.946C663 241.032 849 61.7515 849 61.7515"
-        stroke="black"
+        stroke={theme.palette.mode === 'dark' ? 'white' : 'black'}
         strokeDasharray="10 30"
         strokeOpacity="0.15"
         strokeWidth="5"

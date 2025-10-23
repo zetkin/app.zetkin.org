@@ -4,13 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import makeStyles from '@mui/styles/makeStyles';
 
-import oldTheme from 'theme';
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   fab: {
-    bottom: oldTheme.spacing(10),
+    bottom: theme.spacing(10),
     position: 'fixed',
-    right: oldTheme.spacing(4),
+    right: theme.spacing(4),
   },
 }));
 

@@ -1,7 +1,6 @@
-import { Box, Collapse, Typography } from '@mui/material';
+import { Box, Collapse, Typography, useTheme } from '@mui/material';
 import React, { FormEvent, useEffect, useState } from 'react';
 
-import oldTheme from 'theme';
 import { useMessages } from 'core/i18n';
 import { ZetkinNoteBody } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from '../ZUISubmitCancelButtons';
@@ -23,6 +22,8 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   disabled,
   onSubmit,
 }) => {
+  const theme = useTheme();
+
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const [clear, setClear] = useState<number>(0);
@@ -72,7 +73,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
         />
         {showPostRequestError && (
           <Box>
-            <Typography color={oldTheme.palette.error.main}>
+            <Typography color={theme.palette.error.main}>
               {messages.fileUploadErrorMessage()}
             </Typography>
           </Box>

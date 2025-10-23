@@ -73,8 +73,10 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       store={store}
       user={pageProps.user}
     >
-      <CssBaseline />
-      <NoSsr>{getLayout(<Component {...restProps} />, restProps)}</NoSsr>
+      <NoSsr>
+        <CssBaseline />
+        {getLayout(<Component {...restProps} />, restProps)}
+      </NoSsr>
     </Providers>
   );
 }

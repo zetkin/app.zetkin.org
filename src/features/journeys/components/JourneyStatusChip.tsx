@@ -4,16 +4,15 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
-import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   closedChip: {
-    backgroundColor: oldTheme.palette.error.main,
+    backgroundColor: theme.palette.error.main,
     color: 'white',
     fontWeight: 'bold',
   },
   openChip: {
-    backgroundColor: oldTheme.palette.success.main,
+    backgroundColor: theme.palette.success.main,
     color: 'white',
     fontWeight: 'bold',
   },

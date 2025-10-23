@@ -7,11 +7,10 @@ import {
   PhoneInTalk,
 } from '@mui/icons-material';
 
-import { CHOICES } from './types';
-import { ColumnChoice } from './types';
+import { CHOICES, ColumnChoice } from './types';
 import LocalQueryConfig from '../LocalQueryConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
-import oldTheme from 'theme';
+import theme from 'zui/theme';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   CallHistoryFilterConfig,
@@ -20,7 +19,7 @@ import {
 } from 'features/smartSearch/components/types';
 import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 
-const { blue } = oldTheme.palette.viewColumnGallery;
+const { blue } = theme.palette.viewColumnGallery;
 
 export const customQuery: ColumnChoice = {
   color: blue,

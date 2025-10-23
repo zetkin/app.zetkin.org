@@ -1,7 +1,6 @@
 import React from 'react';
-import { Avatar, AvatarGroup, Box } from '@mui/material';
+import { Avatar, AvatarGroup, Box, useTheme } from '@mui/material';
 
-import oldTheme from 'theme';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import {
   ZetkinEventParticipant,
@@ -17,6 +16,7 @@ const ParticipantAvatars = ({
   participants: list,
   orgId,
 }: ParticipantAvatarsProps) => {
+  const theme = useTheme();
   return (
     <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5}>
       <AvatarGroup
@@ -25,10 +25,10 @@ const ParticipantAvatars = ({
           /* surplus chip styling */
           '& .MuiAvatarGroup-avatar': {
             backgroundColor: 'inherit',
-            borderColor: oldTheme.palette.grey[400],
+            borderColor: theme.palette.grey[400],
             borderRadius: '1.2em',
             borderWidth: '1px',
-            color: oldTheme.palette.text.primary,
+            color: theme.palette.text.primary,
             fontSize: '0.7em',
             height: 20,
             margin: 0.1,

@@ -1,14 +1,19 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { Box, CircularProgress, Pagination, Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Pagination,
+  Typography,
+  useTheme,
+} from '@mui/material';
 
 import DuplicateCard from 'features/duplicates/components/DuplicateCard';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
-import oldTheme from 'theme';
 import useDuplicates from 'features/duplicates/hooks/useDuplicates';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
@@ -21,6 +26,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(async () => {
 });
 
 const DuplicatesPage: PageWithLayout = () => {
+  const theme = useTheme();
+
   const onServer = useServerSide();
   const { orgId } = useNumericRouteParams();
   const list = useDuplicates(orgId);
@@ -81,7 +88,7 @@ const DuplicatesPage: PageWithLayout = () => {
           }}
         >
           <Typography
-            color={oldTheme.palette.grey[500]}
+            color={theme.palette.grey[500]}
             sx={{ mb: 2, textTransform: 'uppercase' }}
             variant="subtitle2"
           >

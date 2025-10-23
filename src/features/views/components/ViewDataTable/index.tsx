@@ -14,7 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useEffect, useState } from 'react';
-import { Box, Link, useTheme } from '@mui/material';
+import { Box, Link } from '@mui/material';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
@@ -59,7 +59,6 @@ import {
 import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
-import oldTheme from 'theme';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -88,10 +87,10 @@ declare module '@mui/x-data-grid-pro' {
   }
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
     '0%': {
-      backgroundColor: oldTheme.palette.success.main,
+      backgroundColor: theme.palette.success.main,
     },
     '100%': {
       backgroundColor: 'transparent',
@@ -143,7 +142,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   rowSelection: selectionModel,
   view,
 }) => {
-  const theme = useTheme();
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const gridApiRef = useGridApiRef();
@@ -498,7 +496,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
         }
         localeText={{
-          ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
           noRowsLabel: messages.empty.notice[contentSource](),
         }}
         onCellEditStart={(params, event) => {

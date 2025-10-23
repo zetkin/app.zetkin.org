@@ -20,7 +20,6 @@ import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
-import oldTheme from 'theme';
 
 const iconAndMessage = (
   intl: IntlShape,
@@ -119,10 +118,10 @@ interface ZUIDateRangePickerProps {
 interface StyleProps {
   readonly: boolean | undefined;
 }
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   label: {
     '&:hover': {
-      borderBottomColor: lighten(oldTheme.palette.primary.main, 0.65),
+      borderBottomColor: lighten(theme.palette.primary.main, 0.65),
       borderBottomStyle: 'dotted',
       borderBottomWidth: ({ readonly }) => (!readonly ? 2 : 0),
     },

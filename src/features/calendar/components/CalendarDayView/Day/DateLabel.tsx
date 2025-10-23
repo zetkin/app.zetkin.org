@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
-import { Box, Typography } from '@mui/material';
-
-import oldTheme from 'theme';
+import { Box, Typography, useTheme } from '@mui/material';
 
 const DateLabel = ({ date }: { date: Date }) => {
+  const theme = useTheme();
+
   const isToday = dayjs(date).isSame(dayjs(), 'day');
   const isThePast = dayjs(date).isBefore(dayjs(), 'day');
   return (
@@ -15,14 +15,14 @@ const DateLabel = ({ date }: { date: Date }) => {
         justifyContent="center"
         sx={{
           aspectRatio: '1',
-          backgroundColor: isToday ? oldTheme.palette.primary.main : undefined,
+          backgroundColor: isToday ? theme.palette.primary.main : undefined,
           borderRadius: '50%',
           color: isToday
             ? // White colour if today
               'white'
             : isThePast
             ? // Grey if it's the past
-              oldTheme.palette.secondary.main
+              theme.palette.secondary.main
             : // Default colour if it's the future
               'inherit',
           minHeight: '40px',

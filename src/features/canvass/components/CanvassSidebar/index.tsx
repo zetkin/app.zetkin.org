@@ -64,7 +64,10 @@ const CanvassSidebar: FC<Props> = ({ assignment, selectedArea }) => {
   return (
     <Box
       sx={(theme) => ({
-        background: `linear-gradient(90deg, ${theme.palette.grey[300]} 0, white 2rem)`,
+        background:
+          theme.palette.mode === 'dark'
+            ? theme.palette.grey[800]
+            : `linear-gradient(90deg, ${theme.palette.grey[300]} 0, white 2rem)`,
         display: 'flex',
         flexDirection: 'column',
         gap: 2,

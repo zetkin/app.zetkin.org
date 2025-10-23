@@ -1,4 +1,4 @@
-import { Box, Fade, Modal, Slide } from '@mui/material';
+import { Box, Fade, Modal, Slide, useTheme } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 import ModalBackground from '../ZUIModal/ModalBackground';
@@ -10,6 +10,8 @@ type Props = {
 };
 
 const Drawer: FC<Props> = ({ children, onClose, open }) => {
+  const theme = useTheme();
+
   return (
     <Modal
       disableRestoreFocus
@@ -21,7 +23,10 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
             <Box
               onClick={onClose}
               sx={{
-                backgroundColor: 'rgba(255,255,255,0.5)',
+                backgroundColor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(0, 0, 0, 0.5)'
+                    : 'rgba(255,255,255,0.5)',
                 height: '100%',
                 width: '100%',
               }}
@@ -35,7 +40,8 @@ const Drawer: FC<Props> = ({ children, onClose, open }) => {
       <Slide direction="up" in={open} timeout={300}>
         <Box
           sx={{
-            backgroundColor: 'white',
+            backgroundColor:
+              theme.palette.mode === 'dark' ? theme.palette.grey[900] : 'white',
             bottom: 0,
             display: 'flex',
             flexDirection: 'column',

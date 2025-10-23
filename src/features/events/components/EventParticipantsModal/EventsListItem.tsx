@@ -15,25 +15,24 @@ import { useMessages } from 'core/i18n';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
-import oldTheme from 'theme';
 
 interface StyleProps {
   color: STATUS_COLORS;
   selected: boolean;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     alignItems: 'center',
     backgroundColor: ({ selected }) =>
-      selected ? oldTheme.palette.grey[100] : 'transparent',
+      selected ? theme.palette.grey[100] : 'transparent',
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'space-between',
     padding: '1.0em 0.5em',
   },
   dot: {
-    backgroundColor: ({ color }) => oldTheme.palette.statusColors[color],
+    backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
     flexShrink: 0,
     height: '10px',
@@ -53,7 +52,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     flex: '1 0',
   },
   primaryIcon: {
-    color: oldTheme.palette.grey[500],
+    color: theme.palette.grey[500],
     fontSize: '28px',
   },
 }));

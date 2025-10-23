@@ -1,10 +1,9 @@
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
-import { lighten, Box } from '@mui/system';
+import { Box, lighten } from '@mui/system';
 
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
-import theme from '../../theme';
 
 export interface ZUIRatingChartProps {
   data: number[];
@@ -13,7 +12,7 @@ export interface ZUIRatingChartProps {
   visualizationHeight?: number;
 }
 
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles((theme) => {
   return {
     root: {
       '& .average .averageRating': {

@@ -1,8 +1,8 @@
 import { Layer, Source } from '@vis.gl/react-maplibre';
 import { FC, useMemo } from 'react';
+import { useTheme } from '@mui/material';
 
 import { Zetkin2Area, Zetkin2AreaLine } from 'features/areas/types';
-import oldTheme from 'theme';
 
 type Props = {
   draggingPoints: Zetkin2AreaLine | null;
@@ -15,6 +15,8 @@ const SelectedArea: FC<Props> = ({
   editingArea,
   selectedArea,
 }) => {
+  const theme = useTheme();
+
   const selectedAreaGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     if (draggingPoints) {
       return {
@@ -36,7 +38,7 @@ const SelectedArea: FC<Props> = ({
       <Layer
         id="selectedOutlines"
         paint={{
-          'line-color': oldTheme.palette.primary.main,
+          'line-color': theme.palette.primary.main,
           'line-width': 3,
         }}
         type="line"
@@ -44,7 +46,7 @@ const SelectedArea: FC<Props> = ({
       <Layer
         id="selectedArea"
         paint={{
-          'fill-color': oldTheme.palette.primary.main,
+          'fill-color': theme.palette.primary.main,
           'fill-opacity': 0.6,
         }}
         type="fill"
@@ -53,7 +55,7 @@ const SelectedArea: FC<Props> = ({
         <Layer
           id="editPoints"
           paint={{
-            'circle-color': oldTheme.palette.primary.main,
+            'circle-color': theme.palette.primary.main,
             'circle-radius': 8,
           }}
           type="circle"

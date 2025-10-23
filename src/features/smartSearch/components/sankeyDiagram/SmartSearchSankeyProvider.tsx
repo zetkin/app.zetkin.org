@@ -1,7 +1,7 @@
 import { createContext, FC, ReactNode, useContext } from 'react';
+import { useTheme } from '@mui/material';
 
 import makeSankeySegments from './makeSankeySegments';
-import oldTheme from 'theme';
 import useSmartSearchStats from 'features/smartSearch/hooks/useSmartSearchStats';
 import { ZetkinSmartSearchFilter } from '../types';
 import { SankeyConfig, SankeySegment } from './types';
@@ -29,12 +29,22 @@ const SmartSearchSankeyProvider: FC<SmartSearchSankeyProviderProps> = ({
   arrowDepth = 10,
   arrowWidth = 20,
   children,
-  color = oldTheme.palette.grey[300],
+  color,
   diagWidth = 200,
-  hoverColor = oldTheme.palette.grey[400],
+  hoverColor,
   margin = 30,
   filters,
 }) => {
+  const theme = useTheme();
+
+  if (hoverColor === undefined) {
+    hoverColor = theme.palette.grey[400];
+  }
+
+  if (color === undefined) {
+    color = theme.palette.grey[300];
+  }
+
   const { orgId } = useNumericRouteParams();
   const stats = useSmartSearchStats(filters);
   const segments = stats ? makeSankeySegments(stats, orgId) : [];

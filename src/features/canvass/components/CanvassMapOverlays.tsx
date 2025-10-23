@@ -73,7 +73,8 @@ const CanvassMapOverlays: FC<Props> = ({
       )}
       <Box
         sx={(theme) => ({
-          bgcolor: 'white',
+          bgcolor:
+            theme.palette.mode === 'dark' ? theme.palette.grey[800] : 'white',
           bottom: 0,
           boxShadow: theme.shadows[20],
           left: 0,

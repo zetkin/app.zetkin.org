@@ -13,9 +13,8 @@ import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
 import messageIds from '../l10n/messageIds';
-import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   divider: {
     marginLeft: 72,
   },
@@ -23,11 +22,11 @@ const useStyles = makeStyles(() => ({
     '& span': {
       fontWeight: 'bold',
     },
-    color: oldTheme.palette.primary.main,
+    color: theme.palette.primary.main,
     textTransform: 'uppercase',
   },
   title: {
-    marginBottom: oldTheme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
 }));
 

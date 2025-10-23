@@ -90,7 +90,11 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
         width="50%"
       >
         <Box
-          bgcolor={theme.palette.grey[200]}
+          bgcolor={
+            theme.palette.mode === 'dark'
+              ? theme.palette.grey[700]
+              : theme.palette.grey[200]
+          }
           padding={1}
           sx={{ borderRadius: 2 }}
         >

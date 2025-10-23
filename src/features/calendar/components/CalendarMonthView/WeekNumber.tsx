@@ -1,6 +1,4 @@
-import { Box, Typography } from '@mui/material';
-
-import oldTheme from 'theme';
+import { Box, Typography, useTheme } from '@mui/material';
 
 type CalendarWeekNumberProps = {
   onClick: () => void;
@@ -8,6 +6,8 @@ type CalendarWeekNumberProps = {
 };
 
 const WeekNumber = ({ onClick, weekNr }: CalendarWeekNumberProps) => {
+  const theme = useTheme();
+
   return (
     <Box
       marginTop="2px"
@@ -17,7 +17,7 @@ const WeekNumber = ({ onClick, weekNr }: CalendarWeekNumberProps) => {
       }}
     >
       <Typography
-        color={oldTheme.palette.secondary.light}
+        color={theme.palette.secondary.light}
         fontStyle="bold"
         sx={{ fontWeight: 800 }}
         variant="body2"

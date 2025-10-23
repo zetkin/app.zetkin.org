@@ -1,4 +1,4 @@
-import { Box, SxProps } from '@mui/material';
+import { Box, SxProps, useTheme } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
 import { FC, PropsWithChildren, useMemo, useState } from 'react';
@@ -111,6 +111,8 @@ export const ActivistPortalEventMap: FC<
     };
   }, [events, locationFilter]);
 
+  const theme = useTheme();
+
   return (
     <Box
       sx={{ flexGrow: 1, height: '100px', position: 'relative', ...(sx ?? {}) }}
@@ -137,7 +139,11 @@ export const ActivistPortalEventMap: FC<
           bounds,
           fitBoundsOptions: { padding: 200 },
         }}
-        mapStyle={env.vars.MAPLIBRE_STYLE}
+        mapStyle={
+          theme.palette.mode === 'dark'
+            ? env.vars.MAPLIBRE_STYLE_DARK
+            : env.vars.MAPLIBRE_STYLE
+        }
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}

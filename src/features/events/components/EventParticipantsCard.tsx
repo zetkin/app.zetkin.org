@@ -10,13 +10,13 @@ import {
   Popper,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { FC, useState } from 'react';
 
 import getEventUrl from '../utils/getEventUrl';
 import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
-import oldTheme from 'theme';
 import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
@@ -34,6 +34,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   eventId,
   orgId,
 }) => {
+  const theme = useTheme();
+
   const event = useEvent(orgId, eventId)?.data;
   const { pendingSignUps, participantsFuture } = useEventParticipants(
     orgId,
@@ -71,7 +73,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <ZUINumberChip
               color={getParticipantsStatusColor(
                 reqParticipants,
-                availParticipants
+                availParticipants,
+                theme
               )}
               outlined={true}
               size="sm"
@@ -203,7 +206,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
           >
             <Link underline="none">
               <Typography
-                color={oldTheme.palette.info.main}
+                color={theme.palette.info.main}
                 component="h6"
                 variant="subtitle1"
               >

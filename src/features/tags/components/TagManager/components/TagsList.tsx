@@ -7,18 +7,17 @@ import messageIds from '../../../l10n/messageIds';
 import TagChip from './TagChip';
 import { useMessages } from 'core/i18n';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
-import oldTheme from 'theme';
 
 interface StyleProps {
   clickable: boolean;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   chip: {
-    borderColor: oldTheme.palette.grey[500],
+    borderColor: theme.palette.grey[500],
     borderRadius: '1em',
     borderWidth: '1px',
-    color: oldTheme.palette.text.secondary,
+    color: theme.palette.text.secondary,
     cursor: ({ clickable }) => (clickable ? 'pointer' : 'default'),
     display: 'flex',
     lineHeight: 'normal',

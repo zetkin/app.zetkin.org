@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, Fragment, Suspense, useMemo, useState } from 'react';
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import {
   CalendarMonth,
   EmailOutlined,
@@ -178,7 +178,11 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 )}
                 {hasInfoText && (
                   <Box
-                    bgcolor="white"
+                    bgcolor={(theme) =>
+                      theme.palette.mode === 'dark'
+                        ? theme.palette.grey[900]
+                        : 'white'
+                    }
                     borderRadius={2}
                     minHeight={isFullScreen ? 400 : ''}
                     padding={2}
@@ -195,7 +199,11 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 )}
               </Box>
               <Box
-                bgcolor="white"
+                bgcolor={(theme) =>
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.grey[900]
+                    : 'white'
+                }
                 borderRadius={2}
                 display="flex"
                 flexDirection="column"
@@ -322,6 +330,7 @@ const DateAndLocation: FC<{
     () => new Date(removeOffset(event.end_time)),
     [event]
   );
+  const theme = useTheme();
 
   return (
     <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
@@ -364,7 +373,11 @@ const DateAndLocation: FC<{
               longitude: event.location.lng,
               zoom: 14,
             }}
-            mapStyle={env.vars.MAPLIBRE_STYLE}
+            mapStyle={
+              theme.palette.mode === 'dark'
+                ? env.vars.MAPLIBRE_STYLE_DARK
+                : env.vars.MAPLIBRE_STYLE
+            }
             onClick={(ev) => {
               ev.target.panTo(ev.lngLat, { animate: true });
             }}

@@ -3,7 +3,6 @@ import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Box, Button, Typography } from '@mui/material';
 
-import oldTheme from 'theme';
 import { ZetkinJoinForm } from '../types';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useApiClient } from 'core/hooks';
@@ -14,7 +13,7 @@ import messageIds from '../l10n/messageIds';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import useJoinFormMutations from '../hooks/useJoinFormMutations';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     alignItems: 'center',
     cursor: 'pointer',
@@ -29,7 +28,7 @@ const useStyles = makeStyles({
     width: '7em',
   },
   icon: {
-    color: oldTheme.palette.grey[500],
+    color: theme.palette.grey[500],
     fontSize: '28px',
   },
   left: {
@@ -42,7 +41,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     display: 'flex',
   },
-});
+}));
 
 export enum STATUS_COLORS {
   BLUE = 'blue',

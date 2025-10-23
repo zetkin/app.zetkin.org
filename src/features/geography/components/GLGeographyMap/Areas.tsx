@@ -1,14 +1,16 @@
 import { Layer, Source } from '@vis.gl/react-maplibre';
 import { FC, useMemo } from 'react';
+import { useTheme } from '@mui/material';
 
 import { Zetkin2Area } from 'features/areas/types';
-import oldTheme from 'theme';
 
 type Props = {
   areas: Zetkin2Area[];
 };
 
 const Areas: FC<Props> = ({ areas }) => {
+  const theme = useTheme();
+
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     return {
       features: areas.map((area) => ({
@@ -25,7 +27,7 @@ const Areas: FC<Props> = ({ areas }) => {
       <Layer
         id="outlines"
         paint={{
-          'line-color': oldTheme.palette.secondary.main,
+          'line-color': theme.palette.secondary.main,
           'line-width': 2,
         }}
         type="line"
@@ -33,7 +35,7 @@ const Areas: FC<Props> = ({ areas }) => {
       <Layer
         id="areas"
         paint={{
-          'fill-color': oldTheme.palette.secondary.main,
+          'fill-color': theme.palette.secondary.main,
           'fill-opacity': 0.4,
         }}
         type="fill"

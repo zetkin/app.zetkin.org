@@ -17,13 +17,13 @@ import {
   Link,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import messageIds from 'features/events/l10n/messageIds';
-import oldTheme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import useEventLocations from 'features/events/hooks/useEventLocations';
@@ -49,6 +49,7 @@ type EventOverviewCardProps = {
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
+  const theme = useTheme();
   const { updateEvent } = useEventMutations(orgId, data.id);
   const locations = useEventLocations(orgId);
   const { addLocation } = useEventLocationMutations(orgId);
@@ -453,7 +454,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     renderPreview: () => (
                       <Box marginLeft={4}>
                         <Typography
-                          color={oldTheme.palette.text.secondary}
+                          color={theme.palette.text.secondary}
                           variant="subtitle1"
                         >
                           {messages.eventOverviewCard.url().toUpperCase()}
@@ -501,7 +502,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 renderPreview: () => (
                   <Box>
                     <Typography
-                      color={oldTheme.palette.text.secondary}
+                      color={theme.palette.text.secondary}
                       variant="subtitle1"
                     >
                       {messages.eventOverviewCard.description().toUpperCase()}

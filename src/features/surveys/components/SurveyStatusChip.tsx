@@ -5,13 +5,12 @@ import { makeStyles } from '@mui/styles';
 import { Msg } from 'core/i18n';
 import { SurveyState } from '../hooks/useSurveyState';
 import messageIds from '../l10n/messageIds';
-import oldTheme from 'theme';
 
 interface SurveyStatusChipProps {
   state: SurveyState;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   chip: {
     alignItems: 'center',
     borderRadius: '2em',
@@ -22,19 +21,19 @@ const useStyles = makeStyles(() => ({
     padding: '0.5em 0.7em',
   },
   draft: {
-    backgroundColor: oldTheme.palette.grey[500],
+    backgroundColor: theme.palette.grey[500],
   },
   published: {
-    backgroundColor: oldTheme.palette.success.main,
+    backgroundColor: theme.palette.success.main,
   },
   scheduled: {
-    backgroundColor: oldTheme.palette.statusColors.blue,
+    backgroundColor: theme.palette.statusColors.blue,
   },
   spinner: {
     marginLeft: '0.5em',
   },
   unpublished: {
-    backgroundColor: oldTheme.palette.error.main,
+    backgroundColor: theme.palette.error.main,
   },
 }));
 

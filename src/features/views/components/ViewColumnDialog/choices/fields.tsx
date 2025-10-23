@@ -6,7 +6,7 @@ import { ColumnChoice } from './types';
 import DoubleIconCardVisual from '../DoubleIconCardVisual';
 import PersonFieldConfig from '../PersonFieldConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
-import oldTheme from 'theme';
+import theme from 'zui/theme';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -14,7 +14,7 @@ import {
   ZetkinViewColumn,
 } from '../../types';
 
-const { blue, purple } = oldTheme.palette.viewColumnGallery;
+const { blue, purple } = theme.palette.viewColumnGallery;
 
 export const fullName: ColumnChoice = {
   alreadyInView: (columns) => {

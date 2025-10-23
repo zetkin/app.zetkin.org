@@ -163,7 +163,10 @@ const OfficialList: FC<OfficialListProps> = ({ orgId, officialList }) => {
       slots={{
         columnHeaders: () => null,
       }}
-      sx={{ backgroundColor: 'white' }}
+      sx={(theme) => ({
+        backgroundColor:
+          theme.palette.mode === 'dark' ? theme.palette.grey[900] : 'white',
+      })}
     />
   );
 };

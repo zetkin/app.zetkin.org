@@ -1,7 +1,6 @@
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography, useTheme } from '@mui/material';
 import { FC, useContext, useState } from 'react';
 
-import oldTheme from 'theme';
 import PotentialDuplicateModal from './PotentialDuplicateModal';
 import messageIds from '../l10n/messageIds';
 import { PotentialDuplicate } from '../store';
@@ -15,6 +14,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 type DuplicateCardProps = { cluster: PotentialDuplicate };
 
 const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
+  const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -26,7 +26,7 @@ const DuplicateCard: FC<DuplicateCardProps> = ({ cluster }) => {
       <Paper elevation={2} sx={{ mb: 1.5, p: 1.5 }}>
         <Box display={'flex'} flexDirection={'column'} gap={1.5}>
           <Typography
-            color={oldTheme.palette.grey[500]}
+            color={theme.palette.grey[500]}
             sx={{ textTransform: 'uppercase' }}
             variant="subtitle2"
           >

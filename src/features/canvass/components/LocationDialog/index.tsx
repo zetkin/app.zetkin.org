@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import HouseholdVisitPage from './pages/HouseholdVisitPage';
 import EditLocationPage from './pages/EditLocationPage';
@@ -128,12 +128,19 @@ const LocationDialog: FC<LocationDialogProps> = ({
     null | number[]
   >(null);
 
+  const theme = useTheme();
+
   return (
     <Box height="100%">
       {showSparkle && (
         <EncouragingSparkle onComplete={() => setShowSparkle(false)} />
       )}
-      <ZUINavStack bgcolor="white" currentPage={dialogStep}>
+      <ZUINavStack
+        bgcolor={
+          theme.palette.mode === 'dark' ? theme.palette.grey[800] : 'white'
+        }
+        currentPage={dialogStep}
+      >
         <LocationPage
           key="location"
           assignment={assignment}

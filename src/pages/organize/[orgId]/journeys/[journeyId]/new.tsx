@@ -132,7 +132,10 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                   <Chip
                     label={messages.instance.newInstance.draft()}
                     style={{
-                      backgroundColor: theme.palette.grey['300'],
+                      backgroundColor:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.grey['800']
+                          : theme.palette.grey['300'],
                       fontWeight: 'bold',
                     }}
                   />

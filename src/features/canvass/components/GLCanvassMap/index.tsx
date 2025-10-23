@@ -1,12 +1,12 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Layer, LngLatLike, Map, Source } from '@vis.gl/react-maplibre';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { GpsNotFixed } from '@mui/icons-material';
 import {
   ExpressionSpecification,
   LngLatBounds,
-  MapOptions,
   Map as MapType,
+  MapOptions,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -16,7 +16,6 @@ import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
 import MarkerIcon from '../MarkerIcon';
 import useCreateLocation from '../../hooks/useCreateLocation';
-import oldTheme from 'theme';
 import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
@@ -233,6 +232,8 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
   }, [created, locations]);
 
+  const theme = useTheme();
+
   if (!locations.data) {
     return null;
   }
@@ -303,7 +304,11 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         initialViewState={{
           ...initialBounds,
         }}
-        mapStyle={env.vars.MAPLIBRE_STYLE}
+        mapStyle={
+          theme.palette.mode === 'dark'
+            ? env.vars.MAPLIBRE_STYLE_DARK
+            : env.vars.MAPLIBRE_STYLE
+        }
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}
@@ -320,7 +325,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
                   successPercentage,
                   visitPercentage,
                   false,
-                  oldTheme.palette.primary.main
+                  theme.palette.primary.main
                 )
               );
               map.addImage(
@@ -329,7 +334,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
                   successPercentage,
                   visitPercentage,
                   true,
-                  oldTheme.palette.primary.main
+                  theme.palette.primary.main
                 )
               );
               map.addImage(
@@ -337,7 +342,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
                 new ClusterImageRenderer(
                   successPercentage,
                   visitPercentage,
-                  oldTheme.palette.primary.main
+                  theme.palette.primary.main
                 )
               );
             });

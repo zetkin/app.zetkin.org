@@ -27,6 +27,7 @@ export type EnvVars = {
   INSTANCE_OWNER_HREF?: string;
   INSTANCE_OWNER_NAME?: string;
   MAPLIBRE_STYLE?: string;
+  MAPLIBRE_STYLE_DARK?: string;
   MUIX_LICENSE_KEY?: string;
   TILESERVER?: string;
   ZETKIN_APP_DOMAIN?: string;

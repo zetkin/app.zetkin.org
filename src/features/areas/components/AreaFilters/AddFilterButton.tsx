@@ -2,10 +2,9 @@ import { alpha } from '@mui/material/styles';
 import { Add } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-import { MenuItem } from '@mui/material';
+import { MenuItem, useTheme } from '@mui/material';
 import { FC, useState } from 'react';
 
-import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 
@@ -22,6 +21,7 @@ type Props = {
 
 const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const theme = useTheme();
 
   return (
     <div>
@@ -49,8 +49,8 @@ const AddFilterButton: FC<Props> = ({ items, open, onToggle }) => {
               },
               '&:active': {
                 backgroundColor: alpha(
-                  oldTheme.palette.primary.main,
-                  oldTheme.palette.action.selectedOpacity
+                  theme.palette.primary.main,
+                  theme.palette.action.selectedOpacity
                 ),
               },
             },

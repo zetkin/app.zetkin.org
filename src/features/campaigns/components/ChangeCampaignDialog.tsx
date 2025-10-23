@@ -12,11 +12,11 @@ import {
   ListItem,
   TextField,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 
-import oldTheme from 'theme';
 import { useMessages } from 'core/i18n';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from '../../../core/hooks';
@@ -65,13 +65,14 @@ const useStyles = makeStyles(() => ({
 const ChangeCampaignDialog: React.FunctionComponent<
   ChangeCampaignDialogProps
 > = ({ title, errorMessage, open, onCampaignSelected, onClose }) => {
+  const theme = useTheme();
   const { orgId, campId } = useNumericRouteParams();
   const classes = useStyles();
 
   const [error, setError] = useState(false);
   const messages = useMessages(messageIds);
 
-  const fullScreen = useMediaQuery(oldTheme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [campaignFilter, setCampaignFilter] = useState('');
   const [isLoadingCampaign, setIsLoadingCampaign] = useState(0);

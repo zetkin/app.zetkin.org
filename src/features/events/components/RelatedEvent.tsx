@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import NextLink from 'next/link';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 
 import { getParticipantsStatusColor } from 'features/events/utils/eventUtils';
 import messageIds from '../l10n/messageIds';
@@ -16,6 +16,8 @@ interface RelatedEventProps {
 }
 
 const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
+  const theme = useTheme();
+
   const messages = useMessages(messageIds);
   return (
     <Box display="flex" flexDirection="column">
@@ -32,7 +34,8 @@ const RelatedEvent: FC<RelatedEventProps> = ({ event }) => {
         <ZUINumberChip
           color={getParticipantsStatusColor(
             event.num_participants_required,
-            event.num_participants_available
+            event.num_participants_available,
+            theme
           )}
           outlined={true}
           size="sm"
