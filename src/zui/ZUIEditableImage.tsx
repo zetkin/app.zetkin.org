@@ -37,7 +37,10 @@ const ZUIEditableImage: React.FC<
               onClick={() => onFileSelect(null)}
               size="large"
               style={{
-                backgroundColor: 'rgba(255,255,255,0.7)',
+                backgroundColor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(100, 100, 100,0.7)'
+                    : 'rgba(255,255,255,0.7)',
                 marginRight: 10,
               }}
             >
@@ -48,7 +51,10 @@ const ZUIEditableImage: React.FC<
               onClick={() => setSelecting(true)}
               size="large"
               style={{
-                backgroundColor: 'rgba(255,255,255,0.7)',
+                backgroundColor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(100, 100, 100,0.7)'
+                    : 'rgba(255,255,255,0.7)',
               }}
             >
               <Edit />
@@ -67,8 +73,14 @@ const ZUIEditableImage: React.FC<
           onClick={() => setSelecting(true)}
           sx={{
             alignItems: 'center',
-            backgroundColor: theme.palette.grey[100],
-            borderColor: theme.palette.grey[400],
+            backgroundColor:
+              theme.palette.mode === 'dark'
+                ? theme.palette.grey[900]
+                : theme.palette.grey[100],
+            borderColor:
+              theme.palette.mode === 'dark'
+                ? theme.palette.grey[700]
+                : theme.palette.grey[400],
             borderStyle: 'dashed',
             borderWidth: 2,
             cursor: 'pointer',

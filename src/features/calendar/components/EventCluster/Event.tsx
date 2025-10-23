@@ -38,8 +38,14 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
         cancelled || draft
           ? theme.palette.secondary.main
           : theme.palette.primary.main
-      } 4px, white 4px)`,
-    border: `1px solid ${theme.palette.grey[300]}`,
+      } 4px, ${
+        theme.palette.mode === 'dark' ? theme.palette.grey[800] : 'white'
+      } 4px)`,
+    border: `1px solid ${
+      theme.palette.mode === 'dark'
+        ? theme.palette.grey[700]
+        : theme.palette.grey[300]
+    }`,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
     borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),

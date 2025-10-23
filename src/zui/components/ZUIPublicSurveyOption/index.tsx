@@ -9,15 +9,24 @@ const ZUIPublicSurveyOption: FC<FormControlLabelProps> = ({
       {...formControlLabelProps}
       sx={(theme) => ({
         '& .MuiCheckbox-root:hover, .MuiRadio-root:hover': {
-          backgroundColor: theme.palette.grey[100],
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? theme.palette.grey[700]
+              : theme.palette.grey[100],
         },
 
         '&:not(.Mui-checked)': {
           '&, & + .MuiFormControlLabel-label': {
             '&:hover': {
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[700]
+                  : theme.palette.grey[100],
             },
-            backgroundColor: theme.palette.grey[50],
+            backgroundColor:
+              theme.palette.mode === 'dark'
+                ? theme.palette.grey[800]
+                : theme.palette.grey[50],
             borderRadius: '5rem',
           },
         },
@@ -27,9 +36,15 @@ const ZUIPublicSurveyOption: FC<FormControlLabelProps> = ({
         '&:has(.Mui-checked)': {
           '&, & + .MuiFormControlLabel-label': {
             '&:hover': {
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[700]
+                  : theme.palette.grey[100],
             },
-            backgroundColor: theme.palette.grey[200],
+            backgroundColor:
+              theme.palette.mode === 'dark'
+                ? theme.palette.grey[600]
+                : theme.palette.grey[200],
             borderRadius: '5rem',
           },
         },

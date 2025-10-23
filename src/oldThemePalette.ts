@@ -89,7 +89,7 @@ export const oldDarkThemePalette = {
     medium: '#CDB1B999',
   },
   outline: {
-    main: 'rgba(0,0,0,0.12)',
+    main: 'rgba(255,255,255,0.12)',
   },
   primary: {
     main: '#ff5868',

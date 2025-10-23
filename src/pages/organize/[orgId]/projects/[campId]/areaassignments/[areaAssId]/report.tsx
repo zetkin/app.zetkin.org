@@ -18,6 +18,7 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
@@ -29,7 +30,6 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-  Grid,
 } from '@mui/material';
 import { omit } from 'lodash';
 import Head from 'next/head';
@@ -294,7 +294,10 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                 {isReportEditable && (
                   <Card
                     sx={{
-                      backgroundColor: theme.palette.grey[200],
+                      backgroundColor:
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.grey[900]
+                          : theme.palette.grey[200],
                       border: 'none',
                       marginTop: 2,
                       padding: 2,

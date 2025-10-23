@@ -57,7 +57,11 @@ const useStyles = makeStyles((theme) => ({
       borderColor: theme.palette.onSurface.medium,
     },
     background: (props: { active: boolean }) =>
-      props.active ? 'white' : 'transparent',
+      props.active
+        ? theme.palette.mode === 'dark'
+          ? theme.palette.grey[900]
+          : 'white'
+        : 'transparent',
     border: '1.5px solid',
     borderColor: (props: { active: boolean }) =>
       props.active
