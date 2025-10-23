@@ -39,7 +39,11 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
             maxWidth: 960,
           }}
         >
-          <Box bgcolor="white">
+          <Box
+            bgcolor={(theme) =>
+              theme.palette.mode === 'dark' ? theme.palette.grey[900] : 'white'
+            }
+          >
             <ActivistPortalHeader
               subtitle={
                 <Box

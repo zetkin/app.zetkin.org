@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
@@ -11,6 +11,8 @@ import { Msg } from 'core/i18n';
 
 const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
   const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
+  const theme = useTheme();
+
   return (
     <Box
       alignItems="flex-start"
@@ -19,14 +21,22 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
       gap={4}
       padding={1}
       sx={{
-        backgroundColor: '#eeeeee',
+        backgroundColor:
+          theme.palette.mode === 'dark' ? theme.palette.grey[900] : '#eeeeee',
       }}
     >
       <Box display="flex" flexDirection="column" width={'200px'}>
         <DateLabel date={date} />
         {dstChange !== undefined && (
           <Box padding="8px 12px">
-            <Typography color={oldTheme.palette.grey[600]} variant="body2">
+            <Typography
+              color={
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[800]
+                  : oldTheme.palette.grey[600]
+              }
+              variant="body2"
+            >
               <Msg
                 id={
                   dstChange === 'summertime'

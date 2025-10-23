@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
 import { Close, Create, Save } from '@mui/icons-material';
 import Map from '@vis.gl/react-maplibre';
 import { FC, useMemo, useState } from 'react';
@@ -28,6 +28,7 @@ type Props = {
 
 const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
   const env = useEnv();
+  const theme = useTheme();
   const [map, setMap] = useState<MapType | null>(null);
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({ areas, map });
@@ -127,7 +128,11 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
           <Map
             ref={(map) => setMap(map?.getMap() ?? null)}
             initialViewState={{ bounds }}
-            mapStyle={env.vars.MAPLIBRE_STYLE}
+            mapStyle={
+              theme.palette.mode === 'dark'
+                ? env.vars.MAPLIBRE_STYLE_DARK
+                : env.vars.MAPLIBRE_STYLE
+            }
             RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
           >
             <Areas areas={areasExceptSelected} />

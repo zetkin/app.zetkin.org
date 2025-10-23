@@ -140,7 +140,10 @@ const ZUIItemCard: FC<ItemCard> = (props) => {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor: theme.palette.common.white,
+        backgroundColor:
+          theme.palette.mode === 'dark'
+            ? theme.palette.grey[800]
+            : theme.palette.common.white,
         border: `0.063rem solid ${theme.palette.dividers.main}`,
         borderRadius: '0.25rem',
         overflow: 'hidden',

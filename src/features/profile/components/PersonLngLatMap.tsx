@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box, BoxProps } from '@mui/material';
+import { Box, BoxProps, useTheme } from '@mui/material';
 import Map, { Marker } from '@vis.gl/react-maplibre';
 import { LngLatBounds, Map as MapType } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -41,6 +41,7 @@ const PersonLngLatMap: FC<Props> = ({
 }) => {
   const env = useEnv();
   const [map, setMap] = useState<MapType | null>(null);
+  const theme = useTheme();
 
   const lngLatFields = customFields.filter(
     (field) => field.type == CUSTOM_FIELD_TYPE.LNGLAT
@@ -103,7 +104,11 @@ const PersonLngLatMap: FC<Props> = ({
           longitude: bounds?.getCenter().lng,
           zoom: 12,
         }}
-        mapStyle={env.vars.MAPLIBRE_STYLE}
+        mapStyle={
+          theme.palette.mode === 'dark'
+            ? env.vars.MAPLIBRE_STYLE_DARK
+            : env.vars.MAPLIBRE_STYLE
+        }
         style={{
           height: '100%',
           width: '100%',

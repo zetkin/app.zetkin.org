@@ -222,7 +222,10 @@ const ZUIButton: FC<ZUIButtonProps> = ({
               backgroundColor: theme.palette.error.dark,
             },
             '&.MuiButton-containedPrimary': {
-              backgroundColor: theme.palette.primary.dark,
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[400]
+                  : theme.palette.primary.dark,
             },
             '&.MuiButton-containedWarning': {
               backgroundColor: theme.palette.warning.dark,

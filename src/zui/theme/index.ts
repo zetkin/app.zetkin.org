@@ -15,8 +15,8 @@ import {
 import { daDK, deDE, Localization, nbNO, svSE } from '@mui/material/locale';
 
 import './types';
-import palette from './palette';
 import typography from './typography';
+import { palette } from './palette';
 
 const theme = createTheme({
   elevation: {

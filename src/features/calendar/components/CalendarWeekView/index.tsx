@@ -171,6 +171,14 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
             : 0;
 
           const lanes = eventsByDate[index].lanes;
+          const bgAColor =
+            theme.palette.mode === 'dark'
+              ? theme.palette.background.default
+              : theme.palette.grey[400];
+          const bgBColor =
+            theme.palette.mode === 'dark'
+              ? theme.palette.grey[900]
+              : theme.palette.grey[200];
 
           return (
             <Box
@@ -181,7 +189,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
               flexGrow={1}
               height={`${HOUR_HEIGHT * 24}px`}
               sx={{
-                backgroundImage: `repeating-linear-gradient(180deg, ${theme.palette.grey[400]}, ${theme.palette.grey[400]} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} ${HOUR_HEIGHT}px)`,
+                backgroundImage: `repeating-linear-gradient(180deg, ${bgAColor}, ${bgAColor} 1px, ${bgBColor} 1px, ${bgBColor} ${HOUR_HEIGHT}px)`,
                 marginTop: '0.6em', // Aligns the hour marker on each day to the hour on the hour column
                 overflow: 'hidden', // Will prevent the ghostElement to expand the size of the calender, showing vertical scrollbar and whitespace underneath calender #issue-#1614
               }}

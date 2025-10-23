@@ -42,10 +42,17 @@ const SidebarListItem = forwardRef<HTMLDivElement, SidebarListItemProps>(
         onClick={onClick}
         sx={{
           '&:hover': {
-            background: theme.palette.grey[100],
+            background:
+              theme.palette.mode === 'dark'
+                ? theme.palette.grey[700]
+                : theme.palette.grey[100],
             pointer: 'cursor',
           },
-          backgroundColor: selected ? theme.palette.grey[200] : 'transparent',
+          backgroundColor: selected
+            ? theme.palette.mode === 'dark'
+              ? theme.palette.grey[800]
+              : theme.palette.grey[200]
+            : 'transparent',
           borderRadius: '3px',
           my: 0.5,
           py: open ? 1.25 : 1.5,

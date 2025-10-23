@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, lighten, Typography } from '@mui/material';
+import { Box, lighten, Typography, useTheme } from '@mui/material';
 
 import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import messageIds from 'features/views/l10n/messageIds';
@@ -12,6 +12,7 @@ interface CellContentProps {
 
 const ValueTagCell: FC<CellContentProps> = ({ tag }) => {
   const isEmpty = !tag.value || !tag.value.toString().trim().length;
+  const theme = useTheme();
 
   return (
     <Box
@@ -19,6 +20,7 @@ const ValueTagCell: FC<CellContentProps> = ({ tag }) => {
         alignItems: 'center',
         backgroundColor: lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
         borderLeft: `4px solid ${tag.color || DEFAULT_TAG_COLOR}`,
+        color: 'black',
         display: 'flex',
         height: '100%',
         justifyContent: 'center',
@@ -26,7 +28,13 @@ const ValueTagCell: FC<CellContentProps> = ({ tag }) => {
       }}
     >
       <Typography
-        color={isEmpty ? 'secondary' : ''}
+        color={
+          isEmpty
+            ? theme.palette.mode === 'dark'
+              ? theme.palette.grey[700]
+              : 'secondary'
+            : ''
+        }
         fontStyle={isEmpty ? 'italic' : ''}
         sx={{
           maxWidth: '90%',

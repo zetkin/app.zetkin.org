@@ -39,6 +39,7 @@ export default async function RootLayout({
               INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
               INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
               MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
+              MAPLIBRE_STYLE_DARK: process.env.MAPLIBRE_STYLE_DARK,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
               TILESERVER: process.env.TILESERVER,
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,

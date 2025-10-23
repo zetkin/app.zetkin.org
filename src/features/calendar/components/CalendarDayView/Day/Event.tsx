@@ -30,7 +30,11 @@ const Event = ({ event }: { event: ZetkinEvent }) => {
           flexDirection="row"
           justifyContent="space-between"
           padding={2}
-          sx={{ backgroundColor: 'white', borderRadius: '3px' }}
+          sx={(theme) => ({
+            backgroundColor:
+              theme.palette.mode === 'dark' ? theme.palette.grey[800] : 'white',
+            borderRadius: '3px',
+          })}
           width="100%"
         >
           <Box alignItems="center" display="flex" gap={2.2}>

@@ -1,12 +1,12 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Layer, LngLatLike, Map, Source } from '@vis.gl/react-maplibre';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { GpsNotFixed } from '@mui/icons-material';
 import {
   ExpressionSpecification,
   LngLatBounds,
-  MapOptions,
   Map as MapType,
+  MapOptions,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -233,6 +233,8 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
   }, [created, locations]);
 
+  const theme = useTheme();
+
   if (!locations.data) {
     return null;
   }
@@ -303,7 +305,11 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         initialViewState={{
           ...initialBounds,
         }}
-        mapStyle={env.vars.MAPLIBRE_STYLE}
+        mapStyle={
+          theme.palette.mode === 'dark'
+            ? env.vars.MAPLIBRE_STYLE_DARK
+            : env.vars.MAPLIBRE_STYLE
+        }
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}

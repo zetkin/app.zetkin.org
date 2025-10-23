@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { FormattedDate } from 'react-intl';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 
 import messageIds from '../../l10n/messageIds';
@@ -27,6 +27,7 @@ const Day = ({
 }: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
   const dstChange = useMemo(() => getDstChangeAtDate(dayjs(date)), [date]);
+  const theme = useTheme();
 
   let textColor = oldTheme.palette.text.secondary;
   if (isToday) {
@@ -38,9 +39,21 @@ const Day = ({
   return (
     <Box
       alignItems="stretch"
-      bgcolor={isInFocusMonth ? '#eee' : 'none'}
+      bgcolor={
+        isInFocusMonth
+          ? theme.palette.mode === 'dark'
+            ? theme.palette.grey[900]
+            : '#eee'
+          : 'none'
+      }
       border="2px solid #eeeeee"
-      borderColor={isToday ? oldTheme.palette.primary.main : 'eee'}
+      borderColor={
+        isToday
+          ? oldTheme.palette.primary.main
+          : theme.palette.mode === 'dark'
+          ? theme.palette.grey[800]
+          : 'eee'
+      }
       display="flex"
       flexDirection="column"
       height="100%"
