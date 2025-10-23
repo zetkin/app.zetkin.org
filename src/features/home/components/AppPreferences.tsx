@@ -36,6 +36,8 @@ const AppPreferences: FC<Props> = ({ user }) => {
   const { set: setDarkModeSetting, value: darkModeSetting } = useContext(
     DarkModeSettingContext
   );
+  const [selectedDarkModeSetting, setSelectedDarkModeSetting] =
+    useState(darkModeSetting);
 
   return (
     <Box
@@ -82,16 +84,6 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 selectedOption={selectedLanguage || 'auto'}
                 size="large"
               />
-              <ZUIButton
-                disabled={selectedLanguage == user.lang}
-                label={messages.settings.appPreferences.lang.saveButton()}
-                onClick={async () => {
-                  await updateUser({ lang: selectedLanguage });
-                  location.reload();
-                }}
-                size="large"
-                variant="primary"
-              />
               <ZUISelect
                 fullWidth
                 items={[
@@ -111,13 +103,31 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 label={messages.settings.appPreferences.darkMode.label()}
                 onChange={(newValue) => {
                   if (newValue == 'auto') {
-                    setDarkModeSetting('auto');
+                    setSelectedDarkModeSetting('auto');
                   } else {
-                    setDarkModeSetting(newValue === 'true');
+                    setSelectedDarkModeSetting(newValue === 'true');
                   }
                 }}
-                selectedOption={darkModeSetting + ''}
+                selectedOption={selectedDarkModeSetting + ''}
                 size="large"
+              />
+              <ZUIButton
+                disabled={
+                  selectedLanguage === user.lang &&
+                  darkModeSetting === selectedDarkModeSetting
+                }
+                label={messages.settings.appPreferences.lang.saveButton()}
+                onClick={async () => {
+                  if (selectedLanguage !== user.lang) {
+                    await updateUser({ lang: selectedLanguage });
+                  }
+                  if (darkModeSetting !== selectedDarkModeSetting) {
+                    setDarkModeSetting(selectedDarkModeSetting);
+                  }
+                  location.reload();
+                }}
+                size="large"
+                variant="primary"
               />
             </Box>
           )}
