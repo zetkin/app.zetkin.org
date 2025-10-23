@@ -15,4 +15,9 @@ describe('formatUrl()', () => {
     const formatted = formatUrl('Angela');
     expect(formatted).toEqual(null);
   });
+
+  it('does nothing with a valid mailto: url', () => {
+    const formatted = formatUrl('mailto:test@example.org');
+    expect(formatted).toEqual('mailto:test@example.org');
+  });
 });
