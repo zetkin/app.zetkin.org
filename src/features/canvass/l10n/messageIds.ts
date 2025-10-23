@@ -9,6 +9,10 @@ export default makeMessages('feat.canvass', {
     location: m('Untitled location'),
   },
   households: {
+    stackItem: {
+      detailsButtonLabel: m('Details'),
+      visitButtonLabel: m('Visit'),
+    },
     bulkEditHouseholds: {
       floorLabel: m('Edit floor'),
       header: m<{ numHouseholds: number }>(

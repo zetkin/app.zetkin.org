@@ -1,6 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 
+import { Msg } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { HouseholdItem } from './types';
 import HouseholdSquare from './HouseholdSquare';
@@ -93,7 +95,7 @@ const HouseholdStackItem: FC<Props> = ({
               }}
               variant="outlined"
             >
-              Details
+              <Msg id={messageIds.households.stackItem.detailsButtonLabel} />
             </Button>
             <Button
               onClick={(ev) => {
@@ -102,7 +104,7 @@ const HouseholdStackItem: FC<Props> = ({
               }}
               variant="outlined"
             >
-              Visit
+              <Msg id={messageIds.households.stackItem.visitButtonLabel} />
             </Button>
           </Box>
         </Box>
