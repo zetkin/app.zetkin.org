@@ -1,10 +1,15 @@
-import { act, renderHook } from 'utils/testing';
+import { act, render } from '@testing-library/react';
+import { FC, Suspense } from 'react';
+import { Provider as ReduxProvider } from 'react-redux';
+
 import createStore from 'core/store';
-import { makeWrapper } from 'utils/testing';
 import mockApiClient from 'utils/testing/mocks/mockApiClient';
 import IApiClient from 'core/api/client/IApiClient';
 import useLocationHouseholdVisits from './useLocationHouseholdVisits';
 import loadLocationHouseholdVisits from '../rpc/loadLocationHouseholdVisits';
+import Environment from 'core/env/Environment';
+import { EnvProvider } from 'core/env/EnvContext';
+import { UserProvider } from 'core/env/UserContext';
 
 describe('useLocationHouseholdVisits', () => {
   it('returns aggregated household visits from RPC', async () => {
@@ -40,23 +45,51 @@ describe('useLocationHouseholdVisits', () => {
     }) as unknown as jest.MockedFunction<IApiClient['rpc']>;
 
     const apiClient = mockApiClient({ rpc: rpcMock });
-
     const store = createStore();
-    const wrapper = makeWrapper(store, apiClient);
-    const { result } = renderHook(
-      () => useLocationHouseholdVisits(orgId, assignmentId, locationId),
-      { wrapper }
+    const env = new Environment(apiClient);
+
+    const TestComponent: FC = () => {
+      const householdVisits = useLocationHouseholdVisits(
+        orgId,
+        assignmentId,
+        locationId
+      );
+      return (
+        <div>
+          <p>loaded</p>
+          <ul>
+            {householdVisits.map((visit) => (
+              <li key={visit.id}>{visit.household_id}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    };
+
+    const { queryByText } = render(
+      <ReduxProvider store={store}>
+        <EnvProvider env={env}>
+          <UserProvider user={null}>
+            <Suspense fallback={<p>loading</p>}>
+              <TestComponent />
+            </Suspense>
+          </UserProvider>
+        </EnvProvider>
+      </ReduxProvider>
     );
 
-    // Initially triggers load and returns empty until resolved
-    expect(result.current).toEqual([]);
+    // Initially shows loading
+    expect(queryByText('loading')).not.toBeNull();
 
     await act(async () => {
-      // Allow state updates to flush
-      await Promise.resolve();
+      // Wait for promise to resolve
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(result.current).toHaveLength(2);
-    expect(result.current.map((v) => v.household_id)).toEqual([10, 11]);
+    // After load, shows the loaded content
+    expect(queryByText('loading')).toBeNull();
+    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('10')).not.toBeNull();
+    expect(queryByText('11')).not.toBeNull();
   });
 });
