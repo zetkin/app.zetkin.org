@@ -1,12 +1,30 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { ThemeProvider as StylesThemeProvider } from '@mui/styles';
 import { Box } from '@mui/system';
 import { SxProps } from '@mui/system/styleFunctionSx';
 
 import { oldDarkThemeWithLocale, oldThemeWithLocale } from 'theme';
-import { getDarkModeFromLocalStorage } from 'zui/theme/dark-mode';
+import {
+  getDarkModeFromLocalStorage,
+  getDarkModeSettingFromLocalStorage,
+  setDarkModeToLocalStorage,
+} from 'zui/theme/dark-mode';
 import { darkThemeWithLocale, themeWithLocale } from './index';
+
+export const DarkModeSettingContext = createContext<{
+  set: (darkMode: boolean | 'auto') => void;
+  value: boolean | 'auto';
+}>({
+  set: () => {},
+  value: 'auto',
+});
 
 export const ZUIThemeProvider = ({
   children,
@@ -38,10 +56,27 @@ export const ZUIThemeProvider = ({
     [showRoot]
   );
 
+  const [darkModeSetting, setDarkModeSetting] = useState(
+    getDarkModeSettingFromLocalStorage()
+  );
+
+  const darkModeSettings = useMemo(() => {
+    return {
+      set: (darkMode: boolean | 'auto') => {
+        setDarkModeToLocalStorage(darkMode);
+        setDarkModeSetting(darkMode);
+        setDarkMode(getDarkModeFromLocalStorage());
+      },
+      value: darkModeSetting,
+    };
+  }, [setDarkMode, darkModeSetting]);
+
   return (
     <StylesThemeProvider theme={theme}>
       <ThemeProvider theme={theme}>
-        <Box sx={rootStyle}>{children}</Box>
+        <DarkModeSettingContext.Provider value={darkModeSettings}>
+          <Box sx={rootStyle}>{children}</Box>
+        </DarkModeSettingContext.Provider>
       </ThemeProvider>
     </StylesThemeProvider>
   );

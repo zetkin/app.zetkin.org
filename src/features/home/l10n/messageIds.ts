@@ -72,6 +72,12 @@ export default makeMessages('feat.home', {
         label: m('Language'),
         saveButton: m('Save & reload'),
       },
+      darkMode: {
+        auto: m('Automatic (configured in  browser)'),
+        dark: m('Dark'),
+        label: m('Dark mode'),
+        light: m('Light'),
+      },
     },
   },
   tabs: {

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { Box } from '@mui/material';
 
 import useUserMutations from '../hooks/useUserMutations';
@@ -9,6 +9,7 @@ import ZUISection from 'zui/components/ZUISection';
 import ZUISelect from 'zui/components/ZUISelect';
 import ZUIButton from 'zui/components/ZUIButton';
 import { SupportedLanguage } from 'core/i18n/languages';
+import { DarkModeSettingContext } from '../../../zui/theme/ZUIThemeProvider';
 
 export type ZetkinUserLanguage = SupportedLanguage | null;
 
@@ -30,6 +31,10 @@ const AppPreferences: FC<Props> = ({ user }) => {
   const { updateUser } = useUserMutations();
   const [selectedLanguage, setSelectedLanguage] = useState<ZetkinUserLanguage>(
     user?.lang as ZetkinUserLanguage
+  );
+
+  const { set: setDarkModeSetting, value: darkModeSetting } = useContext(
+    DarkModeSettingContext
   );
 
   return (
@@ -86,6 +91,33 @@ const AppPreferences: FC<Props> = ({ user }) => {
                 }}
                 size="large"
                 variant="primary"
+              />
+              <ZUISelect
+                fullWidth
+                items={[
+                  {
+                    label: messages.settings.appPreferences.darkMode.auto(),
+                    value: 'auto',
+                  },
+                  {
+                    label: messages.settings.appPreferences.darkMode.dark(),
+                    value: 'true',
+                  },
+                  {
+                    label: messages.settings.appPreferences.darkMode.light(),
+                    value: 'false',
+                  },
+                ]}
+                label={messages.settings.appPreferences.darkMode.label()}
+                onChange={(newValue) => {
+                  if (newValue == 'auto') {
+                    setDarkModeSetting('auto');
+                  } else {
+                    setDarkModeSetting(newValue === 'true');
+                  }
+                }}
+                selectedOption={darkModeSetting + ''}
+                size="large"
               />
             </Box>
           )}

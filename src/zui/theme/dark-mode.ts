@@ -5,6 +5,7 @@ export const setDarkModeToLocalStorage = (newDarkMode: boolean | 'auto') => {
 
   if (newDarkMode !== 'auto') {
     localStorage.setItem('darkMode', newDarkMode + '');
+    return;
   }
 
   if (localStorage.getItem('darkMode') !== null) {
@@ -13,6 +14,18 @@ export const setDarkModeToLocalStorage = (newDarkMode: boolean | 'auto') => {
 };
 
 export const getDarkModeFromLocalStorage = (): boolean => {
+  const setting = getDarkModeSettingFromLocalStorage();
+  if (setting !== 'auto') {
+    return setting;
+  }
+
+  return (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+};
+
+export const getDarkModeSettingFromLocalStorage = (): boolean | 'auto' => {
   if (typeof localStorage === 'undefined') {
     return false;
   }
@@ -22,8 +35,5 @@ export const getDarkModeFromLocalStorage = (): boolean => {
     return storedDarkMode === 'true';
   }
 
-  return (
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  return 'auto';
 };
