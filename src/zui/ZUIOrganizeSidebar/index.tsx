@@ -365,6 +365,17 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                         {
                           label: (
                             <Typography>
+                              {messages.organizeSidebar.userSettings()}
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            router.push('/my/settings');
+                          },
+                          startIcon: <Settings />,
+                        },
+                        {
+                          label: (
+                            <Typography>
                               {messages.organizeSidebar.signOut()}
                             </Typography>
                           ),
