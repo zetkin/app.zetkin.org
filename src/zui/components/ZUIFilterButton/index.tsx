@@ -70,7 +70,7 @@ const ZUIFilterButton: FC<ZUIFilterButtonProps> = ({
         borderRadius: '2rem',
         color: active
           ? theme.palette.mode === 'dark'
-            ? theme.palette.black
+            ? theme.palette.common.black
             : theme.palette.common.white
           : theme.palette.text.primary,
         cursor: 'pointer',
