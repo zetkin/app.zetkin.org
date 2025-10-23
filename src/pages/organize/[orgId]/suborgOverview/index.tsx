@@ -23,6 +23,8 @@ import useSuborgsWithStats from 'features/organizations/hooks/useSuborgsWithStat
 import SuborgOverviewLayout from 'features/organizations/layouts/SuborgOverviewLayout';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -39,10 +41,19 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
+  const organization = useOrganization(orgId).data;
   const suborgsWithStats = useSuborgsWithStats(orgId);
 
   if (suborgsWithStats.length == 0) {
-    return <Typography>You have no sub-organizations</Typography>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <ZUIEmptyState
+          message={
+            organization ? `${organization.title} has no suborganizations` : ''
+          }
+        />
+      </Box>
+    );
   }
 
   return (
