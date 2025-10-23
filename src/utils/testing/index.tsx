@@ -5,11 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactElement, ReactNode } from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
+import { StyledEngineProvider, Theme } from '@mui/material/styles';
 
 import { AnyMessage } from 'core/i18n/messages';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
@@ -20,7 +16,7 @@ import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLu
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
-import theme from 'zui/theme';
+import { ZUIThemeProvider } from 'zui/theme/ZUIThemeProvider';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -39,7 +35,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   return (
     <UserProvider user={null}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
+        <ZUIThemeProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <IntlProvider
               defaultLocale="en"
@@ -59,7 +55,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
               </EnvProvider>
             </IntlProvider>
           </LocalizationProvider>
-        </ThemeProvider>
+        </ZUIThemeProvider>
       </StyledEngineProvider>
     </UserProvider>
   );
