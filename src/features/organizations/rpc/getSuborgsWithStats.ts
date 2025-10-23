@@ -113,10 +113,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         numCalls: calls.filter(
           (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
         ).length,
-        numEmails: emails.length,
         numEmailsSent,
         numEventParticipants,
-        numEvents: events.length,
         numLists: lists.length,
         numPeople,
         numProjects: projects.length,
