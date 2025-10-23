@@ -146,13 +146,7 @@ const OrganizationsSlice = createSlice({
     ) => {
       const suborgsWithStats = action.payload;
 
-      state.suborgsWithStats = remoteList(
-        suborgsWithStats
-          .concat(suborgsWithStats)
-          .concat(suborgsWithStats)
-          .concat(suborgsWithStats)
-          .concat(suborgsWithStats)
-      );
+      state.suborgsWithStats = remoteList(suborgsWithStats);
       state.suborgsWithStats.loaded = new Date().toISOString();
       state.suborgsWithStats.isLoading = false;
     },
