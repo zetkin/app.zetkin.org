@@ -14,7 +14,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useEffect, useState } from 'react';
-import { Box, Link, useTheme } from '@mui/material';
+import { Box, Link } from '@mui/material';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
@@ -142,7 +142,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   rowSelection: selectionModel,
   view,
 }) => {
-  const theme = useTheme();
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const gridApiRef = useGridApiRef();
