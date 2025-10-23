@@ -6,7 +6,7 @@ import {
   TileLayer,
   useMapEvents,
 } from 'react-leaflet';
-import { Box, Divider, lighten, Typography } from '@mui/material';
+import { Box, Divider, lighten, Typography, useTheme } from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType } from 'leaflet';
 
@@ -16,21 +16,22 @@ import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
 import { ZetkinArea } from 'features/areas/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import {
-  ZetkinAssignmentAreaStats,
   ZetkinAreaAssignee,
+  ZetkinAssignmentAreaStats,
   ZetkinLocation,
 } from '../types';
 import { getBoundSize } from '../../canvass/utils/getBoundSize';
 import { useEnv } from 'core/hooks';
 import MarkerIcon from 'features/canvass/components/MarkerIcon';
 import locToLatLng from 'features/geography/utils/locToLatLng';
-import oldTheme from 'theme';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
 
 const LocationMarker: FC<{
   location: ZetkinLocation;
   locationStyle: 'dot' | 'households' | 'progress';
 }> = ({ location, locationStyle }) => {
+  const theme = useTheme();
+
   if (locationStyle == 'dot') {
     return (
       <DivIconMarker
@@ -39,7 +40,7 @@ const LocationMarker: FC<{
         zIndexOffset={-1000}
       >
         <Box
-          bgcolor={oldTheme.palette.text.primary}
+          bgcolor={theme.palette.text.primary}
           borderRadius="2em"
           height={6}
           width={6}
@@ -60,7 +61,7 @@ const LocationMarker: FC<{
             bgcolor="white"
             borderRadius={1}
             boxShadow="0px 4px 20px 0px rgba(0,0,0,0.3)"
-            color={oldTheme.palette.text.secondary}
+            color={theme.palette.text.secondary}
             display="inline-flex"
             flexDirection="column"
             fontSize="14px"
@@ -120,6 +121,8 @@ function HouseholdOverlayMarker(props: {
   numberOfHouseholds: number;
   numberOfLocations: number;
 }) {
+  const theme = useTheme();
+
   return (
     <Box
       alignItems="center"
@@ -133,10 +136,7 @@ function HouseholdOverlayMarker(props: {
       sx={{ translate: '-50% -50%' }}
     >
       <Typography alignItems="center" display="flex" fontSize="14px">
-        <DoorFront
-          fontSize="small"
-          sx={{ color: oldTheme.palette.grey[300] }}
-        />
+        <DoorFront fontSize="small" sx={{ color: theme.palette.grey[300] }} />
         {props.numberOfHouseholds}
       </Typography>
       <Divider
@@ -145,7 +145,7 @@ function HouseholdOverlayMarker(props: {
         }}
       />
       <Typography alignItems="center" display="flex" fontSize="14px">
-        <Place fontSize="small" sx={{ color: oldTheme.palette.grey[300] }} />
+        <Place fontSize="small" sx={{ color: theme.palette.grey[300] }} />
 
         {props.numberOfLocations}
       </Typography>
@@ -157,6 +157,8 @@ function ProgressOverlayMarker(props: {
   successfulVisitsColorPercent: number;
   visitsColorPercent: number;
 }) {
+  const theme = useTheme();
+
   return (
     <Box
       bgcolor="white"
@@ -170,11 +172,11 @@ function ProgressOverlayMarker(props: {
       <div
         style={{
           alignItems: 'center',
-          background: `conic-gradient(${oldTheme.palette.primary.main} ${
+          background: `conic-gradient(${theme.palette.primary.main} ${
             props.successfulVisitsColorPercent
-          }%, ${lighten(oldTheme.palette.primary.main, 0.7)} ${
+          }%, ${lighten(theme.palette.primary.main, 0.7)} ${
             props.successfulVisitsColorPercent
-          }% ${props.visitsColorPercent}%, ${oldTheme.palette.grey[400]} ${
+          }% ${props.visitsColorPercent}%, ${theme.palette.grey[400]} ${
             props.visitsColorPercent
           }%)`,
           borderRadius: '2em',
@@ -190,14 +192,16 @@ function ProgressOverlayMarker(props: {
 }
 
 function NumberOverlayMarker(props: { value: number }) {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
         alignItems: 'center',
-        backgroundColor: oldTheme.palette.primary.main,
+        backgroundColor: theme.palette.primary.main,
         borderRadius: 10,
         boxShadow: '0 0 8px rgba(0,0,0,0.3)',
-        color: oldTheme.palette.primary.contrastText,
+        color: theme.palette.primary.contrastText,
         display: 'flex',
         fontWeight: 'bold',
         height: 30,
@@ -289,6 +293,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   overlayStyle,
   locationStyle,
 }) => {
+  const theme = useTheme();
+
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
   const [zoomed, setZoomed] = useState(false);
@@ -343,21 +349,21 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
 
     if (areaStyle == 'assignees') {
       return hasPeople
-        ? oldTheme.palette.primary.main
-        : oldTheme.palette.secondary.main;
+        ? theme.palette.primary.main
+        : theme.palette.secondary.main;
     }
 
     if (areaStyle == 'progress' && !hasPeople) {
-      return oldTheme.palette.secondary.main;
+      return theme.palette.secondary.main;
     }
 
     return areaStyle == 'households'
       ? //TODO: Use theme colors for these
-        `color-mix(in hsl, ${lighten(oldTheme.palette.primary.main, 0.8)}, ${
-          oldTheme.palette.primary.main
+        `color-mix(in hsl, ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
         } ${householdColorPercent}%)`
-      : `color-mix(in hsl,  ${lighten(oldTheme.palette.primary.main, 0.8)}, ${
-          oldTheme.palette.primary.main
+      : `color-mix(in hsl,  ${lighten(theme.palette.primary.main, 0.8)}, ${
+          theme.palette.primary.main
         } ${visitsColorPercent || 1}%)`;
   };
 

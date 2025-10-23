@@ -5,11 +5,11 @@ import {
   Menu,
   MenuItem,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import noPropagate from 'utils/noPropagate';
-import oldTheme from 'theme';
 
 type horizontalType = 'left' | 'center' | 'right';
 type verticalType = 'top' | 'center' | 'bottom';
@@ -36,6 +36,8 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   anchorOrigin,
   transformOrigin,
 }) => {
+  const theme = useTheme();
+
   const [menuActivator, setMenuActivator] = useState<null | HTMLElement>(null);
   const [subMenuActivator, setSubMenuActivator] = useState<null | HTMLElement>(
     null
@@ -70,7 +72,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
                 marginRight: 1,
               },
             },
-            marginTop: oldTheme.spacing(1),
+            marginTop: theme.spacing(1),
           },
         }}
         transformOrigin={

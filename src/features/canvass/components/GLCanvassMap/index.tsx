@@ -16,7 +16,6 @@ import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
 import MarkerIcon from '../MarkerIcon';
 import useCreateLocation from '../../hooks/useCreateLocation';
-import oldTheme from 'theme';
 import MarkerImageRenderer from './MarkerImageRenderer';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
@@ -326,7 +325,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
                   successPercentage,
                   visitPercentage,
                   false,
-                  oldTheme.palette.primary.main
+                  theme.palette.primary.main
                 )
               );
               map.addImage(
@@ -335,7 +334,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
                   successPercentage,
                   visitPercentage,
                   true,
-                  oldTheme.palette.primary.main
+                  theme.palette.primary.main
                 )
               );
               map.addImage(
@@ -343,7 +342,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
                 new ClusterImageRenderer(
                   successPercentage,
                   visitPercentage,
-                  oldTheme.palette.primary.main
+                  theme.palette.primary.main
                 )
               );
             });

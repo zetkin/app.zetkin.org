@@ -44,41 +44,40 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS, OFFICIALS } from 'utils/featureFlags';
-import oldTheme from 'theme';
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     flexShrink: 0,
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.enteringScreen,
-      easing: oldTheme.transitions.easing.sharp,
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
     }),
     whiteSpace: 'nowrap',
     width: drawerWidth,
   },
   drawerPaper: {
     display: 'none',
-    [oldTheme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
     overflowX: 'hidden',
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.enteringScreen,
-      easing: oldTheme.transitions.easing.sharp,
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
     }),
     width: drawerWidth,
   },
   toggleDrawerPaper: {
-    [oldTheme.breakpoints.up('sm')]: {
-      width: `calc(${oldTheme.spacing(8)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(${theme.spacing(8)} + 1px)`,
     },
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.leavingScreen,
-      easing: oldTheme.transitions.easing.sharp,
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp,
     }),
-    width: `calc(${oldTheme.spacing(7)} + 1px)`,
+    width: `calc(${theme.spacing(7)} + 1px)`,
   },
 }));
 

@@ -18,11 +18,10 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
-import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   icon: {
-    color: oldTheme.palette.grey[400],
+    color: theme.palette.grey[400],
     fontSize: '8rem',
   },
 }));

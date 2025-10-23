@@ -2,10 +2,8 @@ import { alpha } from '@mui/material/styles';
 import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-import { MenuItem } from '@mui/material';
+import { MenuItem, useTheme } from '@mui/material';
 import { FC, MouseEvent, ReactNode, useState } from 'react';
-
-import oldTheme from 'theme';
 
 type ZUIButtonMenuProps = {
   items: {
@@ -25,6 +23,8 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   startIcon,
   variant = 'contained',
 }) => {
+  const theme = useTheme();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -60,12 +60,12 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
               },
               '&:active': {
                 backgroundColor: alpha(
-                  oldTheme.palette.primary.main,
-                  oldTheme.palette.action.selectedOpacity
+                  theme.palette.primary.main,
+                  theme.palette.action.selectedOpacity
                 ),
               },
             },
-            marginTop: oldTheme.spacing(1),
+            marginTop: theme.spacing(1),
           },
         }}
         transformOrigin={{

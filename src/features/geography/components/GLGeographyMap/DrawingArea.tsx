@@ -1,14 +1,16 @@
 import { Layer, Source } from '@vis.gl/react-maplibre';
 import { FC } from 'react';
+import { useTheme } from '@mui/material';
 
 import { Zetkin2AreaLine } from 'features/areas/types';
-import oldTheme from 'theme';
 
 type Props = {
   drawingPoints: Zetkin2AreaLine;
 };
 
 const DrawingArea: FC<Props> = ({ drawingPoints }) => {
+  const theme = useTheme();
+
   const drawingGeoJson: GeoJSON.GeoJSON = {
     geometry: {
       coordinates: [drawingPoints],
@@ -23,7 +25,7 @@ const DrawingArea: FC<Props> = ({ drawingPoints }) => {
       <Layer
         id="drawOutlines"
         paint={{
-          'line-color': oldTheme.palette.primary.main,
+          'line-color': theme.palette.primary.main,
           'line-width': 3,
         }}
         type="line"
@@ -31,7 +33,7 @@ const DrawingArea: FC<Props> = ({ drawingPoints }) => {
       <Layer
         id="drawArea"
         paint={{
-          'fill-color': oldTheme.palette.primary.main,
+          'fill-color': theme.palette.primary.main,
           'fill-opacity': 0.2,
         }}
         type="fill"
@@ -39,7 +41,7 @@ const DrawingArea: FC<Props> = ({ drawingPoints }) => {
       <Layer
         id="anchorPoints"
         paint={{
-          'circle-color': oldTheme.palette.primary.main,
+          'circle-color': theme.palette.primary.main,
           'circle-radius': 8,
         }}
         type="circle"

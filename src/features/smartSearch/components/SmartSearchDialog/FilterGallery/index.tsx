@@ -9,10 +9,10 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import FilterGalleryCard from './FilterGalleryCard';
-import { GROUPED_FILTERS } from './groupedFilters';
+import { groupedFilters } from './groupedFilters';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import {
@@ -47,6 +47,8 @@ const FilterGallery = ({
     return true;
   };
 
+  const groupedFiltersEval = useMemo(() => groupedFilters(theme), [theme]);
+
   return (
     <>
       <Box
@@ -76,7 +78,7 @@ const FilterGallery = ({
           width="20%"
         >
           <List>
-            {Object.entries(GROUPED_FILTERS).map(([category], index) => (
+            {Object.entries(groupedFiltersEval).map(([category], index) => (
               <ListItem
                 key={index}
                 onClick={() => {
@@ -109,7 +111,7 @@ const FilterGallery = ({
           sx={{ overflowY: 'auto' }}
           width={isMobile ? '100%' : '80%'}
         >
-          {Object.entries(GROUPED_FILTERS).map(
+          {Object.entries(groupedFiltersEval).map(
             ([slug, categoryData], index) => (
               <Box
                 key={`category-${index}`}

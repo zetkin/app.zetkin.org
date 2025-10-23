@@ -1,11 +1,10 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { Check } from '@mui/icons-material';
 import { FC } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
-import oldTheme from '../../../../../theme';
 import { LocalQueryViewColumn, ZetkinViewColumn } from '../../types';
 
 type LocalQueryViewCell = boolean | null;
@@ -56,6 +55,8 @@ export default class LocalQueryColumnType
 }
 
 const Cell: FC<{ cell: LocalQueryViewCell | undefined }> = ({ cell }) => {
+  const theme = useTheme();
+
   if (!cell) {
     return null;
   }
@@ -63,7 +64,7 @@ const Cell: FC<{ cell: LocalQueryViewCell | undefined }> = ({ cell }) => {
   return (
     <Box
       alignItems="center"
-      bgcolor={oldTheme.palette.success.light}
+      bgcolor={theme.palette.success.light}
       display="flex"
       height="100%"
       justifyContent="center"

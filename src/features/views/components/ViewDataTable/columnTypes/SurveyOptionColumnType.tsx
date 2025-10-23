@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { Check, History } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
@@ -8,7 +8,6 @@ import { IColumnType } from '.';
 import { Msg } from 'core/i18n';
 import { SurveyOptionViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
-import oldTheme from '../../../../../theme';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 import messageIds from 'features/views/l10n/messageIds';
@@ -75,6 +74,8 @@ export default class SurveyOptionColumnType
 }
 
 const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
+  const theme = useTheme();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
   const { orgId } = useRouter().query;
@@ -105,7 +106,7 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   return (
     <Box
       alignItems="center"
-      bgcolor={mostRecent.selected ? oldTheme.palette.success.light : ''}
+      bgcolor={mostRecent.selected ? theme.palette.success.light : ''}
       display="flex"
       height="100%"
       justifyContent="center"

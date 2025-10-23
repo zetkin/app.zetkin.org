@@ -3,7 +3,7 @@ import { Children } from 'react';
 import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 
-import oldTheme from '../theme';
+import theme from '../theme';
 import { DarkModePreScript } from '../zui/theme/dark-mode-pre-script';
 
 // boilerplate page taken from https://github.com/mui-org/material-ui/tree/master/examples/nextjs
@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
           <DarkModePreScript />
 
           {/* PWA primary color */}
-          <meta content={oldTheme.palette.primary.main} name="theme-color" />
+          <meta content={theme.palette.primary.main} name="theme-color" />
           <link href="https://use.typekit.net/tqq3ylv.css" rel="stylesheet" />
           <link href="/logo-zetkin.png" rel="shortcut icon" />
         </Head>

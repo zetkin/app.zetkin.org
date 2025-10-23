@@ -1,4 +1,4 @@
-export const setDarkMode = (newDarkMode: boolean | 'auto') => {
+export const setDarkModeToLocalStorage = (newDarkMode: boolean | 'auto') => {
   if (typeof localStorage === 'undefined') {
     return;
   }
@@ -12,7 +12,7 @@ export const setDarkMode = (newDarkMode: boolean | 'auto') => {
   }
 };
 
-export const getDarkMode = (): boolean => {
+export const getDarkModeFromLocalStorage = (): boolean => {
   if (typeof localStorage === 'undefined') {
     return false;
   }

@@ -2,11 +2,17 @@ import Fuse from 'fuse.js';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import { Add, DeleteOutline } from '@mui/icons-material';
-import { Autocomplete, Box, TextField, Theme, Tooltip } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  TextField,
+  Theme,
+  Tooltip,
+  useTheme,
+} from '@mui/material';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
-import oldTheme from 'theme';
 import { toSentenceCase } from 'utils/stringUtils';
 import useCreateType from '../hooks/useCreateType';
 import { useMessages } from 'core/i18n';
@@ -19,17 +25,17 @@ interface StyleProps {
   showBorder: boolean | undefined;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   inputRoot: {
     '& fieldset': { border: 'none' },
     '&:focus, &:hover': {
-      borderColor: lighten(oldTheme.palette.primary.main, 0.65),
+      borderColor: lighten(theme.palette.primary.main, 0.65),
       paddingLeft: 10,
       paddingRight: 0,
     },
     border: '2px dotted transparent',
     borderColor: ({ showBorder }) =>
-      showBorder ? lighten(oldTheme.palette.primary.main, 0.65) : '',
+      showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
     paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
     paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
@@ -38,7 +44,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   span: {
     // Same styles as input
     '&:focus, &:hover': {
-      borderColor: lighten(oldTheme.palette.primary.main, 0.65),
+      borderColor: lighten(theme.palette.primary.main, 0.65),
       paddingLeft: 10,
       paddingRight: 0,
     },
@@ -78,6 +84,8 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   types,
   value,
 }) => {
+  const theme = useTheme();
+
   const createType = useCreateType(orgId);
   const deleteType = useDeleteType(orgId);
   const messages = useMessages(messageIds);
@@ -256,9 +264,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
                     }}
                     sx={{
                       '&:hover': {
-                        color: oldTheme.palette.secondary.main,
+                        color: theme.palette.secondary.main,
                       },
-                      color: oldTheme.palette.secondary.light,
+                      color: theme.palette.secondary.light,
                       cursor: 'pointer',
                       transition: 'color 0.3s ease',
                     }}

@@ -6,11 +6,7 @@ import createCache from '@emotion/cache';
 import { IntlProvider } from 'react-intl';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, Suspense, useRef } from 'react';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
+import { StyledEngineProvider, Theme } from '@mui/material/styles';
 import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 
@@ -19,12 +15,12 @@ import Environment, { EnvVars } from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { MessageList } from 'utils/locale';
 import createStore, { Store } from 'core/store';
-import { oldThemeWithLocale } from '../../theme';
 import { UserProvider } from './UserContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+import { ZUIThemeProvider } from 'zui/theme/ZUIThemeProvider';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -71,7 +67,7 @@ const ClientContext: FC<ClientContextProps> = ({
     <ReduxProvider store={storeRef.current}>
       <StyledEngineProvider injectFirst>
         <CacheProvider value={cache}>
-          <ThemeProvider theme={oldThemeWithLocale(lang)}>
+          <ZUIThemeProvider lang={lang} oldTheme={true}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -96,7 +92,7 @@ const ClientContext: FC<ClientContextProps> = ({
                 </LocalizationProvider>
               </UserProvider>
             </EnvProvider>
-          </ThemeProvider>
+          </ZUIThemeProvider>
         </CacheProvider>
       </StyledEngineProvider>
     </ReduxProvider>

@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { lighten } from '@mui/system';
-
-import oldTheme from 'theme';
+import { useTheme } from '@mui/material';
 
 interface MarkerIconProps {
   selected: boolean;
@@ -18,8 +17,13 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   selected,
   totalVisits = 0,
   successfulVisits = 0,
-  color = oldTheme.palette.primary.main,
+  color,
 }) => {
+  const theme = useTheme();
+  if (color === undefined) {
+    color = theme.palette.primary.main;
+  }
+
   const pinInteriorKey = uniqueKey + '_pinInterior';
   const pinOutlinePath =
     'M10.5 0C4.695 0 0 4.695 0 10.5C0 18.375 10.5 30 10.5 30C10.5 30 21 18.375 21 10.5C21 4.695 16.305 0 10.5 0Z';

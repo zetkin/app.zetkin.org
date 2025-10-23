@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 import { Localization } from '@mui/x-data-grid/utils/getGridLocalization';
 import { daDK, deDE, nbNO, svSE } from '@mui/x-data-grid-pro';
 
-import { oldThemePalette } from 'oldThemePalette';
+import { oldDarkThemePalette, oldThemePalette } from 'oldThemePalette';
 
 // Create a theme instance.
 const theme = createTheme({
@@ -138,8 +138,18 @@ locales['de'] = deDE;
 locales['nn'] = nbNO;
 locales['sv'] = svSE;
 
-export const oldThemeWithLocale = (lang: string) => {
-  return createTheme(theme, locales[lang]);
+export const oldThemeWithLocale = (lang?: string) => {
+  return createTheme(theme, ...(lang ? [locales[lang]] : []));
+};
+
+export const oldDarkThemeWithLocale = (lang?: string) => {
+  return createTheme(
+    {
+      ...theme,
+      palette: oldDarkThemePalette,
+    },
+    ...(lang ? [locales[lang]] : [])
+  );
 };
 
 export default theme;

@@ -6,7 +6,6 @@ import DateLabel from './DateLabel';
 import { DaySummary, getDstChangeAtDate } from '../../utils';
 import Event from './Event';
 import messageIds from 'features/calendar/l10n/messageIds';
-import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 
 const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
@@ -33,7 +32,7 @@ const Day = ({ date, dayInfo }: { date: Date; dayInfo: DaySummary }) => {
               color={
                 theme.palette.mode === 'dark'
                   ? theme.palette.grey[800]
-                  : oldTheme.palette.grey[600]
+                  : theme.palette.grey[600]
               }
               variant="body2"
             >

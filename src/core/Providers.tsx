@@ -7,18 +7,18 @@ import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode } from 'react';
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 import Environment from './env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { EventPopperProvider } from 'features/events/components/EventPopper/EventPopperProvider';
 import { MessageList } from 'utils/locale';
 import { Store } from './store';
-import { oldThemeWithLocale } from '../theme';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 import { UserProvider } from './env/UserContext';
+import { ZUIThemeProvider } from '../zui/theme/ZUIThemeProvider';
 
 type ProviderData = {
   env: Environment;
@@ -66,7 +66,7 @@ const Providers: FC<ProvidersProps> = ({
         <UserProvider user={user}>
           <StyledEngineProvider injectFirst>
             <CacheProvider value={cache}>
-              <ThemeProvider theme={oldThemeWithLocale(lang)}>
+              <ZUIThemeProvider lang={lang} oldTheme={true}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <IntlProvider
                     defaultLocale="en"
@@ -84,7 +84,7 @@ const Providers: FC<ProvidersProps> = ({
                     </ZUISnackbarProvider>
                   </IntlProvider>
                 </LocalizationProvider>
-              </ThemeProvider>
+              </ZUIThemeProvider>
             </CacheProvider>
           </StyledEngineProvider>
         </UserProvider>

@@ -2,8 +2,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import SvgIcon from '@mui/material/SvgIcon';
 import { Box, Typography } from '@mui/material';
 
-import oldTheme from 'theme';
-
 interface ZUILogoProps {
   size?: number;
   color?: 'inherit' | 'disabled' | 'action' | 'secondary' | 'primary' | 'error';
@@ -11,18 +9,18 @@ interface ZUILogoProps {
   beta?: boolean;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   beta: {
-    backgroundColor: oldTheme.palette.secondary.main,
-    borderRadius: oldTheme.spacing(0.25),
-    bottom: oldTheme.spacing(0.0),
-    color: oldTheme.palette.background.paper,
+    backgroundColor: theme.palette.secondary.main,
+    borderRadius: theme.spacing(0.25),
+    bottom: theme.spacing(0.0),
+    color: theme.palette.background.paper,
     fontSize: '0.5rem',
     fontWeight: 900,
     lineHeight: 1,
-    padding: oldTheme.spacing(0.25),
+    padding: theme.spacing(0.25),
     position: 'absolute',
-    right: oldTheme.spacing(-0.5),
+    right: theme.spacing(-0.5),
   },
   logoContainer: {
     position: 'relative',

@@ -2,11 +2,9 @@ import { alpha } from '@mui/material/styles';
 import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-import { MenuItem } from '@mui/material';
+import { MenuItem, useTheme } from '@mui/material';
 import { FC, ReactNode, useState } from 'react';
 import { Box } from '@mui/system';
-
-import oldTheme from 'theme';
 
 type Props = {
   items: {
@@ -31,6 +29,7 @@ const FilterDropDown: FC<Props> = ({
   variant = 'contained',
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const theme = useTheme();
 
   return (
     <div style={{ width: '100%' }}>
@@ -64,8 +63,8 @@ const FilterDropDown: FC<Props> = ({
               },
               '&:active': {
                 backgroundColor: alpha(
-                  oldTheme.palette.primary.main,
-                  oldTheme.palette.action.selectedOpacity
+                  theme.palette.primary.main,
+                  theme.palette.action.selectedOpacity
                 ),
               },
             },

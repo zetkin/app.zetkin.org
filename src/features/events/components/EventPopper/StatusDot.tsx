@@ -5,15 +5,14 @@ import { Box, Tooltip } from '@mui/material';
 import { EventState } from 'features/events/hooks/useEventState';
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivitiesOverview/items/OverviewListItem';
-import oldTheme from 'theme';
 
 interface StyleProps {
   color: STATUS_COLORS;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   dot: {
-    backgroundColor: ({ color }) => oldTheme.palette.statusColors[color],
+    backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
     height: '10px',
     marginLeft: '0.5em',

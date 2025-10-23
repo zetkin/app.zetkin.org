@@ -31,7 +31,6 @@ import { markdownToSlate } from './utils/markdownToSlate';
 import './types';
 import { FileUpload } from 'features/files/hooks/useFileUploads';
 import TextElement from './TextElement';
-import oldTheme from 'theme';
 import Toolbar from './Toolbar';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
 import {
@@ -48,28 +47,28 @@ const emptySlate = [
   },
 ] as Descendant[];
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     '& a': {
-      color: oldTheme.palette.primary.main,
+      color: theme.palette.primary.main,
       fontWeight: 600,
     },
     '&:hover': {
-      borderColor: oldTheme.palette.onSurface.medium,
+      borderColor: theme.palette.onSurface.medium,
     },
     background: (props: { active: boolean }) =>
       props.active ? 'white' : 'transparent',
     border: '1.5px solid',
     borderColor: (props: { active: boolean }) =>
       props.active
-        ? oldTheme.palette.onSurface.medium
-        : oldTheme.palette.outline.main,
+        ? theme.palette.onSurface.medium
+        : theme.palette.outline.main,
     borderRadius: 8,
     fontFamily: 'system-ui',
     padding: 16,
     transition: 'all 0.3s ease',
   },
-});
+}));
 
 export interface ZUITextEditorProps {
   clear?: number;

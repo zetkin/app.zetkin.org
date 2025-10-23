@@ -1,7 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
-import React from 'react';
+import React, { FC, useState } from 'react';
 import { ArrowForwardIos } from '@mui/icons-material';
 import {
   Avatar,
@@ -12,6 +11,7 @@ import {
   ListItem,
   ListItemButton,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { ArrowLeftIcon } from '@mui/x-date-pickers';
 import { useRouter } from 'next/navigation';
@@ -20,7 +20,6 @@ import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
-import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
@@ -28,6 +27,7 @@ import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentArea
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
 }> = ({ assignment }) => {
+  const theme = useTheme();
   const orgFuture = useOrganization(assignment.organization_id);
   const router = useRouter();
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
@@ -45,7 +45,7 @@ const Page: FC<{
         >
           <Box
             alignItems="center"
-            bgcolor={oldTheme.palette.background.paper}
+            bgcolor={theme.palette.background.paper}
             display="flex"
             justifyContent="space-between"
             py={2}

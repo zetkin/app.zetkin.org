@@ -5,15 +5,14 @@ import { makeStyles } from '@mui/styles';
 import { Msg } from 'core/i18n';
 import { EventState } from '../hooks/useEventState';
 import messageIds from '../l10n/messageIds';
-import oldTheme from 'theme';
 
 interface EventStatusChipProps {
   state: EventState;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   cancelled: {
-    backgroundColor: oldTheme.palette.statusColors.orange,
+    backgroundColor: theme.palette.statusColors.orange,
   },
   chip: {
     alignItems: 'center',
@@ -25,16 +24,16 @@ const useStyles = makeStyles(() => ({
     padding: '0.5em 0.7em',
   },
   draft: {
-    backgroundColor: oldTheme.palette.grey[500],
+    backgroundColor: theme.palette.grey[500],
   },
   ended: {
-    backgroundColor: oldTheme.palette.error.main,
+    backgroundColor: theme.palette.error.main,
   },
   open: {
-    backgroundColor: oldTheme.palette.success.main,
+    backgroundColor: theme.palette.success.main,
   },
   scheduled: {
-    backgroundColor: oldTheme.palette.statusColors.blue,
+    backgroundColor: theme.palette.statusColors.blue,
   },
 }));
 

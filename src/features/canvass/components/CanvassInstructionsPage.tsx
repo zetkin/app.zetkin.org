@@ -2,14 +2,21 @@
 
 import { FC } from 'react';
 import { HomeWork } from '@mui/icons-material';
-import { Avatar, Box, Button, Card, Divider, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Divider,
+  Typography,
+  useTheme,
+} from '@mui/material';
 
 import useMyCanvassAssignments from '../hooks/useMyAreaAssignments';
 import { ZetkinAreaAssignment } from '../../areaAssignments/types';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFutures from 'zui/ZUIFutures';
-import oldTheme from 'theme';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
@@ -17,6 +24,7 @@ import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentArea
 const Page: FC<{
   assignment: ZetkinAreaAssignment;
 }> = ({ assignment }) => {
+  const theme = useTheme();
   const orgFuture = useOrganization(assignment.organization_id);
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const userMustSelectArea = areas.length > 1;
@@ -34,7 +42,7 @@ const Page: FC<{
         >
           <Box
             alignItems="center"
-            bgcolor={oldTheme.palette.background.paper}
+            bgcolor={theme.palette.background.paper}
             display="flex"
             justifyContent="space-between"
             padding={2}
@@ -85,7 +93,7 @@ const Page: FC<{
                 }}
               >
                 <HomeWork
-                  sx={{ color: oldTheme.palette.grey[400], fontSize: 100 }}
+                  sx={{ color: theme.palette.grey[400], fontSize: 100 }}
                 />
                 <Typography color="secondary" variant="body1">
                   <Msg id={messageIds.instructions.ready} />

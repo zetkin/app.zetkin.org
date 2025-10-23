@@ -5,13 +5,12 @@ import { Box, Theme } from '@mui/material';
 import { FieldIcon } from './FieldIcon';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import { FIELD_PRESENTATION, PresentableField } from './Event';
-import theme from '../../../../theme';
 
 interface StyleProps {
   requiresAction: boolean;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   icon: {
     alignItems: 'center',
     color: ({ requiresAction }) =>

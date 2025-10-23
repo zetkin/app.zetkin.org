@@ -2,14 +2,12 @@ import React from 'react';
 import { lighten, TextareaAutosize } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-import oldTheme from 'theme';
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   textarea: {
     border: '2px dotted transparent',
-    borderColor: lighten(oldTheme.palette.primary.main, 0.65),
+    borderColor: lighten(theme.palette.primary.main, 0.65),
     borderRadius: 10,
-    fontFamily: oldTheme.typography.fontFamily,
+    fontFamily: theme.typography.fontFamily,
     lineHeight: '1.5',
     overflow: 'hidden',
     padding: 10,

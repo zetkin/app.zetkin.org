@@ -16,7 +16,7 @@ import { daDK, deDE, Localization, nbNO, svSE } from '@mui/material/locale';
 
 import './types';
 import typography from './typography';
-import { palette } from './palette';
+import { darkPalette } from './palette';
 
 const theme = createTheme({
   elevation: {
@@ -41,7 +41,7 @@ const theme = createTheme({
       },
     },
   },
-  palette: palette,
+  palette: darkPalette, // palette,
   typography: typography,
 });
 
@@ -66,12 +66,24 @@ pickersLocales['de'] = pickersDeDE;
 pickersLocales['nn'] = pickersNbNO;
 pickersLocales['sv'] = pickersSvSE;
 
-export const themeWithLocale = (lang: string) => {
+export const themeWithLocale = (lang?: string) => {
   return createTheme(
     theme,
-    coreLocales[lang],
-    dataGridLocales[lang],
-    pickersLocales[lang]
+    ...(lang
+      ? [coreLocales[lang], dataGridLocales[lang], pickersLocales[lang]]
+      : [])
+  );
+};
+
+export const darkThemeWithLocale = (lang?: string) => {
+  return createTheme(
+    {
+      ...theme,
+      palette: darkPalette,
+    },
+    ...(lang
+      ? [coreLocales[lang], dataGridLocales[lang], pickersLocales[lang]]
+      : [])
   );
 };
 

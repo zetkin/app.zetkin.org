@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 import { AreaAssignmentState } from '../hooks/useAreaAssignmentStatus';
-import oldTheme from 'theme';
 
 interface AssigmentStatusChipProps {
   state: AreaAssignmentState;
@@ -13,7 +12,7 @@ const capitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   chip: {
     alignItems: 'center',
     borderRadius: '2em',
@@ -24,16 +23,16 @@ const useStyles = makeStyles(() => ({
     padding: '0.5em 0.7em',
   },
   closed: {
-    backgroundColor: oldTheme.palette.error.main,
+    backgroundColor: theme.palette.error.main,
   },
   draft: {
-    backgroundColor: oldTheme.palette.grey[500],
+    backgroundColor: theme.palette.grey[500],
   },
   open: {
-    backgroundColor: oldTheme.palette.success.main,
+    backgroundColor: theme.palette.success.main,
   },
   scheduled: {
-    backgroundColor: oldTheme.palette.statusColors.blue,
+    backgroundColor: theme.palette.statusColors.blue,
   },
 }));
 

@@ -17,10 +17,10 @@ import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import IApiClient from 'core/api/client/IApiClient';
 import RosaLuxemburgUser from '../../../integrationTesting/mockData/users/RosaLuxemburgUser';
-import oldTheme from 'theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
+import theme from 'zui/theme';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -39,7 +39,7 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   return (
     <UserProvider user={null}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={oldTheme}>
+        <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <IntlProvider
               defaultLocale="en"

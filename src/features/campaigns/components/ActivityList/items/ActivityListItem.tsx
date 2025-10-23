@@ -1,17 +1,23 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, SvgIconTypeMap, Theme, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  SvgIconTypeMap,
+  Theme,
+  Tooltip,
+  Typography,
+  useTheme,
+} from '@mui/material';
 
 import getStatusDotLabel from 'features/events/utils/getStatusDotLabel';
-import oldTheme from 'theme';
 import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
 interface StyleProps {
   color: STATUS_COLORS;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     alignItems: 'center',
     cursor: 'pointer',
@@ -20,7 +26,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     padding: '1.0em 0.5em',
   },
   dot: {
-    backgroundColor: ({ color }) => oldTheme.palette.statusColors[color],
+    backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
     flexShrink: 0,
     height: '10px',
@@ -44,7 +50,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     width: '8em',
   },
   primaryIcon: {
-    color: oldTheme.palette.grey[500],
+    color: theme.palette.grey[500],
     fontSize: '28px',
   },
   right: {
@@ -52,7 +58,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     display: 'flex',
   },
   secondaryIcon: {
-    color: oldTheme.palette.grey[700],
+    color: theme.palette.grey[700],
     margin: '0 0.5em',
   },
 }));
@@ -94,6 +100,7 @@ const ActivityListItem = ({
   endNumber,
   endNumberColor = 'secondary',
 }: AcitivityListItemProps) => {
+  const theme = useTheme();
   const classes = useStyles({ color });
 
   return (
@@ -113,9 +120,7 @@ const ActivityListItem = ({
           </Tooltip>
           <PrimaryIcon className={classes.primaryIcon} />
           <Box>
-            <Typography color={oldTheme.palette.text.primary}>
-              {title}
-            </Typography>
+            <Typography color={theme.palette.text.primary}>{title}</Typography>
             {subtitle && (
               <Box>
                 <Typography variant="body2">{subtitle}</Typography>

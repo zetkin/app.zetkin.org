@@ -8,7 +8,6 @@ import FieldGroup from './FieldGroup';
 import { useAppSelector } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
-import oldTheme from 'theme';
 
 interface StyleProps {
   cancelled: boolean;
@@ -19,7 +18,7 @@ interface StyleProps {
   width: string;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   collapsedContainer: {
     alignItems: 'center',
     borderBottomLeftRadius: 4,
@@ -37,10 +36,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     background: ({ cancelled, draft }) =>
       `linear-gradient(to right, ${
         cancelled || draft
-          ? oldTheme.palette.secondary.main
-          : oldTheme.palette.primary.main
+          ? theme.palette.secondary.main
+          : theme.palette.primary.main
       } 4px, white 4px)`,
-    border: `1px solid ${oldTheme.palette.grey[300]}`,
+    border: `1px solid ${theme.palette.grey[300]}`,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
     borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
@@ -56,7 +55,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     width: ({ width }) => width,
   },
   fieldGroupContainer: {
-    borderTop: `1px solid ${oldTheme.palette.grey[300]}`,
+    borderTop: `1px solid ${theme.palette.grey[300]}`,
   },
   fieldGroups: {
     display: 'flex',
