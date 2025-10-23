@@ -42,6 +42,12 @@ function renderTree(props: OrganizationTreeProps): React.ReactNode {
         </Link>
       }
       onClick={onSwitchOrg}
+      sx={(theme) => ({
+        '.MuiTreeItem-content.Mui-focused:hover': {
+          backgroundColor:
+            theme.palette.mode === 'dark' ? theme.palette.grey[800] : undefined,
+        },
+      })}
     >
       {item.children
         ? renderTree({ onSwitchOrg, orgId, treeItemData: item.children })
