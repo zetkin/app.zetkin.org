@@ -11,6 +11,7 @@ type Props = {
   householdItems: HouseholdItem[];
   initialExpanded?: boolean;
   onClick: (householdId: number) => void;
+  onClickDetails: (householdId: number) => void;
   onClickVisit: (householdId: number) => void;
   onDeselectIds: (ids: number[]) => void;
   onSelectIds: (ids: number[]) => void;
@@ -22,6 +23,7 @@ const FloorHouseholdGroup: FC<Props> = ({
   householdItems,
   initialExpanded = false,
   onClick,
+  onClickDetails,
   onClickVisit,
   onSelectIds,
   onDeselectIds,
@@ -128,6 +130,7 @@ const FloorHouseholdGroup: FC<Props> = ({
                 onClick(householdId);
               }
             }}
+            onClickDetails={(householdId) => onClickDetails(householdId)}
             onClickVisit={(householdId) => onClickVisit(householdId)}
             selectedIds={selectedIds}
           />

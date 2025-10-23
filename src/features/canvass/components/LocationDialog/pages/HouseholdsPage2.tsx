@@ -23,6 +23,7 @@ type Props = {
   onBulkVisit: (households: number[]) => void;
   onClickVisit: (householdId: number) => void;
   onClose: () => void;
+  onDetails: (householdId: number) => void;
   onSelectHousehold: (householdId: number) => void;
   onSelectHouseholds: (householdIds: null | number[]) => void;
   selectedHouseholdIds: null | number[];
@@ -36,6 +37,7 @@ const HouseholdsPage2: FC<Props> = ({
   onBulkVisit,
   onClickVisit,
   onClose,
+  onDetails,
   onSelectHousehold,
   onSelectHouseholds,
   selectedHouseholdIds,
@@ -110,6 +112,7 @@ const HouseholdsPage2: FC<Props> = ({
               assignment={assignment}
               draftFloors={draftFloors}
               location={location}
+              onClickDetails={(householdId) => onDetails(householdId)}
               onClickVisit={onClickVisit}
               onEditChange={(drafts) => {
                 setDraftFloors(drafts);

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import { TreeItemData } from './types';
+import { SuborgWithStats, TreeItemData } from './types';
 import {
   remoteItem,
   RemoteItem,
@@ -29,6 +29,7 @@ export interface OrganizationsStoreSlice {
   filters: OrgEventFilters;
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
+  suborgsWithStats: RemoteList<SuborgWithStats>;
   treeDataList: RemoteList<TreeItemData>;
   userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
@@ -44,6 +45,7 @@ const initialState: OrganizationsStoreSlice = {
   },
   orgData: remoteItem(0),
   subOrgsByOrgId: {},
+  suborgsWithStats: remoteList(),
   treeDataList: remoteList(),
   userMembershipList: remoteList(),
 };
@@ -135,6 +137,19 @@ const OrganizationsSlice = createSlice({
       state.subOrgsByOrgId[orgId].loaded = new Date().toISOString();
       state.subOrgsByOrgId[orgId].isLoading = false;
     },
+    suborgsWithStatsLoad: (state) => {
+      state.suborgsWithStats.isLoading = true;
+    },
+    suborgsWithStatsLoaded: (
+      state,
+      action: PayloadAction<SuborgWithStats[]>
+    ) => {
+      const suborgsWithStats = action.payload;
+
+      state.suborgsWithStats = remoteList(suborgsWithStats);
+      state.suborgsWithStats.loaded = new Date().toISOString();
+      state.suborgsWithStats.isLoading = false;
+    },
     treeDataLoad: (state) => {
       state.treeDataList.isLoading = true;
     },
@@ -177,6 +192,8 @@ export const {
   treeDataLoaded,
   subOrgsLoad,
   subOrgsLoaded,
+  suborgsWithStatsLoad,
+  suborgsWithStatsLoaded,
   userMembershipsLoad,
   userMembershipsLoaded,
 } = OrganizationsSlice.actions;
