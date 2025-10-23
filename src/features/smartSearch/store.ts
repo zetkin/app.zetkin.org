@@ -9,7 +9,7 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 
-type EphemeralQueryStats = {
+export type EphemeralQueryStats = {
   // This property needs to be called `id` to meet the requirements
   // of RemoteItem, but really it will be the JSON serialization of
   // the filters in the query.

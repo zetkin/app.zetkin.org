@@ -122,6 +122,7 @@ export default function mockState(overrides?: RootState) {
       },
       orgData: remoteItem(0),
       subOrgsByOrgId: {},
+      suborgsWithStats: remoteList(),
       treeDataList: remoteList(),
       userMembershipList: remoteList(),
     },
