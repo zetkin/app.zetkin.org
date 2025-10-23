@@ -10,6 +10,7 @@ type Props = {
   expanded: boolean;
   item: HouseholdItem;
   onClick: () => void;
+  onClickDetails: () => void;
   onClickVisit: () => void;
   selectionMode: 'default' | 'selected' | 'unselected';
 };
@@ -19,6 +20,7 @@ const HouseholdStackItem: FC<Props> = ({
   expanded,
   item,
   onClick,
+  onClickDetails,
   onClickVisit,
   selectionMode,
 }) => {
@@ -84,6 +86,15 @@ const HouseholdStackItem: FC<Props> = ({
               gap: 1,
             }}
           >
+            <Button
+              onClick={(ev) => {
+                ev.stopPropagation();
+                onClickDetails();
+              }}
+              variant="outlined"
+            >
+              Details
+            </Button>
             <Button
               onClick={(ev) => {
                 ev.stopPropagation();
