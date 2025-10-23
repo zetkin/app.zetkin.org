@@ -91,6 +91,10 @@ export default makeMessages('feat.canvass', {
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       wasVisited: m('This household has been visited in this assignment'),
     },
+    stackItem: {
+      detailsButtonLabel: m('Details'),
+      visitButtonLabel: m('Visit'),
+    },
   },
   instructions: {
     areas: m('Areas'),

@@ -1,6 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 
+import { Msg } from 'core/i18n';
+import messageIds from 'features/canvass/l10n/messageIds';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { HouseholdItem } from './types';
 import HouseholdSquare from './HouseholdSquare';
@@ -10,6 +12,7 @@ type Props = {
   expanded: boolean;
   item: HouseholdItem;
   onClick: () => void;
+  onClickDetails: () => void;
   onClickVisit: () => void;
   selectionMode: 'default' | 'selected' | 'unselected';
 };
@@ -19,6 +22,7 @@ const HouseholdStackItem: FC<Props> = ({
   expanded,
   item,
   onClick,
+  onClickDetails,
   onClickVisit,
   selectionMode,
 }) => {
@@ -87,11 +91,20 @@ const HouseholdStackItem: FC<Props> = ({
             <Button
               onClick={(ev) => {
                 ev.stopPropagation();
+                onClickDetails();
+              }}
+              variant="outlined"
+            >
+              <Msg id={messageIds.households.stackItem.detailsButtonLabel} />
+            </Button>
+            <Button
+              onClick={(ev) => {
+                ev.stopPropagation();
                 onClickVisit();
               }}
               variant="outlined"
             >
-              Visit
+              <Msg id={messageIds.households.stackItem.visitButtonLabel} />
             </Button>
           </Box>
         </Box>
