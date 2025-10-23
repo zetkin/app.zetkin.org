@@ -16,10 +16,12 @@ export default function useHouseholds(
     actionOnLoad: () => householdsLoad(locationId),
     actionOnSuccess: (data) => householdsLoaded([locationId, data]),
     loader: async () =>
-      fetchAllPaginated<HouseholdWithColor>((page) =>
-        apiClient.get(
-          `/beta/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
-        )
+      fetchAllPaginated<HouseholdWithColor>(
+        (page) =>
+          apiClient.get(
+            `/beta/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
+          ),
+        100
       ),
   });
 }
