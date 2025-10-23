@@ -1,5 +1,5 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
@@ -26,8 +26,15 @@ export default async function RootLayout({
     user = null;
   }
 
+  const theme = cookies().get('theme')?.value || 'light';
+
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={{
+        backgroundColor: theme === 'dark' ? '#151515' : undefined,
+      }}
+    >
       <body>
         <AppRouterCacheProvider>
           <ClientContext

@@ -65,11 +65,22 @@ export const ZUIThemeProvider = ({
       set: (darkMode: boolean | 'auto') => {
         setDarkModeToLocalStorage(darkMode);
         setDarkModeSetting(darkMode);
-        setDarkMode(getDarkModeFromLocalStorage());
+
+        const newDarkModeVal = getDarkModeFromLocalStorage();
+        document.cookie = `theme=${
+          newDarkModeVal ? 'dark' : 'light'
+        }; path=/; max-age=31536000`;
+        setDarkMode(newDarkModeVal);
       },
       value: darkModeSetting,
     };
   }, [setDarkMode, darkModeSetting]);
+
+  useEffect(() => {
+    document.cookie = `theme=${
+      darkMode ? 'dark' : 'light'
+    }; path=/; max-age=31536000`;
+  }, [darkMode]);
 
   return (
     <StylesThemeProvider theme={theme}>
