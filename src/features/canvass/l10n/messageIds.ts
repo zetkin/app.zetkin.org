@@ -9,10 +9,6 @@ export default makeMessages('feat.canvass', {
     location: m('Untitled location'),
   },
   households: {
-    stackItem: {
-      detailsButtonLabel: m('Details'),
-      visitButtonLabel: m('Visit'),
-    },
     bulkEditHouseholds: {
       floorLabel: m('Edit floor'),
       header: m<{ numHouseholds: number }>(
@@ -94,6 +90,10 @@ export default makeMessages('feat.canvass', {
       logVisitButtonLabel: m('Log visit'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       wasVisited: m('This household has been visited in this assignment'),
+    },
+    stackItem: {
+      detailsButtonLabel: m('Details'),
+      visitButtonLabel: m('Visit'),
     },
   },
   instructions: {
