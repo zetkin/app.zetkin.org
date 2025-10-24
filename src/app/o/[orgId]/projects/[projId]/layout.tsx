@@ -7,6 +7,7 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import PublicProjectLayout from 'features/campaigns/layout/PublicProjectLayout';
+import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {
   children: ReactNode;
@@ -26,9 +27,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `/api/orgs/${params.orgId}/campaigns/${params.projId}`
   );
 
+  const baseTags = getSeoTags(
+    `${campaign.title} | ${campaign.organization.title}`,
+    campaign.info_text,
+    `/o/${campaign.organization.id}/projects/${campaign.id}`
+  );
   return {
-    icons: [{ url: '/logo-zetkin.png' }],
-    title: campaign.title,
+    ...baseTags,
+    openGraph: {
+      ...baseTags.openGraph,
+      ...getOrganizationOpenGraphTags(campaign.organization),
+    },
+    robots: { follow: true, index: campaign.published },
   };
 }
 

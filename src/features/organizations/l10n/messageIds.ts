@@ -67,6 +67,9 @@ export default makeMessages('feat.organizations', {
       logout: m('Logout'),
       myZetkin: m('My Zetkin'),
     },
+    seoDescription: m<{ org: string }>(
+      `Discover {org}, an organization driving social change through activism, community projects, and initiatives. Stay informed about their events, campaigns, and efforts to create a more just, sustainable, and equitable society.`
+    ),
     tabs: {
       calendar: m('Calendar'),
       suborgs: m('Explore'),
