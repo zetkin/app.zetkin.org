@@ -45,7 +45,7 @@ async function loadMessages(): Promise<MessageDB> {
   const basePath = path.resolve('./src/locale');
   const messages: MessageDB = {};
 
-  for await (const fullPath of findYMLFiles('./src')) {
+  for await (const fullPath of findYMLFiles(basePath)) {
     const localPath = fullPath.replace(basePath, '');
     const pathElems = localPath.split(path.sep).filter((elem) => elem.length);
     const fileName = pathElems.pop();
