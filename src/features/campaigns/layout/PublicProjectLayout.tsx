@@ -28,7 +28,7 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
-  const { allEvents, filteredEvents } = useFilteredCampaignEvents(
+  const { filteredEvents } = useFilteredCampaignEvents(
     campaign.organization.id,
     campaign.id
   );
@@ -89,7 +89,7 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
       }
       locationFilter={geojsonToFilterBy}
       setLocationFilter={setLocationFilter}
-      showMap={allEvents.length > 0}
+      showMap={true}
     >
       {children}
     </EventMapLayout>
