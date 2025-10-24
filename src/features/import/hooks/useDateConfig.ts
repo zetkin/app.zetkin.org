@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { columnUpdate } from '../store';
-import { DateColumn } from '../utils/types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
+import { columnUpdate } from '../store';
 import parserFactory from '../utils/dateParsing/parserFactory';
 import { IDateParser } from '../utils/dateParsing/types';
+import { DateColumn } from '../utils/types';
 
 export default function useDateConfig(column: DateColumn, columnIndex: number) {
   const dispatch = useAppDispatch();
@@ -33,21 +33,29 @@ export default function useDateConfig(column: DateColumn, columnIndex: number) {
     parser = parserFactory(column.dateFormat);
   }
 
-  const wrongDateFormat = cellValues.some((value, index) => {
-    if (index === 0 && firstRowIsHeaders) {
-      return false;
-    }
+  const problemRows = cellValues
+    .map((value, index) => ({ index, value }))
+    .filter(({ value, index }) => {
+      if (index === 0 && firstRowIsHeaders) {
+        return false;
+      }
+      if (!value) {
+        return false;
+      }
+      return parser && column.dateFormat && !parser.validate(value);
+    })
+    .map(({ index }) => index);
 
-    if (!value) {
-      return false;
-    }
+  const cellValuesLength = cellValues.length - (firstRowIsHeaders ? 1 : 0);
 
-    if (parser && column.dateFormat) {
-      return !parser.validate(value);
-    }
-
-    return false;
-  });
+  const wrongDateFormat =
+    problemRows.length !== 0
+      ? {
+          count: problemRows.length,
+          percentage: Math.round((problemRows.length / cellValuesLength) * 100),
+          problemRows: problemRows,
+        }
+      : null;
 
   const updateDateFormat = (dateFormat: string) => {
     dispatch(columnUpdate([columnIndex, { ...column, dateFormat }]));
