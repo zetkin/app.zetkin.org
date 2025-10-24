@@ -4,6 +4,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.organizations', {
   allEventsList: {
+    descriptionReadMore: m('Read more'),
     emptyList: {
       message: m('Could not find any events'),
       removeFiltersButton: m('Clear filters'),
@@ -66,6 +67,7 @@ export default makeMessages('feat.organizations', {
     },
     tabs: {
       calendar: m('Calendar'),
+      projects: m('Projects'),
       suborgs: m('Explore'),
     },
   },
@@ -87,6 +89,9 @@ export default makeMessages('feat.organizations', {
   },
   page: {
     title: m('Select organization:'),
+  },
+  projectsList: {
+    emptyList: m('Could not find any projects'),
   },
   sidebar: {
     allOrganizations: m('All organizations'),
