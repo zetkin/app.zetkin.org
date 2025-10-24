@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import { SuborgWithStats, TreeItemData } from './types';
+import { SuborgResult, TreeItemData } from './types';
 import {
   remoteItem,
   RemoteItem,
@@ -29,7 +29,7 @@ export interface OrganizationsStoreSlice {
   filters: OrgEventFilters;
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
-  suborgsWithStats: RemoteList<SuborgWithStats>;
+  suborgsWithStats: RemoteList<SuborgResult>;
   treeDataList: RemoteList<TreeItemData>;
   userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
@@ -140,10 +140,7 @@ const OrganizationsSlice = createSlice({
     suborgsWithStatsLoad: (state) => {
       state.suborgsWithStats.isLoading = true;
     },
-    suborgsWithStatsLoaded: (
-      state,
-      action: PayloadAction<SuborgWithStats[]>
-    ) => {
+    suborgsWithStatsLoaded: (state, action: PayloadAction<SuborgResult[]>) => {
       const suborgsWithStats = action.payload;
 
       state.suborgsWithStats = remoteList(suborgsWithStats);

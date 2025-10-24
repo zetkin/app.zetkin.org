@@ -21,3 +21,10 @@ export type SuborgWithStats = {
   };
   title: string;
 };
+
+export type SuborgError = {
+  error: boolean;
+  id: string;
+};
+
+export type SuborgResult = SuborgWithStats | SuborgError;
