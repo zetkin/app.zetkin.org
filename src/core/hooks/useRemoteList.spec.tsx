@@ -13,12 +13,28 @@ type StoreState = {
 };
 
 describe('useRemoteList()', () => {
+  it('deduplicates loader across two components using same cacheKey on initial load', async () => {
+    const { hooks, promise, render } = setupWrapperComponent();
+
+    const { queryByText } = render();
+
+    expect(queryByText('loading1')).not.toBeNull();
+    expect(queryByText('loading2')).not.toBeNull();
+
+    await act(async () => {
+      await promise;
+    });
+
+    // Called only once although two components mounted
+    expect(hooks.loader).toHaveBeenCalledTimes(1);
+  });
   it('triggers a load when the data has not yet been loaded', async () => {
     const { hooks, promise, render, store } = setupWrapperComponent();
 
     const { queryByText } = render();
 
-    expect(queryByText('loading')).not.toBeNull();
+    expect(queryByText('loading1')).not.toBeNull();
+    expect(queryByText('loading2')).not.toBeNull();
 
     await act(async () => {
       await promise;
@@ -35,30 +51,48 @@ describe('useRemoteList()', () => {
       type: 'loaded',
     });
 
-    expect(queryByText('loading')).toBeNull();
-    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
   });
 
   it('returns data without load when the data has been loaded recently', async () => {
-    const { hooks, render, store } = setupWrapperComponent({
+    const { hooks, promise, render, store } = setupWrapperComponent({
       ...remoteList([
         {
           id: 1,
           name: 'Clara Zetkin',
         },
+        {
+          id: 2,
+          name: 'Rosa Luxemburg',
+        },
       ]),
       loaded: new Date().toISOString(),
     });
 
-    const { queryByText } = render();
+    const { queryByText, queryAllByText } = render();
 
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(hooks.loader).not.toHaveBeenCalled();
-    expect(queryByText('loading')).toBeNull();
-    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
 
-    const listItem = queryByText('Clara Zetkin');
-    expect(listItem?.tagName).toBe('LI');
+    const listItems = queryAllByText('Clara Zetkin');
+    expect(listItems).toHaveLength(2);
+    listItems.forEach((item) => {
+      expect(item?.tagName).toBe('LI');
+    });
+
+    await act(async () => {
+      await promise;
+    });
+
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
   });
 
   it('returns stale data while re-loading', async () => {
@@ -68,20 +102,37 @@ describe('useRemoteList()', () => {
           id: 1,
           name: 'Clara Zetkin',
         },
+        {
+          id: 2,
+          name: 'Rosa Luxemburg',
+        },
       ]),
       loaded: new Date(1857, 6, 5).toISOString(),
     });
 
-    const { queryByText } = render();
+    const { queryByText, queryAllByText, debug } = render();
 
-    expect(queryByText('Clara Zetkin')).not.toBeNull();
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
 
     await act(async () => {
       await promise;
     });
 
+    debug();
+
     expect(hooks.loader).toHaveBeenCalled();
     expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(0);
   });
 });
 
@@ -101,7 +152,7 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
       } else if (action.type == 'loaded') {
         return {
           list: {
-            ...remoteList(),
+            ...remoteList(action.payload as ListObjectForTest[]),
             isLoading: false,
             loaded: new Date().toISOString(),
           },
@@ -125,6 +176,7 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
       payload: data,
       type: 'loaded',
     }),
+    cacheKey: 'test:list',
     loader: () => promise,
   };
 
@@ -139,7 +191,26 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
 
     return (
       <div>
-        <p>loaded</p>
+        <p>loaded1</p>
+        <ul>
+          {items.map((item) => (
+            <li key={item.id}>{item.name}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const Component2: FC = () => {
+    const list = useSelector<StoreState, RemoteList<ListObjectForTest>>(
+      (state) => state.list
+    );
+
+    const items = useRemoteList(list, hooks);
+
+    return (
+      <div>
+        <p>loaded2</p>
         <ul>
           {items.map((item) => (
             <li key={item.id}>{item.name}</li>
@@ -155,8 +226,11 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
     render: () =>
       render(
         <ReduxProvider store={store}>
-          <Suspense fallback={<p>loading</p>}>
+          <Suspense fallback={<p>loading1</p>}>
             <Component />
+          </Suspense>
+          <Suspense fallback={<p>loading2</p>}>
+            <Component2 />
           </Suspense>
         </ReduxProvider>
       ),

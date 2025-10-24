@@ -16,6 +16,7 @@ export default function useLocationVisits(
   const visits = useRemoteList(visitList, {
     actionOnLoad: () => visitsLoad(assignmentId),
     actionOnSuccess: (items) => visitsLoaded([assignmentId, items]),
+    cacheKey: `visits:${orgId}:${assignmentId}:${locationId}`,
     loader: () =>
       apiClient.get<ZetkinLocationVisit[]>(
         `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits`
