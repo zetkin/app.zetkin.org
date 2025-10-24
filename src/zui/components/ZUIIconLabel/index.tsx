@@ -1,14 +1,28 @@
 import { FC, ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import { MUIIcon, ZUIPrimary, ZUISecondary, ZUISize } from '../types';
-import ZUIIcon from '../ZUIIcon';
+import {
+  MUIIcon,
+  ZUIPrimary,
+  ZUISecondary,
+  ZUISize,
+} from 'zui/components/types';
+import ZUIIcon from 'zui/components/ZUIIcon';
+import ZUILink from 'zui/components/ZUILink';
 
 const TextVariants = {
   large: 'bodyMdRegular',
   medium: 'bodySmRegular',
   small: 'bodySmRegular',
 } as const;
+
+export type ZUILabelText =
+  | string
+  | {
+      href: string;
+      openNewTab?: boolean;
+      text: string;
+    };
 
 export type ZUIIconLabelProps = {
   /**
@@ -28,7 +42,7 @@ export type ZUIIconLabelProps = {
   /**
    * The label
    */
-  label: string | string[];
+  label: ZUILabelText | ZUILabelText[];
 
   /**
    * If true, the text will not overflow and end with an ellipsis.
@@ -45,6 +59,23 @@ export type ZUIIconLabelProps = {
   size?: ZUISize;
 };
 
+const getLabelText = (label: ZUILabelText, key: number | string) => {
+  if (typeof label === 'string') {
+    return label;
+  }
+
+  return (
+    <ZUILink
+      key={key}
+      hoverUnderline={true}
+      href={label.href}
+      openInNewTab={label.openNewTab ?? false}
+      text={label.text}
+      variant={'secondary'}
+    />
+  );
+};
+
 const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
   color = 'primary',
   icon,
@@ -55,19 +86,23 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
   const labels: ReactNode[] = [];
 
   if (Array.isArray(label)) {
+    let i = 0;
+
     label.forEach((text, index) => {
       if (index > 0) {
         labels.push(
-          <Typography key={index} component="span" sx={{ mx: 1 }}>
+          <Typography key={i} component="span" sx={{ mx: 1 }}>
             ·
           </Typography>
         );
+        i++;
       }
 
-      labels.push(text);
+      labels.push(getLabelText(text, i));
+      i++;
     });
   } else {
-    labels.push(label);
+    labels.push(getLabelText(label, 0));
   }
 
   return (
