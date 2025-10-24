@@ -6,7 +6,6 @@ import {
   ZetkinCampaign,
   ZetkinEmail,
   ZetkinEvent,
-  ZetkinEventParticipant,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurveySubmission,
@@ -50,42 +49,57 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const today = now.toISOString().slice(0, 10);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
-    const [suborgStats, calls, surveySubmissions, events, lists, projects] =
-      await Promise.all([
-        apiClient.post<
-          ZetkinSmartSearchFilterStats[],
-          { filter_spec: ZetkinSmartSearchFilter[] }
-        >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
-          filter_spec: [
-            {
-              config: {},
-              op: OPERATION.ADD,
-              type: FILTER_TYPE.ALL,
+    const [
+      suborgStats,
+      eventParticipationStats,
+      calls,
+      surveySubmissions,
+      lists,
+      projects,
+    ] = await Promise.all([
+      apiClient.post<
+        ZetkinSmartSearchFilterStats[],
+        { filter_spec: ZetkinSmartSearchFilter[] }
+      >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
+        filter_spec: [
+          {
+            config: {},
+            op: OPERATION.ADD,
+            type: FILTER_TYPE.ALL,
+          },
+        ],
+      }),
+      apiClient.post<
+        ZetkinSmartSearchFilterStats[],
+        { filter_spec: ZetkinSmartSearchFilter[] }
+      >(`/api/orgs/${suborg.id}/people/queries/ephemeral/stats`, {
+        filter_spec: [
+          {
+            config: {
+              after: '-30d',
+              operator: 'in',
+              organizations: [suborg.id],
+              state: 'booked',
             },
-          ],
-        }),
-        apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
-        apiClient.get<ZetkinSurveySubmission[]>(
-          `/api/orgs/${suborg.id}/survey_submissions?recursive`
-        ),
-        apiClient.get<ZetkinEvent[]>(
-          `/api/orgs/${suborg.id}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=start_time<=${today}`
-        ),
-        apiClient.get<ZetkinView[]>(
-          `/api/orgs/${suborg.id}/people/views?recursive`
-        ),
-        apiClient.get<ZetkinCampaign[]>(
-          `/api/orgs/${suborg.id}/campaigns?recursive`
-        ),
-      ]);
-
-    let numEventParticipants = 0;
-    for (const event of events) {
-      const participants = await apiClient.get<ZetkinEventParticipant[]>(
-        `/api/orgs/${suborg.id}/actions/${event.id}/participants`
-      );
-      numEventParticipants = numEventParticipants + participants.length;
-    }
+            op: OPERATION.ADD,
+            type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+          },
+        ],
+      }),
+      apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
+      apiClient.get<ZetkinSurveySubmission[]>(
+        `/api/orgs/${suborg.id}/survey_submissions?recursive`
+      ),
+      apiClient.get<ZetkinEvent[]>(
+        `/api/orgs/${suborg.id}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=start_time<=${today}`
+      ),
+      apiClient.get<ZetkinView[]>(
+        `/api/orgs/${suborg.id}/people/views?recursive`
+      ),
+      apiClient.get<ZetkinCampaign[]>(
+        `/api/orgs/${suborg.id}/campaigns?recursive`
+      ),
+    ]);
 
     //TODO: Add call to /emails with "recursive" flag in Promise.all above
     //once the API supports "recursive" flag for emails.
@@ -116,6 +130,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       numEmailsSent = numEmailsSent + stats.num_sent;
     }
     const numPeople = suborgStats[0].result;
+    const numEventParticipants = eventParticipationStats[0].result;
 
     const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
 
