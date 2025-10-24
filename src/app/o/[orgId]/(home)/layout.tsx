@@ -6,6 +6,10 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicOrgLayout from 'features/organizations/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import { getBrowserLanguage } from 'utils/locale';
+import getServerMessages from 'core/i18n/server';
+import messageIds from 'features/organizations/l10n/messageIds';
+import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {
   children: ReactNode;
@@ -20,13 +24,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
+  const lang = getBrowserLanguage(headersList.get('accept-language') || '');
+  const messages = await getServerMessages(lang, messageIds);
+
   const org = await apiClient.get<ZetkinOrganization>(
     `/api/orgs/${params.orgId}`
   );
 
+  const description = messages.home.seoDescription({ org: org.title });
+
+  const baseTags = getSeoTags(org.title, description, `/o/${org.id}`);
   return {
-    icons: [{ url: '/logo-zetkin.png' }],
-    title: org.title,
+    ...baseTags,
+    openGraph: {
+      ...baseTags.openGraph,
+      ...getOrganizationOpenGraphTags(org),
+    },
+    robots: { follow: true, index: org.is_public },
   };
 }
 

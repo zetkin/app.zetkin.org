@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.organizations', {
   allEventsList: {
@@ -64,6 +64,9 @@ export default makeMessages('feat.organizations', {
       logout: m('Logout'),
       myZetkin: m('My Zetkin'),
     },
+    seoDescription: m<{ org: string }>(
+      `Discover {org}, an organization driving social change through activism, community projects, and initiatives. Stay informed about their events, campaigns, and efforts to create a more just, sustainable, and equitable society.`
+    ),
     tabs: {
       calendar: m('Calendar'),
       suborgs: m('Explore'),

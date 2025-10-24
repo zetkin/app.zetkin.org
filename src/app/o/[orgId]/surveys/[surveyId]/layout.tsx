@@ -8,6 +8,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicSurveyLayout from 'features/surveys/layouts/PublicSurveyLayout';
+import { getSeoTags } from 'utils/seoTags';
 
 type Props = {
   children: ReactNode;
@@ -23,14 +24,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const survey = await apiClient.get<ZetkinSurveyExtended>(
     `/api/orgs/${orgId}/surveys/${surveyId}`
   );
-  return {
-    description: survey.info_text,
-    openGraph: {
-      description: survey.info_text,
-      title: survey.title,
-    },
-    title: survey.title,
-  };
+
+  return getSeoTags(
+    `${survey.title} | ${survey.organization.title}`,
+    survey.info_text,
+    `/o/${survey.organization.id}/surveys/${survey.id}`,
+    [
+      'social change',
+      'feedback',
+      'research',
+      'community input',
+      'surveys',
+      'participation',
+    ]
+  );
 }
 
 // @ts-expect-error https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error
