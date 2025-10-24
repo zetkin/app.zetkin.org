@@ -14,7 +14,7 @@ import {
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
-import { SuborgWithStats } from '../types';
+import { SuborgResult } from '../types';
 import { ZetkinCall } from 'features/call/types';
 import { ZetkinEmailStats } from 'features/emails/types';
 
@@ -24,7 +24,7 @@ const paramsSchema = z.object({
 
 type Params = z.infer<typeof paramsSchema>;
 
-export type Result = SuborgWithStats[];
+export type Result = SuborgResult[];
 
 export const getSuborgsWithStatsDef = {
   handler: handle,
@@ -143,5 +143,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
    * Background: It otherwise would resolve the promises after sending it out somehow.
    * It caused the request to take 4 times compared to when awaiting it here
    ***/
-  return await Promise.all(suborgPromises);
+  return await Promise.all(
+    suborgPromises.map((promise, index) =>
+      promise.catch(() => ({ error: true, id: `error-${index}` }))
+    )
+  );
 }
