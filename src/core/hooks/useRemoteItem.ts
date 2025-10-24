@@ -1,9 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import shouldLoad from 'core/caching/shouldLoad';
 import { RemoteItem } from 'utils/storeUtils';
-import { useAppDispatch } from '.';
-import usePromiseCache from './usePromiseCache';
+import useRemoteObject from './useRemoteObject';
 
 export default function useRemoteItem<
   DataType,
@@ -20,34 +18,7 @@ export default function useRemoteItem<
     loader: () => Promise<DataType>;
   }
 ): DataType {
-  const dispatch = useAppDispatch();
-  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteItem);
-
-  const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache } = usePromiseCache(promiseKey);
-
-  if (loadIsNecessary) {
-    dispatch(hooks.actionOnLoad());
-
-    const promise = hooks
-      .loader()
-      .then((data) => {
-        dispatch(hooks.actionOnSuccess(data));
-      })
-      .catch((err) => {
-        if (hooks.actionOnError) {
-          dispatch(hooks.actionOnError(err));
-        }
-      });
-
-    cache(promise);
-
-    if (remoteItem?.data) {
-      return remoteItem.data;
-    } else {
-      throw promise;
-    }
-  }
+  useRemoteObject(remoteItem, hooks);
 
   if (!remoteItem?.data) {
     throw new Error('Item not loading or loaded');
