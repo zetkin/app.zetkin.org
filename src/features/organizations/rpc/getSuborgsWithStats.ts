@@ -5,7 +5,6 @@ import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinCampaign,
   ZetkinEmail,
-  ZetkinEvent,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurveySubmission,
@@ -46,7 +45,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const thirtyDaysAgo = new Date(new Date().setDate(now.getDate() - 30))
     .toISOString()
     .slice(0, 10);
-  const today = now.toISOString().slice(0, 10);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
     const [
@@ -89,9 +87,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       apiClient.get<ZetkinCall[]>(`/api/orgs/${suborg.id}/calls?recursive`),
       apiClient.get<ZetkinSurveySubmission[]>(
         `/api/orgs/${suborg.id}/survey_submissions?recursive`
-      ),
-      apiClient.get<ZetkinEvent[]>(
-        `/api/orgs/${suborg.id}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=start_time<=${today}`
       ),
       apiClient.get<ZetkinView[]>(
         `/api/orgs/${suborg.id}/people/views?recursive`
