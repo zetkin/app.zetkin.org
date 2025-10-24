@@ -79,9 +79,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const showErrorAlert = status == 'error';
 
   const privacyUrl =
-    process.env.ORGANIZATION_PRIVACY_POLICY_LINK ||
-    process.env.ZETKIN_PRIVACY_POLICY_LINK ||
-    'https://zetkin.org/privacy';
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
