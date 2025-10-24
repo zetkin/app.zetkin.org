@@ -41,6 +41,10 @@ export async function GET(
   ]);
 
   const urls =
+    getUrlsXml(
+      [`${baseUrl}/o/${params.orgId}`, `${baseUrl}/o/${params.orgId}/suborgs`],
+      (str) => str
+    ) +
     getUrlsXml(events, (e) => `${baseUrl}/o/${params.orgId}/events/${e.id}`) +
     getUrlsXml(
       projects,
