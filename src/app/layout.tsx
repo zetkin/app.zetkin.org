@@ -11,9 +11,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const lang = getBrowserLanguage(headers().get('accept-language') || '');
-  const messages = await getMessages(lang);
-
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
@@ -25,6 +22,10 @@ export default async function RootLayout({
   } catch (e) {
     user = null;
   }
+
+  const lang =
+    user?.lang || getBrowserLanguage(headers().get('accept-language') || '');
+  const messages = await getMessages(lang);
 
   return (
     <html lang="en">
