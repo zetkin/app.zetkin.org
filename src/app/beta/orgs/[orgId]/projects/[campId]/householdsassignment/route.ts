@@ -67,6 +67,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       const model = new HouseholdsAssignmentModel({
         assigneeIds: [],
         campId: params.campId,
+        id: 0, // Will be set by pre-validate hook
         orgId: orgId,
         queryId: queryRes.id,
         title: payload.title,

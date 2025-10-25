@@ -49,7 +49,7 @@ const householdsAssignmentSchema =
   });
 
 householdsAssignmentSchema.pre<ZetkinHouseholdsAssignmentModelType>(
-  'save',
+  'validate',
   async function (next) {
     if (!this.id) {
       this.id = await getNextHouseholdAssignmentId();
