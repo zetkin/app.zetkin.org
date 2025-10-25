@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
 import {
   ArrowForward,
+  BookmarkAddOutlined,
   CancelOutlined,
   ContentCopy,
   Delete,
@@ -117,17 +118,17 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
                     : messages.eventActionButtons.cancel(),
                   warningText: event.cancelled
                     ? messages.eventActionButtons.warningRestore({
-                        eventTitle:
-                          event.title ||
-                          event.activity?.title ||
-                          messages.common.noTitle(),
-                      })
+                      eventTitle:
+                        event.title ||
+                        event.activity?.title ||
+                        messages.common.noTitle(),
+                    })
                     : messages.eventActionButtons.warningCancel({
-                        eventTitle:
-                          event.title ||
-                          event.activity?.title ||
-                          messages.common.noTitle(),
-                      }),
+                      eventTitle:
+                        event.title ||
+                        event.activity?.title ||
+                        messages.common.noTitle(),
+                    }),
                 });
               },
 
@@ -141,6 +142,11 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
               label: <>{messages.eventActionButtons.duplicate()}</>,
               onSelect: handleDuplicate,
               startIcon: <ContentCopy />,
+            },
+            {
+              label: <>Bookmark</>,
+              onSelect: handleMove,
+              startIcon: <BookmarkAddOutlined />,
             },
             {
               label: <>{messages.eventActionButtons.move()}</>,
