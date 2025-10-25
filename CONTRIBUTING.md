@@ -102,6 +102,8 @@ represents the structure of that part of the app, and with messages defined in t
 object. Add your own message (or sub-object of multiple messages) where each message is
 defined using the `m()` function.
 
+Messages use [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages) for variable interpolation and pluralization (e.g. `{orgCount, plural, =0 {No organizations} =1 {One organization} other {# organizations}}`).
+
 ### How it works
 Translations are stored in YAML files in `src/locale`. These files are not created by
 humans. The English "translations" are generated from the `messageIds`, and any other
