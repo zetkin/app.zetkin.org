@@ -61,6 +61,10 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
           href: '/incoming',
           label: messages.browserLayout.tabs.incoming(),
         },
+        {
+          href: "/test",
+          label: "Test"
+        }
       ]}
       title={messages.browserLayout.title()}
     >

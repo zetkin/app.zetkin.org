@@ -4,19 +4,35 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Architecture,
+  ArchitectureOutlined,
+  BookmarksOutlined,
+  CalendarMonthOutlined,
+  CalendarTodayOutlined,
+  CalendarViewDay,
   Close,
+  CompassCalibrationOutlined,
+  EventOutlined,
   ExpandLess,
   ExpandMore,
   Explore,
+  Favorite,
+  FavoriteBorder,
+  FavoriteOutlined,
+  FiberPin,
   FilterListOutlined,
   Groups,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
   LocalOffer,
+  LocationPin,
   Logout,
   Map,
+  Person,
+  Pin,
+  Pinterest,
   Search,
   Settings,
+  Star
 } from '@mui/icons-material';
 import {
   Avatar,
@@ -360,6 +376,53 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       justifyContent: 'flex-end',
                     }}
                   >
+                    <ZUIEllipsisMenu
+                      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                      menuIcon={<BookmarksOutlined />}
+                      removable
+                      items={[
+                        {
+                          label: (
+                            <Typography>
+                              Max F.
+                              {/* {messages.organizeSidebar.signOut()} */}
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            // 
+                          },
+                          startIcon: <Person />,
+                        },
+                        {
+                          label: (
+                            <Typography>
+                              Pizza Communista
+                              {/* {messages.organizeSidebar.signOut()} */}
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            // 
+                          },
+                          startIcon: <ArchitectureOutlined />,
+                        },
+                        {
+                          label: (
+                            <Typography>
+                              Pizza Communista #1
+                              {/* {messages.organizeSidebar.signOut()} */}
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            // 
+                          },
+                          startIcon: <EventOutlined />,
+                        },
+                      ]}
+                      transformOrigin={{
+                        horizontal: 'right',
+                        vertical: 'bottom',
+                      }}
+                    />
                     <ZUIEllipsisMenu
                       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                       items={[

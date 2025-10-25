@@ -1,4 +1,4 @@
-import { MoreVert } from '@mui/icons-material';
+import { Cancel, CancelOutlined, MoreVert } from '@mui/icons-material';
 import {
   Button,
   ListItemIcon,
@@ -29,12 +29,16 @@ export interface ZUIEllipsisMenuProps {
   items: MenuItem[];
   anchorOrigin?: { horizontal: horizontalType; vertical: verticalType };
   transformOrigin?: { horizontal: horizontalType; vertical: verticalType };
+  menuIcon?: ReactElement;
+  removable?: boolean;
 }
 
 const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   items,
   anchorOrigin,
   transformOrigin,
+  menuIcon,
+  removable
 }) => {
   const [menuActivator, setMenuActivator] = useState<null | HTMLElement>(null);
   const [subMenuActivator, setSubMenuActivator] = useState<null | HTMLElement>(
@@ -53,7 +57,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
           setMenuActivator(e?.currentTarget as HTMLElement)
         )}
       >
-        <MoreVert />
+        {menuIcon ?? <MoreVert />}
       </Button>
       <Menu
         anchorEl={menuActivator}
@@ -97,6 +101,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
             <Typography sx={{ color: item.textColor ?? '', display: 'flex' }}>
               {item.label}
             </Typography>
+            {removable && <Button><CancelOutlined /></Button>}
             {item.subMenuItems && (
               <Menu
                 anchorEl={subMenuActivator}

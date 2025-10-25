@@ -222,6 +222,12 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                     );
                   },
                 },
+                {
+                  disabled: item.type != 'view',
+                  id: 'bookmark-item',
+                  label: 'Bookmark',
+                  onSelect: () => { }
+                },
               ]}
             />
           );
