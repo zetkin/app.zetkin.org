@@ -51,28 +51,28 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     );
   }
 
-  // Copy filters
   if (
     oldView.content_query != null &&
     oldView.content_query.filter_spec.length != 0
   ) {
+    // Copy filters
     apiClient.patch<ZetkinQuery[], Pick<ZetkinQuery, 'filter_spec'>>(
       `/api/orgs/${orgId}/people/views/${newView.id}/content_query`,
       {
         filter_spec: oldView.content_query?.filter_spec,
       }
     );
-  }
-
-  // Copy manually added rows
-  const rows = await apiClient.get<ZetkinViewRow[]>(
-    `/api/orgs/${orgId}/people/views/${oldView.id}/rows`
-  );
-  if (rows.length != 0) {
-    for await (const person of rows) {
-      await apiClient.put(
-        `/api/orgs/${orgId}/people/views/${newView.id}/rows/${person.id}`
-      );
+  } else {
+    // Copy manually added rows
+    const rows = await apiClient.get<ZetkinViewRow[]>(
+      `/api/orgs/${orgId}/people/views/${oldView.id}/rows`
+    );
+    if (rows.length != 0) {
+      for await (const person of rows) {
+        await apiClient.put(
+          `/api/orgs/${orgId}/people/views/${newView.id}/rows/${person.id}`
+        );
+      }
     }
   }
 

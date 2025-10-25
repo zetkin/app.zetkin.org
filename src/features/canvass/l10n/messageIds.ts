@@ -91,6 +91,10 @@ export default makeMessages('feat.canvass', {
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       wasVisited: m('This household has been visited in this assignment'),
     },
+    stackItem: {
+      detailsButtonLabel: m('Details'),
+      visitButtonLabel: m('Visit'),
+    },
   },
   instructions: {
     areas: m('Areas'),
@@ -154,8 +158,12 @@ export default makeMessages('feat.canvass', {
       },
       header: {
         households: m('Households'),
+        householdsSuccessful: m('Successfully visited'),
+        householdsVisited: m('Visited households'),
         locations: m('Locations'),
+        successfulVisits: m('Successful Visits'),
         title: m('Progress'),
+        visits: m('Visits'),
       },
       session: {
         team: m('Team'),

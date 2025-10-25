@@ -171,9 +171,12 @@ const LocationDialog: FC<LocationDialogProps> = ({
             goto('householdVisit');
           }}
           onClose={onClose}
-          onSelectHousehold={(householdId: number) => {
+          onDetails={(householdId: number) => {
             setSelectedHouseholdId(householdId);
             goto('household');
+          }}
+          onSelectHousehold={(householdId: number) => {
+            setSelectedHouseholdIds([householdId]);
           }}
           onSelectHouseholds={(householdIds: null | number[]) =>
             setSelectedHouseholdIds(householdIds)

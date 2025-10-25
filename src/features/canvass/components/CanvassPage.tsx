@@ -120,7 +120,12 @@ const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
               zIndex: 99999,
             }}
           >
-            <CanvassSidebar assignment={assignment} />
+            {selectedArea && (
+              <CanvassSidebar
+                assignment={assignment}
+                selectedArea={selectedArea}
+              />
+            )}
           </Box>
         </Box>
       )}

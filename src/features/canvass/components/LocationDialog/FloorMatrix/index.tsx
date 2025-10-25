@@ -19,6 +19,7 @@ type Props = {
   assignment: ZetkinAreaAssignment;
   draftFloors: EditedFloor[] | null;
   location: ZetkinLocation;
+  onClickDetails: (householdId: number) => void;
   onClickVisit: (householdId: number) => void;
   onEditChange: (floors: EditedFloor[]) => void;
   onSelectHousehold: (householdId: number) => void;
@@ -30,6 +31,7 @@ const FloorMatrix: FC<Props> = ({
   assignment,
   draftFloors,
   location,
+  onClickDetails,
   onClickVisit,
   onEditChange,
   onSelectHousehold,
@@ -203,6 +205,7 @@ const FloorMatrix: FC<Props> = ({
                 householdItems={householdItems}
                 initialExpanded={shouldStartExpanded}
                 onClick={(householdId) => onSelectHousehold(householdId)}
+                onClickDetails={(householdId) => onClickDetails(householdId)}
                 onClickVisit={(householdId) => onClickVisit(householdId)}
                 onDeselectIds={(ids) =>
                   onUpdateSelection(

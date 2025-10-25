@@ -176,6 +176,7 @@ export default makeMessages('zui', {
     geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
+    overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),
