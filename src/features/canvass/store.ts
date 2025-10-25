@@ -182,17 +182,21 @@ const canvassSlice = createSlice({
       state.visitsByAssignmentId[assignmentId].isStale = true;
     },
     visitsLoad: (state, action: PayloadAction<number>) => {
-      state.visitsByAssignmentId[action.payload] = remoteList();
-      state.visitsByAssignmentId[action.payload].isLoading = true;
+      const assignmentId = action.payload;
+      state.visitsByAssignmentId[assignmentId] ||= remoteList();
+      // Preserve existing items; just mark as loading
+      state.visitsByAssignmentId[assignmentId].isLoading = true;
+      // Also mark as stale while revalidating if not loaded yet handled downstream
     },
     visitsLoaded: (
       state,
       action: PayloadAction<[number, ZetkinLocationVisit[]]>
     ) => {
-      const [locationId, visits] = action.payload;
-      state.visitsByAssignmentId[locationId] = remoteList(visits);
-      state.visitsByAssignmentId[locationId].isLoading = false;
-      state.visitsByAssignmentId[locationId].loaded = new Date().toISOString();
+      const [assignmentId, visits] = action.payload;
+      state.visitsByAssignmentId[assignmentId] = remoteList(visits);
+      state.visitsByAssignmentId[assignmentId].isLoading = false;
+      state.visitsByAssignmentId[assignmentId].loaded =
+        new Date().toISOString();
     },
   },
 });

@@ -1,9 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import shouldLoad from 'core/caching/shouldLoad';
 import { RemoteList } from 'utils/storeUtils';
-import { useAppDispatch } from '.';
-import usePromiseCache from './usePromiseCache';
+import useRemoteObject from './useRemoteObject';
 
 export default function useRemoteList<
   DataType,
@@ -20,39 +18,9 @@ export default function useRemoteList<
     loader: () => Promise<DataType[]>;
   }
 ): DataType[] {
-  const dispatch = useAppDispatch();
-  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
+  useRemoteObject<DataType, OnLoadPayload, OnSuccessPayload>(remoteList, hooks);
 
-  const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache } = usePromiseCache(promiseKey);
-
-  if (!remoteList || loadIsNecessary) {
-    const promise = Promise.resolve()
-      .then(() => {
-        dispatch(hooks.actionOnLoad());
-      })
-      .then(() => hooks.loader())
-      .then((val) => {
-        dispatch(hooks.actionOnSuccess(val));
-        return val;
-      })
-      .catch((err: unknown) => {
-        if (hooks.actionOnError) {
-          dispatch(hooks.actionOnError(err));
-          return null;
-        } else {
-          throw err;
-        }
-      });
-
-    cache(promise);
-
-    if (!remoteList?.items.length) {
-      throw promise;
-    }
-  }
-
-  return remoteList.items
+  return remoteList?.items
     .filter((item) => !item.deleted)
     .map((item) => item.data)
     .filter((data) => !!data) as DataType[];

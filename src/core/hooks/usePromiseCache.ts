@@ -1,5 +1,7 @@
 type UsePromiseCacheReturn = {
   cache: (promise: Promise<unknown>) => void;
+  getOldPromise: () => Promise<unknown> | undefined;
+  oldPromise: Promise<unknown> | undefined;
 };
 
 // TODO: Store this in context?
@@ -10,12 +12,12 @@ export default function usePromiseCache(
 ): UsePromiseCacheReturn {
   const oldPromise = promises[cacheKey];
 
-  if (oldPromise) {
-    throw oldPromise;
-  }
-
   return {
     cache(promise) {
+      if (oldPromise) {
+        throw oldPromise;
+      }
+
       promises[cacheKey] = promise;
 
       promise.then(() => {
@@ -26,5 +28,7 @@ export default function usePromiseCache(
         delete promises[cacheKey];
       });
     },
+    getOldPromise: () => promises[cacheKey],
+    oldPromise,
   };
 }

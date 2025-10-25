@@ -13,12 +13,28 @@ type StoreState = {
 };
 
 describe('useRemoteItem()', () => {
+  it('deduplicates loader across two components using same cacheKey on initial load', async () => {
+    const { hooks, promise, render } = setupWrapperComponent();
+
+    const { queryByText } = render();
+
+    expect(queryByText('loading1')).not.toBeNull();
+    expect(queryByText('loading2')).not.toBeNull();
+
+    await act(async () => {
+      await promise;
+    });
+
+    // Called only once although two components mounted
+    expect(hooks.loader).toHaveBeenCalledTimes(1);
+  });
   it('triggers a load when the data has not yet been loaded', async () => {
     const { hooks, promise, render, store } = setupWrapperComponent();
 
     const { queryByText } = render();
 
-    expect(queryByText('loading')).not.toBeNull();
+    expect(queryByText('loading1')).not.toBeNull();
+    expect(queryByText('loading2')).not.toBeNull();
 
     await act(async () => {
       await promise;
@@ -35,30 +51,39 @@ describe('useRemoteItem()', () => {
       type: 'loaded',
     });
 
-    expect(queryByText('loading')).toBeNull();
-    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
   });
 
   it('returns data without load when the data has been loaded recently', async () => {
-    const { hooks, render, store } = setupWrapperComponent({
+    const { hooks, promise, render, store } = setupWrapperComponent({
       ...remoteItem(1, {
         data: {
           id: 1,
-          name: 'Clara Zetkin',
+          name: 'Rosa Luxemburg',
         },
       }),
       loaded: new Date().toISOString(),
     });
 
-    const { queryByText } = render();
+    const { queryByText, queryAllByText } = render();
 
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(hooks.loader).not.toHaveBeenCalled();
-    expect(queryByText('loading')).toBeNull();
-    expect(queryByText('loaded')).not.toBeNull();
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
 
-    const listItem = queryByText('Clara Zetkin');
-    expect(listItem).not.toBeNull();
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
+
+    await act(async () => {
+      await promise;
+    });
+
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
   });
 
   it('returns stale data while re-loading', async () => {
@@ -66,15 +91,19 @@ describe('useRemoteItem()', () => {
       ...remoteItem(1, {
         data: {
           id: 1,
-          name: 'Clara Zetkin',
+          name: 'Rosa Luxemburg',
         },
       }),
       loaded: new Date(1857, 6, 5).toISOString(),
     });
 
-    const { queryByText } = render();
+    const { queryByText, queryAllByText } = render();
 
-    expect(queryByText('Clara Zetkin')).not.toBeNull();
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(2);
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
 
     await act(async () => {
       await promise;
@@ -82,6 +111,12 @@ describe('useRemoteItem()', () => {
 
     expect(hooks.loader).toHaveBeenCalled();
     expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(queryByText('loading1')).toBeNull();
+    expect(queryByText('loaded1')).not.toBeNull();
+    expect(queryByText('loading2')).toBeNull();
+    expect(queryByText('loaded2')).not.toBeNull();
+    expect(queryAllByText('Rosa Luxemburg')).toHaveLength(0);
+    expect(queryAllByText('Clara Zetkin')).toHaveLength(2);
   });
 });
 
@@ -128,6 +163,7 @@ function setupWrapperComponent(initialItem?: RemoteItem<ItemObjectForTest>) {
       payload: data,
       type: 'loaded',
     }),
+    cacheKey: 'test:item:1',
     loader: () => promise,
   };
 
@@ -142,7 +178,22 @@ function setupWrapperComponent(initialItem?: RemoteItem<ItemObjectForTest>) {
 
     return (
       <div>
-        <p>loaded</p>
+        <p>loaded1</p>
+        <small>{data.name}</small>
+      </div>
+    );
+  };
+
+  const Component2: FC = () => {
+    const item = useSelector<StoreState, RemoteItem<ItemObjectForTest> | null>(
+      (state) => state.item
+    );
+
+    const data = useRemoteItem(item, hooks);
+
+    return (
+      <div>
+        <p>loaded2</p>
         <small>{data.name}</small>
       </div>
     );
@@ -154,8 +205,11 @@ function setupWrapperComponent(initialItem?: RemoteItem<ItemObjectForTest>) {
     render: () =>
       render(
         <ReduxProvider store={store}>
-          <Suspense fallback={<p>loading</p>}>
+          <Suspense fallback={<p>loading1</p>}>
             <Component />
+          </Suspense>
+          <Suspense fallback={<p>loading2</p>}>
+            <Component2 />
           </Suspense>
         </ReduxProvider>
       ),
