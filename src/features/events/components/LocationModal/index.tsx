@@ -1,7 +1,5 @@
 import dynamic from 'next/dynamic';
 import { InfoOutlined } from '@mui/icons-material';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/system';
 import { Box, Dialog, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
@@ -14,25 +12,6 @@ import MoveLocationCard from './MoveLocationCard';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
-
-interface StyleProps {
-  cardIsFullHeight: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  overlay: {
-    bottom: ({ cardIsFullHeight }) => (cardIsFullHeight ? 64 : ''),
-    display: 'flex',
-    justifyContent: 'flex-end',
-    justifySelf: 'flex-end',
-    margin: 2,
-    position: 'absolute',
-    right: 32,
-    top: 32,
-    width: '30%',
-    zIndex: 1000,
-  },
-}));
 
 export type PendingLocation = {
   lat: number;
@@ -81,7 +60,6 @@ const LocationModal: FC<LocationModalProps> = ({
 
   const cardIsFullHeight =
     (!!pendingLocation || !!selectedLocation) && !inMoveState;
-  const classes = useStyles({ cardIsFullHeight });
 
   useEffect(() => {
     setSelectedLocationId(locationId);
@@ -117,7 +95,20 @@ const LocationModal: FC<LocationModalProps> = ({
           searchString={searchString}
           selectedLocation={selectedLocation}
         />
-        <Box className={classes.overlay}>
+        <Box
+          sx={{
+            bottom: cardIsFullHeight ? '64px' : '',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            justifySelf: 'flex-end',
+            margin: '2px',
+            position: 'absolute',
+            right: '32px',
+            top: '32px',
+            width: '30%',
+            zIndex: 1000,
+          }}
+        >
           {!selectedLocation && !pendingLocation && (
             <LocationSearch
               onChange={(value: ZetkinLocation) => {
