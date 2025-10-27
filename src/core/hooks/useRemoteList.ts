@@ -18,37 +18,72 @@ export default function useRemoteList<
     cacheKey?: string;
     isNecessary?: () => boolean;
     loader: () => Promise<DataType[]>;
+    staleWhileRevalidate?: boolean;
   }
 ): DataType[] {
   const dispatch = useAppDispatch();
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache } = usePromiseCache(promiseKey);
+  const { cache, getExisting } = usePromiseCache(promiseKey);
+  const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
-  if (!remoteList || loadIsNecessary) {
-    const promise = Promise.resolve()
-      .then(() => {
-        dispatch(hooks.actionOnLoad());
-      })
-      .then(() => hooks.loader())
-      .then((val) => {
-        dispatch(hooks.actionOnSuccess(val));
-        return val;
-      })
-      .catch((err: unknown) => {
-        if (hooks.actionOnError) {
-          dispatch(hooks.actionOnError(err));
-          return null;
-        } else {
-          throw err;
-        }
-      });
+  if (!remoteList) {
+    const existing = getExisting();
+    if (!existing) {
+      const promise = Promise.resolve()
+        .then(() => {
+          dispatch(hooks.actionOnLoad());
+        })
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err: unknown) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+            return null;
+          } else {
+            throw err;
+          }
+        });
 
-    cache(promise);
+      cache(promise);
+    }
 
-    if (!remoteList?.items.length) {
-      throw promise;
+    // No data at all: must suspend
+    throw getExisting()!;
+  }
+
+  if (loadIsNecessary) {
+    const existing = getExisting();
+    if (!existing) {
+      const promise = Promise.resolve()
+        .then(() => {
+          dispatch(hooks.actionOnLoad());
+        })
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err: unknown) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+            return null;
+          } else {
+            throw err;
+          }
+        });
+
+      cache(promise);
+    }
+
+    // Suspend if no items exist, or if staleWhileRevalidate is disabled
+    const hasData = remoteList.items.length > 0;
+    if (!hasData || !staleWhileRevalidate) {
+      throw getExisting()!;
     }
   }
 
