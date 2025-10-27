@@ -25,18 +25,20 @@ export default function useRemoteItem<
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteItem);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache, getExisting } = usePromiseCache(promiseKey);
+  const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
   if (loadIsNecessary) {
-    const existing = getExisting();
+    const existing = getExistingPromise();
     if (!existing) {
-      dispatch(hooks.actionOnLoad());
-
-      const promise = hooks
-        .loader()
-        .then((data) => {
-          dispatch(hooks.actionOnSuccess(data));
+      const promise = Promise.resolve()
+        .then(() => {
+          dispatch(hooks.actionOnLoad());
+        })
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
         })
         .catch((err) => {
           if (hooks.actionOnError) {
@@ -51,7 +53,7 @@ export default function useRemoteItem<
     const hasData = !!remoteItem?.data;
     const shouldSuspend = !hasData || !staleWhileRevalidate;
     if (shouldSuspend) {
-      const toThrow = getExisting();
+      const toThrow = getExistingPromise();
       if (toThrow) {
         throw toThrow;
       }
