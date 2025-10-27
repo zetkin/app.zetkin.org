@@ -5,7 +5,9 @@ import mockAssignedTask from 'utils/testing/mocks/mockAssignedTask';
 import { render } from 'utils/testing';
 import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 
 beforeEach(() => {
   singletonRouter.query = {

@@ -101,6 +101,7 @@ declare module '@mui/material/styles' {
    * Defines the options that can be passed to createTypography(),
    * limited only to the variants in the ZUI system.
    */
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface TypographyVariantsOptions extends Partial<TypographyVariants> {}
 }
 
@@ -197,6 +198,7 @@ declare module '@mui/material/styles' {
     swatches: Swatches;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface PaletteOptions extends Partial<Palette> {}
 
   interface SimplePaletteColorOptions {

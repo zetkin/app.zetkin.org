@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { areaStatsLoad, areaStatsLoaded } from '../store';
 
 export default function useAssignmentAreaStats(
-  orgId: number,
+  _orgId: number,
   areaAssId: number
 ) {
   const dispatch = useAppDispatch();
