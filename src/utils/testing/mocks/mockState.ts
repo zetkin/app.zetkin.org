@@ -121,6 +121,7 @@ export default function mockState(overrides?: RootState) {
         orgIdsToFilterBy: [],
       },
       orgData: remoteItem(0),
+      orgStats: remoteItem(0),
       subOrgsByOrgId: {},
       suborgsWithStats: remoteList(),
       treeDataList: remoteList(),

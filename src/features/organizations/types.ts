@@ -8,18 +8,20 @@ export interface TreeItemData {
   children: TreeItemData[] | [];
 }
 
+export type OrgStats = {
+  numCalls: number;
+  numEmailsSent: number;
+  numEventParticipants: number;
+  numEventsWithParticipants: number;
+  numLists: number;
+  numPeople: number;
+  numProjects: number;
+  numSubmissions: number;
+};
+
 export type SuborgWithStats = {
   id: number;
-  stats: {
-    numCalls: number;
-    numEmailsSent: number;
-    numEventParticipants: number;
-    numEventsWithParticipants: number;
-    numLists: number;
-    numPeople: number;
-    numProjects: number;
-    numSubmissions: number;
-  };
+  stats: OrgStats;
   title: string;
 };
 
