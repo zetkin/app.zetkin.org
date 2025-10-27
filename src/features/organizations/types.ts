@@ -26,6 +26,7 @@ export type SuborgWithStats = {
 export type SuborgError = {
   error: boolean;
   id: string;
+  message: string;
 };
 
 export type SuborgResult = SuborgWithStats | SuborgError;

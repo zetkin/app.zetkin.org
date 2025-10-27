@@ -50,15 +50,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const today = now.toISOString().slice(0, 10);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
-    const [
-      suborgStats,
-      eventParticipationStats,
-      calls,
-      surveySubmissions,
-      lists,
-      projects,
-      events,
-    ] = await Promise.all([
+    const results = await Promise.allSettled([
       apiClient.post<
         ZetkinSmartSearchFilterStats[],
         { filter_spec: ZetkinSmartSearchFilter[] }
@@ -103,15 +95,35 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       ),
     ]);
 
-    let numEventsWithParticipants = 0;
-    for (const event of events) {
-      const eventStats = await apiClient.rpc(getEventStats, {
-        eventId: event.id,
-        orgId: event.organization.id,
-      });
+    if (results.some((result) => result.status == 'rejected')) {
+      return {
+        error: true,
+        id: `${suborg.id}-error`,
+        message: `Error loading data for organization ${suborg.id}`,
+      };
+    }
 
-      if (eventStats.numBooked > 0) {
-        numEventsWithParticipants++;
+    const [
+      suborgStats,
+      eventParticipationStats,
+      calls,
+      surveySubmissions,
+      lists,
+      projects,
+      events,
+    ] = results;
+
+    let numEventsWithParticipants = 0;
+    if (events.status == 'fulfilled') {
+      for (const event of events.value) {
+        const eventStats = await apiClient.rpc(getEventStats, {
+          eventId: event.id,
+          orgId: event.organization.id,
+        });
+
+        if (eventStats.numBooked > 0) {
+          numEventsWithParticipants++;
+        }
       }
     }
 
@@ -143,26 +155,41 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       );
       numEmailsSent = numEmailsSent + stats.num_sent;
     }
-    const numPeople = suborgStats[0].result;
-    const numEventParticipants = eventParticipationStats[0].result;
 
     const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
+    const numCalls =
+      calls.status == 'fulfilled'
+        ? calls.value.filter(
+            (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
+          ).length
+        : 0;
+    const numEventParticipants =
+      eventParticipationStats.status == 'fulfilled'
+        ? eventParticipationStats.value[0].result
+        : 0;
+    const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
+    const numPeople =
+      suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
+    const numProjects =
+      projects.status == 'fulfilled' ? projects.value.length : 0;
+    const numSubmissions =
+      surveySubmissions.status == 'fulfilled'
+        ? surveySubmissions.value.filter(
+            (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
+          ).length
+        : 0;
 
     return {
       id: suborg.id,
       stats: {
-        numCalls: calls.filter(
-          (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
-        ).length,
+        numCalls,
         numEmailsSent,
         numEventParticipants,
         numEventsWithParticipants,
-        numLists: lists.length,
+        numLists,
         numPeople,
-        numProjects: projects.length,
-        numSubmissions: surveySubmissions.filter(
-          (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
-        ).length,
+        numProjects,
+        numSubmissions,
       },
       title: suborg.title,
     };
@@ -173,9 +200,5 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
    * Background: It otherwise would resolve the promises after sending it out somehow.
    * It caused the request to take 4 times compared to when awaiting it here
    ***/
-  return await Promise.all(
-    suborgPromises.map((promise, index) =>
-      promise.catch(() => ({ error: true, id: `error-${index}` }))
-    )
-  );
+  return await Promise.all(suborgPromises);
 }

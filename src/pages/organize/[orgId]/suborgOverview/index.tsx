@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { FC, Suspense } from 'react';
 import {
+  Alert,
   Avatar,
   Box,
   CircularProgress,
@@ -65,6 +66,10 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
     <Stack spacing={2}>
       {suborgsWithStats.map((orgWithStats) => {
         if (isError(orgWithStats)) {
+          if (orgWithStats.id == 'loadingError') {
+            return <Alert severity="error">{orgWithStats.message}</Alert>;
+          }
+
           return (
             <Paper key={orgWithStats.id}>
               <Box
@@ -74,7 +79,7 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
                   padding: 2,
                 }}
               >
-                <Typography>Could not load data for this suborg.</Typography>
+                <Alert severity="error">{orgWithStats.message}</Alert>
               </Box>
             </Paper>
           );
