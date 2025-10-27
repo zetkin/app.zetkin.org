@@ -137,7 +137,11 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
                     <Typography>
                       {orgWithStats.stats.numEventParticipants}
                     </Typography>
-                    <Typography color="secondary">participants</Typography>
+                    <Typography color="secondary">participants in </Typography>
+                    <Typography>
+                      {orgWithStats.stats.numEventsWithParticipants}
+                    </Typography>
+                    <Typography color="secondary">events</Typography>
                   </Box>
                 </Box>
                 <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>

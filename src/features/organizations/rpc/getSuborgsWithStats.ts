@@ -5,6 +5,7 @@ import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinCampaign,
   ZetkinEmail,
+  ZetkinEvent,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurveySubmission,
@@ -15,6 +16,7 @@ import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgResult } from '../types';
 import { ZetkinCall } from 'features/call/types';
 import { ZetkinEmailStats } from 'features/emails/types';
+import getEventStats from 'features/events/rpc/getEventStats';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -45,6 +47,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const thirtyDaysAgo = new Date(new Date().setDate(now.getDate() - 30))
     .toISOString()
     .slice(0, 10);
+  const today = now.toISOString().slice(0, 10);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
     const [
@@ -54,6 +57,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       surveySubmissions,
       lists,
       projects,
+      events,
     ] = await Promise.all([
       apiClient.post<
         ZetkinSmartSearchFilterStats[],
@@ -94,7 +98,22 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       apiClient.get<ZetkinCampaign[]>(
         `/api/orgs/${suborg.id}/campaigns?recursive`
       ),
+      apiClient.get<ZetkinEvent[]>(
+        `/api/orgs/${suborg.id}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=end_time<=${today}`
+      ),
     ]);
+
+    let numEventsWithParticipants = 0;
+    for (const event of events) {
+      const eventStats = await apiClient.rpc(getEventStats, {
+        eventId: event.id,
+        orgId: event.organization.id,
+      });
+
+      if (eventStats.numBooked > 0) {
+        numEventsWithParticipants++;
+      }
+    }
 
     //TODO: Add call to /emails with "recursive" flag in Promise.all above
     //once the API supports "recursive" flag for emails.
@@ -137,6 +156,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
         ).length,
         numEmailsSent,
         numEventParticipants,
+        numEventsWithParticipants,
         numLists: lists.length,
         numPeople,
         numProjects: projects.length,
