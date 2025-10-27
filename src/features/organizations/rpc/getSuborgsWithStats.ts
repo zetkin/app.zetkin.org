@@ -148,15 +148,21 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       emails.push(...suborgEmails);
     }
 
+    const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
     let numEmailsSent = 0;
     for (const email of emails) {
-      const stats = await apiClient.get<ZetkinEmailStats>(
-        `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
-      );
-      numEmailsSent = numEmailsSent + stats.num_sent;
+      if (email.published) {
+        const sendTime = new Date(email.published);
+
+        if (sendTime >= thirtyDaysAgoDate && sendTime <= now) {
+          const stats = await apiClient.get<ZetkinEmailStats>(
+            `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
+          );
+          numEmailsSent = numEmailsSent + stats.num_sent;
+        }
+      }
     }
 
-    const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
     const numCalls =
       calls.status == 'fulfilled'
         ? calls.value.filter(
