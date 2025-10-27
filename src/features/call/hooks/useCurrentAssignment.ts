@@ -1,11 +1,11 @@
 import { useAppSelector } from 'core/hooks';
-import useMyCallAssignments from 'features/callAssignments/hooks/useMyCallAssignments';
+import useMyAssignments from 'features/call/hooks/useMyAssignments';
 
 export default function useCurrentAssignment() {
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
   );
-  const userAssignments = useMyCallAssignments();
+  const userAssignments = useMyAssignments();
 
   const assignment = userAssignments.find(
     (assignment) => assignment.id == lane.assignmentId

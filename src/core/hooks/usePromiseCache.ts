@@ -1,6 +1,6 @@
 type UsePromiseCacheReturn = {
   cache: (promise: Promise<unknown>) => void;
-  getExisting: () => Promise<unknown> | undefined;
+  getExistingPromise: () => Promise<unknown> | undefined;
 };
 
 // TODO: Store this in context?
@@ -21,7 +21,7 @@ export default function usePromiseCache(
         delete promises[cacheKey];
       });
     },
-    getExisting() {
+    getExistingPromise() {
       return promises[cacheKey];
     },
   };
