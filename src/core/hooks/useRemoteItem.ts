@@ -18,34 +18,42 @@ export default function useRemoteItem<
     cacheKey?: string;
     isNecessary?: () => boolean;
     loader: () => Promise<DataType>;
+    staleWhileRevalidate?: boolean;
   }
 ): DataType {
   const dispatch = useAppDispatch();
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteItem);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache } = usePromiseCache(promiseKey);
+  const { cache, getExisting } = usePromiseCache(promiseKey);
+  const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
   if (loadIsNecessary) {
-    dispatch(hooks.actionOnLoad());
+    const existing = getExisting();
+    if (!existing) {
+      dispatch(hooks.actionOnLoad());
 
-    const promise = hooks
-      .loader()
-      .then((data) => {
-        dispatch(hooks.actionOnSuccess(data));
-      })
-      .catch((err) => {
-        if (hooks.actionOnError) {
-          dispatch(hooks.actionOnError(err));
-        }
-      });
+      const promise = hooks
+        .loader()
+        .then((data) => {
+          dispatch(hooks.actionOnSuccess(data));
+        })
+        .catch((err) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+          }
+        });
 
-    cache(promise);
+      cache(promise);
+    }
 
-    if (remoteItem?.data) {
-      return remoteItem.data;
-    } else {
-      throw promise;
+    // Suspend if no data exists, or if staleWhileRevalidate is disabled
+    const hasData = !!remoteItem?.data;
+    if (!hasData || !staleWhileRevalidate) {
+      const toThrow = getExisting();
+      if (toThrow) {
+        throw toThrow;
+      }
     }
   }
 
