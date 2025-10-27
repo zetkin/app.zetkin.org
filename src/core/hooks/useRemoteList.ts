@@ -25,11 +25,11 @@ export default function useRemoteList<
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
-  const { cache, getExisting } = usePromiseCache(promiseKey);
+  const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
   if (!remoteList) {
-    const existing = getExisting();
+    const existing = getExistingPromise();
     if (!existing) {
       const promise = Promise.resolve()
         .then(() => {
@@ -52,12 +52,11 @@ export default function useRemoteList<
       cache(promise);
     }
 
-    // No data at all: must suspend
-    throw getExisting()!;
+    throw getExistingPromise();
   }
 
   if (loadIsNecessary) {
-    const existing = getExisting();
+    const existing = getExistingPromise();
     if (!existing) {
       const promise = Promise.resolve()
         .then(() => {
@@ -80,10 +79,11 @@ export default function useRemoteList<
       cache(promise);
     }
 
-    // Suspend if no items exist, or if staleWhileRevalidate is disabled
-    const hasData = remoteList.items.length > 0;
-    if (!hasData || !staleWhileRevalidate) {
-      throw getExisting()!;
+    const hasData = !!remoteList.items?.length;
+    const shouldSuspend = !hasData || !staleWhileRevalidate;
+
+    if (shouldSuspend) {
+      throw getExistingPromise()!;
     }
   }
 
