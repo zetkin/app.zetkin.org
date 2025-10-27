@@ -10,7 +10,7 @@ import {
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { Zetkin2Area } from 'features/areas/types';
+import { PointData, Zetkin2Area } from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
@@ -49,6 +49,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [userLocation, setUserLocation] = useState<PointData | null>(null);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -171,6 +172,26 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return locations.data?.find((loc) => loc.id == selectedLocationId) || null;
   }, [locations]);
 
+  const userLocationGeoJson: GeoJSON.FeatureCollection | null = useMemo(() => {
+    if (!userLocation) {
+      return null;
+    }
+
+    return {
+      features: [
+        {
+          geometry: {
+            coordinates: userLocation,
+            type: 'Point',
+          },
+          properties: {},
+          type: 'Feature',
+        },
+      ],
+      type: 'FeatureCollection',
+    };
+  }, [userLocation]);
+
   const saveBounds = () => {
     const bounds = map?.getBounds();
 
@@ -250,8 +271,12 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               });
             }
           }}
-          onGeolocate={(lngLat) => {
-            map?.panTo(lngLat, { animate: true, duration: 800 });
+          onGeolocate={(lngLat: PointData) => {
+            setUserLocation(lngLat);
+            map?.panTo(lngLat, {
+              animate: true,
+              duration: 800,
+            });
           }}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
@@ -433,6 +458,29 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             type="symbol"
           />
         </Source>
+        {userLocationGeoJson && (
+          <Source data={userLocationGeoJson} id="userLocation" type="geojson">
+            <Layer
+              id="userLocationHalo"
+              paint={{
+                'circle-color': oldTheme.palette.primary.main,
+                'circle-opacity': 0.15,
+                'circle-radius': 18,
+              }}
+              type="circle"
+            />
+            <Layer
+              id="userLocationDot"
+              paint={{
+                'circle-color': oldTheme.palette.primary.main,
+                'circle-radius': 6,
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 2,
+              }}
+              type="circle"
+            />
+          </Source>
+        )}
       </Map>
       <CanvassMapOverlays
         assignment={assignment}
