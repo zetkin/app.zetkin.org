@@ -183,6 +183,7 @@ const OrganizationsSlice = createSlice({
             suborgWithStats.id,
             {
               data: suborgWithStats,
+              loaded: new Date().toISOString(),
             }
           );
         }
