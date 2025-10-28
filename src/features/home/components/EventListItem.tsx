@@ -13,6 +13,7 @@ import { ZetkinEventWithStatus } from '../types';
 import { removeOffset } from 'utils/dateUtils';
 import { timeSpanToString } from 'zui/utils/timeSpanString';
 import { EventSignupButton } from './EventSignupButton';
+import { ZUILabelText } from 'zui/components/ZUIIconLabel';
 
 type Props = {
   event: ZetkinEventWithStatus;
@@ -35,14 +36,22 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
   return (
     <MyActivityListItem
       actions={actions}
+      description={event.info_text}
       href={href}
       image={event.cover_file?.url}
       info={[
         {
           Icon: GroupWorkOutlined,
-          labels: [event.campaign?.title, event.organization.title].filter(
-            (label) => !!label
-          ) as string[],
+          labels: [
+            event.campaign && {
+              href: `/o/${event.organization.id}/projects/${event.campaign.id}`,
+              text: event.campaign.title,
+            },
+            {
+              href: `/o/${event.organization.id}/`,
+              text: event.organization.title,
+            },
+          ].filter((label) => !!label) as ZUILabelText[],
         },
         {
           Icon: WatchLaterOutlined,
@@ -57,7 +66,17 @@ const EventListItem: FC<Props> = ({ event, href, onClickSignUp }) => {
         {
           Icon: LocationOnOutlined,
           labels: [
-            event.location?.title || messages.defaultTitles.noLocation(),
+            event.location
+              ? {
+                  href: `https://www.google.com/maps?q=${event.location.lat.toFixed(
+                    4
+                  )},${event.location.lng.toFixed(4)}(${encodeURIComponent(
+                    event.location.title
+                  )})`,
+                  openNewTab: true,
+                  text: event.location.title,
+                }
+              : messages.defaultTitles.noLocation(),
           ],
         },
       ]}
