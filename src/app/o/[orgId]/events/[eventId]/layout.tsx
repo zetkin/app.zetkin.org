@@ -8,6 +8,7 @@ import PublicEventLayout from 'features/organizations/layouts/PublicEventLayout'
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { getSeoTags } from 'utils/seoTags';
 
 type Props = PropsWithChildren<{
   params: {
@@ -29,12 +30,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = getBrowserLanguage(headers().get('accept-language') || '');
   const messages = await getMessages(lang);
 
+  const baseTitle =
+    event.title ||
+    event.activity?.title ||
+    messages['feat.events.common.noTitle'];
+
+  const baseTags = getSeoTags(
+    `${baseTitle} | ${event.organization.title}`,
+    event.info_text,
+    `/o/${event.organization.id}/events/${event.id}`
+  );
   return {
-    icons: [{ url: '/logo-zetkin.png' }],
-    title:
-      event.title ||
-      event.activity?.title ||
-      messages['feat.events.common.noTitle'],
+    ...baseTags,
+    creator: event.organization.title,
+    openGraph: {
+      ...baseTags.openGraph,
+      images: event.cover_file ? [event.cover_file.url] : undefined,
+      locale: new Intl.Locale(lang).maximize().toString(),
+    },
+    publisher: event.organization.title,
   };
 }
 
