@@ -151,7 +151,7 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
               </Box>
             }
           >
-            <SuborgCard orgId={parsedOrgId} />
+            <SuborgsList orgId={parsedOrgId} />
           </Suspense>
         </Box>
         <Box sx={{ flex: 1 }}>
@@ -167,7 +167,7 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
               </Box>
             }
           >
-            <SuborgsList orgId={parsedOrgId} />
+            <SuborgCard orgId={parsedOrgId} />
           </Suspense>
         </Box>
       </Box>
