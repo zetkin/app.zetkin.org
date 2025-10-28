@@ -3,7 +3,6 @@
 import { Box } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { Home, Settings, Event } from '@mui/icons-material';
 import NextLink from 'next/link';
 
 import { useMessages } from 'core/i18n';
@@ -14,7 +13,6 @@ import useUser from 'core/hooks/useUser';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useMemberships from 'features/organizations/hooks/useMemberships';
 import messageIds from '../l10n/messageIds';
-import ZUILogo from 'zui/ZUILogo';
 import ZUIText from 'zui/components/ZUIText';
 
 type Props = {
@@ -60,24 +58,20 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
     >
       {isOfficial && user && <NewLandingPageAlert userId={user.id} />}
       <ActivistPortalHeader
-        noHomeChevron={true}
         selectedTab={lastSegment}
         tabs={[
           {
             href: `/my/home`,
-            icon: Home,
             label: messages.tabs.home(),
             value: 'home',
           },
           {
             href: `/my/feed`,
-            icon: Event,
             label: messages.tabs.feed(),
             value: 'feed',
           },
           {
             href: `/my/settings`,
-            icon: Settings,
             label: messages.tabs.settings(),
             value: 'settings',
           },
@@ -98,7 +92,6 @@ const HomeLayout: FC<Props> = ({ children, title }) => {
                 justifyContent: 'center',
               }}
             >
-              <ZUILogo />
               <ZUIText
                 style={{
                   marginBottom: '3px',
