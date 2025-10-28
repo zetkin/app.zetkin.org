@@ -25,6 +25,8 @@ import SuborgsList, {
   isError,
 } from 'features/organizations/components/SuborgsList';
 import useSuborgWithStats from 'features/organizations/hooks/useSuborgWithStatus';
+import useEmailThemes from 'features/emails/hooks/useEmailThemes';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -42,6 +44,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
   const suborgWithStats = useSuborgWithStats(orgId);
+  const themes = useEmailThemes(orgId).data || [];
+  const configs = useEmailConfigs(orgId).data || [];
+  const usesEmailFeature = configs.length > 0 && themes.length > 0;
 
   if (isError(suborgWithStats)) {
     return <>hej</>;
@@ -107,13 +112,15 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                 <Typography color="secondary">events</Typography>
               </Box>
             </Box>
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <EmailOutlined color="secondary" />
+            {usesEmailFeature && (
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{suborgWithStats.stats.numEmailsSent}</Typography>
-                <Typography color="secondary">sent</Typography>
+                <EmailOutlined color="secondary" />
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <Typography>{suborgWithStats.stats.numEmailsSent}</Typography>
+                  <Typography color="secondary">sent</Typography>
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
         </Box>
       </Box>

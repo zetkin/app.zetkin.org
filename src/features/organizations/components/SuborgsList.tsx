@@ -15,13 +15,92 @@ import {
   PhoneOutlined,
 } from '@mui/icons-material';
 
-import { SuborgLoadingError, SuborgResult } from '../types';
+import { SuborgLoadingError, SuborgResult, SuborgWithStats } from '../types';
 import useOrganization from '../hooks/useOrganization';
 import useSuborgsWithStats from '../hooks/useSuborgsWithStats';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
+import useEmailThemes from 'features/emails/hooks/useEmailThemes';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 export const isError = (result: SuborgResult): result is SuborgLoadingError => {
   return 'error' in result;
+};
+
+const SuborgListItem: FC<{ onSelect: () => void; suborg: SuborgWithStats }> = ({
+  onSelect,
+  suborg,
+}) => {
+  const themes = useEmailThemes(suborg.id).data || [];
+  const configs = useEmailConfigs(suborg.id).data || [];
+  const usesEmailFeature = configs.length > 0 && themes.length > 0;
+  return (
+    <Box
+      onClick={() => onSelect()}
+      sx={{
+        alignContent: 'center',
+        cursor: 'pointer',
+        padding: 2,
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <Avatar alt="icon" src={`/api/orgs/${suborg.id}/avatar`} />
+          <Typography variant="h5">{suborg.title}</Typography>
+        </Box>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Typography>{suborg.stats.numPeople}</Typography>
+            <Typography color="secondary">people</Typography>
+          </Box>
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Typography>{suborg.stats.numLists}</Typography>
+            <Typography color="secondary">lists</Typography>
+          </Box>
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Typography>{suborg.stats.numProjects}</Typography>
+            <Typography color="secondary">projects</Typography>
+          </Box>
+        </Box>
+      </Box>
+      <Typography color="secondary">Activity in the past 30 days:</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <PhoneOutlined color="secondary" />
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Typography>{suborg.stats.numCalls}</Typography>
+            <Typography color="secondary">calls</Typography>
+          </Box>
+        </Box>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <AssignmentOutlined color="secondary" />
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Typography>{suborg.stats.numSubmissions}</Typography>
+            <Typography color="secondary">submissions</Typography>
+          </Box>
+        </Box>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <EventOutlined color="secondary" />
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Typography>{suborg.stats.numEventParticipants}</Typography>
+            <Typography color="secondary">participants in </Typography>
+            <Typography>{suborg.stats.numEventsWithParticipants}</Typography>
+            <Typography color="secondary">events</Typography>
+          </Box>
+        </Box>
+        {usesEmailFeature && (
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <EmailOutlined color="secondary" />
+            <Typography color="secondary">{`${suborg.stats.numEmailsSent} sent`}</Typography>
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
 };
 
 const SuborgsList: FC<{
@@ -66,77 +145,11 @@ const SuborgsList: FC<{
             );
           }
           return (
-            <Box
+            <SuborgListItem
               key={orgWithStats.id}
-              onClick={() => onSelectSuborg(orgWithStats.id)}
-              sx={{
-                alignContent: 'center',
-                cursor: 'pointer',
-                padding: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-                  <Typography variant="h5">{orgWithStats.title}</Typography>
-                </Box>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                    <Typography>{orgWithStats.stats.numPeople}</Typography>
-                    <Typography color="secondary">people</Typography>
-                  </Box>
-                  <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                    <Typography>{orgWithStats.stats.numLists}</Typography>
-                    <Typography color="secondary">lists</Typography>
-                  </Box>
-                  <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                    <Typography>{orgWithStats.stats.numProjects}</Typography>
-                    <Typography color="secondary">projects</Typography>
-                  </Box>
-                </Box>
-              </Box>
-              <Typography color="secondary">
-                Activity in the past 30 days:
-              </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <PhoneOutlined color="secondary" />
-                  <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                    <Typography>{orgWithStats.stats.numCalls}</Typography>
-                    <Typography color="secondary">calls</Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <AssignmentOutlined color="secondary" />
-                  <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                    <Typography>{orgWithStats.stats.numSubmissions}</Typography>
-                    <Typography color="secondary">submissions</Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <EventOutlined color="secondary" />
-                  <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                    <Typography>
-                      {orgWithStats.stats.numEventParticipants}
-                    </Typography>
-                    <Typography color="secondary">participants in </Typography>
-                    <Typography>
-                      {orgWithStats.stats.numEventsWithParticipants}
-                    </Typography>
-                    <Typography color="secondary">events</Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <EmailOutlined color="secondary" />
-                  <Typography color="secondary">{`${orgWithStats.stats.numEmailsSent} sent`}</Typography>
-                </Box>
-              </Box>
-            </Box>
+              onSelect={() => onSelectSuborg(orgWithStats.id)}
+              suborg={orgWithStats}
+            />
           );
         })}
       </Stack>
