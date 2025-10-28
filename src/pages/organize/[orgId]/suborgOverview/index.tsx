@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { FC, Suspense } from 'react';
+import { FC, Suspense, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -21,9 +21,10 @@ import { scaffold } from 'utils/next';
 import SuborgOverviewLayout from 'features/organizations/layouts/SuborgOverviewLayout';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/organizations/l10n/messageIds';
-import SuborgsList from 'features/organizations/components/SuborgsList';
-import useOrganization from 'features/organizations/hooks/useOrganization';
-import useOrgStats from 'features/organizations/hooks/useOrgStats';
+import SuborgsList, {
+  isError,
+} from 'features/organizations/components/SuborgsList';
+import useSuborgWithStats from 'features/organizations/hooks/useSuborgWithStatus';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -40,11 +41,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
-  const organization = useOrganization(orgId).data;
-  const orgStats = useOrgStats(orgId);
+  const suborgWithStats = useSuborgWithStats(orgId);
 
-  if (!organization) {
-    return null;
+  if (isError(suborgWithStats)) {
+    return <>hej</>;
   }
 
   return (
@@ -54,8 +54,7 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
       >
         <Box>
           <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-          <Typography variant="h5">{organization.title}</Typography>
-          <Typography>{organization.email}</Typography>
+          <Typography variant="h5">{suborgWithStats.title}</Typography>
         </Box>
         <Box>
           <Box
@@ -65,15 +64,15 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             }}
           >
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography>{orgStats.numPeople}</Typography>
+              <Typography>{suborgWithStats.stats.numPeople}</Typography>
               <Typography color="secondary">people</Typography>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography>{orgStats.numLists}</Typography>
+              <Typography>{suborgWithStats.stats.numLists}</Typography>
               <Typography color="secondary">lists</Typography>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography>{orgStats.numProjects}</Typography>
+              <Typography>{suborgWithStats.stats.numProjects}</Typography>
               <Typography color="secondary">projects</Typography>
             </Box>
           </Box>
@@ -84,30 +83,34 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               <PhoneOutlined color="secondary" />
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{orgStats.numCalls}</Typography>
+                <Typography>{suborgWithStats.stats.numCalls}</Typography>
                 <Typography color="secondary">calls</Typography>
               </Box>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               <AssignmentOutlined color="secondary" />
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{orgStats.numSubmissions}</Typography>
+                <Typography>{suborgWithStats.stats.numSubmissions}</Typography>
                 <Typography color="secondary">submissions</Typography>
               </Box>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               <EventOutlined color="secondary" />
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{orgStats.numEventParticipants}</Typography>
+                <Typography>
+                  {suborgWithStats.stats.numEventParticipants}
+                </Typography>
                 <Typography color="secondary">participants in </Typography>
-                <Typography>{orgStats.numEventsWithParticipants}</Typography>
+                <Typography>
+                  {suborgWithStats.stats.numEventsWithParticipants}
+                </Typography>
                 <Typography color="secondary">events</Typography>
               </Box>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               <EmailOutlined color="secondary" />
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{orgStats.numEmailsSent}</Typography>
+                <Typography>{suborgWithStats.stats.numEmailsSent}</Typography>
                 <Typography color="secondary">sent</Typography>
               </Box>
             </Box>
@@ -125,6 +128,7 @@ interface Props {
 const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
   const parsedOrgId = parseInt(orgId);
   const onServer = useServerSide();
+  const [selectedSuborgId, setSelectedSuborgId] = useState<number | null>(null);
 
   if (onServer) {
     return null;
@@ -151,24 +155,32 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
               </Box>
             }
           >
-            <SuborgsList orgId={parsedOrgId} />
+            <SuborgsList
+              onSelectSuborg={(suborgId: number) =>
+                setSelectedSuborgId(suborgId)
+              }
+              orgId={parsedOrgId}
+            />
           </Suspense>
         </Box>
         <Box sx={{ flex: 1 }}>
-          <Suspense
-            fallback={
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            }
-          >
-            <SuborgCard orgId={parsedOrgId} />
-          </Suspense>
+          {!selectedSuborgId && <>No selected suborg to inspect</>}
+          {selectedSuborgId && (
+            <Suspense
+              fallback={
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              }
+            >
+              <SuborgCard orgId={selectedSuborgId} />
+            </Suspense>
+          )}
         </Box>
       </Box>
     </>

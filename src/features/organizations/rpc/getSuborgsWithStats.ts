@@ -98,8 +98,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     if (results.some((result) => result.status == 'rejected')) {
       return {
         error: true,
-        id: `${suborg.id}-error`,
-        message: `Error loading data for organization ${suborg.id}`,
+        id: suborg.id,
       };
     }
 

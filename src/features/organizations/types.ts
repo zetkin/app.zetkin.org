@@ -25,10 +25,18 @@ export type SuborgWithStats = {
   title: string;
 };
 
-export type SuborgError = {
+export type AllSuborgsLoadingError = {
   error: boolean;
   id: string;
-  message: string;
 };
 
-export type SuborgResult = SuborgWithStats | SuborgError;
+export type SingleSuborgLoadingError = {
+  error: boolean;
+  id: number;
+};
+
+export type SuborgLoadingError =
+  | AllSuborgsLoadingError
+  | SingleSuborgLoadingError;
+
+export type SuborgResult = SuborgWithStats | SuborgLoadingError;

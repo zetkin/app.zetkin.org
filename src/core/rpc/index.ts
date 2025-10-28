@@ -28,7 +28,7 @@ import { submitSurveysDef } from 'features/call/rpc/submitSurveysAndUpdateCall';
 import { editHouseholdsDef } from 'features/canvass/rpc/editHouseholds';
 import { loadLocationHouseholdVisitsDef } from 'features/canvass/rpc/loadLocationHouseholdVisits';
 import { getSuborgsWithStatsDef } from 'features/organizations/rpc/getSuborgsWithStats';
-import { getOrgStatsDef } from 'features/organizations/rpc/getOrgStats';
+import { getSuborgWithStatsDef } from 'features/organizations/rpc/getSuborgWithStats';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -62,7 +62,7 @@ export function createRPCRouter() {
   rpcRouter.register(editHouseholdsDef);
   rpcRouter.register(loadLocationHouseholdVisitsDef);
   rpcRouter.register(getSuborgsWithStatsDef);
-  rpcRouter.register(getOrgStatsDef);
+  rpcRouter.register(getSuborgWithStatsDef);
 
   return rpcRouter;
 }

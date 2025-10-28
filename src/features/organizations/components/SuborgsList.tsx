@@ -15,16 +15,19 @@ import {
   PhoneOutlined,
 } from '@mui/icons-material';
 
-import { SuborgError, SuborgResult } from '../types';
+import { SuborgLoadingError, SuborgResult } from '../types';
 import useOrganization from '../hooks/useOrganization';
 import useSuborgsWithStats from '../hooks/useSuborgsWithStats';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 
-export const isError = (result: SuborgResult): result is SuborgError => {
+export const isError = (result: SuborgResult): result is SuborgLoadingError => {
   return 'error' in result;
 };
 
-const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
+const SuborgsList: FC<{
+  onSelectSuborg: (suborgId: number) => void;
+  orgId: number;
+}> = ({ onSelectSuborg, orgId }) => {
   const organization = useOrganization(orgId).data;
   const suborgsWithStats = useSuborgsWithStats(orgId);
 
@@ -46,7 +49,9 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
         {suborgsWithStats.map((orgWithStats) => {
           if (isError(orgWithStats)) {
             if (orgWithStats.id == 'loadingError') {
-              return <Alert severity="error">{orgWithStats.message}</Alert>;
+              return (
+                <Alert severity="error">{`Error loading suborg data`}</Alert>
+              );
             }
 
             return (
@@ -56,15 +61,17 @@ const SuborgsList: FC<{ orgId: number }> = ({ orgId }) => {
                   padding: 2,
                 }}
               >
-                <Alert severity="error">{orgWithStats.message}</Alert>
+                <Alert severity="error">{`Error loading data for organization ${orgWithStats.id}`}</Alert>
               </Box>
             );
           }
           return (
             <Box
               key={orgWithStats.id}
+              onClick={() => onSelectSuborg(orgWithStats.id)}
               sx={{
                 alignContent: 'center',
+                cursor: 'pointer',
                 padding: 2,
               }}
             >

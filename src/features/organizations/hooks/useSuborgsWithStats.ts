@@ -20,7 +20,6 @@ export default function useSuborgsWithStats(orgId: number) {
           {
             error: true,
             id: 'loadingError',
-            message: 'There was an error loading the sub organization data',
           },
         ]);
       }

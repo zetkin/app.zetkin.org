@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import { OrgStats, SuborgResult, TreeItemData } from './types';
+import { SuborgResult, TreeItemData } from './types';
 import {
   remoteItem,
   RemoteItem,
@@ -30,7 +30,7 @@ export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   suborgsWithStats: RemoteList<SuborgResult>;
-  orgStats: RemoteItem<OrgStats & { id: number }>;
+  statsBySuborgId: Record<number, RemoteItem<SuborgResult>>;
   treeDataList: RemoteList<TreeItemData>;
   userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
@@ -45,7 +45,7 @@ const initialState: OrganizationsStoreSlice = {
     orgIdsToFilterBy: [],
   },
   orgData: remoteItem(0),
-  orgStats: remoteItem(0),
+  statsBySuborgId: {},
   subOrgsByOrgId: {},
   suborgsWithStats: remoteList(),
   treeDataList: remoteList(),
@@ -122,19 +122,6 @@ const OrganizationsSlice = createSlice({
       state.orgData.loaded = new Date().toISOString();
       state.orgData.isLoading = false;
     },
-    organizationStatsLoad: (state) => {
-      state.orgStats.isLoading = true;
-    },
-    organizationStatsLoaded: (
-      state,
-      action: PayloadAction<[number, OrgStats]>
-    ) => {
-      const [id, stats] = action.payload;
-
-      state.orgStats.data = { ...stats, id };
-      state.orgStats.loaded = new Date().toISOString();
-      state.orgStats.isLoading = false;
-    },
     subOrgsLoad: (state, action: PayloadAction<number>) => {
       const orgId = action.payload;
       if (!state.subOrgsByOrgId[orgId]) {
@@ -152,6 +139,30 @@ const OrganizationsSlice = createSlice({
       state.subOrgsByOrgId[orgId].loaded = new Date().toISOString();
       state.subOrgsByOrgId[orgId].isLoading = false;
     },
+    suborgWithStatsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+
+      if (!state.statsBySuborgId[id]) {
+        state.statsBySuborgId[id] = remoteItem(0);
+      }
+
+      state.statsBySuborgId[id].isLoading = true;
+    },
+    suborgWithStatsLoaded: (
+      state,
+      action: PayloadAction<[number, SuborgResult]>
+    ) => {
+      const [id, suborgWithStats] = action.payload;
+
+      if (!state.statsBySuborgId[id]) {
+        state.statsBySuborgId[id] = remoteItem(0);
+      }
+
+      state.statsBySuborgId[id] = remoteItem(id, {
+        data: suborgWithStats,
+        loaded: new Date().toISOString(),
+      });
+    },
     suborgsWithStatsLoad: (state) => {
       state.suborgsWithStats.isLoading = true;
     },
@@ -161,6 +172,21 @@ const OrganizationsSlice = createSlice({
       state.suborgsWithStats = remoteList(suborgsWithStats);
       state.suborgsWithStats.loaded = new Date().toISOString();
       state.suborgsWithStats.isLoading = false;
+
+      suborgsWithStats.forEach((suborgWithStats) => {
+        if (typeof suborgWithStats.id != 'string') {
+          if (!state.statsBySuborgId[suborgWithStats.id]) {
+            state.statsBySuborgId[suborgWithStats.id] = remoteItem(0);
+          }
+
+          state.statsBySuborgId[suborgWithStats.id] = remoteItem(
+            suborgWithStats.id,
+            {
+              data: suborgWithStats,
+            }
+          );
+        }
+      });
     },
     treeDataLoad: (state) => {
       state.treeDataList.isLoading = true;
@@ -198,14 +224,14 @@ export const {
   orgEventsLoaded,
   organizationLoaded,
   organizationLoad,
-  organizationStatsLoad,
-  organizationStatsLoaded,
   orgFollowed,
   orgUnfollowed,
   treeDataLoad,
   treeDataLoaded,
   subOrgsLoad,
   subOrgsLoaded,
+  suborgWithStatsLoad,
+  suborgWithStatsLoaded,
   suborgsWithStatsLoad,
   suborgsWithStatsLoaded,
   userMembershipsLoad,
