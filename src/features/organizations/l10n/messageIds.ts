@@ -35,6 +35,9 @@ export default makeMessages('feat.organizations', {
     loading: m('Loading...'),
     noLocation: m('No physical location'),
     partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
+    participatingInfo: m<{ participatingCount: number }>(
+      '{participatingCount, plural, =1 {# person is} other {# persons are}} participating'
+    ),
     today: m('Today'),
   },
   gen3: {

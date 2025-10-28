@@ -9,6 +9,7 @@ import {
   ExpandMore,
   Link as LinkIcon,
   LocationPin,
+  Person,
   Phone,
 } from '@mui/icons-material';
 import { Map, Marker } from '@vis.gl/react-maplibre';
@@ -35,6 +36,7 @@ import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
+import useMemberships from '../hooks/useMemberships';
 
 type Props = {
   eventId: number;
@@ -44,7 +46,7 @@ type Props = {
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
   const myEvents = useMyEvents();
-
+  const memberships = useMemberships();
   const baseEvent = useEvent(orgId, eventId)?.data;
   const baseEventWithStatus: ZetkinEventWithStatus | undefined = baseEvent
     ? { ...baseEvent, status: null }
@@ -78,6 +80,13 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isFullScreen = !isMobile;
 
   const contactPerson = event?.contact;
+  const orgMembership = memberships.data?.find(
+    (membership) => membership.organization.id == orgId
+  );
+
+  const isLoggedInAsContactPerson =
+    contactPerson != undefined && contactPerson.id == orgMembership?.profile.id;
+
   const showContactDetails =
     !event?.cancelled && event?.status == 'booked' && !!contactPerson;
 
@@ -206,6 +215,11 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
               >
                 <SignUpSection event={event} />
                 <DateAndLocation event={event} />
+                {isLoggedInAsContactPerson && (
+                  <ParticipatingInfo
+                    participatingCount={event.num_participants_available}
+                  />
+                )}
               </Box>
             </Box>
             <ZUIPublicFooter />
@@ -383,6 +397,28 @@ const DateAndLocation: FC<{
           </Map>
         </Box>
       )}
+    </Box>
+  );
+};
+
+const ParticipatingInfo: FC<{
+  participatingCount: number;
+}> = ({ participatingCount }) => {
+  const isMobile = useIsMobile();
+
+  return (
+    <Box display="flex" flexDirection="column" gap={isMobile ? 1 : 2}>
+      <Box alignItems="center" display="flex" gap={1}>
+        <ZUIIcon icon={Person} />
+        <ZUIText>
+          <Msg
+            id={messageIds.eventPage.participatingInfo}
+            values={{
+              participatingCount: participatingCount,
+            }}
+          />
+        </ZUIText>
+      </Box>
     </Box>
   );
 };
