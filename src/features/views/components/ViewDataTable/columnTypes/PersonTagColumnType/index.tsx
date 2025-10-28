@@ -24,9 +24,10 @@ import ValueTagCell from './ValueTagCell';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
-import { AppDispatch, RootState } from 'core/store';
+import { AppDispatch } from 'core/store';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
+import { RemoteList } from 'utils/storeUtils';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -40,7 +41,7 @@ export default class PersonTagColumnType implements IColumnType {
   getColDef(
     column: PersonTagViewColumn,
     accessLevel: ZetkinObjectAccess['level'],
-    state: RootState,
+    tagListState: RemoteList<ZetkinTag>,
     apiClient: IApiClient,
     dispatch: AppDispatch,
     orgId: number
@@ -50,8 +51,7 @@ export default class PersonTagColumnType implements IColumnType {
     let tag: ZetkinTag | null = null;
 
     if (!accessLevel) {
-      const tagList = state.tags.tagList;
-      const tagItem = tagList.items.find((item) => item.id == tagId);
+      const tagItem = tagListState.items.find((item) => item.id == tagId);
 
       const tagFuture = loadItemIfNecessary(tagItem, dispatch, {
         actionOnLoad: () => tagLoad(tagId),
