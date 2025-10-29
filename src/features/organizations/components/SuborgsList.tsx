@@ -9,10 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  AssignmentOutlined,
-  EmailOutlined,
+  AssignmentTurnedIn,
+  Email,
   EventOutlined,
-  PhoneOutlined,
+  Group,
+  Phone,
 } from '@mui/icons-material';
 
 import {
@@ -43,8 +44,10 @@ const SuborgListItem: FC<{
     <Box
       onClick={() => onSelect()}
       sx={{
-        alignContent: 'center',
         cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
         padding: 2,
       }}
     >
@@ -59,49 +62,33 @@ const SuborgListItem: FC<{
           <Typography variant="h5">{suborg.title}</Typography>
         </Box>
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <Typography>{suborg.stats.numPeople}</Typography>
-            <Typography color="secondary">people</Typography>
-          </Box>
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <Typography>{suborg.stats.numLists}</Typography>
-            <Typography color="secondary">lists</Typography>
-          </Box>
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <Typography>{suborg.stats.numProjects}</Typography>
-            <Typography color="secondary">projects</Typography>
-          </Box>
+          <Group color="secondary" />
+          <Typography>{suborg.stats.numPeople}</Typography>
         </Box>
       </Box>
-      <Typography color="secondary">Activity in the past 30 days:</Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-          <PhoneOutlined color="secondary" />
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <Typography>{suborg.stats.numCalls}</Typography>
-            <Typography color="secondary">calls</Typography>
-          </Box>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
+          <Phone color="secondary" />
+          <Typography color="secondary">{suborg.stats.numCalls}</Typography>
         </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-          <AssignmentOutlined color="secondary" />
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <Typography>{suborg.stats.numSubmissions}</Typography>
-            <Typography color="secondary">submissions</Typography>
-          </Box>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
+          <AssignmentTurnedIn color="secondary" />
+          <Typography color="secondary">
+            {suborg.stats.numSubmissions}
+          </Typography>
         </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
           <EventOutlined color="secondary" />
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <Typography>{suborg.stats.numEventParticipants}</Typography>
-            <Typography color="secondary">participants in </Typography>
-            <Typography>{suborg.stats.numEventsWithParticipants}</Typography>
-            <Typography color="secondary">events</Typography>
-          </Box>
+          <Typography color="secondary">
+            {suborg.stats.numEventParticipants}
+          </Typography>
         </Box>
         {usesEmailFeature && (
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-            <EmailOutlined color="secondary" />
-            <Typography color="secondary">{`${suborg.stats.numEmailsSent} sent`}</Typography>
+          <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
+            <Email color="secondary" />
+            <Typography color="secondary">
+              {suborg.stats.numEmailsSent}
+            </Typography>
           </Box>
         )}
       </Box>
@@ -129,7 +116,7 @@ const SuborgsList: FC<{
   }
 
   return (
-    <Paper>
+    <Paper sx={{ padding: 2 }}>
       <Stack divider={<Divider />}>
         {suborgsWithStats.map((orgWithStats) => {
           if (isError(orgWithStats)) {
