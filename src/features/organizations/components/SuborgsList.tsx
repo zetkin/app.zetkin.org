@@ -80,7 +80,7 @@ const SuborgListItem: FC<{
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
           <EventOutlined color="secondary" />
           <Typography color="secondary">
-            {suborg.stats.numEventParticipants}
+            {suborg.stats.numBookedForEvents}
           </Typography>
         </Box>
         {usesEmailFeature && (

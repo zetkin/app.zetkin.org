@@ -3,20 +3,16 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
-  ZetkinCampaign,
   ZetkinEmail,
-  ZetkinEvent,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurveySubmission,
-  ZetkinView,
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgResult } from '../types';
 import { ZetkinCall } from 'features/call/types';
 import { ZetkinEmailStats } from 'features/emails/types';
-import getEventStats from 'features/events/rpc/getEventStats';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -47,7 +43,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const thirtyDaysAgo = new Date(new Date().setDate(now.getDate() - 30))
     .toISOString()
     .slice(0, 10);
-  const today = now.toISOString().slice(0, 10);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
     const results = await Promise.allSettled([
@@ -84,15 +79,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       apiClient.get<ZetkinSurveySubmission[]>(
         `/api/orgs/${suborg.id}/survey_submissions?recursive`
       ),
-      apiClient.get<ZetkinView[]>(
-        `/api/orgs/${suborg.id}/people/views?recursive`
-      ),
-      apiClient.get<ZetkinCampaign[]>(
-        `/api/orgs/${suborg.id}/campaigns?recursive`
-      ),
-      apiClient.get<ZetkinEvent[]>(
-        `/api/orgs/${suborg.id}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=end_time<=${today}`
-      ),
     ]);
 
     if (results.some((result) => result.status == 'rejected')) {
@@ -102,29 +88,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       };
     }
 
-    const [
-      suborgStats,
-      eventParticipationStats,
-      calls,
-      surveySubmissions,
-      lists,
-      projects,
-      events,
-    ] = results;
-
-    let numEventsWithParticipants = 0;
-    if (events.status == 'fulfilled') {
-      for (const event of events.value) {
-        const eventStats = await apiClient.rpc(getEventStats, {
-          eventId: event.id,
-          orgId: event.organization.id,
-        });
-
-        if (eventStats.numBooked > 0) {
-          numEventsWithParticipants++;
-        }
-      }
-    }
+    const [suborgStats, eventParticipationStats, calls, surveySubmissions] =
+      results;
 
     //TODO: Add call to /emails with "recursive" flag in Promise.all above
     //once the API supports "recursive" flag for emails.
@@ -168,15 +133,12 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
             (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
           ).length
         : 0;
-    const numEventParticipants =
+    const numBookedForEvents =
       eventParticipationStats.status == 'fulfilled'
         ? eventParticipationStats.value[0].result
         : 0;
-    const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
     const numPeople =
       suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
-    const numProjects =
-      projects.status == 'fulfilled' ? projects.value.length : 0;
     const numSubmissions =
       surveySubmissions.status == 'fulfilled'
         ? surveySubmissions.value.filter(
@@ -187,13 +149,10 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     return {
       id: suborg.id,
       stats: {
+        numBookedForEvents,
         numCalls,
         numEmailsSent,
-        numEventParticipants,
-        numEventsWithParticipants,
-        numLists,
         numPeople,
-        numProjects,
         numSubmissions,
       },
       title: suborg.title,

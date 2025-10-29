@@ -9,21 +9,17 @@ export interface TreeItemData {
 }
 
 export type SimpleOrgStats = {
+  numBookedForEvents: number;
   numCalls: number;
   numEmailsSent: number;
-  numEventParticipants: number;
-  numEventsWithParticipants: number;
-  numLists: number;
   numPeople: number;
-  numProjects: number;
   numSubmissions: number;
 };
 
-export type FullOrgStats = Omit<
-  SimpleOrgStats,
-  'numEventsWithParticipants' | 'numEventParticipants'
-> & {
+export type FullOrgStats = Omit<SimpleOrgStats, 'numBookedForEvents'> & {
   numBookedByEventStartDate: Record<string, number>;
+  numLists: number;
+  numProjects: number;
 };
 
 type SuborgBase = {
