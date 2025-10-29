@@ -39,9 +39,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId } = params;
 
   const now = new Date();
-  const thirtyDaysAgo = new Date(new Date().setDate(now.getDate() - 30))
-    .toISOString()
-    .slice(0, 10);
+  const thirtyDaysAgo = new Date(new Date().setDate(now.getDate() - 30));
   const today = now.toISOString().slice(0, 10);
 
   const results = await Promise.allSettled([
@@ -70,7 +68,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     apiClient.get<ZetkinView[]>(`/api/orgs/${orgId}/people/views?recursive`),
     apiClient.get<ZetkinCampaign[]>(`/api/orgs/${orgId}/campaigns?recursive`),
     apiClient.get<ZetkinEvent[]>(
-      `/api/orgs/${orgId}/actions?recursive&filter=start_time>=${thirtyDaysAgo}&filter=end_time<=${today}`
+      `/api/orgs/${orgId}/actions?recursive&filter=start_time>=${thirtyDaysAgo
+        .toISOString()
+        .slice(0, 10)}&filter=end_time<=${today}`
     ),
   ]);
 
@@ -93,6 +93,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const numBookedByEventStartDate: Record<string, number> = {};
   if (events.status == 'fulfilled') {
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
+        .toISOString()
+        .slice(0, 10);
+      numBookedByEventStartDate[date] = 0;
+    }
+
     for (const event of events.value) {
       const eventStats = await apiClient.rpc(getEventStats, {
         eventId: event.id,
@@ -127,13 +134,12 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     emails.push(...suborgEmails);
   }
 
-  const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
   let numEmailsSent = 0;
   for (const email of emails) {
     if (email.published) {
       const sendTime = new Date(email.published);
 
-      if (sendTime >= thirtyDaysAgoDate && sendTime <= now) {
+      if (sendTime >= thirtyDaysAgo && sendTime <= now) {
         const stats = await apiClient.get<ZetkinEmailStats>(
           `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
         );
@@ -145,7 +151,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const numCalls =
     calls.status == 'fulfilled'
       ? calls.value.filter(
-          (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
+          (call) => new Date(call.allocation_time) >= thirtyDaysAgo
         ).length
       : 0;
   const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
@@ -156,7 +162,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const numSubmissions =
     surveySubmissions.status == 'fulfilled'
       ? surveySubmissions.value.filter(
-          (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
+          (submission) => new Date(submission.submitted) >= thirtyDaysAgo
         ).length
       : 0;
   const title =

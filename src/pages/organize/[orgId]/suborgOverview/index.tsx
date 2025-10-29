@@ -5,13 +5,16 @@ import {
   Avatar,
   Box,
   CircularProgress,
+  lighten,
   Paper,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import {
   AssignmentOutlined,
   EmailOutlined,
+  Event,
   PhoneOutlined,
 } from '@mui/icons-material';
 
@@ -53,6 +56,15 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
       <Alert severity="error">{`Error fetching data for org ${orgId}`}</Alert>
     );
   }
+
+  let mostParticipants = 0;
+  Object.values(suborgWithFullStats.stats.numBookedByEventStartDate).forEach(
+    (numBooked) => {
+      if (numBooked > mostParticipants) {
+        mostParticipants = numBooked;
+      }
+    }
+  );
 
   return (
     <Paper>
@@ -103,14 +115,47 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                 <Typography color="secondary">submissions</Typography>
               </Box>
             </Box>
-            <Box>
-              Date - booked people
-              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
+                <Event color="secondary" />
+                <Typography>Events</Typography>
+              </Box>
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: 1,
+                  justifyContent: 'space-between',
+                }}
+              >
                 {Object.entries(
                   suborgWithFullStats.stats.numBookedByEventStartDate
                 ).map(([startDate, numBooked]) => {
+                  const noEventsHadParticipants = mostParticipants == 0;
+                  const thisDateHadNoParticipants = numBooked == 0;
                   return (
-                    <Box key={startDate}>{`${startDate}: ${numBooked}`}</Box>
+                    <Tooltip
+                      key={startDate}
+                      arrow
+                      title={`${numBooked} booked on events on ${startDate}`}
+                    >
+                      <Box
+                        sx={(theme) => ({
+                          backgroundColor:
+                            noEventsHadParticipants || thisDateHadNoParticipants
+                              ? theme.palette.grey[100]
+                              : lighten(
+                                  theme.palette.primary.main,
+                                  Math.round(
+                                    (1 - numBooked / mostParticipants) * 10
+                                  ) / 10
+                                ),
+                          borderRadius: '2em',
+                          height: '10px',
+                          width: '10px',
+                        })}
+                      />
+                    </Tooltip>
                   );
                 })}
               </Box>
