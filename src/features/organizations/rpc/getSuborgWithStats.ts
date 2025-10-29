@@ -50,6 +50,18 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     >(`/api/orgs/${orgId}/people/queries/ephemeral/stats`, {
       filter_spec: [
         {
+          config: {},
+          op: OPERATION.ADD,
+          type: FILTER_TYPE.ALL,
+        },
+      ],
+    }),
+    apiClient.post<
+      ZetkinSmartSearchFilterStats[],
+      { filter_spec: ZetkinSmartSearchFilter[] }
+    >(`/api/orgs/${orgId}/people/queries/ephemeral/stats`, {
+      filter_spec: [
+        {
           config: {
             after: '-30d',
             operator: 'in',
@@ -84,6 +96,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const [
     organization,
     suborgStats,
+    eventParticipationStats,
     calls,
     surveySubmissions,
     lists,
@@ -91,6 +104,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     events,
   ] = results;
 
+  let numEventsWithBookedPeople = 0;
   const numBookedByEventStartDate: Record<string, number> = {};
   if (events.status == 'fulfilled') {
     for (let i = 0; i < 30; i++) {
@@ -107,8 +121,10 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       });
 
       if (eventStats.numBooked > 0) {
-        numBookedByEventStartDate[event.start_time.slice(0, 10)] =
-          eventStats.numBooked;
+        numEventsWithBookedPeople++;
+        const eventStartDate = event.start_time.slice(0, 10);
+        numBookedByEventStartDate[eventStartDate] =
+          numBookedByEventStartDate[eventStartDate] + eventStats.numBooked;
       }
     }
   }
@@ -134,26 +150,49 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     emails.push(...suborgEmails);
   }
 
-  let numEmailsSent = 0;
+  const numEmailsSentBySendDate: Record<string, number> = {};
   for (const email of emails) {
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
+        .toISOString()
+        .slice(0, 10);
+      numEmailsSentBySendDate[date] = 0;
+    }
+
     if (email.published) {
       const sendTime = new Date(email.published);
-
       if (sendTime >= thirtyDaysAgo && sendTime <= now) {
         const stats = await apiClient.get<ZetkinEmailStats>(
           `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
         );
-        numEmailsSent = numEmailsSent + stats.num_sent;
+
+        numEmailsSentBySendDate[sendTime.toISOString().slice(0, 10)] =
+          numEmailsSentBySendDate[sendTime.toISOString().slice(0, 10)] +
+          stats.num_sent;
       }
     }
   }
 
-  const numCalls =
-    calls.status == 'fulfilled'
-      ? calls.value.filter(
-          (call) => new Date(call.allocation_time) >= thirtyDaysAgo
-        ).length
-      : 0;
+  let numCalls = 0;
+  const numCallsByCallDate: Record<string, number> = {};
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
+      .toISOString()
+      .slice(0, 10);
+    numCallsByCallDate[date] = 0;
+  }
+
+  if (calls.status == 'fulfilled') {
+    for (const call of calls.value) {
+      const allocationTime = new Date(call.allocation_time);
+      if (allocationTime >= thirtyDaysAgo) {
+        numCalls++;
+        const callDate = allocationTime.toISOString().slice(0, 10);
+        numCallsByCallDate[callDate] = numCallsByCallDate[callDate] + 1;
+      }
+    }
+  }
+
   const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
   const numPeople =
     suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
@@ -167,13 +206,20 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       : 0;
   const title =
     organization.status == 'fulfilled' ? organization.value.title : '';
+  const numBookedForEvents =
+    eventParticipationStats.status == 'fulfilled'
+      ? eventParticipationStats.value[0].result
+      : 0;
 
   return {
     id: orgId,
     stats: {
       numBookedByEventStartDate,
+      numBookedForEvents,
       numCalls,
-      numEmailsSent,
+      numCallsByCallDate,
+      numEmailsSentBySendDate,
+      numEvents: numEventsWithBookedPeople,
       numLists,
       numPeople,
       numProjects,

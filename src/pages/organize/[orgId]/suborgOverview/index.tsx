@@ -11,12 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import {
-  AssignmentOutlined,
-  EmailOutlined,
-  Event,
-  PhoneOutlined,
-} from '@mui/icons-material';
+import { EmailOutlined, Event, PhoneOutlined } from '@mui/icons-material';
 
 import useServerSide from 'core/useServerSide';
 import { PageWithLayout } from 'utils/types';
@@ -66,6 +61,24 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
     }
   );
 
+  let mostEmails = 0;
+  Object.values(suborgWithFullStats.stats.numEmailsSentBySendDate).forEach(
+    (numSent) => {
+      if (numSent > mostEmails) {
+        mostEmails = numSent;
+      }
+    }
+  );
+
+  let mostCalls = 0;
+  Object.values(suborgWithFullStats.stats.numCallsByCallDate).forEach(
+    (numCalls) => {
+      if (numCalls > mostCalls) {
+        mostCalls = numCalls;
+      }
+    }
+  );
+
   return (
     <Paper>
       <Box
@@ -79,7 +92,6 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
             }}
           >
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
@@ -98,27 +110,62 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
           <Typography color="secondary">
             Activity in the past 30 days:
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <PhoneOutlined color="secondary" />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+              }}
+            >
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{suborgWithFullStats.stats.numCalls}</Typography>
-                <Typography color="secondary">calls</Typography>
+                <PhoneOutlined color="secondary" />
+                <Typography color="secondary">Calls</Typography>
               </Box>
-            </Box>
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <AssignmentOutlined color="secondary" />
-              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>
-                  {suborgWithFullStats.stats.numSubmissions}
-                </Typography>
-                <Typography color="secondary">submissions</Typography>
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: 1,
+                  justifyContent: 'space-between',
+                }}
+              >
+                {Object.entries(
+                  suborgWithFullStats.stats.numCallsByCallDate
+                ).map(([callDate, numCalls]) => {
+                  const noDateHasCalls = mostCalls == 0;
+                  const thisDateHadNoCalls = numCalls == 0;
+                  return (
+                    <Tooltip
+                      key={`${callDate}-calls`}
+                      arrow
+                      title={`${numCalls} calls made on ${callDate}`}
+                    >
+                      <Box
+                        sx={(theme) => ({
+                          backgroundColor:
+                            noDateHasCalls || thisDateHadNoCalls
+                              ? theme.palette.grey[100]
+                              : lighten(
+                                  theme.palette.primary.main,
+                                  Math.round((1 - numCalls / mostCalls) * 10) /
+                                    10
+                                ),
+                          borderRadius: '2em',
+                          height: '10px',
+                          width: '10px',
+                        })}
+                      />
+                    </Tooltip>
+                  );
+                })}
               </Box>
+              <Typography>{`${suborgWithFullStats.stats.numCalls} calls made`}</Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
                 <Event color="secondary" />
-                <Typography>Events</Typography>
+                <Typography color="secondary">Events</Typography>
               </Box>
               <Box
                 sx={{
@@ -159,15 +206,49 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                   );
                 })}
               </Box>
+              <Typography>{`${suborgWithFullStats.stats.numBookedForEvents} people booked for ${suborgWithFullStats.stats.numEvents} events`}</Typography>
             </Box>
             {usesEmailFeature && (
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
                 <EmailOutlined color="secondary" />
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <Typography>
-                    {suborgWithFullStats.stats.numEmailsSent}
-                  </Typography>
-                  <Typography color="secondary">sent</Typography>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    gap: 1,
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  {Object.entries(
+                    suborgWithFullStats.stats.numBookedByEventStartDate
+                  ).map(([sendDate, numEmails]) => {
+                    const noDateHadEmailsSent = mostEmails == 0;
+                    const thisDateHadNoEmailsSent = numEmails == 0;
+                    return (
+                      <Tooltip
+                        key={`${sendDate}-emails`}
+                        arrow
+                        title={`${numEmails} emails sent on ${sendDate}`}
+                      >
+                        <Box
+                          sx={(theme) => ({
+                            backgroundColor:
+                              noDateHadEmailsSent || thisDateHadNoEmailsSent
+                                ? theme.palette.grey[100]
+                                : lighten(
+                                    theme.palette.primary.main,
+                                    Math.round(
+                                      (1 - numEmails / mostEmails) * 10
+                                    ) / 10
+                                  ),
+                            borderRadius: '2em',
+                            height: '10px',
+                            width: '10px',
+                          })}
+                        />
+                      </Tooltip>
+                    );
+                  })}
                 </Box>
               </Box>
             )}
