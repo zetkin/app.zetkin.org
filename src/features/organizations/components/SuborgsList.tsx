@@ -15,21 +15,27 @@ import {
   PhoneOutlined,
 } from '@mui/icons-material';
 
-import { SuborgLoadingError, SuborgResult, SuborgWithStats } from '../types';
+import {
+  SuborgLoadingError,
+  SuborgWithFullStats,
+  SuborgWithSimpleStats,
+} from '../types';
 import useOrganization from '../hooks/useOrganization';
 import useSuborgsWithStats from '../hooks/useSuborgsWithStats';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
-export const isError = (result: SuborgResult): result is SuborgLoadingError => {
+export const isError = (
+  result: SuborgWithSimpleStats | SuborgWithFullStats | SuborgLoadingError
+): result is SuborgLoadingError => {
   return 'error' in result;
 };
 
-const SuborgListItem: FC<{ onSelect: () => void; suborg: SuborgWithStats }> = ({
-  onSelect,
-  suborg,
-}) => {
+const SuborgListItem: FC<{
+  onSelect: () => void;
+  suborg: SuborgWithSimpleStats;
+}> = ({ onSelect, suborg }) => {
   const themes = useEmailThemes(suborg.id).data || [];
   const configs = useEmailConfigs(suborg.id).data || [];
   const usesEmailFeature = configs.length > 0 && themes.length > 0;

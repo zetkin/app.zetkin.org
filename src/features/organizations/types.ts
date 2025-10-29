@@ -8,7 +8,7 @@ export interface TreeItemData {
   children: TreeItemData[] | [];
 }
 
-export type OrgStats = {
+export type SimpleOrgStats = {
   numCalls: number;
   numEmailsSent: number;
   numEventParticipants: number;
@@ -19,10 +19,24 @@ export type OrgStats = {
   numSubmissions: number;
 };
 
-export type SuborgWithStats = {
+export type FullOrgStats = Omit<
+  SimpleOrgStats,
+  'numEventsWithParticipants' | 'numEventParticipants'
+> & {
+  numBookedByEventStartDate: Record<string, number>;
+};
+
+type SuborgBase = {
   id: number;
-  stats: OrgStats;
   title: string;
+};
+
+export type SuborgWithSimpleStats = SuborgBase & {
+  stats: SimpleOrgStats;
+};
+
+export type SuborgWithFullStats = SuborgBase & {
+  stats: FullOrgStats;
 };
 
 export type AllSuborgsLoadingError = {
@@ -39,4 +53,4 @@ export type SuborgLoadingError =
   | AllSuborgsLoadingError
   | SingleSuborgLoadingError;
 
-export type SuborgResult = SuborgWithStats | SuborgLoadingError;
+export type SuborgResult = SuborgWithSimpleStats | SuborgLoadingError;

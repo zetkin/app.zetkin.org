@@ -2,7 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import { SuborgResult, TreeItemData } from './types';
+import {
+  SuborgLoadingError,
+  SuborgResult,
+  SuborgWithFullStats,
+  TreeItemData,
+} from './types';
 import {
   remoteItem,
   RemoteItem,
@@ -30,7 +35,10 @@ export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   suborgsWithStats: RemoteList<SuborgResult>;
-  statsBySuborgId: Record<number, RemoteItem<SuborgResult>>;
+  statsBySuborgId: Record<
+    number,
+    RemoteItem<SuborgWithFullStats | SuborgLoadingError>
+  >;
   treeDataList: RemoteList<TreeItemData>;
   userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
@@ -150,7 +158,7 @@ const OrganizationsSlice = createSlice({
     },
     suborgWithStatsLoaded: (
       state,
-      action: PayloadAction<[number, SuborgResult]>
+      action: PayloadAction<[number, SuborgWithFullStats | SuborgLoadingError]>
     ) => {
       const [id, suborgWithStats] = action.payload;
 
@@ -172,22 +180,6 @@ const OrganizationsSlice = createSlice({
       state.suborgsWithStats = remoteList(suborgsWithStats);
       state.suborgsWithStats.loaded = new Date().toISOString();
       state.suborgsWithStats.isLoading = false;
-
-      suborgsWithStats.forEach((suborgWithStats) => {
-        if (typeof suborgWithStats.id != 'string') {
-          if (!state.statsBySuborgId[suborgWithStats.id]) {
-            state.statsBySuborgId[suborgWithStats.id] = remoteItem(0);
-          }
-
-          state.statsBySuborgId[suborgWithStats.id] = remoteItem(
-            suborgWithStats.id,
-            {
-              data: suborgWithStats,
-              loaded: new Date().toISOString(),
-            }
-          );
-        }
-      });
     },
     treeDataLoad: (state) => {
       state.treeDataList.isLoading = true;

@@ -14,7 +14,7 @@ import {
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
-import { SuborgResult } from '../types';
+import { SuborgLoadingError, SuborgWithFullStats } from '../types';
 import { ZetkinCall } from 'features/call/types';
 import { ZetkinEmailStats } from 'features/emails/types';
 import getEventStats from 'features/events/rpc/getEventStats';
@@ -25,7 +25,7 @@ const paramsSchema = z.object({
 
 type Params = z.infer<typeof paramsSchema>;
 
-export type Result = SuborgResult;
+export type Result = SuborgWithFullStats | SuborgLoadingError;
 
 export const getSuborgWithStatsDef = {
   handler: handle,
@@ -46,18 +46,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
 
   const results = await Promise.allSettled([
     apiClient.get<ZetkinOrganization>(`/api/orgs/${orgId}`),
-    apiClient.post<
-      ZetkinSmartSearchFilterStats[],
-      { filter_spec: ZetkinSmartSearchFilter[] }
-    >(`/api/orgs/${orgId}/people/queries/ephemeral/stats`, {
-      filter_spec: [
-        {
-          config: {},
-          op: OPERATION.ADD,
-          type: FILTER_TYPE.ALL,
-        },
-      ],
-    }),
     apiClient.post<
       ZetkinSmartSearchFilterStats[],
       { filter_spec: ZetkinSmartSearchFilter[] }
@@ -96,7 +84,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const [
     organization,
     suborgStats,
-    eventParticipationStats,
     calls,
     surveySubmissions,
     lists,
@@ -104,7 +91,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     events,
   ] = results;
 
-  let numEventsWithParticipants = 0;
+  const numBookedByEventStartDate: Record<string, number> = {};
   if (events.status == 'fulfilled') {
     for (const event of events.value) {
       const eventStats = await apiClient.rpc(getEventStats, {
@@ -113,7 +100,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       });
 
       if (eventStats.numBooked > 0) {
-        numEventsWithParticipants++;
+        numBookedByEventStartDate[event.start_time.slice(0, 10)] =
+          eventStats.numBooked;
       }
     }
   }
@@ -160,10 +148,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
           (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
         ).length
       : 0;
-  const numEventParticipants =
-    eventParticipationStats.status == 'fulfilled'
-      ? eventParticipationStats.value[0].result
-      : 0;
   const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
   const numPeople =
     suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
@@ -181,10 +165,9 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   return {
     id: orgId,
     stats: {
+      numBookedByEventStartDate,
       numCalls,
       numEmailsSent,
-      numEventParticipants,
-      numEventsWithParticipants,
       numLists,
       numPeople,
       numProjects,

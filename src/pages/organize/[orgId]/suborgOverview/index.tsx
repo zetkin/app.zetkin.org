@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { FC, Suspense, useState } from 'react';
 import {
+  Alert,
   Avatar,
   Box,
   CircularProgress,
@@ -11,7 +12,6 @@ import { GetServerSideProps } from 'next';
 import {
   AssignmentOutlined,
   EmailOutlined,
-  EventOutlined,
   PhoneOutlined,
 } from '@mui/icons-material';
 
@@ -24,7 +24,7 @@ import messageIds from 'features/organizations/l10n/messageIds';
 import SuborgsList, {
   isError,
 } from 'features/organizations/components/SuborgsList';
-import useSuborgWithStats from 'features/organizations/hooks/useSuborgWithStatus';
+import useSuborgWithFullStats from 'features/organizations/hooks/useSuborgWithFullStats';
 import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
@@ -43,13 +43,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
-  const suborgWithStats = useSuborgWithStats(orgId);
+  const suborgWithFullStats = useSuborgWithFullStats(orgId);
   const themes = useEmailThemes(orgId).data || [];
   const configs = useEmailConfigs(orgId).data || [];
   const usesEmailFeature = configs.length > 0 && themes.length > 0;
 
-  if (isError(suborgWithStats)) {
-    return <>hej</>;
+  if (isError(suborgWithFullStats)) {
+    return (
+      <Alert severity="error">{`Error fetching data for org ${orgId}`}</Alert>
+    );
   }
 
   return (
@@ -59,7 +61,7 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
       >
         <Box>
           <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
-          <Typography variant="h5">{suborgWithStats.title}</Typography>
+          <Typography variant="h5">{suborgWithFullStats.title}</Typography>
         </Box>
         <Box>
           <Box
@@ -69,15 +71,15 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             }}
           >
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography>{suborgWithStats.stats.numPeople}</Typography>
+              <Typography>{suborgWithFullStats.stats.numPeople}</Typography>
               <Typography color="secondary">people</Typography>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography>{suborgWithStats.stats.numLists}</Typography>
+              <Typography>{suborgWithFullStats.stats.numLists}</Typography>
               <Typography color="secondary">lists</Typography>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <Typography>{suborgWithStats.stats.numProjects}</Typography>
+              <Typography>{suborgWithFullStats.stats.numProjects}</Typography>
               <Typography color="secondary">projects</Typography>
             </Box>
           </Box>
@@ -88,35 +90,38 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               <PhoneOutlined color="secondary" />
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{suborgWithStats.stats.numCalls}</Typography>
+                <Typography>{suborgWithFullStats.stats.numCalls}</Typography>
                 <Typography color="secondary">calls</Typography>
               </Box>
             </Box>
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
               <AssignmentOutlined color="secondary" />
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>{suborgWithStats.stats.numSubmissions}</Typography>
+                <Typography>
+                  {suborgWithFullStats.stats.numSubmissions}
+                </Typography>
                 <Typography color="secondary">submissions</Typography>
               </Box>
             </Box>
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-              <EventOutlined color="secondary" />
+            <Box>
+              Date - booked people
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <Typography>
-                  {suborgWithStats.stats.numEventParticipants}
-                </Typography>
-                <Typography color="secondary">participants in </Typography>
-                <Typography>
-                  {suborgWithStats.stats.numEventsWithParticipants}
-                </Typography>
-                <Typography color="secondary">events</Typography>
+                {Object.entries(
+                  suborgWithFullStats.stats.numBookedByEventStartDate
+                ).map(([startDate, numBooked]) => {
+                  return (
+                    <Box key={startDate}>{`${startDate}: ${numBooked}`}</Box>
+                  );
+                })}
               </Box>
             </Box>
             {usesEmailFeature && (
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
                 <EmailOutlined color="secondary" />
                 <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  <Typography>{suborgWithStats.stats.numEmailsSent}</Typography>
+                  <Typography>
+                    {suborgWithFullStats.stats.numEmailsSent}
+                  </Typography>
                   <Typography color="secondary">sent</Typography>
                 </Box>
               </Box>
