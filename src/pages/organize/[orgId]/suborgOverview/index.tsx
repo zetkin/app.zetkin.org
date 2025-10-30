@@ -5,7 +5,6 @@ import {
   Avatar,
   Box,
   CircularProgress,
-  lighten,
   Paper,
   Tooltip,
   Typography,
@@ -110,10 +109,9 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
               </Box>
               <Box
                 sx={{
-                  alignItems: 'center',
+                  alignItems: 'flex-end',
                   display: 'flex',
-                  gap: 1,
-                  justifyContent: 'space-between',
+                  height: '30px',
                 }}
               >
                 {Object.entries(
@@ -129,17 +127,13 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                     >
                       <Box
                         sx={(theme) => ({
-                          backgroundColor:
+                          backgroundColor: theme.palette.primary.main,
+                          height:
                             noDateHasCalls || thisDateHadNoCalls
-                              ? theme.palette.grey[100]
-                              : lighten(
-                                  theme.palette.primary.main,
-                                  Math.round((1 - numCalls / mostCalls) * 10) /
-                                    10
-                                ),
-                          borderRadius: '2em',
-                          height: '10px',
-                          width: '10px',
+                              ? '0px'
+                              : `${Math.round((numCalls / mostCalls) * 100)}%`,
+                          marginRight: 0.5,
+                          width: 1 / 30,
                         })}
                       />
                     </Tooltip>
@@ -155,10 +149,9 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
               </Box>
               <Box
                 sx={{
-                  alignItems: 'center',
+                  alignItems: 'flex-end',
                   display: 'flex',
-                  gap: 1,
-                  justifyContent: 'space-between',
+                  height: '30px',
                 }}
               >
                 {Object.entries(
@@ -166,6 +159,7 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                 ).map(([startDate, numBooked]) => {
                   const noEventsHadParticipants = mostParticipants == 0;
                   const thisDateHadNoParticipants = numBooked == 0;
+
                   return (
                     <Tooltip
                       key={startDate}
@@ -174,18 +168,15 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                     >
                       <Box
                         sx={(theme) => ({
-                          backgroundColor:
+                          backgroundColor: theme.palette.primary.main,
+                          height:
                             noEventsHadParticipants || thisDateHadNoParticipants
-                              ? theme.palette.grey[100]
-                              : lighten(
-                                  theme.palette.primary.main,
-                                  Math.round(
-                                    (1 - numBooked / mostParticipants) * 10
-                                  ) / 10
-                                ),
-                          borderRadius: '2em',
-                          height: '10px',
-                          width: '10px',
+                              ? '0px'
+                              : `${Math.round(
+                                  (numBooked / mostParticipants) * 100
+                                )}%`,
+                          marginRight: 0.5,
+                          width: 1 / 30,
                         })}
                       />
                     </Tooltip>
