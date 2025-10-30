@@ -276,7 +276,7 @@ export interface ZetkinSurveyTextElement {
   hidden: boolean;
   id: number;
   text_block: {
-    content: string;
+    content: string | null;
     header: string;
   };
   type: ELEMENT_TYPE.TEXT;

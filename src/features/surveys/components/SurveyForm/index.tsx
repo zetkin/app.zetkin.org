@@ -66,7 +66,9 @@ const SurveyForm: FC<SurveyFormProps> = ({
                     {element.text_block.header}
                   </ZUIText>
                   <ZUIText>
-                    <LinkifiedText text={element.text_block.content} />
+                    {element.text_block.content && (
+                      <LinkifiedText text={element.text_block.content} />
+                    )}
                   </ZUIText>
                 </Box>
               )}
