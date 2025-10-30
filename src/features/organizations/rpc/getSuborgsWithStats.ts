@@ -3,18 +3,14 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
-  ZetkinCampaign,
-  ZetkinEmail,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurveySubmission,
-  ZetkinView,
 } from 'utils/types/zetkin';
 import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgResult } from '../types';
 import { ZetkinCall } from 'features/call/types';
-import { ZetkinEmailStats } from 'features/emails/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -47,14 +43,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     .slice(0, 10);
 
   const suborgPromises = activeSuborgs.map(async (suborg) => {
-    const [
-      suborgStats,
-      eventParticipationStats,
-      calls,
-      surveySubmissions,
-      lists,
-      projects,
-    ] = await Promise.all([
+    const results = await Promise.allSettled([
       apiClient.post<
         ZetkinSmartSearchFilterStats[],
         { filter_spec: ZetkinSmartSearchFilter[] }
@@ -88,61 +77,45 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       apiClient.get<ZetkinSurveySubmission[]>(
         `/api/orgs/${suborg.id}/survey_submissions?recursive`
       ),
-      apiClient.get<ZetkinView[]>(
-        `/api/orgs/${suborg.id}/people/views?recursive`
-      ),
-      apiClient.get<ZetkinCampaign[]>(
-        `/api/orgs/${suborg.id}/campaigns?recursive`
-      ),
     ]);
 
-    //TODO: Add call to /emails with "recursive" flag in Promise.all above
-    //once the API supports "recursive" flag for emails.
-    const emailsInThisSuborg = await apiClient.get<ZetkinEmail[]>(
-      `/api/orgs/${suborg.id}/emails`
-    );
-    const allSuborgsOfThisSuborg = await apiClient.get<ZetkinSubOrganization[]>(
-      `/api/orgs/${suborg.id}/sub_organizations?recursive`
-    );
-    const allActiveSuborgsOfThisSuborg = allSuborgsOfThisSuborg.filter(
-      (s) => s.is_active && s.id != suborg.id
-    );
-
-    const emails: ZetkinEmail[] = [];
-    emails.push(...emailsInThisSuborg);
-    for (const s of allActiveSuborgsOfThisSuborg) {
-      const suborgEmails = await apiClient.get<ZetkinEmail[]>(
-        `/api/orgs/${s.id}/emails`
-      );
-      emails.push(...suborgEmails);
+    if (results.some((result) => result.status == 'rejected')) {
+      return {
+        error: true,
+        id: suborg.id,
+      };
     }
 
-    let numEmailsSent = 0;
-    for (const email of emails) {
-      const stats = await apiClient.get<ZetkinEmailStats>(
-        `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
-      );
-      numEmailsSent = numEmailsSent + stats.num_sent;
-    }
-    const numPeople = suborgStats[0].result;
-    const numEventParticipants = eventParticipationStats[0].result;
+    const [suborgStats, eventParticipationStats, calls, surveySubmissions] =
+      results;
 
     const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
+    const numCalls =
+      calls.status == 'fulfilled'
+        ? calls.value.filter(
+            (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
+          ).length
+        : 0;
+    const numBookedForEvents =
+      eventParticipationStats.status == 'fulfilled'
+        ? eventParticipationStats.value[0].result
+        : 0;
+    const numPeople =
+      suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
+    const numSubmissions =
+      surveySubmissions.status == 'fulfilled'
+        ? surveySubmissions.value.filter(
+            (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
+          ).length
+        : 0;
 
     return {
       id: suborg.id,
       stats: {
-        numCalls: calls.filter(
-          (call) => new Date(call.allocation_time) >= thirtyDaysAgoDate
-        ).length,
-        numEmailsSent,
-        numEventParticipants,
-        numLists: lists.length,
+        numBookedForEvents,
+        numCalls,
         numPeople,
-        numProjects: projects.length,
-        numSubmissions: surveySubmissions.filter(
-          (submission) => new Date(submission.submitted) >= thirtyDaysAgoDate
-        ).length,
+        numSubmissions,
       },
       title: suborg.title,
     };
@@ -153,9 +126,5 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
    * Background: It otherwise would resolve the promises after sending it out somehow.
    * It caused the request to take 4 times compared to when awaiting it here
    ***/
-  return await Promise.all(
-    suborgPromises.map((promise, index) =>
-      promise.catch(() => ({ error: true, id: `error-${index}` }))
-    )
-  );
+  return await Promise.all(suborgPromises);
 }

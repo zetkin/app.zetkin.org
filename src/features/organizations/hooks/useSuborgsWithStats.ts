@@ -12,6 +12,17 @@ export default function useSuborgsWithStats(orgId: number) {
   return useRemoteList(suborgsWithStats, {
     actionOnLoad: () => suborgsWithStatsLoad(),
     actionOnSuccess: (data) => suborgsWithStatsLoaded(data),
-    loader: () => apiClient.rpc(getSuborgsWithStats, { orgId }),
+    loader: () => {
+      try {
+        return apiClient.rpc(getSuborgsWithStats, { orgId });
+      } catch (e) {
+        return Promise.resolve([
+          {
+            error: true,
+            id: 'loadingError',
+          },
+        ]);
+      }
+    },
   });
 }

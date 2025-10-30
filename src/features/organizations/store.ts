@@ -2,7 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-import { SuborgResult, TreeItemData } from './types';
+import {
+  SuborgLoadingError,
+  SuborgResult,
+  SuborgWithFullStats,
+  TreeItemData,
+} from './types';
 import {
   remoteItem,
   RemoteItem,
@@ -30,6 +35,10 @@ export interface OrganizationsStoreSlice {
   orgData: RemoteItem<ZetkinOrganization>;
   subOrgsByOrgId: Record<number, RemoteList<ZetkinSubOrganization>>;
   suborgsWithStats: RemoteList<SuborgResult>;
+  statsBySuborgId: Record<
+    number,
+    RemoteItem<SuborgWithFullStats | SuborgLoadingError>
+  >;
   treeDataList: RemoteList<TreeItemData>;
   userMembershipList: RemoteList<ZetkinMembership & { id: number }>;
 }
@@ -44,6 +53,7 @@ const initialState: OrganizationsStoreSlice = {
     orgIdsToFilterBy: [],
   },
   orgData: remoteItem(0),
+  statsBySuborgId: {},
   subOrgsByOrgId: {},
   suborgsWithStats: remoteList(),
   treeDataList: remoteList(),
@@ -137,6 +147,30 @@ const OrganizationsSlice = createSlice({
       state.subOrgsByOrgId[orgId].loaded = new Date().toISOString();
       state.subOrgsByOrgId[orgId].isLoading = false;
     },
+    suborgWithStatsLoad: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+
+      if (!state.statsBySuborgId[id]) {
+        state.statsBySuborgId[id] = remoteItem(0);
+      }
+
+      state.statsBySuborgId[id].isLoading = true;
+    },
+    suborgWithStatsLoaded: (
+      state,
+      action: PayloadAction<[number, SuborgWithFullStats | SuborgLoadingError]>
+    ) => {
+      const [id, suborgWithStats] = action.payload;
+
+      if (!state.statsBySuborgId[id]) {
+        state.statsBySuborgId[id] = remoteItem(0);
+      }
+
+      state.statsBySuborgId[id] = remoteItem(id, {
+        data: suborgWithStats,
+        loaded: new Date().toISOString(),
+      });
+    },
     suborgsWithStatsLoad: (state) => {
       state.suborgsWithStats.isLoading = true;
     },
@@ -189,6 +223,8 @@ export const {
   treeDataLoaded,
   subOrgsLoad,
   subOrgsLoaded,
+  suborgWithStatsLoad,
+  suborgWithStatsLoaded,
   suborgsWithStatsLoad,
   suborgsWithStatsLoaded,
   userMembershipsLoad,
