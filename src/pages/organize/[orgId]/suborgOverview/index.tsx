@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { Event, PhoneOutlined } from '@mui/icons-material';
+import { Assignment, Event, PhoneOutlined } from '@mui/icons-material';
 
 import useServerSide from 'core/useServerSide';
 import { PageWithLayout } from 'utils/types';
@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
+export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
   const suborgWithFullStats = useSuborgWithFullStats(orgId);
 
   if (isError(suborgWithFullStats)) {
@@ -60,6 +60,15 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
     (numCalls) => {
       if (numCalls > mostCalls) {
         mostCalls = numCalls;
+      }
+    }
+  );
+
+  let mostSubmissions = 0;
+  Object.values(suborgWithFullStats.stats.numSubmissionsBySubmitDate).forEach(
+    (numSubmissions) => {
+      if (numSubmissions > mostSubmissions) {
+        mostSubmissions = numSubmissions;
       }
     }
   );
@@ -95,7 +104,7 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
           <Typography color="secondary">
             Activity in the past 30 days:
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box
               sx={{
                 display: 'flex',
@@ -105,13 +114,13 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             >
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
                 <PhoneOutlined color="secondary" />
-                <Typography color="secondary">Calls</Typography>
+                <Typography variant="h6">Calls</Typography>
               </Box>
               <Box
                 sx={{
                   alignItems: 'flex-end',
                   display: 'flex',
-                  height: '30px',
+                  height: '48px',
                 }}
               >
                 {Object.entries(
@@ -126,16 +135,29 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                       title={`${numCalls} calls made on ${callDate}`}
                     >
                       <Box
-                        sx={(theme) => ({
-                          backgroundColor: theme.palette.primary.main,
-                          height:
-                            noDateHasCalls || thisDateHadNoCalls
-                              ? '0px'
-                              : `${Math.round((numCalls / mostCalls) * 100)}%`,
+                        sx={{
+                          alignContent: 'end',
+                          height: '100%',
                           marginRight: 0.5,
                           width: 1 / 30,
-                        })}
-                      />
+                        }}
+                      >
+                        <Box
+                          sx={(theme) => ({
+                            backgroundColor:
+                              noDateHasCalls || thisDateHadNoCalls
+                                ? theme.palette.grey[300]
+                                : theme.palette.primary.main,
+                            borderRadius: '4px',
+                            height:
+                              noDateHasCalls || thisDateHadNoCalls
+                                ? '2px'
+                                : `${Math.round(
+                                    (numCalls / mostCalls) * 100
+                                  )}%`,
+                          })}
+                        />
+                      </Box>
                     </Tooltip>
                   );
                 })}
@@ -145,13 +167,13 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
                 <Event color="secondary" />
-                <Typography color="secondary">Events</Typography>
+                <Typography variant="h6">Events</Typography>
               </Box>
               <Box
                 sx={{
                   alignItems: 'flex-end',
                   display: 'flex',
-                  height: '30px',
+                  height: '48px',
                 }}
               >
                 {Object.entries(
@@ -167,23 +189,90 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                       title={`${numBooked} booked on events on ${startDate}`}
                     >
                       <Box
-                        sx={(theme) => ({
-                          backgroundColor: theme.palette.primary.main,
-                          height:
-                            noEventsHadParticipants || thisDateHadNoParticipants
-                              ? '0px'
-                              : `${Math.round(
-                                  (numBooked / mostParticipants) * 100
-                                )}%`,
+                        sx={{
+                          alignContent: 'end',
+                          height: '100%',
                           marginRight: 0.5,
                           width: 1 / 30,
-                        })}
-                      />
+                        }}
+                      >
+                        <Box
+                          sx={(theme) => ({
+                            backgroundColor:
+                              noEventsHadParticipants ||
+                              thisDateHadNoParticipants
+                                ? theme.palette.grey[300]
+                                : theme.palette.primary.main,
+                            borderRadius: '4px',
+                            height:
+                              noEventsHadParticipants ||
+                              thisDateHadNoParticipants
+                                ? '2px'
+                                : `${Math.round(
+                                    (numBooked / mostParticipants) * 100
+                                  )}%`,
+                          })}
+                        />
+                      </Box>
                     </Tooltip>
                   );
                 })}
               </Box>
               <Typography>{`${suborgWithFullStats.stats.numBookedForEvents} people booked for ${suborgWithFullStats.stats.numEvents} events`}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
+                <Assignment color="secondary" />
+                <Typography variant="h6">Survey submissions</Typography>
+              </Box>
+              <Box
+                sx={{
+                  alignItems: 'flex-end',
+                  display: 'flex',
+                  height: '48px',
+                }}
+              >
+                {Object.entries(
+                  suborgWithFullStats.stats.numSubmissionsBySubmitDate
+                ).map(([submitDate, numSubmissions]) => {
+                  const noDateHadSubmissions = mostSubmissions == 0;
+                  const thisDateHadNoSubmissions = numSubmissions == 0;
+
+                  return (
+                    <Tooltip
+                      key={submitDate}
+                      arrow
+                      title={`${numSubmissions} submissions made on ${submitDate}`}
+                    >
+                      <Box
+                        sx={{
+                          alignContent: 'end',
+                          height: '100%',
+                          marginRight: 0.5,
+                          width: 1 / 30,
+                        }}
+                      >
+                        <Box
+                          sx={(theme) => ({
+                            backgroundColor:
+                              noDateHadSubmissions || thisDateHadNoSubmissions
+                                ? theme.palette.grey[300]
+                                : theme.palette.primary.main,
+                            borderRadius: '4px',
+                            height:
+                              noDateHadSubmissions || thisDateHadNoSubmissions
+                                ? '2px'
+                                : `${Math.round(
+                                    (numSubmissions / mostSubmissions) * 100
+                                  )}%`,
+                          })}
+                        />
+                      </Box>
+                    </Tooltip>
+                  );
+                })}
+              </Box>
+              <Typography>{`${suborgWithFullStats.stats.numSubmissions} survey submissions made`}</Typography>
             </Box>
           </Box>
         </Box>
@@ -228,13 +317,16 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
           >
             <SuborgsList
               onSelectSuborg={(suborgId: number) =>
-                setSelectedSuborgId(suborgId)
+                setSelectedSuborgId(
+                  selectedSuborgId == suborgId ? null : suborgId
+                )
               }
               orgId={parsedOrgId}
+              selectedSuborgId={selectedSuborgId}
             />
           </Suspense>
         </Box>
-        <Box sx={{ flex: 1 }}>
+        {/* <Box sx={{ flex: 1 }}>
           {!selectedSuborgId && <>No selected suborg to inspect</>}
           {selectedSuborgId && (
             <Suspense
@@ -252,7 +344,7 @@ const SuborgsPage: PageWithLayout<Props> = ({ orgId }) => {
               <SuborgCard orgId={selectedSuborgId} />
             </Suspense>
           )}
-        </Box>
+        </Box> */}
       </Box>
     </>
   );

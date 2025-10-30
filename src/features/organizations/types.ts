@@ -15,13 +15,13 @@ export type SimpleOrgStats = {
   numSubmissions: number;
 };
 
-export type FullOrgStats = Omit<SimpleOrgStats, 'numCalls'> & {
+export type FullOrgStats = SimpleOrgStats & {
   numBookedByEventStartDate: Record<string, number>;
-  numCalls: number;
   numCallsByCallDate: Record<string, number>;
   numEvents: number;
   numLists: number;
   numProjects: number;
+  numSubmissionsBySubmitDate: Record<string, number>;
 };
 
 type SuborgBase = {

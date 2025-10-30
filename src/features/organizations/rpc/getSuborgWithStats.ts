@@ -146,17 +146,32 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     }
   }
 
+  let numSubmissions = 0;
+  const numSubmissionsBySubmitDate: Record<string, number> = {};
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
+      .toISOString()
+      .slice(0, 10);
+    numSubmissionsBySubmitDate[date] = 0;
+  }
+
+  if (surveySubmissions.status == 'fulfilled') {
+    for (const submission of surveySubmissions.value) {
+      const submitTime = new Date(submission.submitted);
+      if (submitTime >= thirtyDaysAgo) {
+        numSubmissions++;
+        const submitDate = submitTime.toISOString().slice(0, 10);
+        numSubmissionsBySubmitDate[submitDate] =
+          numSubmissionsBySubmitDate[submitDate] + 1;
+      }
+    }
+  }
+
   const numLists = lists.status == 'fulfilled' ? lists.value.length : 0;
   const numPeople =
     suborgStats.status == 'fulfilled' ? suborgStats.value[0].result : 0;
   const numProjects =
     projects.status == 'fulfilled' ? projects.value.length : 0;
-  const numSubmissions =
-    surveySubmissions.status == 'fulfilled'
-      ? surveySubmissions.value.filter(
-          (submission) => new Date(submission.submitted) >= thirtyDaysAgo
-        ).length
-      : 0;
   const title =
     organization.status == 'fulfilled' ? organization.value.title : '';
   const numBookedForEvents =
@@ -176,6 +191,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       numPeople,
       numProjects,
       numSubmissions,
+      numSubmissionsBySubmitDate,
     },
     title,
   };
