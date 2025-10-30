@@ -137,7 +137,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 <ZUIPreviewableInput
                   {...previewableProps}
                   renderInput={(params) => {
-                    params.ref;
                     return (
                       <DatePicker
                         format="DD-MM-YYYY"

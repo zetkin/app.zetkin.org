@@ -16,7 +16,7 @@ import { PageWithLayout } from '../utils/types';
 import Providers from 'core/Providers';
 
 declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface DefaultTheme extends Theme {}
 }
 

@@ -130,7 +130,7 @@ const EventShiftDetails: FC<EventShiftDetailsProps> = ({
               ? messages.eventOverviewCard.noLocation()
               : option.title
           }
-          onChange={(ev, option) => {
+          onChange={(_ev, option) => {
             if (option === 'CREATE_NEW_LOCATION') {
               setLocationModalOpen(true);
               return;

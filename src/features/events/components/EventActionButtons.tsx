@@ -70,7 +70,11 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
 
   const handleCancel = () => {
-    event.cancelled ? restoreEvent() : cancelEvent();
+    if (event.cancelled) {
+      restoreEvent();
+    } else {
+      cancelEvent();
+    }
   };
 
   const handleMove = () => {
