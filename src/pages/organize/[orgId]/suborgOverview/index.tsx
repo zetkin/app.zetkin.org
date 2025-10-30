@@ -48,7 +48,7 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
   }
 
   let mostParticipants = 0;
-  Object.values(suborgWithFullStats.stats.numBookedByEventStartDate).forEach(
+  Object.values(suborgWithFullStats.stats.numBookedByEventsByStartDate).forEach(
     (numBooked) => {
       if (numBooked > mostParticipants) {
         mostParticipants = numBooked;
@@ -181,7 +181,7 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                 <Event color="secondary" />
                 <Typography variant="h6">Event participation</Typography>
               </Box>
-              <Typography color="secondary">{`${suborgWithFullStats.stats.numBookedForEvents} people booked for ${suborgWithFullStats.stats.numEvents} events`}</Typography>
+              <Typography color="secondary">{`${suborgWithFullStats.stats.numBookedForEvents} people booked for ${suborgWithFullStats.stats.numEventsWithBookedPeople} events`}</Typography>
             </Box>
             <Box
               sx={(theme) => ({
@@ -192,7 +192,7 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
               })}
             >
               {Object.entries(
-                suborgWithFullStats.stats.numBookedByEventStartDate
+                suborgWithFullStats.stats.numBookedByEventsByStartDate
               ).map(([startDate, numBooked]) => {
                 const noEventsHadParticipants = mostParticipants == 0;
                 const thisDateHadNoParticipants = numBooked == 0;

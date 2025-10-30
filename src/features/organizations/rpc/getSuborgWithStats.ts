@@ -102,13 +102,13 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   ] = results;
 
   let numEventsWithBookedPeople = 0;
-  const numBookedByEventStartDate: Record<string, number> = {};
+  const numBookedByEventsByStartDate: Record<string, number> = {};
   if (events.status == 'fulfilled') {
     for (let i = 0; i < 30; i++) {
       const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
         .toISOString()
         .slice(0, 10);
-      numBookedByEventStartDate[date] = 0;
+      numBookedByEventsByStartDate[date] = 0;
     }
 
     for (const event of events.value) {
@@ -120,8 +120,8 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       if (eventStats.numBooked > 0) {
         numEventsWithBookedPeople++;
         const eventStartDate = event.start_time.slice(0, 10);
-        numBookedByEventStartDate[eventStartDate] =
-          numBookedByEventStartDate[eventStartDate] + eventStats.numBooked;
+        numBookedByEventsByStartDate[eventStartDate] =
+          numBookedByEventsByStartDate[eventStartDate] + eventStats.numBooked;
       }
     }
   }
@@ -182,11 +182,11 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   return {
     id: orgId,
     stats: {
-      numBookedByEventStartDate,
+      numBookedByEventsByStartDate,
       numBookedForEvents,
       numCalls,
       numCallsByCallDate,
-      numEvents: numEventsWithBookedPeople,
+      numEventsWithBookedPeople,
       numLists,
       numPeople,
       numProjects,

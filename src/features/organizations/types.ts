@@ -16,9 +16,9 @@ export type SimpleOrgStats = {
 };
 
 export type FullOrgStats = SimpleOrgStats & {
-  numBookedByEventStartDate: Record<string, number>;
+  numBookedByEventsByStartDate: Record<string, number>;
   numCallsByCallDate: Record<string, number>;
-  numEvents: number;
+  numEventsWithBookedPeople: number;
   numLists: number;
   numProjects: number;
   numSubmissionsBySubmitDate: Record<string, number>;
