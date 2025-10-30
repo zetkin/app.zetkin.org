@@ -163,9 +163,7 @@ export const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
                             height:
                               noDateHasCalls || thisDateHadNoCalls
                                 ? '2px'
-                                : `${Math.round(
-                                    (numCalls / mostCalls) * 100
-                                  )}%`,
+                                : `${Math.round((numCalls / mostCalls) * 100)}%`,
                           })}
                         />
                       </Box>

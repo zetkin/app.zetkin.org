@@ -105,8 +105,8 @@ const Journey: FC<JourneyProps> = ({
   const selected = !filter.config.tags
     ? REGARDLESS_TAGS
     : filter.config.tags.min_matching
-    ? JOURNEY_CONDITION_OP.SOME
-    : filter.config.tags.condition;
+      ? JOURNEY_CONDITION_OP.SOME
+      : filter.config.tags.condition;
 
   const notRegardlessTags = !!filter.config.tags;
 

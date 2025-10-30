@@ -7,7 +7,7 @@ module.exports = {
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  extends: ['eslint:recommended', 'next'],
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files

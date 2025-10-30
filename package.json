@@ -10,7 +10,7 @@
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
     "docs:build": "storybook build -o public/storybook",
     "lint:eslint": "eslint src integrationTesting",
-    "lint:prettier": "prettier --check src integrationTesting",
+    "lint:formatting": "biome format src integrationTesting",
     "lint:translations": "ts-node src/tools/lint-translations.ts",
     "lint": "run-p lint:*",
     "check-types": "tsc --noEmit",
@@ -26,6 +26,7 @@
     "make-yaml": "ts-node src/tools/make-yaml.ts"
   },
   "dependencies": {
+    "@biomejs/biome": "^2.3.2",
     "@date-io/date-fns": "1.x",
     "@date-io/dayjs": "1.x",
     "@editorjs/editorjs": "^2.28.2",

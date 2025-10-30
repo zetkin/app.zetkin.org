@@ -29,7 +29,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
         large: '1.2em',
         medium: '1.0em',
         small: '0.8em',
-      }[size]),
+      })[size],
     lineHeight: 'normal',
     marginRight: '0.1em',
     opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),

@@ -145,8 +145,8 @@ const CallPanels: FC<Props> = ({
             lane.step == LaneStep.START
               ? 'calc((100% / 3) * 2)'
               : lane.step == LaneStep.SUMMARY
-              ? '100%'
-              : 0,
+                ? '100%'
+                : 0,
           maxHeight: '100%',
           overflowY: 'auto',
           position: 'absolute',
@@ -169,10 +169,10 @@ const CallPanels: FC<Props> = ({
             lane.step == LaneStep.START
               ? '100%'
               : lane.step == LaneStep.CALL
-              ? 'calc(100% / 3)'
-              : lane.step == LaneStep.REPORT
-              ? 0
-              : 'calc(100% + (100% / 3))',
+                ? 'calc(100% / 3)'
+                : lane.step == LaneStep.REPORT
+                  ? 0
+                  : 'calc(100% + (100% / 3))',
 
           overflowY: 'auto',
           position: 'absolute',
@@ -199,10 +199,10 @@ const CallPanels: FC<Props> = ({
             lane.step == LaneStep.START
               ? '100%'
               : lane.step == LaneStep.CALL
-              ? 'calc((100% / 3) * 2)'
-              : lane.step == LaneStep.REPORT
-              ? 'calc(100% / 3)'
-              : 'calc(100% + (100% / 3) * 2)',
+                ? 'calc((100% / 3) * 2)'
+                : lane.step == LaneStep.REPORT
+                  ? 'calc(100% / 3)'
+                  : 'calc(100% + (100% / 3) * 2)',
           overflowY: 'auto',
           position: 'absolute',
           transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',

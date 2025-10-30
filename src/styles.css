@@ -23,10 +23,10 @@ blockquote {
 }
 
 /**
-* NProgress bar styles
-* 
-* Copied from `nprogress/nprogress.css` and modified.
-*/
+ * NProgress bar styles
+ *
+ * Copied from `nprogress/nprogress.css` and modified.
+ */
 #nprogress .bar {
   background: var(--color-primary);
 

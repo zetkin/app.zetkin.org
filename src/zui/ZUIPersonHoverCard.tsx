@@ -129,8 +129,8 @@ const HoverCardContent: FC<{ personId: number }> = ({ personId }) => {
             const linkType = field.includes('mail')
               ? 'mailto:'
               : field.includes('phone')
-              ? 'tel:'
-              : '';
+                ? 'tel:'
+                : '';
 
             if (typeof value === 'object') {
               return null;

@@ -415,7 +415,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         checkboxSelection={false}
         columns={columns}
         rows={
-          filterString ? filterParticipants(rows, filterString) : rows ?? []
+          filterString ? filterParticipants(rows, filterString) : (rows ?? [])
         }
         sx={{
           '& .MuiDataGrid-row:hover': {

@@ -11,7 +11,7 @@ type CallbackFn<Args extends DefaultCallbackArgs, ReturnType> = (
  */
 export default function useDebounce<
   Args extends DefaultCallbackArgs,
-  ReturnType
+  ReturnType,
 >(
   callback: CallbackFn<Args, ReturnType>,
   delay: number

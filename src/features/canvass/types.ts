@@ -98,7 +98,7 @@ export const householdColors = [
   '#6D6D6D',
   '#000000',
 ] as const;
-export type HouseholdColor = typeof householdColors[number] | 'clear';
+export type HouseholdColor = (typeof householdColors)[number] | 'clear';
 
 export type HouseholdWithColor = {
   color: HouseholdColor;

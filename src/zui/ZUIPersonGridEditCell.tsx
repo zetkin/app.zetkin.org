@@ -240,29 +240,30 @@ const ZUIPersonGridEditCell: FC<{
                         showSuggestedPeople || searching ? 'block' : 'none',
                     }}
                   >
-                    {showSuggestedPeople && filteredSuggestedPeople.length > 0 && (
-                      <>
-                        <ListSubheader
-                          disableSticky={true}
-                          sx={{ marginTop: 0, paddingTop: 0 }}
-                        >
-                          {suggestedPeopleLabel}
-                        </ListSubheader>
-                        {filteredSuggestedPeople.map((option, index) => (
-                          <PersonListItem
-                            key={option.id}
-                            itemProps={{
-                              onClick: () => {
-                                onUpdate(option);
-                              },
-                            }}
-                            orgId={orgId}
-                            person={option}
-                            selected={activeIndex == index}
-                          />
-                        ))}
-                      </>
-                    )}
+                    {showSuggestedPeople &&
+                      filteredSuggestedPeople.length > 0 && (
+                        <>
+                          <ListSubheader
+                            disableSticky={true}
+                            sx={{ marginTop: 0, paddingTop: 0 }}
+                          >
+                            {suggestedPeopleLabel}
+                          </ListSubheader>
+                          {filteredSuggestedPeople.map((option, index) => (
+                            <PersonListItem
+                              key={option.id}
+                              itemProps={{
+                                onClick: () => {
+                                  onUpdate(option);
+                                },
+                              }}
+                              orgId={orgId}
+                              person={option}
+                              selected={activeIndex == index}
+                            />
+                          ))}
+                        </>
+                      )}
                     {searching && (
                       <List
                         {...autoComplete.getListboxProps()}

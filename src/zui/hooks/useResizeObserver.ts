@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 export default function useResizeObserver<
-  ElemType extends HTMLElement = HTMLElement
+  ElemType extends HTMLElement = HTMLElement,
 >(onResize: (elem: ElemType) => void) {
   const elemRef = useRef<ElemType>(null);
 

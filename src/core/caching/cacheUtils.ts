@@ -37,7 +37,7 @@ import { RemoteItem, RemoteList } from 'utils/storeUtils';
 export function loadListIfNecessary<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType[]
+  OnSuccessPayload = DataType[],
 >(
   remoteList: RemoteList<DataType> | undefined,
   dispatch: AppDispatch,
@@ -89,7 +89,7 @@ export function loadListIfNecessary<
 export function loadList<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType[]
+  OnSuccessPayload = DataType[],
 >(
   dispatch: AppDispatch,
   hooks: {
@@ -144,7 +144,7 @@ export function loadList<
 export function loadItemIfNecessary<
   DataType,
   OnLoadPayload = void,
-  OnSuccessPayload = DataType
+  OnSuccessPayload = DataType,
 >(
   remoteItem: RemoteItem<DataType> | undefined,
   dispatch: AppDispatch,

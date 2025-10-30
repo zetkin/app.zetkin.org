@@ -20,7 +20,7 @@ import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 export interface IColumnType<
   ColumnType = ZetkinViewColumn,
-  CellType = unknown
+  CellType = unknown,
 > {
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(
