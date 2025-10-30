@@ -8,12 +8,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import {
-  AssignmentTurnedIn,
-  EventOutlined,
-  Group,
-  Phone,
-} from '@mui/icons-material';
+import { Assignment, EventOutlined, Group, Phone } from '@mui/icons-material';
 
 import {
   SuborgLoadingError,
@@ -42,7 +37,7 @@ const SuborgListItem: FC<{
         display: 'flex',
         flexDirection: 'column',
         gap: 1,
-        padding: 2,
+        paddingY: 2,
       }}
     >
       <Box
@@ -60,22 +55,19 @@ const SuborgListItem: FC<{
           <Typography>{suborg.stats.numPeople}</Typography>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Typography color="secondary">In the past 30 days:</Typography>
+      <Box sx={{ display: 'flex', gap: 2 }}>
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
           <Phone color="secondary" />
-          <Typography color="secondary">{suborg.stats.numCalls}</Typography>
+          <Typography color="secondary">{`${suborg.stats.numCalls} calls made`}</Typography>
         </Box>
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
-          <AssignmentTurnedIn color="secondary" />
-          <Typography color="secondary">
-            {suborg.stats.numSubmissions}
-          </Typography>
+          <Assignment color="secondary" />
+          <Typography color="secondary">{`${suborg.stats.numSubmissions} survey submissions`}</Typography>
         </Box>
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
           <EventOutlined color="secondary" />
-          <Typography color="secondary">
-            {suborg.stats.numBookedForEvents}
-          </Typography>
+          <Typography color="secondary">{`${suborg.stats.numBookedForEvents} event participants`}</Typography>
         </Box>
       </Box>
     </Box>
