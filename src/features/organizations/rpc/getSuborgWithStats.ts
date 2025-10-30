@@ -4,11 +4,9 @@ import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
   ZetkinCampaign,
-  ZetkinEmail,
   ZetkinEvent,
   ZetkinOrganization,
   ZetkinSmartSearchFilter,
-  ZetkinSubOrganization,
   ZetkinSurveySubmission,
   ZetkinView,
 } from 'utils/types/zetkin';
@@ -16,7 +14,6 @@ import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgLoadingError, SuborgWithFullStats } from '../types';
 import { ZetkinCall } from 'features/call/types';
-import { ZetkinEmailStats } from 'features/emails/types';
 import getEventStats from 'features/events/rpc/getEventStats';
 
 const paramsSchema = z.object({
@@ -129,50 +126,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     }
   }
 
-  //TODO: Add call to /emails with "recursive" flag in Promise.all above
-  //once the API supports "recursive" flag for emails.
-  const emailsInThisSuborg = await apiClient.get<ZetkinEmail[]>(
-    `/api/orgs/${orgId}/emails`
-  );
-  const allSuborgsOfThisSuborg = await apiClient.get<ZetkinSubOrganization[]>(
-    `/api/orgs/${orgId}/sub_organizations?recursive`
-  );
-  const allActiveSuborgsOfThisSuborg = allSuborgsOfThisSuborg.filter(
-    (s) => s.is_active && s.id != orgId
-  );
-
-  const emails: ZetkinEmail[] = [];
-  emails.push(...emailsInThisSuborg);
-  for (const s of allActiveSuborgsOfThisSuborg) {
-    const suborgEmails = await apiClient.get<ZetkinEmail[]>(
-      `/api/orgs/${s.id}/emails`
-    );
-    emails.push(...suborgEmails);
-  }
-
-  const numEmailsSentBySendDate: Record<string, number> = {};
-  for (const email of emails) {
-    for (let i = 0; i < 30; i++) {
-      const date = new Date(new Date().setDate(now.getDate() - (30 - i)))
-        .toISOString()
-        .slice(0, 10);
-      numEmailsSentBySendDate[date] = 0;
-    }
-
-    if (email.published) {
-      const sendTime = new Date(email.published);
-      if (sendTime >= thirtyDaysAgo && sendTime <= now) {
-        const stats = await apiClient.get<ZetkinEmailStats>(
-          `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
-        );
-
-        numEmailsSentBySendDate[sendTime.toISOString().slice(0, 10)] =
-          numEmailsSentBySendDate[sendTime.toISOString().slice(0, 10)] +
-          stats.num_sent;
-      }
-    }
-  }
-
   let numCalls = 0;
   const numCallsByCallDate: Record<string, number> = {};
   for (let i = 0; i < 30; i++) {
@@ -218,7 +171,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       numBookedForEvents,
       numCalls,
       numCallsByCallDate,
-      numEmailsSentBySendDate,
       numEvents: numEventsWithBookedPeople,
       numLists,
       numPeople,

@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import {
   AssignmentTurnedIn,
-  Email,
   EventOutlined,
   Group,
   Phone,
@@ -24,8 +23,6 @@ import {
 import useOrganization from '../hooks/useOrganization';
 import useSuborgsWithStats from '../hooks/useSuborgsWithStats';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import useEmailThemes from 'features/emails/hooks/useEmailThemes';
-import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 export const isError = (
   result: SuborgWithSimpleStats | SuborgWithFullStats | SuborgLoadingError
@@ -37,9 +34,6 @@ const SuborgListItem: FC<{
   onSelect: () => void;
   suborg: SuborgWithSimpleStats;
 }> = ({ onSelect, suborg }) => {
-  const themes = useEmailThemes(suborg.id).data || [];
-  const configs = useEmailConfigs(suborg.id).data || [];
-  const usesEmailFeature = configs.length > 0 && themes.length > 0;
   return (
     <Box
       onClick={() => onSelect()}
@@ -83,14 +77,6 @@ const SuborgListItem: FC<{
             {suborg.stats.numBookedForEvents}
           </Typography>
         </Box>
-        {usesEmailFeature && (
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
-            <Email color="secondary" />
-            <Typography color="secondary">
-              {suborg.stats.numEmailsSent}
-            </Typography>
-          </Box>
-        )}
       </Box>
     </Box>
   );

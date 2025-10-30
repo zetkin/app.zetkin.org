@@ -3,7 +3,6 @@ import { z } from 'zod';
 import IApiClient from 'core/api/client/IApiClient';
 import { makeRPCDef } from 'core/rpc/types';
 import {
-  ZetkinEmail,
   ZetkinSmartSearchFilter,
   ZetkinSubOrganization,
   ZetkinSurveySubmission,
@@ -12,7 +11,6 @@ import { ZetkinSmartSearchFilterStats } from 'features/smartSearch/types';
 import { FILTER_TYPE, OPERATION } from 'features/smartSearch/components/types';
 import { SuborgResult } from '../types';
 import { ZetkinCall } from 'features/call/types';
-import { ZetkinEmailStats } from 'features/emails/types';
 
 const paramsSchema = z.object({
   orgId: z.number(),
@@ -91,42 +89,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     const [suborgStats, eventParticipationStats, calls, surveySubmissions] =
       results;
 
-    //TODO: Add call to /emails with "recursive" flag in Promise.all above
-    //once the API supports "recursive" flag for emails.
-    const emailsInThisSuborg = await apiClient.get<ZetkinEmail[]>(
-      `/api/orgs/${suborg.id}/emails`
-    );
-    const allSuborgsOfThisSuborg = await apiClient.get<ZetkinSubOrganization[]>(
-      `/api/orgs/${suborg.id}/sub_organizations?recursive`
-    );
-    const allActiveSuborgsOfThisSuborg = allSuborgsOfThisSuborg.filter(
-      (s) => s.is_active && s.id != suborg.id
-    );
-
-    const emails: ZetkinEmail[] = [];
-    emails.push(...emailsInThisSuborg);
-    for (const s of allActiveSuborgsOfThisSuborg) {
-      const suborgEmails = await apiClient.get<ZetkinEmail[]>(
-        `/api/orgs/${s.id}/emails`
-      );
-      emails.push(...suborgEmails);
-    }
-
     const thirtyDaysAgoDate = new Date(thirtyDaysAgo);
-    let numEmailsSent = 0;
-    for (const email of emails) {
-      if (email.published) {
-        const sendTime = new Date(email.published);
-
-        if (sendTime >= thirtyDaysAgoDate && sendTime <= now) {
-          const stats = await apiClient.get<ZetkinEmailStats>(
-            `/api/orgs/${email.organization.id}/emails/${email.id}/stats`
-          );
-          numEmailsSent = numEmailsSent + stats.num_sent;
-        }
-      }
-    }
-
     const numCalls =
       calls.status == 'fulfilled'
         ? calls.value.filter(
@@ -151,7 +114,6 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
       stats: {
         numBookedForEvents,
         numCalls,
-        numEmailsSent,
         numPeople,
         numSubmissions,
       },

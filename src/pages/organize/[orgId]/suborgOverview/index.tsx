@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { EmailOutlined, Event, PhoneOutlined } from '@mui/icons-material';
+import { Event, PhoneOutlined } from '@mui/icons-material';
 
 import useServerSide from 'core/useServerSide';
 import { PageWithLayout } from 'utils/types';
@@ -23,8 +23,6 @@ import SuborgsList, {
   isError,
 } from 'features/organizations/components/SuborgsList';
 import useSuborgWithFullStats from 'features/organizations/hooks/useSuborgWithFullStats';
-import useEmailThemes from 'features/emails/hooks/useEmailThemes';
-import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -42,9 +40,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
   const suborgWithFullStats = useSuborgWithFullStats(orgId);
-  const themes = useEmailThemes(orgId).data || [];
-  const configs = useEmailConfigs(orgId).data || [];
-  const usesEmailFeature = configs.length > 0 && themes.length > 0;
 
   if (isError(suborgWithFullStats)) {
     return (
@@ -57,15 +52,6 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
     (numBooked) => {
       if (numBooked > mostParticipants) {
         mostParticipants = numBooked;
-      }
-    }
-  );
-
-  let mostEmails = 0;
-  Object.values(suborgWithFullStats.stats.numEmailsSentBySendDate).forEach(
-    (numSent) => {
-      if (numSent > mostEmails) {
-        mostEmails = numSent;
       }
     }
   );
@@ -208,50 +194,6 @@ const SuborgCard: FC<{ orgId: number }> = ({ orgId }) => {
               </Box>
               <Typography>{`${suborgWithFullStats.stats.numBookedForEvents} people booked for ${suborgWithFullStats.stats.numEvents} events`}</Typography>
             </Box>
-            {usesEmailFeature && (
-              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                <EmailOutlined color="secondary" />
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    gap: 1,
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  {Object.entries(
-                    suborgWithFullStats.stats.numBookedByEventStartDate
-                  ).map(([sendDate, numEmails]) => {
-                    const noDateHadEmailsSent = mostEmails == 0;
-                    const thisDateHadNoEmailsSent = numEmails == 0;
-                    return (
-                      <Tooltip
-                        key={`${sendDate}-emails`}
-                        arrow
-                        title={`${numEmails} emails sent on ${sendDate}`}
-                      >
-                        <Box
-                          sx={(theme) => ({
-                            backgroundColor:
-                              noDateHadEmailsSent || thisDateHadNoEmailsSent
-                                ? theme.palette.grey[100]
-                                : lighten(
-                                    theme.palette.primary.main,
-                                    Math.round(
-                                      (1 - numEmails / mostEmails) * 10
-                                    ) / 10
-                                  ),
-                            borderRadius: '2em',
-                            height: '10px',
-                            width: '10px',
-                          })}
-                        />
-                      </Tooltip>
-                    );
-                  })}
-                </Box>
-              </Box>
-            )}
           </Box>
         </Box>
       </Box>
