@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactNode, useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import { EmotionCache } from '@emotion/utils/dist/emotion-utils.cjs';
+import { EmotionCache } from '@emotion/utils';
 
 import Environment from './env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
