@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode;
 };
 
-const MyHomeLayout: FC<Props> = ({ children }) => {
+const LostPasswordLayout: FC<Props> = ({ children }) => {
   return (
     <HomeThemeProvider>
       <AccountLayout>{children}</AccountLayout>
@@ -15,4 +15,4 @@ const MyHomeLayout: FC<Props> = ({ children }) => {
   );
 };
 
-export default MyHomeLayout;
+export default LostPasswordLayout;

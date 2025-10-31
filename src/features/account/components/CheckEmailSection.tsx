@@ -47,14 +47,18 @@ const CheckEmailSection: FC<CheckEmailSectionProps> = ({ email, onBack }) => {
               <ZUIText color="secondary" variant="headingLg">
                 <Msg id={messageIds.lostPassword.checkEmail} />
               </ZUIText>
-              <Box sx={{ textAlign: 'center' }}>
-                <ZUIText color="secondary" variant="bodyMdRegular">
-                  <Msg id={messageIds.lostPassword.descriptionCheck} />
-                </ZUIText>
-                <ZUIText color="secondary" variant="bodyMdSemiBold">
-                  {email}
-                </ZUIText>
-              </Box>
+              <ZUIText color="secondary" variant="bodyMdRegular">
+                <Msg
+                  id={messageIds.lostPassword.descriptionCheck}
+                  values={{
+                    email: (
+                      <ZUIText color="secondary" variant="bodyMdSemiBold">
+                        {email}
+                      </ZUIText>
+                    ),
+                  }}
+                />
+              </ZUIText>
               <ZUIButton
                 fullWidth
                 label={messages.lostPassword.actions.sendLink()}
