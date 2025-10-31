@@ -27,7 +27,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
       focusDate={focusDate}
       href={`/organize/${task.organization.id}/projects/${
         task.campaign?.id ?? 'standalone'
-      }/calendar/tasks/${task.id}`}
+      }/tasks/${task.id}`}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
       startDate={activity.visibleFrom}
