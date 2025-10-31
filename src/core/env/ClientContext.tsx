@@ -13,6 +13,7 @@ import {
 } from '@mui/material/styles';
 import { LicenseInfo, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { EmotionCache } from '@emotion/utils';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment, { EnvVars } from 'core/env/Environment';
@@ -60,7 +61,12 @@ const ClientContext: FC<ClientContextProps> = ({
     : new BrowserApiClient();
 
   const env = new Environment(apiClient, envVars);
-  const cache = createCache({ key: 'css', prepend: true });
+
+  const cache = useRef<EmotionCache | null>(null);
+
+  if (!cache.current) {
+    cache.current = createCache({ key: 'css', prepend: true });
+  }
 
   // MUI-X license
   if (env.vars.MUIX_LICENSE_KEY) {
@@ -70,7 +76,7 @@ const ClientContext: FC<ClientContextProps> = ({
   return (
     <ReduxProvider store={storeRef.current}>
       <StyledEngineProvider injectFirst>
-        <CacheProvider value={cache}>
+        <CacheProvider value={cache.current}>
           <ThemeProvider theme={oldThemeWithLocale(lang)}>
             <EnvProvider env={env}>
               <UserProvider user={user}>
