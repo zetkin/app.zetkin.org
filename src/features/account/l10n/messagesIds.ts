@@ -11,8 +11,8 @@ export default makeMessages('feat.account', {
     description: m(
       'Have you forgotten your password for Zetkin? Give us your e-mail address and we will send out a link where you can pick a new password.'
     ),
-    descriptionCheck: m(
-      'If an account exists with this email address, you will receive reset instructions at '
+    descriptionCheck: m<{ email: JSX.Element }>(
+      'If an account exists with this email address, you will receive reset instructions at {email}'
     ),
     emailFieldLabel: m('Email'),
     errors: {
