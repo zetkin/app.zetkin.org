@@ -38,7 +38,7 @@ export default makeMessages('feat.account', {
         'Please enter valid details for your email and/or phone number.'
       ),
       phoneError: m('Please enter a valid phone number.'),
-      unkownError: m('Registration failed. Try again later.'),
+      unknownError: m('Registration failed. Try again later.'),
     },
     instructions: m('A message with instructions has been sent to '),
     labels: {

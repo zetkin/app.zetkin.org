@@ -3,11 +3,7 @@ import { useState } from 'react';
 import { useApiClient } from 'core/hooks';
 import { ApiClientError } from 'core/api/errors';
 import { RegisterData } from '../components/RegisterFormSection';
-
-export type CreateNewAccountStatus = {
-  errorCode?: string;
-  success: boolean;
-};
+import { CreateNewAccountStatus } from '../types';
 
 type UseCreateNewAccountProps = {
   createNewAccount: (formData: RegisterData) => Promise<CreateNewAccountStatus>;
@@ -30,16 +26,16 @@ export function useCreateNewAccount(): UseCreateNewAccountProps {
     } catch (err) {
       if (err instanceof ApiClientError) {
         if (err.status == 409) {
-          return { errorCode: 'CONFLICT_ERROR', success: false };
+          return { errorCode: 'conflictError', success: false };
         }
         if (err.status == 400) {
           return {
-            errorCode: 'INVALID_PARAMETER',
+            errorCode: 'invalidParameter',
             success: false,
           };
         }
       }
-      return { errorCode: 'UNKNOWN_ERROR', success: false };
+      return { errorCode: 'unknownError', success: false };
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { Box } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import isEmail from 'validator/lib/isEmail';
 
 import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUISection from 'zui/components/ZUISection';
@@ -14,6 +15,7 @@ import ZUILogo from 'zui/ZUILogo';
 import ZUICheckbox from 'zui/components/ZUICheckbox';
 import { useCreateNewAccount } from '../hooks/useCreateNewAccount';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import { ErrorCode } from '../types';
 
 export type RegisterData = {
   email: string;
@@ -31,12 +33,13 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const { loading, createNewAccount } = useCreateNewAccount();
+
   const [showExtraFields, setShowExtraFields] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [resultError, setResultError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState(false);
+  const [resultError, setResultError] = useState<ErrorCode | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [formData, setFormData] = useState<RegisterData>({
     email: '',
@@ -49,6 +52,11 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const allFieldsFilled = Object.values(formData).every(
     (value) => value.trim() !== ''
   );
+
+  const showErrorMessage =
+    resultError == 'conflictError' ||
+    resultError == 'invalidParameter' ||
+    resultError == 'unknownError';
 
   return (
     <ZUISection
@@ -68,31 +76,22 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
             <form
               onSubmit={async (ev) => {
                 ev.preventDefault();
-                if (!formData.email.includes('@')) {
-                  setEmailError(messages.lostPassword.errors.invalidEmail());
-                  return;
-                }
-                setEmailError(null);
+                if (!isEmail(formData.email)) {
+                  setEmailError(true);
+                } else {
+                  setEmailError(false);
 
-                if (formData.password.length < 6) {
-                  setPasswordError(true);
-                  return;
-                }
-
-                if (isTermsAccepted) {
-                  const result = await createNewAccount(formData);
-
-                  if (result.success) {
-                    onSuccess(formData.first_name, formData.email);
+                  if (formData.password.length < 6) {
+                    setPasswordError(true);
                   } else {
-                    if (result.errorCode == 'REGISTRATION_FAILED') {
-                      setResultError('REGISTRATION_FAILED');
-                    } else if (result.errorCode == 'CONFLICT_ERROR') {
-                      setResultError('CONFLICT_ERROR');
-                    } else if (result.errorCode == 'INVALID_PARAMETER') {
-                      setResultError('INVALID_PARAMETER');
-                    } else {
-                      setResultError('UNKNOWN_ERROR');
+                    if (isTermsAccepted) {
+                      const result = await createNewAccount(formData);
+
+                      if (result.success) {
+                        onSuccess(formData.first_name, formData.email);
+                      } else if (result.errorCode) {
+                        setResultError(result.errorCode);
+                      }
                     }
                   }
                 }
@@ -112,35 +111,17 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   sx={{ overflow: 'visible' }}
                   width="100%"
                 >
-                  {(resultError === 'CONFLICT_ERROR' ||
-                    resultError === 'INVALID_PARAMETER' ||
-                    resultError === 'UNKNOWN_ERROR') && (
+                  {showErrorMessage && (
                     <Box sx={{ mb: 2 }}>
-                      {resultError == 'CONFLICT_ERROR' && (
-                        <ZUIAlert
-                          appear
-                          severity={'error'}
-                          title={messages.register.error.conflictError()}
-                        />
-                      )}
-                      {resultError == 'UNKNOWN_ERROR' && (
-                        <ZUIAlert
-                          appear
-                          severity={'error'}
-                          title={messages.register.error.unkownError()}
-                        />
-                      )}
-                      {resultError == 'INVALID_PARAMETER' && (
-                        <ZUIAlert
-                          appear
-                          severity={'error'}
-                          title={messages.register.error.invalidParameter()}
-                        />
-                      )}
+                      <ZUIAlert
+                        appear
+                        severity={'error'}
+                        title={messages.register.error[resultError]()}
+                      />
                     </Box>
                   )}
                   <ZUITextField
-                    error={Boolean(emailError)}
+                    error={emailError}
                     fullWidth
                     helperText={
                       emailError
@@ -150,7 +131,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                     label={messages.register.labels.email()}
                     onChange={(value) => {
                       setFormData((prev) => ({ ...prev, email: value }));
-                      setEmailError(null);
+                      setEmailError(false);
                     }}
                     size="large"
                   />
@@ -185,7 +166,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                   />
                   <MuiTelInput
                     defaultCountry="SE"
-                    error={Boolean(phoneError)}
+                    error={phoneError}
                     fullWidth
                     helperText={
                       phoneError ? messages.register.error.phoneError() : ''
