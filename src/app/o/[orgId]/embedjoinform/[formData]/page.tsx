@@ -93,7 +93,7 @@ export default async function Page({ params, searchParams }: PageProps) {
               margin-bottom: 1rem;
             }
 
-            .zetkin-joinform__field input[type="text"], .zetkin-joinform__field select {
+            .zetkin-joinform__field input.zetkin-joinform__text-input, .zetkin-joinform__field select {
               width: 100%;
               max-width: 600px;
               padding: 0.3rem;
