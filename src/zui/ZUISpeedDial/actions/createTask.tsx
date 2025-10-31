@@ -24,9 +24,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
     const newTask = await createTask(body);
     closeDialog();
     // Redirect to task page
-    router.push(
-      `/organize/${orgId}/projects/${campId}/calendar/tasks/${newTask.id}`
-    );
+    router.push(`/organize/${orgId}/projects/${campId}/tasks/${newTask.id}`);
   };
 
   return <TaskDetailsForm onCancel={closeDialog} onSubmit={handleFormSubmit} />;

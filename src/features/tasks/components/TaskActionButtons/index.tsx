@@ -56,7 +56,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   const handleOnCampaignSelected = async (campaignId: number) => {
     const updatedTask = await updateTask({ campaign_id: campaignId });
     await router.push(
-      `/organize/${task.organization.id}/projects/${campaignId}/calendar/tasks/${task.id}`
+      `/organize/${task.organization.id}/projects/${campaignId}/tasks/${task.id}`
     );
     showSnackbar(
       'success',
