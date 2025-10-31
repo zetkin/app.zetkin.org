@@ -357,8 +357,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                             {...params}
                             inputRef={renderParams.ref}
                             label={messages.eventOverviewCard.location()}
-                            onFocus={() => {
+                            onFocus={(e) => {
                               setLocationDropdownOpen(true);
+                              const target = e.currentTarget;
+                              setTimeout(() => {
+                                target?.select();
+                              }, 0);
                             }}
                             sx={{
                               backgroundColor: 'white',
