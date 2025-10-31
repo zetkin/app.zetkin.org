@@ -10,20 +10,31 @@ import { FC, useEffect } from 'react';
 import { useFormState } from 'react-dom';
 
 import { EmbeddedJoinFormData, EmbeddedJoinFormStatus } from '../types';
-import { Msg, useMessages } from 'core/i18n';
-import globalMessageIds from 'core/i18n/messageIds';
 import submitJoinForm from '../actions/submitEmbeddedJoinForm';
-import messageIds from '../l10n/messageIds';
-import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
+import {
+  CUSTOM_FIELD_TYPE,
+  ZetkinPersonNativeFields,
+} from 'utils/types/zetkin';
 
-type Props = {
+export type Props = {
   encrypted: string;
   fields: EmbeddedJoinFormData['fields'];
+  messages: {
+    embedding: {
+      formSubmitted: string;
+      submitButton: string;
+    };
+    genderOptions: {
+      f: string;
+      m: string;
+      o: string;
+      unspecified: string;
+    };
+    personFields: Record<keyof ZetkinPersonNativeFields, string>;
+  };
 };
 
-const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
-  const globalMessages = useMessages(globalMessageIds);
-
+const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields, messages }) => {
   const [status, action] = useFormState<EmbeddedJoinFormStatus>(
     submitJoinForm,
     'editing'
@@ -58,9 +69,7 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
             const isCustom = 'l' in field;
             const isEnum =
               isCustom && field.t == CUSTOM_FIELD_TYPE.ENUM && 'e' in field;
-            const label = isCustom
-              ? field.l
-              : globalMessages.personFields[field.s]();
+            const label = isCustom ? field.l : messages.personFields[field.s];
 
             if (isEnum) {
               return (
@@ -96,17 +105,11 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
                       {field.s == 'gender' && (
                         <select name={field.s}>
                           <option value="unspecified">
-                            {globalMessages.genderOptions.unspecified()}
+                            {messages.genderOptions.unspecified}
                           </option>
-                          <option value="m">
-                            {globalMessages.genderOptions.m()}
-                          </option>
-                          <option value="f">
-                            {globalMessages.genderOptions.f()}
-                          </option>
-                          <option value="o">
-                            {globalMessages.genderOptions.o()}
-                          </option>
+                          <option value="m">{messages.genderOptions.m}</option>
+                          <option value="f">{messages.genderOptions.f}</option>
+                          <option value="o">{messages.genderOptions.o}</option>
                         </select>
                       )}
                     </div>
@@ -116,15 +119,11 @@ const EmbeddedJoinForm: FC<Props> = ({ encrypted, fields }) => {
             }
           })}
           <button className="zetkin-joinform__submit-button" type="submit">
-            <Msg id={messageIds.embedding.submitButton} />
+            {messages.embedding.submitButton}
           </button>
         </form>
       )}
-      {status == 'submitted' && (
-        <h2>
-          <Msg id={messageIds.embedding.formSubmitted} />
-        </h2>
-      )}
+      {status == 'submitted' && <h2>{messages.embedding.formSubmitted}</h2>}
     </div>
   );
 };
