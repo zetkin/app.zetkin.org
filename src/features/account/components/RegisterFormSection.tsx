@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { Box } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import isEmail from 'validator/lib/isEmail';
@@ -33,6 +34,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const { loading, createNewAccount } = useCreateNewAccount();
+  const intl = useIntl();
 
   const [showExtraFields, setShowExtraFields] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -46,7 +48,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
     first_name: '',
     last_name: '',
     password: '',
-    phone: '',
+    phone: '+',
   });
 
   const allFieldsFilled = Object.values(formData).every(
@@ -165,13 +167,13 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                     size="large"
                   />
                   <MuiTelInput
-                    defaultCountry="SE"
                     error={phoneError}
                     fullWidth
                     helperText={
                       phoneError ? messages.register.error.phoneError() : ''
                     }
                     label={messages.register.labels.mobile()}
+                    langOfCountryName={intl.locale}
                     onChange={(value) => {
                       setPhoneError(!matchIsValidTel(value));
                       setFormData((prev) => ({ ...prev, phone: value }));
