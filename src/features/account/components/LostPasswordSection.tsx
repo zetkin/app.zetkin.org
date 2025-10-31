@@ -91,7 +91,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                       ? messages.lostPassword.errors.invalidEmail()
                       : ''
                   }
-                  label={'Email'}
+                  label={messages.lostPassword.emailFieldLabel()}
                   onChange={(newValue) => {
                     setEmail(newValue);
                     setEmailError(null);

@@ -14,6 +14,7 @@ export default makeMessages('feat.account', {
     descriptionCheck: m(
       'If an account exists with this email address, you will receive reset instructions at '
     ),
+    emailFieldLabel: m('Email'),
     errors: {
       invalidEmail: m('Please enter a valid email address.'),
       unknownError: m('Something went wrong. Please try again later.'),
