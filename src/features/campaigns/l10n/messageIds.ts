@@ -225,4 +225,12 @@ export default makeMessages('feat.campaigns', {
     },
   },
   tasks: m('Tasks'),
+  urlCard: {
+    nowAccepting: m('Now accepting sign-ups at this link'),
+    open: m('Open for sign-ups'),
+    preview: m('Preview project'),
+    previewPortal: m('Preview project in activist portal'),
+    visitPortal: m('Visit project in activist portal'),
+    willAccept: m('Will accept sign-ups at this link'),
+  },
 });

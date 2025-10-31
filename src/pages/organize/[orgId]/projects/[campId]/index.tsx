@@ -12,6 +12,7 @@ import useCampaign from 'features/campaigns/hooks/useCampaign';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import { ZetkinCampaign } from 'utils/types/zetkin';
+import CampaignURLCard from 'features/campaigns/components/CampaignURLCard';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -42,10 +43,17 @@ const CampaignSummaryPage: PageWithLayout = () => {
   const { orgId, campId } = useNumericRouteParams();
   const { campaignFuture } = useCampaign(orgId, campId);
   const campaign = campaignFuture.data;
+  const layoutSwitch = campaign?.info_text;
 
   if (isOnServer) {
     return null;
   }
+
+  const activities = (
+    <Suspense>
+      <ActivitiesOverview campaignId={campId} orgId={orgId} />
+    </Suspense>
+  );
 
   return (
     <>
@@ -53,18 +61,31 @@ const CampaignSummaryPage: PageWithLayout = () => {
         <title>{campaign?.title}</title>
       </Head>
       <>
-        <Box mb={campaign?.info_text || campaign?.manager ? 2 : 0}>
-          <Grid container spacing={2}>
-            {campaign?.info_text && (
-              <Grid size={{ lg: 6, md: 12, xs: 12 }}>
-                <Typography variant="body1">{campaign?.info_text}</Typography>
+        <Grid container spacing={2}>
+          <Grid size={{ lg: 8, md: 6 }}>
+            <Box mb={campaign?.info_text || campaign?.manager ? 2 : 0}>
+              <Grid container spacing={2}>
+                {campaign?.info_text && (
+                  <Grid size={{ lg: 12, md: 12, xs: 12 }}>
+                    <Typography variant="body1">
+                      {campaign?.info_text}
+                    </Typography>
+                  </Grid>
+                )}
               </Grid>
-            )}
+            </Box>
+            {!layoutSwitch && activities}
           </Grid>
-        </Box>
-        <Suspense>
-          <ActivitiesOverview campaignId={campId} orgId={orgId} />
-        </Suspense>
+          <Grid size={{ lg: 4, md: 6 }}>
+            <CampaignURLCard
+              campId={campId}
+              isOpen={!!campaign?.published}
+              orgId={orgId}
+            />
+          </Grid>
+        </Grid>
+
+        {layoutSwitch && activities}
       </>
     </>
   );
