@@ -38,14 +38,19 @@ export default class SurveyOptionsColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
+      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
-        return cell
-          ?.map((response) =>
-            response.selected.map((selected) => selected.text)
-          )
-          ?.join(' ');
+        if (!cell?.length) {
+          return '';
+        }
+
+        const sorted = cell.concat().sort((sub0, sub1) => {
+          const d0 = new Date(sub0.submitted);
+          const d1 = new Date(sub1.submitted);
+          return d1.getTime() - d0.getTime();
+        });
+        return sorted[0].selected.map((s) => s.text).join(' ');
       },
     };
   }

@@ -36,10 +36,21 @@ export default class SurveyResponseColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
+      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
         return cell?.map((response) => response.text || '')?.join(' ') || '';
+        if (!cell?.length) {
+          return '';
+        }
+
+        const sorted = cell.concat().sort((sub0, sub1) => {
+          const d0 = new Date(sub0.submitted);
+          const d1 = new Date(sub1.submitted);
+          return d1.getTime() - d0.getTime();
+        });
+
+        return sorted[0].text;
       },
       width: 250,
     };
