@@ -36,21 +36,10 @@ export default class SurveyResponseColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string[], v2: string[]) => {
-        const lastInV1 = v1[v1.length - 1];
-        const lastInV2 = v2[v2.length - 1];
-
-        if (v1.length == 0 || lastInV1 == '') {
-          return 1;
-        } else if (v2.length == 0 || lastInV2 == '') {
-          return -1;
-        } else {
-          return lastInV1.localeCompare(lastInV2);
-        }
-      },
+      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return cell?.map((response) => response.text || '') || [];
+        return cell?.map((response) => response.text || '')?.join(' ') || '';
       },
       width: 250,
     };
@@ -129,7 +118,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
           submissions={cell.map((sub, index) => ({
             id: sub.submission_id,
             matchingContent:
-              index == 0 && sub.text ? getEllipsedString(sub.text, 300) : null,
+              index == 0 ? getEllipsedString(sub.text, 300) : null,
             submitted: sub.submitted,
           }))}
         />
