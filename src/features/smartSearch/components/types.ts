@@ -399,6 +399,7 @@ export enum QUERY_TYPE {
   STANDALONE = 'standalone',
   PURPOSE = 'callassignment_goal',
   TARGET = 'callassignment_target',
+  EMAIL_TARGET = 'email_target',
 }
 
 export interface ZetkinQuery {

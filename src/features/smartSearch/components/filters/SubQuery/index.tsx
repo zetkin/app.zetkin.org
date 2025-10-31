@@ -20,6 +20,7 @@ import {
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
 import messageIds from 'features/smartSearch/l10n/messageIds';
+import useEmails from 'features/emails/hooks/useEmails';
 
 const localMessageIds = messageIds.filters.subQuery;
 
@@ -58,10 +59,20 @@ const SubQuery = ({
     title: a.title,
   }));
 
+  const emailsFuture = useEmails(orgId);
+  const emails = emailsFuture.data || [];
+
+  const emailTargetQueriesWithTitles: ZetkinQuery[] = emails.map((e) => ({
+    ...e.target,
+    title: e.title || undefined,
+    type: QUERY_TYPE.EMAIL_TARGET,
+  }));
+
   const queries = [
     ...standaloneQueries,
     ...targetGroupQueriesWithTitles,
     ...purposeGroupQueriesWithTitles,
+    ...emailTargetQueriesWithTitles,
   ];
 
   const { filter, setOp } =
@@ -252,6 +263,18 @@ const SubQuery = ({
                               id={
                                 localMessageIds.query.selectOptions
                                   .callassignment_goal
+                              }
+                            />
+                          </MenuItem>
+                        )}
+                        {emailTargetQueriesWithTitles.length > 0 && (
+                          <MenuItem
+                            key={QUERY_TYPE.EMAIL_TARGET}
+                            value={QUERY_TYPE.EMAIL_TARGET}
+                          >
+                            <Msg
+                              id={
+                                localMessageIds.query.selectOptions.email_target
                               }
                             />
                           </MenuItem>
