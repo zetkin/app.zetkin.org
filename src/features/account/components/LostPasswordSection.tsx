@@ -1,6 +1,7 @@
 import NextLink from 'next/link';
 import { Box } from '@mui/material';
 import React, { FC, useState } from 'react';
+import isEmail from 'validator/lib/isEmail';
 
 import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIButton from 'zui/components/ZUIButton';
@@ -45,20 +46,20 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
               onSubmit={async (ev) => {
                 ev.preventDefault();
 
-                if (!email.includes('@')) {
+                if (!isEmail(email)) {
                   setEmailError('INVALID_EMAIL');
-                  return;
-                }
-                setEmailError(null);
-
-                const result = await sendPasswordResetToken(email);
-                if (result.success) {
-                  onSuccess(email);
                 } else {
-                  if (result.errorCode == 'USER_NOT_FOUND') {
-                    setEmailError('USER_NOT_FOUND');
+                  setEmailError(null);
+
+                  const result = await sendPasswordResetToken(email);
+                  if (result.success) {
+                    onSuccess(email);
                   } else {
-                    setEmailError('UNKNOWN_ERROR');
+                    if (result.errorCode == 'USER_NOT_FOUND') {
+                      setEmailError('USER_NOT_FOUND');
+                    } else {
+                      setEmailError('UNKNOWN_ERROR');
+                    }
                   }
                 }
               }}
