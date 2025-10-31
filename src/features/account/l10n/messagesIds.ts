@@ -30,7 +30,9 @@ export default makeMessages('feat.account', {
       labelPassword: m('Password'),
       save: m('Save password'),
     },
-    description: m('Set a new password that you wish to use going forward.'),
+    description: m(
+      'Set a new password that you wish to use going forward. Must be at least 6 characters long.'
+    ),
     descriptionUpdated: m(
       'Your password was updated. You can sign in using your new password.'
     ),
