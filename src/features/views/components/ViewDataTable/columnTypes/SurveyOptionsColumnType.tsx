@@ -38,22 +38,14 @@ export default class SurveyOptionsColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string[][], v2: string[][]) => {
-        const getPriority = (cell: string[][]) => {
-          if (cell == null || cell.length == 0) {
-            return 0;
-          } else {
-            return -cell[cell.length - 1].length;
-          }
-        };
-
-        return getPriority(v1) - getPriority(v2);
-      },
+      sortComparator: (v1: string, v2: string) => v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
-        return cell?.map((response) =>
-          response.selected.map((selected) => selected.text)
-        );
+        return cell
+          ?.map((response) =>
+            response.selected.map((selected) => selected.text)
+          )
+          ?.join(' ');
       },
     };
   }
