@@ -1,12 +1,10 @@
-import { OpenInNew } from '@mui/icons-material';
+import { Box } from '@mui/material';
 import { useMemo } from 'react';
-import { Box, Link, useTheme } from '@mui/material';
 
-import ZUICard from 'zui/ZUICard';
-import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
-import { Msg, useMessages } from 'core/i18n';
+import useMessages from 'core/i18n/useMessages';
 import messageIds from '../l10n/messageIds';
 import useEvent from '../hooks/useEvent';
+import ZUIURLCard from 'zui/components/ZUIURLCard';
 
 interface EventURLCardProps {
   isOpen: boolean;
@@ -21,7 +19,6 @@ const EventURLCard = ({
 }: EventURLCardProps) => {
   const event = useEvent(orgId, eventId);
   const messages = useMessages(messageIds);
-  const theme = useTheme();
   const eventUrl = useMemo(
     () =>
       event != null && event.data
@@ -32,45 +29,12 @@ const EventURLCard = ({
 
   return (
     <Box mt={2}>
-      <ZUICard
-        header={isOpen ? messages.urlCard.open() : messages.urlCard.preview()}
-        status={
-          <Box
-            sx={{
-              backgroundColor: isOpen
-                ? theme.palette.success.main
-                : theme.palette.grey['500'],
-              borderRadius: 5,
-              height: 20,
-              width: 20,
-            }}
-          />
-        }
-        subheader={
-          isOpen
-            ? messages.urlCard.nowAccepting()
-            : messages.urlCard.willAccept()
-        }
-      >
-        <Box display="flex" paddingBottom={2}>
-          <ZUITextfieldToClipboard copyText={eventUrl}>
-            {eventUrl}
-          </ZUITextfieldToClipboard>
-        </Box>
-        <Link
-          display="flex"
-          href={`/o/${orgId}/events/${eventId}`}
-          sx={{ alignItems: 'center', gap: 1 }}
-          target="_blank"
-        >
-          <OpenInNew fontSize="inherit" />
-          {isOpen ? (
-            <Msg id={messageIds.urlCard.visitPortal} />
-          ) : (
-            <Msg id={messageIds.urlCard.previewPortal} />
-          )}
-        </Link>
-      </ZUICard>
+      <ZUIURLCard
+        absoluteUrl={eventUrl}
+        isOpen={isOpen}
+        messages={messages.urlCard}
+        relativeUrl={`/o/${orgId}/events/${eventId}`}
+      />
     </Box>
   );
 };
