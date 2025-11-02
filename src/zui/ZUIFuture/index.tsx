@@ -91,7 +91,7 @@ function ZUIFuture<DataType>(props: ZUIFutureProps<DataType>): ReturnType<FC> {
     ),
   } = props;
 
-  if (future.data && !isEmptyData(future)) {
+  if (future.data && (!future.isLoading || !isEmptyData(future))) {
     if (future.isLoading && ignoreDataWhileLoading) {
       return skeleton;
     }
