@@ -19,27 +19,24 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
+import { useNumericRouteParams } from '../../../core/hooks';
 
 type HouseholdAssignmentLayoutProps = {
-  campId: number;
   children: ReactNode;
-  householdsAssId: number;
-  orgId: number;
 };
 
 const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   children,
-  orgId,
-  campId,
-  householdsAssId,
 }) => {
   const messages = useMessages(messageIds);
+  const { orgId, campId, householdsAssId } = useNumericRouteParams();
   const path = useRouter().pathname;
-  const householdAssignment = useHouseholdAssignment(
-    campId,
-    orgId,
-    householdsAssId
-  ).data;
+
+  const {
+    data: householdsAssignment,
+    updateTargets,
+  } = useHouseholdAssignment(campId, orgId, householdsAssId);
+
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
     useHouseholdAssignmentMutations(campId, orgId, householdsAssId);
 
@@ -56,13 +53,14 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
 
   const isMapTab = path.endsWith('/map');
 
-  if (!householdAssignment) {
+  if (!householdsAssignment) {
+    console.log("Linus hat recht");
     return null;
   }
 
   const handleDelete = () => {
     deleteHouseholdAssignment();
-    router.push(`/organize/${orgId}/projects/${householdAssignment.campId} `);
+    router.push(`/organize/${orgId}/projects/${householdsAssignment.campId} `);
   };
 
   return (
@@ -87,7 +85,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
                     onSubmit: handleDelete,
                     title: messages.layout.actions.delete(),
                     warningText: messages.layout.actions.deleteWarningText({
-                      title: householdAssignment.title ?? '',
+                      title: householdsAssignment.title ?? '',
                     }),
                   });
                 },
@@ -100,14 +98,14 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
       baseHref={`/organize/${orgId}/projects/${campId}/householdsassignments/${householdsAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
-          endDate={householdAssignment.end_date || null}
+          endDate={householdsAssignment.end_date || null}
           onChange={(startDate, endDate) => {
             updateHouseholdAssignment({
               end_date: endDate,
               start_date: startDate,
             });
           }}
-          startDate={householdAssignment.start_date || null}
+          startDate={householdsAssignment.start_date || null}
         />
       }
       defaultTab="/"
@@ -136,7 +134,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           onChange={(newTitle) =>
             updateHouseholdAssignment({ title: newTitle })
           }
-          value={householdAssignment.title ?? ''}
+          value={householdsAssignment.title ?? ''}
         />
       }
     >

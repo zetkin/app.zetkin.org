@@ -8,6 +8,10 @@ import { PageWithLayout } from 'utils/types';
 import useHouseholdAssignment from 'features/householdsAssignments/hooks/useHouseholdAssignment';
 import HouseholdsAssignmentTargets from 'features/householdsAssignments/components/HouseholdsAssignmentTargets';
 import HouseholdAssignmentLayout from 'features/householdsAssignments/layouts/HouseholdAssignmentLayout';
+import { useNumericRouteParams } from 'core/hooks';
+import { ZetkinHouseholdAssignment } from 'features/householdsAssignments/types';
+import useServerSide from 'core/useServerSide';
+import BackendApiClient from '../../../../../../../core/api/client/BackendApiClient';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -16,34 +20,42 @@ const scaffoldOptions = {
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, campId, householdsAssId } = ctx.params!;
+  try {
+    const client = new BackendApiClient(ctx.req.headers);
+
+    const data = await client.get<ZetkinHouseholdAssignment>(
+      `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}`
+    );
+    const actualCampaign = data.campId?.toString() ?? 'standalone';
+    if (actualCampaign !== campId) {
+      return { notFound: true };
+    }
+  } catch (error) {
+    return { notFound: true };
+  }
   return {
-    props: { campId, householdsAssId, orgId },
+    props: {},
   };
 }, scaffoldOptions);
 
-interface HouseholdsAssignmentPageProps {
-  campId: string;
-  householdsAssId: string;
-  orgId: string;
-}
+const HouseholdsAssignmentPage: PageWithLayout = () => {
+  const { orgId, campId, householdsAssId } = useNumericRouteParams();
+  const { data: householdsAssignment } = useHouseholdAssignment(campId, orgId, householdsAssId);
 
-const HouseholdsAssignmentPage: PageWithLayout<
-  HouseholdsAssignmentPageProps
-> = ({ campId, orgId, householdsAssId }) => {
-  const assignmentFuture = useHouseholdAssignment(
-    parseInt(campId),
-    parseInt(orgId),
-    parseInt(householdsAssId)
-  );
+  const onServer = useServerSide();
+
+  if (onServer) {
+    return null;
+  }
 
   return (
     <>
       <Head>
-        <title>{assignmentFuture.data?.title}</title>
+        <title>{householdsAssignment?.title}</title>
       </Head>
       <Box>
         <Box mb={2}>
-          <HouseholdsAssignmentTargets assignmentId={parseInt(householdsAssId)} campId={parseInt(campId)} orgId={parseInt(orgId)} />
+          <HouseholdsAssignmentTargets assignmentId={householdsAssId} campId={campId} orgId={orgId} />
         </Box>
       </Box>
     </>
@@ -52,9 +64,7 @@ const HouseholdsAssignmentPage: PageWithLayout<
 
 HouseholdsAssignmentPage.getLayout = function getLayout(page) {
   return (
-    <HouseholdAssignmentLayout {...page.props}>
-      {page}
-    </HouseholdAssignmentLayout>
+    <HouseholdAssignmentLayout>{page}</HouseholdAssignmentLayout>
   );
 };
 
