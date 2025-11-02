@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           organization: {
             id: orgId,
           },
-          target: assignment.target,
+          queryId: assignment.queryId,
           title: assignment.title,
         })),
       });
@@ -67,7 +67,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         campId: params.campId,
         id: 0, // Will be set by pre-validate hook
         orgId: orgId,
-        target: queryRes,
+        queryId: queryRes.id,
+        target: null,
         title: payload.title,
       });
 
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
             campaign: { id: model.campId },
             id: model.id.toString(),
             organization: { id: orgId },
+            target: queryRes,
             title: model.title,
           },
         },

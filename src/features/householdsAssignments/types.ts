@@ -12,6 +12,7 @@ export type ZetkinHouseholdAssignment = {
   end_date: string | null;
   id: string;
   orgId: number;
+  queryId: number;
   start_date: string | null;
   target: ZetkinQuery;
   title: string | null;

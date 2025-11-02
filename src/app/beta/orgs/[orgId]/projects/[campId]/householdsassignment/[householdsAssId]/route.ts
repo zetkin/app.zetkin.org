@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { HouseholdsAssignmentModel } from 'features/householdsAssignments/models';
 import { ZetkinHouseholdAssignment } from 'features/householdsAssignments/types';
+import { ZetkinQuery } from 'features/smartSearch/components/types';
 
 type RouteMeta = {
   params: {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       request: request,
       roles: ['admin'],
     },
-    async ({ orgId }) => {
+    async ({ apiClient, orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
 
       const householdAssignmentModel = await HouseholdsAssignmentModel.findOne({
@@ -30,8 +31,12 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       });
 
       if (!householdAssignmentModel) {
-        return new NextResponse(null, { status: 410 });
+        return new NextResponse(null, { status: 404 });
       }
+
+      const target = await apiClient.get<ZetkinQuery>(
+        `/api/orgs/${orgId}/people/queries/${householdAssignmentModel.queryId}`
+      );
 
       const householdAssignment: ZetkinHouseholdAssignment = {
         assignees: householdAssignmentModel.assignees,
@@ -39,8 +44,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         end_date: householdAssignmentModel.end_date,
         id: householdAssignmentModel.id.toString(),
         orgId: orgId,
+        queryId: householdAssignmentModel.queryId,
         start_date: householdAssignmentModel.start_date,
-        target: householdAssignmentModel.target,
+        target: target,
         title: householdAssignmentModel.title,
       };
 

@@ -54,7 +54,6 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   const isMapTab = path.endsWith('/map');
 
   if (!householdsAssignment) {
-    console.log("Linus hat recht");
     return null;
   }
 

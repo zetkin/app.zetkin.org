@@ -13,8 +13,9 @@ type ZetkinHouseholdsAssignmentModelType = {
   end_date: string | null;
   id: number;
   orgId: number;
+  queryId: number; // in the post handler, it needs to already add a smartSearch Query object post to /orgs/[orgId]/people/queries and use the id returned by the /api
   start_date: string | null;
-  target: ZetkinQuery; // in the post handler, it needs to already add a smartSearch Query object post to /orgs/[orgId]/people/queries and use the id returned by the /api
+  target: ZetkinQuery | null;
   title: string | null;
 };
 
@@ -46,7 +47,8 @@ const householdsAssignmentSchema =
     campId: { required: true, type: Number },
     id: { required: true, type: Number, unique: true },
     orgId: { required: true, type: Number },
-    target: { required: true, type: mongoose.Schema.Types.Mixed },
+    queryId: { required: true, type: Number },
+    target: { required: false, type: mongoose.Schema.Types.Mixed},
     title: String,
   });
 
