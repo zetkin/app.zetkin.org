@@ -38,9 +38,7 @@ test.describe('Task detail page', async () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/people/queries/1', 'patch', filter);
 
-    await page.goto(
-      appUri + '/organize/1/projects/1/calendar/tasks/1/assignees'
-    );
+    await page.goto(appUri + '/organize/1/projects/1/tasks/1/assignees');
 
     // Open Smart Search dialog
     await page.click('data-testid=QueryStatusAlert-actionButton');
