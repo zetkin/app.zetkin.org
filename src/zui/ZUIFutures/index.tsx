@@ -24,7 +24,11 @@ function isEmptyData<T>(future: IFuture<T>): boolean {
     return true;
   }
 
-  if (future.data.length === 0) {
+  if (
+    typeof future.data === 'object' &&
+    'length' in future.data &&
+    future.data.length === 0
+  ) {
     return !('loaded' in future) || !future.loaded;
   }
 
