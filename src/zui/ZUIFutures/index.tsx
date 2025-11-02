@@ -19,7 +19,7 @@ interface ZUIFuturesProps<G extends Record<string, unknown>> {
   loadingIndicator?: React.ReactElement;
 }
 
-function isEmptyData<T>(future: IFuture<T>): boolean {
+export function isEmptyData<T>(future: IFuture<T>): boolean {
   if (!future.data) {
     return true;
   }
