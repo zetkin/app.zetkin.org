@@ -230,34 +230,8 @@ feat:
     showMore: Mehr
     today: Heute
   call:
-    activeEvents:
-      alreadyBooked: '{name} ist schon gebucht'
-      noBookings: '{name} ist nirgendwo angemeldet'
-      signUp: Anmelden
-      undoSignUp: Abmelden
     instructions:
       title: Anweisungen
-    nav:
-      backToHome: Zur Startseite
-      startCalling: Anrufen beginnen
-    prepare:
-      activeEvents: Aktive Veranstaltungen
-      edit: Diese Information bearbeiten?
-      editDescription: Wenn in dieser Spalte Änderungen erforderlich sind, füge eine
-        Nachricht an Organizer*in im Anrufbericht hinzu.
-      noActiveEvents: Keine aktiven Veranstaltungen.
-      noPreviousCalls: Noch nie angerufen
-      noPreviousEvents: '{name} hat bisher an keinen Veranstaltungen teilgenommeen.'
-      noSurveys: Keine Umfragen
-      noTags: Keine Schlagworte
-      previousCallsOfTarget: Vorherige Anrufe bei {name}.
-      previousEvents: Vergangene Veranstaltungen
-      previousEventsOfTarget: '{name} hat teilgenommen an {numEvents} Veranstaltungen,
-        zuletzt an {eventTitle} .'
-      summary: Zusammenfassung
-      surveys: Umfragen
-      tags: Schlagworte
-      title: Persönliche Angaben
     report:
       steps:
         callBack:
@@ -276,6 +250,10 @@ feat:
           question:
             saveWithNoteButton: Mit Notiz speichern
             saveWithoutNoteButton: Ohne Notiz speichern
+        leftMessage:
+          summary:
+            leftMessage:
+              title: Nachricht auf dem Anrufbeantworter hinterlassen
         organizerAction:
           question:
             noButton: Nein
@@ -286,12 +264,16 @@ feat:
             orgActionNeeded:
               subtitle: Organizer*in wird benachrichtigt.
               title: 'Du hast dem*r Organizerin eine Information hinterlassen. '
+            orgActionNotNeeded: Keine Aktion ist notwendig
         organizerLog:
           question:
+            messageLabel: Füge optionale Nachricht hinzu
+            shortcutHint: Drücke beim Tippen SHIFT + ENTER, um die Nachricht einzufügen.
             title: Erkläre der*m Organizer*in das Problem
             withMessageButton: Nachricht speichern
             withoutMessageButton: Weiter
             wrongNumberMessages:
+              altPhone: 'Alternative Telefonnummer ist falsch: {altPhone}'
               both: Beide Telefonnummern sind falsch.
               phone: Die Telefonnummer ist falsch.
           summary:
@@ -305,12 +287,30 @@ feat:
             title: Hast du {firstName} erreicht?
             yesButton: Ja
           summary:
+            failure:
+              subtitle: Zukünftige Telefonierer*innen werden sehen, dass Du nicht mit
+                {firstName} gesprochen hast
+              title: Wir haben {firstName} nicht erreicht
             success:
+              subtitle: Zukünftige Telefonierer*innen werden sehen, dass Du mit {firstName
+                gesprochen hast
               title: '{firstName} wurde erfolgreich angerufen'
+        wrongNumber:
+          question:
+            bothButton: Beide
+            title: Welche Telefonnummer ist falsch?
+          summary:
+            phoneBoth: 'Beide Telefonnummern sind falsch: {phone} und {altPhone}'
+            phoneSingle: 'Eine Telefonnummer ist falsch: {phone}'
+      summary:
+        editButtonLabel: Bearbeiten
+    stats:
+      callsMade: Geführte Telefonate
   callAssignments:
     actions:
       delete: Löschen
       end: Aufgabe beenden
+      move: Bewegen
       start: Aufgabe starten
       warning: '"{title}" wird gelöscht.'
     blocked:
@@ -324,6 +324,11 @@ feat:
       subtitle: Zielpersonen können noch nicht angerufen werden
       title: Blockiert
       viewSheetButton: Zeige Liste
+    callAssignmentChangeCampaignDialog:
+      error: 'Fehler: Die Zuweisung konnte nicht in das ausgewählte Projekt verschoben
+        werden.'
+      success: Zuweisung "{assignmentTitle}" bewegt nach "{campaignTitle}"
+      title: Bewege Zuweisung
     callers:
       actions:
         customize: Warteschlange anpassen
@@ -437,6 +442,7 @@ feat:
       cardCTA: Gehe zu Projekt
       create: Erstelle neues Projekt
       filter:
+        areaAssignments: Gebietszuweisungen
         calls: Telefonaktionen
         emails: E-Mails
         filter: Filterergebnisse
@@ -517,6 +523,7 @@ feat:
       overview: Überblick
     linkGroup:
       createActivity: Erstelle Aktivität
+      createAreaAssignment: Gebietszuweisung
       createCallAssignment: Erstelle Telefonaktion
       createEmail: Erstelle E-Mail
       createEvent: Erstelle Aktion
@@ -531,11 +538,14 @@ feat:
       heading: Mobilisierung
     noManager: kein*e Verantwortliche*r
     publicProjectPage:
+      calendarLinkCopied: Kalendar-Link erfolgreich kopiert
+      copyIcsUrl: Kopiere Kalendar-Abo-Link
       eventList:
         emptyList:
           message: Es konnten keine Veranstaltungen gefunden werden
           removeFiltersButton: Filter entfernen
         filterButtonLabels:
+          locations: '{count} Orts'
           thisWeek: Diese Woche
           today: Heute
           tomorrow: Morgen
@@ -576,8 +586,11 @@ feat:
   canvass:
     default:
       description: Leere Beschreibung
+      floor: Unbekannte Etage
+      location: Unbenannter Ort
     households:
       bulkEditHouseholds:
+        floorLabel: Etage bearbeiten
         header: Bearbeite {numHouseholds, plural, one {1 household} andere {#
           households}}
         saveButtonLabel: Speichern {numHouseholds, plural, one {1 household} andere {#
@@ -2596,7 +2609,6 @@ feat:
       error: Beim Absenden Ihrer Antworten ist ein Fehler aufgetreten. Bitte versuche
         es später noch einmal.
       policy:
-        link: https://www.die-linke.de/seitenfuss/datenschutz/
         text: Klicke hier, um die vollständige Zetkin-Datenschutzhinweise zu lesen.
       required: erforderlich
       sign:
@@ -2607,7 +2619,7 @@ feat:
         description: Wenn Du diese Umfrage abschickst, werden die von Dir zur Verfügung
           gestellten Informationen in Zetkin von {organization} gespeichert und
           verarbeitet, um in Übereinstimmung mit unseren Datenschutzhinweisen
-          Aktivitäten der Partei Die Linke zu organisieren.
+          Aktivitäten der {organization} zu organisieren.
         title: Datenschutzhinweise
     surveyFormSubmitted:
       text: Deine Antworten zu „{Titel}“ wurden übermittelt.

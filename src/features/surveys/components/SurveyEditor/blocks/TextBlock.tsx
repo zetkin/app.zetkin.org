@@ -32,7 +32,7 @@ const TextBlock: FC<TextBlockProps> = ({
   const { updateElement } = useSurveyMutations(orgId, surveyId);
 
   const [header, setHeader] = useState(element.text_block.header);
-  const [content, setContent] = useState(element.text_block.content);
+  const [content, setContent] = useState(element.text_block.content || '');
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({

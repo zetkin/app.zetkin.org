@@ -19,7 +19,7 @@ import { EnvVars } from 'core/env/Environment';
 import { omitUndefined } from './omitUndefined';
 
 //TODO: Create module definition and revert to import.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
 
 type RegularProps = {
