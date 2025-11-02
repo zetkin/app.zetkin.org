@@ -49,7 +49,7 @@ export async function PUT(request: NextRequest, { params }: RouteMeta) {
         id: householdAssignmentModel.id.toString(),
         orgId: orgId,
         start_date: householdAssignmentModel.start_date,
-        target: householdAssignmentModel.queryId.toString(),
+        target: householdAssignmentModel.target,
         title: householdAssignmentModel.title,
       };
 

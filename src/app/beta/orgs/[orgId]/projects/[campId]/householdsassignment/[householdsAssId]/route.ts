@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       });
 
       if (!householdAssignmentModel) {
-        return new NextResponse(null, { status: 404 });
+        return new NextResponse(null, { status: 410 });
       }
 
       const householdAssignment: ZetkinHouseholdAssignment = {
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
         id: householdAssignmentModel.id.toString(),
         orgId: orgId,
         start_date: householdAssignmentModel.start_date,
-        target: householdAssignmentModel.queryId.toString(),
+        target: householdAssignmentModel.target,
         title: householdAssignmentModel.title,
       };
 
@@ -69,8 +69,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
             orgId,
           },
           {
-            assigneeIds: payload.assigneeIds,
-            queryId: payload.queryId,
+            assignees: payload.assignees,
             title: payload.title,
           },
           { new: true }
@@ -88,6 +87,31 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           title: householdAssignmentModel.title,
         },
       });
+    }
+  );
+}
+
+export async function DELETE(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const result = await HouseholdsAssignmentModel.findOneAndDelete({
+        campId: params.campId,
+        id: params.householdsAssId,
+        orgId,
+      });
+
+      if (!result) {
+        return new NextResponse(null, { status: 404 });
+      }
+
+      return new NextResponse(null, { status: 204 });
     }
   );
 }

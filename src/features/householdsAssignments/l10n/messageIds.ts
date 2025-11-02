@@ -209,4 +209,10 @@ export default makeMessages('feat.householdAssignments', {
       title: m('Add questions for your canvass assignment.'),
     },
   },
+  targets: {
+    defineButton: m('Define target group'),
+    editButton: m('Edit target group'),
+    subtitle: m('Use smart search to define target group for this assignment.'),
+    title: m('Targets'),
+  },
 });

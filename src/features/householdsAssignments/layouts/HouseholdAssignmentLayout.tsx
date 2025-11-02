@@ -97,7 +97,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           />
         </Box>
       }
-      baseHref={`/organize/${orgId}/projects/${campId}/householdassignments/${householdsAssId}`}
+      baseHref={`/organize/${orgId}/projects/${campId}/householdsassignments/${householdsAssId}`}
       belowActionButtons={
         <ZUIDateRangePicker
           endDate={householdAssignment.end_date || null}
@@ -130,9 +130,6 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
       }
       tabs={[
         { href: '/', label: messages.layout.tabs.overview() },
-        { href: '/map', label: messages.layout.tabs.map() },
-        { href: '/report', label: messages.layout.tabs.report() },
-        { href: '/instructions', label: messages.layout.tabs.instructions() },
       ]}
       title={
         <ZUIEditTextinPlace

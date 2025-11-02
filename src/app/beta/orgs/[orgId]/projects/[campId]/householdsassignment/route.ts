@@ -34,9 +34,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           organization: {
             id: orgId,
           },
-          target: {
-            id: assignment.queryId.toString(),
-          },
+          target: assignment.target,
           title: assignment.title,
         })),
       });
@@ -60,7 +58,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         `/api/orgs/${orgId}/people/queries`,
         {
           filter_spec: [],
-          title: 'Untitled Household Assignment Query',
+          title: `${payload.title} Query`,
         }
       );
 
@@ -69,7 +67,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         campId: params.campId,
         id: 0, // Will be set by pre-validate hook
         orgId: orgId,
-        queryId: queryRes.id,
+        target: queryRes,
         title: payload.title,
       });
 

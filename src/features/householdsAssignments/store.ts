@@ -137,12 +137,39 @@ const householdAssignmentSlice = createSlice({
       const householdAssignment = action.payload;
       remoteItemUpdated(state.householdAssignmentList, householdAssignment);
     },
+    householdAssignmentUpdate: (
+      state,
+      action: PayloadAction<[number, string[]]>
+    ) => {
+      const [id, attributes] = action.payload;
+      const haItem = state.householdAssignmentList.items.find(
+        (item) => item.id === id
+      );
+
+      if (haItem) {
+        haItem.mutating = haItem.mutating
+          .filter((attr) => !attributes.includes(attr))
+          .concat(attributes);
+      }
+    },
     householdAssignmentUpdated: (
       state,
-      action: PayloadAction<ZetkinHouseholdAssignment>
+      action: PayloadAction<[ZetkinHouseholdAssignment, string[]]>
     ) => {
-      const updatedHousehold = action.payload;
-      remoteItemUpdated(state.householdAssignmentList, updatedHousehold);
+      const [assignment, mutating] = action.payload;
+      const haItem = state.householdAssignmentList.items.find(
+        (item) => item.id === assignment.id
+      );
+
+      if (haItem) {
+        haItem.mutating = haItem.mutating.filter((attr) =>
+          mutating.includes(attr)
+        );
+      }
+
+      state.householdAssignmentList.items = state.householdAssignmentList.items
+        .filter((ha) => ha.id !== assignment.id)
+        .concat([remoteItem(assignment.id, { data: assignment })]);
     },
     householdAssignmentsLoad: (state) => {
       state.householdAssignmentList = remoteListLoad(
@@ -278,6 +305,7 @@ export const {
   householdAssignmentDeleted,
   householdAssignmentLoad,
   householdAssignmentLoaded,
+  householdAssignmentUpdate,
   householdAssignmentUpdated,
   householdAssignmentsLoad,
   householdAssignmentsLoaded,

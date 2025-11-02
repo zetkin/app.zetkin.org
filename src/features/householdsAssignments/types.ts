@@ -1,4 +1,5 @@
 import { MetricBulkResponse } from '../canvass/types';
+import { ZetkinQuery } from 'features/smartSearch/components/types';
 
 export type ZetkinHouseholdsAssignee = {
   householdsAssId: number;
@@ -12,7 +13,7 @@ export type ZetkinHouseholdAssignment = {
   id: string;
   orgId: number;
   start_date: string | null;
-  target: string;
+  target: ZetkinQuery;
   title: string | null;
 };
 
@@ -43,6 +44,7 @@ export type HouseholdGraphData = {
 };
 
 export type ZetkinHouseholdAssignmentStats = {
+  allTargets: number;
   metrics: MetricBulkResponse;
   num_households: number;
   num_households_successfully_visited: number | null;
