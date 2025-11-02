@@ -35,10 +35,12 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       }
 
       const targetMatches = await apiClient.get<ZetkinPerson[]>(
-          `/api/orgs/${orgId}/people/queries/${householdAssignmentModel.queryId}/matches`
+        `/api/orgs/${orgId}/people/queries/${householdAssignmentModel.queryId}/matches`
       );
 
-      const householdAssignmentStats: ZetkinHouseholdAssignmentStats =<ZetkinHouseholdAssignmentStats>{
+      const householdAssignmentStats: ZetkinHouseholdAssignmentStats = <
+        ZetkinHouseholdAssignmentStats
+      >{
         allTargets: targetMatches.length,
       };
 

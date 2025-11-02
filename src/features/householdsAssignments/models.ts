@@ -48,7 +48,7 @@ const householdsAssignmentSchema =
     id: { required: true, type: Number, unique: true },
     orgId: { required: true, type: Number },
     queryId: { required: true, type: Number },
-    target: { required: false, type: mongoose.Schema.Types.Mixed},
+    target: { required: false, type: mongoose.Schema.Types.Mixed },
     title: String,
   });
 

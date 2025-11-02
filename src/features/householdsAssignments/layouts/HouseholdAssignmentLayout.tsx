@@ -32,10 +32,11 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   const { orgId, campId, householdsAssId } = useNumericRouteParams();
   const path = useRouter().pathname;
 
-  const {
-    data: householdsAssignment,
-    updateTargets,
-  } = useHouseholdAssignment(campId, orgId, householdsAssId);
+  const { data: householdsAssignment } = useHouseholdAssignment(
+    campId,
+    orgId,
+    householdsAssId
+  );
 
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
     useHouseholdAssignmentMutations(campId, orgId, householdsAssId);
@@ -125,9 +126,7 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           </Box>
         </Box>
       }
-      tabs={[
-        { href: '/', label: messages.layout.tabs.overview() },
-      ]}
+      tabs={[{ href: '/', label: messages.layout.tabs.overview() }]}
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) =>

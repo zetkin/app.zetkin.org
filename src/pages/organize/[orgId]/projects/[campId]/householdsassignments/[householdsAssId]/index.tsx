@@ -40,7 +40,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 const HouseholdsAssignmentPage: PageWithLayout = () => {
   const { orgId, campId, householdsAssId } = useNumericRouteParams();
-  const { data: householdsAssignment } = useHouseholdAssignment(campId, orgId, householdsAssId);
+  const { data: householdsAssignment } = useHouseholdAssignment(
+    campId,
+    orgId,
+    householdsAssId
+  );
 
   const onServer = useServerSide();
 
@@ -55,7 +59,11 @@ const HouseholdsAssignmentPage: PageWithLayout = () => {
       </Head>
       <Box>
         <Box mb={2}>
-          <HouseholdsAssignmentTargets assignmentId={householdsAssId} campId={campId} orgId={orgId} />
+          <HouseholdsAssignmentTargets
+            assignmentId={householdsAssId}
+            campId={campId}
+            orgId={orgId}
+          />
         </Box>
       </Box>
     </>
@@ -63,9 +71,7 @@ const HouseholdsAssignmentPage: PageWithLayout = () => {
 };
 
 HouseholdsAssignmentPage.getLayout = function getLayout(page) {
-  return (
-    <HouseholdAssignmentLayout>{page}</HouseholdAssignmentLayout>
-  );
+  return <HouseholdAssignmentLayout>{page}</HouseholdAssignmentLayout>;
 };
 
 export default HouseholdsAssignmentPage;
