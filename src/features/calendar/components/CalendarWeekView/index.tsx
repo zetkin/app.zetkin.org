@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
@@ -11,23 +12,24 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { isSameDate } from 'utils/dateUtils';
+import messageIds from 'features/calendar/l10n/messageIds';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
+import { useFocusDate } from 'utils/hooks/useFocusDate';
+import { useWeekDates } from 'features/calendar/hooks/useWeekDates';
+import { Msg } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
+import range from 'utils/range';
 import DayHeader from './DayHeader';
 import EventCluster from '../EventCluster';
 import EventDayLane from './EventDayLane';
 import EventGhost from './EventGhost';
 import EventShiftModal from '../EventShiftModal';
 import HeaderWeekNumber from './HeaderWeekNumber';
-import { isSameDate } from 'utils/dateUtils';
-import messageIds from 'features/calendar/l10n/messageIds';
-import { Msg } from 'core/i18n';
-import range from 'utils/range';
 import { scrollToEarliestEvent } from './utils';
 import { getDstChangeAtDate } from '../utils';
-import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import { useNumericRouteParams } from 'core/hooks';
-import useWeekCalendarEvents from 'features/calendar/hooks/useWeekCalendarEvents';
 
 dayjs.extend(isoWeek);
 
@@ -35,10 +37,9 @@ const HOUR_HEIGHT = 80;
 const HOUR_COLUMN_WIDTH = '60px';
 
 export interface CalendarWeekViewProps {
-  focusDate: Date;
   onClickDay: (date: Date) => void;
 }
-const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
+const CalendarWeekView = ({ onClickDay }: CalendarWeekViewProps) => {
   const theme = useTheme();
   const [creating, setCreating] = useState(false);
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
@@ -48,24 +49,15 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
   );
   const { orgId, campId } = useNumericRouteParams();
   const createEvent = useCreateEvent(orgId);
-  const focusWeekStartDay =
-    dayjs(focusDate).isoWeekday() == 7
-      ? dayjs(focusDate).add(-1, 'day')
-      : dayjs(focusDate);
+  const { focusDate } = useFocusDate();
+  const { weekDates } = useWeekDates();
 
-  const dayDates = range(7).map((weekday) => {
-    return focusWeekStartDay.day(weekday + 1).toDate();
-  });
-
-  const dstChange = useMemo(
-    () =>
-      dayDates.map((d) => dayjs(d)).find((date) => getDstChangeAtDate(date)),
-    [dayDates]
-  );
+  const dstChange = weekDates
+    .map((d) => dayjs(d))
+    .find((date) => getDstChangeAtDate(date));
 
   const eventsByDate = useWeekCalendarEvents({
     campaignId: campId,
-    dates: dayDates,
     orgId,
   });
 
@@ -93,8 +85,8 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
         position="relative"
       >
         {/* Empty */}
-        <HeaderWeekNumber weekNr={dayjs(dayDates[0]).isoWeek()} />
-        {dayDates.map((weekdayDate: Date, weekday: number) => {
+        <HeaderWeekNumber weekNr={dayjs(weekDates[0]).isoWeek()} />
+        {weekDates.map((weekdayDate: Date, weekday: number) => {
           return (
             <Box key={`weekday-${weekday}`} position="relative">
               <DayHeader
@@ -157,7 +149,7 @@ const CalendarWeekView = ({ focusDate, onClickDay }: CalendarWeekViewProps) => {
           })}
         </Box>
         {/* Day columns */}
-        {dayDates.map((date: Date, index: number) => {
+        {weekDates.map((date: Date, index: number) => {
           const pendingTop = pendingEvent
             ? (pendingEvent[0].getUTCHours() * 60 +
                 pendingEvent[0].getMinutes()) /
