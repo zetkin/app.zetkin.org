@@ -126,7 +126,16 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           </Box>
         </Box>
       }
-      tabs={[{ href: '/', label: messages.layout.tabs.overview() }]}
+      tabs={[
+        {
+          href: '/',
+          label: messages.layout.tabs.overview()
+        },
+        {
+          href: '/canvassers',
+          label: messages.layout.tabs.canvassers()
+        }
+      ]}
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) =>

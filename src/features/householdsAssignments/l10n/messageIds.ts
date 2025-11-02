@@ -43,6 +43,7 @@ export default makeMessages('feat.householdAssignments', {
     },
     tabs: {
       assignees: m('Assignees'),
+      canvassers: m('Canvassers'),
       instructions: m('Instructions'),
       map: m('Map'),
       overview: m('Overview'),

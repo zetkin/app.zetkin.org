@@ -40,13 +40,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 const HouseholdsAssignmentPage: PageWithLayout = () => {
   const { orgId, campId, householdsAssId } = useNumericRouteParams();
+  const onServer = useServerSide();
   const { data: householdsAssignment } = useHouseholdAssignment(
     campId,
     orgId,
     householdsAssId
   );
-
-  const onServer = useServerSide();
 
   if (onServer) {
     return null;
