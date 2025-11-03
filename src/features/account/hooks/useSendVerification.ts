@@ -3,11 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import { useApiClient } from 'core/hooks';
 import { ZetkinUser } from 'utils/types/zetkin';
-
-export type SendVerificationStatus = {
-  errorCode?: string;
-  success: boolean;
-};
+import { SendVerificationStatus } from '../types';
 
 type UseSendVerificationProps = {
   loading: boolean;

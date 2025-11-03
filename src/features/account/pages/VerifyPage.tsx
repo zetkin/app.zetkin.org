@@ -15,12 +15,17 @@ import messageIds from '../l10n/messagesIds';
 import messagesIds from '../l10n/messagesIds';
 import { UseSendVerification } from '../hooks/useSendVerification';
 import ZUIAlert from 'zui/components/ZUIAlert';
+import { SendFail, SendVerificationStatus } from '../types';
+
+const hasError = (result: SendVerificationStatus): result is SendFail => {
+  return 'errorCode' in result;
+};
 
 const VerifyPage: FC = () => {
   const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
   const { loading, sendVerification } = UseSendVerification();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   return (
     <Suspense
@@ -47,8 +52,9 @@ const VerifyPage: FC = () => {
                   ev.preventDefault();
 
                   const result = await sendVerification();
-                  if (result.errorCode) {
-                    setError('UNKNOWN_ERROR');
+
+                  if (hasError(result)) {
+                    setError(true);
                   }
                 }}
               >

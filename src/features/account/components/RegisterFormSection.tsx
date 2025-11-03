@@ -16,7 +16,7 @@ import ZUILogo from 'zui/ZUILogo';
 import ZUICheckbox from 'zui/components/ZUICheckbox';
 import { useCreateNewAccount } from '../hooks/useCreateNewAccount';
 import ZUIAlert from 'zui/components/ZUIAlert';
-import { ErrorCode } from '../types';
+import { CreateAccountErrorCode } from '../types';
 
 export type RegisterData = {
   email: string;
@@ -39,7 +39,9 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
   const [showExtraFields, setShowExtraFields] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [resultError, setResultError] = useState<ErrorCode | null>(null);
+  const [resultError, setResultError] = useState<CreateAccountErrorCode | null>(
+    null
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
