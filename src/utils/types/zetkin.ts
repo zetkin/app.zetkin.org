@@ -213,7 +213,7 @@ export interface ZetkinSession {
   created: string;
   level: number;
   user: ZetkinUser;
-  factors: string[];
+  factors: ('email_password' | 'phone_otp' | 'api_key')[];
 }
 
 export interface ZetkinCallAssignment {
