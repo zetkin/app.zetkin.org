@@ -20,8 +20,19 @@ type SendSuccss = {
 };
 
 export type SendFail = {
-  errorCode: 'UNKNOWN_ERROR';
+  errorCode: 'unknownError';
   success: false;
 };
 
 export type SendVerificationStatus = SendSuccss | SendFail;
+
+export type PasswordSuccess = {
+  success: true;
+};
+
+type PasswordFail = {
+  errorCode: 'unknownError';
+  success: false;
+};
+
+export type PasswordResetStatus = PasswordFail | PasswordSuccess;

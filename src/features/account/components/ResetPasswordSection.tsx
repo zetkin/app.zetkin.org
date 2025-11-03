@@ -111,11 +111,7 @@ const ResetPasswordSection: FC<ResetPasswordSectionProps> = ({
                 right: { md: 'auto', xs: 0 },
               }}
             >
-              <NextLink
-                href={`${
-                  process.env.ZETKIN_LOGIN_URL || 'https://login.zetk.in/'
-                }`}
-              >
+              <NextLink href="/login">
                 <ZUIButton
                   fullWidth
                   label={messages.lostPassword.actions.signIn()}

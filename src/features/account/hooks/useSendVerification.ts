@@ -29,7 +29,7 @@ export function UseSendVerification(): UseSendVerificationProps {
         success: true,
       };
     } catch (err) {
-      return { errorCode: 'UNKNOWN_ERROR', success: false };
+      return { errorCode: 'unknownError', success: false };
     } finally {
       setLoading(false);
     }
