@@ -20,7 +20,7 @@ export function UseSendVerification(): UseSendVerificationProps {
     try {
       const user: ZetkinUser = await apiClient.get(`/api/users/me`);
       if (user.email_is_verified) {
-        router.push(process.env.ZETKIN_LOGIN_URL || 'https://login.zetk.in/');
+        router.push('/login');
       }
 
       await apiClient.post(`/api/users/me/verification_codes`, {});
