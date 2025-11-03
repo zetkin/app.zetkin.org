@@ -8,9 +8,12 @@ import RegisterFormSection from '../components/RegisterFormSection';
 import RegisterSuccessSection from '../components/RegisterSuccessSection';
 
 const RegisterPage: FC = () => {
-  const [success, setSuccess] = useState(true);
-  const [userName, setUserName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [success, setSuccess] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const successfullyRegistered = success && userName && email;
+
   return (
     <Suspense
       fallback={
@@ -25,7 +28,7 @@ const RegisterPage: FC = () => {
         </Box>
       }
     >
-      {success && userName && email ? (
+      {successfullyRegistered ? (
         <RegisterSuccessSection email={email} userName={userName} />
       ) : (
         <RegisterFormSection
