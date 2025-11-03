@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Collapse } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
@@ -62,7 +62,7 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
 
   return (
     <ZUISection
-      borders={isMobile ? false : true}
+      borders={!isMobile}
       fullHeight
       renderContent={() => {
         return (
@@ -100,54 +100,48 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
               }}
             >
               <Box
+                onFocus={() => {
+                  setShowExtraFields(true);
+                }}
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  flexGrow: 1,
-                  gap: showExtraFields ? 2 : 1,
-                  pt: resultError ? 0 : 1,
+                  gap: 2,
+                  paddingBottom: 2,
+                  width: '100%',
                 }}
               >
-                <Box
-                  onClick={() => setShowExtraFields(true)}
-                  sx={{ overflow: 'visible' }}
-                  width="100%"
-                >
-                  {showErrorMessage && (
-                    <Box sx={{ mb: 2 }}>
-                      <ZUIAlert
-                        appear
-                        severity={'error'}
-                        title={messages.register.error[resultError]()}
-                      />
-                    </Box>
-                  )}
-                  <ZUITextField
-                    error={emailError}
-                    fullWidth
-                    helperText={
-                      emailError
-                        ? messages.lostPassword.errors.invalidEmail()
-                        : ''
-                    }
-                    label={messages.register.labels.email()}
-                    onChange={(value) => {
-                      setFormData((prev) => ({ ...prev, email: value }));
-                      setEmailError(false);
-                    }}
-                    size="large"
+                {showErrorMessage && (
+                  <ZUIAlert
+                    appear
+                    severity={'error'}
+                    title={messages.register.error[resultError]()}
                   />
-                </Box>
-
+                )}
+                <ZUITextField
+                  error={emailError}
+                  fullWidth
+                  helperText={
+                    emailError
+                      ? messages.lostPassword.errors.invalidEmail()
+                      : ''
+                  }
+                  label={messages.register.labels.email()}
+                  onChange={(value) => {
+                    setFormData((prev) => ({ ...prev, email: value }));
+                    setEmailError(false);
+                  }}
+                  size="large"
+                />
+              </Box>
+              <Collapse in={showExtraFields}>
                 <Box
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: showExtraFields ? 2 : 0,
-                    height: showExtraFields ? 'auto' : 0,
-                    opacity: showExtraFields ? 1 : 0,
-                    overflow: showExtraFields ? 'visible' : 'hidden',
-                    transition: 'opacity 2s ease, height 2s ease',
+                    gap: 2,
+                    paddingBottom: 2,
+                    width: '100%',
                   }}
                 >
                   <ZUITextField
@@ -218,24 +212,16 @@ const RegisterFormSection: FC<RegisterFormSectionProps> = ({ onSuccess }) => {
                     size="large"
                   />
                 </Box>
-                <ZUIButton
-                  actionType="submit"
-                  disabled={loading || !isTermsAccepted || !allFieldsFilled}
-                  label={messages.register.actions.createAccount()}
-                  size="large"
-                  variant={'primary'}
-                />
-              </Box>
+              </Collapse>
+              <ZUIButton
+                actionType="submit"
+                disabled={loading || !isTermsAccepted || !allFieldsFilled}
+                label={messages.register.actions.createAccount()}
+                size="large"
+                variant={'primary'}
+              />
             </form>
-
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexShrink: 0,
-                gap: 2,
-              }}
-            >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <AccountFooter />
             </Box>
           </Box>
