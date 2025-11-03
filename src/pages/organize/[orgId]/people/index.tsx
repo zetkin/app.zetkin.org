@@ -50,7 +50,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
       <Head>
         <title>{messages.browserLayout.title()}</title>
       </Head>
-      <ViewBrowser autoHeight={false} basePath={`/organize/${orgId}/people`} />
+      <ViewBrowser basePath={`/organize/${orgId}/people`} />
     </>
   );
 };
