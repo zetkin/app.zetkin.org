@@ -6,23 +6,22 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 
 interface PageProps {
   params: {
-    code: string;
+    token: string;
   };
 }
 export default async function Page({ params }: PageProps) {
-  const { code } = params;
+  await redirectIfLoginNeeded();
+
+  const { token } = params;
   const headersList = headers();
   const headersEntries = headersList.entries();
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
   try {
-    await apiClient.put(`/api/users/me/verification_codes`, { code });
-
-    await redirectIfLoginNeeded();
-    redirect('/my');
+    await apiClient.put(`/api/users/me/verification_codes/${token}`);
   } catch (err) {
-    const path = headersList.get('x-requested-path');
-    redirect(`/login?redirect=${path}`);
+    redirect('/verify');
   }
+  redirect('/my');
 }
