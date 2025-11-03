@@ -18,7 +18,7 @@ export function UseSendVerification(): UseSendVerificationProps {
   const sendVerification = async (): Promise<SendVerificationStatus> => {
     setLoading(true);
     try {
-      const user: ZetkinUser = await apiClient.get(`/api/users/me`);
+      const user = await apiClient.get<ZetkinUser>(`/api/users/me`);
       if (user.email_is_verified) {
         router.push('/login');
       }
