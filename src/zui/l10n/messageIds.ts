@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('zui', {
   accessList: {
@@ -176,6 +176,7 @@ export default makeMessages('zui', {
     geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
+    overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),

@@ -51,7 +51,7 @@ const tagsSlice = createSlice({
     },
     tagCreate: (state) => {
       // TODO: This is inconsistent with other features. The list itself is not truly loading, just some of the contents
-      state.tagList.isLoading;
+      state.tagList.isLoading = true;
     },
     tagCreated: (state, action: PayloadAction<ZetkinTag>) => {
       const tag = action.payload;
@@ -71,7 +71,7 @@ const tagsSlice = createSlice({
     },
     tagGroupCreate: (state) => {
       // TODO: This is inconsistent with other features. The list itself is not truly loading, just some of the contents
-      state.tagGroupList.isLoading;
+      state.tagGroupList.isLoading = true;
     },
     tagGroupCreated: (state, action: PayloadAction<ZetkinTagGroup>) => {
       const tagGroup = action.payload;

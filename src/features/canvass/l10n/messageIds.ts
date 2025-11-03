@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.canvass', {
   default: {
@@ -67,6 +67,12 @@ export default makeMessages('feat.canvass', {
       numberOfFloorsInput: m('Number of floors'),
       numberOfHouseholdsInput: m('Households per floor'),
     },
+    delete: {
+      title: m('Delete household'),
+      warningText: m(
+        'Are you sure you want to delete the household? It can not be undone.'
+      ),
+    },
     editSingleHousehold: {
       floorLabel: m('Edit floor'),
       header: m<{ title: string }>('Edit {title}'),
@@ -84,6 +90,10 @@ export default makeMessages('feat.canvass', {
       logVisitButtonLabel: m('Log visit'),
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       wasVisited: m('This household has been visited in this assignment'),
+    },
+    stackItem: {
+      detailsButtonLabel: m('Details'),
+      visitButtonLabel: m('Visit'),
     },
   },
   instructions: {
@@ -148,8 +158,12 @@ export default makeMessages('feat.canvass', {
       },
       header: {
         households: m('Households'),
+        householdsSuccessful: m('Successfully visited'),
+        householdsVisited: m('Visited households'),
         locations: m('Locations'),
+        successfulVisits: m('Successful Visits'),
         title: m('Progress'),
+        visits: m('Visits'),
       },
       session: {
         team: m('Team'),

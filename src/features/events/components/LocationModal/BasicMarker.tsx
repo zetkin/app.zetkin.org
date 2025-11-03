@@ -1,27 +1,5 @@
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
-import { Box, Theme, Typography } from '@mui/material';
-
-interface StyleProps {
-  color: string;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  number: {
-    bottom: 11,
-    color: ({ color }) => color,
-    left: '50%',
-    position: 'absolute',
-    textAlign: 'center',
-    transform: 'translate(-50%)',
-    zIndex: 2000,
-  },
-  parent: {
-    height: 4,
-    position: 'relative',
-    width: 4,
-  },
-}));
+import { Box, Typography } from '@mui/material';
 
 interface BasicMarkerProps {
   color: string;
@@ -29,11 +7,26 @@ interface BasicMarkerProps {
 }
 
 const BasicMarker: FC<BasicMarkerProps> = ({ color, events }) => {
-  const classes = useStyles({ color });
   return (
-    <Box className={classes.parent}>
+    <Box
+      sx={{
+        height: '4px',
+        position: 'relative',
+        width: '4px',
+      }}
+    >
       {events > 0 && (
-        <Box className={classes.number}>
+        <Box
+          sx={{
+            bottom: '11px',
+            color,
+            left: '50%',
+            position: 'absolute',
+            textAlign: 'center',
+            transform: 'translate(-50%)',
+            zIndex: 2000,
+          }}
+        >
           <Typography>{events > 9 ? '9+' : events}</Typography>
         </Box>
       )}
