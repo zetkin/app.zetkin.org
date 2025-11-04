@@ -38,7 +38,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
       greenChipValue={stats?.completed}
       href={`/organize/${orgId}/projects/${
         task.campaign?.id ?? 'standalone'
-      }/calendar/tasks/${taskId}`}
+      }/tasks/${taskId}`}
       orangeChipValue={stats?.ignored}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
