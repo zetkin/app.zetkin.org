@@ -52,6 +52,7 @@ interface ScaffoldOptions {
   // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
   authLevelRequired?: number;
   allowNonOfficials?: boolean;
+  allowUnverified?: boolean;
   featuresRequired?: string[];
   localeScope?: string[];
 }
@@ -135,7 +136,11 @@ export const scaffold =
 
       // Only redirect to email verification if user used email authentication
       // and their email is not verified. Phone-only authentication is fine.
-      if (hasEmailAuth && !ctx.user.email_is_verified) {
+      if (
+        hasEmailAuth &&
+        !ctx.user.email_is_verified &&
+        !options?.allowUnverified
+      ) {
         return {
           redirect: {
             destination: '/verify',
