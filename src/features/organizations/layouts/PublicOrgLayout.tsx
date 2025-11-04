@@ -33,7 +33,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
 
   const messages = useMessages(messageIds);
   const subOrgs = usePublicSubOrgs(org.id);
-  const { allEvents, filteredEvents } = useFilteredOrgEvents(org.id);
+  const { filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
 
   const lastSegment = path?.split('/')[3] ?? 'home';
