@@ -2,7 +2,7 @@ import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
 import VerifyPage from 'features/account/pages/VerifyPage';
 
 const Page = async () => {
-  await redirectIfLoginNeeded();
+  await redirectIfLoginNeeded({ allowUnverified: true });
   return <VerifyPage />;
 };
 
