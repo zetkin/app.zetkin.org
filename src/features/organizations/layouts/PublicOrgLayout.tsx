@@ -121,7 +121,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       }
       locationFilter={geojsonToFilterBy}
       setLocationFilter={setLocationFilter}
-      showMap={lastSegment != 'suborgs' && allEvents.length > 0}
+      showMap={true}
     >
       {children}
     </EventMapLayout>
