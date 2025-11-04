@@ -25,6 +25,35 @@ export default makeMessages('feat.account', {
     },
     title: m('Recover your Zetkin account'),
   },
+  register: {
+    actions: {
+      createAccount: m('Create account'),
+    },
+    description: m('Start organizing with Zetkin right away'),
+    error: {
+      conflictError: m(
+        'An account with this email or phone number already exists.'
+      ),
+      invalidParameter: m(
+        'Please enter valid details for your email and/or phone number.'
+      ),
+      phoneError: m('Please enter a valid phone number.'),
+      unknownError: m('Registration failed. Try again later.'),
+    },
+    instructions: m('A message with instructions has been sent to '),
+    labels: {
+      checkBox: m(
+        'I approve that my information is processed in order to maintain a user account for Zetkin'
+      ),
+      email: m('Email address'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+      mobile: m('Mobile phone number'),
+      password: m('Password'),
+    },
+    title: m('Create new account'),
+    welcome: m<{ userName: string }>('Welcome, {userName}'),
+  },
   resetPassword: {
     actions: {
       labelPassword: m('Password'),
@@ -38,5 +67,15 @@ export default makeMessages('feat.account', {
     ),
     title: m('Reset password'),
     validation: m('Password must be at least 6 characters long.'),
+  },
+  verify: {
+    description: m(
+      'Please verify your email to continue using Zetkin. We have sent a verification link to your inbox. Check your spam folder if you don’t see it, or click the button below to resend it.'
+    ),
+    error: m(
+      'Something went wrong. We were unable to send the verification link.'
+    ),
+    sendVerification: m('Send a new verification'),
+    title: m('Verify your email address'),
   },
 });

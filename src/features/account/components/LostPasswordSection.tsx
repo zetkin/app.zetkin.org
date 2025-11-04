@@ -14,10 +14,17 @@ import ZUIAlert from 'zui/components/ZUIAlert';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messagesIds';
 import AccountFooter from './AccountFooter';
+import { PasswordResetStatus, PasswordSuccess } from '../types';
 
 type LostPasswordSectionProps = {
   onSuccess: (email: string) => void;
   submittedEmail: string | null;
+};
+
+const wasSuccessful = (
+  result: PasswordResetStatus
+): result is PasswordSuccess => {
+  return result.success == true;
 };
 
 const LostPasswordSection: FC<LostPasswordSectionProps> = ({
@@ -28,7 +35,9 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
   const messages = useMessages(messageIds);
   const { sendPasswordResetToken, loading } = useSendPasswordResetToken();
   const [email, setEmail] = useState(submittedEmail || '');
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<
+    'unknownError' | 'invalidEmail' | null
+  >(null);
   return (
     <ZUISection
       borders={isMobile ? false : true}
@@ -47,19 +56,15 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 ev.preventDefault();
 
                 if (!isEmail(email)) {
-                  setEmailError('INVALID_EMAIL');
+                  setEmailError('invalidEmail');
                 } else {
                   setEmailError(null);
 
                   const result = await sendPasswordResetToken(email);
-                  if (result.success) {
+                  if (wasSuccessful(result)) {
                     onSuccess(email);
                   } else {
-                    if (result.errorCode == 'USER_NOT_FOUND') {
-                      setEmailError('USER_NOT_FOUND');
-                    } else {
-                      setEmailError('UNKNOWN_ERROR');
-                    }
+                    setEmailError(result.errorCode);
                   }
                 }
               }}
@@ -76,7 +81,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 <ZUIText variant="bodyMdRegular">
                   <Msg id={messageIds.lostPassword.description} />
                 </ZUIText>
-                {emailError == 'UNKNOWN_ERROR' && (
+                {emailError == 'unknownError' && (
                   <ZUIAlert
                     appear
                     description={messages.lostPassword.errors.unknownError()}
@@ -85,9 +90,9 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                   />
                 )}
                 <ZUITextField
-                  error={emailError == 'INVALID_EMAIL' ? true : false}
+                  error={emailError == 'invalidEmail'}
                   helperText={
-                    emailError == 'INVALID_EMAIL'
+                    emailError == 'invalidEmail'
                       ? messages.lostPassword.errors.invalidEmail()
                       : ''
                   }
@@ -108,7 +113,6 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 />
               </Box>
             </form>
-
             <Box
               sx={{
                 bottom: { md: 'auto', xs: 0 },
@@ -123,7 +127,7 @@ const LostPasswordSection: FC<LostPasswordSectionProps> = ({
                 right: { md: 'auto', xs: 0 },
               }}
             >
-              <NextLink href={`https://login.zetk.in/`}>
+              <NextLink href="/login?redirect=/my">
                 <ZUIButton
                   fullWidth
                   label={messages.lostPassword.actions.signIn()}

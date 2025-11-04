@@ -118,18 +118,34 @@ export const scaffold =
       ctx.user = null;
     }
 
-    if (options?.authLevelRequired) {
-      let authLevel;
+    let apiSession: ZetkinSession | null = null;
+    let authLevel = 0;
 
-      try {
-        const apiSessionRes = await ctx.z.resource('session').get();
-        const apiSession = apiSessionRes.data.data as ZetkinSession;
-        authLevel = apiSession.level;
-      } catch (err) {
-        // Not logged in, so auth level is zero (anonymous)
-        authLevel = 0;
+    try {
+      const apiSessionRes = await ctx.z.resource('session').get();
+      apiSession = apiSessionRes.data.data as ZetkinSession;
+      authLevel = apiSession.level;
+    } catch (err) {
+      // Not logged in, so auth level is zero (anonymous)
+      authLevel = 0;
+    }
+
+    if (ctx.user && apiSession && apiSession.factors) {
+      const hasEmailAuth = apiSession.factors.includes('email_password');
+
+      // Only redirect to email verification if user used email authentication
+      // and their email is not verified. Phone-only authentication is fine.
+      if (hasEmailAuth && !ctx.user.email_is_verified) {
+        return {
+          redirect: {
+            destination: '/verify',
+            permanent: false,
+          },
+        };
       }
+    }
 
+    if (options?.authLevelRequired) {
       if (authLevel < options.authLevelRequired) {
         // Store the URL that the user tried to access, so that they
         // can be redirected back here after logging in

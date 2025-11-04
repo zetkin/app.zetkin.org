@@ -1,18 +1,27 @@
+import { FC } from 'react';
 import { Box } from '@mui/material';
-import NextLink from 'next/link';
+import { MarkEmailUnreadOutlined } from '@mui/icons-material';
 
+import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUISection from 'zui/components/ZUISection';
+import AccountFooter from '../components/AccountFooter';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messagesIds';
-import useIsMobile from 'utils/hooks/useIsMobile';
-import AccountFooter from './AccountFooter';
 import ZUILogo from 'zui/ZUILogo';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIButton from 'zui/components/ZUIButton';
 
-const UpdatedPasswordSection = () => {
-  const messages = useMessages(messageIds);
+type RegisterSuccessSectionProps = {
+  email: string;
+  userName: string;
+};
+
+const RegisterSuccessSection: FC<RegisterSuccessSectionProps> = ({
+  email,
+  userName,
+}) => {
   const isMobile = useIsMobile();
+  const messages = useMessages(messageIds);
+
   return (
     <ZUISection
       borders={isMobile ? false : true}
@@ -28,30 +37,34 @@ const UpdatedPasswordSection = () => {
           >
             <Box
               sx={{
-                alignItems: 'left',
+                alignItems: 'center',
                 display: 'flex',
                 flexDirection: 'column',
                 flexGrow: 1,
                 gap: 2,
                 justifyContent: 'center',
+                mt: 15,
               }}
             >
-              <ZUIText variant="bodyMdRegular">
-                <Msg id={messageIds.resetPassword.descriptionUpdated} />
+              <MarkEmailUnreadOutlined color="secondary" fontSize="large" />
+              <ZUIText variant="headingLg">
+                <Msg id={messageIds.register.welcome} values={{ userName }} />
               </ZUIText>
-              <Box
-                sx={{
-                  width: '100%',
-                }}
-              >
-                <NextLink href="/login">
-                  <ZUIButton
-                    fullWidth
-                    label={messages.lostPassword.actions.signIn()}
-                    size="large"
-                    variant="secondary"
-                  />
-                </NextLink>
+              <Box sx={{ textAlign: 'center' }}>
+                <ZUIText
+                  color="secondary"
+                  display="inline"
+                  variant="bodyMdRegular"
+                >
+                  <Msg id={messageIds.register.instructions} />
+                </ZUIText>
+                <ZUIText
+                  color="secondary"
+                  display="inline"
+                  variant="bodyMdSemiBold"
+                >
+                  {email}
+                </ZUIText>
               </Box>
             </Box>
             <Box
@@ -76,9 +89,10 @@ const UpdatedPasswordSection = () => {
       renderRightHeaderContent={() => {
         return <ZUILogo />;
       }}
-      title={messages.resetPassword.title()}
+      subtitle={messages.register.description()}
+      title={messages.register.title()}
     />
   );
 };
 
-export default UpdatedPasswordSection;
+export default RegisterSuccessSection;
