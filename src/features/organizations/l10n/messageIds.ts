@@ -32,7 +32,6 @@ export default makeMessages('feat.organizations', {
     ),
     contactPerson: m<{ name: string }>('{name} is the contact person'),
     defaultTitle: m('Untitled event'),
-    description: m('Description'),
     loading: m('Loading...'),
     noLocation: m('No physical location'),
     partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
