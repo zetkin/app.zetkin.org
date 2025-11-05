@@ -21,6 +21,7 @@ import {
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
+  extendedSurveysBySurveyId: Record<number, RemoteItem<ZetkinSurveyExtended>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
   submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
@@ -31,6 +32,7 @@ export interface SurveysStoreSlice {
 
 const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
+  extendedSurveysBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
   submissionsBySurveyId: {},
@@ -222,6 +224,24 @@ const surveysSlice = createSlice({
             newOrder.default.indexOf(el0.data?.id ?? 0) -
             newOrder.default.indexOf(el1.data?.id ?? 0)
         );
+    },
+    extendedSurveyLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      if (!state.extendedSurveysBySurveyId[surveyId]) {
+        state.extendedSurveysBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.extendedSurveysBySurveyId[surveyId].isLoading = true;
+    },
+    extendedSurveyLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyExtended]>
+    ) => {
+      const [surveyId, survey] = action.payload;
+      state.extendedSurveysBySurveyId[surveyId].data = survey;
+      state.extendedSurveysBySurveyId[surveyId].isLoading = false;
+      state.extendedSurveysBySurveyId[surveyId].loaded =
+        new Date().toISOString();
+      state.extendedSurveysBySurveyId[surveyId].isStale = false;
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -468,6 +488,8 @@ export const {
   elementsLoad,
   elementsLoaded,
   elementsReordered,
+  extendedSurveyLoad,
+  extendedSurveyLoaded,
   submissionLoad,
   submissionLoaded,
   statsLoad,

@@ -13,6 +13,7 @@ import useHydratedSurveySubmission, {
   ELEM_TYPE,
 } from '../hooks/useHydratedSurveySubmission';
 import messageIds from '../l10n/messageIds';
+import ZUILink from 'zui/components/ZUILink';
 
 interface SurveySubmissionPaneProps {
   orgId: number;
@@ -98,7 +99,17 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                   }}
                 />
               }
-              title={sub.survey.title}
+              title={
+                sub.campaign ? (
+                  <ZUILink
+                    hoverUnderline={true}
+                    href={`/organize/${sub.organization.id}/projects/${sub.campaign.id}/surveys/${sub.survey.id}`}
+                    text={sub.survey.title}
+                  />
+                ) : (
+                  sub.survey.title
+                )
+              }
             />
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {

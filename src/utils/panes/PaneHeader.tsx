@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 interface PaneHeaderProps {
-  title: string;
+  title: string | ReactNode;
   subtitle?: ReactNode;
 }
 
