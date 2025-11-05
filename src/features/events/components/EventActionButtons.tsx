@@ -85,8 +85,11 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
     showSnackbar(
       'success',
       messages.eventChangeCampaignDialog.success({
-        campaignTitle: updatedEvent.campaign?.title || '?',
-        eventTitle: updatedEvent.title || event.title || '?',
+        campaignTitle: updatedEvent.campaign?.title || '',
+        eventTitle:
+          updatedEvent.title ||
+          updatedEvent.activity?.title ||
+          messages.common.noTitle(),
       })
     );
   };
