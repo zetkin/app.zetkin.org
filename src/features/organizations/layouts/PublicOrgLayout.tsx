@@ -82,7 +82,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       header={
         <ActivistPortalHeader
           button={
-            <>
+            <Box>
               {org.is_open ? (
                 <FollowUnfollowLoginButton orgId={org.id} />
               ) : undefined}
@@ -96,7 +96,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
                   },
                 ]}
               />
-            </>
+            </Box>
           }
           selectedTab={lastSegment}
           tabs={navBarItems}
