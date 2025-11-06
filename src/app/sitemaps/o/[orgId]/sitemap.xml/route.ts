@@ -30,7 +30,7 @@ export async function GET(
 
   const [events, projects, surveys] = await Promise.all([
     apiClient
-      .get<ZetkinEvent[]>(`/api/orgs/${params.orgId}/activities`)
+      .get<ZetkinEvent[]>(`/api/orgs/${params.orgId}/actions`)
       .catch(() => [] as ZetkinEvent[]),
     apiClient
       .get<ZetkinCampaign[]>(`/api/orgs/${params.orgId}/campaigns`)
