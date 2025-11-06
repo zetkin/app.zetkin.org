@@ -1,8 +1,8 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, ReactNode, useContext } from 'react';
-import { usePathname } from 'next/navigation';
+import { FC, ReactNode, useCallback, useContext } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { CalendarMonth, NorthWest } from '@mui/icons-material';
 import NextLink from 'next/link';
 
@@ -35,6 +35,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
   const subOrgs = usePublicSubOrgs(org.id);
   const { filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
+  const router = useRouter();
 
   const lastSegment = path?.split('/')[3] ?? 'home';
   const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
@@ -75,6 +76,16 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
       })
     );
   };
+
+  const onLocationFilterChange = useCallback(
+    (geojsonToFilterBy: GeoJSON.Feature[]) => {
+      setLocationFilter(geojsonToFilterBy);
+      if (lastSegment === 'suborgs') {
+        router.push(`/o/${org.id}`);
+      }
+    },
+    [setLocationFilter, lastSegment, router.push, org.id]
+  );
 
   return (
     <EventMapLayout
@@ -120,7 +131,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
         />
       }
       locationFilter={geojsonToFilterBy}
-      setLocationFilter={setLocationFilter}
+      setLocationFilter={onLocationFilterChange}
       showMap={true}
     >
       {children}
