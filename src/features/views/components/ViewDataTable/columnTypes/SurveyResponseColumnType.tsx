@@ -20,14 +20,14 @@ import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 export type SurveyResponseViewCell = {
   submission_id: number;
   submitted: string;
-  text: string;
+  text: string | null;
 }[];
 
 export default class SurveyResponseColumnType
   implements IColumnType<SurveyResponseViewColumn, SurveyResponseViewCell>
 {
   cellToString(cell: SurveyResponseViewCell): string {
-    return cell?.length ? cell[0].text : '';
+    return cell?.length && cell[0].text ? cell[0].text : '';
   }
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
@@ -50,7 +50,7 @@ export default class SurveyResponseColumnType
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return cell?.map((response) => response.text) || [];
+        return cell?.map((response) => response.text || '') || [];
       },
       width: 250,
     };
@@ -129,7 +129,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
           submissions={cell.map((sub, index) => ({
             id: sub.submission_id,
             matchingContent:
-              index == 0 ? getEllipsedString(sub.text, 300) : null,
+              index == 0 && sub.text ? getEllipsedString(sub.text, 300) : null,
             submitted: sub.submitted,
           }))}
         />

@@ -31,8 +31,6 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 
-const initializeEventTypesToFilterBy = () => [] as (string | null)[];
-
 const AllEventsList: FC = () => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
@@ -43,8 +41,8 @@ const AllEventsList: FC = () => {
     'orgs' | 'calendar' | 'eventTypes' | null
   >(null);
   const [orgIdsToFilterBy, setOrgIdsToFilterBy] = useState<number[]>([]);
-  const [eventTypesToFilterBy, setEventTypesToFilterBy] = useState(
-    initializeEventTypesToFilterBy()
+  const [eventTypesToFilterBy, setEventTypesToFilterBy] = useState<string[]>(
+    []
   );
   const [customDatesToFilterBy, setCustomDatesToFilterBy] = useState<
     DateRange<Dayjs>
@@ -54,8 +52,8 @@ const AllEventsList: FC = () => {
   >(null);
 
   const eventTypeFilter = useEventTypeFilter(allEvents, {
-    eventTypesToFilterBy,
-    setEventTypesToFilterBy,
+    eventTypeLabelsToFilterBy: eventTypesToFilterBy,
+    setEventTypeLabelsToFilterBy: setEventTypesToFilterBy,
   });
 
   const orgs = [
@@ -266,7 +264,7 @@ const AllEventsList: FC = () => {
                 setDateFilterState(null);
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
             />
           )}
@@ -300,7 +298,7 @@ const AllEventsList: FC = () => {
               onClick={() => {
                 setCustomDatesToFilterBy([null, null]);
                 setOrgIdsToFilterBy([]);
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
                 setDateFilterState(null);
               }}
               variant="secondary"
@@ -424,20 +422,15 @@ const AllEventsList: FC = () => {
         open={drawerContent == 'eventTypes'}
       >
         <List>
-          {eventTypeFilter.eventTypes.map((eventType) => (
-            <ListItem
-              key={eventTypeFilter.getLabelFromEventType(eventType)}
-              sx={{ justifyContent: 'space-between' }}
-            >
+          {eventTypeFilter.eventTypeLabels.map((eventType) => (
+            <ListItem key={eventType} sx={{ justifyContent: 'space-between' }}>
               <Box alignItems="center" display="flex">
-                <ZUIText>
-                  {eventTypeFilter.getLabelFromEventType(eventType)}
-                </ZUIText>
+                <ZUIText>{eventType}</ZUIText>
               </Box>
               <Switch
-                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventTypeLabel(eventType)}
                 onChange={() => {
-                  eventTypeFilter.toggleEventType(eventType);
+                  eventTypeFilter.toggleEventTypeLabel(eventType);
                 }}
               />
             </ListItem>
