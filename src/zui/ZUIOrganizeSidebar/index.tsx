@@ -273,6 +273,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               <SearchDialog
                 activator={(openDialog) => (
                   <Tooltip
+                    arrow
                     placement="right"
                     title={
                       !open ? messages.organizeSidebar['search']() : undefined
@@ -304,6 +305,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     passHref
                   >
                     <Tooltip
+                      arrow
                       placement="right"
                       title={
                         !open ? messages.organizeSidebar[name]() : undefined
