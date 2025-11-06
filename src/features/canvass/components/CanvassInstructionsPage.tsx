@@ -20,6 +20,7 @@ const Page: FC<{
   const orgFuture = useOrganization(assignment.organization_id);
   const areas = useAssignmentAreas(assignment.organization_id, assignment.id);
   const userMustSelectArea = areas.length > 1;
+  const userHasAreas = !!areas.length;
 
   return (
     <ZUIFutures futures={{ org: orgFuture }}>
@@ -104,24 +105,26 @@ const Page: FC<{
               right: 0,
             }}
           >
-            <Button
-              fullWidth
-              href={
-                userMustSelectArea
-                  ? `/canvass/${assignment.id}/areas`
-                  : `/canvass/${assignment.id}/areas/${areas[0].id}`
-              }
-              sx={{
-                width: '50%',
-              }}
-              variant="contained"
-            >
-              {userMustSelectArea ? (
-                <Msg id={messageIds.instructions.selectArea} />
-              ) : (
-                <Msg id={messageIds.instructions.start} />
-              )}
-            </Button>
+            {userHasAreas && (
+              <Button
+                fullWidth
+                href={
+                  userMustSelectArea
+                    ? `/canvass/${assignment.id}/areas`
+                    : `/canvass/${assignment.id}/areas/${areas[0].id}`
+                }
+                sx={{
+                  width: '50%',
+                }}
+                variant="contained"
+              >
+                {userMustSelectArea ? (
+                  <Msg id={messageIds.instructions.selectArea} />
+                ) : (
+                  <Msg id={messageIds.instructions.start} />
+                )}
+              </Button>
+            )}
           </Box>
         </Box>
       )}

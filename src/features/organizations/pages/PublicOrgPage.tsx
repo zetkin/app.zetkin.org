@@ -36,12 +36,14 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const isMobile = useIsMobile();
   const intl = useIntl();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
@@ -280,7 +282,9 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           gap={1}
           maxWidth="100%"
           padding={1}
-          sx={{ overflowX: 'auto' }}
+          sx={{
+            ...(isMobile ? { overflowX: 'auto' } : { flexWrap: 'wrap' }),
+          }}
         >
           {isFiltered && (
             <ZUIFilterButton
@@ -296,7 +300,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                     orgIdsToFilterBy: [],
                   })
                 );
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
             />
           )}
@@ -335,7 +339,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                     orgIdsToFilterBy: [],
                   })
                 );
-                eventTypeFilter.clearEventTypes();
+                eventTypeFilter.clearEventTypeFilter();
               }}
               variant="secondary"
             />
@@ -495,20 +499,15 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
         open={drawerContent == 'eventTypes'}
       >
         <List>
-          {eventTypeFilter.eventTypes.map((eventType) => (
-            <ListItem
-              key={eventTypeFilter.getLabelFromEventType(eventType)}
-              sx={{ justifyContent: 'space-between' }}
-            >
+          {eventTypeFilter.eventTypeLabels.map((eventType) => (
+            <ListItem key={eventType} sx={{ justifyContent: 'space-between' }}>
               <Box alignItems="center" display="flex">
-                <ZUIText>
-                  {eventTypeFilter.getLabelFromEventType(eventType)}
-                </ZUIText>
+                <ZUIText>{eventType}</ZUIText>
               </Box>
               <Switch
-                checked={eventTypeFilter.getIsCheckedEventType(eventType)}
+                checked={eventTypeFilter.getIsCheckedEventTypeLabel(eventType)}
                 onChange={() => {
-                  eventTypeFilter.toggleEventType(eventType);
+                  eventTypeFilter.toggleEventTypeLabel(eventType);
                 }}
               />
             </ListItem>

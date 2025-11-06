@@ -1,4 +1,11 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  startTransition,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { latLngBounds, Map as MapType } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 import { useRouter } from 'next/router';
@@ -124,20 +131,24 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
   }, [navigateToAreaId]);
 
   const clearAndCloseSettings = () => {
-    setSettingsOpen(null);
-    setSelectedId(0);
-    onAssigneesFilterChange(null);
-    setFilteredAreaIds(null);
-    setActiveGroupIds([]);
-    setActiveTagIdsByGroup({});
-    setFilterText('');
+    startTransition(() => {
+      setSettingsOpen(null);
+      setSelectedId(0);
+      onAssigneesFilterChange(null);
+      setFilteredAreaIds(null);
+      setActiveGroupIds([]);
+      setActiveTagIdsByGroup({});
+      setFilterText('');
+    });
   };
 
   const toggleSettings = (settingName: SettingName) => {
     if (settingsOpen === settingName) {
       clearAndCloseSettings();
     } else {
-      setSettingsOpen(settingName);
+      startTransition(() => {
+        setSettingsOpen(settingName);
+      });
     }
   };
 
@@ -206,7 +217,9 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                   if (settingsOpen == 'filters') {
                     clearAndCloseSettings();
                   } else {
-                    setSettingsOpen('filters');
+                    startTransition(() => {
+                      setSettingsOpen('filters');
+                    });
                   }
                 }}
               >
@@ -229,12 +242,16 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                 onClick={() => {
                   if (settingsOpen == 'select') {
                     if (selectedId) {
-                      setSelectedId(0);
+                      startTransition(() => {
+                        setSelectedId(0);
+                      });
                     } else {
                       clearAndCloseSettings();
                     }
                   } else {
-                    setSettingsOpen('select');
+                    startTransition(() => {
+                      setSettingsOpen('select');
+                    });
                   }
                 }}
               >
@@ -291,7 +308,11 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
                     }}
                     onClose={clearAndCloseSettings}
                     onFilterTextChange={(newValue) => setFilterText(newValue)}
-                    onSelectArea={(newValue) => setSelectedId(newValue)}
+                    onSelectArea={(newValue) =>
+                      startTransition(() => {
+                        setSelectedId(newValue);
+                      })
+                    }
                     selectedArea={selectedArea}
                     selectedAreaStats={areaStats.stats.find(
                       (stat) => stat.area_id == selectedArea?.id
@@ -358,13 +379,10 @@ const OrganizerMap: FC<OrganizerMapProps> = ({
             locations={locations}
             locationStyle={mapStyle.location}
             onSelectedIdChange={(newId) => {
-              setSelectedId(newId);
-
-              if (!newId) {
-                setSettingsOpen(null);
-              } else {
-                setSettingsOpen('select');
-              }
+              startTransition(() => {
+                setSelectedId(newId);
+                setSettingsOpen(newId ? 'select' : null);
+              });
             }}
             overlayStyle={mapStyle.overlay}
             selectedId={selectedId}

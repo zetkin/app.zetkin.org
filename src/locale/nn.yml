@@ -326,34 +326,8 @@ feat:
     showMore: Vis
     today: I dag
   call:
-    activeEvents:
-      alreadyBooked: '{name} er registrert'
-      noBookings: '{name} er ikke registrert på noen arrangementer'
-      signUp: Meld på
-      undoSignUp: Meld av
     instructions:
       title: Veiledning
-    nav:
-      backToHome: Tilbake
-      startCalling: Begynn å ringe
-    prepare:
-      activeEvents: Aktive arrangementer
-      edit: Rediger denne informasjonen?
-      editDescription: Hvis noe i denne fanen må endres, skriv melding til en
-        tillitsvalgt i rapporten når du har fullført samtalen.
-      noActiveEvents: Ingen aktive arrangementer
-      noPreviousCalls: Aldri ringt
-      noPreviousEvents: '{name} har aldri deltatt på arrangementer.'
-      noSurveys: Ingen spørreundersøkelser
-      noTags: Ingen etiketter
-      previousCalls: Det finnes tidligere samtaler.
-      previousCallsOfTarget: Tidligere samtaler til {name}
-      previousEvents: Tidligere arrangementer
-      previousEventsOfTarget: '{name} har deltatt på {numEvents}, den siste var {eventTitle}.'
-      summary: Oppsummering
-      surveys: Spørreundersøkelser
-      tags: Etiketter
-      title: Personopplysninger
     report:
       steps:
         callBack:
@@ -469,8 +443,6 @@ feat:
         editButtonLabel: Rediger
     stats:
       callsMade: gjennomførte telefonoppringinger
-      callsReached: vellykkede telefonsamtaler
-      targetMatches: folk i målgruppa
   callAssignments:
     actions:
       delete: Slett

@@ -290,7 +290,7 @@ const surveysSlice = createSlice({
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.surveyList.items.find((item) => item.id == id);
-      state.elementsBySurveyId[id] == remoteList();
+      state.elementsBySurveyId[id] = remoteList();
       state.surveyList.items = state.surveyList.items
         .filter((item) => item.id != id)
         .concat([remoteItem(id, { data: item?.data, isLoading: true })]);

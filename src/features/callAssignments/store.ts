@@ -69,7 +69,7 @@ const callAssignmentsSlice = createSlice({
       const id = action.payload;
       const item = state.assignmentList.items.find((item) => item.id == id);
       if (item) {
-        item.deleted;
+        item.deleted = true;
       }
     },
     callAssignmentLoad: (state, action: PayloadAction<number>) => {

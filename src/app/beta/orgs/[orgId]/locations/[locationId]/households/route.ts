@@ -24,7 +24,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
   const apiClient = new BackendApiClient(headers);
 
   const households = await apiClient.get<Zetkin2Household[]>(
-    `/api2/orgs/${params.orgId}/locations/${params.locationId}/households`
+    `/api2/orgs/${params.orgId}/locations/${
+      params.locationId
+    }/households?${request.nextUrl.searchParams.toString()}`
   );
 
   const householdsWithColor: HouseholdWithColor[] = [];
