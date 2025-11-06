@@ -28,6 +28,15 @@ const toggleBlock = (editor: Editor, format: string): void => {
   const isActive = isBlockActive(editor, format);
   const isList = LIST_TYPES.includes(format);
 
+  if (!isList) {
+    const newProperties: Partial<SlateElement> = {
+      // @ts-ignore
+      type: isActive ? 'paragraph' : format,
+    };
+    Transforms.setNodes<SlateElement>(editor, newProperties);
+    return;
+  }
+
   Transforms.unwrapNodes(editor, {
     match: (n) =>
       !Editor.isEditor(n) &&
@@ -36,17 +45,19 @@ const toggleBlock = (editor: Editor, format: string): void => {
     split: true,
   });
 
-  const newProperties: Partial<SlateElement> = {
-    // @ts-ignore
-    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-  };
-  Transforms.setNodes<SlateElement>(editor, newProperties);
+  Transforms.unwrapNodes(editor, {
+    match: (n) =>
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      n.type === 'list-item',
+  });
 
   if (!isActive && isList) {
     const block = { children: [], type: format };
 
     // @ts-ignore
     Transforms.wrapNodes(editor, block);
+    Transforms.wrapNodes(editor, { children: [], type: 'list-item' });
   }
 };
 
