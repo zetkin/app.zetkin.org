@@ -38,7 +38,11 @@ function ZUIPreviewableInput<
         {renderInput({
           ref: (elem) => {
             if (focusingRef.current) {
-              elem?.focus();
+              if (elem) {
+                elem.focus();
+                elem.setSelectionRange(elem.value.length, elem.value.length);
+                elem.scrollTop = elem.scrollHeight;
+              }
               focusingRef.current = false;
             }
           },
