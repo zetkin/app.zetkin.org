@@ -29,11 +29,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import Link from 'next/link';
 
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
@@ -342,18 +343,28 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       width: '48px',
                     }}
                   >
-                    <ZUIUserAvatar
-                      personId={user.id}
-                      size={open ? 'sm' : 'md'}
-                    />
-                    <Typography
-                      sx={{
-                        display: open ? 'flex' : 'none',
-                        marginLeft: 1,
-                      }}
+                    <Tooltip
+                      arrow
+                      placement={open ? 'top' : 'right'}
+                      title={messages.organizeSidebar.activistPortalInfoText()}
                     >
-                      {user.first_name}
-                    </Typography>
+                      <Link href="/my">
+                        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                          <ZUIUserAvatar
+                            personId={user.id}
+                            size={open ? 'sm' : 'md'}
+                          />
+                          <Typography
+                            sx={{
+                              display: open ? 'flex' : 'none',
+                              marginLeft: 1,
+                            }}
+                          >
+                            {user.first_name}
+                          </Typography>
+                        </Box>
+                      </Link>
+                    </Tooltip>
                   </Box>
                   <Box
                     sx={{
@@ -363,6 +374,22 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     <ZUIEllipsisMenu
                       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                       items={[
+                        {
+                          divider: true,
+                          label: (
+                            <Typography>
+                              <Msg
+                                id={
+                                  messageIds.organizeSidebar
+                                    .activistPortalMenuItemLabbel
+                                }
+                              />
+                            </Typography>
+                          ),
+                          onSelect: () => {
+                            router.push('/my');
+                          },
+                        },
                         {
                           label: (
                             <Typography>

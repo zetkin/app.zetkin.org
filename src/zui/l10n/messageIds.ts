@@ -172,6 +172,8 @@ export default makeMessages('zui', {
     },
   },
   organizeSidebar: {
+    activistPortalInfoText: m('Go to activist portal'),
+    activistPortalMenuItemLabbel: m('Activist portal'),
     filter: m('Type to filter'),
     geography: m('Geography'),
     home: m('Home'),
