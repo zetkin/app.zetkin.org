@@ -42,6 +42,7 @@ const theme = createTheme({
     },
   },
   palette: palette,
+  spacing: (factor:number) => `${0.5 * factor}rem`,
   typography: typography,
 });
 
