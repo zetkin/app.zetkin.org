@@ -82,15 +82,18 @@ const EventActionButtons: React.FunctionComponent<EventActionButtonsProps> = ({
   };
 
   const handleOnCampaignSelected = async (campaignId: number) => {
-    await updateEvent({ campaign_id: campaignId });
+    const updatedEvent = await updateEvent({ campaign_id: campaignId });
     await router.push(
       `/organize/${orgId}/projects/${campaignId}/events/${event.id}`
     );
     showSnackbar(
       'success',
       messages.eventChangeCampaignDialog.success({
-        campaignTitle: event.campaign!.title,
-        eventTitle: event.title!,
+        campaignTitle: updatedEvent.campaign?.title || '',
+        eventTitle:
+          updatedEvent.title ||
+          updatedEvent.activity?.title ||
+          messages.common.noTitle(),
       })
     );
   };
