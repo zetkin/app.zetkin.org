@@ -10,7 +10,12 @@ import {
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { PointData, Zetkin2Area } from 'features/areas/types';
+import {
+  Latitude,
+  Longitude,
+  PointData,
+  Zetkin2Area,
+} from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
@@ -24,6 +29,7 @@ import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
 
 const BOUNDS_PADDING = 20;
+const RELOCATION_TIMEOUT = 10 * 1000; // Every 10 seconds
 
 type Props = {
   assignment: ZetkinAreaAssignment;
@@ -263,6 +269,23 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return null;
   }
 
+  function startLocating(lngLat: PointData) {
+    setUserLocation(lngLat);
+
+    setTimeout(() => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude as Latitude;
+          const lng = pos.coords.longitude as Longitude;
+
+          startLocating([lng, lat]);
+        },
+        null,
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }, RELOCATION_TIMEOUT);
+  }
+
   return (
     <>
       <Box sx={{ position: 'relative' }}>
@@ -277,7 +300,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             }
           }}
           onGeolocate={(lngLat: PointData) => {
-            setUserLocation(lngLat);
+            startLocating(lngLat);
             map?.panTo(lngLat, {
               animate: true,
               duration: 800,
