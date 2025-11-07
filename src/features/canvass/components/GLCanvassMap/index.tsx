@@ -58,6 +58,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   );
   const [mapInitError, setMapInitError] = useState(false);
   const [userLocation, setUserLocation] = useState<PointData | null>(null);
+  const [shouldLocate, setShouldLocate] = useState<boolean>(false);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -216,6 +217,42 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
   };
 
+  const locateUser = () => {
+    if (!shouldLocate) {
+      setUserLocation(null);
+      return;
+    }
+
+    setTimeout(() => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude as Latitude;
+          const lng = pos.coords.longitude as Longitude;
+          setUserLocation([lng, lat]);
+
+          locateUser();
+        },
+        null,
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }, RELOCATION_TIMEOUT);
+  };
+
+  const onGeoLocate = (lngLat: PointData) => {
+    const nextShouldLocate = !shouldLocate;
+    setShouldLocate(nextShouldLocate);
+
+    if (nextShouldLocate) {
+      setUserLocation(lngLat);
+      map?.panTo(lngLat, {
+        animate: true,
+        duration: 800,
+      });
+    } else {
+      setUserLocation(null);
+    }
+  };
+
   const updateSelection = useCallback(() => {
     let nearestLocation: number | null = null;
     let nearestDistance = Infinity;
@@ -262,6 +299,10 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   }, [map, selectedLocationId, locations]);
 
   useEffect(() => {
+    locateUser();
+  }, [shouldLocate]);
+
+  useEffect(() => {
     if (created) {
       updateSelection();
     }
@@ -280,24 +321,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
       </Box>
     );
   }
-
-  function startLocating(lngLat: PointData) {
-    setUserLocation(lngLat);
-
-    setTimeout(() => {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude as Latitude;
-          const lng = pos.coords.longitude as Longitude;
-
-          startLocating([lng, lat]);
-        },
-        null,
-        { enableHighAccuracy: true, timeout: 5000 }
-      );
-    }, RELOCATION_TIMEOUT);
-  }
-
   return (
     <>
       <Box sx={{ position: 'relative' }}>
@@ -311,13 +334,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               });
             }
           }}
-          onGeolocate={(lngLat: PointData) => {
-            startLocating(lngLat);
-            map?.panTo(lngLat, {
-              animate: true,
-              duration: 800,
-            });
-          }}
+          onGeolocate={onGeoLocate}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
         />
