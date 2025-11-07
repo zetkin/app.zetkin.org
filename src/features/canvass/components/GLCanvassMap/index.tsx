@@ -304,7 +304,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             left: '50%',
             opacity: !selectedLocationId ? 1 : 0.3,
             position: 'absolute',
-            top: 'calc(50vh - 40px)',
+            top: 'calc(50vh - 37px)',
             transform: 'translate(-50%, -50%)',
             transition: 'opacity 0.1s',
             zIndex: 1200,
