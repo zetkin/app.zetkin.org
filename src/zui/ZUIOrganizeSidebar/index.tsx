@@ -10,6 +10,7 @@ import {
   Explore,
   FilterListOutlined,
   Groups,
+  Home,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
   LocalOffer,
@@ -348,7 +349,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     <Tooltip
                       arrow
                       placement={open ? 'top' : 'right'}
-                      title={messages.organizeSidebar.activistPortalInfoText()}
+                      title={messages.organizeSidebar.myPagesInfoText()}
                     >
                       <Link href="/my">
                         <Box sx={{ alignItems: 'center', display: 'flex' }}>
@@ -383,7 +384,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                               <Msg
                                 id={
                                   messageIds.organizeSidebar
-                                    .activistPortalMenuItemLabbel
+                                    .myPagesMenuItemLabel
                                 }
                               />
                             </Typography>
@@ -391,6 +392,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                           onSelect: () => {
                             router.push('/my');
                           },
+                          startIcon: <Home />,
                         },
                         {
                           label: (
