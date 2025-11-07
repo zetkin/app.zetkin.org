@@ -2,10 +2,12 @@ import { Box } from '@mui/material';
 import { FC } from 'react';
 import theme from 'zui/theme';
 
+type columnSizes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
 type Props = {
   children?: React.ReactNode;
   sx?: object;
-  size?: number;
+  size?: columnSizes;
 };
 
 const ZUIColumn: FC<Props> = (props) => {
