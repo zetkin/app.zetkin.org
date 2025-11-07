@@ -6,9 +6,6 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicOrgLayout from 'features/organizations/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
-import { getBrowserLanguage } from 'utils/locale';
-import getServerMessages from 'core/i18n/server';
-import messageIds from 'features/organizations/l10n/messageIds';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {
