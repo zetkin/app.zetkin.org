@@ -178,6 +178,7 @@ export default makeMessages('zui', {
     journeys: m('Journeys'),
     myPagesInfoText: m('Go to my pages'),
     myPagesMenuItemLabel: m('My pages'),
+    mySettingsMenuItemLabel: m('My settings'),
     overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),

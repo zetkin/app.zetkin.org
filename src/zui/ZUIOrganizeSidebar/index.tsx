@@ -35,7 +35,7 @@ import Link from 'next/link';
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
@@ -378,28 +378,20 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                       items={[
                         {
-                          divider: true,
-                          label: (
-                            <Typography>
-                              <Msg
-                                id={
-                                  messageIds.organizeSidebar
-                                    .myPagesMenuItemLabel
-                                }
-                              />
-                            </Typography>
-                          ),
-                          onSelect: () => {
-                            router.push('/my');
-                          },
+                          href: '/my',
+                          label:
+                            messages.organizeSidebar.myPagesMenuItemLabel(),
                           startIcon: <Home />,
                         },
                         {
-                          label: (
-                            <Typography>
-                              {messages.organizeSidebar.signOut()}
-                            </Typography>
-                          ),
+                          divider: true,
+                          href: '/my/settings',
+                          label:
+                            messages.organizeSidebar.mySettingsMenuItemLabel(),
+                          startIcon: <Settings />,
+                        },
+                        {
+                          label: messages.organizeSidebar.signOut(),
                           onSelect: () => {
                             logOut();
                           },
