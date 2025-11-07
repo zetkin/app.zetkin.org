@@ -58,6 +58,8 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   );
   const [mapInitError, setMapInitError] = useState(false);
   const [userLocation, setUserLocation] = useState<PointData | null>(null);
+  const [userAccuracy, setUserAccuracy] = useState<number | null>(null);
+  const [mapZoom, setMapZoom] = useState<number | null>(null);
   const [shouldLocate, setShouldLocate] = useState<boolean>(false);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
@@ -191,6 +193,17 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
       return null;
     }
 
+    const zoom = mapZoom;
+    let accuracyPx = 18;
+
+    if (userAccuracy != null && zoom != null) {
+      const lat = userLocation[1];
+      const metersPerPixel =
+        (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, zoom);
+
+      accuracyPx = userAccuracy / metersPerPixel;
+    }
+
     return {
       features: [
         {
@@ -198,13 +211,13 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             coordinates: userLocation,
             type: 'Point',
           },
-          properties: {},
+          properties: { accuracyPx },
           type: 'Feature',
         },
       ],
       type: 'FeatureCollection',
     };
-  }, [userLocation]);
+  }, [userLocation, userAccuracy, mapZoom]);
 
   const saveBounds = () => {
     const bounds = map?.getBounds();
@@ -229,6 +242,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           const lat = pos.coords.latitude as Latitude;
           const lng = pos.coords.longitude as Longitude;
           setUserLocation([lng, lat]);
+          setUserAccuracy(pos.coords.accuracy ?? null);
 
           locateUser();
         },
@@ -250,6 +264,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
       });
     } else {
       setUserLocation(null);
+      setUserAccuracy(null);
     }
   };
 
@@ -427,8 +442,12 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               );
             });
           });
+          setMapZoom(map.getZoom());
         }}
-        onMove={() => updateSelection()}
+        onMove={(ev) => {
+          updateSelection();
+          setMapZoom(ev.target.getZoom());
+        }}
         onMoveEnd={() => saveBounds()}
         RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         style={{ height: '100%', width: '100%' }}
@@ -525,7 +544,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               paint={{
                 'circle-color': oldTheme.palette.primary.main,
                 'circle-opacity': 0.15,
-                'circle-radius': 18,
+                'circle-radius': ['coalesce', ['get', 'accuracyPx'], 18],
               }}
               type="circle"
             />
