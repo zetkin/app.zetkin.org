@@ -18,24 +18,24 @@ export async function generateMetadata(): Promise<Metadata> {
   const lastSegment = pathname.split('/').pop() ?? 'home';
 
   let pageTitle = '';
-  let description = '';
 
   if (lastSegment === 'feed') {
     pageTitle = messages.tabs.feed();
-    description = messages.allEventsList.seoDescription();
   } else if (lastSegment === 'home') {
     pageTitle = messages.tabs.home();
-    description = messages.activityList.seoDescription();
   } else if (lastSegment === 'settings') {
     pageTitle = messages.tabs.settings();
-    description = messages.settings.seoDescription();
   }
 
-  return getSeoTags(
+  const baseTags = getSeoTags(
     `${pageTitle} | ${process.env.HOME_TITLE || messages.title()}`,
-    description,
+    '',
     pathname
   );
+  return {
+    ...baseTags,
+    robots: { follow: true, index: false },
+  };
 }
 
 type Props = {

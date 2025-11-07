@@ -30,16 +30,7 @@ export const getSeoTags = (
   title: string,
   description: string,
   canonicalPath: string,
-  keywords: string[] = [
-    'social change',
-    'activism',
-    'community projects',
-    'nonprofit',
-    'sustainable initiatives',
-    'equity',
-    'campaigns',
-    'events',
-  ],
+  keywords?: string[],
   titleLengthCap = 60,
   descriptionLengthCap = 160
 ): Metadata => {

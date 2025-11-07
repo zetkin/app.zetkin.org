@@ -40,15 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return getSeoTags(
     `${survey.title} | ${survey.organization.title}`,
     survey.info_text,
-    `/o/${survey.organization.id}/surveys/${survey.id}`,
-    [
-      'social change',
-      'feedback',
-      'research',
-      'community input',
-      'surveys',
-      'participation',
-    ]
+    `/o/${survey.organization.id}/surveys/${survey.id}`
   );
 }
 

@@ -24,9 +24,6 @@ export default makeMessages('feat.home', {
       canvass: m('Areas'),
       event: m('Events'),
     },
-    seoDescription: m(
-      'Stay on top of your activism with the Zetkin portal home page. Track all your signed-up activities, manage participation, and engage with campaigns that matter to you.'
-    ),
   },
   allEventsList: {
     emptyList: {
@@ -41,9 +38,6 @@ export default makeMessages('feat.home', {
       today: m('Today'),
       tomorrow: m('Tomorrow'),
     },
-    seoDescription: m(
-      'Discover and join events from organizations you follow. The Zetkin events page keeps you informed about upcoming actions, meetings, and community activities.'
-    ),
   },
   defaultTitles: {
     areaAssignment: m('Untitled area assignment'),
@@ -79,9 +73,6 @@ export default makeMessages('feat.home', {
         saveButton: m('Save & reload'),
       },
     },
-    seoDescription: m(
-      'Customize your Zetkin experience. Update your language settings, email, and control how you engage with activist activities and events.'
-    ),
   },
   tabs: {
     feed: m('All events'),

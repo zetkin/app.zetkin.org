@@ -24,16 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const headersObject = Object.fromEntries(headersEntries);
   const apiClient = new BackendApiClient(headersObject);
 
-  const lang = getBrowserLanguage(headersList.get('accept-language') || '');
-  const messages = await getServerMessages(lang, messageIds);
-
   const org = await apiClient.get<ZetkinOrganization>(
     `/api/orgs/${params.orgId}`
   );
 
-  const description = messages.home.seoDescription({ org: org.title });
-
-  const baseTags = getSeoTags(org.title, description, `/o/${org.id}`);
+  const baseTags = getSeoTags(org.title, '', `/o/${org.id}`);
   return {
     ...baseTags,
     openGraph: {
