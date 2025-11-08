@@ -108,6 +108,7 @@ export default makeMessages('feat.surveys', {
   },
   layout: {
     actions: {
+      createList: m('Create list from submissions'),
       delete: m('Delete'),
       move: m('Move'),
       publish: m('Publish survey'),
@@ -234,6 +235,11 @@ export default makeMessages('feat.surveys', {
         'Sign as {person} with email {email}'
       ),
     },
+  },
+  surveyToList: {
+    error: m(
+      'Could not create list from survey submissions due to unknown error.'
+    ),
   },
   tabs: {
     overview: m('Overview'),

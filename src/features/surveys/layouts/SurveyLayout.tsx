@@ -4,11 +4,12 @@ import {
   ArrowForward,
   ChatBubbleOutline,
   Delete,
+  Groups,
   QuizOutlined,
 } from '@mui/icons-material';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
-import { ELEMENT_TYPE } from 'utils/types/zetkin';
+import { ELEMENT_TYPE, ZetkinView } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
 import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
@@ -29,6 +30,7 @@ import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
+import { useApiClient } from 'core/hooks';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -63,6 +65,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const originalOrgId = surveyFuture.data?.organization.id;
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
+  const apiClient = useApiClient();
 
   const roleAdmin =
     orgs.find((item) => item.organization.id === originalOrgId)?.role ===
@@ -103,6 +106,25 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       })
     );
   };
+
+  const handleCreateList = useCallback(
+    async (folderId?: number) => {
+      try {
+        const view = await apiClient.get<ZetkinView>(
+          `/api/views/createFromSurvey?` +
+            `orgId=${encodeURIComponent(orgId)}` +
+            `&surveyId=${encodeURIComponent(surveyId)}` +
+            (folderId ? `&folderId=${encodeURIComponent(folderId)}` : '')
+        );
+        await router.push(
+          `/organize/${view.organization.id}/people/lists/${view.id}`
+        );
+      } catch (e) {
+        showSnackbar('error', messages.surveyToList.error());
+      }
+    },
+    [apiClient, orgId, surveyId, router.push]
+  );
 
   return (
     <TabbedLayout
@@ -146,6 +168,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           label: messages.layout.actions.move(),
           onSelect: () => setIsMoveDialogOpen(true),
           startIcon: <ArrowForward />,
+        },
+        {
+          label: messages.layout.actions.createList(),
+          onSelect: () => handleCreateList(),
+          startIcon: <Groups />,
         },
         {
           label: messages.layout.actions.delete(),
