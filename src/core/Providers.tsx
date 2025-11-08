@@ -6,7 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { IntlProvider } from 'react-intl';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { Provider as ReduxProvider } from 'react-redux';
-import { FC, ReactNode, useRef } from 'react';
+import { FC, ReactNode, Suspense, useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { EmotionCache } from '@emotion/utils';
 
@@ -82,7 +82,7 @@ const Providers: FC<ProvidersProps> = ({
                       <ZUIConfirmDialogProvider>
                         <EventPopperProvider>
                           <DndProvider backend={HTML5Backend}>
-                            {children}
+                            <Suspense>{children}</Suspense>
                           </DndProvider>
                         </EventPopperProvider>
                       </ZUIConfirmDialogProvider>
