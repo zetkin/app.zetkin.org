@@ -51,7 +51,7 @@ test.describe('Task detail page', () => {
 
     moxy.setZetkinApiMock('/orgs/1/tasks/1', 'patch', taskWithFile);
 
-    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/tasks/1');
 
     await page.locator('data-testid=ZUIEditableImage-placeholder').click();
 
@@ -119,7 +119,7 @@ test.describe('Task detail page', () => {
 
     const image = page.locator('data-testid=TaskPreviewSection-section >> img');
 
-    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/tasks/1');
     await image.waitFor({ state: 'visible' });
 
     await Promise.all([
