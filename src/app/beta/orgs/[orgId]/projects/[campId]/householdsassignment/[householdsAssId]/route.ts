@@ -76,6 +76,8 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           },
           {
             assignees: payload.assignees,
+            end_date: payload.end_date,
+            start_date: payload.start_date,
             title: payload.title,
           },
           { new: true }

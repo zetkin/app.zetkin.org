@@ -54,9 +54,11 @@ const householdsAssignmentSchema =
   new mongoose.Schema<ZetkinHouseholdsAssignmentModelType>({
     assignees: [householdsAssigneeSchema],
     campId: { required: true, type: Number },
+    end_date: { type: Date },
     id: { required: true, type: Number, unique: true },
     orgId: { required: true, type: Number },
     queryId: { required: true, type: Number },
+    start_date: { type: Date },
     target: { required: false, type: mongoose.Schema.Types.Mixed },
     title: String,
   });

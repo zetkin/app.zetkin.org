@@ -15,7 +15,7 @@ import {
   assigneesLoad,
   assigneesLoaded,
 } from 'features/householdsAssignments/store';
-import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 interface UseHouseholdAssigneesReturn {
   addAssignee: (assigneeId: number) => PromiseFuture<ZetkinHouseholdsAssignee>;

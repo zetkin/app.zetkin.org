@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import router, { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
-import { Delete, Headset } from '@mui/icons-material';
+import { Delete, Hiking, People } from '@mui/icons-material';
 
 import AssignmentStatusChip from '../components/AssignmentStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
@@ -21,6 +21,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from '../../../core/hooks';
 import { ZUIFuture } from '../../../../docs';
+import useHouseholdAssignmentStats from '../hooks/useHouseholdAssignmentStats';
 
 type HouseholdAssignmentLayoutProps = {
   children: ReactNode;
@@ -32,16 +33,18 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   const messages = useMessages(messageIds);
   const { orgId, campId, householdsAssId } = useNumericRouteParams();
   const path = useRouter().pathname;
-
   const { data: householdsAssignment } = useHouseholdAssignment(
     campId,
     orgId,
     householdsAssId
   );
-
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
     useHouseholdAssignmentMutations(campId, orgId, householdsAssId);
-
+  const statsFuture = useHouseholdAssignmentStats(
+    campId,
+    orgId,
+    householdsAssId
+  );
   const { filteredAssigneesFuture } = useHouseholdAssignees(
     campId,
     orgId,
@@ -121,13 +124,32 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
+              future={statsFuture}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {(data) => (
+                <>
+                  <People />
+                  <Typography marginLeft={1}>
+                    <Msg
+                      id={messageIds.stats.targets}
+                      values={{ numTargets: data?.allTargets ?? 0 }}
+                    />
+                  </Typography>
+                </>
+              )}
+            </ZUIFuture>
+          </Box>
+          <Box display="flex" marginX={1}>
+            <ZUIFuture
               future={filteredAssigneesFuture}
               ignoreDataWhileLoading
               skeletonWidth={100}
             >
               {(data) => (
                 <>
-                  <Headset />
+                  <Hiking />
                   <Typography marginLeft={1}>
                     <Msg
                       id={messageIds.stats.assignees}
