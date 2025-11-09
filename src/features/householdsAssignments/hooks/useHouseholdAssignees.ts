@@ -15,7 +15,7 @@ import {
   assigneesLoad,
   assigneesLoaded,
 } from 'features/householdsAssignments/store';
-import { ZetkinAppliedTag } from 'utils/types/zetkin';
+import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 interface UseHouseholdAssigneesReturn {
   addAssignee: (assigneeId: number) => PromiseFuture<ZetkinHouseholdsAssignee>;
@@ -27,8 +27,8 @@ interface UseHouseholdAssigneesReturn {
   selectInputRef: MutableRefObject<HTMLInputElement | undefined>;
   setAssigneeTags: (
     userId: number,
-    prioTags: ZetkinAppliedTag[],
-    excludedTags: ZetkinAppliedTag[]
+    prioTags: ZetkinTag[],
+    excludedTags: ZetkinTag[]
   ) => void;
   setSearchString: (searchString: string) => void;
   setSelectedAssignee: (assignee: ZetkinHouseholdsAssignee | null) => void;
@@ -114,16 +114,22 @@ export default function useHouseholdsAssignees(
 
   const setAssigneeTags = (
     assigneeId: number,
-    prioritized_tags: ZetkinAppliedTag[],
-    excluded_tags: ZetkinAppliedTag[]
+    prioritized_tags: ZetkinTag[],
+    excluded_tags: ZetkinTag[]
   ) => {
     dispatch(assigneeConfigure([householdsAssId, assigneeId]));
     apiClient
       .patch<ZetkinHouseholdsAssignee>(
         `/beta/orgs/${orgId}/projects/${campId}/householdsassignment/${householdsAssId}/assignees/${assigneeId}`,
         {
-          excluded_tags: excluded_tags,
-          prioritized_tags: prioritized_tags,
+          excluded_tags: excluded_tags.map((tag) => ({
+            ...tag,
+            value: assigneeId,
+          })),
+          prioritized_tags: prioritized_tags.map((tag) => ({
+            ...tag,
+            value: assigneeId,
+          })),
         }
       )
       .then((data: ZetkinHouseholdsAssignee) => {

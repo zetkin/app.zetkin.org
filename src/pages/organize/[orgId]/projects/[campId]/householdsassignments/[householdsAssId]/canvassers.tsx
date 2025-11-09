@@ -109,7 +109,7 @@ const AssigneesPage: PageWithLayout = () => {
         <Box marginTop={2}>
           <MUIOnlyPersonSelect
             bulkSelection={{
-              entityToAddTo: householdsAssignment?.title,
+              entityToAddTo: householdsAssignment?.title || undefined,
               onSelectMultiple: (ids) => {
                 // TODO #2789: Optimize this, e.g. using RPC
                 ids.forEach((id) => {
