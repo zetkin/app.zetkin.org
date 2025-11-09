@@ -1,4 +1,7 @@
 import { TextField } from '@mui/material';
+import UndoIcon from '@mui/icons-material/Undo';
+import { IconButton } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC, MutableRefObject } from 'react';
 
 import FieldValidationWarning from './FieldValidationWarning';
@@ -20,6 +23,9 @@ interface PersonFieldInputProps {
   style?: Record<string, unknown>;
   error?: boolean;
   value?: string;
+  onReset?: () => void;
+  hasChanges?: boolean;
+  editMode?: boolean;
 }
 const PersonFieldInput: FC<PersonFieldInputProps> = ({
   disabled = false,
@@ -32,10 +38,14 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
   isURLField,
   error,
   value,
+  // only relevant for edit mode
+  editMode = false,
+  hasChanges,
+  onReset,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
 
-  return (
+  const textField = (
     <TextField
       disabled={disabled}
       error={error}
@@ -59,6 +69,19 @@ const PersonFieldInput: FC<PersonFieldInputProps> = ({
       sx={style}
       value={value}
     />
+  );
+
+  return editMode ? (
+    textField
+  ) : (
+    <Box alignItems="flex-start" display="flex" flex={1}>
+      {textField}
+      {hasChanges && (
+        <IconButton onClick={onReset} sx={{ paddingTop: 2 }}>
+          <UndoIcon />
+        </IconButton>
+      )}
+    </Box>
   );
 };
 export default PersonFieldInput;
