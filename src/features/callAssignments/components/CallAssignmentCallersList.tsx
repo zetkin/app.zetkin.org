@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Tooltip } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
@@ -14,25 +13,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import theme from '../../../theme';
 
-const useStyles = makeStyles(() => ({
-  chip: {
-    borderColor: theme.palette.grey[500],
-    borderRadius: '1em',
-    borderWidth: '1px',
-    color: theme.palette.text.secondary,
-    cursor: 'default',
-    display: 'flex',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-    textOverflow: 'ellipsis',
-  },
-}));
-
 const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
-  const classes = useStyles();
-
   return (
     <ZUIResponsiveContainer ssrWidth={200}>
       {(width) => {
@@ -49,7 +30,19 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
             ))}
             {hiddenTags.length > 0 && (
               <Tooltip title={tooltipTitle}>
-                <Box border={2} className={classes.chip}>
+                <Box border={2} sx={{
+                  borderColor: theme.palette.grey[500],
+                  borderRadius: '1em',
+                  borderWidth: '1px',
+                  color: theme.palette.text.secondary,
+                  cursor: 'default',
+                  display: 'flex',
+                  lineHeight: 'normal',
+                  marginRight: '0.1em',
+                  overflow: 'hidden',
+                  padding: '0.2em 0.7em',
+                  textOverflow: 'ellipsis',
+                }}>
                   {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
                 </Box>
               </Tooltip>
