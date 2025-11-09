@@ -3,9 +3,9 @@ import IApiClient from './IApiClient';
 import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 import { ApiClientError } from '../errors';
 
-function assertOk(res: Response) {
+async function assertOk(res: Response) {
   if (!res.ok) {
-    throw ApiClientError.fromResponse(res);
+    throw await ApiClientError.fromResponse(res);
   }
 }
 
@@ -21,14 +21,15 @@ export default class FetchApiClient implements IApiClient {
       method: 'DELETE',
     });
 
-    assertOk(res);
+    await assertOk(res);
   }
 
   async get<DataType>(path: string): Promise<DataType> {
     const res = await this._fetch(path);
-    const body = await res.json();
 
-    assertOk(res);
+    await assertOk(res);
+
+    const body = await res.json();
 
     return body.data;
   }
@@ -45,7 +46,7 @@ export default class FetchApiClient implements IApiClient {
       method: 'PATCH',
     });
 
-    assertOk(res);
+    await assertOk(res);
 
     const body = await res.json();
     return body.data;
@@ -63,7 +64,7 @@ export default class FetchApiClient implements IApiClient {
       method: 'POST',
     });
 
-    assertOk(res);
+    await assertOk(res);
 
     const body = await res.json();
     return body.data;
@@ -86,7 +87,7 @@ export default class FetchApiClient implements IApiClient {
 
     const res = await this._fetch(path, options);
 
-    assertOk(res);
+    await assertOk(res);
 
     try {
       const body = await res.json();
