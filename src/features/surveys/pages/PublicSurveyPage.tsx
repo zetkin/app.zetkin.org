@@ -242,6 +242,12 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
             })}
             severity="success"
             title={messages.surveyFormSubmitted.title()}
+            button={{
+              label: messages.surveyRetake.text(),
+              onClick: () => {
+                location.reload();
+              },
+            }}
           />
         )}
       </Box>

@@ -221,6 +221,9 @@ export default makeMessages('feat.surveys', {
     ),
     title: m('Survey Submitted'),
   },
+  surveyRetake: {
+    text: m('Retake survey'),
+  },
   surveySignature: {
     email: {
       email: m('Email'),
