@@ -48,15 +48,33 @@ const StyledGroupedSelect: FC<Props> = (props) => {
 
   return (
     <TextField
-      className={classes.MuiTextField}
-      inputProps={{ className: classes.MuiInput }}
       select
       {...props}
-      SelectProps={{
-        renderValue: (value) =>
-          props.items.find((item) => item.id == value)?.label ?? '',
-        ...props.SelectProps,
-        className: classes.MuiSelect,
+      slotProps={{
+        input: {
+          ...props.slotProps?.input,
+          sx: {
+            fontSize: oldTheme.typography.h4.fontSize,
+            input: {
+              padding: 0,
+            },
+          },
+        },
+        select: {
+          renderValue: (value) =>
+            props.items.find((item) => item.id == value)?.label ?? '',
+          sx: {
+            '.MuiSelect-standard': {
+              padding: 0,
+            },
+            fontSize: oldTheme.typography.h4.fontSize,
+            minWidth: props.minWidth,
+          },
+        },
+      }}
+      sx={{
+        display: 'inline',
+        verticalAlign: 'inherit',
       }}
       variant="standard"
     >

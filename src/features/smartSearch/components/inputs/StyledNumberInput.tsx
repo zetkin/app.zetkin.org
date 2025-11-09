@@ -7,7 +7,17 @@ const StyledNumberInput: React.FC<TextFieldProps> = (props): JSX.Element => {
     <TextField
       type="number"
       {...props}
-      inputProps={{ ...props.inputProps, className: classes.MuiInput }}
+      slotProps={{ htmlInput: { ...props.slotProps?.htmlInput } }}
+      sx={{
+        display: 'inline',
+        input: {
+          fontSize: oldTheme.typography.h4.fontSize,
+          padding: 0,
+          textAlign: 'center',
+          width: '5rem',
+        },
+        verticalAlign: 'inherit',
+      }}
       variant="standard"
     />
   );
