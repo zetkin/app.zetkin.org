@@ -82,19 +82,11 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
           },
           { new: true }
         );
-
       if (!householdAssignmentModel) {
         return new NextResponse(null, { status: 404 });
       }
 
-      return NextResponse.json({
-        data: {
-          campaign: { id: householdAssignmentModel.campId },
-          id: householdAssignmentModel.id.toString(),
-          organization: { id: orgId },
-          title: householdAssignmentModel.title,
-        },
-      });
+      return NextResponse.json({ data: householdAssignmentModel });
     }
   );
 }
@@ -114,7 +106,6 @@ export async function DELETE(request: NextRequest, { params }: RouteMeta) {
         id: params.householdsAssId,
         orgId,
       });
-
       if (!result) {
         return new NextResponse(null, { status: 404 });
       }

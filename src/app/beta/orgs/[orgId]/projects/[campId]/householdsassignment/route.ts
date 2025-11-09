@@ -66,14 +66,13 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         assigneeIds: [],
         campId: params.campId,
         end_date: null,
-        id: 0, // Will be set by pre-validate hook
+        id: 0,
         orgId: orgId,
         queryId: queryRes.id,
         start_date: null,
         target: null,
         title: payload.title,
       });
-
       await model.save();
 
       return NextResponse.json(

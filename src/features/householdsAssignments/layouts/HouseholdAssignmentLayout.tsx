@@ -171,6 +171,10 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
           href: '/canvassers',
           label: messages.layout.tabs.canvassers(),
         },
+        {
+          href: '/report',
+          label: messages.layout.tabs.report(),
+        },
       ]}
       title={
         <ZUIEditTextinPlace

@@ -8,10 +8,11 @@ import {
   householdAssignmentUpdated,
 } from '../store';
 import { ZetkinQuery } from 'utils/types/zetkin';
-import { futureToObject } from 'core/caching/futures';
+import { futureToObject, IFuture } from 'core/caching/futures';
 
 interface UseHouseholdAssignmentReturn {
   data: ZetkinHouseholdAssignment | null;
+  householdsAssignmentFuture: IFuture<ZetkinHouseholdAssignment>;
   isTargeted: boolean;
   updateTargets: (query: Partial<ZetkinQuery>) => void;
 }
@@ -74,6 +75,7 @@ export default function useHouseholdAssignment(
 
   return {
     ...futureToObject(householdsAssignmentFuture),
+    householdsAssignmentFuture,
     isTargeted,
     updateTargets,
   };

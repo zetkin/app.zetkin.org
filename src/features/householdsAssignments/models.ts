@@ -13,15 +13,25 @@ type ZetkinHouseholdsAssigneeModelType = {
 };
 
 type ZetkinHouseholdsAssignmentModelType = {
-  assignees: ZetkinHouseholdsAssigneeModelType[]; // people going to the households, look for UserAutocomplete in the AreaSelect.ts file
+  assignees: ZetkinHouseholdsAssigneeModelType[];
   campId: number;
   end_date: string | null;
   id: number;
   orgId: number;
-  queryId: number; // in the post handler, it needs to already add a smartSearch Query object post to /orgs/[orgId]/people/queries and use the id returned by the /api
+  queryId: number;
   start_date: string | null;
   target: ZetkinQuery | null;
   title: string | null;
+};
+
+type ZetkinMetricModelType = {
+  created: string;
+  defines_success: boolean;
+  description: string;
+  household_assignment_id: number;
+  id: number;
+  question: string;
+  type: 'bool' | 'scale5';
 };
 
 const householdsAssigneeSchema =
@@ -38,11 +48,30 @@ const counterSchema = new mongoose.Schema({
   _id: { required: true, type: String },
   seq: { default: 0, type: Number },
 });
+
 const Counter =
   mongoose.models.Counter || mongoose.model('Counter', counterSchema);
 
 const getNextHouseholdAssignmentId = async () => {
   const counter = await Counter.findOneAndUpdate(
+    { _id: 'householdAssignmentId' },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+  return counter.seq;
+};
+
+const metricCounterSchema = new mongoose.Schema({
+  _id: { required: true, type: String },
+  seq: { default: 0, type: Number },
+});
+
+const MetricCounter =
+  mongoose.models.MetricCounter ||
+  mongoose.model('MetricCounter', metricCounterSchema);
+
+const getNextMetricId = async () => {
+  const counter = await MetricCounter.findOneAndUpdate(
     { _id: 'householdAssignmentId' },
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
@@ -79,3 +108,27 @@ export const HouseholdsAssignmentModel: mongoose.Model<ZetkinHouseholdsAssignmen
     'HouseholdsAssignment',
     householdsAssignmentSchema
   );
+
+const zetkinMetricSchema = new mongoose.Schema<ZetkinMetricModelType>({
+  created: { required: true, type: String },
+  defines_success: { required: true, type: Boolean },
+  description: { type: String },
+  household_assignment_id: { required: true, type: Number },
+  id: { required: true, type: Number, unique: true },
+  question: { type: String },
+  type: { enum: ['bool', 'scale5'], required: true, type: String },
+});
+
+zetkinMetricSchema.pre<ZetkinMetricModelType>(
+  'validate',
+  async function (next) {
+    if (!this.id) {
+      this.id = await getNextMetricId();
+    }
+    next();
+  }
+);
+
+export const ZetkinMetricModel: mongoose.Model<ZetkinMetricModelType> =
+  mongoose.models.ZetkinMetric ||
+  mongoose.model<ZetkinMetricModelType>('ZetkinMetric', zetkinMetricSchema);

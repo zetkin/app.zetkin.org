@@ -105,15 +105,6 @@ export default makeMessages('feat.householdAssignments', {
         'To delete this, first create a new choice question to define whether the visit was successful.'
       ),
     },
-    dataCard: {
-      header: m('Data precision & privacy'),
-      household: m('per household (most precise)'),
-      info: m('Collect data...'),
-      location: m('per location (less precise, more privacy)'),
-      subheader: m(
-        'Configuring where to store the data is a matter of striking a balance between precision and privacy that is right for your cause'
-      ),
-    },
     delete: {
       cancel: m('Cancel'),
       confirm: m('Confirm'),
