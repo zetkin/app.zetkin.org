@@ -18,8 +18,7 @@ import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
-import PersonFieldInput from './PersonFieldInput';
-import PersonFieldSelect from './PersonFieldSelect';
+import PersonField from './PersonField';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useTags from 'features/tags/hooks/useTags';
@@ -41,7 +40,7 @@ interface PersonalInfoFormProps {
   personalInfo: ZetkinCreatePerson;
   orgId: number;
   onChange: (field: string, value: string | null | number) => void;
-  onReset: (field: string) => void;
+  onReset?: (field: string) => void;
   tags: number[];
   editMode?: boolean;
   defaultFormValues?: ZetkinPerson;
@@ -52,9 +51,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   orgId,
   onChange,
   tags,
-  editMode = false,
-  onReset = null,
-  defaultFormValues = null,
+  editMode,
+  onReset,
+  defaultFormValues,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
@@ -100,47 +99,59 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          <PersonFieldInput
+          <PersonField
+            editMode
             field={'first_name'}
+            fieldType="text"
             onChange={(field, value) => onChange(field, value)}
             required
-            value={personalInfo.first_name}
+            value={personalInfo.first_name || ''}
           />
         </Box>
         <Box width="50%">
-          <PersonFieldInput
+          <PersonField
+            editMode
             field={'last_name'}
+            fieldType="text"
             onChange={(field, value) => onChange(field, value)}
             required
-            value={personalInfo.last_name}
+            value={personalInfo.last_name || ''}
           />
         </Box>
       </Box>
-      <PersonFieldInput
+      <PersonField
+        editMode
         error={invalidFields.includes('email')}
         field={'email'}
+        fieldType="text"
         onChange={(field, value) => onChange(field, value)}
         value={personalInfo.email || ''}
       />
-      <PersonFieldInput
+      <PersonField
+        editMode
         error={invalidFields.includes('phone')}
         field={'phone'}
+        fieldType="text"
         onChange={(field, value) => onChange(field, value)}
         value={personalInfo.phone || ''}
       />
       {!!showAllClickedType && (
         <Box display="flex" flexDirection="column" gap={2}>
-          <PersonFieldInput
+          <PersonField
+            editMode
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
+            fieldType="text"
             inputRef={inputRef}
             onChange={(field, value) =>
               onChange(field, value === ' ' ? '' : value)
             }
             value={personalInfo.alt_phone || ''}
           />
-          <PersonFieldSelect
+          <PersonField
+            editMode
             field="gender"
+            fieldType="select"
             onChange={(field, value) =>
               onChange(field, value === Gender.UNKNOWN ? '' : value)
             }
@@ -150,19 +161,25 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             }))}
             value={!personalInfo.gender ? Gender.UNKNOWN : personalInfo.gender}
           />
-          <PersonFieldInput
+          <PersonField
+            editMode
             field={'street_address'}
+            fieldType="text"
             onChange={(field, value) => onChange(field, value)}
             value={personalInfo.street_address || ''}
           />
-          <PersonFieldInput
+          <PersonField
+            editMode
             field={'co_address'}
+            fieldType="text"
             onChange={(field, value) => onChange(field, value)}
             value={personalInfo.co_address || ''}
           />
           <Box>
-            <PersonFieldInput
+            <PersonField
+              editMode
               field={'zip_code'}
+              fieldType="text"
               onChange={(field, value) => onChange(field, value)}
               style={{
                 pr: 2,
@@ -170,8 +187,10 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               }}
               value={personalInfo.zip_code || ''}
             />
-            <PersonFieldInput
+            <PersonField
+              editMode
               field={'city'}
+              fieldType="text"
               onChange={(field, value) => onChange(field, value)}
               style={{
                 width: '70%',
@@ -179,13 +198,17 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               value={personalInfo.city || ''}
             />
           </Box>
-          <PersonFieldInput
+          <PersonField
+            editMode
             field={'country'}
+            fieldType="text"
             onChange={(field, value) => onChange(field, value)}
             value={personalInfo.country || ''}
           />
-          <PersonFieldInput
+          <PersonField
+            editMode
             field={'ext_id'}
+            fieldType="text"
             onChange={(field, value) => onChange(field, value)}
             value={personalInfo.ext_id || ''}
           />
@@ -219,10 +242,12 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else if (field.type === 'url') {
             return (
-              <PersonFieldInput
+              <PersonField
                 key={field.slug}
+                editMode
                 error={invalidFields.includes(field.slug)}
                 field={field.slug}
+                fieldType="text"
                 isURLField
                 label={field.title}
                 onChange={(field, value) => {
@@ -251,9 +276,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
               })),
             ];
             return (
-              <PersonFieldSelect
+              <PersonField
                 key={field.slug}
+                editMode
                 field={field.slug}
+                fieldType="select"
                 label={field.title}
                 onChange={(field, value) => {
                   const finalValue = value === '' ? null : value;
@@ -265,9 +292,11 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else {
             return (
-              <PersonFieldInput
+              <PersonField
                 key={field.slug}
+                editMode
                 field={field.slug}
+                fieldType="text"
                 label={field.title}
                 onChange={(field, value) => onChange(field, value)}
                 value={personalInfo[field.slug] || ''}
