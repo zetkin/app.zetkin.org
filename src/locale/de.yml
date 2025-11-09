@@ -597,7 +597,19 @@ feat:
           households}}
       colorPicker:
         colorNames:
-          undefined: Hellgrün
+          lightRed: Hellrot
+          lightTurquoise: Helltürkis
+          lightYellow: Hellgelb
+          mediumAqua: Aquamarin
+          mediumBlue: Blau
+          mediumGreen: Grün
+          mediumIndigo: Indigo
+          mediumLime: Grün
+          mediumOrange: Orange
+          mediumPink: Pink
+          mediumPurple: Violett
+          mediumTurqouise: Türkis
+          mediumYellow: Gelb
         inputLabel: Bearbeite die Haushalt-Farbe
         noColor: Keine Farbe
       createMultiple:
@@ -605,6 +617,10 @@ feat:
         header: Haushalt anlegen
         numberOfFloorsInput: Anzahl der Etagen
         numberOfHouseholdsInput: Haushalte je Etage
+      delete:
+        title: Lösche Haushalt
+        warningText: Bist Du sicher, dass Du diesen Haushalt löschen möchtest? Es kann
+          nicht rückgängig gemacht werden.
       editSingleHousehold:
         floorLabel: Etage bearbeiten
         header: Bearbeiten {title}
@@ -618,6 +634,9 @@ feat:
         logVisitButtonLabel: Besuch eintragen
         subtitle: Etage
         wasVisited: Dieser Haushalt wurde in dieser Haustür-Aktion besucht.
+      stackItem:
+        detailsButtonLabel: Details
+        visitButtonLabel: Besuch
     instructions:
       areas: Gebiete
       instructionsHeader: Anleitungen
@@ -663,8 +682,12 @@ feat:
           title: Jederzeit
         header:
           households: Haushalte
+          householdsSuccessful: Erfolgreich besucht
+          householdsVisited: Besuchte Haushalte
           locations: Orte
+          successfulVisits: Erfolgreiche Besuche
           title: Fortschritt
+          visits: Besuche
         session:
           team: Team
           title: Session (today)
@@ -1763,6 +1786,8 @@ feat:
       loading: Laden...
       noLocation: Kein physischer Standort
       partOfProject: Teil von {projectLink}
+      participatingInfo: '{participatingCount, plural, =1 {# person is} andere {#
+        persons are}} nehmen teil'
       today: Heute
     gen3:
       description: Das ist die neue (generation 3) Web App für Organisator*innen. Wenn
@@ -1801,6 +1826,9 @@ feat:
         deinem Kreisverband oder bei der Zetkin Stiftung.
       myPageButton: Gehe zum Aktivistenportal
       title: Du hast keinen Administrator_innen-Zugang.
+    overview:
+      suborgs:
+        title: Unterorganisationen
     page:
       title: 'Organisation auswählen:'
     sidebar:
@@ -2261,21 +2289,25 @@ feat:
           edit:
             callassignment_goal: '{querySelect} der Telefonaktion "{titleSelect}"'
             callassignment_target: '{querySelect} der Telefonaktion "{titleSelect}"'
+            email_target: '{querySelect} der E-Mail "{titleSelect}"'
             none: querySelect
             standalone: '{querySelect} "{titleSelect}"'
           preview:
             callassignment_goal: die Zielgruppe der Telefonaktion "{queryTitle}"
             callassignment_target: die Zielgruppe der Telefonaktion "{queryTitle}"
+            email_target: Die Zielgruppe der E-Mail "{queryTitle}"
             none: '{queryTitle}'
             standalone: Intelligente Suchanfrage
           selectLabel:
             callassignment_goal: Zielgruppe
             callassignment_target: Zielgruppe
+            email_target: Die Zielgruppe
             none: eine Intelligente Suchanfrage
             standalone: Intelligente Suchanfrage
           selectOptions:
             callassignment_goal: die Zielgruppe einer Telefonaktion
             callassignment_target: die Zielgruppe einer Telefonaktion
+            email_target: Die Zielgruppe einer E-Mail
             none: Diese Organisation hat bisher keine Telefonaktionen oder Intelligente
               Suchanfragen.
             standalone: eigenständige Intelligente Suchanfrage
@@ -3369,6 +3401,7 @@ zui:
     geography: Geographie
     home: Startseite
     journeys: Anfragenvermittlung
+    overview: Überblick
     people: Personen
     projects: Projekte & Aktivitäten
     search: Suche
