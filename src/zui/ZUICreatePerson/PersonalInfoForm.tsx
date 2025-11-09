@@ -21,7 +21,6 @@ import messageIds from 'zui/l10n/messageIds';
 import PersonFieldInput from './PersonFieldInput';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import {
@@ -37,17 +36,21 @@ type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
 type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
-  onChange: (field: string, value: string | null | number) => void;
   personalInfo: ZetkinCreatePerson;
+  orgId: number;
+  onChange: (field: string, value: string | null | number) => void;
+  onReset: (field: string) => void;
   tags: number[];
+  editMode?: boolean;
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
-  onChange,
   personalInfo,
+  orgId,
+  onChange,
+  onReset,
   tags,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
