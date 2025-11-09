@@ -11,7 +11,6 @@ import {
 
 import { ACTIVITIES } from 'features/campaigns/types';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS, TASKS } from 'utils/featureFlags';
@@ -20,6 +19,7 @@ interface FilterActivitiesProps {
   filters: ACTIVITIES[];
   filterTypes: ACTIVITIES[];
   onFiltersChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  searchString?: string;
   onSearchStringChange: (value: string) => void;
 }
 
@@ -27,18 +27,12 @@ const FilterActivities = ({
   filters,
   filterTypes,
   onFiltersChange,
+  searchString,
   onSearchStringChange,
 }: FilterActivitiesProps) => {
   const messages = useMessages(messageIds);
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
-
-  const debouncedFinishedTyping = useDebounce(
-    async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      onSearchStringChange(evt.target.value);
-    },
-    400
-  );
 
   return (
     <Card>
@@ -53,8 +47,9 @@ const FilterActivities = ({
               />
             ),
           }}
-          onChange={(e) => debouncedFinishedTyping(e)}
+          onChange={(e) => onSearchStringChange(e.target.value)}
           placeholder={messages.singleProject.filterActivities()}
+          value={searchString}
         />
         <FormGroup>
           <FormControlLabel
