@@ -1,9 +1,14 @@
 import { MetricBulkResponse } from '../canvass/types';
 import { ZetkinQuery } from 'features/smartSearch/components/types';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export type ZetkinHouseholdsAssignee = {
+  excluded_tags: ZetkinAppliedTag[];
+  first_name: string;
   householdsAssId: number;
-  user_id: number;
+  id: number;
+  last_name: string;
+  prioritized_tags: ZetkinAppliedTag[];
 };
 
 export type ZetkinHouseholdAssignment = {
@@ -25,12 +30,6 @@ export type ZetkinHouseholdAssignmentPostBody = Partial<
 export type ZetkinHouseholdAssignmentPatchbody = Partial<
   Omit<ZetkinHouseholdAssignment, 'id'>
 >;
-
-export type ZetkinHouseholdAssignee = {
-  assignment_id: number;
-  household_id: number;
-  user_id: number;
-};
 
 export type HouseholdCardData = {
   data: HouseholdGraphData[];

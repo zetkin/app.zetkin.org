@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  remoteListCreated,
   remoteListLoad,
   remoteListLoaded,
   remoteItemLoad,
@@ -16,10 +15,9 @@ import {
   HouseholdCardData,
   ZetkinHouseholdAssignmentStats,
   ZetkinHouseholdAssignment,
-  ZetkinHouseholdAssignee,
   ZetkinAssignmentHouseholdStats,
-  SessionDeletedPayload,
   ZetkinMetric,
+  ZetkinHouseholdsAssignee,
 } from './types';
 
 export interface HouseholdAssignmentsStoreSlice {
@@ -34,7 +32,7 @@ export interface HouseholdAssignmentsStoreSlice {
   householdAssignmentList: RemoteList<ZetkinHouseholdAssignment>;
   assigneesByAssignmentId: Record<
     number,
-    RemoteList<ZetkinHouseholdAssignee & { id: string }>
+    RemoteList<ZetkinHouseholdsAssignee & { id: number }>
   >;
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
   statsByHouseholdsAssId: Record<
@@ -56,64 +54,74 @@ const householdAssignmentSlice = createSlice({
   initialState: initialState,
   name: 'householdAssignments',
   reducers: {
-    assigneeAdded: (state, action: PayloadAction<ZetkinHouseholdAssignee>) => {
-      const assignee = action.payload;
-      state.assigneesByAssignmentId[assignee.assignment_id] ||=
-        remoteListCreated();
-
-      remoteItemUpdated(state.assigneesByAssignmentId[assignee.assignment_id], {
-        ...assignee,
-        id: `${assignee.user_id}/${assignee.household_id}`,
-      });
-
-      const hasStatsItem = !!state.householdStatsByAssignmentId[
-        assignee.assignment_id
-      ].data?.stats.find(
-        (statsItem) => statsItem.household_id == assignee.household_id
+    assigneeAdd: (state, action: PayloadAction<[number, number]>) => {
+      const [haId, assigneeId] = action.payload;
+      state.assigneesByAssignmentId[haId].items.push(
+        remoteItem(assigneeId, { isLoading: true })
       );
-
-      if (!hasStatsItem) {
-        state.householdStatsByAssignmentId[assignee.assignment_id].isStale =
-          true;
+    },
+    assigneeAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinHouseholdsAssignee]>
+    ) => {
+      const [haId, assignee] = action.payload;
+      state.assigneesByAssignmentId[haId].items = state.assigneesByAssignmentId[
+        haId
+      ].items
+        .filter((a) => a.id != assignee.id)
+        .concat([remoteItem(assignee.id, { data: assignee })]);
+    },
+    assigneeConfigure: (state, action: PayloadAction<[number, number]>) => {
+      const [haId, userId] = action.payload;
+      const item = state.assigneesByAssignmentId[haId].items.find(
+        (item) => item.id == userId
+      );
+      if (item) {
+        item.isLoading = true;
       }
     },
-    assigneeDeleted: (state, action: PayloadAction<SessionDeletedPayload>) => {
-      const { householdId, assignmentId, assigneeId } = action.payload;
-
-      const sessionsList = state.assigneesByAssignmentId[assignmentId];
-
-      if (sessionsList) {
-        const filteredSessions = sessionsList.items.filter(
-          (item) =>
-            !(
-              item.data?.household_id === householdId &&
-              item.data?.user_id === assigneeId
-            )
-        );
-        state.assigneesByAssignmentId[assignmentId] = {
-          ...sessionsList,
-          items: filteredSessions,
-        };
+    assigneeConfigured: (
+      state,
+      action: PayloadAction<[number, ZetkinHouseholdsAssignee]>
+    ) => {
+      const [haId, assignee] = action.payload;
+      const item = state.assigneesByAssignmentId[haId].items.find(
+        (item) => item.id == assignee.id
+      );
+      if (item) {
+        item.isLoading = false;
+        item.data = assignee;
       }
+    },
+    assigneeRemove: (state, action: PayloadAction<[number, number]>) => {
+      const [haId, assignee] = action.payload;
+      const item = state.assigneesByAssignmentId[haId].items.find(
+        (item) => item.id == assignee
+      );
+      if (item) {
+        item.isLoading = true;
+      }
+    },
+    assigneeRemoved: (state, action: PayloadAction<[number, number]>) => {
+      const [haId, assignee] = action.payload;
+      state.assigneesByAssignmentId[haId].items = state.assigneesByAssignmentId[
+        haId
+      ].items.filter((item) => item.id != assignee);
     },
     assigneesLoad: (state, action: PayloadAction<number>) => {
-      const assignmentId = action.payload;
-      state.assigneesByAssignmentId[assignmentId] = remoteListLoad(
-        state.assigneesByAssignmentId[assignmentId]
-      );
+      state.assigneesByAssignmentId[action.payload] =
+        remoteList<ZetkinHouseholdsAssignee>();
+      state.assigneesByAssignmentId[action.payload].isLoading = true;
     },
     assigneesLoaded: (
       state,
-      action: PayloadAction<[number, ZetkinHouseholdAssignee[]]>
+      action: PayloadAction<[ZetkinHouseholdsAssignee[], number]>
     ) => {
-      const [assignmentId, sessions] = action.payload;
+      const [assignees, assignmentId] = action.payload;
+      const timestamp = new Date().toISOString();
 
-      state.assigneesByAssignmentId[assignmentId] = remoteListLoaded(
-        sessions.map((session) => ({
-          ...session,
-          id: `${session.user_id}/${session.household_id}`,
-        }))
-      );
+      state.assigneesByAssignmentId[assignmentId] = remoteList(assignees);
+      state.assigneesByAssignmentId[assignmentId].loaded = timestamp;
     },
     householdAssignmentCreated: (
       state,
@@ -309,7 +317,10 @@ export const {
   householdAssignmentUpdated,
   householdAssignmentsLoad,
   householdAssignmentsLoaded,
+  assigneeAdd,
   assigneeAdded,
+  assigneeConfigure,
+  assigneeConfigured,
   assigneesLoad,
   assigneesLoaded,
   metricCreated,
@@ -317,7 +328,8 @@ export const {
   metricUpdated,
   metricsLoad,
   metricsLoaded,
-  assigneeDeleted,
+  assigneeRemove,
+  assigneeRemoved,
   statsLoad,
   statsLoaded,
 } = householdAssignmentSlice.actions;

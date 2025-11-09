@@ -1,14 +1,19 @@
 import mongoose from 'mongoose';
 
 import { ZetkinQuery } from 'features/smartSearch/components/types';
+import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 type ZetkinHouseholdsAssigneeModelType = {
+  excluded_tags: ZetkinAppliedTag[];
+  first_name: string;
   householdsAssId: number;
-  user_id: number;
+  id: number;
+  last_name: string;
+  prioritized_tags: ZetkinAppliedTag[];
 };
 
 type ZetkinHouseholdsAssignmentModelType = {
-  assignees: ZetkinHouseholdsAssigneeModelType[]; // people goign to the households, look for UserAutocomplete in the AreaSelect.ts file
+  assignees: ZetkinHouseholdsAssigneeModelType[]; // people going to the households, look for UserAutocomplete in the AreaSelect.ts file
   campId: number;
   end_date: string | null;
   id: number;
@@ -21,8 +26,12 @@ type ZetkinHouseholdsAssignmentModelType = {
 
 const householdsAssigneeSchema =
   new mongoose.Schema<ZetkinHouseholdsAssigneeModelType>({
+    excluded_tags: [{ type: mongoose.Schema.Types.Mixed }],
+    first_name: { required: true, type: String },
     householdsAssId: { required: true, type: Number },
-    user_id: { required: true, type: Number },
+    id: { required: true, type: Number },
+    last_name: { required: true, type: String },
+    prioritized_tags: [{ type: mongoose.Schema.Types.Mixed }],
   });
 
 const counterSchema = new mongoose.Schema({

@@ -2,10 +2,35 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.householdAssignments', {
   assignees: {
+    actions: {
+      customize: m('Customize queue'),
+      remove: m('Remove from assignment'),
+    },
+    add: {
+      alreadyAdded: m('Already added'),
+      placeholder: m('Start typing to search or add a new canvasser'),
+    },
     columns: {
       households: m('Households'),
       name: m('Name'),
     },
+    customize: {
+      exclude: {
+        h: m('Excluded tags'),
+        intro: m('Never call targets with these tags.'),
+      },
+      prioritize: {
+        h: m('Prioritized tags'),
+        intro: m('First call targets with these tags.'),
+      },
+      title: m<{ name: string }>('Customize Queue for {name}'),
+    },
+    customizeButton: m('Customize'),
+    excludedTagsColumn: m('Excluded tags'),
+    nameColumn: m('Name'),
+    prioritizedTagsColumn: m('Prioritized tags'),
+    searchBox: m('Search'),
+    title: m('Assignees'),
   },
   default: {
     title: m('Untitled household assignment'),
@@ -48,82 +73,6 @@ export default makeMessages('feat.householdAssignments', {
       map: m('Map'),
       overview: m('Overview'),
       report: m('Report'),
-    },
-  },
-  map: {
-    filter: {
-      assignees: {
-        assigned: m('Only assigned households'),
-        label: m('Assignees'),
-        unassigned: m('Only unassigned households'),
-      },
-      description: m('Define what households you see on the map'),
-      header: m('Filters'),
-      title: m('Add filters to decide what households you see on the map'),
-      ungroupedTags: m('Ungrouped tags'),
-    },
-    findHousehold: {
-      filterPlaceHolder: m('Filter'),
-      title: m('Households'),
-    },
-    householdInfo: {
-      assignees: {
-        add: m('Add assignee'),
-        none: m('No assignees'),
-        title: m('Assignees'),
-      },
-      stats: {
-        households: m<{ numHouseholds: number }>(
-          '{numHouseholds, plural, one {Household visited} other {Households visited}}'
-        ),
-        locations: m<{ numLocations: number }>(
-          '{numLocations, plural, one {Location} other {Locations}}'
-        ),
-        successful: m<{ numSuccessfulVisits: number }>(
-          '{numSuccessfulVisits, plural, one {Successful visit} other {Successful visits}}'
-        ),
-      },
-    },
-    mapStyle: {
-      center: {
-        label: m('Household markers'),
-        options: {
-          assignees: m('Assignees'),
-          hidden: m('Hidden'),
-          households: m('Households & locations'),
-          progress: m('Progress'),
-        },
-      },
-      household: {
-        label: m('Household color'),
-        options: {
-          assignees: m('Assignees'),
-          hidden: m('Hidden'),
-          households: m('Households'),
-          outlined: m('Outlined'),
-          progress: m('Progress'),
-        },
-      },
-      markers: {
-        label: m('Location markers'),
-        options: {
-          altDescriptions: {
-            householdMarkerAssignee: m('Center household assignees'),
-            householdMarkerAssignmentProgreess: m('Center household progress'),
-            householdMarkerHidden: m('Center household hidden'),
-            householdMarkerHouseholds: m('Center household households'),
-            locationDot: m('Dot option'),
-            locationHidden: m('Hide option'),
-            locationHouseholds: m('Households option'),
-            locationProgress: m('Progress option'),
-          },
-          dot: m('Point'),
-          hidden: m('Hidden'),
-          households: m('Households'),
-          progress: m('Progress'),
-        },
-      },
-      title: m('Data visualization'),
     },
   },
   overview: {
@@ -209,6 +158,14 @@ export default makeMessages('feat.householdAssignments', {
     toolBar: {
       title: m('Add questions for your canvass assignment.'),
     },
+  },
+  stats: {
+    assignees: m<{ numAssignees: number }>(
+      '{numAssignees, plural, =0 {No assignees} one {1 assignee} other {# assignees}}'
+    ),
+    targets: m<{ numTargets: number }>(
+      '{numTargets, plural, =0 {No targets} one {1 targets} other {# targets}}'
+    ),
   },
   targets: {
     defineButton: m('Define target group'),

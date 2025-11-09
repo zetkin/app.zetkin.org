@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       }
 
       return NextResponse.json({
-        assignees: householdAssignmentModel.assignees,
+        data: householdAssignmentModel.assignees,
       });
     }
   );

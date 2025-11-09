@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import router, { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
-import { Delete, People } from '@mui/icons-material';
+import { Delete, Headset } from '@mui/icons-material';
 
 import AssignmentStatusChip from '../components/AssignmentStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
@@ -20,6 +20,7 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from '../../../core/hooks';
+import { ZUIFuture } from '../../../../docs';
 
 type HouseholdAssignmentLayoutProps = {
   children: ReactNode;
@@ -41,8 +42,11 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
   const { deleteHouseholdAssignment, updateHouseholdAssignment } =
     useHouseholdAssignmentMutations(campId, orgId, householdsAssId);
 
-  const householdAssignees =
-    useHouseholdAssignees(campId, orgId, householdsAssId).data || [];
+  const { filteredAssigneesFuture } = useHouseholdAssignees(
+    campId,
+    orgId,
+    householdsAssId
+  );
 
   const state = useHouseholdAssignmentStatus(campId, orgId, householdsAssId);
   const { startAssignment, endAssignment } = useStartEndAssignment(
@@ -116,25 +120,35 @@ const HouseholdAssignmentLayout: FC<HouseholdAssignmentLayoutProps> = ({
             <AssignmentStatusChip state={state} />
           </Box>
           <Box display="flex" marginX={1}>
-            <People />
-            <Typography marginLeft={1}>
-              <Msg
-                id={messageIds.layout.basicAssignmentStats.assignees}
-                values={{ numAssignees: householdAssignees.length }}
-              />
-            </Typography>
+            <ZUIFuture
+              future={filteredAssigneesFuture}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {(data) => (
+                <>
+                  <Headset />
+                  <Typography marginLeft={1}>
+                    <Msg
+                      id={messageIds.stats.assignees}
+                      values={{ numAssignees: data.length }}
+                    />
+                  </Typography>
+                </>
+              )}
+            </ZUIFuture>
           </Box>
         </Box>
       }
       tabs={[
         {
           href: '/',
-          label: messages.layout.tabs.overview()
+          label: messages.layout.tabs.overview(),
         },
         {
           href: '/canvassers',
-          label: messages.layout.tabs.canvassers()
-        }
+          label: messages.layout.tabs.canvassers(),
+        },
       ]}
       title={
         <ZUIEditTextinPlace
