@@ -237,17 +237,17 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         )}
         {showSuccess && (
           <ZUIAlert
-            description={messages.surveyFormSubmitted.text({
-              title: survey.title,
-            })}
-            severity="success"
-            title={messages.surveyFormSubmitted.title()}
             button={{
               label: messages.surveyRetake.text(),
               onClick: () => {
                 location.reload();
               },
             }}
+            description={messages.surveyFormSubmitted.text({
+              title: survey.title,
+            })}
+            severity="success"
+            title={messages.surveyFormSubmitted.title()}
           />
         )}
       </Box>
