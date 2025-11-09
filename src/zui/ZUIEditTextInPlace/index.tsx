@@ -1,14 +1,9 @@
 import { Box, lighten, useTheme } from '@mui/material';
-import { FormControl, InputBase, Theme, Tooltip } from '@mui/material';
+import { FormControl, InputBase, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-
-interface StyleProps {
-  showBorder: boolean | undefined;
-  readonly: boolean | undefined;
-}
 
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;

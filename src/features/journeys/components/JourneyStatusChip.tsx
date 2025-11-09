@@ -1,5 +1,4 @@
 import { Chip } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 
 import { useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';

@@ -45,7 +45,6 @@ const PersonCard: React.FunctionComponent<{
                   )}
                 </ListItemIcon>
                 <ListItemText
-                  className={classes.editButton}
                   primary={
                     editable
                       ? messages.editButtonClose({ title })
