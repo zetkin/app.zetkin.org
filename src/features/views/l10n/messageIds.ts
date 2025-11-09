@@ -350,9 +350,6 @@ export default makeMessages('feat.views', {
   newViewFields: {
     title: m('New list'),
   },
-  newViewFromSurvey: {
-    title: m<{ surveyTitle: string }>('Submissions from {surveyTitle}'),
-  },
   removeDialog: {
     action: m('Are you sure you want to remove these rows from this list?'),
     title: m('Remove people from list'),

@@ -240,6 +240,7 @@ export default makeMessages('feat.surveys', {
     error: m(
       'Could not create list from survey submissions due to unknown error.'
     ),
+    title: m<{ surveyTitle: string }>('Submissions from {surveyTitle}'),
   },
   tabs: {
     overview: m('Overview'),

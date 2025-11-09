@@ -9,7 +9,7 @@ import {
 } from '@mui/icons-material';
 import React, { useCallback, useContext, useState } from 'react';
 
-import { ELEMENT_TYPE, ZetkinView } from 'utils/types/zetkin';
+import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
 import messageIds from '../l10n/messageIds';
 import SurveyStatusChip from '../components/SurveyStatusChip';
@@ -31,6 +31,7 @@ import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
 import { useApiClient } from 'core/hooks';
+import surveyToList from 'features/surveys/rpc/surveyToList';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -110,12 +111,21 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const handleCreateList = useCallback(
     async (folderId?: number) => {
       try {
-        const view = await apiClient.get<ZetkinView>(
-          `/api/views/createFromSurvey?` +
-            `orgId=${encodeURIComponent(orgId)}` +
-            `&surveyId=${encodeURIComponent(surveyId)}` +
-            (folderId ? `&folderId=${encodeURIComponent(folderId)}` : '')
-        );
+        if (!surveyFuture.data) {
+          showSnackbar('error', messages.surveyToList.error());
+          return;
+        }
+
+        const view = await apiClient.rpc(surveyToList, {
+          firstNameColumnName: messages.submissions.firstNameColumn(),
+          folderId,
+          lastNameColumName: messages.submissions.lastNameColumn(),
+          orgId: parseInt(orgId),
+          surveyId: parseInt(surveyId),
+          title: messages.surveyToList.title({
+            surveyTitle: surveyFuture.data.title,
+          }),
+        });
         await router.push(
           `/organize/${view.organization.id}/people/lists/${view.id}`
         );
@@ -123,7 +133,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         showSnackbar('error', messages.surveyToList.error());
       }
     },
-    [apiClient, orgId, surveyId, router.push]
+    [apiClient, orgId, surveyId, router.push, surveyFuture.data]
   );
 
   return (
