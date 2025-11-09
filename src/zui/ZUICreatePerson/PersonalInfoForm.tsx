@@ -19,21 +19,23 @@ import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import PersonFieldInput from './PersonFieldInput';
+import PersonFieldSelect from './PersonFieldSelect';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import {
   CUSTOM_FIELD_TYPE,
+  Gender,
   ZetkinAppliedTag,
   ZetkinCreatePerson,
+  ZetkinPerson,
 } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
 
 dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
-type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
 
 interface PersonalInfoFormProps {
   personalInfo: ZetkinCreatePerson;
@@ -42,14 +44,17 @@ interface PersonalInfoFormProps {
   onReset: (field: string) => void;
   tags: number[];
   editMode?: boolean;
+  defaultFormValues?: ZetkinPerson;
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   personalInfo,
   orgId,
   onChange,
-  onReset,
   tags,
+  editMode = false,
+  onReset = null,
+  defaultFormValues = null,
 }) => {
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
@@ -69,9 +74,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       return acc;
     }, []) ?? [];
   const customFields = useCustomFields(orgId).data ?? [];
-  const genderKeys = Object.keys(
-    messageIds.createPerson.genders
-  ) as GenderKeyType[];
 
   useEffect(() => {
     if (showAllClickedType === 'keyboard') {
@@ -137,27 +139,17 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             }
             value={personalInfo.alt_phone || ''}
           />
-          <FormControl fullWidth>
-            <InputLabel>
-              <Msg id={globalMessageIds.personFields.gender} />
-            </InputLabel>
-            <Select
-              defaultValue=""
-              label={globalMessages.personFields.gender()}
-              onChange={(e) =>
-                onChange(
-                  'gender',
-                  e.target.value === 'unknown' ? '' : e.target.value
-                )
-              }
-            >
-              {genderKeys.map((genderKey) => (
-                <MenuItem key={genderKey} value={genderKey}>
-                  {messages.createPerson.genders[genderKey]()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <PersonFieldSelect
+            field="gender"
+            onChange={(field, value) =>
+              onChange(field, value === Gender.UNKNOWN ? '' : value)
+            }
+            options={Object.values(Gender).map((key) => ({
+              value: key,
+              label: messages.createPerson.genders[key](),
+            }))}
+            value={!personalInfo.gender ? Gender.UNKNOWN : personalInfo.gender}
+          />
           <PersonFieldInput
             field={'street_address'}
             onChange={(field, value) => onChange(field, value)}
@@ -244,35 +236,32 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             field.type === CUSTOM_FIELD_TYPE.ENUM &&
             field.enum_choices
           ) {
+            const enumOptions = [
+              {
+                value: '',
+                label: (
+                  <span style={{ fontStyle: 'italic' }}>
+                    <Msg id={messageIds.createPerson.enumFields.noneOption} />
+                  </span>
+                ),
+              },
+              ...field.enum_choices.map((c) => ({
+                value: c.key,
+                label: c.label,
+              })),
+            ];
             return (
-              <Box alignItems="flex-start" display="flex" flex={1}>
-                <FormControl fullWidth>
-                  <InputLabel>{field.title}</InputLabel>
-                  <Select
-                    fullWidth
-                    label={field.title}
-                    onChange={(ev) => {
-                      let value: string | null = ev.target.value as
-                        | string
-                        | null;
-                      if (value === '') {
-                        value = null;
-                      }
-                      onChange(field.slug, value);
-                    }}
-                    value={personalInfo[field.slug] || ''}
-                  >
-                    <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
-                      <Msg id={messageIds.createPerson.enumFields.noneOption} />
-                    </MenuItem>
-                    {field.enum_choices.map((c) => (
-                      <MenuItem key={c.key} value={c.key}>
-                        {c.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
+              <PersonFieldSelect
+                key={field.slug}
+                field={field.slug}
+                label={field.title}
+                onChange={(field, value) => {
+                  const finalValue = value === '' ? null : value;
+                  onChange(field, finalValue);
+                }}
+                options={enumOptions}
+                value={personalInfo[field.slug]?.toString() || ''}
+              />
             );
           } else {
             return (
