@@ -115,3 +115,46 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
     }
   );
 }
+
+export async function DELETE(request: NextRequest, { params }: RouteMeta) {
+  return asOrgAuthorized(
+    {
+      orgId: params.orgId,
+      request: request,
+      roles: ['admin'],
+    },
+    async ({ orgId }) => {
+      await mongoose.connect(process.env.MONGODB_URL || '');
+
+      const householdAssignmentModel = await HouseholdsAssignmentModel.findOne({
+        campId: params.campId,
+        id: params.householdsAssId,
+        orgId,
+      });
+
+      if (!householdAssignmentModel) {
+        return new NextResponse(null, { status: 406 });
+      }
+
+      const existingAssigneeIndex =
+        householdAssignmentModel.assignees.findIndex(
+          (assignee) => assignee.id === parseInt(params.assigneeId)
+        );
+
+      if (existingAssigneeIndex === -1) {
+        return new NextResponse(
+          JSON.stringify({ error: 'Assignee not found' }),
+          { status: 404 }
+        );
+      }
+
+      householdAssignmentModel.assignees.splice(existingAssigneeIndex, 1);
+
+      await householdAssignmentModel.save();
+
+      return NextResponse.json({
+        data: householdAssignmentModel.assignees,
+      });
+    }
+  );
+}
