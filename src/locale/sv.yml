@@ -730,8 +730,6 @@ feat:
         header: Redigera {numHouseholds} hushåll
         saveButtonLabel: Spara {numHouseholds} hushåll
       colorPicker:
-        colorNames:
-          undefined: ''
         inputLabel: Redigera hushållets färg
         noColor: Ingen färg
       createMultiple:
