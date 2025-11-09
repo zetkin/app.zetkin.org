@@ -8,19 +8,13 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  MuiInput: {
-    fontSize: oldTheme.typography.h4.fontSize,
-    padding: 0,
-  },
+  MuiInput: {},
   MuiSelect: {
     fontSize: oldTheme.typography.h4.fontSize,
     minWidth: ({ minWidth }) => minWidth,
     padding: 0,
   },
-  MuiTextField: {
-    display: 'inline',
-    verticalAlign: 'inherit',
-  },
+  MuiTextField: {},
 }));
 
 const StyledSelect: React.FC<TextFieldProps & { minWidth?: string }> = (

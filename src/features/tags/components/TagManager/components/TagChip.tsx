@@ -19,32 +19,8 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  chip: {
-    borderRadius: '1em',
-    cursor: ({ clickable, disabled }) =>
-      clickable && !disabled ? 'pointer' : 'default',
-    display: 'flex',
-    fontSize: ({ size }) =>
-      ({
-        large: '1.2em',
-        medium: '1.0em',
-        small: '0.8em',
-      }[size]),
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),
-    overflow: 'hidden',
-  },
-  deleteButton: {
-    fontSize: '1.1rem',
-    padding: '3px',
-    position: 'absolute',
-    right: '0.12em',
-    transform: ({ deletable, hover }) =>
-      deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
-    transition: ({ deletable, hover }) =>
-      deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
-  },
+  chip: {},
+  deleteButton: {},
   deleteContainer: {
     padding: ({ deletable, hover }) => {
       if (deletable) {
@@ -56,28 +32,9 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     position: 'relative',
     transition: 'padding 0.1s',
   },
-  deleteIcon: {
-    color: ({ tag }) =>
-      tag.value_type
-        ? 'black'
-        : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-  },
-  label: {
-    backgroundColor: ({ tag }) => tag.color || DEFAULT_TAG_COLOR,
-    color: ({ tag }) => getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-    maxWidth: '100%',
-    overflow: 'hidden',
-    padding: '0.2em 0.4em 0.2em 1em',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  value: {
-    backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
-    maxWidth: '10em',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
+  deleteIcon: {},
+  label: {},
+  value: {},
 }));
 
 const TagToolTip: React.FunctionComponent<{
@@ -123,7 +80,17 @@ const TagChip: React.FunctionComponent<{
   });
 
   const hasValue = isValueTag(tag);
-
+  const clickable = onClick !== undefined;
+  const deletable = onDelete !== undefined;
+  const deleteContainerStyle = {
+    padding: deletable
+      ? hover
+        ? '0.2em 1.5em 0.2em 0.7em'
+        : '0.2em 1em'
+      : '0.2em 0.6em',
+    position: 'relative',
+    transition: 'padding 0.1s',
+  };
   const deleteButton = onDelete ? (
     <IconButton
       className={classes.deleteButton}
@@ -134,9 +101,26 @@ const TagChip: React.FunctionComponent<{
         onDelete(tag as ZetkinAppliedTag);
       }}
       size="large"
+      sx={{
+        fontSize: '1.1rem',
+        padding: '3px',
+        position: 'absolute',
+        right: '0.12em',
+        transform: deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
+        transition:
+          deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
+      }}
       tabIndex={-1}
     >
-      <Clear className={classes.deleteIcon} fontSize="inherit" />
+      <Clear
+        className={classes.deleteIcon}
+        fontSize="inherit"
+        sx={{
+          color: tag.value_type
+            ? 'black'
+            : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+        }}
+      />
     </IconButton>
   ) : null;
 
@@ -146,16 +130,52 @@ const TagChip: React.FunctionComponent<{
       onClick={() => !disabled && onClick && onClick(tag)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      sx={{
+        borderRadius: '1em',
+        cursor: clickable && !disabled ? 'pointer' : 'default',
+        display: 'flex',
+        fontSize: {
+          large: '1.2em',
+          medium: '1.0em',
+          small: '0.8em',
+        }[size],
+        lineHeight: 'normal',
+        marginRight: '0.1em',
+        opacity: disabled ? 0.5 : 1.0,
+        overflow: 'hidden',
+      }}
     >
       {hasValue && (
         <>
           <TagToolTip tag={tag}>
-            <Box className={classes.label}>{tag.title}</Box>
+            <Box
+              className={classes.label}
+              sx={{
+                backgroundColor: tag.color || DEFAULT_TAG_COLOR,
+                color: getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+                maxWidth: '100%',
+                overflow: 'hidden',
+                padding: '0.2em 0.4em 0.2em 1em',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {tag.title}
+            </Box>
           </TagToolTip>
           <Tooltip arrow title={tag.value || ''}>
             <Box
-              className={classes.value + ' ' + classes.deleteContainer}
               data-testid="TagChip-value"
+              sx={[
+                {
+                  backgroundColor: lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
+                  maxWidth: '10em',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                },
+                deleteContainerStyle,
+              ]}
             >
               {tag.value}
               {deleteButton}
@@ -165,7 +185,7 @@ const TagChip: React.FunctionComponent<{
       )}
       {!hasValue && (
         <TagToolTip tag={tag}>
-          <Box className={classes.label + ' ' + classes.deleteContainer}>
+          <Box sx={{ deleteContainerStyle }}>
             {tag.title}
             {deleteButton}
           </Box>

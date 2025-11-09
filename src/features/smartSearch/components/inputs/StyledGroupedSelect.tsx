@@ -3,31 +3,10 @@ import {
   MenuItem,
   TextField,
   TextFieldProps,
-  Theme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { FC, ReactElement } from 'react';
 
 import oldTheme from 'theme';
-
-interface StyleProps {
-  minWidth?: string;
-}
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  MuiInput: {
-    fontSize: oldTheme.typography.h4.fontSize,
-    padding: 0,
-  },
-  MuiSelect: {
-    fontSize: oldTheme.typography.h4.fontSize,
-    minWidth: ({ minWidth }) => minWidth,
-    padding: 0,
-  },
-  MuiTextField: {
-    display: 'inline',
-    verticalAlign: 'inherit',
-  },
-}));
 
 type Props = TextFieldProps & {
   items: {
@@ -39,7 +18,6 @@ type Props = TextFieldProps & {
 };
 
 const StyledGroupedSelect: FC<Props> = (props) => {
-  const classes = useStyles({ minWidth: props.minWidth });
   const groups = new Set(props.items.map((item) => item.group));
 
   const options: ReactElement[] = [];

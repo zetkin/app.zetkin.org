@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import { Edit } from '@mui/icons-material';
-import makeStyles from '@mui/styles/makeStyles';
 import { useState } from 'react';
 
 import EmailLoader from './elements/EmailLoader';
@@ -21,22 +20,7 @@ interface Props {
   update: ZetkinUpdateJourneyInstanceAddNote;
 }
 
-const useStyles = makeStyles(() => {
-  return {
-    note: {
-      '& p:first-child': {
-        marginTop: 0,
-      },
-      '& p:last-child': {
-        marginBottom: 0,
-      },
-    },
-  };
-});
-
 const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
-  const classes = useStyles();
-
   const [editing, setEditing] = useState(false);
   const [noteText, setNoteText] = useState(update.details.note.text);
 
@@ -98,8 +82,15 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
         <>
           <ZUIMarkdown
             BoxProps={{
-              className: classes.note,
               component: 'div',
+              sx: {
+                '& p:first-child': {
+                  marginTop: 0,
+                },
+                '& p:last-child': {
+                  marginBottom: 0,
+                },
+              },
             }}
             markdown={update.details.note.text}
           />
