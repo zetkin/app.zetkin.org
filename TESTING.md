@@ -1,7 +1,9 @@
 # Testing
+
 This file contains information and instructions about our automated testing.
 
 ## Integration tests
+
 Integration tests are run with [Playwright](https://playwright.dev/docs/intro). To run tests:
 
 ```
