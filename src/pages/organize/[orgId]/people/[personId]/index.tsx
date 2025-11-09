@@ -120,7 +120,7 @@ const PersonProfilePage: PageWithLayout = () => {
             )}
           </ZUIFuture>
         </Grid>
-        {journeysFuture.data?.length && (
+        {!!journeysFuture.data?.length && (
           <Grid size={{ lg: 4, xs: 12 }}>
             <PersonJourneysCard orgId={orgId} personId={personId} />
           </Grid>
