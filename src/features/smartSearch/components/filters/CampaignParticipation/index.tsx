@@ -2,7 +2,6 @@ import { FormEvent } from 'react';
 import { Box, MenuItem, Tooltip } from '@mui/material';
 
 import FilterForm from '../../FilterForm';
-import StyledGroupedSelect from '../../inputs/StyledGroupedSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { truncateOnMiddle } from 'utils/stringUtils';
