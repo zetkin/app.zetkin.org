@@ -48,6 +48,12 @@ export default makeMessages('feat.home', {
   footer: {
     privacyPolicy: m('Privacy policy'),
   },
+  newLandingPageAlert: {
+    description: m(
+      'Sign up for activities here, or go to the organizer app by clicking the button in the header.'
+    ),
+    title: m('This the landing page now'),
+  },
   settings: {
     accountSettings: {
       email: {
