@@ -96,6 +96,7 @@
     "react-intl": "^6.1.0",
     "react-leaflet": "^4.2.1",
     "react-redux": "^8.0.4",
+    "react-window": "^2.2.3",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "remark-slate": "^1.8.6",
