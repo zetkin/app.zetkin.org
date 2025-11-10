@@ -162,7 +162,10 @@ const StyledPopper = styled(Popper)({
 });
 
 type Item = {
-  group?: string | null;
+  /**
+   * Groups items by a group label. "pinned" is a pseudo group that makes the component get displayed at the top.
+   */
+  group?: 'pinned' | string | null;
   id: string | number;
   label: string;
 };
