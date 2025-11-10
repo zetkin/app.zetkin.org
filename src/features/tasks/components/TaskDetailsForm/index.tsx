@@ -1,13 +1,14 @@
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import validator from 'validator';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { MenuItem, TextField } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import { ZetkinTask } from 'utils/types/zetkin';
 import {
   AnyTaskTypeConfig,
+  DEMOGRAPHICS_FIELD,
   NewTaskValues,
   TASK_TYPE,
   VisitLinkConfig,
@@ -27,7 +28,6 @@ import {
   isExpiresThird,
   isPublishedFirst,
 } from './utils';
-import { DEFAULT_REASSIGN_INTERVAL, TASK_DETAILS_FIELDS } from './constants';
 import messageIds from 'features/tasks/l10n/messageIds';
 import useCampaigns from 'features/campaigns/hooks/useCampaigns';
 import { useNumericRouteParams } from 'core/hooks';
@@ -60,27 +60,27 @@ const TaskDetailsForm = ({
   const [type, setType] = useState<TASK_TYPE | undefined>(task?.type);
 
   const [shareUrl, setShareUrl] = useState<string | undefined>(
-    task?.type === TASK_TYPE.SHARE_LINK && 'url' in (task.config || {})
-      ? (task.config as any).url
+    task?.type === TASK_TYPE.SHARE_LINK && 'url' in task.config
+      ? task.config.url
       : undefined
   );
   const [shareDefaultMessage, setShareDefaultMessage] = useState<
     string | undefined
   >(
-    task?.type === TASK_TYPE.SHARE_LINK &&
-      'default_message' in (task.config || {})
-      ? (task.config as any).default_message
+    task?.type === TASK_TYPE.SHARE_LINK && 'default_message' in task.config
+      ? task.config.default_message
       : undefined
   );
   const [visitUrl, setVisitUrl] = useState<string | undefined>(
-    task?.type === TASK_TYPE.VISIT_LINK && 'url' in (task.config || {})
-      ? (task.config as any).url
+    task?.type === TASK_TYPE.VISIT_LINK && 'url' in task.config
+      ? task.config.url
       : undefined
   );
-  const [demographicsField, setDemographicsField] = useState<any>(
-    task?.type === TASK_TYPE.COLLECT_DEMOGRAPHICS &&
-      'fields' in (task.config || {})
-      ? (task.config as any).fields?.[0]
+  const [demographicsField, setDemographicsField] = useState<
+    DEMOGRAPHICS_FIELD | undefined
+  >(
+    task?.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && 'fields' in task.config
+      ? task.config.fields?.[0]
       : undefined
   );
 
@@ -148,23 +148,21 @@ const TaskDetailsForm = ({
     return errors;
   };
 
-  // Compose values to reuse existing validation helpers
   const composedValues: NewTaskValues = useMemo(() => {
-    let config: AnyTaskTypeConfig = {};
-    if (type === TASK_TYPE.SHARE_LINK) {
-      config = {
-        default_message: shareDefaultMessage,
-        url: shareUrl,
-      };
-    } else if (type === TASK_TYPE.VISIT_LINK) {
-      config = { url: visitUrl };
-    } else if (type === TASK_TYPE.COLLECT_DEMOGRAPHICS) {
-      config = { fields: demographicsField };
-    }
-
     return {
       campaign_id: campaignId,
-      config,
+      config: (() => {
+        if (type === TASK_TYPE.SHARE_LINK) {
+          return {
+            default_message: shareDefaultMessage,
+            url: shareUrl,
+          };
+        } else if (type === TASK_TYPE.VISIT_LINK) {
+          return { url: visitUrl };
+        } else if (type === TASK_TYPE.COLLECT_DEMOGRAPHICS) {
+          return { fields: [demographicsField] };
+        }
+      })(),
       deadline: deadline ?? undefined,
       expires: expires ?? undefined,
       instructions,
@@ -239,7 +237,6 @@ const TaskDetailsForm = ({
       <TextField
         disabled={!!campId}
         fullWidth
-        id={TASK_DETAILS_FIELDS.CAMPAIGN_ID}
         label={messages.form.fields.campaign()}
         margin="normal"
         onChange={(e) => setCampaignId(Number(e.target.value))}
@@ -267,7 +264,6 @@ const TaskDetailsForm = ({
 
       <TextField
         fullWidth
-        id={TASK_DETAILS_FIELDS.INSTRUCTIONS}
         label={messages.form.fields.instructions()}
         margin="normal"
         multiline
@@ -278,14 +274,10 @@ const TaskDetailsForm = ({
         variant="filled"
       />
 
-      <TimeEstimateField
-        onChange={(v) => setTimeEstimate(v)}
-        value={timeEstimate}
-      />
+      <TimeEstimateField onChange={setTimeEstimate} value={timeEstimate} />
 
       <TextField
         fullWidth
-        id={TASK_DETAILS_FIELDS.TYPE}
         label={messages.form.fields.type()}
         margin="normal"
         onChange={(e) => setType(e.target.value as TASK_TYPE)}
@@ -334,7 +326,7 @@ const TaskDetailsForm = ({
         }
         disablePast
         label={messages.form.fields.published()}
-        onChange={(newVal) => setPublished(newVal)}
+        onChange={setPublished}
         value={published}
       />
 
@@ -342,7 +334,7 @@ const TaskDetailsForm = ({
         ampm={false}
         disablePast
         label={messages.form.fields.deadline()}
-        onChange={(newVal) => setDeadline(newVal)}
+        onChange={setDeadline}
         value={deadline}
       />
 
@@ -350,7 +342,7 @@ const TaskDetailsForm = ({
         ampm={false}
         disablePast
         label={messages.form.fields.expires()}
-        onChange={(newVal) => setExpires(newVal)}
+        onChange={setExpires}
         value={expires}
       />
 
@@ -361,8 +353,6 @@ const TaskDetailsForm = ({
         id="reassign-limit"
         label={messages.form.fields.reassignLimit()}
         margin="normal"
-        type="number"
-        value={reassignLimit === null ? '' : reassignLimit}
         onChange={(e) => {
           const val = e.target.value;
           if (val === '') {
@@ -371,6 +361,8 @@ const TaskDetailsForm = ({
             setReassignLimit(Number(val));
           }
         }}
+        type="number"
+        value={reassignLimit === null ? '' : reassignLimit}
       />
 
       <ZUISubmitCancelButtons onCancel={onCancel} submitDisabled={!isValid} />
