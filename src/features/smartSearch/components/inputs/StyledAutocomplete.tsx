@@ -326,10 +326,12 @@ const StyledGroupedSelect: FC<Props> = (props) => {
         },
         '& .MuiOutlinedInput-notchedOutline': {
           border: 'none',
+          padding: 0,
         },
         '& .MuiOutlinedInput-root .MuiInputBase-input': {
           fontSize: '34px',
           padding: 0,
+          textOverflow: 'clip',
         },
         display: 'inline-block',
         minWidth: props.minWidth,
