@@ -1,10 +1,21 @@
-import { TextField } from 'mui-rff';
+import { TextField } from '@mui/material';
 
-import { SHARE_LINK_FIELDS } from '../constants';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 
-const ShareLinkFields = (): JSX.Element => {
+type Props = {
+  defaultMessage?: string;
+  onDefaultMessageChange: (value: string) => void;
+  onUrlChange: (value: string) => void;
+  url?: string;
+};
+
+const ShareLinkFields = ({
+  url,
+  onUrlChange,
+  defaultMessage,
+  onDefaultMessageChange,
+}: Props): JSX.Element => {
   const messages = useMessages(messageIds);
 
   return (
@@ -14,8 +25,9 @@ const ShareLinkFields = (): JSX.Element => {
         id="url"
         label={messages.configs.shareLink.fields.url()}
         margin="normal"
-        name={SHARE_LINK_FIELDS.URL}
+        onChange={(e) => onUrlChange(e.target.value)}
         required
+        value={url ?? ''}
       />
 
       <TextField
@@ -23,8 +35,9 @@ const ShareLinkFields = (): JSX.Element => {
         id="default_message"
         label={messages.configs.shareLink.fields.defaultMessage()}
         margin="normal"
-        name={SHARE_LINK_FIELDS.DEFAULT_MESSAGE}
+        onChange={(e) => onDefaultMessageChange(e.target.value)}
         required
+        value={defaultMessage ?? ''}
       />
     </>
   );
