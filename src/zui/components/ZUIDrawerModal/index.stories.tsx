@@ -39,7 +39,7 @@ export const Basic: Story = {
               alignItems: 'center',
               backgroundColor: 'peachpuff',
               display: 'flex',
-              height: '1000px',
+              height: '2000px',
               justifyContent: 'center',
               padding: '1rem',
               width: '100%',

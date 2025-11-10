@@ -66,7 +66,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
     if (errorMessageRef.current) {
       errorMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, []);
+  }, [errorMessageRef.current]);
 
   useEffect(() => {
     if (status == 'submitted' || status == 'error') {
@@ -79,7 +79,7 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
   const showErrorAlert = status == 'error';
 
   const privacyUrl =
-    process.env.ZETKIN_PRIVACY_POLICY_LINK || messages.surveyForm.policy.link();
+    process.env.ZETKIN_PRIVACY_POLICY_LINK || 'https://zetkin.org/privacy';
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   remoteItem,
+  remoteItemDeleted,
   remoteItemUpdated,
   RemoteList,
   remoteList,
@@ -47,6 +48,10 @@ const canvassSlice = createSlice({
           loaded: new Date().toISOString(),
         })
       );
+    },
+    householdDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [locationId, householdId] = action.payload;
+      remoteItemDeleted(state.householdsByLocationId[locationId], householdId);
     },
     householdLoad: (state, action: PayloadAction<[number, number]>) => {
       const [locationId, householdId] = action.payload;
@@ -195,6 +200,7 @@ const canvassSlice = createSlice({
 export default canvassSlice;
 export const {
   householdCreated,
+  householdDeleted,
   householdLoad,
   householdLoaded,
   householdVisitCreated,

@@ -2057,7 +2057,6 @@ feat:
       error: Something went wrong when submitting your answers. Please try again
         later.
       policy:
-        link: https://zetkin.org/privacy
         text: Click to read the full Zetkin Privacy Policy
       required: required
       sign:

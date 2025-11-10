@@ -6,17 +6,20 @@ import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
 import messageIds from 'features/surveys/l10n/messageIds';
+import LinkifiedText from './LinkifiedText';
 
 export type SurveyTextQuestionProps = {
   element: ZetkinSurveyTextQuestionElement;
   initialValue?: string;
   name: string;
+  onChange?: (newValue: string) => void;
 };
 
 const TextQuestion: FC<SurveyTextQuestionProps> = ({
   element,
   initialValue,
   name,
+  onChange,
 }) => {
   const messages = useMessages(messageIds);
   return (
@@ -34,7 +37,7 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({
           </FormLabel>
           {element.question.description && (
             <ZUIText id={`description-${element.id}`}>
-              {element.question.description}
+              <LinkifiedText text={element.question.description} />
             </ZUIText>
           )}
         </Box>
@@ -45,6 +48,11 @@ const TextQuestion: FC<SurveyTextQuestionProps> = ({
           maxRows={element.question.response_config.multiline ? 4 : 1}
           multiline={element.question.response_config.multiline}
           name={name}
+          onChange={(newValue) => {
+            if (onChange) {
+              onChange(newValue);
+            }
+          }}
           required={element.question.required}
           size="large"
           type="text"

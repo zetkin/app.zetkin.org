@@ -2047,7 +2047,6 @@ feat:
       error: Er is iets misgegaan bij het indienen van je antwoorden. Probeer het
         later opnieuw.
       policy:
-        link: https://zetkin.org/privacy
         text: Klik om de volledige Privacy Policy van Zetkin te bekijken
       required: Verplicht
       sign:

@@ -7,7 +7,9 @@ import { EditTag, NewTag } from '../../types';
 import messageIds from 'features/tags/l10n/messageIds';
 import TagDialog from 'features/tags/components/TagManager/components/TagDialog';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/dist/client/router', () =>
+  jest.requireActual('next-router-mock')
+);
 
 describe('<TagDialog />', () => {
   let onSubmit: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;

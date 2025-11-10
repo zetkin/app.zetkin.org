@@ -64,6 +64,10 @@ feat:
         deleteWarningText: Är du säker på att du vill radera {title}?
         end: Avsluta uppdrag
         start: Starta uppdrag
+      basicAssignmentStats:
+        areas: '{numAreas, plural, =0 {Inga områden} one {1 område} other {# områden}}'
+        assignees: '{numAssignees, plural, =0 {Ingen ansvarig} one {1 ansvarig} other {#
+          ansvariga}}'
       tabs:
         assignees: Ansvariga
         instructions: Instruktioner
@@ -324,34 +328,8 @@ feat:
     showMore: Visa
     today: Idag
   call:
-    activeEvents:
-      alreadyBooked: '{name} är redan bokad'
-      noBookings: '{name} har inga bokningar'
-      signUp: Anmäl
-      undoSignUp: Ånga anmälan
     instructions:
       title: Instruktioner
-    nav:
-      backToHome: Tillbaka hem
-      startCalling: Börja ringa
-    prepare:
-      activeEvents: Aktiva event
-      edit: Ändra den här informationen?
-      editDescription: Om något i den här fliken behöver ändras, skriv ett meddelande
-        till organisatören i rapporten efter att samtalet är avslutat.
-      noActiveEvents: Inga aktiva event.
-      noPreviousCalls: Aldrig ringd
-      noPreviousEvents: '{name} har aldrig deltagit på några event.'
-      noSurveys: Inga enkäter
-      noTags: Inga etiketter
-      previousCalls: Det finns inga tidigare samtal
-      previousCallsOfTarget: Tidigare samtal till {name}.
-      previousEvents: Tidigare event
-      previousEventsOfTarget: '{name} har deltagit på {numEvents} event, senaste var {eventTitle} .'
-      summary: Sammanfattning
-      surveys: Enkäter
-      tags: Etiketter
-      title: Personlig info
     report:
       steps:
         callBack:
@@ -467,8 +445,6 @@ feat:
         editButtonLabel: Redigera
     stats:
       callsMade: samta gjorda
-      callsReached: lyckade samtal
-      targetMatches: personer i målgruppen
   callAssignments:
     actions:
       delete: Radera
@@ -1524,6 +1500,8 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} och {numEmpty, plural, =1 {en
             tom rad} other {# tomma rader}}.'
           twoValuesNoEmpty: '{firstValue} och {secondValue}.'
+        notEnoughRows: Din fil innehåller inte tillräckligt många rader för att
+          importera någon data
         organization: Organisation
         selectZetkinField: Importera som…
         tags: Etiketter
@@ -1897,6 +1875,8 @@ feat:
       map:
         viewInList: Visa i lista
         viewInMap: Visa på karta
+      menu:
+        logout: Logga ut
       tabs:
         calendar: Kalender
         suborgs: Utforska
@@ -2686,7 +2666,6 @@ feat:
       error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen
         senare.
       policy:
-        link: https://zetkin.org/sv/sekretess
         text: Klicka för att läsa sekretesspolicyn
       required: svar krävs
       sign:
@@ -3403,6 +3382,9 @@ zui:
   eventWarningIcons:
     reminders: '{numMissing, plural, =1 {En} other {#}} deltagare har ännu inte
       mottagit påminnelser'
+  expandableText:
+    showLess: Visa mindre
+    showMore: Visa mer
   futures:
     errorLoading: Något gick fel när datan laddades upp.
   header:
@@ -3421,6 +3403,7 @@ zui:
       this: Endast {org}
   organizeSidebar:
     filter: Skriv för att filtrera
+    geography: Geografi
     home: Hem
     journeys: Journeys
     people: Människor
@@ -3437,12 +3420,20 @@ zui:
     restrictedMode: Kan inte redigeras i delade listor
     searchResults: Sökresultat
   personSelect:
+    bulkAdd:
+      backButton: Tillbaka
     keepTyping: Fortsätt skriv för att börja söka
     noResult: Hittade ingen person som matchade
     search: Skriv för att börja söka
     searching: Söker...
   publicFooter:
     hostingOrganization: Denna kopia av Zetkin tillhandahålls och hanteras av {name}.
+    text: 'Zetkin är en plattform för att organisera aktivism. Zetkin är utvecklat
+      av Zetkin Foundation som arbetar för radikal samhällsförändring i en
+      socialistiskt, feministisk, antirasistisk och hållbar riktning. '
+  signUpChip:
+    booked: Du är bokad
+    needed: Du behövs
   snackbar:
     error: Åh nej, något gick fel!
     success: Framgång

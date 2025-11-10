@@ -12,7 +12,7 @@ type HouseholdUpdate = { color?: string; level?: number };
 type Props = {
   householdIds: number[];
   onBack: () => void;
-  onSave: (updates: HouseholdUpdate) => void;
+  onSave: (updates: HouseholdUpdate) => Promise<void>;
 };
 
 const BulkEditHouseholdsPage: FC<Props> = ({
@@ -31,7 +31,7 @@ const BulkEditHouseholdsPage: FC<Props> = ({
     setcolor(null);
   }, [householdIds]);
 
-  const nothingHasBeenEdited = !color && !floor;
+  const nothingHasBeenEdited = !color && floor == null;
 
   return (
     <PageBase

@@ -114,10 +114,10 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               label={messages.blocks.open.textFieldType()}
               margin="normal"
               onChange={(event) => {
-                handleSelect(event),
-                  setMultiline(
-                    event.target.value === FIELDTYPE.MULTILINE ? true : false
-                  );
+                handleSelect(event);
+                setMultiline(
+                  event.target.value === FIELDTYPE.MULTILINE ? true : false
+                );
               }}
               select
               SelectProps={{

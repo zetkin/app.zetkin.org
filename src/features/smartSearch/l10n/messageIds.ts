@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.smartSearch', {
   buttonLabels: {
@@ -58,6 +58,12 @@ export default makeMessages('feat.smartSearch', {
           'Find people based on what sub-organizations they are in.'
         ),
         title: m('Everyone in a sub-organization'),
+      },
+      area: {
+        description: m(
+          'Search based on location fields inside or outside of a geographical area'
+        ),
+        title: m('Location (area)'),
       },
       call_history: {
         description: m('Find people who were called, reached or tried.'),
@@ -192,6 +198,24 @@ export default makeMessages('feat.smartSearch', {
         any: m('any sub-organization'),
         multiple: m('any of the following sub-organizations'),
         single: m('the specific sub-organization'),
+      },
+    },
+    area: {
+      examples: {
+        one: m('Add people whose Home location is within the area Malmö'),
+        two: m('Remove people whose HQ address is outside the area Copenhagen'),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        areaSelect: ReactElement;
+        lnglatFieldSelect: ReactElement;
+        withinOutsideSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people whose {lnglatFieldSelect} is {withinOutsideSelect} the area {areaSelect}'
+      ),
+      slice: {
+        in: m('within'),
+        out: m('outside'),
       },
     },
     callBlocked: {
@@ -601,6 +625,10 @@ export default makeMessages('feat.smartSearch', {
             querySelect: ReactElement;
             titleSelect: ReactElement;
           }>('{querySelect} of call assignment "{titleSelect}"'),
+          email_target: m<{
+            querySelect: ReactElement;
+            titleSelect: ReactElement;
+          }>('{querySelect} of email "{titleSelect}"'),
           none: m<{ querySelect: ReactElement; titleSelect: ReactElement }>(
             '{querySelect}'
           ),
@@ -616,6 +644,9 @@ export default makeMessages('feat.smartSearch', {
           callassignment_target: m<{ queryTitle: ReactElement | string }>(
             'the target group of call assignment "{queryTitle}"'
           ),
+          email_target: m<{
+            queryTitle: ReactElement | string;
+          }>('the target group of email "{queryTitle}"'),
           none: m<{ queryTitle: ReactElement | string }>('{queryTitle}'),
           standalone: m<{ queryTitle: ReactElement | string }>(
             'Smart Search query "{queryTitle}"'
@@ -624,12 +655,14 @@ export default makeMessages('feat.smartSearch', {
         selectLabel: {
           callassignment_goal: m('the purpose group'),
           callassignment_target: m('the target group'),
+          email_target: m('the target group'),
           none: m('a Smart Search query'),
           standalone: m('Smart Search query'),
         },
         selectOptions: {
           callassignment_goal: m('the purpose group of a call assignment'),
           callassignment_target: m('the target group of a call assignment'),
+          email_target: m('the target group of an email'),
           none: m(
             "This organization doesn't have any call assignments or Smart Search queries yet."
           ),

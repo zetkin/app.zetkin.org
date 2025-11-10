@@ -72,7 +72,7 @@ const tasksSlice = createSlice({
       state.statsById[taskId].loaded = new Date().toISOString();
     },
     taskCreate: (state) => {
-      state.tasksList.isLoading;
+      state.tasksList.isLoading = true;
     },
     taskCreated: (state, action: PayloadAction<ZetkinTask>) => {
       const task = action.payload;

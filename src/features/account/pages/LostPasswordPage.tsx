@@ -28,7 +28,8 @@ const LostPasswordPage: FC = () => {
         <CheckEmailSection
           email={submittedEmail}
           onBack={(email) => {
-            setSuccess(false), setSubmittedEmail(email);
+            setSuccess(false);
+            setSubmittedEmail(email);
           }}
         />
       ) : (

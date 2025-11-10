@@ -219,8 +219,8 @@ const AreaAssignmentReportPage: PageWithLayout<AreaAssignmentReportProps> = ({
                                       } else {
                                         showConfirmDialog({
                                           onCancel: () => {
-                                            setMetricBeingDeleted(null),
-                                              setAnchorEl(null);
+                                            setMetricBeingDeleted(null);
+                                            setAnchorEl(null);
                                           },
                                           onSubmit: () => {
                                             handleDeleteMetric(metric.id);

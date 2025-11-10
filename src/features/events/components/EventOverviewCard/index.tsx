@@ -137,7 +137,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 <ZUIPreviewableInput
                   {...previewableProps}
                   renderInput={(params) => {
-                    params.ref;
                     return (
                       <DatePicker
                         format="DD-MM-YYYY"
@@ -506,7 +505,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                     >
                       {messages.eventOverviewCard.description().toUpperCase()}
                     </Typography>
-                    <Typography variant="body1">{data.info_text}</Typography>
+                    <Typography sx={{ whiteSpace: 'pre-line' }} variant="body1">
+                      {data.info_text}
+                    </Typography>
                   </Box>
                 ),
               })}

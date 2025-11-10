@@ -1,4 +1,5 @@
 import AllInSuborg from '../filters/AllInSubOrg';
+import Area from '../filters/Area';
 import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
@@ -44,6 +45,13 @@ const FilterEditor = ({
     <>
       {filter.type == FILTER_TYPE.ALL && (
         <AllInSuborg
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type == FILTER_TYPE.AREA && (
+        <Area
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}
