@@ -1,11 +1,10 @@
-import { Box, TextField } from '@mui/material';
+import { MenuItem, TextField } from '@mui/material';
 import { FormEvent, useState } from 'react';
 
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCampaign, ZetkinPerson } from 'utils/types/zetkin';
 import messageIds from '../l10n/messageIds';
-import ZUISelect from '../../../zui/components/ZUISelect';
 
 interface CampaignDetailsFormProps {
   campaign?: ZetkinCampaign;
@@ -52,20 +51,12 @@ const CampaignDetailsForm = ({
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-        paddingTop: '20px',
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <TextField
         fullWidth
         id="title"
         label={messages.form.name()}
+        margin="normal"
         name="title"
         onChange={(e) => setTitle(e.target.value)}
         required
@@ -76,6 +67,7 @@ const CampaignDetailsForm = ({
         fullWidth
         id="info_text"
         label={messages.form.description()}
+        margin="normal"
         multiline
         name="info_text"
         onChange={(e) => setInfoText(e.target.value)}
@@ -84,32 +76,40 @@ const CampaignDetailsForm = ({
         variant="outlined"
       />
 
-      <ZUISelect
+      <TextField
         fullWidth
-        items={[
-          { label: messages.form.status.published(), value: 'published' },
-          { label: messages.form.status.draft(), value: 'draft' },
-        ]}
         label={messages.form.status.heading()}
-        onChange={(e) => setStatus(e as 'published' | 'draft')}
-        selectedOption={status}
-        size="large"
-      />
+        margin="normal"
+        onChange={(e) => setStatus(e.target.value as 'published' | 'draft')}
+        select
+        value={status}
+      >
+        <MenuItem value="published">
+          <Msg id={messageIds.form.status.published} />
+        </MenuItem>
+        <MenuItem value="draft">
+          <Msg id={messageIds.form.status.draft} />
+        </MenuItem>
+      </TextField>
 
-      <ZUISelect
+      <TextField
         fullWidth
-        items={[
-          { label: messages.form.visibility.private(), value: 'hidden' },
-          { label: messages.form.visibility.public(), value: 'open' },
-        ]}
         label={messages.form.visibility.heading()}
-        onChange={(e) => setVisibility(e as 'hidden' | 'open')}
-        selectedOption={visibility}
-        size="large"
-      />
+        margin="normal"
+        onChange={(e) => setVisibility(e.target.value as 'hidden' | 'open')}
+        select
+        value={visibility}
+      >
+        <MenuItem value="hidden">
+          <Msg id={messageIds.form.visibility.private} />
+        </MenuItem>
+        <MenuItem value="open">
+          <Msg id={messageIds.form.visibility.public} />
+        </MenuItem>
+      </TextField>
 
       <ZUISubmitCancelButtons onCancel={onCancel} />
-    </Box>
+    </form>
   );
 };
 
