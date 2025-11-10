@@ -49,7 +49,8 @@ export default function useRemoteItem<
 
     // Suspend if no data exists, or if staleWhileRevalidate is disabled
     const hasData = !!remoteItem?.data;
-    if (!hasData || !staleWhileRevalidate) {
+    const shouldSuspend = !hasData || !staleWhileRevalidate;
+    if (shouldSuspend) {
       const toThrow = getExisting();
       if (toThrow) {
         throw toThrow;
