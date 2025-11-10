@@ -98,7 +98,7 @@ export const householdHexColors = [
   '#6D6D6D',
   '#000000',
 ] as const;
-export type HouseholdHexColor = (typeof householdHexColors)[number];
+export type HouseholdHexColor = typeof householdHexColors[number];
 
 export const householdColorNames = [
   'lightRed',
@@ -137,7 +137,7 @@ export const householdColorNames = [
   'grey',
   'black',
 ] as const;
-export type HouseholdColorName = (typeof householdColorNames)[number];
+export type HouseholdColorName = typeof householdColorNames[number];
 export type HouseholdColor = HouseholdHexColor | 'clear';
 
 export const hexColorToHouseholdColor: Record<
