@@ -1,7 +1,6 @@
-import { MenuItem, TextField } from '@mui/material';
-
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
+import ZUISelect from '../../../../../zui/components/ZUISelect';
 
 type Props = {
   onChange: (value: number | null) => void;
@@ -10,99 +9,47 @@ type Props = {
 
 const DEFAULT_TIME_ESTIMATE = 'noEstimate';
 
+const toHoursAndMinutes = (minutes: number) => ({
+  hours: Math.floor(minutes / 60),
+  minutes: minutes % 60,
+});
+
 const TimeEstimateField: React.FunctionComponent<Props> = ({
   value,
   onChange,
 }) => {
   const messages = useMessages(messageIds);
-  const internalValue = value === null ? DEFAULT_TIME_ESTIMATE : value;
+  const internalValue =
+    value === null ? DEFAULT_TIME_ESTIMATE : value.toString();
+
+  const allowedValues = [1, 3, 5, 10, 15, 30, 45, 60, 90, 120];
 
   return (
-    <TextField
+    <ZUISelect
       fullWidth
-      id="estimated-time"
+      items={[
+        {
+          label: messages.form.fields.timeEstimateOptions.noEstimate(),
+          value: DEFAULT_TIME_ESTIMATE,
+        },
+        {
+          label: messages.form.fields.timeEstimateOptions.lessThanOneMinute(),
+          value: '0',
+        },
+        ...allowedValues.map((minutes) => ({
+          label: messages.form.fields.timeEstimateOptions.hoursAndMinutes(
+            toHoursAndMinutes(minutes)
+          ),
+          value: minutes.toString(),
+        })),
+      ]}
       label={messages.form.fields.timeEstimate()}
-      margin="normal"
-      onChange={(e) =>
-        onChange(
-          e.target.value === DEFAULT_TIME_ESTIMATE
-            ? null
-            : parseInt(e.target.value)
-        )
+      onChange={(value) =>
+        onChange(value === DEFAULT_TIME_ESTIMATE ? null : parseInt(value))
       }
-      required
-      select
-      value={internalValue}
-    >
-      <MenuItem value={DEFAULT_TIME_ESTIMATE}>
-        <Msg id={messageIds.form.fields.timeEstimateOptions.noEstimate} />
-      </MenuItem>
-      <MenuItem value={0}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.lessThanOneMinute}
-        />
-      </MenuItem>
-      <MenuItem value={1}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 1 }}
-        />
-      </MenuItem>
-      <MenuItem value={3}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 3 }}
-        />
-      </MenuItem>
-      <MenuItem value={5}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 5 }}
-        />
-      </MenuItem>
-      <MenuItem value={10}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 10 }}
-        />
-      </MenuItem>
-      <MenuItem value={15}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 15 }}
-        />
-      </MenuItem>
-      <MenuItem value={30}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 30 }}
-        />
-      </MenuItem>
-      <MenuItem value={45}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 0, minutes: 45 }}
-        />
-      </MenuItem>
-      <MenuItem value={60}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 1, minutes: 0 }}
-        />
-      </MenuItem>
-      <MenuItem value={90}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 1, minutes: 30 }}
-        />
-      </MenuItem>
-      <MenuItem value={120}>
-        <Msg
-          id={messageIds.form.fields.timeEstimateOptions.hoursAndMinutes}
-          values={{ hours: 2, minutes: 0 }}
-        />
-      </MenuItem>
-    </TextField>
+      selectedOption={internalValue}
+      size="large"
+    />
   );
 };
 
