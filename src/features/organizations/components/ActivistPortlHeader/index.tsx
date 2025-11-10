@@ -86,10 +86,8 @@ const ActivistPortalHeader: FC<Props> = ({
             <Box>
               {isOfficial && (
                 <ZUIButton
-                  label="Organize"
-                  onClick={() => {
-                    router.push(`/organize`);
-                  }}
+                  href="/organize"
+                  label={messages.home.header.goToOrganizerAppButtonLabel()}
                 />
               )}
               <Button
