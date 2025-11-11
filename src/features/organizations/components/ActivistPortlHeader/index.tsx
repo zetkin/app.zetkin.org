@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Event, Home, Logout, Settings } from '@mui/icons-material';
+import { Logout } from '@mui/icons-material';
 
 import messageIds from 'features/organizations/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
