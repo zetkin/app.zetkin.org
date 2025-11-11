@@ -43,22 +43,17 @@ const ActivistPortalHeader: FC<Props> = ({
   const menuItems: MenuItem[] = useMemo(
     () => [
       {
-        divider: true,
         label: messages.home.menu.myActivities(),
         onClick: () => router.push('/my/home'),
-        startIcon: Home,
       },
       {
-        divider: true,
         label: messages.home.menu.allEvents(),
         onClick: () => router.push('/my/feed'),
-        startIcon: Event,
       },
       {
         divider: true,
         label: messages.home.menu.settings(),
         onClick: () => router.push('/my/settings'),
-        startIcon: Settings,
       },
       {
         label: messages.home.menu.logout(),
