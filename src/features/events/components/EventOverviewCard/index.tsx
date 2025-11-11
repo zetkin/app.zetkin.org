@@ -99,7 +99,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
       return a.title.localeCompare(b.title);
     });
     return sorted;
-  }, [locations?.length]);
+  }, [locations]);
 
   const options: (
     | ZetkinLocation
