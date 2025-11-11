@@ -1,15 +1,22 @@
 import { useEffect } from 'react';
-import { Map as MapType } from 'maplibre-gl';
+import { Map as MapType, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import { GeoJSON } from 'geojson';
 
 export default function useMapMarkerClick(
   map: MapType | null,
   onMarkerClick?: (features: GeoJSON.Feature[]) => void
 ) {
   useEffect(() => {
-    if (map) {
-      map.on('click', 'locationMarkers', (event) => {
-        if (event.features) {
-          const geojsonFeatures = event.features.map((feature) => {
+    if (!map) {
+      return;
+    }
+
+    const onClick = (
+      event: MapMouseEvent & { features?: MapGeoJSONFeature[] }
+    ) => {
+      if (event.features) {
+        const geojsonFeatures: GeoJSON.Feature[] = event.features.map(
+          (feature) => {
             const location = JSON.parse(feature?.properties?.location);
             return {
               geometry: {
@@ -21,21 +28,31 @@ export default function useMapMarkerClick(
               },
               type: 'Feature',
             };
-          }) as GeoJSON.Feature[];
-
-          if (onMarkerClick) {
-            onMarkerClick(geojsonFeatures);
           }
+        );
+
+        if (onMarkerClick) {
+          onMarkerClick(geojsonFeatures);
         }
-      });
+      }
+    };
 
-      map.on('mouseenter', 'locationMarkers', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
+    const onMouseEnter = () => {
+      map.getCanvas().style.cursor = 'pointer';
+    };
 
-      map.on('mouseleave', 'locationMarkers', () => {
-        map.getCanvas().style.cursor = '';
-      });
-    }
-  }, [map]);
+    const onMouseLeave = () => {
+      map.getCanvas().style.cursor = '';
+    };
+
+    map.on('click', 'locationMarkers', onClick);
+    map.on('mouseenter', 'locationMarkers', onMouseEnter);
+    map.on('mouseleave', 'locationMarkers', onMouseLeave);
+
+    return () => {
+      map.off('click', 'locationMarkers', onClick);
+      map.off('mouseenter', 'locationMarkers', onMouseEnter);
+      map.off('mouseleave', 'locationMarkers', onMouseLeave);
+    };
+  }, [map, onMarkerClick]);
 }
