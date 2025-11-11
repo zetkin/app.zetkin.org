@@ -3,31 +3,10 @@ import {
   MenuItem,
   TextField,
   TextFieldProps,
-  Theme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { FC, ReactElement } from 'react';
 
 import oldTheme from 'theme';
-
-interface StyleProps {
-  minWidth?: string;
-}
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  MuiInput: {
-    fontSize: oldTheme.typography.h4.fontSize,
-    padding: 0,
-  },
-  MuiSelect: {
-    fontSize: oldTheme.typography.h4.fontSize,
-    minWidth: ({ minWidth }) => minWidth,
-    padding: 0,
-  },
-  MuiTextField: {
-    display: 'inline',
-    verticalAlign: 'inherit',
-  },
-}));
 
 type Props = TextFieldProps & {
   items: {
@@ -39,7 +18,6 @@ type Props = TextFieldProps & {
 };
 
 const StyledGroupedSelect: FC<Props> = (props) => {
-  const classes = useStyles({ minWidth: props.minWidth });
   const groups = new Set(props.items.map((item) => item.group));
 
   const options: ReactElement[] = [];
@@ -70,15 +48,33 @@ const StyledGroupedSelect: FC<Props> = (props) => {
 
   return (
     <TextField
-      className={classes.MuiTextField}
-      inputProps={{ className: classes.MuiInput }}
       select
       {...props}
-      SelectProps={{
-        renderValue: (value) =>
-          props.items.find((item) => item.id == value)?.label ?? '',
-        ...props.SelectProps,
-        className: classes.MuiSelect,
+      slotProps={{
+        input: {
+          ...props.slotProps?.input,
+          sx: {
+            fontSize: oldTheme.typography.h4.fontSize,
+            input: {
+              padding: 0,
+            },
+          },
+        },
+        select: {
+          renderValue: (value) =>
+            props.items.find((item) => item.id == value)?.label ?? '',
+          sx: {
+            '.MuiSelect-standard': {
+              padding: 0,
+            },
+            fontSize: oldTheme.typography.h4.fontSize,
+            minWidth: props.minWidth,
+          },
+        },
+      }}
+      sx={{
+        display: 'inline',
+        verticalAlign: 'inherit',
       }}
       variant="standard"
     >

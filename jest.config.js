@@ -11,4 +11,7 @@ module.exports = {
     '^.+\\.tsx?$': ['babel-jest', { configFile: './.babelrc.jest.json' }],
   },
   moduleDirectories: ['node_modules', 'src'],
+  moduleNameMapper: {
+    '\\.module\\.css$': '<rootDir>/integrationTesting/mockFiles/mockFile.js',
+  },
 };

@@ -1,6 +1,5 @@
-import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
-import { Box, Button, Theme } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { FunctionComponent, useContext, useState } from 'react';
 import NProgress from 'nprogress';
 import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
@@ -26,15 +25,6 @@ import messageIds from '../l10n/messageIds';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useView from '../hooks/useView';
 
-const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
-  deactivateWrapper: {
-    filter: (props) =>
-      props.deactivated ? 'grayscale(1) opacity(0.5)' : 'none',
-    pointerEvents: (props) => (props.deactivated ? 'none' : 'all'),
-    transition: 'filter 0.3s ease',
-  },
-}));
-
 interface SingleViewLayoutProps {
   children: React.ReactNode;
 }
@@ -46,7 +36,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const { orgId, viewId } = useNumericRouteParams();
 
   const [deactivated, setDeactivated] = useState(false);
-  const classes = useStyles({ deactivated });
   const messages = useMessages(messageIds);
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -167,7 +156,14 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   });
 
   return (
-    <Box key={`${viewId}`} className={classes.deactivateWrapper}>
+    <Box
+      key={`${viewId}`}
+      sx={{
+        filter: deactivated ? 'grayscale(1) opacity(0.5)' : 'none',
+        pointerEvents: deactivated ? 'none' : 'all',
+        transition: 'filter 0.3s ease',
+      }}
+    >
       <SimpleLayout
         actionButtons={
           <Button

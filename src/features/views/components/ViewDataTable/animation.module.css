@@ -1,0 +1,12 @@
+@keyframes addedRowAnimation {
+  from {
+    background-color: var(--animation-row-fade-in-color);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.addedRow {
+  animation: addedRowAnimation 2s;
+}

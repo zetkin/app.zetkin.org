@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -48,44 +47,9 @@ import oldTheme from 'theme';
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles(() => ({
-  drawer: {
-    flexShrink: 0,
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.enteringScreen,
-      easing: oldTheme.transitions.easing.sharp,
-    }),
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-  },
-  drawerPaper: {
-    display: 'none',
-    [oldTheme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-    overflowX: 'hidden',
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.enteringScreen,
-      easing: oldTheme.transitions.easing.sharp,
-    }),
-    width: drawerWidth,
-  },
-  toggleDrawerPaper: {
-    [oldTheme.breakpoints.up('sm')]: {
-      width: `calc(${oldTheme.spacing(8)} + 1px)`,
-    },
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.leavingScreen,
-      easing: oldTheme.transitions.easing.sharp,
-    }),
-    width: `calc(${oldTheme.spacing(7)} + 1px)`,
-  },
-}));
-
 const ZUIOrganizeSidebar = (): JSX.Element => {
   const [hover, setHover] = useState(false);
   const messages = useMessages(messageIds);
-  const classes = useStyles();
   const user = useCurrentUser();
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
@@ -130,20 +94,38 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   return (
     <Box data-testid="organize-sidebar">
       <Drawer
-        classes={{
-          paper:
-            classes.drawerPaper +
-            (!open ? ` ${classes.toggleDrawerPaper}` : ''),
-        }}
-        className={
-          classes.drawer + (!open ? ` ${classes.toggleDrawerPaper}` : '')
-        }
         onMouseLeave={() => {
           setHover(false);
         }}
         onMouseOver={() => {
           setHover(true);
         }}
+        sx={[
+          {
+            display: 'none',
+            flexShrink: 0,
+            overflowX: 'hidden',
+            transition: oldTheme.transitions.create('width', {
+              duration: oldTheme.transitions.duration.enteringScreen,
+              easing: oldTheme.transitions.easing.sharp,
+            }),
+            [oldTheme.breakpoints.up('sm')]: {
+              display: 'block',
+            },
+            whiteSpace: 'nowrap',
+            width: drawerWidth,
+          },
+          !open && {
+            [oldTheme.breakpoints.up('sm')]: {
+              width: `calc(${oldTheme.spacing(8)} + 1px)`,
+            },
+            transition: oldTheme.transitions.create('width', {
+              duration: oldTheme.transitions.duration.leavingScreen,
+              easing: oldTheme.transitions.easing.sharp,
+            }),
+            width: `calc(${oldTheme.spacing(7)} + 1px)`,
+          },
+        ]}
         variant="permanent"
       >
         <Box display="flex" flexDirection="column" height="100%">

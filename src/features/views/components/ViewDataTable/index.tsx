@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import {
@@ -59,6 +58,7 @@ import {
 import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
+import classes from './animation.module.css';
 import oldTheme from 'theme';
 
 declare module '@mui/x-data-grid-pro' {
@@ -87,20 +87,6 @@ declare module '@mui/x-data-grid-pro' {
     sortModel: GridSortModel;
   }
 }
-
-const useStyles = makeStyles(() => ({
-  '@keyframes addedRowAnimation': {
-    '0%': {
-      backgroundColor: oldTheme.palette.success.main,
-    },
-    '100%': {
-      backgroundColor: 'transparent',
-    },
-  },
-  addedRow: {
-    animation: '$addedRowAnimation 2s',
-  },
-}));
 
 const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
   const stringOperators = getGridStringOperators().filter(
@@ -145,7 +131,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const classes = useStyles();
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -562,6 +547,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           toolbar: ViewDataTableToolbar,
         }}
         style={{
+          // @ts-expect-error: Hack to get theme color into css module as a way to enable animation for row in DataGridPro
+          '--animation-row-fade-in-color': oldTheme.palette.success.main,
           border: 'none',
         }}
         sx={{

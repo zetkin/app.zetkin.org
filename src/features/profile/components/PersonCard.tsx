@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import {
   Card,
   List,
@@ -15,29 +14,12 @@ import ZUISection from 'zui/ZUISection';
 import messageIds from '../l10n/messageIds';
 import oldTheme from 'theme';
 
-const useStyles = makeStyles(() => ({
-  divider: {
-    marginLeft: 72,
-  },
-  editButton: {
-    '& span': {
-      fontWeight: 'bold',
-    },
-    color: oldTheme.palette.primary.main,
-    textTransform: 'uppercase',
-  },
-  title: {
-    marginBottom: oldTheme.spacing(1),
-  },
-}));
-
 const PersonCard: React.FunctionComponent<{
   children: React.ReactNode;
   onClickEdit?: ReactEventHandler;
   title: string;
 }> = ({ onClickEdit, title, children }) => {
   const [editable, setEditable] = useState<boolean>();
-  const classes = useStyles();
   const messages = useMessages(messageIds);
 
   const onToggleEdit = (evt: SyntheticEvent) => {
@@ -63,12 +45,18 @@ const PersonCard: React.FunctionComponent<{
                   )}
                 </ListItemIcon>
                 <ListItemText
-                  className={classes.editButton}
                   primary={
                     editable
                       ? messages.editButtonClose({ title })
                       : messages.editButton({ title })
                   }
+                  sx={{
+                    color: oldTheme.palette.primary.main,
+                    span: {
+                      fontWeight: 'bold',
+                    },
+                    textTransform: 'uppercase',
+                  }}
                 />
               </ListItemButton>
             </ListItem>

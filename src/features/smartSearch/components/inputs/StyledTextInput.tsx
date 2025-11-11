@@ -1,29 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
-import { Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import { StandardTextFieldProps, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import oldTheme from 'theme';
-
-const useStyles = makeStyles<Theme, ExpandingTextInputProps>(() => ({
-  MuiInput: (props) => ({
-    fontSize: oldTheme.typography.h4.fontSize,
-    padding: 0,
-    width: `${props.inputWidth + 20}px`,
-  }),
-  MuiTextField: {
-    display: 'inline',
-    verticalAlign: 'inherit',
-  },
-}));
-
-const useHiddenInputStyles = makeStyles<Theme>(() => ({
-  hiddenInput: {
-    fontSize: oldTheme.typography.h4.fontSize,
-    position: 'absolute',
-    visibility: 'hidden',
-  },
-}));
 
 interface ExpandingTextInputProps extends StandardTextFieldProps {
   inputWidth: number;
@@ -36,12 +15,18 @@ interface StyledTextInputProps extends StandardTextFieldProps {
 const ExpandingTextInput: React.FC<ExpandingTextInputProps> = (
   props
 ): JSX.Element => {
-  const classes = useStyles(props);
   return (
     <TextField
-      className={classes.MuiTextField}
-      inputProps={{ className: classes.MuiInput }}
       {...props}
+      sx={{
+        display: 'inline',
+        input: {
+          fontSize: oldTheme.typography.h4.fontSize,
+          padding: 0,
+          width: `${props.inputWidth + 20}px`,
+        },
+        verticalAlign: 'inherit',
+      }}
       variant="standard"
     />
   );
@@ -50,7 +35,6 @@ const ExpandingTextInput: React.FC<ExpandingTextInputProps> = (
 const StyledTextInput: React.FC<StyledTextInputProps> = (
   props
 ): JSX.Element => {
-  const classes = useHiddenInputStyles(props);
   const hiddenInput = useRef<HTMLSpanElement>(null);
   const [inputWidth, setInputWidth] = useState(50);
   useEffect(() => {
@@ -60,9 +44,17 @@ const StyledTextInput: React.FC<StyledTextInputProps> = (
   }, [props.inputString]);
   return (
     <>
-      <span ref={hiddenInput} className={classes.hiddenInput}>
+      <Box
+        ref={hiddenInput}
+        component="span"
+        sx={{
+          fontSize: oldTheme.typography.h4.fontSize,
+          position: 'absolute',
+          visibility: 'hidden',
+        }}
+      >
         {props.inputString}
-      </span>
+      </Box>
       <ExpandingTextInput inputWidth={inputWidth} {...props} />
     </>
   );
