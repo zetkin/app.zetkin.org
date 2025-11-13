@@ -11,6 +11,8 @@ import ZUIPersonAvatar from 'zui/components/ZUIPersonAvatar';
 import useUser from 'core/hooks/useUser';
 import { useMessages } from 'core/i18n';
 import ZUIMenu, { MenuItem } from 'zui/components/ZUIMenu';
+import ZUIButton from 'zui/components/ZUIButton';
+import useMemberships from 'features/organizations/hooks/useMemberships';
 
 type Props = {
   button?: JSX.Element;
@@ -52,6 +54,9 @@ const ActivistPortalHeader: FC<Props> = ({
     });
   }
 
+  const memberships = useMemberships().data || [];
+  const isOfficial = memberships.find((membership) => membership.role != null);
+
   return (
     <Box
       sx={{
@@ -78,7 +83,13 @@ const ActivistPortalHeader: FC<Props> = ({
         >
           {topLeftComponent}
           {user && (
-            <>
+            <Box>
+              {isOfficial && (
+                <ZUIButton
+                  href="/organize"
+                  label={messages.home.header.organize()}
+                />
+              )}
               <Button
                 onClick={(event) => setLogoutMenuAnchorEl(event.currentTarget)}
               >
@@ -94,7 +105,7 @@ const ActivistPortalHeader: FC<Props> = ({
                 menuItems={menuItems}
                 onClose={() => setLogoutMenuAnchorEl(null)}
               />
-            </>
+            </Box>
           )}
         </Box>
         <Box

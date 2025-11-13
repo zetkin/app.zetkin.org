@@ -93,7 +93,7 @@
     "react-dropzone": "^14.2.1",
     "react-error-boundary": "^6.0.0",
     "react-final-form": "^6.5.9",
-    "react-intl": "^6.1.0",
+    "react-intl": "^7.1.14",
     "react-leaflet": "^4.2.1",
     "react-redux": "^8.0.4",
     "remark-gfm": "^3.0.1",

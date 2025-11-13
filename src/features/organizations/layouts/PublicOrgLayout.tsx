@@ -1,8 +1,8 @@
 'use client';
 
 import { Box } from '@mui/material';
-import { FC, ReactNode, useContext } from 'react';
-import { usePathname } from 'next/navigation';
+import { FC, ReactNode, useCallback, useContext } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { CalendarMonth, NorthWest } from '@mui/icons-material';
 import NextLink from 'next/link';
 
@@ -33,8 +33,9 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
 
   const messages = useMessages(messageIds);
   const subOrgs = usePublicSubOrgs(org.id);
-  const { allEvents, filteredEvents } = useFilteredOrgEvents(org.id);
+  const { filteredEvents } = useFilteredOrgEvents(org.id);
   const path = usePathname();
+  const router = useRouter();
 
   const lastSegment = path?.split('/')[3] ?? 'home';
   const showSuborgsTab = lastSegment == 'suborgs' || subOrgs.length > 0;
@@ -76,13 +77,23 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
     );
   };
 
+  const onLocationFilterChange = useCallback(
+    (geojsonToFilterBy: GeoJSON.Feature[]) => {
+      setLocationFilter(geojsonToFilterBy);
+      if (lastSegment === 'suborgs') {
+        router.push(`/o/${org.id}`);
+      }
+    },
+    [setLocationFilter, lastSegment, router.push, org.id]
+  );
+
   return (
     <EventMapLayout
       events={filteredEvents}
       header={
         <ActivistPortalHeader
           button={
-            <>
+            <Box>
               {org.is_open ? (
                 <FollowUnfollowLoginButton orgId={org.id} />
               ) : undefined}
@@ -96,7 +107,7 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
                   },
                 ]}
               />
-            </>
+            </Box>
           }
           selectedTab={lastSegment}
           tabs={navBarItems}
@@ -120,8 +131,8 @@ const PublicOrgLayout: FC<Props> = ({ children, org }) => {
         />
       }
       locationFilter={geojsonToFilterBy}
-      setLocationFilter={setLocationFilter}
-      showMap={lastSegment != 'suborgs' && allEvents.length > 0}
+      setLocationFilter={onLocationFilterChange}
+      showMap={true}
     >
       {children}
     </EventMapLayout>

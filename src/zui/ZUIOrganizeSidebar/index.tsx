@@ -29,6 +29,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import Link from 'next/link';
 
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
@@ -272,6 +273,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               <SearchDialog
                 activator={(openDialog) => (
                   <Tooltip
+                    arrow
                     placement="right"
                     title={
                       !open ? messages.organizeSidebar['search']() : undefined
@@ -303,6 +305,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     passHref
                   >
                     <Tooltip
+                      arrow
                       placement="right"
                       title={
                         !open ? messages.organizeSidebar[name]() : undefined
@@ -342,18 +345,28 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       width: '48px',
                     }}
                   >
-                    <ZUIUserAvatar
-                      personId={user.id}
-                      size={open ? 'sm' : 'md'}
-                    />
-                    <Typography
-                      sx={{
-                        display: open ? 'flex' : 'none',
-                        marginLeft: 1,
-                      }}
+                    <Tooltip
+                      arrow
+                      placement={open ? 'top' : 'right'}
+                      title={messages.organizeSidebar.myPagesInfoText()}
                     >
-                      {user.first_name}
-                    </Typography>
+                      <Link href="/my">
+                        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                          <ZUIUserAvatar
+                            personId={user.id}
+                            size={open ? 'sm' : 'md'}
+                          />
+                          <Typography
+                            sx={{
+                              display: open ? 'flex' : 'none',
+                              marginLeft: 1,
+                            }}
+                          >
+                            {user.first_name}
+                          </Typography>
+                        </Box>
+                      </Link>
+                    </Tooltip>
                   </Box>
                   <Box
                     sx={{
@@ -364,11 +377,18 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                       items={[
                         {
-                          label: (
-                            <Typography>
-                              {messages.organizeSidebar.signOut()}
-                            </Typography>
-                          ),
+                          href: '/my',
+                          label:
+                            messages.organizeSidebar.myPagesMenuItemLabel(),
+                        },
+                        {
+                          divider: true,
+                          href: '/my/settings',
+                          label:
+                            messages.organizeSidebar.mySettingsMenuItemLabel(),
+                        },
+                        {
+                          label: messages.organizeSidebar.signOut(),
                           onSelect: () => {
                             logOut();
                           },
