@@ -87,7 +87,7 @@ const ActivistPortalHeader: FC<Props> = ({
               {isOfficial && (
                 <ZUIButton
                   href="/organize"
-                  label={messages.home.header.goToOrganizerAppButtonLabel()}
+                  label={messages.home.header.organize()}
                 />
               )}
               <Button

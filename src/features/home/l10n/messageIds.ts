@@ -50,9 +50,9 @@ export default makeMessages('feat.home', {
   },
   newLandingPageAlert: {
     description: m(
-      'Sign up for activities here, or go to the organizer app by clicking the button in the header.'
+      'If you are looking for the organizer pages, you can find them from now on by clicking the button in the header below.'
     ),
-    title: m('This the landing page now'),
+    title: m('This is your new landing page'),
   },
   settings: {
     accountSettings: {

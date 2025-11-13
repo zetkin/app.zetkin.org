@@ -56,8 +56,8 @@ export default makeMessages('feat.organizations', {
       connect: m('Connect'),
       copyIcsUrl: m('Copy calendar subscription URL'),
       follow: m('Follow'),
-      goToOrganizerAppButtonLabel: m('Organize'),
       login: m('Login & connect'),
+      organize: m('Organize'),
       unfollow: m('Unfollow'),
     },
     map: {
