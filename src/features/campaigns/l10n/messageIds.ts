@@ -10,6 +10,10 @@ export default makeMessages('feat.campaigns', {
     extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
     goToActivities: m('See all upcoming activities.'),
     noActivities: m('There are no activities this week.'),
+    noDescriptionAddOneNow: m('Add one now.'),
+    noDescriptionText: m<{ addOneNow: ReactElement }>(
+      'No description has been added to this project yet. {addOneNow}'
+    ),
     nothingTomorrow: m('Nothing planned for tomorrow'),
     startsTomorrow: m('starts tomorrow'),
     subtitles: {
