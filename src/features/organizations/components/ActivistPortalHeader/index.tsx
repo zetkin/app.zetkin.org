@@ -90,6 +90,7 @@ const ActivistPortalHeader: FC<Props> = ({
           sx={{
             alignItems: 'center',
             display: 'flex',
+            justifyContent: topLeftComponent ? 'space-between' : 'flex-end',
           }}
         >
           {topLeftComponent}
