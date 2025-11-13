@@ -112,7 +112,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
-    "@playwright/test": "~1.25.0",
+    "@playwright/test": "~1.56.1",
     "@storybook/addon-actions": "^8.1.10",
     "@storybook/addon-essentials": "^8.1.10",
     "@storybook/addon-interactions": "^8.1.10",
