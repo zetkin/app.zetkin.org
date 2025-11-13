@@ -23,7 +23,10 @@ export async function middleware(request: NextRequest) {
     password: requiredEnvVar('SESSION_PASSWORD'),
   });
 
-  if (isProtectedRoute && !session?.tokenData) {
+  const hasTokenData = !!session?.tokenData;
+  const userIsAnonymous = !hasTokenData;
+
+  if (isProtectedRoute && userIsAnonymous) {
     return NextResponse.redirect(
       new URL('/login?redirect=' + path, request.nextUrl)
     );
