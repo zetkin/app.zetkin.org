@@ -23,29 +23,27 @@ const AreaAssignmentListItem: FC<Props> = ({ assignment, href }) => {
   const messages = useMessages(messageIds);
 
   return (
-    <div>
-      <MyActivityListItem
-        actions={[
-          <ZUIButton
-            key="mainAction"
-            href={href}
-            label={messages.activityList.actions.areaAssignment()}
-            size="large"
-            variant="secondary"
-          />,
-        ]}
-        info={[
-          {
-            Icon: GroupWorkOutlined,
-            labels: [
-              campaign.campaignFuture.data?.title,
-              organization.data?.title,
-            ].filter((label) => !!label) as string[],
-          },
-        ]}
-        title={assignment.title || messages.defaultTitles.areaAssignment()}
-      />
-    </div>
+    <MyActivityListItem
+      actions={[
+        <ZUIButton
+          key="mainAction"
+          href={href}
+          label={messages.activityList.actions.areaAssignment()}
+          size="large"
+          variant="secondary"
+        />,
+      ]}
+      info={[
+        {
+          Icon: GroupWorkOutlined,
+          labels: [
+            campaign.campaignFuture.data?.title,
+            organization.data?.title,
+          ].filter((label) => !!label) as string[],
+        },
+      ]}
+      title={assignment.title || messages.defaultTitles.areaAssignment()}
+    />
   );
 };
 
