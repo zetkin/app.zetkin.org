@@ -1,15 +1,12 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
-import isEmail from 'validator/lib/isEmail';
+import { Link } from '@mui/material';
 
 import { IColumnType } from '.';
-import { PersonFieldViewColumn, ZetkinViewColumn } from '../../types';
-
-const phoneRegex = /^(\+|0)?[\d\s-]{6,}$/;
-
-const looksLikePhoneNumberish = (value: string): boolean => {
-  // Check if the value matches the phone number regex
-  return phoneRegex.test(value);
-};
+import {
+  NATIVE_PERSON_FIELDS,
+  PersonFieldViewColumn,
+  ZetkinViewColumn,
+} from '../../types';
 
 type SimpleData = string | number | boolean | null;
 
@@ -35,20 +32,18 @@ export default class PersonFieldColumnType
       renderCell: (params) => {
         const cell = params.row[params.field];
         const value = getValue(cell, column);
-        if (isEmail(value)) {
-          return (
-            <a href={`mailto:${value}`} style={{ textDecoration: 'none' }}>
-              {value}
-            </a>
-          );
+
+        if (column.config.field == NATIVE_PERSON_FIELDS.EMAIL) {
+          return <Link href={`mailto:${value}`}>{value}</Link>;
         }
-        if (looksLikePhoneNumberish(value)) {
-          return (
-            <a href={`tel:${value}`} style={{ textDecoration: 'none' }}>
-              {value}
-            </a>
-          );
+
+        if (
+          column.config.field == NATIVE_PERSON_FIELDS.PHONE ||
+          column.config.field == NATIVE_PERSON_FIELDS.ALT_PHONE
+        ) {
+          return <Link href={`tel:${value}`}>{value}</Link>;
         }
+
         return <div>{value}</div>;
       },
       valueGetter: (params) => {
