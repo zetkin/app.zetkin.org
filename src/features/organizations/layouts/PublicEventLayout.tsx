@@ -3,7 +3,6 @@
 import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
-import { Typography } from '@mui/material';
 
 import ActivistPortalHeader from '../components/ActivistPortlHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -57,7 +56,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                       start={new Date(removeOffset(event.start_time))}
                     />
                   </ZUIText>
-                  <Typography component="span">·</Typography>
+                  <ZUIText component="span">·</ZUIText>
                   <ZUIText variant="bodySmRegular">
                     {event.location?.title || (
                       <Msg id={messageIds.eventPage.noLocation} />
