@@ -10,7 +10,6 @@ import {
   Explore,
   FilterListOutlined,
   Groups,
-  Home,
   KeyboardDoubleArrowLeftOutlined,
   KeyboardDoubleArrowRightOutlined,
   LocalOffer,
@@ -381,14 +380,12 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                           href: '/my',
                           label:
                             messages.organizeSidebar.myPagesMenuItemLabel(),
-                          startIcon: <Home />,
                         },
                         {
                           divider: true,
                           href: '/my/settings',
                           label:
                             messages.organizeSidebar.mySettingsMenuItemLabel(),
-                          startIcon: <Settings />,
                         },
                         {
                           label: messages.organizeSidebar.signOut(),
