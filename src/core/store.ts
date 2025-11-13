@@ -56,9 +56,9 @@ import areaAssignmentSlice, {
 } from 'features/areaAssignments/store';
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
-import householdAssignmentSlice, {
-  HouseholdAssignmentsStoreSlice,
-} from 'features/householdsAssignments/store';
+import visitAssignmentSlice, {
+  VisitAssignmentsStoreSlice,
+} from 'features/visitassignments/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
@@ -72,7 +72,7 @@ export interface RootState {
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
-  householdAssignments: HouseholdAssignmentsStoreSlice;
+  visitAssignments: VisitAssignmentsStoreSlice;
   import: ImportStoreSlice;
   joinForms: JoinFormsStoreSlice;
   journeys: JourneysStoreSlice;
@@ -100,7 +100,6 @@ const reducer = {
   emails: emailsSlice.reducer,
   events: eventsSlice.reducer,
   files: filesSlice.reducer,
-  householdAssignments: householdAssignmentSlice.reducer,
   import: importSlice.reducer,
   joinForms: joinFormsSlice.reducer,
   journeys: journeysSlice.reducer,
@@ -114,6 +113,7 @@ const reducer = {
   tasks: tasksSlice.reducer,
   user: userSlice.reducer,
   views: viewsSlice.reducer,
+  visitAssignments: visitAssignmentSlice.reducer,
 };
 
 const listenerMiddleware = createListenerMiddleware();

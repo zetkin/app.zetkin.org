@@ -68,9 +68,9 @@ export default makeMessages('feat.campaigns', {
     createCallAssignment: m('Call assignment'),
     createEmail: m('Email'),
     createEvent: m('Event'),
-    createHouseholdAssignment: m('Household Assignment'),
     createSurvey: m('Survey'),
     createTask: m('Task'),
+    createVisitAssignment: m('Visit Assignment'),
   },
   events: m('Events'),
   feedback: {

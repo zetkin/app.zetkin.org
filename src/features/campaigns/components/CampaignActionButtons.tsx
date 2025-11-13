@@ -30,11 +30,11 @@ import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
-import useCreateHouseholdAssignment from 'features/householdsAssignments/hooks/useCreateHouseholdsAssignment';
+import useCreateVisitAssignment from 'features/visitassignments/hooks/useCreateVisitAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, HOUSEHOLDS2, TASKS } from 'utils/featureFlags';
+import { AREAS, VISITS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
-import householdAssignmentMessageIds from 'features/householdsAssignments/l10n/messageIds';
+import visitAssignmentMessageIds from 'features/visitassignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 enum CAMPAIGN_MENU_ITEMS {
@@ -52,13 +52,11 @@ const CampaignActionButtons: React.FunctionComponent<
 > = ({ campaign }) => {
   const campaginMessages = useMessages(campaignMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
-  const householdAssignmentMessages = useMessages(
-    householdAssignmentMessageIds
-  );
+  const visitAssignmentMessages = useMessages(visitAssignmentMessageIds);
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
-  const hasHouseholdAssignments = useFeature(HOUSEHOLDS2);
+  const hasVisitAssignments = useFeature(VISITS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -66,7 +64,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
-  const createHouseholdAssignment = useCreateHouseholdAssignment(orgId, campId);
+  const createVisitAssignment = useCreateVisitAssignment(orgId, campId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -167,13 +165,13 @@ const CampaignActionButtons: React.FunctionComponent<
     });
   }
 
-  if (hasHouseholdAssignments) {
+  if (hasVisitAssignments) {
     menuItems.push({
       icon: <MeetingRoom />,
-      label: campaginMessages.createButton.createHouseholdAssignment(),
+      label: campaginMessages.createButton.createVisitAssignment(),
       onClick: () =>
-        createHouseholdAssignment({
-          title: householdAssignmentMessages.default.title(),
+        createVisitAssignment({
+          title: visitAssignmentMessages.default.title(),
         }),
     });
   }

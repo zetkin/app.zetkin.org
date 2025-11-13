@@ -90,14 +90,6 @@ export default function mockState(overrides?: RootState) {
     files: {
       fileList: remoteList(),
     },
-    householdAssignments: {
-      assigneesByAssignmentId: {},
-      householdAssignmentList: remoteList(),
-      householdGraphByAssignmentId: {},
-      householdStatsByAssignmentId: {},
-      metricsByAssignmentId: {},
-      statsByHouseholdsAssId: {},
-    },
     import: {
       importResult: null,
       pendingFile: {
@@ -183,6 +175,14 @@ export default function mockState(overrides?: RootState) {
       recentlyCreatedFolder: null,
       rowsByViewId: {},
       viewList: remoteList(),
+    },
+    visitAssignments: {
+      assigneesByAssignmentId: {},
+      metricsByAssignmentId: {},
+      statsByVisitAssId: {},
+      visitAssignmentList: remoteList(),
+      visitGraphByAssignmentId: {},
+      visitStatsByAssignmentId: {},
     },
   };
 
