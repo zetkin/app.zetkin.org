@@ -17,21 +17,26 @@ const FieldGroup: FC<FieldGroupProps> = ({ fields, height }) => {
     (f) => f.presentation === FIELD_PRESENTATION.ICON_ONLY
   );
   return (
-    <Box height={height} sx={{
-      display: 'flex',
-      flexFlow: 'column',
-      gap: '4px 0',
-      paddingLeft: '8px',
-      position: 'relative',
-    }} >
-      <Box sx={{
+    <Box
+      height={height}
+      sx={{
         display: 'flex',
-        gap: '0 4px',
-        paddingRight: '4px',
-        position: 'absolute',
-        right: 0,
-        top: 2,
-      }}>
+        flexFlow: 'column',
+        gap: '4px 0',
+        paddingLeft: '8px',
+        position: 'relative',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          gap: '0 4px',
+          paddingRight: '4px',
+          position: 'absolute',
+          right: 0,
+          top: 2,
+        }}
+      >
         {fieldsWithIconOnly.map((field, index) => (
           <Field key={`${field.kind}-${index}`} field={field} />
         ))}

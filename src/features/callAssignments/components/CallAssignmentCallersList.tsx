@@ -30,19 +30,22 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
             ))}
             {hiddenTags.length > 0 && (
               <Tooltip title={tooltipTitle}>
-                <Box border={2} sx={{
-                  borderColor: theme.palette.grey[500],
-                  borderRadius: '1em',
-                  borderWidth: '1px',
-                  color: theme.palette.text.secondary,
-                  cursor: 'default',
-                  display: 'flex',
-                  lineHeight: 'normal',
-                  marginRight: '0.1em',
-                  overflow: 'hidden',
-                  padding: '0.2em 0.7em',
-                  textOverflow: 'ellipsis',
-                }}>
+                <Box
+                  border={2}
+                  sx={{
+                    borderColor: theme.palette.grey[500],
+                    borderRadius: '1em',
+                    borderWidth: '1px',
+                    color: theme.palette.text.secondary,
+                    cursor: 'default',
+                    display: 'flex',
+                    lineHeight: 'normal',
+                    marginRight: '0.1em',
+                    overflow: 'hidden',
+                    padding: '0.2em 0.7em',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
                   {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
                 </Box>
               </Tooltip>

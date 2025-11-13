@@ -29,16 +29,18 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
   const colorClassName = classMap[state];
 
   return (
-    <Box sx={{
-      alignItems: 'center',
-      backgroundColor: colorClassName,
-      borderRadius: '2em',
-      color: 'white',
-      display: 'inline-flex',
-      fontSize: 14,
-      fontWeight: 'bold',
-      padding: '0.5em 0.7em',
-    }}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        backgroundColor: colorClassName,
+        borderRadius: '2em',
+        color: 'white',
+        display: 'inline-flex',
+        fontSize: 14,
+        fontWeight: 'bold',
+        padding: '0.5em 0.7em',
+      }}
+    >
       <Msg id={messageIds.state[state]} />
     </Box>
   );
