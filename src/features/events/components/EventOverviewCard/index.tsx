@@ -111,6 +111,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
 
   const events = useParallelEvents(orgId, data.start_time, data.end_time);
 
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -316,7 +318,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
             <Box display="flex" flex={1} flexDirection="column" gap={2}>
               <ZUIPreviewableInput
                 {...previewableProps}
-                renderInput={() => {
+                renderInput={(renderParams) => {
                   return (
                     <Box alignItems="center" display="flex">
                       <Autocomplete
@@ -346,11 +348,22 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                           }
                           setLocationId(location.id);
                         }}
+                        onClose={() => setLocationDropdownOpen(false)}
+                        onOpen={() => setLocationDropdownOpen(true)}
+                        open={locationDropdownOpen}
                         options={options}
                         renderInput={(params) => (
                           <TextField
                             {...params}
+                            inputRef={renderParams.ref}
                             label={messages.eventOverviewCard.location()}
+                            onFocus={(e) => {
+                              setLocationDropdownOpen(true);
+                              const target = e.currentTarget;
+                              setTimeout(() => {
+                                target?.select();
+                              }, 0);
+                            }}
                             sx={{
                               backgroundColor: 'white',
                               borderRadius: '5px',
