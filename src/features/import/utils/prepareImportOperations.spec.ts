@@ -1,4 +1,4 @@
-import { CountryCode } from 'libphonenumber-js/types.cjs';
+import { CountryCode } from 'libphonenumber-js';
 import { describe, it } from '@jest/globals';
 
 import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
