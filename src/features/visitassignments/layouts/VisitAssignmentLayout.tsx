@@ -63,7 +63,7 @@ const VisitAssignmentLayout: FC<VisitAssignmentLayoutProps> = ({
 
   const handleDelete = () => {
     deleteVisitAssignment();
-    router.push(`/organize/${orgId}/projects/${visitAssignment.campId} `);
+    router.push(`/organize/${orgId}/projects/${visitAssignment.campaign.id} `);
   };
 
   return (

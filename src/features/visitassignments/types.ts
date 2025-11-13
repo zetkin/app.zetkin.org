@@ -13,10 +13,14 @@ export type ZetkinVisitAssignee = {
 
 export type ZetkinVisitAssignment = {
   assignees: ZetkinVisitAssignee[];
-  campId: number;
+  campaign: {
+    id: number;
+  };
   end_date: string | null;
   id: string;
-  orgId: number;
+  organization: {
+    id: number;
+  };
   queryId: number;
   start_date: string | null;
   target: ZetkinQuery;

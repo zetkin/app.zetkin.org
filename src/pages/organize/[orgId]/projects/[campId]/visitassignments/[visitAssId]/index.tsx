@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     const data = await client.get<ZetkinVisitAssignment>(
       `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}`
     );
-    const actualCampaign = data.campId?.toString() ?? 'standalone';
+    const actualCampaign = data.campaign.id?.toString() ?? 'standalone';
     if (actualCampaign !== campId) {
       return { notFound: true };
     }

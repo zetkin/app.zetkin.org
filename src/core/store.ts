@@ -57,6 +57,7 @@ import areaAssignmentSlice, {
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
 import visitAssignmentSlice, {
+  visitAssignmentCreated,
   VisitAssignmentsStoreSlice,
 } from 'features/visitassignments/store';
 
@@ -186,6 +187,16 @@ listenerMiddleware.startListening({
     const journeyInstance = action.payload;
     Router.push(
       `/organize/${journeyInstance.organization.id}/journeys/${journeyInstance.journey.id}/${journeyInstance.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: visitAssignmentCreated,
+  effect: (action) => {
+    const visitAssignment = action.payload;
+    Router.push(
+      `/organize/${visitAssignment.organization.id}/projects/${visitAssignment.campaign.id}/visitassignments/${visitAssignment.id}`
     );
   },
 });

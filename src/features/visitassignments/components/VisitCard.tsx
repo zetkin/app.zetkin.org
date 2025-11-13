@@ -76,7 +76,7 @@ const VisitCard: FC<VisitCardProps> = ({
   const navigateToVisit = (visitId: number) => {
     router.replace(
       {
-        pathname: `/organize/${orgId}/projects/${assignment.campId}/visitassignments/${assignment.id}/map`,
+        pathname: `/organize/${orgId}/projects/${assignment.campaign.id}/visitassignments/${assignment.id}/map`,
         query: { navigateToVisitId: visitId },
       },
       undefined,
