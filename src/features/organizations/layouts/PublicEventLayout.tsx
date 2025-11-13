@@ -3,7 +3,7 @@
 import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 
-import ActivistPortalHeader from '../components/ActivistPortlHeader';
+import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';

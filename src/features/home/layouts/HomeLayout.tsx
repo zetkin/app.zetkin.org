@@ -7,12 +7,12 @@ import NextLink from 'next/link';
 
 import { useMessages } from 'core/i18n';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
-import ActivistPortalHeader from 'features/organizations/components/ActivistPortlHeader';
 import ZUIAlert from 'zui/components/ZUIAlert';
 import useUser from 'core/hooks/useUser';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useMemberships from 'features/organizations/hooks/useMemberships';
 import messageIds from '../l10n/messageIds';
+import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIText from 'zui/components/ZUIText';
 
 type Props = {
