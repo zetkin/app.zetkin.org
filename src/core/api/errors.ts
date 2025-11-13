@@ -29,13 +29,13 @@ export class ApiClientError extends Error {
     let title: string | undefined;
     let description: string | undefined;
 
-    try {
-      const data = await res.json();
-      title = data?.error?.title;
-      description = data?.error?.description;
-    } catch (_e) {
-      // Ignore and return as usual
-    }
+    // try {
+    //   const data = await res.json();
+    //   title = data?.error?.title;
+    //   description = data?.error?.description;
+    // } catch (_e) {
+    //   // Ignore and return as usual
+    // }
 
     return new ApiClientError(res.status, res.url, title, description);
   }
