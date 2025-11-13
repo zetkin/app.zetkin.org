@@ -33,11 +33,6 @@ type ZUILinkProps = {
    * The text that will show as the link.
    */
   text: string;
-
-  /**
-   * Switch color (default: primary)
-   */
-  variant?: 'primary' | 'secondary';
 };
 
 const ZUILink: FC<ZUILinkProps> = ({
@@ -45,7 +40,6 @@ const ZUILink: FC<ZUILinkProps> = ({
   text,
   openInNewTab = false,
   size,
-  variant = 'primary',
   hoverUnderline,
 }) => {
   const linkVariants = {
@@ -61,11 +55,10 @@ const ZUILink: FC<ZUILinkProps> = ({
       sx={(theme) => ({
         '&:hover': {
           textDecoration: 'underline',
-          textDecorationColor: theme.palette.text[variant],
+          textDecorationColor: theme.palette.text.primary,
         },
-        color: theme.palette.text[variant],
         textDecoration: hoverUnderline ? 'none' : 'underline',
-        textDecorationColor: theme.palette.text[variant],
+        textDecorationColor: theme.palette.text.primary,
       })}
       target={openInNewTab ? '_blank' : ''}
       variant={size ? linkVariants[size] : undefined}

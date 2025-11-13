@@ -118,7 +118,7 @@ const ZUITabbedNavBar: FC<ZUITabbedNavBarProps> = ({
               ''
             )
           }
-          iconPosition={'end'}
+          iconPosition="end"
           label={tab.label}
           sx={{
             fontSize: '0.875rem',
