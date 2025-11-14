@@ -27,7 +27,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
   optionAlreadySelected,
 }) => {
   const messages = useMessages(messageIds);
-  const { importID, resetImportIDIfNeeded } = useImportID();
+  const { importID, updateImportID } = useImportID();
 
   const fieldOptionsSorted = [
     ...fieldOptions,
@@ -110,18 +110,21 @@ const FieldSelect: FC<FieldSelectProps> = ({
       onChange={(event) => {
         clearConfiguration();
 
-        if (event.target.value === '' || event.target.value === undefined) {
-          resetImportIDIfNeeded(column.originalColumn, importID);
+        const isCurrentlyImportID =
+          column.originalColumn.kind == ColumnKind.ID_FIELD &&
+          column.originalColumn.idField &&
+          importID == column.originalColumn.idField;
+
+        if (isCurrentlyImportID) {
+          updateImportID(null);
+        }
+
+        if (event.target.value == '') {
           onChange({
             kind: ColumnKind.UNKNOWN,
             selected: false,
           });
-          return;
-        }
-
-        resetImportIDIfNeeded(column.originalColumn, importID);
-
-        if (event.target.value == 'ext_id') {
+        } else if (event.target.value == 'ext_id') {
           onChange({
             idField: 'ext_id',
             kind: ColumnKind.ID_FIELD,

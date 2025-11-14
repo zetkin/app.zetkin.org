@@ -55,7 +55,7 @@ const MappingRow: FC<MappingRowProps> = ({
 }) => {
   const theme = useTheme();
   const column = useUIDataColumn(columnIndex);
-  const { importID, handleColumnDeselection } = useImportID();
+  const { importID, updateImportID } = useImportID();
 
   const columnValuesMessage = useColumnValuesMessage(
     column.numberOfEmptyRows,
@@ -95,11 +95,20 @@ const MappingRow: FC<MappingRowProps> = ({
                   selected: isChecked,
                 });
               } else {
-                handleColumnDeselection(
-                  column.originalColumn,
-                  importID,
-                  onChange
-                );
+                const isCurrentlyImportID =
+                  column.originalColumn.kind == ColumnKind.ID_FIELD &&
+                  column.originalColumn.idField &&
+                  importID == column.originalColumn.idField;
+
+                if (isCurrentlyImportID) {
+                  updateImportID(null);
+                }
+
+                onChange({
+                  ...column,
+                  kind: ColumnKind.UNKNOWN,
+                  selected: false,
+                });
               }
               clearConfiguration();
             }}
