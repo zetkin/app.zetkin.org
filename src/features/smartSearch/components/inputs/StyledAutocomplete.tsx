@@ -317,24 +317,54 @@ const StyledGroupedSelect: FC<Props> = (props) => {
         popper: StyledPopper,
       }}
       sx={{
-        '& .MuiInputBase-root': {
-          border: 'none',
-          borderBottom: `1px solid rgba(0, 0, 0, 0.42)`,
-          borderRadius: 0,
-          display: 'flex',
-          padding: 0,
-        },
-        '& .MuiInputBase-root:hover': {
-          borderBottom: `2px solid #ED1C55`,
-        },
         '& .MuiOutlinedInput-notchedOutline': {
           border: 'none',
+          padding: 0,
+        },
+        '& .MuiOutlinedInput-root': {
+          border: 'none',
+          // borderBottom: `1px solid rgba(0, 0, 0, 0.42)`,
+          borderRadius: 0,
+          // display: 'flex',
           padding: 0,
         },
         '& .MuiOutlinedInput-root .MuiInputBase-input': {
           fontSize: '34px',
           padding: 0,
           textOverflow: 'clip',
+        },
+        '& .MuiOutlinedInput-root.Mui-focused:after': {
+          borderBottom: '2px solid #ED1C55',
+          transform: 'scaleX(1) translateX(0)',
+        },
+        '& .MuiOutlinedInput-root:after': {
+          bottom: 0,
+          content: '""',
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          transform: 'scaleX(0)',
+          transition: 'transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
+        },
+        '& .MuiOutlinedInput-root:before': {
+          borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
+          bottom: 0,
+          content: '""',
+          left: 0,
+          pointerEvents: 'none',
+          position: 'absolute',
+          right: 0,
+          transition:
+            'border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        },
+        '& .MuiOutlinedInput-root:hover:before': {
+          borderBottom: `2px solid black`,
+        },
+        '& .MuiSvgIcon-root': {
+          color: 'rgba(0, 0, 0, 0.54)',
+        },
+        '& .MuiSvgIcon-root:hover': {
+          color: 'rgba(0, 0, 0, 0.54)',
         },
         display: 'inline-block',
         minWidth: props.minWidth,
