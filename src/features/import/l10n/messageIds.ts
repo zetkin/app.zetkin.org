@@ -132,7 +132,7 @@ export default makeMessages('feat.import', {
         idField: 'ext_id' | 'id' | 'email';
         numValues: number;
       }>(
-        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} ext_id {External ID} email {Email} other {Unknown}}'
+        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} ext_id {External ID} email {Email}}'
       ),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
