@@ -99,7 +99,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(true);
   });
 
-  it('returns false if all email values contain "@"', () => {
+  it('returns false if all email values are correctly formatted', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
         idField: 'email',
@@ -113,7 +113,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(false);
   });
 
-  it('returns true if any email value does not contain "@"', () => {
+  it('returns true if any email value is not a correct email', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
         idField: 'email',
@@ -127,7 +127,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(true);
   });
 
-  it('returns true if email value is empty', () => {
+  it('returns false if email value is empty', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
         idField: 'email',
@@ -138,6 +138,6 @@ describe('hasWrongIDFormat()', () => {
       true
     );
 
-    expect(wrongIDFormat).toBe(true);
+    expect(wrongIDFormat).toBe(false);
   });
 });
