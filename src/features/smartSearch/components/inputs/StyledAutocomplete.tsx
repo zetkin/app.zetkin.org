@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ComponentType, FC, HTMLAttributes, useCallback, useMemo } from 'react';
+import {
+  ComponentType,
+  FC,
+  HTMLAttributes,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, {
   autocompleteClasses,
@@ -255,6 +262,9 @@ const StyledGroupedSelect: FC<Props> = (props) => {
     }
   };
 
+  const [editMode, setEditMode] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
   const onChange = useCallback(
     (
       event: React.SyntheticEvent,
@@ -274,8 +284,9 @@ const StyledGroupedSelect: FC<Props> = (props) => {
         reason,
         details
       );
+      setInputValue('');
     },
-    [props.onChange]
+    [props.onChange, setInputValue]
   );
 
   if (!valueItem) {
@@ -287,19 +298,62 @@ const StyledGroupedSelect: FC<Props> = (props) => {
       disableClearable={true}
       disableListWrap
       groupBy={(option) => option.group ?? ''}
+      inputValue={inputValue}
       onChange={onChange}
       onHighlightChange={handleHighlightChange}
+      onInputChange={(_event, value, reason) => {
+        if (reason === 'reset') {
+          setInputValue('');
+          return;
+        }
+
+        setInputValue(value);
+      }}
       options={options}
       renderGroup={(params) => params as unknown as React.ReactNode}
       renderInput={(params) => (
-        <Box>
-          <TextField {...params} />
+        <Box
+          sx={{
+            position: 'relative',
+          }}
+        >
+          <TextField
+            {...params}
+            onBlur={() => setEditMode(false)}
+            onFocus={() => {
+              setEditMode(true);
+              setInputValue('');
+            }}
+            placeholder={valueItem?.label}
+            sx={
+              editMode
+                ? {}
+                : {
+                    '& .MuiOutlinedInput-root input': {
+                      opacity: 0,
+                    },
+                  }
+            }
+          />
           <Typography
             sx={{
               fontSize: '34px',
               height: 0,
               opacity: 0,
               paddingRight: '39px',
+            }}
+          >
+            {valueItem?.label}
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '34px',
+              left: 0,
+              paddingRight: '39px',
+              pointerEvents: 'none',
+              position: 'absolute',
+              top: 0,
+              ...(editMode ? { opacity: 0 } : {}),
             }}
           >
             {valueItem?.label}
