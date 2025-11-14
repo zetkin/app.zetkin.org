@@ -74,11 +74,14 @@ export default makeMessages('feat.import', {
         },
       },
       ids: {
-        email: m('Email'),
-        externalID: m('External ID'),
         externalIDInfo: m(
           'An external ID is an ID that comes from another system than Zetkin, such as a separate member database. It can be used to find and identify people in Zetkin.'
         ),
+        field: {
+          email: m('Email'),
+          ['ext_id']: m('External ID'),
+          id: m('Zetkin ID'),
+        },
         importCheckboxDescription: m(
           'The field will be used to find people that already exist in Zetkin, each row should ideally be unique'
         ),
@@ -96,7 +99,6 @@ export default makeMessages('feat.import', {
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
         ),
-        zetkinID: m('Zetkin ID'),
         zetkinIDInfo: m(
           'A Zetkin ID is the ID of a person already in Zetkin. You would have it in a file if you exported data from Zetkin.'
         ),

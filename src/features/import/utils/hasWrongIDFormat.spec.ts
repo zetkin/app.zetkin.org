@@ -16,20 +16,6 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(false);
   });
 
-  it('returns false if column is ID_FIELD, but config is unfinished', () => {
-    const wrongIDFormat = hasWrongIDFormat(
-      {
-        idField: null,
-        kind: ColumnKind.ID_FIELD,
-        selected: true,
-      },
-      [],
-      true
-    );
-
-    expect(wrongIDFormat).toBe(false);
-  });
-
   it('returns false for empty Zetkin IDs', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {

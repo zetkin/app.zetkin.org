@@ -74,7 +74,7 @@ export type EnumColumn = BaseColumn & {
 export type ImportID = 'ext_id' | 'id' | 'email';
 
 export type IDFieldColumn = BaseColumn & {
-  idField: ImportID | null;
+  idField: ImportID;
   kind: ColumnKind.ID_FIELD;
 };
 

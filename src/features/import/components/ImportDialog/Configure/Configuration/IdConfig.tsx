@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { BadgeOutlined } from '@mui/icons-material';
 
-import { IDFieldColumn, ImportID } from 'features/import/utils/types';
+import { IDFieldColumn } from 'features/import/utils/types';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useIDConfig from 'features/import/hooks/useIDConfig';
 import { Msg, useMessages } from 'core/i18n';
@@ -28,26 +28,17 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const { importID, updateImportID } = useImportID();
   const { skipUnknown, updateSheetSettings } = useSheets();
   const messages = useMessages(messageIds);
-  const getIdLabel = (idField: ImportID | null) => {
-    if (idField == 'id') {
-      return 'Zetkin ID';
-    } else if (idField == 'ext_id') {
-      return 'External ID';
-    } else if (idField == 'email') {
-      return 'Email';
-    } else {
-      return '';
-    }
-  };
+
+  const idField = uiDataColumn.originalColumn.idField;
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
       <Box display="flex" flexDirection="column" gap={1}>
-        {uiDataColumn.originalColumn.idField == 'id' && (
+        <Typography variant="h5">
+          <Msg id={messageIds.configuration.configure.ids.field[idField]} />
+        </Typography>
+        {idField == 'id' && (
           <>
-            <Typography variant="h5">
-              <Msg id={messageIds.configuration.configure.ids.zetkinID} />
-            </Typography>
             <Typography>
               <Msg id={messageIds.configuration.configure.ids.zetkinIDInfo} />
             </Typography>
@@ -62,32 +53,19 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             )}
           </>
         )}
-        {uiDataColumn.originalColumn.idField == 'email' && (
-          <>
-            <Typography variant="h5">
-              <Msg id={messageIds.configuration.configure.ids.email} />
-            </Typography>
-            {wrongIDFormat && (
-              <Alert severity="error">
-                <Msg
-                  id={
-                    messageIds.configuration.configure.ids
-                      .wrongEmailFormatWarning
-                  }
-                />
-              </Alert>
-            )}
-          </>
+        {idField == 'email' && wrongIDFormat && (
+          <Alert severity="error">
+            <Msg
+              id={
+                messageIds.configuration.configure.ids.wrongEmailFormatWarning
+              }
+            />
+          </Alert>
         )}
-        {uiDataColumn.originalColumn.idField == 'ext_id' && (
-          <>
-            <Typography variant="h5">
-              <Msg id={messageIds.configuration.configure.ids.externalID} />
-            </Typography>
-            <Typography>
-              <Msg id={messageIds.configuration.configure.ids.externalIDInfo} />
-            </Typography>
-          </>
+        {idField == 'ext_id' && (
+          <Typography>
+            <Msg id={messageIds.configuration.configure.ids.externalIDInfo} />
+          </Typography>
         )}
         <Box mt={2}>
           <Box alignItems="center" display="flex" gap={1}>
@@ -100,7 +78,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             <Msg
               id={messageIds.configuration.configure.ids.importIDDescription}
               values={{
-                importID: getIdLabel(uiDataColumn.originalColumn.idField),
+                importID: messages.configuration.configure.ids.field[idField](),
               }}
             />
           </Typography>
@@ -110,18 +88,18 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={importID == uiDataColumn.originalColumn.idField}
+                  checked={importID == idField}
                   onChange={() => {
-                    if (importID == uiDataColumn.originalColumn.idField) {
+                    if (importID == idField) {
                       updateImportID(null);
                     } else {
-                      updateImportID(uiDataColumn.originalColumn.idField!);
+                      updateImportID(idField!);
                     }
                   }}
                 />
               }
               label={messages.configuration.configure.ids.importCheckboxLabel({
-                importID: getIdLabel(uiDataColumn.originalColumn.idField),
+                importID: messages.configuration.configure.ids.field[idField](),
               })}
             />
             <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
@@ -133,7 +111,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
               />
             </Typography>
           </Box>
-          {importID == uiDataColumn.originalColumn.idField && (
+          {importID == idField && (
             <Box display="flex" flexDirection="column">
               <FormControlLabel
                 control={
