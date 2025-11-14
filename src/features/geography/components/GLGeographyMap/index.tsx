@@ -21,6 +21,7 @@ import { Msg } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import useAreaDrawing from 'features/geography/hooks/useAreaDrawing';
 import DrawingArea from './DrawingArea';
+import { PointData } from 'features/areas/types';
 
 type Props = {
   areas: Zetkin2Area[];
@@ -45,6 +46,8 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
     map,
     selectedArea,
   });
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [userLocation, setUserLocation] = useState<PointData | null>(null);
 
   const areasExceptSelected = useMemo(
     () => areas.filter((area) => area.id !== selectedArea?.id),
@@ -101,13 +104,28 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
         </Box>
         <Box sx={{ flexGrow: 1, position: 'relative' }}>
           <ZUIMapControls
+            isFollowing={isFollowing}
             onFitBounds={() => {
               if (map) {
                 map.fitBounds(bounds, { animate: true, duration: 800 });
               }
             }}
-            onGeolocate={(lngLat) => {
-              map?.panTo(lngLat, { animate: true, duration: 800 });
+            onFollowChange={(follow) => {
+              setIsFollowing(follow);
+              if (follow && userLocation && map) {
+                map.easeTo({ center: userLocation, duration: 400 });
+              }
+            }}
+            onGeolocate={(lngLat, _accuracy, tracking) => {
+              if (tracking) {
+                setUserLocation(lngLat);
+                if (isFollowing) {
+                  map?.easeTo({ center: lngLat, duration: 400 });
+                }
+              } else {
+                setUserLocation(null);
+                setIsFollowing(false);
+              }
             }}
             onZoomIn={() => map?.zoomIn()}
             onZoomOut={() => map?.zoomOut()}
@@ -129,6 +147,8 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
             ref={(map) => setMap(map?.getMap() ?? null)}
             initialViewState={{ bounds }}
             mapStyle={env.vars.MAPLIBRE_STYLE}
+            onDragStart={() => setIsFollowing(false)}
+            onZoomStart={() => setIsFollowing(false)}
             RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
           >
             <Areas areas={areasExceptSelected} />

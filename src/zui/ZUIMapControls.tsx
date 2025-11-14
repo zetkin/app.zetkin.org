@@ -1,12 +1,22 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
-import { Add, Remove, GpsFixed, GpsNotFixed, Home } from '@mui/icons-material';
+import {
+  Add,
+  Remove,
+  GpsFixed,
+  GpsNotFixed,
+  Home,
+  NearMe,
+  NearMeOutlined,
+} from '@mui/icons-material';
 
 import { Latitude, Longitude, PointData } from 'features/areas/types';
 
 type Props = {
+  isFollowing?: boolean;
   onFitBounds: () => void;
+  onFollowChange?: (follow: boolean) => void;
   onGeolocate: (
     lngLat: PointData,
     accuracy: number | null,
@@ -21,6 +31,8 @@ const ZUIMapControls: React.FC<Props> = ({
   onGeolocate,
   onZoomIn,
   onZoomOut,
+  isFollowing,
+  onFollowChange,
 }) => {
   const theme = useTheme();
   const [isAwaitingInitialPosition, setIsAwaitingInitialPosition] =
@@ -32,30 +44,6 @@ const ZUIMapControls: React.FC<Props> = ({
   const isUserLocationVisibleRef = useRef<boolean>(false);
 
   useEffect(() => {
-    geolocationWatchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        const lat = pos.coords.latitude as Latitude;
-        const lng = pos.coords.longitude as Longitude;
-        const accuracy = pos.coords.accuracy ?? null;
-        const point: PointData = [lng, lat];
-
-        latestPositionRef.current = point;
-        latestAccuracyRef.current = accuracy;
-        if (isAwaitingInitialPosition) {
-          setIsAwaitingInitialPosition(false);
-        }
-        if (isUserLocationVisibleRef.current) {
-          onGeolocate(point, accuracy, true);
-        }
-      },
-      () => {
-        if (isAwaitingInitialPosition) {
-          setIsAwaitingInitialPosition(false);
-        }
-      },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
-    );
-
     return () => {
       if (geolocationWatchIdRef.current !== null) {
         navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
@@ -105,24 +93,79 @@ const ZUIMapControls: React.FC<Props> = ({
               return;
             }
 
-            const nextIsVisible = !isUserLocationVisible;
-            setIsUserLocationVisible(nextIsVisible);
-            isUserLocationVisibleRef.current = nextIsVisible;
-            const latestPosition = latestPositionRef.current;
-            const latestAccuracy = latestAccuracyRef.current ?? null;
+            if (isUserLocationVisible) {
+              setIsUserLocationVisible(false);
+              isUserLocationVisibleRef.current = false;
+              onFollowChange?.(false);
 
-            if (nextIsVisible) {
-              if (latestPosition) {
-                onGeolocate(latestPosition, latestAccuracy, true);
-              } else {
-                setIsAwaitingInitialPosition(true);
+              if (geolocationWatchIdRef.current !== null) {
+                navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
+                geolocationWatchIdRef.current = null;
               }
-            } else {
+
+              const latestPosition = latestPositionRef.current;
               if (latestPosition) {
                 onGeolocate(latestPosition, null, false);
               } else {
                 onGeolocate([0 as Longitude, 0 as Latitude], null, false);
               }
+              return;
+            }
+
+            setIsAwaitingInitialPosition(true);
+            if ('geolocation' in navigator) {
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  const lat = pos.coords.latitude as Latitude;
+                  const lng = pos.coords.longitude as Longitude;
+                  const accuracy = pos.coords.accuracy ?? null;
+                  const point: PointData = [lng, lat];
+
+                  latestPositionRef.current = point;
+                  latestAccuracyRef.current = accuracy;
+                  setIsAwaitingInitialPosition(false);
+                  setIsUserLocationVisible(true);
+                  isUserLocationVisibleRef.current = true;
+
+                  onGeolocate(point, accuracy, true);
+
+                  geolocationWatchIdRef.current =
+                    navigator.geolocation.watchPosition(
+                      (watchPos) => {
+                        const wLat = watchPos.coords.latitude as Latitude;
+                        const wLng = watchPos.coords.longitude as Longitude;
+                        const wAccuracy = watchPos.coords.accuracy ?? null;
+                        const wPoint: PointData = [wLng, wLat];
+
+                        latestPositionRef.current = wPoint;
+                        latestAccuracyRef.current = wAccuracy;
+                        if (isUserLocationVisibleRef.current) {
+                          onGeolocate(wPoint, wAccuracy, true);
+                        }
+                      },
+                      null,
+                      {
+                        enableHighAccuracy: true,
+                        maximumAge: 0,
+                        timeout: 10000,
+                      }
+                    );
+                },
+                () => {
+                  setIsAwaitingInitialPosition(false);
+                  setIsUserLocationVisible(false);
+                  isUserLocationVisibleRef.current = false;
+                  if (geolocationWatchIdRef.current !== null) {
+                    navigator.geolocation.clearWatch(
+                      geolocationWatchIdRef.current
+                    );
+                    geolocationWatchIdRef.current = null;
+                  }
+                },
+                { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+              );
+            } else {
+              setIsAwaitingInitialPosition(false);
             }
           }}
         >
@@ -134,6 +177,23 @@ const ZUIMapControls: React.FC<Props> = ({
             <GpsNotFixed />
           )}
         </Button>
+        {isUserLocationVisible && (
+          <Button
+            onClick={() => {
+              const next = !isFollowing;
+              onFollowChange?.(next);
+              if (next) {
+                const latestPosition = latestPositionRef.current;
+                const latestAccuracy = latestAccuracyRef.current ?? null;
+                if (latestPosition) {
+                  onGeolocate(latestPosition, latestAccuracy, true);
+                }
+              }
+            }}
+          >
+            {isFollowing ? <NearMe /> : <NearMeOutlined />}
+          </Button>
+        )}
       </ButtonGroup>
     </Box>
   );
