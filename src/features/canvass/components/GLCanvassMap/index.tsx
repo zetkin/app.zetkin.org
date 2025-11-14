@@ -7,10 +7,11 @@ import {
   LngLatBounds,
   MapOptions,
   Map as MapType,
+  GeoJSONSource,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { Zetkin2Area } from 'features/areas/types';
+import { PointData, Zetkin2Area } from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useLocations from 'features/areaAssignments/hooks/useLocations';
 import CanvassMapOverlays from '../CanvassMapOverlays';
@@ -38,6 +39,8 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     selectedArea.id
   );
   const crosshairRef = useRef<HTMLDivElement | null>(null);
+  const isTrackingRef = useRef<boolean>(false);
+  const followUserRef = useRef<boolean>(false);
   const createLocation = useCreateLocation(assignment.organization_id);
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LngLatLike, LngLatLike] | null
@@ -49,6 +52,105 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [userLocation, setUserLocation] = useState<PointData | null>(null);
+  const [userAccuracy, setUserAccuracy] = useState<number | null>(null);
+  const [mapZoom, setMapZoom] = useState<number | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const [displayUserLocation, setDisplayUserLocation] =
+    useState<PointData | null>(null);
+  const userAccuracyRef = useRef<number | null>(null);
+  const mapZoomRef = useRef<number | null>(null);
+  const smoothedUserLocationRef = useRef<PointData | null>(null);
+  const smoothedAccuracyRef = useRef<number | null>(null);
+  const userAnimFrameRef = useRef<number | null>(null);
+  const userAnimStartRef = useRef<number>(0);
+  const userAnimFromRef = useRef<PointData | null>(null);
+  const userAnimToRef = useRef<PointData | null>(null);
+
+  const cancelUserAnimation = () => {
+    if (userAnimFrameRef.current != null) {
+      cancelAnimationFrame(userAnimFrameRef.current);
+      userAnimFrameRef.current = null;
+    }
+  };
+
+  const animateUserLocation = useCallback(
+    (to: PointData) => {
+      const from = displayUserLocation ?? to;
+      if (from[0] === to[0] && from[1] === to[1]) {
+        cancelUserAnimation();
+        setDisplayUserLocation(to);
+        return;
+      }
+
+      cancelUserAnimation();
+      userAnimFromRef.current = from;
+      userAnimToRef.current = to;
+      userAnimStartRef.current = performance.now();
+
+      const durationMs = 400;
+      const easeInOut = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const step = (now: number) => {
+        const start = userAnimStartRef.current;
+        const progress = Math.min(1, (now - start) / durationMs);
+        const eased = easeInOut(progress);
+
+        const currFrom = userAnimFromRef.current ?? to;
+        const currTo = userAnimToRef.current ?? to;
+        const lng = currFrom[0] + (currTo[0] - currFrom[0]) * eased;
+        const lat = currFrom[1] + (currTo[1] - currFrom[1]) * eased;
+        setDisplayUserLocation([lng, lat] as PointData);
+
+        const source = map?.getSource('userLocation') as
+          | GeoJSONSource
+          | undefined;
+        if (source) {
+          const currentZoom = mapZoomRef.current ?? map?.getZoom() ?? null;
+          const acc = smoothedAccuracyRef.current ?? userAccuracyRef.current;
+          let accuracyPx = 18;
+          if (acc != null && currentZoom != null) {
+            const metersPerPixel =
+              (156543.03392 * Math.cos((lat * Math.PI) / 180)) /
+              Math.pow(2, currentZoom);
+            accuracyPx = acc / metersPerPixel;
+          }
+          const data: GeoJSON.FeatureCollection = {
+            features: [
+              {
+                geometry: {
+                  coordinates: [lng, lat],
+                  type: 'Point',
+                },
+                properties: { accuracyPx },
+                type: 'Feature',
+              },
+            ],
+            type: 'FeatureCollection',
+          };
+          source.setData(data);
+        }
+
+        if (progress < 1) {
+          userAnimFrameRef.current = requestAnimationFrame(step);
+        } else {
+          userAnimFrameRef.current = null;
+          setDisplayUserLocation(currTo);
+        }
+      };
+
+      userAnimFrameRef.current = requestAnimationFrame(step);
+    },
+    [displayUserLocation]
+  );
+
+  useEffect(() => {
+    return () => {
+      cancelUserAnimation();
+    };
+  }, []);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -176,6 +278,36 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return Array.from(new Set(titles));
   }, [locations.data]);
 
+  const userLocationGeoJson: GeoJSON.FeatureCollection | null = useMemo(() => {
+    if (!displayUserLocation) {
+      return null;
+    }
+
+    let accuracyPx = 18;
+
+    if (userAccuracy != null && mapZoom != null) {
+      const lat = displayUserLocation[1];
+      const metersPerPixel =
+        (156543.03392 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, mapZoom);
+
+      accuracyPx = userAccuracy / metersPerPixel;
+    }
+
+    return {
+      features: [
+        {
+          geometry: {
+            coordinates: displayUserLocation,
+            type: 'Point',
+          },
+          properties: { accuracyPx },
+          type: 'Feature',
+        },
+      ],
+      type: 'FeatureCollection',
+    };
+  }, [displayUserLocation, userAccuracy, mapZoom]);
+
   const saveBounds = () => {
     const bounds = map?.getBounds();
 
@@ -184,6 +316,50 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         [bounds.getWest(), bounds.getSouth()],
         [bounds.getEast(), bounds.getNorth()],
       ]);
+    }
+  };
+
+  const onGeoLocate = (
+    lngLat: PointData,
+    accuracy: number | null,
+    tracking: boolean
+  ) => {
+    if (tracking) {
+      const alpha = 0.2;
+      const prev = smoothedUserLocationRef.current ?? lngLat;
+      const smoothed: PointData = [
+        (prev[0] as number) * (1 - alpha) + (lngLat[0] as number) * alpha,
+        (prev[1] as number) * (1 - alpha) + (lngLat[1] as number) * alpha,
+      ] as PointData;
+      smoothedUserLocationRef.current = smoothed;
+
+      const prevAcc = smoothedAccuracyRef.current ?? accuracy ?? null;
+      const smoothedAcc =
+        accuracy == null || prevAcc == null
+          ? accuracy
+          : prevAcc * (1 - alpha) + accuracy * alpha;
+      smoothedAccuracyRef.current = smoothedAcc ?? null;
+
+      setUserLocation(smoothed);
+      setUserAccuracy(smoothedAcc ?? null);
+      userAccuracyRef.current = smoothedAcc ?? null;
+      animateUserLocation(smoothed);
+      if (!isTrackingRef.current) {
+        followUserRef.current = true;
+        setIsFollowing(true);
+        isTrackingRef.current = true;
+      }
+    } else {
+      setUserLocation(null);
+      setUserAccuracy(null);
+      userAccuracyRef.current = null;
+      smoothedAccuracyRef.current = null;
+      smoothedUserLocationRef.current = null;
+      cancelUserAnimation();
+      setDisplayUserLocation(null);
+      isTrackingRef.current = false;
+      followUserRef.current = false;
+      setIsFollowing(false);
     }
   };
 
@@ -227,7 +403,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           setSelectedLocationId(null);
         }
       }
-    } catch (err) {
+    } catch {
       // Do nothing for now
     }
   }, [map, selectedLocationId, locations]);
@@ -238,6 +414,12 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
   }, [created, locations]);
 
+  useEffect(() => {
+    if (map && userLocation && (followUserRef.current || isFollowing)) {
+      map.easeTo({ center: userLocation, duration: 400 });
+    }
+  }, [map, userLocation, isFollowing]);
+
   if (!locations.data) {
     return null;
   }
@@ -246,6 +428,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     <>
       <Box sx={{ position: 'relative' }}>
         <ZUIMapControls
+          isFollowing={isFollowing}
           onFitBounds={() => {
             if (map) {
               map.fitBounds(boundsForSelectedArea, {
@@ -255,9 +438,14 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               });
             }
           }}
-          onGeolocate={(lngLat) => {
-            map?.panTo(lngLat, { animate: true, duration: 800 });
+          onFollowChange={(follow) => {
+            setIsFollowing(follow);
+            followUserRef.current = follow;
+            if (follow && userLocation && map) {
+              map.easeTo({ center: userLocation, duration: 400 });
+            }
           }}
+          onGeolocate={onGeoLocate}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
         />
@@ -267,7 +455,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             left: '50%',
             opacity: !selectedLocationId ? 1 : 0.3,
             position: 'absolute',
-            top: 'calc(50vh - 40px)',
+            top: 'calc(50vh - 37px)',
             transform: 'translate(-50%, -50%)',
             transition: 'opacity 0.1s',
             zIndex: 1200,
@@ -312,6 +500,10 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}
+        onDragStart={() => {
+          followUserRef.current = false;
+          setIsFollowing(false);
+        }}
         onLoad={(ev) => {
           const map = ev.target;
           const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
@@ -347,9 +539,19 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
               );
             });
           });
+          setMapZoom(map.getZoom());
         }}
-        onMove={() => updateSelection()}
+        onMove={(ev) => {
+          updateSelection();
+          const z = ev.target.getZoom();
+          setMapZoom(z);
+          mapZoomRef.current = z;
+        }}
         onMoveEnd={() => saveBounds()}
+        onZoomStart={() => {
+          followUserRef.current = false;
+          setIsFollowing(false);
+        }}
         RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         style={{ height: '100%', width: '100%' }}
       >
@@ -438,6 +640,29 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             type="symbol"
           />
         </Source>
+        {userLocationGeoJson && (
+          <Source data={userLocationGeoJson} id="userLocation" type="geojson">
+            <Layer
+              id="userLocationHalo"
+              paint={{
+                'circle-color': oldTheme.palette.primary.main,
+                'circle-opacity': 0.15,
+                'circle-radius': ['coalesce', ['get', 'accuracyPx'], 18],
+              }}
+              type="circle"
+            />
+            <Layer
+              id="userLocationDot"
+              paint={{
+                'circle-color': oldTheme.palette.primary.main,
+                'circle-radius': 6,
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 2,
+              }}
+              type="circle"
+            />
+          </Source>
+        )}
       </Map>
       <CanvassMapOverlays
         assignment={assignment}
