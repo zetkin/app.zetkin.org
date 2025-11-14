@@ -220,7 +220,9 @@ const StyledGroupedSelect: FC<Props> = (props) => {
   const valueItem = useMemo(
     () =>
       props.value === undefined
-        ? undefined
+        ? props.items.length === 0
+          ? undefined
+          : props.items[0]
         : options.find((item) => item.id === props.value),
     [props.value, options]
   );
@@ -271,6 +273,10 @@ const StyledGroupedSelect: FC<Props> = (props) => {
     },
     [props.onChange]
   );
+
+  if (!valueItem) {
+    return null;
+  }
 
   return (
     <Autocomplete
