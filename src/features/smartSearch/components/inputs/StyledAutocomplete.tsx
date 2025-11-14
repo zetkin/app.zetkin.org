@@ -31,7 +31,7 @@ type ItemData = Array<
       group: string;
       key: number;
     }
-  | [React.ReactElement, string, number]
+  | [React.ReactElement, string, number, string]
 >;
 
 function RowComponent({
@@ -93,8 +93,8 @@ const ListboxComponent = React.forwardRef<
 
   // Map option values to their indices in the flattened array
   itemData.forEach((item, index) => {
-    if (Array.isArray(item) && item[1]) {
-      optionIndexMap.set(item[1], index);
+    if (Array.isArray(item) && item[3]) {
+      optionIndexMap.set(item[3], index);
     }
   });
 
@@ -307,7 +307,12 @@ const StyledGroupedSelect: FC<Props> = (props) => {
         </Box>
       )}
       renderOption={(props, option, state) =>
-        [props, option.label, state.index] as React.ReactNode
+        [
+          props,
+          option.label,
+          state.index,
+          option.id.toString(),
+        ] as React.ReactNode
       }
       slotProps={{
         listbox: {
