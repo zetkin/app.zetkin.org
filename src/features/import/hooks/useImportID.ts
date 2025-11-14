@@ -6,7 +6,7 @@ export default function useImportID() {
   const dispatch = useAppDispatch();
   const importID = useAppSelector((state) => state.import.importID);
 
-  const updateImportID = (importID: ImportID) => {
+  const updateImportID = (importID: ImportID | null) => {
     dispatch(importIDUpdate(importID));
   };
 

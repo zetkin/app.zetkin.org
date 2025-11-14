@@ -10,7 +10,7 @@ import {
 } from './utils/types';
 
 export interface ImportStoreSlice {
-  importID: ImportID;
+  importID: ImportID | null;
   importResult: PersonImport | null;
   preflightSummary: ImportPreview | null;
   pendingFile: ImportedFile;
@@ -40,7 +40,7 @@ const importSlice = createSlice({
       const sheetIndex = state.pendingFile.selectedSheetIndex;
       state.pendingFile.sheets[sheetIndex].columns[index] = newColumn;
     },
-    importIDUpdate: (state, action: PayloadAction<ImportID>) => {
+    importIDUpdate: (state, action: PayloadAction<ImportID | null>) => {
       const newImportID = action.payload;
       state.importID = newImportID;
     },

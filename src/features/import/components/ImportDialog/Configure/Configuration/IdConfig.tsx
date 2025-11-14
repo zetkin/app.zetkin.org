@@ -28,7 +28,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const { importID, updateImportID } = useImportID();
   const { skipUnknown, updateSheetSettings } = useSheets();
   const messages = useMessages(messageIds);
-  const getIdLabel = (idField: ImportID) => {
+  const getIdLabel = (idField: ImportID | null) => {
     if (idField == 'id') {
       return 'Zetkin ID';
     } else if (idField == 'ext_id') {
