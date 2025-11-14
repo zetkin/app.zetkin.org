@@ -48,7 +48,7 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
 }
 
 const ViewBrowser: FC<ViewBrowserProps> = ({
-  autoHeight = true,
+  autoHeight = false,
   basePath,
   enableDragAndDrop = true,
   enableEllipsisMenu = true,

@@ -35,6 +35,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
       actionButtons={<PeopleActionButton folderId={null} orgId={orgId} />}
       baseHref={`/organize/${orgId}/people`}
       defaultTab="/"
+      fixedHeight={true}
       noPad
       subtitle={
         <ZUIFuture future={itemSummaryFuture}>
