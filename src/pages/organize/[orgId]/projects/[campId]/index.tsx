@@ -87,7 +87,7 @@ const CampaignSummaryPage: PageWithLayout = () => {
                           })}
                           variant="body1"
                         >
-                          {messages.activitiesOverview.noDescriptionText({
+                          {messages.activitiesOverview.noDescription.text({
                             addOneNow: (
                               <Link
                                 onClick={openEditCampaign}
@@ -99,7 +99,7 @@ const CampaignSummaryPage: PageWithLayout = () => {
                                   textDecoration: 'none',
                                 }}
                               >
-                                {messages.activitiesOverview.noDescriptionAddOneNow()}
+                                {messages.activitiesOverview.noDescription.addOneNow()}
                               </Link>
                             ),
                           })}
