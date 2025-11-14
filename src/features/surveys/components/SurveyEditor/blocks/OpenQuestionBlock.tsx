@@ -82,7 +82,11 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
     });
 
   return (
-    <ClickAwayListener {...clickAwayProps}>
+    <ClickAwayListener
+      mouseEvent="onMouseDown"
+      onClickAway={clickAwayProps.onClickAway}
+      touchEvent="onTouchStart"
+    >
       <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
