@@ -1,8 +1,6 @@
 import { FC } from 'react';
 import { Box } from '@mui/material';
 
-import theme from '../../../../theme';
-
 interface TopBadgeProps {
   cancelled: boolean;
   draft: boolean;
@@ -13,7 +11,7 @@ interface TopBadgeProps {
 const TopBadge: FC<TopBadgeProps> = ({ cancelled, draft, icon, text }) => {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         alignItems: 'center',
         backgroundColor:
           cancelled || draft
@@ -33,7 +31,7 @@ const TopBadge: FC<TopBadgeProps> = ({ cancelled, draft, icon, text }) => {
         top: 0,
         transform: 'translateY(-100%) translateX(-1px)',
         width: 40,
-      }}
+      })}
     >
       {icon}
       <span>{text}</span>

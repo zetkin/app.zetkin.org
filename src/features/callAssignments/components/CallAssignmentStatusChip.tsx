@@ -17,7 +17,7 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
     return null;
   }
 
-  const classMap: Record<CallAssignmentState, string> = {
+  const colors: Record<CallAssignmentState, string> = {
     [CallAssignmentState.ACTIVE]: oldTheme.palette.success.main,
     [CallAssignmentState.CLOSED]: oldTheme.palette.error.main,
     [CallAssignmentState.DRAFT]: oldTheme.palette.grey[500],
@@ -26,13 +26,11 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
     [CallAssignmentState.UNKNOWN]: oldTheme.palette.grey[500],
   };
 
-  const colorClassName = classMap[state];
-
   return (
     <Box
       sx={{
         alignItems: 'center',
-        backgroundColor: colorClassName,
+        backgroundColor: colors[state],
         borderRadius: '2em',
         color: 'white',
         display: 'inline-flex',

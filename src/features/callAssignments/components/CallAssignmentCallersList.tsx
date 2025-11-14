@@ -11,7 +11,6 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import theme from '../../../theme';
 
 const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
   return (
@@ -32,7 +31,7 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
               <Tooltip title={tooltipTitle}>
                 <Box
                   border={2}
-                  sx={{
+                  sx={(theme) => ({
                     borderColor: theme.palette.grey[500],
                     borderRadius: '1em',
                     borderWidth: '1px',
@@ -44,7 +43,7 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
                     overflow: 'hidden',
                     padding: '0.2em 0.7em',
                     textOverflow: 'ellipsis',
-                  }}
+                  })}
                 >
                   {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
                 </Box>
