@@ -61,7 +61,10 @@ export default function useColumn(orgId: number) {
   };
 
   const nativeFieldsOptions: Option[] = Object.values(NATIVE_PERSON_FIELDS)
-    .filter((fieldSlug) => fieldSlug != 'id' && fieldSlug != 'ext_id')
+    .filter(
+      (fieldSlug) =>
+        fieldSlug != 'id' && fieldSlug != 'ext_id' && fieldSlug != 'email'
+    )
     .map((fieldSlug) => ({
       disabled: false,
       label: globalMessages.personFields[fieldSlug](),

@@ -1,7 +1,24 @@
 import { ReactElement } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
+import { BadgeOutlined } from '@mui/icons-material';
 
 import { CellData } from 'features/import/utils/types';
+import useImportID from 'features/import/hooks/useImportID';
+
+function matchesImportID(importID: string | null, columnHeader?: string) {
+  if (!importID || !columnHeader) {
+    return false;
+  }
+
+  const headerToID: Record<string, string> = {
+    Email: 'email',
+    'External ID': 'ext_id',
+    ID: 'id',
+  };
+
+  const normalizedHeader = columnHeader.trim();
+  return headerToID[normalizedHeader] == importID;
+}
 
 interface PreviewGridProps {
   columnHeader?: string;
@@ -16,6 +33,7 @@ const PreviewGrid = ({
   emptyLabel,
 }: PreviewGridProps) => {
   const theme = useTheme();
+  const { importID } = useImportID();
 
   return (
     <Box
@@ -28,27 +46,32 @@ const PreviewGrid = ({
         padding: 2,
       }}
     >
-      <Box
-        sx={{
-          backgroundColor: columnHeader
-            ? 'transparent'
-            : theme.palette.transparentGrey.light,
-          height: '14px',
-          mb: 0.5,
-          minWidth: '150px',
-        }}
-      >
-        <Typography
-          fontSize="12px"
+      <Box alignContent="align-center" display="flex">
+        <Box
           sx={{
-            color: theme.palette.grey['600'],
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
+            backgroundColor: columnHeader
+              ? 'transparent'
+              : theme.palette.transparentGrey.light,
+            height: '14px',
+            mb: 0.5,
+            minWidth: matchesImportID(importID, columnHeader) ? '0px' : '150px',
           }}
-          variant="body1"
         >
-          {columnHeader}
-        </Typography>
+          <Typography
+            fontSize="12px"
+            sx={{
+              color: theme.palette.grey['600'],
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+            }}
+            variant="body1"
+          >
+            {columnHeader}
+          </Typography>
+        </Box>
+        {matchesImportID(importID, columnHeader) && (
+          <BadgeOutlined color="secondary" fontSize="small" sx={{ ml: 1 }} />
+        )}
       </Box>
       <Box
         sx={{

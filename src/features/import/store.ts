@@ -2,19 +2,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   Column,
+  ColumnKind,
   ImportedFile,
+  ImportID,
   ImportPreview,
   PersonImport,
   SheetSettings,
 } from './utils/types';
 
 export interface ImportStoreSlice {
+  importID: ImportID | null;
   importResult: PersonImport | null;
   preflightSummary: ImportPreview | null;
   pendingFile: ImportedFile;
 }
 
 const initialState: ImportStoreSlice = {
+  importID: null,
   importResult: null,
   pendingFile: {
     selectedSheetIndex: 0,
@@ -35,7 +39,22 @@ const importSlice = createSlice({
     columnUpdate: (state, action: PayloadAction<[number, Column]>) => {
       const [index, newColumn] = action.payload;
       const sheetIndex = state.pendingFile.selectedSheetIndex;
+      const currentColumn = state.pendingFile.sheets[sheetIndex].columns[index];
+
+      const currentColumnIsImportID =
+        currentColumn.kind == ColumnKind.ID_FIELD &&
+        currentColumn.idField &&
+        state.importID == currentColumn.idField;
+
+      if (currentColumnIsImportID) {
+        state.importID = null;
+      }
+
       state.pendingFile.sheets[sheetIndex].columns[index] = newColumn;
+    },
+    importIDUpdate: (state, action: PayloadAction<ImportID | null>) => {
+      const newImportID = action.payload;
+      state.importID = newImportID;
     },
     importPreviewAdd: (state, action: PayloadAction<ImportPreview>) => {
       state.preflightSummary = action.payload;
@@ -63,6 +82,7 @@ export default importSlice;
 export const {
   addFile,
   columnUpdate,
+  importIDUpdate,
   importPreviewAdd,
   importResultAdd,
   sheetSettingsUpdated,

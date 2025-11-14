@@ -16,20 +16,6 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(false);
   });
 
-  it('returns false if column is ID_FIELD, but config is unfinished', () => {
-    const wrongIDFormat = hasWrongIDFormat(
-      {
-        idField: null,
-        kind: ColumnKind.ID_FIELD,
-        selected: true,
-      },
-      [],
-      true
-    );
-
-    expect(wrongIDFormat).toBe(false);
-  });
-
   it('returns false for empty Zetkin IDs', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
@@ -97,5 +83,47 @@ describe('hasWrongIDFormat()', () => {
     );
 
     expect(wrongIDFormat).toBe(true);
+  });
+
+  it('returns false if all email values are correctly formatted', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'email',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Email', 'user@example.com', 'test@test.org'],
+      true
+    );
+
+    expect(wrongIDFormat).toBe(false);
+  });
+
+  it('returns true if any email value is not a correct email', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'email',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Email', 'not-an-email', 'valid@example.com'],
+      true
+    );
+
+    expect(wrongIDFormat).toBe(true);
+  });
+
+  it('returns false if email value is empty', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'email',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Email', '', 'another@example.com'],
+      true
+    );
+
+    expect(wrongIDFormat).toBe(false);
   });
 });

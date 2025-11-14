@@ -64,7 +64,7 @@ const MappingRow: FC<MappingRowProps> = ({
     if (column.originalColumn.kind == ColumnKind.DATE) {
       return messageIds.configuration.mapping.configButton;
     } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
-      return messageIds.configuration.mapping.infoButton;
+      return messageIds.configuration.mapping.configButton;
     } else {
       return messageIds.configuration.mapping.mapValuesButton;
     }
@@ -94,7 +94,7 @@ const MappingRow: FC<MappingRowProps> = ({
                 });
               } else {
                 onChange({
-                  ...column.originalColumn,
+                  ...column,
                   kind: ColumnKind.UNKNOWN,
                   selected: isChecked,
                 });

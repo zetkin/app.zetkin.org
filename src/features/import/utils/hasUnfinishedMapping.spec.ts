@@ -21,16 +21,6 @@ describe('hasUnfinishedMapping()', () => {
     expect(unfinishedMapping).toBe(true);
   });
 
-  it('returns true if columnKind is ID_FIELD and idField is null', () => {
-    const unfinishedMapping = hasUnfinishedMapping({
-      idField: null,
-      kind: ColumnKind.ID_FIELD,
-      selected: true,
-    });
-
-    expect(unfinishedMapping).toBe(true);
-  });
-
   it('returns true if columnKind is TAG and mapping length is 0', () => {
     const unfinishedMapping = hasUnfinishedMapping({
       kind: ColumnKind.TAG,

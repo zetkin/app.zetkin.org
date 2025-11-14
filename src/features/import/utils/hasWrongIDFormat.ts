@@ -1,3 +1,5 @@
+import isEmail from 'validator/lib/isEmail';
+
 import { CellData, Column, ColumnKind } from './types';
 
 export default function hasWrongIDFormat(
@@ -22,8 +24,12 @@ export default function hasWrongIDFormat(
       return false;
     }
     const stringValue = value.toString();
-    const parsedToNumber = Number(stringValue);
 
+    if (column.idField === 'email') {
+      return !isEmail(stringValue);
+    }
+
+    const parsedToNumber = Number(stringValue);
     if (isNaN(parsedToNumber)) {
       return true;
     } else {
