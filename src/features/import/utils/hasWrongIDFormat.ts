@@ -1,3 +1,5 @@
+import isEmail from 'validator/lib/isEmail';
+
 import { CellData, Column, ColumnKind } from './types';
 
 export default function hasWrongIDFormat(
@@ -24,7 +26,7 @@ export default function hasWrongIDFormat(
     const stringValue = value.toString();
 
     if (column.idField === 'email') {
-      return !stringValue.includes('@');
+      return !isEmail(stringValue);
     }
 
     const parsedToNumber = Number(stringValue);
