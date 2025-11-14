@@ -213,7 +213,11 @@ const StyledGroupedSelect: FC<Props> = (props) => {
             };
           }
           return item;
-        }),
+        })
+        .map((item) => ({
+          ...item,
+          label: item.label.trim(),
+        })),
     [props.items]
   );
 
