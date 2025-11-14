@@ -7,47 +7,52 @@ import {
   SurveySubmissionData,
   Report,
   ZetkinCallPatchResponse,
-  Step,
+  ActivityFilters,
 } from './types';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
 import { SerializedError } from './hooks/useAllocateCall';
 
 export interface CallStoreSlice {
   activeLaneIndex: number;
   upcomingEventsList: RemoteList<ZetkinEvent>;
   lanes: LaneState[];
+  myAssignmentsList: RemoteList<ZetkinCallAssignment>;
   outgoingCalls: RemoteList<ZetkinCall>;
   queueHasError: SerializedError | null;
 }
 
+const emptyFilters: ActivityFilters = {
+  customDatesToFilterEventsBy: [null, null],
+  eventDateFilterState: null,
+  filterState: {
+    alreadyIn: false,
+    events: false,
+    surveys: false,
+    thisCall: false,
+  },
+  orgIdsToFilterEventsBy: [],
+  projectIdsToFilterActivitiesBy: [],
+};
+
+const emptyReport: Report = {
+  callBackAfter: null,
+  callerLog: '',
+  completed: false,
+  failureReason: null,
+  leftMessage: false,
+  organizerActionNeeded: false,
+  organizerLog: '',
+  step: 'successOrFailure',
+  success: false,
+  targetCouldTalk: false,
+  wrongNumber: null,
+};
+
 const initialState: CallStoreSlice = {
   activeLaneIndex: 0,
-  lanes: [
-    {
-      callIsBeingAllocated: false,
-      currentCallId: null,
-      previousCall: null,
-      report: {
-        callBackAfter: null,
-        callerLog: '',
-        completed: false,
-        failureReason: null,
-        leftMessage: false,
-        organizerActionNeeded: false,
-        organizerLog: '',
-        step: 'successOrFailure',
-        success: false,
-        targetCouldTalk: false,
-        wrongNumber: null,
-      },
-      respondedEventIds: [],
-      step: LaneStep.STATS,
-      submissionDataBySurveyId: {},
-      surveySubmissionError: false,
-      updateCallError: false,
-    },
-  ],
+  lanes: [],
+  myAssignmentsList: remoteList(),
   outgoingCalls: remoteList(),
   queueHasError: null,
   upcomingEventsList: remoteList(),
@@ -62,11 +67,11 @@ const CallSlice = createSlice({
       state.queueHasError = error;
 
       const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.STATS;
-      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
-      state.lanes[state.activeLaneIndex].respondedEventIds = [];
+      lane.step = LaneStep.START;
+      lane.submissionDataBySurveyId = {};
+      lane.respondedEventIds = [];
+      lane.callIsBeingAllocated = false;
       state.outgoingCalls.isLoading = false;
-      state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
     },
     allocateNewCall: (state) => {
       state.lanes[state.activeLaneIndex].callIsBeingAllocated = true;
@@ -86,36 +91,34 @@ const CallSlice = createSlice({
         state.lanes = filteredLanes;
       }
 
-      const newLane = {
-        callIsBeingAllocated: false,
-        currentCallId: newCall.id,
-        previousCall: null,
-        report: {
-          callBackAfter: null,
-          callerLog: '',
-          completed: false,
-          failureReason: null,
-          leftMessage: false,
-          organizerActionNeeded: false,
-          organizerLog: '',
-          step: 'successOrFailure' as Step,
-          success: false,
-          targetCouldTalk: false,
-          wrongNumber: null,
-        },
-        respondedEventIds: [],
-        step: LaneStep.PREPARE,
-        submissionDataBySurveyId: {},
-        surveySubmissionError: false,
-        updateCallError: false,
-      };
+      const indexOfExistingLane = state.lanes.findIndex(
+        (lane) => lane.currentCallId == newCall.id
+      );
+      if (indexOfExistingLane != -1) {
+        state.activeLaneIndex = indexOfExistingLane;
+      } else {
+        const newLane = {
+          assignmentId: newCall.assignment_id,
+          callIsBeingAllocated: false,
+          currentCallId: newCall.id,
+          filters: emptyFilters,
+          previousCall: null,
+          report: emptyReport,
+          respondedEventIds: [],
+          selectedSurveyId: null,
+          step: LaneStep.CALL,
+          submissionDataBySurveyId: {},
+          surveySubmissionError: false,
+          updateCallError: false,
+        };
 
-      state.lanes.push(newLane);
-      state.activeLaneIndex = state.lanes.length - 1;
+        state.lanes.push(newLane);
+        state.activeLaneIndex = state.lanes.length - 1;
+      }
 
       state.outgoingCalls.items.push(
-        remoteItem(action.payload.id, {
-          data: action.payload,
+        remoteItem(newCall.id, {
+          data: newCall,
           isLoading: false,
           isStale: false,
           loaded: new Date().toISOString(),
@@ -132,7 +135,9 @@ const CallSlice = createSlice({
       );
 
       state.queueHasError = null;
-      state.lanes[state.activeLaneIndex].currentCallId = newCall.id;
+
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.currentCallId = newCall.id;
 
       state.outgoingCalls.items.push(
         remoteItem(newCall.id, {
@@ -143,27 +148,16 @@ const CallSlice = createSlice({
         })
       );
 
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.PREPARE;
-
-      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
-      state.lanes[state.activeLaneIndex].respondedEventIds = [];
-      state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
+      lane.step = LaneStep.CALL;
+      lane.submissionDataBySurveyId = {};
+      lane.respondedEventIds = [];
+      lane.callIsBeingAllocated = false;
+      lane.report = emptyReport;
+      lane.filters = emptyFilters;
+      lane.selectedSurveyId = null;
     },
     clearReport: (state) => {
-      state.lanes[state.activeLaneIndex].report = {
-        callBackAfter: null,
-        callerLog: '',
-        completed: false,
-        failureReason: null,
-        leftMessage: false,
-        organizerActionNeeded: false,
-        organizerLog: '',
-        step: 'successOrFailure',
-        success: false,
-        targetCouldTalk: false,
-        wrongNumber: null,
-      };
+      state.lanes[state.activeLaneIndex].report = emptyReport;
     },
     eventResponseAdded: (state, action: PayloadAction<number>) => {
       const eventIdToAdd = action.payload;
@@ -172,11 +166,10 @@ const CallSlice = createSlice({
     },
     eventResponseRemoved: (state, action: PayloadAction<number>) => {
       const eventIdToRemove = action.payload;
-      const eventIds = state.lanes[state.activeLaneIndex].respondedEventIds;
+      const lane = state.lanes[state.activeLaneIndex];
+      const eventIds = lane.respondedEventIds;
 
-      state.lanes[state.activeLaneIndex].respondedEventIds = eventIds.filter(
-        (id) => id != eventIdToRemove
-      );
+      lane.respondedEventIds = eventIds.filter((id) => id != eventIdToRemove);
     },
     eventsLoad: (state) => {
       state.upcomingEventsList.isLoading = true;
@@ -185,24 +178,95 @@ const CallSlice = createSlice({
       state.upcomingEventsList = remoteList(action.payload);
       state.upcomingEventsList.loaded = new Date().toISOString();
     },
+    filtersUpdated: (
+      state,
+      action: PayloadAction<Partial<ActivityFilters>>
+    ) => {
+      const updatedFilters = action.payload;
+
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.filters = { ...lane.filters, ...updatedFilters };
+    },
+    initiateAssignment: (
+      state,
+      action: PayloadAction<[number, LaneState[]]>
+    ) => {
+      const [assignmentId, lanes] = action.payload;
+
+      const indexOfExistingLane = lanes.findIndex(
+        (lane) => lane.assignmentId == assignmentId
+      );
+
+      if (indexOfExistingLane != -1) {
+        state.lanes = lanes;
+        state.activeLaneIndex = indexOfExistingLane;
+      } else {
+        const newLane = {
+          assignmentId: assignmentId,
+          callIsBeingAllocated: false,
+          currentCallId: null,
+          filters: emptyFilters,
+          previousCall: null,
+          report: emptyReport,
+          respondedEventIds: [],
+          selectedSurveyId: null,
+          step: LaneStep.START,
+          submissionDataBySurveyId: {},
+          surveySubmissionError: false,
+          updateCallError: false,
+        };
+
+        state.lanes.push(newLane);
+        state.activeLaneIndex = state.lanes.length - 1;
+      }
+    },
+    initiateWithoutAssignment: (
+      state,
+      action: PayloadAction<[number, LaneState[]]>
+    ) => {
+      const [activeLaneIndex, lanes] = action.payload;
+
+      state.lanes = lanes;
+      state.activeLaneIndex = activeLaneIndex;
+    },
+    myAssignmentsLoad: (state) => {
+      state.myAssignmentsList.isLoading = true;
+    },
+    myAssignmentsLoaded: (
+      state,
+      action: PayloadAction<ZetkinCallAssignment[]>
+    ) => {
+      const assignments = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.myAssignmentsList = remoteList(assignments);
+      state.myAssignmentsList.loaded = timestamp;
+      state.myAssignmentsList.items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
+    },
     newCallAllocated: (state, action: PayloadAction<ZetkinCall>) => {
-      state.lanes[state.activeLaneIndex].currentCallId = action.payload.id;
+      const newCall = action.payload;
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.currentCallId = action.payload.id;
       state.queueHasError = null;
 
       state.outgoingCalls.items.push(
-        remoteItem(action.payload.id, {
-          data: action.payload,
+        remoteItem(newCall.id, {
+          data: newCall,
           isLoading: false,
           isStale: false,
           loaded: new Date().toISOString(),
         })
       );
 
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.PREPARE;
-      state.lanes[state.activeLaneIndex].respondedEventIds = [];
-      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
-      state.lanes[state.activeLaneIndex].callIsBeingAllocated = false;
+      lane.step = LaneStep.CALL;
+      lane.respondedEventIds = [];
+      lane.submissionDataBySurveyId = {};
+      lane.callIsBeingAllocated = false;
+      lane.report = emptyReport;
+      lane.filters = emptyFilters;
+      lane.selectedSurveyId = null;
     },
     outgoingCallsLoad: (state) => {
       state.outgoingCalls.isLoading = true;
@@ -220,37 +284,27 @@ const CallSlice = createSlice({
     },
     quitCall: (state, action: PayloadAction<number>) => {
       const deletedCallId = action.payload;
+      const lane = state.lanes[state.activeLaneIndex];
+
       state.outgoingCalls.items = state.outgoingCalls.items.filter(
         (item) => item.id != deletedCallId
       );
 
-      state.lanes[state.activeLaneIndex].currentCallId = null;
-
-      const lane = state.lanes[state.activeLaneIndex];
-      lane.step = LaneStep.STATS;
-
-      state.lanes[state.activeLaneIndex].submissionDataBySurveyId = {};
-      state.lanes[state.activeLaneIndex].respondedEventIds = [];
-      state.lanes[state.activeLaneIndex].report = {
-        callBackAfter: null,
-        callerLog: '',
-        completed: false,
-        failureReason: null,
-        leftMessage: false,
-        organizerActionNeeded: false,
-        organizerLog: '',
-        step: 'successOrFailure',
-        success: false,
-        targetCouldTalk: false,
-        wrongNumber: null,
-      };
+      lane.currentCallId = null;
+      lane.step = LaneStep.START;
+      lane.submissionDataBySurveyId = {};
+      lane.respondedEventIds = [];
+      lane.report = emptyReport;
+      lane.filters = emptyFilters;
+      lane.selectedSurveyId = null;
     },
     reportSubmitted: (
       state,
       action: PayloadAction<ZetkinCallPatchResponse>
     ) => {
-      state.lanes[state.activeLaneIndex].surveySubmissionError = false;
-      state.lanes[state.activeLaneIndex].updateCallError = false;
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.surveySubmissionError = false;
+      lane.updateCallError = false;
       const updatedCall = action.payload;
 
       const callItem = state.outgoingCalls.items.find(
@@ -286,12 +340,22 @@ const CallSlice = createSlice({
       lane.report = report;
     },
     setSurveySubmissionError: (state, action: PayloadAction<boolean>) => {
-      state.lanes[state.activeLaneIndex].surveySubmissionError = action.payload;
-      state.lanes[state.activeLaneIndex].updateCallError = false;
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.surveySubmissionError = action.payload;
+      lane.updateCallError = false;
     },
     setUpdateCallError: (state, action: PayloadAction<boolean>) => {
-      state.lanes[state.activeLaneIndex].updateCallError = action.payload;
-      state.lanes[state.activeLaneIndex].surveySubmissionError = false;
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.updateCallError = action.payload;
+      lane.surveySubmissionError = false;
+    },
+    surveyDeselected: (state) => {
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.selectedSurveyId = null;
+    },
+    surveySelected: (state, action: PayloadAction<number>) => {
+      const lane = state.lanes[state.activeLaneIndex];
+      lane.selectedSurveyId = action.payload;
     },
     surveySubmissionAdded: (
       state,
@@ -304,12 +368,13 @@ const CallSlice = createSlice({
       responsesBySurveyId[surveyId] = response;
     },
     surveySubmissionDeleted: (state, action: PayloadAction<number>) => {
+      const lane = state.lanes[state.activeLaneIndex];
       const surveyId = action.payload;
 
-      const responsesBySurveyId =
-        state.lanes[state.activeLaneIndex].submissionDataBySurveyId;
+      const responsesBySurveyId = lane.submissionDataBySurveyId;
 
       delete responsesBySurveyId[surveyId];
+      lane.selectedSurveyId = null;
     },
     unfinishedCallAbandoned: (state, action: PayloadAction<number>) => {
       const abandonedCallId = action.payload;
@@ -317,19 +382,22 @@ const CallSlice = createSlice({
         (item) => item.id != abandonedCallId
       );
 
-      const indexToRemove = state.lanes.findIndex(
+      const indexOfLaneWithAbandonedCall = state.lanes.findIndex(
         (lane) => lane.currentCallId == abandonedCallId
       );
-      if (indexToRemove != -1) {
-        state.lanes.splice(indexToRemove, 1);
+      if (indexOfLaneWithAbandonedCall != -1) {
+        state.lanes.splice(indexOfLaneWithAbandonedCall, 1);
 
-        if (state.activeLaneIndex >= indexToRemove) {
+        if (state.activeLaneIndex >= indexOfLaneWithAbandonedCall) {
           state.activeLaneIndex = Math.max(0, state.activeLaneIndex - 1);
         }
       }
     },
-    unfinishedCallSwitched: (state, action: PayloadAction<ZetkinCall>) => {
-      const unfinishedCall = action.payload;
+    unfinishedCallSwitched: (
+      state,
+      action: PayloadAction<[number, number]>
+    ) => {
+      const [unfinishedCallId, unfinishedCallAssignmentId] = action.payload;
 
       const currentLaneIndex = state.activeLaneIndex;
       const currentLane = state.lanes[currentLaneIndex];
@@ -342,35 +410,22 @@ const CallSlice = createSlice({
         state.lanes = filteredLanes;
       }
 
-      const unfinishedCallLineIndex = state.lanes.findIndex(
-        (lane) => lane.currentCallId == unfinishedCall.id
+      const indexOfExistingLane = state.lanes.findIndex(
+        (lane) => lane.currentCallId == unfinishedCallId
       );
-      const unfinishedCallLane = state.lanes.find(
-        (lane) => lane.currentCallId == unfinishedCall.id
-      );
-
-      if (unfinishedCallLane && unfinishedCallLineIndex !== -1) {
-        state.activeLaneIndex = unfinishedCallLineIndex;
+      if (indexOfExistingLane != -1) {
+        state.activeLaneIndex = indexOfExistingLane;
       } else {
         const newLane = {
+          assignmentId: unfinishedCallAssignmentId,
           callIsBeingAllocated: false,
-          currentCallId: unfinishedCall.id,
+          currentCallId: unfinishedCallId,
+          filters: emptyFilters,
           previousCall: null,
-          report: {
-            callBackAfter: null,
-            callerLog: '',
-            completed: false,
-            failureReason: null,
-            leftMessage: false,
-            organizerActionNeeded: false,
-            organizerLog: '',
-            step: 'successOrFailure' as Step,
-            success: false,
-            targetCouldTalk: false,
-            wrongNumber: null,
-          },
+          report: emptyReport,
           respondedEventIds: [],
-          step: LaneStep.PREPARE,
+          selectedSurveyId: null,
+          step: LaneStep.CALL,
           submissionDataBySurveyId: {},
           surveySubmissionError: false,
           updateCallError: false,
@@ -379,6 +434,7 @@ const CallSlice = createSlice({
         state.lanes.push(newLane);
         state.activeLaneIndex = state.lanes.length - 1;
       }
+
       sortOutgoingCalls(state.outgoingCalls);
     },
     updateLaneStep: (state, action: PayloadAction<LaneStep>) => {
@@ -412,6 +468,11 @@ export const {
   allocateCallError,
   eventResponseAdded,
   eventResponseRemoved,
+  filtersUpdated,
+  initiateAssignment,
+  initiateWithoutAssignment,
+  myAssignmentsLoaded,
+  myAssignmentsLoad,
   allocatePreviousCall,
   allocateNewCall,
   newCallAllocated,
@@ -422,6 +483,8 @@ export const {
   quitCall,
   reportSubmitted,
   reportUpdated,
+  surveyDeselected,
+  surveySelected,
   setSurveySubmissionError,
   setUpdateCallError,
   surveySubmissionAdded,

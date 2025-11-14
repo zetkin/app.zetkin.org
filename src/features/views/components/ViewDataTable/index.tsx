@@ -10,11 +10,24 @@ import {
   GridCellEditStartReasons,
   GridCellParams,
   GridColDef,
+  GridColumnOrderChangeParams,
+  GridColumnResizeParams,
+  GridRowClassNameParams,
+  GridRowSelectionModel,
   GridSortModel,
+  MuiEvent,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useContext, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Box, Link, useTheme } from '@mui/material';
+import { GridCellEditStartParams } from '@mui/x-data-grid/models/params/gridEditCellParams';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
@@ -135,6 +148,24 @@ interface ViewDataTableProps {
   view: ZetkinView;
 }
 
+const pinnedColumns = {
+  left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
+};
+
+const style = {
+  border: 'none',
+};
+
+type Row = Record<string, unknown> & {
+  id: number;
+};
+
+const slots = {
+  columnMenu: ViewDataTableColumnMenu,
+  footer: ViewDataTableFooter,
+  toolbar: ViewDataTableToolbar,
+};
+
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
   disableAdd = false,
@@ -184,113 +215,136 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
 
-  const showError = (error: VIEW_DATA_TABLE_ERROR) => {
-    showSnackbar('error', messages.dataTableErrors[error]());
-  };
+  const showError = useCallback(
+    (error: VIEW_DATA_TABLE_ERROR) => {
+      showSnackbar('error', messages.dataTableErrors[error]());
+    },
+    [showSnackbar]
+  );
 
-  const updateColumn = async (
-    id: number,
-    data: Omit<Partial<ZetkinViewColumn>, 'id'>
-  ) => {
-    NProgress.start();
-    try {
-      await viewGrid.updateColumn(id, data);
-    } catch (err) {
-      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
-    } finally {
-      NProgress.done();
-    }
-  };
-
-  const onCreateColumnCancel = () => {
-    setColumnToCreate(null);
-  };
-
-  const onConfigureColumnCancel = () => {
-    setColumnToConfigure(null);
-  };
-
-  const onConfigureColumnSave = (
-    id: number,
-    config: ZetkinViewColumn['config']
-  ) => {
-    setColumnToConfigure(null);
-
-    const columnPreEdit = columns.find((col) => col.id === id);
-    if (!columnPreEdit) {
-      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
-      return;
-    }
-
-    updateColumn(id, { config: config });
-  };
-
-  const onCreateColumnSave = async (colSpec: SelectedViewColumn) => {
-    setColumnToCreate(null);
-    try {
-      await addColumn({
-        config: colSpec.config,
-        title: colSpec.title,
-        type: colSpec.type,
-      });
-    } catch (err) {
-      showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
-    } finally {
-      NProgress.done();
-    }
-  };
-
-  const onColumnConfigure = (colFieldName: string) => {
-    const colId = colIdFromFieldName(colFieldName);
-    const colSpec = columns.find((col) => col.id === colId) || null;
-    setColumnToConfigure(colSpec);
-  };
-
-  const onColumnCreate = () => {
-    setColumnToCreate({});
-  };
-
-  const onColumnDelete = async (colFieldName: string) => {
-    const colId = colIdFromFieldName(colFieldName);
-    const colSpec = columns.find((col) => col.id === colId) || null;
-
-    async function doDelete() {
+  const updateColumn = useCallback(
+    async (id: number, data: Omit<Partial<ZetkinViewColumn>, 'id'>) => {
+      NProgress.start();
       try {
-        await deleteColumn(colId);
+        await viewGrid.updateColumn(id, data);
       } catch (err) {
-        showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
-        NProgress.done();
+        showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
       } finally {
         NProgress.done();
       }
-    }
+    },
+    [viewGrid, showError]
+  );
 
-    // If it's a local column, require confirmation
-    if (colSpec?.type.includes('local_')) {
-      showConfirmDialog({
-        onSubmit: doDelete,
-        title: messages.columnMenu.delete(),
-        warningText: messages.columnMenu.confirmDelete(),
-      });
-    } else {
-      doDelete();
-    }
-  };
+  const onCreateColumnCancel = useCallback(() => {
+    setColumnToCreate(null);
+  }, [setColumnToCreate]);
 
-  const onColumnRename = (colFieldName: string) => {
-    const colId = colIdFromFieldName(colFieldName);
-    const colSpec = columns.find((col) => col.id === colId) || null;
-    setColumnToRename(colSpec);
-  };
+  const onConfigureColumnCancel = useCallback(() => {
+    setColumnToConfigure(null);
+  }, [setColumnToConfigure]);
 
-  const onColumnRenameSave = async (
-    column: Pick<ZetkinViewColumn, 'id' | 'title'>
-  ) => {
-    setColumnToRename(null);
-    updateColumn(column.id, { title: column.title });
-  };
+  const onConfigureColumnSave = useCallback(
+    (id: number, config: ZetkinViewColumn['config']) => {
+      setColumnToConfigure(null);
 
-  const onRowsRemove = async () => {
+      const columnPreEdit = columns.find((col) => col.id === id);
+      if (!columnPreEdit) {
+        showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+        return;
+      }
+
+      updateColumn(id, { config: config });
+    },
+    [setColumnToConfigure, columns, showError, updateColumn]
+  );
+
+  const onCreateColumnSave = useCallback(
+    async (colSpec: SelectedViewColumn) => {
+      setColumnToCreate(null);
+      try {
+        await addColumn({
+          config: colSpec.config,
+          title: colSpec.title,
+          type: colSpec.type,
+        });
+      } catch (err) {
+        showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
+      } finally {
+        NProgress.done();
+      }
+    },
+    [setColumnToCreate, addColumn, showError]
+  );
+
+  const onColumnConfigure = useCallback(
+    (colFieldName: string) => {
+      const colId = colIdFromFieldName(colFieldName);
+      const colSpec = columns.find((col) => col.id === colId) || null;
+      setColumnToConfigure(colSpec);
+    },
+    [colIdFromFieldName, columns, setColumnToConfigure]
+  );
+
+  const onColumnCreate = useCallback(() => {
+    setColumnToCreate({});
+  }, [setColumnToCreate]);
+
+  const onColumnDelete = useCallback(
+    async (colFieldName: string) => {
+      const colId = colIdFromFieldName(colFieldName);
+      const colSpec = columns.find((col) => col.id === colId) || null;
+
+      async function doDelete() {
+        try {
+          await deleteColumn(colId);
+        } catch (err) {
+          showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
+          NProgress.done();
+        } finally {
+          NProgress.done();
+        }
+      }
+
+      // If it's a local column, require confirmation
+      if (colSpec?.type.includes('local_')) {
+        showConfirmDialog({
+          onSubmit: doDelete,
+          title: messages.columnMenu.delete(),
+          warningText: messages.columnMenu.confirmDelete(),
+        });
+      } else {
+        doDelete();
+      }
+    },
+    [
+      colIdFromFieldName,
+      columns,
+      deleteColumn,
+      showError,
+      showConfirmDialog,
+      messages.columnMenu,
+    ]
+  );
+
+  const onColumnRename = useCallback(
+    (colFieldName: string) => {
+      const colId = colIdFromFieldName(colFieldName);
+      const colSpec = columns.find((col) => col.id === colId) || null;
+      setColumnToRename(colSpec);
+    },
+    [colIdFromFieldName, columns, setColumnToRename]
+  );
+
+  const onColumnRenameSave = useCallback(
+    async (column: Pick<ZetkinViewColumn, 'id' | 'title'>) => {
+      setColumnToRename(null);
+      updateColumn(column.id, { title: column.title });
+    },
+    [setColumnToRename, updateColumn]
+  );
+
+  const onRowsRemove = useCallback(async () => {
     setWaiting(true);
     try {
       viewGrid.removeRows(selection);
@@ -299,181 +353,226 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     } finally {
       setWaiting(false);
     }
-  };
+  }, [viewGrid.removeRows, showError, setWaiting]);
 
-  const onViewCreate = () => {
+  const onViewCreate = useCallback(() => {
     createView(view.folder?.id ?? 0, selection);
-  };
+  }, [createView, view.folder, selection]);
 
-  const avatarColumn: GridColDef = {
-    disableColumnMenu: true,
-    disableExport: true,
-    disableReorder: true,
-    field: 'id',
-    filterable: false,
-    headerName: ' ',
-    renderCell: (params) => {
-      const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
-      return (
-        <ZUIPersonHoverCard personId={params.value as number}>
-          <NextLink
-            href={`/organize/${orgId}/people/${params.value}`}
-            legacyBehavior
-            passHref
-          >
-            <Link
-              onClick={(evt) => evt.stopPropagation()}
-              style={{ cursor: 'pointer' }}
-              underline="hover"
+  const avatarColumn: GridColDef = useMemo(
+    () => ({
+      disableColumnMenu: true,
+      disableExport: true,
+      disableReorder: true,
+      field: 'id',
+      filterable: false,
+      headerName: ' ',
+      renderCell: (params) => {
+        const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
+        return (
+          <ZUIPersonHoverCard personId={params.value as number}>
+            <NextLink
+              href={`/organize/${orgId}/people/${params.value}`}
+              legacyBehavior
+              passHref
             >
-              <Box
-                alt={'Avatar'}
-                component="img"
-                src={url}
-                sx={{ maxHeight: '100%', maxWidth: '100%' }}
-              />
-            </Link>
-          </NextLink>
-        </ZUIPersonHoverCard>
-      );
-    },
-    resizable: false,
-    sortable: false,
-    width: 50,
-  };
+              <Link
+                onClick={(evt) => evt.stopPropagation()}
+                style={{ cursor: 'pointer' }}
+                underline="hover"
+              >
+                <Box
+                  alt={'Avatar'}
+                  component="img"
+                  src={url}
+                  sx={{ maxHeight: '100%', maxWidth: '100%' }}
+                />
+              </Link>
+            </NextLink>
+          </ZUIPersonHoverCard>
+        );
+      },
+      resizable: false,
+      sortable: false,
+      width: 50,
+    }),
+    [orgId]
+  );
 
   const debouncedUpdateColumnOrder = useDebounce((order: number[]) => {
     return updateColumnOrder(view.id, order);
   }, 1000);
 
-  const moveColumn = (field: string, targetIndex: number) => {
-    // The column index is offset by 2 compared to the API (avatar and checkbox)
-    targetIndex -= 2;
-    const columnId = colIdFromFieldName(field);
-    const origIndex = columns.findIndex((col) => col.id == columnId);
-    const columnOrder = columns.map((col) => col.id);
+  const moveColumn = useCallback(
+    (field: string, targetIndex: number) => {
+      // The column index is offset by 2 compared to the API (avatar and checkbox)
+      targetIndex -= 2;
+      const columnId = colIdFromFieldName(field);
+      const origIndex = columns.findIndex((col) => col.id == columnId);
+      const columnOrder = columns.map((col) => col.id);
 
-    // Remove column and place it in new location
-    columnOrder.splice(origIndex, 1);
-    const newColumnOrder = [
-      ...columnOrder.slice(0, targetIndex),
-      columnId,
-      ...columnOrder.slice(targetIndex),
-    ];
-    debouncedUpdateColumnOrder(newColumnOrder);
-  };
+      // Remove column and place it in new location
+      columnOrder.splice(origIndex, 1);
+      const newColumnOrder = [
+        ...columnOrder.slice(0, targetIndex),
+        columnId,
+        ...columnOrder.slice(targetIndex),
+      ];
+      debouncedUpdateColumnOrder(newColumnOrder);
+    },
+    [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
+  );
 
   const dispatch = useAppDispatch();
   const apiClient = useApiClient();
-  const state = useAppSelector((state) => state);
+  const tagListState = useAppSelector((state) => state.tags.tagList);
 
-  const unConfiguredGridColumns = [
-    avatarColumn,
-    ...columns.map((col) => ({
-      field: `col_${col.id}`,
-      filterOperators: getFilterOperators(
-        columnTypes[col.type].getColDef(
+  const unConfiguredGridColumns = useMemo(
+    () => [
+      avatarColumn,
+      ...columns.map((col) => ({
+        field: `col_${col.id}`,
+        filterOperators: getFilterOperators(
+          columnTypes[col.type].getColDef(
+            col,
+            accessLevel,
+            tagListState,
+            apiClient,
+            dispatch,
+            orgId
+          )
+        ),
+        headerName: col.title,
+        minWidth: 100,
+        resizable: true,
+        sortable: true,
+        width: 150,
+        ...columnTypes[col.type].getColDef(
           col,
           accessLevel,
-          state,
+          tagListState,
           apiClient,
           dispatch,
           orgId
-        )
-      ),
-      headerName: col.title,
-      minWidth: 100,
-      resizable: true,
-      sortable: true,
-      width: 150,
-      ...columnTypes[col.type].getColDef(
-        col,
-        accessLevel,
-        state,
-        apiClient,
-        dispatch,
-        orgId
-      ),
-    })),
-  ];
+        ),
+      })),
+    ],
+    [
+      avatarColumn,
+      columns,
+      accessLevel,
+      tagListState,
+      apiClient,
+      dispatch,
+      orgId,
+    ]
+  );
 
   const { columns: gridColumns, setColumnWidth } =
     useConfigurableDataGridColumns('viewInstances', unConfiguredGridColumns);
 
-  const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
+  const gridRows = useMemo(() => {
+    const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
+    return rowsWithSearch.map((input) => {
+      const output: Row = {
+        id: input.id,
+      };
+      input.content.forEach((cellValue, colIndex) => {
+        const col = columns[colIndex];
+        if (col) {
+          const fieldName = `col_${col.id}`;
+          output[fieldName] = cellValue;
+        }
+      });
 
-  const gridRows = rowsWithSearch.map((input) => {
-    const output: Record<string, unknown> = {
-      id: input.id,
-    };
-    input.content.forEach((cellValue, colIndex) => {
-      const col = columns[colIndex];
-      if (col) {
-        const fieldName = `col_${col.id}`;
-        output[fieldName] = cellValue;
-      }
+      return output;
     });
-
-    return output;
-  });
+  }, [rows, columns, quickSearch]);
 
   const componentsProps: {
     columnMenu: ViewDataTableColumnMenuProps;
     footer: ViewDataTableFooterProps;
     toolbar: ViewDataTableToolbarProps;
-  } = {
-    columnMenu: {
-      onConfigure: onColumnConfigure,
-      onDelete: onColumnDelete,
-      onRename: onColumnRename,
-      showConfigureButton: (field): boolean => {
-        const column = columns.find(
-          (column) => column.id === colIdFromFieldName(field)
-        );
+  } = useMemo(
+    () => ({
+      columnMenu: {
+        onConfigure: onColumnConfigure,
+        onDelete: onColumnDelete,
+        onRename: onColumnRename,
+        showConfigureButton: (field): boolean => {
+          const column = columns.find(
+            (column) => column.id === colIdFromFieldName(field)
+          );
 
-        if (!column) {
-          return false;
-        }
+          if (!column) {
+            return false;
+          }
 
-        return !!columnTypes[column.type].renderConfigDialog;
+          return !!columnTypes[column.type].renderConfigDialog;
+        },
       },
-    },
-    footer: {
-      onRowAdd: async (person) => {
-        await addPerson(person.id);
+      footer: {
+        onRowAdd: async (person) => {
+          await addPerson(person.id);
 
-        // Store ID for highlighting the new row
-        setAddedId(person.id);
+          // Store ID for highlighting the new row
+          setAddedId(person.id);
 
-        // Remove ID again after 2 seconds, unless the state has changed
-        setTimeout(() => {
-          setAddedId((curState) => (curState == person.id ? 0 : curState));
-        }, 2000);
+          // Remove ID again after 2 seconds, unless the state has changed
+          setTimeout(() => {
+            setAddedId((curState) => (curState == person.id ? 0 : curState));
+          }, 2000);
 
-        // Scroll (jump) to row after short delay
-        setTimeout(() => {
-          const gridApi = gridApiRef.current;
-          const rowIndex = gridApi.getRowIndexRelativeToVisibleRows(person.id);
-          gridApi.scrollToIndexes({ rowIndex });
-        }, 200);
+          // Scroll (jump) to row after short delay
+          setTimeout(() => {
+            const gridApi = gridApiRef.current;
+            const rowIndex = gridApi.getRowIndexRelativeToVisibleRows(
+              person.id
+            );
+            gridApi.scrollToIndexes({ rowIndex });
+          }, 200);
+        },
       },
-    },
-    toolbar: {
-      disableBulkActions: selectionModel?.mode !== 'selectWithBulkActions',
+      toolbar: {
+        disableBulkActions: selectionModel?.mode !== 'selectWithBulkActions',
+        disableConfigure,
+        disabled: waiting,
+        gridColumns,
+        isLoading,
+        isSmartSearch: !!view.content_query,
+        onColumnCreate,
+        onRowsRemove,
+        onSortModelChange: modelGridProps.onSortModelChange,
+        onViewCreate,
+        selection,
+        setQuickSearch,
+        sortModel: modelGridProps.sortModel,
+      },
+    }),
+    [
+      onColumnConfigure,
+      onColumnDelete,
+      onColumnRename,
+      columns,
+      colIdFromFieldName,
+      addPerson,
+      setAddedId,
+      gridApiRef,
+      selectionModel,
       disableConfigure,
-      disabled: waiting,
+      waiting,
       gridColumns,
       isLoading,
-      isSmartSearch: !!view.content_query,
+      view.content_query,
       onColumnCreate,
       onRowsRemove,
-      onSortModelChange: modelGridProps.onSortModelChange,
+      modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
       setQuickSearch,
-      sortModel: modelGridProps.sortModel,
-    },
-  };
+      modelGridProps.sortModel,
+    ]
+  );
 
   const empty = gridRows.length == 0;
   const contentSource = view.content_query
@@ -483,6 +582,132 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const renderConfigDialog =
     columnToConfigure && columnTypes[columnToConfigure.type].renderConfigDialog;
 
+  const getRowClassName = useCallback(
+    (params: GridRowClassNameParams): string =>
+      params.id == addedId ? classes.addedRow : '',
+    [addedId, classes.addedRow]
+  );
+
+  const localeText = useMemo(
+    () => ({
+      ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
+      noRowsLabel: messages.empty.notice[contentSource](),
+    }),
+    [theme.components, messages.empty.notice]
+  );
+
+  const onCellEditStart = useCallback(
+    (
+      params: GridCellEditStartParams,
+      event: MuiEvent<React.KeyboardEvent | React.MouseEvent>
+    ) => {
+      if (params.reason == GridCellEditStartReasons.printableKeyDown) {
+        // Don't enter edit mode when the user just presses a printable character.
+        // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
+        // means the user will overwrite the original value, which is rarely what
+        // you want with the precious data that exists in views (when there is no
+        // undo feature).
+        event.defaultMuiPrevented = true;
+      }
+    },
+    []
+  );
+
+  const onCellKeyDown = useCallback(
+    (
+      params: GridCellParams<ZetkinViewRow, unknown>,
+      ev: MuiEvent<React.KeyboardEvent<HTMLElement>>
+    ) => {
+      if (!params.isEditable) {
+        const col = colFromFieldName(params.field, columns);
+        if (col) {
+          const handleKeyDown = columnTypes[col.type].handleKeyDown;
+          if (handleKeyDown) {
+            handleKeyDown(
+              viewGrid,
+              col,
+              params.row.id,
+              params.value,
+              ev,
+              accessLevel
+            );
+          }
+        }
+      }
+    },
+    [columns, viewGrid, accessLevel]
+  );
+
+  const onColumnOrderChange = useCallback(
+    (params: GridColumnOrderChangeParams) => {
+      moveColumn(params.column.field, params.targetIndex);
+    },
+    [moveColumn]
+  );
+
+  const onColumnResize = useCallback(
+    (params: GridColumnResizeParams) => {
+      setColumnWidth(params.colDef.field, params.width);
+    },
+    [setColumnWidth]
+  );
+
+  const onRowSelectionModelChange = useCallback(
+    (model: GridRowSelectionModel) => setSelection(model as number[]),
+    [setSelection]
+  );
+
+  const processRowUpdate = useCallback(
+    (after: Row, before: Row): Row => {
+      const changedField = Object.keys(after).find(
+        (key) => after[key] != before[key]
+      );
+      if (changedField) {
+        const col = colFromFieldName(changedField, columns);
+        if (col) {
+          const proc = columnTypes[col.type].processRowUpdate;
+          if (proc) {
+            proc(viewGrid, col, after.id, after[changedField]);
+          }
+        }
+      }
+      return after;
+    },
+    [columns]
+  );
+
+  const mainSx = useMemo(
+    () => ({
+      ...(accessLevel === 'readonly' && {
+        '& .MuiDataGrid-cell:focus': {
+          outline: 'none',
+        },
+        '& .MuiDataGrid-cell:focus-within': {
+          outline: 'none',
+        },
+        '& .MuiDataGrid-cell:hover': {
+          backgroundColor: 'transparent',
+          cursor: 'default',
+        },
+      }),
+    }),
+    [accessLevel]
+  );
+
+  const onCancelRename = useCallback(
+    () => setColumnToRename(null),
+    [setColumnToRename]
+  );
+
+  const onSaveCreateColumn = useCallback(
+    async (columns: SelectedViewColumn[]) => {
+      for (const col of columns) {
+        await onCreateColumnSave(col);
+      }
+    },
+    [onCreateColumnSave]
+  );
+
   return (
     <>
       <DataGridPro
@@ -491,93 +716,23 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         checkboxSelection={!!selectionModel?.mode}
         columns={gridColumns}
         disableRowSelectionOnClick={true}
-        getRowClassName={(params) =>
-          params.id == addedId ? classes.addedRow : ''
-        }
+        getRowClassName={getRowClassName}
         hideFooter={
           disableAdd || empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC
         }
-        localeText={{
-          ...theme.components?.MuiDataGrid?.defaultProps?.localeText,
-          noRowsLabel: messages.empty.notice[contentSource](),
-        }}
-        onCellEditStart={(params, event) => {
-          if (params.reason == GridCellEditStartReasons.printableKeyDown) {
-            // Don't enter edit mode when the user just presses a printable character.
-            // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
-            // means the user will overwrite the original value, which is rarely what
-            // you want with the precious data that exists in views (when there is no
-            // undo feature).
-            event.defaultMuiPrevented = true;
-          }
-        }}
-        onCellKeyDown={(params: GridCellParams<ZetkinViewRow, unknown>, ev) => {
-          if (!params.isEditable) {
-            const col = colFromFieldName(params.field, columns);
-            if (col) {
-              const handleKeyDown = columnTypes[col.type].handleKeyDown;
-              if (handleKeyDown) {
-                handleKeyDown(
-                  viewGrid,
-                  col,
-                  params.row.id,
-                  params.value,
-                  ev,
-                  accessLevel
-                );
-              }
-            }
-          }
-        }}
-        onColumnOrderChange={(params) => {
-          moveColumn(params.column.field, params.targetIndex);
-        }}
-        onColumnResize={(params) => {
-          setColumnWidth(params.colDef.field, params.width);
-        }}
-        onRowSelectionModelChange={(model) => setSelection(model as number[])}
-        pinnedColumns={{
-          left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
-        }}
-        processRowUpdate={(after, before) => {
-          const changedField = Object.keys(after).find(
-            (key) => after[key] != before[key]
-          );
-          if (changedField) {
-            const col = colFromFieldName(changedField, columns);
-            if (col) {
-              const processRowUpdate = columnTypes[col.type].processRowUpdate;
-              if (processRowUpdate) {
-                processRowUpdate(viewGrid, col, after.id, after[changedField]);
-              }
-            }
-          }
-          return after;
-        }}
+        localeText={localeText}
+        onCellEditStart={onCellEditStart}
+        onCellKeyDown={onCellKeyDown}
+        onColumnOrderChange={onColumnOrderChange}
+        onColumnResize={onColumnResize}
+        onRowSelectionModelChange={onRowSelectionModelChange}
+        pinnedColumns={pinnedColumns}
+        processRowUpdate={processRowUpdate}
         rows={gridRows}
         slotProps={componentsProps}
-        slots={{
-          columnMenu: ViewDataTableColumnMenu,
-          footer: ViewDataTableFooter,
-          toolbar: ViewDataTableToolbar,
-        }}
-        style={{
-          border: 'none',
-        }}
-        sx={{
-          ...(accessLevel === 'readonly' && {
-            '& .MuiDataGrid-cell:focus': {
-              outline: 'none',
-            },
-            '& .MuiDataGrid-cell:focus-within': {
-              outline: 'none',
-            },
-            '& .MuiDataGrid-cell:hover': {
-              backgroundColor: 'transparent',
-              cursor: 'default',
-            },
-          }),
-        }}
+        slots={slots}
+        style={style}
+        sx={mainSx}
         {...modelGridProps}
       />
 
@@ -585,7 +740,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       {columnToRename && (
         <ViewRenameColumnDialog
           column={columnToRename}
-          onCancel={() => setColumnToRename(null)}
+          onCancel={onCancelRename}
           onSave={onColumnRenameSave}
         />
       )}
@@ -593,11 +748,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         <ViewColumnDialog
           columns={columns}
           onClose={onCreateColumnCancel}
-          onSave={async (columns) => {
-            for (const col of columns) {
-              await onCreateColumnSave(col);
-            }
-          }}
+          onSave={onSaveCreateColumn}
         />
       )}
       {renderConfigDialog &&

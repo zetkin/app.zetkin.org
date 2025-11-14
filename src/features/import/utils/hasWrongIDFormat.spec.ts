@@ -30,6 +30,19 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(false);
   });
 
+  it('returns false for empty Zetkin IDs', () => {
+    const wrongIDFormat = hasWrongIDFormat(
+      {
+        idField: 'id',
+        kind: ColumnKind.ID_FIELD,
+        selected: true,
+      },
+      ['Zetkin IDs', 1, 2, null, '', 4],
+      true
+    );
+    expect(wrongIDFormat).toBe(false);
+  });
+
   it('returns false if columnValues are digits and first row is header', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {

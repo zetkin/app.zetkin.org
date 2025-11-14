@@ -41,15 +41,15 @@ const PATTERN_TEMPLATES = {
     background:
       'repeating-linear-gradient(45deg, transparent, transparent 22px, $strongColor 22px, $strongColor 44px), $paleColor',
   },
+  pattern17: {
+    background:
+      'conic-gradient(at 32px 32px, $strongColor 0deg, $strongColor 25deg, transparent 25deg) 0 32px, conic-gradient(at 32px 32px, transparent 0deg, transparent 336deg, $strongColor 336deg, $strongColor 360deg) 0 32px, linear-gradient(transparent 0%,transparent 50%, $paleColor 50%, $paleColor 100%), radial-gradient(circle at 32px 32px, $strongColor 32%, transparent 16%), $paleColor',
+    backgroundSize: 'calc(2*32px) calc(2*32px)',
+  },
   pattern2: {
     background:
       'conic-gradient(from 116.56deg at calc(100%/3) 0, #0000 90deg,$paleColor 0), conic-gradient(from -63.44deg at calc(200%/3) 100%, #0000 90deg,$paleColor 0) $strongColor',
     backgroundSize: '32px 32px',
-  },
-  pattern3: {
-    background:
-      'conic-gradient(at 10% 50%,#0000 75%,$strongColor 0), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(1*32px) calc(3*32px), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(2*32px) calc(1*32px), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(3*32px) calc(4*32px), conic-gradient(at 10% 50%,#0000 75%,$strongColor 0) calc(4*32px) calc(2*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) 0 calc(4*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(1*32px) calc(2*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(2*32px) 0, conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(3*32px) calc(3*32px), conic-gradient(at 50% 10%,#0000 75%,$strongColor 0) calc(4*32px) calc(1*32px), $paleColor',
-    backgroundSize: '160px 160px',
   },
   pattern4: {
     background:
@@ -94,7 +94,7 @@ export default function filterGalleryPattern(
   } else if (slug === FILTER_TYPE.PERSON_DATA) {
     pattern = PATTERN_TEMPLATES.pattern2;
   } else if (slug === FILTER_TYPE.PERSON_FIELD) {
-    pattern = PATTERN_TEMPLATES.pattern3;
+    pattern = PATTERN_TEMPLATES.pattern15;
   } else if (slug === FILTER_TYPE.PERSON_TAGS) {
     pattern = PATTERN_TEMPLATES.pattern4;
   } else if (slug === FILTER_TYPE.PERSON_VIEW) {
@@ -119,6 +119,8 @@ export default function filterGalleryPattern(
     pattern = PATTERN_TEMPLATES.pattern14;
   } else if (slug === FILTER_TYPE.JOURNEY) {
     pattern = PATTERN_TEMPLATES.pattern16;
+  } else if (slug === FILTER_TYPE.AREA) {
+    pattern = PATTERN_TEMPLATES.pattern17;
   } else if (slug == FILTER_TYPE.ALL) {
     pattern = PATTERN_TEMPLATES.pattern13;
   } else {

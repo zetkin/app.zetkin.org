@@ -2,7 +2,7 @@
 
 import { IntlShape, useIntl } from 'react-intl';
 
-import { Message, MessageMap, MessageValue } from './messages';
+import { Message, MessageMap } from './messages';
 
 /**
  * The useMessages() takes messages defined by the messages() function, and
@@ -34,7 +34,7 @@ export function injectIntl<MapType extends MessageMap>(
 
   Object.entries(map).forEach(([key, val]) => {
     if (isMessage(val)) {
-      output[key] = ((values?: Record<string, MessageValue>) => {
+      output[key] = (values?: Record<string, string>) => {
         return intl.formatMessage(
           {
             defaultMessage: val._defaultMessage,
@@ -42,7 +42,7 @@ export function injectIntl<MapType extends MessageMap>(
           },
           values
         );
-      }) as HookedMessageFunc<typeof val>;
+      };
     } else {
       output[key] = injectIntl(val, intl) as UseMessagesMap<typeof val>;
     }

@@ -11,20 +11,22 @@ import { labels, colors } from './PreviousCallsInfo';
 import { ZetkinCall } from '../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useCurrentCall from '../hooks/useCurrentCall';
+import UnfinishedCall from './UnfinishedCall';
+import { useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type PreviousCallsSectionProps = {
-  assingmentId: number;
-  onClose?: () => void;
+  onCall: (assignmentId: number) => void;
   orgId: number;
   searchTerm?: string;
 };
 
 const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
-  assingmentId,
-  onClose,
   orgId,
+  onCall,
   searchTerm,
 }) => {
+  const messages = useMessages(messageIds);
   const {
     abandonUnfinishedCall,
     switchToPreviousCall,
@@ -34,6 +36,7 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
   const outgoingCalls = useOutgoingCalls();
   const search = searchTerm?.toLowerCase().trim();
 
+  //TODO: Use Fuse libray to fuzzy search.
   const matchesSearch = (call: ZetkinCall) => {
     if (!search) {
       return true;
@@ -69,139 +72,106 @@ const PreviousCallsSection: FC<PreviousCallsSectionProps> = ({
     <Box>
       {unfinishedCalls.map((unfinishedCall) => (
         <Fragment key={unfinishedCall.id}>
-          <Box mt={1}>
+          <UnfinishedCall
+            onAbandonCall={() => abandonUnfinishedCall(unfinishedCall.id)}
+            onSwitchToCall={() => {
+              switchToUnfinishedCall(
+                unfinishedCall.id,
+                unfinishedCall.assignment_id
+              );
+              onCall(unfinishedCall.assignment_id);
+            }}
+            unfinishedCall={unfinishedCall}
+          />
+          <ZUIDivider />
+        </Fragment>
+      ))}
+      {previousCalls.map((previousCall) => (
+        <Fragment key={previousCall.id}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0.5,
+              paddingY: 1,
+            }}
+          >
             <Box
-              alignItems="flex-start"
-              display="flex"
-              gap={1}
-              justifyContent="space-between"
-              sx={{ minWidth: 0 }}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
             >
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flex: 1,
+                  gap: 1,
+                  minWidth: 0,
+                }}
+              >
+                <ZUIPersonAvatar
+                  firstName={previousCall.target.first_name}
+                  id={previousCall.target.id}
+                  lastName={previousCall.target.last_name}
+                  size="medium"
+                />
+                <ZUIText noWrap variant="bodyMdSemiBold">
+                  {previousCall.target.name}
+                </ZUIText>
+              </Box>
+              <ZUIButton
+                label={messages.callLog.previousCall.logNew()}
+                onClick={() => {
+                  switchToPreviousCall(
+                    previousCall.assignment_id,
+                    previousCall.target.id
+                  );
+                  onCall(previousCall.assignment_id);
+                }}
+                size="small"
+                variant="secondary"
+              />
+            </Box>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+                paddingLeft: 5,
+              }}
+            >
+              <ZUIText variant="bodyMdRegular">
+                {previousCall.target.phone}
+              </ZUIText>
               <Box
                 alignItems="center"
                 display="flex"
                 gap={1}
-                mt={1}
-                sx={{ flex: 1, minWidth: 0 }}
+                sx={(theme) => {
+                  const color = colors[previousCall.state];
+                  return {
+                    color:
+                      color === 'warning'
+                        ? theme.palette.warning.dark
+                        : theme.palette[color].main,
+                    minWidth: 0,
+                  };
+                }}
               >
-                <ZUIPersonAvatar
-                  firstName={unfinishedCall.target.first_name}
-                  id={unfinishedCall.target.id}
-                  lastName={unfinishedCall.target.last_name}
-                  size="medium"
-                />
-
-                <ZUIText noWrap variant="bodyMdSemiBold">
-                  {unfinishedCall.target.first_name +
-                    ' ' +
-                    unfinishedCall.target.last_name}
+                <ZUIText color="inherit" noWrap>
+                  {labels[previousCall.state]}
                 </ZUIText>
-              </Box>
-              <Box
-                alignItems="flex-end"
-                display="flex"
-                flexDirection="column"
-                gap={0.5}
-                justifyContent="center"
-                my={1}
-              >
-                <Box display="flex" gap={1}>
-                  <ZUIButton
-                    label="Abandon"
-                    onClick={() => {
-                      abandonUnfinishedCall(unfinishedCall.id);
-                    }}
-                    variant="tertiary"
-                  />
-                  <ZUIButton
-                    label="Switch to"
-                    onClick={() => {
-                      switchToUnfinishedCall(unfinishedCall);
-                      onClose?.();
-                    }}
-                    variant="primary"
-                  />
-                </Box>
                 <ZUIText color="secondary" noWrap>
-                  <ZUIRelativeTime datetime={unfinishedCall.update_time} />
+                  <ZUIRelativeTime datetime={previousCall.update_time} />
                 </ZUIText>
               </Box>
             </Box>
           </Box>
           <ZUIDivider />
         </Fragment>
-      ))}
-      {previousCalls.map((previousCall) => (
-        <Box key={previousCall.id} mt={2}>
-          <Box
-            alignItems="center"
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Box
-              alignItems="center"
-              display="flex"
-              gap={1}
-              sx={{ flex: 1, minWidth: 0 }}
-            >
-              <ZUIPersonAvatar
-                firstName={previousCall.target.first_name}
-                id={previousCall.target.id}
-                lastName={previousCall.target.last_name}
-                size="medium"
-              />
-              <ZUIText noWrap variant="bodyMdSemiBold">
-                {previousCall.target.first_name +
-                  ' ' +
-                  previousCall.target.last_name}
-              </ZUIText>
-            </Box>
-
-            <ZUIButton
-              label="Log another call"
-              onClick={() => {
-                switchToPreviousCall(assingmentId, previousCall.target.id);
-                onClose?.();
-              }}
-              variant="secondary"
-            />
-          </Box>
-          <Box
-            alignItems="center"
-            display="flex"
-            gap={1}
-            justifyContent="space-between"
-            ml="2.5rem"
-            my={1}
-          >
-            <ZUIText variant="bodyMdRegular">
-              {previousCall.target.phone}
-            </ZUIText>
-            <Box
-              alignItems="center"
-              display="flex"
-              gap={1}
-              sx={(theme) => {
-                const color = colors[previousCall.state];
-                return {
-                  color:
-                    color === 'warning'
-                      ? theme.palette.warning.dark
-                      : theme.palette[color].main,
-                  minWidth: 0,
-                };
-              }}
-            >
-              <ZUIText color="inherit" noWrap>
-                {labels[previousCall.state]}
-              </ZUIText>
-              <ZUIText color="secondary" noWrap>
-                <ZUIRelativeTime datetime={previousCall.update_time} />
-              </ZUIText>
-            </Box>
-          </Box>
-          <ZUIDivider />
-        </Box>
       ))}
     </Box>
   );

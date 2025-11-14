@@ -4,8 +4,10 @@ import { useMemo } from 'react';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import useUpcomingOrgEvents from './useUpcomingOrgEvents';
 import useMyEvents from 'features/events/hooks/useMyEvents';
-import { useAppSelector } from 'core/hooks';
+import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { getGeoJSONFeaturesAtLocations } from '../../map/utils/locationFiltering';
+import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
+import { filtersUpdated } from '../store';
 
 export default function useFilteredOrgEvents(orgId: number) {
   const orgEvents = useUpcomingOrgEvents(orgId);
@@ -14,6 +16,7 @@ export default function useFilteredOrgEvents(orgId: number) {
   const {
     customDatesToFilterBy,
     dateFilterState,
+    eventTypesToFilterBy,
     geojsonToFilterBy,
     orgIdsToFilterBy,
   } = useAppSelector((state) => state.organizations.filters);
@@ -39,6 +42,13 @@ export default function useFilteredOrgEvents(orgId: number) {
         myEvents.find((userEvent) => userEvent.id == event.id)?.status || null,
     }));
   }, [orgEvents]);
+
+  const dispatch = useAppDispatch();
+  const eventTypeFilter = useEventTypeFilter(allEvents, {
+    eventTypeLabelsToFilterBy: eventTypesToFilterBy,
+    setEventTypeLabelsToFilterBy: (newArray) =>
+      dispatch(filtersUpdated({ eventTypesToFilterBy: newArray })),
+  });
 
   const filteredEvents = allEvents
     .filter((event) => {
@@ -76,7 +86,8 @@ export default function useFilteredOrgEvents(orgId: number) {
           (eventEnd.isBefore(end, 'day') || eventEnd.isSame(end, 'day'));
         return isOngoing || startsInPeriod || endsInPeriod;
       }
-    });
+    })
+    .filter(eventTypeFilter.getShouldShowEvent);
 
   const locationEvents = filteredEvents.filter((event) => {
     if (geojsonToFilterBy.length === 0) {
@@ -95,5 +106,11 @@ export default function useFilteredOrgEvents(orgId: number) {
     return features.length > 0;
   });
 
-  return { allEvents, filteredEvents, getDateRange, locationEvents };
+  return {
+    allEvents,
+    eventTypeFilter,
+    filteredEvents,
+    getDateRange,
+    locationEvents,
+  };
 }

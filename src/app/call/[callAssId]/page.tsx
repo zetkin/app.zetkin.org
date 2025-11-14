@@ -1,16 +1,24 @@
-import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
+import { Metadata } from 'next';
+import { headers } from 'next/headers';
 
-import BackendApiClient from 'core/api/client/BackendApiClient';
-import CallPage from 'features/call/pages/CallPage';
-import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import redirectIfLoginNeeded from 'core/utils/redirectIfLoginNeeded';
-import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import { CALL, hasFeature } from 'utils/featureFlags';
+import BackendApiClient from 'core/api/client/BackendApiClient';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 type Props = {
-  params: { callAssId: string };
+  params: {
+    callAssId: string;
+  };
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    icons: [{ url: '/logo-zetkin.png' }],
+    title: 'Call',
+  };
+}
 
 export default async function Page({ params }: Props) {
   await redirectIfLoginNeeded();
@@ -30,11 +38,7 @@ export default async function Page({ params }: Props) {
   }
 
   if (hasFeature(CALL, assignment.organization.id, process.env)) {
-    return (
-      <HomeThemeProvider>
-        <CallPage assignment={assignment} />
-      </HomeThemeProvider>
-    );
+    return redirect(`/call?assignment=${params.callAssId}`);
   } else {
     const callUrl = process.env.ZETKIN_GEN2_CALL_URL;
     const assignmentUrl = `${callUrl}/assignments/${params.callAssId}/call`;

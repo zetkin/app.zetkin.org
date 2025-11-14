@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.import', {
   actionButtons: {
@@ -201,6 +201,9 @@ export default makeMessages('feat.import', {
           secondValue: string | number;
         }>('{firstValue} and {secondValue}.'),
       },
+      notEnoughRows: m(
+        'Your file does not contain enough rows to import any data'
+      ),
       organization: m('Organization'),
       selectZetkinField: m('Import as...'),
       tags: m('Tags'),

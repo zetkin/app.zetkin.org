@@ -1,4 +1,4 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.breadcrumbs', {
   elements: {
@@ -35,6 +35,7 @@ export default makeMessages('feat.breadcrumbs', {
     settings: m('Settings'),
     shared: m('Shared with us'),
     submissions: m('Submissions'),
+    suborgOverview: m('Suborganization overview'),
     surveys: m('Surveys'),
     tags: m('Tags'),
     tasks: m('Tasks'),

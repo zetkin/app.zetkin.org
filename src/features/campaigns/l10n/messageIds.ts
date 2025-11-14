@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.campaigns', {
   activitiesOverview: {
@@ -161,6 +161,8 @@ export default makeMessages('feat.campaigns', {
   },
   noManager: m('No Project Manager'),
   publicProjectPage: {
+    calendarLinkCopied: m('Successfully copied calendar link'),
+    copyIcsUrl: m('Copy calendar subscription URL'),
     eventList: {
       emptyList: {
         message: m('Could not find any events'),

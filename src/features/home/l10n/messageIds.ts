@@ -48,6 +48,12 @@ export default makeMessages('feat.home', {
   footer: {
     privacyPolicy: m('Privacy policy'),
   },
+  newLandingPageAlert: {
+    description: m(
+      'If you are looking for the organizer pages, you can find them from now on by clicking the button in the header below.'
+    ),
+    title: m('This is your new landing page'),
+  },
   settings: {
     accountSettings: {
       email: {

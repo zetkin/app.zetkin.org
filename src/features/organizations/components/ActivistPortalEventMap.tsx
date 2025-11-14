@@ -1,7 +1,8 @@
 import { Box, SxProps } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
-import { FC, PropsWithChildren, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import { GeoJSON } from 'geojson';
 
 import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
@@ -23,31 +24,36 @@ export const ActivistPortalEventMap: FC<
 > = ({ children, events, locationFilter, setLocationFilter, sx }) => {
   const [map, setMap] = useState<MapType | null>(null);
 
-  useMapMarkerClick(map, (geojsonFeatures) => {
-    const bounds = pointsToBounds(
-      geojsonFeatures.map((feature) => {
-        if (feature.geometry.type === 'Point') {
-          return [
-            feature.geometry.coordinates[1] as Longitude,
-            feature.geometry.coordinates[0] as Latitude,
-          ];
-        } else {
-          return [0 as Longitude, 0 as Latitude];
-        }
-      })
-    );
+  const onMarkerClick = useCallback(
+    (geojsonFeatures: GeoJSON.Feature[]) => {
+      const bounds = pointsToBounds(
+        geojsonFeatures.map((feature) => {
+          if (feature.geometry.type === 'Point') {
+            return [
+              feature.geometry.coordinates[1] as Longitude,
+              feature.geometry.coordinates[0] as Latitude,
+            ];
+          } else {
+            return [0 as Longitude, 0 as Latitude];
+          }
+        })
+      );
 
-    if (map && bounds) {
-      map.fitBounds(bounds, {
-        animate: true,
-        duration: 1200,
-        maxZoom: 16,
-        padding: 20,
-      });
-    }
+      if (map && bounds) {
+        map.fitBounds(bounds, {
+          animate: true,
+          duration: 1200,
+          maxZoom: 16,
+          padding: 20,
+        });
+      }
 
-    setLocationFilter(geojsonFeatures);
-  });
+      setLocationFilter(geojsonFeatures);
+    },
+    [map, setLocationFilter]
+  );
+
+  useMapMarkerClick(map, onMarkerClick);
 
   const env = useEnv();
   const bounds = useMemo(
@@ -56,10 +62,7 @@ export const ActivistPortalEventMap: FC<
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .map((location) => [
-            location.lng as Longitude,
-            location.lat as Latitude,
-          ])
+          .map((location) => [location.lng, location.lat])
       ) ?? undefined,
     [events]
   );
@@ -80,7 +83,7 @@ export const ActivistPortalEventMap: FC<
             }
             acc[key].count += 1;
             return acc;
-          }, {} as Record<string, { count: number; id: number; lat: number; lng: number }>)
+          }, {} as Record<string, { count: number; id: number; lat: Latitude; lng: Longitude }>)
       ),
     [events]
   );

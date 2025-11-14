@@ -35,7 +35,7 @@ const TagsLayout: FC<TagsLayoutProps> = ({ children }) => {
             <Msg id={messageIds.tagsPage.createTagButton} />
           </Button>
         }
-        baseHref={`organize/${orgId}/tags`}
+        baseHref={`/organize/${orgId}/tags`}
         defaultTab="/"
         tabs={[{ href: '/', label: messages.tagsPage.overviewTabLabel() }]}
         title={messages.tagsPage.title()}

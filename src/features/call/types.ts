@@ -1,3 +1,6 @@
+import { DateRange } from '@mui/x-date-pickers-pro';
+import { Dayjs } from 'dayjs';
+
 import {
   ZetkinEvent,
   ZetkinEventResponse,
@@ -88,21 +91,36 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
 }
 
 export enum LaneStep {
-  STATS = 0,
-  PREPARE = 1,
-  ONGOING = 2,
-  REPORT = 3,
-  SUMMARY = 4,
+  START = 0,
+  CALL = 1,
+  REPORT = 2,
+  SUMMARY = 3,
 }
 
 export type SurveySubmissionData = Record<string, string | string[]>;
 
+export type ActivityFilters = {
+  customDatesToFilterEventsBy: DateRange<Dayjs>;
+  eventDateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+  filterState: {
+    alreadyIn: boolean;
+    events: boolean;
+    surveys: boolean;
+    thisCall: boolean;
+  };
+  orgIdsToFilterEventsBy: number[];
+  projectIdsToFilterActivitiesBy: (number | 'noProject')[];
+};
+
 export type LaneState = {
+  assignmentId: number;
   callIsBeingAllocated: boolean;
   currentCallId: number | null;
+  filters: ActivityFilters;
   previousCall: ZetkinCall | null;
   report: Report;
   respondedEventIds: number[];
+  selectedSurveyId: number | null;
   step: LaneStep;
   submissionDataBySurveyId: Record<number, SurveySubmissionData>;
   surveySubmissionError: boolean;

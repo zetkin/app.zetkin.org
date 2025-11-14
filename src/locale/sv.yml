@@ -40,10 +40,179 @@ core:
       använda. Du omdirigeras nu till den äldre versionen av Zetkin som stödjer
       den funktionen.
 feat:
+  areaAssignments:
+    assignees:
+      columns:
+        areas: Områden
+        name: Namn
+    default:
+      title: Namnlöst områdesuppdrag
+    instructions:
+      editor:
+        confirm: Vill du radera alla ändringar som inte sparats och gå tillbaka till
+          sparade instruktioner?
+        editorPlaceholder: Lägg till instruktioner till dina aktivister
+        revertLink: Återvänt till sparad version?
+        saveButton: Spara
+        savedMessage: Allt är uppdaterat!
+        savingButton: Sparar...
+        unsavedMessage: Du har ändringar som inte sparats.
+      title: Instruktioner till ansvariga
+    layout:
+      actions:
+        delete: Radera
+        deleteWarningText: Är du säker på att du vill radera {title}?
+        end: Avsluta uppdrag
+        start: Starta uppdrag
+      basicAssignmentStats:
+        areas: '{numAreas, plural, =0 {Inga områden} one {1 område} other {# områden}}'
+        assignees: '{numAssignees, plural, =0 {Ingen ansvarig} one {1 ansvarig} other {#
+          ansvariga}}'
+      tabs:
+        assignees: Ansvariga
+        instructions: Instruktioner
+        map: Karta
+        overview: Översikt
+        report: Rapport
+    map:
+      areaInfo:
+        assignees:
+          add: Lägg till ansvarig
+          none: Inga ansvariga
+          title: Ansvariga
+      filter:
+        assignees:
+          assigned: Endast tilldelade områden
+          label: Ansvariga
+          unassigned: Endast ej tilldelade områden
+        description: Definiera vilka områden du ser på kartan
+        header: Filters
+        title: Lägg till filter för att avgöra vilka områden du ser på kartan
+        ungroupedTags: Ogrupperade etiketter
+      findArea:
+        filterPlaceHolder: Filter
+        title: Områden
+      mapStyle:
+        area:
+          label: Områdesfärg
+          options:
+            assignees: Ansvariga
+            hidden: Dold
+            households: Hushåll
+            outlined: Markerad
+            progress: Framsteg
+        center:
+          label: Områdesmarkeringar
+          options:
+            assignees: Ansvariga
+            hidden: Dold
+            households: Hushåll & platser
+            progress: Framsteg
+        markers:
+          label: Platsmarkörer
+          options:
+            altDescriptions:
+              locationDot: Punktalternativ
+              locationHidden: Dölj val
+              locationHouseholds: Alternativ för hushåll
+              locationProgress: Alternativ för framsteg
+            dot: Punkt
+            hidden: Dold
+            households: Hushåll
+            progress: Framsteg
+        title: Datavisualisering
+    overview:
+      empty:
+        description: Detta områdesuppdrag har inte planerats ännu
+        startPlanningButton: Planera nu
+      progress:
+        headers:
+          households: Besökta hushåll
+          locations: Besökta platser
+          successful: Lyckade besök
+        statsTitle: Framsteg
+        unassignedVisits:
+          description: Detta diagram visar besök som gjordes utanför tilldelade områden
+          title: Ej tilldelade besök
+    report:
+      card:
+        definesSuccess: Definiera framgång
+        delete: Radera
+        description: Ingen beskrivning
+        question: Namnlös fråga
+        tooltip: 'För att radera denna behöver du först skapa en ny fråga med val för
+          att definiera om besöket var lyckat. '
+      dataCard:
+        header: Dataprecision & integritet
+        household: Per hushåll (högst precision)
+        info: Samla in data...
+        location: per plats (mindre exakt, mer integritet)
+        subheader: Att konfigurera var datan ska lagras handlar om att hitta en balans
+          mellan precision och integritet som passar din organisation.
+      delete:
+        cancel: Avbryt
+        confirm: Bekräfta
+        deleteWarningText: Om du vill radera {title} behöver du välja en annan fråga som
+          definierar att besöket var lyckat
+        dialog: 'Är du säker på att du vill radera denna fråga? Denna handling är
+          permanent och går inte att ånga. '
+        select: Välj
+      lockCard:
+        add: Lägger till frågor
+        change: Ändrar fråga som definierar lyckade besök
+        description: Uppdraget har startat. Att ända uppdraget nu kan skapa problem med
+          datan. Gå vidare med försiktighet.
+        descriptionUnlock: Var försiktig med att göra ändringar som kan leda till
+          förlorad eller felaktig data.
+        fix: Ändra stavning
+        header: Rapport låst
+        headerUnlock: Rapport upplåst
+        rename: Ändra frågan på ett sätt som ändrar innebörden
+        safe: Säker
+        unsafe: Osäker
+      metricCard:
+        choice: Fråga med val
+        ratingDescription: Ansvarig person kommer svara genom att ranka frågan från 1 till 5
+        save: Spara
+        scale: Fråga med skala
+      successCard:
+        header: Lyckade besök
+        subheader: Välj en fråga som avgör lyckade besök. Att svara ja på den frågan
+          räknas som lyckat besök
+      toolBar:
+        title: Lägg till frågor till ditt områdesuppdrag
+  areas:
+    areas:
+      areaSettings:
+        delete: Radera
+        edit:
+          cancelButton: Avbryt
+          editButton: Redigera
+          saveButton: Spara
+        tags:
+          title: Områdesetiketter
+      controlLabels:
+        filters: Filter
+        layers: Datavisualisering
+        select: Välj
+      default:
+        description: Ingen beskrivning
+        title: Namnlöst område
+      draw:
+        cancelButton: Avbryt
+        saveButton: Spara
+        startButton: Rita
+      filter:
+        addFilterButton: Lägg till filter
+        openFiltersButton: Filter
+        ungroupedTagsLabel: Ogrupperade etiketter
+    page:
+      title: Geografi
   breadcrumbs:
     elements:
       activities: Aktiviteter
       archive: Arkiv
+      areaassignments: Områdesuppdrag
       assignees: Ansvariga
       calendar: Kalender
       callassignments: Ringuppdrag
@@ -56,6 +225,7 @@ feat:
       emails: E-post
       events: Event
       folders: Listor
+      geography: Geografi
       incoming: Inkommande
       insights: Insikter
       instances: Exempel
@@ -67,6 +237,7 @@ feat:
       organize: Organisera
       participants: Deltagare
       people: Människor
+      plan: Planera
       projects: Projekt
       questions: Frågor
       settings: Inställningar
@@ -156,10 +327,129 @@ feat:
     shortWeek: v {weekNumber}
     showMore: Visa
     today: Idag
+  call:
+    instructions:
+      title: Instruktioner
+    report:
+      steps:
+        callBack:
+          question:
+            afterSpecificHourOptionLabel: Efter {hour}
+            anyTimeOptionLabel: När som helst på dagen
+            callBackButtonLabel: Ring tillbaka efter {date}
+            dateLabel: På vilket datum
+            examples:
+              nextWeek: Nästa vecka
+              title: Snabbkommandon
+              today: Senare idag
+              tomorrow: Imorgon
+            invalidDateButtonLabel: Ogiltigt datum
+            timeLabel: Efter vilken tid
+            title: När ska vi ringa tillbaka?
+          summary:
+            afterSpecificTime: Ring tillbaka efter {time}
+            anyTime: Vi ringer tillbaka efter {date}
+            subtitle: Under tiden, {firstName} blir automatiskt bortplockad från kön
+        callerLog:
+          question:
+            noteLabel: Lägg till valfritt meddelande
+            saveWithNoteButton: Spara med meddelande
+            saveWithoutNoteButton: Spara utan meddelande
+            shortcutHint: När du skriver, tryck SHIFT + ENTER för att spara med meddelande.
+            title: Vill du lämna ett meddelande till framtida ringare?
+          summary:
+            withNote:
+              subtitle: 'Framtida ringare kommer se ditt meddelande: {note}'
+              title: Du skrev ett meddelande till framtida ringare
+            withoutNote: Du lämnade inte ett meddelande till framtida ringare
+        couldTalk:
+          question:
+            noButton: Nej, ring tillbaka
+            title: Kunde {firstName} prata?
+            yesButton: Ja
+          summary:
+            couldNotTalk:
+              subtitle: Framtida ringare kommer att kunna se att vi behöver ringa tillbaka
+              title: '{firstName} kunde inte prata'
+            couldTalk:
+              subtitle: Framtida ringare kommer att kunna se att du lyckades
+              title: '{firstName} kunde prata'
+        failureReason:
+          question:
+            lineBusy: Upptagen
+            noPickup: Inget svar
+            notAvailable: Inte tillgänglig just nu
+            title: Varför inte?
+            wrongNumber: Fel nummer
+          summary:
+            lineBusy: Det var upptaget
+            noPickup: '{firstName} svarade inte'
+            notAvailable: '{firstName} kunde inte prata just nu, vi behöver ringa tillbaka'
+            wrongNumber: Vi har fel nummer till {firstName}
+        leftMessage:
+          question:
+            noButton: Nej
+            title: Lämnade du ett meddelande på telefonsvararen?
+            yesButton: Ja
+          summary:
+            didNotLeaveMessage: Lämnade inte ett meddelande på telefonsvararen
+            leftMessage:
+              subtitle: Framtida ringar kommer att se att du lämnade ett meddelande
+              title: Lämnade ett meddelande på telefonsvararen
+        organizerAction:
+          question:
+            noButton: Nej
+            title: Hände något under samtalet som kräver att en organisatör agerar?
+            yesButton: Ja
+          summary:
+            orgActionNeeded:
+              subtitle: En organisatör kommer notifieras
+              title: Du vill att en organisatör granskar detta samtal
+            orgActionNotNeeded: Ingen åtgärd nödvändig
+        organizerLog:
+          question:
+            messageLabel: Lägg till valfritt meddelande
+            shortcutHint: När du skriver, tryck SHIFT + ENTER för att lägga till meddelande.
+            title: Förklara problemet till organisatörerna
+            withMessageButton: Inkludera meddelade
+            withoutMessageButton: Spara utan meddelande
+            wrongNumberMessages:
+              altPhone: 'Alternativt telefonnummer är inkorrekt: {altPhone}'
+              both: Båda telefonnumren är inkorrekta, {phone} och {altPhone}
+              phone: 'Telefonnumret är inkorrekt: {phone}'
+          summary:
+            withMessage:
+              subtitle: 'Organisatörerna kommer se ditt meddelande: {message}'
+              title: Du lämnade ett meddelande till organisatörerna
+            withoutMessage: Du lämnade inte ett meddelande till organisatörerna
+        successOrFailure:
+          question:
+            noButton: Nej
+            title: Nådde du {firstName}?
+            yesButton: Ja
+          summary:
+            failure:
+              subtitle: Framtida ringare kommer att se att du inte pratade med {firstName}
+              title: Vi nådde inte {firstName}
+            success:
+              subtitle: Framtida ringare kommer att se att du pratade med {firstName}
+              title: '{firstName} blev nådd'
+        wrongNumber:
+          question:
+            bothButton: Båda
+            title: Vilket nummer är inkorrekt?
+          summary:
+            phoneBoth: 'Båda telefonnumren är inkorrekta: {phone} och {altPhone}'
+            phoneSingle: 'Ett telefonnummer är inkorrekt: {phone}'
+      summary:
+        editButtonLabel: Redigera
+    stats:
+      callsMade: samta gjorda
   callAssignments:
     actions:
       delete: Radera
       end: Avsluta ringuppdrag
+      move: Flytta
       start: Starta ringuppdrag
       warning: '"{title}" kommer raderas.'
     blocked:
@@ -173,6 +463,10 @@ feat:
       subtitle: Målgruppen är inte redo att bli uppringd
       title: Blockerade
       viewSheetButton: Visa lista
+    callAssignmentChangeCampaignDialog:
+      error: 'Fel: Kunde inte flytta uppdraget till valt projekt'
+      success: Uppdraget "{assignmentTitle}" flyttat till "{campaignTitle}"
+      title: Flytta uppdrag
     callers:
       actions:
         customize: Anpassa kö
@@ -285,6 +579,7 @@ feat:
       cardCTA: Gå till projekt
       create: Skapa nytt projekt
       filter:
+        areaAssignments: Områdesuppdrag
         calls: Ringuppdrag
         emails: E-post
         filter: Filtrera resultat
@@ -300,8 +595,11 @@ feat:
       viewArchive: Visa arkiv
     assigneeActions: Uppgifter för ansvarig
     calendarView: Se alla i kalendern
+    changeCampaignDialog:
+      moveButtonLabel: Flytta
     createButton:
       createActivity: Skapa
+      createAreaAssignment: Områdesuppdrag
       createCallAssignment: Ringuppdrag
       createEmail: E-post
       createEvent: Event
@@ -314,6 +612,8 @@ feat:
       create: Skapa enkät
       heading: Feedback och Enkäter (ingen konfiguerad)
     form:
+      createAreaAssignment:
+        defaultQuestion: Har du slutfört uppgiften?
       createCallAssignment:
         newCallAssignment: Mitt ringuppdrag
       createCampaign:
@@ -361,6 +661,7 @@ feat:
       overview: Översikt
     linkGroup:
       createActivity: Skapa aktivitet
+      createAreaAssignment: Områdesuppdrag
       createCallAssignment: Skapa ringuppdrag
       createEmail: Skapa e-post
       createEvent: Skapa event
@@ -374,6 +675,22 @@ feat:
       create: Skapa ringuppdrag
       heading: Mobilisering och kontaktarbete (ej konfigurerad)
     noManager: Ingen projektansvarig
+    publicProjectPage:
+      eventList:
+        emptyList:
+          message: Kunde inte hitta några event
+          removeFiltersButton: Rensa filter
+        filterButtonLabels:
+          locations: '{count} platser'
+          thisWeek: Denna vecka
+          today: Idag
+          tomorrow: Imorgon
+        noEventsBlurb:
+          description: '{project} har inga kommande events.'
+          headline: Det finns inga kommande events
+      map:
+        viewInListButton: Visa i lista
+        viewInMapButton: Visa på karta
     shared:
       cta: Gå till projekt
       noActivities: Alla pågående aktiviteter som delas med din organisation kommer
@@ -402,6 +719,108 @@ feat:
         insights: Insikter
         summary: Sammanfattning
     tasks: Uppgifter
+  canvass:
+    default:
+      description: Ingen beskrivning
+      floor: Okänd våning
+      location: Namnlös plats
+    households:
+      bulkEditHouseholds:
+        floorLabel: Redigera våning
+        header: Redigera {numHouseholds} hushåll
+        saveButtonLabel: Spara {numHouseholds} hushåll
+      colorPicker:
+        inputLabel: Redigera hushållets färg
+        noColor: Ingen färg
+      createMultiple:
+        createButtonLabel: Skapa {numHouseholds} hushåll
+        header: Skapa hushåll
+        numberOfFloorsInput: Antal våningar
+        numberOfHouseholdsInput: Hushåll per våning
+      editSingleHousehold:
+        floorLabel: Redigera våning
+        header: Redigera {title}
+        saveButtonLabel: Spara
+        titleLabel: Redigera titel
+      householdDefaultTitle: Hushåll {householdNumber}
+      page:
+        empty: Denna plats har inga hushåll än
+        header: Hushåll
+      single:
+        logVisitButtonLabel: Logga besök
+        subtitle: Våning {floorNumber}
+        wasVisited: Detta hushåll har besökts i det här uppdraget
+    instructions:
+      areas: Områden
+      instructionsHeader: Instruktioner
+      ready: Du är redo att börja
+      selectArea: Välj område
+      start: Starta uppdrag
+      visitedHouseholds: Besökta hushåll
+      visitedLocations: Besökta platser
+    location:
+      edit:
+        descriptionLabel: Redigera beskrivning
+        header: Redigera {title}
+        saveButtonLabel: Spara
+        titleLabel: Redigera titel
+      header: '{numVisitedHouseholds}/{numHouseholds} hushåll har besökts'
+      page:
+        historySectionHeader: Historik
+        householdVisitedStatLabel: besökta hushåll
+        householdsButtonLabel: Hushåll
+        householdsVisitedStat: '{numVisitedHouseholds} av {numHouseholds}'
+        noHouseholds: Inga hushåll är registrerade här ännu
+        numberOfHouseholds: '{numHouseholds} hushåll'
+        quickReportButtonLabel: Snabbrapport
+      subheader: '{successfulVisits, plural, one {1 lyckat besök} other {# lyckade
+        besök}}'
+    map:
+      addLocation:
+        add: Lägg till plats
+        cancel: Avbryt
+        create: Skapa plats
+        inputPlaceholder: Ge platsen ett namn
+    selectArea:
+      noAreas: Inga områden tillgängliga
+    sidebar:
+      instructions:
+        title: Instruktioner
+      menuOptions:
+        home: Mina aktiviteter
+        logOut: Logga ut
+      progress:
+        allTime:
+          title: Alltid
+        header:
+          households: Hushåll
+          locations: Platser
+          title: Framsteg
+        session:
+          title: Session (idag)
+          you: Du
+        sync:
+          label:
+            hasLoaded: Synkad {timestamp}
+            neverLoaded: Aldrig inläst
+          syncButton:
+            label: Synka nu
+            loading: Synkar
+    visit:
+      household:
+        header: '{householdTitle}: Logga besök'
+        noButtonLabel: Nej
+        skipButtonLabel: Hoppa över denna fråga
+        submitReportButtonLabel: Skicka rapport
+        yesButtonLabel: Ja
+      location:
+        average: '{numHouseholds} hushåll, {avgFixed} i genomsnitt'
+        completed: '{numHouseholds} hushåll, {numYes} ja'
+        header: Rapportera besök här
+        noInputLabel: Nej
+        proceedButtonLabel: Fortsätt
+        submitButtonLabel: Skicka
+        yesInputLabel: Ja
   duplicates:
     modal:
       cancelButton: Avbryt
@@ -474,12 +893,17 @@ feat:
             confirmation: En förhandsvisning har skickats till din e-postadress.
             instructions: Här kan du skicka det här utskicket till dig själv för att få en
               förhandsvisning av hur det kommer att se ut för mottagarna.
+            invalidEmailAddress: Detta är inte en giltig e-postadress
             okButton: OK!
+            previewInBrowser: Förhandsvisa i webbläsaren
+            previewInBrowserInstructions: Använd knappen nedan för att förhandsvisa
+              e-postmeddelandet i din webbläsare.
             sendButton: Skicka
             sendTo: 'Utskicket kommer att skickas till adressen:'
             title: Förhandsvisning
           settings:
             senderAddressInputLabel: Avsändarens adress
+            senderInputLabel: Avsändare
             subjectInputLabel: Ämne
             title: Inställningar
       tools:
@@ -487,6 +911,7 @@ feat:
           block:
             noButtonText: Klicka för att ändra texten!
           settings:
+            buttonTextWarning: Kom ihåg att lägga till din text på knappen
             invalidUrl: Länken fungerar inte
             testLink: Klicka för att testa länk
             urlLabel: URL till länk
@@ -513,6 +938,7 @@ feat:
       deliveryDate: Leveransdatum
       deliveryTime: Leveranstid
       duplicate: Duplicera
+      move: Flytta
       schedule: Schemalägg
       sendAnyway: Skicka ändå
       sendLater: Skicka senare
@@ -527,6 +953,10 @@ feat:
       timeZone: Tidszon
       warning: Är du säker på att du vill radera utskicket? Det är permanent och går
         inte att ångra.
+    emailChangeCampaignDialog:
+      error: 'Fel: E-postmeddelandet kunde inte flyttas till det valda projektet'
+      success: E-post "{emailTitle}" flyttat till "{campaignTitle}"
+      title: Flytta e-post
     emailFeatureIsBlocked:
       errorMessage: Din organisation har inte tillgång till e-post i Zetkin just nu.
       goBackButton: Tillbaka
@@ -592,6 +1022,19 @@ feat:
       lockButton: Lås för leverans
       locked: Målgrupp låst för leverans
       lockedChip: Låst
+      subtitle:
+        notTargeted: Använd Smart sökning för att välja mottagare av detta e-postmeddelande.
+        scheduled: E-postmeddelandet är schemalagt för utskick. Om du vill låsa upp
+          målgruppen för att redigera den smarta sökningen, avbryt utskick
+          först.
+        sent: 'Du kan kolla på den smarta sökningen som användes för att välja mottagare
+          av detta e-postmeddelande. '
+        targetedAndLocked: 'Fortsätt till utskick eller lås upp målgrupp om du vill
+          redigera den smarta sökningen som används för att välja målgrupp för
+          detta e-postmeddelande. '
+        targetedNotLocked: 'Redigera den smarta sökningen som användes för att välja
+          mottagare av detta e-postmeddelande, eller lås målgruppen för att
+          möjliggöra e-postutskick. '
       title: Målgrupp
       unlockAlert: Att låsa upp kan göra att personer läggs till eller tas bort från
         målgruppen basert på resultatet i den Smarta sökningen.
@@ -635,6 +1078,7 @@ feat:
     eventChangeCampaignDialog:
       error: 'Fel: Eventet kunde inte flyttas till det valda projektet'
       success: Eventet flyttades till "{campaignTitle}"
+      title: Flytta event
     eventContactCard:
       header: Kontakt
       noContact: Ingen kontakt tilldelad!
@@ -845,6 +1289,13 @@ feat:
         för hela {orgTitle}?
       tooltip: Klicka här för att byta typ
       uncategorized: Okategoriserade
+    urlCard:
+      nowAccepting: Anmälningar tas nu emot via denna länk
+      open: Öppen för anmälningar
+      preview: Förhandsvisa event
+      previewPortal: Förhandsvisa event i aktivistportalen
+      visitPortal: Öppna event i aktivistportalen
+      willAccept: Anmälningar tas emot via denna länk
   files:
     fileUpload:
       dropToUpload: Släpp fil här för att ladda upp
@@ -872,7 +1323,11 @@ feat:
   home:
     activityList:
       actions:
+        areaAssignment: Anslut
         call: Börja ringa
+        connectAndSignUp: Anslut & anmäl dig
+        details: Läs mer
+        loginToSignUp: Logga in för att anmäla dig
         signUp: Anmäl dig
         undoSignup: Ångra anmälan
       emptyListMessage: Du är inte anmäld till några aktiviteter
@@ -883,6 +1338,7 @@ feat:
         signedUp: Du har anmält dig
       filters:
         call: Ringa
+        canvass: Områden
         event: Event
     allEventsList:
       emptyList:
@@ -895,14 +1351,33 @@ feat:
         today: Idag
         tomorrow: Imorgon
     defaultTitles:
+      areaAssignment: Namnlöst områdesuppdrag
       callAssignment: Icke namngivet ringuppdrag
       event: Icke namngivet event
       noLocation: Ingen fysisk plats
     footer:
       privacyPolicy: Sekretesspolicy
+    settings:
+      accountSettings:
+        email:
+          addInstructions: Lägg till en e-postadress till ditt konto för att kunna logga
+            in genom att använda lösenord.
+          changeInstructions: Om du behöver ändra din e-postadress, kontakta info@zetkin.org.
+          errorText: Ett fel uppstod. Försök igen eller kontakta Zetkin Foundation för
+            support.
+          label: E-postadress
+          saveButton: Spara
+        header: Kontoinställningar
+      appPreferences:
+        header: Appinställningar
+        lang:
+          auto: Automatisk (configured in browser)
+          label: Språk
+          saveButton: Spara & ladda om
     tabs:
       feed: Alla event
       home: Mina aktiviteter
+      settings: Inställningar
     title: Mitt Zetkin
   import:
     actionButtons:
@@ -1023,6 +1498,8 @@ feat:
           twoValuesAndEmpty: '{firstValue}, {secondValue} och {numEmpty, plural, =1 {en
             tom rad} other {# tomma rader}}.'
           twoValuesNoEmpty: '{firstValue} och {secondValue}.'
+        notEnoughRows: Din fil innehåller inte tillräckligt många rader för att
+          importera någon data
         organization: Organisation
         selectZetkinField: Importera som…
         tags: Etiketter
@@ -1060,6 +1537,7 @@ feat:
         header: Inställningar
         sheetSelectHelpText: Din fil innehåller flera blad. Välj vilket du vill använda.
         sheetSelectLabel: Blad
+        skipUnknown: Hoppa över rader med okända ID:n (skapa aldrig nya personer)
       show: Visa
       statusMessage:
         done: Förbereder import av {numConfiguredPeople, plural, =1 {en person} other {#
@@ -1113,6 +1591,10 @@ feat:
           singleRow: Problemet finns på rad {row}.
         invalidFormat:
           title: '{field} har fel format'
+        invalidOrgCountry:
+          description: 'Detta gör det omöjligt att gissa t.ex. landsnummer för
+            telefonnummer. Kontakta support för att åtgärda detta. '
+          title: 'Eventuellt ogiltig landskod för organisationen: {code}'
         majorChange:
           description: Kontrollera att du konfigurerat kolumnerna på rätt sätt
           title: Importen kommer skriva över många personers {field}
@@ -1123,6 +1605,9 @@ feat:
         noImpact:
           description: Det kan beror på att filen inte innehåller någon ny data eller att
             något gått fel.
+          descriptionSkipped: Detta kan bero på att filen inte innehåller någon ny data,
+            eller att den nya datan har hoppats över enligt dina inställningar.
+            I ovanliga fall kan det handla om ett okänt fel.
           title: Importen skulle inte få någon effekt
         ok:
           description: Kontrollera att sammanställningen ser bra ut och klicka på
@@ -1183,8 +1668,13 @@ feat:
           other {# personer}}
   joinForms:
     defaultTitle: Formulär utan titel
+    deleteJoinForm:
+      success: '{title} blev raderat'
+      title: Radera join form
+      warning: Är du säker på att du vill radera "{title}"?
     embedding:
       copyLink: Kopiera länk för inbäddning
+      delete: Radera
       formSubmitted: Formuläret skickades in
       linkCopied: Länk för inbäddning kopierades
       openLink: Besök nu
@@ -1194,6 +1684,7 @@ feat:
         addField: Lägg till fält
         description: Beskrivning
         requireEmailVerification: Kräv epostverifiering
+        shareWithSuborgs: Dela med underorganisationer
         title: Titel
       title: Redigera formulär
     forms: Formulär
@@ -1240,6 +1731,9 @@ feat:
       editButton: Redigera
       ellipsisMenu:
         convert: Konvertera till...
+        deletion:
+          delete: Radera "{instanceTitle}"
+          warning: '"{instanceTitle}" kommer raderas. Detta kan inte ångras.'
       expandButton: Expandera
       markedCompleteLabel: Markera som färdig {relativeTime}
       newInstance:
@@ -1334,13 +1828,59 @@ feat:
         timeline: Tidslinje
       title: Journeys
   organizations:
+    allEventsList:
+      emptyList:
+        message: Kunde inte hitta några events
+        removeFiltersButton: Rensa filter
+      filterButtonLabels:
+        locations: '{count, plural, =1 {1 plats} other {# platser}}'
+        organizations: '{numOrgs, plural,=0 {Organisationer} =1 {1 organisation} other
+          {# organisationer}}'
+        thisWeek: Denna vecka
+        today: Idag
+        tomorrow: Imorgon
+    authDialog:
+      cancelButton: Avbryt
+      content: Du behöver ett Zetkinkonto för att anmälda dig till events.
+      label: Anmäl dig
+      loginButton: Logga in & kom tillbaka
+    eventPage:
+      cancelSignup: Avbryt anmälan
+      cancelledHeader: Detta event har avbokats
+      cancelledParagraph: Du kan inte längre anmälda dig och om du var anmäld så
+        förväntas du inte längre att närvara.
+      contactPerson: '{name} är kontaktperson'
+      defaultTitle: Namnlöst event
+      loading: Laddar...
+      noLocation: Ingen fysisk plats
+      partOfProject: Del av {projectLink}
+      today: Idag
     gen3:
       description: Det här är den nya (generation 3) organisatörssidan. Om du är van
         vid den gamla kommer du hitta flera nya funktioner och en förbättrad
-        användarupplevelse. Om du vill, kan du fortfarande använda den gamla
-        organisatörssidan ett tag till.
+        användarupplevelse. Du kan fortfarande använda den gamla
+        organisatörssidan ett tag till om du vill.
       gen2Button: Gå till den gamla organisatörssidan
       title: Välkommen till nya Zetkin!
+    home:
+      footer:
+        privacyPolicy: Integritetspolicy
+      header:
+        connect: Anslut
+        follow: Följ
+        login: Logga in & anslut
+        unfollow: Avfölj
+      map:
+        viewInList: Visa i lista
+        viewInMap: Visa på karta
+      menu:
+        logout: Logga ut
+      tabs:
+        calendar: Kalender
+        suborgs: Utforska
+    noEventsBlurb:
+      description: '{org} har inga kommande events.'
+      headline: Det finns inga kommande events
     notOrganizer:
       description: Den här delen av Zetkin är bara tillgänglig för personer som har
         administratörsbehörighet. Du har just nu inte rätt behörighet. Om du
@@ -1360,6 +1900,12 @@ feat:
       recent:
         clear: Rensa
         title: Senaste organisationerna
+    subOrgEventBlurb:
+      description: Det finns {eventsElem} {numEvents, plural, =1 {till event} other
+        {andra event}} i {orgsElem} {numOrgs, plural, =1 {underorganisation}
+        other {underorganisationer}}.
+      headline: Utforska mer
+      showButton: Visa alla events
   profile:
     delete:
       button: Ta bort person
@@ -1390,6 +1936,8 @@ feat:
       removeError: Organisationen kunde inte tas bort
       title: Organisationer
     resetButton: Återställ
+    role:
+      noRole: Ingen roll
     saveButton: Spara
     tabs:
       manage: Hantera
@@ -1488,6 +2036,9 @@ feat:
           description: Välj baserat på data från uppgifter
           title: Uppgifter
       filters:
+        all:
+          description: 'Hitta personer baserat på vilka underorganisationer de tillhör. '
+          title: Alla i en underorganisation
         call_history:
           description: Hitta personer som har blivit uppringda, nådda eller fått
             samtalsförsök.
@@ -1496,7 +2047,7 @@ feat:
           description: Vem anmälde sig? Vem blev bokad? Vem blev det inte? Hitta dem!
           title: Deltagande i events
         email_blacklist:
-          description: Studsade, felaktig adress, ej mottaget - här är dem.
+          description: Studsade, felaktig adress, ej mottaget - här är de.
           title: Personer som är blockerade från e-post
         email_click:
           description: Klickade de? Klickade de inte?
@@ -1504,6 +2055,8 @@ feat:
         email_history:
           description: Vad skickades till vem, när?
           title: Baserat på deras e-posthistorik
+        joinform:
+          description: Hitta personer som anslöt genom en join form
         journey_subjects:
           description: Hitta personer som är i en Journey eller redan har avslutat den
           title: Personer i en Journey
@@ -1548,9 +2101,24 @@ feat:
         startWithSelect:
           'false': en tom lista
           'true': en lista på alla personer i organisationen
+      allInSuborg:
+        examples:
+          one: Lägg till alla i den specifika underorganisationen Lillstads
+            lokalavdelning.
+          two: Ta bort alla som finns i någon underorganisation.
+        inputString:
+          any: '{addRemoveSelect} alla som finns i {suborgScopeSelect}.'
+          multiple: '{addRemoveSelect} ala som finns i {suborgScopeSelect}:
+            {multipleSuborgsSelect}'
+          single: '{addRemoveSelect} alla som finns i {suborgScopeSelect}
+            {singleSuborgSelect}'
+        suborgScopeSelect:
+          any: alla underorganisationer
+          multiple: någon av följande underorganisationer
+          single: den specifika underorganisationen
       callBlocked:
         inputString: '{addRemoveSelect} personer som är blockerade från att ringa av
-          någon som helst anledning'
+          vilken anledning som helst'
       callHistory:
         assignmentSelect:
           any: något ringuppdrag
@@ -1587,10 +2155,17 @@ feat:
         haveSelect:
           in: har
           notin: inte har
-        inputString: ''
+        inputString: '{addRemoveSelect} alla som {haveSelect} {bookedSelect}
+          {statusSelect} på event i {campaignSelect} av typen {activitySelect}
+          på {locationSelect} {timeFrame}'
         locationSelect:
           any: vilken plats som helst
           location: platsen "{location}"
+        statusSelect:
+          any: oavsett närvaro
+          attended: och deltog
+          cancelled: och avbokade
+          noshow: och inte dök upp
       emailBlacklist:
         inputString: '{addRemoveSelect} personer som inte kommer få e-post för att
           {reasonSelect}'
@@ -1622,6 +2197,7 @@ feat:
           opened: öppnade
           sent: blev skickade
       joinForm:
+        anyForm: någon join form
         form: '"{title}"'
         inputString: '{addRemoveSelect} personer som kom in via {formSelect} {timeFrame}'
       journey:
@@ -2023,6 +2599,7 @@ feat:
     layout:
       actions:
         delete: Ta bort enkät
+        move: Flytta
         publish: Publicera enkät
         unpublish: Avpublicera enkät
         warning: '"{surveyTitle}" kommer tas bort.'
@@ -2058,7 +2635,13 @@ feat:
       subtitle: '{person} {date}'
     submissions:
       anonymous: Anonymt
+      createPersonSubmit: Spara och länka
+      createPersonTitle: Skapa ny person
       dateColumn: Datum
+      delete: Radera
+      deleteSuccess: Har raderats
+      deleteTitle: Radera enkätsvar
+      deleteWarningText: Är du säker på att du vill radera detta enkätsvar?
       emailColumn: E-post
       firstNameColumn: Förnamn
       lastNameColumn: Efternamn
@@ -2066,6 +2649,10 @@ feat:
       personRecordColumn: Svarande
       suggestedPeople: Föreslagna personer
       unlink: Avlänka
+    surveyChangeCampaignDialog:
+      error: 'Fel: Kunde inte flytta enkäten till valt projekt'
+      success: Enkäten "{surveyTitle}" flyttad till "{campaignTitle}"
+      title: Flytta enkät
     surveyDialog:
       add: Lägg till
       cancel: Lägg inte till
@@ -2077,7 +2664,6 @@ feat:
       error: Något gick fel när ditt svar skulle skickas igen. Testa gärna igen
         senare.
       policy:
-        link: https://zetkin.org/sv/sekretess
         text: Klicka för att läsa sekretesspolicyn
       required: svar krävs
       sign:
@@ -2172,6 +2758,10 @@ feat:
       title: Etiketter
       ungroupedHeader: Ingen grupp
   tasks:
+    actions:
+      delete: Radera
+      edit: Redigera
+      move: Flytta
     assignees:
       completedStates:
         completed: Färdigställd {time}
@@ -2278,6 +2868,10 @@ feat:
       draft: Utkast
       expired: Utgången
       scheduled: Schemalagd
+    taskChangeCampaignDialog:
+      error: 'Fel: Kunde inte flytta uppgift till valt projekt'
+      success: Uppgift "{taskTitle}" flyttad till "{campaignTitle}"
+      title: Flytta uppgift
     taskDetails:
       deadlineTime: Deadline
       editButton: Redigera
@@ -2631,6 +3225,7 @@ feat:
         share: Dela
       ellipsisMenu:
         delete: Radera lista
+        duplicate: Duplicera
         editQuery: Redigera Smart sökning
         makeDynamic: Konvertera till en lista som baseras på en Smart sökning
         makeStatic:
@@ -2785,6 +3380,9 @@ zui:
   eventWarningIcons:
     reminders: '{numMissing, plural, =1 {En} other {#}} deltagare har ännu inte
       mottagit påminnelser'
+  expandableText:
+    showLess: Visa mindre
+    showMore: Visa mer
   futures:
     errorLoading: Något gick fel när datan laddades upp.
   header:
@@ -2803,6 +3401,7 @@ zui:
       this: Endast {org}
   organizeSidebar:
     filter: Skriv för att filtrera
+    geography: Geografi
     home: Hem
     journeys: Journeys
     people: Människor
@@ -2819,16 +3418,29 @@ zui:
     restrictedMode: Kan inte redigeras i delade listor
     searchResults: Sökresultat
   personSelect:
+    bulkAdd:
+      backButton: Tillbaka
     keepTyping: Fortsätt skriv för att börja söka
     noResult: Hittade ingen person som matchade
     search: Skriv för att börja söka
     searching: Söker...
   publicFooter:
     hostingOrganization: Denna kopia av Zetkin tillhandahålls och hanteras av {name}.
+    text: 'Zetkin är en plattform för att organisera aktivism. Zetkin är utvecklat
+      av Zetkin Foundation som arbetar för radikal samhällsförändring i en
+      socialistiskt, feministisk, antirasistisk och hållbar riktning. '
+  signUpChip:
+    booked: Du är bokad
+    needed: Du behövs
   snackbar:
     error: Åh nej, något gick fel!
     success: Framgång
     warning: Varning!
+  statusChip:
+    draft: Utkast
+    ended: Avslutad
+    published: Publicerad
+    scheduled: Schemalagd
   submitOrCancel:
     cancel: Avbryt
     submit: Spara
@@ -2842,4 +3454,6 @@ zui:
     singleDayAllDay: Hela dagen idag
     singleDayToday: Idag, {start} - {end}
   timeZonePicker:
+    noOptionsText: Ingen plats matchar din sökning
+    placeholder: Börja skriva för att söka efter plats
     timeZone: Tidszon

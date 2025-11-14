@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 import { Box, CircularProgress, Pagination, Typography } from '@mui/material';
 
 import DuplicateCard from 'features/duplicates/components/DuplicateCard';
@@ -24,9 +25,19 @@ const DuplicatesPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const list = useDuplicates(orgId);
   const messages = useMessages(messageIds);
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const [page, setPage] = useState(
+    router.query.page !== undefined ? Number(router.query.page) : 1
+  );
   const pageSize = 100;
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const url = `${window.location.protocol}//${window.location.host}${
+      router.asPath.split('?')[0]
+    }?page=${page}`;
+    window.history.replaceState({}, '', url);
+  }, [page]);
 
   if (onServer) {
     return null;
@@ -56,6 +67,9 @@ const DuplicatesPage: PageWithLayout = () => {
           </Typography>
           <Typography variant="body1">
             {messages.page.noDuplicatesDescription()}
+            <br />
+            <br />
+            {messages.page.noDuplicatesContactUs()}
           </Typography>
         </Box>
       )}

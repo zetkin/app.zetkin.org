@@ -13,7 +13,11 @@ import {
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
-import { HouseholdColor, householdColors } from '../types';
+import {
+  hexColorToHouseholdColor,
+  HouseholdColor,
+  householdHexColors,
+} from '../types';
 
 type Props = {
   onChange: (newColor: HouseholdColor) => void;
@@ -64,7 +68,9 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
               <Typography>
                 {value == 'clear'
                   ? messages.households.colorPicker.noColor()
-                  : messages.households.colorPicker.colorNames[value]()}
+                  : messages.households.colorPicker.colorNames[
+                      hexColorToHouseholdColor[value]
+                    ]()}
               </Typography>
             </Box>
           );
@@ -91,43 +97,45 @@ const HouseholdColorPicker: FC<Props> = ({ selectedColor, onChange }) => {
         >
           <Close color="secondary" />
         </MenuItem>
-        {householdColors.map((color) => (
-          <MenuItem
-            key={color}
-            sx={{
-              '&.Mui-selected': {
-                '&:focus-visible': {
-                  backgroundColor: darken(theme.palette.common.white, 0.25),
-                },
-                '&:hover': {
-                  backgroundColor: darken(theme.palette.common.white, 0.5),
-                },
-                backgroundColor: theme.palette.common.white,
-                border: `2px solid ${theme.palette.common.black}`,
-              },
-              '&:focus-visible': { backgroundColor: darken(color, 0.25) },
-              '&:hover': { backgroundColor: darken(color, 0.5) },
-              alignItems: 'center',
-              backgroundColor: color,
-              borderRadius: '4px',
-              display: 'flex',
-              justifyContent: 'center',
-              span: {
-                padding: '0 0 100%',
-              },
-            }}
-            value={color}
-          >
-            <Box
+        {householdHexColors.map((color, index) => {
+          return (
+            <MenuItem
+              key={index}
               sx={{
+                '&.Mui-selected': {
+                  '&:focus-visible': {
+                    backgroundColor: darken(theme.palette.common.white, 0.25),
+                  },
+                  '&:hover': {
+                    backgroundColor: darken(theme.palette.common.white, 0.5),
+                  },
+                  backgroundColor: theme.palette.common.white,
+                  border: `2px solid ${theme.palette.common.black}`,
+                },
+                '&:focus-visible': { backgroundColor: darken(color, 0.25) },
+                '&:hover': { backgroundColor: darken(color, 0.5) },
+                alignItems: 'center',
                 backgroundColor: color,
                 borderRadius: '4px',
-                minHeight: '30px',
-                minWidth: '30px',
+                display: 'flex',
+                justifyContent: 'center',
+                span: {
+                  padding: '0 0 100%',
+                },
               }}
-            />
-          </MenuItem>
-        ))}
+              value={color}
+            >
+              <Box
+                sx={{
+                  backgroundColor: color,
+                  borderRadius: '4px',
+                  minHeight: '30px',
+                  minWidth: '30px',
+                }}
+              />
+            </MenuItem>
+          );
+        })}
       </Select>
     </FormControl>
   );
