@@ -215,6 +215,7 @@ export default makeMessages('feat.surveys', {
     },
   },
   surveyFormSubmitted: {
+    retakeSurvey: m('Retake survey'),
     text: m<{ title: string }>(
       'Your responses to “{title}” have been submitted.'
     ),
