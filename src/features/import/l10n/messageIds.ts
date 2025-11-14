@@ -124,6 +124,7 @@ export default makeMessages('feat.import', {
     mapping: {
       configButton: m('Configure'),
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
+      email: m('Email'),
       emptyStateMessage: m('Start by mapping file columns.'),
       externalID: m('External ID'),
       fileHeader: m('File'),

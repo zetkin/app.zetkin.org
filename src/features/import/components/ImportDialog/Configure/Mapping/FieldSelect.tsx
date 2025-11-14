@@ -1,5 +1,11 @@
 import { FC } from 'react';
-import { Box, ListSubheader, MenuItem, Select } from '@mui/material';
+import {
+  Box,
+  ListItemText,
+  ListSubheader,
+  MenuItem,
+  Select,
+} from '@mui/material';
 import { BadgeOutlined } from '@mui/icons-material';
 
 import messageIds from 'features/import/l10n/messageIds';
@@ -38,7 +44,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
     },
     {
       disabled: false,
-      label: 'Email',
+      label: messages.configuration.mapping.email(),
       value: 'email',
     },
   ].sort((a, b) => a.label.localeCompare(b.label));
@@ -94,7 +100,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
           justifyContent="space-between"
           width="100%"
         >
-          <span>{label}</span>
+          <ListItemText>{label}</ListItemText>
           {importID == value ? (
             <BadgeOutlined color="secondary" fontSize="small" />
           ) : undefined}
