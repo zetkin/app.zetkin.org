@@ -27,7 +27,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
   optionAlreadySelected,
 }) => {
   const messages = useMessages(messageIds);
-  const { importID, updateImportID } = useImportID();
+  const { importID } = useImportID();
 
   const fieldOptionsSorted = [
     ...fieldOptions,
@@ -109,15 +109,6 @@ const FieldSelect: FC<FieldSelectProps> = ({
       label={messages.configuration.mapping.selectZetkinField()}
       onChange={(event) => {
         clearConfiguration();
-
-        const isCurrentlyImportID =
-          column.originalColumn.kind == ColumnKind.ID_FIELD &&
-          column.originalColumn.idField &&
-          importID == column.originalColumn.idField;
-
-        if (isCurrentlyImportID) {
-          updateImportID(null);
-        }
 
         if (event.target.value == '') {
           onChange({

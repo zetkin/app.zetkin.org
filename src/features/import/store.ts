@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
   Column,
+  ColumnKind,
   ImportedFile,
   ImportID,
   ImportPreview,
@@ -38,6 +39,17 @@ const importSlice = createSlice({
     columnUpdate: (state, action: PayloadAction<[number, Column]>) => {
       const [index, newColumn] = action.payload;
       const sheetIndex = state.pendingFile.selectedSheetIndex;
+      const currentColumn = state.pendingFile.sheets[sheetIndex].columns[index];
+
+      const currentColumnIsImportID =
+        currentColumn.kind == ColumnKind.ID_FIELD &&
+        currentColumn.idField &&
+        state.importID == currentColumn.idField;
+
+      if (currentColumnIsImportID) {
+        state.importID = null;
+      }
+
       state.pendingFile.sheets[sheetIndex].columns[index] = newColumn;
     },
     importIDUpdate: (state, action: PayloadAction<ImportID | null>) => {

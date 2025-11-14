@@ -21,7 +21,6 @@ import {
   ColumnKind,
   ConfigurableColumn,
 } from 'features/import/utils/types';
-import useImportID from 'features/import/hooks/useImportID';
 
 const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
   return [
@@ -55,7 +54,6 @@ const MappingRow: FC<MappingRowProps> = ({
 }) => {
   const theme = useTheme();
   const column = useUIDataColumn(columnIndex);
-  const { importID, updateImportID } = useImportID();
 
   const columnValuesMessage = useColumnValuesMessage(
     column.numberOfEmptyRows,
@@ -95,19 +93,10 @@ const MappingRow: FC<MappingRowProps> = ({
                   selected: isChecked,
                 });
               } else {
-                const isCurrentlyImportID =
-                  column.originalColumn.kind == ColumnKind.ID_FIELD &&
-                  column.originalColumn.idField &&
-                  importID == column.originalColumn.idField;
-
-                if (isCurrentlyImportID) {
-                  updateImportID(null);
-                }
-
                 onChange({
                   ...column,
                   kind: ColumnKind.UNKNOWN,
-                  selected: false,
+                  selected: isChecked,
                 });
               }
               clearConfiguration();
