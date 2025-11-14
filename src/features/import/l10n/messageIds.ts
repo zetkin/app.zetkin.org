@@ -91,7 +91,7 @@ export default makeMessages('feat.import', {
         ),
         skipRowDescription: m('No new people will be created'),
         wrongEmailFormatWarning: m(
-          'The values in this column don’t look like valid emails. An email address must contain an ‘@’ symbol.'
+          'There are values in this column that are not valid email addresses.'
         ),
         wrongIDFormatWarning: m(
           'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
