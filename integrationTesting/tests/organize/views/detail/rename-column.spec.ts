@@ -91,6 +91,6 @@ test.describe('View detail page', () => {
     await page.fill('#rename-column-title-field', 'New title');
     await page.click('button:text("Save")');
 
-    expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
+    await expect(page.locator('data-testid=Snackbar-error')).toHaveCount(1);
   });
 });
