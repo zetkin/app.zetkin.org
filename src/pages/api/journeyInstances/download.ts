@@ -28,11 +28,13 @@ export default async function handler(
     Array.isArray(journeyId) ||
     Array.isArray(format)
   ) {
-    return res.status(400).end();
+    res.status(400).end();
+    return;
   }
 
   if (format != 'csv' && format != 'xlsx') {
-    return res.status(400).end();
+    res.status(400).end();
+    return;
   }
   const formatType = FORMAT_TYPES[format];
 
@@ -50,7 +52,8 @@ export default async function handler(
 
   const instanceRes = await apiFetch(url);
   if (!instanceRes.ok) {
-    return res.status(instanceRes.status).end();
+    res.status(instanceRes.status).end();
+    return;
   }
   const data = await instanceRes.json();
   const journeyInstances = data.data as ZetkinJourneyInstance[];
@@ -167,7 +170,8 @@ export default async function handler(
     // This should never happen, because format is already checked
     // at the beginning of this function. We do this anyway to make
     // Typescript aware that fileData will always have a value.
-    return res.status(400).end();
+    res.status(400).end();
+    return;
   }
 
   res
