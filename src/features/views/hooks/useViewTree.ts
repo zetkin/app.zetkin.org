@@ -1,7 +1,12 @@
 import shouldLoad from 'core/caching/shouldLoad';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { allItemsLoad, allItemsLoaded } from '../store';
-import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  IFuture,
+  LoadingFuture,
+  PromiseFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useViewTree(orgId: number): IFuture<ViewTreeData> {
@@ -18,6 +23,11 @@ export default function useViewTree(orgId: number): IFuture<ViewTreeData> {
         return items;
       });
     return new PromiseFuture(promise);
+  } else if (
+    (views.viewList.isLoading && !views.viewList.loaded) ||
+    (views.folderList.isLoading && !views.folderList.loaded)
+  ) {
+    return new LoadingFuture();
   } else {
     return new ResolvedFuture({
       folders: views.folderList.items.map((item) => item.data!),

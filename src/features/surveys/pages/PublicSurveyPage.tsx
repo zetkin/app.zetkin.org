@@ -1,6 +1,5 @@
 'use client';
 
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Box,
   Checkbox,
@@ -10,6 +9,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 // TODO: Remove comment once we upgrade to React 19
 // Type definitions for useFormState don't exist in React 18
 // because it's an experimental feature. That's why we silence
@@ -18,23 +18,23 @@ import {
 // @ts-ignore
 import { useFormState } from 'react-dom';
 
+import { Msg, useMessages } from 'core/i18n';
 import SurveyForm from 'features/surveys/components/SurveyForm';
-import { submit } from '../actions/submit';
+import useIsMobile from 'utils/hooks/useIsMobile';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyFormStatus,
   ZetkinSurveySignatureType,
   ZetkinUser,
 } from 'utils/types/zetkin';
-import ZUIText from 'zui/components/ZUIText';
-import { Msg, useMessages } from 'core/i18n';
-import ZUITextField from 'zui/components/ZUITextField';
-import ZUIPublicSurveyOption from 'zui/components/ZUIPublicSurveyOption';
-import messageIds from '../l10n/messageIds';
-import ZUILink from 'zui/components/ZUILink';
-import ZUIButton from 'zui/components/ZUIButton';
 import ZUIAlert from 'zui/components/ZUIAlert';
-import useIsMobile from 'utils/hooks/useIsMobile';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUILink from 'zui/components/ZUILink';
+import ZUIPublicSurveyOption from 'zui/components/ZUIPublicSurveyOption';
+import ZUIText from 'zui/components/ZUIText';
+import ZUITextField from 'zui/components/ZUITextField';
+import { submit } from '../actions/submit';
+import messageIds from '../l10n/messageIds';
 
 type PublicSurveyPageProps = {
   survey: ZetkinSurveyExtended;
@@ -237,6 +237,12 @@ const PublicSurveyPage: FC<PublicSurveyPageProps> = ({ survey, user }) => {
         )}
         {showSuccess && (
           <ZUIAlert
+            button={{
+              label: messages.surveyFormSubmitted.retakeSurvey(),
+              onClick: () => {
+                location.reload();
+              },
+            }}
             description={messages.surveyFormSubmitted.text({
               title: survey.title,
             })}
