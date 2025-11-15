@@ -1,10 +1,14 @@
-import { TextField } from 'mui-rff';
+import { TextField } from '@mui/material';
 
 import { useMessages } from 'core/i18n';
-import { VISIT_LINK_FIELDS } from '../constants';
 import messageIds from 'features/tasks/l10n/messageIds';
 
-const VisitLinkFields = (): JSX.Element => {
+type Props = {
+  onUrlChange: (value: string) => void;
+  url?: string;
+};
+
+const VisitLinkFields = ({ url, onUrlChange }: Props): JSX.Element => {
   const messages = useMessages(messageIds);
 
   return (
@@ -13,8 +17,9 @@ const VisitLinkFields = (): JSX.Element => {
       id="url"
       label={messages.configs.visitLink.fields.url()}
       margin="normal"
-      name={VISIT_LINK_FIELDS.URL}
+      onChange={(e) => onUrlChange(e.target.value)}
       required
+      value={url ?? ''}
     />
   );
 };

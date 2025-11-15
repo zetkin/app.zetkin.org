@@ -1,7 +1,5 @@
-import { Form } from 'react-final-form';
-import { MenuItem } from '@mui/material';
-import { TextField } from 'mui-rff';
-import { useState } from 'react';
+import { MenuItem, TextField } from '@mui/material';
+import { FormEvent, useState } from 'react';
 
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
 import { Msg, useMessages } from 'core/i18n';
@@ -31,25 +29,20 @@ const CampaignDetailsForm = ({
       : null
   );
 
-  const initialValues = {
-    info_text: campaign?.info_text,
-    status: campaign?.published ? 'published' : 'draft',
-    title: campaign?.title,
-    visibility: campaign?.visibility,
-  };
+  const [title, setTitle] = useState<string>(campaign?.title ?? '');
+  const [infoText, setInfoText] = useState<string>(campaign?.info_text ?? '');
+  const [status, setStatus] = useState<'published' | 'draft'>(
+    campaign?.published ? 'published' : 'draft'
+  );
+  const [visibility, setVisibility] = useState<'hidden' | 'open'>(
+    (campaign?.visibility as 'hidden' | 'open') ?? 'hidden'
+  );
 
-  const validate = (values: Record<string, string>) => {
-    const errors: Record<string, string> = {};
-    if (!values.title) {
-      errors.title = messages.form.required();
-    }
-    return errors;
-  };
+  const handleSubmit = (evt: FormEvent) => {
+    evt.preventDefault();
 
-  const handleSubmit = (values: Record<string, string>) => {
-    const { info_text, status, title, visibility } = values;
     onSubmit({
-      info_text: info_text ?? '',
+      info_text: infoText ?? '',
       manager_id: selectedManager ? selectedManager.id : null,
       published: status !== 'draft',
       title: title,
@@ -58,71 +51,65 @@ const CampaignDetailsForm = ({
   };
 
   return (
-    <Form
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      render={({ handleSubmit, submitting, valid }) => (
-        <form noValidate onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            id="title"
-            label={messages.form.name()}
-            margin="normal"
-            name="title"
-            required
-          />
+    <form onSubmit={handleSubmit}>
+      <TextField
+        fullWidth
+        id="title"
+        label={messages.form.name()}
+        margin="normal"
+        name="title"
+        onChange={(e) => setTitle(e.target.value)}
+        required
+        value={title}
+      />
 
-          <TextField
-            fullWidth
-            id="info_text"
-            label={messages.form.description()}
-            margin="normal"
-            multiline
-            name="info_text"
-            rows={5}
-            variant="outlined"
-          />
+      <TextField
+        fullWidth
+        id="info_text"
+        label={messages.form.description()}
+        margin="normal"
+        multiline
+        name="info_text"
+        onChange={(e) => setInfoText(e.target.value)}
+        rows={5}
+        value={infoText}
+        variant="outlined"
+      />
 
-          <TextField
-            fullWidth
-            id="status"
-            label={messages.form.status.heading()}
-            margin="normal"
-            name="status"
-            select
-          >
-            <MenuItem value="published">
-              <Msg id={messageIds.form.status.published} />
-            </MenuItem>
-            <MenuItem value="draft">
-              <Msg id={messageIds.form.status.draft} />
-            </MenuItem>
-          </TextField>
+      <TextField
+        fullWidth
+        label={messages.form.status.heading()}
+        margin="normal"
+        onChange={(e) => setStatus(e.target.value as 'published' | 'draft')}
+        select
+        value={status}
+      >
+        <MenuItem value="published">
+          <Msg id={messageIds.form.status.published} />
+        </MenuItem>
+        <MenuItem value="draft">
+          <Msg id={messageIds.form.status.draft} />
+        </MenuItem>
+      </TextField>
 
-          <TextField
-            fullWidth
-            id="visibility"
-            label={messages.form.visibility.heading()}
-            margin="normal"
-            name="visibility"
-            select
-          >
-            <MenuItem value="hidden">
-              <Msg id={messageIds.form.visibility.private} />
-            </MenuItem>
-            <MenuItem value="open">
-              <Msg id={messageIds.form.visibility.public} />
-            </MenuItem>
-          </TextField>
+      <TextField
+        fullWidth
+        label={messages.form.visibility.heading()}
+        margin="normal"
+        onChange={(e) => setVisibility(e.target.value as 'hidden' | 'open')}
+        select
+        value={visibility}
+      >
+        <MenuItem value="hidden">
+          <Msg id={messageIds.form.visibility.private} />
+        </MenuItem>
+        <MenuItem value="open">
+          <Msg id={messageIds.form.visibility.public} />
+        </MenuItem>
+      </TextField>
 
-          <ZUISubmitCancelButtons
-            onCancel={onCancel}
-            submitDisabled={submitting || !valid}
-          />
-        </form>
-      )}
-      validate={validate}
-    />
+      <ZUISubmitCancelButtons onCancel={onCancel} />
+    </form>
   );
 };
 
