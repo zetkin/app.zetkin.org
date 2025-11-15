@@ -172,7 +172,7 @@ const CampaignActionButtons: React.FunctionComponent<
       onClick: () =>
         createVisitAssignment({
           campaign_id: campId,
-          title: visitAssignmentMessages.default.title()
+          title: visitAssignmentMessages.default.title(),
         }),
     });
   }

@@ -40,7 +40,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       return Response.json(
         {
           data: {
-            campaign: { id: visitAssignmentModel.id },
+            campaign: { id: visitAssignmentModel.campId },
             end_date: visitAssignmentModel.end_date,
             id: visitAssignmentModel.id.toString(),
             organization: { id: orgId },
@@ -77,6 +77,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         },
         {
           assignees: payload.assignees,
+          campId: payload.campaign_id,
           end_date: payload.end_date,
           start_date: payload.start_date,
           title: payload.title,

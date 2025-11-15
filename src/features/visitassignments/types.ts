@@ -15,6 +15,7 @@ export type ZetkinVisitAssignment = {
   assignees: ZetkinVisitAssignee[];
   campaign: {
     id: number;
+    title: string;
   };
   end_date: string | null;
   id: string;
@@ -30,7 +31,7 @@ export type ZetkinVisitAssignment = {
 export type ZetkinVisitAssignmentPostBody = Partial<
   Omit<ZetkinVisitAssignment, 'id' | 'campaign' | 'organization'>
 > & {
-  campaign_id: number | null
+  campaign_id: number | null;
 };
 
 export type ZetkinVisitAssignmentPatchbody = Partial<

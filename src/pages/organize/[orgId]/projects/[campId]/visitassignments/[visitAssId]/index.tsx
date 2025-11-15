@@ -27,13 +27,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
       `/beta/orgs/${orgId}/visitassignments/${visitAssId}`
     );
     const actualCampaign = data.campaign.id?.toString() ?? 'standalone';
-    if (actualCampaign !== campId) {
-      return {
-        redirect: {
-          destination: `/organize/${orgId}/projects/${actualCampaign}/visitassignments/${visitAssId}`,
-          permanent: false,
-        },
-      };
+    if (actualCampaign != campId) {
+      return { notFound: true };
     }
   } catch (error) {
     return { notFound: true };
@@ -59,10 +54,7 @@ const VisitAssignmentPage: PageWithLayout = () => {
       </Head>
       <Box>
         <Box mb={2}>
-          <VisitAssignmentTargets
-            assignmentId={visitAssId}
-            orgId={orgId}
-          />
+          <VisitAssignmentTargets assignmentId={visitAssId} orgId={orgId} />
         </Box>
       </Box>
     </>
