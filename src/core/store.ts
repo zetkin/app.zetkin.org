@@ -56,6 +56,10 @@ import areaAssignmentSlice, {
 } from 'features/areaAssignments/store';
 import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
 import callSlice, { CallStoreSlice } from 'features/call/store';
+import visitAssignmentSlice, {
+  visitAssignmentCreated,
+  VisitAssignmentsStoreSlice,
+} from 'features/visitassignments/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
@@ -69,6 +73,7 @@ export interface RootState {
   emails: EmailStoreSlice;
   events: EventsStoreSlice;
   files: FilesStoreSlice;
+  visitAssignments: VisitAssignmentsStoreSlice;
   import: ImportStoreSlice;
   joinForms: JoinFormsStoreSlice;
   journeys: JourneysStoreSlice;
@@ -109,6 +114,7 @@ const reducer = {
   tasks: tasksSlice.reducer,
   user: userSlice.reducer,
   views: viewsSlice.reducer,
+  visitAssignments: visitAssignmentSlice.reducer,
 };
 
 const listenerMiddleware = createListenerMiddleware();
@@ -181,6 +187,16 @@ listenerMiddleware.startListening({
     const journeyInstance = action.payload;
     Router.push(
       `/organize/${journeyInstance.organization.id}/journeys/${journeyInstance.journey.id}/${journeyInstance.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: visitAssignmentCreated,
+  effect: (action) => {
+    const visitAssignment = action.payload;
+    Router.push(
+      `/organize/${visitAssignment.organization.id}/projects/${visitAssignment.campaign.id}/visitassignments/${visitAssignment.id}`
     );
   },
 });

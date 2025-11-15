@@ -176,6 +176,14 @@ export default function mockState(overrides?: RootState) {
       rowsByViewId: {},
       viewList: remoteList(),
     },
+    visitAssignments: {
+      assigneesByAssignmentId: {},
+      metricsByAssignmentId: {},
+      statsByVisitAssId: {},
+      visitAssignmentList: remoteList(),
+      visitGraphByAssignmentId: {},
+      visitStatsByAssignmentId: {},
+    },
   };
 
   return {

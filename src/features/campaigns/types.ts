@@ -6,6 +6,7 @@ import {
   ZetkinSurvey,
   ZetkinTask,
 } from 'utils/types/zetkin';
+import { ZetkinVisitAssignment } from 'features/visitassignments/types';
 
 export enum ACTIVITIES {
   CALL_ASSIGNMENT = 'callAssignment',
@@ -14,6 +15,7 @@ export enum ACTIVITIES {
   EVENT = 'event',
   SURVEY = 'survey',
   TASK = 'task',
+  VISIT_ASSIGNMENT = 'visitAssignment',
 }
 
 type CampaignActivityBase = {
@@ -41,6 +43,11 @@ export type TaskActivity = CampaignActivityBase & {
   kind: ACTIVITIES.TASK;
 };
 
+export type VisitAssignmentActivity = CampaignActivityBase & {
+  data: ZetkinVisitAssignment;
+  kind: ACTIVITIES.VISIT_ASSIGNMENT;
+};
+
 export type EventActivity = CampaignActivityBase & {
   data: ZetkinEvent;
   kind: ACTIVITIES.EVENT;
@@ -57,7 +64,8 @@ export type CampaignActivity =
   | EmailActivity
   | EventActivity
   | SurveyActivity
-  | TaskActivity;
+  | TaskActivity
+  | VisitAssignmentActivity;
 
 export type ActivityOverview = {
   alsoThisWeek: CampaignActivity[];

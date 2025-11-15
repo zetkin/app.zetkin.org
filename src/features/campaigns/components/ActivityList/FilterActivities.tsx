@@ -14,7 +14,7 @@ import messageIds from 'features/campaigns/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import { useMessages } from 'core/i18n';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, TASKS } from 'utils/featureFlags';
+import { AREAS, TASKS, VISITS } from 'utils/featureFlags';
 
 interface FilterActivitiesProps {
   filters: ACTIVITIES[];
@@ -32,6 +32,7 @@ const FilterActivities = ({
   const messages = useMessages(messageIds);
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
+  const hasVisitAssignments = useFeature(VISITS);
 
   const debouncedFinishedTyping = useDebounce(
     async (evt: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -90,6 +91,19 @@ const FilterActivities = ({
                 />
               }
               label={messages.all.filter.areaAssignments()}
+            />
+          )}
+          {hasVisitAssignments && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={filters.includes(ACTIVITIES.VISIT_ASSIGNMENT)}
+                  disabled={!filterTypes.includes(ACTIVITIES.VISIT_ASSIGNMENT)}
+                  onChange={onFiltersChange}
+                  value={ACTIVITIES.VISIT_ASSIGNMENT}
+                />
+              }
+              label={messages.all.filter.visitAssignments()}
             />
           )}
           {hasTasks && (

@@ -29,7 +29,7 @@ type Props = {
   selectedHouseholdIds: null | number[];
 };
 
-const HouseholdsPage2: FC<Props> = ({
+const VisitsPage: FC<Props> = ({
   assignment,
   location,
   onBack,
@@ -164,4 +164,4 @@ const HouseholdsPage2: FC<Props> = ({
   );
 };
 
-export default HouseholdsPage2;
+export default VisitsPage;
