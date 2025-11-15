@@ -17,6 +17,7 @@ import useClusteredActivities, {
   CLUSTER_TYPE,
 } from 'features/campaigns/hooks/useClusteredActivities';
 import AreaAssignmentListItem from './items/AreaAssignmentListItem';
+import VisitAssignmentListItem from './items/VisitAssignmentListItem';
 import ActivityListItem, { STATUS_COLORS } from './items/ActivityListItem';
 
 interface ActivitiesProps {
@@ -99,6 +100,19 @@ const Activities = ({
                 activity={activity}
                 caId={activity.data.id}
                 orgId={orgId}
+              />
+            </LazyActivitiesBox>
+          );
+        } else if (activity.kind == ACTIVITIES.VISIT_ASSIGNMENT) {
+          return (
+            <LazyActivitiesBox
+              key={`visitassignment-${activity.data.id}`}
+              index={index}
+            >
+              <VisitAssignmentListItem
+                activity={activity}
+                orgId={orgId}
+                vaId={parseInt(activity.data.id)}
               />
             </LazyActivitiesBox>
           );

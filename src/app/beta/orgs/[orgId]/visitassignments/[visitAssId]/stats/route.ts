@@ -8,7 +8,6 @@ import { ZetkinPerson } from 'utils/types/zetkin';
 
 type RouteMeta = {
   params: {
-    campId: string;
     orgId: string;
     visitAssId: string;
   };
@@ -22,10 +21,11 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async ({ apiClient, orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const visitAssignmentModel = await VisitAssignmentModel.findOne({
-        campId: params.campId,
         id: params.visitAssId,
         orgId,
       });

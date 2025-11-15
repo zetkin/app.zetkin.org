@@ -45,6 +45,7 @@ export default makeMessages('feat.campaigns', {
       filter: m('Filter results'),
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
+      visitAssignments: m('Visit assignments'),
     },
     heading: m('All projects'),
     indefinite: m('Indefinite'),

@@ -18,7 +18,6 @@ interface UseVisitAssignmentReturn {
 }
 
 export default function useVisitAssignment(
-  campId: number,
   orgId: number,
   visitAssId: number
 ): UseVisitAssignmentReturn {
@@ -36,7 +35,7 @@ export default function useVisitAssignment(
     actionOnSuccess: (data) => visitAssignmentLoaded(data),
     loader: () =>
       apiClient.get<ZetkinVisitAssignment>(
-        `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}`
+        `/beta/orgs/${orgId}/visitassignments/${visitAssId}`
       ),
   });
 

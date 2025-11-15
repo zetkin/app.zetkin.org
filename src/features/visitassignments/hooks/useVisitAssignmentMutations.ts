@@ -23,7 +23,6 @@ interface UseVisitAssignmentReturn {
 }
 
 export default function useVisitAssignmentMutations(
-  campId: number,
   orgId: number,
   visitAssId: number
 ): UseVisitAssignmentReturn {
@@ -32,7 +31,7 @@ export default function useVisitAssignmentMutations(
 
   const addMetric = async (metric: ZetkinMetricPostBody) => {
     const created = await apiClient.post<ZetkinMetric, ZetkinMetricPostBody>(
-      `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/metrics`,
+      `/beta/orgs/${orgId}/visitassignments/${visitAssId}/metrics`,
       metric
     );
     dispatch(metricCreated([visitAssId, created]));
@@ -40,14 +39,14 @@ export default function useVisitAssignmentMutations(
 
   const deleteVisitAssignment = async () => {
     await apiClient.delete(
-      `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}`
+      `/beta/orgs/${orgId}/visitassignments/${visitAssId}`
     );
     dispatch(visitAssignmentDeleted(visitAssId));
   };
 
   const deleteMetric = async (metricId: number) => {
     await apiClient.delete(
-      `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/metrics/${metricId}`
+      `/beta/orgs/${orgId}/visitassignments/${visitAssId}/metrics/${metricId}`
     );
     dispatch(metricDeleted([visitAssId, metricId]));
   };
@@ -58,10 +57,7 @@ export default function useVisitAssignmentMutations(
     const updated = await apiClient.patch<
       ZetkinVisitAssignment,
       ZetkinVisitAssignmentPatchbody
-    >(
-      `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}`,
-      data
-    );
+    >(`/beta/orgs/${orgId}/visitassignments/${visitAssId}`, data);
     dispatch(visitAssignmentUpdated([updated, Object.keys(data)]));
   };
 
@@ -70,7 +66,7 @@ export default function useVisitAssignmentMutations(
     data: ZetkinMetricPatchBody
   ) => {
     const updated = await apiClient.patch<ZetkinMetric, ZetkinMetricPatchBody>(
-      `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/metrics/${metricId}`,
+      `/beta/orgs/${orgId}/visitassignments/${visitAssId}/metrics/${metricId}`,
       data
     );
     dispatch(metricUpdated([visitAssId, updated]));

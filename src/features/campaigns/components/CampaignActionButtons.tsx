@@ -64,7 +64,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
-  const createVisitAssignment = useCreateVisitAssignment(orgId, campId);
+  const createVisitAssignment = useCreateVisitAssignment(orgId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -171,7 +171,8 @@ const CampaignActionButtons: React.FunctionComponent<
       label: campaginMessages.createButton.createVisitAssignment(),
       onClick: () =>
         createVisitAssignment({
-          title: visitAssignmentMessages.default.title(),
+          campaign_id: campId,
+          title: visitAssignmentMessages.default.title()
         }),
     });
   }

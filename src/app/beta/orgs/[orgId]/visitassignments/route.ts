@@ -3,11 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { VisitAssignmentModel } from 'features/visitassignments/models';
-import { ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinQuery } from 'features/smartSearch/components/types';
 
 type RouteMeta = {
   params: {
-    campId: string;
     orgId: string;
   };
 };
@@ -20,13 +19,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async ({ orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
-      const assignments = VisitAssignmentModel.find({ orgId: orgId });
+      const assignments = await VisitAssignmentModel.find({ orgId: orgId });
 
       return NextResponse.json({
-        data: (await assignments).map((assignment) => ({
-          assignees: assignment.assignees,
+        data: assignments.map((assignment) => ({
           campaign: {
             id: assignment.campId,
           },
@@ -34,7 +34,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           organization: {
             id: orgId,
           },
-          queryId: assignment.queryId,
           title: assignment.title,
         })),
       });
@@ -50,7 +49,9 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async ({ apiClient, orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const payload = await request.json();
 
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
       const model = new VisitAssignmentModel({
         assigneeIds: [],
-        campId: params.campId,
+        campId: payload.campaign_id,
         end_date: null,
         id: 0,
         orgId: orgId,

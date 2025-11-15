@@ -4,13 +4,11 @@ import useVisitAssignment from './useVisitAssignment';
 import useVisitAssignmentMutations from './useVisitAssignmentMutations';
 
 export default function useStartEndAssignment(
-  campId: number,
   orgId: number,
   visitAssId: number
 ) {
-  const visitAssignment = useVisitAssignment(campId, orgId, visitAssId);
+  const visitAssignment = useVisitAssignment(orgId, visitAssId);
   const { updateVisitAssignment } = useVisitAssignmentMutations(
-    campId,
     orgId,
     visitAssId
   );

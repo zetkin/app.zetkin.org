@@ -67,23 +67,18 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 const ReportPage: PageWithLayout = () => {
-  const { orgId, campId, visitAssId } = useNumericRouteParams();
+  const { orgId, visitAssId } = useNumericRouteParams();
   const theme = useTheme();
   const onServer = useServerSide();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const { visitAssignmentFuture } = useVisitAssignment(
-    campId,
-    orgId,
-    visitAssId
-  );
+  const { visitAssignmentFuture } = useVisitAssignment(orgId, visitAssId);
   const { addMetric, deleteMetric, updateMetric } = useVisitAssignmentMutations(
-    campId,
     orgId,
     visitAssId
   );
-  const metricsList = useVisitAssignmentMetrics(campId, orgId, visitAssId);
+  const metricsList = useVisitAssignmentMetrics(orgId, visitAssId);
 
   const [metricBeingCreated, setMetricBeingCreated] =
     useState<Partial<ZetkinMetric> | null>(null);

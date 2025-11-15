@@ -1,7 +1,12 @@
 import { MutableRefObject, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 
-import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  futureToObject,
+  IFuture,
+  PromiseFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinVisitAssignee } from 'features/visitassignments/types';
@@ -19,6 +24,7 @@ import { ZetkinTag } from 'utils/types/zetkin';
 
 interface UseVisitAssigneesReturn {
   addAssignee: (assigneeId: number) => PromiseFuture<ZetkinVisitAssignee>;
+  data: ZetkinVisitAssignee[] | null;
   filteredAssigneesFuture: IFuture<ZetkinVisitAssignee[]>;
   isAssignee: (personId: number) => boolean;
   removeAssignee: (assigneeId: number) => void;
@@ -35,7 +41,6 @@ interface UseVisitAssigneesReturn {
 }
 
 export default function useVisitAssignees(
-  campId: number,
   orgId: number,
   visitAssId: number
 ): UseVisitAssigneesReturn {
@@ -55,7 +60,7 @@ export default function useVisitAssignees(
     dispatch(assigneeAdd([visitAssId, assigneeId]));
     const promise = apiClient
       .put<ZetkinVisitAssignee>(
-        `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/assignees/${assigneeId}`
+        `/beta/orgs/${orgId}/visitassignments/${visitAssId}/assignees/${assigneeId}`
       )
       .then((data) => {
         dispatch(assigneeAdded([visitAssId, data]));
@@ -70,7 +75,7 @@ export default function useVisitAssignees(
     actionOnSuccess: (data) => assigneesLoaded([data, visitAssId]),
     loader: () =>
       apiClient.get<ZetkinVisitAssignee[]>(
-        `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/assignees`
+        `/beta/orgs/${orgId}/visitassignments/${visitAssId}/assignees`
       ),
   });
 
@@ -102,7 +107,7 @@ export default function useVisitAssignees(
     dispatch(assigneeRemove([visitAssId, assigneeId]));
     apiClient
       .delete(
-        `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/assignees/${assigneeId}`
+        `/beta/orgs/${orgId}/visitassignments/${visitAssId}/assignees/${assigneeId}`
       )
       .then(() => {
         dispatch(assigneeRemoved([visitAssId, assigneeId]));
@@ -117,7 +122,7 @@ export default function useVisitAssignees(
     dispatch(assigneeConfigure([visitAssId, assigneeId]));
     apiClient
       .patch<ZetkinVisitAssignee>(
-        `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/assignees/${assigneeId}`,
+        `/beta/orgs/${orgId}/visitassignments/${visitAssId}/assignees/${assigneeId}`,
         {
           excluded_tags: excluded_tags.map((tag) => ({
             ...tag,
@@ -136,6 +141,7 @@ export default function useVisitAssignees(
 
   return {
     addAssignee,
+    ...futureToObject(filteredAssigneesFuture),
     filteredAssigneesFuture,
     isAssignee,
     removeAssignee,

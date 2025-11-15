@@ -4,7 +4,6 @@ import { metricsLoad, metricsLoaded } from 'features/visitassignments/store';
 import { ZetkinMetric } from 'features/visitassignments/types';
 
 export default function useVisitAssignmentMetrics(
-  campId: number,
   orgId: number,
   visitAssId: number
 ) {
@@ -13,7 +12,7 @@ export default function useVisitAssignmentMetrics(
     (state) => state.visitAssignments.metricsByAssignmentId[visitAssId]
   );
 
-  const url = `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/metrics`;
+  const url = `/beta/orgs/${orgId}/visitassignments/${visitAssId}/metrics`;
 
   return useRemoteList(metricsList, {
     actionOnLoad: () => metricsLoad(visitAssId),

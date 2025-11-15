@@ -29,7 +29,9 @@ export type ZetkinVisitAssignment = {
 
 export type ZetkinVisitAssignmentPostBody = Partial<
   Omit<ZetkinVisitAssignment, 'id' | 'campaign' | 'organization'>
->;
+> & {
+  campaign_id: number | null
+};
 
 export type ZetkinVisitAssignmentPatchbody = Partial<
   Omit<ZetkinVisitAssignment, 'id'>

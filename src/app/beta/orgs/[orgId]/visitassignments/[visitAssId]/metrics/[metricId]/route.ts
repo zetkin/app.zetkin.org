@@ -6,7 +6,6 @@ import { ZetkinMetricModel } from 'features/visitassignments/models';
 
 type RouteMeta = {
   params: {
-    campId: string;
     metricId: string;
     orgId: string;
     visitAssId: string;
@@ -21,7 +20,9 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async () => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const payload = await request.json();
 
@@ -52,7 +53,9 @@ export async function DELETE(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async () => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const result = await ZetkinMetricModel.findOneAndDelete({
         id: params.metricId,

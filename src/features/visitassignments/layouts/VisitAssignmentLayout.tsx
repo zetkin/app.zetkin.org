@@ -33,23 +33,14 @@ const VisitAssignmentLayout: FC<VisitAssignmentLayoutProps> = ({
   const messages = useMessages(messageIds);
   const { orgId, campId, visitAssId } = useNumericRouteParams();
   const path = useRouter().pathname;
-  const { data: visitAssignment } = useVisitAssignment(
-    campId,
-    orgId,
-    visitAssId
-  );
+  const { data: visitAssignment } = useVisitAssignment(orgId, visitAssId);
   const { deleteVisitAssignment, updateVisitAssignment } =
-    useVisitAssignmentMutations(campId, orgId, visitAssId);
-  const statsFuture = useVisitAssignmentStats(campId, orgId, visitAssId);
-  const { filteredAssigneesFuture } = useVisitAssignees(
-    campId,
-    orgId,
-    visitAssId
-  );
+    useVisitAssignmentMutations(orgId, visitAssId);
+  const statsFuture = useVisitAssignmentStats(orgId, visitAssId);
+  const { filteredAssigneesFuture } = useVisitAssignees(orgId, visitAssId);
 
-  const state = useVisitAssignmentStatus(campId, orgId, visitAssId);
+  const state = useVisitAssignmentStatus(orgId, visitAssId);
   const { startAssignment, endAssignment } = useStartEndAssignment(
-    campId,
     orgId,
     visitAssId
   );

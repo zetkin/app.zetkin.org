@@ -24,11 +24,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     const client = new BackendApiClient(ctx.req.headers);
 
     const data = await client.get<ZetkinVisitAssignment>(
-      `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}`
+      `/beta/orgs/${orgId}/visitassignments/${visitAssId}`
     );
     const actualCampaign = data.campaign.id?.toString() ?? 'standalone';
     if (actualCampaign !== campId) {
-      return { notFound: true };
+      return {
+        redirect: {
+          destination: `/organize/${orgId}/projects/${actualCampaign}/visitassignments/${visitAssId}`,
+          permanent: false,
+        },
+      };
     }
   } catch (error) {
     return { notFound: true };
@@ -39,13 +44,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 const VisitAssignmentPage: PageWithLayout = () => {
-  const { orgId, campId, visitAssId } = useNumericRouteParams();
+  const { orgId, visitAssId } = useNumericRouteParams();
   const onServer = useServerSide();
-  const { data: visitAssignment } = useVisitAssignment(
-    campId,
-    orgId,
-    visitAssId
-  );
+  const { data: visitAssignment } = useVisitAssignment(orgId, visitAssId);
 
   if (onServer) {
     return null;
@@ -60,7 +61,6 @@ const VisitAssignmentPage: PageWithLayout = () => {
         <Box mb={2}>
           <VisitAssignmentTargets
             assignmentId={visitAssId}
-            campId={campId}
             orgId={orgId}
           />
         </Box>

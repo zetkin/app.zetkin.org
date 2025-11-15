@@ -9,7 +9,6 @@ import { ZetkinUser } from 'utils/types/zetkin';
 type RouteMeta = {
   params: {
     assigneeId: string;
-    campId: string;
     orgId: string;
     visitAssId: string;
   };
@@ -23,10 +22,11 @@ export async function PUT(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async ({ apiClient, orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const visitAssignmentModel = await VisitAssignmentModel.findOne({
-        campId: params.campId,
         id: params.visitAssId,
         orgId,
       });
@@ -75,12 +75,13 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async ({ orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const payload = await request.json();
 
       const visitAssignmentModel = await VisitAssignmentModel.findOne({
-        campId: params.campId,
         id: params.visitAssId,
         orgId,
       });
@@ -122,10 +123,11 @@ export async function DELETE(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async ({ orgId }) => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const visitAssignmentModel = await VisitAssignmentModel.findOne({
-        campId: params.campId,
         id: params.visitAssId,
         orgId,
       });

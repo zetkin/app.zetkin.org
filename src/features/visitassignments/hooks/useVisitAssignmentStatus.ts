@@ -11,15 +11,10 @@ export enum VisitAssignmentState {
 }
 
 export default function useVisitAssignmentStatus(
-  campId: number,
   orgId: number,
   visitAssId: number
 ): VisitAssignmentState {
-  const { data: visitAssignment } = useVisitAssignment(
-    campId,
-    orgId,
-    visitAssId
-  );
+  const { data: visitAssignment } = useVisitAssignment(orgId, visitAssId);
 
   if (!visitAssignment) {
     return VisitAssignmentState.UNKNOWN;

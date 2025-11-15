@@ -6,7 +6,6 @@ import { ZetkinMetricModel } from 'features/visitassignments/models';
 
 type RouteMeta = {
   params: {
-    campId: string;
     orgId: string;
     visitAssId: string;
   };
@@ -20,7 +19,9 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async () => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const metrics = ZetkinMetricModel.find({
         visit_assignment_id: params.visitAssId,
@@ -48,7 +49,9 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       roles: ['admin'],
     },
     async () => {
-      await mongoose.connect(process.env.MONGODB_URL || '');
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGODB_URL || '');
+      }
 
       const payload = await request.json();
 

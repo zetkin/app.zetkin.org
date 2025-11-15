@@ -4,7 +4,6 @@ import { ZetkinVisitAssignmentStats } from '../types';
 import { statsLoad, statsLoaded } from '../store';
 
 export default function useVisitAssignmentStats(
-  campId: number,
   orgId: number,
   visitAssId: number
 ) {
@@ -19,7 +18,7 @@ export default function useVisitAssignmentStats(
     actionOnSuccess: (data) => statsLoaded([visitAssId, data]),
     loader: () =>
       apiClient.get<ZetkinVisitAssignmentStats>(
-        `/beta/orgs/${orgId}/projects/${campId}/visitassignments/${visitAssId}/stats`
+        `/beta/orgs/${orgId}/visitassignments/${visitAssId}/stats`
       ),
   });
 }

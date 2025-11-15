@@ -43,15 +43,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 const AssigneesPage: PageWithLayout = () => {
-  const { orgId, campId, visitAssId } = useNumericRouteParams();
+  const { orgId, visitAssId } = useNumericRouteParams();
   const onServer = useServerSide();
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
-  const { data: visitAssignment } = useVisitAssignment(
-    campId,
-    orgId,
-    visitAssId
-  );
+  const { data: visitAssignment } = useVisitAssignment(orgId, visitAssId);
   const {
     addAssignee,
     filteredAssigneesFuture,
@@ -63,7 +59,7 @@ const AssigneesPage: PageWithLayout = () => {
     setAssigneeTags,
     setSearchString,
     setSelectedAssignee,
-  } = useVisitAssignees(campId, orgId, visitAssId);
+  } = useVisitAssignees(orgId, visitAssId);
 
   if (onServer) {
     return null;

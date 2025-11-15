@@ -40,6 +40,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
     ACTIVITIES.SURVEY,
     ACTIVITIES.TASK,
     ACTIVITIES.EMAIL,
+    ACTIVITIES.VISIT_ASSIGNMENT,
   ]);
 
   const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {

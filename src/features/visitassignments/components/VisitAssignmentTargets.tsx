@@ -27,12 +27,10 @@ const useStyles = makeStyles(() => ({
 
 interface VisitAssignmentTargetsProps {
   assignmentId: number;
-  campId: number;
   orgId: number;
 }
 
 const VisitAssignmentTargets: FC<VisitAssignmentTargetsProps> = ({
-  campId,
   orgId,
   assignmentId,
 }) => {
@@ -43,8 +41,8 @@ const VisitAssignmentTargets: FC<VisitAssignmentTargetsProps> = ({
     data: visitAssignment,
     isTargeted,
     updateTargets: setTargets,
-  } = useVisitAssignment(campId, orgId, assignmentId);
-  const statsFuture = useVisitAssignmentStats(campId, orgId, assignmentId);
+  } = useVisitAssignment(orgId, assignmentId);
+  const statsFuture = useVisitAssignmentStats(orgId, assignmentId);
 
   return (
     <>
