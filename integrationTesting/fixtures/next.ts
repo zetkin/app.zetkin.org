@@ -203,6 +203,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
         created: '2020-01-01T00:00:00',
         level: 2,
         user: user,
+        factors: ['email_password', 'phone_otp'],
       });
     };
     await use(login);
