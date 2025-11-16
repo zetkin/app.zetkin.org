@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           campaign: {
             id: assignment.campId,
           },
-          id: assignment.id.toString(),
+          id: assignment.id,
           organization: {
             id: orgId,
           },
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
         {
           data: {
             campaign: { id: model.campId },
-            id: model.id.toString(),
+            id: model.id,
             organization: { id: orgId },
             target: queryRes,
             title: model.title,

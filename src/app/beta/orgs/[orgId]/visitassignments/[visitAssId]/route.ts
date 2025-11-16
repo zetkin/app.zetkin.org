@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           data: {
             campaign: { id: visitAssignmentModel.campId },
             end_date: visitAssignmentModel.end_date,
-            id: visitAssignmentModel.id.toString(),
+            id: visitAssignmentModel.id,
             organization: { id: orgId },
             queryId: visitAssignmentModel.queryId,
             start_date: visitAssignmentModel.start_date,
