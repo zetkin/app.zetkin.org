@@ -27,13 +27,12 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       return NextResponse.json({
         data: assignments.map((assignment) => ({
-          campaign: {
-            id: assignment.campId,
-          },
+          campaign: { id: assignment.campId },
           id: assignment.id,
           organization: {
             id: orgId,
           },
+          target: { id: assignment.queryId },
           title: assignment.title,
         })),
       });
