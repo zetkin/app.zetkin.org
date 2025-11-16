@@ -11,6 +11,11 @@ export type ZetkinVisitAssignee = {
   visitAssId: number;
 };
 
+export type VisitAssigneeInfo = {
+  id: number;
+  sessions: ZetkinVisitAssignee[];
+};
+
 export type ZetkinVisitAssignment = {
   assignees: ZetkinVisitAssignee[];
   campaign: {
@@ -18,7 +23,7 @@ export type ZetkinVisitAssignment = {
     title: string;
   };
   end_date: string | null;
-  id: string;
+  id: number;
   organization: {
     id: number;
   };

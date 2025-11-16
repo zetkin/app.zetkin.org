@@ -12,9 +12,9 @@ import { futureToObject, IFuture } from 'core/caching/futures';
 
 interface UseVisitAssignmentReturn {
   data: ZetkinVisitAssignment | null;
-  visitAssignmentFuture: IFuture<ZetkinVisitAssignment>;
   isTargeted: boolean;
   updateTargets: (query: Partial<ZetkinQuery>) => void;
+  visitAssignmentFuture: IFuture<ZetkinVisitAssignment>;
 }
 
 export default function useVisitAssignment(
@@ -70,6 +70,6 @@ export default function useVisitAssignment(
     ...futureToObject(visitAssignmentFuture),
     isTargeted,
     updateTargets,
-    visitAssignmentFuture: visitAssignmentFuture,
+    visitAssignmentFuture,
   };
 }

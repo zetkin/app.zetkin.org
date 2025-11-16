@@ -112,7 +112,7 @@ const Activities = ({
               <VisitAssignmentListItem
                 activity={activity}
                 orgId={orgId}
-                vaId={parseInt(activity.data.id)}
+                vaId={activity.data.id}
               />
             </LazyActivitiesBox>
           );

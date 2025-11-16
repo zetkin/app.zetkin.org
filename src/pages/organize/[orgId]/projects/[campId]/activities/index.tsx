@@ -50,6 +50,7 @@ const CampaignActivitiesPage: PageWithLayout<
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
     ACTIVITIES.AREA_ASSIGNMENT,
+    ACTIVITIES.VISIT_ASSIGNMENT,
     ACTIVITIES.SURVEY,
     ACTIVITIES.TASK,
     ACTIVITIES.EMAIL,
