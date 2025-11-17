@@ -10,6 +10,7 @@ type ZetkinVisitAssigneeModelType = {
   first_name: string;
   id: number;
   last_name: string;
+  orgId: number;
   prioritized_tags: ZetkinAppliedTag[];
   visitAssId: number;
 };
@@ -81,6 +82,7 @@ const visitAssigneeSchema = new mongoose.Schema<ZetkinVisitAssigneeModelType>({
   first_name: { required: true, type: String },
   id: { required: true, type: Number },
   last_name: { required: true, type: String },
+  orgId: { required: true, type: Number },
   prioritized_tags: [{ type: mongoose.Schema.Types.Mixed }],
   visitAssId: { required: true, type: Number },
 });

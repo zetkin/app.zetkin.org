@@ -34,6 +34,7 @@ export interface VisitAssignmentsStoreSlice {
     RemoteList<ZetkinVisitAssignee & { id: number }>
   >;
   metricsByAssignmentId: Record<number, RemoteList<ZetkinMetric>>;
+  myAssignmentsList: RemoteList<ZetkinVisitAssignment>;
   statsByVisitAssId: Record<
     number,
     RemoteItem<ZetkinVisitAssignmentStats & { id: number }>
@@ -43,6 +44,7 @@ export interface VisitAssignmentsStoreSlice {
 const initialState: VisitAssignmentsStoreSlice = {
   assigneesByAssignmentId: {},
   metricsByAssignmentId: {},
+  myAssignmentsList: remoteList(),
   statsByVisitAssId: {},
   visitAssignmentList: remoteList(),
   visitGraphByAssignmentId: {},
@@ -143,6 +145,22 @@ const visitAssignmentSlice = createSlice({
     metricsLoaded: (state, action: PayloadAction<[number, ZetkinMetric[]]>) => {
       const [assignmentId, metrics] = action.payload;
       state.metricsByAssignmentId[assignmentId] = remoteListLoaded(metrics);
+    },
+    myAssignmentsLoad: (state) => {
+      state.myAssignmentsList.isLoading = true;
+    },
+    myAssignmentsLoaded: (
+      state,
+      action: PayloadAction<ZetkinVisitAssignment[]>
+    ) => {
+      const assignments = action.payload;
+      const timestamp = new Date().toISOString();
+
+      state.myAssignmentsList = remoteList(assignments);
+      state.myAssignmentsList.loaded = timestamp;
+      state.myAssignmentsList.items.forEach(
+        (item) => (item.loaded = timestamp)
+      );
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const visitAssId = action.payload;
@@ -310,6 +328,8 @@ export const {
   metricUpdated,
   metricsLoad,
   metricsLoaded,
+  myAssignmentsLoad,
+  myAssignmentsLoaded,
   assigneeRemove,
   assigneeRemoved,
   statsLoad,

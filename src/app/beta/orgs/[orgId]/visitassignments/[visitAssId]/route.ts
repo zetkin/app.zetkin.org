@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import asOrgAuthorized from 'utils/api/asOrgAuthorized';
 import { VisitAssignmentModel } from 'features/visitassignments/models';
-import { ZetkinQuery } from '../../../../../../features/smartSearch/components/types';
+import { ZetkinQuery } from 'features/smartSearch/components/types';
 
 type RouteMeta = {
   params: {

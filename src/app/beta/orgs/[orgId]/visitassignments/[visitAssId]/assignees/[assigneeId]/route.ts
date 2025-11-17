@@ -27,6 +27,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
       const assignee = await ZetkinVisitAssigneeModel.findOne({
         id: params.assigneeId,
+        orgId: params.orgId,
         visitAssId: params.visitAssId,
       });
 
@@ -67,7 +68,11 @@ export async function PUT(request: NextRequest, { params }: RouteMeta) {
       const assigneeIdNum = parseInt(params.assigneeId, 10);
       const visitAssIdNum = parseInt(params.visitAssId, 10);
 
-      const filter = { id: assigneeIdNum, visitAssId: visitAssIdNum };
+      const filter = {
+        id: assigneeIdNum,
+        orgId: orgId,
+        visitAssId: visitAssIdNum,
+      };
       const update = {
         $set: {
           excluded_tags: [],
@@ -77,6 +82,7 @@ export async function PUT(request: NextRequest, { params }: RouteMeta) {
         },
         $setOnInsert: {
           id: assigneeIdNum,
+          orgId: orgId,
           visitAssId: visitAssIdNum,
         },
       };
@@ -111,7 +117,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       request: request,
       roles: ['admin'],
     },
-    async () => {
+    async ({ orgId }) => {
       if (mongoose.connection.readyState !== 1) {
         await mongoose.connect(process.env.MONGODB_URL || '');
       }
@@ -122,6 +128,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
         await ZetkinVisitAssigneeModel.findOneAndUpdate(
           {
             id: params.assigneeId,
+            orgId,
             visitAssId: params.visitAssId,
           },
           {
@@ -147,13 +154,14 @@ export async function DELETE(request: NextRequest, { params }: RouteMeta) {
       request: request,
       roles: ['admin'],
     },
-    async () => {
+    async ({ orgId }) => {
       if (mongoose.connection.readyState !== 1) {
         await mongoose.connect(process.env.MONGODB_URL || '');
       }
 
       const result = await ZetkinVisitAssigneeModel.findOneAndDelete({
         id: params.assigneeId,
+        orgId,
         visitAssId: params.visitAssId,
       });
       if (!result) {

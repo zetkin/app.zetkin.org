@@ -179,6 +179,7 @@ export default function mockState(overrides?: RootState) {
     visitAssignments: {
       assigneesByAssignmentId: {},
       metricsByAssignmentId: {},
+      myAssignmentsList: remoteList(),
       statsByVisitAssId: {},
       visitAssignmentList: remoteList(),
       visitGraphByAssignmentId: {},

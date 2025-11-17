@@ -33,6 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
           first_name: assignee.first_name,
           id: assignee.id,
           last_name: assignee.last_name,
+          orgId: assignee.orgId,
           prioritized_tags: assignee.prioritized_tags,
           user_id: assignee.id,
           visitAssId: assignee.visitAssId,
