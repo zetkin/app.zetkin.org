@@ -28,6 +28,52 @@ export default function useRemoteItem<
   const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
+  if (!remoteItem) {
+    const existing = getExistingPromise();
+    if (!existing) {
+      const promise = Promise.resolve()
+        .then(() => {
+          dispatch(hooks.actionOnLoad());
+        })
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+          } else {
+            throw err;
+          }
+        });
+      cache(promise);
+    }
+    throw getExistingPromise()!;
+  }
+
+  if (remoteItem.isLoading && !remoteItem.data) {
+    const existing = getExistingPromise();
+    if (!existing) {
+      const promise = Promise.resolve()
+        // No need to dispatch actionOnLoad: already loading
+        .then(() => hooks.loader())
+        .then((val) => {
+          dispatch(hooks.actionOnSuccess(val));
+          return val;
+        })
+        .catch((err) => {
+          if (hooks.actionOnError) {
+            dispatch(hooks.actionOnError(err));
+          } else {
+            throw err;
+          }
+        });
+      cache(promise);
+    }
+    throw getExistingPromise()!;
+  }
+
   if (loadIsNecessary) {
     const existing = getExistingPromise();
     if (!existing) {
