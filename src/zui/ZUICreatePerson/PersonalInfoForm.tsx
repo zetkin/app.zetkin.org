@@ -35,9 +35,10 @@ import useOrganization from '../../features/organizations/hooks/useOrganization'
 dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
+type PersonFormData = ZetkinCreatePerson | ZetkinPerson;
 
 interface PersonalInfoFormProps {
-  personalInfo: ZetkinCreatePerson;
+  personalInfo: PersonFormData;
   orgId: number;
   onChange: (field: string, value: string | null | number) => void;
   onReset?: (field: string) => void;
@@ -289,7 +290,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                   onChange(field, formattedUrl ?? value);
                 }}
                 onReset={() => onReset?.(field.slug)}
-                value={personalInfo[field.slug] || ''}
+                value={(personalInfo[field.slug]?.toString() || '') as string}
               />
             );
           } else if (
@@ -338,7 +339,7 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
                 label={field.title}
                 onChange={(field, value) => onChange(field, value)}
                 onReset={() => onReset?.(field.slug)}
-                value={personalInfo[field.slug] || ''}
+                value={(personalInfo[field.slug]?.toString() || '') as string}
               />
             );
           }
