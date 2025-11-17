@@ -8,6 +8,7 @@ export type ZetkinVisitAssignee = {
   id: number;
   last_name: string;
   prioritized_tags: ZetkinAppliedTag[];
+  user_id: number;
   visitAssId: number;
 };
 
