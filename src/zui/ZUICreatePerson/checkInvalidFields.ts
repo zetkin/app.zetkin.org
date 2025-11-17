@@ -50,7 +50,7 @@ export default function checkInvalidFields(
   customFields.forEach((field) => {
     if (field.type === 'url') {
       const slug = field.slug;
-      if (personalInfo[slug] && !isURL(personalInfo[slug] || '')) {
+      if (personalInfo[slug] && !isURL(personalInfo[slug]?.toString() || '')) {
         invalidFields.push(slug);
       }
     }
