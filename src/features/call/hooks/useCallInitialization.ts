@@ -68,10 +68,7 @@ export default function useCallInitialization() {
 
   let canInitialize = false;
   if (assignmentIdFromQuery) {
-    const requestedId = parseInt(assignmentIdFromQuery);
-    canInitialize = userCallAssignments.some(
-      (assignment) => assignment.id == requestedId
-    );
+    canInitialize = true;
   } else if (callLanes) {
     const thisUserHasSavedLanes =
       !!activeLanes &&
