@@ -108,7 +108,7 @@ test.describe('Journey instance page Milestones tab', () => {
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click June 24 to trigger setting new deadline
-      await june24.click(),
+      june24.click(),
     ]);
 
     //Expect the deadline to be the newly set deadline
@@ -186,7 +186,7 @@ test.describe('Journey instance page Milestones tab', () => {
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click "completed"-checkbox in first JourneyMilestoneCard
-      await page
+      page
         .locator(
           '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
         )
@@ -237,7 +237,7 @@ test.describe('Journey instance page Milestones tab', () => {
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click "completed"-checkbox in JourneyMilestoneCard
-      await page
+      page
         .locator(
           '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
         )

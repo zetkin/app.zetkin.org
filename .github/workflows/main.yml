@@ -22,8 +22,8 @@ jobs:
   playwright-test:
     uses: ./.github/workflows/reusable-base.yml
     with:
-      build-script: npx playwright install chromium
-      yarn-test-script: playwright:ci
+      build-script: yarn playwright install chromium
+      yarn-test-script: e2e:ci
       upload-path: playwright-report/
 
   unit-test:

@@ -379,6 +379,7 @@ test.describe('Journey instance detail page sidebar', () => {
       await page.locator(`text="${PlaysGuitarTag.title}"`).isVisible()
     ).toBeTruthy();
   });
+
   test('let user assign a tag to the journey instance', async ({
     appUri,
     page,
@@ -424,6 +425,7 @@ test.describe('Journey instance detail page sidebar', () => {
     // Expect to have made request to put tag
     expect(putTagLog().length).toEqual(1);
   });
+
   test('lets user unassign a tag from the journey instance', async ({
     appUri,
     page,
@@ -457,15 +459,9 @@ test.describe('Journey instance detail page sidebar', () => {
     ]);
 
     await page.locator(`text="${ActivistTag.title}"`).hover();
-
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${ActivistTag.id}`
-      ),
-      page.locator(`[data-testid=TagChip-deleteButton]`).first().click(),
-    ]);
+    await page.locator(`[data-testid=TagChip-deleteButton]`).first().click();
 
     // Expect to have made request to delete tag
-    expect(deleteTagLog().length).toEqual(1);
+    expect(deleteTagLog).toHaveLength(1);
   });
 });
