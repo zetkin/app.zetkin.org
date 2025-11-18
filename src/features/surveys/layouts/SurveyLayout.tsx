@@ -160,7 +160,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       ellipsisMenuItems={[
         {
           label: messages.layout.actions.duplicate(),
-          onSelect: handleDuplicate,
+          onSelect: () => handleDuplicate(),
           startIcon: <ContentCopy />,
         },
         {
