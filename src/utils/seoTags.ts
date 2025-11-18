@@ -66,10 +66,15 @@ export const getSeoTags = (
 export const getOrganizationOpenGraphTags = (
   org: ZetkinOrganization
 ): OpenGraph => {
-  const regionNames = new Intl.DisplayNames(
-    [headers().get('accept-language')?.split('-')[0] || 'en'],
-    { type: 'region' }
-  );
+  let regionNames: Intl.DisplayNames;
+  try {
+    regionNames = new Intl.DisplayNames(
+      [headers().get('accept-language')?.split('-')[0] || 'en'],
+      { type: 'region' }
+    );
+  } catch (_e) {
+    regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+  }
   let countryName = org.country;
   try {
     countryName = regionNames.of(org.country) ?? org.country;
