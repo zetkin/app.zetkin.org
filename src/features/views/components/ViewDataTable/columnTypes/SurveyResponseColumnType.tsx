@@ -128,7 +128,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
           submissions={cell.map((sub, index) => ({
             id: sub.submission_id,
             matchingContent:
-              index == 0 ? getEllipsedString(sub.text, 300) : null,
+              index == 0 && sub.text ? getEllipsedString(sub.text, 300) : null,
             submitted: sub.submitted,
           }))}
         />
