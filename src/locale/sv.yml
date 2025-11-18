@@ -2620,7 +2620,6 @@ feat:
           orsaka problem med datan. Fortsätt med försiktighet.
     layout:
       actions:
-        duplicate: Duplicera
         delete: Ta bort enkät
         move: Flytta
         publish: Publicera enkät
