@@ -39,7 +39,6 @@ export default class SurveyResponseColumnType
       sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return cell?.map((response) => response.text || '')?.join(' ') || '';
         if (!cell?.length) {
           return '';
         }
@@ -50,7 +49,7 @@ export default class SurveyResponseColumnType
           return d1.getTime() - d0.getTime();
         });
 
-        return sorted[0].text;
+        return sorted[0].text || '';
       },
       width: 250,
     };
