@@ -40,6 +40,10 @@ export default function useColumn(orgId: number) {
     }
 
     const exists = selectedColumns.find((column) => {
+      if (column.kind == ColumnKind.ID_FIELD) {
+        return column.idField == value;
+      }
+
       if (column.kind == ColumnKind.FIELD) {
         return column.field == value.slice(6);
       }
