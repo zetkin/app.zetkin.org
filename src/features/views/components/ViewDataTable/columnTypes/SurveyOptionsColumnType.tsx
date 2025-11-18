@@ -25,6 +25,11 @@ export type SurveyOptionsViewCell =
     }[]
   | null;
 
+const surveyOptionsColumnSortRank = (str: string) => {
+  const split = str.split('|');
+  return -split[split.length - 1].length;
+};
+
 export default class SurveyOptionsColumnType
   implements IColumnType<ZetkinViewColumn, SurveyOptionsViewCell>
 {
@@ -38,7 +43,11 @@ export default class SurveyOptionsColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
+      sortComparator: (v1: string, v2: string) => {
+        return (
+          surveyOptionsColumnSortRank(v1) - surveyOptionsColumnSortRank(v2)
+        );
+      },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
         if (!cell?.length) {
@@ -50,7 +59,7 @@ export default class SurveyOptionsColumnType
           const d1 = new Date(sub1.submitted);
           return d1.getTime() - d0.getTime();
         });
-        return sorted[0].selected.map((s) => s.text).join(' ');
+        return sorted[0].selected.map((s) => s.text).join('|');
       },
     };
   }
