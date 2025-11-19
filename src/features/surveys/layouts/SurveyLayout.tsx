@@ -20,7 +20,6 @@ import useSurvey from '../hooks/useSurvey';
 import useSurveyElements from '../hooks/useSurveyElements';
 import useSurveyMutations from '../hooks/useSurveyMutations';
 import useSurveyStats from '../hooks/useSurveyStats';
-import useDuplicateSurvey from '../hooks/useDuplicateSurvey';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -34,6 +33,7 @@ import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialo
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
 import { useApiClient } from 'core/hooks';
 import surveyToList from 'features/surveys/rpc/surveyToList';
+import duplicateSurvey from '../rpc/duplicateSurvey';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -96,14 +96,17 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     );
   };
 
-  const duplicateSurvey = useDuplicateSurvey(
-    parsedOrg,
-    parseInt(surveyId),
-    parseInt(campId)
-  );
   const handleDuplicate = async () => {
-    const res = await duplicateSurvey();
+    const res = await apiClient.rpc(duplicateSurvey, {
+      campId: parseInt(campId),
+      orgId: parsedOrg,
+      surveyId: parseInt(surveyId),
+    });
+
     if (res) {
+      await router.push(
+        `/organize/${res.organization.id}/projects/${campId}/surveys/${res.id}`
+      );
       showSnackbar('success', messages.surveyDuplicated.success());
     } else {
       showSnackbar('error', messages.surveyDuplicated.error());
