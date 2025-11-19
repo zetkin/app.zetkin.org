@@ -43,13 +43,14 @@ export default class SurveyResponseColumnType
           return '';
         }
 
-        const sorted = cell.concat().sort((sub0, sub1) => {
+        const sortedSubmissions = cell.concat().sort((sub0, sub1) => {
           const d0 = new Date(sub0.submitted);
           const d1 = new Date(sub1.submitted);
           return d1.getTime() - d0.getTime();
         });
+        const mostRecentSubmission = sortedSubmissions[0];
 
-        return sorted[0].text || '';
+        return mostRecentSubmission.text || '';
       },
       width: 250,
     };
