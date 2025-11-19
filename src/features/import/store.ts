@@ -43,7 +43,6 @@ const importSlice = createSlice({
 
       const currentColumnIsImportID =
         currentColumn.kind == ColumnKind.ID_FIELD &&
-        currentColumn.idField &&
         state.importID == currentColumn.idField;
 
       if (currentColumnIsImportID) {
@@ -54,6 +53,25 @@ const importSlice = createSlice({
     },
     importIDUpdate: (state, action: PayloadAction<ImportID | null>) => {
       const newImportID = action.payload;
+
+      const currentImportIDIsZetkinID = state.importID == 'id';
+
+      //If changing import ID from Zetkin ID,
+      //deselect column that was Zetkin IDs
+      if (currentImportIDIsZetkinID && newImportID != 'id') {
+        const sheetIndex = state.pendingFile.selectedSheetIndex;
+        const sheet = state.pendingFile.sheets[sheetIndex];
+
+        const indexOfIdColumn = sheet.columns.findIndex(
+          (col) => col.kind == ColumnKind.ID_FIELD && col.idField == 'id'
+        );
+
+        state.pendingFile.sheets[sheetIndex].columns[indexOfIdColumn] = {
+          kind: ColumnKind.UNKNOWN,
+          selected: false,
+        };
+      }
+
       state.importID = newImportID;
     },
     importPreviewAdd: (state, action: PayloadAction<ImportPreview>) => {
