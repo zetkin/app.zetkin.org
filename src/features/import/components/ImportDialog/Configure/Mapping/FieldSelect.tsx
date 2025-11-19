@@ -33,7 +33,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
   optionAlreadySelected,
 }) => {
   const messages = useMessages(messageIds);
-  const { importID } = useImportID();
+  const { importID, updateImportID } = useImportID();
 
   const fieldOptionsSorted = [
     ...fieldOptions,
@@ -134,6 +134,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
             kind: ColumnKind.ID_FIELD,
             selected: true,
           });
+          updateImportID('id');
           onConfigureStart();
         } else if (event.target.value == 'email') {
           onChange({
