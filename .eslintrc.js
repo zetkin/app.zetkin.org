@@ -28,7 +28,12 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
-        '@typescript-eslint/no-unused-vars': ['error'],
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            caughtErrors: 'none',
+          },
+        ],
         '@typescript-eslint/member-ordering': [
           'error',
           {

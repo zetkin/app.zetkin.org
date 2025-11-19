@@ -27,7 +27,7 @@ test.describe('Task detail page', async () => {
       title: newTitle,
     });
 
-    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/tasks/1');
 
     // Open modal
     await page.click('header [data-testid=ZUIEllipsisMenu-menuActivator]');

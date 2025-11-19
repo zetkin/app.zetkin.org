@@ -31,7 +31,7 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     numLockedTargets,
     numBlocked,
   } = useEmailStats(orgId, emailId);
-  const endNumber = numTargetMatches - numBlocked.any ?? 0;
+  const endNumber = numTargetMatches - numBlocked.any;
 
   if (!email) {
     return null;

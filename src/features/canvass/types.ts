@@ -61,7 +61,7 @@ export type ZetkinLocationPostBody = Partial<Omit<ZetkinLocation, 'id'>>;
 export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 //TODO: use from theme object, when canvass is moved to ZUI
-export const householdColors = [
+export const householdHexColors = [
   '#F1A8A8',
   '#F7BC9E',
   '#FDDF91',
@@ -98,7 +98,88 @@ export const householdColors = [
   '#6D6D6D',
   '#000000',
 ] as const;
-export type HouseholdColor = typeof householdColors[number] | 'clear';
+export type HouseholdHexColor = typeof householdHexColors[number];
+
+export const householdColorNames = [
+  'lightRed',
+  'lightOrange',
+  'lightYellow',
+  'lightLime',
+  'lightGreen',
+  'lightTurquoise',
+  'lightAqua',
+  'lightBlue',
+  'lightIndigo',
+  'lightPurple',
+  'lightPink',
+  'mediumRed',
+  'mediumOrange',
+  'mediumYellow',
+  'mediumLime',
+  'mediumGreen',
+  'mediumTurqouise',
+  'mediumAqua',
+  'mediumBlue',
+  'mediumIndigo',
+  'mediumPurple',
+  'mediumPink',
+  'darkRed',
+  'darkOrange',
+  'darkYellow',
+  'darkLime',
+  'darkGreen',
+  'darkTurqouise',
+  'darkAqua',
+  'darkBlue',
+  'darkIndigo',
+  'darkPurple',
+  'darkPink',
+  'grey',
+  'black',
+] as const;
+export type HouseholdColorName = typeof householdColorNames[number];
+export type HouseholdColor = HouseholdHexColor | 'clear';
+
+export const hexColorToHouseholdColor: Record<
+  HouseholdHexColor,
+  HouseholdColorName
+> = {
+  '#000000': 'black',
+  '#014F77': 'darkBlue',
+  '#0284C7': 'mediumBlue',
+  '#187F81': 'darkAqua',
+  '#1F7F5C': 'darkTurqouise',
+  '#28D4D7': 'mediumAqua',
+  '#2F2A89': 'darkIndigo',
+  '#34D399': 'mediumTurqouise',
+  '#478837': 'darkGreen',
+  '#4F46E5': 'mediumIndigo',
+  '#661B86': 'darkPurple',
+  '#6D6D6D': 'grey',
+  '#73851A': 'darkLime',
+  '#77E25B': 'mediumGreen',
+  '#831747': 'darkPink',
+  '#841717': 'darkRed',
+  '#8C3507': 'darkOrange',
+  '#93E9EB': 'lightAqua',
+  '#977316': 'darkYellow',
+  '#99E9CC': 'lightTurquoise',
+  '#AA2DDF': 'mediumPurple',
+  '#B3DAEE': 'lightBlue',
+  '#BBF1AD': 'lightGreen',
+  '#C0DE2B': 'mediumLime',
+  '#CAC7F7': 'lightIndigo',
+  '#DB2777': 'mediumPink',
+  '#DC2626': 'mediumRed',
+  '#DFEF95': 'lightLime',
+  '#E5C0F5': 'lightPurple',
+  '#EA580C': 'mediumOrange',
+  '#F1A8A8': 'lightRed',
+  '#F1A9C9': 'lightPink',
+  '#F7BC9E': 'lightOrange',
+  '#FBBF24': 'mediumYellow',
+  '#FDDF91': 'lightYellow',
+};
 
 export type HouseholdWithColor = {
   color: HouseholdColor;

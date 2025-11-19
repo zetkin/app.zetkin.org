@@ -1,4 +1,4 @@
-import { Close, Edit } from '@mui/icons-material';
+import { Close, Delete, Edit } from '@mui/icons-material';
 import { Box, Divider, IconButton } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
@@ -8,8 +8,10 @@ type Props = {
   actions?: ReactNode;
   children?: ReactNode;
   color?: string | null;
+  fullWidth?: boolean;
   onBack?: () => void;
   onClose?: () => void;
+  onDelete?: () => void;
   onEdit?: () => void;
   subtitle?: string;
   title: string;
@@ -19,8 +21,10 @@ const PageBase: FC<Props> = ({
   actions,
   children,
   color,
+  fullWidth = false,
   onBack,
   onClose,
+  onDelete,
   onEdit,
   subtitle,
   title,
@@ -36,6 +40,11 @@ const PageBase: FC<Props> = ({
                 <Edit />
               </IconButton>
             )}
+            {onDelete && (
+              <IconButton onClick={onDelete}>
+                <Delete />
+              </IconButton>
+            )}
             {onClose && (
               <IconButton onClick={onClose}>
                 <Close />
@@ -48,7 +57,15 @@ const PageBase: FC<Props> = ({
         title={title}
       />
       <Divider />
-      <Box flexGrow={1} p={2} sx={{ overflowY: 'auto', position: 'relative' }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          overflowY: 'auto',
+          position: 'relative',
+          pt: 1,
+          px: fullWidth ? 0 : 2,
+        }}
+      >
         {children}
       </Box>
       {actions && (

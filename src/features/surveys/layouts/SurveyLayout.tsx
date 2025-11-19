@@ -5,9 +5,10 @@ import {
   ChatBubbleOutline,
   ContentCopy,
   Delete,
+  Groups,
   QuizOutlined,
 } from '@mui/icons-material';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
@@ -31,6 +32,8 @@ import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
+import { useApiClient } from 'core/hooks';
+import surveyToList from 'features/surveys/rpc/surveyToList';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -65,6 +68,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const originalOrgId = surveyFuture.data?.organization.id;
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
+  const apiClient = useApiClient();
 
   const roleAdmin =
     orgs.find((item) => item.organization.id === originalOrgId)?.role ===
@@ -120,6 +124,34 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     );
   };
 
+  const handleCreateList = useCallback(
+    async (folderId?: number) => {
+      try {
+        if (!surveyFuture.data) {
+          showSnackbar('error', messages.surveyToList.error());
+          return;
+        }
+
+        const view = await apiClient.rpc(surveyToList, {
+          firstNameColumnName: messages.submissions.firstNameColumn(),
+          folderId,
+          lastNameColumName: messages.submissions.lastNameColumn(),
+          orgId: parseInt(orgId),
+          surveyId: parseInt(surveyId),
+          title: messages.surveyToList.title({
+            surveyTitle: surveyFuture.data.title,
+          }),
+        });
+        await router.push(
+          `/organize/${view.organization.id}/people/lists/${view.id}`
+        );
+      } catch (e) {
+        showSnackbar('error', messages.surveyToList.error());
+      }
+    },
+    [apiClient, orgId, surveyId, router.push, surveyFuture.data]
+  );
+
   return (
     <TabbedLayout
       actionButtons={
@@ -167,6 +199,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           label: messages.layout.actions.move(),
           onSelect: () => setIsMoveDialogOpen(true),
           startIcon: <ArrowForward />,
+        },
+        {
+          label: messages.layout.actions.createList(),
+          onSelect: () => handleCreateList(),
+          startIcon: <Groups />,
         },
         {
           label: messages.layout.actions.delete(),

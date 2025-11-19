@@ -5,18 +5,23 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
 import PreviousCallsSearch from './PreviousCallsSearch';
+import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
   onClose: () => void;
+  onSwitch: (assignmentId: number) => void;
   open: boolean;
 };
 
 const CallSwitchModal: FC<CallSwitchModalProps> = ({
   assignment,
   onClose,
+  onSwitch,
   open,
 }) => {
+  const messages = useMessages(messageIds);
   const [debouncedInput, setDebouncedInput] = useState<string>('');
 
   return (
@@ -27,7 +32,7 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
       }}
       open={open}
       size="medium"
-      title="Call log"
+      title={messages.callLog.title()}
     >
       <Box
         sx={{
@@ -46,8 +51,10 @@ const CallSwitchModal: FC<CallSwitchModalProps> = ({
           }}
         />
         <PreviousCallsSection
-          assingmentId={assignment.id}
-          onCall={() => onClose()}
+          onCall={(assignmentId) => {
+            onSwitch(assignmentId);
+            onClose();
+          }}
           orgId={assignment.organization.id}
           searchTerm={debouncedInput}
         />

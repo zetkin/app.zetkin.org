@@ -7,6 +7,8 @@ import ZUIMarkdown from 'zui/ZUIMarkdown';
 import { LaneStep, ZetkinCall } from '../types';
 import ZUITabView from 'zui/components/ZUITabView';
 import { AboutContent } from './AboutSection';
+import { Msg, useMessages } from 'core/i18n';
+import messageIds from '../l10n/messageIds';
 
 type Props = {
   call: ZetkinCall | null;
@@ -14,7 +16,20 @@ type Props = {
   step: LaneStep;
 };
 
+const Instructions = ({ instructions }: { instructions: string }) => (
+  <ZUIText component="div">
+    {instructions ? (
+      <Box sx={{ paddingBottom: 10 }}>
+        <ZUIMarkdown markdown={instructions} />
+      </Box>
+    ) : (
+      <Msg id={messageIds.instructions.noInstructions} />
+    )}
+  </ZUIText>
+);
+
 const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
+  const messages = useMessages(messageIds);
   const [selectedTab, setSelectedTab] = useState<'instructions' | 'about'>(
     'instructions'
   );
@@ -42,20 +57,14 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
           fullWidth
           items={[
             {
-              label: 'Instructions',
-              render: () => (
-                <ZUIText component="div">
-                  {instructions ? (
-                    <ZUIMarkdown markdown={instructions} />
-                  ) : (
-                    "This assignment doesn't have instructions."
-                  )}
-                </ZUIText>
-              ),
+              label: messages.instructions.title(),
+              render: () => <Instructions instructions={instructions} />,
               value: 'instructions',
             },
             {
-              label: `About ${call.target.first_name}`,
+              label: messages.about.title({
+                name: call.target.first_name,
+              }),
               render: () => (
                 <Box
                   sx={{
@@ -83,16 +92,8 @@ const InstructionsSection: FC<Props> = ({ call, instructions, step }) => {
     <ZUISection
       borders={false}
       fullHeight
-      renderContent={() => (
-        <ZUIText component="div">
-          {instructions ? (
-            <ZUIMarkdown markdown={instructions} />
-          ) : (
-            "This assignment doesn't have instructions."
-          )}
-        </ZUIText>
-      )}
-      title={'Instructions'}
+      renderContent={() => <Instructions instructions={instructions} />}
+      title={messages.instructions.title()}
     />
   );
 };

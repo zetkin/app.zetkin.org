@@ -604,15 +604,17 @@ describe('useVisitReporting()', () => {
         }
       );
 
-      await act(async () => {
-        await result.current.reportHouseholdVisit(HOUSEHOLD_ID, [
+      await act(() =>
+        result.current.reportHouseholdVisit(HOUSEHOLD_ID, [
           { metric_id: 10001, response: 'yes' },
-        ]);
+        ])
+      );
 
-        await result.current.reportHouseholdVisit(HOUSEHOLD_ID + 1, [
+      await act(() =>
+        result.current.reportHouseholdVisit(HOUSEHOLD_ID + 1, [
           { metric_id: 10001, response: 'no' },
-        ]);
-      });
+        ])
+      );
 
       expect(apiClient.patch).toHaveBeenCalledTimes(2);
       expect(apiClient.patch).toHaveBeenNthCalledWith(

@@ -19,6 +19,22 @@ interface ZUIFuturesProps<G extends Record<string, unknown>> {
   loadingIndicator?: React.ReactElement;
 }
 
+export function isEmptyData<T>(future: IFuture<T>): boolean {
+  if (!future.data) {
+    return true;
+  }
+
+  if (
+    typeof future.data === 'object' &&
+    'length' in future.data &&
+    future.data.length === 0
+  ) {
+    return !('loaded' in future) || !future.loaded;
+  }
+
+  return false;
+}
+
 function ZUIFutures<G extends Record<string, unknown>>({
   children,
   errorIndicator,
@@ -47,7 +63,9 @@ function ZUIFutures<G extends Record<string, unknown>>({
   }
 
   if (
-    Object.values(futures).some((future) => future.isLoading && !future.data)
+    Object.values(futures).some(
+      (future) => future.isLoading && isEmptyData(future)
+    )
   ) {
     return (
       loadingIndicator || (

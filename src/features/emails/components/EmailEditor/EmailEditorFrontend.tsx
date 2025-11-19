@@ -160,7 +160,6 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
   }, []);
 
   const styleSheet: CSSStyleSheet = new CSSStyleSheet();
-  styleSheet.deleteRule;
 
   function prefixRule(rule: CSSRule): string {
     if (rule instanceof CSSStyleRule) {

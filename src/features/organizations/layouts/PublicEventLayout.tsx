@@ -56,6 +56,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                       start={new Date(removeOffset(event.start_time))}
                     />
                   </ZUIText>
+                  <ZUIText component="span">·</ZUIText>
                   <ZUIText variant="bodySmRegular">
                     {event.location?.title || (
                       <Msg id={messageIds.eventPage.noLocation} />
