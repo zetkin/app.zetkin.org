@@ -131,12 +131,6 @@ export default makeMessages('feat.import', {
       finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
         'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
       ),
-      finishedMappingIds: m<{
-        idField: 'ext_id' | 'id' | 'email';
-        numValues: number;
-      }>(
-        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} ext_id {External ID} email {Email}}'
-      ),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
         numPeople: number;

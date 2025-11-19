@@ -55,10 +55,7 @@ const MappingRow: FC<MappingRowProps> = ({
   const theme = useTheme();
   const column = useUIDataColumn(columnIndex);
 
-  const columnValuesMessage = useColumnValuesMessage(
-    column.numberOfEmptyRows,
-    column.uniqueValues
-  );
+  const makeColumnValuesMessage = useColumnValuesMessage();
 
   const getMappingRowButtonMessageId = () => {
     if (column.originalColumn.kind == ColumnKind.DATE) {
@@ -145,7 +142,10 @@ const MappingRow: FC<MappingRowProps> = ({
         {!isConfigurableColumn(column.originalColumn) && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
-              {columnValuesMessage}
+              {makeColumnValuesMessage(
+                column.numberOfEmptyRows,
+                column.uniqueValues
+              )}
             </Typography>
           </Box>
         )}
