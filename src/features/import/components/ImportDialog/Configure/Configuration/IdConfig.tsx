@@ -78,39 +78,44 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             <Msg
               id={messageIds.configuration.configure.ids.importIDDescription}
               values={{
-                importID: messages.configuration.configure.ids.field[idField](),
+                importID: idField,
               }}
             />
           </Typography>
         </Box>
         <Box ml={2}>
-          <Box display="flex" flexDirection="column" mb={1}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={importID == idField}
-                  onChange={() => {
-                    if (importID == idField) {
-                      updateImportID(null);
-                    } else {
-                      updateImportID(idField!);
-                    }
-                  }}
-                />
-              }
-              label={messages.configuration.configure.ids.importCheckboxLabel({
-                importID: messages.configuration.configure.ids.field[idField](),
-              })}
-            />
-            <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
-              <Msg
-                id={
-                  messageIds.configuration.configure.ids
-                    .importCheckboxDescription
+          {idField != 'id' && (
+            <Box display="flex" flexDirection="column" mb={1}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={importID == idField}
+                    onChange={() => {
+                      if (importID == idField) {
+                        updateImportID(null);
+                      } else {
+                        updateImportID(idField);
+                      }
+                    }}
+                  />
                 }
+                label={messages.configuration.configure.ids.importCheckboxLabel(
+                  {
+                    importID:
+                      messages.configuration.configure.ids.field[idField](),
+                  }
+                )}
               />
-            </Typography>
-          </Box>
+              <Typography color="text.secondary" sx={{ ml: 4 }} variant="body2">
+                <Msg
+                  id={
+                    messageIds.configuration.configure.ids
+                      .importCheckboxDescription
+                  }
+                />
+              </Typography>
+            </Box>
+          )}
           {importID == idField && (
             <Box display="flex" flexDirection="column">
               <FormControlLabel

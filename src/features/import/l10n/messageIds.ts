@@ -89,8 +89,8 @@ export default makeMessages('feat.import', {
           'Use {importID} as Import ID'
         ),
         importID: m('Import ID'),
-        importIDDescription: m<{ importID: string }>(
-          '{importID} can be used to find and idenfity people in Zetkin'
+        importIDDescription: m<{ importID: 'ext_id' | 'email' | 'id' }>(
+          '{importID, select, id {Zetkin ID will be used to find and identify people in Zetkin.} email {Email can be used to find and identify people in Zetkin.} other {External ID can be used to find and identify people in Zetkin.}}'
         ),
         skipRowDescription: m('No new people will be created'),
         wrongEmailFormatWarning: m(
