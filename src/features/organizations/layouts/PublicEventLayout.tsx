@@ -2,6 +2,7 @@
 
 import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
+import NextLink from 'next/link';
 
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -12,7 +13,6 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
-import ZUILink from 'zui/components/ZUILink';
 
 type Props = PropsWithChildren<{
   eventId: number;
@@ -56,6 +56,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                       start={new Date(removeOffset(event.start_time))}
                     />
                   </ZUIText>
+                  <ZUIText component="span">·</ZUIText>
                   <ZUIText variant="bodySmRegular">
                     {event.location?.title || (
                       <Msg id={messageIds.eventPage.noLocation} />
@@ -69,24 +70,21 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                 messages.eventPage.defaultTitle()
               }
               topLeftComponent={
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'inline-flex',
-                    gap: 1,
-                    justifyContent: 'center',
-                  }}
-                >
-                  <ZUIOrgLogoAvatar
-                    orgId={event.organization.id}
-                    size="small"
-                  />
-                  <ZUILink
-                    hoverUnderline={true}
-                    href={`/o/${event.organization.id}`}
-                    text={event.organization.title}
-                  />
-                </Box>
+                <NextLink href={`/o/${event.organization.id}`} passHref>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'inline-flex',
+                      gap: 1,
+                    }}
+                  >
+                    <ZUIOrgLogoAvatar
+                      orgId={event.organization.id}
+                      size="small"
+                    />
+                    <ZUIText>{event.organization.title}</ZUIText>
+                  </Box>
+                </NextLink>
               }
             />
           </Box>

@@ -2,9 +2,11 @@
 
 import { Box } from '@mui/material';
 import { FC, ReactNode, useContext } from 'react';
+import NextLink from 'next/link';
 import { CalendarMonth } from '@mui/icons-material';
 
 import { ZetkinCampaign } from 'utils/types/zetkin';
+import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
 import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
@@ -15,7 +17,6 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUILink from 'zui/components/ZUILink';
 
 type Props = {
   campaign: ZetkinCampaign;
@@ -72,14 +73,17 @@ const PublicProjectLayout: FC<Props> = ({ children, campaign }) => {
           subtitle={campaign.info_text}
           title={campaign.title}
           topLeftComponent={
-            <Box sx={{ alignItems: 'center', display: 'inline-flex', gap: 1 }}>
-              <ZUIOrgLogoAvatar orgId={campaign.organization.id} size="small" />
-              <ZUILink
-                hoverUnderline={true}
-                href={`/o/${campaign.organization.id}`}
-                text={campaign.organization.title}
-              />
-            </Box>
+            <NextLink href={`/o/${campaign.organization.id}`} passHref>
+              <Box
+                sx={{ alignItems: 'center', display: 'inline-flex', gap: 1 }}
+              >
+                <ZUIOrgLogoAvatar
+                  orgId={campaign.organization.id}
+                  size="small"
+                />
+                <ZUIText>{campaign.organization.title}</ZUIText>
+              </Box>
+            </NextLink>
           }
         />
       }
