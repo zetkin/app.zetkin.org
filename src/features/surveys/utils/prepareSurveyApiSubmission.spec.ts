@@ -65,7 +65,21 @@ describe('prepareSurveyApiSubmission()', () => {
 
   it('signs as the logged-in account when a logged-in user requests to sign as themself', () => {
     formData.set('sig', 'user');
-    const submission = prepareSurveyApiSubmission(formData, true);
+    const submission = prepareSurveyApiSubmission(
+      formData,
+      {
+        email: 'testuser@example.org',
+        first_name: 'test',
+        id: 0,
+        is_verifiend: true,
+        lang: null,
+        last_name: 'user',
+        phone: null,
+        phone_is_verified: true,
+        username: 'testuser',
+      },
+      true
+    );
     expect(submission.signature).toEqual('user');
   });
 

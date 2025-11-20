@@ -9,8 +9,8 @@ import {
 
 export default function prepareSurveyApiSubmission(
   formData: FormData,
-  user: ZetkinUser | null,
-  isConnectedToOrg: boolean
+  user?: ZetkinUser | null,
+  isConnectedToOrg?: boolean
 ): ZetkinSurveyApiSubmission {
   const responses: ZetkinSurveyQuestionResponse[] = [];
   const keys = uniq([...formData.keys()]);
