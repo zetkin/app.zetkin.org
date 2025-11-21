@@ -1,11 +1,11 @@
-import { Box, Checkbox, FormControlLabel, IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { Delete, Visibility, VisibilityOff } from '@mui/icons-material';
 import { FC, useContext } from 'react';
 
 import messageIds from 'features/surveys/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurveyMutations from 'features/surveys/hooks/useSurveyMutations';
-import { ELEMENT_TYPE, ZetkinSurveyElement } from 'utils/types/zetkin';
+import { ZetkinSurveyElement } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface DeleteHideButtonsProps {
@@ -25,23 +25,6 @@ const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({
 
   return (
     <Box display="flex">
-      {element.type == ELEMENT_TYPE.QUESTION && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              onChange={(ev) => {
-                updateElement(element.id, {
-                  question: {
-                    required: !element.question.required,
-                  },
-                });
-                ev.stopPropagation();
-              }}
-            />
-          }
-          label={`${messages.surveyForm.required()}`}
-        />
-      )}
       <IconButton
         onClick={(ev) => {
           updateElement(element.id, { hidden: !element.hidden });
