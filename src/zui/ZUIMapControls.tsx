@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
-import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
+import { Add, Remove, Home } from '@mui/icons-material';
 
 import { Latitude, Longitude, PointData } from 'features/areas/types';
+import { AnimatedGpsFixed } from 'zui/icons/AnimatedGpsFixed';
 
 type Props = {
   onFitBounds: () => void;
@@ -114,7 +115,7 @@ const ZUIMapControls: React.FC<Props> = ({
             }
           }}
         >
-          <GpsFixed />
+          <AnimatedGpsFixed pulsing={isAwaitingInitialPosition} />
         </Button>
       </ButtonGroup>
     </Box>
