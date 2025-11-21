@@ -140,6 +140,9 @@ export default makeMessages('feat.canvass', {
       create: m('Create location'),
       inputPlaceholder: m('Give the location a name'),
     },
+    errorWebGLinitialization: m(
+      "Your browser's WebGL failed to initialize or is disabled"
+    ),
   },
   selectArea: {
     noAreas: m('No areas available'),

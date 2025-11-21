@@ -22,16 +22,18 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
-
+import ZUIAlert from 'zui/components/ZUIAlert';
+import messageIds from '../../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 const BOUNDS_PADDING = 20;
 
 type Props = {
   assignment: ZetkinAreaAssignment;
   selectedArea: Zetkin2Area;
 };
-
 const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const env = useEnv();
+  const messages = useMessages(messageIds);
   const locations = useLocations(
     assignment.organization_id,
     assignment.id,
@@ -49,6 +51,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [webglSupported, setWebglSupported] = useState(true);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -303,142 +306,159 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           <GpsNotFixed />
         </Box>
       </Box>
-      <Map
-        ref={(map) => setMap(map?.getMap() ?? null)}
-        initialViewState={{
-          ...initialBounds,
-        }}
-        mapStyle={env.vars.MAPLIBRE_STYLE}
-        onClick={(ev) => {
-          ev.target.panTo(ev.lngLat, { animate: true });
-        }}
-        onLoad={(ev) => {
-          const map = ev.target;
-          const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-
-          percentages.forEach((visitPercentage, visitIndex) => {
-            const successPercentages = percentages.slice(0, visitIndex + 1);
-            successPercentages.forEach((successPercentage) => {
-              map.addImage(
-                `marker-${successPercentage}-${visitPercentage}`,
-                new MarkerImageRenderer(
-                  successPercentage,
-                  visitPercentage,
-                  false,
-                  oldTheme.palette.primary.main
-                )
-              );
-              map.addImage(
-                `marker-${successPercentage}-${visitPercentage}-selected`,
-                new MarkerImageRenderer(
-                  successPercentage,
-                  visitPercentage,
-                  true,
-                  oldTheme.palette.primary.main
-                )
-              );
-              map.addImage(
-                `cluster-${successPercentage}-${visitPercentage}`,
-                new ClusterImageRenderer(
-                  successPercentage,
-                  visitPercentage,
-                  oldTheme.palette.primary.main
-                )
-              );
-            });
-          });
-        }}
-        onMove={() => updateSelection()}
-        onMoveEnd={() => saveBounds()}
-        RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
-        style={{ height: '100%', width: '100%' }}
-      >
-        <Source data={areasGeoJson} id="areas" type="geojson">
-          <Layer
-            id="areaFill"
-            paint={{ 'fill-color': '#000', 'fill-opacity': 0.4 }}
-            source="areas"
-            type="fill"
-          />
-        </Source>
-        <Source
-          cluster
-          clusterMaxZoom={14}
-          clusterProperties={{
-            successPercentage: ['+', ['get', 'successPercentage']],
-            visitPercentage: ['+', ['get', 'visitPercentage']],
+      {webglSupported ? (
+        <Map
+          ref={(map) => setMap(map?.getMap() ?? null)}
+          initialViewState={{
+            ...initialBounds,
           }}
-          clusterRadius={50}
-          data={locationsGeoJson}
-          id="locations"
-          type="geojson"
+          mapStyle={env.vars.MAPLIBRE_STYLE}
+          onClick={(ev) => {
+            ev.target.panTo(ev.lngLat, { animate: true });
+          }}
+          onError={(ev) => {
+            const parsedErrorMsg = JSON.parse(ev.error?.message);
+            const errorType = parsedErrorMsg.type as string;
+            if (errorType == 'webglcontextcreationerror') {
+              setWebglSupported(false);
+            }
+          }}
+          onLoad={(ev) => {
+            const map = ev.target;
+            const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+            percentages.forEach((visitPercentage, visitIndex) => {
+              const successPercentages = percentages.slice(0, visitIndex + 1);
+              successPercentages.forEach((successPercentage) => {
+                map.addImage(
+                  `marker-${successPercentage}-${visitPercentage}`,
+                  new MarkerImageRenderer(
+                    successPercentage,
+                    visitPercentage,
+                    false,
+                    oldTheme.palette.primary.main
+                  )
+                );
+                map.addImage(
+                  `marker-${successPercentage}-${visitPercentage}-selected`,
+                  new MarkerImageRenderer(
+                    successPercentage,
+                    visitPercentage,
+                    true,
+                    oldTheme.palette.primary.main
+                  )
+                );
+                map.addImage(
+                  `cluster-${successPercentage}-${visitPercentage}`,
+                  new ClusterImageRenderer(
+                    successPercentage,
+                    visitPercentage,
+                    oldTheme.palette.primary.main
+                  )
+                );
+              });
+            });
+          }}
+          onMove={() => updateSelection()}
+          onMoveEnd={() => saveBounds()}
+          RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
+          style={{ height: '100%', width: '100%' }}
         >
-          <Layer
-            filter={['!=', 'cluster', true]}
-            id="locationMarkers"
-            layout={{
-              'icon-allow-overlap': true,
-              'icon-image': ['get', 'icon'],
-              'icon-offset': [0, -15],
-              'symbol-sort-key': ['get', 'z'],
+          <Source data={areasGeoJson} id="areas" type="geojson">
+            <Layer
+              id="areaFill"
+              paint={{ 'fill-color': '#000', 'fill-opacity': 0.4 }}
+              source="areas"
+              type="fill"
+            />
+          </Source>
+          <Source
+            cluster
+            clusterMaxZoom={14}
+            clusterProperties={{
+              successPercentage: ['+', ['get', 'successPercentage']],
+              visitPercentage: ['+', ['get', 'visitPercentage']],
             }}
-            type="symbol"
-          />
-          <Layer
-            filter={['==', 'cluster', true]}
-            id="clusterMarkers"
-            layout={{
-              'icon-allow-overlap': true,
-              'icon-image': [
-                'concat',
-                'cluster-',
-                [
-                  'to-string',
-                  expressionToRoundAveragePercentage('successPercentage'),
-                ],
-                '-',
-                [
-                  'to-string',
-                  expressionToRoundAveragePercentage('visitPercentage'),
-                ],
-              ],
-              'icon-offset': [0, 0],
-            }}
-            type="symbol"
-          />
-          <Layer
-            filter={['==', 'cluster', true]}
-            id="clusterLabels"
-            layout={{
-              'text-field': [
-                'concat',
-                [
-                  'to-string',
+            clusterRadius={50}
+            data={locationsGeoJson}
+            id="locations"
+            type="geojson"
+          >
+            <Layer
+              filter={['!=', 'cluster', true]}
+              id="locationMarkers"
+              layout={{
+                'icon-allow-overlap': true,
+                'icon-image': ['get', 'icon'],
+                'icon-offset': [0, -15],
+                'symbol-sort-key': ['get', 'z'],
+              }}
+              type="symbol"
+            />
+            <Layer
+              filter={['==', 'cluster', true]}
+              id="clusterMarkers"
+              layout={{
+                'icon-allow-overlap': true,
+                'icon-image': [
+                  'concat',
+                  'cluster-',
                   [
-                    'round',
-                    [
-                      '/',
-                      ['number', ['get', 'visitPercentage']],
-                      ['get', 'point_count'],
-                    ],
+                    'to-string',
+                    expressionToRoundAveragePercentage('successPercentage'),
+                  ],
+                  '-',
+                  [
+                    'to-string',
+                    expressionToRoundAveragePercentage('visitPercentage'),
                   ],
                 ],
-                ['literal', '%'],
-              ],
-              'text-size': 13,
-            }}
-            paint={{
-              'text-color': [
-                'case',
-                ['>', ['get', 'visitPercentage'], 0],
-                '#000000',
-                '#888888',
-              ],
-            }}
-            type="symbol"
+                'icon-offset': [0, 0],
+              }}
+              type="symbol"
+            />
+            <Layer
+              filter={['==', 'cluster', true]}
+              id="clusterLabels"
+              layout={{
+                'text-field': [
+                  'concat',
+                  [
+                    'to-string',
+                    [
+                      'round',
+                      [
+                        '/',
+                        ['number', ['get', 'visitPercentage']],
+                        ['get', 'point_count'],
+                      ],
+                    ],
+                  ],
+                  ['literal', '%'],
+                ],
+                'text-size': 13,
+              }}
+              paint={{
+                'text-color': [
+                  'case',
+                  ['>', ['get', 'visitPercentage'], 0],
+                  '#000000',
+                  '#888888',
+                ],
+              }}
+              type="symbol"
+            />
+          </Source>
+        </Map>
+      ) : (
+        <Box data-testid="WebGL-error" role="alert">
+          <ZUIAlert
+            severity="error"
+            title={messages.map.errorWebGLinitialization()}
           />
-        </Source>
-      </Map>
+        </Box>
+      )}
+
       <CanvassMapOverlays
         assignment={assignment}
         isCreating={isCreating}
