@@ -224,28 +224,15 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
   };
 
-  const onGeoLocate = (
-    lngLat: PointData,
-    accuracy: number | null,
-    tracking: boolean
-  ) => {
-    if (tracking) {
-      setUserLocation(lngLat);
-      setUserAccuracy(accuracy);
-      if (!isTrackingRef.current) {
-        followUserRef.current = true;
-        isTrackingRef.current = true;
-      }
-
-      if (followUserRef.current) {
-        map?.jumpTo({ center: lngLat });
-      }
-    } else {
-      setUserLocation(null);
-      setUserAccuracy(null);
-      isTrackingRef.current = false;
-      followUserRef.current = false;
+  const onGeoLocate = (lngLat: PointData, accuracy: number | null) => {
+    setUserLocation(lngLat);
+    setUserAccuracy(accuracy);
+    if (!isTrackingRef.current) {
+      followUserRef.current = true;
+      isTrackingRef.current = true;
     }
+
+    map?.jumpTo({ center: lngLat });
   };
 
   const updateSelection = useCallback(() => {
