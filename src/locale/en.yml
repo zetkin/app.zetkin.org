@@ -1565,9 +1565,7 @@ feat:
         haveSelect:
           in: have
           notin: have not
-        inputString: '{addRemoveSelect} people who {haveSelect} {bookedSelect} for
-          events in {campaignSelect} of {activitySelect} at {locationSelect}
-          {timeFrame}'
+        inputString: ''
         locationSelect:
           any: any location
           location: location "{location}"
@@ -2059,7 +2057,6 @@ feat:
       error: Something went wrong when submitting your answers. Please try again
         later.
       policy:
-        link: https://zetkin.org/privacy
         text: Click to read the full Zetkin Privacy Policy
       required: required
       sign:
@@ -2727,8 +2724,6 @@ zui:
       url: Please add a valid URL
   dataTableSearch:
     button: Search
-    helpText: Type at least {minSearchLength} characters
-    idSearchHelpText: Type an ID (numbers only)
     placeholder: Search this table
     placeholderWithIdSearch: 'Search - use # for IDs, e.g. type #123'
     title: Search

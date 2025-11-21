@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.campaigns', {
   activitiesOverview: {
@@ -10,6 +10,12 @@ export default makeMessages('feat.campaigns', {
     extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
     goToActivities: m('See all upcoming activities.'),
     noActivities: m('There are no activities this week.'),
+    noDescription: {
+      addOneNow: m('Add one now.'),
+      text: m<{ addOneNow: ReactElement }>(
+        'No description has been added to this project yet. {addOneNow}'
+      ),
+    },
     nothingTomorrow: m('Nothing planned for tomorrow'),
     startsTomorrow: m('starts tomorrow'),
     subtitles: {
@@ -161,12 +167,15 @@ export default makeMessages('feat.campaigns', {
   },
   noManager: m('No Project Manager'),
   publicProjectPage: {
+    calendarLinkCopied: m('Successfully copied calendar link'),
+    copyIcsUrl: m('Copy calendar subscription URL'),
     eventList: {
       emptyList: {
         message: m('Could not find any events'),
         removeFiltersButton: m('Clear filters'),
       },
       filterButtonLabels: {
+        locations: m<{ count: number }>('{count} locations'),
         thisWeek: m('This week'),
         today: m('Today'),
         tomorrow: m('Tomorrow'),
@@ -222,4 +231,12 @@ export default makeMessages('feat.campaigns', {
     },
   },
   tasks: m('Tasks'),
+  urlCard: {
+    nowAccepting: m('Now accepting sign-ups at this link'),
+    open: m('Open for sign-ups'),
+    preview: m('Preview project'),
+    previewPortal: m('Preview project in activist portal'),
+    visitPortal: m('Visit project in activist portal'),
+    willAccept: m('Will accept sign-ups at this link'),
+  },
 });

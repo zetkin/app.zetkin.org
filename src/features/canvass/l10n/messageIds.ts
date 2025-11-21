@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.canvass', {
   default: {
@@ -9,6 +9,56 @@ export default makeMessages('feat.canvass', {
     location: m('Untitled location'),
   },
   households: {
+    bulkEditHouseholds: {
+      floorLabel: m('Edit floor'),
+      header: m<{ numHouseholds: number }>(
+        'Edit {numHouseholds, plural, one {1 household} other {# households}}'
+      ),
+      saveButtonLabel: m<{ numHouseholds: number }>(
+        'Save {numHouseholds, plural, one {1 household} other {# households}}'
+      ),
+    },
+    colorPicker: {
+      colorNames: {
+        black: m('Black'),
+        darkAqua: m('Dark aqua'),
+        darkBlue: m('Dark blue'),
+        darkGreen: m('Dark green'),
+        darkIndigo: m('Dark indigo'),
+        darkLime: m('Dark lime'),
+        darkOrange: m('Dark orange'),
+        darkPink: m('Dark pink'),
+        darkPurple: m('Dark purple'),
+        darkRed: m('Dark red'),
+        darkTurqouise: m('Dark turqouise'),
+        darkYellow: m('Dark yellow'),
+        grey: m('Grey'),
+        lightAqua: m('Light aqua'),
+        lightBlue: m('Light blue'),
+        lightGreen: m('Light green'),
+        lightIndigo: m('Light indigo'),
+        lightLime: m('Light lime'),
+        lightOrange: m('Light orange'),
+        lightPink: m('Light pink'),
+        lightPurple: m('Light purple'),
+        lightRed: m('Light red'),
+        lightTurquoise: m('Light turquoise'),
+        lightYellow: m('Light yellow'),
+        mediumAqua: m('Medium aqua'),
+        mediumBlue: m('Medium blue'),
+        mediumGreen: m('Medium green'),
+        mediumIndigo: m('Medium indigo'),
+        mediumLime: m('Medium lime'),
+        mediumOrange: m('Medium orange'),
+        mediumPink: m('Medium pink'),
+        mediumPurple: m('Medium purple'),
+        mediumRed: m('Medium red'),
+        mediumTurqouise: m('Medium turqouise'),
+        mediumYellow: m('Medium yellow'),
+      },
+      inputLabel: m('Edit household color'),
+      noColor: m('No color'),
+    },
     createMultiple: {
       createButtonLabel: m<{ numHouseholds: number }>(
         'Create {numHouseholds, plural, one {1 household} other {# households}}'
@@ -17,7 +67,13 @@ export default makeMessages('feat.canvass', {
       numberOfFloorsInput: m('Number of floors'),
       numberOfHouseholdsInput: m('Households per floor'),
     },
-    edit: {
+    delete: {
+      title: m('Delete household'),
+      warningText: m(
+        'Are you sure you want to delete the household? It can not be undone.'
+      ),
+    },
+    editSingleHousehold: {
       floorLabel: m('Edit floor'),
       header: m<{ title: string }>('Edit {title}'),
       saveButtonLabel: m('Save'),
@@ -35,11 +91,16 @@ export default makeMessages('feat.canvass', {
       subtitle: m<{ floorNumber: number }>('Floor {floorNumber}'),
       wasVisited: m('This household has been visited in this assignment'),
     },
+    stackItem: {
+      detailsButtonLabel: m('Details'),
+      visitButtonLabel: m('Visit'),
+    },
   },
   instructions: {
     areas: m('Areas'),
     instructionsHeader: m('Instructions'),
     ready: m('You are ready to go'),
+    selectArea: m('Select area'),
     start: m('Begin assignment'),
     visitedHouseholds: m('Households visited'),
     visitedLocations: m('Locations visited'),
@@ -80,6 +141,9 @@ export default makeMessages('feat.canvass', {
       inputPlaceholder: m('Give the location a name'),
     },
   },
+  selectArea: {
+    noAreas: m('No areas available'),
+  },
   sidebar: {
     instructions: {
       title: m('Instructions'),
@@ -94,8 +158,12 @@ export default makeMessages('feat.canvass', {
       },
       header: {
         households: m('Households'),
+        householdsSuccessful: m('Successfully visited'),
+        householdsVisited: m('Visited households'),
         locations: m('Locations'),
+        successfulVisits: m('Successful Visits'),
         title: m('Progress'),
+        visits: m('Visits'),
       },
       session: {
         team: m('Team'),

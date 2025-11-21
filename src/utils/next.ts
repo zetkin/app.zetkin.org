@@ -19,7 +19,7 @@ import { EnvVars } from 'core/env/Environment';
 import { omitUndefined } from './omitUndefined';
 
 //TODO: Create module definition and revert to import.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
 
 type RegularProps = {
@@ -207,9 +207,11 @@ export const scaffold =
         ...result.props,
         envVars: omitUndefined({
           FEAT_AREAS: process.env.FEAT_AREAS,
+          FEAT_OFFICIALS: process.env.FEAT_OFFICIALS,
           FEAT_TASKS: process.env.FEAT_TASKS,
           INSTANCE_OWNER_HREF: process.env.INSTANCE_OWNER_HREF,
           INSTANCE_OWNER_NAME: process.env.INSTANCE_OWNER_NAME,
+          MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
           TILESERVER:
             process.env.TILESERVER || 'https://tile.openstreetmap.org',

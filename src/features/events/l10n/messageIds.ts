@@ -1,4 +1,4 @@
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.events', {
   addPerson: {
@@ -85,6 +85,7 @@ export default makeMessages('feat.events', {
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
+    columnSignedUp: m('Signed up'),
     contactTooltip: m('Contact Person'),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
@@ -181,6 +182,11 @@ export default makeMessages('feat.events', {
     open: m('Open'),
     scheduled: m('Scheduled'),
     unknown: m('Unknown'),
+  },
+  filterButtonLabels: {
+    eventTypes: m<{ numEventTypes: number; singleEventType: string }>(
+      '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}} other {# event types}}'
+    ),
   },
   list: {
     events: m('Events'),
@@ -291,5 +297,13 @@ export default makeMessages('feat.events', {
     ),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
+  },
+  urlCard: {
+    nowAccepting: m('Now accepting sign-ups at this link'),
+    open: m('Open for sign-ups'),
+    preview: m('Preview event'),
+    previewPortal: m('Preview event in activist portal'),
+    visitPortal: m('Visit event in activist portal'),
+    willAccept: m('Will accept sign-ups at this link'),
   },
 });

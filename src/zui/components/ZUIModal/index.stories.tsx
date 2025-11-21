@@ -88,3 +88,35 @@ export const NoChildrenAndNoOnclose: Story = {
     );
   },
 };
+
+export const NoButtons: Story = {
+  render: function Render(args) {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <>
+        <ZUIButton
+          label="Open modal"
+          onClick={() => setOpen(true)}
+          variant="primary"
+        />
+        <ZUIModal
+          {...args}
+          onClose={() => setOpen(false)}
+          open={open}
+          title="Modal title"
+        >
+          <Box
+            sx={{
+              backgroundColor: 'peachpuff',
+              height: '1000px',
+              width: '100%',
+            }}
+          >
+            <ZUIText>Children go here</ZUIText>
+          </Box>
+        </ZUIModal>
+      </>
+    );
+  },
+};

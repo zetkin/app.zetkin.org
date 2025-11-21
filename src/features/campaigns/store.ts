@@ -8,6 +8,8 @@ import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 type CampaignEventFilters = {
   customDatesToFilterBy: DateRange<Dayjs>;
   dateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+  eventTypesToFilterBy: string[];
+  geojsonToFilterBy: GeoJSON.Feature[];
 };
 
 export interface CampaignsStoreSlice {
@@ -23,6 +25,8 @@ const initialCampaignsState: CampaignsStoreSlice = {
   filters: {
     customDatesToFilterBy: [null, null],
     dateFilterState: null,
+    eventTypesToFilterBy: [],
+    geojsonToFilterBy: [],
   },
   recentlyCreatedCampaign: null,
 };

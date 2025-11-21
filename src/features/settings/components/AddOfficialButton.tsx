@@ -93,9 +93,11 @@ const AddOfficialButton = ({
             }}
             name="person"
             onChange={(person) => {
-              addAdmin
-                ? updateRole(person.id, 'admin')
-                : updateRole(person.id, 'organizer');
+              if (addAdmin) {
+                updateRole(person.id, 'admin');
+              } else {
+                updateRole(person.id, 'organizer');
+              }
             }}
             placeholder={messages.officials.addPerson.placeholder({
               list: addAdmin

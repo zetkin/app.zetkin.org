@@ -6,13 +6,15 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import useHousehold from 'features/canvass/hooks/useHousehold';
 import { ZetkinLocation } from 'features/areaAssignments/types';
+import HouseholdColorPicker from '../../HouseholdColorPicker';
+import { HouseholdColor } from 'features/canvass/types';
 
 type Props = {
   householdId: number;
   location: ZetkinLocation;
   onBack: () => void;
   onClose: () => void;
-  onSave: (title: string, level: number) => void;
+  onSave: (title: string, level: number, color: HouseholdColor) => void;
 };
 
 const EditHouseholdPage: FC<Props> = ({
@@ -31,53 +33,75 @@ const EditHouseholdPage: FC<Props> = ({
 
   const [title, setTitle] = useState(household.title || '');
   const [floor, setFloor] = useState(household.level ?? 0);
+  const [color, setcolor] = useState(household.color);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setTitle(household.title || '');
     setFloor(household.level ?? 0);
+    setcolor(household.color);
   }, [household]);
 
   const nothingHasBeenEdited =
-    title == household.title && floor == household.level;
+    title == household.title &&
+    floor == household.level &&
+    color == household.color;
 
   return (
     <PageBase
       actions={
         <Button
           disabled={nothingHasBeenEdited || title.length === 0}
-          onClick={() => {
-            onSave(title, floor || 0);
+          loading={isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+            await onSave(title, floor || 0, color);
+            setIsLoading(false);
           }}
           variant="contained"
         >
-          <Msg id={messageIds.households.edit.saveButtonLabel} />
+          <Msg id={messageIds.households.editSingleHousehold.saveButtonLabel} />
         </Button>
       }
+      color={household.color}
       onBack={onBack}
       onClose={onClose}
-      title={messages.households.edit.header({
+      subtitle={
+        household.level
+          ? messages.households.single.subtitle({
+              floorNumber: household.level,
+            })
+          : messages.default.floor()
+      }
+      title={messages.households.editSingleHousehold.header({
         title: household.title,
       })}
     >
       <form
-        onSubmit={(ev) => {
+        onSubmit={async (ev) => {
+          setIsLoading(true);
           ev.preventDefault();
-          onSave(title, floor);
+          await onSave(title, floor, color);
+          setIsLoading(false);
         }}
       >
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
             fullWidth
-            label={messages.households.edit.titleLabel()}
+            label={messages.households.editSingleHousehold.titleLabel()}
             onChange={(ev) => setTitle(ev.target.value)}
             value={title}
           />
           <TextField
             fullWidth
-            label={messages.households.edit.floorLabel()}
+            label={messages.households.editSingleHousehold.floorLabel()}
             onChange={(ev) => setFloor(parseInt(ev.target.value))}
             type="number"
             value={floor}
+          />
+          <HouseholdColorPicker
+            onChange={(newColor) => setcolor(newColor)}
+            selectedColor={color}
           />
         </Box>
       </form>

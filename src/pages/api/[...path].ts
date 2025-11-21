@@ -1,5 +1,3 @@
-//TODO: Enable eslint rules and fix errors
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { getIronSession } from 'iron-session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -18,6 +16,7 @@ export const config = {
 };
 
 //TODO: Create module definition and revert to import.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Z = require('zetkin');
 
 interface HttpVerbMethod {

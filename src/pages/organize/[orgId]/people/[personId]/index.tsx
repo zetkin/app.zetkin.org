@@ -22,6 +22,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -77,6 +78,17 @@ const PersonProfilePage: PageWithLayout = () => {
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
+        <Grid size={12}>
+          <ZUIFuture future={fieldsFuture}>
+            {(fields) => (
+              <PersonLngLatMap
+                customFields={fields}
+                height="30vh"
+                person={person}
+              />
+            )}
+          </ZUIFuture>
+        </Grid>
         <Grid size={{ lg: 4, xs: 12 }}>
           <ZUIFuture future={fieldsFuture}>
             {(fields) => (
@@ -108,7 +120,7 @@ const PersonProfilePage: PageWithLayout = () => {
             )}
           </ZUIFuture>
         </Grid>
-        {journeysFuture.data?.length && (
+        {!!journeysFuture.data?.length && (
           <Grid size={{ lg: 4, xs: 12 }}>
             <PersonJourneysCard orgId={orgId} personId={personId} />
           </Grid>

@@ -103,7 +103,7 @@ export default function useHydratedSurveySubmission(
       elements.push({
         header: elem.text_block.header,
         id: elem.id,
-        text: elem.text_block.content,
+        text: elem.text_block.content || '',
         type: ELEM_TYPE.TEXT_BLOCK,
       });
     } else {

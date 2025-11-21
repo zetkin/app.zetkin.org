@@ -1,10 +1,10 @@
 import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   HouseholdPatchBody,
-  Zetkin2Household,
+  HouseholdWithColor,
   ZetkinLocationPatchBody,
 } from '../types';
-import { householdCreated, householdUpdated } from '../store';
+import { householdCreated, householdDeleted, householdUpdated } from '../store';
 import { locationUpdated } from '../../areaAssignments/store';
 import createHouseholds from '../rpc/createHouseholds/client';
 import { ZetkinLocation } from 'features/areaAssignments/types';
@@ -17,8 +17,8 @@ export default function useLocationMutations(
   const dispatch = useAppDispatch();
 
   return {
-    addHousehold: async (data: Partial<Zetkin2Household>) => {
-      const household = await apiClient.post<Zetkin2Household>(
+    addHousehold: async (data: Partial<HouseholdWithColor>) => {
+      const household = await apiClient.post<HouseholdWithColor>(
         `/api2/orgs/${orgId}/locations/${locationId}/households`,
         data
       );
@@ -34,12 +34,18 @@ export default function useLocationMutations(
 
       created.forEach((household) => dispatch(householdCreated(household)));
     },
+    deleteHousehold: async (householdId: number) => {
+      await apiClient.delete(
+        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`
+      );
+      dispatch(householdDeleted([locationId, householdId]));
+    },
     updateHousehold: async (householdId: number, data: HouseholdPatchBody) => {
       const household = await apiClient.patch<
-        Zetkin2Household,
+        HouseholdWithColor,
         HouseholdPatchBody
       >(
-        `/api2/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
+        `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`,
         data
       );
       dispatch(householdUpdated([locationId, household]));

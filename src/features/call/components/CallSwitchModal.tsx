@@ -5,52 +5,56 @@ import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import PreviousCallsSection from './PreviousCallsSection';
 import ZUIModal from 'zui/components/ZUIModal';
 import PreviousCallsSearch from './PreviousCallsSearch';
+import messageIds from '../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type CallSwitchModalProps = {
   assignment: ZetkinCallAssignment;
   onClose: () => void;
-  onSwitchCall: () => void;
+  onSwitch: (assignmentId: number) => void;
   open: boolean;
 };
 
 const CallSwitchModal: FC<CallSwitchModalProps> = ({
   assignment,
-  onSwitchCall,
   onClose,
+  onSwitch,
   open,
 }) => {
+  const messages = useMessages(messageIds);
   const [debouncedInput, setDebouncedInput] = useState<string>('');
 
   return (
     <ZUIModal
-      open={open}
-      primaryButton={{
-        label: 'Close',
-        onClick: () => {
-          onClose();
-        },
+      onClose={() => {
+        setDebouncedInput('');
+        onClose();
       }}
-      title="Your calls"
+      open={open}
+      size="medium"
+      title={messages.callLog.title()}
     >
       <Box
-        display="flex"
-        flexDirection="column"
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
           overflowX: 'hidden',
+          paddingRight: 1,
+          paddingTop: 2,
           width: '100%',
         }}
       >
-        <Box mb={1} mt={3}>
-          <PreviousCallsSearch
-            onDebouncedChange={(value) => {
-              setDebouncedInput(value);
-            }}
-          />
-        </Box>
+        <PreviousCallsSearch
+          onDebouncedChange={(value) => {
+            setDebouncedInput(value);
+          }}
+        />
         <PreviousCallsSection
-          assingmentId={assignment.id}
-          onClose={onClose}
-          onSwitchCall={onSwitchCall}
+          onCall={(assignmentId) => {
+            onSwitch(assignmentId);
+            onClose();
+          }}
           orgId={assignment.organization.id}
           searchTerm={debouncedInput}
         />

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 
 import EditPersonDialog from './EditPersonDialog';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIDate from 'zui/ZUIDate';
@@ -78,7 +78,11 @@ const PersonDetailsCard: React.FunctionComponent<{
   });
 
   const customFieldsConfig = customFields
-    .filter((field) => field.type !== CUSTOM_FIELD_TYPE.JSON)
+    .filter(
+      (field) =>
+        field.type != CUSTOM_FIELD_TYPE.JSON &&
+        field.type != CUSTOM_FIELD_TYPE.LNGLAT
+    )
     .map((field) => {
       // Object type is filtered above
       let value: string | React.ReactNode = person[field.slug] as

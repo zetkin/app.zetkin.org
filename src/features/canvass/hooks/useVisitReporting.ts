@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   MetricBulkResponse,
   MetricResponse,
@@ -9,17 +7,20 @@ import {
   ZetkinLocationVisit,
   ZetkinLocationVisitPostBody,
 } from '../types';
+import { locationLoaded } from 'features/areaAssignments/store';
 import {
-  householdVisitCreated,
-  locationLoaded,
-} from 'features/areaAssignments/store';
-import { visitCreated, visitUpdated } from '../store';
+  visitCreated,
+  householdVisitCreated as householdVisitCreated,
+  visitUpdated,
+} from '../store';
 import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment';
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useLocationVisits from './useLocationVisits';
 import useUser from 'core/hooks/useUser';
 import summarizeMetrics from '../utils/summarizeMetrics';
 import { ZetkinLocation } from 'features/areaAssignments/types';
+import submitHouseholdVisits from '../rpc/submitHouseholdVisits';
+import useLocationHouseholdVisits from './useLocationHouseholdVisits';
 
 type VisitByHouseholdIdMap = Record<
   number,
@@ -34,6 +35,10 @@ export type UseVisitReportingReturn = {
   lastVisitByHouseholdId: VisitByHouseholdIdMap;
   reportHouseholdVisit: (
     householdId: number,
+    responses: MetricResponse[]
+  ) => Promise<void>;
+  reportHouseholdVisits: (
+    householdsId: number[],
     responses: MetricResponse[]
   ) => Promise<void>;
   reportLocationVisit: (
@@ -51,39 +56,26 @@ export default function useVisitReporting(
   const dispatch = useAppDispatch();
   const assignment = useAreaAssignment(orgId, assignmentId).data;
   const locationVisits = useLocationVisits(orgId, assignmentId, locationId);
+  const apiVisits = useLocationHouseholdVisits(orgId, assignmentId, locationId);
   const user = useUser();
-  const visitsByHouseholdId = useAppSelector(
-    (state) => state.areaAssignments.visitsByHouseholdId
-  );
   const [lastVisitByHouseholdId, setLastVisitByHouseholdId] =
     useLocalStorage<VisitByHouseholdIdMap>(
       `visitsInAssignmentAndLocation-${assignmentId}-${locationId}`,
       {}
     );
 
-  useEffect(() => {
-    const updated: VisitByHouseholdIdMap = {
-      ...lastVisitByHouseholdId,
-    };
-
-    Object.entries(visitsByHouseholdId).forEach(([id, list]) => {
-      const sortedItems = list.items.sort(
-        (a, b) =>
-          new Date(b.data?.created ?? 0).getTime() -
-          new Date(a.data?.created ?? 0).getTime()
-      );
-
-      if (sortedItems[0]?.data) {
-        const lastVisit = sortedItems[0].data;
-        updated[parseInt(id)] = {
-          created: lastVisit.created,
-          metrics: lastVisit.metrics,
-        };
+  apiVisits.forEach((visit) => {
+    const existingVisit = lastVisitByHouseholdId[visit.household_id];
+    if (existingVisit) {
+      const existingVisitTimestamp = new Date(existingVisit.created);
+      const apiVisitTimestamp = new Date(visit.created);
+      if (apiVisitTimestamp > existingVisitTimestamp) {
+        lastVisitByHouseholdId[visit.household_id] = visit;
       }
-    });
-
-    setLastVisitByHouseholdId(updated);
-  }, [visitsByHouseholdId]);
+    } else {
+      lastVisitByHouseholdId[visit.household_id] = visit;
+    }
+  });
 
   const now = new Date();
   const currentLocationVisit =
@@ -163,7 +155,64 @@ export default function useVisitReporting(
           }
         );
 
-        dispatch(householdVisitCreated(visit));
+        dispatch(householdVisitCreated([locationId, visit]));
+        await refreshLocationStats();
+      }
+    },
+    async reportHouseholdVisits(
+      householdIds: number[],
+      responses: MetricResponse[]
+    ) {
+      if (assignment?.reporting_level == 'location') {
+        const nowStr = new Date().toISOString();
+        const updated: VisitByHouseholdIdMap = { ...lastVisitByHouseholdId };
+        householdIds.forEach((householdId) => {
+          updated[householdId] = {
+            created: nowStr,
+            metrics: responses,
+          };
+        });
+
+        setLastVisitByHouseholdId(updated);
+
+        const visitData = summarizeMetrics(
+          Object.entries(updated).map(([id, info]) => ({
+            household_id: parseInt(id),
+            metrics: info.metrics,
+          }))
+        );
+
+        if (currentLocationVisit) {
+          const visit = await apiClient.patch<
+            ZetkinLocationVisit,
+            ZetkinLocationVisitPostBody
+          >(
+            `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits/${currentLocationVisit.id}`,
+            visitData
+          );
+          dispatch(visitUpdated(visit));
+        } else {
+          const visit = await apiClient.post<
+            ZetkinLocationVisit,
+            ZetkinLocationVisitPostBody
+          >(
+            `/api2/orgs/${orgId}/area_assignments/${assignmentId}/locations/${locationId}/visits`,
+            visitData
+          );
+          dispatch(visitCreated(visit));
+        }
+
+        await refreshLocationStats();
+      } else {
+        const result = await apiClient.rpc(submitHouseholdVisits, {
+          assignmentId: assignmentId,
+          households: householdIds,
+          orgId: orgId,
+          responses: responses,
+        });
+        result.visits.forEach((visit) =>
+          dispatch(householdVisitCreated([locationId, visit]))
+        );
         await refreshLocationStats();
       }
     },

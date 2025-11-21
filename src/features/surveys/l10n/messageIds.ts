@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.surveys', {
   addBlocks: {
@@ -108,7 +108,9 @@ export default makeMessages('feat.surveys', {
   },
   layout: {
     actions: {
+      createList: m('Create list from submissions'),
       delete: m('Delete'),
+      duplicate: m('Duplicate'),
       move: m('Move'),
       publish: m('Publish survey'),
       unpublish: m('Unpublish survey'),
@@ -193,6 +195,11 @@ export default makeMessages('feat.surveys', {
     ),
     title: m('Add email address'),
   },
+  surveyDuplicated: {
+    error: m('Error: Could not duplicate survey'),
+    success: m('Your survey has been duplicated.'),
+    title: m('Survey Duplicated'),
+  },
   surveyEditor: {
     required: m('Require the user to answer this question'),
   },
@@ -202,7 +209,6 @@ export default makeMessages('feat.surveys', {
       'Something went wrong when submitting your answers. Please try again later.'
     ),
     policy: {
-      link: m('https://zetkin.org/privacy'),
       text: m('Click to read the full Zetkin Privacy Policy'),
     },
     required: m('required'),
@@ -219,6 +225,7 @@ export default makeMessages('feat.surveys', {
     },
   },
   surveyFormSubmitted: {
+    retakeSurvey: m('Retake survey'),
     text: m<{ title: string }>(
       'Your responses to “{title}” have been submitted.'
     ),
@@ -238,6 +245,12 @@ export default makeMessages('feat.surveys', {
         'Sign as {person} with email {email}'
       ),
     },
+  },
+  surveyToList: {
+    error: m(
+      'Could not create list from survey submissions due to unknown error.'
+    ),
+    title: m<{ surveyTitle: string }>('Submissions from {surveyTitle}'),
   },
   tabs: {
     overview: m('Overview'),

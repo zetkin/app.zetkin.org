@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.organizations', {
   allEventsList: {
@@ -9,6 +9,7 @@ export default makeMessages('feat.organizations', {
       removeFiltersButton: m('Clear filters'),
     },
     filterButtonLabels: {
+      locations: m<{ count: number }>('{count} locations'),
       organizations: m<{ numOrgs: number }>(
         '{numOrgs, plural,=0 {Organizations} =1 {1 organization} other {# organizations}}'
       ),
@@ -34,6 +35,9 @@ export default makeMessages('feat.organizations', {
     loading: m('Loading...'),
     noLocation: m('No physical location'),
     partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
+    participatingInfo: m<{ participatingCount: number }>(
+      '{participatingCount, plural, =1 {# person is} other {# persons are}} participating'
+    ),
     today: m('Today'),
   },
   gen3: {
@@ -48,14 +52,24 @@ export default makeMessages('feat.organizations', {
       privacyPolicy: m('Privacy policy'),
     },
     header: {
+      calendarLinkCopied: m('Successfully copied calendar link'),
       connect: m('Connect'),
+      copyIcsUrl: m('Copy calendar subscription URL'),
       follow: m('Follow'),
       login: m('Login & connect'),
+      organize: m('Organize'),
       unfollow: m('Unfollow'),
     },
     map: {
       viewInList: m('View in list'),
       viewInMap: m('View in map'),
+    },
+    menu: {
+      allEvents: m('All events'),
+      logout: m('Logout'),
+      myActivities: m('My activities'),
+      myZetkin: m('My Zetkin'),
+      settings: m('Settings'),
     },
     tabs: {
       calendar: m('Calendar'),
@@ -72,6 +86,11 @@ export default makeMessages('feat.organizations', {
     ),
     myPageButton: m('Go to activist portal'),
     title: m('You do not have organizer access'),
+  },
+  overview: {
+    suborgs: {
+      title: m('Sub-organizations'),
+    },
   },
   page: {
     title: m('Select organization:'),

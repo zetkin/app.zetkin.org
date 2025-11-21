@@ -144,12 +144,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         disableClearable
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
-          const inputStartWithCapital = inputValue
-            ? `${inputValue[0].toUpperCase()}${inputValue.substring(
-                1,
-                inputValue.length
-              )}`
-            : '';
+          const sanitized = inputValue.trim();
 
           const filteredResult: EventTypeOption[] = [
             ...searchedResults.map((result) => {
@@ -172,7 +167,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
 
           filteredResult.push({
             id: 'CREATE',
-            title: inputStartWithCapital,
+            title: sanitized,
           });
           return inputValue ? filteredResult : options;
         }}

@@ -20,14 +20,14 @@ import useToggleDebounce from 'utils/hooks/useToggleDebounce';
 export type SurveyResponseViewCell = {
   submission_id: number;
   submitted: string;
-  text: string;
+  text: string | null;
 }[];
 
 export default class SurveyResponseColumnType
   implements IColumnType<SurveyResponseViewColumn, SurveyResponseViewCell>
 {
   cellToString(cell: SurveyResponseViewCell): string {
-    return cell?.length ? cell[0].text : '';
+    return cell?.length && cell[0].text ? cell[0].text : '';
   }
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
@@ -36,21 +36,21 @@ export default class SurveyResponseColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string[], v2: string[]) => {
-        const lastInV1 = v1[v1.length - 1];
-        const lastInV2 = v2[v2.length - 1];
-
-        if (v1.length == 0 || lastInV1 == '') {
-          return 1;
-        } else if (v2.length == 0 || lastInV2 == '') {
-          return -1;
-        } else {
-          return lastInV1.localeCompare(lastInV2);
-        }
-      },
+      sortComparator: (v1: string, v2: string) => -v1.localeCompare(v2),
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyResponseViewCell = params.row[params.field];
-        return cell?.map((response) => response.text) || [];
+        if (!cell?.length) {
+          return '';
+        }
+
+        const sortedSubmissions = cell.concat().sort((sub0, sub1) => {
+          const d0 = new Date(sub0.submitted);
+          const d1 = new Date(sub1.submitted);
+          return d1.getTime() - d0.getTime();
+        });
+        const mostRecentSubmission = sortedSubmissions[0];
+
+        return mostRecentSubmission.text || '';
       },
       width: 250,
     };
@@ -126,14 +126,12 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
               width: 400,
             });
           }}
-          submissions={cell
-            .filter((sub) => sub.text)
-            .map((sub, index) => ({
-              id: sub.submission_id,
-              matchingContent:
-                index == 0 ? getEllipsedString(sub.text, 300) : null,
-              submitted: sub.submitted,
-            }))}
+          submissions={cell.map((sub, index) => ({
+            id: sub.submission_id,
+            matchingContent:
+              index == 0 && sub.text ? getEllipsedString(sub.text, 300) : null,
+            submitted: sub.submitted,
+          }))}
         />
       </Box>
     </Box>

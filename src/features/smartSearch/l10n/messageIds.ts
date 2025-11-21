@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.smartSearch', {
   buttonLabels: {
@@ -53,6 +53,18 @@ export default makeMessages('feat.smartSearch', {
       },
     },
     filters: {
+      all: {
+        description: m(
+          'Find people based on what sub-organizations they are in.'
+        ),
+        title: m('Everyone in a sub-organization'),
+      },
+      area: {
+        description: m(
+          'Search based on location fields inside or outside of a geographical area'
+        ),
+        title: m('Location (area)'),
+      },
       call_history: {
         description: m('Find people who were called, reached or tried.'),
         title: m('Call history'),
@@ -155,6 +167,57 @@ export default makeMessages('feat.smartSearch', {
         true: m('a list of all the people in the organization'),
       },
     },
+    allInSuborg: {
+      examples: {
+        one: m(
+          'Add everyone who is in the specific sub-organization Littleton Local Branch'
+        ),
+        two: m('Remove everyone who is in any sub-organization.'),
+      },
+      inputString: {
+        any: m<{
+          addRemoveSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>('{addRemoveSelect} everyone who is in {suborgScopeSelect}.'),
+        multiple: m<{
+          addRemoveSelect: ReactElement;
+          multipleSuborgsSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>(
+          '{addRemoveSelect} everyone who is in {suborgScopeSelect}: {multipleSuborgsSelect}'
+        ),
+        single: m<{
+          addRemoveSelect: ReactElement;
+          singleSuborgSelect: ReactElement;
+          suborgScopeSelect: ReactElement;
+        }>(
+          '{addRemoveSelect} everyone who is in {suborgScopeSelect} {singleSuborgSelect}'
+        ),
+      },
+      suborgScopeSelect: {
+        any: m('any sub-organization'),
+        multiple: m('any of the following sub-organizations'),
+        single: m('the specific sub-organization'),
+      },
+    },
+    area: {
+      examples: {
+        one: m('Add people whose Home location is within the area Malmö'),
+        two: m('Remove people whose HQ address is outside the area Copenhagen'),
+      },
+      inputString: m<{
+        addRemoveSelect: ReactElement;
+        areaSelect: ReactElement;
+        lnglatFieldSelect: ReactElement;
+        withinOutsideSelect: ReactElement;
+      }>(
+        '{addRemoveSelect} people whose {lnglatFieldSelect} is {withinOutsideSelect} the area {areaSelect}'
+      ),
+      slice: {
+        in: m('within'),
+        out: m('outside'),
+      },
+    },
     callBlocked: {
       inputString: m<{ addRemoveSelect: ReactElement }>(
         '{addRemoveSelect} people who are blocked from calling for any reason'
@@ -215,10 +278,10 @@ export default makeMessages('feat.smartSearch', {
       },
       examples: {
         one: m(
-          "Add people who have signed up for events in any project of any type at location 'Dorfplatz' at any point in time"
+          "Add people who have signed up and showed up for events in any project of any type at location 'Dorfplatz' at any point in time"
         ),
         two: m(
-          "Remove people who have not been booked for events in any project of type 'Put up posters' at any location before today."
+          "Remove people who have not been booked no matter their attendance for events in any project of type 'Put up posters' at any location before today."
         ),
       },
       haveSelect: {
@@ -232,15 +295,22 @@ export default makeMessages('feat.smartSearch', {
         campaignSelect: ReactElement;
         haveSelect: ReactElement;
         locationSelect: ReactElement;
+        statusSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
       ),
       locationSelect: {
         any: m('any location'),
         location: m<{ location: ReactElement | string }>(
           'location "{location}"'
         ),
+      },
+      statusSelect: {
+        any: m('no matter their attendance'),
+        attended: m('and showed up'),
+        cancelled: m('and cancelled'),
+        noshow: m('and did not show up'),
       },
     },
     emailBlacklist: {
@@ -555,6 +625,10 @@ export default makeMessages('feat.smartSearch', {
             querySelect: ReactElement;
             titleSelect: ReactElement;
           }>('{querySelect} of call assignment "{titleSelect}"'),
+          email_target: m<{
+            querySelect: ReactElement;
+            titleSelect: ReactElement;
+          }>('{querySelect} of email "{titleSelect}"'),
           none: m<{ querySelect: ReactElement; titleSelect: ReactElement }>(
             '{querySelect}'
           ),
@@ -570,6 +644,9 @@ export default makeMessages('feat.smartSearch', {
           callassignment_target: m<{ queryTitle: ReactElement | string }>(
             'the target group of call assignment "{queryTitle}"'
           ),
+          email_target: m<{
+            queryTitle: ReactElement | string;
+          }>('the target group of email "{queryTitle}"'),
           none: m<{ queryTitle: ReactElement | string }>('{queryTitle}'),
           standalone: m<{ queryTitle: ReactElement | string }>(
             'Smart Search query "{queryTitle}"'
@@ -578,12 +655,14 @@ export default makeMessages('feat.smartSearch', {
         selectLabel: {
           callassignment_goal: m('the purpose group'),
           callassignment_target: m('the target group'),
+          email_target: m('the target group'),
           none: m('a Smart Search query'),
           standalone: m('Smart Search query'),
         },
         selectOptions: {
           callassignment_goal: m('the purpose group of a call assignment'),
           callassignment_target: m('the target group of a call assignment'),
+          email_target: m('the target group of an email'),
           none: m(
             "This organization doesn't have any call assignments or Smart Search queries yet."
           ),

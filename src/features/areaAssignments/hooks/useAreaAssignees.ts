@@ -2,6 +2,7 @@ import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import { ZetkinAreaAssignee } from '../types';
 import { assigneesLoad, assigneesLoaded } from '../store';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useAreaAssignees(orgId: number, areaAssId: number) {
   const apiClient = useApiClient();
@@ -15,8 +16,12 @@ export default function useAreaAssignees(orgId: number, areaAssId: number) {
 
     actionOnSuccess: (data) => assigneesLoaded([areaAssId, data]),
     loader: () =>
-      apiClient.get<ZetkinAreaAssignee[]>(
-        `/api2/orgs/${orgId}/area_assignments/${areaAssId}/assignees`
+      fetchAllPaginated(
+        (page) =>
+          apiClient.get<ZetkinAreaAssignee[]>(
+            `/api2/orgs/${orgId}/area_assignments/${areaAssId}/assignees?size=100&page=${page}`
+          ),
+        100
       ),
   });
 }

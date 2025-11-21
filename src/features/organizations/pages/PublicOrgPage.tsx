@@ -36,27 +36,33 @@ import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';
 import useOrganization from '../hooks/useOrganization';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {
   orgId: number;
 };
 
 const PublicOrgPage: FC<Props> = ({ orgId }) => {
+  const isMobile = useIsMobile();
   const intl = useIntl();
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const organization = useOrganization(orgId).data;
   const user = useUser();
   const dispatch = useAppDispatch();
-  const { allEvents, filteredEvents, getDateRange } =
+  const { allEvents, getDateRange, locationEvents, eventTypeFilter } =
     useFilteredOrgEvents(orgId);
-  const { customDatesToFilterBy, dateFilterState, orgIdsToFilterBy } =
-    useAppSelector((state) => state.organizations.filters);
+  const {
+    customDatesToFilterBy,
+    dateFilterState,
+    geojsonToFilterBy,
+    orgIdsToFilterBy,
+  } = useAppSelector((state) => state.organizations.filters);
 
   const [postAuthEvent, setPostAuthEvent] = useState<ZetkinEvent | null>(null);
   const [includeSubOrgs, setIncludeSubOrgs] = useState(false);
   const [drawerContent, setDrawerContent] = useState<
-    'orgs' | 'calendar' | null
+    'orgs' | 'calendar' | 'eventTypes' | null
   >(null);
 
   const orgs = [
@@ -67,7 +73,11 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
     ).values(),
   ].sort((a, b) => a.title.localeCompare(b.title));
 
-  const isFiltered = orgIdsToFilterBy.length || !!dateFilterState;
+  const isFiltered =
+    !!dateFilterState ||
+    eventTypeFilter.isFiltered ||
+    !!geojsonToFilterBy.length ||
+    !!orgIdsToFilterBy.length;
 
   const getDatesFilteredBy = (end: Dayjs | null, start: Dayjs) => {
     if (!end) {
@@ -91,6 +101,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   }, []);
 
   const moreThanOneOrgHasEvents = orgIdsWithEvents.length > 1;
+
+  let locationFilterLabel = '';
+  if (geojsonToFilterBy.length > 1) {
+    locationFilterLabel = messages.allEventsList.filterButtonLabels.locations({
+      count: geojsonToFilterBy.length,
+    });
+  } else if (geojsonToFilterBy.length === 1) {
+    locationFilterLabel = geojsonToFilterBy[0]?.properties?.location
+      ?.title as string;
+  }
 
   const filters = [
     {
@@ -158,15 +178,44 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           },
         ]
       : []),
-  ].sort((a, b) => {
-    if (a.active && !b.active) {
-      return -1;
-    } else if (!a.active && b.active) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+    ...(eventTypeFilter.shouldShowFilter
+      ? [
+          {
+            active: eventTypeFilter.isFiltered,
+            key: 'eventTypes',
+            label: eventTypeFilter.filterButtonLabel,
+            onClick: () => setDrawerContent('eventTypes'),
+          },
+        ]
+      : []),
+  ]
+    .concat(
+      geojsonToFilterBy.length
+        ? [
+            {
+              active: true,
+              key: 'location',
+              label: locationFilterLabel,
+              onClick: () => {
+                dispatch(
+                  filtersUpdated({
+                    geojsonToFilterBy: [],
+                  })
+                );
+              },
+            },
+          ]
+        : []
+    )
+    .sort((a, b) => {
+      if (a.active && !b.active) {
+        return -1;
+      } else if (!a.active && b.active) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
   const topOrgEvents = allEvents.filter(
     (event) => event.organization.id == orgId
@@ -175,7 +224,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const events =
     includeSubOrgs || topOrgEvents.length == 0 ? allEvents : topOrgEvents;
 
-  const eventsByDate = filteredEvents.reduce<
+  const eventsByDate = locationEvents.reduce<
     Record<string, ZetkinEventWithStatus[]>
   >((dates, event) => {
     const eventDate = event.start_time.slice(0, 10);
@@ -197,7 +246,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
   const dates = Object.keys(eventsByDate).sort();
   const indexForSubOrgsButton = Math.min(1, dates.length - 1);
   const showSubOrgBlurb =
-    orgIdsToFilterBy.length == 0 && allEvents.length > events.length;
+    orgIdsToFilterBy.length == 0 && locationEvents.length > events.length;
 
   const showNoEventsBlurb = !allEvents.length;
 
@@ -233,22 +282,26 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           gap={1}
           maxWidth="100%"
           padding={1}
-          sx={{ overflowX: 'auto' }}
+          sx={{
+            ...(isMobile ? { overflowX: 'auto' } : { flexWrap: 'wrap' }),
+          }}
         >
           {isFiltered && (
             <ZUIFilterButton
               active={true}
               circular
               label={Clear}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
+                    geojsonToFilterBy: [],
                     orgIdsToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypeFilter();
+              }}
             />
           )}
           {filters.map((filter) => (
@@ -261,7 +314,7 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           ))}
         </Box>
       )}
-      {filteredEvents.length == 0 && (
+      {locationEvents.length == 0 && (
         <Box
           alignItems="center"
           display="flex"
@@ -278,15 +331,16 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
           {isFiltered && (
             <ZUIButton
               label={messages.allEventsList.emptyList.removeFiltersButton()}
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   filtersUpdated({
                     customDatesToFilterBy: [null, null],
                     dateFilterState: null,
                     orgIdsToFilterBy: [],
                   })
-                )
-              }
+                );
+                eventTypeFilter.clearEventTypeFilter();
+              }}
               variant="secondary"
             />
           )}
@@ -434,6 +488,26 @@ const PublicOrgPage: FC<Props> = ({ orgId }) => {
                       })
                     );
                   }
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </ZUIDrawerModal>
+      <ZUIDrawerModal
+        onClose={() => setDrawerContent(null)}
+        open={drawerContent == 'eventTypes'}
+      >
+        <List>
+          {eventTypeFilter.eventTypeLabels.map((eventType) => (
+            <ListItem key={eventType} sx={{ justifyContent: 'space-between' }}>
+              <Box alignItems="center" display="flex">
+                <ZUIText>{eventType}</ZUIText>
+              </Box>
+              <Switch
+                checked={eventTypeFilter.getIsCheckedEventTypeLabel(eventType)}
+                onChange={() => {
+                  eventTypeFilter.toggleEventTypeLabel(eventType);
                 }}
               />
             </ListItem>

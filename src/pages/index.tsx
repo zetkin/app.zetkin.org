@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 export default function Home(): JSX.Element {
   const router = useRouter();
-  router.push('/organize');
+  router.push('/my');
 
   return (
     <>

@@ -1,12 +1,13 @@
 import useRemoteList from 'core/hooks/useRemoteList';
-import { Zetkin2Household } from '../types';
+import { HouseholdWithColor } from '../types';
 import { useApiClient, useAppSelector } from 'core/hooks';
 import { householdsLoad, householdsLoaded } from '../store';
+import { fetchAllPaginated } from 'utils/fetchAllPaginated';
 
 export default function useHouseholds(
   orgId: number,
   locationId: number
-): Zetkin2Household[] {
+): HouseholdWithColor[] {
   const apiClient = useApiClient();
   const list = useAppSelector(
     (state) => state.canvass.householdsByLocationId[locationId]
@@ -14,9 +15,13 @@ export default function useHouseholds(
   return useRemoteList(list, {
     actionOnLoad: () => householdsLoad(locationId),
     actionOnSuccess: (data) => householdsLoaded([locationId, data]),
-    loader: () =>
-      apiClient.get<Zetkin2Household[]>(
-        `/api2/orgs/${orgId}/locations/${locationId}/households`
+    loader: async () =>
+      fetchAllPaginated<HouseholdWithColor>(
+        (page) =>
+          apiClient.get(
+            `/beta/orgs/${orgId}/locations/${locationId}/households?size=100&page=${page}`
+          ),
+        100
       ),
   });
 }

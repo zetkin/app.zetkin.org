@@ -21,8 +21,16 @@ import { renderEmailDef } from 'features/emails/rpc/renderEmail/server';
 import { createCallAssignmentDef } from 'features/callAssignments/rpc/createCallAssignment';
 import { getJoinFormEmbedDataDef } from 'features/joinForms/rpc/getJoinFormEmbedData';
 import { createHouseholdsDef } from 'features/canvass/rpc/createHouseholds/server';
+import { submitHouseholdVisitsDef } from 'features/canvass/rpc/submitHouseholdVisits';
 import { getAllEventsDef } from 'features/events/rpc/getAllEvents';
 import { connectToOrgDef } from 'features/organizations/rpc/connectToOrg';
+import { submitSurveysDef } from 'features/call/rpc/submitSurveysAndUpdateCall';
+import { editHouseholdsDef } from 'features/canvass/rpc/editHouseholds';
+import { loadLocationHouseholdVisitsDef } from 'features/canvass/rpc/loadLocationHouseholdVisits';
+import { getSuborgsWithStatsDef } from 'features/organizations/rpc/getSuborgsWithStats';
+import { getSuborgWithStatsDef } from 'features/organizations/rpc/getSuborgWithStats';
+import { surveyToListDef } from 'features/surveys/rpc/surveyToList';
+import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -32,6 +40,8 @@ export function createRPCRouter() {
   rpcRouter.register(createNewViewRouteDef);
   rpcRouter.register(copyViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
+  rpcRouter.register(duplicateSurveyDef);
+  rpcRouter.register(surveyToListDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
   rpcRouter.register(getEventStatsDef);
@@ -51,6 +61,12 @@ export function createRPCRouter() {
   rpcRouter.register(getJoinFormEmbedDataDef);
   rpcRouter.register(createHouseholdsDef);
   rpcRouter.register(connectToOrgDef);
+  rpcRouter.register(submitSurveysDef);
+  rpcRouter.register(submitHouseholdVisitsDef);
+  rpcRouter.register(editHouseholdsDef);
+  rpcRouter.register(loadLocationHouseholdVisitsDef);
+  rpcRouter.register(getSuborgsWithStatsDef);
+  rpcRouter.register(getSuborgWithStatsDef);
 
   return rpcRouter;
 }

@@ -29,6 +29,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import Link from 'next/link';
 
 import messageIds from '../l10n/messageIds';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
@@ -43,7 +44,7 @@ import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS } from 'utils/featureFlags';
+import { AREAS, OFFICIALS } from 'utils/featureFlags';
 import oldTheme from 'theme';
 
 const drawerWidth = 300;
@@ -97,6 +98,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const [searchString, setSearchString] = useState('');
   const organizationFuture = useOrganization(orgId);
   const hasAreas = useFeature(AREAS, orgId);
+  const hasSettings = useFeature(OFFICIALS, orgId);
 
   const handleExpansion = () => {
     setChecked(!checked);
@@ -271,6 +273,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               <SearchDialog
                 activator={(openDialog) => (
                   <Tooltip
+                    arrow
                     placement="right"
                     title={
                       !open ? messages.organizeSidebar['search']() : undefined
@@ -290,6 +293,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 if (name == 'geography' && !hasAreas) {
                   return null;
                 }
+                if (name == 'settings' && !hasSettings) {
+                  return null;
+                }
 
                 return (
                   <NextLink
@@ -299,6 +305,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     passHref
                   >
                     <Tooltip
+                      arrow
                       placement="right"
                       title={
                         !open ? messages.organizeSidebar[name]() : undefined
@@ -338,18 +345,28 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       width: '48px',
                     }}
                   >
-                    <ZUIUserAvatar
-                      personId={user.id}
-                      size={open ? 'sm' : 'md'}
-                    />
-                    <Typography
-                      sx={{
-                        display: open ? 'flex' : 'none',
-                        marginLeft: 1,
-                      }}
+                    <Tooltip
+                      arrow
+                      placement={open ? 'top' : 'right'}
+                      title={messages.organizeSidebar.myPagesInfoText()}
                     >
-                      {user.first_name}
-                    </Typography>
+                      <Link href="/my">
+                        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                          <ZUIUserAvatar
+                            personId={user.id}
+                            size={open ? 'sm' : 'md'}
+                          />
+                          <Typography
+                            sx={{
+                              display: open ? 'flex' : 'none',
+                              marginLeft: 1,
+                            }}
+                          >
+                            {user.first_name}
+                          </Typography>
+                        </Box>
+                      </Link>
+                    </Tooltip>
                   </Box>
                   <Box
                     sx={{
@@ -360,11 +377,18 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                       items={[
                         {
-                          label: (
-                            <Typography>
-                              {messages.organizeSidebar.signOut()}
-                            </Typography>
-                          ),
+                          href: '/my',
+                          label:
+                            messages.organizeSidebar.myPagesMenuItemLabel(),
+                        },
+                        {
+                          divider: true,
+                          href: '/my/settings',
+                          label:
+                            messages.organizeSidebar.mySettingsMenuItemLabel(),
+                        },
+                        {
+                          label: messages.organizeSidebar.signOut(),
                           onSelect: () => {
                             logOut();
                           },

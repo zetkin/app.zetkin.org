@@ -83,7 +83,11 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
     });
 
   return (
-    <ClickAwayListener {...clickAwayProps}>
+    <ClickAwayListener
+      mouseEvent="onMouseDown"
+      onClickAway={clickAwayProps.onClickAway}
+      touchEvent="onTouchStart"
+    >
       <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
@@ -122,10 +126,10 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               label={messages.blocks.open.textFieldType()}
               margin="normal"
               onChange={(event) => {
-                handleSelect(event),
-                  setMultiline(
-                    event.target.value === FIELDTYPE.MULTILINE ? true : false
-                  );
+                handleSelect(event);
+                setMultiline(
+                  event.target.value === FIELDTYPE.MULTILINE ? true : false
+                );
               }}
               select
               SelectProps={{

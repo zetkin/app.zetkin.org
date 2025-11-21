@@ -1,7 +1,8 @@
 import { Box, SxProps } from '@mui/material';
 import { Layer, Map, Source } from '@vis.gl/react-maplibre';
 import { Map as MapType } from 'maplibre-gl';
-import { FC, PropsWithChildren, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useCallback, useMemo, useState } from 'react';
+import { GeoJSON } from 'geojson';
 
 import notEmpty from 'utils/notEmpty';
 import ZUIMapControls from 'zui/ZUIMapControls';
@@ -10,14 +11,49 @@ import { markerImage } from '../utils/markerImage';
 import { pointsToBounds } from 'utils/mapUtils';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import { Latitude, Longitude } from 'features/areas/types';
+import { getGeoJSONFeaturesAtLocations } from '../../map/utils/locationFiltering';
+import useMapMarkerClick from '../hooks/useMapMarkerClick';
 
 export const ActivistPortalEventMap: FC<
   PropsWithChildren<{
     events: ZetkinEventWithStatus[];
+    locationFilter: GeoJSON.Feature[];
+    setLocationFilter: (geojsonToFilterBy: GeoJSON.Feature[]) => void;
     sx?: SxProps;
   }>
-> = ({ children, events, sx }) => {
+> = ({ children, events, locationFilter, setLocationFilter, sx }) => {
   const [map, setMap] = useState<MapType | null>(null);
+
+  const onMarkerClick = useCallback(
+    (geojsonFeatures: GeoJSON.Feature[]) => {
+      const bounds = pointsToBounds(
+        geojsonFeatures.map((feature) => {
+          if (feature.geometry.type === 'Point') {
+            return [
+              feature.geometry.coordinates[1] as Longitude,
+              feature.geometry.coordinates[0] as Latitude,
+            ];
+          } else {
+            return [0 as Longitude, 0 as Latitude];
+          }
+        })
+      );
+
+      if (map && bounds) {
+        map.fitBounds(bounds, {
+          animate: true,
+          duration: 1200,
+          maxZoom: 16,
+          padding: 20,
+        });
+      }
+
+      setLocationFilter(geojsonFeatures);
+    },
+    [map, setLocationFilter]
+  );
+
+  useMapMarkerClick(map, onMarkerClick);
 
   const env = useEnv();
   const bounds = useMemo(
@@ -26,10 +62,7 @@ export const ActivistPortalEventMap: FC<
         events
           .map((event) => event.location)
           .filter(notEmpty)
-          .map((location) => [
-            location.lng as Longitude,
-            location.lat as Latitude,
-          ])
+          .map((location) => [location.lng, location.lat])
       ) ?? undefined,
     [events]
   );
@@ -43,11 +76,14 @@ export const ActivistPortalEventMap: FC<
           .reduce((acc, location) => {
             const key = `${location.lat},${location.lng}`;
             if (!acc[key]) {
-              acc[key] = { count: 0, lat: location.lat, lng: location.lng };
+              acc[key] = {
+                count: 0,
+                ...location,
+              };
             }
             acc[key].count += 1;
             return acc;
-          }, {} as Record<string, { count: number; lat: number; lng: number }>)
+          }, {} as Record<string, { count: number; id: number; lat: Latitude; lng: Longitude }>)
       ),
     [events]
   );
@@ -56,7 +92,14 @@ export const ActivistPortalEventMap: FC<
     return {
       features:
         eventCountByLocation.map((location) => {
-          const icon = `marker-${location.count}`;
+          const features = getGeoJSONFeaturesAtLocations(
+            locationFilter,
+            location
+          );
+
+          const icon = `marker-${location.count}-${
+            features.length > 0 ? 'highlight' : 'regular'
+          }`;
 
           return {
             geometry: {
@@ -65,13 +108,14 @@ export const ActivistPortalEventMap: FC<
             },
             properties: {
               icon,
+              location,
             },
             type: 'Feature',
           };
         }) ?? [],
       type: 'FeatureCollection',
     };
-  }, [events]);
+  }, [events, locationFilter]);
 
   return (
     <Box
@@ -97,7 +141,7 @@ export const ActivistPortalEventMap: FC<
         ref={(map) => setMap(map?.getMap() ?? null)}
         initialViewState={{
           bounds,
-          fitBoundsOptions: { padding: 20 },
+          fitBoundsOptions: { padding: 200 },
         }}
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
@@ -109,8 +153,12 @@ export const ActivistPortalEventMap: FC<
           new Set(eventCountByLocation.map(({ count }) => count)).forEach(
             (count) => {
               map.addImage(
-                `marker-${count}`,
-                markerImage('#000000', count.toString())
+                `marker-${count}-regular`,
+                markerImage('#000000', false, count.toString())
+              );
+              map.addImage(
+                `marker-${count}-highlight`,
+                markerImage('#000000', true, count.toString())
               );
             }
           );

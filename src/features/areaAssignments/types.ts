@@ -7,6 +7,7 @@ export type AreaAssigneeInfo = {
 
 export type ZetkinMetric = {
   area_assignment_id: number;
+  created: string;
   defines_success: boolean;
   description?: string;
   id: number;
@@ -56,6 +57,8 @@ export type Household = {
 };
 
 export type ZetkinLocation = {
+  created: string;
+  created_by_user_id: number | null;
   description: string;
   id: number;
   latitude: number;
@@ -68,6 +71,7 @@ export type ZetkinLocation = {
   num_visits: number;
   organization_id: number;
   title: string;
+  type: 'assignment' | 'event';
 };
 
 export type ZetkinAreaAssignee = {

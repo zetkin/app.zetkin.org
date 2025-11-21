@@ -1,3 +1,6 @@
+import { DateRange } from '@mui/x-date-pickers-pro';
+import { Dayjs } from 'dayjs';
+
 import {
   ZetkinEvent,
   ZetkinEventResponse,
@@ -37,7 +40,47 @@ export type ZetkinCallTarget = ZetkinPerson & {
   tags: ZetkinTag[];
 };
 
-export type ZetkinCallPatchBody = Pick<
+export type ZetkinCallPatchResponse = Omit<ZetkinCall, 'target'> & {
+  target: {
+    alt_phone: string | null;
+    id: number;
+    name: string;
+    phone: string;
+  };
+};
+
+export type Step =
+  | 'callBack'
+  | 'callerLog'
+  | 'couldTalk'
+  | 'failureReason'
+  | 'leftMessage'
+  | 'organizerAction'
+  | 'organizerLog'
+  | 'successOrFailure'
+  | 'summary'
+  | 'wrongNumber';
+
+export type Report = {
+  callBackAfter: string | null;
+  callerLog: string;
+  completed: boolean;
+  failureReason:
+    | 'lineBusy'
+    | 'noPickup'
+    | 'wrongNumber'
+    | 'notAvailable'
+    | null;
+  leftMessage: boolean;
+  organizerActionNeeded: boolean;
+  organizerLog: string;
+  step: Step;
+  success: boolean;
+  targetCouldTalk: boolean;
+  wrongNumber: 'altPhone' | 'phone' | 'both' | null;
+};
+
+export type CallReport = Pick<
   ZetkinCall,
   'message_to_organizer' | 'notes' | 'organizer_action_needed' | 'state'
 > &
@@ -47,6 +90,39 @@ export interface CombinedEventResponse extends ZetkinEventResponse {
   action: ZetkinEvent;
 }
 
-export type CallState = {
-  report: ZetkinCallPatchBody;
+export enum LaneStep {
+  START = 0,
+  CALL = 1,
+  REPORT = 2,
+  SUMMARY = 3,
+}
+
+export type SurveySubmissionData = Record<string, string | string[]>;
+
+export type ActivityFilters = {
+  customDatesToFilterEventsBy: DateRange<Dayjs>;
+  eventDateFilterState: 'today' | 'tomorrow' | 'thisWeek' | 'custom' | null;
+  filterState: {
+    alreadyIn: boolean;
+    events: boolean;
+    surveys: boolean;
+    thisCall: boolean;
+  };
+  orgIdsToFilterEventsBy: number[];
+  projectIdsToFilterActivitiesBy: (number | 'noProject')[];
+};
+
+export type LaneState = {
+  assignmentId: number;
+  callIsBeingAllocated: boolean;
+  currentCallId: number | null;
+  filters: ActivityFilters;
+  previousCall: ZetkinCall | null;
+  report: Report;
+  respondedEventIds: number[];
+  selectedSurveyId: number | null;
+  step: LaneStep;
+  submissionDataBySurveyId: Record<number, SurveySubmissionData>;
+  surveySubmissionError: boolean;
+  updateCallError: boolean;
 };

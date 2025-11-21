@@ -10,9 +10,9 @@ export default function mockState(overrides?: RootState) {
       areasByAssignmentId: {},
       assigneesByAssignmentId: {},
       locationsByAssignmentId: {},
+      locationsByAssignmentIdAndAreaId: {},
       metricsByAssignmentId: {},
       statsByAreaAssId: {},
-      visitsByHouseholdId: {},
     },
     areas: {
       areaList: remoteList(),
@@ -22,11 +22,12 @@ export default function mockState(overrides?: RootState) {
       crumbsByPath: {},
     },
     call: {
-      currentCallId: null,
-      eventsByTargetId: {},
+      activeLaneIndex: 0,
+      lanes: [],
+      myAssignmentsList: remoteList(),
       outgoingCalls: remoteList(),
       queueHasError: null,
-      stateByCallId: {},
+      upcomingEventsList: remoteList(),
     },
     callAssignments: {
       assignmentList: remoteList(),
@@ -43,12 +44,15 @@ export default function mockState(overrides?: RootState) {
       filters: {
         customDatesToFilterBy: [null, null],
         dateFilterState: null,
+        eventTypesToFilterBy: [],
+        geojsonToFilterBy: [],
       },
       recentlyCreatedCampaign: null,
     },
     canvass: {
       householdsByLocationId: {},
       myAssignmentsList: remoteList(),
+      visitsByAssignmentAndLocationId: {},
       visitsByAssignmentId: {},
     },
     duplicates: {
@@ -112,10 +116,14 @@ export default function mockState(overrides?: RootState) {
       filters: {
         customDatesToFilterBy: [null, null],
         dateFilterState: null,
+        eventTypesToFilterBy: [],
+        geojsonToFilterBy: [],
         orgIdsToFilterBy: [],
       },
       orgData: remoteItem(0),
+      statsBySuborgId: {},
       subOrgsByOrgId: {},
+      suborgsWithStats: remoteList(),
       treeDataList: remoteList(),
       userMembershipList: remoteList(),
     },

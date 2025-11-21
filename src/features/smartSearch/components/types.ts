@@ -34,6 +34,7 @@ export enum FILTER_TYPE {
   SURVEY_SUBMISSION = 'survey_submission',
   TASK = 'task',
   USER = 'user',
+  AREA = 'area',
 }
 
 export enum CONDITION_OPERATOR {
@@ -59,6 +60,11 @@ export enum JOURNEY_CONDITION_OP {
 export enum IN_OPERATOR {
   IN = 'in',
   NOTIN = 'notin',
+}
+
+export enum AREA_OPERATOR {
+  IN = 'in',
+  NOTIN = 'out',
 }
 
 export enum MATCH_OPERATORS {
@@ -265,8 +271,19 @@ export interface UserFilterConfig {
 
 export type FilterConfigOrgOptions = number[] | 'all' | 'suborgs';
 
+export type AllInSuborgFilterConfig = {
+  organizations: FilterConfigOrgOptions;
+};
+
+export type AreaFilterConfig = {
+  area: number;
+  field: string;
+  operator: AREA_OPERATOR;
+};
+
 export interface CampaignParticipationConfig {
   state: 'booked' | 'signed_up';
+  status?: 'attended' | 'cancelled' | 'noshow';
   operator: 'in' | 'notin';
   organizations?: FilterConfigOrgOptions;
   campaign?: number;
@@ -382,6 +399,7 @@ export enum QUERY_TYPE {
   STANDALONE = 'standalone',
   PURPOSE = 'callassignment_goal',
   TARGET = 'callassignment_target',
+  EMAIL_TARGET = 'email_target',
 }
 
 export interface ZetkinQuery {

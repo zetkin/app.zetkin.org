@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('zui', {
   accessList: {
@@ -76,12 +76,12 @@ export default makeMessages('zui', {
   },
   dataTableSearch: {
     button: m('Search'),
-    helpText: m<{ minSearchLength: number }>(
-      'Type at least {minSearchLength} characters'
+    placeholder: m<{ minSearchLength: number }>(
+      'Type to search (min {minSearchLength} chars)'
     ),
-    idSearchHelpText: m('Type an ID (numbers only)'),
-    placeholder: m('Search this table'),
-    placeholderWithIdSearch: m('Search - use # for IDs, e.g. type #123'),
+    placeholderWithIdSearch: m<{ minSearchLength: number }>(
+      'Search - use # for IDs, e.g. type #123 (min {minSearchLength} chars)'
+    ),
     title: m('Search'),
   },
   dataTableSorting: {
@@ -176,6 +176,10 @@ export default makeMessages('zui', {
     geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
+    myPagesInfoText: m('Go to my pages'),
+    myPagesMenuItemLabel: m('My pages'),
+    mySettingsMenuItemLabel: m('My settings'),
+    overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
     search: m('Search'),

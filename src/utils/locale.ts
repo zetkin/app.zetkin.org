@@ -45,7 +45,7 @@ async function loadMessages(): Promise<MessageDB> {
   const basePath = path.resolve('./src/locale');
   const messages: MessageDB = {};
 
-  for await (const fullPath of findYMLFiles('./src')) {
+  for await (const fullPath of findYMLFiles(basePath)) {
     const localPath = fullPath.replace(basePath, '');
     const pathElems = localPath.split(path.sep).filter((elem) => elem.length);
     const fileName = pathElems.pop();
@@ -67,7 +67,7 @@ async function loadMessages(): Promise<MessageDB> {
   // Fall back to English for any strings that is missing from other languages
   Object.keys(messages).forEach((lang) => {
     if (lang !== 'en') {
-      const messagesWithFallbacks: MessageList = {};
+      const messagesWithFallbacks: MessageList = { ...messages[lang] };
       Object.keys(messages.en).forEach((id) => {
         const val = messages[lang][id];
         messagesWithFallbacks[id] = val || messages.en[id];

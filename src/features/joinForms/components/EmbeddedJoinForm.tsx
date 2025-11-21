@@ -11,7 +11,7 @@ import { useFormState } from 'react-dom';
 
 import { EmbeddedJoinFormData, EmbeddedJoinFormStatus } from '../types';
 import { Msg, useMessages } from 'core/i18n';
-import globalMessageIds from 'core/i18n/globalMessageIds';
+import globalMessageIds from 'core/i18n/messageIds';
 import submitJoinForm from '../actions/submitEmbeddedJoinForm';
 import messageIds from '../l10n/messageIds';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
