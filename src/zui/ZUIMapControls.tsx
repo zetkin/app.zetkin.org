@@ -1,17 +1,12 @@
-import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, ButtonGroup, useTheme } from '@mui/material';
-import { Add, Remove, GpsFixed, GpsNotFixed, Home } from '@mui/icons-material';
+import { Add, Remove, GpsFixed, Home } from '@mui/icons-material';
 
 import { Latitude, Longitude, PointData } from 'features/areas/types';
 
 type Props = {
   onFitBounds: () => void;
-  onGeolocate: (
-    lngLat: PointData,
-    accuracy: number | null,
-    tracking: boolean
-  ) => void;
+  onGeolocate: (lngLat: PointData, accuracy: number | null) => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
 };
@@ -45,7 +40,7 @@ const ZUIMapControls: React.FC<Props> = ({
           setIsAwaitingInitialPosition(false);
         }
         if (isUserLocationVisibleRef.current) {
-          onGeolocate(point, accuracy, true);
+          onGeolocate(point, accuracy);
         }
       },
       () => {
@@ -104,35 +99,22 @@ const ZUIMapControls: React.FC<Props> = ({
             if (isAwaitingInitialPosition) {
               return;
             }
+            if (!isUserLocationVisible) {
+              setIsUserLocationVisible(true);
+              isUserLocationVisibleRef.current = true;
+            }
 
-            const nextIsVisible = !isUserLocationVisible;
-            setIsUserLocationVisible(nextIsVisible);
-            isUserLocationVisibleRef.current = nextIsVisible;
             const latestPosition = latestPositionRef.current;
             const latestAccuracy = latestAccuracyRef.current ?? null;
 
-            if (nextIsVisible) {
-              if (latestPosition) {
-                onGeolocate(latestPosition, latestAccuracy, true);
-              } else {
-                setIsAwaitingInitialPosition(true);
-              }
+            if (latestPosition) {
+              onGeolocate(latestPosition, latestAccuracy);
             } else {
-              if (latestPosition) {
-                onGeolocate(latestPosition, null, false);
-              } else {
-                onGeolocate([0 as Longitude, 0 as Latitude], null, false);
-              }
+              setIsAwaitingInitialPosition(true);
             }
           }}
         >
-          {isAwaitingInitialPosition ? (
-            <CircularProgress color="inherit" size={24} />
-          ) : isUserLocationVisible ? (
-            <GpsFixed />
-          ) : (
-            <GpsNotFixed />
-          )}
+          <GpsFixed />
         </Button>
       </ButtonGroup>
     </Box>
