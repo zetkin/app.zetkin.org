@@ -43,6 +43,11 @@ type ZUIMenuProps = {
   anchorEl?: Element | null;
 
   /**
+   * By default, the menu is anchored to the left. This inverts it to the right.
+   */
+  invertHorizontalAnchor?: boolean;
+
+  /**
    * The maximum height of the menu.
    */
   maxHeight?: string;
@@ -66,6 +71,7 @@ type ZUIMenuProps = {
 
 const ZUIMenu: FC<ZUIMenuProps> = ({
   anchorEl,
+  invertHorizontalAnchor,
   maxHeight,
   menuItems,
   width,
@@ -73,6 +79,17 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
 }) => (
   <Menu
     anchorEl={anchorEl}
+    anchorOrigin={
+      invertHorizontalAnchor
+        ? {
+            horizontal: 'right',
+            vertical: 'bottom',
+          }
+        : {
+            horizontal: 'left',
+            vertical: 'bottom',
+          }
+    }
     onClose={onClose}
     open={!!anchorEl}
     slotProps={{
@@ -92,6 +109,14 @@ const ZUIMenu: FC<ZUIMenuProps> = ({
         width,
       },
     }}
+    transformOrigin={
+      invertHorizontalAnchor
+        ? {
+            horizontal: 'right',
+            vertical: 'top',
+          }
+        : { horizontal: 'left', vertical: 'top' }
+    }
   >
     {menuItems.map((item, index) => {
       const Icon = item.startIcon;
