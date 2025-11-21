@@ -174,12 +174,12 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           variant="content"
         />
         {editable && (
+          <>
             <RequiredCheckbox
               orgId={orgId}
               surveyId={surveyId}
               surveyQuestionElement={element}
             />
-          ) && (
             <TextField
               fullWidth
               label={messages.blocks.choice.widget()}
@@ -209,7 +209,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                 </MenuItem>
               ))}
             </TextField>
-          )}
+          </>
+        )}
         <ZUIReorderable
           centerWidgets
           disableClick={!editable}
