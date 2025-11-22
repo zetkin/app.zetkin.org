@@ -1,6 +1,13 @@
 import NextLink from 'next/link';
 import { useState } from 'react';
-import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
+import {
+  Button,
+  Card,
+  Link,
+  ListItem,
+  ListItemText,
+  Tooltip,
+} from '@mui/material';
 
 import EditPersonDialog from './EditPersonDialog';
 import globalMessageIds from 'core/i18n/messageIds';
@@ -14,7 +21,11 @@ import {
   CUSTOM_FIELD_TYPE,
   ZetkinCustomField,
   ZetkinPerson,
+  ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
+import { PersonWithUpdates } from '../types/PersonWithUpdates';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import dayjs from 'dayjs';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -39,9 +50,28 @@ const nativeFieldsToDisplay = [
   'ext_id',
 ] as const;
 
+const ChangedDateTooltip: React.FunctionComponent<{
+  person: PersonWithUpdates & ZetkinPerson;
+  field: string;
+}> = ({ person, field }) => {
+  const changedDate = (person as PersonWithUpdates)._history?.fields?.[
+    field as keyof ZetkinPersonNativeFields
+  ];
+
+  if (!changedDate) {
+    return <>?</>
+  }
+
+  if (dayjs().diff(dayjs(changedDate), 'day') > 30) {
+    return <ZUIDate datetime={changedDate} />;
+  }
+
+  return <ZUIRelativeTime datetime={changedDate} />;
+};
+
 const PersonDetailsCard: React.FunctionComponent<{
   customFields: ZetkinCustomField[];
-  person: ZetkinPerson;
+  person: PersonWithUpdates & ZetkinPerson;
 }> = ({ customFields, person }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
@@ -72,6 +102,7 @@ const PersonDetailsCard: React.FunctionComponent<{
     }
 
     return {
+      field,
       title: globalMessages.personFields[field](),
       value,
     };
@@ -106,6 +137,7 @@ const PersonDetailsCard: React.FunctionComponent<{
       }
 
       return {
+        field: field.slug,
         title: field.title,
         value,
       };
@@ -133,10 +165,18 @@ const PersonDetailsCard: React.FunctionComponent<{
           <ZUIList initialLength={4} showMoreStep={allFields.length - 4}>
             {allFields.map((detail, idx) => (
               <ListItem key={idx} divider>
-                <ListItemText
-                  primary={detail.value || '-'}
-                  secondary={detail.title}
-                />
+                <Tooltip
+                key={idx}
+                  placement="bottom"
+                  title={
+                    <ChangedDateTooltip person={person} field={detail.field} />
+                  }
+                >
+                  <ListItemText
+                    primary={detail.value || '-'}
+                    secondary={detail.title}
+                  />
+                </Tooltip>
               </ListItem>
             ))}
           </ZUIList>
