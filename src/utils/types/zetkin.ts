@@ -1,18 +1,18 @@
+import { Latitude, Longitude } from 'features/areas/types';
 import { EmailTheme } from 'features/emails/types';
-import {
-  ZetkinAssignedTask,
-  ZetkinTask,
-} from '../../features/tasks/components/types';
 import {
   ZetkinQuery,
   ZetkinSmartSearchFilter,
 } from '../../features/smartSearch/components/types';
 import {
+  ZetkinAssignedTask,
+  ZetkinTask,
+} from '../../features/tasks/components/types';
+import {
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewRow,
 } from '../../features/views/components/types';
-import { Latitude, Longitude } from 'features/areas/types';
 
 export interface ZetkinCampaign {
   color: string;
@@ -532,10 +532,10 @@ export interface ZetkinNoteBody {
 }
 
 export type {
-  ZetkinTask,
   ZetkinAssignedTask,
   ZetkinQuery,
   ZetkinSmartSearchFilter,
+  ZetkinTask,
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -589,3 +589,26 @@ export type ZetkinCreatePerson = Partial<
   Record<string, string | null>;
 
 export type ZetkinUpdatePerson = ZetkinCreatePerson;
+
+export interface ZetkinPetition {
+  id: number;
+  title: string;
+  description: string;
+  signature: 'require_signature' | 'optional_signature';
+  organization?: {
+    id: number;
+    title: string;
+  };
+  project?: {
+    id: number;
+    title: string;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ZetkinPetitionPostBody {
+  title: string;
+  description: string;
+  signature: 'require_signature' | 'optional_signature';
+}

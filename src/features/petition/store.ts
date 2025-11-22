@@ -1,7 +1,7 @@
 // store/campaignSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList } from 'utils/storeUtils';
-import { ZetkinPetition } from './utils/types';
+import { ZetkinPetition } from 'utils/types/zetkin';
 
 interface PetitionState {
   petitionList: {

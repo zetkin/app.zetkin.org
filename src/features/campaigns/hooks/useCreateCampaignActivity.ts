@@ -6,14 +6,13 @@ import {
   callAssignmentCreated,
 } from 'features/callAssignments/store';
 import { petitionCreate, petitionCreated } from 'features/petition/store';
-import {
-  ZetkinPetition,
-  ZetkinPetitionPostBody,
-} from 'features/petition/utils/types';
+
 import { surveyCreate, surveyCreated } from 'features/surveys/store';
 import {
   ZetkinCallAssignment,
   ZetkinCallAssignmentPartial,
+  ZetkinPetition,
+  ZetkinPetitionPostBody,
   ZetkinSurvey,
   ZetkinSurveyExtended,
   ZetkinSurveyPostBody,
@@ -67,9 +66,6 @@ export default function useCreateCampaignActivity(
       )
       .then((survey) => {
         const d = surveyCreated(survey);
-
-        console.log('survey data ', d);
-
         dispatch(d);
         return survey;
       });
@@ -81,9 +77,6 @@ export default function useCreateCampaignActivity(
     petitionBody: ZetkinPetitionPostBody
   ): IFuture<ZetkinPetition> => {
     dispatch(petitionCreate());
-
-    console.log('BODY ', petitionBody);
-
     const promise = apiClient
       .post<ZetkinPetition, ZetkinPetitionPostBody>(
         `/beta/orgs/${orgId}/petitions
@@ -92,8 +85,6 @@ export default function useCreateCampaignActivity(
       )
       .then((petition) => {
         const data = petitionCreated(petition);
-
-        console.log('data ', data);
         dispatch(data);
         return petition;
       });
