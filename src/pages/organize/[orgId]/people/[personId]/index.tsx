@@ -10,6 +10,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import Head from 'next/head';
@@ -38,7 +39,6 @@ import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
 import usePersonNotes from 'features/profile/hooks/usePersonNotes';
 import ZUIDate from 'zui/ZUIDate';
 import ZUISection from 'zui/ZUISection';
-import ZUITextEditor from 'zui/ZUITextEditor';
 import useAddPersonNote from 'features/profile/hooks/useAddPersonNote';
 import useDeletePersonNote from 'features/profile/hooks/useDeletePersonNote';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -78,6 +78,7 @@ const PersonProfilePage: PageWithLayout = () => {
   const { orgId, personId } = useNumericRouteParams();
 
   const [newNote, setNewNote] = useState('');
+  const [isSubmittingNote, setIsSubmittingNote] = useState(false);
 
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -159,10 +160,12 @@ const PersonProfilePage: PageWithLayout = () => {
             <ZUISection title={`Notes about ${person.first_name}`}>
               <Card sx={{ padding: 1 }}>
                 <Box sx={{ padding: 1 }}>
-                  <ZUITextEditor
-                    onChange={(value) => setNewNote(value.trim())}
+                  <TextField
+                    fullWidth
+                    multiline
+                    onChange={(ev) => setNewNote(ev.target.value.trim())}
                     placeholder="Write a note"
-                    showStyling={false}
+                    value={newNote}
                   />
                   <Box
                     sx={{
@@ -173,7 +176,13 @@ const PersonProfilePage: PageWithLayout = () => {
                   >
                     <Button
                       disabled={!newNote.trim()}
-                      onClick={() => addPersonNote(newNote)}
+                      loading={isSubmittingNote}
+                      onClick={async () => {
+                        setIsSubmittingNote(true);
+                        await addPersonNote(newNote);
+                        setIsSubmittingNote(false);
+                        setNewNote('');
+                      }}
                       variant="outlined"
                     >
                       Add note
