@@ -1,22 +1,28 @@
-import Router from 'next/router';
 import {
   configureStore,
   ConfigureStoreOptions,
   createListenerMiddleware,
 } from '@reduxjs/toolkit';
+import Router from 'next/router';
 
+import areaAssignmentSlice, {
+  areaAssignmentCreated,
+  AreaAssignmentsStoreSlice,
+} from 'features/areaAssignments/store';
+import areasSlice, { AreasStoreSlice } from 'features/areas/store';
 import breadcrumbsSlice, {
   BreadcrumbsStoreSlice,
 } from 'features/breadcrumbs/store';
-import callAssignmentsSlice, {
-  callAssignmentCreated,
-  CallAssignmentSlice,
-} from '../features/callAssignments/store';
+import callSlice, { CallStoreSlice } from 'features/call/store';
 import campaignsSlice, {
   campaignCreated,
   campaignDeleted,
   CampaignsStoreSlice,
 } from 'features/campaigns/store';
+import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
+import potentialDuplicatesSlice, {
+  PotentialDuplicatesStoreSlice,
+} from 'features/duplicates/store';
 import emailsSlice, {
   emailCreated,
   EmailStoreSlice,
@@ -32,9 +38,7 @@ import journeysSlice, {
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
-import potentialDuplicatesSlice, {
-  PotentialDuplicatesStoreSlice,
-} from 'features/duplicates/store';
+import { petitionCreated } from 'features/petition/store';
 import profilesSlice, { ProfilesStoreSlice } from 'features/profile/store';
 import searchSlice, { SearchStoreSlice } from 'features/search/store';
 import settingsSlice, { SettingsStoreSlice } from 'features/settings/store';
@@ -49,13 +53,10 @@ import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
 import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import userSlice, { UserStoreSlice } from 'features/user/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
-import areasSlice, { AreasStoreSlice } from 'features/areas/store';
-import areaAssignmentSlice, {
-  areaAssignmentCreated,
-  AreaAssignmentsStoreSlice,
-} from 'features/areaAssignments/store';
-import canvassSlice, { CanvassStoreSlice } from 'features/canvass/store';
-import callSlice, { CallStoreSlice } from 'features/call/store';
+import callAssignmentsSlice, {
+  callAssignmentCreated,
+  CallAssignmentSlice,
+} from '../features/callAssignments/store';
 
 export interface RootState {
   areaAssignments: AreaAssignmentsStoreSlice;
@@ -171,6 +172,18 @@ listenerMiddleware.startListening({
       `/organize/${survey.organization.id}/projects/${
         survey.campaign?.id ?? 'standalone'
       }/surveys/${survey.id}`
+    );
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: petitionCreated,
+  effect: (action) => {
+    const petition = action.payload;
+    Router.push(
+      `/organize/${petition.orgId}/projects/${
+        petition.project?.id ?? 'standalone'
+      }/petitions/${petition.id}`
     );
   },
 });

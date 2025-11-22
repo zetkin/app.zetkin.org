@@ -5,6 +5,11 @@ import {
   callAssignmentCreate,
   callAssignmentCreated,
 } from 'features/callAssignments/store';
+import { petitionCreate, petitionCreated } from 'features/petition/store';
+import {
+  ZetkinPetition,
+  ZetkinPetitionPostBody,
+} from 'features/petition/utils/types';
 import { surveyCreate, surveyCreated } from 'features/surveys/store';
 import {
   ZetkinCallAssignment,
@@ -19,7 +24,9 @@ interface UseCreateCampaignActivityReturn {
     callAssignmentBody: ZetkinCallAssignmentPartial
   ) => IFuture<ZetkinCallAssignment>;
   createSurvey: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
-  createPetition: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
+  createPetition: (
+    petitionBody: ZetkinPetitionPostBody
+  ) => IFuture<ZetkinPetition>;
 }
 
 export default function useCreateCampaignActivity(
@@ -59,7 +66,11 @@ export default function useCreateCampaignActivity(
         surveyBody
       )
       .then((survey) => {
-        dispatch(surveyCreated(survey));
+        const d = surveyCreated(survey);
+
+        console.log('survey data ', d);
+
+        dispatch(d);
         return survey;
       });
 
@@ -67,19 +78,24 @@ export default function useCreateCampaignActivity(
   };
 
   const createPetition = (
-    surveyBody: ZetkinSurveyPostBody
-  ): IFuture<ZetkinSurvey> => {
-    dispatch(surveyCreate);
+    petitionBody: ZetkinPetitionPostBody
+  ): IFuture<ZetkinPetition> => {
+    dispatch(petitionCreate());
+
+    console.log('BODY ', petitionBody);
 
     const promise = apiClient
-      .post<ZetkinSurveyExtended, ZetkinSurveyPostBody>(
-        `/api/orgs/${orgId}/campaigns/${campId}/surveys`,
-        surveyBody
+      .post<ZetkinPetition, ZetkinPetitionPostBody>(
+        `/beta/orgs/${orgId}/petitions
+        `,
+        petitionBody
       )
-      .then((survey) => {
-        console.log('survey ', survey);
-        dispatch(surveyCreated(survey));
-        return survey;
+      .then((petition) => {
+        const data = petitionCreated(petition);
+
+        console.log('data ', data);
+        dispatch(data);
+        return petition;
       });
 
     return new PromiseFuture(promise);

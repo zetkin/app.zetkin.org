@@ -148,11 +148,13 @@ const CampaignActionButtons: React.FunctionComponent<
     menuItems.push({
       icon: <SnowboardingSharp />,
       label: campaginMessages.createButton.createPetition(),
-      onClick: () =>
+      onClick: () => {
         createPetition({
+          title: 'New Petition',
+          description: '',
           signature: 'require_signature',
-          title: campaginMessages.form.createSurvey.newSurvey(),
-        }),
+        }) as any;
+      },
     });
   }
 
