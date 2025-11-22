@@ -25,6 +25,7 @@ import useEmailStats from '../hooks/useEmailStats';
 import useSecondaryEmailInsights from '../hooks/useSecondaryEmailInsights';
 import { ZetkinEmail } from 'utils/types/zetkin';
 import useEmailInsights from '../hooks/useEmailInsights';
+import { EmailLinkWithMeta } from '../types';
 
 type Props = {
   email: ZetkinEmail;
@@ -109,8 +110,7 @@ const ClickedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
             {(insights) => (
               <Box alignItems="flex-start" display="flex">
                 <Table>
-                  {insights.links
-                    .concat()
+                  {countClicksByTag(insights.links)
                     .sort((a, b) => b.clicks - a.clicks)
                     .map((link) => (
                       <TableRow
@@ -151,6 +151,19 @@ const ClickedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
         </Box>
       </Box>
     </ZUICard>
+  );
+};
+
+const countClicksByTag = (array: EmailLinkWithMeta[]): EmailLinkWithMeta[] => {
+  return Object.values(
+    array.reduce<Record<string, EmailLinkWithMeta>>((acc, link) => {
+      if (!acc[link.tag]) {
+        acc[link.tag] = { ...link };
+      } else {
+        acc[link.tag].clicks += link.clicks;
+      }
+      return acc;
+    }, {})
   );
 };
 
