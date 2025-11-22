@@ -17,6 +17,18 @@ type EventSignupBody = {
   phone?: string;
 };
 
+export async function GET(request: NextRequest, { params }: RouteMeta) {
+  await mongoose.connect(process.env.MONGODB_URL || '');
+  const headers: IncomingHttpHeaders = {};
+  request.headers.forEach((value, key) => (headers[key] = value));
+
+  const eventSignups = await EventSignupModel.find({
+    eventId: parseInt(params.eventId),
+  });
+
+  return NextResponse.json({ data: eventSignups }, { status: 200 });
+}
+
 export async function POST(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
@@ -40,4 +52,3 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
 
   return NextResponse.json({ data: eventSignup }, { status: 201 });
 }
-
