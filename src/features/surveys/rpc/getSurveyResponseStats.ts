@@ -27,11 +27,15 @@ export type OptionsQuestionStats = {
     option: ZetkinSurveyOption;
   }[];
   question: ZetkinSurveyOptionsQuestionElement;
+  totalSelectedOptionsCount: number;
 };
 
 export type TextQuestionStats = {
   answerCount: number;
   question: ZetkinSurveyTextQuestionElement;
+  topWordFrequencies: Record<string, number>;
+  totalUniqueWordCount: number;
+  totalWordCount: number;
 };
 
 export type QuestionStats = OptionsQuestionStats | TextQuestionStats;
@@ -45,6 +49,22 @@ export const getSurveyResponseStatsDef = {
   handler: handle,
   name: 'getSurveyResponseStats',
   schema: paramsSchema,
+};
+
+type ResponseStatsCounter = {
+  answerCounter: number;
+  selectedOptions: Record<
+    number,
+    {
+      count: 0;
+      option: ZetkinSurveyOption;
+    }
+  >;
+  topWordFrequencies: Record<string, number>;
+  totalSelectedOptionsCounts: number;
+  totalUniqueWordCount: number;
+  totalWordCounts: number;
+  wordFrequencies: Record<string, number>;
 };
 
 export default makeRPCDef<Params, SurveyResponseStats>(
@@ -79,33 +99,30 @@ async function handle(
     )
   );
 
-  const selectedOptions: Record<
-    number,
-    Record<
-      number,
-      {
-        count: 0;
-        option: ZetkinSurveyOption;
-      }
-    >
-  > = {};
-  const answerCounter: Record<number, number> = {};
+  const responseStatsCounters: Record<number, ResponseStatsCounter> = {};
 
   survey.elements.forEach((question) => {
     if (question.type === ELEMENT_TYPE.TEXT) {
       return;
     }
 
-    answerCounter[question.id] = 0;
+    responseStatsCounters[question.id] = {
+      answerCounter: 0,
+      selectedOptions: {},
+      topWordFrequencies: {},
+      totalSelectedOptionsCounts: 0,
+      totalUniqueWordCount: 0,
+      totalWordCounts: 0,
+      wordFrequencies: {},
+    };
 
     if (question.question.response_type === RESPONSE_TYPE.TEXT) {
       return;
     }
 
-    selectedOptions[question.id] = {};
     (question as ZetkinSurveyOptionsQuestionElement).question.options.forEach(
       (option) => {
-        selectedOptions[question.id][option.id] = {
+        responseStatsCounters[question.id].selectedOptions[option.id] = {
           count: 0,
           option: option,
         };
@@ -121,24 +138,54 @@ async function handle(
     response.responses.forEach((response) => {
       if (
         !Object.prototype.hasOwnProperty.call(
-          answerCounter,
+          responseStatsCounters,
           response.question_id
         )
       ) {
         return;
       }
 
-      answerCounter[response.question_id]++;
+      responseStatsCounters[response.question_id].answerCounter++;
 
       if ('response' in response) {
+        const wordList = response.response
+          .toLowerCase()
+          .replace(/\W+/g, '')
+          .split(/\s+/)
+          .filter(Boolean);
+        responseStatsCounters[response.question_id].totalWordCounts +=
+          wordList.length;
+
+        const wordSet = new Set(wordList);
+
+        for (const w of wordSet) {
+          responseStatsCounters[response.question_id].wordFrequencies[w] =
+            (responseStatsCounters[response.question_id].wordFrequencies[w] ??
+              0) + 1;
+        }
+
         return;
       }
 
+      responseStatsCounters[response.question_id].totalSelectedOptionsCounts +=
+        response.options.length;
       response.options.forEach((option) => {
-        selectedOptions[response.question_id][option].count++;
+        responseStatsCounters[response.question_id].selectedOptions[option]
+          .count++;
       });
     });
   });
+
+  for (const questionId in responseStatsCounters) {
+    const wordFrequenciesAsList = Object.entries(
+      responseStatsCounters[questionId].wordFrequencies
+    );
+    responseStatsCounters[questionId].topWordFrequencies = Object.fromEntries(
+      wordFrequenciesAsList.sort((a, b) => b[1] - a[1]).slice(0, 10)
+    );
+    responseStatsCounters[questionId].totalUniqueWordCount =
+      wordFrequenciesAsList.length;
+  }
 
   const questionStats = survey.elements
     .map((question) => {
@@ -146,22 +193,28 @@ async function handle(
         return null;
       }
 
+      const counter = responseStatsCounters[question.id];
+
       if (question.question.response_type === RESPONSE_TYPE.TEXT) {
         return <TextQuestionStats>{
-          answerCount: answerCounter[question.id],
+          answerCount: counter.answerCounter,
           question: question as ZetkinSurveyTextElement,
+          topWordFrequencies: counter.topWordFrequencies,
+          totalUniqueWordCount: counter.totalUniqueWordCount,
+          totalWordCount: counter.totalWordCounts,
         };
       }
 
       question = question as ZetkinSurveyOptionsQuestionElement;
 
       return <OptionsQuestionStats>{
-        answerCount: answerCounter[question.id],
+        answerCount: counter.answerCounter,
         options:
           question.question.options?.map(
-            (option) => selectedOptions[question.id][option.id]
+            (option) => counter.selectedOptions[option.id]
           ) ?? [],
         question: question,
+        totalSelectedOptionsCount: counter.totalSelectedOptionsCounts,
       };
     })
     .filter((el) => !!el) as QuestionStats[];
