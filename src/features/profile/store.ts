@@ -8,6 +8,7 @@ import {
   remoteList,
 } from 'utils/storeUtils';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinPersonNote } from './types';
 
 export type PersonOrgData = {
   id: string;
@@ -20,11 +21,13 @@ export type PersonOrgData = {
 export interface ProfilesStoreSlice {
   fieldsList: RemoteList<ZetkinCustomField>;
   orgsByPersonId: Record<number, RemoteItem<PersonOrgData>>;
+  notesByPersonId: Record<number, RemoteList<ZetkinPersonNote>>;
   personById: Record<number, RemoteItem<ZetkinPerson>>;
 }
 
 const initialState: ProfilesStoreSlice = {
   fieldsList: remoteList(),
+  notesByPersonId: {},
   orgsByPersonId: {},
   personById: {},
 };
@@ -53,6 +56,24 @@ const profilesSlice = createSlice({
         data,
         loaded: new Date().toISOString(),
       });
+    },
+    personNotesLoad: (state, action: PayloadAction<number>) => {
+      const personId = action.payload;
+      if (!state.notesByPersonId[personId]) {
+        state.notesByPersonId[personId] = remoteList();
+      }
+      state.notesByPersonId[personId].isLoading = true;
+    },
+    personNotesLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinPersonNote[]]>
+    ) => {
+      const [personId, notes] = action.payload;
+      if (!state.notesByPersonId[personId]) {
+        state.notesByPersonId[personId] = remoteList();
+      }
+      state.notesByPersonId[personId] = remoteList(notes);
+      state.notesByPersonId[personId].loaded = new Date().toISOString();
     },
     personOrgAdded: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
@@ -122,6 +143,8 @@ export const {
   fieldsLoaded,
   personLoad,
   personLoaded,
+  personNotesLoad,
+  personNotesLoaded,
   personOrgsLoad,
   personOrgsLoaded,
   personOrgAdded,

@@ -1,7 +1,16 @@
 import { GetServerSideProps } from 'next';
-import { Grid } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Card,
+  CircularProgress,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
 import Head from 'next/head';
-import { useContext } from 'react';
+import { Suspense, useContext } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/profile/l10n/messageIds';
@@ -23,6 +32,9 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
+import usePersonNotes from 'features/profile/hooks/usePersonNotes';
+import ZUIDate from 'zui/ZUIDate';
+import ZUISection from 'zui/ZUISection';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -65,6 +77,7 @@ const PersonProfilePage: PageWithLayout = () => {
   const person = personFuture.data;
   const personTagsFuture = usePersonTags(orgId, personId);
   const journeysFuture = useJourneys(orgId);
+  const notes = usePersonNotes(orgId, personId);
 
   if (!person) {
     return null;
@@ -128,6 +141,47 @@ const PersonProfilePage: PageWithLayout = () => {
         <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
+        <Suspense fallback={<CircularProgress />}>
+          <Grid size={{ lg: 4, xs: 12 }}>
+            <ZUISection title={`Notes about ${person.first_name}`}>
+              <Card sx={{ padding: 1 }}>
+                <Stack divider={<Divider flexItem />} gap={2}>
+                  {notes.map((note) => (
+                    <Box
+                      key={note.id}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                        padding: 1,
+                      }}
+                    >
+                      <Typography color="secondary">
+                        <ZUIDate datetime={note.created} />
+                      </Typography>
+                      <Typography>{note.text}</Typography>
+                      <Box
+                        sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
+                      >
+                        <Avatar
+                          src={`/api/orgs/${orgId}/people/${note.author.id}/avatar`}
+                          sx={{ height: 28, width: 28 }}
+                        />
+                        <Typography>{note.author.name}</Typography>
+                        <Divider flexItem orientation="vertical" />
+                        <Avatar
+                          src={`/api/orgs/${note.organization.id}/avatar`}
+                          sx={{ height: 28, width: 28 }}
+                        />
+                        <Typography>{note.organization.title}</Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Stack>
+              </Card>
+            </ZUISection>
+          </Grid>
+        </Suspense>
       </Grid>
     </>
   );
