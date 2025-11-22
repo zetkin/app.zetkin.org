@@ -2,14 +2,16 @@ import { FC, useEffect, useMemo } from 'react';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
 
+import { useSpring } from '@react-spring/core';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 import {
+  OptionsQuestionStats,
   QuestionStats,
   SurveyResponseStats,
+  TextQuestionStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
-import { useSpring } from '@react-spring/core';
 
 type ResponseStatsChartCardProps = {
   orgId: number;
@@ -52,7 +54,7 @@ const CustomBarComponent = <RawDatum extends BarDatum>(
   );
 };
 
-const ResponseStatsCards = ({ question }: { question: QuestionStats }) => {
+const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
   const theme = useTheme();
 
   const data = useMemo(() => {
@@ -110,7 +112,53 @@ const ResponseStatsCards = ({ question }: { question: QuestionStats }) => {
   );
 };
 
-const ResponseStatsCard: FC<ResponseStatsChartCardProps> = ({
+const OptionsStatsCard = ({
+  questionStats,
+}: {
+  questionStats: OptionsQuestionStats;
+}) => {
+  return (
+    <ZUICard
+      header={questionStats.question.question.question}
+      subheader={`${questionStats.answerCount} answers in total. ${questionStats.totalSelectedOptionsCount} selected options in total.`}
+      sx={{
+        width: '100%',
+      }}
+    >
+      <Box height={400}>
+        <QuestionStatsBarPlot question={questionStats} />
+      </Box>
+    </ZUICard>
+  );
+};
+
+const TextStatsCard = ({
+  questionStats,
+}: {
+  questionStats: TextQuestionStats;
+}) => {
+  return (
+    <ZUICard
+      header={questionStats.question.question.question}
+      subheader={`${questionStats.answerCount} answers in total. ${
+        questionStats.totalWordCount
+      } words in total. ${
+        questionStats.totalUniqueWordCount
+      } total unique words per response. Showing top ${
+        Object.entries(questionStats.topWordFrequencies).length
+      } word frequencies in free text question:`}
+      sx={{
+        width: '100%',
+      }}
+    >
+      <Box height={400}>
+        <QuestionStatsBarPlot question={questionStats} />
+      </Box>
+    </ZUICard>
+  );
+};
+
+const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
   orgId,
   surveyId,
 }) => {
@@ -121,31 +169,13 @@ const ResponseStatsCard: FC<ResponseStatsChartCardProps> = ({
       {(data: SurveyResponseStats) => {
         return (
           <>
-            {data.questions.map((questionStats, index) => {
-              return (
-                <ZUICard
-                  key={index}
-                  header={questionStats.question.question.question}
-                  subheader={`${questionStats.answerCount} answers in total. ${
-                    'options' in questionStats
-                      ? `${questionStats.totalSelectedOptionsCount} selected options in total.`
-                      : `${questionStats.totalWordCount} words in total. ${
-                          questionStats.totalUniqueWordCount
-                        } total unique words per response. Showing top ${
-                          Object.entries(questionStats.topWordFrequencies)
-                            .length
-                        } word frequencies in free text question:`
-                  }`}
-                  sx={{
-                    width: '100%',
-                  }}
-                >
-                  <Box height={400}>
-                    <ResponseStatsCards question={questionStats} />
-                  </Box>
-                </ZUICard>
-              );
-            })}
+            {data.questions.map((questionStats, index) =>
+              'options' in questionStats ? (
+                <OptionsStatsCard questionStats={questionStats} />
+              ) : (
+                <TextStatsCard questionStats={questionStats} />
+              )
+            )}
           </>
         );
       }}
@@ -153,4 +183,4 @@ const ResponseStatsCard: FC<ResponseStatsChartCardProps> = ({
   );
 };
 
-export default ResponseStatsCard;
+export default ResponseStatsCards;
