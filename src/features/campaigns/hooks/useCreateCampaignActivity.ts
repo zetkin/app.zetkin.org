@@ -1,11 +1,11 @@
+import { IFuture, PromiseFuture } from 'core/caching/futures';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import createCallAssignmentRpc from 'features/callAssignments/rpc/createCallAssignment';
 import {
   callAssignmentCreate,
   callAssignmentCreated,
 } from 'features/callAssignments/store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
 import { surveyCreate, surveyCreated } from 'features/surveys/store';
-import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   ZetkinCallAssignment,
   ZetkinCallAssignmentPartial,
@@ -19,6 +19,7 @@ interface UseCreateCampaignActivityReturn {
     callAssignmentBody: ZetkinCallAssignmentPartial
   ) => IFuture<ZetkinCallAssignment>;
   createSurvey: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
+  createPetition: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
 }
 
 export default function useCreateCampaignActivity(
@@ -65,5 +66,24 @@ export default function useCreateCampaignActivity(
     return new PromiseFuture(promise);
   };
 
-  return { createCallAssignment, createSurvey };
+  const createPetition = (
+    surveyBody: ZetkinSurveyPostBody
+  ): IFuture<ZetkinSurvey> => {
+    dispatch(surveyCreate);
+
+    const promise = apiClient
+      .post<ZetkinSurveyExtended, ZetkinSurveyPostBody>(
+        `/api/orgs/${orgId}/campaigns/${campId}/surveys`,
+        surveyBody
+      )
+      .then((survey) => {
+        console.log('survey ', survey);
+        dispatch(surveyCreated(survey));
+        return survey;
+      });
+
+    return new PromiseFuture(promise);
+  };
+
+  return { createCallAssignment, createSurvey, createPetition };
 }

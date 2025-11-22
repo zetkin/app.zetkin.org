@@ -1,5 +1,3 @@
-import { Box } from '@mui/material';
-import { Link } from '@mui/material';
 import {
   AssignmentOutlined,
   CheckBoxOutlined,
@@ -10,29 +8,31 @@ import {
   Map,
   OpenInNew,
   Settings,
+  SnowboardingSharp,
 } from '@mui/icons-material';
+import { Box, Link } from '@mui/material';
 import React, { useContext, useState } from 'react';
 
-import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsForm';
-import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actions/createTask';
-import campaignMessageIds from '../l10n/messageIds';
-import useCampaign from '../hooks/useCampaign';
-import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
-import useCreateEmail from 'features/emails/hooks/useCreateEmail';
-import useCreateEvent from 'features/events/hooks/useCreateEvent';
-import useEmailThemes from 'features/emails/hooks/useEmailThemes';
 import { useNumericRouteParams } from 'core/hooks';
+import { Msg, useMessages } from 'core/i18n';
+import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
+import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
+import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsForm';
+import useCreateEmail from 'features/emails/hooks/useCreateEmail';
+import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
+import useEmailThemes from 'features/emails/hooks/useEmailThemes';
+import useCreateEvent from 'features/events/hooks/useCreateEvent';
+import { AREAS, TASKS } from 'utils/featureFlags';
+import useFeature from 'utils/featureFlags/useFeature';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import { Msg, useMessages } from 'core/i18n';
-import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
-import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, TASKS } from 'utils/featureFlags';
-import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
-import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
+import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actions/createTask';
+import useCampaign from '../hooks/useCampaign';
+import useCreateCampaignActivity from '../hooks/useCreateCampaignActivity';
+import campaignMessageIds from '../l10n/messageIds';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -52,6 +52,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
+  const hasPetitions = true;
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -60,10 +61,8 @@ const CampaignActionButtons: React.FunctionComponent<
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
   const createEvent = useCreateEvent(orgId);
-  const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
-    orgId,
-    campId
-  );
+  const { createCallAssignment, createSurvey, createPetition } =
+    useCreateCampaignActivity(orgId, campId);
   const { deleteCampaign, updateCampaign } = useCampaign(orgId, campaign.id);
   const { createEmail } = useCreateEmail(orgId);
   const themes = useEmailThemes(orgId).data || [];
@@ -141,6 +140,18 @@ const CampaignActionButtons: React.FunctionComponent<
           */
           reporting_level: 'location',
           title: areaAssignmentMessages.default.title(),
+        }),
+    });
+  }
+
+  if (hasPetitions) {
+    menuItems.push({
+      icon: <SnowboardingSharp />,
+      label: campaginMessages.createButton.createPetition(),
+      onClick: () =>
+        createPetition({
+          signature: 'require_signature',
+          title: campaginMessages.form.createSurvey.newSurvey(),
         }),
     });
   }
