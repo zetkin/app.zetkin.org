@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CircularProgress,
   Divider,
@@ -10,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import Head from 'next/head';
-import { Suspense, useContext } from 'react';
+import { Suspense, useContext, useState } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/profile/l10n/messageIds';
@@ -35,6 +36,8 @@ import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
 import usePersonNotes from 'features/profile/hooks/usePersonNotes';
 import ZUIDate from 'zui/ZUIDate';
 import ZUISection from 'zui/ZUISection';
+import ZUITextEditor from 'zui/ZUITextEditor';
+import useAddPersonNote from 'features/profile/hooks/useAddPersonNote';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -69,6 +72,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 const PersonProfilePage: PageWithLayout = () => {
   const { orgId, personId } = useNumericRouteParams();
+
+  const [newNote, setNewNote] = useState('');
+
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
@@ -78,6 +84,7 @@ const PersonProfilePage: PageWithLayout = () => {
   const personTagsFuture = usePersonTags(orgId, personId);
   const journeysFuture = useJourneys(orgId);
   const notes = usePersonNotes(orgId, personId);
+  const addPersonNote = useAddPersonNote(orgId, personId);
 
   if (!person) {
     return null;
@@ -145,6 +152,28 @@ const PersonProfilePage: PageWithLayout = () => {
           <Grid size={{ lg: 4, xs: 12 }}>
             <ZUISection title={`Notes about ${person.first_name}`}>
               <Card sx={{ padding: 1 }}>
+                <Box sx={{ padding: 1 }}>
+                  <ZUITextEditor
+                    onChange={(value) => setNewNote(value.trim())}
+                    placeholder="Write a note"
+                    showStyling={false}
+                  />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      paddingY: 1,
+                    }}
+                  >
+                    <Button
+                      disabled={!newNote.trim()}
+                      onClick={() => addPersonNote(newNote)}
+                      variant="outlined"
+                    >
+                      Add note
+                    </Button>
+                  </Box>
+                </Box>
                 <Stack divider={<Divider flexItem />} gap={2}>
                   {notes.map((note) => (
                     <Box

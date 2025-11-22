@@ -57,6 +57,20 @@ const profilesSlice = createSlice({
         loaded: new Date().toISOString(),
       });
     },
+    personNoteAdded: (
+      state,
+      action: PayloadAction<[ZetkinPersonNote, number]>
+    ) => {
+      const [note, personId] = action.payload;
+      if (!state.notesByPersonId[personId]) {
+        state.notesByPersonId[personId] = remoteList();
+      }
+      state.notesByPersonId[personId].items = state.notesByPersonId[
+        personId
+      ].items
+        .filter((c) => c.id != note.id)
+        .concat([remoteItem(note.id, { data: note })]);
+    },
     personNotesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
       if (!state.notesByPersonId[personId]) {
@@ -143,6 +157,7 @@ export const {
   fieldsLoaded,
   personLoad,
   personLoaded,
+  personNoteAdded,
   personNotesLoad,
   personNotesLoaded,
   personOrgsLoad,

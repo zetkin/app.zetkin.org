@@ -75,6 +75,7 @@ export interface ZUITextEditorProps {
   clear?: number;
   fileUploads?: FileUpload[];
   initialValue?: string;
+  showStyling?: boolean;
   onChange: (value: string) => void;
   onCancelFile?: (file: FileUpload) => void;
   onClickAttach?: () => void;
@@ -85,6 +86,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   clear,
   fileUploads,
   initialValue,
+  showStyling = true,
   onChange,
   onCancelFile,
   onClickAttach,
@@ -190,9 +192,11 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
                 overflowY: 'scroll',
               }}
             />
-            <Collapse in={active} sx={{ flexShrink: 0 }}>
-              <Toolbar onClickAttach={onClickAttach} />
-            </Collapse>
+            {showStyling && (
+              <Collapse in={active} sx={{ flexShrink: 0 }}>
+                <Toolbar onClickAttach={onClickAttach} />
+              </Collapse>
+            )}
           </Slate>
         )}
         {fileUploads &&
