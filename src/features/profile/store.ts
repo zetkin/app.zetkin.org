@@ -71,6 +71,24 @@ const profilesSlice = createSlice({
         .filter((c) => c.id != note.id)
         .concat([remoteItem(note.id, { data: note })]);
     },
+    personNoteDelete: (state, action: PayloadAction<[number, number]>) => {
+      const [personId, noteId] = action.payload;
+
+      const noteItem = state.notesByPersonId[personId].items.find(
+        (item) => item.id == noteId
+      );
+
+      if (noteItem) {
+        noteItem.isLoading = true;
+      }
+    },
+    personNoteDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [personId, noteId] = action.payload;
+
+      state.notesByPersonId[personId].items = state.notesByPersonId[
+        personId
+      ].items.filter((item) => item.id != noteId);
+    },
     personNotesLoad: (state, action: PayloadAction<number>) => {
       const personId = action.payload;
       if (!state.notesByPersonId[personId]) {
@@ -158,6 +176,8 @@ export const {
   personLoad,
   personLoaded,
   personNoteAdded,
+  personNoteDelete,
+  personNoteDeleted,
   personNotesLoad,
   personNotesLoaded,
   personOrgsLoad,

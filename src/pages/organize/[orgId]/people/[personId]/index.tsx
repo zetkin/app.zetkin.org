@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { Close } from '@mui/icons-material';
 import {
   Avatar,
   Box,
@@ -7,6 +8,7 @@ import {
   CircularProgress,
   Divider,
   Grid,
+  IconButton,
   Stack,
   Typography,
 } from '@mui/material';
@@ -38,6 +40,8 @@ import ZUIDate from 'zui/ZUIDate';
 import ZUISection from 'zui/ZUISection';
 import ZUITextEditor from 'zui/ZUITextEditor';
 import useAddPersonNote from 'features/profile/hooks/useAddPersonNote';
+import useDeletePersonNote from 'features/profile/hooks/useDeletePersonNote';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -77,6 +81,7 @@ const PersonProfilePage: PageWithLayout = () => {
 
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
   const fieldsFuture = useCustomFields(orgId);
   const personFuture = usePerson(orgId, personId);
@@ -85,6 +90,7 @@ const PersonProfilePage: PageWithLayout = () => {
   const journeysFuture = useJourneys(orgId);
   const notes = usePersonNotes(orgId, personId);
   const addPersonNote = useAddPersonNote(orgId, personId);
+  const deletePersonNote = useDeletePersonNote(orgId, personId);
 
   if (!person) {
     return null;
@@ -185,9 +191,28 @@ const PersonProfilePage: PageWithLayout = () => {
                         padding: 1,
                       }}
                     >
-                      <Typography color="secondary">
-                        <ZUIDate datetime={note.created} />
-                      </Typography>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Typography color="secondary">
+                          <ZUIDate datetime={note.created} />
+                        </Typography>
+                        <IconButton
+                          onClick={() =>
+                            showConfirmDialog({
+                              onSubmit: () => deletePersonNote(note.id),
+                              title: 'Confirm deleting note',
+                              warningText: `Are you sure you want to delete this note about ${person.first_name}? Deleting a note can not be undone.`,
+                            })
+                          }
+                        >
+                          <Close />
+                        </IconButton>
+                      </Box>
                       <Typography>{note.text}</Typography>
                       <Box
                         sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
