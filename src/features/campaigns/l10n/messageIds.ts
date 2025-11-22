@@ -10,6 +10,12 @@ export default makeMessages('feat.campaigns', {
     extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
     goToActivities: m('See all upcoming activities.'),
     noActivities: m('There are no activities this week.'),
+    noDescription: {
+      addOneNow: m('Add one now.'),
+      text: m<{ addOneNow: ReactElement }>(
+        'No description has been added to this project yet. {addOneNow}'
+      ),
+    },
     nothingTomorrow: m('Nothing planned for tomorrow'),
     startsTomorrow: m('starts tomorrow'),
     subtitles: {
@@ -227,4 +233,12 @@ export default makeMessages('feat.campaigns', {
     },
   },
   tasks: m('Tasks'),
+  urlCard: {
+    nowAccepting: m('Now accepting sign-ups at this link'),
+    open: m('Open for sign-ups'),
+    preview: m('Preview project'),
+    previewPortal: m('Preview project in activist portal'),
+    visitPortal: m('Visit project in activist portal'),
+    willAccept: m('Will accept sign-ups at this link'),
+  },
 });

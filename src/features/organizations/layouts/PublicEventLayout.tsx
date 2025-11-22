@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
-import ActivistPortalHeader from '../components/ActivistPortlHeader';
+import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
@@ -56,6 +56,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
                       start={new Date(removeOffset(event.start_time))}
                     />
                   </ZUIText>
+                  <ZUIText component="span">·</ZUIText>
                   <ZUIText variant="bodySmRegular">
                     {event.location?.title || (
                       <Msg id={messageIds.eventPage.noLocation} />

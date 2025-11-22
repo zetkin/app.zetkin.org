@@ -9,7 +9,7 @@ import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
-import ActivistPortalHeader from 'features/organizations/components/ActivistPortlHeader';
+import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
 import EventMapLayout from 'features/organizations/layouts/EventMapLayout';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import { filtersUpdated } from '../store';

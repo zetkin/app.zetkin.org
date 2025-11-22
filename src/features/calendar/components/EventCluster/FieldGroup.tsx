@@ -1,27 +1,8 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
 
 import Field from './Field';
 import { FIELD_PRESENTATION, PresentableField } from './Event';
-
-const useStyles = makeStyles(() => ({
-  fields: {
-    display: 'flex',
-    flexFlow: 'column',
-    gap: '4px 0',
-    paddingLeft: '8px',
-    position: 'relative',
-  },
-  fieldsWithIconOnly: {
-    display: 'flex',
-    gap: '0 4px',
-    paddingRight: '4px',
-    position: 'absolute',
-    right: 0,
-    top: 2,
-  },
-}));
 
 interface FieldGroupProps {
   fields: PresentableField[];
@@ -29,7 +10,6 @@ interface FieldGroupProps {
 }
 
 const FieldGroup: FC<FieldGroupProps> = ({ fields, height }) => {
-  const classes = useStyles();
   const fieldsWithLabel = fields.filter(
     (f) => f.presentation === FIELD_PRESENTATION.WITH_LABEL
   );
@@ -37,8 +17,26 @@ const FieldGroup: FC<FieldGroupProps> = ({ fields, height }) => {
     (f) => f.presentation === FIELD_PRESENTATION.ICON_ONLY
   );
   return (
-    <Box className={classes.fields} height={height}>
-      <Box className={classes.fieldsWithIconOnly}>
+    <Box
+      height={height}
+      sx={{
+        display: 'flex',
+        flexFlow: 'column',
+        gap: '4px 0',
+        paddingLeft: '8px',
+        position: 'relative',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          gap: '0 4px',
+          paddingRight: '4px',
+          position: 'absolute',
+          right: 0,
+          top: 2,
+        }}
+      >
         {fieldsWithIconOnly.map((field, index) => (
           <Field key={`${field.kind}-${index}`} field={field} />
         ))}

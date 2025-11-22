@@ -30,6 +30,7 @@ import { loadLocationHouseholdVisitsDef } from 'features/canvass/rpc/loadLocatio
 import { getSuborgsWithStatsDef } from 'features/organizations/rpc/getSuborgsWithStats';
 import { getSuborgWithStatsDef } from 'features/organizations/rpc/getSuborgWithStats';
 import { surveyToListDef } from 'features/surveys/rpc/surveyToList';
+import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
 
 export function createRPCRouter() {
   const rpcRouter = new RPCRouter();
@@ -39,6 +40,7 @@ export function createRPCRouter() {
   rpcRouter.register(createNewViewRouteDef);
   rpcRouter.register(copyViewRouteDef);
   rpcRouter.register(getSurveyStatsDef);
+  rpcRouter.register(duplicateSurveyDef);
   rpcRouter.register(surveyToListDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);

@@ -3,6 +3,7 @@ import { Box, Button } from '@mui/material';
 import {
   ArrowForward,
   ChatBubbleOutline,
+  ContentCopy,
   Delete,
   Groups,
   QuizOutlined,
@@ -32,6 +33,7 @@ import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialo
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
 import { useApiClient } from 'core/hooks';
 import surveyToList from 'features/surveys/rpc/surveyToList';
+import duplicateSurvey from '../rpc/duplicateSurvey';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -92,6 +94,23 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     await router.push(
       `/organize/${orgId}/projects/${surveyFuture.data?.campaign?.id || ''} `
     );
+  };
+
+  const handleDuplicate = async () => {
+    const res = await apiClient.rpc(duplicateSurvey, {
+      campId: parseInt(campId),
+      orgId: parsedOrg,
+      surveyId: parseInt(surveyId),
+    });
+
+    if (res) {
+      await router.push(
+        `/organize/${res.organization.id}/projects/${campId}/surveys/${res.id}`
+      );
+      showSnackbar('success', messages.surveyDuplicated.success());
+    } else {
+      showSnackbar('error', messages.surveyDuplicated.error());
+    }
   };
 
   const handleOnCampaignSelected = async (campaignId: number) => {
@@ -174,6 +193,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       }
       defaultTab="/"
       ellipsisMenuItems={[
+        {
+          label: messages.layout.actions.duplicate(),
+          onSelect: () => handleDuplicate(),
+          startIcon: <ContentCopy />,
+        },
         {
           label: messages.layout.actions.move(),
           onSelect: () => setIsMoveDialogOpen(true),
