@@ -8,6 +8,7 @@ import { getSurveyCampId } from 'features/surveys/utils/getSurveyUrl';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
+import ResponseStatsCards from 'features/surveys/components/ResponseStatsCards';
 import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
@@ -93,28 +94,10 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
           <Grid container spacing={2}>
-            <Grid container size={{ md: 8 }} spacing={1}>
-              <SubmissionChartCard
-                orgId={parseInt(orgId)}
-                surveyId={parseInt(surveyId)}
-              />
-            </Grid>
-            <Grid size={{ md: 4 }}>
-              <SurveyURLCard
-                isOpen={isOpen}
-                orgId={survey.organization.id.toString()}
-                surveyId={surveyId}
-              />
-              <SurveyUnlinkedCard
-                campId={
-                  campId !== 'shared' && campId !== 'standalone'
-                    ? parseInt(campId)
-                    : campId
-                }
-                orgId={parseInt(orgId)}
-                surveyId={parseInt(surveyId)}
-              />
-            </Grid>
+            <ResponseStatsCards
+              orgId={parseInt(orgId)}
+              surveyId={parseInt(surveyId)}
+            />
           </Grid>
         )}
       </Box>
