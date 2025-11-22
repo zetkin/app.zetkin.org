@@ -24,13 +24,21 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     `/api/orgs/${params.orgId}/people/${params.personId}`
   );
 
-  const personModel = await PersonModel.findOne({
+  const personModelDocument = await PersonModel.findOne({
     personId: params.personId,
   });
+  const personModel = personModelDocument?.toObject();
 
   const personWithUpdates: PersonWithUpdates = {
     ...person,
-    _history: personModel?._history,
+    _history: {
+      ...defaultData._history,
+      ...personModel?._history,
+      fields: {
+        ...defaultData._history!.fields,
+        ...personModel?._history?.fields,
+      },
+    },
   };
 
   return NextResponse.json({ data: personWithUpdates });
@@ -43,17 +51,19 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const now = new Date().toISOString();
 
-  const fields = Object.keys(payload)
-    .map((field) => [`_history.fields.${field}`, now] as const);
+  const fields = Object.keys(payload).map(
+    (field) => [`_history.fields.${field}`, now] as const
+  );
 
-  const updated = await PersonModel.findOneAndUpdate(
+  const updatedDocument = await PersonModel.findOneAndUpdate(
     { personId: params.personId },
     {
-      "_history.last_update": now,
+      '_history.last_update': now,
       ...Object.fromEntries(fields),
     },
     { new: true, upsert: true, multi: true }
   );
+  const updated = updatedDocument?.toObject();
 
   const headers: IncomingHttpHeaders = {};
   request.headers.forEach((value, key) => (headers[key] = value));
@@ -66,10 +76,40 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
 
   const personWithUpdates: PersonWithUpdates = {
     ...person,
-    _history: updated?._history,
+    _history: {
+      ...defaultData._history,
+      ...updated?._history,
+      fields: {
+        ...defaultData._history!.fields,
+        ...updated?._history?.fields,
+      },
+    },
   };
 
   return NextResponse.json({
     data: personWithUpdates,
   });
 }
+
+const defaultData = {
+  _history: {
+    created: '2025-01-01T00:00:00.000Z',
+    fields: {
+      id: '2025-01-01T00:00:00.000Z',
+      alt_phone: '2025-01-01T00:00:00.000Z',
+      email: '2025-01-01T00:00:00.000Z',
+      first_name: '2025-01-01T00:00:00.000Z',
+      city: '2025-01-01T00:00:00.000Z',
+      last_name: '2025-01-01T00:00:00.000Z',
+      co_address: '2025-01-01T00:00:00.000Z',
+      country: '2025-01-01T00:00:00.000Z',
+      ext_id: '2025-01-01T00:00:00.000Z',
+      gender: '2025-01-01T00:00:00.000Z',
+      phone: '2025-01-01T00:00:00.000Z',
+      is_user: '2025-01-01T00:00:00.000Z',
+      street_address: '2025-01-01T00:00:00.000Z',
+      zip_code: '2025-01-01T00:00:00.000Z',
+    },
+    last_update: '2025-01-01T00:00:00.000Z',
+  },
+} as const satisfies Pick<PersonWithUpdates, '_history'> ;
