@@ -106,6 +106,7 @@ async function handle(
       return;
     }
 
+    // initialize counters for each question
     responseStatsCounters[question.id] = {
       answerCounter: 0,
       selectedOptions: {},
@@ -115,12 +116,14 @@ async function handle(
       totalWordCounts: 0,
       wordFrequencies: {},
     };
-
-    if (question.question.response_type === RESPONSE_TYPE.TEXT) {
+    // handle questions with options as response
+    if (
+      question.question.response_type === RESPONSE_TYPE.TEXT ||
+      !question.question.options
+    ) {
       return;
     }
-
-    (question as ZetkinSurveyOptionsQuestionElement).question.options.forEach(
+    (question as ZetkinSurveyOptionsQuestionElement).question.options!.forEach(
       (option) => {
         responseStatsCounters[question.id].selectedOptions[option.id] = {
           count: 0,
@@ -130,6 +133,7 @@ async function handle(
     );
   });
 
+  // this handles questions with text as response
   responses.forEach((response) => {
     if (!response || !response.responses) {
       return;
