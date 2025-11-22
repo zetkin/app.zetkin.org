@@ -47,7 +47,6 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                   })
                 : undefined
             }
-            sx={{ width: '100%' }}
           >
             <Box height={400}>
               {!hasChartData && (
