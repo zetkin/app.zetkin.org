@@ -14,11 +14,13 @@ import { ZetkinAppliedTag } from 'utils/types/zetkin';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<Zetkin2Area>;
+  locationsByAreaId: Record<string, RemoteList<ZetkinLocation>>;
   tagsByAreaId: Record<string, RemoteList<ZetkinAppliedTag>>;
 }
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
+  locationsByAreaId: remoteList(),
   tagsByAreaId: {},
 };
 
@@ -53,6 +55,14 @@ const areasSlice = createSlice({
       const areas = action.payload;
       state.areaList = remoteListLoaded(areas);
     },
+    locationsLoad: (state) => {
+      state.locationsByAreaId = remoteListLoad(state.locationsByAreaId);
+    },
+    locationsLoaded: (state, action: PayloadAction<[string, ZetkinLocation[]]>) => {
+      const locations = action.payload;
+      state.locationsByAreaId = remoteListLoaded(locations);
+    },
+
   },
 });
 
@@ -64,5 +74,7 @@ export const {
   areaLoaded,
   areasLoad,
   areasLoaded,
+  locationsLoad,
+  locationsLoaded,
   areaUpdated,
 } = areasSlice.actions;

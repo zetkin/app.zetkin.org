@@ -11,6 +11,7 @@ import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import AreaOverlay from 'features/areas/components/AreaOverlay';
 import oldAreaFormat from 'features/areas/utils/oldAreaFormat';
+import useLocations from 'features/areas/hooks/useLocations';
 import useAreaEditing from 'features/geography/hooks/useAreaEditing';
 import useAreaSelection from 'features/geography/hooks/useAreaSelection';
 import SelectedArea from './SelectedArea';
@@ -31,6 +32,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
   const [map, setMap] = useState<MapType | null>(null);
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({ areas, map });
+  const locations = useLocations(orgId, selectedArea?.id);
   const {
     cancelDrawing,
     canFinishDrawing,
@@ -111,13 +113,14 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
             onZoomIn={() => map?.zoomIn()}
             onZoomOut={() => map?.zoomOut()}
           />
-          {selectedArea && (
+          {selectedArea && locations && (
             <AreaOverlay
               area={
                 editingArea
                   ? oldAreaFormat(editingArea)
                   : oldAreaFormat(selectedArea)
               }
+              locations={locations}
               editing={editing}
               onBeginEdit={() => setEditing(true)}
               onCancelEdit={() => setEditing(false)}

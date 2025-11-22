@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { ZetkinArea } from '../../types';
+import { ZetkinArea, ZetkinLocation } from '../../types';
 import useAreaMutations from '../../hooks/useAreaMutations';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
@@ -31,6 +31,7 @@ import { ZUIExpandableText } from 'zui/ZUIExpandableText';
 type Props = {
   area: ZetkinArea;
   editing: boolean;
+  locations: ZetkinLocation[];
   onBeginEdit: () => void;
   onCancelEdit: () => void;
   onClose: () => void;
@@ -39,6 +40,7 @@ type Props = {
 const AreaOverlay: FC<Props> = ({
   area,
   editing,
+  locations,
   onBeginEdit,
   onCancelEdit,
   onClose,
@@ -80,6 +82,26 @@ const AreaOverlay: FC<Props> = ({
     setTitle(area.title);
     setDescription(area.description);
   }, [area.id]);
+
+  const locationsInSelectedArea: ZetkinLocation[] = [];
+  if (area) {
+    locations.map((location) => {
+      const isInsideArea = isPointInsidePolygon(
+        locToLatLng(location),
+        area.points.map((point) => ({ lat: point[0], lng: point[1] }))
+      );
+      if (isInsideArea) {
+        locationsInSelectedArea.push(location);
+      }
+    });
+  }
+
+  const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
+    .map(
+      (location) =>
+        location.num_known_households || location.num_estimated_households
+    )
+    .reduce((prev, curr) => prev + curr, 0);
 
   return (
     <Paper
@@ -229,6 +251,18 @@ const AreaOverlay: FC<Props> = ({
         {/*
         <TagsSection area={area} />
         */}
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={1}
+        paddingTop={1}
+        sx={{ overflowY: 'auto' }}
+      >
+        <Typography color="secondary" variant="h5">
+            Number of locations
+            {locationsInSelectedArea.length}
+        </Typography>
       </Box>
       <Box display="flex" gap={1}>
         {editing && (
