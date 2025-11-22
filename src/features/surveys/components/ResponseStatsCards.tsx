@@ -9,6 +9,7 @@ import {
   QuestionStats,
   SurveyResponseStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
+import ZUIText from 'zui/components/ZUIText';
 
 type ResponseStatsChartCardProps = {
   orgId: number;
@@ -18,14 +19,16 @@ type ResponseStatsChartCardProps = {
 const QuestionBarChart = ({ question }: { question: QuestionStats }) => {
   const theme = useTheme();
 
-  if (!('options' in question)) {
-    return null;
-  }
-
-  const data = question.options.map((o) => ({
-    count: o.count,
-    option: o.option.text,
-  }));
+  const data =
+    'options' in question
+      ? question.options.map((o) => ({
+          count: o.count,
+          option: o.option.text,
+        }))
+      : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
+          count: count,
+          option: word,
+        }));
 
   return (
     <ResponsiveBar
@@ -106,7 +109,15 @@ const ResponseStatsCard: FC<ResponseStatsChartCardProps> = ({
                 <ZUICard
                   key={index}
                   header={question.question.question.question}
-                  subheader={`${question.answerCount} answers in total.`}
+                  subheader={`${question.answerCount} answers in total. ${
+                    'options' in question
+                      ? `${question.totalSelectedOptionsCount} selected options in total.`
+                      : `${question.totalWordCount} words in total. ${
+                          question.totalUniqueWordCount
+                        } total unique words per response. Showing top ${
+                          Object.entries(question.topWordFrequencies).length
+                        } word frequencies in free text question:`
+                  }`}
                   sx={{
                     width: '100%',
                   }}
