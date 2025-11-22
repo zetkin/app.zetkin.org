@@ -298,6 +298,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           href: '/submissions',
           label: messages.tabs.submissions(),
         },
+        {
+          href: '/insights',
+          label: 'Insights',
+        },
       ]}
       title={
         <ZUIFuture future={surveyFuture}>
