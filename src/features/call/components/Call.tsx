@@ -1,7 +1,9 @@
 'use client';
 
-import { Alert, Box, Slide, Snackbar } from '@mui/material';
+import { Alert, Box, Slide, Snackbar, Tab } from '@mui/material';
 import { FC, useState } from 'react';
+import { Info, ListOutlined, Person } from '@mui/icons-material';
+import { TabContext, TabList } from '@mui/lab';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
@@ -20,6 +22,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 const Call: FC = () => {
   const messages = useMessages(messageIds);
@@ -27,6 +30,10 @@ const Call: FC = () => {
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
+  const isMobile = useIsMobile();
+  const [currentMobileTab, setCurrentMobileTab] = useState<number | null>(
+    isMobile ? 1 : null
+  );
 
   const [callLogOpen, setCallLogOpen] = useState(false);
   const [assignmentSwitchedTo, setAssignmentSwitchedTo] = useState<
@@ -73,6 +80,10 @@ const Call: FC = () => {
     );
   }
 
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCurrentMobileTab(newValue);
+  };
+
   return (
     <>
       <Box
@@ -90,11 +101,12 @@ const Call: FC = () => {
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
         />
-        <Box height="calc(100dvh - 100px)" position="relative" width="100%">
+        <Box height="calc(100dvh - 150px)" position="relative" width="100%">
           <CallPanels
             assignment={assignment}
             call={call}
             lane={lane}
+            mobileTabIndex={currentMobileTab}
             onAbandonUnfinishedCall={(callId) => abandonUnfinishedCall(callId)}
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
@@ -107,6 +119,22 @@ const Call: FC = () => {
             unfinishedCalls={unfinishedCalls}
           />
         </Box>
+        {currentMobileTab && (
+          <Box sx={{ typography: 'body1', width: '100%' }}>
+            <TabContext value={currentMobileTab}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <TabList
+                  aria-label="lab API tabs example"
+                  onChange={handleChange}
+                >
+                  <Tab icon={<Info />} label="One" value="1" />
+                  <Tab icon={<Person />} label="Item Two" value="2" />
+                  <Tab icon={<ListOutlined />} label="Item Three" value="3" />
+                </TabList>
+              </Box>
+            </TabContext>
+          </Box>
+        )}
       </Box>
       <CallSwitchModal
         assignment={assignment}
