@@ -93,7 +93,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
           <Grid container spacing={2}>
-            <Grid container size={{ md: 8 }} spacing={1}>
+            <Grid size={{ md: 8 }}>
               <SubmissionChartCard
                 orgId={parseInt(orgId)}
                 surveyId={parseInt(surveyId)}
