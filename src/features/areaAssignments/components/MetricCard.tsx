@@ -81,7 +81,6 @@ const MetricCard: FC<MetricCardProps> = ({ metric, onClose, onSave }) => {
               onClick={() => {
                 onSave({
                   defines_success: definesDone,
-                  description,
                   id: metric.id,
                   question,
                   type: metric.type,
