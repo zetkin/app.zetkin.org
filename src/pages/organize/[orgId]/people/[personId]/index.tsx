@@ -181,56 +181,63 @@ const PersonProfilePage: PageWithLayout = () => {
                   </Box>
                 </Box>
                 <Stack divider={<Divider flexItem />} gap={2}>
-                  {notes.map((note) => (
-                    <Box
-                      key={note.id}
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1,
-                        padding: 1,
-                      }}
-                    >
+                  {notes
+                    .sort((a, b) => {
+                      return (
+                        new Date(b.created).getTime() -
+                        new Date(a.created).getTime()
+                      );
+                    })
+                    .map((note) => (
                       <Box
+                        key={note.id}
                         sx={{
-                          alignItems: 'center',
                           display: 'flex',
-                          justifyContent: 'space-between',
+                          flexDirection: 'column',
+                          gap: 1,
+                          padding: 1,
                         }}
                       >
-                        <Typography color="secondary">
-                          <ZUIDate datetime={note.created} />
-                        </Typography>
-                        <IconButton
-                          onClick={() =>
-                            showConfirmDialog({
-                              onSubmit: () => deletePersonNote(note.id),
-                              title: 'Confirm deleting note',
-                              warningText: `Are you sure you want to delete this note about ${person.first_name}? Deleting a note can not be undone.`,
-                            })
-                          }
+                        <Box
+                          sx={{
+                            alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
                         >
-                          <Close />
-                        </IconButton>
+                          <Typography color="secondary">
+                            <ZUIDate datetime={note.created} />
+                          </Typography>
+                          <IconButton
+                            onClick={() =>
+                              showConfirmDialog({
+                                onSubmit: () => deletePersonNote(note.id),
+                                title: 'Confirm deleting note',
+                                warningText: `Are you sure you want to delete this note about ${person.first_name}? Deleting a note can not be undone.`,
+                              })
+                            }
+                          >
+                            <Close />
+                          </IconButton>
+                        </Box>
+                        <Typography>{note.text}</Typography>
+                        <Box
+                          sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
+                        >
+                          <Avatar
+                            src={`/api/orgs/${orgId}/people/${note.author.id}/avatar`}
+                            sx={{ height: 28, width: 28 }}
+                          />
+                          <Typography>{note.author.name}</Typography>
+                          <Divider flexItem orientation="vertical" />
+                          <Avatar
+                            src={`/api/orgs/${note.organization.id}/avatar`}
+                            sx={{ height: 28, width: 28 }}
+                          />
+                          <Typography>{note.organization.title}</Typography>
+                        </Box>
                       </Box>
-                      <Typography>{note.text}</Typography>
-                      <Box
-                        sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
-                      >
-                        <Avatar
-                          src={`/api/orgs/${orgId}/people/${note.author.id}/avatar`}
-                          sx={{ height: 28, width: 28 }}
-                        />
-                        <Typography>{note.author.name}</Typography>
-                        <Divider flexItem orientation="vertical" />
-                        <Avatar
-                          src={`/api/orgs/${note.organization.id}/avatar`}
-                          sx={{ height: 28, width: 28 }}
-                        />
-                        <Typography>{note.organization.title}</Typography>
-                      </Box>
-                    </Box>
-                  ))}
+                    ))}
                 </Stack>
               </Card>
             </ZUISection>
