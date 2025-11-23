@@ -162,7 +162,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           label={messages.blocks.choice.question()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.choice.emptyQuestion()}
-          value={title + (element.question.required ? '*' : '')}
+          required={element.question.required}
+          value={title}
           variant="header"
         />
         <PreviewableSurveyInput

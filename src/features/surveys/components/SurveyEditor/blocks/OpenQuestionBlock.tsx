@@ -95,7 +95,8 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           label={messages.blocks.open.label()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.open.empty()}
-          value={title + (element.question.required ? '*' : '')}
+          required={element.question.required}
+          value={title}
           variant="header"
         />
         <PreviewableSurveyInput
