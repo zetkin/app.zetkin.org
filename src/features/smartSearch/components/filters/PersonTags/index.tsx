@@ -1,4 +1,4 @@
-import { Box, Chip, MenuItem } from '@mui/material';
+import { Box, Button, Chip, MenuItem, Typography } from '@mui/material';
 import { FormEvent, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
@@ -237,6 +237,67 @@ const PersonTags = ({
                     groupBy={(option) => option.group?.title || 'No group'}
                     onChange={(_, v) => handleTagChange(v)}
                     options={sortedGroupedTags}
+                    renderGroup={(params) => {
+                      return (
+                        <Box
+                          key={params.key}
+                          component="li"
+                          sx={{
+                            width: '100%',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              paddingX: 1,
+                              width: '100%',
+                            }}
+                          >
+                            <Typography color="secondary">
+                              {params.group}
+                            </Typography>
+                            <Button
+                              onClick={() => {
+                                const group = groupedTags.find(
+                                  (tagGroup) => tagGroup.title == params.group
+                                );
+
+                                const existingTags = tags.filter(
+                                  (tag) =>
+                                    !!filter.config.tags.some(
+                                      (tagId) => tagId == tag.id
+                                    )
+                                );
+
+                                if (group) {
+                                  handleTagChange([
+                                    ...existingTags,
+                                    ...group.tags
+                                      .filter(
+                                        (tag) =>
+                                          !existingTags.some(
+                                            (t) => t.id == tag.id
+                                          )
+                                      )
+                                      .map((tag) => ({
+                                        id: tag.id,
+                                        title: tag.title,
+                                      })),
+                                  ]);
+                                }
+                              }}
+                              size="small"
+                            >
+                              Add all
+                            </Button>
+                          </Box>
+                          <p>{params.children}</p>
+                        </Box>
+                      );
+                    }}
+                    sx={{ minWidth: '300px' }}
                     value={tags.filter((t) =>
                       filter.config.tags.includes(t.id)
                     )}
