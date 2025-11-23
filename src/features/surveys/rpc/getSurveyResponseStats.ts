@@ -193,7 +193,7 @@ async function handle(
       responseStatsCounters[questionId].wordFrequencies
     );
     responseStatsCounters[questionId].topWordFrequencies = Object.fromEntries(
-      wordFrequenciesAsList.sort((a, b) => b[1] - a[1]).slice(0, 10)
+      wordFrequenciesAsList.sort((a, b) => b[1] - a[1]).slice(0, 100)
     );
     responseStatsCounters[questionId].totalUniqueWordCount =
       wordFrequenciesAsList.length;

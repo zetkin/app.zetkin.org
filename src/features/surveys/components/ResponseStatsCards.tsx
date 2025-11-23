@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Paper,
-  Skeleton,
   Tab,
   Tabs,
   Typography,
@@ -12,6 +11,8 @@ import {
 } from '@mui/material';
 import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
 import { useSpring } from '@react-spring/core';
+import { List } from 'react-window';
+import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -23,11 +24,11 @@ import {
   SurveyResponseStats,
   TextQuestionStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
-import useSurveySubmissions from 'features/surveys/hooks/useSurveySubmissions';
-import { IFuture } from 'core/caching/futures';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-import { List } from 'react-window';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
+
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/scale.css';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
@@ -85,7 +86,7 @@ const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
             count: count,
             option: word,
           }));
-    return bars.sort((a, b) => b.count - a.count);
+    return bars.sort((a, b) => b.count - a.count).slice(0, 10);
   }, [question]);
 
   return (
@@ -146,6 +147,43 @@ const OptionsStatsCard = ({
         <QuestionStatsBarPlot question={questionStats} />
       </Box>
     </ZUICard>
+  );
+};
+
+const TextResponseWordCloud = ({
+  questionStats,
+}: {
+  questionStats: TextQuestionStats;
+}) => {
+  const words: Word[] = useMemo(
+    () =>
+      Object.entries(questionStats.topWordFrequencies).map(
+        ([word, frequency]) => ({
+          text: word,
+          value: frequency,
+        })
+      ),
+    [questionStats.topWordFrequencies]
+  );
+
+  const options: OptionsProp = useMemo(
+    () => ({
+      fontFamily: 'Azo-Sans-Web',
+      fontSizes: [30, 80],
+      rotationAngles: [0, 90],
+      rotations: 2,
+    }),
+    []
+  );
+
+  return (
+    <Box
+      sx={{
+        padding: '10px',
+      }}
+    >
+      <ReactWordcloud options={options} words={words} />
+    </Box>
   );
 };
 
@@ -210,8 +248,8 @@ type TextResponseListRowProps = {
   index: number;
   orgId: number;
   questionId: number;
-  style: CSSProperties;
   rows: SubmissionStats[][];
+  style: CSSProperties;
 };
 
 const TextResponseListRow = ({
@@ -327,7 +365,7 @@ const TextStatsCard = ({
   submissionStats: SubmissionStats[];
   surveyId: number;
 }) => {
-  const [tab, setTab] = useState('responses');
+  const [tab, setTab] = useState('word-cloud');
 
   return (
     <ZUICard
@@ -338,24 +376,26 @@ const TextStatsCard = ({
       }}
     >
       <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
+        <Tab label={'Word cloud'} value={'word-cloud'} />
+        <Tab label={'Word frequency bars'} value={'word-frequency-bars'} />
         <Tab label={'Responses'} value={'responses'} />
-        <Tab label={'Bar plot'} value={'bar-plot'} />
       </Tabs>
-      {tab === 'responses' && (
-        <Box display={'flex'} height={400} position={'relative'}>
+      <Box height={400}>
+        {tab === 'word-cloud' && (
+          <TextResponseWordCloud questionStats={questionStats} />
+        )}
+        {tab === 'word-frequency-bars' && (
+          <QuestionStatsBarPlot question={questionStats} />
+        )}
+        {tab === 'responses' && (
           <TextResponseList
             orgId={orgId}
             questionStats={questionStats}
             submissionStats={submissionStats}
             surveyId={surveyId}
           />
-        </Box>
-      )}
-      {tab === 'bar-plot' && (
-        <Box height={400}>
-          <QuestionStatsBarPlot question={questionStats} />
-        </Box>
-      )}
+        )}
+      </Box>
     </ZUICard>
   );
 };
