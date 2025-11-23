@@ -309,11 +309,15 @@ const CallPanels: FC<Props> = ({
           flexDirection: 'column',
           height: '100%',
           justifyContent: 'space-evenly',
-          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 3)' : '100%',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.SUMMARY
+            ? 'calc(100% / 3)'
+            : '100%',
           padding: 2,
           position: 'relative',
           transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
-          width: 1 / 3,
+          width: mobileTabIndex ? 1 : 1 / 3,
         }}
       >
         <Box
