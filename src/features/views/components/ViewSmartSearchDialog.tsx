@@ -5,14 +5,17 @@ import { ZetkinView } from 'features/views/components/types';
 import SmartSearchDialog, {
   SmartSearchDialogProps,
 } from 'features/smartSearch/components/SmartSearchDialog';
+import { ZetkinSmartSearchFilter } from 'utils/types/zetkin';
 
 interface ViewSmartSearchDialogProps {
+  initialSmartSearchFilter?: ZetkinSmartSearchFilter[];
   onDialogClose: SmartSearchDialogProps['onDialogClose'];
   orgId: number;
   view: ZetkinView;
 }
 
 const ViewSmartSearchDialog: FunctionComponent<ViewSmartSearchDialogProps> = ({
+  initialSmartSearchFilter,
   orgId,
   view,
   ...dialogProps
@@ -22,6 +25,7 @@ const ViewSmartSearchDialog: FunctionComponent<ViewSmartSearchDialogProps> = ({
   return (
     <SmartSearchDialog
       {...dialogProps}
+      initialSmartSearchFilter={initialSmartSearchFilter}
       onSave={(query) => {
         updateContentQuery(query);
         dialogProps.onDialogClose();

@@ -315,6 +315,13 @@ export default makeMessages('feat.views', {
       ),
       headline: m('Configure Smart Search list'),
     },
+    newPeople: {
+      configureButton: m('Configure new people list'),
+      description: m(
+        'Create a dynamic list for people who have recently registered'
+      ),
+      headline: m('Configure New People Smart Search list'),
+    },
     notice: {
       dynamic: m('This is a Smart Search list but no people match the query'),
       static: m("You haven't added any rows yet"),

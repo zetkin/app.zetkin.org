@@ -23,6 +23,7 @@ import {
 } from 'features/views/components/types';
 
 export interface SmartSearchDialogProps {
+  initialSmartSearchFilter?: ZetkinSmartSearchFilter[];
   query?: ZetkinQuery | null;
   onDialogClose?: () => void;
   onOutputConfigured?: (columns: SelectedViewColumn[]) => void;
@@ -39,6 +40,7 @@ enum STATE {
 }
 
 const SmartSearch = ({
+  initialSmartSearchFilter,
   hasSaveCancelButtons,
   onDialogClose,
   onOutputConfigured,
@@ -55,7 +57,10 @@ const SmartSearch = ({
     setStartsWithAll,
     deleteFilter,
     update,
-  } = useSmartSearch(query?.filter_spec);
+  } = useSmartSearch([
+    ...(query?.filter_spec ?? []),
+    ...(initialSmartSearchFilter ?? []),
+  ]);
   // TODO: Remove this after refactoring Smart Search / View connection
   const viewsMessages = useMessages(viewsMessageIds);
   const smartSearchMessages = useMessages(smartSearchMessageIds);

@@ -1,9 +1,10 @@
 import { Dialog, DialogContent } from '@mui/material';
 
 import SmartSearch from './SmartSearch';
-import { ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinQuery, ZetkinSmartSearchFilter } from 'utils/types/zetkin';
 
 export interface SmartSearchDialogProps {
+  initialSmartSearchFilter?: ZetkinSmartSearchFilter[];
   query?: ZetkinQuery | null;
   onDialogClose: () => void;
   onSave: (query: Pick<ZetkinQuery, 'filter_spec'>) => void;
@@ -11,6 +12,7 @@ export interface SmartSearchDialogProps {
 }
 
 const SmartSearchDialog = ({
+  initialSmartSearchFilter,
   onDialogClose,
   onSave,
   query,
@@ -26,6 +28,7 @@ const SmartSearchDialog = ({
         }}
       >
         <SmartSearch
+          initialSmartSearchFilter={initialSmartSearchFilter}
           onDialogClose={onDialogClose}
           onSave={onSave}
           query={query}
