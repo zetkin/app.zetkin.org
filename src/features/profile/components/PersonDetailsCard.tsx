@@ -8,6 +8,7 @@ import {
   ListItemText,
   Tooltip,
 } from '@mui/material';
+import dayjs from 'dayjs';
 
 import EditPersonDialog from './EditPersonDialog';
 import globalMessageIds from 'core/i18n/messageIds';
@@ -25,7 +26,6 @@ import {
 } from 'utils/types/zetkin';
 import { PersonWithUpdates } from '../types/PersonWithUpdates';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import dayjs from 'dayjs';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -51,22 +51,32 @@ const nativeFieldsToDisplay = [
 ] as const;
 
 const ChangedDateTooltip: React.FunctionComponent<{
-  person: PersonWithUpdates & ZetkinPerson;
   field: string;
+  person: PersonWithUpdates & ZetkinPerson;
 }> = ({ person, field }) => {
   const changedDate = (person as PersonWithUpdates)._history?.fields?.[
     field as keyof ZetkinPersonNativeFields
   ];
 
   if (!changedDate) {
-    return <>?</>
+    return <>?</>;
   }
 
   if (dayjs().diff(dayjs(changedDate), 'day') > 30) {
-    return <ZUIDate datetime={changedDate} />;
+    return (
+      <>
+        <Msg id={messageIds.changedDateTooltip} />{' '}
+        <ZUIDate datetime={changedDate} />
+      </>
+    );
   }
 
-  return <ZUIRelativeTime datetime={changedDate} />;
+  return (
+    <>
+      <Msg id={messageIds.changedDateTooltip} />{' '}
+      <ZUIRelativeTime datetime={changedDate} />
+    </>
+  );
 };
 
 const PersonDetailsCard: React.FunctionComponent<{
@@ -166,10 +176,9 @@ const PersonDetailsCard: React.FunctionComponent<{
             {allFields.map((detail, idx) => (
               <ListItem key={idx} divider>
                 <Tooltip
-                key={idx}
                   placement="bottom"
                   title={
-                    <ChangedDateTooltip person={person} field={detail.field} />
+                    <ChangedDateTooltip field={detail.field} person={person} />
                   }
                 >
                   <ListItemText

@@ -61,7 +61,7 @@ export async function PATCH(request: NextRequest, { params }: RouteMeta) {
       '_history.last_update': now,
       ...Object.fromEntries(fields),
     },
-    { new: true, upsert: true, multi: true }
+    { new: true, upsert: true }
   );
   const updated = updatedDocument?.toObject();
 
@@ -95,21 +95,21 @@ const defaultData = {
   _history: {
     created: '2025-01-01T00:00:00.000Z',
     fields: {
-      id: '2025-01-01T00:00:00.000Z',
       alt_phone: '2025-01-01T00:00:00.000Z',
-      email: '2025-01-01T00:00:00.000Z',
-      first_name: '2025-01-01T00:00:00.000Z',
       city: '2025-01-01T00:00:00.000Z',
-      last_name: '2025-01-01T00:00:00.000Z',
       co_address: '2025-01-01T00:00:00.000Z',
       country: '2025-01-01T00:00:00.000Z',
+      email: '2025-01-01T00:00:00.000Z',
       ext_id: '2025-01-01T00:00:00.000Z',
+      first_name: '2025-01-01T00:00:00.000Z',
       gender: '2025-01-01T00:00:00.000Z',
-      phone: '2025-01-01T00:00:00.000Z',
+      id: '2025-01-01T00:00:00.000Z',
       is_user: '2025-01-01T00:00:00.000Z',
+      last_name: '2025-01-01T00:00:00.000Z',
+      phone: '2025-01-01T00:00:00.000Z',
       street_address: '2025-01-01T00:00:00.000Z',
       zip_code: '2025-01-01T00:00:00.000Z',
     },
     last_update: '2025-01-01T00:00:00.000Z',
   },
-} as const satisfies Pick<PersonWithUpdates, '_history'> ;
+} as const;

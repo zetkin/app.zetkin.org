@@ -7,7 +7,7 @@ type PersonModelType = {
     created: string;
     fields: Record<keyof ZetkinPersonNativeFields, string | null>;
     last_update: string;
-  }
+  };
   personId: number;
 };
 
@@ -22,7 +22,4 @@ const personSchema = new mongoose.Schema<PersonModelType>({
 
 export const PersonModel: mongoose.Model<PersonModelType> =
   mongoose.models.Person ||
-  mongoose.model<PersonModelType>(
-    'Person',
-    personSchema
-  );
+  mongoose.model<PersonModelType>('Person', personSchema);
