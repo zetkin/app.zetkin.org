@@ -18,6 +18,8 @@ import PotentialDuplicatesLists from './PotentialDuplicatesLists';
 import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { useNumericRouteParams } from 'core/hooks';
+import useDetailledPersons from '../hooks/useDetailledPerson';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -38,14 +40,27 @@ const MergeModal: FC<Props> = ({
   const messages = useMessages(messageIds);
   const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
 
+  const test = useDetailledPersons;
+
   const [selectedIds, setSelectedIds] = useState<number[]>(
     persons.map((person) => person.id) ?? []
   );
 
+  const { orgId } = useNumericRouteParams();
+
   const peopleToMerge = [
     ...persons.filter((person) => selectedIds.includes(person.id)),
-    ...additionalPeople,
+    ...test(
+      orgId,
+      additionalPeople.map((person) => person.id)
+    ).detailledPersons,
   ];
+
+  // useEffect(() => {
+  //   if (newPersonId && detailedPerson) {
+  //     setAdditionalPeople([...additionalPeople, detailedPerson]);
+  //   }
+  // }, [newPersonId, detailedPerson]);
 
   const peopleNotToMerge = persons.filter(
     (person) => !selectedIds.includes(person.id)
