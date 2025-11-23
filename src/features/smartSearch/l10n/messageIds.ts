@@ -560,6 +560,7 @@ export default makeMessages('feat.smartSearch', {
       }>(
         '{addRemoveSelect} people with {condition} of the following tags: {tags}'
       ),
+      noGroup: m('No group'),
     },
     personView: {
       examples: {
