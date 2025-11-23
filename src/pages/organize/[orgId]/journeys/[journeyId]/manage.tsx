@@ -14,6 +14,8 @@ import { ZetkinJourney } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Box, Card, Grid, Stack, TextField } from '@mui/material';
 import BlockWrapper from 'features/surveys/components/SurveyEditor/blocks/BlockWrapper';
+import ZUIReorderable from 'zui/ZUIReorderable';
+import { useState } from 'react';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -41,11 +43,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 const ClosedJourneyInstancesPage: PageWithLayout = () => {
   const { orgId, journeyId } = useNumericRouteParams();
   const journeyFuture = useJourney(orgId, journeyId);
-
+  
   const milestones = [
     {id: 1, title: "Assigned Contact", description:"Assign an organizer to act as contact person forthe new member"},
     {id: 2, title: "First Contact", description: "Get in contacts"},
   ]
+  const [milestoneOrder, setMilestoneOrder] = useState<number[]>(milestones.map(ms=>ms.id));
 
   return (
     <>
@@ -57,11 +60,11 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
           <Card sx={{ padding: 2 }}>
             <Stack spacing={2}>
 
-              <TextField key={journeyFuture.data?.title} label="Title" defaultValue={journeyFuture.data?.title}></TextField>
-              <TextField key={journeyFuture.data?.singular_label} label="Label (singular)" defaultValue={journeyFuture.data?.singular_label}></TextField>
-              <TextField key={journeyFuture.data?.plural_label} label="Label (plural)" defaultValue={journeyFuture.data?.plural_label}></TextField>
+              <TextField label="Title" defaultValue={journeyFuture.data?.title}></TextField>
+              <TextField label="Label (singular)" defaultValue={journeyFuture.data?.singular_label}></TextField>
+              <TextField label="Label (plural)" defaultValue={journeyFuture.data?.plural_label}></TextField>
               <TextField label="Description" multiline></TextField>
-              <TextField key={journeyFuture.data?.opening_note_template} label="Opening note" multiline defaultValue={journeyFuture.data?.opening_note_template}></TextField>
+              <TextField label="Opening note" multiline defaultValue={journeyFuture.data?.opening_note_template}></TextField>
             </Stack>
 
           </Card>
@@ -70,9 +73,10 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
 
           <Card sx={{ padding: 2 }}>
             <ZUIReorderable
-              items={milestones.map((milestone) => ({
-                id: milestone.id,
+              items={milestoneOrder.map((milestoneID) => ({
+                id: milestoneID,
                 renderContent: ({ dragging }) => {
+                  const milestone = milestones[(milestoneID) - 1] ;
 
 
                       return (
@@ -92,7 +96,8 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
                 },
               }))}
               onReorder={(ids) => {
-                updateElementOrder(ids);
+                const numIds = ids.map(id=>Number(id))
+                setMilestoneOrder(numIds);
               }}
             />
             {/* <Stack spacing={2} component="ul">
