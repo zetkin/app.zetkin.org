@@ -11,9 +11,10 @@ type RouteMeta = {
 };
 
 type EventSignupBody = {
-  first_name: string;
-  last_name: string;
   email?: string;
+  first_name: string;
+  gdpr_consent: boolean;
+  last_name: string;
   phone?: string;
 };
 
@@ -41,10 +42,18 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
     );
   }
 
+  if (body.gdpr_consent !== true) {
+    return NextResponse.json(
+      { error: 'gdpr_consent is required' },
+      { status: 400 }
+    );
+  }
+
   const eventSignup = await EventSignupModel.create({
     email: body.email,
     eventId: parseInt(params.eventId),
     first_name: body.first_name,
+    gdpr_consent: body.gdpr_consent,
     last_name: body.last_name,
     orgId: parseInt(params.orgId),
     phone: body.phone,
