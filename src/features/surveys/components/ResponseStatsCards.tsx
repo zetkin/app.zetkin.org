@@ -182,11 +182,22 @@ const TextResponseCard = ({
           <Card
             sx={{
               display: 'flex',
-              width: '100%',
               height: '100%',
+              width: '100%',
             }}
           >
-            <CardContent>{questionResponse.response}</CardContent>
+            <CardContent>
+              <Typography
+                sx={{
+                  '-webkit-box-orient': 'vertical',
+                  '-webkit-line-clamp': '4',
+                  display: '-webkit-box',
+                  overflow: 'hidden',
+                }}
+              >
+                {questionResponse.response}
+              </Typography>
+            </CardContent>
           </Card>
         );
       }}
