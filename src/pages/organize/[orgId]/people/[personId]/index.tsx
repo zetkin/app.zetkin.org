@@ -163,7 +163,7 @@ const PersonProfilePage: PageWithLayout = () => {
                   <TextField
                     fullWidth
                     multiline
-                    onChange={(ev) => setNewNote(ev.target.value.trim())}
+                    onChange={(ev) => setNewNote(ev.target.value)}
                     placeholder="Write a note"
                     value={newNote}
                   />
@@ -178,10 +178,13 @@ const PersonProfilePage: PageWithLayout = () => {
                       disabled={!newNote.trim()}
                       loading={isSubmittingNote}
                       onClick={async () => {
-                        setIsSubmittingNote(true);
-                        await addPersonNote(newNote);
-                        setIsSubmittingNote(false);
-                        setNewNote('');
+                        const trimmedNote = newNote.trim();
+                        if (trimmedNote) {
+                          setIsSubmittingNote(true);
+                          await addPersonNote(trimmedNote);
+                          setIsSubmittingNote(false);
+                          setNewNote('');
+                        }
                       }}
                       variant="outlined"
                     >
