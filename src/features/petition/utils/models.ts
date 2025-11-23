@@ -1,17 +1,25 @@
 import mongoose from 'mongoose';
 
 type PetitionModelType = {
-  petitionId: number;
+  id: number;
   orgId: number;
+  campId: number;
+  created_at: string;
   title: string | null;
-  description: string | null;
+  info_text: string | null;
+  published: string | null;
+  expires: string | null;
+  content: string | null;
+  signature_count: number | null;
+  signature_goal: number | null;
 };
 
 const petitionSchema = new mongoose.Schema<PetitionModelType>({
-  petitionId: Number,
+  id: Number,
   orgId: Number,
   title: String,
-  description: String,
+  created_at: String,
+  info_text: String,
 });
 
 export const PetitionModel: mongoose.Model<PetitionModelType> =

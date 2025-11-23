@@ -79,7 +79,7 @@ export default function useCreateCampaignActivity(
     dispatch(petitionCreate());
     const promise = apiClient
       .post<ZetkinPetition, ZetkinPetitionPostBody>(
-        `/beta/orgs/${orgId}/petitions
+        `/beta/orgs/${orgId}/campaigns/${campId}/petitions
         `,
         petitionBody
       )

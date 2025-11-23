@@ -181,7 +181,7 @@ listenerMiddleware.startListening({
   effect: (action) => {
     const petition = action.payload;
     Router.push(
-      `/organize/${petition.orgId}/projects/${
+      `/organize/${petition.organization?.id}/projects/${
         petition.project?.id ?? 'standalone'
       }/petitions/${petition.id}`
     );

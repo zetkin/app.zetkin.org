@@ -22,7 +22,6 @@ const PetitionPage: PageWithLayout<PetitionPageProps> = ({
     description: 'This is a mock petition description.',
     signature: 'require_signature' as const,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
     organization: {
       id: Number(orgId),
       title: `Org #${orgId}`,
