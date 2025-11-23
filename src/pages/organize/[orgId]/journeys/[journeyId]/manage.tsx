@@ -13,6 +13,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinJourney } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Box, Card, Grid, Stack, TextField } from '@mui/material';
+import BlockWrapper from 'features/surveys/components/SurveyEditor/blocks/BlockWrapper';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -42,8 +43,8 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
   const journeyFuture = useJourney(orgId, journeyId);
 
   const milestones = [
-    {title: "Assigned Contact", description:"Assign an organizer to act as contact person forthe new member"},
-    { title: "First Contact", description: "Get in contacts"},
+    {id: 1, title: "Assigned Contact", description:"Assign an organizer to act as contact person forthe new member"},
+    {id: 2, title: "First Contact", description: "Get in contacts"},
   ]
 
   return (
@@ -68,7 +69,33 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
         <Grid size={{ md: 6, xs: 12 }}>
 
           <Card sx={{ padding: 2 }}>
-            <Stack spacing={2} component="ul">
+            <ZUIReorderable
+              items={milestones.map((milestone) => ({
+                id: milestone.id,
+                renderContent: ({ dragging }) => {
+
+
+                      return (
+                        <BlockWrapper
+                          key={milestone.id}
+                          dragging={dragging}
+                          hidden={false}
+                        >
+                          <Stack spacing={1} sx={{ padding: 2 }} key={milestone.title} component="li">
+                            <TextField label="Milestone" defaultValue={milestone.title}></TextField>
+                            <TextField label="Description" defaultValue={milestone.description}></TextField>
+                          </Stack>
+                        </BlockWrapper>
+                      );
+                    
+                  
+                },
+              }))}
+              onReorder={(ids) => {
+                updateElementOrder(ids);
+              }}
+            />
+            {/* <Stack spacing={2} component="ul">
               
                 {milestones.map(milestone =>(
                   <Stack spacing={1} sx={{ padding: 2 }} key={milestone.title} component="li">
@@ -77,7 +104,7 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
                   </Stack>
                 ))}
                 
-            </Stack>
+            </Stack> */}
           </Card>
         </Grid>
       </Grid>
