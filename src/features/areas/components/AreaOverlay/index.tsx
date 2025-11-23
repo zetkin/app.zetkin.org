@@ -250,11 +250,7 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
-      <Box ref={tagsElement} flexGrow={1} my={2}>
-        {/*
-        <TagsSection area={area} />
-        */}
-      </Box>
+
       <Box
         display="flex"
         flexDirection="column"
@@ -262,14 +258,41 @@ const AreaOverlay: FC<Props> = ({
         paddingTop={1}
         sx={{ overflowY: 'auto' }}
       >
-        <Typography color="secondary" variant="h5">
-          {messages.areas.locations.numberLabel()}: 
-          {locationsInSelectedArea.length}
-        </Typography>
-        <Typography color="secondary" variant="h5">
-          {messages.areas.locations.householdLabel()}: 
-          {numberOfHouseholdsInSelectedArea}
-        </Typography>
+        <Box>
+          <Typography
+            color="secondary"
+            sx={(theme) => ({ color: theme.palette.secondary.main })}
+            variant="h5"
+          >
+            {locationsInSelectedArea.length}
+          </Typography>
+          <Typography color="secondary" textAlign="center" variant="caption">
+            <Msg
+              id={messageIds.areas.stats.locations}
+              values={{ numLocations: locationsInSelectedArea.length }}
+            />
+          </Typography>
+        </Box>
+        <Box>
+          <Typography
+            color="secondary"
+            sx={(theme) => ({ color: theme.palette.secondary.main })}
+            variant="h5"
+          >
+            {numberOfHouseholdsInSelectedArea}
+          </Typography>
+          <Typography color="secondary" textAlign="center" variant="caption">
+            <Msg
+              id={messageIds.areas.stats.households}
+              values={{ numHouseholds: numberOfHouseholdsInSelectedArea }}
+            />
+          </Typography>
+        </Box>
+      </Box>
+      <Box ref={tagsElement} flexGrow={1} my={2}>
+        {/*
+        <TagsSection area={area} />
+        */}
       </Box>
       <Box display="flex" gap={1}>
         {editing && (

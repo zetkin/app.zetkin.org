@@ -32,9 +32,13 @@ export default makeMessages('feat.areas', {
       openFiltersButton: m('Filter'),
       ungroupedTagsLabel: m('Ungrouped tags'),
     },
-    locations: {
-      numberLabel: m('Number of locations'),
-      householdLabel: m('Number of households'),
+    stats: {
+      households: m<{ numHouseholds: number }>(
+        '{numHouseholds, plural, one {Household in selected area} other {Households in selected area}}'
+      ),
+      locations: m<{ numLocations: number }>(
+        '{numLocations, plural, one {Location in selected area} other {Locations in selected area}}'
+      ),
     },
   },
   page: {
