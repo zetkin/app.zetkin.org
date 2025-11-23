@@ -3,7 +3,11 @@ import { PetitionModel } from 'features/petition/utils/models';
 import { IncomingHttpHeaders } from 'http';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
-import { ZetkinCampaign, ZetkinOrganization } from 'utils/types/zetkin';
+import {
+  ZetkinCampaign,
+  ZetkinOrganization,
+  ZetkinPetition,
+} from 'utils/types/zetkin';
 interface RouteMeta {
   params: {
     orgId: string;
@@ -34,7 +38,7 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
 
   if (!petitionDoc) return;
 
-  const res = {
+  const res: ZetkinPetition = {
     id: petitionDoc.id,
     title: petitionDoc.title ?? '',
     description: petitionDoc.info_text ?? '',
@@ -46,6 +50,8 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       id: campaign.id,
       title: campaign.title,
     },
+    created_at: petitionDoc.created_at,
+    content: petitionDoc.content ?? '',
   };
 
   return NextResponse.json({ data: res });

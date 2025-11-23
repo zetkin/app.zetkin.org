@@ -603,6 +603,7 @@ export interface ZetkinPetition {
     id: number;
     title: string;
   };
+  content: string;
 }
 
 export interface ZetkinPetitionPostBody {

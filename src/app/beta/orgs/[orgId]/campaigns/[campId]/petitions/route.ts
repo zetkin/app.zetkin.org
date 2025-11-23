@@ -45,6 +45,7 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
     campId: campaign.id,
     created_at: new Date().toISOString(),
     id,
+    content: '',
     ...body,
   });
 
@@ -61,9 +62,8 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
       title: campaign.title,
     },
     created_at: created.created_at,
+    content: '',
   };
-
-  console.log('postobject ', zetkinPetition);
 
   return NextResponse.json({ data: zetkinPetition }, { status: 201 });
 }

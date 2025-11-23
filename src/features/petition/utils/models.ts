@@ -5,7 +5,7 @@ type PetitionModelType = {
   orgId: number;
   campId: number;
   created_at: string;
-  title: string | null;
+  title: string;
   info_text: string | null;
   published: string | null;
   expires: string | null;
@@ -20,6 +20,7 @@ const petitionSchema = new mongoose.Schema<PetitionModelType>({
   title: String,
   created_at: String,
   info_text: String,
+  content: String,
 });
 
 export const PetitionModel: mongoose.Model<PetitionModelType> =
