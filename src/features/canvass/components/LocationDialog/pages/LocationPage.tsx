@@ -19,7 +19,7 @@ import estimateVisitedHouseholds from 'features/canvass/utils/estimateVisitedHou
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/canvass/l10n/messageIds';
 import useBasicLocationStats from 'features/canvass/hooks/useBasicLocationStats';
-import { HOUSEHOLDS2 } from 'utils/featureFlags';
+import { VISITS } from 'utils/featureFlags';
 import useFeatureWithOrg from 'utils/featureFlags/useFeatureWithOrg';
 
 type LocationPageProps = {
@@ -39,10 +39,7 @@ const LocationPage: FC<LocationPageProps> = ({
   onVisit,
   location,
 }) => {
-  const hasHouseholds2 = useFeatureWithOrg(
-    HOUSEHOLDS2,
-    assignment.organization_id
-  );
+  const hasVisits = useFeatureWithOrg(VISITS, assignment.organization_id);
   const messages = useMessages(messageIds);
   const visits = uselocationVisits(
     assignment.organization_id,
@@ -95,7 +92,7 @@ const LocationPage: FC<LocationPageProps> = ({
         <Button onClick={() => onHouseholds(false)} variant="contained">
           <Msg id={messageIds.location.page.householdsButtonLabel} />
         </Button>
-        {hasHouseholds2 && (
+        {hasVisits && (
           <Button onClick={() => onHouseholds(true)} variant="contained">
             Households v2
           </Button>
