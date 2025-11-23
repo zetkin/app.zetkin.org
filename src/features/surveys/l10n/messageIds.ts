@@ -195,6 +195,14 @@ export default makeMessages('feat.surveys', {
     ),
     title: m('Add email address'),
   },
+  surveyDialogDifferentEmail: {
+    description: m(
+      'The person you are about to link has a different email to the one in the survey response. Would you like to set the survey response email to be the new email for this person?'
+    ),
+    keep: m('No, keep old email'),
+    title: m('Update email address'),
+    update: m('Yes, update email'),
+  },
   surveyDuplicated: {
     error: m('Error: Could not duplicate survey'),
     success: m('Your survey has been duplicated.'),
