@@ -162,7 +162,7 @@ async function handle(
       if ('response' in response) {
         const wordList = response.response
           .toLowerCase()
-          .replace(/\W+/g, '')
+          .replace(/[^a-z0-9]+/gi, ' ')
           .split(/\s+/)
           .filter(Boolean);
         responseStatsCounters[response.question_id].totalWordCounts +=
