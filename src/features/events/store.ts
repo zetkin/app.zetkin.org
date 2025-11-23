@@ -7,6 +7,7 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
+import { EventSignupModelType } from 'features/events/models';
 import {
   ZetkinActivity,
   ZetkinEvent,
@@ -69,6 +70,10 @@ export interface EventsStoreSlice {
   selectedEventIds: number[];
   statsByEventId: Record<number, RemoteItem<EventStats>>;
   typeList: RemoteList<ZetkinActivity>;
+  unverifiedParticipantsByEventId: Record<
+    number,
+    RemoteList<EventSignupModelType>
+  >;
   userEventList: RemoteList<ZetkinEventWithStatus>;
 }
 
@@ -91,6 +96,7 @@ const initialState: EventsStoreSlice = {
   selectedEventIds: [],
   statsByEventId: {},
   typeList: remoteList(),
+  unverifiedParticipantsByEventId: {},
   userEventList: remoteList(),
 };
 
@@ -598,6 +604,25 @@ const eventsSlice = createSlice({
       state.typeList = remoteList(eventTypes);
       state.typeList.loaded = new Date().toISOString();
     },
+    unverifiedParticipantsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      if (!state.unverifiedParticipantsByEventId[eventId]) {
+        state.unverifiedParticipantsByEventId[eventId] = remoteList();
+      }
+
+      state.unverifiedParticipantsByEventId[eventId].isLoading = true;
+    },
+    unverifiedParticipantsLoaded: (
+      state,
+      action: PayloadAction<[number, EventSignupModelType[]]>
+    ) => {
+      const [eventId, unverifiedParticipants] = action.payload;
+      state.unverifiedParticipantsByEventId[eventId] = remoteList(
+        unverifiedParticipants
+      );
+      state.unverifiedParticipantsByEventId[eventId].loaded =
+        new Date().toISOString();
+    },
     userEventsLoad: (state) => {
       state.userEventList.isLoading = true;
     },
@@ -787,6 +812,8 @@ export const {
   typeLoaded,
   typesLoad,
   typesLoaded,
+  unverifiedParticipantsLoad,
+  unverifiedParticipantsLoaded,
   userEventsLoad,
   userEventsLoaded,
   userResponseAdded,

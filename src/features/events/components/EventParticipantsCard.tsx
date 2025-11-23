@@ -21,6 +21,7 @@ import useEvent from '../hooks/useEvent';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
 import { useMessages } from 'core/i18n';
+import useUnverifiedEventParticipants from '../hooks/useUnverifiedEventParticipants';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -50,6 +51,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
 
   const availParticipants = event?.num_participants_available ?? 0;
   const reqParticipants = event?.num_participants_required ?? 0;
+  const unverifiedParticipants = event?.num_unverified_participants ?? 0;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
     reqParticipants
@@ -155,6 +157,17 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
               {messages.eventParticipantsCard.pending()}
             </Typography>
             <Typography>{pendingSignUps.length}</Typography>
+          </Box>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            marginY={1}
+          >
+            <Typography color={'secondary'} component="h6" variant="subtitle1">
+              Unverified sign-ups
+            </Typography>
+            <Typography>{unverifiedParticipants}</Typography>
           </Box>
           <Box
             alignItems="center"

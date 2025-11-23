@@ -5,6 +5,8 @@ import {
   participantsLoaded,
   respondentsLoad,
   respondentsLoaded,
+  unverifiedParticipantsLoad,
+  unverifiedParticipantsLoaded,
 } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import {
@@ -47,6 +49,16 @@ export default function useEventParticipants(
       ),
   });
 
+  const unverifiedParticipantsFuture = loadListIfNecessary(list, dispatch, {
+    actionOnLoad: () => unverifiedParticipantsLoad(eventId),
+    actionOnSuccess: (unverifiedParticipants) =>
+      unverifiedParticipantsLoaded([eventId, unverifiedParticipants]),
+    loader: () =>
+      apiClient.get<ZetkinEventParticipant[]>(
+        `/beta/orgs/${orgId}/events/${eventId}`
+      ),
+  });
+
   const respondentsFuture = loadListIfNecessary(respondentsList, dispatch, {
     actionOnLoad: () => respondentsLoad(eventId),
     actionOnSuccess: (respondents) => respondentsLoaded([eventId, respondents]),
@@ -58,6 +70,10 @@ export default function useEventParticipants(
 
   const numAvailParticipants = participantsFuture.data
     ? participantsFuture.data.filter((p) => p.cancelled == null).length
+    : 0;
+
+  const numUnverifiedParticipants = unverifiedParticipantsFuture.data
+    ? unverifiedParticipantsFuture.data.length
     : 0;
 
   const pendingSignUps =
@@ -101,8 +117,10 @@ export default function useEventParticipants(
     numNoshowParticipants,
     numRemindedParticipants,
     numSignedParticipants,
+    numUnverifiedParticipants,
     participantsFuture,
     pendingSignUps,
     respondentsFuture,
+    unverifiedParticipantsFuture,
   };
 }

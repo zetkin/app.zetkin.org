@@ -32,6 +32,26 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
 
   return (
     <Box ref={ref}>
+      {
+        /* TODO: numUnverifiedParticipants */ 1 > 0 && (
+          <ParticipantListSection
+            chipColor={oldTheme.palette.grey[500]}
+            chipNumber={'42' /* TODO: numUnverifiedParticipants.toString() */}
+            description={
+              'These people have signed up themselves without a user account. You must confirm them.'
+              /* TODO: messages.eventUnverifiedParticipantsList.descriptionSignups() */
+            }
+            eventId={data.id}
+            filterString={filterString}
+            orgId={orgId}
+            rows={/* TODO: unverifiedSignUps ?? */ []}
+            title={
+              /* messages.eventUnverifiedParticipantsList.signUps() */ 'Unverified Sign-ups'
+            }
+            type="unverifiedSignups"
+          />
+        )
+      }
       {numSignedParticipants > 0 && (
         <ParticipantListSection
           chipColor={oldTheme.palette.grey[500]}
