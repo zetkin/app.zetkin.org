@@ -120,7 +120,7 @@ const Header: React.FC<HeaderProps> = ({
               <Box>
                 <Typography
                   className={classes.title}
-                  component="div"
+                  component="h1"
                   data-testid="page-title"
                   noWrap
                   style={{ display: 'flex' }}
@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({
                 >
                   {title}
                 </Typography>
-                <Typography color="secondary" component="h2" variant="h5">
+                <Typography color="secondary" component="div" variant="h5">
                   {subtitle}
                 </Typography>
               </Box>
