@@ -68,12 +68,12 @@ const ClosedJourneyInstancesPage: PageWithLayout = () => {
         <Grid size={{ md: 6, xs: 12 }}>
 
           <Card sx={{ padding: 2 }}>
-            <Stack spacing={2}>
+            <Stack spacing={2} component="ul">
               
                 {milestones.map(milestone =>(
-                  <Stack spacing={1} sx={{ padding: 2 }}>
-                    <TextField key={journeyFuture.data?.title} label="Milestone" defaultValue={journeyFuture.data?.title}></TextField>
-                    <TextField key={journeyFuture.data?.singular_label} label="Description" defaultValue={journeyFuture.data?.singular_label}></TextField>
+                  <Stack spacing={1} sx={{ padding: 2 }} key={milestone.title} component="li">
+                    <TextField label="Milestone" defaultValue={milestone.title}></TextField>
+                    <TextField label="Description" defaultValue={milestone.description}></TextField>
                   </Stack>
                 ))}
                 
