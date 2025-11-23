@@ -238,6 +238,22 @@ const PersonTags = ({
                     onChange={(_, v) => handleTagChange(v)}
                     options={sortedGroupedTags}
                     renderGroup={(params) => {
+                      const group = groupedTags.find(
+                        (tagGroup) => tagGroup.title == params.group
+                      );
+
+                      const alreadySelectedTagsFromThisGroup =
+                        group?.tags.filter(
+                          (tag) =>
+                            !!filter.config.tags.some(
+                              (tagId) => tagId == tag.id
+                            )
+                        ) || [];
+
+                      const allTagsInGroupAreSelected =
+                        group?.tags.length ==
+                        alreadySelectedTagsFromThisGroup.length;
+
                       return (
                         <Box
                           key={params.key}
@@ -259,6 +275,7 @@ const PersonTags = ({
                               {params.group}
                             </Typography>
                             <Button
+                              disabled={allTagsInGroupAreSelected}
                               onClick={() => {
                                 const group = groupedTags.find(
                                   (tagGroup) => tagGroup.title == params.group
