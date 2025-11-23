@@ -172,8 +172,10 @@ const Call: FC = () => {
                             dispatch(updateLaneStep(LaneStep.REPORT));
 
                             const hasSurveySubmissions =
-                              Object.entries(submissionDataBySurveyId).length > 0;
-                            const hasEventSignups = lane.respondedEventIds.length > 0;
+                              Object.entries(submissionDataBySurveyId).length >
+                              0;
+                            const hasEventSignups =
+                              lane.respondedEventIds.length > 0;
 
                             if (hasSurveySubmissions || hasEventSignups) {
                               dispatch(
@@ -197,16 +199,18 @@ const Call: FC = () => {
                             }
                             setSubmittingReport(true);
 
-                            const submissions = Object.entries(submissionDataBySurveyId)
+                            const submissions = Object.entries(
+                              submissionDataBySurveyId
+                            )
                               .filter(([, surveySubmissionData]) => {
-                                return Object.entries(surveySubmissionData).some(
-                                  ([, value]) => {
-                                    if (typeof value == 'string') {
-                                      return value.trim() !== '';
-                                    }
-                                    return true;
+                                return Object.entries(
+                                  surveySubmissionData
+                                ).some(([, value]) => {
+                                  if (typeof value == 'string') {
+                                    return value.trim() !== '';
                                   }
-                                );
+                                  return true;
+                                });
                               })
                               .map(([surveyId, surveySubmissionData]) => {
                                 const surveySubmissionDataAsFormData =
@@ -220,7 +224,11 @@ const Call: FC = () => {
                                 };
                               });
 
-                            const result = await submitReport(call.id, report, submissions);
+                            const result = await submitReport(
+                              call.id,
+                              report,
+                              submissions
+                            );
 
                             if (result.kind === 'success') {
                               dispatch(previousCallAdd(call));
@@ -237,9 +245,10 @@ const Call: FC = () => {
                         variant={
                           isAllocatingCall || submittingReport
                             ? 'loading'
-                            : lane.step == LaneStep.SUMMARY && (unfinishedCalls.length > 0)
-                              ? 'secondary'
-                              : 'primary'
+                            : lane.step == LaneStep.SUMMARY &&
+                              unfinishedCalls.length > 0
+                            ? 'secondary'
+                            : 'primary'
                         }
                       />
                     </Box>
@@ -250,94 +259,93 @@ const Call: FC = () => {
           </Box>
         )}
       </Box>
-      {!isMobile && (
-        <>
-          <CallSwitchModal
-            assignment={assignment}
-            onClose={() => setCallLogOpen(false)}
-            onSwitch={(assignmentId) => {
-              if (assignmentId != assignment.id) {
-                setAssignmentSwitchedTo(assignmentId);
-              }
-            }}
-            open={callLogOpen}
-          />
-          <ZUIModal
-            open={skipCallModalOpen}
-            primaryButton={{
-              label: messages.skipCallDialog.cancelButton(),
-              onClick: () => {
-                setSkipCallModalOpen(false);
-              },
-            }}
-            secondaryButton={{
-              label: messages.skipCallDialog.confirmButton({
-                name: call?.target.name || '',
-              }),
-              onClick: () => {
-                if (call) {
-                  skipCurrentCall(assignment.id, call.id);
-                  dispatch(updateLaneStep(LaneStep.CALL));
-                  setSkipCallModalOpen(false);
-                }
-              },
-            }}
-            size="small"
-            title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
-          />
-          <Snackbar
-            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-            autoHideDuration={5000}
-            onClose={(ev, reason) => {
-              if (reason == 'clickaway') {
-                return;
-              } else {
-                setAssignmentSwitchedTo(null);
-              }
-            }}
-            open={!!assignmentSwitchedTo}
-            slots={{
-              transition: (props) => {
-                return (
-                  <Slide
-                    {...props}
-                    direction="right"
-                    timeout={{
-                      enter: 500,
-                      exit: 300,
-                    }}
-                  />
-                );
-              },
-            }}
-            sx={{
-              '@media (min-width: 600px)': {
-                bottom: 68,
-                left: 16,
-              },
-            }}
-          >
-            <Alert
-              icon={false}
-              onClose={() => setAssignmentSwitchedTo(null)}
-              severity="success"
-              sx={(theme) => ({
-                backgroundColor: theme.palette.common.white,
-                borderLeft: `4px solid ${theme.palette.success.main}`,
-                boxShadow: theme.elevation.bottom.big.medium,
-              })}
-            >
-              {switchedTo && (
-                <ZUIText>
-                  <Msg
-                    id={messageIds.switchedAssignmentsAlert.message}
-                    values={{ assignmentTitle: switchedTo.title }}
-                  />
-                </ZUIText>
-              )}
-            </Alert>
-          </Snackbar>
-        </>)}
+      <CallSwitchModal
+        assignment={assignment}
+        onClose={() => setCallLogOpen(false)}
+        onSwitch={(assignmentId) => {
+          if (assignmentId != assignment.id) {
+            setAssignmentSwitchedTo(assignmentId);
+          }
+        }}
+        open={callLogOpen}
+      />
+      <ZUIModal
+        open={skipCallModalOpen}
+        primaryButton={{
+          label: messages.skipCallDialog.cancelButton(),
+          onClick: () => {
+            setSkipCallModalOpen(false);
+          },
+        }}
+        secondaryButton={{
+          label: messages.skipCallDialog.confirmButton({
+            name: call?.target.name || '',
+          }),
+          onClick: () => {
+            if (call) {
+              skipCurrentCall(assignment.id, call.id);
+              dispatch(updateLaneStep(LaneStep.CALL));
+              setSkipCallModalOpen(false);
+            }
+          },
+        }}
+        size="small"
+        title={messages.skipCallDialog.title({
+          name: call?.target.name || '',
+        })}
+      />
+      <Snackbar
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        autoHideDuration={5000}
+        onClose={(ev, reason) => {
+          if (reason == 'clickaway') {
+            return;
+          } else {
+            setAssignmentSwitchedTo(null);
+          }
+        }}
+        open={!!assignmentSwitchedTo}
+        slots={{
+          transition: (props) => {
+            return (
+              <Slide
+                {...props}
+                direction="right"
+                timeout={{
+                  enter: 500,
+                  exit: 300,
+                }}
+              />
+            );
+          },
+        }}
+        sx={{
+          '@media (min-width: 600px)': {
+            bottom: 68,
+            left: 16,
+          },
+        }}
+      >
+        <Alert
+          icon={false}
+          onClose={() => setAssignmentSwitchedTo(null)}
+          severity="success"
+          sx={(theme) => ({
+            backgroundColor: theme.palette.common.white,
+            borderLeft: `4px solid ${theme.palette.success.main}`,
+            boxShadow: theme.elevation.bottom.big.medium,
+          })}
+        >
+          {switchedTo && (
+            <ZUIText>
+              <Msg
+                id={messageIds.switchedAssignmentsAlert.message}
+                values={{ assignmentTitle: switchedTo.title }}
+              />
+            </ZUIText>
+          )}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

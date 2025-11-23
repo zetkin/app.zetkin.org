@@ -329,6 +329,8 @@ const CallPanels: FC<Props> = ({
           padding: 2,
           position: 'relative',
           transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
+          visibility:
+            mobileTabIndex && lane.step != LaneStep.SUMMARY ? 'hidden' : '',
           width: mobileTabIndex ? 1 : 1 / 3,
         }}
       >
