@@ -332,13 +332,7 @@ const TextStatsCard = ({
   return (
     <ZUICard
       header={questionStats.question.question.question}
-      subheader={`${questionStats.answerCount} answers in total. ${
-        questionStats.totalWordCount
-      } words in total. ${
-        questionStats.totalUniqueWordCount
-      } total unique words per response. Showing top ${
-        Object.entries(questionStats.topWordFrequencies).length
-      } word frequencies in free text question:`}
+      subheader={`${questionStats.answerCount} answers in total. ${questionStats.totalWordCount} words in total. ${questionStats.totalUniqueWordCount} total unique words per response.`}
       sx={{
         width: '100%',
       }}
