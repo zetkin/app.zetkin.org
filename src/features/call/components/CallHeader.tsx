@@ -18,8 +18,6 @@ import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiS
 import { useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useIsMobile from 'utils/hooks/useIsMobile';
-import CallSwitchModal from './CallSwitchModal';
-import ZUIModal from 'zui/components/ZUIModal';
 
 type Props = {
   assignment: ZetkinCallAssignment;
@@ -56,19 +54,6 @@ const CallHeader: FC<Props> = ({
     isLoading: isAllocatingCall,
   } = useAllocateCall(assignment.organization.id, assignment.id);
   const { submitReport } = useSubmitReport(assignment.organization.id);
-
-  const [callLogOpen, setCallLogOpen] = useState(false);
-
-  const [assignmentSwitchedTo, setAssignmentSwitchedTo] = useState<
-    number | null
-  >(null);
-
-  const [skipCallModalOpen, setSkipCallModalOpen] = useState(false);
-
-  const { skipCurrentCall } =
-    useCallMutations(assignment.organization.id);
-
-
 
   return (
     <Box
@@ -141,9 +126,11 @@ const CallHeader: FC<Props> = ({
               lastName={call.target.last_name}
             />
             <ZUIText variant="headingLg">{call.target.name}</ZUIText>
-            <ZUIText color="secondary" variant="headingLg">{`${call.target.phone
-              }${call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
-              }`}</ZUIText>
+            <ZUIText color="secondary" variant="headingLg">{`${
+              call.target.phone
+            }${
+              call.target.alt_phone ? `/ ${call.target.alt_phone}` : ''
+            }`}</ZUIText>
           </>
         )}
       </Box>
@@ -185,128 +172,90 @@ const CallHeader: FC<Props> = ({
           variant="secondary"
         />
         {!isMobile && (
-          <>
-            <ZUIButton
-              disabled={
-                !!errorAllocatingCall ||
-                (lane.step == LaneStep.REPORT && !report.completed)
-              }
-              label={messages.header.primaryButton[lane.step]()}
-              onClick={async () => {
-                if (lane.step == LaneStep.START) {
-                  await allocateCall();
-                  dispatch(updateLaneStep(LaneStep.CALL));
-                } else if (lane.step == LaneStep.CALL) {
-                  dispatch(updateLaneStep(LaneStep.REPORT));
+          <ZUIButton
+            disabled={
+              !!errorAllocatingCall ||
+              (lane.step == LaneStep.REPORT && !report.completed)
+            }
+            label={messages.header.primaryButton[lane.step]()}
+            onClick={async () => {
+              if (lane.step == LaneStep.START) {
+                await allocateCall();
+                dispatch(updateLaneStep(LaneStep.CALL));
+              } else if (lane.step == LaneStep.CALL) {
+                dispatch(updateLaneStep(LaneStep.REPORT));
 
-                  const hasSurveySubmissions =
-                    Object.entries(submissionDataBySurveyId).length > 0;
-                  const hasEventSignups = lane.respondedEventIds.length > 0;
+                const hasSurveySubmissions =
+                  Object.entries(submissionDataBySurveyId).length > 0;
+                const hasEventSignups = lane.respondedEventIds.length > 0;
 
-                  if (hasSurveySubmissions || hasEventSignups) {
-                    dispatch(
-                      filtersUpdated({
-                        customDatesToFilterEventsBy: [null, null],
-                        eventDateFilterState: null,
-                        filterState: {
-                          alreadyIn: false,
-                          events: false,
-                          surveys: false,
-                          thisCall: true,
-                        },
-                        orgIdsToFilterEventsBy: [],
-                        projectIdsToFilterActivitiesBy: [],
-                      })
-                    );
-                  }
-                } else if (lane.step == LaneStep.REPORT) {
-                  if (!report || !call) {
-                    return;
-                  }
-                  setSubmittingReport(true);
-
-                  const submissions = Object.entries(submissionDataBySurveyId)
-                    .filter(([, surveySubmissionData]) => {
-                      return Object.entries(surveySubmissionData).some(
-                        ([, value]) => {
-                          if (typeof value == 'string') {
-                            return value.trim() !== '';
-                          }
-                          return true;
-                        }
-                      );
+                if (hasSurveySubmissions || hasEventSignups) {
+                  dispatch(
+                    filtersUpdated({
+                      customDatesToFilterEventsBy: [null, null],
+                      eventDateFilterState: null,
+                      filterState: {
+                        alreadyIn: false,
+                        events: false,
+                        surveys: false,
+                        thisCall: true,
+                      },
+                      orgIdsToFilterEventsBy: [],
+                      projectIdsToFilterActivitiesBy: [],
                     })
-                    .map(([surveyId, surveySubmissionData]) => {
-                      const surveySubmissionDataAsFormData =
-                        objectToFormData(surveySubmissionData);
-                      return {
-                        submission: prepareSurveyApiSubmission(
-                          surveySubmissionDataAsFormData
-                        ),
-                        surveyId: Number(surveyId),
-                        targetId: call.target.id,
-                      };
-                    });
+                  );
+                }
+              } else if (lane.step == LaneStep.REPORT) {
+                if (!report || !call) {
+                  return;
+                }
+                setSubmittingReport(true);
 
-                  const result = await submitReport(call.id, report, submissions);
+                const submissions = Object.entries(submissionDataBySurveyId)
+                  .filter(([, surveySubmissionData]) => {
+                    return Object.entries(surveySubmissionData).some(
+                      ([, value]) => {
+                        if (typeof value == 'string') {
+                          return value.trim() !== '';
+                        }
+                        return true;
+                      }
+                    );
+                  })
+                  .map(([surveyId, surveySubmissionData]) => {
+                    const surveySubmissionDataAsFormData =
+                      objectToFormData(surveySubmissionData);
+                    return {
+                      submission: prepareSurveyApiSubmission(
+                        surveySubmissionDataAsFormData
+                      ),
+                      surveyId: Number(surveyId),
+                      targetId: call.target.id,
+                    };
+                  });
 
-                  if (result.kind === 'success') {
-                    dispatch(previousCallAdd(call));
-                  } else {
-                    setSubmittingReport(false);
-                  }
-                  setSubmittingReport(false);
-                  dispatch(updateLaneStep(LaneStep.SUMMARY));
+                const result = await submitReport(call.id, report, submissions);
+
+                if (result.kind === 'success') {
+                  dispatch(previousCallAdd(call));
                 } else {
-                  //Lane step must be Summary
-                  await allocateCall();
+                  setSubmittingReport(false);
                 }
-              }}
-              variant={
-                isAllocatingCall || submittingReport
-                  ? 'loading'
-                  : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
-                    ? 'secondary'
-                    : 'primary'
+                setSubmittingReport(false);
+                dispatch(updateLaneStep(LaneStep.SUMMARY));
+              } else {
+                //Lane step must be Summary
+                await allocateCall();
               }
-            />
-          </>)}
-        {isMobile && (
-          <>
-            <CallSwitchModal
-              assignment={assignment}
-              onClose={() => setCallLogOpen(false)}
-              onSwitch={(assignmentId) => {
-                if (assignmentId != assignment.id) {
-                  setAssignmentSwitchedTo(assignmentId);
-                }
-              }}
-              open={callLogOpen}
-            />
-            <ZUIModal
-              open={skipCallModalOpen}
-              primaryButton={{
-                label: messages.skipCallDialog.cancelButton(),
-                onClick: () => {
-                  setSkipCallModalOpen(false);
-                },
-              }}
-              secondaryButton={{
-                label: messages.skipCallDialog.confirmButton({
-                  name: call?.target.name || '',
-                }),
-                onClick: () => {
-                  if (call) {
-                    skipCurrentCall(assignment.id, call.id);
-                    dispatch(updateLaneStep(LaneStep.CALL));
-                    setSkipCallModalOpen(false);
-                  }
-                },
-              }}
-              size="small"
-              title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
-            />
-          </>
+            }}
+            variant={
+              isAllocatingCall || submittingReport
+                ? 'loading'
+                : lane.step == LaneStep.SUMMARY && hasUnfinishedCalls
+                ? 'secondary'
+                : 'primary'
+            }
+          />
         )}
       </Box>
     </Box>
