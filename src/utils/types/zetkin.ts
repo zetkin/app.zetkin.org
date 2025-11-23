@@ -594,7 +594,7 @@ export interface ZetkinPetition {
   id: number;
   title: string;
   description: string;
-  signature: 'require_signature' | 'optional_signature';
+  created_at: string;
   organization?: {
     id: number;
     title: string;
@@ -603,11 +603,9 @@ export interface ZetkinPetition {
     id: number;
     title: string;
   };
-  created_at: string;
 }
 
 export interface ZetkinPetitionPostBody {
   title: string;
-  description: string;
-  signature: 'require_signature' | 'optional_signature';
+  info_text: string;
 }

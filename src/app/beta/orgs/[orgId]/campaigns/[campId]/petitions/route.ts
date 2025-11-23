@@ -1,8 +1,14 @@
 // beta/orgs/[orgId]/petitions/[petitionId]/route.ts
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PetitionModel } from 'features/petition/utils/models';
+import { IncomingHttpHeaders } from 'http';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
-import { ZetkinPetition } from 'utils/types/zetkin';
+import {
+  ZetkinCampaign,
+  ZetkinOrganization,
+  ZetkinPetition,
+} from 'utils/types/zetkin';
 
 interface RouteMeta {
   params: {
@@ -14,37 +20,50 @@ interface RouteMeta {
 export async function POST(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
+  const headers: IncomingHttpHeaders = {};
+  request.headers.forEach((value, key) => (headers[key] = value));
+  const apiClient = new BackendApiClient(headers);
+
+  const org = await apiClient.get<ZetkinOrganization>(
+    `/api/orgs/${params.orgId}`
+  );
+
+  const campaign = await apiClient.get<ZetkinCampaign>(
+    `/api/orgs/${params.orgId}/campaigns/${params.campId}`
+  );
+
   const body = await request.json();
 
-  // TODO
-  // find petition Id for new petitiion
-  const id = 1;
+  const petitionDocs = await PetitionModel.find({
+    orgId: org.id,
+  });
+
+  const id = petitionDocs.length + 1;
 
   const created = await PetitionModel.create({
-    orgId: Number(params.orgId),
-    campId: Number(params.campId),
-    created_at: new Date().getDate.toString(),
+    orgId: org.id,
+    campId: campaign.id,
+    created_at: new Date().toISOString(),
     id,
     ...body,
   });
 
-  // TODO Fetch org camp data from real API
-
   const zetkinPetition: ZetkinPetition = {
-    id: 1,
-    title: 'string',
-    description: 'string',
-    signature: 'optional_signature',
+    id,
+    title: created.title ?? '',
+    description: created.info_text ?? '',
     organization: {
-      id: 1,
-      title: '',
+      id: org.id,
+      title: org.title,
     },
     project: {
-      id: 345,
-      title: 'string',
+      id: campaign.id,
+      title: campaign.title,
     },
-    created_at: 'string',
+    created_at: created.created_at,
   };
+
+  console.log('postobject ', zetkinPetition);
 
   return NextResponse.json({ data: zetkinPetition }, { status: 201 });
 }

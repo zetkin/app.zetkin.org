@@ -151,9 +151,8 @@ const CampaignActionButtons: React.FunctionComponent<
       onClick: () => {
         createPetition({
           title: 'New Petition',
-          description: '',
-          signature: 'require_signature',
-        }) as any;
+          info_text: '',
+        });
       },
     });
   }
