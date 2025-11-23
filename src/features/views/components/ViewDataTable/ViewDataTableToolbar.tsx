@@ -58,7 +58,13 @@ const ViewDataTableToolbar: React.FunctionComponent<
     });
   };
   return (
-    <Box role="toolbar">
+    <Box
+      role="toolbar"
+      sx={{
+        alignItems: 'flex-start',
+        flexWrap: 'wrap',
+      }}
+    >
       {!disableBulkActions && (
         <>
           <Slide direction="left" in={!!selection.length} timeout={150}>
