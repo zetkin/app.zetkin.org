@@ -263,9 +263,11 @@ const AreaOverlay: FC<Props> = ({
         sx={{ overflowY: 'auto' }}
       >
         <Typography color="secondary" variant="h5">
-          Number of locations
+          {messages.areas.locations.numberLabel()}: 
           {locationsInSelectedArea.length}
-          Number of households
+        </Typography>
+        <Typography color="secondary" variant="h5">
+          {messages.areas.locations.householdLabel()}: 
           {numberOfHouseholdsInSelectedArea}
         </Typography>
       </Box>

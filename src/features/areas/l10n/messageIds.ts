@@ -32,6 +32,10 @@ export default makeMessages('feat.areas', {
       openFiltersButton: m('Filter'),
       ungroupedTagsLabel: m('Ungrouped tags'),
     },
+    locations: {
+      numberLabel: m('Number of locations'),
+      householdLabel: m('Number of households'),
+    },
   },
   page: {
     title: m('Geography'),
