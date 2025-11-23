@@ -202,7 +202,10 @@ export type ZetkinEmailLink = {
   url: string;
 };
 
-type EmailLinkWithMeta = ZetkinEmailLink & { clicks: number; text: string };
+export type EmailLinkWithMeta = ZetkinEmailLink & {
+  clicks: number;
+  text: string;
+};
 
 export type EmailInsights = {
   id: number;
