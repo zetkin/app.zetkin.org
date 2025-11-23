@@ -154,16 +154,21 @@ const ClickedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
   );
 };
 
-const countClicksByTag = (array: EmailLinkWithMeta[]): EmailLinkWithMeta[] => {
+const countClicksByTag = (
+  emailLinks: EmailLinkWithMeta[]
+): EmailLinkWithMeta[] => {
   return Object.values(
-    array.reduce<Record<string, EmailLinkWithMeta>>((acc, link) => {
-      if (!acc[link.tag]) {
-        acc[link.tag] = { ...link };
-      } else {
-        acc[link.tag].clicks += link.clicks;
-      }
-      return acc;
-    }, {})
+    emailLinks.reduce<Record<string, EmailLinkWithMeta>>(
+      (accumulatedEmailLinks, link) => {
+        if (!accumulatedEmailLinks[link.tag]) {
+          accumulatedEmailLinks[link.tag] = { ...link };
+        } else {
+          accumulatedEmailLinks[link.tag].clicks += link.clicks;
+        }
+        return accumulatedEmailLinks;
+      },
+      {}
+    )
   );
 };
 
