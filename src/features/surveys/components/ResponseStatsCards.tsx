@@ -316,7 +316,7 @@ const TextStatsCard = ({
   submissionStats: SubmissionStats[];
   surveyId: number;
 }) => {
-  const [tab, setTab] = useState('bar-plot');
+  const [tab, setTab] = useState('responses');
 
   return (
     <ZUICard
@@ -333,14 +333,9 @@ const TextStatsCard = ({
       }}
     >
       <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
-        <Tab label={'Bar plot'} value={'bar-plot'} />
         <Tab label={'Responses'} value={'responses'} />
+        <Tab label={'Bar plot'} value={'bar-plot'} />
       </Tabs>
-      {tab === 'bar-plot' && (
-        <Box height={400}>
-          <QuestionStatsBarPlot question={questionStats} />
-        </Box>
-      )}
       {tab === 'responses' && (
         <Box display={'flex'} height={400} position={'relative'}>
           <TextResponseList
@@ -349,6 +344,11 @@ const TextStatsCard = ({
             submissionStats={submissionStats}
             surveyId={surveyId}
           />
+        </Box>
+      )}
+      {tab === 'bar-plot' && (
+        <Box height={400}>
+          <QuestionStatsBarPlot question={questionStats} />
         </Box>
       )}
     </ZUICard>
