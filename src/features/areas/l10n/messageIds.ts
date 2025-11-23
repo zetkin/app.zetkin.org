@@ -37,7 +37,7 @@ export default makeMessages('feat.areas', {
         '{numHouseholds, plural, one {Household in selected area} other {Households in selected area}}'
       ),
       locations: m<{ numLocations: number }>(
-        '{numLocations, plural, one {Location in selected area} other {Locations in selected area}}'
+        '{numLocations, plural, one {Building in selected area} other {Buildings in selected area}}'
       ),
     },
   },
