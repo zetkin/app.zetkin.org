@@ -11,6 +11,7 @@ import {
 } from 'utils/storeUtils';
 import { Zetkin2Area } from './types';
 import { ZetkinAppliedTag } from 'utils/types/zetkin';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 export interface AreasStoreSlice {
   areaList: RemoteList<Zetkin2Area>;
@@ -20,7 +21,7 @@ export interface AreasStoreSlice {
 
 const initialState: AreasStoreSlice = {
   areaList: remoteList(),
-  locationsByAreaId: remoteList(),
+  locationsByAreaId: {},
   tagsByAreaId: {},
 };
 
@@ -55,14 +56,21 @@ const areasSlice = createSlice({
       const areas = action.payload;
       state.areaList = remoteListLoaded(areas);
     },
-    locationsLoad: (state) => {
-      state.locationsByAreaId = remoteListLoad(state.locationsByAreaId);
-    },
-    locationsLoaded: (state, action: PayloadAction<[string, ZetkinLocation[]]>) => {
-      const locations = action.payload;
-      state.locationsByAreaId = remoteListLoaded(locations);
-    },
+    locationsLoad: (state, action) => {
+      const key = action.payload;
 
+      state.locationsByAreaId[key] = remoteListLoad(
+        state.locationsByAreaId[key]
+      );
+    },
+    locationsLoaded: (
+      state,
+      action: PayloadAction<[string, ZetkinLocation[]]>
+    ) => {
+      const [key, locations] = action.payload;
+
+      state.locationsByAreaId[key] = remoteListLoaded(locations);
+    },
   },
 });
 

@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { ZetkinArea, ZetkinLocation } from '../../types';
+import { ZetkinArea } from '../../types';
 import useAreaMutations from '../../hooks/useAreaMutations';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
@@ -27,6 +27,9 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
+import locToLatLng from 'features/geography/utils/locToLatLng';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 type Props = {
   area: ZetkinArea;
@@ -88,7 +91,7 @@ const AreaOverlay: FC<Props> = ({
     locations.map((location) => {
       const isInsideArea = isPointInsidePolygon(
         locToLatLng(location),
-        area.points.map((point) => ({ lat: point[0], lng: point[1] }))
+        area.points.map((point) => ({ lat: point[1], lng: point[0] }))
       );
       if (isInsideArea) {
         locationsInSelectedArea.push(location);
@@ -260,8 +263,10 @@ const AreaOverlay: FC<Props> = ({
         sx={{ overflowY: 'auto' }}
       >
         <Typography color="secondary" variant="h5">
-            Number of locations
-            {locationsInSelectedArea.length}
+          Number of locations
+          {locationsInSelectedArea.length}
+          Number of households
+          {numberOfHouseholdsInSelectedArea}
         </Typography>
       </Box>
       <Box display="flex" gap={1}>

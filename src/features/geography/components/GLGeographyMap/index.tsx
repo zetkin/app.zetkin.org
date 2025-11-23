@@ -32,7 +32,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
   const [map, setMap] = useState<MapType | null>(null);
   const bounds = useMapBounds({ areas, map });
   const { selectedArea, setSelectedId } = useAreaSelection({ areas, map });
-  const locations = useLocations(orgId, selectedArea?.id);
+  const locations = useLocations(orgId, selectedArea?.id || null);
   const {
     cancelDrawing,
     canFinishDrawing,
@@ -120,8 +120,8 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
                   ? oldAreaFormat(editingArea)
                   : oldAreaFormat(selectedArea)
               }
-              locations={locations}
               editing={editing}
+              locations={locations}
               onBeginEdit={() => setEditing(true)}
               onCancelEdit={() => setEditing(false)}
               onClose={() => setSelectedId(0)}
