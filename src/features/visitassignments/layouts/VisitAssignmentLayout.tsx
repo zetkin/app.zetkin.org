@@ -152,7 +152,11 @@ const VisitAssignmentLayout: FC<VisitAssignmentLayoutProps> = ({
       tabs={[
         {
           href: '/',
-          label: messages.layout.tabs.overview(),
+          label: messages.layout.tabs.target(),
+        },
+        {
+          href: '/map',
+          label: messages.layout.tabs.map(),
         },
         {
           href: '/assignees',

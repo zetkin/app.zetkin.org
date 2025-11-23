@@ -34,6 +34,24 @@ export type ZetkinVisitAssignment = {
   title: string | null;
 };
 
+export type ZetkinLocation = {
+  created: string;
+  created_by_user_id: number | null;
+  description: string;
+  id: number;
+  latitude: number;
+  longitude: number;
+  num_estimated_households: number;
+  num_households_successful: number | null;
+  num_households_visited: number | null;
+  num_known_households: number;
+  num_successful_visits: number;
+  num_visits: number;
+  organization_id: number;
+  title: string;
+  type: 'assignment' | 'event';
+};
+
 export type ZetkinVisitAssignmentPostBody = Partial<
   Omit<ZetkinVisitAssignment, 'id' | 'campaign' | 'organization'>
 > & {

@@ -70,8 +70,84 @@ export default makeMessages('feat.visitAssignments', {
       assignees: m('Assignees'),
       instructions: m('Instructions'),
       map: m('Map'),
-      overview: m('Overview'),
       report: m('Report'),
+      target: m('Target'),
+    },
+  },
+  map: {
+    areaInfo: {
+      assignees: {
+        add: m('Add assignee'),
+        none: m('No assignees'),
+        title: m('Assignees'),
+      },
+      stats: {
+        households: m<{ numHouseholds: number }>(
+          '{numHouseholds, plural, one {Household visited} other {Households visited}}'
+        ),
+        locations: m<{ numLocations: number }>(
+          '{numLocations, plural, one {Location} other {Locations}}'
+        ),
+        successful: m<{ numSuccessfulVisits: number }>(
+          '{numSuccessfulVisits, plural, one {Successful visit} other {Successful visits}}'
+        ),
+      },
+    },
+    filter: {
+      assignees: {
+        assigned: m('Only assigned areas'),
+        label: m('Assignees'),
+        unassigned: m('Only unassigned areas'),
+      },
+      description: m('Define what areas you see on the map'),
+      header: m('Filters'),
+      title: m('Add filters to decide what areas you see on the map'),
+      ungroupedTags: m('Ungrouped tags'),
+    },
+    findArea: {
+      filterPlaceHolder: m('Filter'),
+      title: m('Areas'),
+    },
+    mapStyle: {
+      area: {
+        label: m('Area color'),
+        options: {
+          assignees: m('Assignees'),
+          hidden: m('Hidden'),
+          households: m('Households'),
+          outlined: m('Outlined'),
+          progress: m('Progress'),
+        },
+      },
+      center: {
+        label: m('Area markers'),
+        options: {
+          assignees: m('Assignees'),
+          hidden: m('Hidden'),
+          households: m('Households & locations'),
+          progress: m('Progress'),
+        },
+      },
+      markers: {
+        label: m('Location markers'),
+        options: {
+          altDescriptions: {
+            areaMarkerAssignee: m('Center area assignees'),
+            areaMarkerAssignmentProgreess: m('Center area progress'),
+            areaMarkerHidden: m('Center area hidden'),
+            areaMarkerHouseholds: m('Center area households'),
+            locationDot: m('Dot option'),
+            locationHidden: m('Hide option'),
+            locationHouseholds: m('Households option'),
+            locationProgress: m('Progress option'),
+          },
+          dot: m('Point'),
+          hidden: m('Hidden'),
+          households: m('Households'),
+          progress: m('Progress'),
+        },
+      },
+      title: m('Data visualization'),
     },
   },
   overview: {
