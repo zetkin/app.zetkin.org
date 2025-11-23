@@ -1,24 +1,41 @@
-import { FC, useEffect, useMemo } from 'react';
-import { Box, Paper, Typography, useTheme } from '@mui/material';
+import { CSSProperties, FC, useEffect, useMemo, useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Paper,
+  Skeleton,
+  Tab,
+  Tabs,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
-
 import { useSpring } from '@react-spring/core';
+
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 import {
   OptionsQuestionStats,
   QuestionStats,
+  SubmissionStats,
   SurveyResponseStats,
   TextQuestionStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
+import useSurveySubmissions from 'features/surveys/hooks/useSurveySubmissions';
+import { IFuture } from 'core/caching/futures';
+import { ZetkinSurveySubmission } from 'utils/types/zetkin';
+import { List } from 'react-window';
+import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
+
+const BAR_MAX_WIDTH = 100;
+const TEXT_RESPONSE_CARD_HEIGHT = 150;
 
 type ResponseStatsChartCardProps = {
   orgId: number;
   surveyId: number;
 };
-
-const BAR_MAX_WIDTH = 100;
 
 const CustomBarComponent = <RawDatum extends BarDatum>(
   props: BarItemProps<RawDatum>
@@ -132,11 +149,175 @@ const OptionsStatsCard = ({
   );
 };
 
-const TextStatsCard = ({
-  questionStats,
+const TextResponseCard = ({
+  orgId,
+  questionId,
+  submission,
 }: {
-  questionStats: TextQuestionStats;
+  orgId: number;
+  questionId: number;
+  submission: SubmissionStats;
 }) => {
+  const extendedSubmissionFuture = useSurveySubmission(
+    orgId,
+    submission.submissionId
+  );
+
+  return (
+    <ZUIFuture future={extendedSubmissionFuture}>
+      {(extendedSubmission: ZetkinSurveySubmission) => {
+        if (!extendedSubmission.responses) {
+          return null;
+        }
+
+        const questionResponse = extendedSubmission.responses.find(
+          (response) => response.question_id === questionId
+        );
+
+        if (!questionResponse || !('response' in questionResponse)) {
+          return null;
+        }
+
+        return (
+          <Card
+            sx={{
+              display: 'flex',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <CardContent>{questionResponse.response}</CardContent>
+          </Card>
+        );
+      }}
+    </ZUIFuture>
+  );
+};
+
+type TextResponseListRowProps = {
+  columnCount: number;
+  index: number;
+  orgId: number;
+  questionId: number;
+  style: CSSProperties;
+  rows: SubmissionStats[][];
+};
+
+const TextResponseListRow = ({
+  columnCount,
+  index: rowIndex,
+  orgId,
+  questionId,
+  style,
+  rows,
+}: TextResponseListRowProps) => {
+  const row = rows[rowIndex];
+
+  return (
+    <Box
+      style={style}
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        height: TEXT_RESPONSE_CARD_HEIGHT,
+        width: '100%',
+      }}
+    >
+      {row.map((submission, colIndex) => {
+        return (
+          <Box
+            key={colIndex}
+            sx={{
+              display: 'flex',
+              height: TEXT_RESPONSE_CARD_HEIGHT,
+              padding: '10px',
+              width: `${100.0 / columnCount}%`,
+            }}
+          >
+            <TextResponseCard
+              orgId={orgId}
+              questionId={questionId}
+              submission={submission}
+            />
+          </Box>
+        );
+      })}
+    </Box>
+  );
+};
+
+function chunk<T>(xs: T[], size: number): T[][] {
+  const res: T[][] = [];
+  for (let i = 0; i < xs.length; i += size) {
+    res.push(xs.slice(i, i + size));
+  }
+  return res;
+}
+
+const TextResponseList = ({
+  orgId,
+  questionStats,
+  submissionStats,
+}: {
+  orgId: number;
+  questionStats: TextQuestionStats;
+  submissionStats: SubmissionStats[];
+}) => {
+  const columnCount = 2;
+
+  const rows = useMemo(
+    () =>
+      chunk(
+        submissionStats.filter((submission) =>
+          submission.answeredTextQuestions.some(
+            (questionId) => questionId === questionStats.question.id
+          )
+        ),
+        columnCount
+      ),
+    [submissionStats, columnCount, questionStats.question.id]
+  );
+
+  const rowProps = useMemo(
+    () => ({
+      columnCount,
+      orgId,
+      questionId: questionStats.question.id,
+      rows,
+    }),
+    [columnCount, orgId, questionStats.question.id, rows]
+  );
+
+  if (!rows) {
+    return null;
+  }
+
+  return (
+    <List
+      rowComponent={TextResponseListRow}
+      rowCount={rows.length}
+      rowHeight={TEXT_RESPONSE_CARD_HEIGHT}
+      rowProps={rowProps}
+      style={{
+        height: TEXT_RESPONSE_CARD_HEIGHT * rows.length,
+      }}
+    />
+  );
+};
+
+const TextStatsCard = ({
+  orgId,
+  questionStats,
+  submissionStats,
+  surveyId,
+}: {
+  orgId: number;
+  questionStats: TextQuestionStats;
+  submissionStats: SubmissionStats[];
+  surveyId: number;
+}) => {
+  const [tab, setTab] = useState('bar-plot');
+
   return (
     <ZUICard
       header={questionStats.question.question.question}
@@ -151,9 +332,25 @@ const TextStatsCard = ({
         width: '100%',
       }}
     >
-      <Box height={400}>
-        <QuestionStatsBarPlot question={questionStats} />
-      </Box>
+      <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
+        <Tab label={'Bar plot'} value={'bar-plot'} />
+        <Tab label={'Responses'} value={'responses'} />
+      </Tabs>
+      {tab === 'bar-plot' && (
+        <Box height={400}>
+          <QuestionStatsBarPlot question={questionStats} />
+        </Box>
+      )}
+      {tab === 'responses' && (
+        <Box display={'flex'} height={400} position={'relative'}>
+          <TextResponseList
+            orgId={orgId}
+            questionStats={questionStats}
+            submissionStats={submissionStats}
+            surveyId={surveyId}
+          />
+        </Box>
+      )}
     </ZUICard>
   );
 };
@@ -171,9 +368,15 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
           <>
             {data.questions.map((questionStats, index) =>
               'options' in questionStats ? (
-                <OptionsStatsCard questionStats={questionStats} />
+                <OptionsStatsCard key={index} questionStats={questionStats} />
               ) : (
-                <TextStatsCard questionStats={questionStats} />
+                <TextStatsCard
+                  key={index}
+                  orgId={orgId}
+                  questionStats={questionStats}
+                  submissionStats={data.submissionStats}
+                  surveyId={surveyId}
+                />
               )
             )}
           </>

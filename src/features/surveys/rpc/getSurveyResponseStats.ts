@@ -40,9 +40,15 @@ export type TextQuestionStats = {
 
 export type QuestionStats = OptionsQuestionStats | TextQuestionStats;
 
+export type SubmissionStats = {
+  answeredTextQuestions: number[];
+  submissionId: number;
+};
+
 export type SurveyResponseStats = {
   id: number;
   questions: QuestionStats[];
+  submissionStats: SubmissionStats[];
 };
 
 export const getSurveyResponseStatsDef = {
@@ -149,7 +155,9 @@ async function handle(
         return;
       }
 
-      responseStatsCounters[response.question_id].answerCounter++;
+      if (!('response' in response) || response.response.length > 0) {
+        responseStatsCounters[response.question_id].answerCounter++;
+      }
 
       if ('response' in response) {
         const wordList = response.response
@@ -223,8 +231,22 @@ async function handle(
     })
     .filter((el) => !!el) as QuestionStats[];
 
+  const submissionStats: SubmissionStats[] = responses
+    .filter((resp) => !!resp)
+    .map((response) => {
+      return <SubmissionStats>{
+        answeredTextQuestions: response!.responses
+          ? response!.responses
+              .filter((resp) => 'response' in resp && !!resp.response)
+              .map((resp) => resp.question_id)
+          : [],
+        submissionId: response!.id,
+      };
+    });
+
   return {
     id: surveyId,
     questions: questionStats,
+    submissionStats: submissionStats,
   };
 }
