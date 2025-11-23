@@ -196,11 +196,30 @@ const PersonTags = ({
                 })}
                 {selectedTags.length < tags.length && (
                   <StyledItemSelect
+                    filterOptions={(tags, state) => {
+                      const lowerCaseSearchPhrase =
+                        state.inputValue.toLowerCase();
+
+                      const matchingTags = tags.filter((tag) => {
+                        return (
+                          tag.title
+                            .toLowerCase()
+                            .includes(lowerCaseSearchPhrase) ||
+                          tag.group?.title
+                            .toLowerCase()
+                            .includes(lowerCaseSearchPhrase)
+                        );
+                      });
+
+                      return matchingTags;
+                    }}
                     getOptionDisabled={(t) =>
                       selectedTags.some((selected) => selected.id === t.id)
                     }
+                    groupBy={(option) => option.group?.title || 'No group'}
                     onChange={(_, v) => handleTagChange(v)}
                     options={tags.map((t) => ({
+                      group: t.group ?? undefined,
                       id: t.id,
                       title: t.title,
                     }))}
