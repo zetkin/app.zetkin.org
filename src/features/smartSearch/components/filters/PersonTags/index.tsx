@@ -133,6 +133,12 @@ const PersonTags = ({
     );
   });
 
+  const groupedSelectedTags = groupTags(selectedTags, messages.noGroup());
+  const sortedGroupedSelectedTags: ZetkinTag[] = [];
+  groupedSelectedTags.forEach((group) => {
+    sortedGroupedSelectedTags.push(...group.tags);
+  });
+
   return (
     <FilterForm
       disableSubmit={!submittable}
@@ -201,7 +207,7 @@ const PersonTags = ({
                 display="inline-flex"
                 style={{ verticalAlign: 'middle' }}
               >
-                {selectedTags.map((tag) => {
+                {sortedGroupedSelectedTags.map((tag) => {
                   return (
                     <Chip
                       key={tag.id}
