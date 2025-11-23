@@ -176,7 +176,8 @@ const CallPanels: FC<Props> = ({
             mobileTabIndex &&
             ((lane.step == LaneStep.START && mobileTabIndex != 3) ||
               (lane.step == LaneStep.CALL && mobileTabIndex != 1) ||
-              lane.step > LaneStep.CALL)
+              (lane.step == LaneStep.REPORT && mobileTabIndex != 1) ||
+              lane.step == LaneStep.SUMMARY)
               ? 'hidden'
               : '',
           width: mobileTabIndex ? 1 : 1 / 3,
@@ -208,9 +209,9 @@ const CallPanels: FC<Props> = ({
           transition: 'left 0.5s',
           visibility:
             mobileTabIndex &&
-            (lane.step != LaneStep.CALL || mobileTabIndex != 2)
-              ? 'hidden'
-              : lane.step == LaneStep.SUMMARY
+            ((lane.step == LaneStep.CALL && mobileTabIndex != 2) ||
+              (lane.step == LaneStep.REPORT && mobileTabIndex != 1) ||
+              (lane.step != LaneStep.CALL && lane.step != LaneStep.REPORT))
               ? 'hidden'
               : '',
           width: mobileTabIndex ? 1 : 1 / 3,
@@ -244,7 +245,9 @@ const CallPanels: FC<Props> = ({
           transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
           visibility:
             mobileTabIndex &&
-            (lane.step != LaneStep.CALL || mobileTabIndex != 3)
+            ((lane.step == LaneStep.CALL && mobileTabIndex != 3) ||
+              (lane.step == LaneStep.REPORT && mobileTabIndex != 2) ||
+              (lane.step != LaneStep.CALL && lane.step != LaneStep.REPORT))
               ? 'hidden'
               : '',
           width: mobileTabIndex ? 1 : 1 / 3,
@@ -267,11 +270,20 @@ const CallPanels: FC<Props> = ({
           animationName: lane.step == LaneStep.SUMMARY ? 'reportOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left: lane.step == LaneStep.REPORT ? 'calc((100% / 3) * 2)' : '100%',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.REPORT
+            ? 'calc((100% / 3) * 2)'
+            : '100%',
           overflowY: 'auto',
           position: 'absolute',
           transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            (lane.step != LaneStep.REPORT || mobileTabIndex != 3)
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
         })}
       >
         <ZUISection

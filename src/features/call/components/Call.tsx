@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, Box, Slide, Snackbar, Tab } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Info, ListOutlined, Person } from '@mui/icons-material';
 import { TabContext, TabList } from '@mui/lab';
 
@@ -50,6 +50,13 @@ const Call: FC = () => {
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
   );
+
+  useEffect(() => {
+    if (lane.step == LaneStep.REPORT) {
+      setCurrentMobileTab(3);
+    }
+  }, [lane.step]);
+
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
@@ -80,7 +87,7 @@ const Call: FC = () => {
     );
   }
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setCurrentMobileTab(newValue);
   };
 
