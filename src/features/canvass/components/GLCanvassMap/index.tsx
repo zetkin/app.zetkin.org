@@ -51,7 +51,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
-  const [mapInitError, setMapInitError] = useState(true);
+  const [mapInitError, setMapInitError] = useState(false);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -245,7 +245,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return null;
   }
 
-  if (!mapInitError) {
+  if (mapInitError) {
     return (
       <Box data-testid="map-error" role="alert">
         <ZUIAlert severity="error" title={messages.map.initializationError()} />
@@ -324,7 +324,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}
         onError={() => {
-          setMapInitError(false);
+          setMapInitError(true);
         }}
         onLoad={(ev) => {
           const map = ev.target;
