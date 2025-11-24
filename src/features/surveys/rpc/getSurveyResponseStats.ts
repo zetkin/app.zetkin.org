@@ -9,7 +9,6 @@ import {
   ZetkinSurveyOption,
   ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveySubmission,
-  ZetkinSurveyTextElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
 
@@ -210,7 +209,7 @@ async function handle(
       if (question.question.response_type === RESPONSE_TYPE.TEXT) {
         return <TextQuestionStats>{
           answerCount: counter.answerCounter,
-          question: question as ZetkinSurveyTextElement,
+          question: question as ZetkinSurveyTextQuestionElement,
           topWordFrequencies: counter.topWordFrequencies,
           totalUniqueWordCount: counter.totalUniqueWordCount,
           totalWordCount: counter.totalWordCounts,

@@ -235,7 +235,7 @@ const surveysSlice = createSlice({
     },
     responseStatsLoaded: (
       state,
-      action: PayloadAction<[number, SurveyStats]>
+      action: PayloadAction<[number, SurveyResponseStats]>
     ) => {
       const [surveyId, stats] = action.payload;
       state.responseStatsBySurveyId[surveyId].data = stats;

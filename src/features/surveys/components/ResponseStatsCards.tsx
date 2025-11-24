@@ -26,7 +26,6 @@ import {
   TextQuestionStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
 import range from 'utils/range';
@@ -133,7 +132,6 @@ const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
       data={data}
       enableGridX={false}
       enableGridY={true}
-      height={CHART_HEIGHT}
       indexBy="option"
       keys={['count']}
       labelSkipHeight={20}
@@ -180,8 +178,8 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
       arcLinkLabel={(d) => `${d.id}: ${d.value}`}
       arcLinkLabelsColor={{ from: 'color' }}
       arcLinkLabelsTextColor={theme.palette.text.primary}
-      cornerRadius={3}
       colors={COLORS}
+      cornerRadius={3}
       data={data}
       enableArcLabels={false}
       enableArcLinkLabels={true}
@@ -318,8 +316,8 @@ const TextResponseCard = ({
       skeleton={
         <Skeleton
           height={TEXT_RESPONSE_CARD_HEIGHT}
-          width={'100%'}
           variant={'rounded'}
+          width={'100%'}
         />
       }
     >
@@ -347,8 +345,8 @@ const TextResponseCard = ({
             <CardContent>
               <Typography
                 sx={{
-                  '-webkit-box-orient': 'vertical',
-                  '-webkit-line-clamp': '4',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: '4',
                   display: '-webkit-box',
                   overflow: 'hidden',
                 }}
@@ -365,11 +363,9 @@ const TextResponseCard = ({
 
 type TextResponseListRowProps = {
   columnCount: number;
-  index: number;
   orgId: number;
   questionId: number;
   rows: SubmissionStats[][];
-  style: CSSProperties;
 };
 
 const TextResponseListRow = ({
@@ -379,7 +375,10 @@ const TextResponseListRow = ({
   questionId,
   style,
   rows,
-}: TextResponseListRowProps) => {
+}: TextResponseListRowProps & {
+  index: number;
+  style: CSSProperties;
+}) => {
   const row = rows[rowIndex];
 
   return (
@@ -462,7 +461,7 @@ const TextResponseList = ({
   }
 
   return (
-    <List
+    <List<TextResponseListRowProps>
       rowComponent={TextResponseListRow}
       rowCount={rows.length}
       rowHeight={TEXT_RESPONSE_CARD_HEIGHT}
@@ -478,12 +477,10 @@ const TextStatsCard = ({
   orgId,
   questionStats,
   submissionStats,
-  surveyId,
 }: {
   orgId: number;
   questionStats: TextQuestionStats;
   submissionStats: SubmissionStats[];
-  surveyId: number;
 }) => {
   const [tab, setTab] = useState('word-cloud');
   const messages = useMessages(messageIds);
@@ -532,7 +529,6 @@ const TextStatsCard = ({
             orgId={orgId}
             questionStats={questionStats}
             submissionStats={submissionStats}
-            surveyId={surveyId}
           />
         )}
       </Box>
@@ -589,7 +585,6 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
                   orgId={orgId}
                   questionStats={questionStats}
                   submissionStats={data.submissionStats}
-                  surveyId={surveyId}
                 />
               )
             )}
