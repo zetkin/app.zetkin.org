@@ -300,7 +300,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         },
         {
           href: '/insights',
-          label: 'Insights',
+          label: messages.tabs.insights(),
         },
       ]}
       title={

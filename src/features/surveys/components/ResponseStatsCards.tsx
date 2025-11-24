@@ -31,6 +31,9 @@ import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
 import range from 'utils/range';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
+import { useMessages } from 'core/i18n';
+import messageIds from 'features/surveys/l10n/messageIds';
+import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
@@ -176,7 +179,7 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
       animate={false}
       arcLinkLabel={(d) => `${d.id}: ${d.value}`}
       arcLinkLabelsColor={{ from: 'color' }}
-      arcLinkLabelsTextColor={theme.palette.text.primary} // “donut” look (remove for full cake)
+      arcLinkLabelsTextColor={theme.palette.text.primary}
       cornerRadius={3}
       colors={COLORS}
       data={data}
@@ -214,18 +217,34 @@ const OptionsStatsCard = ({
   questionStats: OptionsQuestionStats;
 }) => {
   const [tab, setTab] = useState('bar-plot');
+  const messages = useMessages(messageIds);
+
+  const subheader = useMemo(
+    () =>
+      messages.insights.optionsFields.subheader({
+        answerCount: questionStats.answerCount,
+        totalSelectedOptionsCount: questionStats.totalSelectedOptionsCount,
+      }),
+    [questionStats, messages.insights.optionsFields.subheader]
+  );
 
   return (
     <ZUICard
       header={questionStats.question.question.question}
-      subheader={`${questionStats.answerCount} answers in total. ${questionStats.totalSelectedOptionsCount} selected options in total.`}
+      subheader={subheader}
       sx={{
         width: '100%',
       }}
     >
       <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
-        <Tab label={'Bars'} value={'bar-plot'} />
-        <Tab label={'Pie'} value={'pie-chart'} />
+        <Tab
+          label={messages.insights.optionsFields.tabs.barPlot()}
+          value={'bar-plot'}
+        />
+        <Tab
+          label={messages.insights.optionsFields.tabs.piePlot()}
+          value={'pie-chart'}
+        />
       </Tabs>
       <Box height={CHART_HEIGHT}>
         {tab === 'bar-plot' && (
@@ -467,19 +486,39 @@ const TextStatsCard = ({
   surveyId: number;
 }) => {
   const [tab, setTab] = useState('word-cloud');
+  const messages = useMessages(messageIds);
+
+  const subheader = useMemo(
+    () =>
+      messages.insights.textFields.subheader({
+        answerCount: questionStats.answerCount,
+        totalUniqueWordCount: questionStats.totalUniqueWordCount,
+        totalWordCount: questionStats.totalWordCount,
+      }),
+    [questionStats, messages.insights.textFields.subheader]
+  );
 
   return (
     <ZUICard
       header={questionStats.question.question.question}
-      subheader={`${questionStats.answerCount} answers in total. ${questionStats.totalWordCount} words in total. ${questionStats.totalUniqueWordCount} total unique words.`}
+      subheader={subheader}
       sx={{
         width: '100%',
       }}
     >
       <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
-        <Tab label={'Word cloud'} value={'word-cloud'} />
-        <Tab label={'Word frequency bars'} value={'word-frequency-bars'} />
-        <Tab label={'Responses'} value={'responses'} />
+        <Tab
+          label={messages.insights.textFields.tabs.wordCloud()}
+          value={'word-cloud'}
+        />
+        <Tab
+          label={messages.insights.textFields.tabs.wordFrequencies()}
+          value={'word-frequency-bars'}
+        />
+        <Tab
+          label={messages.insights.textFields.tabs.responses()}
+          value={'responses'}
+        />
       </Tabs>
       <Box height={CHART_HEIGHT}>
         {tab === 'word-cloud' && (

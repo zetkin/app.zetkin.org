@@ -55,13 +55,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface SurveyPageProps {
+interface InsightsPageProps {
   campId: string;
   orgId: string;
   surveyId: string;
 }
 
-const SurveyPage: PageWithLayout<SurveyPageProps> = ({
+const InsightsPage: PageWithLayout<InsightsPageProps> = ({
   campId,
   orgId,
   surveyId,
@@ -105,7 +105,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   );
 };
 
-SurveyPage.getLayout = function getLayout(page, props) {
+InsightsPage.getLayout = function getLayout(page, props) {
   return (
     <SurveyLayout
       campId={props.campId}
@@ -117,4 +117,4 @@ SurveyPage.getLayout = function getLayout(page, props) {
   );
 };
 
-export default SurveyPage;
+export default InsightsPage;

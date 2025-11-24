@@ -106,6 +106,34 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  insights: {
+    optionsFields: {
+      subheader: m<{
+        answerCount: number;
+        totalSelectedOptionsCount: number;
+      }>(
+        'In total, there were {answerCount} answers and {totalSelectedOptionsCount} selected options.'
+      ),
+      tabs: {
+        barPlot: m('Bars'),
+        piePlot: m('Pie'),
+      },
+    },
+    textFields: {
+      subheader: m<{
+        answerCount: number;
+        totalUniqueWordCount: number;
+        totalWordCount: number;
+      }>(
+        'In total, there were {answerCount} answers, {totalWordCount} words and {totalUniqueWordCount} unique words.'
+      ),
+      tabs: {
+        responses: m('Responses'),
+        wordCloud: m('Word cloud'),
+        wordFrequencies: m('Word frequencies'),
+      },
+    },
+  },
   layout: {
     actions: {
       createList: m('Create list from submissions'),
@@ -250,6 +278,7 @@ export default makeMessages('feat.surveys', {
     title: m<{ surveyTitle: string }>('Submissions from {surveyTitle}'),
   },
   tabs: {
+    insights: m('Insights'),
     overview: m('Overview'),
     questions: m('Questions'),
     submissions: m('Submissions'),
