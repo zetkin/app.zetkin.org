@@ -25,6 +25,7 @@ import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
 import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
+import useIsMobile from 'utils/hooks/useIsMobile';
 const BOUNDS_PADDING = 20;
 
 type Props = {
@@ -38,6 +39,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     assignment.id,
     selectedArea.id
   );
+  const isMobile = useIsMobile();
   const crosshairRef = useRef<HTMLDivElement | null>(null);
   const isTrackingRef = useRef<boolean>(false);
   const followUserRef = useRef<boolean>(false);
@@ -322,7 +324,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             left: '50%',
             opacity: !selectedLocationId ? 1 : 0.3,
             position: 'absolute',
-            top: 'calc(50vh - 37px)',
+            top: isMobile ? 'calc(50vh - 57px)' : 'calc(50vh - 37px)',
             transform: 'translate(-50%, -50%)',
             transition: 'opacity 0.1s',
             zIndex: 1200,
