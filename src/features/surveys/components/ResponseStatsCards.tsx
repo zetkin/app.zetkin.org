@@ -73,19 +73,19 @@ const CustomBarComponent = <RawDatum extends BarDatum>(
   const w = Math.min(bar.width, BAR_MAX_WIDTH);
   const x = bar.x + bar.width / 2 - w / 2;
 
-  const [spring, setSpring] = useSpring(() => ({
+  const [spring, api] = useSpring(() => ({
     labelX: w / 2,
     transform: `translate(${x}, ${bar.y})`,
     width: w,
   }));
 
   useEffect(() => {
-    setSpring({
+    api.start({
       labelX: w / 2,
       transform: `translate(${x}, ${bar.y})`,
       width: w,
     });
-  }, [w, setSpring, x, bar]);
+  }, [w, api, x, bar]);
 
   return (
     <BarItem
