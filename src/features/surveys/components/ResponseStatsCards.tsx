@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, FC, memo, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Card,
@@ -13,6 +13,7 @@ import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
 import { useSpring } from '@react-spring/core';
 import { List } from 'react-window';
 import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
+import { ResponsivePie } from '@nivo/pie';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -130,11 +131,68 @@ const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
   );
 };
 
+const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
+  const theme = useTheme();
+
+  const data = useMemo(() => {
+    const items =
+      'options' in question
+        ? question.options.map((o) => ({
+            id: o.option.text,
+            label: o.option.text,
+            value: o.count,
+          }))
+        : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
+            id: word,
+            label: word,
+            value: count,
+          }));
+    return items.sort((a, b) => b.value - a.value).slice(0, 10);
+  }, [question]);
+
+  return (
+    <ResponsivePie
+      animate={false}
+      arcLinkLabel={(d) => `${d.id}: ${d.value}`}
+      arcLinkLabelsColor={{ from: 'color' }}
+      arcLinkLabelsTextColor={theme.palette.text.primary} // “donut” look (remove for full cake)
+      cornerRadius={3}
+      data={data}
+      enableArcLabels={false}
+      enableArcLinkLabels={true}
+      innerRadius={0.5}
+      legends={[
+        {
+          anchor: 'bottom',
+          direction: 'row',
+          itemHeight: 14,
+          itemWidth: 80,
+          symbolSize: 12,
+          translateY: 40,
+        },
+      ]}
+      margin={{ bottom: 60, left: 60, right: 60, top: 40 }}
+      padAngle={1}
+      tooltip={({ datum }) => (
+        <Paper>
+          <Box p={1}>
+            <Typography variant="body2">
+              {datum.id}: {datum.value}
+            </Typography>
+          </Box>
+        </Paper>
+      )}
+    />
+  );
+};
+
 const OptionsStatsCard = ({
   questionStats,
 }: {
   questionStats: OptionsQuestionStats;
 }) => {
+  const [tab, setTab] = useState('bar-plot');
+
   return (
     <ZUICard
       header={questionStats.question.question.question}
@@ -143,12 +201,21 @@ const OptionsStatsCard = ({
         width: '100%',
       }}
     >
+      <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
+        <Tab label={'Bars'} value={'bar-plot'} />
+        <Tab label={'Pie'} value={'pie-chart'} />
+      </Tabs>
       <Box height={400}>
-        <QuestionStatsBarPlot question={questionStats} />
+        {tab === 'bar-plot' && (
+          <QuestionStatsBarPlot question={questionStats} />
+        )}
+        {tab === 'pie-chart' && <QuestionStatsPie question={questionStats} />}
       </Box>
     </ZUICard>
   );
 };
+
+const WordCloud = memo(ReactWordcloud);
 
 const TextResponseWordCloud = ({
   questionStats,
@@ -168,8 +235,10 @@ const TextResponseWordCloud = ({
 
   const options: OptionsProp = useMemo(
     () => ({
+      deterministic: true,
       fontFamily: 'Azo-Sans-Web',
       fontSizes: [30, 80],
+      randomSeed: '42',
       rotationAngles: [0, 90],
       rotations: 2,
     }),
@@ -179,10 +248,10 @@ const TextResponseWordCloud = ({
   return (
     <Box
       sx={{
-        padding: '10px',
+        padding: '20px',
       }}
     >
-      <ReactWordcloud options={options} words={words} />
+      <WordCloud options={options} words={words} />
     </Box>
   );
 };
