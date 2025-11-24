@@ -464,7 +464,7 @@ const TextResponseWordCloud = ({
     () => ({
       colors: COLORS,
       deterministic: true,
-      fontFamily: 'Azo-Sans-Web',
+      fontFamily: `'AzoSansWeb', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
       fontSizes: [30, 80],
       randomSeed: '42',
       rotationAngles: [0, 90],
