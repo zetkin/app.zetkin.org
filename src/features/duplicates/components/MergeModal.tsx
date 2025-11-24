@@ -40,8 +40,6 @@ const MergeModal: FC<Props> = ({
   const messages = useMessages(messageIds);
   const [additionalPeople, setAdditionalPeople] = useState<ZetkinPerson[]>([]);
 
-  const test = useDetailledPersons;
-
   const [selectedIds, setSelectedIds] = useState<number[]>(
     persons.map((person) => person.id) ?? []
   );
@@ -50,24 +48,20 @@ const MergeModal: FC<Props> = ({
 
   const peopleToMerge = [
     ...persons.filter((person) => selectedIds.includes(person.id)),
-    ...test(
-      orgId,
-      additionalPeople.map((person) => person.id)
-    ).detailledPersons,
+    ...additionalPeople,
   ];
 
-  // useEffect(() => {
-  //   if (newPersonId && detailedPerson) {
-  //     setAdditionalPeople([...additionalPeople, detailedPerson]);
-  //   }
-  // }, [newPersonId, detailedPerson]);
+  const { detailledPersons } = useDetailledPersons(
+    orgId,
+    peopleToMerge.map((person) => person.id)
+  );
 
   const peopleNotToMerge = persons.filter(
     (person) => !selectedIds.includes(person.id)
   );
 
   const { hasConflictingValues, fieldValues, initialOverrides } =
-    useFieldSettings(peopleToMerge);
+    useFieldSettings(detailledPersons);
   const [overrides, setOverrides] = useState(initialOverrides);
 
   useEffect(() => {
@@ -123,7 +117,7 @@ const MergeModal: FC<Props> = ({
           width="50%"
         >
           <FieldSettings
-            duplicates={peopleToMerge}
+            duplicates={detailledPersons}
             fieldValues={fieldValues}
             onChange={(field, value) => {
               setOverrides({ ...overrides, [`${field}`]: value });
