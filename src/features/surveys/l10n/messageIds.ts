@@ -133,6 +133,14 @@ export default makeMessages('feat.surveys', {
         wordFrequencies: m('Word frequencies'),
       },
     },
+    export: {
+      errorNotFound: m(
+        'Error occurred while exporting: Did not find plot root.'
+      ),
+      errorUnknown: m('Unknown error occurred while exporting.'),
+      toPng: m('Export to png'),
+      toSvg: m('Export to svg'),
+    },
   },
   layout: {
     actions: {

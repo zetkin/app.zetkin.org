@@ -1,4 +1,15 @@
-import { CSSProperties, FC, memo, useEffect, useMemo, useState } from 'react';
+import React, {
+  CSSProperties,
+  FC,
+  memo,
+  ReactElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Box,
   Card,
@@ -33,6 +44,10 @@ import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStat
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import ImageIcon from '@mui/icons-material/Image';
+import ArchitectureIcon from '@mui/icons-material/Architecture';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
@@ -52,6 +67,159 @@ const COLORS = [
   'rgb(192,28,178)',
   'rgb(63,190,118)',
 ];
+
+async function svgToPng(svgEl: SVGSVGElement, scale = 1) {
+  const svgData = new XMLSerializer().serializeToString(svgEl);
+
+  // Ensure XML header — Windows cares
+  const svgWithHeader = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgData;
+
+  // SVG → Blob
+  const svgBlob = new Blob([svgWithHeader], {
+    type: 'image/svg+xml;charset=utf-8',
+  });
+  const url = URL.createObjectURL(svgBlob);
+
+  return new Promise<Blob>((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+
+      const ctx = canvas.getContext('2d');
+      ctx!.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      URL.revokeObjectURL(url);
+
+      // Real PNG blob
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Failed to create PNG blob'));
+        },
+        'image/png',
+        1.0
+      );
+    };
+
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+function download(filename: string, content: string | Blob) {
+  const element = document.createElement('a');
+  element.setAttribute(
+    'href',
+    typeof content === 'string'
+      ? 'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+      : URL.createObjectURL(content)
+  );
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+function sanitizeFileName(name) {
+  // Replace Windows-forbidden chars + control chars
+  name = name.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
+
+  // Collapse underscores
+  name = name.replace(/_+/g, '_');
+
+  // Trim spaces/dots from ends (Windows hates them)
+  name = name.replace(/^[ .]+|[ .]+$/g, '');
+
+  if (!name) name = 'file';
+
+  // Enforce 255-byte limit
+  if (new TextEncoder().encode(name).length > 255) {
+    const enc = new TextEncoder().encode(name);
+    name = new TextDecoder().decode(enc.slice(0, 255));
+  }
+
+  return name;
+}
+
+const ChartWrapper = ({
+  children,
+  exportFileName,
+}: {
+  children: ReactElement;
+  exportFileName: string;
+}) => {
+  const messages = useMessages(messageIds);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
+
+  const exportChart = useCallback(
+    async (format: 'png' | 'svg') => {
+      try {
+        const wrapper = ref.current;
+
+        if (!wrapper) {
+          showSnackbar('error', messages.insights.export.errorNotFound());
+          return;
+        }
+
+        const elements = wrapper.getElementsByTagName('svg');
+        if (elements.length === 0) {
+          showSnackbar('error', messages.insights.export.errorNotFound());
+          return;
+        }
+
+        const svgRoot = elements[0];
+
+        const fileName = sanitizeFileName(exportFileName);
+
+        if (format === 'png') {
+          const pngBlob = await svgToPng(svgRoot);
+          download(`${fileName}.png`, pngBlob);
+        } else if (format === 'svg') {
+          const svgStr = new XMLSerializer().serializeToString(svgRoot);
+          download(`${fileName}.svg`, svgStr);
+        }
+      } catch (e) {
+        showSnackbar('error', messages.insights.export.errorUnknown());
+      }
+    },
+    [showSnackbar, ref, exportFileName]
+  );
+
+  const ellipsisMenuItems = useMemo(
+    () => [
+      {
+        label: messages.insights.export.toPng(),
+        onSelect: () => exportChart('png'),
+        startIcon: <ImageIcon />,
+      },
+      {
+        label: messages.insights.export.toSvg(),
+        onSelect: () => exportChart('svg'),
+        startIcon: <ArchitectureIcon />,
+      },
+    ],
+    [exportChart]
+  );
+
+  return (
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ position: 'absolute', right: 10, top: 10, zIndex: 10 }}>
+        <ZUIEllipsisMenu items={ellipsisMenuItems} />
+      </Box>
+      <Box ref={ref} sx={{ height: '100%', width: '100%' }}>
+        {children}
+      </Box>
+    </Box>
+  );
+};
 
 function ellipsize(s: string, limit: number = 40): string {
   return s.length <= limit ? s : s.slice(0, limit) + '…';
@@ -96,60 +264,68 @@ const CustomBarComponent = <RawDatum extends BarDatum>(
   );
 };
 
-const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
+const QuestionStatsBarPlot = ({
+  questionStats,
+}: {
+  questionStats: QuestionStats;
+}) => {
   const theme = useTheme();
 
   const data = useMemo(() => {
     const bars =
-      'options' in question
-        ? question.options.map((o) => ({
+      'options' in questionStats
+        ? questionStats.options.map((o) => ({
             count: o.count,
             option: ellipsize(o.option.text),
           }))
-        : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
-            count: count,
-            option: ellipsize(word),
-          }));
+        : Object.entries(questionStats.topWordFrequencies).map(
+            ([word, count]) => ({
+              count: count,
+              option: ellipsize(word),
+            })
+          );
     return bars.sort((a, b) => b.count - a.count).slice(0, 10);
-  }, [question]);
+  }, [questionStats]);
 
   return (
-    <ResponsiveBar
-      animate={false}
-      axisBottom={{
-        tickPadding: 5,
-        tickSize: 0,
-      }}
-      axisLeft={{
-        format: (v) => (Number.isInteger(v) ? v : ''),
-        tickPadding: 5,
-        tickSize: 0,
-      }}
-      axisRight={null}
-      axisTop={null}
-      barComponent={CustomBarComponent}
-      colors={({ index }) => COLORS[index % COLORS.length]}
-      data={data}
-      enableGridX={false}
-      enableGridY={true}
-      indexBy="option"
-      keys={['count']}
-      labelSkipHeight={20}
-      labelSkipWidth={20}
-      labelTextColor={() => theme.palette.primary.contrastText}
-      layout="vertical"
-      margin={{ bottom: 60, left: 60, right: 20, top: 20 }}
-      padding={0.3}
-      tooltip={({ indexValue, value }) => (
-        <Paper>
-          <Box p={1}>
-            <Typography variant="body2">
-              {indexValue}: {value}
-            </Typography>
-          </Box>
-        </Paper>
-      )}
-    />
+    <ChartWrapper exportFileName={questionStats.question.question.question}>
+      <ResponsiveBar
+        animate={false}
+        axisBottom={{
+          tickPadding: 5,
+          tickSize: 0,
+        }}
+        axisLeft={{
+          format: (v) => (Number.isInteger(v) ? v : ''),
+          tickPadding: 5,
+          tickSize: 0,
+        }}
+        axisRight={null}
+        axisTop={null}
+        barComponent={CustomBarComponent}
+        colors={({ index }) => COLORS[index % COLORS.length]}
+        data={data}
+        enableGridX={false}
+        enableGridY={true}
+        indexBy="option"
+        keys={['count']}
+        labelSkipHeight={20}
+        labelSkipWidth={20}
+        labelTextColor={() => theme.palette.primary.contrastText}
+        layout="vertical"
+        margin={{ bottom: 60, left: 60, right: 20, top: 20 }}
+        padding={0.3}
+        tooltip={({ indexValue, value }) => (
+          <Paper>
+            <Box p={1}>
+              <Typography variant="body2">
+                {indexValue}: {value}
+              </Typography>
+            </Box>
+          </Paper>
+        )}
+      />
+    </ChartWrapper>
   );
 };
 
@@ -173,39 +349,41 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
   }, [question]);
 
   return (
-    <ResponsivePie
-      animate={false}
-      arcLinkLabel={(d) => `${d.id}: ${d.value}`}
-      arcLinkLabelsColor={{ from: 'color' }}
-      arcLinkLabelsTextColor={theme.palette.text.primary}
-      colors={COLORS}
-      cornerRadius={3}
-      data={data}
-      enableArcLabels={false}
-      enableArcLinkLabels={true}
-      innerRadius={0.5}
-      legends={[
-        {
-          anchor: 'bottom',
-          direction: 'row',
-          itemHeight: 14,
-          itemWidth: 80,
-          symbolSize: 12,
-          translateY: 40,
-        },
-      ]}
-      margin={{ bottom: 60, left: 60, right: 60, top: 40 }}
-      padAngle={1}
-      tooltip={({ datum }) => (
-        <Paper>
-          <Box p={1}>
-            <Typography variant="body2">
-              {datum.id}: {datum.value}
-            </Typography>
-          </Box>
-        </Paper>
-      )}
-    />
+    <ChartWrapper exportFileName={question.question.question.question}>
+      <ResponsivePie
+        animate={false}
+        arcLinkLabel={(d) => `${d.id}: ${d.value}`}
+        arcLinkLabelsColor={{ from: 'color' }}
+        arcLinkLabelsTextColor={theme.palette.text.primary}
+        colors={COLORS}
+        cornerRadius={3}
+        data={data}
+        enableArcLabels={false}
+        enableArcLinkLabels={true}
+        innerRadius={0.5}
+        legends={[
+          {
+            anchor: 'bottom',
+            direction: 'row',
+            itemHeight: 14,
+            itemWidth: 80,
+            symbolSize: 12,
+            translateY: 40,
+          },
+        ]}
+        margin={{ bottom: 60, left: 60, right: 60, top: 40 }}
+        padAngle={1}
+        tooltip={({ datum }) => (
+          <Paper>
+            <Box p={1}>
+              <Typography variant="body2">
+                {datum.id}: {datum.value}
+              </Typography>
+            </Box>
+          </Paper>
+        )}
+      />
+    </ChartWrapper>
   );
 };
 
@@ -231,6 +409,7 @@ const OptionsStatsCard = ({
       header={questionStats.question.question.question}
       subheader={subheader}
       sx={{
+        position: 'relative',
         width: '100%',
       }}
     >
@@ -246,7 +425,7 @@ const OptionsStatsCard = ({
       </Tabs>
       <Box height={CHART_HEIGHT}>
         {tab === 'bar-plot' && (
-          <QuestionStatsBarPlot question={questionStats} />
+          <QuestionStatsBarPlot questionStats={questionStats} />
         )}
         {tab === 'pie-chart' && <QuestionStatsPie question={questionStats} />}
       </Box>
@@ -291,7 +470,9 @@ const TextResponseWordCloud = ({
         padding: '20px',
       }}
     >
-      <WordCloud options={options} words={words} />
+      <ChartWrapper exportFileName={questionStats.question.question.question}>
+        <WordCloud options={options} words={words} />
+      </ChartWrapper>
     </Box>
   );
 };
@@ -494,6 +675,7 @@ const TextStatsCard = ({
       header={questionStats.question.question.question}
       subheader={subheader}
       sx={{
+        position: 'relative',
         width: '100%',
       }}
     >
@@ -516,7 +698,7 @@ const TextStatsCard = ({
           <TextResponseWordCloud questionStats={questionStats} />
         )}
         {tab === 'word-frequency-bars' && (
-          <QuestionStatsBarPlot question={questionStats} />
+          <QuestionStatsBarPlot questionStats={questionStats} />
         )}
         {tab === 'responses' && (
           <TextResponseList
