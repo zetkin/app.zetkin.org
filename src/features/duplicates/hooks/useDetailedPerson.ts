@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
 
 import { useApiClient } from 'core/hooks';
-import loadDetailledPerson from '../rpc/loadDetailledPerson';
+import loadDetailedPerson from '../rpc/loadDetailedPerson';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
-export default function useDetailledPersons(
-  orgId: number,
-  personIds: number[]
-) {
+export default function useDetailedPersons(orgId: number, personIds: number[]) {
   const apiClient = useApiClient();
-  const [detailledPersons, setDetailledPersons] = useState<ZetkinPerson[]>([]);
+  const [detailedPersons, setDetailedPersons] = useState<ZetkinPerson[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -21,11 +18,11 @@ export default function useDetailledPersons(
     const fetchPersons = async () => {
       setLoading(true);
       try {
-        const result = await apiClient.rpc(loadDetailledPerson, {
+        const result = await apiClient.rpc(loadDetailedPerson, {
           orgId,
           personIds,
         });
-        setDetailledPersons(result.detailledPersons);
+        setDetailedPersons(result.detailedPersons);
       } catch (err) {
         setError(err as Error);
       } finally {
@@ -36,5 +33,5 @@ export default function useDetailledPersons(
     fetchPersons();
   }, [orgId, personIds.join(','), apiClient]);
 
-  return { detailledPersons, error, loading };
+  return { detailedPersons: detailedPersons, error, loading };
 }

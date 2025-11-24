@@ -19,7 +19,7 @@ import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { useNumericRouteParams } from 'core/hooks';
-import useDetailledPersons from '../hooks/useDetailledPerson';
+import useDetailedPersons from '../hooks/useDetailedPerson';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -51,7 +51,7 @@ const MergeModal: FC<Props> = ({
     ...additionalPeople,
   ];
 
-  const { detailledPersons } = useDetailledPersons(
+  const { detailedPersons: detailedPersons } = useDetailedPersons(
     orgId,
     peopleToMerge.map((person) => person.id)
   );
@@ -61,7 +61,7 @@ const MergeModal: FC<Props> = ({
   );
 
   const { hasConflictingValues, fieldValues, initialOverrides } =
-    useFieldSettings(detailledPersons);
+    useFieldSettings(detailedPersons);
   const [overrides, setOverrides] = useState(initialOverrides);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ const MergeModal: FC<Props> = ({
           width="50%"
         >
           <FieldSettings
-            duplicates={detailledPersons}
+            duplicates={detailedPersons}
             fieldValues={fieldValues}
             onChange={(field, value) => {
               setOverrides({ ...overrides, [`${field}`]: value });

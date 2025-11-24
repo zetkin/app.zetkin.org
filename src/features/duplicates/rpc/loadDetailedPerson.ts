@@ -11,28 +11,28 @@ const paramsSchema = z.object({
 
 type Params = z.input<typeof paramsSchema>;
 type Result = {
-  detailledPersons: ZetkinPerson[];
+  detailedPersons: ZetkinPerson[];
 };
 
-export const loadDetailledPerson = {
+export const loadDetailedPerson = {
   handler: handle,
   name: 'loadPersonFields',
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(loadDetailledPerson.name);
+export default makeRPCDef<Params, Result>(loadDetailedPerson.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { personIds, orgId } = params;
 
-  const detailledPersons: ZetkinPerson[] = [];
+  const detailedPersons: ZetkinPerson[] = [];
 
   for await (const personId of personIds) {
-    const detailledPerson = await apiClient.get<ZetkinPerson>(
+    const detailedPerson = await apiClient.get<ZetkinPerson>(
       `/api/orgs/${orgId}/people/${personId}`
     );
-    detailledPersons.push(detailledPerson);
+    detailedPersons.push(detailedPerson);
   }
 
-  return { detailledPersons };
+  return { detailedPersons: detailedPersons };
 }
