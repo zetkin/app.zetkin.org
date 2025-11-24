@@ -107,6 +107,14 @@ export default makeMessages('feat.surveys', {
     },
   },
   insights: {
+    export: {
+      errorNotFound: m(
+        'Error occurred while exporting: Did not find plot root.'
+      ),
+      errorUnknown: m('Unknown error occurred while exporting.'),
+      toPng: m('Export to png'),
+      toSvg: m('Export to svg'),
+    },
     optionsFields: {
       subheader: m<{
         answerCount: number;
@@ -132,14 +140,6 @@ export default makeMessages('feat.surveys', {
         wordCloud: m('Word cloud'),
         wordFrequencies: m('Word frequencies'),
       },
-    },
-    export: {
-      errorNotFound: m(
-        'Error occurred while exporting: Did not find plot root.'
-      ),
-      errorUnknown: m('Unknown error occurred while exporting.'),
-      toPng: m('Export to png'),
-      toSvg: m('Export to svg'),
     },
   },
   layout: {

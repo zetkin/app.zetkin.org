@@ -26,6 +26,8 @@ import { useSpring } from '@react-spring/core';
 import { List } from 'react-window';
 import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
 import { ResponsivePie } from '@nivo/pie';
+import ImageIcon from '@mui/icons-material/Image';
+import ArchitectureIcon from '@mui/icons-material/Architecture';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -46,8 +48,6 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
-import ImageIcon from '@mui/icons-material/Image';
-import ArchitectureIcon from '@mui/icons-material/Architecture';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
@@ -96,8 +96,11 @@ async function svgToPng(svgEl: SVGSVGElement, scale = 1) {
       // Real PNG blob
       canvas.toBlob(
         (blob) => {
-          if (blob) resolve(blob);
-          else reject(new Error('Failed to create PNG blob'));
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to create PNG blob'));
+          }
         },
         'image/png',
         1.0
@@ -127,9 +130,13 @@ function download(filename: string, content: string | Blob) {
   document.body.removeChild(element);
 }
 
-function sanitizeFileName(name) {
+function sanitizeFileName(name: string) {
   // Replace Windows-forbidden chars + control chars
-  name = name.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
+  const control = Array.from({ length: 32 }, (_, i) =>
+    String.fromCharCode(i)
+  ).join('');
+  const forbidden = new RegExp(`[<>:"/\\\\|?*${control}]`, 'g');
+  name = name.replace(forbidden, '_');
 
   // Collapse underscores
   name = name.replace(/_+/g, '_');
@@ -137,7 +144,9 @@ function sanitizeFileName(name) {
   // Trim spaces/dots from ends (Windows hates them)
   name = name.replace(/^[ .]+|[ .]+$/g, '');
 
-  if (!name) name = 'file';
+  if (!name) {
+    name = 'file';
+  }
 
   // Enforce 255-byte limit
   if (new TextEncoder().encode(name).length > 255) {
