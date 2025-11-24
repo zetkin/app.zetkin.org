@@ -34,6 +34,10 @@ import 'tippy.js/animations/scale.css';
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 
+function ellipsize(s: string, limit: number = 40): string {
+  return s.length <= limit ? s : s.slice(0, limit) + '…';
+}
+
 type ResponseStatsChartCardProps = {
   orgId: number;
   surveyId: number;
@@ -81,11 +85,11 @@ const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
       'options' in question
         ? question.options.map((o) => ({
             count: o.count,
-            option: o.option.text,
+            option: ellipsize(o.option.text),
           }))
         : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
             count: count,
-            option: word,
+            option: ellipsize(word),
           }));
     return bars.sort((a, b) => b.count - a.count).slice(0, 10);
   }, [question]);
@@ -138,13 +142,13 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
     const items =
       'options' in question
         ? question.options.map((o) => ({
-            id: o.option.text,
-            label: o.option.text,
+            id: ellipsize(o.option.text),
+            label: ellipsize(o.option.text),
             value: o.count,
           }))
         : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
-            id: word,
-            label: word,
+            id: ellipsize(word),
+            label: ellipsize(word),
             value: count,
           }));
     return items.sort((a, b) => b.value - a.value).slice(0, 10);
