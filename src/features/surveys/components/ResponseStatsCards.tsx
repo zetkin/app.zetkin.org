@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   Paper,
+  Skeleton,
   Tab,
   Tabs,
   Typography,
@@ -12,16 +13,11 @@ import {
 import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
 import { useSpring } from '@react-spring/core';
 import { List } from 'react-window';
-import ReactWordcloud, {
-  CallbacksProp,
-  OptionsProp,
-  Word,
-} from 'react-wordcloud';
+import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
 import { ResponsivePie } from '@nivo/pie';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
-import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 import {
   OptionsQuestionStats,
   QuestionStats,
@@ -30,13 +26,15 @@ import {
   TextQuestionStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/animations/scale.css';
+import range from 'utils/range';
+import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
+const CHART_HEIGHT = 400;
 
 const COLORS = [
   'rgb(237, 28, 85)',
@@ -132,7 +130,7 @@ const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
       data={data}
       enableGridX={false}
       enableGridY={true}
-      height={400}
+      height={CHART_HEIGHT}
       indexBy="option"
       keys={['count']}
       labelSkipHeight={20}
@@ -229,7 +227,7 @@ const OptionsStatsCard = ({
         <Tab label={'Bars'} value={'bar-plot'} />
         <Tab label={'Pie'} value={'pie-chart'} />
       </Tabs>
-      <Box height={400}>
+      <Box height={CHART_HEIGHT}>
         {tab === 'bar-plot' && (
           <QuestionStatsBarPlot question={questionStats} />
         )}
@@ -296,7 +294,16 @@ const TextResponseCard = ({
   );
 
   return (
-    <ZUIFuture future={extendedSubmissionFuture}>
+    <ZUIFuture
+      future={extendedSubmissionFuture}
+      skeleton={
+        <Skeleton
+          height={TEXT_RESPONSE_CARD_HEIGHT}
+          width={'100%'}
+          variant={'rounded'}
+        />
+      }
+    >
       {(extendedSubmission: ZetkinSurveySubmission) => {
         if (!extendedSubmission.responses) {
           return null;
@@ -474,7 +481,7 @@ const TextStatsCard = ({
         <Tab label={'Word frequency bars'} value={'word-frequency-bars'} />
         <Tab label={'Responses'} value={'responses'} />
       </Tabs>
-      <Box height={400}>
+      <Box height={CHART_HEIGHT}>
         {tab === 'word-cloud' && (
           <TextResponseWordCloud questionStats={questionStats} />
         )}
@@ -494,6 +501,26 @@ const TextStatsCard = ({
   );
 };
 
+const LoadingStatsCard = () => {
+  return (
+    <ZUICard
+      header={<Skeleton height={'100%'} width={150} />}
+      subheader={<Skeleton height={'100%'} width={300} />}
+      sx={{
+        width: '100%',
+      }}
+    >
+      <Skeleton
+        height={30}
+        sx={{ marginBottom: '10px' }}
+        variant={'rounded'}
+        width={200}
+      />
+      <Skeleton height={200} variant={'rounded'} width={'100%'} />
+    </ZUICard>
+  );
+};
+
 const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
   orgId,
   surveyId,
@@ -501,7 +528,16 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
   const responseStatsFuture = useSurveyResponseStats(orgId, surveyId);
 
   return (
-    <ZUIFuture future={responseStatsFuture}>
+    <ZUIFuture
+      future={responseStatsFuture}
+      skeleton={
+        <>
+          {range(3).map((_, index) => (
+            <LoadingStatsCard key={index} />
+          ))}
+        </>
+      }
+    >
       {(data: SurveyResponseStats) => {
         return (
           <>
