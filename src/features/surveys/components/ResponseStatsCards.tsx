@@ -33,7 +33,6 @@ import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStat
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
-import { LoadingFuture } from 'core/caching/futures';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
