@@ -12,7 +12,11 @@ import {
 import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
 import { useSpring } from '@react-spring/core';
 import { List } from 'react-window';
-import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
+import ReactWordcloud, {
+  CallbacksProp,
+  OptionsProp,
+  Word,
+} from 'react-wordcloud';
 import { ResponsivePie } from '@nivo/pie';
 
 import ZUICard from 'zui/ZUICard';
@@ -33,6 +37,21 @@ import 'tippy.js/animations/scale.css';
 
 const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
+
+const COLORS = [
+  'rgb(237, 28, 85)',
+  'rgb(194,169,84)',
+  'rgb(73,109,189)',
+  'rgb(91,204,82)',
+  'rgb(192,97,196)',
+  'rgb(76,183,183)',
+  'rgb(224,112,77)',
+  'rgb(64,92,164)',
+  'rgb(140,190,63)',
+  'rgb(164,64,91)',
+  'rgb(192,28,178)',
+  'rgb(63,190,118)',
+];
 
 function ellipsize(s: string, limit: number = 40): string {
   return s.length <= limit ? s : s.slice(0, limit) + '…';
@@ -109,7 +128,7 @@ const QuestionStatsBarPlot = ({ question }: { question: QuestionStats }) => {
       axisRight={null}
       axisTop={null}
       barComponent={CustomBarComponent}
-      colors={[theme.palette.primary.main]}
+      colors={({ index }) => COLORS[index % COLORS.length]}
       data={data}
       enableGridX={false}
       enableGridY={true}
@@ -161,6 +180,7 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
       arcLinkLabelsColor={{ from: 'color' }}
       arcLinkLabelsTextColor={theme.palette.text.primary} // “donut” look (remove for full cake)
       cornerRadius={3}
+      colors={COLORS}
       data={data}
       enableArcLabels={false}
       enableArcLinkLabels={true}
@@ -239,6 +259,7 @@ const TextResponseWordCloud = ({
 
   const options: OptionsProp = useMemo(
     () => ({
+      colors: COLORS,
       deterministic: true,
       fontFamily: 'Azo-Sans-Web',
       fontSizes: [30, 80],
