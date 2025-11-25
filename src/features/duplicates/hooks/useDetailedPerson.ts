@@ -1,37 +1,25 @@
-import { useState, useEffect } from 'react';
-
-import { useApiClient } from 'core/hooks';
+import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 import loadDetailedPerson from '../rpc/loadDetailedPerson';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { detailedPersonsLoad, detailedPersonsLoaded } from '../store';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import shouldLoad from 'core/caching/shouldLoad';
 
 export default function useDetailedPersons(orgId: number, personIds: number[]) {
   const apiClient = useApiClient();
-  const [detailedPersons, setDetailedPersons] = useState<ZetkinPerson[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
+  const dispatch = useAppDispatch();
+  const key = personIds.sort().join(',');
+  const list = useAppSelector(
+    (state) => state.duplicates.detailedPersonsList[key]
+  );
 
-  useEffect(() => {
-    if (personIds.length === 0) {
-      return;
-    }
-
-    const fetchPersons = async () => {
-      setLoading(true);
-      try {
-        const result = await apiClient.rpc(loadDetailedPerson, {
-          orgId,
-          personIds,
-        });
-        setDetailedPersons(result.detailedPersons);
-      } catch (err) {
-        setError(err as Error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPersons();
-  }, [orgId, personIds.join(','), apiClient]);
-
-  return { detailedPersons: detailedPersons, error, loading };
+  return loadListIfNecessary(list, dispatch, {
+    actionOnLoad: () => detailedPersonsLoad(personIds),
+    actionOnSuccess: (data) => detailedPersonsLoaded([personIds, data]),
+    isNecessary: () => shouldLoad(list),
+    loader: () =>
+      apiClient.rpc(loadDetailedPerson, {
+        orgId,
+        personIds,
+      }),
+  });
 }

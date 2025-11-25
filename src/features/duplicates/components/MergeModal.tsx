@@ -20,6 +20,7 @@ import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { useNumericRouteParams } from 'core/hooks';
 import useDetailedPersons from '../hooks/useDetailedPerson';
+import ZUIFuture from 'zui/ZUIFuture';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -51,7 +52,7 @@ const MergeModal: FC<Props> = ({
     ...additionalPeople,
   ];
 
-  const { detailedPersons: detailedPersons } = useDetailedPersons(
+  const detailedPersons = useDetailedPersons(
     orgId,
     peopleToMerge.map((person) => person.id)
   );
@@ -61,7 +62,7 @@ const MergeModal: FC<Props> = ({
   );
 
   const { hasConflictingValues, fieldValues, initialOverrides } =
-    useFieldSettings(detailedPersons);
+    useFieldSettings(detailedPersons.data ?? []);
   const [overrides, setOverrides] = useState(initialOverrides);
 
   useEffect(() => {
@@ -116,13 +117,18 @@ const MergeModal: FC<Props> = ({
           sx={{ overflowY: 'auto' }}
           width="50%"
         >
-          <FieldSettings
-            duplicates={detailedPersons}
-            fieldValues={fieldValues}
-            onChange={(field, value) => {
-              setOverrides({ ...overrides, [`${field}`]: value });
-            }}
-          />
+          <ZUIFuture future={detailedPersons}>
+            {(detailedPersons) => (
+              <FieldSettings
+                duplicates={detailedPersons}
+                fieldValues={fieldValues}
+                onChange={(field, value) => {
+                  setOverrides({ ...overrides, [`${field}`]: value });
+                }}
+              />
+            )}
+          </ZUIFuture>
+
           <Box marginBottom={2} />
           {hasConflictingValues && (
             <Alert severity="warning">

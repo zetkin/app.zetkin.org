@@ -10,9 +10,7 @@ const paramsSchema = z.object({
 });
 
 type Params = z.input<typeof paramsSchema>;
-type Result = {
-  detailedPersons: ZetkinPerson[];
-};
+type Result = ZetkinPerson[];
 
 export const loadDetailedPerson = {
   handler: handle,
@@ -34,5 +32,5 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     detailedPersons.push(detailedPerson);
   }
 
-  return { detailedPersons: detailedPersons };
+  return detailedPersons;
 }

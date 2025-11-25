@@ -56,6 +56,7 @@ export default function mockState(overrides?: RootState) {
       visitsByAssignmentId: {},
     },
     duplicates: {
+      detailedPersonsList: {},
       potentialDuplicatesList: remoteList(),
     },
     emails: {
