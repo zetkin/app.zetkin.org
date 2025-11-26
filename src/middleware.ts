@@ -88,6 +88,11 @@ export async function middleware(request: NextRequest) {
     contentSecurityPolicyHeaderValue
   );
 
+  response.headers.set(
+    'Strict-Transport-Security',
+    'max-age=31536000; includeSubDomains; preload'
+  );
+
   return response;
 }
 
