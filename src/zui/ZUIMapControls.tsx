@@ -28,6 +28,23 @@ const ZUIMapControls: React.FC<Props> = ({
   const isUserLocationVisibleRef = useRef<boolean>(false);
 
   useEffect(() => {
+    return () => {
+      if (geolocationWatchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
+        geolocationWatchIdRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    isUserLocationVisibleRef.current = isUserLocationVisible;
+  }, [isUserLocationVisible]);
+
+  const startWatchingPosition = () => {
+    if (geolocationWatchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
+    }
+
     geolocationWatchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         const lat = pos.coords.latitude as Latitude;
@@ -51,18 +68,52 @@ const ZUIMapControls: React.FC<Props> = ({
       },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     );
+  };
 
-    return () => {
-      if (geolocationWatchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
-        geolocationWatchIdRef.current = null;
-      }
-    };
-  }, []);
+  const handleGeolocateClick = () => {
+    if (isAwaitingInitialPosition) {
+      return;
+    }
 
-  useEffect(() => {
-    isUserLocationVisibleRef.current = isUserLocationVisible;
-  }, [isUserLocationVisible]);
+    if (!isUserLocationVisible) {
+      setIsUserLocationVisible(true);
+      isUserLocationVisibleRef.current = true;
+    }
+
+    const latestPosition = latestPositionRef.current;
+    const latestAccuracy = latestAccuracyRef.current ?? null;
+
+    if (latestPosition && geolocationWatchIdRef.current !== null) {
+      onGeolocate(latestPosition, latestAccuracy);
+      return;
+    }
+
+    setIsAwaitingInitialPosition(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude as Latitude;
+        const lng = pos.coords.longitude as Longitude;
+        const accuracy = pos.coords.accuracy ?? null;
+        const point: PointData = [lng, lat];
+
+        latestPositionRef.current = point;
+        latestAccuracyRef.current = accuracy;
+        setIsAwaitingInitialPosition(false);
+
+        startWatchingPosition();
+
+        onGeolocate(point, accuracy);
+      },
+      () => {
+        setIsAwaitingInitialPosition(false);
+        if (geolocationWatchIdRef.current !== null) {
+          navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
+          geolocationWatchIdRef.current = null;
+        }
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+    );
+  };
 
   return (
     <Box
@@ -95,26 +146,7 @@ const ZUIMapControls: React.FC<Props> = ({
         <Button onClick={onFitBounds}>
           <Home />
         </Button>
-        <Button
-          onClick={() => {
-            if (isAwaitingInitialPosition) {
-              return;
-            }
-            if (!isUserLocationVisible) {
-              setIsUserLocationVisible(true);
-              isUserLocationVisibleRef.current = true;
-            }
-
-            const latestPosition = latestPositionRef.current;
-            const latestAccuracy = latestAccuracyRef.current ?? null;
-
-            if (latestPosition) {
-              onGeolocate(latestPosition, latestAccuracy);
-            } else {
-              setIsAwaitingInitialPosition(true);
-            }
-          }}
-        >
+        <Button onClick={handleGeolocateClick}>
           <AnimatedGpsFixed pulsing={isAwaitingInitialPosition} />
         </Button>
       </ButtonGroup>
