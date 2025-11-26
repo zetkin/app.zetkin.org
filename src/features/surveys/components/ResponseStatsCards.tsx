@@ -25,6 +25,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
+import NextLink from 'next/link';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -45,6 +46,7 @@ import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
+import { useNumericRouteParams } from 'core/hooks';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -452,14 +454,13 @@ const TextResponseWordCloud = ({
 };
 
 const TextResponseCard = ({
-  orgId,
   questionId,
   submission,
 }: {
-  orgId: number;
   questionId: number;
   submission: SubmissionStats;
 }) => {
+  const { orgId, campId, surveyId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
     submission.submissionId
@@ -484,26 +485,36 @@ const TextResponseCard = ({
         }
 
         return (
-          <Card
-            sx={{
+          <NextLink
+            href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?openSubmission=${extendedSubmission.id}`}
+            style={{
               display: 'flex',
               height: '100%',
               width: '100%',
             }}
           >
-            <CardContent>
-              <Typography
-                sx={{
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: '4',
-                  display: '-webkit-box',
-                  overflow: 'hidden',
-                }}
-              >
-                {questionResponse.response}
-              </Typography>
-            </CardContent>
-          </Card>
+            <Card
+              sx={{
+                display: 'flex',
+                height: '100%',
+                width: '100%',
+              }}
+            >
+              <CardContent>
+                <Typography
+                  sx={{
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: '4',
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {questionResponse.response}
+                </Typography>
+              </CardContent>
+            </Card>
+          </NextLink>
         );
       }}
     </ZUIFuture>
@@ -512,7 +523,6 @@ const TextResponseCard = ({
 
 type TextResponseListRowProps = {
   columnCount: number;
-  orgId: number;
   questionId: number;
   rows: SubmissionStats[][];
 };
@@ -520,7 +530,6 @@ type TextResponseListRowProps = {
 const TextResponseListRow = ({
   columnCount,
   index: rowIndex,
-  orgId,
   questionId,
   style,
   rows,
@@ -551,11 +560,7 @@ const TextResponseListRow = ({
               width: `${100.0 / columnCount}%`,
             }}
           >
-            <TextResponseCard
-              orgId={orgId}
-              questionId={questionId}
-              submission={submission}
-            />
+            <TextResponseCard questionId={questionId} submission={submission} />
           </Box>
         );
       })}
@@ -572,11 +577,9 @@ function chunk<T>(xs: T[], size: number): T[][] {
 }
 
 const TextResponseList = ({
-  orgId,
   questionStats,
   submissionStats,
 }: {
-  orgId: number;
   questionStats: TextQuestionStats;
   submissionStats: SubmissionStats[];
 }) => {
@@ -598,11 +601,10 @@ const TextResponseList = ({
   const rowProps = useMemo(
     () => ({
       columnCount,
-      orgId,
       questionId: questionStats.question.id,
       rows,
     }),
-    [columnCount, orgId, questionStats.question.id, rows]
+    [columnCount, questionStats.question.id, rows]
   );
 
   if (!rows) {
@@ -623,11 +625,9 @@ const TextResponseList = ({
 };
 
 const TextStatsCard = ({
-  orgId,
   questionStats,
   submissionStats,
 }: {
-  orgId: number;
   questionStats: TextQuestionStats;
   submissionStats: SubmissionStats[];
 }) => {
@@ -676,7 +676,6 @@ const TextStatsCard = ({
         )}
         {tab === 'responses' && (
           <TextResponseList
-            orgId={orgId}
             questionStats={questionStats}
             submissionStats={submissionStats}
           />
@@ -737,7 +736,6 @@ const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({
               ) : (
                 <TextStatsCard
                   key={index}
-                  orgId={orgId}
                   questionStats={questionStats}
                   submissionStats={data.submissionStats}
                 />

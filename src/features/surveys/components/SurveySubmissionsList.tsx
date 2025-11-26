@@ -8,6 +8,7 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
 import { FC, useContext, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import messageIds from '../l10n/messageIds';
 import SurveyLinkDialog from './SurveyLinkDialog';
@@ -288,6 +289,37 @@ const SurveySubmissionsList = ({
   const creatingFromSubmission = submissions.find(
     (sub) => sub.id == createPersonOpen
   );
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      const surveySubmissionQuery = new URL(
+        window.location.origin + url
+      ).searchParams.get('openSubmission');
+      if (!surveySubmissionQuery) {
+        return;
+      }
+
+      openPane({
+        render() {
+          return (
+            <SurveySubmissionPane
+              id={parseInt(surveySubmissionQuery)}
+              orgId={orgId}
+            />
+          );
+        },
+        width: 400,
+      });
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events, openPane, orgId]);
 
   return (
     <Box
