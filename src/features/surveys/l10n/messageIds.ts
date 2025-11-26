@@ -123,7 +123,7 @@ export default makeMessages('feat.surveys', {
         'In total, there were {answerCount} answers and {totalSelectedOptionsCount} selected options.'
       ),
       tabs: {
-        barPlot: m('Bars'),
+        barPlot: m('Bar'),
         piePlot: m('Pie'),
       },
     },
@@ -136,9 +136,9 @@ export default makeMessages('feat.surveys', {
         'In total, there were {answerCount} answers, {totalWordCount} words and {totalUniqueWordCount} unique words.'
       ),
       tabs: {
-        responses: m('Responses'),
-        wordCloud: m('Word cloud'),
-        wordFrequencies: m('Word frequencies'),
+        responses: m('Response'),
+        wordCloud: m('Cloud'),
+        wordFrequencies: m('Bar'),
       },
     },
   },
