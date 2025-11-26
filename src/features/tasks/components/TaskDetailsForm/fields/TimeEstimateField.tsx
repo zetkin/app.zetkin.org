@@ -1,12 +1,21 @@
-import { MenuItem } from '@mui/material';
-import { TextField } from 'mui-rff';
+import { MenuItem, TextField } from '@mui/material';
 
-import { DEFAULT_TIME_ESTIMATE, TASK_DETAILS_FIELDS } from '../constants';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/tasks/l10n/messageIds';
 
-const TimeEstimateField: React.FunctionComponent = () => {
+type Props = {
+  onChange: (value: number | null) => void;
+  value: number | null;
+};
+
+const DEFAULT_TIME_ESTIMATE = 'noEstimate';
+
+const TimeEstimateField: React.FunctionComponent<Props> = ({
+  value,
+  onChange,
+}) => {
   const messages = useMessages(messageIds);
+  const internalValue = value === null ? DEFAULT_TIME_ESTIMATE : value;
 
   return (
     <TextField
@@ -14,9 +23,16 @@ const TimeEstimateField: React.FunctionComponent = () => {
       id="estimated-time"
       label={messages.form.fields.timeEstimate()}
       margin="normal"
-      name={TASK_DETAILS_FIELDS.TIME_ESTIMATE}
+      onChange={(e) =>
+        onChange(
+          e.target.value === DEFAULT_TIME_ESTIMATE
+            ? null
+            : parseInt(e.target.value)
+        )
+      }
       required
       select
+      value={internalValue}
     >
       <MenuItem value={DEFAULT_TIME_ESTIMATE}>
         <Msg id={messageIds.form.fields.timeEstimateOptions.noEstimate} />

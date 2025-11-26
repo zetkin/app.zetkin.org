@@ -6,6 +6,7 @@ import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import PublicOrgLayout from 'features/organizations/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
+import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {
   children: ReactNode;
@@ -24,9 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `/api/orgs/${params.orgId}`
   );
 
+  const baseTags = getSeoTags(org.title, '', `/o/${org.id}`);
   return {
-    icons: [{ url: '/logo-zetkin.png' }],
-    title: org.title,
+    ...baseTags,
+    openGraph: {
+      ...baseTags.openGraph,
+      ...getOrganizationOpenGraphTags(org),
+    },
+    robots: { follow: true, index: org.is_public },
   };
 }
 

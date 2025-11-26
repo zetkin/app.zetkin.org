@@ -25,6 +25,12 @@ export type SurveyOptionsViewCell =
     }[]
   | null;
 
+const surveyOptionsColumnSortRank = (allOptionsJoined: string) => {
+  const options = allOptionsJoined.split('|');
+  const lastOption = options[options.length - 1];
+  return -lastOption.length;
+};
+
 export default class SurveyOptionsColumnType
   implements IColumnType<ZetkinViewColumn, SurveyOptionsViewCell>
 {
@@ -38,22 +44,27 @@ export default class SurveyOptionsColumnType
       renderCell: (params: GridRenderCellParams) => {
         return <Cell cell={params.row[params.field]} />;
       },
-      sortComparator: (v1: string[][], v2: string[][]) => {
-        const getPriority = (cell: string[][]) => {
-          if (cell == null || cell.length == 0) {
-            return 0;
-          } else {
-            return -cell[cell.length - 1].length;
-          }
-        };
-
-        return getPriority(v1) - getPriority(v2);
+      sortComparator: (v1: string, v2: string) => {
+        return (
+          surveyOptionsColumnSortRank(v1) - surveyOptionsColumnSortRank(v2)
+        );
       },
       valueGetter: (params: GridValueGetterParams) => {
         const cell: SurveyOptionsViewCell = params.row[params.field];
-        return cell?.map((response) =>
-          response.selected.map((selected) => selected.text)
+        if (!cell?.length) {
+          return '';
+        }
+
+        const sortedSubmissions = cell.concat().sort((sub0, sub1) => {
+          const d0 = new Date(sub0.submitted);
+          const d1 = new Date(sub1.submitted);
+          return d1.getTime() - d0.getTime();
+        });
+        const mostRecentSubmission = sortedSubmissions[0];
+        const selectedOptions = mostRecentSubmission.selected.map(
+          (s) => s.text
         );
+        return selectedOptions.join('|');
       },
     };
   }

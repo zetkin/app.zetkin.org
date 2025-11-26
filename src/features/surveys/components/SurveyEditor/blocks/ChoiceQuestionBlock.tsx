@@ -149,7 +149,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   }
 
   return (
-    <ClickAwayListener {...clickAwayProps}>
+    <ClickAwayListener
+      mouseEvent="onMouseDown"
+      onClickAway={clickAwayProps.onClickAway}
+      touchEvent="onTouchStart"
+    >
       <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
