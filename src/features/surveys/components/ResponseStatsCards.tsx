@@ -451,7 +451,10 @@ const TextResponseWordCloud = ({
   return (
     <Box
       sx={{
+        display: 'flex',
+        height: '100%',
         padding: '20px',
+        width: '100%',
       }}
     >
       <ChartWrapper exportFileName={questionStats.question.question.question}>
