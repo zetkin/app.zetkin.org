@@ -164,6 +164,7 @@ const surveysSlice = createSlice({
             oldOption.id == optionId ? updatedOption : oldOption
           );
       }
+      delete state.responseStatsBySurveyId[surveyId];
     },
     elementOptionsReordered: (
       state,
@@ -196,6 +197,7 @@ const surveysSlice = createSlice({
       ].items.map((item) =>
         item.id == elemId ? remoteItem(elemId, { data: updatedElement }) : item
       );
+      delete state.responseStatsBySurveyId[surveyId];
     },
     elementsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -372,6 +374,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...submission };
         item.mutating = [];
         state.statsBySurveyId[submission.survey.id].isStale = true;
+        delete state.responseStatsBySurveyId[submission.survey.id];
       }
       const submissions = state.submissionsBySurveyId[submission.survey.id];
       if (submissions) {
@@ -424,6 +427,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...survey };
         item.mutating = [];
       }
+      delete state.responseStatsBySurveyId[survey.id];
     },
     surveysWithElementsLoad: (state) => {
       state.surveysWithElementsList.isLoading = true;
