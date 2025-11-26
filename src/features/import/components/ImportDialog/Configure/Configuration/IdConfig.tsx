@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import {
   Alert,
   Box,
@@ -28,6 +28,12 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const { importID, updateImportID } = useImportID();
   const { skipUnknown, updateSheetSettings } = useSheets();
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    if (skipUnknown) {
+      updateSheetSettings({ skipUnknown: false });
+    }
+  }, [importID]);
 
   const idField = uiDataColumn.originalColumn.idField;
 
