@@ -5,7 +5,6 @@ import React, {
   ReactElement,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -14,18 +13,14 @@ import {
   Box,
   Card,
   CardContent,
-  Paper,
   Skeleton,
   Tab,
   Tabs,
   Typography,
   useTheme,
 } from '@mui/material';
-import { BarDatum, BarItem, BarItemProps } from '@nivo/bar';
-import { useSpring } from '@react-spring/core';
 import { List } from 'react-window';
 import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
-import { ResponsivePie } from '@nivo/pie';
 import ImageIcon from '@mui/icons-material/Image';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
@@ -51,7 +46,6 @@ import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 
-const BAR_MAX_WIDTH = 100;
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
 
@@ -248,15 +242,19 @@ const QuestionStatsBarPlot = ({
       'options' in questionStats
         ? questionStats.options.map((o) => ({
             count: o.count,
-            option: ellipsize(o.option.text),
+            option: o.option.text,
           }))
         : Object.entries(questionStats.topWordFrequencies).map(
             ([word, count]) => ({
               count: count,
-              option: ellipsize(word),
+              option: word,
             })
           );
-    return bars.sort((a, b) => b.count - a.count).slice(0, 10);
+    let sorted = bars.sort((a, b) => b.count - a.count);
+    if (!('options' in questionStats)) {
+      sorted = sorted.slice(0, 10);
+    }
+    return sorted;
   }, [questionStats]);
 
   return (
@@ -272,6 +270,19 @@ const QuestionStatsBarPlot = ({
             data: data.map((option) => option.count),
           },
         ]}
+        slotProps={{
+          tooltip: {
+            sx: {
+              caption: {
+                maxWidth: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              },
+              maxWidth: '60vw',
+              overflow: 'hidden',
+            },
+          },
+        }}
         sx={{
           '.MuiChartsAxis-tick': {
             stroke: `${theme.palette.grey['700']} !important`,
@@ -303,8 +314,6 @@ const QuestionStatsBarPlot = ({
 };
 
 const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
-  const theme = useTheme();
-
   const data = useMemo(() => {
     const items =
       'options' in question
