@@ -49,6 +49,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useNumericRouteParams } from 'core/hooks';
 import useIsMobile from 'utils/hooks/useIsMobile';
+import ZUIToggleButton from 'zui/components/ZUIToggleButton';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -391,16 +392,21 @@ const OptionsStatsCard = ({
         width: '100%',
       }}
     >
-      <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
-        <Tab
-          label={messages.insights.optionsFields.tabs.barPlot()}
-          value={'bar-plot'}
-        />
-        <Tab
-          label={messages.insights.optionsFields.tabs.piePlot()}
-          value={'pie-chart'}
-        />
-      </Tabs>
+      <ZUIToggleButton
+        onChange={(selected) => selected && setTab(selected)}
+        options={[
+          {
+            label: messages.insights.optionsFields.tabs.barPlot(),
+            value: 'bar-plot',
+          },
+          {
+            label: messages.insights.optionsFields.tabs.piePlot(),
+            value: 'pie-chart',
+          },
+        ]}
+        size={'small'}
+        value={tab}
+      />
       <Box height={CHART_HEIGHT}>
         {tab === 'bar-plot' && (
           <QuestionStatsBarPlot questionStats={questionStats} />
@@ -658,20 +664,25 @@ const TextStatsCard = ({
         width: '100%',
       }}
     >
-      <Tabs onChange={(_, selected) => setTab(selected)} value={tab}>
-        <Tab
-          label={messages.insights.textFields.tabs.wordCloud()}
-          value={'word-cloud'}
-        />
-        <Tab
-          label={messages.insights.textFields.tabs.wordFrequencies()}
-          value={'word-frequency-bars'}
-        />
-        <Tab
-          label={messages.insights.textFields.tabs.responses()}
-          value={'responses'}
-        />
-      </Tabs>
+      <ZUIToggleButton
+        onChange={(selected) => selected && setTab(selected)}
+        options={[
+          {
+            label: messages.insights.textFields.tabs.wordCloud(),
+            value: 'word-cloud',
+          },
+          {
+            label: messages.insights.textFields.tabs.wordFrequencies(),
+            value: 'word-frequency-bars',
+          },
+          {
+            label: messages.insights.textFields.tabs.responses(),
+            value: 'responses',
+          },
+        ]}
+        size={'small'}
+        value={tab}
+      />
       <Box height={CHART_HEIGHT}>
         {tab === 'word-cloud' && (
           <TextResponseWordCloud questionStats={questionStats} />
