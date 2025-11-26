@@ -353,7 +353,9 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
           '.MuiPieArcLabel-root': {
             fill: 'white !important',
           },
+          gap: '20px',
         }}
+        width={360}
       />
     </ChartWrapper>
   );
