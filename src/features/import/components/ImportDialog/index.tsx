@@ -5,6 +5,7 @@ import Configure from './Configure';
 import ParseFile from './ParseFile';
 import Preflight from './Preflight';
 import StatusReport from './StatusReport';
+import useImportID from 'features/import/hooks/useImportID';
 
 export enum ImportStep {
   PARSE = 0,
@@ -21,6 +22,7 @@ interface ImportDialogProps {
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const { updateImportID } = useImportID();
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('sm');
   const [activeStep, setActiveStep] = useState<ImportStep>(ImportStep.PARSE);
 
@@ -33,6 +35,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
         onClose();
         setActiveStep(ImportStep.PARSE);
         setMaxWidth('sm');
+        updateImportID(null);
       }}
       open={open}
     >
@@ -52,10 +55,12 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
               onClose();
               setActiveStep(ImportStep.PARSE);
               setMaxWidth('sm');
+              updateImportID(null);
             }}
             onRestart={() => {
               setActiveStep(ImportStep.PARSE);
               setMaxWidth('sm');
+              updateImportID(null);
             }}
             onValidate={() => setActiveStep(ImportStep.PREFLIGHT)}
           />
@@ -67,6 +72,7 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
               onClose();
               setActiveStep(ImportStep.PARSE);
               setMaxWidth('sm');
+              updateImportID(null);
             }}
             onImportDone={() => setActiveStep(ImportStep.REPORT)}
             onImportStart={() => setMaxWidth('sm')}
@@ -81,10 +87,12 @@ const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
             onClose={() => {
               onClose();
               setActiveStep(ImportStep.PARSE);
+              updateImportID(null);
             }}
             onDone={() => {
               onClose();
               setActiveStep(ImportStep.PARSE);
+              updateImportID(null);
             }}
           />
         )}
