@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
 import { BadgeOutlined } from '@mui/icons-material';
 
-import { CellData } from 'features/import/utils/types';
+import { CellData } from 'features/import/types';
 import useImportID from 'features/import/hooks/useImportID';
 
 function matchesImportID(importID: string | null, columnHeader?: string) {

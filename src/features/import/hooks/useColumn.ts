@@ -5,7 +5,7 @@ import messageIds from '../l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
 import { useMessages } from 'core/i18n';
-import { Column, ColumnKind } from '../utils/types';
+import { Column, ColumnKind } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export interface Option {

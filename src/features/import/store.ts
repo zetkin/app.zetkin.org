@@ -8,7 +8,7 @@ import {
   ImportPreview,
   PersonImport,
   SheetSettings,
-} from './utils/types';
+} from './types';
 
 export interface ImportStoreSlice {
   importID: ImportID | null;

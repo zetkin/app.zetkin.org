@@ -16,11 +16,7 @@ import { Msg } from 'core/i18n';
 import { Option } from 'features/import/hooks/useColumn';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import useUIDataColumn from 'features/import/hooks/useUIDataColumn';
-import {
-  Column,
-  ColumnKind,
-  ConfigurableColumn,
-} from 'features/import/utils/types';
+import { Column, ColumnKind, ConfigurableColumn } from 'features/import/types';
 
 const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
   return [

@@ -1,6 +1,6 @@
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
-import { CellData, ColumnKind, Sheet } from './types';
+import { CellData, ColumnKind, Sheet } from '../types';
 import parserFactory from './dateParsing/parserFactory';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { BulkOp, BulkSubOp } from '../types';

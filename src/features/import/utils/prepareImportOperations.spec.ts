@@ -3,7 +3,7 @@ import { describe, it } from '@jest/globals';
 
 import { organization as mockOrganization } from 'utils/testing/mocks/mockOrganization';
 import prepareImportOperations from './prepareImportOperations';
-import { ColumnKind, Sheet } from './types';
+import { ColumnKind, Sheet } from '../types';
 
 const countryCode = mockOrganization.country as CountryCode;
 

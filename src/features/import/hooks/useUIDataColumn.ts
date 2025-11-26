@@ -2,7 +2,7 @@ import hasUnfinishedMapping from '../utils/hasUnfinishedMapping';
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
-import { Column, ColumnKind } from '../utils/types';
+import { Column, ColumnKind } from '../types';
 import useColumnValuesMessage from './useColumnValuesMessage';
 
 export type UIDataColumn<CType extends Column> = {

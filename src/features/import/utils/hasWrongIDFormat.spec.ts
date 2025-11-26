@@ -1,4 +1,4 @@
-import { ColumnKind } from './types';
+import { ColumnKind } from '../types';
 import hasWrongIDFormat from './hasWrongIDFormat';
 
 describe('hasWrongIDFormat()', () => {
@@ -16,6 +16,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(false);
   });
 
+  //FRÅGETECKEN
   it('returns false for empty Zetkin IDs', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
@@ -85,6 +86,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(true);
   });
 
+  //FRÅGETECKEN
   it('returns false if all email values are correctly formatted', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
@@ -99,6 +101,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(false);
   });
 
+  //FRÅGETECKEN
   it('returns true if any email value is not a correct email', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {
@@ -113,6 +116,7 @@ describe('hasWrongIDFormat()', () => {
     expect(wrongIDFormat).toBe(true);
   });
 
+  //FRÅGETECKEN
   it('returns false if email value is empty', () => {
     const wrongIDFormat = hasWrongIDFormat(
       {

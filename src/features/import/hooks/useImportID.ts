@@ -1,5 +1,5 @@
 import { importIDUpdate } from '../store';
-import { ImportID } from '../utils/types';
+import { ImportID } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 
 export default function useImportID() {

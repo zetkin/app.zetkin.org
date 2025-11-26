@@ -12,7 +12,7 @@ import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
 import usePersonPreview from 'features/import/hooks/usePersonPreview';
 import useSheets from 'features/import/hooks/useSheets';
-import { ColumnKind, Sheet } from 'features/import/utils/types';
+import { ColumnKind, Sheet } from 'features/import/types';
 import EnumPreview from './EnumPreview';
 import GenderPreview from './GenderPreview';
 

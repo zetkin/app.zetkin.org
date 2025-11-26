@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { BadgeOutlined } from '@mui/icons-material';
 
-import { IDFieldColumn } from 'features/import/utils/types';
+import { IDFieldColumn } from 'features/import/types';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useIDConfig from 'features/import/hooks/useIDConfig';
 import { Msg, useMessages } from 'core/i18n';

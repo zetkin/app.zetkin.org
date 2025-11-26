@@ -11,7 +11,7 @@ import { BadgeOutlined } from '@mui/icons-material';
 import messageIds from 'features/import/l10n/messageIds';
 import { Option } from 'features/import/hooks/useColumn';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
-import { Column, ColumnKind } from 'features/import/utils/types';
+import { Column, ColumnKind } from 'features/import/types';
 import { Msg, useMessages } from 'core/i18n';
 import useImportID from 'features/import/hooks/useImportID';
 

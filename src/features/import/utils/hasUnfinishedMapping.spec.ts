@@ -1,4 +1,4 @@
-import { ColumnKind } from './types';
+import { ColumnKind } from '../types';
 import hasUnfinishedMapping from './hasUnfinishedMapping';
 
 describe('hasUnfinishedMapping()', () => {

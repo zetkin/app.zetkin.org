@@ -13,7 +13,7 @@ import {
   IDFieldColumn,
   OrgColumn,
   TagColumn,
-} from 'features/import/utils/types';
+} from 'features/import/types';
 import useUIDataColumn, {
   UIDataColumn,
 } from 'features/import/hooks/useUIDataColumn';

@@ -6,7 +6,7 @@ import {
   getCountries,
 } from 'libphonenumber-js';
 
-import { ColumnKind, Sheet } from '../types';
+import { ColumnKind, Sheet } from '../../types';
 import { CUSTOM_FIELD_TYPE, ZetkinCustomField } from 'utils/types/zetkin';
 import {
   ImportFieldProblem,
