@@ -17,6 +17,7 @@ import {
   Tab,
   Tabs,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { List } from 'react-window';
@@ -47,6 +48,7 @@ import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useNumericRouteParams } from 'core/hooks';
+import useIsMobile from 'utils/hooks/useIsMobile';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -583,7 +585,10 @@ const TextResponseList = ({
   questionStats: TextQuestionStats;
   submissionStats: SubmissionStats[];
 }) => {
-  const columnCount = 2;
+  const theme = useTheme();
+  const singleColumnLayout = useMediaQuery(theme.breakpoints.down('lg'));
+
+  const columnCount = singleColumnLayout ? 1 : 2;
 
   const rows = useMemo(
     () =>
