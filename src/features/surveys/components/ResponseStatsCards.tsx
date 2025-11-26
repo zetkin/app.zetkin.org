@@ -14,8 +14,6 @@ import {
   Card,
   CardContent,
   Skeleton,
-  Tab,
-  Tabs,
   Typography,
   useMediaQuery,
   useTheme,
@@ -48,7 +46,6 @@ import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useNumericRouteParams } from 'core/hooks';
-import useIsMobile from 'utils/hooks/useIsMobile';
 import ZUIToggleButton from 'zui/components/ZUIToggleButton';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
