@@ -234,7 +234,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
       isTrackingRef.current = true;
     }
 
-    map?.jumpTo({ center: lngLat });
+    map?.panTo(lngLat, { animate: true });
   };
 
   const updateSelection = useCallback(() => {
