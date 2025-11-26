@@ -97,7 +97,7 @@ export default makeMessages('feat.import', {
           'There are values in this column that are not valid email addresses.'
         ),
         wrongIDFormatWarning: m(
-          'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
+          'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells contain f.x. letters, they can not be used as Zetkin IDs.'
         ),
         zetkinIDInfo: m(
           'A Zetkin ID is the ID of a person already in Zetkin. You would have it in a file if you exported data from Zetkin.'
