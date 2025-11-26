@@ -21,13 +21,15 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { BarDatum, BarItem, BarItemProps, ResponsiveBar } from '@nivo/bar';
+import { BarDatum, BarItem, BarItemProps } from '@nivo/bar';
 import { useSpring } from '@react-spring/core';
 import { List } from 'react-window';
 import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
 import { ResponsivePie } from '@nivo/pie';
 import ImageIcon from '@mui/icons-material/Image';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -234,45 +236,6 @@ function ellipsize(s: string, limit: number = 40): string {
   return s.length <= limit ? s : s.slice(0, limit) + '…';
 }
 
-type ResponseStatsChartCardProps = {
-  orgId: number;
-  surveyId: number;
-};
-
-const CustomBarComponent = <RawDatum extends BarDatum>(
-  props: BarItemProps<RawDatum>
-) => {
-  const {
-    bar: { data, ...bar },
-    style,
-  } = props;
-
-  const w = Math.min(bar.width, BAR_MAX_WIDTH);
-  const x = bar.x + bar.width / 2 - w / 2;
-
-  const [spring, api] = useSpring(() => ({
-    labelX: w / 2,
-    transform: `translate(${x}, ${bar.y})`,
-    width: w,
-  }));
-
-  useEffect(() => {
-    api.start({
-      labelX: w / 2,
-      transform: `translate(${x}, ${bar.y})`,
-      width: w,
-    });
-  }, [w, api, x, bar]);
-
-  return (
-    <BarItem
-      {...props}
-      bar={{ ...bar, data, width: w, x }}
-      style={{ ...style, ...spring }}
-    />
-  );
-};
-
 const QuestionStatsBarPlot = ({
   questionStats,
 }: {
@@ -298,41 +261,42 @@ const QuestionStatsBarPlot = ({
 
   return (
     <ChartWrapper exportFileName={questionStats.question.question.question}>
-      <ResponsiveBar
-        animate={false}
-        axisBottom={{
-          tickPadding: 5,
-          tickSize: 0,
+      <BarChartPro
+        grid={{
+          vertical: true,
         }}
-        axisLeft={{
-          format: (v) => (Number.isInteger(v) ? v : ''),
-          tickPadding: 5,
-          tickSize: 0,
+        height={CHART_HEIGHT}
+        layout={'horizontal'}
+        series={[
+          {
+            data: data.map((option) => option.count),
+          },
+        ]}
+        sx={{
+          '.MuiChartsAxis-tick': {
+            stroke: `${theme.palette.grey['700']} !important`,
+          },
         }}
-        axisRight={null}
-        axisTop={null}
-        barComponent={CustomBarComponent}
-        colors={({ index }) => COLORS[index % COLORS.length]}
-        data={data}
-        enableGridX={false}
-        enableGridY={true}
-        indexBy="option"
-        keys={['count']}
-        labelSkipHeight={20}
-        labelSkipWidth={20}
-        labelTextColor={() => theme.palette.primary.contrastText}
-        layout="vertical"
-        margin={{ bottom: 60, left: 60, right: 20, top: 20 }}
-        padding={0.3}
-        tooltip={({ indexValue, value }) => (
-          <Paper>
-            <Box p={1}>
-              <Typography variant="body2">
-                {indexValue}: {value}
-              </Typography>
-            </Box>
-          </Paper>
-        )}
+        xAxis={[
+          {
+            disableLine: true,
+            tickLabelStyle: { fill: theme.palette.grey['700'] },
+          },
+        ]}
+        yAxis={[
+          {
+            colorMap: {
+              colors: COLORS,
+              type: 'ordinal',
+            },
+            data: data.map((option) => option.option),
+            disableLine: true,
+            disableTicks: true,
+            id: 'barCategories',
+            tickLabelStyle: { fill: theme.palette.common.black },
+            width: 200,
+          },
+        ]}
       />
     </ChartWrapper>
   );
@@ -345,52 +309,42 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
     const items =
       'options' in question
         ? question.options.map((o) => ({
-            id: ellipsize(o.option.text),
-            label: ellipsize(o.option.text),
+            label: ellipsize(o.option.text, 60),
             value: o.count,
           }))
         : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
-            id: ellipsize(word),
-            label: ellipsize(word),
+            label: ellipsize(word, 60),
             value: count,
           }));
-    return items.sort((a, b) => b.value - a.value).slice(0, 10);
+    return items
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 10)
+      .map(({ value, label }, index) => ({
+        color: COLORS[index % COLORS.length],
+        label,
+        value,
+      }));
   }, [question]);
 
   return (
     <ChartWrapper exportFileName={question.question.question.question}>
-      <ResponsivePie
-        animate={false}
-        arcLinkLabel={(d) => `${d.id}: ${d.value}`}
-        arcLinkLabelsColor={{ from: 'color' }}
-        arcLinkLabelsTextColor={theme.palette.text.primary}
-        colors={COLORS}
-        cornerRadius={3}
-        data={data}
-        enableArcLabels={false}
-        enableArcLinkLabels={true}
-        innerRadius={0.5}
-        legends={[
-          {
-            anchor: 'bottom',
-            direction: 'row',
-            itemHeight: 14,
-            itemWidth: 80,
-            symbolSize: 12,
-            translateY: 40,
-          },
+      <PieChartPro
+        series={[
+          { arcLabel: 'value', data, innerRadius: 80, outerRadius: 180 },
         ]}
-        margin={{ bottom: 60, left: 60, right: 60, top: 40 }}
-        padAngle={1}
-        tooltip={({ datum }) => (
-          <Paper>
-            <Box p={1}>
-              <Typography variant="body2">
-                {datum.id}: {datum.value}
-              </Typography>
-            </Box>
-          </Paper>
-        )}
+        slotProps={{
+          pieArc: {
+            strokeWidth: 2,
+          },
+          pieArcLabel: {
+            fill: 'white',
+          },
+        }}
+        sx={{
+          '.MuiPieArcLabel-root': {
+            fill: 'white !important',
+          },
+        }}
       />
     </ChartWrapper>
   );
@@ -739,6 +693,11 @@ const LoadingStatsCard = () => {
       <Skeleton height={200} variant={'rounded'} width={'100%'} />
     </ZUICard>
   );
+};
+
+type ResponseStatsChartCardProps = {
+  orgId: number;
+  surveyId: number;
 };
 
 const ResponseStatsCards: FC<ResponseStatsChartCardProps> = ({

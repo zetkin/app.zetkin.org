@@ -43,6 +43,7 @@
     "@mui/material-nextjs": "^7.0.0",
     "@mui/styles": "^5.10.6",
     "@mui/system": "^7.0.1",
+    "@mui/x-charts-pro": "^8.19.0",
     "@mui/x-data-grid-pro": "^6.14.0",
     "@mui/x-date-pickers": "^7.27.3",
     "@mui/x-date-pickers-pro": "^7.27.3",
