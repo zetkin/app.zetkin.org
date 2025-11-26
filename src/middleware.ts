@@ -7,8 +7,55 @@ import { AppSession } from 'utils/types';
 
 const protectedRoutes = ['/my'];
 
+function extractRootUrl(urlStr: string): string {
+  const url = new URL(urlStr);
+  return `https://${url.host}`;
+}
+
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
+  const isDev = process.env.NODE_ENV === 'development';
+
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+
+  if (!process.env.MAPLIBRE_STYLE) {
+    throw new Error('Unexpected undefined MAPLIBRE_STYLE.');
+  }
+
+  const mapTiler = extractRootUrl(process.env.MAPLIBRE_STYLE);
+  const tileServer = extractRootUrl(
+    process.env.TILESERVER || 'https://tile.openstreetmap.org'
+  );
+
+  const cspHeader = `
+  default-src 'self' ${mapTiler};
+  script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval' 'strict-dynamic' ${
+    isDev ? "'unsafe-eval'" : ''
+  };
+  style-src 'self' https://use.typekit.net https://p.typekit.net ${
+    // TODO: switch after https://github.com/zetkin/app.zetkin.org/issues/3176 to: isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
+    "'unsafe-inline'"
+  };
+  style-src-attr 'unsafe-inline';
+  img-src 'self' blob: data: ${tileServer} ${
+    process.env.AVATARS_URL ? `${process.env.AVATARS_URL} ` : ''
+  } ${process.env.FILES_URL ? `${process.env.FILES_URL} ` : ''};
+  font-src 'self' https://use.typekit.net https://p.typekit.net;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'none';
+  upgrade-insecure-requests;
+`;
+  // Replace newline characters and spaces
+  const contentSecurityPolicyHeaderValue = cspHeader
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  headers.set('x-nonce', nonce);
+
+  headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+
   headers.set('x-requested-path', request.nextUrl.pathname);
 
   const path = request.nextUrl.pathname;
@@ -26,15 +73,39 @@ export async function middleware(request: NextRequest) {
   const hasTokenData = !!session?.tokenData;
   const userIsAnonymous = !hasTokenData;
 
+  let response: NextResponse;
+
   if (isProtectedRoute && userIsAnonymous) {
-    return NextResponse.redirect(
+    response = NextResponse.redirect(
       new URL('/login?redirect=' + path, request.nextUrl)
     );
+  } else {
+    response = NextResponse.next({ request: { headers } });
   }
 
-  return NextResponse.next({ request: { headers } });
+  response.headers.set(
+    'Content-Security-Policy',
+    contentSecurityPolicyHeaderValue
+  );
+
+  return response;
 }
 
 export const config = {
-  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    {
+      missing: [
+        { key: 'next-router-prefetch', type: 'header' },
+        { key: 'purpose', type: 'header', value: 'prefetch' },
+      ],
+      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    },
+  ],
 };
