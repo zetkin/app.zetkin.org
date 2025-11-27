@@ -53,7 +53,7 @@ async function loadMessages(): Promise<MessageDB> {
       const dotPath = pathElems.join('.');
       const lang = fileName.replace('.yml', '');
 
-      const content = await fs.readFile(fullPath, 'utf8');
+      const content = await fs.readFile(fullPath || '', 'utf8');
       const data = yaml.parse(content);
       const flattened = flattenObject(data, dotPath);
 
