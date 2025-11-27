@@ -620,12 +620,11 @@ const TextResponseWordCloud = ({
       sx={{
         display: 'flex',
         height: '100%',
-        padding: '20px',
         width: '100%',
       }}
     >
-      <Box ref={containerRef} style={{ height: CHART_HEIGHT, width: '100%' }}>
-        <ChartWrapper sx={{ height: CHART_HEIGHT, width: '100%' }}>
+      <Box ref={containerRef} style={{ height: '100%', width: '100%' }}>
+        <ChartWrapper sx={{ height: '100%', width: '100%' }}>
           <WordCloud options={options} words={words} />
         </ChartWrapper>
       </Box>
