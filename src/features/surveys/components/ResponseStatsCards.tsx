@@ -222,27 +222,6 @@ const ResponseStatsCard = ({
             onChange={(_, newValue) => newValue && onTabChange(newValue)}
             orientation={'horizontal'}
             size={'small'}
-            sx={{
-              '& .MuiToggleButton-root': {
-                '&:hover': {
-                  backgroundColor: theme.palette.grey[100],
-                  color: theme.palette.primary.main,
-                },
-                border: `1px solid ${theme.palette.grey[600]}`,
-                color: theme.palette.primary.main,
-              },
-              '& .MuiToggleButton-root.Mui-selected': {
-                '&:hover': {
-                  color: theme.palette.primary.main,
-                },
-                backgroundColor: theme.palette.primary.main,
-                color: theme.palette.primary.contrastText,
-              },
-              '& .MuiToggleButton-sizeSmall': {
-                fontSize: '12px',
-                padding: '0.2rem 0.4rem',
-              },
-            }}
             value={tabValue}
           >
             {tabOptions.map((option) => (
