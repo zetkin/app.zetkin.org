@@ -1,5 +1,3 @@
-import isEmail from 'validator/lib/isEmail';
-
 import { CellData, Column, ColumnKind } from '../types';
 
 export default function hasWrongIDFormat(
@@ -7,14 +5,19 @@ export default function hasWrongIDFormat(
   cellValues: CellData[],
   firstRowIsHeaders: boolean
 ) {
-  if (column.kind !== ColumnKind.ID_FIELD) {
+  if (column.kind != ColumnKind.ID_FIELD) {
     return false;
   }
 
-  if (column.idField === 'ext_id' || column.idField === null) {
+  if (
+    column.idField == 'email' ||
+    column.idField == 'ext_id' ||
+    column.idField == null
+  ) {
     return false;
   }
 
+  //idField must be "id"
   return cellValues.some((value, index) => {
     if (firstRowIsHeaders && index == 0) {
       return false;
@@ -24,11 +27,6 @@ export default function hasWrongIDFormat(
       return false;
     }
     const stringValue = value.toString();
-
-    //FRÅGETECKEN
-    if (column.idField === 'email') {
-      return !isEmail(stringValue);
-    }
 
     const parsedToNumber = Number(stringValue);
     if (isNaN(parsedToNumber)) {
