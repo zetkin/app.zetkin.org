@@ -132,7 +132,9 @@ const ResponseStatsCard = ({
           throw new Error('mui charts api not defined');
         }
 
+        await new Promise((resolve) => requestAnimationFrame(resolve));
         document.body.style.overflow = 'hidden';
+
         if (format === 'png') {
           await exportApi.current.exportAsImage({
             fileName: sanitizeFileName(
