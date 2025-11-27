@@ -63,6 +63,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIToggleButton from 'zui/components/ZUIToggleButton';
+import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -85,33 +86,6 @@ const COLORS = [
 export interface UseChartProExportPublicApi {
   exportAsPrint: (options?: ChartPrintExportOptions) => Promise<void>;
   exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
-}
-
-function sanitizeFileName(name: string) {
-  // Replace Windows-forbidden chars + control chars
-  const control = Array.from({ length: 32 }, (_, i) =>
-    String.fromCharCode(i)
-  ).join('');
-  const forbidden = new RegExp(`[<>:"/\\\\|?*${control}]`, 'g');
-  name = name.replace(forbidden, '_');
-
-  // Collapse underscores
-  name = name.replace(/_+/g, '_');
-
-  // Trim spaces/dots from ends (Windows hates them)
-  name = name.replace(/^[ .]+|[ .]+$/g, '');
-
-  if (!name) {
-    name = 'file';
-  }
-
-  // Enforce 255-byte limit
-  if (new TextEncoder().encode(name).length > 255) {
-    const enc = new TextEncoder().encode(name);
-    name = new TextDecoder().decode(enc.slice(0, 255));
-  }
-
-  return name;
 }
 
 function ChartWrapper({
@@ -187,10 +161,6 @@ function ChartWrapper({
       </Box>
     </Box>
   );
-}
-
-function ellipsize(s: string, limit: number = 40): string {
-  return s.length <= limit ? s : s.slice(0, limit) + '…';
 }
 
 const QuestionStatsBarPlot = ({
@@ -292,12 +262,12 @@ const QuestionStatsPie = ({
     const items =
       'options' in questionStats
         ? questionStats.options.map((o) => ({
-            label: ellipsize(o.option.text, 60),
+            label: getEllipsedString(o.option.text, 60),
             value: o.count,
           }))
         : Object.entries(questionStats.topWordFrequencies).map(
             ([word, count]) => ({
-              label: ellipsize(word, 60),
+              label: getEllipsedString(word, 60),
               value: count,
             })
           );

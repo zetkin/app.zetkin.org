@@ -128,14 +128,12 @@ async function handle(
     ) {
       return;
     }
-    (question as ZetkinSurveyOptionsQuestionElement).question.options!.forEach(
-      (option) => {
-        responseStatsCounters[question.id].selectedOptions[option.id] = {
-          count: 0,
-          option: option,
-        };
-      }
-    );
+    question.question.options.forEach((option) => {
+      responseStatsCounters[question.id].selectedOptions[option.id] = {
+        count: 0,
+        option: option,
+      };
+    });
   });
 
   // this handles questions with text as response
