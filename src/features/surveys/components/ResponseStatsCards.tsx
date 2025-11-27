@@ -341,11 +341,17 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
     <ChartWrapper exportFileName={question.question.question.question}>
       <PieChartPro
         series={[
-          { arcLabel: 'value', data, innerRadius: 80, outerRadius: 180 },
+          {
+            arcLabel: 'value',
+            cornerRadius: 8,
+            data,
+            innerRadius: 80,
+            outerRadius: 180,
+          },
         ]}
         slotProps={{
           pieArc: {
-            strokeWidth: 2,
+            strokeWidth: 3,
           },
           pieArcLabel: {
             fill: 'white',
