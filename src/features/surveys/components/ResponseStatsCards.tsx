@@ -3,7 +3,8 @@ import React, {
   FC,
   memo,
   MutableRefObject,
-  ReactElement,
+  ReactNode,
+  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -13,27 +14,27 @@ import React, {
 } from 'react';
 import {
   Box,
+  Button,
   Card,
   CardContent,
-  Skeleton,
+  Divider,
   Link,
+  Menu,
+  MenuItem,
+  Skeleton,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { List } from 'react-window';
 import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
-import ImageIcon from '@mui/icons-material/Image';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import {
   BarChartPro,
   BarChartProPluginSignatures,
 } from '@mui/x-charts-pro/BarChartPro';
-import {
-  PieChartPro,
-  PieChartProPluginSignatures,
-} from '@mui/x-charts-pro/PieChartPro';
-import NextLink from 'next/link';
+import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import {
   ChartImageExportOptions,
   ChartPrintExportOptions,
@@ -42,6 +43,7 @@ import {
 } from '@mui/x-charts-pro';
 import { ChartPluginOptions } from '@mui/x-charts/internals';
 import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -64,9 +66,7 @@ import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useNumericRouteParams } from 'core/hooks';
-import ZUIToggleButton from 'zui/components/ZUIToggleButton';
 import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
@@ -94,15 +94,26 @@ export interface UseChartProExportPublicApi {
   exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
 }
 
-function ChartWrapper({
+const ResponseStatsCard = ({
   children,
-  fileName,
-  apiRef,
+  exportApi,
+  exportDisabled,
+  onTabChange,
+  questionStats,
+  subheader,
+  tabOptions,
+  tabValue,
 }: {
-  apiRef: React.MutableRefObject<UseChartProExportPublicApi | undefined>;
-  children: ReactElement;
-  fileName: string;
-}) {
+  children: ReactNode;
+  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
+  exportDisabled: boolean;
+  onTabChange: (tab: string) => void;
+  questionStats: QuestionStats;
+  subheader: string;
+  tabOptions: { label: string; value: string }[];
+  tabValue: string;
+}) => {
+  const theme = useTheme();
   const messages = useMessages(messageIds);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -111,14 +122,16 @@ function ChartWrapper({
     async (format: 'png' | 'pdf') => {
       const docOverflow = document.body.style.overflow;
       try {
-        if (!apiRef.current) {
+        if (!exportApi.current) {
           throw new Error('mui charts api not defined');
         }
 
         document.body.style.overflow = 'hidden';
         if (format === 'png') {
-          await apiRef.current.exportAsImage({
-            fileName: sanitizeFileName(fileName),
+          await exportApi.current.exportAsImage({
+            fileName: sanitizeFileName(
+              questionStats.question.question.question
+            ),
             onBeforeExport: (iframe) => {
               const doc = iframe.contentDocument;
               if (doc && containerRef.current) {
@@ -131,7 +144,7 @@ function ChartWrapper({
             type: 'image/png',
           });
         } else if (format === 'pdf') {
-          await apiRef.current.exportAsPrint();
+          await exportApi.current.exportAsPrint();
         }
       } catch (e) {
         showSnackbar('error', messages.insights.export.errorUnknown());
@@ -139,39 +152,150 @@ function ChartWrapper({
         document.body.style.overflow = docOverflow;
       }
     },
-    [showSnackbar, containerRef, apiRef, fileName]
+    [
+      showSnackbar,
+      containerRef,
+      exportApi,
+      questionStats.question.question.question,
+    ]
   );
-  const ellipsisMenuItems = useMemo(
+
+  const exportMenuItems = useMemo(
     () => [
       {
         label: messages.insights.export.toPng(),
         onSelect: () => exportChart('png'),
-        startIcon: <ImageIcon />,
       },
       {
         label: messages.insights.export.toPdf(),
         onSelect: () => exportChart('pdf'),
-        startIcon: <PictureAsPdfIcon />,
       },
     ],
     [exportChart]
   );
 
+  const [exportMenuAnchorEl, setExportMenuAnchorEl] =
+    useState<null | HTMLElement>(null);
+  const exportMenuOpen = !!exportMenuAnchorEl;
+  const exportMenuHandleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setExportMenuAnchorEl(event.currentTarget);
+    },
+    [setExportMenuAnchorEl]
+  );
+  const exportMenuHandleClose = useCallback(() => {
+    setExportMenuAnchorEl(null);
+  }, []);
+
   return (
-    <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ position: 'absolute', right: 10, top: 10, zIndex: 10 }}>
-        <ZUIEllipsisMenu items={ellipsisMenuItems} />
-      </Box>
-      <Box ref={containerRef} sx={{ height: '100%', width: '100%' }}>
+    <ZUICard
+      header={questionStats.question.question.question}
+      status={
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '5px',
+            height: '100%',
+          }}
+        >
+          <ToggleButtonGroup
+            exclusive
+            onChange={(_, newValue) => newValue && onTabChange(newValue)}
+            orientation={'horizontal'}
+            size={'small'}
+            sx={{
+              '& .MuiToggleButton-root': {
+                '&:hover': {
+                  backgroundColor: theme.palette.grey[100],
+                  color: theme.palette.primary.main,
+                },
+                border: `1px solid ${theme.palette.grey[600]}`,
+                color: theme.palette.primary.main,
+              },
+              '& .MuiToggleButton-root.Mui-selected': {
+                '&:hover': {
+                  color: theme.palette.primary.main,
+                },
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.contrastText,
+              },
+              '& .MuiToggleButton-sizeSmall': {
+                fontSize: '12px',
+                padding: '0.2rem 0.4rem',
+              },
+            }}
+            value={tabValue}
+          >
+            {tabOptions.map((option) => (
+              <ToggleButton
+                key={option.value}
+                size={'small'}
+                value={option.value}
+              >
+                {option.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+          <Box>
+            <Button
+              disabled={exportDisabled}
+              onClick={exportMenuHandleClick}
+              sx={{
+                color: exportDisabled
+                  ? theme.palette.grey['400']
+                  : theme.palette.grey['800'],
+              }}
+            >
+              <DownloadIcon />
+            </Button>
+            <Menu
+              anchorEl={exportMenuAnchorEl}
+              onClose={exportMenuHandleClose}
+              open={exportMenuOpen}
+            >
+              {exportMenuItems.map((item, index) => (
+                <MenuItem
+                  key={index}
+                  onClick={async () => {
+                    exportMenuHandleClose();
+                    await item.onSelect();
+                  }}
+                >
+                  {item.label}
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Box>
+      }
+      subheader={subheader}
+      sx={{
+        position: 'relative',
+        width: '100%',
+      }}
+    >
+      <Divider />
+      <Box
+        ref={containerRef}
+        sx={{
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+        }}
+      >
         {children}
       </Box>
-    </Box>
+    </ZUICard>
   );
-}
+};
 
 const QuestionStatsBarPlot = ({
+  exportApi,
   questionStats,
 }: {
+  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
   const theme = useTheme();
@@ -195,72 +319,71 @@ const QuestionStatsBarPlot = ({
     return sorted;
   }, [questionStats]);
 
-  const apiRef = useRef<ChartPublicAPI<BarChartProPluginSignatures>>();
-
   return (
-    <ChartWrapper
-      apiRef={apiRef as unknown as MutableRefObject<UseChartProExportPublicApi>}
-      fileName={questionStats.question.question.question}
-    >
-      <BarChartPro
-        apiRef={apiRef}
-        grid={{
-          vertical: true,
-        }}
-        height={CHART_HEIGHT}
-        layout={'horizontal'}
-        series={[
-          {
-            data: data.map((option) => option.count),
-          },
-        ]}
-        slotProps={{
-          tooltip: {
-            sx: {
-              caption: {
-                maxWidth: '100%',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              },
-              maxWidth: '60vw',
+    <BarChartPro
+      apiRef={
+        exportApi as unknown as RefObject<
+          ChartPublicAPI<BarChartProPluginSignatures> | undefined
+        >
+      }
+      grid={{
+        vertical: true,
+      }}
+      height={CHART_HEIGHT}
+      layout={'horizontal'}
+      series={[
+        {
+          data: data.map((option) => option.count),
+        },
+      ]}
+      slotProps={{
+        tooltip: {
+          sx: {
+            caption: {
+              maxWidth: '100%',
               overflow: 'hidden',
+              textOverflow: 'ellipsis',
             },
+            maxWidth: '60vw',
+            overflow: 'hidden',
           },
-        }}
-        sx={{
-          '.MuiChartsAxis-tick': {
-            stroke: `${theme.palette.grey['700']} !important`,
+        },
+      }}
+      sx={{
+        '.MuiChartsAxis-tick': {
+          stroke: `${theme.palette.grey['700']} !important`,
+        },
+        height: CHART_HEIGHT,
+      }}
+      xAxis={[
+        {
+          disableLine: true,
+          tickLabelStyle: { fill: theme.palette.grey['700'] },
+        },
+      ]}
+      yAxis={[
+        {
+          colorMap: {
+            colors: COLORS,
+            type: 'ordinal',
           },
-          height: CHART_HEIGHT,
-        }}
-        xAxis={[
-          {
-            disableLine: true,
-            tickLabelStyle: { fill: theme.palette.grey['700'] },
-          },
-        ]}
-        yAxis={[
-          {
-            colorMap: {
-              colors: COLORS,
-              type: 'ordinal',
-            },
-            data: data.map((option) => option.option),
-            disableLine: true,
-            disableTicks: true,
-            id: 'barCategories',
-            tickLabelStyle: { fill: theme.palette.common.black },
-            width: 200,
-          },
-        ]}
-      />
-    </ChartWrapper>
+          data: data.map((option) => option.option),
+          disableLine: true,
+          disableTicks: true,
+          id: 'barCategories',
+          tickLabelStyle: { fill: theme.palette.common.black },
+          width: 200,
+        },
+      ]}
+    />
   );
 };
 
 const QuestionStatsPie = ({
+  exportApi,
   questionStats,
 }: {
+  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: QuestionStats;
 }) => {
   const data = useMemo(() => {
@@ -285,42 +408,37 @@ const QuestionStatsPie = ({
       }));
   }, [questionStats]);
 
-  const apiRef = useRef<ChartPublicAPI<PieChartProPluginSignatures>>();
-
   return (
-    <ChartWrapper
-      apiRef={apiRef as unknown as MutableRefObject<UseChartProExportPublicApi>}
-      fileName={questionStats.question.question.question}
-    >
-      <PieChartPro
-        apiRef={apiRef}
-        height={CHART_HEIGHT}
-        series={[
-          {
-            arcLabel: 'value',
-            cornerRadius: 8,
-            data,
-            innerRadius: 80,
-            outerRadius: 180,
-          },
-        ]}
-        slotProps={{
-          pieArc: {
-            strokeWidth: 3,
-          },
-          pieArcLabel: {
-            fill: 'white',
-          },
-        }}
-        sx={{
-          '.MuiPieArcLabel-root': {
-            fill: 'white !important',
-          },
-          gap: '20px',
-        }}
-        width={360}
-      />
-    </ChartWrapper>
+    <PieChartPro
+      apiRef={
+        exportApi as unknown as MutableRefObject<UseChartProExportPublicApi>
+      }
+      height={CHART_HEIGHT}
+      series={[
+        {
+          arcLabel: 'value',
+          cornerRadius: 5,
+          data,
+          innerRadius: 80,
+          outerRadius: 180,
+        },
+      ]}
+      slotProps={{
+        pieArc: {
+          strokeWidth: 3,
+        },
+        pieArcLabel: {
+          fill: 'white',
+        },
+      }}
+      sx={{
+        '.MuiPieArcLabel-root': {
+          fill: 'white !important',
+        },
+        gap: '20px',
+      }}
+      width={360}
+    />
   );
 };
 
@@ -341,47 +459,52 @@ const OptionsStatsCard = ({
     [questionStats, messages.insights.optionsFields.subheader]
   );
 
+  const exportApi = useRef<UseChartProExportPublicApi>();
+
   return (
-    <ZUICard
-      header={questionStats.question.question.question}
+    <ResponseStatsCard
+      exportApi={exportApi}
+      exportDisabled={false}
+      onTabChange={(selected) => setTab(selected)}
+      questionStats={questionStats}
       subheader={subheader}
-      sx={{
-        position: 'relative',
-        width: '100%',
-      }}
+      tabOptions={[
+        {
+          label: messages.insights.optionsFields.tabs.barPlot(),
+          value: 'bar-plot',
+        },
+        {
+          label: messages.insights.optionsFields.tabs.piePlot(),
+          value: 'pie-chart',
+        },
+      ]}
+      tabValue={tab}
     >
-      <ZUIToggleButton
-        onChange={(selected) => selected && setTab(selected)}
-        options={[
-          {
-            label: messages.insights.optionsFields.tabs.barPlot(),
-            value: 'bar-plot',
-          },
-          {
-            label: messages.insights.optionsFields.tabs.piePlot(),
-            value: 'pie-chart',
-          },
-        ]}
-        size={'small'}
-        value={tab}
-      />
-      <Box height={CHART_HEIGHT}>
+      <Box height={CHART_HEIGHT} width={'100%'}>
         {tab === 'bar-plot' && (
-          <QuestionStatsBarPlot questionStats={questionStats} />
+          <QuestionStatsBarPlot
+            exportApi={exportApi}
+            questionStats={questionStats}
+          />
         )}
         {tab === 'pie-chart' && (
-          <QuestionStatsPie questionStats={questionStats} />
+          <QuestionStatsPie
+            exportApi={exportApi}
+            questionStats={questionStats}
+          />
         )}
       </Box>
-    </ZUICard>
+    </ResponseStatsCard>
   );
 };
 
 const WordCloud = memo(ReactWordcloud);
 
 const TextResponseWordCloud = ({
+  exportApi,
   questionStats,
 }: {
+  exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: TextQuestionStats;
 }) => {
   const words: Word[] = useMemo(
@@ -435,9 +558,8 @@ const TextResponseWordCloud = ({
   );
 
   const { publicAPI } = useChartProExport(exportOptions);
-  const apiRef = useRef(publicAPI);
   useEffect(() => {
-    apiRef.current = publicAPI;
+    exportApi.current = publicAPI as UseChartProExportPublicApi;
   }, [publicAPI]);
 
   return (
@@ -449,16 +571,9 @@ const TextResponseWordCloud = ({
         width: '100%',
       }}
     >
-      <ChartWrapper
-        apiRef={
-          apiRef as unknown as MutableRefObject<UseChartProExportPublicApi>
-        }
-        fileName={questionStats.question.question.question}
-      >
-        <Box ref={containerRef} style={{ height: CHART_HEIGHT }}>
-          <WordCloud options={options} words={words} />
-        </Box>
-      </ChartWrapper>
+      <Box ref={containerRef} style={{ height: CHART_HEIGHT, width: '100%' }}>
+        <WordCloud options={options} words={words} />
+      </Box>
     </Box>
   );
 };
@@ -672,40 +787,43 @@ const TextStatsCard = ({
     [questionStats, messages.insights.textFields.subheader]
   );
 
+  const exportApi = useRef<UseChartProExportPublicApi>();
+
   return (
-    <ZUICard
-      header={questionStats.question.question.question}
+    <ResponseStatsCard
+      exportApi={exportApi}
+      exportDisabled={tab === 'responses'}
+      onTabChange={(selected) => setTab(selected)}
+      questionStats={questionStats}
       subheader={subheader}
-      sx={{
-        position: 'relative',
-        width: '100%',
-      }}
+      tabOptions={[
+        {
+          label: messages.insights.textFields.tabs.wordCloud(),
+          value: 'word-cloud',
+        },
+        {
+          label: messages.insights.textFields.tabs.wordFrequencies(),
+          value: 'word-frequency-bars',
+        },
+        {
+          label: messages.insights.textFields.tabs.responses(),
+          value: 'responses',
+        },
+      ]}
+      tabValue={tab}
     >
-      <ZUIToggleButton
-        onChange={(selected) => selected && setTab(selected)}
-        options={[
-          {
-            label: messages.insights.textFields.tabs.wordCloud(),
-            value: 'word-cloud',
-          },
-          {
-            label: messages.insights.textFields.tabs.wordFrequencies(),
-            value: 'word-frequency-bars',
-          },
-          {
-            label: messages.insights.textFields.tabs.responses(),
-            value: 'responses',
-          },
-        ]}
-        size={'small'}
-        value={tab}
-      />
-      <Box height={CHART_HEIGHT}>
+      <Box height={CHART_HEIGHT} width={'100%'}>
         {tab === 'word-cloud' && (
-          <TextResponseWordCloud questionStats={questionStats} />
+          <TextResponseWordCloud
+            exportApi={exportApi}
+            questionStats={questionStats}
+          />
         )}
         {tab === 'word-frequency-bars' && (
-          <QuestionStatsBarPlot questionStats={questionStats} />
+          <QuestionStatsBarPlot
+            exportApi={exportApi}
+            questionStats={questionStats}
+          />
         )}
         {tab === 'responses' && (
           <TextResponseList
@@ -714,7 +832,7 @@ const TextStatsCard = ({
           />
         )}
       </Box>
-    </ZUICard>
+    </ResponseStatsCard>
   );
 };
 
