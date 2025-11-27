@@ -15,8 +15,7 @@ module.exports = {
   allowedDevOrigins: [],
 
   experimental: {
-    esmExternals: "loose",
-    serverComponentsExternalPackages: ["mjml", "mongoose"],
+    serverComponentsExternalPackages: ['mjml', 'mongoose'],
   },
   images: {
     domains: [

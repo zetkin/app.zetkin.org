@@ -1,6 +1,7 @@
 import { Box, Button } from '@mui/material';
-import { FC, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { FC, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Logout } from '@mui/icons-material';
 
 import messageIds from 'features/organizations/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
@@ -19,7 +20,7 @@ type Props = {
   selectedTab?: string;
   subtitle?: string | JSX.Element;
   tabs?: ZUITabbedNavBarProps['items'];
-  title: string | JSX.Element;
+  title?: string | JSX.Element;
   topLeftComponent?: JSX.Element;
 };
 
@@ -38,21 +39,30 @@ const ActivistPortalHeader: FC<Props> = ({
   const [logoutMenuAnchorEl, setLogoutMenuAnchorEl] =
     useState<HTMLButtonElement | null>(null);
   const router = useRouter();
-  const path = usePathname();
 
-  const menuItems: MenuItem[] = [
-    {
-      label: messages.home.menu.logout(),
-      onClick: () => router.push('/logout'),
-    },
-  ];
-  if (!path?.startsWith('/my')) {
-    menuItems.unshift({
-      divider: true,
-      label: process.env.HOME_TITLE || messages.home.menu.myZetkin(),
-      onClick: () => router.push('/my'),
-    });
-  }
+  const menuItems: MenuItem[] = useMemo(
+    () => [
+      {
+        label: messages.home.menu.myActivities(),
+        onClick: () => router.push('/my/home'),
+      },
+      {
+        label: messages.home.menu.allEvents(),
+        onClick: () => router.push('/my/feed'),
+      },
+      {
+        divider: true,
+        label: messages.home.menu.settings(),
+        onClick: () => router.push('/my/settings'),
+      },
+      {
+        label: messages.home.menu.logout(),
+        onClick: () => router.push('/logout'),
+        startIcon: Logout,
+      },
+    ],
+    [messages, router]
+  );
 
   const memberships = useMemberships().data || [];
   const isOfficial = memberships.find((membership) => membership.role != null);
@@ -70,7 +80,9 @@ const ActivistPortalHeader: FC<Props> = ({
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          padding: 2,
+          paddingBottom: title ? 2 : 0,
+          paddingTop: 2,
+          paddingX: 2,
           width: '100%',
         }}
       >
@@ -92,6 +104,9 @@ const ActivistPortalHeader: FC<Props> = ({
               )}
               <Button
                 onClick={(event) => setLogoutMenuAnchorEl(event.currentTarget)}
+                sx={{
+                  marginLeft: 'auto',
+                }}
               >
                 <ZUIPersonAvatar
                   firstName={user.first_name}
@@ -102,30 +117,33 @@ const ActivistPortalHeader: FC<Props> = ({
               </Button>
               <ZUIMenu
                 anchorEl={logoutMenuAnchorEl}
+                invertHorizontalAnchor={true}
                 menuItems={menuItems}
                 onClose={() => setLogoutMenuAnchorEl(null)}
               />
             </Box>
           )}
         </Box>
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Box>
-            {typeof title == 'string' ? (
-              <ZUIText variant="headingLg">{title}</ZUIText>
-            ) : (
-              title
-            )}
+        {title && (
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Box>
+              {typeof title == 'string' ? (
+                <ZUIText variant="headingLg">{title}</ZUIText>
+              ) : (
+                title
+              )}
+            </Box>
+            {button && button}
           </Box>
-          {button && button}
-        </Box>
+        )}
         {subtitle && (
-          <Box>
+          <Box sx={{ whiteSpace: 'pre-line' }}>
             {typeof subtitle == 'string' ? (
               <ZUIText>{subtitle}</ZUIText>
             ) : (

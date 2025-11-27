@@ -1,6 +1,5 @@
-import makeStyles from '@mui/styles/makeStyles';
 import { useState } from 'react';
-import { Box, Theme, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import EventSelectionCheckBox from 'features/events/components/EventSelectionCheckBox';
 import Field from './Field';
@@ -9,73 +8,6 @@ import { useAppSelector } from 'core/hooks';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { allCollapsedPresentableFields, availableHeightByEvent } from './utils';
 import oldTheme from 'theme';
-
-interface StyleProps {
-  cancelled: boolean;
-  draft: boolean;
-  collapsed: boolean;
-  hasTopBadge: boolean;
-  height: number;
-  width: string;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  collapsedContainer: {
-    alignItems: 'center',
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
-    borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
-    borderTopRightRadius: 4,
-    display: 'flex',
-    height: '100%',
-    justifyContent: 'space-between',
-    padding: '0 4px 0 8px',
-    width: '100%',
-  },
-  container: {
-    alignItems: ({ collapsed }) => (collapsed ? 'center' : ''),
-    background: ({ cancelled, draft }) =>
-      `linear-gradient(to right, ${
-        cancelled || draft
-          ? oldTheme.palette.secondary.main
-          : oldTheme.palette.primary.main
-      } 4px, white 4px)`,
-    border: `1px solid ${oldTheme.palette.grey[300]}`,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
-    borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
-    borderTopRightRadius: 4,
-    display: 'flex',
-    flexDirection: ({ collapsed }) => (collapsed ? 'row' : 'column'),
-    fontSize: 12,
-    gap: '4px 0',
-    height: ({ height }) => height,
-    justifyContent: 'space-between',
-    minHeihgt: '20px',
-    position: 'relative',
-    width: ({ width }) => width,
-  },
-  fieldGroupContainer: {
-    borderTop: `1px solid ${oldTheme.palette.grey[300]}`,
-  },
-  fieldGroups: {
-    display: 'flex',
-    flexFlow: 'column',
-    overflowY: 'hidden',
-  },
-  title: {
-    fontSize: '14px',
-    minHeight: '20px',
-    overflow: 'hidden',
-    textDecoration: ({ cancelled }) => (cancelled ? 'line-through' : ''),
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  titleContainer: {
-    borderTopLeftRadius: ({ hasTopBadge }) => (hasTopBadge ? '0px' : '4px'),
-    borderTopRightRadius: 4,
-  },
-}));
 
 interface Participants {
   kind: 'Participants';
@@ -163,33 +95,67 @@ const Event = ({
     fieldGroups.length
   );
 
-  const classes = useStyles({
-    cancelled,
-    collapsed,
-    draft,
-    hasTopBadge: !!topBadge,
-    height,
-    width,
-  });
-
   const selectedEvents = useAppSelector(
     (state) => state.events.selectedEventIds
   );
 
+  const titleStyle = {
+    fontSize: '14px',
+    minHeight: '20px',
+    overflow: 'hidden',
+    textDecoration: cancelled ? 'line-through' : '',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  };
+
   return (
     <Box
-      className={classes.container}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      sx={{
+        alignItems: collapsed ? 'center' : '',
+        background: `linear-gradient(to right, ${
+          cancelled || draft
+            ? oldTheme.palette.secondary.main
+            : oldTheme.palette.primary.main
+        } 4px, white 4px)`,
+        border: `1px solid ${oldTheme.palette.grey[300]}`,
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        borderTopLeftRadius: topBadge ? '0px' : '4px',
+        borderTopRightRadius: 4,
+        display: 'flex',
+        flexDirection: collapsed ? 'row' : 'column',
+        fontSize: 12,
+        gap: '4px 0',
+        height: height,
+        justifyContent: 'space-between',
+        minHeihgt: '20px',
+        position: 'relative',
+        width: width,
+      }}
     >
       {topBadge}
       {collapsed && (
-        <Box className={classes.collapsedContainer}>
-          <Box className={classes.title} display="flex">
+        <Box
+          sx={{
+            alignItems: 'center',
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 4,
+            borderTopLeftRadius: topBadge ? '0px' : '4px',
+            borderTopRightRadius: 4,
+            display: 'flex',
+            height: '100%',
+            justifyContent: 'space-between',
+            padding: '0 4px 0 8px',
+            width: '100%',
+          }}
+        >
+          <Box display="flex" sx={titleStyle}>
             {(isHovered || selectedEvents.length > 0) && (
               <EventSelectionCheckBox events={events} />
             )}
-            <Typography className={classes.title}>{title}</Typography>
+            <Typography sx={titleStyle}>{title}</Typography>
           </Box>
           <Box display="flex">
             {allCollapsedPresentableFields(fieldGroups).map((field, index) => {
@@ -207,19 +173,33 @@ const Event = ({
       )}
       {!collapsed && (
         <Box height="100%">
-          <Box className={classes.titleContainer}>
+          <Box
+            sx={{
+              borderTopLeftRadius: topBadge ? '0px' : '4px',
+              borderTopRightRadius: 4,
+            }}
+          >
             <Box alignItems="center" display="flex" sx={{ pl: 1 }}>
               {(isHovered || selectedEvents.length > 0) && (
                 <EventSelectionCheckBox events={events} />
               )}
-              <Typography className={classes.title}>{title}</Typography>
+              <Typography sx={titleStyle}>{title}</Typography>
             </Box>
           </Box>
-          <Box className={classes.fieldGroups}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexFlow: 'column',
+              overflowY: 'hidden',
+            }}
+          >
             {fieldGroups.map((fields, index) => (
               <Box
                 key={`fieldGroup-${index}`}
-                className={index > 0 ? classes.fieldGroupContainer : ''}
+                sx={{
+                  borderTop:
+                    index > 0 ? `1px solid ${oldTheme.palette.grey[300]}` : '',
+                }}
               >
                 <FieldGroup
                   fields={fields}

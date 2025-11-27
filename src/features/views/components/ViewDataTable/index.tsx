@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import {
@@ -101,20 +100,6 @@ declare module '@mui/x-data-grid-pro' {
   }
 }
 
-const useStyles = makeStyles(() => ({
-  '@keyframes addedRowAnimation': {
-    '0%': {
-      backgroundColor: oldTheme.palette.success.main,
-    },
-    '100%': {
-      backgroundColor: 'transparent',
-    },
-  },
-  addedRow: {
-    animation: '$addedRowAnimation 2s',
-  },
-}));
-
 const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
   const stringOperators = getGridStringOperators().filter(
     (op) => op.value !== 'isAnyOf'
@@ -176,7 +161,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const classes = useStyles();
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -584,8 +568,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const getRowClassName = useCallback(
     (params: GridRowClassNameParams): string =>
-      params.id == addedId ? classes.addedRow : '',
-    [addedId, classes.addedRow]
+      params.id == addedId ? 'addedRow' : '',
+    [addedId]
   );
 
   const localeText = useMemo(
@@ -732,7 +716,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         slotProps={componentsProps}
         slots={slots}
         style={style}
-        sx={mainSx}
+        sx={[
+          mainSx,
+          {
+            '.addedRow': {
+              '@keyframes addedRowAnimation': {
+                from: {
+                  backgroundColor: oldTheme.palette.success.main,
+                },
+                to: {
+                  backgroundColor: 'transparent',
+                },
+              },
+              animation: 'addedRowAnimation 2s',
+            },
+          },
+        ]}
         {...modelGridProps}
       />
 

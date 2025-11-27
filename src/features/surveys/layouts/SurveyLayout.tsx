@@ -3,10 +3,12 @@ import { Box, Button } from '@mui/material';
 import {
   ArrowForward,
   ChatBubbleOutline,
+  ContentCopy,
   Delete,
+  Groups,
   QuizOutlined,
 } from '@mui/icons-material';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveyUrl from '../utils/getSurveyUrl';
@@ -29,6 +31,9 @@ import { Msg, useMessages } from 'core/i18n';
 import useSurveyState, { SurveyState } from '../hooks/useSurveyState';
 import ChangeCampaignDialog from '../../campaigns/components/ChangeCampaignDialog';
 import ZUISnackbarContext from '../../../zui/ZUISnackbarContext';
+import { useApiClient } from 'core/hooks';
+import surveyToList from 'features/surveys/rpc/surveyToList';
+import duplicateSurvey from '../rpc/duplicateSurvey';
 
 interface SurveyLayoutProps {
   campId: string;
@@ -63,6 +68,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const originalOrgId = surveyFuture.data?.organization.id;
   const isShared = campId === 'shared';
   const orgs = useMemberships().data ?? [];
+  const apiClient = useApiClient();
 
   const roleAdmin =
     orgs.find((item) => item.organization.id === originalOrgId)?.role ===
@@ -90,6 +96,23 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     );
   };
 
+  const handleDuplicate = async () => {
+    const res = await apiClient.rpc(duplicateSurvey, {
+      campId: parseInt(campId),
+      orgId: parsedOrg,
+      surveyId: parseInt(surveyId),
+    });
+
+    if (res) {
+      await router.push(
+        `/organize/${res.organization.id}/projects/${campId}/surveys/${res.id}`
+      );
+      showSnackbar('success', messages.surveyDuplicated.success());
+    } else {
+      showSnackbar('error', messages.surveyDuplicated.error());
+    }
+  };
+
   const handleOnCampaignSelected = async (campaignId: number) => {
     const updatedSurvey = await updateSurvey({ campaign_id: campaignId });
     await router.push(
@@ -103,6 +126,34 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       })
     );
   };
+
+  const handleCreateList = useCallback(
+    async (folderId?: number) => {
+      try {
+        if (!surveyFuture.data) {
+          showSnackbar('error', messages.surveyToList.error());
+          return;
+        }
+
+        const view = await apiClient.rpc(surveyToList, {
+          firstNameColumnName: messages.submissions.firstNameColumn(),
+          folderId,
+          lastNameColumName: messages.submissions.lastNameColumn(),
+          orgId: parseInt(orgId),
+          surveyId: parseInt(surveyId),
+          title: messages.surveyToList.title({
+            surveyTitle: surveyFuture.data.title,
+          }),
+        });
+        await router.push(
+          `/organize/${view.organization.id}/people/lists/${view.id}`
+        );
+      } catch (e) {
+        showSnackbar('error', messages.surveyToList.error());
+      }
+    },
+    [apiClient, orgId, surveyId, router.push, surveyFuture.data]
+  );
 
   return (
     <TabbedLayout
@@ -143,9 +194,19 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       defaultTab="/"
       ellipsisMenuItems={[
         {
+          label: messages.layout.actions.duplicate(),
+          onSelect: () => handleDuplicate(),
+          startIcon: <ContentCopy />,
+        },
+        {
           label: messages.layout.actions.move(),
           onSelect: () => setIsMoveDialogOpen(true),
           startIcon: <ArrowForward />,
+        },
+        {
+          label: messages.layout.actions.createList(),
+          onSelect: () => handleCreateList(),
+          startIcon: <Groups />,
         },
         {
           label: messages.layout.actions.delete(),
@@ -236,6 +297,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         {
           href: '/submissions',
           label: messages.tabs.submissions(),
+        },
+        {
+          href: '/insights',
+          label: messages.tabs.insights(),
         },
       ]}
       title={
