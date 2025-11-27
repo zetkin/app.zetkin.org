@@ -353,33 +353,35 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       justifyContent: 'flex-end',
                     }}
                   >
-                    <ZUIEllipsisMenu
-                      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-                      items={[
-                        {
-                          href: '/my',
-                          label:
-                            messages.organizeSidebar.myPagesMenuItemLabel(),
-                        },
-                        {
-                          divider: true,
-                          href: '/my/settings',
-                          label:
-                            messages.organizeSidebar.mySettingsMenuItemLabel(),
-                        },
-                        {
-                          label: messages.organizeSidebar.signOut(),
-                          onSelect: () => {
-                            logOut();
+                    {open && (
+                      <ZUIEllipsisMenu
+                        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        items={[
+                          {
+                            href: '/my',
+                            label:
+                              messages.organizeSidebar.myPagesMenuItemLabel(),
                           },
-                          startIcon: <Logout />,
-                        },
-                      ]}
-                      transformOrigin={{
-                        horizontal: 'right',
-                        vertical: 'bottom',
-                      }}
-                    />
+                          {
+                            divider: true,
+                            href: '/my/settings',
+                            label:
+                              messages.organizeSidebar.mySettingsMenuItemLabel(),
+                          },
+                          {
+                            label: messages.organizeSidebar.signOut(),
+                            onSelect: () => {
+                              logOut();
+                            },
+                            startIcon: <Logout />,
+                          },
+                        ]}
+                        transformOrigin={{
+                          horizontal: 'right',
+                          vertical: 'bottom',
+                        }}
+                      />
+                    )}
                   </Box>
                 </>
               )}
