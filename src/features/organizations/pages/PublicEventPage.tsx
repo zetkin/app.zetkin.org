@@ -37,6 +37,8 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
 import useMemberships from '../hooks/useMemberships';
+import useUser from 'core/hooks/useUser';
+import { PublicEventSignup } from '../components/PublicEventSignup';
 
 type Props = {
   eventId: number;
@@ -293,6 +295,7 @@ const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
   const messages = useMessages(messageIds);
+  const user = useUser();
 
   if (event.cancelled) {
     return (
@@ -317,7 +320,11 @@ const SignUpSection: FC<{
         </Box>
       )}
       <Box alignItems="center" display="flex" gap={1}>
-        <EventSignupButton event={event} />
+        {!user ? (
+          <PublicEventSignup event={event} />
+        ) : (
+          <EventSignupButton event={event} />
+        )}
       </Box>
     </Box>
   );

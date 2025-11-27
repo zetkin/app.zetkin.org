@@ -72,8 +72,17 @@ export default makeMessages('feat.events', {
     reqParticipantsLabel: m('Required participants'),
   },
   eventParticipantsList: {
+    actions: {
+      book: m('Book'),
+      link: m('Link'),
+      remove: m('Remove'),
+      suggestedPeople: m('Suggested people'),
+      unlink: m('Unlink'),
+    },
     attendance: m('Attendance'),
     bookedParticipants: m('Booked Participants'),
+    bulkBookAll: m('Book all'),
+    bulkRemoveAll: m('Remove all'),
     buttonAttended: m('Attended'),
     buttonBook: m('Book'),
     buttonCancel: m('Cancel'),
@@ -81,11 +90,25 @@ export default makeMessages('feat.events', {
     buttonDelete: m('Delete'),
     buttonNoshow: m('No-show'),
     cancelledParticipants: m('Cancelled Participants'),
+    columnAction: m('Action'),
     columnEmail: m('Email'),
+    columnLinking: m('Linking'),
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
     columnSignedUp: m('Signed up'),
+    confirmBulkBook: m<{ count: number }>(
+      'Book all {count} unverified signups?'
+    ),
+    confirmBulkBookDescription: m(
+      'Each signup will be processed one by one. Make sure they are linked to a person first.'
+    ),
+    confirmBulkRemove: m<{ count: number }>(
+      'Remove all {count} unverified signups?'
+    ),
+    confirmBulkRemoveDescription: m(
+      'This will permanently delete these unverified signups. This cannot be undone.'
+    ),
     contactTooltip: m('Contact Person'),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
@@ -96,10 +119,14 @@ export default makeMessages('feat.events', {
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
     ),
+    descriptionUnverifiedSignups: m(
+      'These people have signed up themselves without a user account. You must confirm them.'
+    ),
     dropDownAttended: m('Confirmed attendance'),
     dropDownNoshow: m('Did not show up'),
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
+    unverifiedSignups: m('Unverified Sign-ups'),
   },
   eventPopper: {
     backToEvents: m('Back to event list'),
@@ -268,6 +295,37 @@ export default makeMessages('feat.events', {
     ),
     submitButton: m('Execute'),
     title: m('Manage participants'),
+  },
+  publicEventSignup: {
+    alert: {
+      error: m('Error'),
+      signupSuccessful: m('Signup successful'),
+      thankYou: m('Thank you for signing up!'),
+    },
+    errors: {
+      emailOrPhoneRequired: m('Either email or phone is required'),
+      gdprConsentRequired: m('GDPR consent is required'),
+      invalidEmail: m('Please provide a valid email'),
+      nameRequired: m('First name and last name are required'),
+      phoneFormat: m(
+        'Phone number must be in international format, e.g. +46701234567'
+      ),
+      signupError: m('An error occurred while signing up'),
+      signupFailed: m('Failed to sign up'),
+    },
+    fields: {
+      email: m('Email'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+      phone: m('Phone'),
+    },
+    privacyPolicy: m<{ organization: string }>(
+      'When you sign up to an event, the information you provide will be stored and processed in Zetkin by My Organization in order to organize activism and in accordance with the Zetkin privacy policy.'
+    ),
+    submit: {
+      button: m('Sign up'),
+      submitting: m('Submitting...'),
+    },
   },
   search: m('Search'),
   state: {
