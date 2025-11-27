@@ -22,6 +22,7 @@ type Params = z.input<typeof paramsSchema>;
 
 export type OptionsQuestionStats = {
   answerCount: number;
+  multipleSelectedOptionsCount: number;
   options: {
     count: number;
     option: ZetkinSurveyOption;
@@ -59,6 +60,7 @@ export const getSurveyResponseStatsDef = {
 
 type ResponseStatsCounter = {
   answerCounter: number;
+  multipleSelectedOptionsCount: number;
   selectedOptions: Record<
     number,
     {
@@ -99,6 +101,7 @@ const initializeStatsCounters = (survey: ZetkinSurveyExtended) => {
 
     responseStatsCounters[question.id] = {
       answerCounter: 0,
+      multipleSelectedOptionsCount: 0,
       selectedOptions: {},
       topWordFrequencies: {},
       totalSelectedOptionsCounts: 0,
@@ -172,6 +175,10 @@ const collectIncrementalStats = (
         responseStatsCounters[response.question_id].selectedOptions[option]
           .count++;
       });
+      if (response.options.length > 1) {
+        responseStatsCounters[response.question_id]
+          .multipleSelectedOptionsCount++;
+      }
     });
   });
 };
@@ -215,6 +222,7 @@ const convertStatsCountersToQuestionStats = (
 
       return <OptionsQuestionStats>{
         answerCount: counter.answerCounter,
+        multipleSelectedOptionsCount: counter.multipleSelectedOptionsCount,
         options:
           question.question.options?.map(
             (option) => counter.selectedOptions[option.id]

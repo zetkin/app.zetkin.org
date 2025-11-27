@@ -13,11 +13,14 @@ import React, {
   useState,
 } from 'react';
 import {
+  Alert,
   Box,
   Button,
   Card,
   CardContent,
+  Collapse,
   Divider,
+  IconButton,
   Link,
   Menu,
   MenuItem,
@@ -44,6 +47,7 @@ import {
 import { ChartPluginOptions } from '@mui/x-charts/internals';
 import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 import DownloadIcon from '@mui/icons-material/Download';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -134,12 +138,22 @@ const ResponseStatsCard = ({
             ),
             onBeforeExport: (iframe) => {
               const doc = iframe.contentDocument;
-              if (doc && containerRef.current) {
-                const boundingRect =
-                  containerRef.current.getBoundingClientRect();
-                doc.body.style.width = `${boundingRect.width}px`;
-                doc.body.style.height = `${boundingRect.height}px`;
+              if (!doc || !containerRef.current) {
+                return;
               }
+
+              const contentOverrides =
+                containerRef.current.getElementsByClassName(
+                  'zetkin-chart-content'
+                );
+              const contentBox =
+                contentOverrides.length > 0
+                  ? contentOverrides[0]
+                  : containerRef.current;
+
+              const boundingRect = contentBox.getBoundingClientRect();
+              doc.body.style.width = `${boundingRect.width}px`;
+              doc.body.style.height = `${boundingRect.height}px`;
             },
             type: 'image/png',
           });
@@ -281,7 +295,9 @@ const ResponseStatsCard = ({
         ref={containerRef}
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           height: '100%',
+          paddingTop: '5px',
           width: '100%',
         }}
       >
@@ -289,6 +305,10 @@ const ResponseStatsCard = ({
       </Box>
     </ZUICard>
   );
+};
+
+const ChartWrapper = ({ children }: { children: ReactNode }) => {
+  return <Box className={'zetkin-chart-content'}>{children}</Box>;
 };
 
 const QuestionStatsBarPlot = ({
@@ -320,62 +340,64 @@ const QuestionStatsBarPlot = ({
   }, [questionStats]);
 
   return (
-    <BarChartPro
-      apiRef={
-        exportApi as unknown as RefObject<
-          ChartPublicAPI<BarChartProPluginSignatures> | undefined
-        >
-      }
-      grid={{
-        vertical: true,
-      }}
-      height={CHART_HEIGHT}
-      layout={'horizontal'}
-      series={[
-        {
-          data: data.map((option) => option.count),
-        },
-      ]}
-      slotProps={{
-        tooltip: {
-          sx: {
-            caption: {
-              maxWidth: '100%',
+    <ChartWrapper>
+      <BarChartPro
+        apiRef={
+          exportApi as unknown as RefObject<
+            ChartPublicAPI<BarChartProPluginSignatures> | undefined
+          >
+        }
+        grid={{
+          vertical: true,
+        }}
+        height={CHART_HEIGHT}
+        layout={'horizontal'}
+        series={[
+          {
+            data: data.map((option) => option.count),
+          },
+        ]}
+        slotProps={{
+          tooltip: {
+            sx: {
+              caption: {
+                maxWidth: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              },
+              maxWidth: '60vw',
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
             },
-            maxWidth: '60vw',
-            overflow: 'hidden',
           },
-        },
-      }}
-      sx={{
-        '.MuiChartsAxis-tick': {
-          stroke: `${theme.palette.grey['700']} !important`,
-        },
-        height: CHART_HEIGHT,
-      }}
-      xAxis={[
-        {
-          disableLine: true,
-          tickLabelStyle: { fill: theme.palette.grey['700'] },
-        },
-      ]}
-      yAxis={[
-        {
-          colorMap: {
-            colors: COLORS,
-            type: 'ordinal',
+        }}
+        sx={{
+          '.MuiChartsAxis-tick': {
+            stroke: `${theme.palette.grey['700']} !important`,
           },
-          data: data.map((option) => option.option),
-          disableLine: true,
-          disableTicks: true,
-          id: 'barCategories',
-          tickLabelStyle: { fill: theme.palette.common.black },
-          width: 200,
-        },
-      ]}
-    />
+          height: CHART_HEIGHT,
+        }}
+        xAxis={[
+          {
+            disableLine: true,
+            tickLabelStyle: { fill: theme.palette.grey['700'] },
+          },
+        ]}
+        yAxis={[
+          {
+            colorMap: {
+              colors: COLORS,
+              type: 'ordinal',
+            },
+            data: data.map((option) => option.option),
+            disableLine: true,
+            disableTicks: true,
+            id: 'barCategories',
+            tickLabelStyle: { fill: theme.palette.common.black },
+            width: 200,
+          },
+        ]}
+      />
+    </ChartWrapper>
   );
 };
 
@@ -407,38 +429,67 @@ const QuestionStatsPie = ({
         value,
       }));
   }, [questionStats]);
+  const messages = useMessages(messageIds);
+  const [hasSeenPieInaccuracyWarning, setHasSeenPieInaccuracyWarning] =
+    useState(false);
 
   return (
-    <PieChartPro
-      apiRef={
-        exportApi as unknown as MutableRefObject<UseChartProExportPublicApi>
-      }
-      height={CHART_HEIGHT}
-      series={[
-        {
-          arcLabel: 'value',
-          cornerRadius: 5,
-          data,
-          innerRadius: 80,
-          outerRadius: 180,
-        },
-      ]}
-      slotProps={{
-        pieArc: {
-          strokeWidth: 3,
-        },
-        pieArcLabel: {
-          fill: 'white',
-        },
-      }}
-      sx={{
-        '.MuiPieArcLabel-root': {
-          fill: 'white !important',
-        },
-        gap: '20px',
-      }}
-      width={360}
-    />
+    <>
+      {isOptionsStats(questionStats) &&
+        !!questionStats.multipleSelectedOptionsCount && (
+          <Collapse in={!hasSeenPieInaccuracyWarning}>
+            <Alert
+              action={
+                <IconButton
+                  onClick={() => setHasSeenPieInaccuracyWarning(true)}
+                  size={'small'}
+                >
+                  <CloseIcon fontSize={'inherit'} />
+                </IconButton>
+              }
+              severity={'warning'}
+            >
+              {messages.insights.optionsFields.warningMultipleSelectedOptionsPie(
+                {
+                  respondentCount: questionStats.multipleSelectedOptionsCount,
+                }
+              )}
+            </Alert>
+          </Collapse>
+        )}
+      <ChartWrapper>
+        <PieChartPro
+          apiRef={
+            exportApi as unknown as MutableRefObject<UseChartProExportPublicApi>
+          }
+          height={CHART_HEIGHT}
+          series={[
+            {
+              arcLabel: 'value',
+              cornerRadius: 5,
+              data,
+              innerRadius: 80,
+              outerRadius: 180,
+            },
+          ]}
+          slotProps={{
+            pieArc: {
+              strokeWidth: 3,
+            },
+            pieArcLabel: {
+              fill: 'white',
+            },
+          }}
+          sx={{
+            '.MuiPieArcLabel-root': {
+              fill: 'white !important',
+            },
+            gap: '20px',
+          }}
+          width={360}
+        />
+      </ChartWrapper>
+    </>
   );
 };
 
@@ -480,20 +531,15 @@ const OptionsStatsCard = ({
       ]}
       tabValue={tab}
     >
-      <Box height={CHART_HEIGHT} width={'100%'}>
-        {tab === 'bar-plot' && (
-          <QuestionStatsBarPlot
-            exportApi={exportApi}
-            questionStats={questionStats}
-          />
-        )}
-        {tab === 'pie-chart' && (
-          <QuestionStatsPie
-            exportApi={exportApi}
-            questionStats={questionStats}
-          />
-        )}
-      </Box>
+      {tab === 'bar-plot' && (
+        <QuestionStatsBarPlot
+          exportApi={exportApi}
+          questionStats={questionStats}
+        />
+      )}
+      {tab === 'pie-chart' && (
+        <QuestionStatsPie exportApi={exportApi} questionStats={questionStats} />
+      )}
     </ResponseStatsCard>
   );
 };
@@ -572,7 +618,9 @@ const TextResponseWordCloud = ({
       }}
     >
       <Box ref={containerRef} style={{ height: CHART_HEIGHT, width: '100%' }}>
-        <WordCloud options={options} words={words} />
+        <ChartWrapper>
+          <WordCloud options={options} words={words} />
+        </ChartWrapper>
       </Box>
     </Box>
   );

@@ -123,6 +123,9 @@ export default makeMessages('feat.surveys', {
         barPlot: m('Bar'),
         piePlot: m('Pie'),
       },
+      warningMultipleSelectedOptionsPie: m<{ respondentCount: number }>(
+        'Note that this question allows respondents to choose more than one option, and {respondentCount, plural, =1 {1 respondent} other {# respondents}} did. This may make the pie chart misleading.'
+      ),
     },
     textFields: {
       subheader: m<{
