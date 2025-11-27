@@ -75,6 +75,8 @@ import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 
+import { BoxOwnProps } from '@mui/system/Box/Box';
+
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
 
@@ -307,8 +309,13 @@ const ResponseStatsCard = ({
   );
 };
 
-const ChartWrapper = ({ children }: { children: ReactNode }) => {
-  return <Box className={'zetkin-chart-content'}>{children}</Box>;
+const ChartWrapper = (props: BoxOwnProps) => {
+  const { children, ...other } = props;
+  return (
+    <Box className={'zetkin-chart-content'} {...other}>
+      {children}
+    </Box>
+  );
 };
 
 const QuestionStatsBarPlot = ({
@@ -618,7 +625,7 @@ const TextResponseWordCloud = ({
       }}
     >
       <Box ref={containerRef} style={{ height: CHART_HEIGHT, width: '100%' }}>
-        <ChartWrapper>
+        <ChartWrapper sx={{ height: CHART_HEIGHT, width: '100%' }}>
           <WordCloud options={options} words={words} />
         </ChartWrapper>
       </Box>
