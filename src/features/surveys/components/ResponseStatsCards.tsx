@@ -45,6 +45,9 @@ import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
+  isOptionsStats,
+  isTextResponse,
+  isTextStats,
   OptionsQuestionStats,
   QuestionStats,
   SubmissionStats,
@@ -171,20 +174,19 @@ const QuestionStatsBarPlot = ({
   const theme = useTheme();
 
   const data = useMemo(() => {
-    const bars =
-      'options' in questionStats
-        ? questionStats.options.map((o) => ({
-            count: o.count,
-            option: o.option.text,
-          }))
-        : Object.entries(questionStats.topWordFrequencies).map(
-            ([word, count]) => ({
-              count: count,
-              option: word,
-            })
-          );
+    const bars = isOptionsStats(questionStats)
+      ? questionStats.options.map((o) => ({
+          count: o.count,
+          option: o.option.text,
+        }))
+      : Object.entries(questionStats.topWordFrequencies).map(
+          ([word, count]) => ({
+            count: count,
+            option: word,
+          })
+        );
     let sorted = bars.sort((a, b) => b.count - a.count);
-    if (!('options' in questionStats)) {
+    if (isTextStats(questionStats)) {
       sorted = sorted.slice(0, 10);
     }
     return sorted;
@@ -259,18 +261,17 @@ const QuestionStatsPie = ({
   questionStats: QuestionStats;
 }) => {
   const data = useMemo(() => {
-    const items =
-      'options' in questionStats
-        ? questionStats.options.map((o) => ({
-            label: getEllipsedString(o.option.text, 60),
-            value: o.count,
-          }))
-        : Object.entries(questionStats.topWordFrequencies).map(
-            ([word, count]) => ({
-              label: getEllipsedString(word, 60),
-              value: count,
-            })
-          );
+    const items = isOptionsStats(questionStats)
+      ? questionStats.options.map((o) => ({
+          label: getEllipsedString(o.option.text, 60),
+          value: o.count,
+        }))
+      : Object.entries(questionStats.topWordFrequencies).map(
+          ([word, count]) => ({
+            label: getEllipsedString(word, 60),
+            value: count,
+          })
+        );
     return items
       .sort((a, b) => b.value - a.value)
       .slice(0, 10)
@@ -486,7 +487,7 @@ const TextResponseCard = ({
           (response) => response.question_id === questionId
         );
 
-        if (!questionResponse || !('response' in questionResponse)) {
+        if (!questionResponse || !isTextResponse(questionResponse)) {
           return null;
         }
 

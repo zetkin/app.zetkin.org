@@ -8,6 +8,7 @@ import {
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveyQuestionResponse,
   ZetkinSurveySubmission,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
@@ -72,6 +73,22 @@ type ResponseStatsCounter = {
   wordFrequencies: Record<string, number>;
 };
 
+export const isTextResponse = (response: ZetkinSurveyQuestionResponse) => {
+  return 'response' in response;
+};
+
+export const isOptionsResponse = (response: ZetkinSurveyQuestionResponse) => {
+  return 'options' in response;
+};
+
+export const isTextStats = (questionStats: QuestionStats) => {
+  return 'topWordFrequencies' in questionStats;
+};
+
+export const isOptionsStats = (questionStats: QuestionStats) => {
+  return 'options' in questionStats;
+};
+
 const initializeStatsCounters = (survey: ZetkinSurveyExtended) => {
   const responseStatsCounters: Record<number, ResponseStatsCounter> = {};
 
@@ -125,11 +142,11 @@ const collectIncrementalStats = (
         return;
       }
 
-      if (!('response' in response) || response.response.length > 0) {
+      if (isOptionsResponse(response) || response.response.length > 0) {
         responseStatsCounters[response.question_id].answerCounter++;
       }
 
-      if ('response' in response) {
+      if (isTextResponse(response)) {
         const wordList = response.response
           .toLowerCase()
           .replace(/[^a-z0-9]+/gi, ' ')
@@ -258,7 +275,7 @@ async function handle(
       return <SubmissionStats>{
         answeredTextQuestions: response.responses
           ? response.responses
-              .filter((resp) => 'response' in resp && !!resp.response)
+              .filter((resp) => isTextResponse(resp) && !!resp.response)
               .map((resp) => resp.question_id)
           : [],
         submissionId: response.id,
