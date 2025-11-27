@@ -117,7 +117,7 @@ export default makeMessages('feat.surveys', {
         answerCount: number;
         totalSelectedOptionsCount: number;
       }>(
-        'In total, there were {answerCount} answers and {totalSelectedOptionsCount} selected options.'
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}} and {totalSelectedOptionsCount, plural, =1 {1 selected option} other {# selected options}}.'
       ),
       tabs: {
         barPlot: m('Bar'),
@@ -130,7 +130,7 @@ export default makeMessages('feat.surveys', {
         totalUniqueWordCount: number;
         totalWordCount: number;
       }>(
-        'In total, there were {answerCount} answers, {totalWordCount} words and {totalUniqueWordCount} unique words.'
+        'In total, there were {answerCount, plural, =1 {1 answer} other {# answers}}, {totalWordCount, plural, =1 {1 word} other {# words}} and {totalUniqueWordCount, plural, =1 {1 unique word} other {# unique words}}.'
       ),
       tabs: {
         responses: m('Response'),
