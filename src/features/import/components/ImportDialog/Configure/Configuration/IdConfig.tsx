@@ -59,15 +59,6 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
             )}
           </>
         )}
-        {idField == 'email' && wrongIDFormat && (
-          <Alert severity="error">
-            <Msg
-              id={
-                messageIds.configuration.configure.ids.wrongEmailFormatWarning
-              }
-            />
-          </Alert>
-        )}
         {idField == 'ext_id' && (
           <Typography>
             <Msg id={messageIds.configuration.configure.ids.externalIDInfo} />
