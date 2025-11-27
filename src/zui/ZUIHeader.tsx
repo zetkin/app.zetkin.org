@@ -105,7 +105,6 @@ const Header: React.FC<HeaderProps> = ({
               )}
               <Box>
                 <Typography
-                  className={classes.title}
                   component="h1"
                   data-testid="page-title"
                   noWrap
