@@ -111,8 +111,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
         {
@@ -143,8 +143,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
       ],
@@ -168,8 +168,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
       ],
@@ -203,8 +203,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
         {
@@ -333,8 +333,8 @@ describe('predictProblem()', () => {
           selected: true,
         },
         {
-          field: 'email',
-          kind: ColumnKind.FIELD,
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
           selected: true,
         },
       ],
