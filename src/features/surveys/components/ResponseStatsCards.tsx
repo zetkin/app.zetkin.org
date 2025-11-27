@@ -16,6 +16,7 @@ import {
   Card,
   CardContent,
   Skeleton,
+  Link,
   Typography,
   useMediaQuery,
   useTheme,
@@ -67,6 +68,8 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { useNumericRouteParams } from 'core/hooks';
 import ZUIToggleButton from 'zui/components/ZUIToggleButton';
 import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
+import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
+import { usePanes } from 'utils/panes';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -467,11 +470,12 @@ const TextResponseCard = ({
   questionId: number;
   submission: SubmissionStats;
 }) => {
-  const { orgId, campId, surveyId } = useNumericRouteParams();
+  const { orgId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
     submission.submissionId
   );
+  const { openPane } = usePanes();
 
   return (
     <ZUIFuture
@@ -492,11 +496,25 @@ const TextResponseCard = ({
         }
 
         return (
-          <NextLink
-            href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?openSubmission=${extendedSubmission.id}`}
+          <Link
+            onClick={() => {
+              openPane({
+                render() {
+                  return (
+                    <SurveySubmissionPane
+                      id={extendedSubmission.id}
+                      orgId={orgId}
+                    />
+                  );
+                },
+                width: 400,
+              });
+            }}
             style={{
+              cursor: 'pointer',
               display: 'flex',
               height: '100%',
+              textDecoration: 'none',
               width: '100%',
             }}
           >
@@ -521,7 +539,7 @@ const TextResponseCard = ({
                 </Typography>
               </CardContent>
             </Card>
-          </NextLink>
+          </Link>
         );
       }}
     </ZUIFuture>
