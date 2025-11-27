@@ -76,7 +76,7 @@ const BreadcrumbTrail = ({
         maxItems={smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10}
         separator={<NavigateNextIcon fontSize="small" />}
         sx={{
-          height: '24px',
+          minHeight: '24px',
         }}
       >
         {breadcrumbs.map((crumb: Breadcrumb, index: number) => {
