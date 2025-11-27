@@ -75,6 +75,9 @@ const BreadcrumbTrail = ({
         itemsBeforeCollapse={smallScreen ? 1 : mediumScreen ? 2 : 3}
         maxItems={smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10}
         separator={<NavigateNextIcon fontSize="small" />}
+        sx={{
+          minHeight: '24px',
+        }}
       >
         {breadcrumbs.map((crumb: Breadcrumb, index: number) => {
           if (index < breadcrumbs.length - 1) {
