@@ -72,38 +72,7 @@ type ResponseStatsCounter = {
   wordFrequencies: Record<string, number>;
 };
 
-export default makeRPCDef<Params, SurveyResponseStats>(
-  getSurveyResponseStatsDef.name
-);
-
-async function handle(
-  params: Params,
-  apiClient: IApiClient
-): Promise<SurveyResponseStats> {
-  const { orgId, surveyId } = params;
-
-  const [survey, submissions]: [
-    ZetkinSurveyExtended,
-    ZetkinSurveySubmission[]
-  ] = await Promise.all([
-    apiClient.get<ZetkinSurveyExtended>(
-      `/api/orgs/${orgId}/surveys/${surveyId}`
-    ),
-    apiClient.get<ZetkinSurveySubmission[]>(
-      `/api/orgs/${orgId}/surveys/${surveyId}/submissions`
-    ),
-  ]);
-
-  const responses: (ZetkinSurveySubmission | undefined)[] = await Promise.all(
-    submissions.map((submission) =>
-      apiClient
-        .get<ZetkinSurveySubmission>(
-          `/api/orgs/${orgId}/survey_submissions/${submission.id}`
-        )
-        .catch(() => Promise.resolve(undefined))
-    )
-  );
-
+const initializeStatsCounters = (survey: ZetkinSurveyExtended) => {
   const responseStatsCounters: Record<number, ResponseStatsCounter> = {};
 
   survey.elements.forEach((question) => {
@@ -111,7 +80,6 @@ async function handle(
       return;
     }
 
-    // initialize counters for each question
     responseStatsCounters[question.id] = {
       answerCounter: 0,
       selectedOptions: {},
@@ -121,7 +89,6 @@ async function handle(
       totalWordCounts: 0,
       wordFrequencies: {},
     };
-    // handle questions with options as response
     if (
       question.question.response_type === RESPONSE_TYPE.TEXT ||
       !question.question.options
@@ -136,7 +103,13 @@ async function handle(
     });
   });
 
-  // this handles questions with text as response
+  return responseStatsCounters;
+};
+
+const collectIncrementalStats = (
+  responses: ZetkinSurveySubmission[],
+  responseStatsCounters: Record<string, ResponseStatsCounter>
+) => {
   responses.forEach((response) => {
     if (!response || !response.responses) {
       return;
@@ -184,7 +157,11 @@ async function handle(
       });
     });
   });
+};
 
+const calculateFrequencyStats = (
+  responseStatsCounters: Record<string, ResponseStatsCounter>
+) => {
   for (const questionId in responseStatsCounters) {
     const wordFrequenciesAsList = Object.entries(
       responseStatsCounters[questionId].wordFrequencies
@@ -195,8 +172,13 @@ async function handle(
     responseStatsCounters[questionId].totalUniqueWordCount =
       wordFrequenciesAsList.length;
   }
+};
 
-  const questionStats = survey.elements
+const convertStatsCountersToQuestionStats = (
+  survey: ZetkinSurveyExtended,
+  responseStatsCounters: Record<number, ResponseStatsCounter>
+): QuestionStats[] => {
+  return survey.elements
     .map((question) => {
       if (question.type === ELEMENT_TYPE.TEXT) {
         return null;
@@ -207,14 +189,12 @@ async function handle(
       if (question.question.response_type === RESPONSE_TYPE.TEXT) {
         return <TextQuestionStats>{
           answerCount: counter.answerCounter,
-          question: question as ZetkinSurveyTextQuestionElement,
+          question: question,
           topWordFrequencies: counter.topWordFrequencies,
           totalUniqueWordCount: counter.totalUniqueWordCount,
           totalWordCount: counter.totalWordCounts,
         };
       }
-
-      question = question as ZetkinSurveyOptionsQuestionElement;
 
       return <OptionsQuestionStats>{
         answerCount: counter.answerCounter,
@@ -226,18 +206,62 @@ async function handle(
         totalSelectedOptionsCount: counter.totalSelectedOptionsCounts,
       };
     })
-    .filter((el) => !!el) as QuestionStats[];
+    .filter((el) => !!el);
+};
+
+export default makeRPCDef<Params, SurveyResponseStats>(
+  getSurveyResponseStatsDef.name
+);
+
+async function handle(
+  params: Params,
+  apiClient: IApiClient
+): Promise<SurveyResponseStats> {
+  const { orgId, surveyId } = params;
+
+  const [survey, submissions]: [
+    ZetkinSurveyExtended,
+    ZetkinSurveySubmission[]
+  ] = await Promise.all([
+    apiClient.get<ZetkinSurveyExtended>(
+      `/api/orgs/${orgId}/surveys/${surveyId}`
+    ),
+    apiClient.get<ZetkinSurveySubmission[]>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/submissions`
+    ),
+  ]);
+
+  const responses: ZetkinSurveySubmission[] = (
+    await Promise.all(
+      submissions.map((submission) =>
+        apiClient
+          .get<ZetkinSurveySubmission>(
+            `/api/orgs/${orgId}/survey_submissions/${submission.id}`
+          )
+          .catch(() => Promise.resolve(undefined))
+      )
+    )
+  ).filter((submission) => !!submission);
+
+  const responseStatsCounters = initializeStatsCounters(survey);
+  collectIncrementalStats(responses, responseStatsCounters);
+  calculateFrequencyStats(responseStatsCounters);
+
+  const questionStats = convertStatsCountersToQuestionStats(
+    survey,
+    responseStatsCounters
+  );
 
   const submissionStats: SubmissionStats[] = responses
     .filter((resp) => !!resp)
     .map((response) => {
       return <SubmissionStats>{
-        answeredTextQuestions: response!.responses
-          ? response!.responses
+        answeredTextQuestions: response.responses
+          ? response.responses
               .filter((resp) => 'response' in resp && !!resp.response)
               .map((resp) => resp.question_id)
           : [],
-        submissionId: response!.id,
+        submissionId: response.id,
       };
     });
 
