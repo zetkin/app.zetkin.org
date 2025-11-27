@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup } from '@mui/material';
 import { Close, Create, Save } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
 import Map from '@vis.gl/react-maplibre';
 import { FC, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
@@ -47,7 +46,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
   });
 
   const areasExceptSelected = useMemo(
-    () => areas.filter((area) => area.id !== selectedArea?.id),
+    () => areas.filter((area) => area.id != selectedArea?.id),
     [areas, selectedArea]
   );
 
@@ -86,7 +85,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
                 </Button>
               )}
               {drawing && canFinishDrawing && (
-                <LoadingButton
+                <Button
                   loading={creating}
                   onClick={() => {
                     finishDrawing();
@@ -94,7 +93,7 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
                   startIcon={<Save />}
                 >
                   <Msg id={messageIds.areas.draw.saveButton} />
-                </LoadingButton>
+                </Button>
               )}
             </ButtonGroup>
           </Box>
