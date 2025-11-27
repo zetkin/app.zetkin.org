@@ -2,9 +2,11 @@ import React, {
   CSSProperties,
   FC,
   memo,
+  MutableRefObject,
   ReactElement,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -21,10 +23,24 @@ import {
 import { List } from 'react-window';
 import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
 import ImageIcon from '@mui/icons-material/Image';
-import ArchitectureIcon from '@mui/icons-material/Architecture';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import {
+  BarChartPro,
+  BarChartProPluginSignatures,
+} from '@mui/x-charts-pro/BarChartPro';
+import {
+  PieChartPro,
+  PieChartProPluginSignatures,
+} from '@mui/x-charts-pro/PieChartPro';
 import NextLink from 'next/link';
+import {
+  ChartImageExportOptions,
+  ChartPrintExportOptions,
+  useChartProExport,
+  UseChartProExportSignature,
+} from '@mui/x-charts-pro';
+import { ChartPluginOptions } from '@mui/x-charts/internals';
+import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -66,66 +82,9 @@ const COLORS = [
   'rgb(63,190,118)',
 ];
 
-async function svgToPng(svgEl: SVGSVGElement, scale = 1) {
-  const svgData = new XMLSerializer().serializeToString(svgEl);
-
-  // Ensure XML header — Windows cares
-  const svgWithHeader = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgData;
-
-  // SVG → Blob
-  const svgBlob = new Blob([svgWithHeader], {
-    type: 'image/svg+xml;charset=utf-8',
-  });
-  const url = URL.createObjectURL(svgBlob);
-
-  return new Promise<Blob>((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-
-      const ctx = canvas.getContext('2d');
-      ctx!.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      URL.revokeObjectURL(url);
-
-      // Real PNG blob
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(new Error('Failed to create PNG blob'));
-          }
-        },
-        'image/png',
-        1.0
-      );
-    };
-
-    img.onerror = reject;
-    img.src = url;
-  });
-}
-
-function download(filename: string, content: string | Blob) {
-  const element = document.createElement('a');
-  element.setAttribute(
-    'href',
-    typeof content === 'string'
-      ? 'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
-      : URL.createObjectURL(content)
-  );
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
+export interface UseChartProExportPublicApi {
+  exportAsPrint: (options?: ChartPrintExportOptions) => Promise<void>;
+  exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
 }
 
 function sanitizeFileName(name: string) {
@@ -155,51 +114,53 @@ function sanitizeFileName(name: string) {
   return name;
 }
 
-const ChartWrapper = ({
+function ChartWrapper({
   children,
-  exportFileName,
+  fileName,
+  apiRef,
 }: {
+  apiRef: React.MutableRefObject<UseChartProExportPublicApi | undefined>;
   children: ReactElement;
-  exportFileName: string;
-}) => {
+  fileName: string;
+}) {
   const messages = useMessages(messageIds);
-  const ref = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const exportChart = useCallback(
-    async (format: 'png' | 'svg') => {
+    async (format: 'png' | 'pdf') => {
+      const docOverflow = document.body.style.overflow;
       try {
-        const wrapper = ref.current;
-
-        if (!wrapper) {
-          showSnackbar('error', messages.insights.export.errorNotFound());
-          return;
+        if (!apiRef.current) {
+          throw new Error('mui charts api not defined');
         }
 
-        const elements = wrapper.getElementsByTagName('svg');
-        if (elements.length === 0) {
-          showSnackbar('error', messages.insights.export.errorNotFound());
-          return;
-        }
-
-        const svgRoot = elements[0];
-
-        const fileName = sanitizeFileName(exportFileName);
-
+        document.body.style.overflow = 'hidden';
         if (format === 'png') {
-          const pngBlob = await svgToPng(svgRoot);
-          download(`${fileName}.png`, pngBlob);
-        } else if (format === 'svg') {
-          const svgStr = new XMLSerializer().serializeToString(svgRoot);
-          download(`${fileName}.svg`, svgStr);
+          await apiRef.current.exportAsImage({
+            fileName: sanitizeFileName(fileName),
+            onBeforeExport: (iframe) => {
+              const doc = iframe.contentDocument;
+              if (doc && containerRef.current) {
+                const boundingRect =
+                  containerRef.current.getBoundingClientRect();
+                doc.body.style.width = `${boundingRect.width}px`;
+                doc.body.style.height = `${boundingRect.height}px`;
+              }
+            },
+            type: 'image/png',
+          });
+        } else if (format === 'pdf') {
+          await apiRef.current.exportAsPrint();
         }
       } catch (e) {
         showSnackbar('error', messages.insights.export.errorUnknown());
+      } finally {
+        document.body.style.overflow = docOverflow;
       }
     },
-    [showSnackbar, ref, exportFileName]
+    [showSnackbar, containerRef, apiRef, fileName]
   );
-
   const ellipsisMenuItems = useMemo(
     () => [
       {
@@ -208,9 +169,9 @@ const ChartWrapper = ({
         startIcon: <ImageIcon />,
       },
       {
-        label: messages.insights.export.toSvg(),
-        onSelect: () => exportChart('svg'),
-        startIcon: <ArchitectureIcon />,
+        label: messages.insights.export.toPdf(),
+        onSelect: () => exportChart('pdf'),
+        startIcon: <PictureAsPdfIcon />,
       },
     ],
     [exportChart]
@@ -221,12 +182,12 @@ const ChartWrapper = ({
       <Box sx={{ position: 'absolute', right: 10, top: 10, zIndex: 10 }}>
         <ZUIEllipsisMenu items={ellipsisMenuItems} />
       </Box>
-      <Box ref={ref} sx={{ height: '100%', width: '100%' }}>
+      <Box ref={containerRef} sx={{ height: '100%', width: '100%' }}>
         {children}
       </Box>
     </Box>
   );
-};
+}
 
 function ellipsize(s: string, limit: number = 40): string {
   return s.length <= limit ? s : s.slice(0, limit) + '…';
@@ -259,9 +220,15 @@ const QuestionStatsBarPlot = ({
     return sorted;
   }, [questionStats]);
 
+  const apiRef = useRef<ChartPublicAPI<BarChartProPluginSignatures>>();
+
   return (
-    <ChartWrapper exportFileName={questionStats.question.question.question}>
+    <ChartWrapper
+      apiRef={apiRef as unknown as MutableRefObject<UseChartProExportPublicApi>}
+      fileName={questionStats.question.question.question}
+    >
       <BarChartPro
+        apiRef={apiRef}
         grid={{
           vertical: true,
         }}
@@ -289,6 +256,7 @@ const QuestionStatsBarPlot = ({
           '.MuiChartsAxis-tick': {
             stroke: `${theme.palette.grey['700']} !important`,
           },
+          height: CHART_HEIGHT,
         }}
         xAxis={[
           {
@@ -315,18 +283,24 @@ const QuestionStatsBarPlot = ({
   );
 };
 
-const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
+const QuestionStatsPie = ({
+  questionStats,
+}: {
+  questionStats: QuestionStats;
+}) => {
   const data = useMemo(() => {
     const items =
-      'options' in question
-        ? question.options.map((o) => ({
+      'options' in questionStats
+        ? questionStats.options.map((o) => ({
             label: ellipsize(o.option.text, 60),
             value: o.count,
           }))
-        : Object.entries(question.topWordFrequencies).map(([word, count]) => ({
-            label: ellipsize(word, 60),
-            value: count,
-          }));
+        : Object.entries(questionStats.topWordFrequencies).map(
+            ([word, count]) => ({
+              label: ellipsize(word, 60),
+              value: count,
+            })
+          );
     return items
       .sort((a, b) => b.value - a.value)
       .slice(0, 10)
@@ -335,11 +309,18 @@ const QuestionStatsPie = ({ question }: { question: QuestionStats }) => {
         label,
         value,
       }));
-  }, [question]);
+  }, [questionStats]);
+
+  const apiRef = useRef<ChartPublicAPI<PieChartProPluginSignatures>>();
 
   return (
-    <ChartWrapper exportFileName={question.question.question.question}>
+    <ChartWrapper
+      apiRef={apiRef as unknown as MutableRefObject<UseChartProExportPublicApi>}
+      fileName={questionStats.question.question.question}
+    >
       <PieChartPro
+        apiRef={apiRef}
+        height={CHART_HEIGHT}
         series={[
           {
             arcLabel: 'value',
@@ -414,7 +395,9 @@ const OptionsStatsCard = ({
         {tab === 'bar-plot' && (
           <QuestionStatsBarPlot questionStats={questionStats} />
         )}
-        {tab === 'pie-chart' && <QuestionStatsPie question={questionStats} />}
+        {tab === 'pie-chart' && (
+          <QuestionStatsPie questionStats={questionStats} />
+        )}
       </Box>
     </ZUICard>
   );
@@ -451,6 +434,38 @@ const TextResponseWordCloud = ({
     []
   );
 
+  const containerRef = useRef<HTMLDivElement>();
+  const svgRef = useRef<SVGSVGElement>();
+
+  useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+    const svgElements = containerRef.current.getElementsByTagName('svg');
+    if (svgElements.length === 0) {
+      return;
+    }
+    svgRef.current = svgElements[0];
+  });
+
+  const exportOptions = useMemo(
+    () =>
+      ({
+        chartRootRef: containerRef,
+        instance: {
+          disableAnimation: () => () => {},
+        },
+        svgRef: svgRef,
+      } as ChartPluginOptions<UseChartProExportSignature>),
+    []
+  );
+
+  const { publicAPI } = useChartProExport(exportOptions);
+  const apiRef = useRef(publicAPI);
+  useEffect(() => {
+    apiRef.current = publicAPI;
+  }, [publicAPI]);
+
   return (
     <Box
       sx={{
@@ -460,8 +475,15 @@ const TextResponseWordCloud = ({
         width: '100%',
       }}
     >
-      <ChartWrapper exportFileName={questionStats.question.question.question}>
-        <WordCloud options={options} words={words} />
+      <ChartWrapper
+        apiRef={
+          apiRef as unknown as MutableRefObject<UseChartProExportPublicApi>
+        }
+        fileName={questionStats.question.question.question}
+      >
+        <Box ref={containerRef} style={{ height: CHART_HEIGHT }}>
+          <WordCloud options={options} words={words} />
+        </Box>
       </ChartWrapper>
     </Box>
   );

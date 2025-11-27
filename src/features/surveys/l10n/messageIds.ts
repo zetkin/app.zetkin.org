@@ -108,12 +108,9 @@ export default makeMessages('feat.surveys', {
   },
   insights: {
     export: {
-      errorNotFound: m(
-        'Error occurred while exporting: Did not find plot root.'
-      ),
       errorUnknown: m('Unknown error occurred while exporting.'),
+      toPdf: m('Export to pdf'),
       toPng: m('Export to png'),
-      toSvg: m('Export to svg'),
     },
     optionsFields: {
       subheader: m<{
