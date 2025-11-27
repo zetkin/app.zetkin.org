@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Architecture,
   Close,
@@ -57,6 +57,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
+  const expandButton = useRef<HTMLButtonElement>(null);
+  const collapseButton = useRef<HTMLButtonElement>(null);
 
   const [checked, setChecked] = useState(false);
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
@@ -75,6 +77,12 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     if (!open) {
       setChecked(false);
     }
+    const nextFocus = open ? expandButton : collapseButton;
+    setTimeout(() => {
+      if (nextFocus.current) {
+        nextFocus.current.focus();
+      }
+    }, 16);
     setOpen(!open);
     setLastOpen(!open);
   };
@@ -139,7 +147,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               }}
             >
               {!open && hover && (
-                <IconButton onClick={handleClick}>
+                <IconButton ref={expandButton} onClick={handleClick}>
                   <KeyboardDoubleArrowRightOutlined />
                 </IconButton>
               )}
@@ -168,7 +176,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                               }}
                             >
                               {hover ? (
-                                <IconButton onClick={handleClick}>
+                                <IconButton
+                                  ref={collapseButton}
+                                  onClick={handleClick}
+                                >
                                   <KeyboardDoubleArrowLeftOutlined />
                                 </IconButton>
                               ) : (
