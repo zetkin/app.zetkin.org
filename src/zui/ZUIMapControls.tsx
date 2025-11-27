@@ -6,6 +6,7 @@ import { Latitude, Longitude, PointData } from 'features/areas/types';
 import { AnimatedGpsFixed } from 'zui/icons/AnimatedGpsFixed';
 
 type Props = {
+  autoUpdate?: boolean;
   onFitBounds: () => void;
   onGeolocate: (lngLat: PointData, accuracy: number | null) => void;
   onZoomIn: () => void;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const ZUIMapControls: React.FC<Props> = ({
+  autoUpdate = false,
   onFitBounds,
   onGeolocate,
   onZoomIn,
@@ -26,6 +28,7 @@ const ZUIMapControls: React.FC<Props> = ({
   const latestAccuracyRef = useRef<number | null>(null);
   const [isUserLocationVisible, setIsUserLocationVisible] = useState(false);
   const isUserLocationVisibleRef = useRef<boolean>(false);
+  const autoUpdateRef = useRef<boolean>(autoUpdate);
 
   useEffect(() => {
     return () => {
@@ -39,6 +42,10 @@ const ZUIMapControls: React.FC<Props> = ({
   useEffect(() => {
     isUserLocationVisibleRef.current = isUserLocationVisible;
   }, [isUserLocationVisible]);
+
+  useEffect(() => {
+    autoUpdateRef.current = autoUpdate;
+  }, [autoUpdate]);
 
   const startWatchingPosition = () => {
     if (geolocationWatchIdRef.current !== null) {
@@ -57,7 +64,7 @@ const ZUIMapControls: React.FC<Props> = ({
         if (isAwaitingInitialPosition) {
           setIsAwaitingInitialPosition(false);
         }
-        if (isUserLocationVisibleRef.current) {
+        if (isUserLocationVisibleRef.current && autoUpdateRef.current) {
           onGeolocate(point, accuracy);
         }
       },
