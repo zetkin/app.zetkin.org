@@ -48,6 +48,7 @@ import { ChartPluginOptions } from '@mui/x-charts/internals';
 import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
+import { BoxOwnProps } from '@mui/system/Box/Box';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -74,8 +75,6 @@ import { useNumericRouteParams } from 'core/hooks';
 import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
-
-import { BoxOwnProps } from '@mui/system/Box/Box';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
