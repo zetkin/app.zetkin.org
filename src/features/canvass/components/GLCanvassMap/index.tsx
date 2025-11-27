@@ -40,8 +40,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   );
   const isMobile = useIsMobile();
   const crosshairRef = useRef<HTMLDivElement | null>(null);
-  const isTrackingRef = useRef<boolean>(false);
-  const followUserRef = useRef<boolean>(false);
   const createLocation = useCreateLocation(assignment.organization_id);
   const [localStorageBounds, setLocalStorageBounds] = useLocalStorage<
     [LngLatLike, LngLatLike] | null
@@ -227,10 +225,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const onGeoLocate = (lngLat: PointData, accuracy: number | null) => {
     setUserLocation(lngLat);
     setUserAccuracy(accuracy);
-    if (!isTrackingRef.current) {
-      followUserRef.current = true;
-      isTrackingRef.current = true;
-    }
 
     map?.panTo(lngLat, { animate: true });
   };
@@ -358,9 +352,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
         }}
-        onDragStart={() => {
-          followUserRef.current = false;
-        }}
         onLoad={(ev) => {
           const map = ev.target;
           const percentages = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
@@ -403,9 +394,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           setMapZoom(ev.target.getZoom());
         }}
         onMoveEnd={() => saveBounds()}
-        onZoomStart={() => {
-          followUserRef.current = false;
-        }}
         RTLTextPlugin="/mapbox-gl-rtl-text-0.3.0.js"
         style={{ height: '100%', width: '100%' }}
       >
