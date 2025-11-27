@@ -13,6 +13,7 @@ import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
+import { EventSignupModelType } from '../models';
 
 type useEventParticipantsReturn = {
   bookedParticipants: ZetkinEventParticipant[] | [];
@@ -23,9 +24,12 @@ type useEventParticipantsReturn = {
   numNoshowParticipants: number;
   numRemindedParticipants: number;
   numSignedParticipants: number;
+  numUnverifiedParticipants: number;
   participantsFuture: IFuture<ZetkinEventParticipant[]>;
   pendingSignUps: ZetkinEventResponse[] | [];
   respondentsFuture: IFuture<ZetkinEventResponse[]>;
+  unverifiedParticipants: EventSignupModelType[];
+  unverifiedParticipantsFuture: IFuture<EventSignupModelType[]>;
 };
 
 export default function useEventParticipants(
@@ -38,6 +42,8 @@ export default function useEventParticipants(
 
   const list = participantsState.participantsByEventId[eventId];
   const respondentsList = participantsState.respondentsByEventId[eventId];
+  const unverifiedParticipantsList =
+    participantsState.unverifiedParticipantsByEventId[eventId];
 
   const participantsFuture = loadListIfNecessary(list, dispatch, {
     actionOnLoad: () => participantsLoad(eventId),
@@ -49,15 +55,24 @@ export default function useEventParticipants(
       ),
   });
 
-  const unverifiedParticipantsFuture = loadListIfNecessary(list, dispatch, {
-    actionOnLoad: () => unverifiedParticipantsLoad(eventId),
-    actionOnSuccess: (unverifiedParticipants) =>
-      unverifiedParticipantsLoaded([eventId, unverifiedParticipants]),
-    loader: () =>
-      apiClient.get<ZetkinEventParticipant[]>(
-        `/beta/orgs/${orgId}/events/${eventId}`
-      ),
-  });
+  const unverifiedParticipantsFuture = loadListIfNecessary(
+    unverifiedParticipantsList,
+    dispatch,
+    {
+      actionOnLoad: () => unverifiedParticipantsLoad(eventId),
+      actionOnSuccess: (unverifiedParticipants) =>
+        unverifiedParticipantsLoaded([eventId, unverifiedParticipants]),
+      loader: async () => {
+        const data = await apiClient.get<
+          Array<EventSignupModelType & { _id: string }>
+        >(`/beta/orgs/${orgId}/events/${eventId}`);
+        return data.map(({ _id, ...rest }) => ({
+          ...rest,
+          id: _id,
+        }));
+      },
+    }
+  );
 
   const respondentsFuture = loadListIfNecessary(respondentsList, dispatch, {
     actionOnLoad: () => respondentsLoad(eventId),
@@ -108,6 +123,8 @@ export default function useEventParticipants(
       (r) => !participantsFuture.data?.some((p) => p.id === r.id)
     ).length ?? 0;
 
+  const unverifiedParticipants = unverifiedParticipantsFuture.data ?? [];
+
   return {
     bookedParticipants,
     cancelledParticipants,
@@ -121,6 +138,7 @@ export default function useEventParticipants(
     participantsFuture,
     pendingSignUps,
     respondentsFuture,
+    unverifiedParticipants,
     unverifiedParticipantsFuture,
   };
 }

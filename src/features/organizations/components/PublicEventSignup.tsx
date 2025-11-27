@@ -3,6 +3,7 @@
 import { FC, useState } from 'react';
 import { Box } from '@mui/system';
 import { FormControl, FormGroup, FormLabel } from '@mui/material';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 import { Msg, useMessages } from 'core/i18n';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -13,6 +14,7 @@ import ZUIText from 'zui/components/ZUIText';
 import ZUILink from 'zui/components/ZUILink';
 import { ZetkinEventWithStatus } from 'features/home/types';
 import messageIds from 'features/surveys/l10n/messageIds';
+import eventMessageIds from 'features/events/l10n/messageIds';
 
 type Props = {
   event: ZetkinEventWithStatus;
@@ -20,9 +22,11 @@ type Props = {
 
 export const PublicEventSignup: FC<Props> = ({ event }) => {
   const messages = useMessages(messageIds);
+  const eventMessages = useMessages(eventMessageIds);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [contact, setContact] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [gdprConsent, setGdprConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,26 +37,35 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
 
   const handleSubmit = async () => {
     if (!firstName.trim() || !lastName.trim()) {
-      setError('First name and last name are required');
+      setError(eventMessages.publicEventSignup.errors.nameRequired());
       return;
     }
 
-    const contactTrimmed = contact.trim();
-    if (!contactTrimmed) {
-      setError('Either email or phone is required');
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+
+    if (!trimmedEmail && !trimmedPhone) {
+      setError(eventMessages.publicEventSignup.errors.emailOrPhoneRequired());
       return;
     }
 
-    const hasAtSymbol = contactTrimmed.includes('@');
-    const hasDigits = /\d/.test(contactTrimmed);
-
-    if (!hasAtSymbol && !hasDigits) {
-      setError('Please provide a valid email or phone number');
+    if (trimmedEmail && !trimmedEmail.includes('@')) {
+      setError(eventMessages.publicEventSignup.errors.invalidEmail());
       return;
+    }
+
+    let normalizedPhone: string | null = null;
+    if (trimmedPhone) {
+      const parsed = parsePhoneNumberFromString(trimmedPhone);
+      if (!parsed || !parsed.isValid()) {
+        setError(eventMessages.publicEventSignup.errors.phoneFormat());
+        return;
+      }
+      normalizedPhone = parsed.number;
     }
 
     if (!gdprConsent) {
-      setError('GDPR consent is required');
+      setError(eventMessages.publicEventSignup.errors.gdprConsentRequired());
       return;
     }
 
@@ -61,21 +74,24 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
 
     try {
       const body: {
+        created: string;
         email?: string;
         first_name: string;
         gdpr_consent: boolean;
         last_name: string;
         phone?: string;
       } = {
+        created: new Date().toISOString(),
         first_name: firstName.trim(),
         gdpr_consent: gdprConsent,
         last_name: lastName.trim(),
       };
 
-      if (hasAtSymbol) {
-        body.email = contactTrimmed;
-      } else {
-        body.phone = contactTrimmed;
+      if (trimmedEmail) {
+        body.email = trimmedEmail;
+      }
+      if (normalizedPhone) {
+        body.phone = normalizedPhone;
       }
 
       const response = await fetch(
@@ -91,7 +107,10 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.error || 'Failed to sign up');
+        setError(
+          errorData.error ||
+            eventMessages.publicEventSignup.errors.signupFailed()
+        );
         setIsSubmitting(false);
         return;
       }
@@ -99,10 +118,11 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
       setSuccess(true);
       setFirstName('');
       setLastName('');
-      setContact('');
+      setEmail('');
+      setPhone('');
       setGdprConsent(false);
     } catch (err) {
-      setError('An error occurred while signing up');
+      setError(eventMessages.publicEventSignup.errors.signupError());
     } finally {
       setIsSubmitting(false);
     }
@@ -111,36 +131,48 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
   if (success) {
     return (
       <ZUIAlert
-        description="Thank you for signing up!"
+        description={eventMessages.publicEventSignup.alert.thankYou()}
         severity="success"
-        title="Signup successful"
+        title={eventMessages.publicEventSignup.alert.signupSuccessful()}
       />
     );
   }
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      {error && <ZUIAlert description={error} severity="error" title="Error" />}
+      {error && (
+        <ZUIAlert
+          description={error}
+          severity="error"
+          title={eventMessages.publicEventSignup.alert.error()}
+        />
+      )}
       <ZUITextField
         fullWidth
-        label="First name"
+        label={eventMessages.publicEventSignup.fields.firstName()}
         onChange={setFirstName}
         required
         value={firstName}
       />
       <ZUITextField
         fullWidth
-        label="Last name"
+        label={eventMessages.publicEventSignup.fields.lastName()}
         onChange={setLastName}
         required
         value={lastName}
       />
+      {/* FIXME: Proper phone field input to guarantee E.164 */}
       <ZUITextField
         fullWidth
-        label="Email or Phone"
-        onChange={setContact}
-        required
-        value={contact}
+        label={eventMessages.publicEventSignup.fields.phone()}
+        onChange={setPhone}
+        value={phone}
+      />
+      <ZUITextField
+        fullWidth
+        label={eventMessages.publicEventSignup.fields.email()}
+        onChange={setEmail}
+        value={email}
       />
       <FormControl fullWidth>
         <FormGroup
@@ -163,16 +195,20 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
           />
           <ZUIText>
             <Msg
-              id={messageIds.surveyForm.terms.description}
+              id={eventMessageIds.publicEventSignup.privacyPolicy}
               values={{ organization: event.organization.title }}
             />
           </ZUIText>
-          <ZUILink href={privacyUrl} text={messages.surveyForm.policy.text()} />
+          <ZUILink href={privacyUrl} text={messages.surveyForm.terms.title()} />
         </FormGroup>
       </FormControl>
       <ZUIButton
         disabled={isSubmitting}
-        label={isSubmitting ? 'Submitting...' : 'Sign up'}
+        label={
+          isSubmitting
+            ? eventMessages.publicEventSignup.submit.submitting()
+            : eventMessages.publicEventSignup.submit.button()
+        }
         onClick={handleSubmit}
         size="large"
         variant="primary"

@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import ParticipantListSection from 'features/events/components/ParticipantListSection';
+import UnverifiedSignupsSection from 'features/events/components/UnverifiedSignupsSection';
 import oldTheme from 'theme';
 import useEventParticipants from '../hooks/useEventParticipants';
 import { useMessages } from 'core/i18n';
@@ -26,32 +27,26 @@ const EventParticipantsList = forwardRef(function EventParticipantsList(
     numAvailParticipants,
     numCancelledParticipants,
     numSignedParticipants,
+    numUnverifiedParticipants,
     pendingSignUps,
+    unverifiedParticipants,
   } = useEventParticipants(orgId, data.id);
   const participantStatus = useParticipantStatus(orgId, data.id);
 
   return (
     <Box ref={ref}>
-      {
-        /* TODO: numUnverifiedParticipants */ 1 > 0 && (
-          <ParticipantListSection
-            chipColor={oldTheme.palette.grey[500]}
-            chipNumber={'42' /* TODO: numUnverifiedParticipants.toString() */}
-            description={
-              'These people have signed up themselves without a user account. You must confirm them.'
-              /* TODO: messages.eventUnverifiedParticipantsList.descriptionSignups() */
-            }
-            eventId={data.id}
-            filterString={filterString}
-            orgId={orgId}
-            rows={/* TODO: unverifiedSignUps ?? */ []}
-            title={
-              /* messages.eventUnverifiedParticipantsList.signUps() */ 'Unverified Sign-ups'
-            }
-            type="unverifiedSignups"
-          />
-        )
-      }
+      {numUnverifiedParticipants > 0 && (
+        <UnverifiedSignupsSection
+          chipColor={oldTheme.palette.grey[500]}
+          chipNumber={numUnverifiedParticipants.toString()}
+          description={messages.eventParticipantsList.descriptionUnverifiedSignups()}
+          eventId={data.id}
+          filterString={filterString}
+          orgId={orgId}
+          rows={unverifiedParticipants ?? []}
+          title={messages.eventParticipantsList.unverifiedSignups()}
+        />
+      )}
       {numSignedParticipants > 0 && (
         <ParticipantListSection
           chipColor={oldTheme.palette.grey[500]}

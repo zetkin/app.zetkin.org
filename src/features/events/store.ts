@@ -623,6 +623,29 @@ const eventsSlice = createSlice({
       state.unverifiedParticipantsByEventId[eventId].loaded =
         new Date().toISOString();
     },
+    unverifiedSignupDeleted: (
+      state,
+      action: PayloadAction<[number, string]>
+    ) => {
+      const [eventId, signupId] = action.payload;
+      const list = state.unverifiedParticipantsByEventId[eventId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id !== signupId);
+      }
+    },
+    unverifiedSignupUpdated: (
+      state,
+      action: PayloadAction<[number, EventSignupModelType]>
+    ) => {
+      const [eventId, updatedSignup] = action.payload;
+      const list = state.unverifiedParticipantsByEventId[eventId];
+      if (list) {
+        const item = list.items.find((item) => item.id === updatedSignup.id);
+        if (item) {
+          item.data = { ...item.data, ...updatedSignup };
+        }
+      }
+    },
     userEventsLoad: (state) => {
       state.userEventList.isLoading = true;
     },
@@ -814,6 +837,8 @@ export const {
   typesLoaded,
   unverifiedParticipantsLoad,
   unverifiedParticipantsLoaded,
+  unverifiedSignupDeleted,
+  unverifiedSignupUpdated,
   userEventsLoad,
   userEventsLoaded,
   userResponseAdded,
