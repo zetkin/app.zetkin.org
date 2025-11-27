@@ -299,6 +299,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     <>
       <Box sx={{ position: 'relative' }}>
         <ZUIMapControls
+          autoUpdate
           onFitBounds={() => {
             if (map) {
               map.fitBounds(boundsForSelectedArea, {
