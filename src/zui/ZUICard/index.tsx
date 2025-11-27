@@ -5,7 +5,7 @@ type ZUICardProps = {
   children?: ReactNode;
   header: string | JSX.Element;
   status?: ReactNode;
-  subheader?: string;
+  subheader?: string | JSX.Element;
   sx?: CardProps['sx'];
 };
 
