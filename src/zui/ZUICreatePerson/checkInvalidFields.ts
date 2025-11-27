@@ -2,11 +2,17 @@ import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
-import { ZetkinCreatePerson, ZetkinCustomField } from 'utils/types/zetkin';
+import {
+  ZetkinCreatePerson,
+  ZetkinCustomField,
+  ZetkinPerson,
+} from 'utils/types/zetkin';
+
+type PersonFormData = ZetkinCreatePerson | ZetkinPerson;
 
 export default function checkInvalidFields(
   customFields: ZetkinCustomField[],
-  personalInfo: ZetkinCreatePerson,
+  personalInfo: PersonFormData,
   countryCode: CountryCode
 ) {
   const invalidFields: string[] = [];
@@ -44,7 +50,7 @@ export default function checkInvalidFields(
   customFields.forEach((field) => {
     if (field.type === 'url') {
       const slug = field.slug;
-      if (personalInfo[slug] && !isURL(personalInfo[slug] || '')) {
+      if (personalInfo[slug] && !isURL(personalInfo[slug]?.toString() || '')) {
         invalidFields.push(slug);
       }
     }

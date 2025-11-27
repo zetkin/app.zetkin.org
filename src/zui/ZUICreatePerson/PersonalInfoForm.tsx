@@ -18,36 +18,44 @@ import formatUrl from 'utils/formatUrl';
 import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
-import PersonFieldInput from './PersonFieldInput';
+import PersonField from './PersonField';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
-import { useNumericRouteParams } from 'core/hooks';
 import useTags from 'features/tags/hooks/useTags';
 import { Msg, useMessages } from 'core/i18n';
 import {
   CUSTOM_FIELD_TYPE,
+  Gender,
   ZetkinAppliedTag,
   ZetkinCreatePerson,
+  ZetkinPerson,
 } from 'utils/types/zetkin';
 import useOrganization from '../../features/organizations/hooks/useOrganization';
 
 dayjs.extend(utc);
 
 type ShowAllTriggeredType = 'keyboard' | 'mouse' | null;
-type GenderKeyType = 'f' | 'm' | 'o' | 'unknown';
+type PersonFormData = ZetkinCreatePerson | ZetkinPerson;
 
 interface PersonalInfoFormProps {
+  personalInfo: PersonFormData;
+  orgId: number;
   onChange: (field: string, value: string | null | number) => void;
-  personalInfo: ZetkinCreatePerson;
+  onReset?: (field: string) => void;
   tags: number[];
+  editMode?: boolean;
+  defaultFormValues?: ZetkinPerson;
 }
 
 const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
-  onChange,
   personalInfo,
+  orgId,
+  onChange,
   tags,
+  editMode,
+  onReset,
+  defaultFormValues,
 }) => {
-  const { orgId } = useNumericRouteParams();
   const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
@@ -66,9 +74,13 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       return acc;
     }, []) ?? [];
   const customFields = useCustomFields(orgId).data ?? [];
-  const genderKeys = Object.keys(
-    messageIds.createPerson.genders
-  ) as GenderKeyType[];
+
+  const shouldShowAllFields = editMode || !!showAllClickedType;
+
+  const hasFieldChanged = (field: string) => {
+    if (!editMode || !defaultFormValues) return false;
+    return personalInfo[field] !== defaultFormValues[field];
+  };
 
   useEffect(() => {
     if (showAllClickedType === 'keyboard') {
@@ -88,115 +100,155 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
       flexDirection="column"
       gap={2}
       sx={{
-        height: !showAllClickedType ? '' : '600px',
+        height: !shouldShowAllFields ? '' : '600px',
         overflowY: 'auto',
         p: '0 40px 20px 0',
       }}
     >
       <Box display="flex" mt={1}>
         <Box mr={2} width="50%">
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
+            error={invalidFields.includes('first_name')}
             field={'first_name'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('first_name')}
             onChange={(field, value) => onChange(field, value)}
+            onReset={() => onReset?.('first_name')}
             required
-            value={personalInfo.first_name}
+            value={personalInfo.first_name || ''}
           />
         </Box>
         <Box width="50%">
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
+            error={invalidFields.includes('last_name')}
             field={'last_name'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('last_name')}
             onChange={(field, value) => onChange(field, value)}
+            onReset={() => onReset?.('last_name')}
             required
-            value={personalInfo.last_name}
+            value={personalInfo.last_name || ''}
           />
         </Box>
       </Box>
-      <PersonFieldInput
+      <PersonField
+        editMode={editMode}
         error={invalidFields.includes('email')}
         field={'email'}
+        fieldType="text"
+        hasChanges={hasFieldChanged('email')}
         onChange={(field, value) => onChange(field, value)}
+        onReset={() => onReset?.('email')}
         value={personalInfo.email || ''}
       />
-      <PersonFieldInput
+      <PersonField
+        editMode={editMode}
         error={invalidFields.includes('phone')}
         field={'phone'}
+        fieldType="text"
+        hasChanges={hasFieldChanged('phone')}
         onChange={(field, value) => onChange(field, value)}
+        onReset={() => onReset?.('phone')}
         value={personalInfo.phone || ''}
       />
-      {!!showAllClickedType && (
+      {shouldShowAllFields && (
         <Box display="flex" flexDirection="column" gap={2}>
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
             error={invalidFields.includes('alt_phone')}
             field={'alt_phone'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('alt_phone')}
             inputRef={inputRef}
             onChange={(field, value) =>
               onChange(field, value === ' ' ? '' : value)
             }
+            onReset={() => onReset?.('alt_phone')}
             value={personalInfo.alt_phone || ''}
           />
-          <FormControl fullWidth>
-            <InputLabel>
-              <Msg id={globalMessageIds.personFields.gender} />
-            </InputLabel>
-            <Select
-              defaultValue=""
-              label={globalMessages.personFields.gender()}
-              onChange={(e) =>
-                onChange(
-                  'gender',
-                  e.target.value === 'unknown' ? '' : e.target.value
-                )
-              }
-            >
-              {genderKeys.map((genderKey) => (
-                <MenuItem key={genderKey} value={genderKey}>
-                  {messages.createPerson.genders[genderKey]()}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
+            field="gender"
+            fieldType="select"
+            hasChanges={hasFieldChanged('gender')}
+            onChange={(field, value) =>
+              onChange(field, value === Gender.UNKNOWN ? '' : value)
+            }
+            onReset={() => onReset?.('gender')}
+            options={Object.values(Gender).map((key) => ({
+              value: key,
+              label: messages.createPerson.genders[key](),
+            }))}
+            value={!personalInfo.gender ? Gender.UNKNOWN : personalInfo.gender}
+          />
+          <PersonField
+            editMode={editMode}
             field={'street_address'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('street_address')}
             onChange={(field, value) => onChange(field, value)}
+            onReset={() => onReset?.('street_address')}
             value={personalInfo.street_address || ''}
           />
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
             field={'co_address'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('co_address')}
             onChange={(field, value) => onChange(field, value)}
+            onReset={() => onReset?.('co_address')}
             value={personalInfo.co_address || ''}
           />
           <Box>
-            <PersonFieldInput
+            <PersonField
+              editMode={editMode}
               field={'zip_code'}
+              fieldType="text"
+              hasChanges={hasFieldChanged('zip_code')}
               onChange={(field, value) => onChange(field, value)}
+              onReset={() => onReset?.('zip_code')}
               style={{
                 pr: 2,
                 width: '30%',
               }}
               value={personalInfo.zip_code || ''}
             />
-            <PersonFieldInput
+            <PersonField
+              editMode={editMode}
               field={'city'}
+              fieldType="text"
+              hasChanges={hasFieldChanged('city')}
               onChange={(field, value) => onChange(field, value)}
+              onReset={() => onReset?.('city')}
               style={{
                 width: '70%',
               }}
               value={personalInfo.city || ''}
             />
           </Box>
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
             field={'country'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('country')}
             onChange={(field, value) => onChange(field, value)}
+            onReset={() => onReset?.('country')}
             value={personalInfo.country || ''}
           />
-          <PersonFieldInput
+          <PersonField
+            editMode={editMode}
             field={'ext_id'}
+            fieldType="text"
+            hasChanges={hasFieldChanged('ext_id')}
             onChange={(field, value) => onChange(field, value)}
+            onReset={() => onReset?.('ext_id')}
             value={personalInfo.ext_id || ''}
           />
         </Box>
       )}
-      {!!showAllClickedType &&
+      {shouldShowAllFields &&
         customFields.map((field) => {
           if (
             field.organization.id !== orgId &&
@@ -224,92 +276,105 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             );
           } else if (field.type === 'url') {
             return (
-              <PersonFieldInput
+              <PersonField
                 key={field.slug}
+                editMode={editMode}
                 error={invalidFields.includes(field.slug)}
                 field={field.slug}
+                fieldType="text"
+                hasChanges={hasFieldChanged(field.slug)}
                 isURLField
                 label={field.title}
                 onChange={(field, value) => {
                   const formattedUrl = formatUrl(value as string);
                   onChange(field, formattedUrl ?? value);
                 }}
-                value={personalInfo[field.slug] || ''}
+                onReset={() => onReset?.(field.slug)}
+                value={(personalInfo[field.slug]?.toString() || '') as string}
               />
             );
           } else if (
             field.type === CUSTOM_FIELD_TYPE.ENUM &&
             field.enum_choices
           ) {
+            const enumOptions = [
+              {
+                value: '',
+                label: (
+                  <span style={{ fontStyle: 'italic' }}>
+                    <Msg id={messageIds.createPerson.enumFields.noneOption} />
+                  </span>
+                ),
+              },
+              ...field.enum_choices.map((c) => ({
+                value: c.key,
+                label: c.label,
+              })),
+            ];
             return (
-              <Box alignItems="flex-start" display="flex" flex={1}>
-                <FormControl fullWidth>
-                  <InputLabel>{field.title}</InputLabel>
-                  <Select
-                    fullWidth
-                    label={field.title}
-                    onChange={(ev) => {
-                      let value: string | null = ev.target.value as
-                        | string
-                        | null;
-                      if (value === '') {
-                        value = null;
-                      }
-                      onChange(field.slug, value);
-                    }}
-                    value={personalInfo[field.slug] || ''}
-                  >
-                    <MenuItem key="" sx={{ fontStyle: 'italic' }} value="">
-                      <Msg id={messageIds.createPerson.enumFields.noneOption} />
-                    </MenuItem>
-                    {field.enum_choices.map((c) => (
-                      <MenuItem key={c.key} value={c.key}>
-                        {c.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
+              <PersonField
+                key={field.slug}
+                editMode={editMode}
+                field={field.slug}
+                fieldType="select"
+                hasChanges={hasFieldChanged(field.slug)}
+                label={field.title}
+                onChange={(field, value) => {
+                  const finalValue = value === '' ? null : value;
+                  onChange(field, finalValue);
+                }}
+                onReset={() => onReset?.(field.slug)}
+                options={enumOptions}
+                value={personalInfo[field.slug]?.toString() || ''}
+              />
             );
           } else {
             return (
-              <PersonFieldInput
+              <PersonField
                 key={field.slug}
+                editMode={editMode}
                 field={field.slug}
+                fieldType="text"
+                hasChanges={hasFieldChanged(field.slug)}
                 label={field.title}
                 onChange={(field, value) => onChange(field, value)}
-                value={personalInfo[field.slug] || ''}
+                onReset={() => onReset?.(field.slug)}
+                value={(personalInfo[field.slug]?.toString() || '') as string}
               />
             );
           }
         })}
-      <Box display="flex" justifyContent="flex-end">
-        {!showAllClickedType && (
-          <Button
-            onClick={() => setShowAllClickedType('mouse')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setShowAllClickedType('keyboard');
-              }
+      {!editMode && (
+        <>
+          <Box display="flex" justifyContent="flex-end">
+            {!showAllClickedType && (
+              <Button
+                onClick={() => setShowAllClickedType('mouse')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setShowAllClickedType('keyboard');
+                  }
+                }}
+                startIcon={<ExpandMore />}
+              >
+                <Msg id={messageIds.createPerson.showAllFields} />
+              </Button>
+            )}
+          </Box>
+          <TagManagerSection
+            assignedTags={selectedTags}
+            disableEditTags
+            disableValueTags
+            onAssignTag={(tag) => {
+              onChange('tags', tag.id);
             }}
-            startIcon={<ExpandMore />}
-          >
-            <Msg id={messageIds.createPerson.showAllFields} />
-          </Button>
-        )}
-      </Box>
-      <TagManagerSection
-        assignedTags={selectedTags}
-        disableEditTags
-        disableValueTags
-        onAssignTag={(tag) => {
-          onChange('tags', tag.id);
-        }}
-        onUnassignTag={(tag) => {
-          onChange('tags', tag.id);
-        }}
-        submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
-      />
+            onUnassignTag={(tag) => {
+              onChange('tags', tag.id);
+            }}
+            submitCreateTagLabel={messages.createPerson.tagCreateAndApplyLabel()}
+          />
+        </>
+      )}
     </Box>
   );
 };

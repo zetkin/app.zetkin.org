@@ -100,6 +100,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
             }}
             personalInfo={personalInfo}
             tags={tags}
+            orgId={orgId}
           />
         )}
         <Box sx={{ pr: 5 }}>
