@@ -6,11 +6,6 @@ import { ZUIMedium, ZUISmall } from '../types';
 
 type ZUILinkProps = {
   /**
-   * If true, only show underline when hovering
-   */
-  hoverUnderline?: boolean;
-
-  /**
    * The href to link to.
    */
   href: string;
@@ -33,11 +28,6 @@ type ZUILinkProps = {
    * The text that will show as the link.
    */
   text: string;
-
-  /**
-   * Switch color (default: primary)
-   */
-  variant?: 'primary' | 'secondary';
 };
 
 const ZUILink: FC<ZUILinkProps> = ({
@@ -45,8 +35,6 @@ const ZUILink: FC<ZUILinkProps> = ({
   text,
   openInNewTab = false,
   size,
-  variant = 'primary',
-  hoverUnderline,
 }) => {
   const linkVariants = {
     medium: 'linkMd',
@@ -57,15 +45,12 @@ const ZUILink: FC<ZUILinkProps> = ({
     <Link
       component={NextLink}
       href={href}
-      rel={openInNewTab ? 'noopener noreferrer nofollow' : ''}
+      rel={openInNewTab ? 'noopener' : ''}
       sx={(theme) => ({
         '&:hover': {
-          textDecoration: 'underline',
-          textDecorationColor: theme.palette.text[variant],
+          textDecorationColor: theme.palette.text.primary,
         },
-        color: theme.palette.text[variant],
-        textDecoration: hoverUnderline ? 'none' : 'underline',
-        textDecorationColor: theme.palette.text[variant],
+        textDecorationColor: theme.palette.text.primary,
       })}
       target={openInNewTab ? '_blank' : ''}
       variant={size ? linkVariants[size] : undefined}

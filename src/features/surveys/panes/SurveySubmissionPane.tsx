@@ -1,6 +1,9 @@
+import { makeStyles } from '@mui/styles';
+import { Box, Link, Typography } from '@mui/material';
 import { Box, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
+import NextLink from 'next/link';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
 import { Msg } from 'core/i18n';
@@ -12,7 +15,6 @@ import useHydratedSurveySubmission, {
   ELEM_TYPE,
 } from '../hooks/useHydratedSurveySubmission';
 import messageIds from '../l10n/messageIds';
-import ZUILink from 'zui/components/ZUILink';
 
 interface SurveySubmissionPaneProps {
   orgId: number;
@@ -72,11 +74,14 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
               }
               title={
                 sub.campaign ? (
-                  <ZUILink
-                    hoverUnderline={true}
+                  <Link
+                    color={'inherit'}
+                    component={NextLink}
                     href={`/organize/${sub.organization.id}/projects/${sub.campaign.id}/surveys/${sub.survey.id}`}
-                    text={sub.survey.title}
-                  />
+                    underline={'hover'}
+                  >
+                    {sub.survey.title}
+                  </Link>
                 ) : (
                   sub.survey.title
                 )
