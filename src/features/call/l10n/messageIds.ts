@@ -35,7 +35,7 @@ export default makeMessages('feat.call', {
       },
       projects: {
         noSelected: m('Context'),
-        selected: m<{ numProjects: number }>('{numOrgs} projects'),
+        selected: m<{ numProjects: number }>('{numProjects} projects'),
       },
     },
     projects: {
