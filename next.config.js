@@ -15,6 +15,11 @@ module.exports = {
   allowedDevOrigins: [],
 
   experimental: {
+    turbo: {
+      resolveAlias: {
+        canvas: 'util',
+      },
+    },
     serverComponentsExternalPackages: ['mjml', 'mongoose'],
   },
   images: {
