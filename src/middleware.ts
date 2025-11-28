@@ -16,11 +16,12 @@ function sanitizeUrl(urlStr: string): string {
   return new URL(urlStr).toString();
 }
 
-export async function middleware(request: NextRequest) {
-  const headers = new Headers(request.headers);
-  const isDev = process.env.NODE_ENV === 'development';
-  const path = request.nextUrl.pathname;
+function setupCsp(path: string) {
+  if (process.env.PLAYWRIGHT === '1') {
+    return ['', "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:"];
+  }
 
+  const isDev = process.env.NODE_ENV === 'development';
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
 
   if (!process.env.MAPLIBRE_STYLE) {
@@ -57,6 +58,15 @@ export async function middleware(request: NextRequest) {
   upgrade-insecure-requests;
 `;
   const cspHeaderTrimmed = cspHeader.replace(/\s{2,}/g, ' ').trim();
+
+  return [nonce, cspHeaderTrimmed] as const;
+}
+
+export async function middleware(request: NextRequest) {
+  const headers = new Headers(request.headers);
+  const path = request.nextUrl.pathname;
+
+  const [nonce, cspHeaderTrimmed] = setupCsp(path);
 
   headers.set('x-nonce', nonce);
 
