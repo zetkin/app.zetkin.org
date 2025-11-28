@@ -22,16 +22,18 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
-
+import ZUIAlert from 'zui/components/ZUIAlert';
+import messageIds from '../../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 const BOUNDS_PADDING = 20;
 
 type Props = {
   assignment: ZetkinAreaAssignment;
   selectedArea: Zetkin2Area;
 };
-
 const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const env = useEnv();
+  const messages = useMessages(messageIds);
   const locations = useLocations(
     assignment.organization_id,
     assignment.id,
@@ -49,6 +51,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [mapInitError, setMapInitError] = useState(false);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -242,6 +245,14 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return null;
   }
 
+  if (mapInitError) {
+    return (
+      <Box data-testid="map-error" role="alert">
+        <ZUIAlert severity="error" title={messages.map.initializationError()} />
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box sx={{ position: 'relative' }}>
@@ -311,6 +322,9 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
+        }}
+        onError={() => {
+          setMapInitError(true);
         }}
         onLoad={(ev) => {
           const map = ev.target;
@@ -439,6 +453,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
           />
         </Source>
       </Map>
+      )
       <CanvassMapOverlays
         assignment={assignment}
         isCreating={isCreating}
