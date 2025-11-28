@@ -20,11 +20,13 @@ import { ZetkinUser } from 'utils/types/zetkin';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 import { UserProvider } from './env/UserContext';
+import { NonceContext } from 'core/hooks/useNonce';
 
 type ProviderData = {
   env: Environment;
   lang: string;
   messages: MessageList;
+  nonce?: string;
   store: Store;
   user: ZetkinUser;
 };
@@ -44,6 +46,7 @@ const Providers: FC<ProvidersProps> = ({
   env,
   lang,
   messages,
+  nonce,
   store,
   user,
 }) => {
@@ -54,6 +57,7 @@ const Providers: FC<ProvidersProps> = ({
       env,
       lang,
       messages,
+      nonce,
       store,
       user,
     };
@@ -62,7 +66,7 @@ const Providers: FC<ProvidersProps> = ({
   const cache = useRef<EmotionCache | null>(null);
 
   if (!cache.current) {
-    cache.current = createCache({ key: 'css', prepend: true });
+    cache.current = createCache({ key: 'css', nonce: nonce, prepend: true });
   }
 
   return (
@@ -71,25 +75,27 @@ const Providers: FC<ProvidersProps> = ({
         <UserProvider user={user}>
           <StyledEngineProvider injectFirst>
             <CacheProvider value={cache.current}>
-              <ThemeProvider theme={oldThemeWithLocale(lang)}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <IntlProvider
-                    defaultLocale="en"
-                    locale={lang}
-                    messages={messages}
-                  >
-                    <ZUISnackbarProvider>
-                      <ZUIConfirmDialogProvider>
-                        <EventPopperProvider>
-                          <DndProvider backend={HTML5Backend}>
-                            <Suspense>{children}</Suspense>
-                          </DndProvider>
-                        </EventPopperProvider>
-                      </ZUIConfirmDialogProvider>
-                    </ZUISnackbarProvider>
-                  </IntlProvider>
-                </LocalizationProvider>
-              </ThemeProvider>
+              <NonceContext.Provider value={nonce}>
+                <ThemeProvider theme={oldThemeWithLocale(lang)}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <IntlProvider
+                      defaultLocale="en"
+                      locale={lang}
+                      messages={messages}
+                    >
+                      <ZUISnackbarProvider>
+                        <ZUIConfirmDialogProvider>
+                          <EventPopperProvider>
+                            <DndProvider backend={HTML5Backend}>
+                              <Suspense>{children}</Suspense>
+                            </DndProvider>
+                          </EventPopperProvider>
+                        </ZUIConfirmDialogProvider>
+                      </ZUISnackbarProvider>
+                    </IntlProvider>
+                  </LocalizationProvider>
+                </ThemeProvider>
+              </NonceContext.Provider>
             </CacheProvider>
           </StyledEngineProvider>
         </UserProvider>
