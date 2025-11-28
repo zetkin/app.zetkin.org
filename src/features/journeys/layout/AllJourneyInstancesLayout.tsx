@@ -49,7 +49,6 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
         {
           href: `/manage`,
           label: messages.journeys.tabs.manage(),
-          tabProps: { disabled: true },
         },
       ]}
       title={journeyFuture.data?.plural_label ?? ''}
