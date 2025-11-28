@@ -14,9 +14,8 @@ const MapControls: FC<MapControlsProps> = ({ map, onFitBounds }) => {
     <ZUIMapControls
       onFitBounds={onFitBounds}
       onGeolocate={(lngLat) => {
-        map?.flyTo(flipForLeaflet(lngLat), undefined, {
+        map?.panTo(flipForLeaflet(lngLat), {
           animate: true,
-          duration: 0.8,
         });
       }}
       onZoomIn={() => map?.zoomIn()}
