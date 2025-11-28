@@ -12,6 +12,10 @@ function extractRootUrl(urlStr: string): string {
   return `https://${url.host}`;
 }
 
+function sanitizeUrl(urlStr: string): string {
+  return new URL(urlStr).toString();
+}
+
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
   const isDev = process.env.NODE_ENV === 'development';
@@ -43,8 +47,8 @@ export async function middleware(request: NextRequest) {
   style-src ${styleSrc};
   style-src-attr 'unsafe-inline';
   img-src 'self' blob: data: ${tileServer} ${
-    process.env.AVATARS_URL ? `${process.env.AVATARS_URL} ` : ''
-  } ${process.env.FILES_URL ? `${process.env.FILES_URL} ` : ''};
+    process.env.AVATARS_URL ? `${sanitizeUrl(process.env.AVATARS_URL)} ` : ''
+  } ${process.env.FILES_URL ? `${sanitizeUrl(process.env.FILES_URL)} ` : ''};
   font-src 'self' https://use.typekit.net https://p.typekit.net;
   object-src 'none';
   base-uri 'self';
