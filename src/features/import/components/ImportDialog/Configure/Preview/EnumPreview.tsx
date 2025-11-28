@@ -1,7 +1,7 @@
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import { useMessages } from 'core/i18n';
-import { CellData, ColumnKind, Sheet } from 'features/import/utils/types';
+import { CellData, ColumnKind, Sheet } from 'features/import/types';
 import useColumn from 'features/import/hooks/useColumn';
 import { useNumericRouteParams } from 'core/hooks';
 import useCustomFields from 'features/profile/hooks/useCustomFields';

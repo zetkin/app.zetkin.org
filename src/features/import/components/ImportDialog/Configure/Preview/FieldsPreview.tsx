@@ -4,7 +4,7 @@ import PreviewGrid from './PreviewGrid';
 import useColumn from 'features/import/hooks/useColumn';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import { CellData, ColumnKind } from 'features/import/utils/types';
+import { CellData, ColumnKind } from 'features/import/types';
 
 interface FieldsPreviewProps {
   fieldKey: string | null;
@@ -25,6 +25,8 @@ const FieldsPreview = ({ fieldKey, fields, kind }: FieldsPreviewProps) => {
         ? globalMessages.personFields.id()
         : fieldKey === 'ext_id'
         ? globalMessages.personFields.ext_id()
+        : fieldKey === 'email'
+        ? globalMessages.personFields.email()
         : '';
   }
 

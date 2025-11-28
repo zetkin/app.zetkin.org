@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { DateColumn } from 'features/import/utils/types';
+import { DateColumn } from 'features/import/types';
 import messageIds from 'features/import/l10n/messageIds';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import useDateConfig from 'features/import/hooks/useDateConfig';

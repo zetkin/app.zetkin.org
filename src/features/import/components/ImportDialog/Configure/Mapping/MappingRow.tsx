@@ -16,11 +16,7 @@ import { Msg } from 'core/i18n';
 import { Option } from 'features/import/hooks/useColumn';
 import useColumnValuesMessage from 'features/import/hooks/useColumnValuesMessage';
 import useUIDataColumn from 'features/import/hooks/useUIDataColumn';
-import {
-  Column,
-  ColumnKind,
-  ConfigurableColumn,
-} from 'features/import/utils/types';
+import { Column, ColumnKind, ConfigurableColumn } from 'features/import/types';
 
 const isConfigurableColumn = (column: Column): column is ConfigurableColumn => {
   return [
@@ -55,16 +51,13 @@ const MappingRow: FC<MappingRowProps> = ({
   const theme = useTheme();
   const column = useUIDataColumn(columnIndex);
 
-  const columnValuesMessage = useColumnValuesMessage(
-    column.numberOfEmptyRows,
-    column.uniqueValues
-  );
+  const makeColumnValuesMessage = useColumnValuesMessage();
 
   const getMappingRowButtonMessageId = () => {
     if (column.originalColumn.kind == ColumnKind.DATE) {
       return messageIds.configuration.mapping.configButton;
     } else if (column.originalColumn.kind == ColumnKind.ID_FIELD) {
-      return messageIds.configuration.mapping.infoButton;
+      return messageIds.configuration.mapping.configButton;
     } else {
       return messageIds.configuration.mapping.mapValuesButton;
     }
@@ -94,7 +87,7 @@ const MappingRow: FC<MappingRowProps> = ({
                 });
               } else {
                 onChange({
-                  ...column.originalColumn,
+                  ...column,
                   kind: ColumnKind.UNKNOWN,
                   selected: isChecked,
                 });
@@ -145,7 +138,10 @@ const MappingRow: FC<MappingRowProps> = ({
         {!isConfigurableColumn(column.originalColumn) && (
           <Box display="flex" sx={{ wordBreak: 'break-word' }} width="100%">
             <Typography color="secondary" variant="body2">
-              {columnValuesMessage}
+              {makeColumnValuesMessage(
+                column.numberOfEmptyRows,
+                column.uniqueValues
+              )}
             </Typography>
           </Box>
         )}
