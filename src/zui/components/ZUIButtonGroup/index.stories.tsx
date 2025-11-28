@@ -1,5 +1,5 @@
 import { Home, MoreVert } from '@mui/icons-material';
-import { Meta, StoryObj } from '@storybook/react/*';
+import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIButtonGroup from './index';
 

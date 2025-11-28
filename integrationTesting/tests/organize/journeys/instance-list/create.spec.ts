@@ -62,7 +62,9 @@ test.describe('Creating a journey instance from journey instance page', () => {
     ]);
 
     const requests = instMock.log<ZetkinJourneyInstance>();
-    expect(requests.length).toBe(1);
+    await expect(() => {
+      expect(requests.length).toBe(1);
+    }).toPass();
     expect(requests[0].data?.title).toEqual('My training');
     expect(requests[0].data?.opening_note).toEqual('Some info');
   });
