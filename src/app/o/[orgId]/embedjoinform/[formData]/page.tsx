@@ -16,6 +16,10 @@ type PageProps = {
   };
 };
 
+function sanitizeUrl(urlStr: string): string {
+  return new URL(urlStr).toString();
+}
+
 export default async function Page({ params, searchParams }: PageProps) {
   const { formData } = params;
 
@@ -33,9 +37,9 @@ export default async function Page({ params, searchParams }: PageProps) {
       <div>
         <EmbeddedJoinForm encrypted={formDataStr} fields={formDataObj.fields} />
         {searchParams.stylesheet && (
-          <style
-            nonce={nonce}
-          >{`@import url(${searchParams.stylesheet})`}</style>
+          <style nonce={nonce}>{`@import url(${sanitizeUrl(
+            searchParams.stylesheet
+          )})`}</style>
         )}
         {!searchParams.stylesheet && (
           <style nonce={nonce}>{`
