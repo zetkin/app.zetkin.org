@@ -36,7 +36,7 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
 
   try {
     const apiClient = new BackendApiClient(ctx.req.headers);
-    await apiClient.get<ZetkinPerson>(`/api/orgs/${orgId}/people/${personId}`);
+    await apiClient.get<ZetkinPerson>(`/beta/orgs/${orgId}/people/${personId}`);
     return {
       props: {
         orgId,
