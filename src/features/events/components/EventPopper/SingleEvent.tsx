@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import {
   AccessTime,
@@ -42,18 +41,6 @@ import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
 
-const useStyles = makeStyles(() => ({
-  description: {
-    '-webkit-box-orient': 'vertical',
-    '-webkit-line-clamp': 3,
-    display: '-webkit-box',
-    maxHeight: '100%',
-    overflow: 'hidden',
-    whiteSpace: 'normal',
-    width: '100%',
-  },
-}));
-
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
   onClickAway: () => void;
@@ -62,7 +49,6 @@ interface SingleEventProps {
 const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
-  const classes = useStyles();
   const orgId = event.organization.id;
   const { participantsFuture, respondentsFuture } = useEventParticipants(
     event.organization.id,
@@ -321,7 +307,17 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
           <Typography color="secondary" fontSize="0.7em">
             {messages.eventPopper.description().toUpperCase()}
           </Typography>
-          <Box className={classes.description}>
+          <Box
+            sx={{
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 3,
+              display: '-webkit-box',
+              maxHeight: '100%',
+              overflow: 'hidden',
+              whiteSpace: 'normal',
+              width: '100%',
+            }}
+          >
             <Typography color="secondary" variant="body2">
               {event.info_text}
             </Typography>
