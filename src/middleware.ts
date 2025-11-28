@@ -15,6 +15,7 @@ function extractRootUrl(urlStr: string): string {
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
   const isDev = process.env.NODE_ENV === 'development';
+  const path = request.nextUrl.pathname;
 
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
 
@@ -27,15 +28,19 @@ export async function middleware(request: NextRequest) {
     process.env.TILESERVER || 'https://tile.openstreetmap.org'
   );
 
+  const isEmbedJoinForm = /^\/o\/[^/]+\/embedjoinform(\/|$)/.test(path);
+  const styleSrc = isEmbedJoinForm
+    ? "* 'unsafe-inline'"
+    : `'self' https://use.typekit.net https://p.typekit.net ${
+        // TODO: switch after https://github.com/zetkin/app.zetkin.org/issues/3176 to: isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
+        "'unsafe-inline'"
+      }`;
   const cspHeader = `
   default-src 'self' ${mapTiler};
   script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval' 'strict-dynamic' ${
     isDev ? "'unsafe-eval'" : ''
   };
-  style-src 'self' https://use.typekit.net https://p.typekit.net ${
-    // TODO: switch after https://github.com/zetkin/app.zetkin.org/issues/3176 to: isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
-    "'unsafe-inline'"
-  };
+  style-src ${styleSrc};
   style-src-attr 'unsafe-inline';
   img-src 'self' blob: data: ${tileServer} ${
     process.env.AVATARS_URL ? `${process.env.AVATARS_URL} ` : ''
@@ -47,18 +52,14 @@ export async function middleware(request: NextRequest) {
   frame-ancestors 'none';
   upgrade-insecure-requests;
 `;
-  // Replace newline characters and spaces
-  const contentSecurityPolicyHeaderValue = cspHeader
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+  const cspHeaderTrimmed = cspHeader.replace(/\s{2,}/g, ' ').trim();
 
   headers.set('x-nonce', nonce);
 
-  headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
+  headers.set('Content-Security-Policy', cspHeaderTrimmed);
 
   headers.set('x-requested-path', request.nextUrl.pathname);
 
-  const path = request.nextUrl.pathname;
   const isProtectedRoute = !!protectedRoutes.find((route) => {
     return path.startsWith(route);
   });
@@ -83,10 +84,7 @@ export async function middleware(request: NextRequest) {
     response = NextResponse.next({ request: { headers } });
   }
 
-  response.headers.set(
-    'Content-Security-Policy',
-    contentSecurityPolicyHeaderValue
-  );
+  response.headers.set('Content-Security-Policy', cspHeaderTrimmed);
 
   response.headers.set(
     'Strict-Transport-Security',
