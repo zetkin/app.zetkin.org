@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { GroupWork } from '@mui/icons-material';
 import randomSeed from 'random-seed';
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 
 import theme from '../../../../theme';
 

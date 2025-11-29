@@ -1,4 +1,4 @@
-import { SxProps, Tab } from '@mui/material';
+import { Tab } from '@mui/material';
 import { FC, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
@@ -18,7 +18,7 @@ const ShareViewDialog: FC<ShareViewDialogProps> = ({ onClose, view }) => {
   const messages = useMessages(messageIds);
   const [tab, setTab] = useState<'share' | 'download'>('share');
 
-  const tabPanelStyles: SxProps = {
+  const tabPanelStyles = {
     height: 'calc(100vh - 240px)',
     maxHeight: '600px',
     paddingBottom: 0,
