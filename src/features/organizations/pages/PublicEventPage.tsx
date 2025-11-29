@@ -157,7 +157,10 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
           >
             {/**TODO: figure out how to layout this properly for mobile and fullscreen without having this component apppear twice */}
             {isMobile && showContactDetails && (
-              <ContactPersonSection contactPerson={contactPerson} orgId={orgId}/>
+              <ContactPersonSection
+                contactPerson={contactPerson}
+                orgId={orgId}
+              />
             )}
             <Box
               sx={{
@@ -182,7 +185,10 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                       gap: 2,
                     }}
                   >
-                    <ContactPersonSection contactPerson={contactPerson} orgId={orgId}/>
+                    <ContactPersonSection
+                      contactPerson={contactPerson}
+                      orgId={orgId}
+                    />
                   </Box>
                 )}
                 {hasInfoText && (
@@ -231,31 +237,29 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
 };
 
 const ContactPersonSection: FC<{
-  contactPerson: { email?: string; id: number; name: string; phone?: string};
-  orgId: number
-}> = ({ contactPerson, orgId}) => {
+  contactPerson: { email?: string; id: number; name: string; phone?: string };
+  orgId: number;
+}> = ({ contactPerson, orgId }) => {
   const [expandContactMethods, setExpandContactMethods] = useState(false);
 
   const userMemberships = useMemberships();
   const matchingMembership = userMemberships.data?.find(
-          (membership) => membership.organization.id === orgId
-        );
-  if(matchingMembership?.profile.id === contactPerson.id){
-    return(
-    <Box bgcolor="white" borderRadius={2} padding={2}>
-      <Box alignItems="center" display="flex" gap={1}>
-        <ZUIPersonAvatar
-          firstName={contactPerson.name.split(' ')[0]}
-          id={contactPerson.id}
-          lastName={contactPerson.name.split(' ')[1]}
-        />
-        <ZUIText variant="bodyMdSemiBold">
-          <Msg
-            id={messageIds.eventPage.contactPerson.you}
+    (membership) => membership.organization.id === orgId
+  );
+  if (matchingMembership?.profile.id === contactPerson.id) {
+    return (
+      <Box bgcolor="white" borderRadius={2} padding={2}>
+        <Box alignItems="center" display="flex" gap={1}>
+          <ZUIPersonAvatar
+            firstName={contactPerson.name.split(' ')[0]}
+            id={contactPerson.id}
+            lastName={contactPerson.name.split(' ')[1]}
           />
-        </ZUIText>
+          <ZUIText variant="bodyMdSemiBold">
+            <Msg id={messageIds.eventPage.contactPerson.you} />
+          </ZUIText>
+        </Box>
       </Box>
-    </Box>
     );
   }
 
