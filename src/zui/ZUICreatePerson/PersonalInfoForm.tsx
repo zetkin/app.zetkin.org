@@ -69,7 +69,9 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   const shouldShowAllFields = editMode || !!showAllClickedType;
 
   const hasFieldChanged = (field: string) => {
-    if (!editMode || !defaultFormValues) return false;
+    if (!editMode || !defaultFormValues) {
+      return false;
+    }
     return personalInfo[field] !== defaultFormValues[field];
   };
 
@@ -169,8 +171,8 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
             }
             onReset={() => onReset?.('gender')}
             options={Object.values(Gender).map((key) => ({
-              value: key,
               label: messages.createPerson.genders[key](),
+              value: key,
             }))}
             value={!personalInfo.gender ? Gender.UNKNOWN : personalInfo.gender}
           />
@@ -290,16 +292,16 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
           ) {
             const enumOptions = [
               {
-                value: '',
                 label: (
                   <span style={{ fontStyle: 'italic' }}>
                     <Msg id={messageIds.createPerson.enumFields.noneOption} />
                   </span>
                 ),
+                value: '',
               },
               ...field.enum_choices.map((c) => ({
-                value: c.key,
                 label: c.label,
+                value: c.key,
               })),
             ];
             return (
