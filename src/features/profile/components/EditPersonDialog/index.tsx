@@ -37,7 +37,6 @@ const EditPersonDialog: FC<EditPersonDialogProps> = ({
     fieldsToUpdate,
     hasInvalidFields,
     hasUpdatedValues,
-    invalidFields,
     onFieldValueChange,
     setFieldsToUpdate,
   } = useEditPerson(person, orgId);

@@ -1,21 +1,13 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ExpandMore } from '@mui/icons-material';
 import utc from 'dayjs/plugin/utc';
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@mui/material';
+import { Box, Button } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
 import { CountryCode } from 'libphonenumber-js';
 
 import checkInvalidFields from './checkInvalidFields';
 import formatUrl from 'utils/formatUrl';
-import globalMessageIds from 'core/i18n/messageIds';
 import { makeNaiveDateString } from 'utils/dateUtils';
 import messageIds from 'zui/l10n/messageIds';
 import PersonField from './PersonField';
@@ -56,7 +48,6 @@ const PersonalInfoForm: FC<PersonalInfoFormProps> = ({
   onReset,
   defaultFormValues,
 }) => {
-  const globalMessages = useMessages(globalMessageIds);
   const messages = useMessages(messageIds);
   const inputRef = useRef<HTMLInputElement>();
   const organization = useOrganization(orgId).data;
