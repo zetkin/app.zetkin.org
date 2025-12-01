@@ -82,6 +82,7 @@ export default makeMessages('feat.events', {
     attendance: m('Attendance'),
     bookedParticipants: m('Booked Participants'),
     bulkBookAll: m('Book all'),
+    bulkCancelAll: m('Cancel all'),
     bulkRemoveAll: m('Remove all'),
     buttonAttended: m('Attended'),
     buttonBook: m('Book'),
@@ -103,8 +104,22 @@ export default makeMessages('feat.events', {
     confirmBulkBookDescription: m(
       'Each signup will be processed one by one. Make sure they are linked to a person first.'
     ),
+    confirmBulkBookSignups: m<{ count: number }>('Book all {count} signups?'),
+    confirmBulkBookSignupsDescription: m(
+      'This will book all selected signups.'
+    ),
+    confirmBulkCancel: m<{ count: number }>('Cancel all {count} participants?'),
+    confirmBulkCancelDescription: m(
+      'This will cancel all selected participants.'
+    ),
     confirmBulkRemove: m<{ count: number }>(
       'Remove all {count} unverified signups?'
+    ),
+    confirmBulkRemoveCancelled: m<{ count: number }>(
+      'Remove all {count} cancelled participants?'
+    ),
+    confirmBulkRemoveCancelledDescription: m(
+      'This will permanently delete these cancelled participants. This cannot be undone.'
     ),
     confirmBulkRemoveDescription: m(
       'This will permanently delete these unverified signups. This cannot be undone.'
@@ -304,7 +319,7 @@ export default makeMessages('feat.events', {
     },
     errors: {
       emailOrPhoneRequired: m('Either email or phone is required'),
-      gdprConsentRequired: m('GDPR consent is required'),
+      gdprConsentRequired: m('You need to accept the terms'),
       invalidEmail: m('Please provide a valid email'),
       nameRequired: m('First name and last name are required'),
       phoneFormat: m(
@@ -318,6 +333,12 @@ export default makeMessages('feat.events', {
       firstName: m('First name'),
       lastName: m('Last name'),
       phone: m('Phone'),
+    },
+    info: {
+      description: m(
+        'Enter your name at least one way for organizers to contact you.'
+      ),
+      title: m('Time to sign up'),
     },
     privacyPolicy: m<{ organization: string }>(
       'When you sign up to an event, the information you provide will be stored and processed in Zetkin by My Organization in order to organize activism and in accordance with the Zetkin privacy policy.'

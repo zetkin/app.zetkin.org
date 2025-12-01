@@ -23,12 +23,10 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({
   orgId,
 }) => {
   const event = useEvent(orgId, eventId)?.data;
-  const { participantsFuture, pendingSignUps } = useEventParticipants(
-    orgId,
-    eventId
-  );
+  const { participantsFuture, pendingSignUps, numUnverifiedParticipants } =
+    useEventParticipants(orgId, eventId);
 
-  const numSignups = pendingSignUps.length;
+  const numSignups = pendingSignUps.length + numUnverifiedParticipants;
 
   if (!event) {
     return null;

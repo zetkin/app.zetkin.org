@@ -140,6 +140,11 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
+      <ZUIAlert
+        description={eventMessages.publicEventSignup.info.description()}
+        severity="info"
+        title={eventMessages.publicEventSignup.info.title()}
+      />
       {error && (
         <ZUIAlert
           description={error}
@@ -204,6 +209,7 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
       </FormControl>
       <ZUIButton
         disabled={isSubmitting}
+        fullWidth
         label={
           isSubmitting
             ? eventMessages.publicEventSignup.submit.submitting()

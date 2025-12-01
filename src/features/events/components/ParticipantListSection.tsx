@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import FaceOutlinedIcon from '@mui/icons-material/FaceOutlined';
-import { FC } from 'react';
+import { FC, useCallback, useContext, useState } from 'react';
 
 import filterParticipants from '../utils/filterParticipants';
 import messageIds from 'features/events/l10n/messageIds';
@@ -31,6 +31,7 @@ import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 type attendance = 'noshow' | 'attended' | 'cancelled';
 
@@ -121,8 +122,93 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   const messages = useMessages(messageIds);
   const event = useEvent(orgId, eventId)?.data;
   const { setContact } = useEventContact(orgId, eventId);
-  const { deleteParticipant, setParticipantStatus } =
+  const { deleteParticipant, setParticipantStatus, updateParticipant } =
     useEventParticipantsMutations(orgId, eventId);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const runBulkBook = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      for (const row of rows) {
+        await updateParticipant(row.id, { status: null });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [rows, updateParticipant]);
+
+  const runBulkCancel = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      for (const row of rows) {
+        await updateParticipant(row.id, {
+          status: participantStatus.CANCELLED,
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [rows, updateParticipant]);
+
+  const runBulkRemove = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      for (const row of rows) {
+        await deleteParticipant(row.id);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [rows, deleteParticipant]);
+
+  const confirmBulkBook = useCallback(() => {
+    showConfirmDialog({
+      onSubmit: () => runBulkBook(),
+      title: messages.eventParticipantsList.confirmBulkBookSignups({
+        count: rows.length,
+      }),
+      warningText:
+        messages.eventParticipantsList.confirmBulkBookSignupsDescription(),
+    });
+  }, [
+    rows.length,
+    messages.eventParticipantsList,
+    runBulkBook,
+    showConfirmDialog,
+  ]);
+
+  const confirmBulkCancel = useCallback(() => {
+    showConfirmDialog({
+      onSubmit: () => runBulkCancel(),
+      title: messages.eventParticipantsList.confirmBulkCancel({
+        count: rows.length,
+      }),
+      warningText:
+        messages.eventParticipantsList.confirmBulkCancelDescription(),
+    });
+  }, [
+    rows.length,
+    messages.eventParticipantsList,
+    runBulkCancel,
+    showConfirmDialog,
+  ]);
+
+  const confirmBulkRemove = useCallback(() => {
+    showConfirmDialog({
+      onSubmit: () => runBulkRemove(),
+      title: messages.eventParticipantsList.confirmBulkRemoveCancelled({
+        count: rows.length,
+      }),
+      warningText:
+        messages.eventParticipantsList.confirmBulkRemoveCancelledDescription(),
+    });
+  }, [
+    rows.length,
+    messages.eventParticipantsList,
+    runBulkRemove,
+    showConfirmDialog,
+  ]);
 
   const columns: GridColDef[] = [
     {
@@ -410,6 +496,50 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
       <Typography mb={2} variant="body1">
         {description}
       </Typography>
+      {type === 'signups' && (
+        <Box display="flex" gap={1} justifyContent="space-between" mb={2}>
+          <Button
+            disabled={!rows.length || isLoading}
+            onClick={confirmBulkCancel}
+            size="small"
+            variant="text"
+          >
+            {messages.eventParticipantsList.bulkCancelAll()}
+          </Button>
+          <Button
+            disabled={!rows.length || isLoading}
+            onClick={confirmBulkBook}
+            size="small"
+            variant="contained"
+          >
+            {messages.eventParticipantsList.bulkBookAll()}
+          </Button>
+        </Box>
+      )}
+      {type === 'booked' && (
+        <Box display="flex" gap={1} justifyContent="flex-end" mb={2}>
+          <Button
+            disabled={!rows.length || isLoading}
+            onClick={confirmBulkCancel}
+            size="small"
+            variant="text"
+          >
+            {messages.eventParticipantsList.bulkCancelAll()}
+          </Button>
+        </Box>
+      )}
+      {type === 'cancelled' && (
+        <Box display="flex" gap={1} justifyContent="flex-end" mb={2}>
+          <Button
+            disabled={!rows.length || isLoading}
+            onClick={confirmBulkRemove}
+            size="small"
+            variant="text"
+          >
+            {messages.eventParticipantsList.bulkRemoveAll()}
+          </Button>
+        </Box>
+      )}
       <DataGridPro
         autoHeight
         checkboxSelection={false}

@@ -119,9 +119,9 @@ export default function useEventParticipants(
     ).length ?? 0;
 
   const numSignedParticipants =
-    respondentsFuture.data?.filter(
+    (respondentsFuture.data?.filter(
       (r) => !participantsFuture.data?.some((p) => p.id === r.id)
-    ).length ?? 0;
+    ).length ?? 0) + numUnverifiedParticipants;
 
   const unverifiedParticipants = unverifiedParticipantsFuture.data ?? [];
 
