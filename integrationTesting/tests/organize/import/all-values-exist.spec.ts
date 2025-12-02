@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test';
 
-import test from '../../../../fixtures/next';
+import test from '../../../fixtures/next';
 import { BulkOp, ImportPreview, PersonImport } from 'features/import/types';
+import mockCsv from '../../../mockFiles/mockCsv';
 
 test.describe(
   'When importing with id, first name and last name from a file where all values exist',
@@ -23,11 +24,24 @@ test.describe(
       await page.goto(appUri + '/organize/1/people');
       await page.locator('text=Create').click();
       await page.locator('text=Import people').click();
-      await page
-        .locator('input')
-        .setInputFiles(
-          'integrationTesting/tests/organize/import/all-values-exist/test-data.csv'
-        );
+      const data = mockCsv([
+        ['id', 'first', 'last', 'email'],
+        ['1', 'Clara', 'Zetkin', 'clara@example.com'],
+        ['2', 'Rosa', 'Luxemburg', 'rosa@example.com'],
+      ]);
+
+      const dataTransfer = await page.evaluateHandle((data) => {
+        const dt = new DataTransfer();
+        const file = new File([data], 'data.csv', {
+          type: 'text/csv',
+        });
+        dt.items.add(file);
+        return dt;
+      }, data);
+
+      await page.dispatchEvent('input', 'drop', {
+        dataTransfer,
+      });
 
       await page.locator('input[type=checkbox] >> nth=1').check();
       await page.locator('div[role=combobox] >> nth=0').click();
