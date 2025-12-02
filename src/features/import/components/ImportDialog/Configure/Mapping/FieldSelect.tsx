@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import {
   Box,
   ListItemText,
@@ -14,6 +14,7 @@ import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import { Column, ColumnKind } from 'features/import/types';
 import { Msg, useMessages } from 'core/i18n';
 import useImportID from 'features/import/hooks/useImportID';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface FieldSelectProps {
   clearConfiguration: () => void;
@@ -35,6 +36,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
   const messages = useMessages(messageIds);
   const { importID, updateImportID } = useImportID();
   const [open, setOpen] = useState(false);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const fieldOptionsSorted = [
     ...fieldOptions,
@@ -130,13 +132,38 @@ const FieldSelect: FC<FieldSelectProps> = ({
           });
           onConfigureStart();
         } else if (event.target.value == 'id') {
-          onChange({
-            idField: 'id',
-            kind: ColumnKind.ID_FIELD,
-            selected: true,
-          });
-          updateImportID('id');
-          onConfigureStart();
+          if (importID && importID != 'id') {
+            showConfirmDialog({
+              onSubmit: () => {
+                onChange({
+                  idField: 'id',
+                  kind: ColumnKind.ID_FIELD,
+                  selected: true,
+                });
+                updateImportID('id');
+                onConfigureStart();
+              },
+              title:
+                messages.configuration.configure.ids.confirmIDChange.title(),
+              warningText:
+                messages.configuration.configure.ids.confirmIDChange.description(
+                  {
+                    currentImportID:
+                      messages.configuration.configure.ids.field[importID](),
+                    newImportID:
+                      messages.configuration.configure.ids.field['id'](),
+                  }
+                ),
+            });
+          } else {
+            onChange({
+              idField: 'id',
+              kind: ColumnKind.ID_FIELD,
+              selected: true,
+            });
+            updateImportID('id');
+            onConfigureStart();
+          }
         } else if (event.target.value == 'email') {
           onChange({
             idField: 'email',

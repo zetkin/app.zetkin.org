@@ -74,6 +74,12 @@ export default makeMessages('feat.import', {
         },
       },
       ids: {
+        confirmIDChange: {
+          description: m<{ currentImportID: string; newImportID: string }>(
+            'You are about to change Import ID from {currentImportID} to {newImportID}.'
+          ),
+          title: m('Confirm change of Import ID'),
+        },
         externalIDInfo: m(
           'An external ID is an ID that comes from another system than Zetkin, such as a separate member database. It can be used to find and identify people in Zetkin.'
         ),

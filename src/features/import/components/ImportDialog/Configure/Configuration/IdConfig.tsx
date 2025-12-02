@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useContext, useEffect } from 'react';
 import {
   Alert,
   Box,
@@ -15,6 +15,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/import/l10n/messageIds';
 import useSheets from 'features/import/hooks/useSheets';
 import useImportID from 'features/import/hooks/useImportID';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 interface IdConfigProps {
   uiDataColumn: UIDataColumn<IDFieldColumn>;
@@ -28,6 +29,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   const { importID, updateImportID } = useImportID();
   const { skipUnknown, updateSheetSettings } = useSheets();
   const messages = useMessages(messageIds);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   useEffect(() => {
     if (skipUnknown) {
@@ -36,6 +38,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
   }, [importID]);
 
   const idField = uiDataColumn.originalColumn.idField;
+  const selectedImportIDIsOther = importID && importID != idField;
 
   return (
     <Box display="flex" flexDirection="column" padding={2}>
@@ -88,10 +91,27 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                   <Checkbox
                     checked={importID == idField}
                     onChange={() => {
-                      if (importID == idField) {
-                        updateImportID(null);
+                      if (selectedImportIDIsOther) {
+                        showConfirmDialog({
+                          onSubmit: () => updateImportID(idField),
+                          title:
+                            messages.configuration.configure.ids.confirmIDChange.title(),
+                          warningText:
+                            messages.configuration.configure.ids.confirmIDChange.description(
+                              {
+                                currentImportID:
+                                  messages.configuration.configure.ids.field[
+                                    importID
+                                  ](),
+                                newImportID:
+                                  messages.configuration.configure.ids.field[
+                                    idField
+                                  ](),
+                              }
+                            ),
+                        });
                       } else {
-                        updateImportID(idField);
+                        updateImportID(importID == idField ? null : idField);
                       }
                     }}
                   />
