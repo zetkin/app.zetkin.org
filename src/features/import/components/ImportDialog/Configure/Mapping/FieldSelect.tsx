@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import {
   Box,
   ListItemText,
@@ -34,6 +34,7 @@ const FieldSelect: FC<FieldSelectProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const { importID, updateImportID } = useImportID();
+  const [open, setOpen] = useState(false);
 
   const fieldOptionsSorted = [
     ...fieldOptions,
@@ -101,9 +102,9 @@ const FieldSelect: FC<FieldSelectProps> = ({
           width="100%"
         >
           <ListItemText>{label}</ListItemText>
-          {importID == value ? (
+          {importID == value && open && (
             <BadgeOutlined color="secondary" fontSize="small" />
-          ) : undefined}
+          )}
         </Box>
       </MenuItem>
     );
@@ -189,6 +190,9 @@ const FieldSelect: FC<FieldSelectProps> = ({
           onConfigureStart();
         }
       }}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
       sx={{ opacity: column.originalColumn.selected ? '' : '50%' }}
       value={getValue()}
     >
