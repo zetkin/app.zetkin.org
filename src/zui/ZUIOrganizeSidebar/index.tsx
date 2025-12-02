@@ -59,14 +59,14 @@ import { ZetkinUser } from 'utils/types/zetkin';
 const drawerWidth = 300;
 
 const ZUIOrganizeMobileHeader = ({
-  openMobileSidebar,
   closeMobileSidebar,
+  openMobileSidebar,
   title,
   user,
   userMenuItems,
 }: {
-  openMobileSidebar: () => void;
   closeMobileSidebar: () => void;
+  openMobileSidebar: () => void;
   title?: string | ReactElement;
   user: ZetkinUser | null;
   userMenuItems: ZUIEllipsisMenuItem[];
