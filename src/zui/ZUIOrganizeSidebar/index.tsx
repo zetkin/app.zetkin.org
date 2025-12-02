@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import {
   Architecture,
   Close,
@@ -14,16 +14,20 @@ import {
   LocalOffer,
   Logout,
   Map,
+  MoreVert,
   Search,
   Settings,
 } from '@mui/icons-material';
 import {
   Avatar,
   Box,
+  Button,
   Divider,
   Drawer,
   IconButton,
   List,
+  Menu,
+  MenuItem,
   TextField,
   Tooltip,
   Typography,
@@ -37,7 +41,9 @@ import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
-import ZUIEllipsisMenu from '../ZUIEllipsisMenu';
+import ZUIEllipsisMenu, {
+  MenuItem as ZUIEllipsisMenuItem,
+} from '../ZUIEllipsisMenu';
 import OrganizationSwitcher from 'features/organizations/components/OrganizationSwitcher';
 import SearchDialog from 'features/search/components/SearchDialog';
 import SidebarListItem from './SidebarListItem';
@@ -47,10 +53,114 @@ import ZUIUserAvatar from 'zui/ZUIUserAvatar';
 import useFeature from 'utils/featureFlags/useFeature';
 import { AREAS, OFFICIALS } from 'utils/featureFlags';
 import oldTheme from 'theme';
+import useIsMobile from 'utils/hooks/useIsMobile';
+import { ZetkinUser } from 'utils/types/zetkin';
 
 const drawerWidth = 300;
 
-const ZUIOrganizeSidebar = (): JSX.Element => {
+const ZUIOrganizeMobileHeader = ({
+  openMobileSidebar,
+  title,
+  user,
+  userMenuItems,
+}: {
+  openMobileSidebar: () => void;
+  title?: string | ReactElement;
+  user: ZetkinUser | null;
+  userMenuItems: ZUIEllipsisMenuItem[];
+}) => {
+  const [mobileUserMenuAnchor, setMobileUserMenuAnchor] =
+    useState<HTMLButtonElement | null>(null);
+  const theme = useTheme();
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        backgroundColor: theme.palette.background.default,
+        borderBottom: `1px solid ${theme.palette.grey['300']}`,
+        display: 'flex',
+        flexDirection: 'row',
+        height: '3.5rem',
+        justifyContent: 'space-between',
+        left: 0,
+        padding: '0 5px',
+        pointerEvents: 'all',
+        position: 'sticky',
+        top: 0,
+        width: '100vw',
+        zIndex: 1,
+      }}
+    >
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+        }}
+      >
+        <Button
+          onClick={(e) => {
+            openMobileSidebar();
+            e.stopPropagation();
+          }}
+        >
+          <MoreVert />
+        </Button>
+        <Typography fontSize={'16px'} variant={'h1'}>
+          {title}
+        </Typography>
+      </Box>
+      {user && (
+        <>
+          <Button
+            onClick={(event) => setMobileUserMenuAnchor(event.currentTarget)}
+          >
+            <ZUIUserAvatar personId={user.id} size={'sm'} />
+          </Button>
+          <Menu
+            anchorEl={mobileUserMenuAnchor}
+            onClose={() => setMobileUserMenuAnchor(null)}
+            open={Boolean(mobileUserMenuAnchor)}
+          >
+            {userMenuItems.map((item, index) => {
+              const inner = (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '10px',
+                  }}
+                >
+                  {item.startIcon}
+                  {item.label}
+                </Box>
+              );
+              return (
+                <MenuItem
+                  key={index}
+                  divider={item.divider}
+                  onSelect={(e) => {
+                    openMobileSidebar(false);
+                    item.onSelect?.(e as React.MouseEvent<HTMLLIElement>);
+                  }}
+                >
+                  {item.href ? <Link href={item.href}>{inner}</Link> : inner}
+                </MenuItem>
+              );
+            })}
+          </Menu>
+        </>
+      )}
+    </Box>
+  );
+};
+
+const ZUIOrganizeSidebar = ({
+  title,
+}: {
+  title?: string | ReactElement;
+}): JSX.Element => {
   const [hover, setHover] = useState(false);
   const messages = useMessages(messageIds);
   const user = useCurrentUser();
@@ -62,7 +172,9 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
 
   const [checked, setChecked] = useState(false);
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
-  const [open, setOpen] = useState(lastOpen);
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(isMobile ? true : lastOpen);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [searchString, setSearchString] = useState('');
   const organizationFuture = useOrganization(orgId);
   const hasAreas = useFeature(AREAS, orgId);
@@ -72,11 +184,18 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     setChecked(!checked);
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
     //remove checked state if menu is collapsed
     if (!open) {
       setChecked(false);
     }
+
+    if (isMobile) {
+      setMobileDrawerOpen(false);
+      e.stopPropagation();
+      return;
+    }
+
     const nextFocus = open ? expandButton : collapseButton;
     setTimeout(() => {
       if (nextFocus.current) {
@@ -96,6 +215,25 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     { icon: <Settings />, name: 'settings' },
   ] as const;
 
+  const userMenuItems = [
+    {
+      href: '/my',
+      label: messages.organizeSidebar.myPagesMenuItemLabel(),
+    },
+    {
+      divider: true,
+      href: '/my/settings',
+      label: messages.organizeSidebar.mySettingsMenuItemLabel(),
+    },
+    {
+      label: messages.organizeSidebar.signOut(),
+      onSelect: () => {
+        logOut();
+      },
+      startIcon: <Logout />,
+    },
+  ];
+
   function logOut() {
     router.push(`/logout`);
   }
@@ -104,12 +242,56 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
 
   const theme = useTheme();
   const isSmall = useMediaQuery(theme.breakpoints.up('sm'));
-  const width = open
-    ? `${drawerWidth}px`
-    : `calc(${oldTheme.spacing(isSmall ? 8 : 7)} + 1px)`;
+  const fullDrawerWidth = `${drawerWidth}px`;
+  const smallDrawerWidth = `calc(${oldTheme.spacing(isSmall ? 8 : 7)} + 1px)`;
+
+  let width = fullDrawerWidth;
+  if (!isMobile && !open) {
+    width = smallDrawerWidth;
+  } else if (isMobile && !mobileDrawerOpen) {
+    width = '0px';
+  }
+
   return (
-    <Box data-testid="organize-sidebar">
+    <Box
+      data-testid="organize-sidebar"
+      onClick={
+        isMobile
+          ? () => {
+              setMobileDrawerOpen(false);
+            }
+          : undefined
+      }
+      sx={
+        isMobile
+          ? {
+              height: '100vh',
+              left: 0,
+              pointerEvents: mobileDrawerOpen ? 'all' : 'none',
+              position: 'absolute',
+              top: 0,
+              width: '100vw',
+              zIndex: 1000,
+            }
+          : {}
+      }
+    >
+      {isMobile && (
+        <ZUIOrganizeMobileHeader
+          openMobileSidebar={() => {
+            setMobileDrawerOpen(true);
+            setOpen(true);
+            setLastOpen(true);
+          }}
+          title={title}
+          user={user}
+          userMenuItems={userMenuItems}
+        />
+      )}
       <Drawer
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         onMouseLeave={() => {
           setHover(false);
         }}
@@ -118,10 +300,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
         }}
         sx={{
           '.MuiDrawer-paper': {
-            [oldTheme.breakpoints.up('sm')]: {
-              display: 'block',
-            },
-            display: 'none',
+            display: 'block',
             overflowX: 'hidden',
             width,
           },
@@ -175,7 +354,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                                 width: '48px',
                               }}
                             >
-                              {hover ? (
+                              {hover || isMobile ? (
                                 <IconButton
                                   ref={collapseButton}
                                   onClick={handleClick}
@@ -367,26 +546,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                     {open && (
                       <ZUIEllipsisMenu
                         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        items={[
-                          {
-                            href: '/my',
-                            label:
-                              messages.organizeSidebar.myPagesMenuItemLabel(),
-                          },
-                          {
-                            divider: true,
-                            href: '/my/settings',
-                            label:
-                              messages.organizeSidebar.mySettingsMenuItemLabel(),
-                          },
-                          {
-                            label: messages.organizeSidebar.signOut(),
-                            onSelect: () => {
-                              logOut();
-                            },
-                            startIcon: <Logout />,
-                          },
-                        ]}
+                        items={userMenuItems}
                         transformOrigin={{
                           horizontal: 'right',
                           vertical: 'bottom',

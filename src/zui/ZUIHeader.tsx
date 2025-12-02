@@ -103,14 +103,19 @@ const Header: React.FC<HeaderProps> = ({
                   }}
                 />
               )}
-              <Box>
+              <Box
+                sx={{
+                  maxWidth: '100%',
+                }}
+              >
                 <Typography
                   component="div"
                   data-testid="page-title"
                   noWrap
-                  style={{ display: 'flex' }}
                   sx={{
+                    display: 'inline-block',
                     marginBottom: '8px',
+                    maxWidth: '100%',
                     transition: 'margin 0.3s ease',
                   }}
                   variant="h3"
