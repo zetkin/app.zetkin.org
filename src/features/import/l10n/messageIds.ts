@@ -238,6 +238,11 @@ export default makeMessages('feat.import', {
         o: m('Other'),
         unknown: m('Unknown'),
       },
+      ids: {
+        email: m('Email'),
+        ['ext_id']: m('External ID'),
+        id: m('Zetkin ID'),
+      },
       next: m('Next'),
       noOrg: m('No organization'),
       noTags: m('No tags'),

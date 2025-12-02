@@ -6,7 +6,7 @@ import DatePreview from './DatePreview';
 import EmptyPreview from './EmptyPreview';
 import FieldsPreview from './FieldsPreview';
 import messageIds from 'features/import/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import OrgsPreview from './OrgsPreview';
 import TagsPreview from './TagsPreview';
 import { useNumericRouteParams } from 'core/hooks';
@@ -16,9 +16,11 @@ import { ColumnKind, Sheet } from 'features/import/types';
 import EnumPreview from './EnumPreview';
 import GenderPreview from './GenderPreview';
 import useImportID from 'features/import/hooks/useImportID';
+import PreviewGrid from './PreviewGrid';
 
 const Preview = () => {
   const theme = useTheme();
+  const messages = useMessages(messageIds);
   const { importID } = useImportID();
   const { sheets, selectedSheetIndex, firstRowIsHeaders } = useSheets();
   const [personIndex, setPersonIndex] = useState(0);
@@ -135,20 +137,30 @@ const Preview = () => {
                     return <EmptyPreview key={columnIdx} rowValue={rowValue} />;
                   }
 
-                  if (
-                    column.kind === ColumnKind.FIELD ||
-                    column.kind === ColumnKind.ID_FIELD
-                  ) {
+                  if (column.kind == ColumnKind.ID_FIELD) {
+                    const fieldValue = fields?.[column.idField];
+                    return (
+                      <PreviewGrid
+                        columnHeader={messages.configuration.preview.ids[
+                          column.idField
+                        ]()}
+                        emptyLabel={
+                          !fieldValue
+                            ? messages.configuration.preview.noValue()
+                            : ''
+                        }
+                        isImportID={importID == column.idField}
+                        rowValue={fieldValue}
+                      />
+                    );
+                  }
+
+                  if (column.kind === ColumnKind.FIELD) {
                     return (
                       <FieldsPreview
                         key={columnIdx}
-                        fieldKey={
-                          column.kind === ColumnKind.FIELD
-                            ? column.field
-                            : column.idField
-                        }
+                        fieldKey={column.field}
                         fields={fields}
-                        kind={column.kind}
                       />
                     );
                   }
