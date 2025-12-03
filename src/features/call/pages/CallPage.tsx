@@ -66,7 +66,7 @@ const CallPage: FC = () => {
           </Box>
         }
       >
-        {canInitialize ? <Call /> : null}
+        {canInitialize && <Call />}
       </ErrorBoundary>
     </main>
   );
