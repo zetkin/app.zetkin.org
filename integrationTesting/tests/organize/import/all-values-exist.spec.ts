@@ -5,7 +5,7 @@ import { BulkOp, ImportPreview, PersonImport } from 'features/import/types';
 import mockCsv from '../../../mockFiles/mockCsv';
 
 test.describe(
-  'When importing with id, first name and last name from a file where all values exist',
+  'When importing with external id, first name and last name from a file where all values exist',
   () => {
     test.beforeEach(({ login }) => {
       login();
