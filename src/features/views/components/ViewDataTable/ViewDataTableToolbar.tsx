@@ -70,7 +70,11 @@ const ViewDataTableToolbar: React.FunctionComponent<
         }}
       >
         {!disableBulkActions && (
-          <Box>
+          <Box
+            sx={{
+              flexShrink: 0,
+            }}
+          >
             {hasSelection && (
               <ZUIButtonMenu
                 items={[
@@ -94,7 +98,13 @@ const ViewDataTableToolbar: React.FunctionComponent<
             )}
           </Box>
         )}
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexGrow: 1,
+            justifyContent: 'flex-end',
+          }}
+        >
           <GridToolbarFilterButton
             componentsProps={{
               button: { color: 'secondary', size: 'medium' },
