@@ -22,13 +22,15 @@ export default function useRemoteList<
   }
 ): DataType[] {
   const dispatch = useAppDispatch();
-  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
+
+  const shouldLoadList = shouldLoad(remoteList);
+  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoadList;
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
   const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
-  if (!remoteList) {
+  if (shouldLoadList) {
     const existing = getExistingPromise();
     if (!existing) {
       const promise = Promise.resolve()
@@ -79,7 +81,7 @@ export default function useRemoteList<
       cache(promise);
     }
 
-    const hasData = !!remoteList.items?.length;
+    const hasData = !!remoteList?.items?.length;
     const shouldSuspend = !hasData || !staleWhileRevalidate;
 
     if (shouldSuspend) {
@@ -87,7 +89,7 @@ export default function useRemoteList<
     }
   }
 
-  return remoteList.items
+  return remoteList?.items
     .filter((item) => !item.deleted)
     .map((item) => item.data)
     .filter((data) => !!data) as DataType[];
