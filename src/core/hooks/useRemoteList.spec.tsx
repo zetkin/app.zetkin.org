@@ -61,7 +61,41 @@ describe('useRemoteList()', () => {
     expect(listItem?.tagName).toBe('LI');
   });
 
-  it('returns stale data while re-loading', async () => {
+  it('throws a promise on initial load', async () => {
+    const { hooks, promise, store } = setupWrapperComponent();
+    let captured: unknown = undefined;
+
+    const CatchingComponent: FC = () => {
+      const list = useSelector<StoreState, RemoteList<ListObjectForTest>>(
+        (state) => state.list
+      );
+
+      try {
+        useRemoteList(list, hooks);
+      } catch (err) {
+        captured = err;
+        throw err;
+      }
+
+      return null;
+    };
+
+    render(
+      <ReduxProvider store={store}>
+        <Suspense fallback={<p>loading</p>}>
+          <CatchingComponent />
+        </Suspense>
+      </ReduxProvider>
+    );
+
+    expect(captured).toBeInstanceOf(Promise);
+
+    await act(async () => {
+      await promise;
+    });
+  });
+
+  it('re-fetches when cached data is stale', async () => {
     const { hooks, promise, render, store } = setupWrapperComponent({
       ...remoteList([
         {
@@ -74,7 +108,8 @@ describe('useRemoteList()', () => {
 
     const { queryByText } = render();
 
-    expect(queryByText('Clara Zetkin')).not.toBeNull();
+    expect(queryByText('loading')).not.toBeNull();
+    expect(queryByText('Clara Zetkin')).toBeNull();
 
     await act(async () => {
       await promise;
@@ -82,6 +117,8 @@ describe('useRemoteList()', () => {
 
     expect(hooks.loader).toHaveBeenCalled();
     expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(queryByText('loading')).toBeNull();
+    expect(queryByText('loaded')).not.toBeNull();
   });
 });
 
