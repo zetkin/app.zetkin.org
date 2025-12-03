@@ -402,14 +402,11 @@ export default makeMessages('feat.views', {
     },
   },
   toolbar: {
+    bulk: {
+      createList: m('Create list from selection'),
+      removeFromList: m('Remove selected people from list'),
+    },
     createColumn: m('New column'),
-    createFromSelection: m('Create list from selection'),
-    removeFromSelection: m<{ numSelected: number }>(
-      'Remove {numSelected, plural, one {1 person} other {{numSelected} people} } from list'
-    ),
-    removeTooltip: m(
-      'Smart search lists do not currently support removing rows'
-    ),
   },
   viewLayout: {
     actions: {

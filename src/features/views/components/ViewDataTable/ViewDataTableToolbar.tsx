@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Slide, Tooltip } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import {
   DataGridProProps,
   GridColDef,
@@ -13,6 +13,7 @@ import ZUIDataTableSearch from 'zui/ZUIDataTableSearch';
 import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/views/l10n/messageIds';
+import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 
 export interface ViewDataTableToolbarProps {
   disableBulkActions?: boolean;
@@ -50,6 +51,8 @@ const ViewDataTableToolbar: React.FunctionComponent<
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const hasSelection = !!selection.length;
+
   const onClickRemoveRows = () => {
     showConfirmDialog({
       onSubmit: onRowsRemove,
@@ -59,67 +62,67 @@ const ViewDataTableToolbar: React.FunctionComponent<
   };
   return (
     <Box role="toolbar">
-      {!disableBulkActions && (
-        <>
-          <Slide direction="left" in={!!selection.length} timeout={150}>
-            <Button
-              data-testid="ViewDataTableToolbar-createFromSelection"
-              disabled={disabled || isLoading}
-              onClick={onViewCreate}
-              startIcon={
-                isLoading ? <CircularProgress size={25} /> : <Launch />
-              }
-            >
-              <Msg id={messageIds.toolbar.createFromSelection} />
-            </Button>
-          </Slide>
-          <Slide direction="left" in={!!selection.length} timeout={100}>
-            <Tooltip
-              title={isSmartSearch ? messages.toolbar.removeTooltip() : ''}
-            >
-              <span>
-                <Button
-                  data-testid="ViewDataTableToolbar-removeFromSelection"
-                  disabled={isSmartSearch || disabled}
-                  onClick={onClickRemoveRows}
-                  startIcon={<RemoveCircleOutline />}
-                >
-                  <Msg
-                    id={messageIds.toolbar.removeFromSelection}
-                    values={{ numSelected: selection.length }}
-                  />
-                </Button>
-              </span>
-            </Tooltip>
-          </Slide>
-        </>
-      )}
-      <GridToolbarFilterButton
-        componentsProps={{
-          button: { color: 'secondary', size: 'medium' },
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
         }}
-      />
-      <ZUIDataTableSorting
-        gridColumns={gridColumns}
-        onSortModelChange={(model) =>
-          onSortModelChange && onSortModelChange(model, {})
-        }
-        sortModel={sortModel}
-      />
-      {!disableConfigure && (
-        <Button
-          color="secondary"
-          data-testid="ViewDataTableToolbar-createColumn"
-          disabled={disabled}
-          onClick={onColumnCreate}
-          startIcon={<Add />}
-        >
-          <Msg id={messageIds.toolbar.createColumn} />
-        </Button>
-      )}
-      <ZUIDataTableSearch
-        onChange={(searchString) => setQuickSearch(searchString)}
-      />
+      >
+        {!disableBulkActions && (
+          <Box>
+            {hasSelection && (
+              <ZUIButtonMenu
+                items={[
+                  {
+                    disabled: disabled,
+                    icon: <Launch />,
+                    label: messages.toolbar.bulk.createList(),
+                    onClick: onViewCreate,
+                  },
+                  {
+                    disabled: isSmartSearch || disabled,
+                    icon: <RemoveCircleOutline />,
+                    label: messages.toolbar.bulk.removeFromList(),
+                    onClick: onClickRemoveRows,
+                  },
+                ]}
+                label="Handle selection"
+                loading={isLoading}
+                variant="outlined"
+              />
+            )}
+          </Box>
+        )}
+        <Box>
+          <GridToolbarFilterButton
+            componentsProps={{
+              button: { color: 'secondary', size: 'medium' },
+            }}
+          />
+          <ZUIDataTableSorting
+            gridColumns={gridColumns}
+            onSortModelChange={(model) =>
+              onSortModelChange && onSortModelChange(model, {})
+            }
+            sortModel={sortModel}
+          />
+          {!disableConfigure && (
+            <Button
+              color="secondary"
+              data-testid="ViewDataTableToolbar-createColumn"
+              disabled={disabled}
+              onClick={onColumnCreate}
+              startIcon={<Add />}
+            >
+              <Msg id={messageIds.toolbar.createColumn} />
+            </Button>
+          )}
+          <ZUIDataTableSearch
+            onChange={(searchString) => setQuickSearch(searchString)}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };

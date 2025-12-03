@@ -15,6 +15,7 @@ type ZUIButtonMenuProps = {
     onClick: () => void;
   }[];
   label: string;
+  loading?: boolean;
   startIcon?: ReactNode;
   variant?: 'text' | 'outlined' | 'contained';
 };
@@ -22,6 +23,7 @@ type ZUIButtonMenuProps = {
 const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   items,
   label,
+  loading,
   startIcon,
   variant = 'contained',
 }) => {
@@ -38,6 +40,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
     <div>
       <Button
         endIcon={<ArrowDropDown />}
+        loading={loading}
         onClick={handleClick}
         startIcon={startIcon}
         variant={variant}
