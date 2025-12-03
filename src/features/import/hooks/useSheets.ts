@@ -1,6 +1,10 @@
-import { sheetSettingsUpdated, setSelectedSheetIndex } from '../store';
+import {
+  sheetSettingsUpdated,
+  setSelectedSheetIndex,
+  importIDUpdate,
+} from '../store';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { SheetSettings } from '../types';
+import { ImportID, SheetSettings } from '../types';
 
 export default function useSheets() {
   const dispatch = useAppDispatch();
@@ -18,11 +22,16 @@ export default function useSheets() {
     dispatch(sheetSettingsUpdated(settings));
   };
 
+  const updateImportID = (newID: ImportID | null) => {
+    dispatch(importIDUpdate(newID));
+  };
+
   return {
     firstRowIsHeaders: selectedSheet.firstRowIsHeaders,
     selectedSheetIndex: pendingFile.selectedSheetIndex,
     sheets,
     skipUnknown: !!selectedSheet.skipUnknown,
+    updateImportID,
     updateSelectedSheetIndex,
     updateSheetSettings,
   };

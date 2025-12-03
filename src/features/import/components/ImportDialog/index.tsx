@@ -5,7 +5,7 @@ import Configure from './Configure';
 import ParseFile from './ParseFile';
 import Preflight from './Preflight';
 import StatusReport from './StatusReport';
-import useImportID from 'features/import/hooks/useImportID';
+import useSheets from 'features/import/hooks/useSheets';
 
 export enum ImportStep {
   PARSE = 0,
@@ -22,7 +22,7 @@ interface ImportDialogProps {
 const ImportDialog: FC<ImportDialogProps> = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const { updateImportID } = useImportID();
+  const { updateImportID } = useSheets();
   const [maxWidth, setMaxWidth] = useState<'sm' | 'lg'>('sm');
   const [activeStep, setActiveStep] = useState<ImportStep>(ImportStep.PARSE);
 

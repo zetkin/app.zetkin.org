@@ -9,6 +9,7 @@ function makeFullSheet(overrides: Partial<Sheet>): Sheet {
   return {
     columns: [],
     firstRowIsHeaders: false,
+    importID: null,
     rows: [],
     title: '',
     ...overrides,
@@ -54,6 +55,7 @@ describe('predictProblem()', () => {
     const sheet: Sheet = {
       columns: [],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [],
       title: '',
     };
@@ -127,6 +129,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [{ data: [1, 'a', 'Clara', 'clara@example.com', 'Dummy value'] }],
     });
 
@@ -148,6 +151,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         {
           data: [1, ' clara@example.com '],
@@ -174,6 +178,7 @@ describe('predictProblem()', () => {
         },
       ],
       firstRowIsHeaders: true,
+      importID: 'id',
       rows: [
         // First row is headers and would be invalid if validated
         { data: ['ID', 'EMAIL'] },
@@ -223,6 +228,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         // Valid values
         {

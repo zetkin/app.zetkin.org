@@ -14,7 +14,6 @@ import useIDConfig from 'features/import/hooks/useIDConfig';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/import/l10n/messageIds';
 import useSheets from 'features/import/hooks/useSheets';
-import useImportID from 'features/import/hooks/useImportID';
 
 interface IdConfigProps {
   uiDataColumn: UIDataColumn<IDFieldColumn>;
@@ -25,9 +24,15 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
     uiDataColumn.originalColumn,
     uiDataColumn.columnIndex
   );
-  const { importID, updateImportID } = useImportID();
-  const { skipUnknown, updateSheetSettings } = useSheets();
+  const {
+    skipUnknown,
+    updateSheetSettings,
+    updateImportID,
+    sheets,
+    selectedSheetIndex,
+  } = useSheets();
   const messages = useMessages(messageIds);
+  const importID = sheets[selectedSheetIndex].importID;
 
   useEffect(() => {
     if (skipUnknown) {

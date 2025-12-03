@@ -24,6 +24,7 @@ export async function parseCSVFile(file: File): Promise<ImportedFile> {
               columns: [],
               currentlyConfiguring: null,
               firstRowIsHeaders: true,
+              importID: null,
               rows: rows,
               title: file.name,
             };
@@ -101,6 +102,7 @@ export async function parseExcelFile(file: File): Promise<ImportedFile> {
           rawData.sheets.push({
             columns: [],
             firstRowIsHeaders: true,
+            importID: null,
             rows: table.rows,
             title: table.name,
           });

@@ -15,6 +15,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'ext_id',
       rows: [
         {
           data: ['123', 'Linköping'],
@@ -55,6 +56,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: true,
+      importID: 'id',
       rows: [
         {
           data: ['ID', 'City', 'Development'],
@@ -100,6 +102,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'Malmö', 1],
@@ -150,6 +153,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'Malmö', 1, 3],
@@ -200,6 +204,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'Malmö', 1, 3],
@@ -244,6 +249,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'Malmö', 'Dummy value'],
@@ -304,6 +310,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: [null, '', null],
@@ -341,6 +348,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'Malmö', null],
@@ -381,6 +389,7 @@ describe('createPreviewData()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'Malmö', '890215-3459'],

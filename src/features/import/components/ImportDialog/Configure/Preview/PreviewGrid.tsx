@@ -3,7 +3,7 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { BadgeOutlined } from '@mui/icons-material';
 
 import { CellData } from 'features/import/types';
-import useImportID from 'features/import/hooks/useImportID';
+import useSheets from 'features/import/hooks/useSheets';
 
 function matchesImportID(importID: string | null, columnHeader?: string) {
   if (!importID || !columnHeader) {
@@ -33,7 +33,8 @@ const PreviewGrid = ({
   emptyLabel,
 }: PreviewGridProps) => {
   const theme = useTheme();
-  const { importID } = useImportID();
+  const { sheets, selectedSheetIndex } = useSheets();
+  const importID = sheets[selectedSheetIndex].importID;
 
   return (
     <Box

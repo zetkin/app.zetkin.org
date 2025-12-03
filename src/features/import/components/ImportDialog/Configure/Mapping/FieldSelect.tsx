@@ -13,7 +13,7 @@ import { Option } from 'features/import/hooks/useColumn';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import { Column, ColumnKind } from 'features/import/types';
 import { Msg, useMessages } from 'core/i18n';
-import useImportID from 'features/import/hooks/useImportID';
+import useSheets from 'features/import/hooks/useSheets';
 
 interface FieldSelectProps {
   clearConfiguration: () => void;
@@ -33,7 +33,8 @@ const FieldSelect: FC<FieldSelectProps> = ({
   optionAlreadySelected,
 }) => {
   const messages = useMessages(messageIds);
-  const { importID, updateImportID } = useImportID();
+  const { sheets, selectedSheetIndex, updateImportID } = useSheets();
+  const importID = sheets[selectedSheetIndex].importID;
 
   const fieldOptionsSorted = [
     ...fieldOptions,

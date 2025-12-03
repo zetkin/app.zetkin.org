@@ -46,6 +46,7 @@ export type ImportedFile = {
 export type Sheet = {
   columns: Column[];
   firstRowIsHeaders: boolean;
+  importID: ImportID | null;
   rows: Row[];
   skipUnknown?: boolean;
   title: string;

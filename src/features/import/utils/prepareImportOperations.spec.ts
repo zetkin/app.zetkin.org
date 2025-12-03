@@ -12,6 +12,7 @@ describe('prepareImportOperations()', () => {
     const sheet: Sheet = {
       columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [],
       title: 'My sheet',
     };
@@ -24,6 +25,7 @@ describe('prepareImportOperations()', () => {
     const sheet: Sheet = {
       columns: [{ idField: 'id', kind: ColumnKind.ID_FIELD, selected: true }],
       firstRowIsHeaders: true,
+      importID: 'id',
       rows: [
         {
           data: ['ID', 'First Name', 'Last Name', 'DevTag', 'Org'],
@@ -41,12 +43,13 @@ describe('prepareImportOperations()', () => {
       columns: [
         { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
         { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
-        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        { field: 'city', kind: ColumnKind.FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: null,
       rows: [
         {
-          data: ['Clara', 'Zetkin', 'clara@example.com'],
+          data: ['Clara', 'Zetkin', 'Berlin'],
         },
       ],
       title: 'My sheet',
@@ -59,7 +62,7 @@ describe('prepareImportOperations()', () => {
         ops: [
           {
             data: {
-              email: 'clara@example.com',
+              city: 'Berlin',
               first_name: 'Clara',
               last_name: 'Zetkin',
             },
@@ -75,9 +78,10 @@ describe('prepareImportOperations()', () => {
       columns: [
         { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
         { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
-        { field: 'email', kind: ColumnKind.FIELD, selected: false },
+        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: false },
       ],
       firstRowIsHeaders: false,
+      importID: null,
       rows: [
         {
           data: ['Clara', 'Zetkin', 'clara@example.com'],
@@ -107,9 +111,10 @@ describe('prepareImportOperations()', () => {
     const sheet: Sheet = {
       columns: [
         { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: 'ext_id',
       rows: [
         {
           data: ['123', 'clara@example.com'],
@@ -145,6 +150,7 @@ describe('prepareImportOperations()', () => {
         { field: 'email', kind: ColumnKind.FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'clara@example.com'],
@@ -177,9 +183,10 @@ describe('prepareImportOperations()', () => {
       columns: [
         { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
         { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', '9999', 'clara@example.com'],
@@ -212,9 +219,10 @@ describe('prepareImportOperations()', () => {
     const sheet: Sheet = {
       columns: [
         { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: 'ext_id',
       rows: [
         {
           data: ['123', 'clara@example.com'],
@@ -257,6 +265,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', '05/07 1857'],
@@ -292,6 +301,7 @@ describe('prepareImportOperations()', () => {
         { field: 'alt_phone', kind: ColumnKind.FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', '070 123 45 67', '+46 704 123 123'],
@@ -353,6 +363,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'woman'],
@@ -412,6 +423,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'x'],
@@ -472,6 +484,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'x'],
@@ -527,6 +540,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'x', 'x'],
@@ -572,6 +586,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', ''],
@@ -613,6 +628,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'this does not match x'],
@@ -644,6 +660,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'x'],
@@ -685,6 +702,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'x', 'x'],
@@ -725,6 +743,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'x'],
@@ -756,6 +775,7 @@ describe('prepareImportOperations()', () => {
         },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           data: ['123', 'this does not match x'],
