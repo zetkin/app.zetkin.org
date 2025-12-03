@@ -33,6 +33,7 @@ const ImportFooter: FC<ImportFooterProps> = ({
           {secondaryButtonMsg}
         </Button>
         <Button
+          data-testid="ImportFooter-primary-button"
           disabled={primaryButtonDisabled}
           onClick={onClickPrimary}
           sx={{ ml: 1 }}

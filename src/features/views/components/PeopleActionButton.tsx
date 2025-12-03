@@ -63,6 +63,7 @@ const PeopleActionButton: FC<PeopleActionButtonProps> = ({
             },
           },
           {
+            dataTestid: 'import-people',
             icon: <UploadFileOutlined />,
             label: messages.actions.importPeople(),
             onClick: () => {

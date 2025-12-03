@@ -80,16 +80,12 @@ const FieldSelect: FC<FieldSelectProps> = ({
 
   // This has to be a function, not a component with PascalCase. If it is used
   // as a component, the `Select` below won't recognise it as a valid option.
-  const listOption = ({
-    disabled,
-    value,
-    label,
-    key,
-  }: Option & { key?: string }) => {
+  const listOption = ({ disabled, value, label }: Option) => {
     const alreadySelected = optionAlreadySelected(value);
     return (
       <MenuItem
-        key={key}
+        key={value}
+        data-testid={`FieldSelect-menu-item-${value}`}
         disabled={alreadySelected || disabled}
         sx={{ paddingLeft: 4 }}
         value={value}

@@ -22,8 +22,8 @@ test.describe(
     }) => {
       moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
       await page.goto(appUri + '/organize/1/people');
-      await page.locator('text=Create').click();
-      await page.locator('text=Import people').click();
+      await page.locator('data-testid=ZUIButtonMenu-button').click();
+      await page.locator('data-testid=import-people').click();
       const data = mockCsv([
         ['id', 'first', 'last', 'email'],
         ['1', 'Clara', 'Zetkin', 'clara@example.com'],
@@ -43,21 +43,57 @@ test.describe(
         dataTransfer,
       });
 
-      await page.locator('input[type=checkbox] >> nth=1').check();
-      await page.locator('div[role=combobox] >> nth=0').click();
-      await page.locator('text=Zetkin ID').click();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> input[type=checkbox] >> nth=0'
+        )
+        .check();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> div[role=combobox] >> nth=0'
+        )
+        .click();
+      await page.locator('data-testid=FieldSelect-menu-item-ext_id').click();
 
-      await page.locator('input[type=checkbox] >> nth=2').check();
-      await page.locator('div[role=combobox] >> nth=1').click();
-      await page.locator('text=First Name').click();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> input[type=checkbox] >> nth=1'
+        )
+        .check();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> div[role=combobox] >> nth=1'
+        )
+        .click();
+      await page
+        .locator('data-testid=FieldSelect-menu-item-field:first_name')
+        .click();
 
-      await page.locator('input[type=checkbox] >> nth=3').check();
-      await page.locator('div[role=combobox] >> nth=2').click();
-      await page.locator('text=Last Name').click();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> input[type=checkbox] >> nth=2'
+        )
+        .check();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> div[role=combobox] >> nth=2'
+        )
+        .click();
+      await page
+        .locator('data-testid=FieldSelect-menu-item-field:last_name')
+        .click();
 
-      await page.locator('input[type=checkbox] >> nth=4').check();
-      await page.locator('div[role=combobox] >> nth=3').click();
-      await page.locator('text=Email >> nth=1').click();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> input[type=checkbox] >> nth=3'
+        )
+        .check();
+      await page
+        .locator(
+          'data-testid=MappingRow-container >> div[role=combobox] >> nth=3'
+        )
+        .click();
+      await page.locator('data-testid=FieldSelect-menu-item-email').click();
 
       const preview: ImportPreview = {
         problems: [],
@@ -65,11 +101,13 @@ test.describe(
           person: {
             summary: {
               addedToOrg: {
-                byOrg: {},
-                total: 0,
+                byOrg: {
+                  1: 1,
+                },
+                total: 1,
               },
               created: {
-                total: 0,
+                total: 1,
               },
               tagged: {
                 byTag: {},
@@ -77,12 +115,10 @@ test.describe(
               },
               updated: {
                 byChangedField: {
-                  email: 2,
-                  first_name: 2,
-                  last_name: 2,
+                  email: 1,
                 },
                 byInitializedField: {},
-                total: 2,
+                total: 1,
               },
             },
           },
@@ -95,17 +131,18 @@ test.describe(
         preview
       );
 
-      await page.locator('button', { hasText: 'Validate' }).click();
+      await page.locator('data-testid=ImportFooter-primary-button').click();
 
       const importOperations: { ops: BulkOp[] } = {
         ops: [
           {
-            key: { id: 1 },
+            key: { ext_id: '1' },
             op: 'person.get',
             ops: [
               {
                 data: {
                   email: 'clara@example.com',
+                  ext_id: '1',
                   first_name: 'Clara',
                   last_name: 'Zetkin',
                 },
@@ -114,12 +151,13 @@ test.describe(
             ],
           },
           {
-            key: { id: 2 },
+            key: { ext_id: '2' },
             op: 'person.get',
             ops: [
               {
                 data: {
                   email: 'rosa@example.com',
+                  ext_id: '2',
                   first_name: 'Rosa',
                   last_name: 'Luxemburg',
                 },
@@ -146,10 +184,7 @@ test.describe(
         importResult
       );
 
-      await page.locator('input[type=checkbox] >> nth=0').check();
-      await page.locator('input[type=checkbox] >> nth=1').check();
-      await page.locator('input[type=checkbox] >> nth=2').check();
-      await page.locator('button', { hasText: 'Import' }).click();
+      await page.locator('data-testid=ImportFooter-primary-button').click();
 
       expect(executeLog().length).toEqual(1);
       expect(executeLog()[0].data).toEqual(importOperations);

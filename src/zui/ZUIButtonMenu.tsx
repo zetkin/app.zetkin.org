@@ -9,6 +9,7 @@ import oldTheme from 'theme';
 
 type ZUIButtonMenuProps = {
   items: {
+    dataTestid?: string;
     disabled?: boolean;
     icon?: JSX.Element;
     label: string;
@@ -37,6 +38,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
   return (
     <div>
       <Button
+        data-testid="ZUIButtonMenu-button"
         endIcon={<ArrowDropDown />}
         onClick={handleClick}
         startIcon={startIcon}
@@ -77,6 +79,7 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
           return (
             <MenuItem
               key={idx}
+              data-testid={item.dataTestid}
               disabled={item.disabled}
               disableRipple
               onClick={() => {

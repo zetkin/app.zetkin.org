@@ -53,6 +53,7 @@ const Mapping: FC<MappingProps> = ({
         border={1}
         borderColor={theme.palette.grey[300]}
         borderRadius={1}
+        data-testid="MappingRow-container"
         flexGrow={1}
       >
         {Array.from(Array(numberOfColumns)).map((x, index) => {
