@@ -14,6 +14,7 @@ import CanvassSidebar from './CanvassSidebar';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import useAssignmentAreas from 'features/areaAssignments/hooks/useAssignmentAreas';
 import GLCanvassMap from './GLCanvassMap';
+import HomeThemeProvider from '../../home/components/HomeThemeProvider';
 
 const Page: FC<{ areaId: number; assignment: ZetkinAreaAssignment }> = ({
   areaId,
@@ -149,9 +150,11 @@ const CanvassPage: FC<CanvassPageProps> = ({ areaAssId, areaId }) => {
   }
 
   return (
-    <Suspense>
-      <Page areaId={areaId} assignment={assignment} />
-    </Suspense>
+    <HomeThemeProvider>
+      <Suspense>
+        <Page areaId={areaId} assignment={assignment} />
+      </Suspense>
+    </HomeThemeProvider>
   );
 };
 
