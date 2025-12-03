@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Box, lighten, TextField, TextFieldProps } from '@mui/material';
 import { FC, KeyboardEvent, useCallback, useState } from 'react';
@@ -118,21 +117,6 @@ export default class PersonTagColumnType implements IColumnType {
   }
 }
 
-const useStyles = makeStyles(() => ({
-  ghost: {
-    pointerEvents: 'none',
-  },
-  ghostContainer: {
-    '&:hover': {
-      opacity: 0.4,
-    },
-    cursor: 'pointer',
-    opacity: 0,
-    transition: 'opacity 0.1s',
-  },
-  valueTagEditCell: {},
-}));
-
 interface CellProps {
   cellValue: ZetkinAppliedTag | string | undefined;
   personId: number;
@@ -241,8 +225,6 @@ const BasicTagCell: FC<{
   const { tagFuture } = useTag(orgId, tagId);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
 
-  const styles = useStyles({});
-
   const [isRestricted] = useAccessLevel();
 
   if (cell) {
@@ -263,12 +245,23 @@ const BasicTagCell: FC<{
         <ZUIFuture future={tagFuture}>
           {(tag) => (
             <Box
-              className={styles.ghostContainer}
               onClick={() => {
                 assignToPerson(personId, tagId);
               }}
+              sx={{
+                '&:hover': {
+                  opacity: 0.4,
+                },
+                cursor: 'pointer',
+                opacity: 0,
+                transition: 'opacity 0.1s',
+              }}
             >
-              <Box className={styles.ghost}>
+              <Box
+                sx={{
+                  pointerEvents: 'none',
+                }}
+              >
                 <TagChip tag={tag} />
               </Box>
             </Box>

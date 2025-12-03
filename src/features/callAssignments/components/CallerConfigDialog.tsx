@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
@@ -72,31 +71,30 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
   );
 };
 
-const useStyles = makeStyles(() => ({
-  subtitle: {
-    marginBottom: '0.5em',
-  },
-  title: {
-    fontSize: '1em',
-    fontWeight: 'bold',
-    marginTop: '1em',
-  },
-}));
-
 const CallerTagSection: FC<{
   onChange: (tags: ZetkinAppliedTag[]) => void;
   subtitle: string;
   tags: ZetkinAppliedTag[];
   title: string;
 }> = ({ onChange, subtitle, tags, title }) => {
-  const classes = useStyles();
-
   return (
     <>
-      <Typography className={classes.title} variant="h3">
+      <Typography
+        sx={{
+          fontSize: '1em',
+          fontWeight: 'bold',
+          marginTop: '1em',
+        }}
+        variant="h3"
+      >
         {title}
       </Typography>
-      <Typography className={classes.subtitle} variant="body1">
+      <Typography
+        sx={{
+          marginBottom: '0.5em',
+        }}
+        variant="body1"
+      >
         {subtitle}
       </Typography>
       <TagManager

@@ -13,7 +13,6 @@ import {
   TextField,
   useMediaQuery,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 
 import oldTheme from 'theme';
@@ -29,13 +28,6 @@ type ChangeCampaignDialogProps = {
   open: boolean;
   title: string;
 };
-
-const useStyles = makeStyles(() => ({
-  list: {
-    listStyle: 'none',
-  },
-  listItem: {},
-}));
 
 /**
  * `ChangeCampaignDialog` is a React functional component that renders a dialog
@@ -66,7 +58,6 @@ const ChangeCampaignDialog: React.FunctionComponent<
   ChangeCampaignDialogProps
 > = ({ title, errorMessage, open, onCampaignSelected, onClose }) => {
   const { orgId, campId } = useNumericRouteParams();
-  const classes = useStyles();
 
   const [error, setError] = useState(false);
   const messages = useMessages(messageIds);
@@ -163,7 +154,6 @@ const ChangeCampaignDialog: React.FunctionComponent<
                 return (
                   <ListItem
                     key={`ChangeCampaignDialog-campaignItem-${campaign.id}`}
-                    className={classes.listItem}
                   >
                     <Box
                       alignItems="center"

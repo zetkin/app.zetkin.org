@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Box, Button, Link, Typography } from '@mui/material';
 
@@ -10,32 +9,27 @@ interface ShareViewDialogDownloadTabProps {
   onAbort?: () => void;
 }
 
-const useStyles = makeStyles({
-  container: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    justifyContent: 'center',
-  },
-  link: {
-    cursor: 'pointer',
-  },
-  warning: {
-    maxWidth: 400,
-    textAlign: 'center',
-  },
-});
-
 const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
   onAbort,
 }) => {
-  const styles = useStyles();
   const { orgId, viewId } = useRouter().query;
 
   return (
-    <Box className={styles.container}>
-      <Box className={styles.warning}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          maxWidth: 400,
+          textAlign: 'center',
+        }}
+      >
         <Typography marginBottom={1} variant="body1">
           <Msg id={messageIds.shareDialog.download.warning1} />
         </Typography>
@@ -45,11 +39,13 @@ const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
             values={{
               shareLink: (
                 <Link
-                  className={styles.link}
                   onClick={() => {
                     if (onAbort) {
                       onAbort();
                     }
+                  }}
+                  sx={{
+                    cursor: 'pointer',
                   }}
                 >
                   <Msg id={messageIds.shareDialog.download.shareLink} />

@@ -1,5 +1,4 @@
 import { alpha } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import { UploadFileOutlined } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import {
@@ -7,10 +6,11 @@ import {
   CircularProgress,
   IconButton,
   Link,
+  SxProps,
   Typography,
   useTheme,
 } from '@mui/material';
-import { CSSProperties, FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 
 import ImportFooter from './elements/ImportFooter';
 import ImportHeader from './elements/ImportHeader';
@@ -18,49 +18,6 @@ import messageIds from '../../l10n/messageIds';
 import useFileParsing from '../../hooks/useFileParsing';
 import { useMessages } from 'core/i18n';
 import oldTheme from 'theme';
-
-const sharedProperties: CSSProperties = {
-  alignItems: 'center',
-  borderRadius: 4,
-  borderWidth: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  flexWrap: 'wrap',
-  marginTop: 8,
-  padding: 50,
-  textAlign: 'center',
-  transition: 'height 1s',
-};
-
-const useStyles = makeStyles(() => ({
-  errorState: {
-    backgroundColor: alpha(
-      oldTheme.palette.statusColors.red,
-      oldTheme.palette.action.selectedOpacity
-    ),
-    borderColor: oldTheme.palette.error.dark,
-    borderStyle: 'solid',
-    ...sharedProperties,
-  },
-  initialState: {
-    backgroundColor: 'transparent',
-    borderColor: oldTheme.palette.grey[300],
-    borderStyle: 'dashed',
-    ...sharedProperties,
-  },
-  loadingState: {
-    backgroundColor: alpha(
-      oldTheme.palette.statusColors.blue,
-      oldTheme.palette.action.selectedOpacity
-    ),
-    borderColor: oldTheme.palette.statusColors.blue,
-    borderStyle: 'dashed',
-    ...sharedProperties,
-  },
-  sharedProperties: {
-    ...sharedProperties,
-  },
-}));
 
 interface ParseFileProps {
   onClose: () => void;
@@ -72,14 +29,50 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
   const messages = useMessages(messageIds);
   const { parseData, loading } = useFileParsing();
   const theme = useTheme();
-  const classes = useStyles(theme);
 
-  let boxClass = classes.initialState;
-  if (error) {
-    boxClass = classes.errorState;
-  } else if (loading) {
-    boxClass = classes.loadingState;
-  }
+  const boxStyles: SxProps = useMemo(() => {
+    const sharedProperties: SxProps = {
+      alignItems: 'center',
+      borderRadius: '4px',
+      borderWidth: '2px',
+      display: 'flex',
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      marginTop: '8px',
+      padding: '50px',
+      textAlign: 'center',
+      transition: 'height 1s',
+    };
+
+    if (error) {
+      return {
+        backgroundColor: alpha(
+          oldTheme.palette.statusColors.red,
+          oldTheme.palette.action.selectedOpacity
+        ),
+        borderColor: oldTheme.palette.error.dark,
+        borderStyle: 'solid',
+        ...sharedProperties,
+      };
+    } else if (loading) {
+      return {
+        backgroundColor: alpha(
+          oldTheme.palette.statusColors.blue,
+          oldTheme.palette.action.selectedOpacity
+        ),
+        borderColor: oldTheme.palette.statusColors.blue,
+        borderStyle: 'dashed',
+        ...sharedProperties,
+      };
+    }
+
+    return {
+      backgroundColor: 'transparent',
+      borderColor: oldTheme.palette.grey[300],
+      borderStyle: 'dashed',
+      ...sharedProperties,
+    };
+  }, [error, loading]);
 
   const onDrop = useCallback((acceptedFiles: File[]): void => {
     acceptedFiles.map(async (file: File) => {
@@ -116,7 +109,7 @@ const ParseFile: FC<ParseFileProps> = ({ onClose, onSuccess }) => {
   return (
     <>
       <ImportHeader onClose={loading ? undefined : onClose} />
-      <Box {...getRootProps()} className={boxClass}>
+      <Box {...getRootProps()} sx={boxStyles}>
         {loading && (
           <Box>
             <CircularProgress sx={{ color: theme.palette.statusColors.blue }} />

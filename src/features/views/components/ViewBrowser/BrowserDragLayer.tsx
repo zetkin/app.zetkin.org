@@ -1,44 +1,10 @@
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
-import { Box, Paper, Theme } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { useDragDropManager, useDragLayer, XYCoord } from 'react-dnd';
 
 import BrowserItemIcon from './BrowserItemIcon';
 import { ViewBrowserItem } from 'features/views/hooks/useViewBrowserItems';
 import oldTheme from 'theme';
-
-const useStyles = makeStyles<Theme, CollectedProps>(() => ({
-  '@keyframes dragPreview-in': {
-    '0%': {
-      transform: 'scale(0.3) rotate(0)',
-    },
-    '100%': {
-      transform: 'scale(1.1) rotate(5deg)',
-    },
-  },
-  dragLayer: {
-    left: 0,
-    pointerEvens: 'none',
-    position: 'fixed',
-    top: 0,
-    zIndex: 9999,
-  },
-  dragPreview: {
-    animation: `$dragPreview-in 400ms ${oldTheme.transitions.easing.easeInOut}`,
-    backgroundColor: 'white',
-    boxShadow: (props) =>
-      props.canDrop
-        ? '0 6px 6px rgba(0,0,0,0.2)'
-        : '0 14px 14px rgba(0,0,0,0.2)',
-    padding: 10,
-    pointerEvents: 'none',
-    position: 'absolute',
-    transform: (props) =>
-      props.canDrop ? 'scale(1) rotate(0)' : 'scale(1.1) rotate(5deg)',
-    transition: 'transform 200ms, box-shadow 200ms',
-    whiteSpace: 'nowrap',
-  },
-}));
 
 interface CollectedProps {
   canDrop: boolean;
@@ -66,18 +32,44 @@ const BrowserDragLayer: FC = () => {
     };
   });
 
-  const styles = useStyles(dragProps);
-
   const { isDragging, item, currentOffset } = dragProps;
 
   if (isDragging && currentOffset) {
     return (
-      <Box className={styles.dragLayer}>
+      <Box
+        sx={{
+          left: 0,
+          pointerEvens: 'none',
+          position: 'fixed',
+          top: 0,
+          zIndex: 9999,
+        }}
+      >
         <Paper
-          className={styles.dragPreview}
-          style={{
+          sx={{
+            '@keyframes dragPreview-in': {
+              '0%': {
+                transform: 'scale(0.3) rotate(0)',
+              },
+              '100%': {
+                transform: 'scale(1.1) rotate(5deg)',
+              },
+            },
+            animation: `dragPreview-in 400ms ${oldTheme.transitions.easing.easeInOut}`,
+            backgroundColor: 'white',
+            boxShadow: dragProps.canDrop
+              ? '0 6px 6px rgba(0,0,0,0.2)'
+              : '0 14px 14px rgba(0,0,0,0.2)',
             left: currentOffset.x,
+            padding: 10,
+            pointerEvents: 'none',
+            position: 'absolute',
             top: currentOffset.y,
+            transform: dragProps.canDrop
+              ? 'scale(1) rotate(0)'
+              : 'scale(1.1) rotate(5deg)',
+            transition: 'transform 200ms, box-shadow 200ms',
+            whiteSpace: 'nowrap',
           }}
         >
           <Box display="flex" gap={2}>
