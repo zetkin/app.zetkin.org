@@ -189,7 +189,7 @@ type Props = {
   value?: string | number;
 };
 
-const StyledGroupedSelect: FC<Props> = (props) => {
+const StyledAutocomplete: FC<Props> = (props) => {
   const options: Item[] = useMemo(
     () =>
       props.items
@@ -445,4 +445,4 @@ const StyledGroupedSelect: FC<Props> = (props) => {
   );
 };
 
-export default StyledGroupedSelect;
+export default StyledAutocomplete;
