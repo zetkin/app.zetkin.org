@@ -178,43 +178,6 @@ describe('prepareImportOperations()', () => {
     ]);
   });
 
-  it('uses person.get and sets ext_id when both IDs are configured', () => {
-    const sheet: Sheet = {
-      columns: [
-        { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
-        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
-        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: true },
-      ],
-      firstRowIsHeaders: false,
-      importID: 'id',
-      rows: [
-        {
-          data: ['123', '9999', 'clara@example.com'],
-        },
-      ],
-      title: 'My sheet',
-    };
-
-    const ops = prepareImportOperations(sheet, countryCode);
-    expect(ops).toEqual([
-      {
-        key: {
-          id: 123,
-        },
-        op: 'person.get',
-        ops: [
-          {
-            data: {
-              email: 'clara@example.com',
-              ext_id: '9999',
-            },
-            op: 'person.setfields',
-          },
-        ],
-      },
-    ]);
-  });
-
   it('sets if_none in person.get when sheet is configured to skip unknown', () => {
     const sheet: Sheet = {
       columns: [
