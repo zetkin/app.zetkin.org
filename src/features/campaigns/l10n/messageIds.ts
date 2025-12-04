@@ -76,6 +76,7 @@ export default makeMessages('feat.campaigns', {
     createEvent: m('Event'),
     createSurvey: m('Survey'),
     createTask: m('Task'),
+    createPetition: m('Petition'),
   },
   events: m('Events'),
   feedback: {

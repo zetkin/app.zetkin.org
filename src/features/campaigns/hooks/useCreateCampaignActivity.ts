@@ -1,14 +1,18 @@
+import { IFuture, PromiseFuture } from 'core/caching/futures';
+import { useApiClient, useAppDispatch } from 'core/hooks';
 import createCallAssignmentRpc from 'features/callAssignments/rpc/createCallAssignment';
 import {
   callAssignmentCreate,
   callAssignmentCreated,
 } from 'features/callAssignments/store';
-import { IFuture, PromiseFuture } from 'core/caching/futures';
+import { petitionCreate, petitionCreated } from 'features/petition/store';
+
 import { surveyCreate, surveyCreated } from 'features/surveys/store';
-import { useApiClient, useAppDispatch } from 'core/hooks';
 import {
   ZetkinCallAssignment,
   ZetkinCallAssignmentPartial,
+  ZetkinPetition,
+  ZetkinPetitionPostBody,
   ZetkinSurvey,
   ZetkinSurveyExtended,
   ZetkinSurveyPostBody,
@@ -19,6 +23,9 @@ interface UseCreateCampaignActivityReturn {
     callAssignmentBody: ZetkinCallAssignmentPartial
   ) => IFuture<ZetkinCallAssignment>;
   createSurvey: (surveyBody: ZetkinSurveyPostBody) => IFuture<ZetkinSurvey>;
+  createPetition: (
+    petitionBody: ZetkinPetitionPostBody
+  ) => IFuture<ZetkinPetition>;
 }
 
 export default function useCreateCampaignActivity(
@@ -58,12 +65,32 @@ export default function useCreateCampaignActivity(
         surveyBody
       )
       .then((survey) => {
-        dispatch(surveyCreated(survey));
+        const d = surveyCreated(survey);
+        dispatch(d);
         return survey;
       });
 
     return new PromiseFuture(promise);
   };
 
-  return { createCallAssignment, createSurvey };
+  const createPetition = (
+    petitionBody: ZetkinPetitionPostBody
+  ): IFuture<ZetkinPetition> => {
+    dispatch(petitionCreate());
+    const promise = apiClient
+      .post<ZetkinPetition, ZetkinPetitionPostBody>(
+        `/beta/orgs/${orgId}/campaigns/${campId}/petitions
+        `,
+        petitionBody
+      )
+      .then((petition) => {
+        const data = petitionCreated(petition);
+        dispatch(data);
+        return petition;
+      });
+
+    return new PromiseFuture(promise);
+  };
+
+  return { createCallAssignment, createSurvey, createPetition };
 }
