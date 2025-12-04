@@ -385,7 +385,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
       slots={{
         popper: StyledPopper,
       }}
-      sx={{
+      sx={(theme) => ({
         '& .MuiOutlinedInput-notchedOutline': {
           border: 'none',
           padding: 0,
@@ -401,7 +401,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
           textOverflow: 'clip',
         },
         '& .MuiOutlinedInput-root.Mui-focused:after': {
-          borderBottom: '2px solid #ED1C55',
+          borderBottom: `2px solid ${theme.palette.primary.main}`,
           transform: 'scaleX(1) translateX(0)',
         },
         '& .MuiOutlinedInput-root:after': {
@@ -437,7 +437,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         minWidth: props.minWidth,
         verticalAlign: 'bottom',
         width: 'fit-content',
-      }}
+      })}
       value={valueItem}
     />
   );
