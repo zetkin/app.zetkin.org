@@ -1,25 +1,17 @@
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
 
-import { CellData, ColumnKind, Sheet } from '../types';
+import { ColumnKind, Sheet } from '../types';
 import parserFactory from './dateParsing/parserFactory';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { BulkOp, BulkSubOp } from '../types';
 import { cleanPhoneNumber } from './phoneUtils';
-
-// TODO: Get rid of this type and dependencies on it
-export type ZetkinPersonImportOp = {
-  data?: Record<string, CellData>;
-  dateFormat?: string | null; //STÄMMER DETTA?
-  op: 'person.import';
-  organizations?: number[];
-  tags?: { id: number }[];
-};
 
 export default function prepareImportOperations(
   sheet: Sheet,
   countryCode: CountryCode
 ): BulkOp[] {
   const preparedOps: BulkOp[] = [];
+  const importID = sheet.importID;
 
   sheet.rows.forEach((row, index) => {
     if (sheet.firstRowIsHeaders && index == 0) {
@@ -28,11 +20,11 @@ export default function prepareImportOperations(
 
     const subOps: BulkSubOp[] = [];
 
-    let zetkinId: number | null = null;
-    let extId: string | null = null;
-    let emailId: string | null = null;
+    let key: { id: number } | { ext_id: string } | { email: string } | null =
+      null;
 
     const fields: Partial<ZetkinPerson> = {};
+
     sheet.columns.forEach((col, index) => {
       if (col.selected) {
         const value = row.data[index];
@@ -51,21 +43,33 @@ export default function prepareImportOperations(
               value = parsedPhoneNumber.format('E.164');
             }
 
-            if (fieldKey == 'email') {
-              value = value.toString().trim();
-            }
-
             fields[col.field] = value;
           }
         } else if (col.kind == ColumnKind.ID_FIELD) {
           if (value) {
-            if (col.idField == 'ext_id') {
-              extId = value.toString();
-            } else if (col.idField == 'id') {
-              zetkinId = parseInt(value.toString());
-            } else if (col.idField == 'email') {
-              emailId = value.toString().trim();
-              fields.email = value.toString().trim();
+            if (sheet.importID === col.idField) {
+              if (col.idField === 'id') {
+                const parsedToInteger = parseInt(value.toString());
+                const canBeParsedToInteger = !isNaN(parsedToInteger);
+                if (!canBeParsedToInteger) {
+                  throw new Error(
+                    "Cell value for id field 'id' has to be an integer"
+                  );
+                }
+                key = { id: parsedToInteger };
+              } else if (col.idField === 'ext_id') {
+                key = { ext_id: value.toString().trim() };
+                fields['ext_id'] = value.toString().trim();
+              } else if (col.idField === 'email') {
+                key = { email: value.toString().trim() };
+                fields['email'] = value.toString().trim();
+              }
+            } else {
+              if (col.idField === 'ext_id') {
+                fields['ext_id'] = value.toString();
+              } else if (col.idField === 'email') {
+                fields['email'] = value.toString();
+              }
             }
           }
         } else if (col.kind == ColumnKind.DATE) {
@@ -112,13 +116,6 @@ export default function prepareImportOperations(
       }
     });
 
-    if (extId) {
-      fields.ext_id = extId;
-      if (zetkinId) {
-        extId = null;
-      }
-    }
-
     const hasFields = Object.keys(fields).length > 0;
     if (hasFields) {
       subOps.push({
@@ -127,28 +124,10 @@ export default function prepareImportOperations(
       });
     }
 
-    if (extId) {
+    if (importID && key) {
       preparedOps.push({
-        if_none: sheet.skipUnknown ? 'skip' : undefined,
-        key: {
-          ext_id: extId,
-        },
-        op: 'person.get',
-        ops: subOps,
-      });
-    } else if (zetkinId) {
-      preparedOps.push({
-        if_none: sheet.skipUnknown ? 'skip' : undefined,
-        key: {
-          id: zetkinId,
-        },
-        op: 'person.get',
-        ops: subOps,
-      });
-    } else if (emailId) {
-      preparedOps.push({
-        if_none: sheet.skipUnknown ? 'skip' : undefined,
-        key: { email: emailId },
+        ...(sheet.skipUnknown && { if_none: 'skip' }),
+        key,
         op: 'person.get',
         ops: subOps,
       });

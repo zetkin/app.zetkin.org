@@ -1,7 +1,15 @@
 import getUniqueTags from './getUniqueTags';
-import { ZetkinPersonImportOp } from './prepareImportOperations';
-import { ColumnKind, Sheet } from '../types';
+import { CellData, ColumnKind, Sheet } from '../types';
 import parserFactory from './dateParsing/parserFactory';
+
+// TODO: Get rid of this type
+type ZetkinPersonImportOp = {
+  data?: Record<string, CellData>;
+  dateFormat?: string | null;
+  op: 'person.import';
+  organizations?: number[];
+  tags?: { id: number }[];
+};
 
 export default function createPreviewData(
   configuredSheet: Sheet,
