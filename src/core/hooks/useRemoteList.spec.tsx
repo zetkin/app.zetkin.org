@@ -5,11 +5,25 @@ import { Provider as ReduxProvider, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import useRemoteList from './useRemoteList';
+import usePromiseCache from './usePromiseCache';
 import { RemoteList, remoteList } from 'utils/storeUtils';
 
 type ListObjectForTest = { id: number; name: string };
 type StoreState = {
   list: RemoteList<ListObjectForTest>;
+};
+
+type RemoteListHooksForTest = {
+  actionOnError?: (err: unknown) => { payload: unknown; type: string };
+  actionOnLoad: () => { payload: undefined; type: string };
+  actionOnSuccess: (items: ListObjectForTest[]) => {
+    payload: ListObjectForTest[];
+    type: string;
+  };
+  cacheKey?: string;
+  isNecessary?: () => boolean;
+  loader: () => Promise<ListObjectForTest[]>;
+  staleWhileRevalidate?: boolean;
 };
 
 describe('useRemoteList()', () => {
@@ -62,20 +76,17 @@ describe('useRemoteList()', () => {
   });
 
   it('throws a promise on initial load', async () => {
+    const cacheKey = 'initial-load-test';
     const { hooks, promise, store } = setupWrapperComponent();
-    let captured: unknown = undefined;
 
-    const CatchingComponent: FC = () => {
+    hooks.cacheKey = cacheKey;
+
+    const ListComponent: FC = () => {
       const list = useSelector<StoreState, RemoteList<ListObjectForTest>>(
         (state) => state.list
       );
 
-      try {
-        useRemoteList(list, hooks);
-      } catch (err) {
-        captured = err;
-        throw err;
-      }
+      useRemoteList(list, hooks);
 
       return null;
     };
@@ -83,12 +94,13 @@ describe('useRemoteList()', () => {
     render(
       <ReduxProvider store={store}>
         <Suspense fallback={<p>loading</p>}>
-          <CatchingComponent />
+          <ListComponent />
         </Suspense>
       </ReduxProvider>
     );
 
-    expect(captured).toBeInstanceOf(Promise);
+    const cachedPromise = usePromiseCache(cacheKey).getExistingPromise();
+    expect(cachedPromise).toBeInstanceOf(Promise);
 
     await act(async () => {
       await promise;
@@ -155,7 +167,7 @@ function setupWrapperComponent(initialList?: RemoteList<ListObjectForTest>) {
 
   const promise = Promise.resolve([{ id: 1, name: 'Clara Zetkin' }]);
 
-  const hooks = {
+  const hooks: RemoteListHooksForTest = {
     actionOnLoad: () => ({ payload: undefined, type: 'load' }),
     actionOnSuccess: (data: ListObjectForTest[]) => ({
       payload: data,
