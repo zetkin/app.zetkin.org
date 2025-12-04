@@ -102,7 +102,11 @@ export function predictProblems(
 
         if (value) {
           if (column.kind == ColumnKind.ID_FIELD) {
-            rowHasId = true;
+            if (sheet.importID) {
+              if (column.idField === sheet.importID) {
+                rowHasId = true;
+              }
+            }
             if (
               column.idField == 'email' &&
               !z.string().email().safeParse(value.toString().trim()).success

@@ -361,7 +361,7 @@ describe('predictProblem()', () => {
     ]);
   });
 
-  it('returns problem when ID or name are not configured', () => {
+  it('returns UNCONFIGURED_ID_AND_NAME problem when ID or full name are not configured', () => {
     const sheet = makeFullSheet({
       columns: [
         {
@@ -432,7 +432,7 @@ describe('predictProblem()', () => {
     expect(problems).toEqual([]);
   });
 
-  it('returns problem when ID and name are configured but missing on a row', () => {
+  it('returns MISSING_ID_AND_NAME problem when ID and name are configured but missing on a row', () => {
     const sheet = makeFullSheet({
       columns: [
         {
@@ -455,6 +455,88 @@ describe('predictProblem()', () => {
         { data: [null, 'Clara', null] },
         { data: [null, null, 'Zetkin'] },
         { data: ['', null, 'Zetkin'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        indices: [0, 1, 2],
+        kind: ImportProblemKind.MISSING_ID_AND_NAME,
+      },
+    ]);
+  });
+
+  it('returns problem MISSING_ID_AND_NAME ID and name are configured but rows miss full name and ID, even if other id fields are present', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'ext_id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+      ],
+      importID: 'ext_id',
+      rows: [
+        { data: ['', '', 'Zetkin', 'clara@example.com'] },
+        { data: ['', 'Rosa', '', 'rosa@example.com'] },
+        { data: ['', null, 'Zetkin', 'karl@example.com'] },
+      ],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        indices: [0, 1, 2],
+        kind: ImportProblemKind.MISSING_ID_AND_NAME,
+      },
+    ]);
+  });
+
+  it('returns MISSING_ID_AND_NAME problem when importID is NOT configured and rows have partial names, even when other id fields are present', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          idField: 'ext_id',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          field: 'last_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+      ],
+      importID: null,
+      rows: [
+        { data: ['', '', 'Zetkin', 'clara@example.com'] },
+        { data: ['', 'Rosa', '', 'rosa@example.com'] },
+        { data: ['', null, 'Zetkin', 'karl@example.com'] },
       ],
     });
 
