@@ -392,9 +392,7 @@ const StyledAutocomplete: FC<Props> = (props) => {
         },
         '& .MuiOutlinedInput-root': {
           border: 'none',
-          // borderBottom: `1px solid rgba(0, 0, 0, 0.42)`,
           borderRadius: 0,
-          // display: 'flex',
           padding: 0,
         },
         '& .MuiOutlinedInput-root .MuiInputBase-input': {
