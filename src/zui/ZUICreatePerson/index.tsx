@@ -34,11 +34,11 @@ interface ZUICreatePersonProps {
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   initialValues,
-  open,
   onClose,
   onSubmit,
-  title,
+  open,
   submitLabel,
+  title,
 }) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
@@ -98,6 +98,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
                 }
               }
             }}
+            orgId={orgId}
             personalInfo={personalInfo}
             tags={tags}
           />
