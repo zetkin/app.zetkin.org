@@ -108,8 +108,7 @@ describe('useRemoteList()', () => {
 
     const { queryByText } = render();
 
-    expect(queryByText('loading')).not.toBeNull();
-    expect(queryByText('Clara Zetkin')).toBeNull();
+    expect(queryByText('Clara Zetkin')).not.toBeNull();
 
     await act(async () => {
       await promise;

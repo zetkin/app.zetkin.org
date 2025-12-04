@@ -23,14 +23,14 @@ export default function useRemoteList<
 ): DataType[] {
   const dispatch = useAppDispatch();
 
-  const shouldLoadList = shouldLoad(remoteList);
-  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoadList;
+  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
+  const isLoaded = !remoteList || !remoteList?.loaded;
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
   const { cache, getExistingPromise } = usePromiseCache(promiseKey);
   const staleWhileRevalidate = hooks.staleWhileRevalidate ?? true;
 
-  if (shouldLoadList) {
+  if (isLoaded) {
     const existing = getExistingPromise();
     if (!existing) {
       const promise = Promise.resolve()
