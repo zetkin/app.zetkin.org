@@ -147,13 +147,13 @@ describe('prepareImportOperations()', () => {
     const sheet: Sheet = {
       columns: [
         { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
-        { field: 'email', kind: ColumnKind.FIELD, selected: true },
+        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
       importID: 'id',
       rows: [
         {
-          data: ['123', 'clara@example.com'],
+          data: [123, 'clara@example.com'],
         },
       ],
       title: 'My sheet',
@@ -727,7 +727,7 @@ describe('prepareImportOperations()', () => {
     ]);
   });
 
-  it('ignores mismatching organiation mappings', () => {
+  it('ignores mismatching organization mappings', () => {
     const sheet: Sheet = {
       columns: [
         { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
@@ -755,6 +755,63 @@ describe('prepareImportOperations()', () => {
         },
         op: 'person.get',
         ops: [],
+      },
+    ]);
+  });
+
+  it('uses person.create if selected import id is missing on a row', () => {
+    const sheet: Sheet = {
+      columns: [
+        { idField: 'ext_id', kind: ColumnKind.ID_FIELD, selected: true },
+        { field: 'first_name', kind: ColumnKind.FIELD, selected: true },
+        { field: 'last_name', kind: ColumnKind.FIELD, selected: true },
+        { idField: 'email', kind: ColumnKind.ID_FIELD, selected: true },
+      ],
+      firstRowIsHeaders: true,
+      importID: 'ext_id',
+      rows: [
+        {
+          data: ['external id', 'first', 'last', 'email'],
+        },
+        {
+          data: ['', 'Clara', 'Zetkin', 'clara@example.com'],
+        },
+        {
+          data: ['2', 'Rosa', 'Luxemburg', 'rosa@example.com'],
+        },
+      ],
+      title: 'My sheet',
+    };
+
+    const ops = prepareImportOperations(sheet, countryCode);
+    expect(ops).toEqual([
+      {
+        op: 'person.create',
+        ops: [
+          {
+            data: {
+              email: 'clara@example.com',
+              first_name: 'Clara',
+              last_name: 'Zetkin',
+            },
+            op: 'person.setfields',
+          },
+        ],
+      },
+      {
+        key: { ext_id: '2' },
+        op: 'person.get',
+        ops: [
+          {
+            data: {
+              email: 'rosa@example.com',
+              ext_id: '2',
+              first_name: 'Rosa',
+              last_name: 'Luxemburg',
+            },
+            op: 'person.setfields',
+          },
+        ],
       },
     ]);
   });
