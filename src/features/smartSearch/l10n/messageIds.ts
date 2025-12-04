@@ -298,7 +298,7 @@ export default makeMessages('feat.smartSearch', {
         statusSelect: ReactElement;
         timeFrame: ReactElement;
       }>(
-        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {campaignSelect} of {activitySelect} at location {locationSelect} {timeFrame}'
+        '{addRemoveSelect} people who {haveSelect} {bookedSelect} {statusSelect} for events in {campaignSelect} of {activitySelect} at {locationSelect} {timeFrame}'
       ),
       locationSelect: {
         any: m('any location'),
