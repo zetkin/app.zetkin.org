@@ -27,10 +27,10 @@ export default function useSheets() {
   };
 
   return {
-    firstRowIsHeaders: selectedSheet.firstRowIsHeaders,
+    firstRowIsHeaders: selectedSheet?.firstRowIsHeaders,
     selectedSheetIndex: pendingFile.selectedSheetIndex,
     sheets,
-    skipUnknown: !!selectedSheet.skipUnknown,
+    skipUnknown: !!selectedSheet?.skipUnknown,
     updateImportID,
     updateSelectedSheetIndex,
     updateSheetSettings,
