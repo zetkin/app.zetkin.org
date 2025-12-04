@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -14,7 +13,8 @@ import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
+import { CampaignActivity } from 'features/campaigns/types';
+import useCampaignActivitiesFilters from 'features/campaigns/hooks/useCampaignActivitiesFilters';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -33,25 +33,8 @@ const CampaignActivitiesPage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId, campId } = useNumericRouteParams();
   const activitiesFuture = useActivityList(orgId, campId);
-  const [searchString, setSearchString] = useState('');
-  const [filters, setFilters] = useState<ACTIVITIES[]>([
-    ACTIVITIES.CALL_ASSIGNMENT,
-    ACTIVITIES.AREA_ASSIGNMENT,
-    ACTIVITIES.SURVEY,
-    ACTIVITIES.TASK,
-    ACTIVITIES.EMAIL,
-  ]);
-
-  const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const filter = evt.target.value as ACTIVITIES;
-    if (filters.includes(filter)) {
-      setFilters(filters.filter((a) => a !== filter));
-    } else {
-      setFilters([...filters, filter]);
-    }
-  };
-
-  const onSearchStringChange = (value: string) => setSearchString(value);
+  const { filters, onFiltersChange, onSearchStringChange, searchString } =
+    useCampaignActivitiesFilters(orgId, campId);
 
   if (onServer) {
     return null;
@@ -93,6 +76,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
                   filterTypes={filterTypes}
                   onFiltersChange={onFiltersChange}
                   onSearchStringChange={onSearchStringChange}
+                  searchString={searchString}
                 />
               </Grid>
             </Grid>
