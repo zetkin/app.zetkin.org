@@ -4,11 +4,13 @@ import {
   ZetkinSurveyApiSubmission,
   ZetkinSurveyQuestionResponse,
   ZetkinSurveySignaturePayload,
+  ZetkinUser,
 } from 'utils/types/zetkin';
 
 export default function prepareSurveyApiSubmission(
   formData: FormData,
-  isLoggedIn?: boolean
+  user?: ZetkinUser | null,
+  isConnectedToOrg?: boolean
 ): ZetkinSurveyApiSubmission {
   const responses: ZetkinSurveyQuestionResponse[] = [];
   const keys = uniq([...formData.keys()]);
@@ -49,8 +51,16 @@ export default function prepareSurveyApiSubmission(
   let signature: ZetkinSurveySignaturePayload = null;
 
   const sig = formData.get('sig') as string | null;
-  if (sig === 'user' && isLoggedIn) {
+  if (sig === 'user' && !!user && isConnectedToOrg) {
     signature = 'user';
+  }
+
+  if (sig === 'user' && !!user && !isConnectedToOrg) {
+    signature = {
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
   }
 
   if (sig == 'email') {
