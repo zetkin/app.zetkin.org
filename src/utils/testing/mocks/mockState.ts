@@ -16,6 +16,7 @@ export default function mockState(overrides?: RootState) {
     },
     areas: {
       areaList: remoteList(),
+      locationsByAreaId: {},
       tagsByAreaId: {},
     },
     breadcrumbs: {

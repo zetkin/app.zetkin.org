@@ -27,10 +27,14 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/areas/l10n/messageIds';
 import { ZUIExpandableText } from 'zui/ZUIExpandableText';
+import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
+import locToLatLng from 'features/geography/utils/locToLatLng';
+import { ZetkinLocation } from 'features/areaAssignments/types';
 
 type Props = {
   area: ZetkinArea;
   editing: boolean;
+  locations: ZetkinLocation[];
   onBeginEdit: () => void;
   onCancelEdit: () => void;
   onClose: () => void;
@@ -39,6 +43,7 @@ type Props = {
 const AreaOverlay: FC<Props> = ({
   area,
   editing,
+  locations,
   onBeginEdit,
   onCancelEdit,
   onClose,
@@ -80,6 +85,26 @@ const AreaOverlay: FC<Props> = ({
     setTitle(area.title);
     setDescription(area.description);
   }, [area.id]);
+
+  const locationsInSelectedArea: ZetkinLocation[] = [];
+  if (area) {
+    locations.map((location) => {
+      const isInsideArea = isPointInsidePolygon(
+        locToLatLng(location),
+        area.points.map((point) => ({ lat: point[1], lng: point[0] }))
+      );
+      if (isInsideArea) {
+        locationsInSelectedArea.push(location);
+      }
+    });
+  }
+
+  const numberOfHouseholdsInSelectedArea = locationsInSelectedArea
+    .map(
+      (location) =>
+        location.num_known_households || location.num_estimated_households
+    )
+    .reduce((prev, curr) => prev + curr, 0);
 
   return (
     <Paper
@@ -225,6 +250,45 @@ const AreaOverlay: FC<Props> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
+
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={1}
+        paddingTop={1}
+        sx={{ overflowY: 'auto' }}
+      >
+        <Box>
+          <Typography
+            color="secondary"
+            sx={(theme) => ({ color: theme.palette.secondary.main })}
+            variant="h5"
+          >
+            {locationsInSelectedArea.length}
+          </Typography>
+          <Typography color="secondary" textAlign="center" variant="caption">
+            <Msg
+              id={messageIds.areas.stats.locations}
+              values={{ numLocations: locationsInSelectedArea.length }}
+            />
+          </Typography>
+        </Box>
+        <Box>
+          <Typography
+            color="secondary"
+            sx={(theme) => ({ color: theme.palette.secondary.main })}
+            variant="h5"
+          >
+            {numberOfHouseholdsInSelectedArea}
+          </Typography>
+          <Typography color="secondary" textAlign="center" variant="caption">
+            <Msg
+              id={messageIds.areas.stats.households}
+              values={{ numHouseholds: numberOfHouseholdsInSelectedArea }}
+            />
+          </Typography>
+        </Box>
+      </Box>
       <Box ref={tagsElement} flexGrow={1} my={2}>
         {/*
         <TagsSection area={area} />

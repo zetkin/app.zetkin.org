@@ -32,6 +32,14 @@ export default makeMessages('feat.areas', {
       openFiltersButton: m('Filter'),
       ungroupedTagsLabel: m('Ungrouped tags'),
     },
+    stats: {
+      households: m<{ numHouseholds: number }>(
+        '{numHouseholds, plural, one {Household in selected area} other {Households in selected area}}'
+      ),
+      locations: m<{ numLocations: number }>(
+        '{numLocations, plural, one {Building in selected area} other {Buildings in selected area}}'
+      ),
+    },
   },
   page: {
     title: m('Geography'),
