@@ -457,15 +457,13 @@ test.describe('Journey instance detail page sidebar', () => {
     ]);
 
     await page.locator(`text="${ActivistTag.title}"`).hover();
-
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${ActivistTag.id}`
-      ),
-      page.locator(`[data-testid=TagChip-deleteButton]`).first().click(),
-    ]);
+    const deleteButtonTransition = page.waitForTimeout(500);
+    await deleteButtonTransition;
+    await page.locator(`[data-testid=TagChip-deleteButton]`).first().click();
 
     // Expect to have made request to delete tag
-    expect(deleteTagLog().length).toEqual(1);
+    await expect(() => {
+      expect(deleteTagLog()).toHaveLength(1);
+    }).toPass();
   });
 });

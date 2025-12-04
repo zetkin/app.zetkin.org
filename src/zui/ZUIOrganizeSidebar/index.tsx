@@ -1,7 +1,6 @@
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Architecture,
   Close,
@@ -28,6 +27,8 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import Link from 'next/link';
 
@@ -49,48 +50,15 @@ import oldTheme from 'theme';
 
 const drawerWidth = 300;
 
-const useStyles = makeStyles(() => ({
-  drawer: {
-    flexShrink: 0,
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.enteringScreen,
-      easing: oldTheme.transitions.easing.sharp,
-    }),
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-  },
-  drawerPaper: {
-    display: 'none',
-    [oldTheme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-    overflowX: 'hidden',
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.enteringScreen,
-      easing: oldTheme.transitions.easing.sharp,
-    }),
-    width: drawerWidth,
-  },
-  toggleDrawerPaper: {
-    [oldTheme.breakpoints.up('sm')]: {
-      width: `calc(${oldTheme.spacing(8)} + 1px)`,
-    },
-    transition: oldTheme.transitions.create('width', {
-      duration: oldTheme.transitions.duration.leavingScreen,
-      easing: oldTheme.transitions.easing.sharp,
-    }),
-    width: `calc(${oldTheme.spacing(7)} + 1px)`,
-  },
-}));
-
 const ZUIOrganizeSidebar = (): JSX.Element => {
   const [hover, setHover] = useState(false);
   const messages = useMessages(messageIds);
-  const classes = useStyles();
   const user = useCurrentUser();
   const router = useRouter();
   const { orgId } = useNumericRouteParams();
   const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
+  const expandButton = useRef<HTMLButtonElement>(null);
+  const collapseButton = useRef<HTMLButtonElement>(null);
 
   const [checked, setChecked] = useState(false);
   const [lastOpen, setLastOpen] = useLocalStorage('orgSidebarOpen', true);
@@ -109,6 +77,12 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
     if (!open) {
       setChecked(false);
     }
+    const nextFocus = open ? expandButton : collapseButton;
+    setTimeout(() => {
+      if (nextFocus.current) {
+        nextFocus.current.focus();
+      }
+    }, 16);
     setOpen(!open);
     setLastOpen(!open);
   };
@@ -128,22 +102,36 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
 
   const showOrgSwitcher = checked && open;
 
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.up('sm'));
+  const width = open
+    ? `${drawerWidth}px`
+    : `calc(${oldTheme.spacing(isSmall ? 8 : 7)} + 1px)`;
   return (
     <Box data-testid="organize-sidebar">
       <Drawer
-        classes={{
-          paper:
-            classes.drawerPaper +
-            (!open ? ` ${classes.toggleDrawerPaper}` : ''),
-        }}
-        className={
-          classes.drawer + (!open ? ` ${classes.toggleDrawerPaper}` : '')
-        }
         onMouseLeave={() => {
           setHover(false);
         }}
         onMouseOver={() => {
           setHover(true);
+        }}
+        sx={{
+          '.MuiDrawer-paper': {
+            [oldTheme.breakpoints.up('sm')]: {
+              display: 'block',
+            },
+            display: 'none',
+            overflowX: 'hidden',
+            width,
+          },
+          flexShrink: 0,
+          transition: oldTheme.transitions.create('width', {
+            duration: oldTheme.transitions.duration.enteringScreen,
+            easing: oldTheme.transitions.easing.sharp,
+          }),
+          whiteSpace: 'nowrap',
+          width,
         }}
         variant="permanent"
       >
@@ -159,7 +147,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               }}
             >
               {!open && hover && (
-                <IconButton onClick={handleClick}>
+                <IconButton ref={expandButton} onClick={handleClick}>
                   <KeyboardDoubleArrowRightOutlined />
                 </IconButton>
               )}
@@ -188,7 +176,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                               }}
                             >
                               {hover ? (
-                                <IconButton onClick={handleClick}>
+                                <IconButton
+                                  ref={collapseButton}
+                                  onClick={handleClick}
+                                >
                                   <KeyboardDoubleArrowLeftOutlined />
                                 </IconButton>
                               ) : (
@@ -373,33 +364,35 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                       justifyContent: 'flex-end',
                     }}
                   >
-                    <ZUIEllipsisMenu
-                      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-                      items={[
-                        {
-                          href: '/my',
-                          label:
-                            messages.organizeSidebar.myPagesMenuItemLabel(),
-                        },
-                        {
-                          divider: true,
-                          href: '/my/settings',
-                          label:
-                            messages.organizeSidebar.mySettingsMenuItemLabel(),
-                        },
-                        {
-                          label: messages.organizeSidebar.signOut(),
-                          onSelect: () => {
-                            logOut();
+                    {open && (
+                      <ZUIEllipsisMenu
+                        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        items={[
+                          {
+                            href: '/my',
+                            label:
+                              messages.organizeSidebar.myPagesMenuItemLabel(),
                           },
-                          startIcon: <Logout />,
-                        },
-                      ]}
-                      transformOrigin={{
-                        horizontal: 'right',
-                        vertical: 'bottom',
-                      }}
-                    />
+                          {
+                            divider: true,
+                            href: '/my/settings',
+                            label:
+                              messages.organizeSidebar.mySettingsMenuItemLabel(),
+                          },
+                          {
+                            label: messages.organizeSidebar.signOut(),
+                            onSelect: () => {
+                              logOut();
+                            },
+                            startIcon: <Logout />,
+                          },
+                        ]}
+                        transformOrigin={{
+                          horizontal: 'right',
+                          vertical: 'bottom',
+                        }}
+                      />
+                    )}
                   </Box>
                 </>
               )}
