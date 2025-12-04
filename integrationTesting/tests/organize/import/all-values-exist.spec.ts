@@ -56,6 +56,10 @@ test.describe(
       await page.locator('data-testid=FieldSelect-menu-item-ext_id').click();
 
       await page
+        .locator('data-testid=IdConfig-importID-checkbox-ext_id')
+        .check();
+
+      await page
         .locator(
           'data-testid=MappingRow-container >> input[type=checkbox] >> nth=1'
         )

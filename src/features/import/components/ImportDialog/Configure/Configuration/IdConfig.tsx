@@ -92,6 +92,7 @@ const IdConfig: FC<IdConfigProps> = ({ uiDataColumn }) => {
                 control={
                   <Checkbox
                     checked={importID == idField}
+                    data-testid={`IdConfig-importID-checkbox-${idField}`}
                     onChange={() => {
                       if (importID == idField) {
                         updateImportID(null);
