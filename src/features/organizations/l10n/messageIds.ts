@@ -32,7 +32,9 @@ export default makeMessages('feat.organizations', {
     ),
     contactPerson: m<{ name: string }>('{name} is the contact person'),
     defaultTitle: m('Untitled event'),
+    haveAccount: m('I have an account'),
     loading: m('Loading...'),
+    noDescription: m('This event has no description'),
     noLocation: m('No physical location'),
     partOfProject: m<{ projectLink: ReactElement }>('Part of {projectLink}'),
     participatingInfo: m<{ participatingCount: number }>(
@@ -106,6 +108,14 @@ export default makeMessages('feat.organizations', {
       clear: m('Clear'),
       title: m('Recent organizations'),
     },
+  },
+  signupChoiceModal: {
+    description: m(
+      "Use your Zetkin account to sign up to an event. If you don't have an account, don't worry you can still sign up without one."
+    ),
+    title: m('How do you want to sign up?'),
+    withAccount: m('With an account'),
+    withoutAccount: m('Without an account'),
   },
   subOrgEventBlurb: {
     description: m<{

@@ -15,6 +15,7 @@ import {
 import { Map, Marker } from '@vis.gl/react-maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 import ZUIText from 'zui/components/ZUIText';
 import ZUIIcon from 'zui/components/ZUIIcon';
@@ -37,6 +38,8 @@ import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
 import useMemberships from '../hooks/useMemberships';
+import useUser from 'core/hooks/useUser';
+import { PublicEventSignup } from '../components/PublicEventSignup';
 
 type Props = {
   eventId: number;
@@ -45,6 +48,7 @@ type Props = {
 
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
+  const messages = useMessages(messageIds);
   const myEvents = useMyEvents();
   const memberships = useMemberships();
   const baseEvent = useEvent(orgId, eventId)?.data;
@@ -78,6 +82,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const hasImage = !!event?.cover_file;
 
   const isFullScreen = !isMobile;
+  const showDescriptionSection = hasInfoText || isFullScreen;
 
   const contactPerson = event?.contact;
   const orgMembership = memberships.data?.find(
@@ -95,7 +100,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
       return 'column-reverse';
     }
 
-    if (!hasInfoText) {
+    if (!showDescriptionSection) {
       return 'column';
     }
 
@@ -163,15 +168,16 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
               sx={{
                 display: 'flex',
                 flexDirection: getFlexDirection(),
-                gap: hasInfoText || (!hasInfoText && isFullScreen) ? 2 : 0,
+                gap: showDescriptionSection ? 2 : 0,
               }}
             >
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: isFullScreen && hasInfoText ? 2 : 0,
-                  width: isFullScreen && hasInfoText ? '60%' : '100%',
+                  gap: isFullScreen && showDescriptionSection ? 2 : 0,
+                  width:
+                    isFullScreen && showDescriptionSection ? '60%' : '100%',
                 }}
               >
                 {isFullScreen && showContactDetails && (
@@ -185,23 +191,40 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                     <ContactPersonSection contactPerson={contactPerson} />
                   </Box>
                 )}
-                {hasInfoText && (
-                  <Box
-                    bgcolor="white"
-                    borderRadius={2}
-                    minHeight={isFullScreen ? 400 : ''}
-                    padding={2}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 2,
-                    }}
-                  >
-                    <Box display="flex" flexDirection="column" gap={1}>
-                      {paragraphs}
+                {showDescriptionSection &&
+                  (hasInfoText ? (
+                    <Box
+                      bgcolor="white"
+                      borderRadius={2}
+                      minHeight={isFullScreen ? 400 : ''}
+                      padding={2}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                      }}
+                    >
+                      <Box display="flex" flexDirection="column" gap={1}>
+                        {paragraphs}
+                      </Box>
                     </Box>
-                  </Box>
-                )}
+                  ) : (
+                    <Box
+                      bgcolor="white"
+                      borderRadius={2}
+                      minHeight={isFullScreen ? 400 : ''}
+                      padding={2}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                      }}
+                    >
+                      <ZUIText color="secondary">
+                        {messages.eventPage.noDescription()}
+                      </ZUIText>
+                    </Box>
+                  ))}
               </Box>
               <Box
                 bgcolor="white"
@@ -211,7 +234,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                 gap={2}
                 minHeight={isFullScreen ? 400 : ''}
                 padding={2}
-                width={isFullScreen && hasInfoText ? '40%' : '100%'}
+                width={isFullScreen && showDescriptionSection ? '40%' : '100%'}
               >
                 <SignUpSection event={event} />
                 <DateAndLocation event={event} />
@@ -293,6 +316,9 @@ const SignUpSection: FC<{
   event: ZetkinEventWithStatus;
 }> = ({ event }) => {
   const messages = useMessages(messageIds);
+  const user = useUser();
+  const pathname = usePathname();
+  const [signupSuccessful, setSignupSuccessful] = useState(false);
 
   if (event.cancelled) {
     return (
@@ -316,8 +342,30 @@ const SignUpSection: FC<{
           <ZUISignUpChip status="booked" />
         </Box>
       )}
-      <Box alignItems="center" display="flex" gap={1}>
-        <EventSignupButton event={event} />
+      <Box alignItems="center" display="flex" flexDirection="column" gap={1}>
+        {!user ? (
+          <>
+            <Box width="100%">
+              <PublicEventSignup
+                event={event}
+                onSignupSuccess={() => setSignupSuccessful(true)}
+              />
+            </Box>
+            {!signupSuccessful && (
+              <ZUIButton
+                fullWidth
+                href={`/login?redirect=${encodeURIComponent(
+                  pathname || `/o/${event.organization.id}/events/${event.id}`
+                )}`}
+                label={messages.eventPage.haveAccount()}
+                size="large"
+                variant="secondary"
+              />
+            )}
+          </>
+        ) : (
+          <EventSignupButton event={event} fullWidth />
+        )}
       </Box>
     </Box>
   );

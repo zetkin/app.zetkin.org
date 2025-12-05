@@ -15,7 +15,6 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
 import { Msg, useMessages } from 'core/i18n';
 import ZUIText from 'zui/components/ZUIText';
-import ZUIModal from 'zui/components/ZUIModal';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import ZUIButton from '../../../zui/components/ZUIButton';
 import ZUIDrawerModal from '../../../zui/components/ZUIDrawerModal';
@@ -26,7 +25,7 @@ import NoEventsBlurb from 'features/organizations/components/NoEventsBlurb';
 import { filtersUpdated } from '../store';
 import messageIds from '../l10n/messageIds';
 import useCampaign from '../hooks/useCampaign';
-import orgMessageIds from 'features/organizations/l10n/messageIds';
+import SignupChoiceModal from 'features/organizations/components/SignupChoiceModal';
 
 type Props = {
   campId: number;
@@ -35,7 +34,6 @@ type Props = {
 
 const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
   const intl = useIntl();
-  const orgMessages = useMessages(orgMessageIds);
   const messages = useMessages(messageIds);
   const nextDelay = useIncrementalDelay();
   const user = useUser();
@@ -409,26 +407,14 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
           ))}
         </List>
       </ZUIDrawerModal>
-      <ZUIModal
-        onClose={() => setPostAuthEvent(null)}
-        open={!!postAuthEvent}
-        primaryButton={{
-          href: `/login?redirect=${encodeURIComponent(`/o/${orgId}`)}`,
-          label: orgMessages.authDialog.loginButton(),
-        }}
-        secondaryButton={{
-          label: orgMessages.authDialog.cancelButton(),
-          onClick: () => setPostAuthEvent(null),
-        }}
-        size="small"
-        title={orgMessages.authDialog.label()}
-      >
-        <Box sx={{ paddingTop: '0.75rem' }}>
-          <ZUIText>
-            <Msg id={orgMessageIds.authDialog.content} />
-          </ZUIText>
-        </Box>
-      </ZUIModal>
+      {postAuthEvent && (
+        <SignupChoiceModal
+          eventId={postAuthEvent.id}
+          onClose={() => setPostAuthEvent(null)}
+          open={!!postAuthEvent}
+          orgId={postAuthEvent.organization.id}
+        />
+      )}
     </Box>
   );
 };

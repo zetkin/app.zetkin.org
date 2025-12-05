@@ -35,10 +35,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   orgId,
 }) => {
   const event = useEvent(orgId, eventId)?.data;
-  const { pendingSignUps, participantsFuture } = useEventParticipants(
-    orgId,
-    eventId
-  );
+  const { numUnverifiedParticipants, pendingSignUps, participantsFuture } =
+    useEventParticipants(orgId, eventId);
   const participants = participantsFuture.data || [];
 
   const { setReqParticipants } = useEventParticipantsMutations(orgId, eventId);
@@ -154,7 +152,20 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
-            <Typography>{pendingSignUps.length}</Typography>
+            <Typography>
+              {pendingSignUps.length + numUnverifiedParticipants}
+            </Typography>
+          </Box>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            marginY={1}
+          >
+            <Typography color={'secondary'} component="h6" variant="subtitle1">
+              Unverified sign-ups
+            </Typography>
+            <Typography>{numUnverifiedParticipants}</Typography>
           </Box>
           <Box
             alignItems="center"
