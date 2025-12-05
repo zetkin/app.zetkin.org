@@ -26,7 +26,7 @@ export default function usePersonMutations(
     const updatedPerson = await apiClient.patch<
       ZetkinPerson,
       ZetkinUpdatePerson
-    >(`/api/orgs/${orgId}/people/${personId}`, data);
+    >(`/beta/orgs/${orgId}/people/${personId}`, data);
 
     dispatch(personUpdated(updatedPerson));
   };

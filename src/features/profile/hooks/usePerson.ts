@@ -11,6 +11,6 @@ export default function usePerson(orgId: number, personId: number) {
     actionOnLoad: () => personLoad(personId),
     actionOnSuccess: (data) => personLoaded([personId, data]),
     loader: () =>
-      apiClient.get<ZetkinPerson>(`/api/orgs/${orgId}/people/${personId}`),
+      apiClient.get<ZetkinPerson>(`/beta/orgs/${orgId}/people/${personId}`),
   });
 }
