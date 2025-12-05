@@ -12,7 +12,7 @@ import { FC } from 'react';
 
 import messageIds from 'features/import/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
-import { Gender, genders } from '../../../../hooks/useGenderMapping';
+import { Gender, genders } from 'features/import/types';
 
 interface GenderConfigRowProps {
   italic?: boolean;

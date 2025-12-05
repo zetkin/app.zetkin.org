@@ -1,7 +1,7 @@
 import { describe, it } from '@jest/globals';
 
 import createPreviewData from './createPreviewData';
-import { ColumnKind, Sheet } from './types';
+import { ColumnKind, Sheet } from '../types';
 
 describe('createPreviewData()', () => {
   it('converts fields to preview object', () => {

@@ -74,14 +74,37 @@ export default makeMessages('feat.import', {
         },
       },
       ids: {
-        externalID: m('External ID'),
+        confirmIDChange: {
+          description: m<{ currentImportID: string; newImportID: string }>(
+            'You are about to change Import ID from {currentImportID} to {newImportID}.'
+          ),
+          title: m('Confirm change of Import ID'),
+        },
         externalIDInfo: m(
           'An external ID is an ID that comes from another system than Zetkin, such as a separate member database. It can be used to find and identify people in Zetkin.'
         ),
-        wrongIDFormatWarning: m(
-          'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells are empty or contain f.x. letters, it can not be used as Zetkin IDs.'
+        field: {
+          email: m('Email'),
+          ['ext_id']: m('External ID'),
+          id: m('Zetkin ID'),
+        },
+        importCheckboxDescription: m(
+          'The field will be used to find people that already exist in Zetkin, each row should ideally be unique'
         ),
-        zetkinID: m('Zetkin ID'),
+        importCheckboxLabel: m<{ importID: string }>(
+          'Use {importID} as Import ID'
+        ),
+        importID: m('Import ID'),
+        importIDDescription: m<{ importID: 'ext_id' | 'email' | 'id' }>(
+          '{importID, select, id {Zetkin ID will be used to find and identify people in Zetkin.} email {Email can be used to find and identify people in Zetkin.} other {External ID can be used to find and identify people in Zetkin.}}'
+        ),
+        skipRowDescription: m('No new people will be created'),
+        wrongEmailFormatWarning: m(
+          'There are values in this column that are not valid email addresses.'
+        ),
+        wrongIDFormatWarning: m(
+          'The values in this column does not look like Zetkin IDs. A Zetkin ID only contains numbers. If some cells contain f.x. letters, they can not be used as Zetkin IDs.'
+        ),
         zetkinIDInfo: m(
           'A Zetkin ID is the ID of a person already in Zetkin. You would have it in a file if you exported data from Zetkin.'
         ),
@@ -107,17 +130,12 @@ export default makeMessages('feat.import', {
     mapping: {
       configButton: m('Configure'),
       defaultColumnHeader: m<{ columnIndex: number }>('Column {columnIndex}'),
+      email: m('Email'),
       emptyStateMessage: m('Start by mapping file columns.'),
       externalID: m('External ID'),
       fileHeader: m('File'),
       finishedMappingDates: m<{ dateFormat: string; numValues: number }>(
         'Mapping {numValues, plural, =1 {1 value} other {# values}} from {dateFormat, select, se {Swedish personnummer} no {Norwegian fødselsnummer} dk {Danish CPR-number} other {{dateFormat}}} into dates'
-      ),
-      finishedMappingIds: m<{
-        idField: 'ext_id' | 'id';
-        numValues: number;
-      }>(
-        'Mapping {numValues, plural, =1 {1 value} other {# values}} to {idField, select, id {Zetkin ID} other {external ID}}'
       ),
       finishedMappingOrganizations: m<{
         numMappedTo: number;
@@ -219,6 +237,11 @@ export default makeMessages('feat.import', {
         m: m('Male'),
         o: m('Other'),
         unknown: m('Unknown'),
+      },
+      ids: {
+        email: m('Email'),
+        ['ext_id']: m('External ID'),
+        id: m('Zetkin ID'),
       },
       next: m('Next'),
       noOrg: m('No organization'),

@@ -1,6 +1,6 @@
 import getUniqueTags from './getUniqueTags';
 import { ZetkinPersonImportOp } from './prepareImportOperations';
-import { ColumnKind, Sheet } from './types';
+import { ColumnKind, Sheet } from '../types';
 import parserFactory from './dateParsing/parserFactory';
 
 export default function createPreviewData(

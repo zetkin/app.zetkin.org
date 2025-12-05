@@ -7,7 +7,7 @@ import PreviewGrid from './PreviewGrid';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { ColumnKind, Sheet } from 'features/import/utils/types';
+import { ColumnKind, Sheet } from 'features/import/types';
 import oldTheme from 'theme';
 
 interface TagPreviewProps {

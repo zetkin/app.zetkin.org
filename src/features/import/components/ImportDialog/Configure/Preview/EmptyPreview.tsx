@@ -1,4 +1,4 @@
-import { CellData } from 'features/import/utils/types';
+import { CellData } from 'features/import/types';
 import messageIds from 'features/import/l10n/messageIds';
 import PreviewGrid from './PreviewGrid';
 import { useMessages } from 'core/i18n';

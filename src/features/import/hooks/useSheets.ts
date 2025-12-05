@@ -1,6 +1,6 @@
 import { sheetSettingsUpdated, setSelectedSheetIndex } from '../store';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { SheetSettings } from '../utils/types';
+import { SheetSettings } from '../types';
 
 export default function useSheets() {
   const dispatch = useAppDispatch();

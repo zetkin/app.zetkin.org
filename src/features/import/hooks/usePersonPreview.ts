@@ -1,5 +1,5 @@
 import createPreviewData from '../utils/createPreviewData';
-import { Sheet } from '../utils/types';
+import { Sheet } from '../types';
 import useSubOrganizations from 'features/organizations/hooks/useSubOrganizations';
 import useTags from 'features/tags/hooks/useTags';
 import { ZetkinTag, ZetkinOrganization } from 'utils/types/zetkin';

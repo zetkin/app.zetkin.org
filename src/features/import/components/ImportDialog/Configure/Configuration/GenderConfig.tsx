@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 
 import messageIds from 'features/import/l10n/messageIds';
-import { GenderColumn } from 'features/import/utils/types';
+import { GenderColumn } from 'features/import/types';
 import { UIDataColumn } from 'features/import/hooks/useUIDataColumn';
 import { Msg, useMessages } from 'core/i18n';
 import GenderConfigRow from './GenderConfigRow';
