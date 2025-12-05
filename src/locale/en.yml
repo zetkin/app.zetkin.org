@@ -1,3 +1,6 @@
+glob:
+  accessLevels:
+    configure: 'Edit configure '
 core:
   err404:
     backToHomePage: Back to home page
