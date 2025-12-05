@@ -74,6 +74,7 @@ export default makeMessages('feat.events', {
   eventParticipantsList: {
     actions: {
       book: m('Book'),
+      create: m('Create'),
       link: m('Link'),
       remove: m('Remove'),
       suggestedPeople: m('Suggested people'),
@@ -81,8 +82,7 @@ export default makeMessages('feat.events', {
     },
     attendance: m('Attendance'),
     bookedParticipants: m('Booked Participants'),
-    bulkBookAll: m('Book all'),
-    bulkCancelAll: m('Cancel all'),
+    bulkBookAll: m('Book all matched'),
     bulkRemoveAll: m('Remove all'),
     buttonAttended: m('Attended'),
     buttonBook: m('Book'),
@@ -97,21 +97,16 @@ export default makeMessages('feat.events', {
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
+    columnProbableMatch: m('Probable match'),
     columnSignedUp: m('Signed up'),
-    confirmBulkBook: m<{ count: number }>(
-      'Book all {count} unverified signups?'
-    ),
+    confirmBulkBook: m<{ count: number }>('Book all {count} linked signups?'),
     confirmBulkBookDescription: m(
-      'Each signup will be processed one by one. Make sure they are linked to a person first.'
+      'This will book all signups linked to a person.'
     ),
     confirmBulkBookSignups: m<{ count: number }>('Book all {count} signups?'),
-    confirmBulkBookSignupsDescription: m(
-      'This will book all selected signups.'
-    ),
+    confirmBulkBookSignupsDescription: m('This will book all signups.'),
     confirmBulkCancel: m<{ count: number }>('Cancel all {count} participants?'),
-    confirmBulkCancelDescription: m(
-      'This will cancel all selected participants.'
-    ),
+    confirmBulkCancelDescription: m('This will cancel all participants.'),
     confirmBulkRemove: m<{ count: number }>(
       'Remove all {count} unverified signups?'
     ),

@@ -301,16 +301,24 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
   }, [deleteUnverifiedSignup, rows]);
 
   const confirmBulkBook = useCallback(() => {
+    const linkedCount = rows.filter((row) => {
+      const personId = linkedPersons[row.id];
+      if (personId !== undefined) {
+        return personId !== null;
+      }
+      return row.person_id !== null && row.person_id !== undefined;
+    }).length;
     showConfirmDialog({
       onSubmit: () => runBulkBook(),
       title: messages.eventParticipantsList.confirmBulkBook({
-        count: linkableRows.length,
+        count: linkedCount,
       }),
       warningText: messages.eventParticipantsList.confirmBulkBookDescription(),
     });
   }, [
-    linkableRows.length,
+    linkedPersons,
     messages.eventParticipantsList,
+    rows,
     runBulkBook,
     showConfirmDialog,
   ]);
@@ -400,7 +408,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
       editable: true,
       field: 'link',
       flex: 1,
-      headerName: messages.eventParticipantsList.columnLinking(),
+      headerName: messages.eventParticipantsList.columnProbableMatch(),
       renderCell: (params) => (
         <LinkReadCell
           linkedPerson={
@@ -459,28 +467,41 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
             >
               {messages.eventParticipantsList.actions.remove()}
             </Button>
-            <Button
-              disabled={isLoading || !linkedPersonId}
-              onClick={noPropagate(async () => {
-                setLoadingSignups((prev) => new Set(prev).add(params.row.id));
-                try {
-                  await bookUnverifiedSignup(
-                    params.row,
-                    linkedPersonId || undefined
-                  );
-                } finally {
-                  setLoadingSignups((prev) => {
-                    const next = new Set(prev);
-                    next.delete(params.row.id);
-                    return next;
-                  });
-                }
-              })}
-              size="small"
-              variant="outlined"
-            >
-              {messages.eventParticipantsList.actions.book()}
-            </Button>
+            {linkedPersonId ? (
+              <Button
+                disabled={isLoading}
+                onClick={noPropagate(async () => {
+                  setLoadingSignups((prev) => new Set(prev).add(params.row.id));
+                  try {
+                    await bookUnverifiedSignup(
+                      params.row,
+                      linkedPersonId || undefined
+                    );
+                  } finally {
+                    setLoadingSignups((prev) => {
+                      const next = new Set(prev);
+                      next.delete(params.row.id);
+                      return next;
+                    });
+                  }
+                })}
+                size="small"
+                variant="outlined"
+              >
+                {messages.eventParticipantsList.actions.book()}
+              </Button>
+            ) : (
+              <Button
+                disabled={isLoading}
+                onClick={noPropagate(() => {
+                  setCreatePersonSignup(params.row);
+                })}
+                size="small"
+                variant="outlined"
+              >
+                {messages.eventParticipantsList.actions.create()}
+              </Button>
+            )}
           </Box>
         );
       },
@@ -556,6 +577,18 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
           onClose={() => setCreatePersonSignup(null)}
           onSubmit={async (_, person) => {
             await handleLinkChange(createPersonSignup.id, person);
+            setLoadingSignups((prev) =>
+              new Set(prev).add(createPersonSignup.id)
+            );
+            try {
+              await bookUnverifiedSignup(createPersonSignup, person.id);
+            } finally {
+              setLoadingSignups((prev) => {
+                const next = new Set(prev);
+                next.delete(createPersonSignup.id);
+                return next;
+              });
+            }
           }}
           open={!!createPersonSignup}
         />

@@ -138,30 +138,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
     }
   }, [rows, updateParticipant]);
 
-  const runBulkCancel = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      for (const row of rows) {
-        await updateParticipant(row.id, {
-          status: participantStatus.CANCELLED,
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [rows, updateParticipant]);
-
-  const runBulkRemove = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      for (const row of rows) {
-        await deleteParticipant(row.id);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [rows, deleteParticipant]);
-
   const confirmBulkBook = useCallback(() => {
     showConfirmDialog({
       onSubmit: () => runBulkBook(),
@@ -175,38 +151,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
     rows.length,
     messages.eventParticipantsList,
     runBulkBook,
-    showConfirmDialog,
-  ]);
-
-  const confirmBulkCancel = useCallback(() => {
-    showConfirmDialog({
-      onSubmit: () => runBulkCancel(),
-      title: messages.eventParticipantsList.confirmBulkCancel({
-        count: rows.length,
-      }),
-      warningText:
-        messages.eventParticipantsList.confirmBulkCancelDescription(),
-    });
-  }, [
-    rows.length,
-    messages.eventParticipantsList,
-    runBulkCancel,
-    showConfirmDialog,
-  ]);
-
-  const confirmBulkRemove = useCallback(() => {
-    showConfirmDialog({
-      onSubmit: () => runBulkRemove(),
-      title: messages.eventParticipantsList.confirmBulkRemoveCancelled({
-        count: rows.length,
-      }),
-      warningText:
-        messages.eventParticipantsList.confirmBulkRemoveCancelledDescription(),
-    });
-  }, [
-    rows.length,
-    messages.eventParticipantsList,
-    runBulkRemove,
     showConfirmDialog,
   ]);
 
@@ -497,15 +441,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
         {description}
       </Typography>
       {type === 'signups' && (
-        <Box display="flex" gap={1} justifyContent="space-between" mb={2}>
-          <Button
-            disabled={!rows.length || isLoading}
-            onClick={confirmBulkCancel}
-            size="small"
-            variant="text"
-          >
-            {messages.eventParticipantsList.bulkCancelAll()}
-          </Button>
+        <Box display="flex" gap={1} justifyContent="flex-end" mb={2}>
           <Button
             disabled={!rows.length || isLoading}
             onClick={confirmBulkBook}
@@ -513,30 +449,6 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
             variant="contained"
           >
             {messages.eventParticipantsList.bulkBookAll()}
-          </Button>
-        </Box>
-      )}
-      {type === 'booked' && (
-        <Box display="flex" gap={1} justifyContent="flex-end" mb={2}>
-          <Button
-            disabled={!rows.length || isLoading}
-            onClick={confirmBulkCancel}
-            size="small"
-            variant="text"
-          >
-            {messages.eventParticipantsList.bulkCancelAll()}
-          </Button>
-        </Box>
-      )}
-      {type === 'cancelled' && (
-        <Box display="flex" gap={1} justifyContent="flex-end" mb={2}>
-          <Button
-            disabled={!rows.length || isLoading}
-            onClick={confirmBulkRemove}
-            size="small"
-            variant="text"
-          >
-            {messages.eventParticipantsList.bulkRemoveAll()}
           </Button>
         </Box>
       )}

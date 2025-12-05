@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 // @ts-expect-error - fast-levenshtein doesn't have type definitions
 import { distance } from 'fast-levenshtein';
+import isEmail from 'validator/lib/isEmail';
 
 import { EventSignupModel } from 'features/events/models';
 import BackendApiClient from 'core/api/client/BackendApiClient';
@@ -79,6 +80,13 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
   if (body.gdpr_consent !== true) {
     return NextResponse.json(
       { error: 'gdpr_consent is required' },
+      { status: 400 }
+    );
+  }
+
+  if (body.email && !isEmail(body.email)) {
+    return NextResponse.json(
+      { error: 'Invalid email format' },
       { status: 400 }
     );
   }

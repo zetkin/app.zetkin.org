@@ -77,6 +77,7 @@
     "marked": "^4.0.16",
     "mjml": "^4.15.3",
     "mongoose": "^8.6.0",
+    "mui-tel-input": "^2.1.0",
     "negotiator": "^0.6.2",
     "next": "^14.2.30",
     "node-xlsx": "^0.21.0",

@@ -318,6 +318,7 @@ const SignUpSection: FC<{
   const messages = useMessages(messageIds);
   const user = useUser();
   const pathname = usePathname();
+  const [signupSuccessful, setSignupSuccessful] = useState(false);
 
   if (event.cancelled) {
     return (
@@ -345,17 +346,22 @@ const SignUpSection: FC<{
         {!user ? (
           <>
             <Box width="100%">
-              <PublicEventSignup event={event} />
+              <PublicEventSignup
+                event={event}
+                onSignupSuccess={() => setSignupSuccessful(true)}
+              />
             </Box>
-            <ZUIButton
-              fullWidth
-              href={`/login?redirect=${encodeURIComponent(
-                pathname || `/o/${event.organization.id}/events/${event.id}`
-              )}`}
-              label={messages.eventPage.haveAccount()}
-              size="large"
-              variant="secondary"
-            />
+            {!signupSuccessful && (
+              <ZUIButton
+                fullWidth
+                href={`/login?redirect=${encodeURIComponent(
+                  pathname || `/o/${event.organization.id}/events/${event.id}`
+                )}`}
+                label={messages.eventPage.haveAccount()}
+                size="large"
+                variant="secondary"
+              />
+            )}
           </>
         ) : (
           <EventSignupButton event={event} fullWidth />

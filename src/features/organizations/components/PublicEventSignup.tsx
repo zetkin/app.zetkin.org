@@ -2,8 +2,11 @@
 
 import { FC, useState } from 'react';
 import { Box } from '@mui/system';
-import { FormControl, FormGroup, FormLabel } from '@mui/material';
+import { FormControl, FormGroup, FormLabel, Theme } from '@mui/material';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import isEmail from 'validator/lib/isEmail';
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { useIntl } from 'react-intl';
 
 import { Msg, useMessages } from 'core/i18n';
 import ZUITextField from 'zui/components/ZUITextField';
@@ -18,15 +21,18 @@ import eventMessageIds from 'features/events/l10n/messageIds';
 
 type Props = {
   event: ZetkinEventWithStatus;
+  onSignupSuccess?: () => void;
 };
 
-export const PublicEventSignup: FC<Props> = ({ event }) => {
+export const PublicEventSignup: FC<Props> = ({ event, onSignupSuccess }) => {
   const messages = useMessages(messageIds);
   const eventMessages = useMessages(eventMessageIds);
+  const intl = useIntl();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('+');
+  const [phoneError, setPhoneError] = useState(false);
   const [gdprConsent, setGdprConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,13 +55,17 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
       return;
     }
 
-    if (trimmedEmail && !trimmedEmail.includes('@')) {
+    if (trimmedEmail && !isEmail(trimmedEmail)) {
       setError(eventMessages.publicEventSignup.errors.invalidEmail());
       return;
     }
 
     let normalizedPhone: string | null = null;
     if (trimmedPhone) {
+      if (phoneError || !matchIsValidTel(trimmedPhone)) {
+        setError(eventMessages.publicEventSignup.errors.phoneFormat());
+        return;
+      }
       const parsed = parsePhoneNumberFromString(trimmedPhone);
       if (!parsed || !parsed.isValid()) {
         setError(eventMessages.publicEventSignup.errors.phoneFormat());
@@ -121,6 +131,7 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
       setEmail('');
       setPhone('');
       setGdprConsent(false);
+      onSignupSuccess?.();
     } catch (err) {
       setError(eventMessages.publicEventSignup.errors.signupError());
     } finally {
@@ -138,13 +149,23 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
     );
   }
 
+  const emailOrPhoneErrorMessages = [
+    eventMessages.publicEventSignup.errors.emailOrPhoneRequired(),
+    eventMessages.publicEventSignup.errors.invalidEmail(),
+    eventMessages.publicEventSignup.errors.phoneFormat(),
+  ];
+  const isEmailOrPhoneError =
+    error !== null && emailOrPhoneErrorMessages.includes(error);
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      <ZUIAlert
-        description={eventMessages.publicEventSignup.info.description()}
-        severity="info"
-        title={eventMessages.publicEventSignup.info.title()}
-      />
+      {!isEmailOrPhoneError && (
+        <ZUIAlert
+          description={eventMessages.publicEventSignup.info.description()}
+          severity="info"
+          title={eventMessages.publicEventSignup.info.title()}
+        />
+      )}
       {error && (
         <ZUIAlert
           description={error}
@@ -166,11 +187,33 @@ export const PublicEventSignup: FC<Props> = ({ event }) => {
         required
         value={lastName}
       />
-      {/* FIXME: Proper phone field input to guarantee E.164 */}
-      <ZUITextField
+      <MuiTelInput
+        error={phoneError}
         fullWidth
+        helperText={
+          phoneError ? eventMessages.publicEventSignup.errors.phoneFormat() : ''
+        }
         label={eventMessages.publicEventSignup.fields.phone()}
-        onChange={setPhone}
+        langOfCountryName={intl.locale}
+        onChange={(value: string) => {
+          setPhoneError(!matchIsValidTel(value));
+          setPhone(value);
+        }}
+        sx={(theme: Theme) => ({
+          '& .MuiFormHelperText-root': {
+            color: phoneError
+              ? theme.palette.error.main
+              : theme.palette.text.secondary,
+            fontFamily: theme.typography.fontFamily,
+            fontSize: '0.813rem',
+            fontWeight: 400,
+          },
+          '& .MuiInputLabel-root': {
+            fontFamily: theme.typography.fontFamily,
+            fontSize: '1rem',
+            fontWeight: '500',
+          },
+        })}
         value={phone}
       />
       <ZUITextField
