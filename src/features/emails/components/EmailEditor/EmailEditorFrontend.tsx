@@ -18,6 +18,7 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import variableToolFactory from './tools/inlineVariable';
 import ParagraphWithSpanPaste from './tools/paragraphWithSpanPaste';
+import { useNonce } from 'core/hooks/useNonce';
 
 export type EmailEditorFrontendProps = {
   apiRef: MutableRefObject<EditorJS | null>;
@@ -204,10 +205,12 @@ const EmailEditorFrontend: FC<EmailEditorFrontendProps> = ({
     })
     .join('\n');
 
+  const nonce = useNonce();
+
   /*eslint-disable react/no-danger*/
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: themeStyles }} />
+      <style dangerouslySetInnerHTML={{ __html: themeStyles }} nonce={nonce} />
       <Box
         id="ClientOnlyEditor-container"
         sx={{

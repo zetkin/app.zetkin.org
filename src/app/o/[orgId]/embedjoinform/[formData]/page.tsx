@@ -1,8 +1,10 @@
 import Iron from '@hapi/iron';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 
 import EmbeddedJoinForm from 'features/joinForms/components/EmbeddedJoinForm';
 import { EmbeddedJoinFormData } from 'features/joinForms/types';
+import { getNonce } from 'core/utils/getNonce';
 
 type PageProps = {
   params: {
@@ -13,6 +15,10 @@ type PageProps = {
     stylesheet?: string;
   };
 };
+
+function sanitizeUrl(urlStr: string): string {
+  return new URL(urlStr).toString();
+}
 
 export default async function Page({ params, searchParams }: PageProps) {
   const { formData } = params;
@@ -25,14 +31,18 @@ export default async function Page({ params, searchParams }: PageProps) {
       Iron.defaults
     )) as EmbeddedJoinFormData;
 
+    const nonce = getNonce(Object.fromEntries(headers().entries()));
+
     return (
       <div>
         <EmbeddedJoinForm encrypted={formDataStr} fields={formDataObj.fields} />
         {searchParams.stylesheet && (
-          <style>{`@import url(${searchParams.stylesheet})`}</style>
+          <style nonce={nonce}>{`@import url(${sanitizeUrl(
+            searchParams.stylesheet
+          )})`}</style>
         )}
         {!searchParams.stylesheet && (
-          <style>{`
+          <style nonce={nonce}>{`
             body {
               padding: 0.5rem;
             }

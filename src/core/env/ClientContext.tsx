@@ -26,6 +26,7 @@ import { ZetkinUser } from 'utils/types/zetkin';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
 import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
+import { NonceContext } from 'core/hooks/useNonce';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -38,6 +39,7 @@ type ClientContextProps = {
   headers: Record<string, string>;
   lang: string;
   messages: MessageList;
+  nonce?: string;
   user: ZetkinUser | null;
 };
 
@@ -47,6 +49,7 @@ const ClientContext: FC<ClientContextProps> = ({
   headers,
   lang,
   messages,
+  nonce,
   user,
 }) => {
   const onServer = typeof window == 'undefined';
@@ -65,7 +68,11 @@ const ClientContext: FC<ClientContextProps> = ({
   const cache = useRef<EmotionCache | null>(null);
 
   if (!cache.current) {
-    cache.current = createCache({ key: 'css', prepend: true });
+    cache.current = createCache({
+      key: 'css',
+      nonce: nonce,
+      prepend: true,
+    });
   }
 
   // MUI-X license
@@ -77,32 +84,34 @@ const ClientContext: FC<ClientContextProps> = ({
     <ReduxProvider store={storeRef.current}>
       <StyledEngineProvider injectFirst>
         <CacheProvider value={cache.current}>
-          <ThemeProvider theme={oldThemeWithLocale(lang)}>
-            <EnvProvider env={env}>
-              <UserProvider user={user}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <IntlProvider
-                    defaultLocale="en"
-                    locale={lang}
-                    messages={messages}
-                  >
-                    <ZUISnackbarProvider>
-                      <IntlProvider
-                        defaultLocale="en"
-                        locale={lang}
-                        messages={messages}
-                      >
-                        <ZUIConfirmDialogProvider>
-                          <CssBaseline />
-                          <Suspense>{children}</Suspense>
-                        </ZUIConfirmDialogProvider>
-                      </IntlProvider>
-                    </ZUISnackbarProvider>
-                  </IntlProvider>
-                </LocalizationProvider>
-              </UserProvider>
-            </EnvProvider>
-          </ThemeProvider>
+          <NonceContext.Provider value={nonce}>
+            <ThemeProvider theme={oldThemeWithLocale(lang)}>
+              <EnvProvider env={env}>
+                <UserProvider user={user}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <IntlProvider
+                      defaultLocale="en"
+                      locale={lang}
+                      messages={messages}
+                    >
+                      <ZUISnackbarProvider>
+                        <IntlProvider
+                          defaultLocale="en"
+                          locale={lang}
+                          messages={messages}
+                        >
+                          <ZUIConfirmDialogProvider>
+                            <CssBaseline />
+                            <Suspense>{children}</Suspense>
+                          </ZUIConfirmDialogProvider>
+                        </IntlProvider>
+                      </ZUISnackbarProvider>
+                    </IntlProvider>
+                  </LocalizationProvider>
+                </UserProvider>
+              </EnvProvider>
+            </ThemeProvider>
+          </NonceContext.Provider>
         </CacheProvider>
       </StyledEngineProvider>
     </ReduxProvider>
