@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 
 import EditPersonDialog from './EditPersonDialog';
+import MarkFaultyDataDialog from './MarkFaultyDataDialog';
 import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from '../l10n/messageIds';
 import { useNumericRouteParams } from 'core/hooks';
@@ -15,6 +16,7 @@ import {
   ZetkinCustomField,
   ZetkinPerson,
 } from 'utils/types/zetkin';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -47,6 +49,7 @@ const PersonDetailsCard: React.FunctionComponent<{
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const [editPersonDialogOpen, setEditPersonDialogOpen] = useState(false);
+  const [markFaultyDataDialogOpen, setMarkFaultyDataDialogOpen] = useState(false);
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
     // NAtive fields are never objects
@@ -121,11 +124,41 @@ const PersonDetailsCard: React.FunctionComponent<{
         orgId={orgId}
         person={person}
       />
+      <MarkFaultyDataDialog
+        onClose={() => setMarkFaultyDataDialogOpen(false)}
+        open={markFaultyDataDialogOpen}
+        orgId={orgId}
+        person={person}
+      />
       <ZUISection
         action={
+          <>
           <Button onClick={() => setEditPersonDialogOpen(true)}>
             <Msg id={messageIds.editButtonLabel} />
           </Button>
+          <Button >
+          <ZUIEllipsisMenu
+            items={[
+              {
+                label: "Mark potentially faulty data",
+                // label: <Msg id={messageIds.layout.actions.delete} />,
+                onSelect: () => {
+                  setMarkFaultyDataDialogOpen(true);
+                  // showConfirmDialog({
+                  //   onSubmit: handleDelete,
+                  //   title: messages.layout.actions.delete(),
+                  //   warningText: messages.layout.actions.deleteWarningText({
+                  //     title: areaAssignment.title,
+                  //   }),
+                  // });
+                },
+                // startIcon: <Delete />,
+              },
+            ]}
+          />
+          </Button>
+          </>
+
         }
         title={messages.details.title()}
       >
