@@ -294,8 +294,27 @@ feat:
     showMore: Mehr
     today: Heute
   call:
+    about:
+      events: '{numEvents} Veranstaltungen'
+      noParticipation: '{name} hat bislang an keinen Veranstaltungen teilgenommen.'
+      participation: '{name} hat an {events} teilgenommen, zuletzt an {titleAndTime}'
+    activities:
+      filters:
+        basic:
+          events: Veranstaltungen
+        events:
+          tomorrow: Morgen
+        organizations:
+          noSelected: Verbandsebenen
+        projects:
+          selected: Projekte
+      title: Aktivitäten
+    callLog:
+      searchLabel: Tippe, um zu suchen
     callingInfo:
       tutorial:
+        call:
+          description: Du kannst über ein eigenes Telefon oder über den Browser anrufen.
         oldCalls:
           title: Bisherige Anrufe
         personInfo:
@@ -486,12 +505,11 @@ feat:
       title: Bewege Zuweisung
     callers:
       actions:
-        customize: Warteschlange anpassen
+        customize: Zielpersonen filtern
         remove: Von Aufgabe entfernen
       add:
         alreadyAdded: Bereits hinzugefügt
-        placeholder: Beginne zu tippen, um zu suchen oder eine_n neue_n Anrufer_in
-          hinzuzufügen.
+        placeholder: Hier tippen, um zu suchen oder eine_n neue_n Anrufer_in hinzuzufügen.
       customize:
         exclude:
           h: Ausgeschlossene Schlagworte
@@ -499,8 +517,8 @@ feat:
         prioritize:
           h: Priorisierte Schlagworte
           intro: Als Erstes Zielpersonen mit diesen Schlagworten anrufen.
-        title: Warteschlange anpassen für {name}
-      customizeButton: Anpassen
+        title: Zielpersonen filtern für {name}
+      customizeButton: Zielpersonen filtern
       excludedTagsColumn: Ausgeschlossene Schlagworte
       nameColumn: Name
       prioritizedTagsColumn: Priorisierte Schlagworte
@@ -563,7 +581,7 @@ feat:
     targets:
       defineButton: Definiere Zielgruppe
       editButton: Bearbeite Zielgruppe
-      subtitle: Benutze Intelligente Suche um Zielgruppe zu definieren.
+      subtitle: Definiere die Zielgruppe mit Intelligenter Suche.
       title: Zielpersonen
   campaigns:
     activitiesOverview:
@@ -573,6 +591,9 @@ feat:
       extraActivities: + {numExtra} mehr
       goToActivities: Zeige alle anstehenden Aktivitäten.
       noActivities: Keine Aktivitäten diese Woche.
+      noDescription:
+        addOneNow: Beschreibung hinzufügen
+        text: Das Projekt hat noch keine Beschreibung.
       nothingTomorrow: Morgen ist frei!
       startsTomorrow: startet morgen
       subtitles:
@@ -738,6 +759,9 @@ feat:
         insights: Statistiken
         summary: Überblick
     tasks: Aufgaben
+    urlCard:
+      visitPortal: Anmeldeseite des Projekts anzeigen
+      willAccept: Anmeldung über diesen Link
   canvass:
     default:
       description: Leere Beschreibung
@@ -1292,8 +1316,8 @@ feat:
       scheduled: Geplant
       unknown: Unbekannt
     filterButtonLabels:
-      eventTypes: '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}}
-        andere {# event types}}'
+      eventTypes: '{numEventTypes, plural,=0 {Veranstaltungsart} =1
+        {{singleEventType}} andere {# Veranstaltungsart}}'
     list:
       events: Aktionen
       noEvents: Keine Aktionen
@@ -1445,6 +1469,10 @@ feat:
       noLocation: Kein Ort.
     footer:
       privacyPolicy: Datenschutzhinweise
+    newLandingPageAlert:
+      description: Den Organizing Bereich findest du über das Feld 'Organize' unter
+        diesem Banner.
+      title: Das ist deine neue Startseite
     settings:
       accountSettings:
         email:
@@ -1987,8 +2015,11 @@ feat:
         viewInList: In Liste anzeigen
         viewInMap: Auf Karte anzeigen
       menu:
+        allEvents: Alle Events
         logout: Ausloggen
+        myActivities: Meine Aktivitäten
         myZetkin: Mein Zetkin
+        settings: Einstellungen
       tabs:
         calendar: Kalender
         suborgs: Erkunden
@@ -2751,7 +2782,9 @@ feat:
           verursachen.
     layout:
       actions:
+        createList: Liste aus Teilnahmen erstellen
         delete: Mitgliederumfrage löschen
+        duplicate: Duplizieren
         move: Verschieben
         publish: Umfrage veröffentlichen
         unpublish: Umfrage deaktivieren
@@ -2813,6 +2846,10 @@ feat:
         E-Mail-Adresse. Aber die Antwort auf die Umfrage beinhaltet eine. Willst
         du diese Adresse der Person hinzufügen?
       title: E-Mail-Adresse hinzufügen
+    surveyDuplicated:
+      error: 'Fehler: Umfrage konnte nicht dupliziert werden'
+      success: Deine Umfrage wurde dupliziert.
+      title: Umfrage dupliziert
     surveyForm:
       accept: Ich akzeptiere die unten aufgeführten Bedingungen.
       error: Beim Absenden Ihrer Antworten ist ein Fehler aufgetreten. Bitte versuche
@@ -2831,6 +2868,7 @@ feat:
           Aktivitäten der {organization} zu organisieren.
         title: Datenschutzhinweise
     surveyFormSubmitted:
+      retakeSurvey: Umfrage wiederholen
       text: Deine Antworten zu „{Titel}“ wurden übermittelt.
       title: Antworten übermittelt
     surveySignature:
@@ -2843,6 +2881,10 @@ feat:
         anonymous: anonym einreichen
         email: Mit Name und E-Mail-Adresse bestätigen.
         user: Bestätige als {person} mit E-Mail-Adresse {email}
+    surveyToList:
+      error: Aus den Umfrageteilnahmen konnte keine Liste erstellt werden. Fehler
+        unbekannt.
+      title: Umfrageteilnahmen aus
     tabs:
       overview: Überblick
       questions: Fragen
@@ -3412,14 +3454,14 @@ feat:
       empty: Du hast noch keine Listen erstellt.
 zui:
   timeline:
-    addNotePlaceholder: Tippe, um eine Notiz zu erstellen
+    addNotePlaceholder: Notiz erstellen
     email:
       headers:
         cc: CC
         from: Von
         to: An
     expand: gesamte Zeitleiste einblenden
-    fileUploadErrorMessage: Es ist nicht möglich, die Notiz hinzuzufügen. Vielleicht zu lang?
+    fileUploadErrorMessage: Notiz kann nicht hinzugefügt werden. Ist sie zu lang?
     filter:
       byType:
         all: Alle
@@ -3458,7 +3500,7 @@ zui:
           complete: '{actor} hat einen Meilenstein abgeschlossen'
           deadline: '{actor} hat eine Meilensteinfrist aktualisiert'
           deadlineRemove: Frist gelöscht
-          deadlineUpdate: jetzt fällig {datetime}
+          deadlineUpdate: jetzt fällig am {datetime}
           incomplete: '{actor} hat Meilenstein als unvollständig markiert'
   accessList:
     added: Hinzugefügt durch {sharer} {updated}
@@ -3578,6 +3620,9 @@ zui:
     geography: Geographie
     home: Startseite
     journeys: Anfragenvermittlung
+    myPagesInfoText: Gehe zu Meine Seite
+    myPagesMenuItemLabel: Meine Seite
+    mySettingsMenuItemLabel: Meine Einstellungen
     overview: Überblick
     people: Personen
     projects: Projekte & Aktivitäten
