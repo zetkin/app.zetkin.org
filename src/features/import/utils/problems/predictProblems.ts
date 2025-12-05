@@ -44,7 +44,10 @@ export function predictProblems(
   const rowProblemByKind: Record<string, ImportRowProblem> = {};
 
   const sheetHasId = sheet.columns.some(
-    (col) => col.kind == ColumnKind.ID_FIELD
+    (col) =>
+      col.kind == ColumnKind.ID_FIELD &&
+      sheet.importID &&
+      sheet.importID == col.idField
   );
   const sheetHasFirstName = sheet.columns.some(
     (col) => col.kind == ColumnKind.FIELD && col.field == 'first_name'
@@ -52,18 +55,6 @@ export function predictProblems(
   const sheetHasLastName = sheet.columns.some(
     (col) => col.kind == ColumnKind.FIELD && col.field == 'last_name'
   );
-
-  if (!sheetHasId) {
-    if (sheetHasFirstName && sheetHasLastName) {
-      problems.push({
-        kind: ImportProblemKind.UNCONFIGURED_ID,
-      });
-    } else {
-      problems.push({
-        kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
-      });
-    }
-  }
 
   function accumulateFieldProblem(field: string, row: number) {
     const existing = problemByField[field];
@@ -165,7 +156,9 @@ export function predictProblems(
       }
     });
 
-    if (sheetHasId && sheetHasFirstName && sheetHasLastName) {
+    // Check for missing ID and name on rows when both name fields are configured
+    // This applies whether or not importID is configured
+    if (sheetHasFirstName && sheetHasLastName) {
       if (!rowHasId && (!rowHasFirstName || !rowHasLastName)) {
         if (!rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME]) {
           rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME] = {
@@ -180,6 +173,23 @@ export function predictProblems(
       }
     }
   });
+
+  // Check for configuration warnings, but only if there are no row-level data problems
+  if (!sheetHasId) {
+    if (sheetHasFirstName && sheetHasLastName) {
+      // If we have row-level MISSING_ID_AND_NAME problems, don't add UNCONFIGURED_ID warning
+      // because the row-level problem is more specific and actionable
+      if (!rowProblemByKind[ImportProblemKind.MISSING_ID_AND_NAME]) {
+        problems.push({
+          kind: ImportProblemKind.UNCONFIGURED_ID,
+        });
+      }
+    } else {
+      problems.push({
+        kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
+      });
+    }
+  }
 
   if (!hadImpact) {
     problems.push({

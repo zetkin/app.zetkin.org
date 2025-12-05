@@ -290,6 +290,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         { data: [1, 'f'] },
         { data: [2, 'm'] },
@@ -317,6 +318,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [{ data: [1, 'F'] }, { data: [2, 'K'] }, { data: [3, 'whatever'] }],
     });
 
@@ -344,6 +346,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         { data: [1, 'clara at example.com'] },
         { data: [2, 'clara@example.com'] },
@@ -371,6 +374,31 @@ describe('predictProblem()', () => {
         },
       ],
       rows: [{ data: ['Clara'] }],
+    });
+
+    const problems = predictProblems(sheet, 'SE', []);
+    expect(problems).toEqual([
+      {
+        kind: ImportProblemKind.UNCONFIGURED_ID_AND_NAME,
+      },
+    ]);
+  });
+
+  it('returns UNCONFIGURED_ID_AND_NAME problem when ID or full name are not configured, even if other id fields are present', () => {
+    const sheet = makeFullSheet({
+      columns: [
+        {
+          field: 'first_name',
+          kind: ColumnKind.FIELD,
+          selected: true,
+        },
+        {
+          idField: 'email',
+          kind: ColumnKind.ID_FIELD,
+          selected: true,
+        },
+      ],
+      rows: [{ data: ['Clara', 'clara@example.com'] }],
     });
 
     const problems = predictProblems(sheet, 'SE', []);
@@ -425,6 +453,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [{ data: [null, 'Clara', 'Zetkin'] }],
     });
 
@@ -451,6 +480,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'ext_id',
       rows: [
         { data: [null, 'Clara', null] },
         { data: [null, null, 'Zetkin'] },
@@ -570,6 +600,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         { data: [1, '19870314-3462', '210329'] },
         { data: [2, '041231-1473', '201213'] },
@@ -602,6 +633,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         { data: [1, '999', '032921'] },
         { data: [2, '041231-1473', 'no info'] },
@@ -635,6 +667,7 @@ describe('predictProblem()', () => {
         { idField: 'id', kind: ColumnKind.ID_FIELD, selected: true },
       ],
       firstRowIsHeaders: false,
+      importID: 'id',
       rows: [
         {
           // Phone number contains U202C, a Unicode control character, to check that it is stripped before validating.
@@ -660,6 +693,7 @@ describe('predictProblem()', () => {
           selected: true,
         },
       ],
+      importID: 'id',
       rows: [
         // Valid values
         {

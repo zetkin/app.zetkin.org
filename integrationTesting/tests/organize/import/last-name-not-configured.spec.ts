@@ -5,7 +5,7 @@ import { BulkOp, ImportPreview, PersonImport } from 'features/import/types';
 import mockCsv from '../../../mockFiles/mockCsv';
 
 test.describe(
-  'When importing without id configured, but with first name and last name from and all rows contain full names',
+  'When importing with external id and first name, but last name not configured from a file where all values are present',
   () => {
     test.beforeEach(({ login }) => {
       login();
@@ -15,7 +15,7 @@ test.describe(
       moxy.teardown();
     });
 
-    test('there is a UNCONFIGURED_ID warning and a request is made to /preview', async ({
+    test('there are no problems and a request is made to /preview', async ({
       appUri,
       moxy,
       page,
@@ -25,9 +25,9 @@ test.describe(
       await page.locator('data-testid=ZUIButtonMenu-button').click();
       await page.locator('data-testid=import-people').click();
       const data = mockCsv([
-        ['first', 'last', 'email'],
-        ['Clara', 'Zetkin', 'clara@example.com'],
-        ['Rosa', 'Luxemburg', 'rosa@example.com'],
+        ['id', 'first', 'last', 'email'],
+        ['1', 'Clara', 'Zetkin', 'clara@example.com'],
+        ['2', 'Rosa', 'Luxemburg', 'rosa@example.com'],
       ]);
 
       const dataTransfer = await page.evaluateHandle((data) => {
@@ -53,9 +53,11 @@ test.describe(
           'data-testid=MappingRow-container >> div[role=combobox] >> nth=0'
         )
         .click();
+      await page.locator('data-testid=FieldSelect-menu-item-ext_id').click();
+
       await page
-        .locator('data-testid=FieldSelect-menu-item-field:first_name')
-        .click();
+        .locator('data-testid=IdConfig-importID-checkbox-ext_id')
+        .check();
 
       await page
         .locator(
@@ -68,17 +70,17 @@ test.describe(
         )
         .click();
       await page
-        .locator('data-testid=FieldSelect-menu-item-field:last_name')
+        .locator('data-testid=FieldSelect-menu-item-field:first_name')
         .click();
 
       await page
         .locator(
-          'data-testid=MappingRow-container >> input[type=checkbox] >> nth=2'
+          'data-testid=MappingRow-container >> input[type=checkbox] >> nth=3'
         )
         .check();
       await page
         .locator(
-          'data-testid=MappingRow-container >> div[role=combobox] >> nth=2'
+          'data-testid=MappingRow-container >> div[role=combobox] >> nth=3'
         )
         .click();
       await page.locator('data-testid=FieldSelect-menu-item-email').click();
@@ -95,7 +97,7 @@ test.describe(
                 total: 2,
               },
               created: {
-                total: 2,
+                total: 0,
               },
               tagged: {
                 byTag: {},
@@ -103,10 +105,10 @@ test.describe(
               },
               updated: {
                 byChangedField: {
-                  email: 0,
+                  email: 2,
                 },
                 byInitializedField: {},
-                total: 0,
+                total: 2,
               },
             },
           },
@@ -124,26 +126,28 @@ test.describe(
       const importOperations: { ops: BulkOp[] } = {
         ops: [
           {
-            op: 'person.create',
+            key: { ext_id: '1' },
+            op: 'person.get',
             ops: [
               {
                 data: {
                   email: 'clara@example.com',
+                  ext_id: '1',
                   first_name: 'Clara',
-                  last_name: 'Zetkin',
                 },
                 op: 'person.setfields',
               },
             ],
           },
           {
-            op: 'person.create',
+            key: { ext_id: '2' },
+            op: 'person.get',
             ops: [
               {
                 data: {
                   email: 'rosa@example.com',
+                  ext_id: '2',
                   first_name: 'Rosa',
-                  last_name: 'Luxemburg',
                 },
                 op: 'person.setfields',
               },
@@ -155,6 +159,7 @@ test.describe(
       expect(previewLog().length).toEqual(1);
       expect(previewLog()[0].data).toEqual(importOperations);
 
+      // TODO: Should we add tests to check how the UI renders a partially completed or error status?
       const importResult: PersonImport = {
         accepted: '',
         completed: '',
@@ -166,13 +171,6 @@ test.describe(
         '/orgs/1/bulk/execute',
         'post',
         importResult
-      );
-
-      const alert = page
-        .getByRole('alert')
-        .filter({ has: page.getByText('You have not chosen an ID column') });
-      await expect(alert).toContainText(
-        'This will result in duplicates in the database. If this is your first import, it is recommended to go back and choose an external ID that you can use going forward.'
       );
 
       await page.getByLabel('I understand and want to proceed anyway').check();
