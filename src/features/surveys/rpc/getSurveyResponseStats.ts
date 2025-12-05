@@ -152,7 +152,7 @@ const collectIncrementalStats = (
       if (isTextResponse(response)) {
         const wordList = response.response
           .toLowerCase()
-          .replace(/[^a-z0-9]+/gi, ' ')
+          .replace(/[^\p{L}\p{N}]+/giu, ' ')
           .split(/\s+/)
           .filter(Boolean);
         responseStatsCounters[response.question_id].totalWordCounts +=
