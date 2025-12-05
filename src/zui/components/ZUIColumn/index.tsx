@@ -1,13 +1,14 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
+
 import theme from 'zui/theme';
 
 type columnSizes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 type Props = {
   children?: React.ReactNode;
-  sx?: object;
   size?: columnSizes;
+  sx?: object;
 };
 
 const ZUIColumn: FC<Props> = (props) => {
@@ -18,8 +19,8 @@ const ZUIColumn: FC<Props> = (props) => {
       flexDirection: 'column',
       flexGrow: props.size ? 0 : 1,
       gap: 2,
-      minWidth: 0,
       maxWidth: '100%',
+      minWidth: 0,
       ...(props.size
         ? {
             [theme.containerQueries.up('sm')]: {

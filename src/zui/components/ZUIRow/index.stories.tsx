@@ -9,8 +9,8 @@ const meta: Meta<typeof ZUIRow> = {
 export default meta;
 
 const columnStyle = {
-  height: '200px',
   backgroundColor: 'swatches.purple.100',
+  height: '200px',
 };
 
 type Story = StoryObj<typeof ZUIRow>;
@@ -18,9 +18,15 @@ type Story = StoryObj<typeof ZUIRow>;
 export const Basic: Story = {
   args: {
     children: [
-      <ZUIColumn sx={columnStyle}>Column 1</ZUIColumn>,
-      <ZUIColumn sx={columnStyle}>Column 2</ZUIColumn>,
-      <ZUIColumn sx={columnStyle}>Column 3</ZUIColumn>,
+      <ZUIColumn key="1" sx={columnStyle}>
+        Column 1
+      </ZUIColumn>,
+      <ZUIColumn key="2" sx={columnStyle}>
+        Column 2
+      </ZUIColumn>,
+      <ZUIColumn key="3" sx={columnStyle}>
+        Column 3
+      </ZUIColumn>,
     ],
   },
 };
@@ -28,10 +34,12 @@ export const Basic: Story = {
 export const SizedAndAuto: Story = {
   args: {
     children: [
-      <ZUIColumn sx={columnStyle} size={8}>
+      <ZUIColumn key="1" size={8} sx={columnStyle}>
         Size 8 column
       </ZUIColumn>,
-      <ZUIColumn sx={columnStyle}>No size column</ZUIColumn>,
+      <ZUIColumn key="2" sx={columnStyle}>
+        No size column
+      </ZUIColumn>,
     ],
   },
 };
@@ -39,16 +47,18 @@ export const SizedAndAuto: Story = {
 export const MultipleSizedAndAuto: Story = {
   args: {
     children: [
-      <ZUIColumn sx={columnStyle} size={3}>
+      <ZUIColumn key="1" size={3} sx={columnStyle}>
         Size 3 column
       </ZUIColumn>,
-      <ZUIColumn sx={columnStyle} size={1}>
+      <ZUIColumn key="2" size={1} sx={columnStyle}>
         Size 1 column
       </ZUIColumn>,
-      <ZUIColumn sx={columnStyle} size={3}>
+      <ZUIColumn key="3" size={3} sx={columnStyle}>
         Size 3 column
       </ZUIColumn>,
-      <ZUIColumn sx={columnStyle}>No size column</ZUIColumn>,
+      <ZUIColumn key="4" sx={columnStyle}>
+        No size column
+      </ZUIColumn>,
     ],
   },
 };

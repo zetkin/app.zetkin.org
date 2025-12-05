@@ -1,4 +1,4 @@
-import { Meta, StoryFn, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import ZUIColumn from './index';
 import ZUIRow from '../ZUIRow';
@@ -16,8 +16,8 @@ const meta: Meta<typeof ZUIColumn> = {
 export default meta;
 
 const columnStyle = {
-  height: '200px',
   backgroundColor: 'swatches.purple.100',
+  height: '200px',
 };
 
 type Story = StoryObj<typeof ZUIColumn>;
@@ -31,8 +31,8 @@ export const Basic: Story = {
 
 export const Sized: Story = {
   args: {
-    children: 'Siz 8 Column content',
-    sx: columnStyle,
+    children: 'Size 8 Column content',
     size: 8,
+    sx: columnStyle,
   },
 };
