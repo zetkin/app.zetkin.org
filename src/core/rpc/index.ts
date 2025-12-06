@@ -31,7 +31,7 @@ import { getSuborgsWithStatsDef } from 'features/organizations/rpc/getSuborgsWit
 import { getSuborgWithStatsDef } from 'features/organizations/rpc/getSuborgWithStats';
 import { surveyToListDef } from 'features/surveys/rpc/surveyToList';
 import { duplicateSurveyDef } from 'features/surveys/rpc/duplicateSurvey';
-import { loadDetailedPerson } from 'features/duplicates/rpc/loadDetailedPerson';
+import { loadPersonFieldsDef } from 'features/duplicates/rpc/loadPersonFields';
 import { getSurveyResponseStatsDef } from 'features/surveys/rpc/getSurveyResponseStats';
 
 export function createRPCRouter() {
@@ -70,7 +70,7 @@ export function createRPCRouter() {
   rpcRouter.register(loadLocationHouseholdVisitsDef);
   rpcRouter.register(getSuborgsWithStatsDef);
   rpcRouter.register(getSuborgWithStatsDef);
-  rpcRouter.register(loadDetailedPerson);
+  rpcRouter.register(loadPersonFieldsDef);
 
   return rpcRouter;
 }

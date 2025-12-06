@@ -12,13 +12,13 @@ const paramsSchema = z.object({
 type Params = z.input<typeof paramsSchema>;
 type Result = ZetkinPerson[];
 
-export const loadDetailedPerson = {
+export const loadPersonFieldsDef = {
   handler: handle,
   name: 'loadPersonFields',
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, Result>(loadDetailedPerson.name);
+export default makeRPCDef<Params, Result>(loadPersonFieldsDef.name);
 
 async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { personIds, orgId } = params;
