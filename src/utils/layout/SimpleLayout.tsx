@@ -36,7 +36,7 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
     : undefined;
 
   return (
-    <DefaultLayout>
+    <DefaultLayout title={title}>
       <Box
         display={fixedHeight ? 'flex' : 'block'}
         flexDirection="column"

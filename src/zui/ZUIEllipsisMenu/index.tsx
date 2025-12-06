@@ -15,7 +15,7 @@ import oldTheme from 'theme';
 type horizontalType = 'left' | 'center' | 'right';
 type verticalType = 'top' | 'center' | 'bottom';
 
-interface MenuItem {
+export interface MenuItem {
   disabled?: boolean;
   divider?: boolean;
   href?: string;
