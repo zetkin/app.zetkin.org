@@ -111,7 +111,7 @@ export type ZetkinMetric = {
   description?: string;
   id: number;
   question: string;
-  type: 'bool' | 'scale5';
+  type: 'bool' | 'scale5' | 'freetext';
   visit_assignment_id: number;
 };
 

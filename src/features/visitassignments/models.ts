@@ -21,7 +21,7 @@ type ZetkinMetricModelType = {
   description: string;
   id: number;
   question: string;
-  type: 'bool' | 'scale5';
+  type: 'bool' | 'scale5' | 'freetext';
   visit_assignment_id: number;
 };
 
@@ -35,6 +35,20 @@ type ZetkinVisitAssignmentModelType = {
   start_date: string | null;
   target: ZetkinQuery | null;
   title: string | null;
+};
+
+type ZetkinVisitResponseType = {
+  metricId: number;
+  response: string | number;
+};
+
+type ZetkinVisitModelType = {
+  assignmentId: number;
+  created: string;
+  creatorId: number;
+  id: number;
+  responses: ZetkinVisitResponseType[];
+  targetId: number;
 };
 
 // --- Counters ---
@@ -75,6 +89,24 @@ const getNextMetricId = async () => {
   return counter.seq;
 };
 
+const visitCounterSchema = new mongoose.Schema({
+  _id: { required: true, type: String },
+  seq: { default: 0, type: Number },
+});
+
+const VisitCounter =
+  mongoose.models.VisitCounter ||
+  mongoose.model('VisitCounter', visitCounterSchema);
+
+const getNextVisitId = async () => {
+  const counter = await VisitCounter.findOneAndUpdate(
+    { _id: 'visitId' },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+  return counter.seq;
+};
+
 // --- Schemas ---
 
 const visitAssigneeSchema = new mongoose.Schema<ZetkinVisitAssigneeModelType>({
@@ -93,7 +125,7 @@ const zetkinMetricSchema = new mongoose.Schema<ZetkinMetricModelType>({
   description: { type: String },
   id: { required: true, type: Number, unique: true },
   question: { type: String },
-  type: { enum: ['bool', 'scale5'], required: true, type: String },
+  type: { enum: ['bool', 'scale5', 'freetext'], required: true, type: String },
   visit_assignment_id: { required: true, type: Number },
 });
 
@@ -130,6 +162,22 @@ visitAssignmentSchema.pre<ZetkinVisitAssignmentModelType>(
   }
 );
 
+const visitSchema = new mongoose.Schema<ZetkinVisitModelType>({
+  assignmentId: { required: true, type: Number },
+  created: { required: true, type: String },
+  creatorId: { required: true, type: Number },
+  id: { required: true, type: Number, unique: true },
+  responses: [{ type: mongoose.Schema.Types.Mixed }],
+  targetId: { required: true, type: Number },
+});
+
+visitSchema.pre<ZetkinVisitModelType>('validate', async function (next) {
+  if (!this.id) {
+    this.id = await getNextVisitId();
+  }
+  next();
+});
+
 // --- Mongoose models ---
 
 export const ZetkinMetricModel: mongoose.Model<ZetkinMetricModelType> =
@@ -149,3 +197,7 @@ export const VisitAssignmentModel: mongoose.Model<ZetkinVisitAssignmentModelType
     'VisitAssignment',
     visitAssignmentSchema
   );
+
+export const ZetkinVisitModel: mongoose.Model<ZetkinVisitModelType> =
+  mongoose.models.ZetkinVisit ||
+  mongoose.model<ZetkinVisitModelType>('ZetkinVisit', visitSchema);

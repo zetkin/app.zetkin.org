@@ -209,6 +209,7 @@ export default makeMessages('feat.visitAssignments', {
     },
     metricCard: {
       choice: m('Choice question'),
+      freetext: m('Free text question'),
       ratingDescription: m(
         ' The assignee will respond by giving a rating from 1 to 5'
       ),

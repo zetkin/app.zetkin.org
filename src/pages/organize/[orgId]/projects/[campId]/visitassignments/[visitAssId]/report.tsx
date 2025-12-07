@@ -4,6 +4,7 @@ import {
   Edit,
   LinearScale,
   SwitchLeft,
+  TextFields,
 } from '@mui/icons-material';
 import { GetServerSideProps } from 'next';
 import { useContext, useState } from 'react';
@@ -46,7 +47,7 @@ import useVisitAssignmentMutations from 'features/visitassignments/hooks/useVisi
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUICard from 'zui/ZUICard';
 import ZUILockCard from 'zui/ZUILockCard';
-import MetricCard from 'features/areaAssignments/components/MetricCard';
+import MetricCard from 'features/visitassignments/components/MetricCard';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 
 const scaffoldOptions = {
@@ -105,7 +106,7 @@ const ReportPage: PageWithLayout = () => {
     setMetricBeingEdited(null);
   };
 
-  const handleAddNewMetric = (type: 'bool' | 'scale5') => {
+  const handleAddNewMetric = (type: 'bool' | 'scale5' | 'freetext') => {
     setMetricBeingCreated({
       defines_success: false,
       question: '',
@@ -156,15 +157,27 @@ const ReportPage: PageWithLayout = () => {
                                 mr={1}
                                 variant="h6"
                               >
-                                {metric.type == 'bool' ? (
-                                  <Typography color="secondary" mr={1}>
-                                    <SwitchLeft />
-                                  </Typography>
-                                ) : (
-                                  <Typography color="secondary" mr={1}>
-                                    <LinearScale />
-                                  </Typography>
-                                )}
+                                {(() => {
+                                  if (metric.type == 'bool') {
+                                    return (
+                                      <Typography color="secondary" mr={1}>
+                                        <SwitchLeft />
+                                      </Typography>
+                                    );
+                                  } else if (metric.type == 'freetext') {
+                                    return (
+                                      <Typography color="secondary" mr={1}>
+                                        <TextFields />
+                                      </Typography>
+                                    );
+                                  } else {
+                                    return (
+                                      <Typography color="secondary" mr={1}>
+                                        <LinearScale />
+                                      </Typography>
+                                    );
+                                  }
+                                })()}
                                 {metric.question ||
                                   messages.report.card.question()}
                               </Typography>
@@ -203,7 +216,8 @@ const ReportPage: PageWithLayout = () => {
                                 (metric.type === 'scale5' ||
                                   (metric.type === 'bool' &&
                                     metricsList.filter((m) => m.type === 'bool')
-                                      .length > 1)) && (
+                                      .length > 1) ||
+                                  metric.type === 'freetext') && (
                                   <IconButton
                                     color="secondary"
                                     onClick={(ev) => {
@@ -309,9 +323,17 @@ const ReportPage: PageWithLayout = () => {
                       <Button
                         onClick={() => handleAddNewMetric('scale5')}
                         startIcon={<LinearScale />}
+                        sx={{ marginRight: 1 }}
                         variant="outlined"
                       >
                         <Msg id={messageIds.report.metricCard.scale} />
+                      </Button>
+                      <Button
+                        onClick={() => handleAddNewMetric('freetext')}
+                        startIcon={<TextFields />}
+                        variant="outlined"
+                      >
+                        <Msg id={messageIds.report.metricCard.freetext} />
                       </Button>
                     </Box>
                   </Card>
