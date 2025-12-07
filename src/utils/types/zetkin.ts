@@ -363,6 +363,9 @@ export type ZetkinSurveyQuestionResponse =
   | {
       options: number[];
       question_id: number;
+    }
+  | {
+      question_id: number;
     };
 
 export type ZetkinSurveySignatureType = 'email' | 'user' | 'anonymous';
