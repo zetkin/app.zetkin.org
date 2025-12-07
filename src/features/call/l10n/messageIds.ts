@@ -36,7 +36,7 @@ export default makeMessages('feat.call', {
         ),
       },
       projects: m<{ numProjects: number }>(
-        '{numProjects, plural, =0{Context} =1{1 Project} other{# Projects}}'
+        '{numProjects, plural, =0{Context} =1{1 project} other{# projects}}'
       ),
     },
     projects: {
