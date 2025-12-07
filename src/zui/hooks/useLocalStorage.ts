@@ -1,21 +1,23 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export default function useLocalStorage<T>(
   key: string,
   defaultValue: T,
   useDefaultValueAsInitialValue?: boolean
 ): [T, (newValue: T) => void] {
-  const [value, setValue] = useState<T>(
+  const [value, setValue] = useState<T>(() =>
     getLocalStorageValue(key, defaultValue, useDefaultValueAsInitialValue)
   );
 
-  return [
-    value,
+  const updateValue = useCallback(
     (newValue: T) => {
       localStorage.setItem(key, JSON.stringify(newValue));
       setValue(newValue);
     },
-  ];
+    [setValue, key]
+  );
+
+  return [value, updateValue] as const;
 }
 
 function getLocalStorageValue<T>(
