@@ -46,8 +46,6 @@ test.describe('Tags manager', () => {
     await tagToDelete.waitFor({ state: 'visible' });
 
     await tagToDelete.hover();
-    const deleteButtonTransition = page.waitForTimeout(500);
-    await deleteButtonTransition;
     await deleteButton.waitFor({ state: 'visible' });
 
     await Promise.all([
@@ -87,8 +85,6 @@ test.describe('Tags manager', () => {
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
     await page.locator(`text="${PlaysGuitarTag.title}"`).hover();
-    const deleteButtonTransition = page.waitForTimeout(500);
-    await deleteButtonTransition;
     await page.locator('[data-testid=TagChip-deleteButton]').click();
 
     // Show error

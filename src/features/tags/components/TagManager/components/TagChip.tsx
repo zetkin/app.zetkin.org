@@ -1,30 +1,12 @@
 import { Clear } from '@mui/icons-material';
-import { useState } from 'react';
-import { Box, IconButton, lighten, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
+import { lighten } from '@mui/system';
 
 import { DEFAULT_TAG_COLOR } from '../utils';
 import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinAppliedTag, ZetkinTag } from 'utils/types/zetkin';
 
 type TagChipSize = 'small' | 'medium' | 'large';
-
-const TagToolTip: React.FunctionComponent<{
-  children: JSX.Element;
-  tag: ZetkinTag;
-}> = ({ children, tag }) => {
-  return (
-    <Tooltip
-      arrow
-      title={
-        <>
-          {tag.title} <br /> {tag.description || ''}
-        </>
-      }
-    >
-      {children}
-    </Tooltip>
-  );
-};
 
 const isValueTag = (
   tag: ZetkinAppliedTag | ZetkinTag
@@ -40,32 +22,39 @@ const TagChip: React.FunctionComponent<{
   size?: TagChipSize;
   tag: ZetkinTag | ZetkinAppliedTag;
 }> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
-  const [hover, setHover] = useState(false);
   const clickable = !!onClick;
   const deletable = !!onDelete;
-  const hasValue = isValueTag(tag);
+  const isAppliedTag = isValueTag(tag);
 
   const labelStyle = {
+    '& > div': {
+      maxWidth: '100%',
+      overflow: 'hidden',
+      transform: deletable ? 'translate(.5rem, 0)' : 'translate(0,0)',
+      transition: 'transform 0.1s',
+    },
+    '&:hover': {
+      '& > div': {
+        transform: 'translate(0,0)',
+        transition: 'transform 0.1s 0.1s',
+      },
+      '.deleteButton': {
+        transform: 'translate(0,0)',
+        transition: 'transform 0.1s 0.1s',
+      },
+    },
     backgroundColor: tag.color || DEFAULT_TAG_COLOR,
     color: getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+    display: 'flex',
     maxWidth: '100%',
     overflow: 'hidden',
-    padding: '0.2em 0.4em 0.2em 1em',
-    textOverflow: 'ellipsis',
+    padding: isAppliedTag ? '.2em .2em .2em .6em' : '0.2em .6em',
     whiteSpace: 'nowrap',
-  };
-  const deleteContainerStyle = {
-    padding: deletable
-      ? hover
-        ? '0.2em 1.5em 0.2em 0.7em'
-        : '0.2em 1em'
-      : '0.2em 0.6em',
-    position: 'relative',
-    transition: 'padding 0.1s',
   };
 
   const deleteButton = onDelete ? (
     <IconButton
+      className="deleteButton"
       data-testid="TagChip-deleteButton"
       onClick={(ev) => {
         // Stop propagation to prevent regular onClick() from being invoked
@@ -75,12 +64,9 @@ const TagChip: React.FunctionComponent<{
       size="large"
       sx={{
         fontSize: '1.1rem',
-        padding: '3px',
-        position: 'absolute',
-        right: '0.12em',
-        transform: deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
-        transition:
-          deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
+        padding: 0,
+        transform: 'translate(2rem, 0)',
+        transition: 'transform 0.1s',
       }}
       tabIndex={-1}
     >
@@ -98,8 +84,6 @@ const TagChip: React.FunctionComponent<{
   return (
     <Box
       onClick={() => !disabled && onClick && onClick(tag)}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       sx={{
         borderRadius: '1em',
         cursor: clickable && !disabled ? 'pointer' : 'default',
@@ -110,44 +94,47 @@ const TagChip: React.FunctionComponent<{
           small: '0.8em',
         }[size],
         lineHeight: 'normal',
-        marginRight: '0.1em',
         opacity: disabled ? 0.5 : 1.0,
         overflow: 'hidden',
       }}
     >
-      {hasValue && (
-        <>
-          <TagToolTip tag={tag}>
-            <Box sx={labelStyle}>{tag.title}</Box>
-          </TagToolTip>
-          <Tooltip arrow title={tag.value || ''}>
+      <Tooltip
+        arrow
+        title={
+          <>
+            {tag.title} <br /> {tag.description || ''}
+          </>
+        }
+      >
+        <Box sx={[labelStyle]}>
+          <Box sx={{ display: 'flex', gap: '4px' }}>
             <Box
+              className="title"
               data-testid="TagChip-value"
-              sx={[
-                {
-                  backgroundColor: lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
-                  maxWidth: '10em',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                },
-                deleteContainerStyle,
-              ]}
+              sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
             >
-              {tag.value}
-              {deleteButton}
+              {tag.title}
             </Box>
-          </Tooltip>
-        </>
-      )}
-      {!hasValue && (
-        <TagToolTip tag={tag}>
-          <Box sx={[labelStyle, deleteContainerStyle]}>
-            {tag.title}
-            {deleteButton}
+            {isAppliedTag && (
+              <Box
+                className="valueArea"
+                sx={{
+                  backgroundColor: lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
+                  borderRadius: '0 1em 1em 0',
+                  minWidth: '3ch',
+                  paddingInline: '3px',
+                }}
+              >
+                {tag.value}
+              </Box>
+            )}
           </Box>
-        </TagToolTip>
-      )}
+          {deleteButton}
+        </Box>
+      </Tooltip>
     </Box>
   );
 };
