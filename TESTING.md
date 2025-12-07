@@ -5,13 +5,13 @@ This file contains information and instructions about our automated testing.
 Integration tests are run with [Playwright](https://playwright.dev/docs/intro). To run tests:
 
 ```
-yarn playwright
+yarn e2e
 ```
 
 This will also build the next.js application. You can save time and not rebuild the application (if only working on tests, for example), using:
 
 ```
-yarn playwright:skipbuild
+yarn e2e:skipbuild
 ```
 
 ## Unit tests
