@@ -684,7 +684,7 @@ feat:
       descriptionBooked: Dit zijn de mensen die je hebt geboekt en op wie je rekent
         voor het evenement. Om hun deelname te annuleren, moeten ze contact met
         jou opnemen en je kunt ze handmatig annuleren.
-      descriptionCancelled: Deze mensen hebben hun deelname om een ​​of andere reden
+      descriptionCancelled: Deze mensen hebben hun deelname om een of andere reden
         geannuleerd. We houden ze hier zodat je ze niet opnieuw probeert te
         boeken.
       descriptionSignups: Deze mensen hebben zich aangemeld in het activistenportaal.
@@ -773,7 +773,7 @@ feat:
       createLocation: Maak nieuwe locatie
       description: Omschrijving
       infoText: Je kunt klikken en slepen om de kaart te verschuiven en scrollen of je
-        vingers naar elkaar toe bewegen om te vergroten. Om een ​​nieuwe locatie
+        vingers naar elkaar toe bewegen om te vergroten. Om een nieuwe locatie
         aan te maken, kun je op een lege plek op de kaart klikken.
       move: Veplaats
       moveInstructions: Versleep de speld om een locatie te selecteren.
