@@ -31,12 +31,13 @@ export default makeMessages('feat.call', {
       },
       organizations: {
         noSelected: m('Organizations'),
-        selected: m<{ numOrgs: number }>('{numOrgs} orgs'),
+        selected: m<{ numOrgs: number }>(
+          '{numOrgs, plural, =1{1 org} other{# orgs}}'
+        ),
       },
-      projects: {
-        noSelected: m('Context'),
-        selected: m<{ numProjects: number }>('{numProjects} projects'),
-      },
+      projects: m<{ numProjects: number }>(
+        '{numProjects, plural, =0{Context} =1{1 Project} other{# Projects}}'
+      ),
     },
     projects: {
       wihoutProjectLabel: m('No project'),
