@@ -1,17 +1,12 @@
 import { CallAssignmentStats } from '../apiTypes';
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useCallAssignment from './useCallAssignment';
-import {
-  IFuture,
-  PlaceholderFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
 import { statsLoad, statsLoaded } from '../store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
+import useRemoteItem from 'core/hooks/useRemoteItem';
 
 interface UseCallAssignmentStatsReturn {
   hasTargets: boolean;
-  statsFuture: IFuture<CallAssignmentStats>;
+  stats: CallAssignmentStats | null;
   statusBarStatsList: { color: string; value: number }[];
 }
 
@@ -20,13 +15,12 @@ export default function useCallAssignmentStats(
   assignmentId: number
 ): UseCallAssignmentStatsReturn {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const statsById = callAssignmentSlice.statsById;
   const statsItem = statsById[assignmentId];
   const { isTargeted } = useCallAssignment(orgId, assignmentId);
 
-  const statsFuture = loadItemIfNecessary(statsItem, dispatch, {
+  const statsData = useRemoteItem(statsItem, {
     actionOnLoad: () => statsLoad(assignmentId),
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {
@@ -37,49 +31,23 @@ export default function useCallAssignmentStats(
     },
   });
 
-  let statsDataFuture: IFuture<CallAssignmentStats | null>;
-  if (!isTargeted) {
-    statsDataFuture = new ResolvedFuture(null);
-  }
-  if (statsFuture.isLoading && !statsFuture.data) {
-    statsDataFuture = new PlaceholderFuture({
-      allTargets: 0,
-      allocated: 0,
-      blocked: 0,
-      callBackLater: 0,
-      calledTooRecently: 0,
-      callsMade: 0,
-      done: 0,
-      id: assignmentId,
-      missingPhoneNumber: 0,
-      mostRecentCallTime: null,
-      organizerActionNeeded: 0,
-      queue: 0,
-      ready: 0,
-    });
-  } else {
-    statsDataFuture = statsFuture;
-  }
-
-  const statsData = statsDataFuture.data;
-  const hasTargets = statsData
-    ? statsData.blocked + statsData.ready > 0
-    : false;
+  const stats = isTargeted ? statsData : null;
+  const hasTargets = stats ? stats.blocked + stats.ready > 0 : false;
 
   const statusBarStatsList =
-    hasTargets && statsData
+    hasTargets && stats
       ? [
           {
             color: 'statusColors.orange',
-            value: statsData.blocked,
+            value: stats.blocked,
           },
           {
             color: 'statusColors.blue',
-            value: statsData.ready,
+            value: stats.ready,
           },
           {
             color: 'statusColors.green',
-            value: statsData.done,
+            value: stats.done,
           },
         ]
       : [
@@ -99,7 +67,7 @@ export default function useCallAssignmentStats(
 
   return {
     hasTargets,
-    statsFuture,
+    stats,
     statusBarStatsList,
   };
 }

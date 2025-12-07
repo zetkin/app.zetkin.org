@@ -47,7 +47,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
   const myEvents = useMyEvents();
   const memberships = useMemberships();
-  const baseEvent = useEvent(orgId, eventId)?.data;
+  const baseEvent = useEvent(orgId, eventId);
   const baseEventWithStatus: ZetkinEventWithStatus | undefined = baseEvent
     ? { ...baseEvent, status: null }
     : undefined;

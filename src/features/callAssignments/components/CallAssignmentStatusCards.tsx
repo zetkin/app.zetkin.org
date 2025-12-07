@@ -38,13 +38,9 @@ const CallAssignmentStatusCards: FC<CallAssignmentStatusCardsProps> = ({
     updateGoal,
     updateCallAssignment,
   } = useCallAssignment(orgId, assignmentId);
-  const { statsFuture, hasTargets } = useCallAssignmentStats(
-    orgId,
-    assignmentId
-  );
+  const { stats, hasTargets } = useCallAssignmentStats(orgId, assignmentId);
 
   const cooldownNumber = callAssignment?.cooldown ?? null;
-  const stats = statsFuture.data;
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)

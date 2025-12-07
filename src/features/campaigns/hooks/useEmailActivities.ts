@@ -1,39 +1,29 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import { ACTIVITIES, CampaignActivity } from '../types';
 import { emailsLoad, emailsLoaded } from 'features/emails/store';
-import {
-  ErrorFuture,
-  IFuture,
-  LoadingFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
+import { useApiClient, useAppSelector } from 'core/hooks';
+import useRemoteList from 'core/hooks/useRemoteList';
 
 export default function useEmailActivities(
   orgId: number,
   campId?: number
 ): IFuture<CampaignActivity[]> {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const emailsList = useAppSelector((state) => state.emails.emailList);
 
   const activities: CampaignActivity[] = [];
 
-  const allEmailsFuture = loadListIfNecessary(emailsList, dispatch, {
-    actionOnLoad: () => dispatch(emailsLoad),
-    actionOnSuccess: (data) => dispatch(emailsLoaded(data)),
+  const allEmails = useRemoteList(emailsList, {
+    actionOnLoad: () => emailsLoad(),
+    actionOnSuccess: (data) => emailsLoaded(data),
     loader: () => apiClient.get(`/api/orgs/${orgId}/emails`),
   });
 
-  if (allEmailsFuture.isLoading) {
+  if (!allEmails) {
     return new LoadingFuture();
-  } else if (allEmailsFuture.error) {
-    return new ErrorFuture(allEmailsFuture.error);
   }
 
-  if (allEmailsFuture.data) {
-    const allEmails = allEmailsFuture.data;
-
+  if (allEmails) {
     if (campId) {
       const campaignEmails = allEmails.filter(
         (email) => email.campaign?.id === campId

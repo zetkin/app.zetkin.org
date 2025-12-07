@@ -12,7 +12,6 @@ import SurveyLayout from 'features/surveys/layouts/SurveyLayout';
 import { useMessages } from 'core/i18n';
 import useSurvey from 'features/surveys/hooks/useSurvey';
 import useSurveyStats from 'features/surveys/hooks/useSurveyStats';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUILockCard from 'zui/ZUILockCard';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -45,7 +44,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
 }) => {
   const [forceEditable, setForceEditable] = useState(false);
   const surveyFuture = useSurvey(parseInt(orgId), parseInt(surveyId));
-  const statsFuture = useSurveyStats(parseInt(orgId), parseInt(surveyId));
+  const stats = useSurveyStats(parseInt(orgId), parseInt(surveyId));
 
   // Figure out whether to display the read-only warning on top
   const theme = useTheme();
@@ -68,8 +67,8 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
       <Head>
         <title>{surveyFuture.data?.title}</title>
       </Head>
-      <ZUIFuture future={statsFuture}>
-        {(stats) => {
+      {stats &&
+        (() => {
           const receivingSubmissions = stats.submissionCount > 0;
           const isEditingLocked = receivingSubmissions || isActive;
           return (
@@ -120,8 +119,7 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
               </Grid>
             </Grid>
           );
-        }}
-      </ZUIFuture>
+        })()}
     </>
   );
 };

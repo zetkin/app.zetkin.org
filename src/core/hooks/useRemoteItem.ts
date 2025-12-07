@@ -27,17 +27,20 @@ export default function useRemoteItem<
   const { cache } = usePromiseCache(promiseKey);
 
   if (loadIsNecessary) {
-    dispatch(hooks.actionOnLoad());
-
-    const promise = hooks
-      .loader()
+    const promise = Promise.resolve()
+      .then(() => {
+        dispatch(hooks.actionOnLoad());
+        return hooks.loader();
+      })
       .then((data) => {
         dispatch(hooks.actionOnSuccess(data));
+        return data;
       })
       .catch((err) => {
         if (hooks.actionOnError) {
           dispatch(hooks.actionOnError(err));
         }
+        throw err;
       });
 
     cache(promise);

@@ -237,7 +237,7 @@ const OpenedInsightsSection: FC<Props> = ({ email, secondaryEmailId }) => {
                     return (
                       <EmailDiagramHoverCard
                         mainInsights={mainInsights}
-                        mainStats={stats.data}
+                        mainStats={stats.rawStats}
                         pointId={props.slice.points[0].id}
                         publishDate={new Date(emailPublished)}
                         secondaryEmail={secondaryEmail}

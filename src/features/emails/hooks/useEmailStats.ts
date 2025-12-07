@@ -1,15 +1,10 @@
-import { PlaceholderFuture, ResolvedFuture } from 'core/caching/futures';
-import { futureToObject } from 'core/caching/futures';
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useEmail from './useEmail';
 import { statsLoad, statsLoaded } from '../store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import { ZetkinEmailStats } from '../types';
+import useRemoteItem from 'core/hooks/useRemoteItem';
 
 interface UseEmailStatsReturn {
-  data: ZetkinEmailStats | null;
-  error: unknown | null;
-  isLoading: boolean;
   lockedReadyTargets: number | null;
   numTargetMatches: number;
   numLockedTargets: number | null;
@@ -23,6 +18,7 @@ interface UseEmailStatsReturn {
   numOpened: number;
   numClicked: number;
   readyTargets: number;
+  rawStats: ZetkinEmailStats | null;
 }
 
 export default function useEmailStats(
@@ -31,10 +27,9 @@ export default function useEmailStats(
 ): UseEmailStatsReturn {
   const { isTargeted } = useEmail(orgId, emailId);
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const statsItem = useAppSelector((state) => state.emails.statsById[emailId]);
 
-  let statsFuture = loadItemIfNecessary(statsItem, dispatch, {
+  const stats = useRemoteItem(statsItem, {
     actionOnLoad: () => statsLoad(emailId),
     actionOnSuccess: (data) => statsLoaded(data),
     loader: async () => {
@@ -45,48 +40,28 @@ export default function useEmailStats(
     },
   });
 
-  if (!isTargeted) {
-    statsFuture = new ResolvedFuture(null);
-  }
+  const statsData = isTargeted ? stats : null;
 
-  if (statsFuture.isLoading && !statsFuture.data) {
-    statsFuture = new PlaceholderFuture({
-      id: emailId,
-      num_blocked: {
-        any: 0,
-        blacklisted: 0,
-        no_email: 0,
-        unsubscribed: 0,
-      },
-      num_clicks: 0,
-      num_clicks_by_link: {},
-      num_locked_targets: 0,
-      num_opened: 0,
-      num_sent: 0,
-      num_target_matches: 0,
-    });
-  }
-
-  const allTargetMatches = statsFuture.data?.num_target_matches ?? 0;
-  const allLocked = statsFuture.data?.num_locked_targets ?? null;
-  const allBlocked = statsFuture.data?.num_blocked.any ?? 0;
+  const allTargetMatches = statsData?.num_target_matches ?? 0;
+  const allLocked = statsData?.num_locked_targets ?? null;
+  const allBlocked = statsData?.num_blocked.any ?? 0;
   const lockedReadyTargets = allLocked === null ? null : allLocked - allBlocked;
   const readyTargets = allTargetMatches - allBlocked;
 
   return {
-    ...futureToObject(statsFuture),
     lockedReadyTargets,
     numBlocked: {
-      any: statsFuture.data?.num_blocked.any ?? 0,
-      blacklisted: statsFuture.data?.num_blocked.blacklisted ?? 0,
-      noEmail: statsFuture.data?.num_blocked.no_email ?? 0,
-      unsubscribed: statsFuture.data?.num_blocked.unsubscribed ?? 0,
+      any: statsData?.num_blocked.any ?? 0,
+      blacklisted: statsData?.num_blocked.blacklisted ?? 0,
+      noEmail: statsData?.num_blocked.no_email ?? 0,
+      unsubscribed: statsData?.num_blocked.unsubscribed ?? 0,
     },
-    numClicked: statsFuture.data?.num_clicks ?? 0,
-    numLockedTargets: statsFuture.data?.num_locked_targets ?? 0,
-    numOpened: statsFuture.data?.num_opened ?? 0,
-    numSent: statsFuture.data?.num_sent ?? 0,
-    numTargetMatches: statsFuture.data?.num_target_matches ?? 0,
+    numClicked: statsData?.num_clicks ?? 0,
+    numLockedTargets: statsData?.num_locked_targets ?? 0,
+    numOpened: statsData?.num_opened ?? 0,
+    numSent: statsData?.num_sent ?? 0,
+    numTargetMatches: statsData?.num_target_matches ?? 0,
+    rawStats: statsData,
     readyTargets,
   };
 }

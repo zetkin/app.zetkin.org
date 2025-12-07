@@ -5,7 +5,6 @@ import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurveyStats from '../hooks/useSurveyStats';
 import ZUICard from 'zui/ZUICard';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
 
 type SurveyUnlinkedCardProps = {
@@ -21,13 +20,17 @@ const SurveyUnlinkedCard = ({
 }: SurveyUnlinkedCardProps) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const statsFuture = useSurveyStats(orgId, surveyId);
+  const stats = useSurveyStats(orgId, surveyId);
+
+  if (!stats) {
+    return null;
+  }
+
+  const unlinkedSubmitters = stats.unlinkedSubmissionCount;
 
   return (
-    <ZUIFuture future={statsFuture}>
-      {(sub) => {
-        const unlinkedSubmitters = sub.unlinkedSubmissionCount;
-
+    <>
+      {(() => {
         return unlinkedSubmitters > 0 ? (
           <Box paddingTop={2}>
             <ZUICard
@@ -54,8 +57,8 @@ const SurveyUnlinkedCard = ({
             </ZUICard>
           </Box>
         ) : null;
-      }}
-    </ZUIFuture>
+      })()}
+    </>
   );
 };
 

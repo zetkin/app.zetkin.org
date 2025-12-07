@@ -23,8 +23,7 @@ describe('When creating an event', () => {
       { wrapper: makeWrapper(store) }
     );
 
-    expect(result.current?.data).toEqual(event);
-    expect(result.current?.isLoading).toEqual(false);
+    expect(result.current).toEqual(event);
   });
 
   it('the created event is saved on the right date', () => {

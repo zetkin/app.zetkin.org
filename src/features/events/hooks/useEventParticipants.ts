@@ -1,29 +1,28 @@
-import { IFuture } from 'core/caching/futures';
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import {
   participantsLoad,
   participantsLoaded,
   respondentsLoad,
   respondentsLoaded,
 } from '../store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
+import useRemoteList from 'core/hooks/useRemoteList';
 
 type useEventParticipantsReturn = {
-  bookedParticipants: ZetkinEventParticipant[] | [];
-  cancelledParticipants: ZetkinEventParticipant[] | [];
+  bookedParticipants: ZetkinEventParticipant[];
+  cancelledParticipants: ZetkinEventParticipant[];
   numAvailParticipants: number;
   numCancelledParticipants: number;
   numConfirmedParticipants: number;
   numNoshowParticipants: number;
   numRemindedParticipants: number;
   numSignedParticipants: number;
-  participantsFuture: IFuture<ZetkinEventParticipant[]>;
-  pendingSignUps: ZetkinEventResponse[] | [];
-  respondentsFuture: IFuture<ZetkinEventResponse[]>;
+  participants: ZetkinEventParticipant[];
+  pendingSignUps: ZetkinEventResponse[];
+  respondents: ZetkinEventResponse[];
 };
 
 export default function useEventParticipants(
@@ -32,12 +31,11 @@ export default function useEventParticipants(
 ): useEventParticipantsReturn {
   const apiClient = useApiClient();
   const participantsState = useAppSelector((state) => state.events);
-  const dispatch = useAppDispatch();
 
   const list = participantsState.participantsByEventId[eventId];
   const respondentsList = participantsState.respondentsByEventId[eventId];
 
-  const participantsFuture = loadListIfNecessary(list, dispatch, {
+  const participants = useRemoteList(list, {
     actionOnLoad: () => participantsLoad(eventId),
     actionOnSuccess: (participants) =>
       participantsLoaded([eventId, participants]),
@@ -47,7 +45,7 @@ export default function useEventParticipants(
       ),
   });
 
-  const respondentsFuture = loadListIfNecessary(respondentsList, dispatch, {
+  const respondents = useRemoteList(respondentsList, {
     actionOnLoad: () => respondentsLoad(eventId),
     actionOnSuccess: (respondents) => respondentsLoaded([eventId, respondents]),
     loader: () =>
@@ -56,41 +54,37 @@ export default function useEventParticipants(
       ),
   });
 
-  const numAvailParticipants = participantsFuture.data
-    ? participantsFuture.data.filter((p) => p.cancelled == null).length
-    : 0;
+  const numAvailParticipants = participants.filter(
+    (p) => p.cancelled == null
+  ).length;
 
-  const pendingSignUps =
-    respondentsFuture.data?.filter(
-      (r) => !participantsFuture.data?.some((p) => p.id === r.id)
-    ) || [];
+  const pendingSignUps = respondents.filter(
+    (r) => !participants.some((p) => p.id === r.id)
+  );
 
-  const bookedParticipants =
-    participantsFuture?.data?.filter((p) => p.cancelled == null) ?? [];
+  const bookedParticipants = participants.filter((p) => p.cancelled == null);
 
-  const cancelledParticipants =
-    participantsFuture?.data?.filter((p) => p.cancelled != null) ?? [];
+  const cancelledParticipants = participants.filter((p) => p.cancelled != null);
 
-  const numCancelledParticipants =
-    participantsFuture.data?.filter((p) => p.cancelled != null).length ?? 0;
+  const numCancelledParticipants = participants.filter(
+    (p) => p.cancelled != null
+  ).length;
 
-  const numConfirmedParticipants = participantsFuture.data
-    ? participantsFuture.data.filter((p) => p.attended != null).length
-    : 0;
+  const numConfirmedParticipants = participants.filter(
+    (p) => p.attended != null
+  ).length;
 
-  const numNoshowParticipants = participantsFuture.data
-    ? participantsFuture.data.filter((p) => p.noshow != null).length
-    : 0;
+  const numNoshowParticipants = participants.filter(
+    (p) => p.noshow != null
+  ).length;
 
-  const numRemindedParticipants =
-    participantsFuture.data?.filter(
-      (p) => p.reminder_sent != null && p.cancelled == null
-    ).length ?? 0;
+  const numRemindedParticipants = participants.filter(
+    (p) => p.reminder_sent != null && p.cancelled == null
+  ).length;
 
-  const numSignedParticipants =
-    respondentsFuture.data?.filter(
-      (r) => !participantsFuture.data?.some((p) => p.id === r.id)
-    ).length ?? 0;
+  const numSignedParticipants = respondents.filter(
+    (r) => !participants.some((p) => p.id === r.id)
+  ).length;
 
   return {
     bookedParticipants,
@@ -101,8 +95,8 @@ export default function useEventParticipants(
     numNoshowParticipants,
     numRemindedParticipants,
     numSignedParticipants,
-    participantsFuture,
+    participants,
     pendingSignUps,
-    respondentsFuture,
+    respondents,
   };
 }

@@ -32,10 +32,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   onClickRecord,
   orgId,
 }) => {
-  const event = useEvent(orgId, eventId)?.data;
+  const event = useEvent(orgId, eventId);
   const participantStatus = useParticipantStatus(orgId, eventId);
   const {
-    respondentsFuture,
+    respondents,
     numAvailParticipants,
     numCancelledParticipants,
     numConfirmedParticipants,
@@ -46,7 +46,6 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({
   } = useEventParticipants(orgId, eventId);
   const { addParticipant, setReqParticipants, sendReminders } =
     useEventParticipantsMutations(orgId, eventId);
-  const respondents = respondentsFuture.data;
   const messages = useMessages(messageIds);
 
   const reqParticipants = event?.num_participants_required ?? 0;

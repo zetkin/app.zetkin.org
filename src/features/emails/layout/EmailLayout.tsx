@@ -1,22 +1,21 @@
 import { FC } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, Dialog, Typography } from '@mui/material';
+import { Box, Button, Dialog, Skeleton, Typography } from '@mui/material';
 import { People } from '@mui/icons-material';
 
+import { Msg, useMessages } from 'core/i18n';
+import { useNumericRouteParams } from 'core/hooks';
 import DeliveryStatusMessage from '../components/DeliveryStatusMessage';
 import EmailActionButtons from '../components/EmailActionButtons';
 import EmailStatusChip from '../components/EmailStatusChip';
 import messageIds from '../l10n/messageIds';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useEmail from '../hooks/useEmail';
+import useEmailState, { EmailState } from '../hooks/useEmailState';
 import useEmailStats from '../hooks/useEmailStats';
 import useEmailThemes from '../hooks/useEmailThemes';
-import { useNumericRouteParams } from 'core/hooks';
 import useOrganization from 'features/organizations/hooks/useOrganization';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
-import ZUIFuture from 'zui/ZUIFuture';
-import { Msg, useMessages } from 'core/i18n';
-import useEmailState, { EmailState } from '../hooks/useEmailState';
 
 interface EmailLayoutProps {
   children: React.ReactNode;
@@ -31,7 +30,7 @@ const EmailLayout: FC<EmailLayoutProps> = ({
   const router = useRouter();
   const messages = useMessages(messageIds);
   const { data: email, updateEmail } = useEmail(orgId, emailId);
-  const emailStatsFuture = useEmailStats(orgId, emailId);
+  const emailStats = useEmailStats(orgId, emailId);
   const emailState = useEmailState(orgId, emailId);
   const organization = useOrganization(orgId).data;
   const themes = useEmailThemes(orgId).data || [];
@@ -78,34 +77,30 @@ const EmailLayout: FC<EmailLayoutProps> = ({
               <EmailStatusChip state={emailState} />
             </Box>
             <Box display="flex" marginX={1}>
-              <ZUIFuture
-                future={emailStatsFuture}
-                ignoreDataWhileLoading
-                skeletonWidth={100}
-              >
-                {(emailStats) => (
-                  <>
-                    <People />
-                    <Typography marginLeft={1}>
-                      {emailStats.num_locked_targets === null ? (
-                        <Msg
-                          id={messageIds.stats.targets}
-                          values={{ numTargets: emailStats.num_target_matches }}
-                        />
-                      ) : (
-                        <Msg
-                          id={messageIds.stats.lockedTargets}
-                          values={{
-                            numLocked:
-                              emailStats.num_target_matches -
-                              emailStats.num_blocked.any,
-                          }}
-                        />
-                      )}
-                    </Typography>
-                  </>
-                )}
-              </ZUIFuture>
+              {emailStats ? (
+                <>
+                  <People />
+                  <Typography marginLeft={1}>
+                    {emailStats.numLockedTargets === null ? (
+                      <Msg
+                        id={messageIds.stats.targets}
+                        values={{ numTargets: emailStats.numTargetMatches }}
+                      />
+                    ) : (
+                      <Msg
+                        id={messageIds.stats.lockedTargets}
+                        values={{
+                          numLocked:
+                            emailStats.numTargetMatches -
+                            emailStats.numBlocked.any,
+                        }}
+                      />
+                    )}
+                  </Typography>
+                </>
+              ) : (
+                <Skeleton width={100} />
+              )}
             </Box>
           </Box>
         }

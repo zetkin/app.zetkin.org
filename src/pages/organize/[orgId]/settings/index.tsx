@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { Suspense } from 'react';
 import { OpenInNew } from '@mui/icons-material';
 import { Box, Grid, Link, Typography } from '@mui/material';
 
@@ -66,7 +67,9 @@ const SettingsPage: PageWithLayout = () => {
         <Typography mb={2} variant="body2">
           <Msg id={messageIds.officials.administrators.description} />
         </Typography>
-        <OfficialList officialList={adminList} orgId={orgId} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <OfficialList officialList={adminList} orgId={orgId} />
+        </Suspense>
         <Box
           alignItems="center"
           display="flex"
@@ -88,7 +91,9 @@ const SettingsPage: PageWithLayout = () => {
         <Typography mb={2} variant="body2">
           <Msg id={messageIds.officials.organizers.description} />
         </Typography>
-        <OfficialList officialList={organizerList} orgId={orgId} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <OfficialList officialList={organizerList} orgId={orgId} />
+        </Suspense>
       </Grid>
       <Grid size={{ md: 4 }}>
         <ZUICard

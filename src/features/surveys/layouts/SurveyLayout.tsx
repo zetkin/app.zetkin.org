@@ -52,7 +52,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   const parsedOrg = parseInt(orgId);
   const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const statsFuture = useSurveyStats(parsedOrg, parseInt(surveyId));
+  const stats = useSurveyStats(parsedOrg, parseInt(surveyId));
   const surveyFuture = useSurvey(parsedOrg, parseInt(surveyId));
   const { publish, unpublish, updateSurvey, deleteSurvey } = useSurveyMutations(
     parsedOrg,
@@ -237,10 +237,12 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             <ZUIFutures
               futures={{
                 elements: elementsFuture,
-                stats: statsFuture,
               }}
             >
-              {({ data: { elements, stats } }) => {
+              {({ data: { elements } }) => {
+                if (!stats) {
+                  return null;
+                }
                 const questionLength = elements.filter(
                   (elem) => elem.type == ELEMENT_TYPE.QUESTION
                 ).length;

@@ -1,20 +1,18 @@
-import { IFuture } from 'core/caching/futures';
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import getSurveyStats, { SurveyStats } from '../rpc/getSurveyStats';
 import { statsLoad, statsLoaded } from '../store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
+import useRemoteItem from 'core/hooks/useRemoteItem';
 
 export default function useSurveyStats(
   orgId: number,
   surveyId: number
-): IFuture<SurveyStats> {
+): SurveyStats {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const statsItem = useAppSelector(
     (state) => state.surveys.statsBySurveyId[surveyId]
   );
 
-  return loadItemIfNecessary(statsItem, dispatch, {
+  return useRemoteItem(statsItem, {
     actionOnLoad: () => statsLoad(surveyId),
     actionOnSuccess: (stats) => statsLoaded([surveyId, stats]),
     loader: () => apiClient.rpc(getSurveyStats, { orgId, surveyId }),

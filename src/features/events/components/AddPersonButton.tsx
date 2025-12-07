@@ -6,7 +6,6 @@ import { EmojiPeople, People } from '@mui/icons-material';
 import messageIds from '../l10n/messageIds';
 import useEventParticipants from '../hooks/useEventParticipants';
 import useEventParticipantsMutations from '../hooks/useEventParticipantsMutations';
-import ZUIFutures from 'zui/ZUIFutures';
 import zuiMessageIds from 'zui/l10n/messageIds';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';
@@ -21,18 +20,11 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const messages = useMessages(messageIds);
   const zuiMessages = useMessages(zuiMessageIds);
-  const eventFuture = useEvent(orgId, eventId);
+  const event = useEvent(orgId, eventId);
   const { addParticipant } = useEventParticipantsMutations(orgId, eventId);
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
-    orgId,
-    eventId
-  );
+  const { participants, respondents } = useEventParticipants(orgId, eventId);
   const isParticipant = (personId: number): boolean => {
-    return (
-      participantsFuture?.data?.some(
-        (participant) => participant.id === personId
-      ) ?? false
-    );
+    return participants.some((participant) => participant.id === personId);
   };
 
   return (
@@ -71,89 +63,79 @@ const AddPersonButton = ({ orgId, eventId }: AddPersonButtonProps) => {
         }}
       >
         <Box mt={1} p={2}>
-          <ZUIFutures
-            futures={{
-              participants: participantsFuture,
-              respondents: respondentsFuture,
-            }}
-          >
-            {({ data: { participants, respondents } }) => {
-              const getOptionExtraLabel = (personId: number) => {
-                //TO DO : Add cancelled statement here when API supports it.
-                if (
-                  participants.some(
-                    (participant) => participant.id === personId
-                  )
-                ) {
-                  return (
-                    <Box
-                      sx={{
-                        color: '#A8A8A8',
-                        display: 'flex',
-                        fontSize: '0.9rem',
-                      }}
-                    >
-                      <People sx={{ fontSize: '1.3rem', mr: 1 }} />
-                      <Msg id={messageIds.addPerson.status.booked} />
-                    </Box>
-                  );
-                }
-                if (
-                  respondents.some((respondent) => respondent.id === personId)
-                ) {
-                  return (
-                    <Box
-                      sx={{
-                        color: '#A8A8A8',
-                        display: 'flex',
-                        fontSize: '0.9rem',
-                      }}
-                    >
-                      <EmojiPeople sx={{ fontSize: '1.3rem', mr: 1 }} />
-                      <Msg id={messageIds.addPerson.status.signedUp} />
-                    </Box>
-                  );
-                }
-                return '';
-              };
+          {(() => {
+            const getOptionExtraLabel = (personId: number) => {
+              //TO DO : Add cancelled statement here when API supports it.
+              if (
+                participants.some((participant) => participant.id === personId)
+              ) {
+                return (
+                  <Box
+                    sx={{
+                      color: '#A8A8A8',
+                      display: 'flex',
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    <People sx={{ fontSize: '1.3rem', mr: 1 }} />
+                    <Msg id={messageIds.addPerson.status.booked} />
+                  </Box>
+                );
+              }
+              if (
+                respondents.some((respondent) => respondent.id === personId)
+              ) {
+                return (
+                  <Box
+                    sx={{
+                      color: '#A8A8A8',
+                      display: 'flex',
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    <EmojiPeople sx={{ fontSize: '1.3rem', mr: 1 }} />
+                    <Msg id={messageIds.addPerson.status.signedUp} />
+                  </Box>
+                );
+              }
+              return '';
+            };
 
-              return (
-                <ZUIPersonSelect
-                  bulkSelection={{
-                    entityToAddTo:
-                      eventFuture?.data?.activity?.title || undefined,
-                    onSelectMultiple: (ids) => {
-                      // TODO #2789: Optimize this, e.g. using RPC
-                      ids.forEach((id) => {
-                        if (!isParticipant(id)) {
-                          addParticipant(id);
-                        }
-                      });
-                    },
-                  }}
-                  createPersonLabels={{
-                    submitLabel: zuiMessages.createPerson.submitLabel.add(),
-                    title: zuiMessages.createPerson.title.participant(),
-                  }}
-                  getOptionDisabled={(option) =>
-                    participants.some(
-                      (participant) => participant.id == option.id
-                    )
-                  }
-                  getOptionExtraLabel={(option) => {
-                    return getOptionExtraLabel(option.id);
-                  }}
-                  name="person"
-                  onChange={(person) => {
-                    addParticipant(person.id);
-                  }}
-                  placeholder={messages.addPerson.addPlaceholder()}
-                  selectedPerson={null}
-                  variant="outlined"
-                />
-              );
-            }}
-          </ZUIFutures>
+            return (
+              <ZUIPersonSelect
+                bulkSelection={{
+                  entityToAddTo: event?.activity?.title || undefined,
+                  onSelectMultiple: (ids) => {
+                    // TODO #2789: Optimize this, e.g. using RPC
+                    ids.forEach((id) => {
+                      if (!isParticipant(id)) {
+                        addParticipant(id);
+                      }
+                    });
+                  },
+                }}
+                createPersonLabels={{
+                  submitLabel: zuiMessages.createPerson.submitLabel.add(),
+                  title: zuiMessages.createPerson.title.participant(),
+                }}
+                getOptionDisabled={(option) =>
+                  participants.some(
+                    (participant) => participant.id == option.id
+                  )
+                }
+                getOptionExtraLabel={(option) => {
+                  return getOptionExtraLabel(option.id);
+                }}
+                name="person"
+                onChange={(person) => {
+                  addParticipant(person.id);
+                }}
+                placeholder={messages.addPerson.addPlaceholder()}
+                selectedPerson={null}
+                variant="outlined"
+              />
+            );
+          })()}
         </Box>
       </Popover>
     </>

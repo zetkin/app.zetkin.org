@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, Suspense, useState } from 'react';
 
 import { PageContainerContext } from 'utils/panes/PageContainerContext';
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
@@ -26,7 +26,9 @@ const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
         },
       }}
     >
-      <ZUIOrganizeSidebar />
+      <Suspense fallback={<div>Loading sidebar...</div>}>
+        <ZUIOrganizeSidebar />
+      </Suspense>
       <Box
         ref={(div: HTMLDivElement) => setContainer(div)}
         display="flex"

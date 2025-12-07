@@ -41,7 +41,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     updateCallAssignment,
     deleteAssignment,
   } = useCallAssignment(orgId, callAssId);
-  const { statsFuture } = useCallAssignmentStats(orgId, callAssId);
+  const { stats } = useCallAssignmentStats(orgId, callAssId);
   const { filteredCallersFuture } = useCallers(orgId, callAssId);
   const state = useCallAssignmentState(orgId, callAssId);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -133,23 +133,17 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
             <CallAssignmentStatusChip state={state} />
           </Box>
           <Box display="flex" marginX={1}>
-            <ZUIFuture
-              future={statsFuture}
-              ignoreDataWhileLoading
-              skeletonWidth={100}
-            >
-              {(data) => (
-                <>
-                  <People />
-                  <Typography marginLeft={1}>
-                    <Msg
-                      id={messageIds.stats.targets}
-                      values={{ numTargets: data?.allTargets ?? 0 }}
-                    />
-                  </Typography>
-                </>
-              )}
-            </ZUIFuture>
+            {stats && (
+              <>
+                <People />
+                <Typography marginLeft={1}>
+                  <Msg
+                    id={messageIds.stats.targets}
+                    values={{ numTargets: stats.allTargets ?? 0 }}
+                  />
+                </Typography>
+              </>
+            )}
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture

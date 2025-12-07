@@ -4,7 +4,6 @@ import { Alert, AlertTitle, Box, Link } from '@mui/material';
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import useSurveyStats from '../hooks/useSurveyStats';
-import ZUIFuture from 'zui/ZUIFuture';
 
 type SubmissionWarningAlertProps = {
   campId: number | 'standalone' | 'shared';
@@ -19,17 +18,21 @@ const SubmissionWarningAlert = ({
   surveyId,
 }: SubmissionWarningAlertProps) => {
   const messages = useMessages(messageIds);
-  const statsFuture = useSurveyStats(orgId, surveyId);
+  const stats = useSurveyStats(orgId, surveyId);
+
+  if (!stats) {
+    return null;
+  }
+
+  const unlinkedSubs = stats.unlinkedSubmissionCount;
+
+  if (unlinkedSubs === 0) {
+    return null;
+  }
 
   return (
-    <ZUIFuture future={statsFuture}>
-      {(sub) => {
-        const unlinkedSubs = sub.unlinkedSubmissionCount;
-
-        if (unlinkedSubs === 0) {
-          return null;
-        }
-
+    <>
+      {(() => {
         return (
           <Alert severity="warning">
             <AlertTitle>
@@ -59,8 +62,8 @@ const SubmissionWarningAlert = ({
             </Box>
           </Alert>
         );
-      }}
-    </ZUIFuture>
+      })()}
+    </>
   );
 };
 

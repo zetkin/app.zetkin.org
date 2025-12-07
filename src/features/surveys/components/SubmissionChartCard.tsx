@@ -6,7 +6,6 @@ import { Box, Paper, Typography, useTheme } from '@mui/material';
 
 import useSurveyStats from '../hooks/useSurveyStats';
 import ZUICard from 'zui/ZUICard';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
@@ -22,28 +21,32 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const statsFuture = useSurveyStats(orgId, surveyId);
+  const stats = useSurveyStats(orgId, surveyId);
+
+  if (!stats) {
+    return null;
+  }
+
+  const hasChartData = stats.submissionsByDay.length > 1;
 
   return (
-    <ZUIFuture future={statsFuture}>
-      {(data) => {
-        const hasChartData = data.submissionsByDay.length > 1;
-
+    <>
+      {(() => {
         return (
           <ZUICard
             header={messages.chart.header()}
             status={
-              !!data.submissionCount && (
+              !!stats.submissionCount && (
                 <ZUINumberChip
                   color={theme.palette.grey[200]}
-                  value={data.submissionCount}
+                  value={stats.submissionCount}
                 />
               )
             }
             subheader={
-              data.submissionCount
+              stats.submissionCount
                 ? messages.chart.subheader({
-                    days: data.submissionsByDay.length,
+                    days: stats.submissionsByDay.length,
                   })
                 : undefined
             }
@@ -85,11 +88,11 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                   curve="basis"
                   data={[
                     {
-                      data: data.submissionsByDay.map((day) => ({
+                      data: stats.submissionsByDay.map((day) => ({
                         x: day.date,
                         y: day.accumulatedSubmissions,
                       })),
-                      id: data.id,
+                      id: stats.id,
                     },
                   ]}
                   defs={[
@@ -111,7 +114,7 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                     // Calculate the left margin from the number of digits
                     // in the submission count, to make sure the axis labels
                     // will fit inside the clipping rectangle.
-                    left: 8 + data.submissionCount.toString().length * 8,
+                    left: 8 + stats.submissionCount.toString().length * 8,
                     top: 20,
                   }}
                   sliceTooltip={(props) => {
@@ -145,8 +148,8 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
             </Box>
           </ZUICard>
         );
-      }}
-    </ZUIFuture>
+      })()}
+    </>
   );
 };
 

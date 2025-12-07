@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
 
 import { CallAssignmentData, CallAssignmentPatchBody } from '../apiTypes';
-import { futureToObject } from 'core/caching/futures';
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import {
   callAssignmentDeleted,
   callAssignmentLoad,
@@ -11,6 +9,7 @@ import {
   callAssignmentUpdated,
 } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import useRemoteItem from 'core/hooks/useRemoteItem';
 import { ZetkinCallAssignment, ZetkinQuery } from 'utils/types/zetkin';
 
 interface UseCallAssignmentReturn {
@@ -37,9 +36,8 @@ export default function useCallAssignment(
   const callAssignmentSlice = useAppSelector((state) => state.callAssignments);
   const callAssignmentItems = callAssignmentSlice.assignmentList.items;
   const caItem = callAssignmentItems.find((item) => item.id == assignmentId);
-  const callAssignment = caItem?.data;
 
-  const callAssignmentFuture = loadItemIfNecessary(caItem, dispatch, {
+  const callAssignment = useRemoteItem(caItem, {
     actionOnLoad: () => callAssignmentLoad(assignmentId),
     actionOnSuccess: (data) => callAssignmentLoaded(data),
     loader: () =>
@@ -49,8 +47,7 @@ export default function useCallAssignment(
   });
 
   const isTargeted = !!(
-    callAssignmentFuture.data &&
-    callAssignmentFuture.data.target?.filter_spec?.length != 0
+    callAssignment && callAssignment.target?.filter_spec?.length != 0
   );
 
   const updateTargets = (query: Partial<ZetkinQuery>): void => {
@@ -113,15 +110,14 @@ export default function useCallAssignment(
   };
 
   const start = () => {
-    if (!callAssignmentFuture.data) {
+    if (!callAssignment) {
       return;
     }
 
     const now = dayjs();
     const today = now.format('YYYY-MM-DD');
 
-    const { start_date: startStr, end_date: endStr } =
-      callAssignmentFuture.data;
+    const { start_date: startStr, end_date: endStr } = callAssignment;
 
     if (!startStr && !endStr) {
       updateCallAssignment({
@@ -172,7 +168,7 @@ export default function useCallAssignment(
   };
 
   const end = () => {
-    if (!callAssignmentFuture.data) {
+    if (!callAssignment) {
       return;
     }
 
@@ -192,9 +188,11 @@ export default function useCallAssignment(
   };
 
   return {
-    ...futureToObject(callAssignmentFuture),
+    data: callAssignment,
     deleteAssignment,
     end,
+    error: null,
+    isLoading: !callAssignment,
     isTargeted,
     start,
     updateCallAssignment,

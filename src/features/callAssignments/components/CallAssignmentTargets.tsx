@@ -42,7 +42,7 @@ const CallAssignmentTargets: FC<CallAssignmentTargetsProps> = ({
     isTargeted,
     updateTargets: setTargets,
   } = useCallAssignment(orgId, assignmentId);
-  const { statsFuture } = useCallAssignmentStats(orgId, assignmentId);
+  const { stats } = useCallAssignmentStats(orgId, assignmentId);
 
   return (
     <>
@@ -52,7 +52,7 @@ const CallAssignmentTargets: FC<CallAssignmentTargetsProps> = ({
             <Msg id={messageIds.targets.title} />
           </Typography>
           {isTargeted && (
-            <ZUIAnimatedNumber value={statsFuture.data?.allTargets || 0}>
+            <ZUIAnimatedNumber value={stats?.allTargets || 0}>
               {(animatedValue) => (
                 <Box className={classes.chip}>{animatedValue}</Box>
               )}

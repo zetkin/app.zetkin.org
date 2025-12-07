@@ -4,7 +4,7 @@ import { ZetkinEventPostBody } from './useEventMutations';
 
 export default function useDuplicateEvent(orgId: number, eventId: number) {
   const createEvent = useCreateEvent(orgId);
-  const event = useEvent(orgId, eventId)?.data;
+  const event = useEvent(orgId, eventId);
 
   return () => {
     const duplicateEventPostBody: ZetkinEventPostBody = {

@@ -64,7 +64,7 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const messages = useMessages(messageIds);
   const classes = useStyles();
   const orgId = event.organization.id;
-  const { participantsFuture, respondentsFuture } = useEventParticipants(
+  const { participants, respondents } = useEventParticipants(
     event.organization.id,
     event.id
   );
@@ -73,8 +73,6 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
   const duplicateEvent = useDuplicateEvent(event.organization.id, event.id);
 
   const dispatch = useAppDispatch();
-  const participants = participantsFuture.data || [];
-  const respondents = respondentsFuture.data || [];
   const state = useEventState(event.organization.id, event.id);
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);

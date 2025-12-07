@@ -119,7 +119,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   type,
 }) => {
   const messages = useMessages(messageIds);
-  const event = useEvent(orgId, eventId)?.data;
+  const event = useEvent(orgId, eventId);
   const { setContact } = useEventContact(orgId, eventId);
   const { deleteParticipant, setParticipantStatus } =
     useEventParticipantsMutations(orgId, eventId);

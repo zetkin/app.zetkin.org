@@ -23,8 +23,7 @@ export const PublicEventLayout: FC<Props> = ({ children, eventId, orgId }) => {
   const messages = useMessages(messageIds);
   const isMobile = useIsMobile();
 
-  const eventFuture = useEvent(orgId, eventId);
-  const event = eventFuture?.data;
+  const event = useEvent(orgId, eventId);
 
   return (
     <Box

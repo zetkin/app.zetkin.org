@@ -15,7 +15,7 @@ export default function useCallAssignmentState(
   assignmentId: number
 ): CallAssignmentState {
   const { data: callAssignment } = useCallAssignment(orgId, assignmentId);
-  const { statsFuture } = useCallAssignmentStats(orgId, assignmentId);
+  const { stats } = useCallAssignmentStats(orgId, assignmentId);
 
   if (!callAssignment) {
     return CallAssignmentState.UNKNOWN;
@@ -34,11 +34,11 @@ export default function useCallAssignmentState(
         }
       }
 
-      if (!statsFuture.data?.mostRecentCallTime) {
+      if (!stats?.mostRecentCallTime) {
         return CallAssignmentState.OPEN;
       }
 
-      const mostRecentCallTime = new Date(statsFuture.data.mostRecentCallTime);
+      const mostRecentCallTime = new Date(stats.mostRecentCallTime);
       const diff = now.getTime() - mostRecentCallTime.getTime();
 
       return diff < 10 * 60 * 1000

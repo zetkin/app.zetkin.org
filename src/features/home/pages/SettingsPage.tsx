@@ -8,9 +8,22 @@ import AppPreferences from '../components/AppPreferences';
 import useCurrentUser from 'features/user/hooks/useCurrentUser';
 import AccountSettings from '../components/AccountSettings';
 
-const AllEventsPage: FC = () => {
+const SettingsContent: FC = () => {
   const user = useCurrentUser();
 
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <>
+      <AppPreferences user={user} />
+      <AccountSettings user={user} />
+    </>
+  );
+};
+
+const AllEventsPage: FC = () => {
   return (
     <Suspense
       fallback={
@@ -25,12 +38,7 @@ const AllEventsPage: FC = () => {
         </Box>
       }
     >
-      {user && (
-        <>
-          <AppPreferences user={user} />
-          <AccountSettings user={user} />
-        </>
-      )}
+      <SettingsContent />
     </Suspense>
   );
 };

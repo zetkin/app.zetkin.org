@@ -105,7 +105,7 @@ const ContactSelect: FC<ContactSelectProps> = ({ orgId, eventId }) => {
 
 const EventContactCard: FC<EventContactCardProps> = ({ data, orgId }) => {
   const messages = useMessages(messageIds);
-  const event = useEvent(orgId, data.id)?.data;
+  const event = useEvent(orgId, data.id);
 
   if (!event) {
     return null;

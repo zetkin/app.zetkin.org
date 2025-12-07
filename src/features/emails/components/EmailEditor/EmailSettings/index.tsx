@@ -1,7 +1,14 @@
 import EditorJS from '@editorjs/editorjs';
 import { OutputBlockData } from '@editorjs/editorjs';
 import { Box, Divider, Stack, Tab } from '@mui/material';
-import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  MutableRefObject,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import BlockListItem from './BlockListItem';
@@ -80,7 +87,9 @@ const EmailSettings: FC<EmailSettingsProps> = ({
           </Stack>
         </TabPanel>
         <TabPanel sx={{ padding: 0 }} value="preview">
-          <PreviewTab />
+          <Suspense fallback={<div>Loading...</div>}>
+            <PreviewTab />
+          </Suspense>
         </TabPanel>
       </TabContext>
     </Box>

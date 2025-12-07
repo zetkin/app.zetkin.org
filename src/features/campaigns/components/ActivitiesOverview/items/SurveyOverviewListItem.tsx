@@ -19,8 +19,8 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
   focusDate,
 }) => {
   const survey = activity.data;
-  const stats = useSurveyStats(survey.organization.id, survey.id).data;
-  const submissionCount = stats?.submissionCount || 0;
+  const stats = useSurveyStats(survey.organization.id, survey.id);
+  const submissionCount = stats.submissionCount || 0;
   const { orgId } = useNumericRouteParams();
   return (
     <OverviewListItem
@@ -33,7 +33,7 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
       SecondaryIcon={ChatBubbleOutline}
       startDate={activity.visibleFrom}
       statusBar={
-        stats?.submissionCount ? (
+        stats.submissionCount ? (
           <ZUIStackedStatusBar
             height={4}
             values={[

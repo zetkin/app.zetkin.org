@@ -51,8 +51,7 @@ describe('Updating an event', () => {
       { wrapper: makeWrapper(store) }
     );
 
-    expect(result.current?.data).toEqual(updatedEvent);
-    expect(result.current?.isLoading).toEqual(false);
+    expect(result.current).toEqual(updatedEvent);
   });
 
   it('updates the date of an event', () => {
@@ -99,7 +98,6 @@ describe('Updating an event', () => {
       { wrapper: makeWrapper(store) }
     );
 
-    expect(result.current?.data).toEqual(updatedEvent);
-    expect(result.current?.isLoading).toEqual(false);
+    expect(result.current).toEqual(updatedEvent);
   });
 });

@@ -27,10 +27,10 @@ const EmailListItem: FC<EmailListItemProps> = ({ orgId, emailId }) => {
     numTargetMatches,
     numOpened,
     numSent,
-    isLoading: statsLoading,
     numLockedTargets,
     numBlocked,
   } = useEmailStats(orgId, emailId);
+  const statsLoading = false; // Stats are now always loaded synchronously
   const endNumber = numTargetMatches - numBlocked.any;
 
   if (!email) {

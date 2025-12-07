@@ -16,10 +16,9 @@ interface SurveyListItemProps {
 }
 
 const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
-  const statsFuture = useSurveyStats(orgId, surveyId);
+  const stats = useSurveyStats(orgId, surveyId);
   const { data } = useSurvey(orgId, surveyId);
   const state = useSurveyState(orgId, surveyId);
-  const stats = statsFuture.data;
 
   if (!data) {
     return null;
@@ -57,7 +56,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
       orangeChipValue={unlinkedSubmissionCount}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
-      statsLoading={statsFuture.isLoading}
+      statsLoading={!stats}
       title={data.title}
     />
   );

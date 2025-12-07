@@ -14,7 +14,7 @@ export default function useEventState(
   orgId: number,
   eventId: number
 ): EventState {
-  const event = useEvent(orgId, eventId)?.data;
+  const event = useEvent(orgId, eventId);
 
   if (!event) {
     return EventState.UNKNOWN;

@@ -19,7 +19,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   orgId,
 }) => {
   const { data: callAssignment } = useCallAssignment(orgId, caId);
-  const { statsFuture } = useCallAssignmentStats(orgId, caId);
+  const { stats } = useCallAssignmentStats(orgId, caId);
   const state = useCallAssignmentState(orgId, caId);
 
   if (!callAssignment) {
@@ -38,10 +38,10 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     color = STATUS_COLORS.BLUE;
   }
 
-  const blocked = statsFuture.data?.blocked || 0;
-  const ready = statsFuture.data?.ready || 0;
-  const done = statsFuture.data?.done || 0;
-  const callsMade = statsFuture.data?.callsMade.toString() || '0';
+  const blocked = stats?.blocked || 0;
+  const ready = stats?.ready || 0;
+  const done = stats?.done || 0;
+  const callsMade = stats?.callsMade.toString() || '0';
 
   return (
     <ActivityListItemWithStats
@@ -55,7 +55,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
-      statsLoading={statsFuture.isLoading}
+      statsLoading={!stats}
       title={callAssignment?.title}
     />
   );

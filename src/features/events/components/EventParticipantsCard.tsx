@@ -34,12 +34,8 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   eventId,
   orgId,
 }) => {
-  const event = useEvent(orgId, eventId)?.data;
-  const { pendingSignUps, participantsFuture } = useEventParticipants(
-    orgId,
-    eventId
-  );
-  const participants = participantsFuture.data || [];
+  const event = useEvent(orgId, eventId);
+  const { pendingSignUps, participants } = useEventParticipants(orgId, eventId);
 
   const { setReqParticipants } = useEventParticipantsMutations(orgId, eventId);
   const messages = useMessages(messageIds);
