@@ -11,9 +11,9 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { FeatureGroup as FeatureGroupType } from 'leaflet';
 
 import { DivIconMarker } from 'features/events/components/LocationModal/DivIconMarker';
-import isPointInsidePolygon from '../../canvass/utils/isPointInsidePolygon';
+import isPointInsidePolygon from 'features/canvass/utils/isPointInsidePolygon';
 import { ZetkinArea } from 'features/areas/types';
-import { getBoundSize } from '../../canvass/utils/getBoundSize';
+import { getBoundSize } from 'features/canvass/utils/getBoundSize';
 import { useEnv } from 'core/hooks';
 import oldTheme from 'theme';
 import flipForLeaflet from 'features/areas/utils/flipForLeaflet';
@@ -30,7 +30,7 @@ const LocationMarker: FC<{
     return (
       <DivIconMarker
         iconAnchor={[2, 2]}
-        position={[location.lng, location.lat]}
+        position={[location.lat, location.lng]}
         zIndexOffset={-1000}
       >
         <Box
@@ -179,8 +179,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
       const isInsideArea = isPointInsidePolygon(
         target.home_location as ZetkinLngLatFieldValue,
         area.points.map((point) => ({
-          lat: point[0],
-          lng: point[1],
+          lat: point[1],
+          lng: point[0],
         }))
       );
       if (isInsideArea) {
@@ -259,8 +259,8 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
             const isInsideArea = isPointInsidePolygon(
               target.home_location as ZetkinLngLatFieldValue,
               area.points.map((point) => ({
-                lat: point[0],
-                lng: point[1],
+                lat: point[1],
+                lng: point[0],
               }))
             );
 
