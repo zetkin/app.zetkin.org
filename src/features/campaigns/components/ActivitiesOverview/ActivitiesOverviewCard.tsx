@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { FC } from 'react';
 import { FlagOutlined } from '@mui/icons-material';
 import NextLink from 'next/link';
 import { Box, Divider, Link } from '@mui/material';
@@ -57,79 +57,64 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
           return (
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <Suspense fallback={<Box sx={{ p: 2 }}>Loading...</Box>}>
-                <CallAssignmentOverviewListItem
-                  activity={activity}
-                  focusDate={focusDate}
-                />
-              </Suspense>
+              <CallAssignmentOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.AREA_ASSIGNMENT) {
           return (
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <Suspense fallback={<Box sx={{ p: 2 }}>Loading...</Box>}>
-                <AreaAssignmentOverviewListItem
-                  activity={activity}
-                  focusDate={focusDate}
-                />
-              </Suspense>
+              <AreaAssignmentOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
             </Box>
           );
         } else if (isEventCluster(activity)) {
           return (
             <Box key={`cluster-${activity.events[0].id}`}>
               {index > 0 && <Divider />}
-              <Suspense fallback={<Box sx={{ p: 2 }}>Loading...</Box>}>
-                {activity.kind == CLUSTER_TYPE.SINGLE ? (
-                  <EventOverviewListItem
-                    event={activity.events[0]}
-                    focusDate={focusDate}
-                  />
-                ) : (
-                  <EventClusterOverviewListItem
-                    cluster={activity}
-                    focusDate={focusDate}
-                  />
-                )}
-              </Suspense>
+              {activity.kind == CLUSTER_TYPE.SINGLE ? (
+                <EventOverviewListItem
+                  event={activity.events[0]}
+                  focusDate={focusDate}
+                />
+              ) : (
+                <EventClusterOverviewListItem
+                  cluster={activity}
+                  focusDate={focusDate}
+                />
+              )}
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {
           return (
             <Box key={`survey-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <Suspense fallback={<Box sx={{ p: 2 }}>Loading...</Box>}>
-                <SurveyOverviewListItem
-                  activity={activity}
-                  focusDate={focusDate}
-                />
-              </Suspense>
+              <SurveyOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.TASK) {
           return (
             <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <Suspense fallback={<Box sx={{ p: 2 }}>Loading...</Box>}>
-                <TaskOverviewListItem
-                  activity={activity}
-                  focusDate={focusDate}
-                />
-              </Suspense>
+              <TaskOverviewListItem activity={activity} focusDate={focusDate} />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.EMAIL) {
           return (
             <Box key={`email-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <Suspense fallback={<Box sx={{ p: 2 }}>Loading...</Box>}>
-                <EmailOverviewListItem
-                  activity={activity}
-                  focusDate={focusDate}
-                />
-              </Suspense>
+              <EmailOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
             </Box>
           );
         }

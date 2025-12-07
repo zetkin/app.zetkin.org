@@ -21,30 +21,21 @@ export default function useActivityArchive(
     orgId,
     campId
   );
-  const callAssignmentActivitiesFuture = useCallAssignmentActivities(
-    orgId,
-    campId
-  );
+  const callAssignmentActivities = useCallAssignmentActivities(orgId, campId);
   const taskActivitiesFuture = useTaskActivities(orgId, campId);
-  const eventActivitiesFuture = useEventActivities(orgId, campId);
-  const emailActivitiesFuture = useEmailActivities(orgId, campId);
+  const eventActivities = useEventActivities(orgId, campId);
+  const emailActivities = useEmailActivities(orgId, campId);
 
   if (
-    callAssignmentActivitiesFuture.isLoading ||
     areaAssignmentActivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
-    taskActivitiesFuture.isLoading ||
-    eventActivitiesFuture.isLoading ||
-    emailActivitiesFuture.isLoading
+    taskActivitiesFuture.isLoading
   ) {
     return new LoadingFuture();
   } else if (
-    callAssignmentActivitiesFuture.error ||
     areaAssignmentActivitiesFuture.error ||
     surveyActivitiesFuture.error ||
-    taskActivitiesFuture.error ||
-    eventActivitiesFuture.error ||
-    emailActivitiesFuture.error
+    taskActivitiesFuture.error
   ) {
     return new ErrorFuture('Error loading acitvities');
   }
@@ -52,11 +43,11 @@ export default function useActivityArchive(
   const activities: CampaignActivity[] = [];
   activities.push(
     ...(surveyActivitiesFuture.data || []),
-    ...(callAssignmentActivitiesFuture.data || []),
+    ...callAssignmentActivities,
     ...(areaAssignmentActivitiesFuture.data || []),
     ...(taskActivitiesFuture.data || []),
-    ...(eventActivitiesFuture.data || []),
-    ...(emailActivitiesFuture.data || [])
+    ...eventActivities,
+    ...emailActivities
   );
 
   const now = new Date();

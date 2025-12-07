@@ -12,6 +12,7 @@ export default function useMyAssignments() {
   return useRemoteList(myAssignmnentsList, {
     actionOnLoad: () => myAssignmentsLoad(),
     actionOnSuccess: (data) => myAssignmentsLoaded(data),
+    cacheKey: 'my-call-assignments',
     loader: () =>
       apiClient.get<ZetkinCallAssignment[]>('/api/users/me/call_assignments'),
   });

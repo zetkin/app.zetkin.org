@@ -7,6 +7,7 @@ import useAreaAssignment from 'features/areaAssignments/hooks/useAreaAssignment'
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 import getStatusColor from 'features/campaigns/utils/getStatusColor';
+import { ZetkinAreaAssignee } from 'features/areaAssignments/types';
 
 type Props = {
   activity: AreaAssignmentActivity;
@@ -17,9 +18,9 @@ type Props = {
 const AreaAssignmentListItem: FC<Props> = ({ caId, orgId, activity }) => {
   const { data: assignment } = useAreaAssignment(orgId, caId);
 
-  const allSessions = useAreaAssignees(orgId, caId).data || [];
+  const allSessions = useAreaAssignees(orgId, caId);
   const sessions = allSessions.filter(
-    (session) => session.assignment_id === caId
+    (session: ZetkinAreaAssignee) => session.assignment_id === caId
   );
 
   if (!assignment) {

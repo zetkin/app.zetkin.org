@@ -12,6 +12,7 @@ export default function useUpcomingEvents(orgId: number): ZetkinEvent[] {
   return useRemoteList(list, {
     actionOnLoad: () => eventsLoad(),
     actionOnSuccess: (data) => eventsLoaded(data),
+    cacheKey: `upcoming-events-${orgId}`,
     loader: async () => {
       const filterParam = encodeURIComponent(`start_time>${todaysDate}`);
       const url = `/api/orgs/${orgId}/actions?filter=${filterParam}`;

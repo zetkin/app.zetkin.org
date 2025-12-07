@@ -6,17 +6,11 @@ import useEventsFromDateRange from 'features/events/hooks/useEventsFromDateRange
 import useSurveyActivities from './useSurveyActivities';
 import useTaskActivities from './useTaskActivities';
 import { ACTIVITIES, ActivityOverview, CampaignActivity } from '../types';
-import {
-  ErrorFuture,
-  IFuture,
-  LoadingFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
 
 export default function useActivitiyOverview(
   orgId: number,
   campId?: number
-): IFuture<ActivityOverview> {
+): ActivityOverview {
   const startOfToday = new Date(new Date().toISOString().slice(0, 10));
   const weekFromNow = new Date(startOfToday);
   weekFromNow.setDate(startOfToday.getDate() + 8);
@@ -29,42 +23,21 @@ export default function useActivitiyOverview(
   );
   const taskActivitiesFuture = useTaskActivities(orgId, campId);
   const surveyActivitiesFuture = useSurveyActivities(orgId, campId);
-  const callAssignmentActivitiesFuture = useCallAssignmentActivities(
+  const callAssignmentActivities = useCallAssignmentActivities(orgId, campId);
+  const emailActivities = useEmailActivities(orgId, campId);
+  const areaAssignmentActivitiesFuture = useAreaAssignmentActivities(
     orgId,
     campId
   );
-  const emailActivitiesFuture = useEmailActivities(orgId, campId);
-  const areaAssignmentAcitivitiesFuture = useAreaAssignmentActivities(
-    orgId,
-    campId
-  );
-
-  if (
-    callAssignmentActivitiesFuture.isLoading ||
-    areaAssignmentAcitivitiesFuture.isLoading ||
-    surveyActivitiesFuture.isLoading ||
-    taskActivitiesFuture.isLoading ||
-    emailActivitiesFuture.isLoading
-  ) {
-    return new LoadingFuture();
-  } else if (
-    callAssignmentActivitiesFuture.error ||
-    areaAssignmentAcitivitiesFuture.error ||
-    surveyActivitiesFuture.error ||
-    taskActivitiesFuture.error ||
-    emailActivitiesFuture.error
-  ) {
-    return new ErrorFuture('Error loading activities');
-  }
 
   const activities: CampaignActivity[] = [];
   activities.push(
     ...eventActivites,
     ...(taskActivitiesFuture.data || []),
     ...(surveyActivitiesFuture.data || []),
-    ...(callAssignmentActivitiesFuture.data || []),
-    ...(areaAssignmentAcitivitiesFuture.data || []),
-    ...(emailActivitiesFuture.data || [])
+    ...callAssignmentActivities,
+    ...(areaAssignmentActivitiesFuture.data || []),
+    ...emailActivities
   );
 
   const sortedActivities = activities.sort((first, second) => {
@@ -128,5 +101,5 @@ export default function useActivitiyOverview(
     );
   });
 
-  return new ResolvedFuture(overview);
+  return overview;
 }

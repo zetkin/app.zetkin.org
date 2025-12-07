@@ -12,6 +12,7 @@ export default function useAssignmentAreas(orgId: number, areaAssId: number) {
   return useRemoteList(list, {
     actionOnLoad: () => assignmentAreasLoad(areaAssId),
     actionOnSuccess: (data) => assignmentAreasLoaded([areaAssId, data]),
+    cacheKey: `assignment-areas-${orgId}-${areaAssId}`,
     loader: () =>
       apiClient.get<Zetkin2Area[]>(
         `/api2/orgs/${orgId}/area_assignments/${areaAssId}/areas`

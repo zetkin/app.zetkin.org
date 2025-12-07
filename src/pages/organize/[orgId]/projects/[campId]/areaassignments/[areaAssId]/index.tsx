@@ -42,16 +42,14 @@ const AreaAssignmentPage: PageWithLayout<AreaAssignmentPageProps> = ({
   areaAssId,
 }) => {
   const messages = useMessages(messageIds);
-  const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
+  const sessions = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const statsFuture = useAreaAssignmentStats(parseInt(orgId), areaAssId);
   const areasStats = useAssignmentAreaStats(parseInt(orgId), areaAssId);
   const dataGraph = useAssignmentAreaGraph(parseInt(orgId), areaAssId);
   const router = useRouter();
 
-  const numAreas = new Set(
-    sessionsFuture.data?.map((session) => session.area_id) ?? []
-  ).size;
+  const numAreas = new Set(sessions.map((session) => session.area_id)).size;
 
   return (
     <>

@@ -14,6 +14,7 @@ export default function useMyEvents() {
   return useRemoteList(list, {
     actionOnLoad: () => userEventsLoad(),
     actionOnSuccess: (data) => userEventsLoaded(data),
+    cacheKey: 'my-events',
     loader: async () => {
       const bookedEventIds: number[] = [];
 

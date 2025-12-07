@@ -7,6 +7,7 @@ import OverviewListItem from './OverviewListItem';
 import useAreaAssignees from 'features/areaAssignments/hooks/useAreaAssignees';
 import getAreaAssignees from 'features/areaAssignments/utils/getAreaAssignees';
 import { useNumericRouteParams } from 'core/hooks';
+import { ZetkinAreaAssignee } from 'features/areaAssignments/types';
 
 type Props = {
   activity: AreaAssignmentActivity;
@@ -17,9 +18,9 @@ const AreaAssignmentOverviewListItem: FC<Props> = ({ activity, focusDate }) => {
   const assignment = activity.data;
   const { orgId } = useNumericRouteParams();
 
-  const allSessions = useAreaAssignees(orgId, assignment.id).data || [];
+  const allSessions = useAreaAssignees(orgId, assignment.id);
   const sessions = allSessions.filter(
-    (session) => session.assignment_id === assignment.id
+    (session: ZetkinAreaAssignee) => session.assignment_id === assignment.id
   );
 
   const areaAssignees = getAreaAssignees(sessions);

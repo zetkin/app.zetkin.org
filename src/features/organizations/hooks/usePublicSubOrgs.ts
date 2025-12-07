@@ -16,6 +16,7 @@ export default function usePublicSubOrgs(orgId: number) {
       const subOrgs = flattenSubOrgs(data);
       return subOrgsLoaded([orgId, subOrgs]);
     },
+    cacheKey: `public-sub-orgs-${orgId}`,
     loader: () =>
       apiClient.get<ZetkinSubOrganization[]>(
         `/api/orgs/${orgId}/sub_organizations?recursive`

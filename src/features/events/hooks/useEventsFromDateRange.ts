@@ -6,6 +6,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 import { ACTIVITIES, EventActivity } from 'features/campaigns/types';
 import { eventRangeLoad, eventRangeLoaded } from '../store';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import usePromiseCache from 'core/hooks/usePromiseCache';
 
 export default function useEventsFromDateRange(
   startDate: Date,
@@ -28,21 +29,33 @@ export default function useEventsFromDateRange(
     shouldLoad(eventsState.eventsByDate[date.slice(0, 10)])
   );
 
+  const cacheKey = `eventsDateRange-${orgId}-${campId || 'all'}-${startDate
+    .toISOString()
+    .slice(0, 10)}-${endDate.toISOString().slice(0, 10)}`;
+  const { cache } = usePromiseCache(cacheKey);
+
   if (mustLoad) {
-    dispatch(eventRangeLoad(dateRange));
     const apiEndDate = new Date(endDate);
     apiEndDate.setDate(apiEndDate.getDate() + 1);
-    const promise = apiClient
-      .get<ZetkinEvent[]>(
-        `/api/orgs/${orgId}/actions?filter=start_time>${startDate
-          .toISOString()
-          .slice(0, 10)}&filter=end_time<${apiEndDate
-          .toISOString()
-          .slice(0, 10)}`
+    const promise = Promise.resolve()
+      .then(() => {
+        dispatch(eventRangeLoad(dateRange));
+      })
+      .then(() =>
+        apiClient.get<ZetkinEvent[]>(
+          `/api/orgs/${orgId}/actions?filter=start_time>${startDate
+            .toISOString()
+            .slice(0, 10)}&filter=end_time<${apiEndDate
+            .toISOString()
+            .slice(0, 10)}`
+        )
       )
       .then((events) => {
         dispatch(eventRangeLoaded([events, dateRange]));
+        return events;
       });
+
+    cache(promise);
 
     // This will suspend React from rendering this branch
     // until the promise resolves.

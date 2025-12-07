@@ -18,6 +18,7 @@ export default function useHousehold(
   return useRemoteItem(item, {
     actionOnLoad: () => householdLoad([locationId, householdId]),
     actionOnSuccess: (data) => householdLoaded([locationId, data]),
+    cacheKey: `household-${orgId}-${locationId}-${householdId}`,
     loader: () =>
       apiClient.get<HouseholdWithColor>(
         `/beta/orgs/${orgId}/locations/${locationId}/households/${householdId}`

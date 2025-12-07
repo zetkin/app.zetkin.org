@@ -10,6 +10,7 @@ export default function useOrgUsers(orgId: number): ZetkinOrgUser[] {
   return useRemoteList(userList, {
     actionOnLoad: () => orgUsersLoad(),
     actionOnSuccess: (data) => orgUsersLoaded(data),
+    cacheKey: `org-users-${orgId}`,
     // TODO: Use search API instead of loading all users
     loader: async () => {
       return await fetchAllPaginated<ZetkinOrgUser>((page) =>

@@ -17,6 +17,7 @@ export default function useAreaAssignmentMetrics(
   return useRemoteList(metricsList, {
     actionOnLoad: () => metricsLoad(assignmentId),
     actionOnSuccess: (data) => metricsLoaded([assignmentId, data]),
+    cacheKey: `area-assignment-metrics-${orgId}-${assignmentId}`,
     loader: () => apiClient.get<ZetkinMetric[]>(url),
   });
 }

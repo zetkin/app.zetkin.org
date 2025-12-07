@@ -14,6 +14,7 @@ export default function useUpcomingOrgEvents(orgId: number): ZetkinEvent[] {
   return useRemoteList(list, {
     actionOnLoad: () => orgEventsLoad(orgId),
     actionOnSuccess: (data) => orgEventsLoaded([orgId, data]),
+    cacheKey: `upcoming-org-events-${orgId}`,
     loader: () =>
       apiClient.get<ZetkinEvent[]>(
         `/api/orgs/${orgId}/actions?recursive&filter=start_time%3E=${now}`

@@ -21,12 +21,13 @@ export default function useRemoteList<
   }
 ): DataType[] {
   const dispatch = useAppDispatch();
-  const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
+  const loadIsNecessary =
+    (hooks.isNecessary?.() ?? true) && shouldLoad(remoteList);
 
   const promiseKey = hooks.cacheKey || hooks.loader.toString();
   const { cache } = usePromiseCache(promiseKey);
 
-  if (!remoteList || loadIsNecessary) {
+  if (loadIsNecessary) {
     const promise = Promise.resolve()
       .then(() => {
         dispatch(hooks.actionOnLoad());
@@ -50,6 +51,11 @@ export default function useRemoteList<
     if (!remoteList?.items.length) {
       throw promise;
     }
+  }
+
+  // If loading is not necessary (e.g., isNecessary returned false), return empty array
+  if (!remoteList?.items) {
+    return [];
   }
 
   return remoteList.items

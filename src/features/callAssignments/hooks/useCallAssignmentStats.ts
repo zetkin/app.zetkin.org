@@ -23,6 +23,7 @@ export default function useCallAssignmentStats(
   const statsData = useRemoteItem(statsItem, {
     actionOnLoad: () => statsLoad(assignmentId),
     actionOnSuccess: (data) => statsLoaded(data),
+    cacheKey: `call-assignment-stats-${orgId}-${assignmentId}`,
     loader: async () => {
       const data = await apiClient.get<CallAssignmentStats & { id: number }>(
         `/api/callAssignments/targets?org=${orgId}&assignment=${assignmentId}`

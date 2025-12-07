@@ -13,7 +13,6 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import ZUIFuture from 'zui/ZUIFuture';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -38,7 +37,7 @@ const SharedActivitiesPage: PageWithLayout<SharedActivitiesPageProps> = ({
   const onServer = useServerSide();
   const parsedOrgId = parseInt(orgId);
   const { campId } = useNumericRouteParams();
-  const activitiesFuture = useAcitvityList(parsedOrgId, campId);
+  const activities = useAcitvityList(parsedOrgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
@@ -63,55 +62,50 @@ const SharedActivitiesPage: PageWithLayout<SharedActivitiesPageProps> = ({
     return null;
   }
 
+  //It only filters shared surveys for now, but there will be more shared activities in the future.
+  const data = activities.filter(
+    (item) =>
+      item.kind === 'survey' &&
+      item.data.org_access === 'suborgs' &&
+      item.data.organization.id != parsedOrgId
+  );
+
+  if (data.length === 0) {
+    return (
+      <Box>
+        <ZUIEmptyState
+          href={`/organize/${orgId}/projects/shared/archive`}
+          linkMessage={messages.allProjects.viewArchive()}
+          message={messages.shared.noActivities()}
+        />
+      </Box>
+    );
+  }
+
+  const activityTypes = data.map((activity: CampaignActivity) => activity.kind);
+  const filterTypes = [...new Set(activityTypes)];
+
   return (
     <Box>
-      <ZUIFuture future={activitiesFuture} skeletonWidth={200}>
-        {(activities) => {
-          //It only filters shared surveys for now, but there will be more shared activities in the future.
-          const data = activities.filter(
-            (item) =>
-              item.kind === 'survey' &&
-              item.data.org_access === 'suborgs' &&
-              item.data.organization.id != parsedOrgId
-          );
-          if (data.length === 0) {
-            return (
-              <ZUIEmptyState
-                href={`/organize/${orgId}/projects/shared/archive`}
-                linkMessage={messages.allProjects.viewArchive()}
-                message={messages.shared.noActivities()}
-              />
-            );
-          }
+      <Grid container spacing={2}>
+        <Grid size={{ sm: 8 }}>
+          <ActivityList
+            allActivities={data}
+            filters={filters}
+            orgId={parsedOrgId}
+            searchString={searchString}
+          />
+        </Grid>
 
-          const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
-          );
-          const filterTypes = [...new Set(activityTypes)];
-
-          return (
-            <Grid container spacing={2}>
-              <Grid size={{ sm: 8 }}>
-                <ActivityList
-                  allActivities={data}
-                  filters={filters}
-                  orgId={parsedOrgId}
-                  searchString={searchString}
-                />
-              </Grid>
-
-              <Grid size={{ sm: 4 }}>
-                <FilterActivities
-                  filters={filters}
-                  filterTypes={filterTypes}
-                  onFiltersChange={onFiltersChange}
-                  onSearchStringChange={onSearchStringChange}
-                />
-              </Grid>
-            </Grid>
-          );
-        }}
-      </ZUIFuture>
+        <Grid size={{ sm: 4 }}>
+          <FilterActivities
+            filters={filters}
+            filterTypes={filterTypes}
+            onFiltersChange={onFiltersChange}
+            onSearchStringChange={onSearchStringChange}
+          />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

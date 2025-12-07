@@ -40,6 +40,7 @@ export default function useCallAssignment(
   const callAssignment = useRemoteItem(caItem, {
     actionOnLoad: () => callAssignmentLoad(assignmentId),
     actionOnSuccess: (data) => callAssignmentLoaded(data),
+    cacheKey: `callAssignment-${orgId}-${assignmentId}`,
     loader: () =>
       apiClient.get<ZetkinCallAssignment>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}`

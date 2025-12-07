@@ -1,20 +1,22 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 import { ZetkinAreaAssignee } from '../types';
 import { assigneesLoad, assigneesLoaded } from '../store';
 import { fetchAllPaginated } from 'utils/fetchAllPaginated';
+import useRemoteList from 'core/hooks/useRemoteList';
 
-export default function useAreaAssignees(orgId: number, areaAssId: number) {
+export default function useAreaAssignees(
+  orgId: number,
+  areaAssId: number
+): ZetkinAreaAssignee[] {
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
   const sessions = useAppSelector(
     (state) => state.areaAssignments.assigneesByAssignmentId[areaAssId]
   );
 
-  return loadListIfNecessary(sessions, dispatch, {
+  return useRemoteList(sessions, {
     actionOnLoad: () => assigneesLoad(areaAssId),
-
     actionOnSuccess: (data) => assigneesLoaded([areaAssId, data]),
+    cacheKey: `area-assignees-${orgId}-${areaAssId}`,
     loader: () =>
       fetchAllPaginated(
         (page) =>

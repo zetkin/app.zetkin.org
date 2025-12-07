@@ -1,13 +1,13 @@
 import { AnyClusteredEvent } from 'features/calendar/utils/clusterEventsForWeekCalender';
 import { EventState } from './useEventState';
 import getEventStats from 'features/events/rpc/getEventStats';
-import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import messageIds from '../l10n/messageIds';
 import { STATUS_COLORS } from 'features/campaigns/components/ActivityList/items/ActivityListItem';
 import { useMessages } from 'core/i18n';
+import useRemoteItem from 'core/hooks/useRemoteItem';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import { statsLoad, statsLoaded } from 'features/events/store';
-import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
+import { useApiClient, useAppSelector } from 'core/hooks';
 
 export default function useEventClusterData(cluster: AnyClusteredEvent) {
   const numParticipantsRequired = cluster.events.reduce(
@@ -20,33 +20,25 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
     0
   );
 
-  let statsLoading = false;
   const messages = useMessages(messageIds);
   const events = useAppSelector((state) => state.events);
   const apiClient = useApiClient();
-  const dispatch = useAppDispatch();
 
   const allStats = cluster.events.map((event) => {
-    const future = loadItemIfNecessary(
-      events.statsByEventId[event.id],
-      dispatch,
-      {
-        actionOnLoad: () => statsLoad(event.id),
-        actionOnSuccess: (stats) => statsLoaded([event.id, stats]),
-        loader: () => {
-          return apiClient.rpc(getEventStats, {
-            eventId: event.id,
-            orgId: event.organization.id,
-          });
-        },
-      }
-    );
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const stats = useRemoteItem(events.statsByEventId[event.id], {
+      actionOnLoad: () => statsLoad(event.id),
+      actionOnSuccess: (stats) => statsLoaded([event.id, stats]),
+      cacheKey: `eventStats-${event.organization.id}-${event.id}`,
+      loader: () => {
+        return apiClient.rpc(getEventStats, {
+          eventId: event.id,
+          orgId: event.organization.id,
+        });
+      },
+    });
 
-    if (future.isLoading) {
-      statsLoading = true;
-    }
-
-    return future.data;
+    return stats;
   });
 
   const allHaveContacts = cluster.events.reduce(
@@ -63,15 +55,13 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
   let numBooked = 0;
   let numPending = 0;
   let numReminded = 0;
-  if (!statsLoading) {
-    allStats.forEach((stats) => {
-      if (stats) {
-        numPending += stats.numPending;
-        numBooked += stats.numBooked;
-        numReminded += stats.numReminded;
-      }
-    });
-  }
+  allStats.forEach((stats) => {
+    if (stats) {
+      numPending += stats.numPending;
+      numBooked += stats.numBooked;
+      numReminded += stats.numReminded;
+    }
+  });
 
   let color = STATUS_COLORS.GREY;
   if (status === EventState.OPEN) {
@@ -108,7 +98,6 @@ export default function useEventClusterData(cluster: AnyClusteredEvent) {
     numReminded,
     orgId,
     startTime,
-    statsLoading,
     title,
   };
 }

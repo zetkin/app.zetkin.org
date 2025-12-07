@@ -6,8 +6,7 @@ import ActivitiesOverviewCard from './ActivitiesOverviewCard';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useActivitiyOverview from 'features/campaigns/hooks/useActivityOverview';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import ZUIFuture from 'zui/ZUIFuture';
-import { ActivityOverview, CampaignActivity } from 'features/campaigns/types';
+import { CampaignActivity } from 'features/campaigns/types';
 import { Msg, useMessages } from 'core/i18n';
 
 type ActivitiesOverviewProps = {
@@ -22,7 +21,7 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const activityOverview = useActivitiyOverview(orgId, campaignId);
+  const activities = useActivitiyOverview(orgId, campaignId);
 
   const todayDate = new Date();
   const tomorrowDate = new Date();
@@ -36,6 +35,18 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
         item.data.organization.id != orgId
     );
   };
+
+  //It only filters shared surveys for now, but there will be more shared activities in the future.
+  const data = isShared
+    ? {
+        alsoThisWeek: filterSharedSurveys(activities.alsoThisWeek),
+        today: filterSharedSurveys(activities.today),
+        tomorrow: filterSharedSurveys(activities.tomorrow),
+      }
+    : activities;
+
+  const totalLength =
+    data.today.length + data.tomorrow.length + data.alsoThisWeek.length;
 
   return (
     <>
@@ -64,70 +75,50 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
           </NextLink>
         </Box>
       </Box>
-      <ZUIFuture future={activityOverview}>
-        {(activities) => {
-          //It only filters shared surveys for now, but there will be more shared activities in the future.
-          const data: ActivityOverview = isShared
-            ? {
-                alsoThisWeek: filterSharedSurveys(activities.alsoThisWeek),
-                today: filterSharedSurveys(activities.today),
-                tomorrow: filterSharedSurveys(activities.tomorrow),
-              }
-            : activities;
-
-          const totalLength =
-            data.today.length + data.tomorrow.length + data.alsoThisWeek.length;
-
-          if (totalLength == 0) {
-            return (
-              <Box>
-                <ZUIEmptyState
-                  href={`/organize/${orgId}/projects${
-                    campaignId ? `/${campaignId}` : ''
-                  }/activities`}
-                  linkMessage={messages.activitiesOverview.goToActivities()}
-                  message={messages.activitiesOverview.noActivities()}
-                />
-              </Box>
-            );
-          }
-
-          return (
-            <Grid container spacing={2}>
-              <Grid size={{ md: 4, xs: 12 }}>
-                <ActivitiesOverviewCard
-                  activities={data.today}
-                  campId={campaignId}
-                  focusDate={todayDate}
-                  header={messages.activitiesOverview.todayCard()}
-                  orgId={orgId}
-                  timeScale={'day'}
-                />
-              </Grid>
-              <Grid size={{ md: 4, xs: 12 }}>
-                <ActivitiesOverviewCard
-                  activities={data.tomorrow}
-                  campId={campaignId}
-                  focusDate={tomorrowDate}
-                  header={messages.activitiesOverview.tomorrowCard()}
-                  orgId={orgId}
-                  timeScale={'day'}
-                />
-              </Grid>
-              <Grid size={{ md: 4, xs: 12 }}>
-                <ActivitiesOverviewCard
-                  activities={data.alsoThisWeek}
-                  campId={campaignId}
-                  focusDate={null}
-                  header={messages.activitiesOverview.thisWeekCard()}
-                  orgId={orgId}
-                  timeScale={'week'}
-                />
-              </Grid>
-            </Grid>
-          );
-        }}
-      </ZUIFuture>
+      {totalLength == 0 ? (
+        <Box>
+          <ZUIEmptyState
+            href={`/organize/${orgId}/projects${
+              campaignId ? `/${campaignId}` : ''
+            }/activities`}
+            linkMessage={messages.activitiesOverview.goToActivities()}
+            message={messages.activitiesOverview.noActivities()}
+          />
+        </Box>
+      ) : (
+        <Grid container spacing={2}>
+          <Grid size={{ md: 4, xs: 12 }}>
+            <ActivitiesOverviewCard
+              activities={data.today}
+              campId={campaignId}
+              focusDate={todayDate}
+              header={messages.activitiesOverview.todayCard()}
+              orgId={orgId}
+              timeScale={'day'}
+            />
+          </Grid>
+          <Grid size={{ md: 4, xs: 12 }}>
+            <ActivitiesOverviewCard
+              activities={data.tomorrow}
+              campId={campaignId}
+              focusDate={tomorrowDate}
+              header={messages.activitiesOverview.tomorrowCard()}
+              orgId={orgId}
+              timeScale={'day'}
+            />
+          </Grid>
+          <Grid size={{ md: 4, xs: 12 }}>
+            <ActivitiesOverviewCard
+              activities={data.alsoThisWeek}
+              campId={campaignId}
+              focusDate={null}
+              header={messages.activitiesOverview.thisWeekCard()}
+              orgId={orgId}
+              timeScale={'week'}
+            />
+          </Grid>
+        </Grid>
+      )}
     </>
   );
 };

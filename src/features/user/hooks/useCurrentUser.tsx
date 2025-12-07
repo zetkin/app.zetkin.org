@@ -12,6 +12,7 @@ const useCurrentUser = (): ZetkinUser | null => {
   const user = useRemoteItem(userState.userItem, {
     actionOnLoad: () => userLoad(),
     actionOnSuccess: (user) => userLoaded(user),
+    cacheKey: 'current-user',
     loader: () => apiClient.get<ZetkinUser>(`/api/users/me`),
   });
 

@@ -12,6 +12,7 @@ export default function useSuborgsWithStats(orgId: number) {
   return useRemoteList(suborgsWithStats, {
     actionOnLoad: () => suborgsWithStatsLoad(),
     actionOnSuccess: (data) => suborgsWithStatsLoaded(data),
+    cacheKey: `suborgs-with-stats-${orgId}`,
     loader: () => {
       try {
         return apiClient.rpc(getSuborgsWithStats, { orgId });

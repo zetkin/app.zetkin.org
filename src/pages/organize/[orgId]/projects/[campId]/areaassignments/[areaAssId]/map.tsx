@@ -53,7 +53,7 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
   //const locations = useLocations(parseInt(orgId), areaAssId).data || [];
   const locations: ZetkinLocation[] = [];
   const areaStatsFuture = useAssignmentAreaStats(parseInt(orgId), areaAssId);
-  const sessionsFuture = useAreaAssignees(parseInt(orgId), areaAssId);
+  const sessions = useAreaAssignees(parseInt(orgId), areaAssId);
   const assignmentFuture = useAreaAssignment(parseInt(orgId), areaAssId);
   const { assignArea: assignUserToArea } = useAreaAssignmentMutations(
     parseInt(orgId),
@@ -74,10 +74,9 @@ const OrganizerMapPage: PageWithLayout<OrganizerMapPageProps> = ({
         <ZUIFutures
           futures={{
             areaStats: areaStatsFuture,
-            sessions: sessionsFuture,
           }}
         >
-          {({ data: { areaStats, sessions } }) => (
+          {({ data: { areaStats } }) => (
             <AreaFilterProvider>
               <AssigneeFilterProvider>
                 <OrganizerMap

@@ -9,6 +9,7 @@ export default function useUserMemberships() {
   return useRemoteList(list, {
     actionOnLoad: () => membershipsLoad(),
     actionOnSuccess: (data) => membershipsLoaded(data),
+    cacheKey: 'user-memberships',
     loader: () =>
       apiClient.get<ZetkinMembership[]>('/api/users/me/memberships'),
   });

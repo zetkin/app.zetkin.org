@@ -18,6 +18,7 @@ import useAreaAssignmentStatus, {
 } from '../hooks/useAreaAssignmentStatus';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import { ZetkinAreaAssignee } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 
@@ -40,7 +41,7 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
   const { deleteAreaAssignment, updateAreaAssignment } =
     useAreaAssignmentMutations(orgId, areaAssId);
 
-  const sessions = useAreaAssignees(orgId, areaAssId).data || [];
+  const sessions = useAreaAssignees(orgId, areaAssId);
 
   const state = useAreaAssignmentStatus(orgId, areaAssId);
   const { startAssignment, endAssignment } = useStartEndAssignment(
@@ -53,7 +54,9 @@ const AreaAssignmentLayout: FC<AreaAssignmentLayoutProps> = ({
 
   const isMapTab = path.endsWith('/map');
 
-  const numAreas = new Set(sessions.map((assignee) => assignee.area_id)).size;
+  const numAreas = new Set(
+    sessions.map((assignee: ZetkinAreaAssignee) => assignee.area_id)
+  ).size;
 
   if (!areaAssignment) {
     return null;

@@ -18,6 +18,7 @@ export default function useSimpleCallAssignmentStats(
   return useRemoteItem(statsItem, {
     actionOnLoad: () => simpleStatsLoad(assignmentId),
     actionOnSuccess: (data) => simpleStatsLoaded([assignmentId, data]),
+    cacheKey: `simple-call-assignment-stats-${orgId}-${assignmentId}`,
     loader: () =>
       apiClient.get<ZetkinCallAssignmentStats & { id: number }>(
         `/api/orgs/${orgId}/call_assignments/${assignmentId}/stats`

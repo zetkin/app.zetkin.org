@@ -15,6 +15,7 @@ export default function useEvent(
   const event = useRemoteItem(item, {
     actionOnLoad: () => eventLoad(id),
     actionOnSuccess: (event) => eventLoaded(event),
+    cacheKey: `event-${orgId}-${id}`,
     loader: () =>
       apiClient.get<ZetkinEvent>(`/api/orgs/${orgId}/actions/${id}`),
   });

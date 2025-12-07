@@ -43,7 +43,6 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
     numParticipantsRequired,
     numPending,
     numReminded,
-    statsLoading,
     orgId,
     startTime,
     title,
@@ -67,7 +66,7 @@ const EventClusterOverviewListItem: FC<EventClusterOverviewListItemProps> = ({
           numParticipants={numBooked}
           numRemindersSent={numReminded}
           numSignups={numPending}
-          participantsLoading={statsLoading}
+          participantsLoading={false}
         />
       }
       onClick={(x: number, y: number) => {

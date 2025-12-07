@@ -40,7 +40,6 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
     numPending,
     numReminded,
     orgId,
-    statsLoading,
     startTime,
     title,
   } = useEventClusterData(cluster);
@@ -58,7 +57,7 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
           numParticipants={numBooked}
           numRemindersSent={numReminded}
           numSignups={numPending}
-          participantsLoading={statsLoading}
+          participantsLoading={false}
         />
       }
       onEventItemClick={(x: number, y: number) => {

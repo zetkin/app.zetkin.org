@@ -15,6 +15,7 @@ export default function useSurveyStats(
   return useRemoteItem(statsItem, {
     actionOnLoad: () => statsLoad(surveyId),
     actionOnSuccess: (stats) => statsLoaded([surveyId, stats]),
+    cacheKey: `survey-stats-${orgId}-${surveyId}`,
     loader: () => apiClient.rpc(getSurveyStats, { orgId, surveyId }),
   });
 }

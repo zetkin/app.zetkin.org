@@ -12,6 +12,7 @@ export default function useSuborgWithFullStats(suborgId: number) {
   return useRemoteItem(item, {
     actionOnLoad: () => suborgWithStatsLoad(suborgId),
     actionOnSuccess: (data) => suborgWithStatsLoaded([suborgId, data]),
+    cacheKey: `suborg-with-full-stats-${suborgId}`,
     loader: () => apiClient.rpc(getSuborgWithStats, { orgId: suborgId }),
   });
 }

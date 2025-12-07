@@ -14,7 +14,6 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -44,7 +43,7 @@ const CampaignActivitiesPage: PageWithLayout<
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { orgId, campId } = useNumericRouteParams();
-  const campaignActivitiesFuture = useActivityList(orgId, campId);
+  const data = useActivityList(orgId, campId);
 
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
@@ -59,52 +58,48 @@ const CampaignActivitiesPage: PageWithLayout<
     return null;
   }
 
+  if (data.length === 0) {
+    return (
+      <Box>
+        <ZUIEmptyState
+          href={`/organize/${orgId}/projects/${campId}/archive`}
+          linkMessage={messages.singleProject.viewArchive()}
+          message={messages.singleProject.noActivities()}
+        />
+      </Box>
+    );
+  }
+
+  const activityTypes = data.map((activity) => activity.kind);
+  const filterTypes = [...new Set(activityTypes)];
+
   return (
     <Box>
-      <ZUIFuture future={campaignActivitiesFuture}>
-        {(data) => {
-          if (data.length === 0) {
-            return (
-              <ZUIEmptyState
-                href={`/organize/${orgId}/projects/${campId}/archive`}
-                linkMessage={messages.singleProject.viewArchive()}
-                message={messages.singleProject.noActivities()}
-              />
-            );
-          }
-
-          const activityTypes = data?.map((activity) => activity.kind);
-          const filterTypes = [...new Set(activityTypes)];
-
-          return (
-            <Grid container spacing={2}>
-              <Grid size={{ sm: 8 }}>
-                <ActivityList
-                  allActivities={data}
-                  filters={filters}
-                  orgId={orgId}
-                  searchString={searchString}
-                />
-              </Grid>
-              <Grid size={{ sm: 4 }}>
-                <FilterActivities
-                  filters={filters}
-                  filterTypes={filterTypes}
-                  onFiltersChange={(evt) => {
-                    const filter = evt.target.value as ACTIVITIES;
-                    if (filters.includes(filter)) {
-                      setFilters(filters.filter((a) => a !== filter));
-                    } else {
-                      setFilters([...filters, filter]);
-                    }
-                  }}
-                  onSearchStringChange={(value) => setSearchString(value)}
-                />
-              </Grid>
-            </Grid>
-          );
-        }}
-      </ZUIFuture>
+      <Grid container spacing={2}>
+        <Grid size={{ sm: 8 }}>
+          <ActivityList
+            allActivities={data}
+            filters={filters}
+            orgId={orgId}
+            searchString={searchString}
+          />
+        </Grid>
+        <Grid size={{ sm: 4 }}>
+          <FilterActivities
+            filters={filters}
+            filterTypes={filterTypes}
+            onFiltersChange={(evt) => {
+              const filter = evt.target.value as ACTIVITIES;
+              if (filters.includes(filter)) {
+                setFilters(filters.filter((a) => a !== filter));
+              } else {
+                setFilters([...filters, filter]);
+              }
+            }}
+            onSearchStringChange={(value) => setSearchString(value)}
+          />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

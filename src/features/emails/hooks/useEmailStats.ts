@@ -32,6 +32,7 @@ export default function useEmailStats(
   const stats = useRemoteItem(statsItem, {
     actionOnLoad: () => statsLoad(emailId),
     actionOnSuccess: (data) => statsLoaded(data),
+    cacheKey: `email-stats-${orgId}-${emailId}`,
     loader: async () => {
       const data = await apiClient.get<ZetkinEmailStats & { id: number }>(
         `/api/orgs/${orgId}/emails/${emailId}/stats`
