@@ -8,7 +8,7 @@ function getTimeScale(timeScaleQueryParam: string | string[] | undefined) {
   ) {
     return timeScaleQueryParam as TimeScale;
   }
-  return TimeScale.MONTH;
+  return undefined;
 }
 
 export default function useTimeScale(
@@ -17,8 +17,8 @@ export default function useTimeScale(
   const [localStorageTimeScale, setLocalStorageTimeScale] =
     useLocalStorage<TimeScale>(
       'calendarTimeScale',
-      getTimeScale(timeScaleQueryParam),
-      true
+      TimeScale.MONTH,
+      getTimeScale(timeScaleQueryParam)
     );
 
   return {

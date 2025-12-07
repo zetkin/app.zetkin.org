@@ -1,32 +1,28 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useLocalStorage<T>(
   key: string,
   defaultValue: T,
-  useDefaultValueAsInitialValue?: boolean
+  initialValue?: T
 ): [T, (newValue: T) => void] {
   const [value, setValue] = useState<T>(() =>
-    getLocalStorageValue(key, defaultValue, useDefaultValueAsInitialValue)
+    getLocalStorageValue(key, defaultValue, initialValue)
   );
 
-  const updateValue = useCallback(
-    (newValue: T) => {
-      localStorage.setItem(key, JSON.stringify(newValue));
-      setValue(newValue);
-    },
-    [setValue, key]
-  );
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [value, key]);
 
-  return [value, updateValue] as const;
+  return [value, setValue] as const;
 }
 
 function getLocalStorageValue<T>(
   key: string,
   defaultValue: T,
-  useDefaultValueAsInitialValue?: boolean
+  initialValue?: T
 ): T {
-  if (useDefaultValueAsInitialValue) {
-    return defaultValue;
+  if (initialValue) {
+    return initialValue;
   }
 
   const isBrowser = typeof window !== 'undefined';
