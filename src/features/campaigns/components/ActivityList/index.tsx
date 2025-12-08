@@ -1,6 +1,6 @@
 import { FilterListOutlined, Pending } from '@mui/icons-material';
 import Fuse from 'fuse.js';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, BoxProps, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentListItem from './items/CallAssignmentListItem';
@@ -56,7 +56,20 @@ const LazyActivitiesBox = ({
   return inView ? (
     <Box {...props}>
       {index > 0 && <Divider />}
-      {children}
+      <Suspense
+        fallback={
+          <ActivityListItem
+            color={STATUS_COLORS.GREY}
+            endNumber={0}
+            href={'#'}
+            PrimaryIcon={Pending}
+            SecondaryIcon={Pending}
+            title={'Loading...'}
+          />
+        }
+      >
+        {children}
+      </Suspense>
     </Box>
   ) : (
     <Box ref={boxRef}>

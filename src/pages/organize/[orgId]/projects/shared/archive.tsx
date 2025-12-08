@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
+import { Suspense } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
@@ -13,7 +14,6 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import ZUIFuture from 'zui/ZUIFuture';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -34,14 +34,76 @@ interface SharedArchivePageProps {
   orgId: string;
 }
 
+const ArchiveContent: React.FC<{
+  campId?: number;
+  filters: ACTIVITIES[];
+  onFiltersChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  onSearchStringChange: (value: string) => void;
+  orgId: string;
+  parsedOrgId: number;
+  searchString: string;
+}> = ({
+  campId,
+  filters,
+  onFiltersChange,
+  onSearchStringChange,
+  orgId,
+  parsedOrgId,
+  searchString,
+}) => {
+  const messages = useMessages(messageIds);
+  const archivedActivities = useActivityArchive(parsedOrgId, campId);
+
+  //It only filters shared surveys for now, but there will be more shared activities in the future.
+  const data = archivedActivities.filter(
+    (item) =>
+      item.kind === 'survey' &&
+      item.data.org_access === 'suborgs' &&
+      item.data.organization.id != parsedOrgId
+  );
+
+  if (data.length === 0) {
+    return (
+      <ZUIEmptyState
+        href={`/organize/${orgId}/projects/shared/activities`}
+        linkMessage={messages.activitiesOverview.goToActivities()}
+        message={messages.shared.noArchives()}
+      />
+    );
+  }
+
+  const activityTypes = data.map((activity: CampaignActivity) => activity.kind);
+  const filterTypes = [...new Set(activityTypes)];
+
+  return (
+    <Grid container spacing={2}>
+      <Grid size={{ sm: 8 }}>
+        <ActivityList
+          allActivities={data}
+          filters={filters}
+          orgId={parsedOrgId}
+          searchString={searchString}
+        />
+      </Grid>
+
+      <Grid size={{ sm: 4 }}>
+        <FilterActivities
+          filters={filters}
+          filterTypes={filterTypes}
+          onFiltersChange={onFiltersChange}
+          onSearchStringChange={onSearchStringChange}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
 const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
   orgId,
 }) => {
-  const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const { campId } = useNumericRouteParams();
   const parsedOrgId = parseInt(orgId);
-  const archivedActivities = useActivityArchive(parsedOrgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
@@ -68,53 +130,17 @@ const SharedArchivePage: PageWithLayout<SharedArchivePageProps> = ({
 
   return (
     <Box>
-      <ZUIFuture future={archivedActivities} skeletonWidth={200}>
-        {(activities) => {
-          //It only filters shared surveys for now, but there will be more shared activities in the future.
-          const data = activities.filter(
-            (item) =>
-              item.kind === 'survey' &&
-              item.data.org_access === 'suborgs' &&
-              item.data.organization.id != parsedOrgId
-          );
-          if (data.length === 0) {
-            return (
-              <ZUIEmptyState
-                href={`/organize/${orgId}/projects/shared/activities`}
-                linkMessage={messages.activitiesOverview.goToActivities()}
-                message={messages.shared.noArchives()}
-              />
-            );
-          }
-
-          const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
-          );
-          const filterTypes = [...new Set(activityTypes)];
-
-          return (
-            <Grid container spacing={2}>
-              <Grid size={{ sm: 8 }}>
-                <ActivityList
-                  allActivities={data}
-                  filters={filters}
-                  orgId={parsedOrgId}
-                  searchString={searchString}
-                />
-              </Grid>
-
-              <Grid size={{ sm: 4 }}>
-                <FilterActivities
-                  filters={filters}
-                  filterTypes={filterTypes}
-                  onFiltersChange={onFiltersChange}
-                  onSearchStringChange={onSearchStringChange}
-                />
-              </Grid>
-            </Grid>
-          );
-        }}
-      </ZUIFuture>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ArchiveContent
+          campId={campId}
+          filters={filters}
+          onFiltersChange={onFiltersChange}
+          onSearchStringChange={onSearchStringChange}
+          orgId={orgId}
+          parsedOrgId={parsedOrgId}
+          searchString={searchString}
+        />
+      </Suspense>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import Image from 'next/image';
 import { Box, ClickAwayListener, Paper, Popover } from '@mui/material';
 
@@ -44,7 +44,9 @@ const SingleEventPopper: FC<SingleEventPopperProps> = ({
             </Box>
           )}
           <Box p={2}>
-            <SingleEvent event={event} onClickAway={onClickAway} />
+            <Suspense fallback={<Box>Loading...</Box>}>
+              <SingleEvent event={event} onClickAway={onClickAway} />
+            </Suspense>
           </Box>
         </Paper>
       </ClickAwayListener>

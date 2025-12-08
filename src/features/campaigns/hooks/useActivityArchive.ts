@@ -5,47 +5,24 @@ import useEmailActivities from './useEmailActivities';
 import useEventActivities from './useEventActivities';
 import useSurveyActivities from './useSurveyActivities';
 import useTaskActivities from './useTaskActivities';
-import {
-  ErrorFuture,
-  IFuture,
-  LoadingFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
 
 export default function useActivityArchive(
   orgId: number,
   campId?: number
-): IFuture<CampaignActivity[]> {
-  const surveyActivitiesFuture = useSurveyActivities(orgId, campId);
-  const areaAssignmentActivitiesFuture = useAreaAssignmentActivities(
-    orgId,
-    campId
-  );
+): CampaignActivity[] {
+  const surveyActivities = useSurveyActivities(orgId, campId);
+  const areaAssignmentActivities = useAreaAssignmentActivities(orgId, campId);
   const callAssignmentActivities = useCallAssignmentActivities(orgId, campId);
-  const taskActivitiesFuture = useTaskActivities(orgId, campId);
+  const taskActivities = useTaskActivities(orgId, campId);
   const eventActivities = useEventActivities(orgId, campId);
   const emailActivities = useEmailActivities(orgId, campId);
 
-  if (
-    areaAssignmentActivitiesFuture.isLoading ||
-    surveyActivitiesFuture.isLoading ||
-    taskActivitiesFuture.isLoading
-  ) {
-    return new LoadingFuture();
-  } else if (
-    areaAssignmentActivitiesFuture.error ||
-    surveyActivitiesFuture.error ||
-    taskActivitiesFuture.error
-  ) {
-    return new ErrorFuture('Error loading acitvities');
-  }
-
   const activities: CampaignActivity[] = [];
   activities.push(
-    ...(surveyActivitiesFuture.data || []),
+    ...surveyActivities,
     ...callAssignmentActivities,
-    ...(areaAssignmentActivitiesFuture.data || []),
-    ...(taskActivitiesFuture.data || []),
+    ...areaAssignmentActivities,
+    ...taskActivities,
     ...eventActivities,
     ...emailActivities
   );
@@ -59,5 +36,5 @@ export default function useActivityArchive(
       activity.visibleUntil < nowDate
   );
 
-  return new ResolvedFuture(filtered);
+  return filtered;
 }

@@ -10,22 +10,19 @@ export default function useActivityList(
   orgId: number,
   campId?: number
 ): CampaignActivity[] {
-  const surveyActivitiesFuture = useSurveyActivities(orgId, campId);
+  const surveyActivities = useSurveyActivities(orgId, campId);
   const callAssignmentActivities = useCallAssignmentActivities(orgId, campId);
-  const areaAssignmentActivitiesFuture = useAreaAssignmentActivities(
-    orgId,
-    campId
-  );
-  const taskActivitiesFuture = useTaskActivities(orgId, campId);
+  const areaAssignmentActivities = useAreaAssignmentActivities(orgId, campId);
+  const taskActivities = useTaskActivities(orgId, campId);
   const eventActivities = useEventActivities(orgId, campId);
   const emailActivities = useEmailActivities(orgId, campId);
 
   const activities: CampaignActivity[] = [];
   activities.push(
-    ...(surveyActivitiesFuture.data || []),
+    ...surveyActivities,
     ...callAssignmentActivities,
-    ...(areaAssignmentActivitiesFuture.data || []),
-    ...(taskActivitiesFuture.data || []),
+    ...areaAssignmentActivities,
+    ...taskActivities,
     ...eventActivities,
     ...emailActivities
   );

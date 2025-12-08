@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, Suspense, useState } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -13,7 +13,6 @@ import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
-import ZUIFuture from 'zui/ZUIFuture';
 import { ACTIVITIES, CampaignActivity } from 'features/campaigns/types';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -28,11 +27,64 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-const ActivitiesArchivePage: PageWithLayout = () => {
+const ArchiveContent: React.FC<{
+  campId?: number;
+  filters: ACTIVITIES[];
+  onFiltersChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  onSearchStringChange: (value: string) => void;
+  orgId: number;
+  searchString: string;
+}> = ({
+  campId,
+  filters,
+  onFiltersChange,
+  onSearchStringChange,
+  orgId,
+  searchString,
+}) => {
   const messages = useMessages(messageIds);
+  const data = useActivityArchive(orgId, campId);
+
+  if (data.length === 0) {
+    return (
+      <ZUIEmptyState
+        href={`/organize/${orgId}/projects/activities`}
+        linkMessage={messages.activitiesOverview.goToActivities()}
+        message={messages.allProjects.noActivities()}
+      />
+    );
+  }
+
+  const activityTypes = data.map((activity: CampaignActivity) => activity.kind);
+  const filterTypes = [...new Set(activityTypes)];
+
+  return (
+    <Grid container spacing={2}>
+      <Grid size={{ sm: 8 }}>
+        <ActivityList
+          allActivities={data}
+          filters={filters}
+          orgId={orgId}
+          searchString={searchString}
+          sortNewestFirst
+        />
+      </Grid>
+
+      <Grid size={{ sm: 4 }}>
+        <FilterActivities
+          filters={filters}
+          filterTypes={filterTypes}
+          onFiltersChange={onFiltersChange}
+          onSearchStringChange={onSearchStringChange}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
+const ActivitiesArchivePage: PageWithLayout = () => {
   const onServer = useServerSide();
   const { orgId, campId } = useNumericRouteParams();
-  const archivedActivities = useActivityArchive(orgId, campId);
   const [searchString, setSearchString] = useState('');
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
@@ -59,47 +111,16 @@ const ActivitiesArchivePage: PageWithLayout = () => {
 
   return (
     <Box>
-      <ZUIFuture future={archivedActivities} skeletonWidth={200}>
-        {(data) => {
-          if (data.length === 0) {
-            return (
-              <ZUIEmptyState
-                href={`/organize/${orgId}/projects/activities`}
-                linkMessage={messages.activitiesOverview.goToActivities()}
-                message={messages.allProjects.noActivities()}
-              />
-            );
-          }
-
-          const activityTypes = data.map(
-            (activity: CampaignActivity) => activity.kind
-          );
-          const filterTypes = [...new Set(activityTypes)];
-
-          return (
-            <Grid container spacing={2}>
-              <Grid size={{ sm: 8 }}>
-                <ActivityList
-                  allActivities={data}
-                  filters={filters}
-                  orgId={orgId}
-                  searchString={searchString}
-                  sortNewestFirst
-                />
-              </Grid>
-
-              <Grid size={{ sm: 4 }}>
-                <FilterActivities
-                  filters={filters}
-                  filterTypes={filterTypes}
-                  onFiltersChange={onFiltersChange}
-                  onSearchStringChange={onSearchStringChange}
-                />
-              </Grid>
-            </Grid>
-          );
-        }}
-      </ZUIFuture>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ArchiveContent
+          campId={campId}
+          filters={filters}
+          onFiltersChange={onFiltersChange}
+          onSearchStringChange={onSearchStringChange}
+          orgId={orgId}
+          searchString={searchString}
+        />
+      </Suspense>
     </Box>
   );
 };

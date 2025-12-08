@@ -21,22 +21,19 @@ export default function useActivitiyOverview(
     orgId,
     campId
   );
-  const taskActivitiesFuture = useTaskActivities(orgId, campId);
-  const surveyActivitiesFuture = useSurveyActivities(orgId, campId);
+  const taskActivities = useTaskActivities(orgId, campId);
+  const surveyActivities = useSurveyActivities(orgId, campId);
   const callAssignmentActivities = useCallAssignmentActivities(orgId, campId);
   const emailActivities = useEmailActivities(orgId, campId);
-  const areaAssignmentActivitiesFuture = useAreaAssignmentActivities(
-    orgId,
-    campId
-  );
+  const areaAssignmentActivities = useAreaAssignmentActivities(orgId, campId);
 
   const activities: CampaignActivity[] = [];
   activities.push(
     ...eventActivites,
-    ...(taskActivitiesFuture.data || []),
-    ...(surveyActivitiesFuture.data || []),
+    ...taskActivities,
+    ...surveyActivities,
     ...callAssignmentActivities,
-    ...(areaAssignmentActivitiesFuture.data || []),
+    ...areaAssignmentActivities,
     ...emailActivities
   );
 
