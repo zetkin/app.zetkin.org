@@ -56,5 +56,4 @@ public/docs
 public/storybook
 
 # openapi
-openapi.json
-
+public/openapi/openapi.json

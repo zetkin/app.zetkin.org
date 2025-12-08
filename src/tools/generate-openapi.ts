@@ -624,7 +624,7 @@ async function main() {
   const outputPath =
     outputIndex !== -1 && args[outputIndex + 1]
       ? args[outputIndex + 1]
-      : path.join(process.cwd(), 'openapi.json');
+      : path.join(process.cwd(), 'public/openapi/openapi.json');
 
   console.log('Zetkin OpenAPI Generator\n');
   console.log(`Root directory: ${process.cwd()}`);
