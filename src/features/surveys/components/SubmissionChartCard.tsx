@@ -1,14 +1,14 @@
-import { FC } from 'react';
-import { FormattedDate } from 'react-intl';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 import { linearGradientDef } from '@nivo/core';
 import { ResponsiveLine } from '@nivo/line';
-import { Box, Paper, Typography, useTheme } from '@mui/material';
+import { FC } from 'react';
+import { FormattedDate } from 'react-intl';
 
-import useSurveyStats from '../hooks/useSurveyStats';
+import { Msg, useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
-import { Msg, useMessages } from 'core/i18n';
+import useSurveyStats from '../hooks/useSurveyStats';
 import messageIds from '../l10n/messageIds';
 
 type SubmissionChartCardProps = {
@@ -23,6 +23,8 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
   const theme = useTheme();
   const messages = useMessages(messageIds);
   const statsFuture = useSurveyStats(orgId, surveyId);
+
+  console.log('statsFuture ', statsFuture);
 
   return (
     <ZUIFuture future={statsFuture}>
