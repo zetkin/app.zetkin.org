@@ -9,6 +9,7 @@ information you need to have a smooth experience contributing.
 4. Handling text (and i18n)
 5. Submitting your contribution
 6. Summary (checklist)
+7. API documentation
 
 ## 1. How and when to contribute
 You can contribute whenever and however you like (but it helps to follow the guidelines
@@ -169,3 +170,21 @@ Here's a list of all the steps to contribute, in summary:
 - [ ] Be prepared to answer questions or make changes as raised during the review
 
 Thank you so much for contributing and being part of this movement!
+
+## 7. API documentation
+
+Currently, Zetkin involves an incomplete API documentation that is accessible via https://app.dev.zetkin.org/openapi
+
+This is generated based on actual usage in the Zetkin codebase and as a result, it is **not complete**.
+
+You can build the spec using:
+
+```bash
+yarn generate-openapi
+```
+
+When running the development server (`yarn devserver`), you can open: [localhost:3000/openapi](http://localhost:3000/openapi)
+
+The resulting file is written to `public/openapi/openapi.json`, which you can also import into Postman or other tools.
+Zetkin authenticates via a cookie, so you may need to provide your session cookie when calling the API from external
+software.
