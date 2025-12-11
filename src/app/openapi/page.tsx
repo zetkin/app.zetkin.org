@@ -1,9 +1,15 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 
+interface System {
+  preauthorizeApiKey(type: string, value: unknown): void;
+}
+
 export default function ApiDocs() {
+  const systemRef = useRef<System>();
+
   useEffect(() => {
     const checkCookie = () => {
       const cookies = document.cookie.split(';');
@@ -12,7 +18,7 @@ export default function ApiDocs() {
       if (zsidCookie) {
         const zsidValue = zsidCookie.split('=')[1];
         setTimeout(() => {
-          const swaggerUI = (window as any).ui;
+          const swaggerUI = systemRef.current;
           if (swaggerUI && zsidValue) {
             swaggerUI.preauthorizeApiKey('cookieAuth', zsidValue);
           }
@@ -25,7 +31,7 @@ export default function ApiDocs() {
 
   return (
     <>
-      <style jsx global>{`
+      <style global jsx>{`
         body {
           background-color: #1a1a1a;
         }
@@ -81,13 +87,12 @@ export default function ApiDocs() {
         }
       `}</style>
       <SwaggerUI
-        url="/openapi/openapi.json"
-        docExpansion="none"
         defaultModelsExpandDepth={-1}
         displayRequestDuration={true}
+        docExpansion="none"
         filter={false}
-        onComplete={(system: any) => {
-          (window as any).ui = system;
+        onComplete={(system) => {
+          systemRef.current = system;
 
           const cookies = document.cookie.split(';');
           const zsidCookie = cookies.find((c) => c.trim().startsWith('zsid='));
@@ -98,6 +103,7 @@ export default function ApiDocs() {
             }
           }
         }}
+        url="/openapi/openapi.json"
       />
     </>
   );
