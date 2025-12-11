@@ -1017,6 +1017,11 @@ export class OpenApiGenerator {
     const spec = this.generateOpenApi();
     const content = JSON.stringify(spec, null, 2);
 
+    const dir = path.dirname(outputPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
     fs.writeFileSync(outputPath, content, 'utf-8');
     this.debug(`\nOpenAPI specification saved to: ${outputPath}`);
   }
