@@ -18,9 +18,10 @@ interface ApiEndpoint {
 
 interface RpcEndpoint {
   name: string;
-  paramsType?: string;
+  paramsSchema?: any;
   resultType?: string;
   fileLocation: string;
+  lineNumber: number;
 }
 
 class OpenApiGenerator {
@@ -106,8 +107,8 @@ class OpenApiGenerator {
       return;
     }
 
-    const path = this.extractPathString(pathArg);
-    if (!path) {
+    const endpointPath = this.extractPathString(pathArg);
+    if (!endpointPath) {
       return;
     }
 
@@ -122,16 +123,16 @@ class OpenApiGenerator {
     const { line } = sourceFile.getLineAndCharacterOfPosition(
       node.getStart(sourceFile)
     );
-    const relativeFile = sourceFile.fileName
-      .replace(this.rootDir, '')
-      .replace(/^[\\\/]/, '');
+    const relativeFile = path
+      .relative(this.rootDir, sourceFile.fileName)
+      .replace(/\\/g, '/');
 
-    const pathParams = this.extractPathParams(path);
-    const queryParams = this.extractQueryParams(path);
+    const pathParams = this.extractPathParams(endpointPath);
+    const queryParams = this.extractQueryParams(endpointPath);
 
     const endpoint: ApiEndpoint = {
       method: methodName.toUpperCase() as ApiEndpoint['method'],
-      path,
+      path: endpointPath,
       responseType,
       requestType,
       fileLocation: relativeFile,
@@ -140,7 +141,7 @@ class OpenApiGenerator {
       queryParams,
     };
 
-    const normalizedPath = this.normalizePath(path);
+    const normalizedPath = this.normalizePath(endpointPath);
 
     if (!this.endpoints.has(normalizedPath)) {
       this.endpoints.set(normalizedPath, []);
@@ -162,20 +163,134 @@ class OpenApiGenerator {
       return;
     }
 
-    const relativeFile = sourceFile.fileName
-      .replace(this.rootDir, '')
-      .replace(/^[\\\/]/, '');
+    const relativeFile = path
+      .relative(this.rootDir, sourceFile.fileName)
+      .replace(/\\/g, '/');
 
-    if (!relativeFile.includes('/rpc/') && !relativeFile.includes('\\rpc\\')) {
+    if (!relativeFile.includes('/rpc/')) {
       return;
     }
 
+    const { line } = sourceFile.getLineAndCharacterOfPosition(
+      node.getStart(sourceFile)
+    );
+
     const rpcName = name.replace('Def', '');
 
-    this.rpcEndpoints.push({
-      name: rpcName,
-      fileLocation: relativeFile,
-    });
+    let paramsSchema: any = undefined;
+    let resultType: string | undefined = undefined;
+
+    if (node.initializer && ts.isObjectLiteralExpression(node.initializer)) {
+      const properties = node.initializer.properties;
+
+      let actualName = rpcName;
+      for (const prop of properties) {
+        if (
+          ts.isPropertyAssignment(prop) &&
+          ts.isIdentifier(prop.name) &&
+          prop.name.text === 'name' &&
+          ts.isStringLiteral(prop.initializer)
+        ) {
+          actualName = prop.initializer.text;
+        }
+        if (
+          ts.isPropertyAssignment(prop) &&
+          ts.isIdentifier(prop.name) &&
+          prop.name.text === 'schema'
+        ) {
+          paramsSchema = this.extractZodSchema(prop.initializer, sourceFile);
+        }
+      }
+
+      this.rpcEndpoints.push({
+        name: actualName,
+        paramsSchema,
+        resultType,
+        fileLocation: relativeFile,
+        lineNumber: line + 1,
+      });
+    }
+  }
+
+  private extractZodSchema(node: ts.Node, sourceFile: ts.SourceFile): any {
+    if (ts.isIdentifier(node)) {
+      const schemaName = node.text;
+      const foundSchema = this.findSchemaDefinition(schemaName, sourceFile);
+      if (foundSchema) {
+        return foundSchema;
+      }
+    }
+
+    const text = node.getText(sourceFile);
+
+    if (text.includes('z.object')) {
+      const properties: Record<string, any> = {};
+      const required: string[] = [];
+
+      const objectMatch = text.match(/z\.object\(\{([\s\S]+?)\}\)/);
+      if (objectMatch) {
+        const propsText = objectMatch[1];
+        const propRegex = /(\w+):\s*z\.(\w+)\([^)]*\)/g;
+        let match;
+
+        while ((match = propRegex.exec(propsText)) !== null) {
+          const [, propName, zodType] = match;
+          const openApiType = this.zodTypeToOpenApi(zodType);
+          properties[propName] = openApiType;
+          required.push(propName);
+        }
+      }
+
+      return {
+        type: 'object',
+        properties,
+        required: required.length > 0 ? required : undefined,
+      };
+    }
+
+    return undefined;
+  }
+
+  private findSchemaDefinition(
+    schemaName: string,
+    sourceFile: ts.SourceFile
+  ): any {
+    let foundSchema: any = undefined;
+
+    const visit = (node: ts.Node) => {
+      if (ts.isVariableStatement(node)) {
+        for (const declaration of node.declarationList.declarations) {
+          if (
+            ts.isIdentifier(declaration.name) &&
+            declaration.name.text === schemaName &&
+            declaration.initializer
+          ) {
+            foundSchema = this.extractZodSchema(
+              declaration.initializer,
+              sourceFile
+            );
+            return;
+          }
+        }
+      }
+      ts.forEachChild(node, visit);
+    };
+
+    visit(sourceFile);
+    return foundSchema;
+  }
+
+  private zodTypeToOpenApi(zodType: string): any {
+    const typeMap: Record<string, any> = {
+      string: { type: 'string' },
+      number: { type: 'number' },
+      boolean: { type: 'boolean' },
+      date: { type: 'string', format: 'date-time' },
+      array: { type: 'array', items: { type: 'string' } },
+      object: { type: 'object' },
+    };
+
+    return typeMap[zodType] || { type: 'object' };
   }
 
   private readonly VALID_API_PREFIXES = ['/api', '/api2', '/beta'];
@@ -232,12 +347,90 @@ class OpenApiGenerator {
     return 'param';
   }
 
+  private normalizeParamName(paramName: string, pathContext: string): string {
+    const lower = paramName.toLowerCase();
+
+    if (lower.includes('org') && !lower.includes('target')) {
+      return 'orgId';
+    }
+    if (lower.includes('campaign')) {
+      return 'campId';
+    }
+    if (lower.includes('event') || lower.includes('action')) {
+      return 'eventId';
+    }
+    if (lower.includes('person')) {
+      return 'personId';
+    }
+    if (lower.includes('survey')) {
+      return 'surveyId';
+    }
+    if (lower.includes('task')) {
+      return 'taskId';
+    }
+    if (lower.includes('call')) {
+      return 'callId';
+    }
+    if (lower.includes('assignment')) {
+      return 'assignmentId';
+    }
+    if (lower.includes('email')) {
+      return 'emailId';
+    }
+    if (lower.includes('view')) {
+      return 'viewId';
+    }
+    if (lower.includes('form')) {
+      return 'formId';
+    }
+    if (lower.includes('file')) {
+      return 'fileId';
+    }
+
+    if (paramName === 'id' || paramName === 'param') {
+      const pathSegments = pathContext.split('/').filter((s) => s);
+
+      for (let i = 0; i < pathSegments.length; i++) {
+        const segment = pathSegments[i];
+
+        if (segment.includes('{') && segment.includes('}')) {
+          const placeholder = segment.match(/\{([^}]+)\}/)?.[1];
+          if (placeholder === paramName) {
+            const prevSegment = i > 0 ? pathSegments[i - 1] : '';
+
+            if (prevSegment === 'orgs') return 'orgId';
+            if (prevSegment === 'campaigns') return 'campId';
+            if (prevSegment === 'actions' || prevSegment === 'events')
+              return 'eventId';
+            if (prevSegment === 'people') return 'personId';
+            if (
+              prevSegment === 'surveys' ||
+              prevSegment === 'survey_submissions'
+            )
+              return 'submissionId';
+            if (prevSegment === 'tasks') return 'taskId';
+            if (prevSegment === 'call_assignments') return 'assignmentId';
+            if (prevSegment === 'emails') return 'emailId';
+            if (prevSegment === 'views') return 'viewId';
+            if (prevSegment === 'calls') return 'callId';
+          }
+        }
+      }
+    }
+
+    return paramName;
+  }
+
   private extractPathParams(path: string): string[] {
-    const matches = path.match(/\{([^}]+)\}/g);
+    const pathPart = path.split('?')[0];
+    const matches = pathPart.match(/\{([^}]+)\}/g);
     if (!matches) {
       return [];
     }
-    return matches.map((m) => m.slice(1, -1));
+    return matches.map((m) => {
+      const paramName = m.slice(1, -1);
+      return this.normalizeParamName(paramName, pathPart);
+    });
   }
 
   private extractQueryParams(path: string): string[] {
@@ -249,9 +442,39 @@ class OpenApiGenerator {
     const queryString = path.slice(queryIndex + 1);
     const params = queryString.split('&');
 
-    return params
-      .map((p) => p.split('=')[0])
-      .filter((p) => !p.includes('%3E') && !p.includes('%3C'));
+    const paramNames = new Set<string>();
+
+    for (const param of params) {
+      let paramName = param.split('=')[0];
+
+      if (paramName.includes('[')) {
+        paramName = paramName.split('[')[0];
+      }
+
+      if (paramName.startsWith('${') && paramName.endsWith('}')) {
+        continue;
+      }
+
+      if (paramName.startsWith('${')) {
+        paramName = paramName.slice(2);
+        if (paramName.endsWith('}')) {
+          paramName = paramName.slice(0, -1);
+        }
+      }
+
+      if (
+        !paramName.includes('%3E') &&
+        !paramName.includes('%3C') &&
+        !paramName.includes('{') &&
+        !paramName.includes('}') &&
+        !paramName.includes('$') &&
+        paramName.length > 0
+      ) {
+        paramNames.add(paramName);
+      }
+    }
+
+    return Array.from(paramNames);
   }
 
   private normalizePath(path: string): string {
@@ -260,11 +483,48 @@ class OpenApiGenerator {
       path = path.slice(0, queryIndex);
     }
 
+    if (path.length > 1 && path.endsWith('/')) {
+      path = path.slice(0, -1);
+    }
+
+    path = path.replace(/\{([^}]+)\}/g, (_match, paramName) => {
+      const normalized = this.normalizeParamName(paramName, path);
+      return `{${normalized}}`;
+    });
+
     return path;
   }
 
   private typeToString(type: ts.TypeNode, sourceFile?: ts.SourceFile): string {
     return type.getText(sourceFile);
+  }
+
+  private typeToSchema(typeName: string): any {
+    if (typeName.endsWith('[]')) {
+      const itemType = typeName.slice(0, -2);
+      return {
+        type: 'array',
+        items: this.typeToSchema(itemType),
+      };
+    }
+
+    const primitiveMap: Record<string, string> = {
+      string: 'string',
+      number: 'number',
+      boolean: 'boolean',
+      any: 'object',
+      unknown: 'object',
+      void: 'null',
+    };
+
+    if (primitiveMap[typeName]) {
+      return { type: primitiveMap[typeName] };
+    }
+
+    return {
+      type: 'object',
+      description: `Type: ${typeName}`,
+    };
   }
 
   private getTotalEndpoints(): number {
@@ -285,33 +545,92 @@ class OpenApiGenerator {
     for (const [pathKey, endpoints] of sortedPaths) {
       const pathItem: any = {};
 
+      const methodGroups = new Map<string, ApiEndpoint[]>();
       for (const endpoint of endpoints) {
+        if (!methodGroups.has(endpoint.method)) {
+          methodGroups.set(endpoint.method, []);
+        }
+        methodGroups.get(endpoint.method)!.push(endpoint);
+      }
+
+      for (const [method, methodEndpoints] of methodGroups) {
+        const canonicalEndpoint = methodEndpoints[0];
+
+        const allQueryParams = new Set<string>();
+        for (const endpoint of methodEndpoints) {
+          endpoint.queryParams.forEach((p) => allQueryParams.add(p));
+        }
+
+        let description = `${canonicalEndpoint.fileLocation}:${canonicalEndpoint.lineNumber}`;
+
+        if (canonicalEndpoint.path.includes('breadcrumbs')) {
+          description +=
+            '\n\nExample: `GET /api/breadcrumbs?pathname=/organize/[orgId]/projects&orgId=2`';
+        }
+
         const operation: any = {
-          summary: this.generateSummary(endpoint),
-          description: `Source: ${endpoint.fileLocation}:${endpoint.lineNumber}`,
-          tags: this.extractTags(endpoint.path),
+          summary: this.generateSummary(canonicalEndpoint),
+          description,
+          tags: this.extractTags(canonicalEndpoint.path),
         };
 
         const parameters: any[] = [];
+        const addedParams = new Set<string>();
 
-        for (const param of endpoint.pathParams) {
-          parameters.push({
-            name: param,
-            in: 'path',
-            required: true,
-            schema: {
-              type: this.guessParamType(param),
-              example: this.getExampleValue(param),
-            },
-          });
+        for (const param of canonicalEndpoint.pathParams) {
+          if (!addedParams.has(param)) {
+            parameters.push({
+              name: param,
+              in: 'path',
+              required: true,
+              schema: {
+                type: this.guessParamType(param),
+                example: this.getExampleValue(param),
+              },
+            });
+            addedParams.add(param);
+          }
         }
 
-        for (const param of endpoint.queryParams) {
+        for (const param of Array.from(allQueryParams).sort()) {
+          if (!addedParams.has(param)) {
+            const paramObj: any = {
+              name: param,
+              in: 'query',
+              required: false,
+              schema: {
+                type: this.guessParamType(param),
+                example: this.getExampleValue(param),
+              },
+            };
+
+            const description = this.getParamDescription(
+              param,
+              canonicalEndpoint.path
+            );
+            if (description) {
+              paramObj.description = description;
+            }
+
+            parameters.push(paramObj);
+            addedParams.add(param);
+          }
+        }
+
+        if (
+          canonicalEndpoint.path.includes('breadcrumbs') &&
+          !addedParams.has('orgId')
+        ) {
           parameters.push({
-            name: param,
+            name: 'orgId',
             in: 'query',
             required: false,
-            schema: { type: 'string' },
+            schema: {
+              type: 'integer',
+              example: 2,
+            },
+            description:
+              'Organization ID to resolve [orgId] placeholder in pathname',
           });
         }
 
@@ -320,16 +639,25 @@ class OpenApiGenerator {
         }
 
         if (
-          ['POST', 'PATCH', 'PUT'].includes(endpoint.method) &&
-          endpoint.requestType
+          ['POST', 'PATCH', 'PUT'].includes(canonicalEndpoint.method) &&
+          canonicalEndpoint.requestType
         ) {
           operation.requestBody = {
             required: true,
             content: {
               'application/json': {
-                schema: {
-                  $ref: `#/components/schemas/${endpoint.requestType}`,
-                },
+                schema: this.typeToSchema(canonicalEndpoint.requestType),
+              },
+            },
+          };
+        } else if (
+          ['POST', 'PATCH', 'PUT'].includes(canonicalEndpoint.method)
+        ) {
+          operation.requestBody = {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object' },
               },
             },
           };
@@ -338,12 +666,10 @@ class OpenApiGenerator {
         operation.responses = {
           200: {
             description: 'Successful response',
-            content: endpoint.responseType
+            content: canonicalEndpoint.responseType
               ? {
                   'application/json': {
-                    schema: {
-                      $ref: `#/components/schemas/${endpoint.responseType}`,
-                    },
+                    schema: this.typeToSchema(canonicalEndpoint.responseType),
                   },
                 }
               : {},
@@ -362,18 +688,56 @@ class OpenApiGenerator {
           },
         };
 
-        pathItem[endpoint.method.toLowerCase()] = operation;
+        pathItem[method.toLowerCase()] = operation;
       }
 
       paths[pathKey] = pathItem;
     }
 
     if (this.rpcEndpoints.length > 0) {
+      const sortedRpcEndpoints = [...this.rpcEndpoints].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      const allFuncNames = sortedRpcEndpoints.map((rpc) => rpc.name);
+
+      const examples: Record<string, any> = {};
+      for (const rpc of sortedRpcEndpoints) {
+        const exampleParams: any = {};
+        if (rpc.paramsSchema?.properties) {
+          for (const [key, value] of Object.entries(
+            rpc.paramsSchema.properties
+          )) {
+            const propSchema = value as any;
+            if (propSchema.type === 'string') {
+              exampleParams[key] = 'string';
+            } else if (propSchema.type === 'number') {
+              exampleParams[key] = key.toLowerCase().includes('id') ? 1 : 0;
+            } else if (propSchema.type === 'boolean') {
+              exampleParams[key] = false;
+            } else {
+              exampleParams[key] = null;
+            }
+          }
+        }
+
+        examples[rpc.name] = {
+          summary: `RPC: ${rpc.name}`,
+          description: `${rpc.fileLocation}:${rpc.lineNumber}`,
+          value: {
+            func: rpc.name,
+            params: exampleParams,
+          },
+        };
+      }
+
       paths['/api/rpc'] = {
         post: {
-          summary: 'Remote Procedure Call endpoint',
-          description: 'Execute registered RPC functions',
+          summary: 'Remote Procedure Call (RPC) Endpoint',
+          description:
+            'Execute RPC functions. All RPC calls use this single endpoint with the function name in the `func` parameter.',
           tags: ['RPC'],
+          operationId: 'rpc',
           requestBody: {
             required: true,
             content: {
@@ -383,14 +747,18 @@ class OpenApiGenerator {
                   properties: {
                     func: {
                       type: 'string',
-                      enum: this.rpcEndpoints.map((rpc) => rpc.name),
+                      enum: allFuncNames,
+                      description: 'RPC function name to execute',
                     },
                     params: {
                       type: 'object',
+                      description:
+                        'Function parameters (see examples for each function)',
                     },
                   },
                   required: ['func', 'params'],
                 },
+                examples,
               },
             },
           },
@@ -404,11 +772,20 @@ class OpenApiGenerator {
                     properties: {
                       result: {
                         type: 'object',
+                        description:
+                          'Result object (structure varies by function)',
                       },
                     },
+                    required: ['result'],
                   },
                 },
               },
+            },
+            400: {
+              description: 'Bad request - invalid parameters',
+            },
+            404: {
+              description: 'RPC function not found',
             },
           },
         },
@@ -418,21 +795,11 @@ class OpenApiGenerator {
     const openapi = {
       openapi: '3.0.0',
       info: {
-        title: 'Zetkin App API',
+        title: 'Zetkin APIs',
         version: '1.0.0',
         description:
           'Auto-generated API documentation from the https://github.com/zetkin/app.zetkin.org repo',
       },
-      servers: [
-        {
-          url: 'http://localhost:3000',
-          description: 'Development server',
-        },
-        {
-          url: '',
-          description: 'Production server',
-        },
-      ],
       paths,
       components: {
         schemas: {},
@@ -442,7 +809,11 @@ class OpenApiGenerator {
             in: 'cookie',
             name: 'zsid',
             description:
-              'Session cookie (zsid). Log in at the app to get this cookie.',
+              'Session cookie (zsid). To get this:\n' +
+              '1. Log in at http://localhost:3000\n' +
+              '2. Open DevTools (F12) > Application/Storage > Cookies\n' +
+              '3. Copy the zsid cookie value\n' +
+              '4. Paste it in the Value field below',
           },
         },
       },
@@ -465,7 +836,8 @@ class OpenApiGenerator {
   }
 
   private extractResourceName(path: string): string {
-    const parts = path.split('/').filter((p) => p && !p.startsWith('{'));
+    const cleanPath = this.normalizePath(path);
+    const parts = cleanPath.split('/').filter((p) => p && !p.startsWith('{'));
     const resourcePart = parts[parts.length - 1];
 
     if (!resourcePart || resourcePart === 'api') {
@@ -487,14 +859,19 @@ class OpenApiGenerator {
   }
 
   private extractTags(path: string): string[] {
-    const parts = path.split('/').filter((p) => p && !p.startsWith('{'));
-    const relevantParts = parts.filter((p) => p !== 'api' && p !== 'orgs');
+    const cleanPath = this.normalizePath(path);
+    const parts = cleanPath.split('/').filter((p) => p && !p.startsWith('{'));
 
-    if (relevantParts.length === 0) {
-      return ['General'];
+    let apiTag = '';
+    if (cleanPath.startsWith('/api2/')) {
+      apiTag = 'api2';
+    } else if (cleanPath.startsWith('/beta/')) {
+      apiTag = 'beta';
+    } else if (cleanPath.startsWith('/api/')) {
+      apiTag = 'api';
     }
 
-    return [this.capitalizeFirst(relevantParts[0])];
+    return apiTag ? [apiTag] : ['General'];
   }
 
   private generateTags(): Array<{ name: string; description: string }> {
@@ -511,12 +888,29 @@ class OpenApiGenerator {
       tagSet.add('RPC');
     }
 
-    return Array.from(tagSet)
-      .sort()
-      .map((tag) => ({
-        name: tag,
-        description: `${tag} related endpoints`,
-      }));
+    const tagDescriptions: Record<string, string> = {
+      api: 'API endpoints',
+      api2: 'API2 endpoints',
+      beta: 'Beta/experimental endpoints',
+      RPC: 'Remote Procedure Call endpoints',
+      General: 'General endpoints',
+    };
+
+    const sortedTags = Array.from(tagSet).sort((a, b) => {
+      const order = ['api', 'api2', 'beta', 'RPC', 'General'];
+      const aIndex = order.indexOf(a);
+      const bIndex = order.indexOf(b);
+
+      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return a.localeCompare(b);
+    });
+
+    return sortedTags.map((tag) => ({
+      name: tag,
+      description: tagDescriptions[tag] || `${tag} related endpoints`,
+    }));
   }
 
   private guessParamType(paramName: string): string {
@@ -526,24 +920,78 @@ class OpenApiGenerator {
     return 'string';
   }
 
+  private getParamDescription(
+    paramName: string,
+    path: string
+  ): string | undefined {
+    const lower = paramName.toLowerCase();
+
+    if (lower === 'pathname' && path.includes('breadcrumbs')) {
+      return 'Route pathname with placeholders like /organize/[orgId]/projects. Pass placeholder values as separate query params (e.g., add &orgId=2 to the URL).';
+    }
+    if (lower === 'query' && path.includes('breadcrumbs')) {
+      return 'Query parameters for the pathname (e.g., orgId=2)';
+    }
+    if (lower === 'filter' && path.includes('actions')) {
+      return 'Filter expression to query events. Format: field>=value or field<=value. Example: start_time>=2025-12-11T10:00:00 filters events starting after that time.';
+    }
+    if (lower === 'recursive' && path.includes('actions')) {
+      return 'Include events from sub-organizations. Set to any value (e.g., "1") or omit parameter entirely. Presence of parameter = recursive, absence = non-recursive.';
+    }
+
+    return undefined;
+  }
+
   private getExampleValue(paramName: string): string | number {
+    const lowerParam = paramName.toLowerCase();
+
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+
+    if (
+      lowerParam === 'today' ||
+      lowerParam === 'date' ||
+      lowerParam === 'startdate' ||
+      lowerParam === 'enddate' ||
+      lowerParam === 'from' ||
+      lowerParam === 'to' ||
+      lowerParam === 'after' ||
+      lowerParam === 'before' ||
+      lowerParam.includes('date')
+    ) {
+      return dateStr;
+    }
+
+    if (lowerParam === 'pathname') {
+      return '/organize/[orgId]/projects';
+    }
+    if (lowerParam === 'query') {
+      return 'orgId=2';
+    }
+    if (lowerParam === 'filter') {
+      return `start_time>=${dateStr}T00:00:00`;
+    }
+    if (lowerParam === 'recursive') {
+      return 1;
+    }
+
     const exampleValues: Record<string, string | number> = {
       orgId: 2,
       personId: 2,
       userId: 2,
       campId: 1,
       projId: 1,
-      campaignId: 1,
-      projectId: 1,
-      eventId: 1,
-      surveyId: 1,
+      campaignId: 281,
+      projectId: 281,
+      eventId: 544,
+      surveyId: 170,
       taskId: 1,
       viewId: 1,
       emailId: 1,
       callId: 1,
       canvassId: 1,
-      assignmentId: 1,
-      callAssId: 1,
+      assignmentId: 73,
+      callAssId: 145,
       canvassAssId: 1,
       areaId: 1,
       areaAssId: 1,
@@ -560,8 +1008,6 @@ class OpenApiGenerator {
       instanceId: 1,
       milestoneId: 1,
     };
-
-    const lowerParam = paramName.toLowerCase();
 
     for (const [key, value] of Object.entries(exampleValues)) {
       if (lowerParam === key.toLowerCase()) {
