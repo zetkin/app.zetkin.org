@@ -107,8 +107,8 @@ class OpenApiGenerator {
       return;
     }
 
-    const path = this.extractPathString(pathArg);
-    if (!path) {
+    const endpointPath = this.extractPathString(pathArg);
+    if (!endpointPath) {
       return;
     }
 
@@ -123,16 +123,16 @@ class OpenApiGenerator {
     const { line } = sourceFile.getLineAndCharacterOfPosition(
       node.getStart(sourceFile)
     );
-    const relativeFile = sourceFile.fileName
-      .replace(this.rootDir, '')
-      .replace(/^[\\\/]/, '');
+    const relativeFile = path
+      .relative(this.rootDir, sourceFile.fileName)
+      .replace(/\\/g, '/');
 
-    const pathParams = this.extractPathParams(path);
-    const queryParams = this.extractQueryParams(path);
+    const pathParams = this.extractPathParams(endpointPath);
+    const queryParams = this.extractQueryParams(endpointPath);
 
     const endpoint: ApiEndpoint = {
       method: methodName.toUpperCase() as ApiEndpoint['method'],
-      path,
+      path: endpointPath,
       responseType,
       requestType,
       fileLocation: relativeFile,
@@ -141,7 +141,7 @@ class OpenApiGenerator {
       queryParams,
     };
 
-    const normalizedPath = this.normalizePath(path);
+    const normalizedPath = this.normalizePath(endpointPath);
 
     if (!this.endpoints.has(normalizedPath)) {
       this.endpoints.set(normalizedPath, []);
@@ -163,11 +163,11 @@ class OpenApiGenerator {
       return;
     }
 
-    const relativeFile = sourceFile.fileName
-      .replace(this.rootDir, '')
-      .replace(/^[\\\/]/, '');
+    const relativeFile = path
+      .relative(this.rootDir, sourceFile.fileName)
+      .replace(/\\/g, '/');
 
-    if (!relativeFile.includes('/rpc/') && !relativeFile.includes('\\rpc\\')) {
+    if (!relativeFile.includes('/rpc/')) {
       return;
     }
 
@@ -347,12 +347,90 @@ class OpenApiGenerator {
     return 'param';
   }
 
+  private normalizeParamName(paramName: string, pathContext: string): string {
+    const lower = paramName.toLowerCase();
+
+    if (lower.includes('org') && !lower.includes('target')) {
+      return 'orgId';
+    }
+    if (lower.includes('campaign')) {
+      return 'campId';
+    }
+    if (lower.includes('event') || lower.includes('action')) {
+      return 'eventId';
+    }
+    if (lower.includes('person')) {
+      return 'personId';
+    }
+    if (lower.includes('survey')) {
+      return 'surveyId';
+    }
+    if (lower.includes('task')) {
+      return 'taskId';
+    }
+    if (lower.includes('call')) {
+      return 'callId';
+    }
+    if (lower.includes('assignment')) {
+      return 'assignmentId';
+    }
+    if (lower.includes('email')) {
+      return 'emailId';
+    }
+    if (lower.includes('view')) {
+      return 'viewId';
+    }
+    if (lower.includes('form')) {
+      return 'formId';
+    }
+    if (lower.includes('file')) {
+      return 'fileId';
+    }
+
+    if (paramName === 'id' || paramName === 'param') {
+      const pathSegments = pathContext.split('/').filter((s) => s);
+
+      for (let i = 0; i < pathSegments.length; i++) {
+        const segment = pathSegments[i];
+
+        if (segment.includes('{') && segment.includes('}')) {
+          const placeholder = segment.match(/\{([^}]+)\}/)?.[1];
+          if (placeholder === paramName) {
+            const prevSegment = i > 0 ? pathSegments[i - 1] : '';
+
+            if (prevSegment === 'orgs') return 'orgId';
+            if (prevSegment === 'campaigns') return 'campId';
+            if (prevSegment === 'actions' || prevSegment === 'events')
+              return 'eventId';
+            if (prevSegment === 'people') return 'personId';
+            if (
+              prevSegment === 'surveys' ||
+              prevSegment === 'survey_submissions'
+            )
+              return 'submissionId';
+            if (prevSegment === 'tasks') return 'taskId';
+            if (prevSegment === 'call_assignments') return 'assignmentId';
+            if (prevSegment === 'emails') return 'emailId';
+            if (prevSegment === 'views') return 'viewId';
+            if (prevSegment === 'calls') return 'callId';
+          }
+        }
+      }
+    }
+
+    return paramName;
+  }
+
   private extractPathParams(path: string): string[] {
-    const matches = path.match(/\{([^}]+)\}/g);
+    const pathPart = path.split('?')[0];
+    const matches = pathPart.match(/\{([^}]+)\}/g);
     if (!matches) {
       return [];
     }
-    return matches.map((m) => m.slice(1, -1));
+    return matches.map((m) => {
+      const paramName = m.slice(1, -1);
+      return this.normalizeParamName(paramName, pathPart);
+    });
   }
 
   private extractQueryParams(path: string): string[] {
@@ -373,10 +451,23 @@ class OpenApiGenerator {
         paramName = paramName.split('[')[0];
       }
 
+      if (paramName.startsWith('${') && paramName.endsWith('}')) {
+        continue;
+      }
+
+      if (paramName.startsWith('${')) {
+        paramName = paramName.slice(2);
+        if (paramName.endsWith('}')) {
+          paramName = paramName.slice(0, -1);
+        }
+      }
+
       if (
         !paramName.includes('%3E') &&
         !paramName.includes('%3C') &&
         !paramName.includes('{') &&
+        !paramName.includes('}') &&
+        !paramName.includes('$') &&
         paramName.length > 0
       ) {
         paramNames.add(paramName);
@@ -395,6 +486,11 @@ class OpenApiGenerator {
     if (path.length > 1 && path.endsWith('/')) {
       path = path.slice(0, -1);
     }
+
+    path = path.replace(/\{([^}]+)\}/g, (_match, paramName) => {
+      const normalized = this.normalizeParamName(paramName, path);
+      return `{${normalized}}`;
+    });
 
     return path;
   }
@@ -465,9 +561,16 @@ class OpenApiGenerator {
           endpoint.queryParams.forEach((p) => allQueryParams.add(p));
         }
 
+        let description = `${canonicalEndpoint.fileLocation}:${canonicalEndpoint.lineNumber}`;
+
+        if (canonicalEndpoint.path.includes('breadcrumbs')) {
+          description +=
+            '\n\nExample: `GET /api/breadcrumbs?pathname=/organize/[orgId]/projects&orgId=2`';
+        }
+
         const operation: any = {
           summary: this.generateSummary(canonicalEndpoint),
-          description: `${canonicalEndpoint.fileLocation}:${canonicalEndpoint.lineNumber}`,
+          description,
           tags: this.extractTags(canonicalEndpoint.path),
         };
 
@@ -491,14 +594,44 @@ class OpenApiGenerator {
 
         for (const param of Array.from(allQueryParams).sort()) {
           if (!addedParams.has(param)) {
-            parameters.push({
+            const paramObj: any = {
               name: param,
               in: 'query',
               required: false,
-              schema: { type: 'string' },
-            });
+              schema: {
+                type: this.guessParamType(param),
+                example: this.getExampleValue(param),
+              },
+            };
+
+            const description = this.getParamDescription(
+              param,
+              canonicalEndpoint.path
+            );
+            if (description) {
+              paramObj.description = description;
+            }
+
+            parameters.push(paramObj);
             addedParams.add(param);
           }
+        }
+
+        if (
+          canonicalEndpoint.path.includes('breadcrumbs') &&
+          !addedParams.has('orgId')
+        ) {
+          parameters.push({
+            name: 'orgId',
+            in: 'query',
+            required: false,
+            schema: {
+              type: 'integer',
+              example: 2,
+            },
+            description:
+              'Organization ID to resolve [orgId] placeholder in pathname',
+          });
         }
 
         if (parameters.length > 0) {
@@ -787,6 +920,28 @@ class OpenApiGenerator {
     return 'string';
   }
 
+  private getParamDescription(
+    paramName: string,
+    path: string
+  ): string | undefined {
+    const lower = paramName.toLowerCase();
+
+    if (lower === 'pathname' && path.includes('breadcrumbs')) {
+      return 'Route pathname with placeholders like /organize/[orgId]/projects. Pass placeholder values as separate query params (e.g., add &orgId=2 to the URL).';
+    }
+    if (lower === 'query' && path.includes('breadcrumbs')) {
+      return 'Query parameters for the pathname (e.g., orgId=2)';
+    }
+    if (lower === 'filter' && path.includes('actions')) {
+      return 'Filter expression to query events. Format: field>=value or field<=value. Example: start_time>=2025-12-11T10:00:00 filters events starting after that time.';
+    }
+    if (lower === 'recursive' && path.includes('actions')) {
+      return 'Include events from sub-organizations. Set to any value (e.g., "1") or omit parameter entirely. Presence of parameter = recursive, absence = non-recursive.';
+    }
+
+    return undefined;
+  }
+
   private getExampleValue(paramName: string): string | number {
     const lowerParam = paramName.toLowerCase();
 
@@ -807,23 +962,36 @@ class OpenApiGenerator {
       return dateStr;
     }
 
+    if (lowerParam === 'pathname') {
+      return '/organize/[orgId]/projects';
+    }
+    if (lowerParam === 'query') {
+      return 'orgId=2';
+    }
+    if (lowerParam === 'filter') {
+      return `start_time>=${dateStr}T00:00:00`;
+    }
+    if (lowerParam === 'recursive') {
+      return 1;
+    }
+
     const exampleValues: Record<string, string | number> = {
       orgId: 2,
       personId: 2,
       userId: 2,
       campId: 1,
       projId: 1,
-      campaignId: 1,
-      projectId: 1,
-      eventId: 1,
-      surveyId: 1,
+      campaignId: 281,
+      projectId: 281,
+      eventId: 544,
+      surveyId: 170,
       taskId: 1,
       viewId: 1,
       emailId: 1,
       callId: 1,
       canvassId: 1,
-      assignmentId: 1,
-      callAssId: 1,
+      assignmentId: 73,
+      callAssId: 145,
       canvassAssId: 1,
       areaId: 1,
       areaAssId: 1,
