@@ -6,17 +6,17 @@ import { Latitude, Longitude, PointData } from 'features/areas/types';
 import { AnimatedGpsFixed } from 'zui/icons/AnimatedGpsFixed';
 
 type Props = {
-  autoUpdate?: boolean;
   onFitBounds: () => void;
   onGeolocate: (lngLat: PointData, accuracy: number | null) => void;
+  onPositionChange?: (lngLat: PointData, accuracy: number | null) => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
 };
 
 const ZUIMapControls: React.FC<Props> = ({
-  autoUpdate = false,
   onFitBounds,
   onGeolocate,
+  onPositionChange,
   onZoomIn,
   onZoomOut,
 }) => {
@@ -28,7 +28,6 @@ const ZUIMapControls: React.FC<Props> = ({
   const latestAccuracyRef = useRef<number | null>(null);
   const [isUserLocationVisible, setIsUserLocationVisible] = useState(false);
   const isUserLocationVisibleRef = useRef<boolean>(false);
-  const autoUpdateRef = useRef<boolean>(autoUpdate);
 
   useEffect(() => {
     return () => {
@@ -43,38 +42,37 @@ const ZUIMapControls: React.FC<Props> = ({
     isUserLocationVisibleRef.current = isUserLocationVisible;
   }, [isUserLocationVisible]);
 
-  useEffect(() => {
-    autoUpdateRef.current = autoUpdate;
-  }, [autoUpdate]);
+  const getPointAndAccuracyFromPos = (pos: GeolocationPosition) => {
+    const lat = pos.coords.latitude as Latitude;
+    const lng = pos.coords.longitude as Longitude;
+    const accuracy = pos.coords.accuracy ?? null;
+    const point: PointData = [lng, lat];
+
+    return { accuracy, point };
+  };
+
+  const setPositionChange = (accuracy: number | null, point: PointData) => {
+    latestPositionRef.current = point;
+    latestAccuracyRef.current = accuracy;
+
+    onPositionChange?.(point, accuracy);
+  };
 
   const startWatchingPosition = () => {
-    if (geolocationWatchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(geolocationWatchIdRef.current);
+    if (onPositionChange && !geolocationWatchIdRef.current) {
+      geolocationWatchIdRef.current = navigator.geolocation.watchPosition(
+        (pos) => {
+          const { accuracy, point } = getPointAndAccuracyFromPos(pos);
+          setPositionChange(accuracy, point);
+        },
+        () => {
+          if (isAwaitingInitialPosition) {
+            setIsAwaitingInitialPosition(false);
+          }
+        },
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+      );
     }
-
-    geolocationWatchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        const lat = pos.coords.latitude as Latitude;
-        const lng = pos.coords.longitude as Longitude;
-        const accuracy = pos.coords.accuracy ?? null;
-        const point: PointData = [lng, lat];
-
-        latestPositionRef.current = point;
-        latestAccuracyRef.current = accuracy;
-        if (isAwaitingInitialPosition) {
-          setIsAwaitingInitialPosition(false);
-        }
-        if (isUserLocationVisibleRef.current && autoUpdateRef.current) {
-          onGeolocate(point, accuracy);
-        }
-      },
-      () => {
-        if (isAwaitingInitialPosition) {
-          setIsAwaitingInitialPosition(false);
-        }
-      },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
-    );
   };
 
   const handleGeolocateClick = () => {
@@ -83,6 +81,7 @@ const ZUIMapControls: React.FC<Props> = ({
     }
 
     if (!isUserLocationVisible) {
+      setIsAwaitingInitialPosition(true);
       setIsUserLocationVisible(true);
       isUserLocationVisibleRef.current = true;
     }
@@ -95,21 +94,14 @@ const ZUIMapControls: React.FC<Props> = ({
       return;
     }
 
-    setIsAwaitingInitialPosition(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const lat = pos.coords.latitude as Latitude;
-        const lng = pos.coords.longitude as Longitude;
-        const accuracy = pos.coords.accuracy ?? null;
-        const point: PointData = [lng, lat];
+        const { accuracy, point } = getPointAndAccuracyFromPos(pos);
 
-        latestPositionRef.current = point;
-        latestAccuracyRef.current = accuracy;
         setIsAwaitingInitialPosition(false);
-
-        startWatchingPosition();
-
+        setPositionChange(accuracy, point);
         onGeolocate(point, accuracy);
+        startWatchingPosition();
       },
       () => {
         setIsAwaitingInitialPosition(false);

@@ -224,10 +224,12 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     }
   };
 
-  const onGeoLocate = (lngLat: PointData, accuracy: number | null) => {
+  const onPositionChange = (lngLat: PointData, accuracy: number | null) => {
     setUserLocation(lngLat);
     setUserAccuracy(accuracy);
+  };
 
+  const onGeoLocate = (lngLat: PointData) => {
     map?.panTo(lngLat, { animate: true });
   };
 
@@ -299,7 +301,6 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     <>
       <Box sx={{ position: 'relative' }}>
         <ZUIMapControls
-          autoUpdate
           onFitBounds={() => {
             if (map) {
               map.fitBounds(boundsForSelectedArea, {
@@ -310,6 +311,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
             }
           }}
           onGeolocate={onGeoLocate}
+          onPositionChange={onPositionChange}
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}
         />
