@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "analyze": "ANALYZE=true next build",
+    "prebuild": "yarn generate-openapi",
     "build": "next build",
     "start": "next start -p 80",
     "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
