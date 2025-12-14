@@ -7,6 +7,7 @@ import { ZetkinCallPatchResponse } from '../types';
 const questionResponseSchema = z.union([
   z.object({ question_id: z.number(), response: z.string() }),
   z.object({ options: z.array(z.number()), question_id: z.number() }),
+  z.object({ question_id: z.number() }),
 ]);
 
 const signatureSchema = z.union([
