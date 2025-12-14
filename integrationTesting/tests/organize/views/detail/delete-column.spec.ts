@@ -91,7 +91,7 @@ test.describe('View detail page', () => {
 
     await page.locator('data-testid=Snackbar-error').waitFor();
 
-    expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
+    await expect(page.locator('data-testid=Snackbar-error')).toHaveCount(1);
   });
 
   test('the user must confirm deletion of a column with local data', async ({
