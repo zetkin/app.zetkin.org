@@ -79,7 +79,7 @@
     "mjml": "^4.15.3",
     "mongoose": "^8.6.0",
     "negotiator": "^0.6.2",
-    "next": "^14.2.30",
+    "next": "14.2.35",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
