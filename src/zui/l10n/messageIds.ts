@@ -233,6 +233,7 @@ export default makeMessages('zui', {
   },
   signUpChip: {
     booked: m('You are booked'),
+    callSignUp: m<{ name: string }>('{name} has signed up'),
     needed: m('You are needed'),
     signedUp: m('You have signed up'),
   },
