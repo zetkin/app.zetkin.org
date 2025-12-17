@@ -9,6 +9,7 @@ import {
   Map as MapType,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Alert } from '@mui/material';
 
 import { Zetkin2Area } from 'features/areas/types';
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
@@ -22,14 +23,14 @@ import useLocalStorage from 'zui/hooks/useLocalStorage';
 import ZUIMapControls from 'zui/ZUIMapControls';
 import { useEnv } from 'core/hooks';
 import ClusterImageRenderer from './ClusterImageRenderer';
-
+import messageIds from '../../l10n/messageIds';
+import { Msg } from 'core/i18n';
 const BOUNDS_PADDING = 20;
 
 type Props = {
   assignment: ZetkinAreaAssignment;
   selectedArea: Zetkin2Area;
 };
-
 const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const env = useEnv();
   const locations = useLocations(
@@ -49,6 +50,7 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
     null
   );
+  const [mapInitError, setMapInitError] = useState(false);
 
   const areasGeoJson: GeoJSON.GeoJSON = useMemo(() => {
     const earthCover = [
@@ -242,6 +244,16 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
     return null;
   }
 
+  if (mapInitError) {
+    return (
+      <Box data-testid="map-error" role="alert">
+        <Alert severity="error">
+          <Msg id={messageIds.map.initializationError} />
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box sx={{ position: 'relative' }}>
@@ -311,6 +323,9 @@ const GLCanvassMap: FC<Props> = ({ assignment, selectedArea }) => {
         mapStyle={env.vars.MAPLIBRE_STYLE}
         onClick={(ev) => {
           ev.target.panTo(ev.lngLat, { animate: true });
+        }}
+        onError={() => {
+          setMapInitError(true);
         }}
         onLoad={(ev) => {
           const map = ev.target;
