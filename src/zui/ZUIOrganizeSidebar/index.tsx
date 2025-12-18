@@ -107,9 +107,7 @@ const ZUIOrganizeMobileHeader = ({
         >
           <MenuIcon />
         </Button>
-        <Typography fontSize={'16px'} variant={'h1'}>
-          {title}
-        </Typography>
+        <Typography fontSize={'16px'}>{title}</Typography>
       </Box>
       {user && (
         <>
