@@ -7,7 +7,6 @@ import { getEllipsedString } from 'utils/stringUtils';
 import { Msg } from 'core/i18n';
 import messageIds from 'features/smartSearch/l10n/messageIds';
 import oldTheme from 'theme';
-import { ZetkinTagGroup } from 'utils/types/zetkin';
 
 const useStyles = makeStyles({
   MuiInput: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles({
 interface StyledItem {
   id: number;
   title: string;
-  group?: ZetkinTagGroup | null;
+  group?: { title: string } | null;
 }
 
 type StyledItemSelectProps = Omit<

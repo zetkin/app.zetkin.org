@@ -240,7 +240,9 @@ const PersonTags = ({
                     getOptionDisabled={(t) =>
                       selectedTags.some((selected) => selected.id === t.id)
                     }
-                    groupBy={(option) => option.group?.title || 'No group'}
+                    groupBy={(option) =>
+                      option.group?.title || messages.noGroup()
+                    }
                     onChange={(_, v) => handleTagChange(v)}
                     options={sortedGroupedTags}
                     renderGroup={(params) => {
