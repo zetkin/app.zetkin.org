@@ -41,7 +41,7 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
 
   return (
     <ZUISection title={messages.notes.title()}>
-      <Box sx={{ padding: 1 }}>
+      <Box sx={{ paddingBottom: 1 }}>
         <TextField
           fullWidth
           multiline
@@ -65,7 +65,7 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
               display: 'flex',
               gap: 1,
               justifyContent: 'flex-end',
-              paddingY: 1,
+              paddingTop: 1,
             }}
           >
             <Button
