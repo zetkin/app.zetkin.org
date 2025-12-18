@@ -113,9 +113,7 @@ const Header: React.FC<HeaderProps> = ({
                   data-testid="page-title"
                   noWrap
                   sx={{
-                    display: 'inline-block',
                     marginBottom: '8px',
-                    maxWidth: '100%',
                     transition: 'margin 0.3s ease',
                   }}
                   variant="h3"
