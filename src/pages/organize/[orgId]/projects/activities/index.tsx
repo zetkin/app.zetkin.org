@@ -31,10 +31,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const CampaignActivitiesPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
-  const { orgId, campId } = useNumericRouteParams();
-  const activitiesFuture = useActivityList(orgId, campId);
+  const { orgId } = useNumericRouteParams();
+  const activitiesFuture = useActivityList(orgId);
   const { filters, onFiltersChange, onSearchStringChange, searchString } =
-    useActivityFilters(orgId, campId);
+    useActivityFilters('activities', orgId);
 
   if (onServer) {
     return null;
