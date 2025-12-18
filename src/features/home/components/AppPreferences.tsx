@@ -22,6 +22,7 @@ const AppPreferences: FC<Props> = ({ user }) => {
     da: 'Dansk',
     de: 'Deutsch',
     en: 'English',
+    fr: 'Français',
     nl: 'Nederlands',
     nn: 'Norsk',
     sv: 'Svenska',
