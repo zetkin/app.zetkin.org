@@ -59,13 +59,11 @@ import { ZetkinUser } from 'utils/types/zetkin';
 const drawerWidth = 300;
 
 const ZUIOrganizeMobileHeader = ({
-  closeMobileSidebar,
   openMobileSidebar,
   title,
   user,
   userMenuItems,
 }: {
-  closeMobileSidebar: () => void;
   openMobileSidebar: () => void;
   title?: string | ReactElement;
   user: ZetkinUser | null;
@@ -143,7 +141,6 @@ const ZUIOrganizeMobileHeader = ({
                   key={index}
                   divider={item.divider}
                   onClick={(e) => {
-                    closeMobileSidebar();
                     item.onSelect?.(e as React.MouseEvent<HTMLLIElement>);
                   }}
                 >
@@ -256,7 +253,6 @@ const ZUIOrganizeSidebar = ({
     <Box data-testid="organize-sidebar">
       {isMobile && (
         <ZUIOrganizeMobileHeader
-          closeMobileSidebar={() => setMobileDrawerOpen(false)}
           openMobileSidebar={() => {
             setMobileDrawerOpen(true);
             setOpen(true);
