@@ -33,10 +33,14 @@ const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
         ref={(div: HTMLDivElement) => setContainer(div)}
         display="flex"
         flexDirection="column"
-        height="100vh"
         onScroll={onScroll}
         overflow="auto"
         position="relative"
+        sx={{
+          [oldTheme.breakpoints.up('sm')]: {
+            height: '100vh',
+          },
+        }}
         width={1}
       >
         <PageContainerContext.Provider value={{ container }}>
