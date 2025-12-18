@@ -111,31 +111,26 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
                   <Avatar
                     src={`/api/orgs/${orgId}/people/${note.author.id}/avatar`}
                   />
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography noWrap>
-                      <Msg
-                        id={messageIds.notes.note.author}
-                        values={{
-                          authorName: (
-                            <Typography component="span" variant="h6">
-                              {note.author.name}
-                            </Typography>
-                          ),
-                          howLongAgo: (
-                            <Typography color="secondary" component="span">
-                              <ZUIRelativeTime
-                                //Adding a "Z" here because timestamp from server is in GMT
-                                datetime={note.created + 'Z'}
-                              />
-                            </Typography>
-                          ),
-                        }}
-                      />
-                    </Typography>
-                    <Typography color="secondary" variant="body2">
-                      {note.organization.title}
-                    </Typography>
-                  </Box>
+                  <Typography noWrap>
+                    <Msg
+                      id={messageIds.notes.note.author}
+                      values={{
+                        authorName: (
+                          <Typography component="span" variant="h6">
+                            {note.author.name}
+                          </Typography>
+                        ),
+                        howLongAgo: (
+                          <Typography color="secondary" component="span">
+                            <ZUIRelativeTime
+                              //Adding a "Z" here because timestamp from server is in GMT
+                              datetime={note.created + 'Z'}
+                            />
+                          </Typography>
+                        ),
+                      }}
+                    />
+                  </Typography>
                 </Box>
                 <ZUIEllipsisMenu
                   items={[
