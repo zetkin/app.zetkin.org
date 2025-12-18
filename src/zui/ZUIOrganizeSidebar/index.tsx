@@ -135,7 +135,7 @@ const ZUIOrganizeMobileHeader = ({
                 width: '100%',
               }}
             >
-              <ZUIUserAvatar personId={user.id} size={open ? 'sm' : 'md'} />
+              <ZUIUserAvatar personId={user.id} size={'sm'} />
               <Typography
                 sx={{
                   display: 'block',
@@ -249,8 +249,8 @@ const ZUIOrganizeSidebar = ({
       label: messages.organizeSidebar.mySettingsMenuItemLabel(),
     },
     {
-      label: messages.organizeSidebar.signOut(),
       href: '/logout',
+      label: messages.organizeSidebar.signOut(),
       startIcon: <Logout />,
     },
   ];
