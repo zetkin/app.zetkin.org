@@ -72,6 +72,7 @@ const ZUIOrganizeMobileHeader = ({
   const [mobileUserMenuAnchor, setMobileUserMenuAnchor] =
     useState<HTMLButtonElement | null>(null);
   const theme = useTheme();
+  const messages = useMessages(messageIds);
 
   return (
     <Box
@@ -100,6 +101,7 @@ const ZUIOrganizeMobileHeader = ({
         }}
       >
         <Button
+          aria-label={messages.mobileOrganizeHeader.sideBarMenuButtonDescription()}
           onClick={(e) => {
             openMobileSidebar();
             e.stopPropagation();
@@ -112,6 +114,7 @@ const ZUIOrganizeMobileHeader = ({
       {user && (
         <>
           <Button
+            aria-label={messages.mobileOrganizeHeader.userMenuButtonDescription()}
             onClick={(event) => setMobileUserMenuAnchor(event.currentTarget)}
           >
             <ZUIUserAvatar personId={user.id} size={'sm'} />

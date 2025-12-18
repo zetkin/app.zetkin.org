@@ -161,6 +161,10 @@ export default makeMessages('zui', {
   lists: {
     showMore: m('Show more...'),
   },
+  mobileOrganizeHeader: {
+    sideBarMenuButtonDescription: m('Open sidebar menu'),
+    userMenuButtonDescription: m('Open user menu'),
+  },
   orgScopeSelect: {
     orgPlaceholder: m('Select organizations'),
     orgSelectionLabel: m<{ count: number }>('{count} selected'),
