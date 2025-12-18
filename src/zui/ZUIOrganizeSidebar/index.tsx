@@ -142,7 +142,7 @@ const ZUIOrganizeMobileHeader = ({
                 <MenuItem
                   key={index}
                   divider={item.divider}
-                  onSelect={(e) => {
+                  onClick={(e) => {
                     closeMobileSidebar();
                     item.onSelect?.(e as React.MouseEvent<HTMLLIElement>);
                   }}
