@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  Collapse,
   Divider,
   Stack,
   TextField,
@@ -30,6 +31,7 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
   const messages = useMessages(messageIds);
   const [newNote, setNewNote] = useState('');
   const [isSubmittingNote, setIsSubmittingNote] = useState(false);
+  const [editorFocused, setEditorFocused] = useState(false);
 
   const notes = usePersonNotes(orgId, person.id);
   const addPersonNote = useAddPersonNote(orgId, person.id);
@@ -43,45 +45,58 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
         <TextField
           fullWidth
           multiline
+          onBlur={() => {
+            if (!newNote.trim()) {
+              setEditorFocused(false);
+            }
+          }}
           onChange={(ev) => setNewNote(ev.target.value)}
+          onFocus={() => setEditorFocused(true)}
           placeholder={messages.notes.placeHolder()}
           sx={(theme) => ({
-            backgroundColor: theme.palette.common.white,
+            backgroundColor:
+              editorFocused || newNote.trim() ? theme.palette.common.white : '',
           })}
           value={newNote}
         />
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 1,
-            justifyContent: 'flex-end',
-            paddingY: 1,
-          }}
-        >
-          <Button
-            disabled={!newNote.trim()}
-            onClick={() => setNewNote('')}
-            variant="text"
-          >
-            <Msg id={messageIds.notes.cancelButton} />
-          </Button>
-          <Button
-            disabled={!newNote.trim()}
-            loading={isSubmittingNote}
-            onClick={async () => {
-              const trimmedNote = newNote.trim();
-              if (trimmedNote) {
-                setIsSubmittingNote(true);
-                await addPersonNote(trimmedNote);
-                setIsSubmittingNote(false);
-                setNewNote('');
-              }
+        <Collapse in={!!newNote.trim()}>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              justifyContent: 'flex-end',
+              paddingY: 1,
             }}
-            variant="contained"
           >
-            <Msg id={messageIds.notes.addNoteButton} />
-          </Button>
-        </Box>
+            <Button
+              disabled={!newNote.trim()}
+              onClick={() => {
+                setNewNote('');
+                setEditorFocused(false);
+              }}
+              variant="text"
+            >
+              <Msg id={messageIds.notes.cancelButton} />
+            </Button>
+            <Button
+              disabled={!newNote.trim()}
+              loading={isSubmittingNote}
+              onClick={async () => {
+                const trimmedNote = newNote.trim();
+                if (trimmedNote) {
+                  setIsSubmittingNote(true);
+                  await addPersonNote(trimmedNote);
+                  setIsSubmittingNote(false);
+                  setEditorFocused(false);
+                  setNewNote('');
+                }
+              }}
+              variant="contained"
+            >
+              <Msg id={messageIds.notes.addNoteButton} />
+            </Button>
+          </Box>
+        </Collapse>
       </Box>
       <Stack divider={<Divider flexItem />} gap={2}>
         {notes
