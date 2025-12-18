@@ -88,7 +88,7 @@ const ZUIOrganizeMobileHeader = ({
         left: 0,
         padding: '0 5px',
         pointerEvents: 'all',
-        position: 'sticky',
+        position: 'absolute',
         top: 0,
         width: '100vw',
         zIndex: 1,
@@ -250,34 +250,10 @@ const ZUIOrganizeSidebar = ({
   let width = fullDrawerWidth;
   if (!isMobile && !open) {
     width = smallDrawerWidth;
-  } else if (isMobile && !mobileDrawerOpen) {
-    width = '0px';
   }
 
   return (
-    <Box
-      data-testid="organize-sidebar"
-      onClick={
-        isMobile
-          ? () => {
-              setMobileDrawerOpen(false);
-            }
-          : undefined
-      }
-      sx={
-        isMobile
-          ? {
-              height: '100vh',
-              left: 0,
-              pointerEvents: mobileDrawerOpen ? 'all' : 'none',
-              position: 'absolute',
-              top: 0,
-              width: '100vw',
-              zIndex: 1000,
-            }
-          : {}
-      }
-    >
+    <Box data-testid="organize-sidebar">
       {isMobile && (
         <ZUIOrganizeMobileHeader
           closeMobileSidebar={() => setMobileDrawerOpen(false)}
@@ -292,15 +268,18 @@ const ZUIOrganizeSidebar = ({
         />
       )}
       <Drawer
+        anchor={'left'}
         onClick={(e) => {
           e.stopPropagation();
         }}
+        onClose={() => setMobileDrawerOpen(false)}
         onMouseLeave={() => {
           setHover(false);
         }}
         onMouseOver={() => {
           setHover(true);
         }}
+        open={mobileDrawerOpen}
         sx={{
           '.MuiDrawer-paper': {
             display: 'block',
@@ -315,7 +294,7 @@ const ZUIOrganizeSidebar = ({
           whiteSpace: 'nowrap',
           width,
         }}
-        variant="permanent"
+        variant={isMobile ? 'temporary' : 'permanent'}
       >
         <Box display="flex" flexDirection="column" height="100%">
           <Box>
