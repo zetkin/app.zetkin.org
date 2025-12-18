@@ -226,16 +226,10 @@ const ZUIOrganizeSidebar = ({
     },
     {
       label: messages.organizeSidebar.signOut(),
-      onSelect: () => {
-        logOut();
-      },
+      href: '/logout',
       startIcon: <Logout />,
     },
   ];
-
-  function logOut() {
-    router.push(`/logout`);
-  }
 
   const showOrgSwitcher = checked && open;
 
