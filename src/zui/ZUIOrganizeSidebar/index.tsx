@@ -124,6 +124,29 @@ const ZUIOrganizeMobileHeader = ({
             onClose={() => setMobileUserMenuAnchor(null)}
             open={Boolean(mobileUserMenuAnchor)}
           >
+            <Box
+              sx={{
+                alignItems: 'center',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+                display: 'flex',
+                maxWidth: '50vw',
+                minWidth: '150px',
+                padding: '10px 16px',
+                width: '100%',
+              }}
+            >
+              <ZUIUserAvatar personId={user.id} size={open ? 'sm' : 'md'} />
+              <Typography
+                sx={{
+                  display: 'block',
+                  marginLeft: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {user.first_name}
+              </Typography>
+            </Box>
             {userMenuItems.map((item, index) => {
               const inner = (
                 <Box
