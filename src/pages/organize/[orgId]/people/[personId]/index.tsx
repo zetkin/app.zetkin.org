@@ -1,20 +1,7 @@
 import { GetServerSideProps } from 'next';
-import { Close } from '@mui/icons-material';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Divider,
-  Grid,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { CircularProgress, Grid } from '@mui/material';
 import Head from 'next/head';
-import { Suspense, useContext, useState } from 'react';
+import { Suspense, useContext } from 'react';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/profile/l10n/messageIds';
@@ -36,12 +23,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
-import usePersonNotes from 'features/profile/hooks/usePersonNotes';
-import ZUIDate from 'zui/ZUIDate';
-import ZUISection from 'zui/ZUISection';
-import useAddPersonNote from 'features/profile/hooks/useAddPersonNote';
-import useDeletePersonNote from 'features/profile/hooks/useDeletePersonNote';
-import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
+import PersonNotes from 'features/profile/components/PersonNotes';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -77,21 +59,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 const PersonProfilePage: PageWithLayout = () => {
   const { orgId, personId } = useNumericRouteParams();
 
-  const [newNote, setNewNote] = useState('');
-  const [isSubmittingNote, setIsSubmittingNote] = useState(false);
-
   const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
-  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { assignToPerson, removeFromPerson } = useTagging(orgId);
   const fieldsFuture = useCustomFields(orgId);
   const personFuture = usePerson(orgId, personId);
   const person = personFuture.data;
   const personTagsFuture = usePersonTags(orgId, personId);
   const journeysFuture = useJourneys(orgId);
-  const notes = usePersonNotes(orgId, personId);
-  const addPersonNote = useAddPersonNote(orgId, personId);
-  const deletePersonNote = useDeletePersonNote(orgId, personId);
 
   if (!person) {
     return null;
@@ -155,106 +130,11 @@ const PersonProfilePage: PageWithLayout = () => {
         <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
-        <Suspense fallback={<CircularProgress />}>
-          <Grid size={{ lg: 4, xs: 12 }}>
-            <ZUISection title={`Notes about ${person.first_name}`}>
-              <Card sx={{ padding: 1 }}>
-                <Box sx={{ padding: 1 }}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    onChange={(ev) => setNewNote(ev.target.value)}
-                    placeholder="Write a note"
-                    value={newNote}
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      paddingY: 1,
-                    }}
-                  >
-                    <Button
-                      disabled={!newNote.trim()}
-                      loading={isSubmittingNote}
-                      onClick={async () => {
-                        const trimmedNote = newNote.trim();
-                        if (trimmedNote) {
-                          setIsSubmittingNote(true);
-                          await addPersonNote(trimmedNote);
-                          setIsSubmittingNote(false);
-                          setNewNote('');
-                        }
-                      }}
-                      variant="outlined"
-                    >
-                      Add note
-                    </Button>
-                  </Box>
-                </Box>
-                <Stack divider={<Divider flexItem />} gap={2}>
-                  {notes
-                    .sort((a, b) => {
-                      return (
-                        new Date(b.created).getTime() -
-                        new Date(a.created).getTime()
-                      );
-                    })
-                    .map((note) => (
-                      <Box
-                        key={note.id}
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 1,
-                          padding: 1,
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            alignItems: 'center',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          <Typography color="secondary">
-                            <ZUIDate datetime={note.created} />
-                          </Typography>
-                          <IconButton
-                            onClick={() =>
-                              showConfirmDialog({
-                                onSubmit: () => deletePersonNote(note.id),
-                                title: 'Confirm deleting note',
-                                warningText: `Are you sure you want to delete this note about ${person.first_name}? Deleting a note can not be undone.`,
-                              })
-                            }
-                          >
-                            <Close />
-                          </IconButton>
-                        </Box>
-                        <Typography>{note.text}</Typography>
-                        <Box
-                          sx={{ alignItems: 'center', display: 'flex', gap: 1 }}
-                        >
-                          <Avatar
-                            src={`/api/orgs/${orgId}/people/${note.author.id}/avatar`}
-                            sx={{ height: 28, width: 28 }}
-                          />
-                          <Typography>{note.author.name}</Typography>
-                          <Divider flexItem orientation="vertical" />
-                          <Avatar
-                            src={`/api/orgs/${note.organization.id}/avatar`}
-                            sx={{ height: 28, width: 28 }}
-                          />
-                          <Typography>{note.organization.title}</Typography>
-                        </Box>
-                      </Box>
-                    ))}
-                </Stack>
-              </Card>
-            </ZUISection>
-          </Grid>
-        </Suspense>
+        <Grid size={{ lg: 4, xs: 12 }}>
+          <Suspense fallback={<CircularProgress />}>
+            <PersonNotes orgId={orgId} person={person} />
+          </Suspense>
+        </Grid>
       </Grid>
     </>
   );
