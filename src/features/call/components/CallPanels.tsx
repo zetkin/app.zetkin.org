@@ -26,6 +26,7 @@ type Props = {
   assignment: ZetkinCallAssignment;
   call: ZetkinCall | null;
   lane: LaneState;
+  mobileTabIndex: number | null;
   onAbandonUnfinishedCall: (callId: number) => void;
   onOpenCallLog: () => void;
   onSwitchToUnfinishedCall: (callId: number, assignmentId: number) => void;
@@ -37,6 +38,7 @@ const CallPanels: FC<Props> = ({
   assignment,
   call,
   lane,
+  mobileTabIndex,
   onAbandonUnfinishedCall,
   onOpenCallLog,
   onSwitchToUnfinishedCall,
@@ -50,8 +52,13 @@ const CallPanels: FC<Props> = ({
     assignment.organization.id,
     assignment.id
   );
+
   return (
-    <>
+    <Box
+      sx={() => ({
+        overflowY: 'auto',
+      })}
+    >
       <Box
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
@@ -61,7 +68,12 @@ const CallPanels: FC<Props> = ({
           overflowY: 'auto',
           position: 'absolute',
           transition: 'left 0.5s',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            (lane.step != LaneStep.START || mobileTabIndex != 1)
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
         })}
       >
         <ZUISection
@@ -119,13 +131,21 @@ const CallPanels: FC<Props> = ({
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left:
-            lane.step == LaneStep.START ? 'calc(100% / 3)' : 'calc(-100% / 3)',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.START
+            ? 'calc(100% / 3)'
+            : 'calc(-100% / 3)',
           maxHeight: '100%',
           overflowY: 'auto',
           position: 'absolute',
           transition: 'left 0.5s',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            (lane.step != LaneStep.START || mobileTabIndex != 2)
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
         })}
       >
         <AssignmentStats stats={stats} />
@@ -141,17 +161,26 @@ const CallPanels: FC<Props> = ({
           animationName: lane.step == LaneStep.SUMMARY ? 'instructionsOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left:
-            lane.step == LaneStep.START
-              ? 'calc((100% / 3) * 2)'
-              : lane.step == LaneStep.SUMMARY
-              ? '100%'
-              : 0,
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.START
+            ? 'calc((100% / 3) * 2)'
+            : lane.step == LaneStep.SUMMARY
+            ? '100%'
+            : 0,
           maxHeight: '100%',
           overflowY: 'auto',
           position: 'absolute',
           transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            ((lane.step == LaneStep.START && mobileTabIndex != 3) ||
+              (lane.step == LaneStep.CALL && mobileTabIndex != 1) ||
+              (lane.step == LaneStep.REPORT && mobileTabIndex != 1) ||
+              lane.step == LaneStep.SUMMARY)
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
           zIndex: lane.step == LaneStep.REPORT || LaneStep.CALL ? 2 : '',
         })}
       >
@@ -165,20 +194,27 @@ const CallPanels: FC<Props> = ({
         sx={(theme) => ({
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left:
-            lane.step == LaneStep.START
-              ? '100%'
-              : lane.step == LaneStep.CALL
-              ? 'calc(100% / 3)'
-              : lane.step == LaneStep.REPORT
-              ? 0
-              : 'calc(100% + (100% / 3))',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.START
+            ? '100%'
+            : lane.step == LaneStep.CALL
+            ? 'calc(100% / 3)'
+            : lane.step == LaneStep.REPORT
+            ? 0
+            : 'calc(100% + (100% / 3))',
 
           overflowY: 'auto',
           position: 'absolute',
           transition: 'left 0.5s',
-          visibility: lane.step == LaneStep.SUMMARY ? 'hidden' : '',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            ((lane.step == LaneStep.CALL && mobileTabIndex != 2) ||
+              (lane.step == LaneStep.REPORT && mobileTabIndex != 1) ||
+              (lane.step != LaneStep.CALL && lane.step != LaneStep.REPORT))
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
         })}
       >
         <AboutSection call={call} />
@@ -195,18 +231,26 @@ const CallPanels: FC<Props> = ({
           animationName: lane.step == LaneStep.SUMMARY ? 'activitiesOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left:
-            lane.step == LaneStep.START
-              ? '100%'
-              : lane.step == LaneStep.CALL
-              ? 'calc((100% / 3) * 2)'
-              : lane.step == LaneStep.REPORT
-              ? 'calc(100% / 3)'
-              : 'calc(100% + (100% / 3) * 2)',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.START
+            ? '100%'
+            : lane.step == LaneStep.CALL
+            ? 'calc((100% / 3) * 2)'
+            : lane.step == LaneStep.REPORT
+            ? 'calc(100% / 3)'
+            : 'calc(100% + (100% / 3) * 2)',
           overflowY: 'auto',
           position: 'absolute',
           transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            ((lane.step == LaneStep.CALL && mobileTabIndex != 3) ||
+              (lane.step == LaneStep.REPORT && mobileTabIndex != 2) ||
+              (lane.step != LaneStep.CALL && lane.step != LaneStep.REPORT))
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
           zIndex: lane.step == LaneStep.START ? -1 : 0,
         })}
       >
@@ -226,11 +270,20 @@ const CallPanels: FC<Props> = ({
           animationName: lane.step == LaneStep.SUMMARY ? 'reportOut' : '',
           borderRight: `1px solid ${theme.palette.dividers.main}`,
           height: '100%',
-          left: lane.step == LaneStep.REPORT ? 'calc((100% / 3) * 2)' : '100%',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.REPORT
+            ? 'calc((100% / 3) * 2)'
+            : '100%',
           overflowY: 'auto',
           position: 'absolute',
           transition: lane.step != LaneStep.SUMMARY ? 'left 0.5s' : '',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex &&
+            (lane.step != LaneStep.REPORT || mobileTabIndex != 3)
+              ? 'hidden'
+              : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
         })}
       >
         <ZUISection
@@ -268,11 +321,17 @@ const CallPanels: FC<Props> = ({
           flexDirection: 'column',
           height: '100%',
           justifyContent: 'space-evenly',
-          left: lane.step == LaneStep.SUMMARY ? 'calc(100% / 3)' : '100%',
+          left: mobileTabIndex
+            ? 0
+            : lane.step == LaneStep.SUMMARY
+            ? 'calc(100% / 3)'
+            : '100%',
           padding: 2,
           position: 'relative',
           transition: lane.step != LaneStep.CALL ? 'left 0.5s' : '',
-          width: 1 / 3,
+          visibility:
+            mobileTabIndex && lane.step != LaneStep.SUMMARY ? 'hidden' : '',
+          width: mobileTabIndex ? 1 : 1 / 3,
         }}
       >
         <Box
@@ -370,7 +429,7 @@ const CallPanels: FC<Props> = ({
           </List>
         )}
       </Box>
-    </>
+    </Box>
   );
 };
 

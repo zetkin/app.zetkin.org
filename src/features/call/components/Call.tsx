@@ -1,12 +1,14 @@
 'use client';
 
-import { Alert, Box, Slide, Snackbar } from '@mui/material';
-import { FC, useState } from 'react';
+import { Alert, Box, Slide, Snackbar, Tab } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { Info, ListOutlined, Person } from '@mui/icons-material';
+import { TabContext, TabList } from '@mui/lab';
 
 import useCurrentCall from '../hooks/useCurrentCall';
 import { LaneStep } from '../types';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { updateLaneStep } from '../store';
+import { filtersUpdated, previousCallAdd, updateLaneStep } from '../store';
 import useServerSide from 'core/useServerSide';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import ZUIText from 'zui/components/ZUIText';
@@ -20,6 +22,12 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import CallHeader from './CallHeader';
 import CallPanels from './CallPanels';
+import { objectToFormData } from './utils/objectToFormData';
+import prepareSurveyApiSubmission from 'features/surveys/utils/prepareSurveyApiSubmission';
+import useIsMobile from 'utils/hooks/useIsMobile';
+import useAllocateCall from '../hooks/useAllocateCall';
+import ZUIButton from 'zui/components/ZUIButton';
+import useSubmitReport from '../hooks/useSubmitReport';
 
 const Call: FC = () => {
   const messages = useMessages(messageIds);
@@ -27,6 +35,24 @@ const Call: FC = () => {
   const onServer = useServerSide();
   const assignment = useCurrentAssignment();
   const allUserAssignments = useMyAssignments();
+  const isMobile = useIsMobile();
+  const [currentMobileTab, setCurrentMobileTab] = useState<number | null>(
+    isMobile ? 1 : null
+  );
+  const {
+    allocateCall,
+    error: errorAllocatingCall,
+    isLoading: isAllocatingCall,
+  } = useAllocateCall(assignment.organization.id, assignment.id);
+
+  const submissionDataBySurveyId = useAppSelector(
+    (state) =>
+      state.call.lanes[state.call.activeLaneIndex].submissionDataBySurveyId
+  );
+
+  const [submittingReport, setSubmittingReport] = useState(false);
+
+  const { submitReport } = useSubmitReport(assignment.organization.id);
 
   const [callLogOpen, setCallLogOpen] = useState(false);
   const [assignmentSwitchedTo, setAssignmentSwitchedTo] = useState<
@@ -43,6 +69,13 @@ const Call: FC = () => {
   const lane = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex]
   );
+
+  useEffect(() => {
+    if (lane.step == LaneStep.REPORT) {
+      setCurrentMobileTab(3);
+    }
+  }, [lane.step]);
+
   const report = useAppSelector(
     (state) => state.call.lanes[state.call.activeLaneIndex].report
   );
@@ -73,6 +106,10 @@ const Call: FC = () => {
     );
   }
 
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setCurrentMobileTab(newValue);
+  };
+
   return (
     <>
       <Box
@@ -90,11 +127,12 @@ const Call: FC = () => {
           onSkipCall={() => setSkipCallModalOpen(true)}
           report={report}
         />
-        <Box height="calc(100dvh - 100px)" position="relative" width="100%">
+        <Box height="calc(100dvh - 150px)" position="relative" width="100%">
           <CallPanels
             assignment={assignment}
             call={call}
             lane={lane}
+            mobileTabIndex={currentMobileTab}
             onAbandonUnfinishedCall={(callId) => abandonUnfinishedCall(callId)}
             onOpenCallLog={() => setCallLogOpen(true)}
             onSwitchToUnfinishedCall={(callId, assignmentId) => {
@@ -107,6 +145,119 @@ const Call: FC = () => {
             unfinishedCalls={unfinishedCalls}
           />
         </Box>
+        {currentMobileTab && (
+          <Box sx={{ typography: 'body1', width: '100%' }}>
+            <TabContext value={currentMobileTab}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <TabList
+                  aria-label="lab API tabs example"
+                  onChange={handleChange}
+                >
+                  <Tab icon={<Info />} value="1" />
+                  <Tab icon={<Person />} value="2" />
+                  <Tab icon={<ListOutlined />} value="3" />
+                  {isMobile && (
+                    <Box>
+                      <ZUIButton
+                        disabled={
+                          !!errorAllocatingCall ||
+                          (lane.step == LaneStep.REPORT && !report.completed)
+                        }
+                        label={messages.header.primaryButton[lane.step]()}
+                        onClick={async () => {
+                          if (lane.step == LaneStep.START) {
+                            await allocateCall();
+                            dispatch(updateLaneStep(LaneStep.CALL));
+                          } else if (lane.step == LaneStep.CALL) {
+                            dispatch(updateLaneStep(LaneStep.REPORT));
+
+                            const hasSurveySubmissions =
+                              Object.entries(submissionDataBySurveyId).length >
+                              0;
+                            const hasEventSignups =
+                              lane.respondedEventIds.length > 0;
+
+                            if (hasSurveySubmissions || hasEventSignups) {
+                              dispatch(
+                                filtersUpdated({
+                                  customDatesToFilterEventsBy: [null, null],
+                                  eventDateFilterState: null,
+                                  filterState: {
+                                    alreadyIn: false,
+                                    events: false,
+                                    surveys: false,
+                                    thisCall: true,
+                                  },
+                                  orgIdsToFilterEventsBy: [],
+                                  projectIdsToFilterActivitiesBy: [],
+                                })
+                              );
+                            }
+                          } else if (lane.step == LaneStep.REPORT) {
+                            if (!report || !call) {
+                              return;
+                            }
+                            setSubmittingReport(true);
+
+                            const submissions = Object.entries(
+                              submissionDataBySurveyId
+                            )
+                              .filter(([, surveySubmissionData]) => {
+                                return Object.entries(
+                                  surveySubmissionData
+                                ).some(([, value]) => {
+                                  if (typeof value == 'string') {
+                                    return value.trim() !== '';
+                                  }
+                                  return true;
+                                });
+                              })
+                              .map(([surveyId, surveySubmissionData]) => {
+                                const surveySubmissionDataAsFormData =
+                                  objectToFormData(surveySubmissionData);
+                                return {
+                                  submission: prepareSurveyApiSubmission(
+                                    surveySubmissionDataAsFormData
+                                  ),
+                                  surveyId: Number(surveyId),
+                                  targetId: call.target.id,
+                                };
+                              });
+
+                            const result = await submitReport(
+                              call.id,
+                              report,
+                              submissions
+                            );
+
+                            if (result.kind === 'success') {
+                              dispatch(previousCallAdd(call));
+                            } else {
+                              setSubmittingReport(false);
+                            }
+                            setSubmittingReport(false);
+                            dispatch(updateLaneStep(LaneStep.SUMMARY));
+                          } else {
+                            //Lane step must be Summary
+                            await allocateCall();
+                          }
+                        }}
+                        variant={
+                          isAllocatingCall || submittingReport
+                            ? 'loading'
+                            : lane.step == LaneStep.SUMMARY &&
+                              unfinishedCalls.length > 0
+                            ? 'secondary'
+                            : 'primary'
+                        }
+                      />
+                    </Box>
+                  )}
+                </TabList>
+              </Box>
+            </TabContext>
+          </Box>
+        )}
       </Box>
       <CallSwitchModal
         assignment={assignment}
@@ -139,7 +290,9 @@ const Call: FC = () => {
           },
         }}
         size="small"
-        title={messages.skipCallDialog.title({ name: call?.target.name || '' })}
+        title={messages.skipCallDialog.title({
+          name: call?.target.name || '',
+        })}
       />
       <Snackbar
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
