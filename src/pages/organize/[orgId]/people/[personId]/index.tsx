@@ -24,6 +24,8 @@ import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
 import PersonNotes from 'features/profile/components/PersonNotes';
+import { PERSON_NOTES } from 'utils/featureFlags';
+import useFeature from 'utils/featureFlags/useFeature';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -67,6 +69,8 @@ const PersonProfilePage: PageWithLayout = () => {
   const person = personFuture.data;
   const personTagsFuture = usePersonTags(orgId, personId);
   const journeysFuture = useJourneys(orgId);
+
+  const hasPersonNotesFeature = useFeature(PERSON_NOTES);
 
   if (!person) {
     return null;
@@ -130,11 +134,13 @@ const PersonProfilePage: PageWithLayout = () => {
         <Grid size={{ lg: 4, xs: 12 }}>
           <PersonOrganizationsCard orgId={orgId} personId={personId} />
         </Grid>
-        <Grid size={{ lg: 4, xs: 12 }}>
-          <Suspense fallback={<CircularProgress />}>
-            <PersonNotes orgId={orgId} person={person} />
-          </Suspense>
-        </Grid>
+        {hasPersonNotesFeature && (
+          <Grid size={{ lg: 4, xs: 12 }}>
+            <Suspense fallback={<CircularProgress />}>
+              <PersonNotes orgId={orgId} person={person} />
+            </Suspense>
+          </Grid>
+        )}
       </Grid>
     </>
   );
