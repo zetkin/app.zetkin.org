@@ -123,7 +123,10 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
                           ),
                           howLongAgo: (
                             <Typography color="secondary" component="span">
-                              <ZUIRelativeTime datetime={note.created} />
+                              <ZUIRelativeTime
+                                //Adding a "Z" here because timestamp from server is in GMT
+                                datetime={note.created + 'Z'}
+                              />
                             </Typography>
                           ),
                         }}
