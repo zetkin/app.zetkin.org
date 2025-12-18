@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useMemo } from 'react';
 
 import useLocalStorage from 'zui/hooks/useLocalStorage';
 import useDebounce from 'utils/hooks/useDebounce';
@@ -26,18 +26,13 @@ export default function useActivityFilters(orgId: number, campId?: number) {
     filtersKey,
     DEFAULT_FILTERS
   );
-  const [storedSearchString, setStoredSearchString] = useLocalStorage<string>(
+  const [searchString, setSearchString] = useLocalStorage<string>(
     searchKey,
     ''
   );
-  const [searchString, setSearchString] = useState(storedSearchString);
-
-  useEffect(() => {
-    setSearchString(storedSearchString);
-  }, [storedSearchString]);
 
   const persistSearchString = useDebounce(async (value: string) => {
-    setStoredSearchString(value);
+    setSearchString(value);
   }, 400);
 
   const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
