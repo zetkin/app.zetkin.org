@@ -14,10 +14,10 @@ import {
   LocalOffer,
   Logout,
   Map,
-  MoreVert,
   Search,
   Settings,
 } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   Avatar,
   Box,
@@ -105,7 +105,7 @@ const ZUIOrganizeMobileHeader = ({
             e.stopPropagation();
           }}
         >
-          <MoreVert />
+          <MenuIcon />
         </Button>
         <Typography fontSize={'16px'} variant={'h1'}>
           {title}
