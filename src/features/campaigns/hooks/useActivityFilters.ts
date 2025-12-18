@@ -12,16 +12,13 @@ const DEFAULT_FILTERS: ACTIVITIES[] = [
   ACTIVITIES.EMAIL,
 ];
 
-export default function useCampaignActivitiesFilters(
-  orgId: number,
-  campId?: number
-) {
+export default function useActivityFilters(orgId: number, campId?: number) {
   const filtersKey = useMemo(
-    () => `campaignActivities:${orgId}:${campId ?? 'all'}:filters`,
+    () => `activities:${orgId}:${campId ?? 'all'}:filters`,
     [campId, orgId]
   );
   const searchKey = useMemo(
-    () => `campaignActivities:${orgId}:${campId ?? 'all'}:search`,
+    () => `activities:${orgId}:${campId ?? 'all'}:search`,
     [campId, orgId]
   );
 

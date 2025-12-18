@@ -14,7 +14,7 @@ import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { CampaignActivity } from 'features/campaigns/types';
-import useCampaignActivitiesFilters from 'features/campaigns/hooks/useCampaignActivitiesFilters';
+import useActivityFilters from 'features/campaigns/hooks/useActivityFilters';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async () => {
@@ -34,7 +34,7 @@ const CampaignActivitiesPage: PageWithLayout = () => {
   const { orgId, campId } = useNumericRouteParams();
   const activitiesFuture = useActivityList(orgId, campId);
   const { filters, onFiltersChange, onSearchStringChange, searchString } =
-    useCampaignActivitiesFilters(orgId, campId);
+    useActivityFilters(orgId, campId);
 
   if (onServer) {
     return null;
