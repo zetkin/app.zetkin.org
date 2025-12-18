@@ -7,10 +7,10 @@ export default function useAddPersonNote(orgId: number, personId: number) {
   const dispatch = useAppDispatch();
 
   return async (note: string) => {
-    const addedNote = await apiClient.post<ZetkinPersonNote>(
-      `/api/orgs/${orgId}/people/${personId}/notes`,
-      { text: note }
-    );
+    const addedNote = await apiClient.post<
+      ZetkinPersonNote,
+      Pick<ZetkinPersonNote, 'text'>
+    >(`/api/orgs/${orgId}/people/${personId}/notes`, { text: note });
 
     dispatch(personNoteAdded([addedNote, personId]));
   };
