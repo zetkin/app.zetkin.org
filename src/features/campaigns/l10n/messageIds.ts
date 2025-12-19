@@ -52,6 +52,10 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
+    filterProjects: {
+      hideArchived: m('Hide archived projects'),
+      showArchived: m('Show archived projects'),
+    },
     heading: m('All projects'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),

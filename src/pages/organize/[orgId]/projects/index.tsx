@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Suspense } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Suspense, useState } from 'react';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -48,6 +48,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const { data: campaigns } = useCampaigns(orgId);
+  const [showArchived, setShowArchived] = useState(false);
   campaigns?.reverse();
 
   const onServer = useServerSide();
@@ -70,10 +71,29 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
       <Suspense>
         <ActivitiesOverview orgId={orgId} />
       </Suspense>
-      <Box mt={4}>
-        <Typography mb={2} variant="h4">
-          <Msg id={messageIds.all.heading} />
-        </Typography>
+      <Box component="section" mt={4}>
+        <Box
+          component="header"
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography mb={2} variant="h4">
+            <Msg id={messageIds.all.heading} />
+          </Typography>
+          <Button onClick={() => setShowArchived(!showArchived)} variant="text">
+            <Msg
+              id={
+                showArchived
+                  ? messageIds.all.filterProjects.hideArchived
+                  : messageIds.all.filterProjects.showArchived
+              }
+            />
+            {}
+          </Button>
+        </Box>
 
         <Grid container spacing={2}>
           {sharedSurveys.length > 0 && (
@@ -81,13 +101,13 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
               <SharedCard />
             </Grid>
           )}
-          {campaigns?.map((campaign) => {
-            return (
+          {campaigns?.map((campaign) =>
+            campaign.archived && !showArchived ? null : (
               <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
                 <CampaignCard campaign={campaign} />
               </Grid>
-            );
-          })}
+            )
+          )}
         </Grid>
       </Box>
     </>
