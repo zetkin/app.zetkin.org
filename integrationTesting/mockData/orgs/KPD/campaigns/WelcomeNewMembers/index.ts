@@ -10,6 +10,7 @@ import { ZetkinCampaign } from 'utils/types/zetkin';
  * - Published
  */
 const WelcomeNewMembers: ZetkinCampaign = {
+  archived: false,
   color: '',
   id: 2,
   info_text: `Welcome new members to the KPD to make sure they are aware of the org
