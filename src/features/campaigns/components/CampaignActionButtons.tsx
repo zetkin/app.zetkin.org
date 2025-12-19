@@ -91,7 +91,7 @@ const CampaignActionButtons: React.FunctionComponent<
     });
   };
 
-  const handleArchiveProject = () => {
+  const handleArchiveCampaign = () => {
     updateCampaign({ archived: !campaign.archived });
   };
 
@@ -200,7 +200,7 @@ const CampaignActionButtons: React.FunctionComponent<
                   <Msg id={campaignMessageIds.form.archiveCampaign.archive} />
                 </>
               ),
-              onSelect: handleArchiveProject,
+              onSelect: handleArchiveCampaign,
             },
             {
               id: CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN,

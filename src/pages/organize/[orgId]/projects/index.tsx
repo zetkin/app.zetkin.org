@@ -87,8 +87,8 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             <Msg
               id={
                 showArchived
-                  ? messageIds.all.filterProjects.hideArchived
-                  : messageIds.all.filterProjects.showArchived
+                  ? messageIds.all.filterCampaigns.hideArchived
+                  : messageIds.all.filterCampaigns.showArchived
               }
             />
             {}

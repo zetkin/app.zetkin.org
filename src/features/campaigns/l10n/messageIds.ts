@@ -52,7 +52,7 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
-    filterProjects: {
+    filterCampaigns: {
       hideArchived: m('Hide archived projects'),
       showArchived: m('Show archived projects'),
     },
