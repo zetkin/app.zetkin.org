@@ -86,6 +86,10 @@ export default makeMessages('feat.campaigns', {
     heading: m('Feedback and Surveys (none configured)'),
   },
   form: {
+    archiveCampaign: {
+      archive: m('Archive project'),
+      unarchive: m('Bring back from archive'),
+    },
     createAreaAssignment: {
       defaultQuestion: m('Did you complete the task?'),
     },
