@@ -15,6 +15,7 @@ import {
 import { Latitude, Longitude } from 'features/areas/types';
 
 export interface ZetkinCampaign {
+  archived: boolean;
   color: string;
   info_text: string;
   title: string;
