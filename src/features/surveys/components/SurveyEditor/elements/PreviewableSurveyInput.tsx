@@ -40,10 +40,15 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
       renderInput={(props) => (
         <TextField
           fullWidth
-          inputProps={{ ...props, sx: VARIANTS[variant] }}
           label={label}
           multiline={variant === 'content'}
           onChange={(ev) => onChange(ev.target.value)}
+          slotProps={{
+            htmlInput: {
+              ...props,
+              sx: VARIANTS[variant],
+            },
+          }}
           sx={{ marginBottom: 2 }}
           value={value}
         />

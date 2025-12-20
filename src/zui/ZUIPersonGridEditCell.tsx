@@ -126,7 +126,6 @@ const ZUIPersonGridEditCell: FC<{
           /* eslint-disable-next-line jsx-a11y/no-autofocus */
           autoFocus
           fullWidth
-          inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
           onKeyDown={(ev) => {
             if (ev.code == 'ArrowUp') {
@@ -156,6 +155,11 @@ const ZUIPersonGridEditCell: FC<{
             }
           }}
           placeholder={messages.personSelect.search()}
+          slotProps={{
+            input: {
+              ...autoComplete.getInputProps(),
+            },
+          }}
           sx={{ paddingLeft: '10px' }}
         />
       </Box>
