@@ -36,7 +36,7 @@ import useMyEvents from 'features/events/hooks/useMyEvents';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
 import useEvent from 'features/events/hooks/useEvent';
 import { removeOffset } from 'utils/dateUtils';
-import useMemberships from '../hooks/useMemberships';
+import useUserMemberships from 'features/home/hooks/useUserMemberships';
 
 type Props = {
   eventId: number;
@@ -46,7 +46,7 @@ type Props = {
 export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isMobile = useIsMobile();
   const myEvents = useMyEvents();
-  const memberships = useMemberships();
+  const userMemberships = useUserMemberships();
   const baseEvent = useEvent(orgId, eventId)?.data;
   const baseEventWithStatus: ZetkinEventWithStatus | undefined = baseEvent
     ? { ...baseEvent, status: null }
@@ -80,7 +80,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
   const isFullScreen = !isMobile;
 
   const contactPerson = event?.contact;
-  const orgMembership = memberships.data?.find(
+  const orgMembership = userMemberships.find(
     (membership) => membership.organization.id == orgId
   );
 
@@ -159,7 +159,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
             {isMobile && showContactDetails && (
               <ContactPersonSection
                 contactPerson={contactPerson}
-                orgId={orgId}
+                isLoggedInAsContactPerson={isLoggedInAsContactPerson}
               />
             )}
             <Box
@@ -187,7 +187,7 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
                   >
                     <ContactPersonSection
                       contactPerson={contactPerson}
-                      orgId={orgId}
+                      isLoggedInAsContactPerson={isLoggedInAsContactPerson}
                     />
                   </Box>
                 )}
@@ -238,33 +238,13 @@ export const PublicEventPage: FC<Props> = ({ eventId, orgId }) => {
 
 const ContactPersonSection: FC<{
   contactPerson: { email?: string; id: number; name: string; phone?: string };
-  orgId: number;
-}> = ({ contactPerson, orgId }) => {
+  isLoggedInAsContactPerson: boolean;
+}> = ({ contactPerson, isLoggedInAsContactPerson }) => {
   const [expandContactMethods, setExpandContactMethods] = useState(false);
 
-  const userMemberships = useMemberships();
-  const matchingMembership = userMemberships.data?.find(
-    (membership) => membership.organization.id === orgId
-  );
-  if (matchingMembership?.profile.id === contactPerson.id) {
-    return (
-      <Box bgcolor="white" borderRadius={2} padding={2}>
-        <Box alignItems="center" display="flex" gap={1}>
-          <ZUIPersonAvatar
-            firstName={contactPerson.name.split(' ')[0]}
-            id={contactPerson.id}
-            lastName={contactPerson.name.split(' ')[1]}
-          />
-          <ZUIText variant="bodyMdSemiBold">
-            <Msg id={messageIds.eventPage.contactPerson.you} />
-          </ZUIText>
-        </Box>
-      </Box>
-    );
-  }
-
   const hasContactMethods =
-    'email' in contactPerson || 'phone' in contactPerson;
+    ('email' in contactPerson || 'phone' in contactPerson) &&
+    !isLoggedInAsContactPerson;
 
   return (
     <Box bgcolor="white" borderRadius={2} padding={2}>
@@ -275,10 +255,14 @@ const ContactPersonSection: FC<{
           lastName={contactPerson.name.split(' ')[1]}
         />
         <ZUIText variant="bodyMdSemiBold">
-          <Msg
-            id={messageIds.eventPage.contactPerson.default}
-            values={{ name: contactPerson.name }}
-          />
+          {isLoggedInAsContactPerson ? (
+            <Msg id={messageIds.eventPage.contactPerson.you} />
+          ) : (
+            <Msg
+              id={messageIds.eventPage.contactPerson.default}
+              values={{ name: contactPerson.name }}
+            />
+          )}
         </ZUIText>
         {hasContactMethods && (
           <Box marginLeft="auto">
