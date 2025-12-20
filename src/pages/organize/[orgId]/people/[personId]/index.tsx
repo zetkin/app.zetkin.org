@@ -23,6 +23,7 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import PersonLngLatMap from 'features/profile/components/PersonLngLatMap';
+import { hasFeature, UPDATEDATE } from 'utils/featureFlags';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -36,7 +37,14 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
 
   try {
     const apiClient = new BackendApiClient(ctx.req.headers);
-    await apiClient.get<ZetkinPerson>(`/beta/orgs/${orgId}/people/${personId}`);
+    const updatesEnabled = hasFeature(
+      UPDATEDATE,
+      parseInt(orgId as string, 10),
+      process.env
+    );
+    await apiClient.get<ZetkinPerson>(
+      `/${updatesEnabled ? 'beta' : 'api'}/orgs/${orgId}/people/${personId}`
+    );
     return {
       props: {
         orgId,

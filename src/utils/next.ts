@@ -14,7 +14,7 @@ import { stringToBool } from './stringUtils';
 import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from './types/zetkin';
-import { hasFeature } from './featureFlags';
+import { hasFeature, UPDATEDATE } from './featureFlags';
 import { EnvVars } from 'core/env/Environment';
 import { omitUndefined } from './omitUndefined';
 
@@ -215,6 +215,7 @@ export const scaffold =
           MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
           TILESERVER:
             process.env.TILESERVER || 'https://tile.openstreetmap.org',
+          [UPDATEDATE]: process.env[UPDATEDATE],
           ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
           ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANIZE_URL,
           ZETKIN_PRIVACY_POLICY_LINK: process.env.ZETKIN_PRIVACY_POLICY_LINK,

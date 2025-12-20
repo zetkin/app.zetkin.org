@@ -26,6 +26,8 @@ import {
 } from 'utils/types/zetkin';
 import { PersonWithUpdates } from '../types/PersonWithUpdates';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import useFeature from 'utils/featureFlags/useFeature';
+import { UPDATEDATE } from 'utils/featureFlags';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -87,6 +89,8 @@ const PersonDetailsCard: React.FunctionComponent<{
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const [editPersonDialogOpen, setEditPersonDialogOpen] = useState(false);
+
+  const updatesEnabled = useFeature(UPDATEDATE);
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
     // NAtive fields are never objects
@@ -178,7 +182,12 @@ const PersonDetailsCard: React.FunctionComponent<{
                 <Tooltip
                   placement="bottom"
                   title={
-                    <ChangedDateTooltip field={detail.field} person={person} />
+                    updatesEnabled && (
+                      <ChangedDateTooltip
+                        field={detail.field}
+                        person={person}
+                      />
+                    )
                   }
                 >
                   <ListItemText
