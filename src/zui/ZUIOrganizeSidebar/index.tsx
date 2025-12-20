@@ -207,18 +207,11 @@ const ZUIOrganizeSidebar = ({
     setChecked(!checked);
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     //remove checked state if menu is collapsed
     if (!open) {
       setChecked(false);
     }
-
-    if (isMobile) {
-      setMobileDrawerOpen(false);
-      e.stopPropagation();
-      return;
-    }
-
     const nextFocus = open ? expandButton : collapseButton;
     setTimeout(() => {
       if (nextFocus.current) {
@@ -350,7 +343,7 @@ const ZUIOrganizeSidebar = ({
                                 width: '48px',
                               }}
                             >
-                              {hover || isMobile ? (
+                              {hover && !isMobile ? (
                                 <IconButton
                                   ref={collapseButton}
                                   onClick={handleClick}
