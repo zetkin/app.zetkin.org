@@ -14,7 +14,6 @@ import { DEFAULT_TAG_COLOR } from 'features/tags/components/TagManager/utils';
 import IApiClient from 'core/api/client/IApiClient';
 import { IColumnType } from '../';
 import { loadItemIfNecessary } from 'core/caching/cacheUtils';
-import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useTag from 'features/tags/hooks/useTag';
 import useTagging from 'features/tags/hooks/useTagging';
@@ -27,6 +26,7 @@ import { AppDispatch } from 'core/store';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../../types';
 import { tagLoad, tagLoaded } from 'features/tags/store';
 import { RemoteList } from 'utils/storeUtils';
+import ZUITagChip from 'zui/components/ZUITagChip';
 
 type PersonTagViewCell = null | {
   value?: string;
@@ -229,7 +229,8 @@ const BasicTagCell: FC<{
 
   if (cell) {
     return (
-      <TagChip
+      <ZUITagChip
+        disabled={isRestricted}
         onDelete={() => {
           removeFromPerson(personId, tagId);
         }}
@@ -262,7 +263,7 @@ const BasicTagCell: FC<{
                   pointerEvents: 'none',
                 }}
               >
-                <TagChip tag={tag} />
+                <ZUITagChip tag={tag} />
               </Box>
             </Box>
           )}

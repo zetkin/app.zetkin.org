@@ -8,6 +8,7 @@ import {
 
 import { IColumnType } from '.';
 import { useNumericRouteParams } from 'core/hooks';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
   LocalBoolViewColumn,
@@ -75,6 +76,7 @@ const Cell: FC<{
   );
 
   const checked = !!cell;
+  const [isRestricted] = useAccessLevel();
 
   return (
     <Box
@@ -88,6 +90,7 @@ const Cell: FC<{
       <Checkbox
         checked={checked}
         color="success"
+        disabled={isRestricted}
         onChange={onChange}
         tabIndex={-1}
       />
