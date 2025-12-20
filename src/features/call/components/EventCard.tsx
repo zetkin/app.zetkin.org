@@ -60,7 +60,9 @@ const EventCard: FC<EventCardProps> = ({ event, target }) => {
                 {event.num_participants_available <
                   event.num_participants_required &&
                   !isSignedUp && <ZUISignUpChip status="needed" />}
-                {isSignedUp && <ZUISignUpChip status="signedUp" />}
+                {isSignedUp && (
+                  <ZUISignUpChip name={target.first_name} status="signedUp" />
+                )}
               </>,
             ]
       }

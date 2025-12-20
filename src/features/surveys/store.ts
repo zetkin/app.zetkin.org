@@ -18,9 +18,11 @@ import {
   remoteList,
   RemoteList,
 } from 'utils/storeUtils';
+import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats';
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
+  responseStatsBySurveyId: Record<number, RemoteItem<SurveyResponseStats>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
   submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
   statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
@@ -31,6 +33,7 @@ export interface SurveysStoreSlice {
 
 const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
+  responseStatsBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
   submissionsBySurveyId: {},
@@ -161,6 +164,7 @@ const surveysSlice = createSlice({
             oldOption.id == optionId ? updatedOption : oldOption
           );
       }
+      delete state.responseStatsBySurveyId[surveyId];
     },
     elementOptionsReordered: (
       state,
@@ -193,6 +197,7 @@ const surveysSlice = createSlice({
       ].items.map((item) =>
         item.id == elemId ? remoteItem(elemId, { data: updatedElement }) : item
       );
+      delete state.responseStatsBySurveyId[surveyId];
     },
     elementsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -222,6 +227,23 @@ const surveysSlice = createSlice({
             newOrder.default.indexOf(el0.data?.id ?? 0) -
             newOrder.default.indexOf(el1.data?.id ?? 0)
         );
+    },
+    responseStatsLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      if (!state.responseStatsBySurveyId[surveyId]) {
+        state.responseStatsBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.responseStatsBySurveyId[surveyId].isLoading = true;
+    },
+    responseStatsLoaded: (
+      state,
+      action: PayloadAction<[number, SurveyResponseStats]>
+    ) => {
+      const [surveyId, stats] = action.payload;
+      state.responseStatsBySurveyId[surveyId].data = stats;
+      state.responseStatsBySurveyId[surveyId].isLoading = false;
+      state.responseStatsBySurveyId[surveyId].loaded = new Date().toISOString();
+      state.responseStatsBySurveyId[surveyId].isStale = false;
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
@@ -352,6 +374,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...submission };
         item.mutating = [];
         state.statsBySurveyId[submission.survey.id].isStale = true;
+        delete state.responseStatsBySurveyId[submission.survey.id];
       }
       const submissions = state.submissionsBySurveyId[submission.survey.id];
       if (submissions) {
@@ -376,7 +399,8 @@ const surveysSlice = createSlice({
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
-      state.submissionsBySurveyId[action.payload] = remoteList();
+      state.submissionsBySurveyId[action.payload] =
+        state.submissionsBySurveyId[action.payload] || remoteList();
       state.submissionsBySurveyId[action.payload].isLoading = true;
       state.submissionList.isLoading = true;
     },
@@ -404,6 +428,7 @@ const surveysSlice = createSlice({
         item.data = { ...item.data, ...survey };
         item.mutating = [];
       }
+      delete state.responseStatsBySurveyId[survey.id];
     },
     surveysWithElementsLoad: (state) => {
       state.surveysWithElementsList.isLoading = true;
@@ -468,6 +493,8 @@ export const {
   elementsLoad,
   elementsLoaded,
   elementsReordered,
+  responseStatsLoad,
+  responseStatsLoaded,
   submissionLoad,
   submissionLoaded,
   statsLoad,

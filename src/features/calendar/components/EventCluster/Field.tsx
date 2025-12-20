@@ -1,34 +1,27 @@
 import { FC } from 'react';
-import { makeStyles } from '@mui/styles';
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { FieldIcon } from './FieldIcon';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import { FIELD_PRESENTATION, PresentableField } from './Event';
 import theme from '../../../../theme';
 
-interface StyleProps {
-  requiresAction: boolean;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => ({
-  icon: {
-    alignItems: 'center',
-    color: ({ requiresAction }) =>
-      requiresAction ? theme.palette.error.main : theme.palette.secondary.main,
-    display: 'flex',
-  },
-}));
-
 interface FieldProps {
   field: PresentableField;
 }
 
 const Field: FC<FieldProps> = ({ field }) => {
-  const classes = useStyles({ requiresAction: field.requiresAction });
   const labelColor = field.requiresAction ? 'error' : 'secondary';
   const icon = (
-    <Box className={classes.icon}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        color: field.requiresAction
+          ? theme.palette.error.main
+          : theme.palette.secondary.main,
+        display: 'flex',
+      }}
+    >
       <FieldIcon field={field} />
     </Box>
   );

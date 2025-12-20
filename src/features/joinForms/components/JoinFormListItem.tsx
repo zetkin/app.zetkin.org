@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { FormatListBulleted, OpenInNew } from '@mui/icons-material';
-import makeStyles from '@mui/styles/makeStyles';
 import { Box, Button, Typography } from '@mui/material';
 
 import oldTheme from 'theme';
@@ -13,36 +12,6 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import useJoinFormMutations from '../hooks/useJoinFormMutations';
-
-const useStyles = makeStyles({
-  container: {
-    alignItems: 'center',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '1.0em 0.5em',
-  },
-  endNumber: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    width: '7em',
-  },
-  icon: {
-    color: oldTheme.palette.grey[500],
-    fontSize: '28px',
-  },
-  left: {
-    alignItems: 'center',
-    display: 'flex',
-    flex: '1 0',
-    gap: '1em',
-  },
-  right: {
-    alignItems: 'center',
-    display: 'flex',
-  },
-});
 
 export enum STATUS_COLORS {
   BLUE = 'blue',
@@ -58,7 +27,6 @@ type Props = {
 };
 
 const JoinFormListItem = ({ form, onClick }: Props) => {
-  const classes = useStyles();
   const apiClient = useApiClient();
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -77,20 +45,45 @@ const JoinFormListItem = ({ form, onClick }: Props) => {
 
   return (
     <Box
-      className={classes.container}
       onClick={() => {
         onClick();
       }}
+      sx={{
+        alignItems: 'center',
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '1.0em 0.5em',
+      }}
     >
-      <Box className={classes.left}>
-        <FormatListBulleted className={classes.icon} />
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flex: '1 0',
+          gap: '1em',
+        }}
+      >
+        <FormatListBulleted
+          sx={{
+            color: oldTheme.palette.grey[500],
+            fontSize: '28px',
+          }}
+        />
         <Box alignItems="center" display="flex" gap={1}>
           <Typography>{form.title}</Typography>
           <Typography color="secondary">(#{form.id})</Typography>
         </Box>
       </Box>
       <Box>
-        <Box className={classes.endNumber}>
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: '7em',
+          }}
+        >
           {/* TODO: Add stats
             <ZUIIconLabel
               icon={<SecondaryIcon color={endNumberColor} />}

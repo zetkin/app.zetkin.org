@@ -7,7 +7,7 @@
     "analyze": "ANALYZE=true next build",
     "build": "next build",
     "start": "next start -p 80",
-    "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000",
+    "devserver": "cross-env NODE_OPTIONS='--inspect' next dev -p 3000 --turbo",
     "docs:build": "storybook build -o public/storybook",
     "lint:eslint": "eslint src integrationTesting",
     "lint:prettier": "prettier --check src integrationTesting",
@@ -17,11 +17,11 @@
     "test": "jest",
     "suite:0-checks": "run-p lint:* check-types",
     "suite:1-test": "yarn test",
-    "suite:2-integration": "yarn playwright:ci",
+    "suite:2-integration": "yarn e2e:ci",
     "suite": "run-s suite:*",
-    "playwright": "cross-env NODE_ENV=production playwright test",
-    "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
-    "playwright:ci": "cross-env NODE_ENV=production playwright test",
+    "e2e": "cross-env NODE_ENV=production playwright test",
+    "e2e:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
+    "e2e:ci": "cross-env NODE_ENV=production playwright test",
     "storybook": "storybook dev -p 6006",
     "make-yaml": "ts-node src/tools/make-yaml.ts"
   },
@@ -43,6 +43,7 @@
     "@mui/material-nextjs": "^7.0.0",
     "@mui/styles": "^5.10.6",
     "@mui/system": "^7.0.1",
+    "@mui/x-charts-pro": "^8.19.0",
     "@mui/x-data-grid-pro": "^6.14.0",
     "@mui/x-date-pickers": "^7.27.3",
     "@mui/x-date-pickers-pro": "^7.27.3",
@@ -61,6 +62,7 @@
     "@types/dompurify": "^2.3.3",
     "@types/mjml": "^4.7.4",
     "@vis.gl/react-maplibre": "^8.0.4",
+    "@visx/wordcloud": "^3.12.0",
     "copy-to-clipboard": "^3.3.1",
     "date-fns": "^2.22.1",
     "dayjs": "^1.10.6",
@@ -78,11 +80,12 @@
     "mjml": "^4.15.3",
     "mongoose": "^8.6.0",
     "negotiator": "^0.6.2",
-    "next": "^14.2.30",
+    "next": "14.2.35",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
     "random-seed": "^0.3.0",
+    "rasterizehtml": "^1.4.0",
     "react": "18.3.1",
     "react-contenteditable": "^3.3.7",
     "react-dnd": "^16.0.1",
@@ -93,6 +96,7 @@
     "react-intl": "^7.1.14",
     "react-leaflet": "^4.2.1",
     "react-redux": "^8.0.4",
+    "react-window": "^2.2.3",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "remark-slate": "^1.8.6",
@@ -112,7 +116,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
-    "@playwright/test": "~1.25.0",
+    "@playwright/test": "~1.56.1",
     "@storybook/addon-actions": "^8.1.10",
     "@storybook/addon-essentials": "^8.1.10",
     "@storybook/addon-interactions": "^8.1.10",
@@ -128,7 +132,7 @@
     "@types/leaflet": "^1.9.3",
     "@types/marked": "^4.0.3",
     "@types/negotiator": "^0.6.1",
-    "@types/node": "^16.3.3",
+    "@types/node": "22",
     "@types/nprogress": "^0.2.0",
     "@types/papaparse": "^5.3.10",
     "@types/random-seed": "^0.3.3",
@@ -167,6 +171,6 @@
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22"
   }
 }

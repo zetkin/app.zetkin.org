@@ -1,23 +1,9 @@
 import { Box } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { FunctionComponent, useState } from 'react';
 
 import { PageContainerContext } from 'utils/panes/PageContainerContext';
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
 import oldTheme from 'theme';
-
-const useStyles = makeStyles(() => ({
-  breadcrumbs: {
-    [oldTheme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
-  root: {
-    [oldTheme.breakpoints.down('sm')]: {
-      paddingTop: '3.5rem',
-    },
-  },
-}));
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -28,11 +14,18 @@ const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
   children,
   onScroll,
 }) => {
-  const classes = useStyles();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   return (
-    <Box className={classes.root} display="flex" height="100vh">
+    <Box
+      display="flex"
+      height="100vh"
+      sx={{
+        [oldTheme.breakpoints.down('sm')]: {
+          paddingTop: '3.5rem',
+        },
+      }}
+    >
       <ZUIOrganizeSidebar />
       <Box
         ref={(div: HTMLDivElement) => setContainer(div)}

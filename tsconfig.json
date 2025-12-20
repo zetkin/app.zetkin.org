@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": ["es6", "dom", "dom.iterable", "esnext"],
     "downlevelIteration": true,
     "noImplicitAny": true,
@@ -17,7 +17,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "./src",
+    "paths": {"*": ["./src/*"]},
     "incremental": true,
     "plugins": [
       {

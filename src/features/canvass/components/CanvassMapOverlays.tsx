@@ -1,6 +1,5 @@
 import { Box, Button } from '@mui/material';
 import { FC, Suspense, useEffect, useState } from 'react';
-import { makeStyles } from '@mui/styles';
 
 import {
   ZetkinAreaAssignment,
@@ -21,19 +20,6 @@ type Props = {
   suggestions?: string[];
 };
 
-const useStyles = makeStyles(() => ({
-  actionAreaContainer: {
-    bottom: 15,
-    display: 'flex',
-    gap: 8,
-    justifyContent: 'center',
-    padding: 8,
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1000,
-  },
-}));
-
 const CanvassMapOverlays: FC<Props> = ({
   assignment,
   isCreating,
@@ -43,7 +29,6 @@ const CanvassMapOverlays: FC<Props> = ({
   suggestions = [],
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const classes = useStyles();
 
   const showViewLocationButton = !!selectedLocation && !expanded;
 
@@ -67,7 +52,18 @@ const CanvassMapOverlays: FC<Props> = ({
   return (
     <>
       {!selectedLocation && !isCreating && (
-        <Box className={classes.actionAreaContainer}>
+        <Box
+          sx={{
+            bottom: 15,
+            display: 'flex',
+            gap: 8,
+            justifyContent: 'center',
+            padding: 8,
+            position: 'absolute',
+            width: '100%',
+            zIndex: 1000,
+          }}
+        >
           <Button onClick={() => onToggleCreating(true)} variant="contained">
             <Msg id={messageIds.map.addLocation.add} />
           </Button>

@@ -23,6 +23,36 @@ const getEllipsedString = (string: string, maxLength: number): string => {
   return string.slice(0, ellipseIndex) + '...';
 };
 
+/**
+ * Sanitizes a string so it can work as a file name
+ */
+const sanitizeFileName = (name: string) => {
+  // Replace Windows-forbidden chars + control chars
+  const control = Array.from({ length: 32 }, (_, i) =>
+    String.fromCharCode(i)
+  ).join('');
+  const forbidden = new RegExp(`[<>:"/\\\\|?*${control}]`, 'g');
+  name = name.replace(forbidden, '_');
+
+  // Collapse underscores
+  name = name.replace(/_+/g, '_');
+
+  // Trim spaces/dots from ends (Windows hates them)
+  name = name.replace(/^[ .]+|[ .]+$/g, '');
+
+  if (!name) {
+    name = 'file';
+  }
+
+  // Enforce 255-byte limit
+  if (new TextEncoder().encode(name).length > 255) {
+    const enc = new TextEncoder().encode(name);
+    name = new TextDecoder().decode(enc.slice(0, 255));
+  }
+
+  return name;
+};
+
 const truncateOnMiddle = (str: string, maxLength: number) => {
   if (str.length <= maxLength) {
     return str;
@@ -46,4 +76,4 @@ const truncateOnMiddle = (str: string, maxLength: number) => {
 export const isInteger = (str: string): boolean =>
   Number.isInteger(parseFloat(str));
 
-export { getEllipsedString, stringToBool, truncateOnMiddle };
+export { getEllipsedString, sanitizeFileName, stringToBool, truncateOnMiddle };
