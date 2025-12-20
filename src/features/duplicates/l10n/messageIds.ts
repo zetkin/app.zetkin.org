@@ -3,6 +3,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 export default makeMessages('feat.duplicates', {
   modal: {
     cancelButton: m('Cancel'),
+    changedDateTooltip: m('Last change'),
     fieldSettings: {
       data: m('Data'),
       field: m('Field'),
