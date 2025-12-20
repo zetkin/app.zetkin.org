@@ -1,4 +1,5 @@
 import IApiClient from 'core/api/client/IApiClient';
+import { UPDATEDATE } from 'utils/featureFlags';
 
 /**
  * Defines the [runtime environment
@@ -29,6 +30,7 @@ export type EnvVars = {
   MAPLIBRE_STYLE?: string;
   MUIX_LICENSE_KEY?: string;
   TILESERVER?: string;
+  [UPDATEDATE]?: string;
   ZETKIN_APP_DOMAIN?: string;
   ZETKIN_GEN2_ORGANIZE_URL?: string;
   ZETKIN_PRIVACY_POLICY_LINK?: string;

@@ -3,17 +3,23 @@ import {
   FormControl,
   MenuItem,
   Select,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import { usePersons } from 'features/profile/hooks/usePerson';
+import { PersonWithUpdates } from 'features/profile/types/PersonWithUpdates';
+import useFeature from 'utils/featureFlags/useFeature';
+import { UPDATEDATE } from 'utils/featureFlags';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import useFieldTitle from 'utils/hooks/useFieldTitle';
 
 interface FieldSettingsRowProps {
@@ -34,6 +40,13 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
   const [selectedValue, setSelectedValue] = useState(values[0]);
   const { orgId } = useNumericRouteParams();
   const getFieldTitle = useFieldTitle(orgId);
+
+  const updatesEnabled = useFeature(UPDATEDATE);
+  const personIds = useMemo(
+    () => (updatesEnabled ? duplicates.map((person) => person.id) : []),
+    [duplicates, updatesEnabled]
+  );
+  const duplicatesWithAdditionalData = usePersons(orgId, personIds);
 
   const getLabel = (value: string) => {
     if (field === NATIVE_PERSON_FIELDS.GENDER) {
@@ -63,7 +76,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
     );
 
     return (
-      <Box display="flex" gap="2px">
+      <Box alignItems="center" display="flex" gap="2px">
         {peopleWithMatchingValues.map((person, index) => {
           return (
             <ZUIAvatar
@@ -74,6 +87,33 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
           );
         })}
       </Box>
+    );
+  };
+
+  const getUpdatedDate = (value: string) => {
+    const futureDataForPeopleWithMatchingValues = duplicates
+      .map(
+        (person, idx) =>
+          [duplicatesWithAdditionalData[idx], person[field]] as const
+      )
+      .filter(([future, fieldValue]) => fieldValue === value && !!future)
+      .map(([{ data }]) => data as PersonWithUpdates | null);
+
+    const lastUpdated = futureDataForPeopleWithMatchingValues
+      .map((person) => person?._history?.fields[field])
+      .filter((date): date is string => !!date)
+      .sort()
+      .at(-1);
+
+    if (!lastUpdated) {
+      return null;
+    }
+
+    return (
+      <>
+        <Msg id={messageIds.modal.changedDateTooltip} />{' '}
+        <ZUIRelativeTime datetime={lastUpdated} />
+      </>
     );
   };
 
@@ -118,17 +158,19 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
               value={selectedValue}
             >
               {values.map((value, index) => (
-                <MenuItem
-                  key={index}
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    justifyContent: 'space-between',
-                  }}
-                  value={value}
-                >
-                  {getLabel(value)}
-                  {getAvatars(value)}
+                <MenuItem key={index} value={value}>
+                  <Tooltip placement="left" title={getUpdatedDate(value)}>
+                    <Box
+                      alignContent="center"
+                      display="flex"
+                      gap={1}
+                      justifyContent="space-between"
+                      sx={{ width: '100%' }}
+                    >
+                      {getLabel(value)}
+                      {getAvatars(value)}
+                    </Box>
+                  </Tooltip>
                 </MenuItem>
               ))}
             </Select>

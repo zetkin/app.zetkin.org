@@ -5,6 +5,7 @@ import BackendApiClient from 'core/api/client/BackendApiClient';
 import ClientContext from 'core/env/ClientContext';
 import { ZetkinUser } from 'utils/types/zetkin';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { UPDATEDATE } from 'utils/featureFlags';
 
 export default async function RootLayout({
   children,
@@ -42,6 +43,7 @@ export default async function RootLayout({
               MAPLIBRE_STYLE: process.env.MAPLIBRE_STYLE,
               MUIX_LICENSE_KEY: process.env.MUIX_LICENSE_KEY,
               TILESERVER: process.env.TILESERVER,
+              [UPDATEDATE]: process.env[UPDATEDATE],
               ZETKIN_APP_DOMAIN: process.env.ZETKIN_APP_DOMAIN,
               ZETKIN_GEN2_ORGANIZE_URL: process.env.ZETKIN_GEN2_ORGANZE_URL,
               ZETKIN_PRIVACY_POLICY_LINK:

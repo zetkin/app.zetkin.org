@@ -1,6 +1,14 @@
 import NextLink from 'next/link';
 import { useState } from 'react';
-import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
+import {
+  Button,
+  Card,
+  Link,
+  ListItem,
+  ListItemText,
+  Tooltip,
+} from '@mui/material';
+import dayjs from 'dayjs';
 
 import EditPersonDialog from './EditPersonDialog';
 import globalMessageIds from 'core/i18n/messageIds';
@@ -14,7 +22,12 @@ import {
   CUSTOM_FIELD_TYPE,
   ZetkinCustomField,
   ZetkinPerson,
+  ZetkinPersonNativeFields,
 } from 'utils/types/zetkin';
+import { PersonWithUpdates } from '../types/PersonWithUpdates';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import useFeature from 'utils/featureFlags/useFeature';
+import { UPDATEDATE } from 'utils/featureFlags';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -39,14 +52,45 @@ const nativeFieldsToDisplay = [
   'ext_id',
 ] as const;
 
+const ChangedDateTooltip: React.FunctionComponent<{
+  field: string;
+  person: PersonWithUpdates & ZetkinPerson;
+}> = ({ person, field }) => {
+  const changedDate = (person as PersonWithUpdates)._history?.fields?.[
+    field as keyof ZetkinPersonNativeFields
+  ];
+
+  if (!changedDate) {
+    return <>?</>;
+  }
+
+  if (dayjs().diff(dayjs(changedDate), 'day') > 30) {
+    return (
+      <>
+        <Msg id={messageIds.changedDateTooltip} />{' '}
+        <ZUIDate datetime={changedDate} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Msg id={messageIds.changedDateTooltip} />{' '}
+      <ZUIRelativeTime datetime={changedDate} />
+    </>
+  );
+};
+
 const PersonDetailsCard: React.FunctionComponent<{
   customFields: ZetkinCustomField[];
-  person: ZetkinPerson;
+  person: PersonWithUpdates & ZetkinPerson;
 }> = ({ customFields, person }) => {
   const { orgId } = useNumericRouteParams();
   const messages = useMessages(messageIds);
   const globalMessages = useMessages(globalMessageIds);
   const [editPersonDialogOpen, setEditPersonDialogOpen] = useState(false);
+
+  const updatesEnabled = useFeature(UPDATEDATE);
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
     // NAtive fields are never objects
@@ -72,6 +116,7 @@ const PersonDetailsCard: React.FunctionComponent<{
     }
 
     return {
+      field,
       title: globalMessages.personFields[field](),
       value,
     };
@@ -106,6 +151,7 @@ const PersonDetailsCard: React.FunctionComponent<{
       }
 
       return {
+        field: field.slug,
         title: field.title,
         value,
       };
@@ -133,10 +179,22 @@ const PersonDetailsCard: React.FunctionComponent<{
           <ZUIList initialLength={4} showMoreStep={allFields.length - 4}>
             {allFields.map((detail, idx) => (
               <ListItem key={idx} divider>
-                <ListItemText
-                  primary={detail.value || '-'}
-                  secondary={detail.title}
-                />
+                <Tooltip
+                  placement="bottom"
+                  title={
+                    updatesEnabled && (
+                      <ChangedDateTooltip
+                        field={detail.field}
+                        person={person}
+                      />
+                    )
+                  }
+                >
+                  <ListItemText
+                    primary={detail.value || '-'}
+                    secondary={detail.title}
+                  />
+                </Tooltip>
               </ListItem>
             ))}
           </ZUIList>
