@@ -34,7 +34,7 @@ import sortMetrics from 'features/canvass/utils/sortMetrics';
 import BulkHouseholdVisitsPage from './pages/BulkHouseholdVisitsPage';
 import BulkEditHouseholdsPage from './pages/BulkEditHouseholdsPage';
 import useEditHouseholds from 'features/canvass/hooks/useEditHouseholds';
-import VisitsPage from './pages/VisitsPage';
+import HouseholdsPage2 from './pages/HouseholdsPage2';
 
 type LocationDialogProps = {
   assignment: ZetkinAreaAssignment;
@@ -48,7 +48,7 @@ type LocationDialogStep =
   | 'edit'
   | 'createHouseholds'
   | 'households'
-  | 'visits'
+  | 'households2'
   | 'household'
   | 'editHousehold'
   | 'locationVisit'
@@ -140,7 +140,7 @@ const LocationDialog: FC<LocationDialogProps> = ({
           location={location}
           onClose={onClose}
           onEdit={() => goto('edit')}
-          onHouseholds={(useNew) => goto(useNew ? 'visits' : 'households')}
+          onHouseholds={(useNew) => goto(useNew ? 'households2' : 'households')}
           onVisit={() => goto('locationVisit')}
         />
         <EditLocationPage
@@ -153,8 +153,8 @@ const LocationDialog: FC<LocationDialogProps> = ({
             back();
           }}
         />
-        <VisitsPage
-          key="visits"
+        <HouseholdsPage2
+          key="households2"
           assignment={assignment}
           location={location}
           onBack={() => back()}
