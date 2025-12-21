@@ -104,11 +104,9 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
   const reactFGref = useRef<FeatureGroupType | null>(null);
 
   const [zoomed, setZoomed] = useState(false);
-  const [zoom, setZoom] = useState(0);
 
   const map = useMapEvents({
     zoom: () => {
-      setZoom(map.getZoom());
       setZoomed(true);
     },
   });
@@ -285,8 +283,7 @@ const OrganizerMapRenderer: FC<OrganizerMapRendererProps> = ({
           //don't show locations outside of assigned areas
           //unless they have visits in this assignment
           const hideFromProgressView =
-            locationStyle == 'progress' &&
-            !hasVisitsInThisAssignment;
+            locationStyle == 'progress' && !hasVisitsInThisAssignment;
 
           if (hideFromProgressView) {
             return null;
