@@ -14,6 +14,7 @@ import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
 import AreaAssignmentListItem from './AreaAssignmentListItem';
+import VisitAssignmentListItem from './VisitAssignmentListItem';
 
 const MyActivitiesList: FC = () => {
   const activities = useMyActivities();
@@ -113,6 +114,11 @@ const MyActivitiesList: FC = () => {
         } else if (activity.kind == 'event') {
           href = `/o/${activity.data.organization.id}/events/${activity.data.id}`;
           elem = <EventListItem event={activity.data} href={href} />;
+        } else if (activity.kind == 'visit') {
+          href = `/visitassignments/${activity.data.id}`;
+          elem = (
+            <VisitAssignmentListItem assignment={activity.data} href={href} />
+          );
         }
 
         return (

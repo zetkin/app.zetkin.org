@@ -9,6 +9,7 @@ import {
   EventActivity,
   SurveyActivity,
   TaskActivity,
+  VisitAssignmentActivity,
 } from '../types';
 import sortEventsByStartTime from 'features/events/utils/sortEventsByStartTime';
 
@@ -44,7 +45,8 @@ export type NonEventActivity =
   | AreaAssignmentActivity
   | SurveyActivity
   | TaskActivity
-  | EmailActivity;
+  | EmailActivity
+  | VisitAssignmentActivity;
 export type ClusteredActivity = ClusteredEvent | NonEventActivity;
 
 export function clusterEvents(

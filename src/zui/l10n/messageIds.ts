@@ -63,6 +63,7 @@ export default makeMessages('zui', {
         'Create person and assign to {journey}'
       ),
       caller: m('Create person and add as caller'),
+      canvasser: m('Create person and add as a canvasser'),
       contact: m('Create person and assign as contact'),
       default: m('Create person'),
       participant: m('Create person and add as participant'),

@@ -1,5 +1,6 @@
 import { ZetkinAreaAssignment } from 'features/areaAssignments/types';
 import { ZetkinCallAssignment, ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinVisitAssignment } from 'features/visitassignments/types';
 
 type MyEventActivity = {
   data: ZetkinEventWithStatus;
@@ -19,10 +20,17 @@ type MyAreaAssignmentActivity = {
   start: Date;
 };
 
+type MyVisitAssignmentActivity = {
+  data: ZetkinVisitAssignment;
+  kind: 'visit';
+  start: Date;
+};
+
 export type MyActivity =
   | MyEventActivity
   | MyCallAssignmentActivity
-  | MyAreaAssignmentActivity;
+  | MyAreaAssignmentActivity
+  | MyVisitAssignmentActivity;
 
 export type ZetkinEventWithStatus = ZetkinEvent &
   (
