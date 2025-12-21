@@ -77,7 +77,11 @@ export function loadListIfNecessary<
   const loadIsNecessary = hooks.isNecessary?.() ?? shouldLoad(remoteList);
 
   if (!remoteList || loadIsNecessary) {
-    return loadList(dispatch, hooks);
+    return loadList(
+      dispatch,
+      hooks,
+      remoteList?.items.map((item) => item.data).filter((item) => item != null)
+    );
   }
 
   return new RemoteListFuture({
@@ -97,7 +101,8 @@ export function loadList<
     actionOnLoad: () => PayloadAction<OnLoadPayload>;
     actionOnSuccess: (items: DataType[]) => PayloadAction<OnSuccessPayload>;
     loader: () => Promise<DataType[]>;
-  }
+  },
+  existingData?: DataType[]
 ): IFuture<DataType[]> {
   dispatch(hooks.actionOnLoad());
   const promise = hooks
@@ -115,7 +120,7 @@ export function loadList<
       }
     });
 
-  return new PromiseFuture(promise);
+  return new PromiseFuture(promise, existingData);
 }
 
 /**

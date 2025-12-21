@@ -399,7 +399,8 @@ const surveysSlice = createSlice({
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
-      state.submissionsBySurveyId[action.payload] = remoteList();
+      state.submissionsBySurveyId[action.payload] =
+        state.submissionsBySurveyId[action.payload] || remoteList();
       state.submissionsBySurveyId[action.payload].isLoading = true;
       state.submissionList.isLoading = true;
     },

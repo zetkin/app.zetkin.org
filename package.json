@@ -62,6 +62,7 @@
     "@types/dompurify": "^2.3.3",
     "@types/mjml": "^4.7.4",
     "@vis.gl/react-maplibre": "^8.0.4",
+    "@visx/wordcloud": "^3.12.0",
     "copy-to-clipboard": "^3.3.1",
     "date-fns": "^2.22.1",
     "dayjs": "^1.10.6",
@@ -79,7 +80,7 @@
     "mjml": "^4.15.3",
     "mongoose": "^8.6.0",
     "negotiator": "^0.6.2",
-    "next": "^14.2.30",
+    "next": "14.2.35",
     "node-xlsx": "^0.21.0",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
@@ -96,7 +97,6 @@
     "react-leaflet": "^4.2.1",
     "react-redux": "^8.0.4",
     "react-window": "^2.2.3",
-    "react-wordcloud": "^1.2.7",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "remark-slate": "^1.8.6",
@@ -171,6 +171,6 @@
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": "22.x"
+    "node": ">=22"
   }
 }

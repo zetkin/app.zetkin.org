@@ -1,5 +1,4 @@
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
-import { makeStyles } from '@mui/styles';
 import {
   Box,
   Button,
@@ -27,24 +26,11 @@ interface ViewSurveySubmissionPreviewProps {
   submissions: PreviewableSubmissionData[];
 }
 
-const useStyles = makeStyles(() => ({
-  container: {
-    width: 300,
-  },
-  header: {
-    fontSize: '1.1em',
-  },
-  timestamp: {
-    color: 'grey',
-  },
-}));
-
 const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
   anchorEl,
   onOpenSubmission,
   submissions,
 }) => {
-  const styles = useStyles();
   const sorted = useMemo(
     () =>
       submissions.sort((sub0, sub1) => {
@@ -61,10 +47,12 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
   return (
     <Popper
       anchorEl={anchorEl}
-      className={styles.container}
       open={!!anchorEl}
       popperOptions={{
         placement: 'left',
+      }}
+      sx={{
+        width: 300,
       }}
     >
       <Paper elevation={2}>
@@ -72,13 +60,20 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
           <Box>
             {mostRecent && (
               <Box>
-                <Typography className={styles.header} variant="h5">
+                <Typography
+                  sx={{
+                    fontSize: '1.1em',
+                  }}
+                  variant="h5"
+                >
                   <Msg id={messageIds.surveyPreview.mostRecent.header} />
                 </Typography>
                 <Typography
-                  className={styles.timestamp}
                   marginBottom={1}
                   marginTop={1}
+                  sx={{
+                    color: 'grey',
+                  }}
                 >
                   <ZUIRelativeTime datetime={mostRecent.submitted} forcePast />
                 </Typography>
@@ -98,7 +93,12 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
           </Box>
           {!!older.length && (
             <Box marginTop={2}>
-              <Typography className={styles.header} variant="h5">
+              <Typography
+                sx={{
+                  fontSize: '1.1em',
+                }}
+                variant="h5"
+              >
                 <Msg id={messageIds.surveyPreview.older.header} />
               </Typography>
               {older.map((submission) => {
@@ -109,7 +109,11 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                       display="flex"
                       justifyContent="space-between"
                     >
-                      <Typography className={styles.timestamp}>
+                      <Typography
+                        sx={{
+                          color: 'grey',
+                        }}
+                      >
                         <ZUIRelativeTime
                           datetime={submission.submitted}
                           forcePast

@@ -1,7 +1,6 @@
 import React, {
   CSSProperties,
   FC,
-  memo,
   MutableRefObject,
   ReactNode,
   RefObject,
@@ -27,12 +26,13 @@ import {
   Skeleton,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { List } from 'react-window';
-import ReactWordcloud, { OptionsProp, Word } from 'react-wordcloud';
+import { Wordcloud } from '@visx/wordcloud';
 import {
   BarChartPro,
   BarChartProPluginSignatures,
@@ -49,6 +49,7 @@ import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import { BoxOwnProps } from '@mui/system/Box/Box';
+import { scaleLog } from 'd3-scale';
 
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -63,8 +64,6 @@ import {
   TextQuestionStats,
 } from 'features/surveys/rpc/getSurveyResponseStats';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-import 'tippy.js/dist/tippy.css';
-import 'tippy.js/animations/scale.css';
 import range from 'utils/range';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 import { useMessages } from 'core/i18n';
@@ -75,6 +74,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
+import useResizeObserver from 'zui/hooks/useResizeObserver';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -531,7 +531,36 @@ const OptionsStatsCard = ({
   );
 };
 
-const WordCloud = memo(ReactWordcloud);
+interface WordData {
+  text: string;
+  value: number;
+}
+const WordCloudFixedValueGenerator = () => 0.5;
+
+/**
+ * Deterministically generate random numbers using a Linear Congruential Generator (LCG). NOT SAFE for cryptography.
+ * @param seed the initial seed
+ * @returns A pseudo-random number in the interval [0, 1]
+ */
+export function makeDeterministicRNG(seed: number) {
+  let state = seed;
+
+  // Linear Congruential Generator (LCG), Numerical Recipes parameters: https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
+  const LCG_MULTIPLIER = 1664525;
+  const LCG_INCREMENT = 1013904223;
+  const UINT32_MAX = 0xffffffff;
+
+  return function nextUniform01() {
+    // advance RNG state (32-bit wraparound)
+    state = (state * LCG_MULTIPLIER + LCG_INCREMENT) >>> 0;
+
+    return state / UINT32_MAX;
+  };
+}
+
+const wordCloudTextStyle: CSSProperties = {
+  transition: 'transform 200ms ease',
+};
 
 const TextResponseWordCloud = ({
   exportApi,
@@ -540,7 +569,7 @@ const TextResponseWordCloud = ({
   exportApi: MutableRefObject<UseChartProExportPublicApi | undefined>;
   questionStats: TextQuestionStats;
 }) => {
-  const words: Word[] = useMemo(
+  const words: WordData[] = useMemo(
     () =>
       Object.entries(questionStats.topWordFrequencies).map(
         ([word, frequency]) => ({
@@ -549,19 +578,6 @@ const TextResponseWordCloud = ({
         })
       ),
     [questionStats.topWordFrequencies]
-  );
-
-  const options: OptionsProp = useMemo(
-    () => ({
-      colors: COLORS,
-      deterministic: true,
-      fontFamily: `'AzoSansWeb', 'Helvetica Neue', Helvetica, Arial, sans-serif`,
-      fontSizes: [30, 80],
-      randomSeed: '42',
-      rotationAngles: [0, 90],
-      rotations: 2,
-    }),
-    []
   );
 
   const containerRef = useRef<HTMLDivElement>();
@@ -595,6 +611,34 @@ const TextResponseWordCloud = ({
     exportApi.current = publicAPI as UseChartProExportPublicApi;
   }, [publicAPI]);
 
+  const [width, setWidth] = useState(600);
+
+  const onResize = useCallback(
+    (elem: HTMLElement) => {
+      setWidth(elem.clientWidth);
+    },
+    [setWidth]
+  );
+
+  const getRotationDegree = useMemo(() => {
+    const rng = makeDeterministicRNG(42);
+    return () => (rng() > 0.5 ? 0 : 90);
+  }, [words, width]);
+
+  const fontScale = useMemo(() => {
+    const values = words.map((w) => w.value);
+    const fontScaleFac = 0.5 + width / 3000;
+    return scaleLog()
+      .domain([Math.min(...values), Math.max(...values)])
+      .range([20 * fontScaleFac, 70 * fontScaleFac]);
+  }, [words, width]);
+  const fontSizeSetter = useCallback(
+    (datum: WordData) => fontScale(datum.value),
+    [fontScale]
+  );
+
+  const resizeObserverRef = useResizeObserver(onResize);
+
   return (
     <Box
       sx={{
@@ -603,9 +647,52 @@ const TextResponseWordCloud = ({
         width: '100%',
       }}
     >
-      <Box ref={containerRef} style={{ height: '100%', width: '100%' }}>
+      <Box ref={containerRef} sx={{ height: '100%', width: '100%' }}>
         <ChartWrapper sx={{ height: '100%', width: '100%' }}>
-          <WordCloud options={options} words={words} />
+          <Box
+            ref={resizeObserverRef}
+            sx={{
+              cursor: 'default',
+              height: '100%',
+              userSelect: 'none',
+              width: '100%',
+            }}
+          >
+            <Wordcloud
+              font={`'AzoSansWeb', 'Helvetica Neue', Helvetica, Arial, sans-serif`}
+              fontSize={fontSizeSetter}
+              height={CHART_HEIGHT}
+              padding={2}
+              random={WordCloudFixedValueGenerator}
+              rotate={getRotationDegree}
+              spiral={'archimedean'}
+              width={width}
+              words={words}
+            >
+              {(cloudWords) =>
+                cloudWords.map((w, i) => (
+                  <Tooltip
+                    key={w.text}
+                    title={
+                      w.text &&
+                      `${w.text}: ${questionStats.topWordFrequencies[w.text]}`
+                    }
+                  >
+                    <text
+                      fill={COLORS[i % COLORS.length]}
+                      fontFamily={w.font}
+                      fontSize={w.size}
+                      style={wordCloudTextStyle}
+                      textAnchor={'middle'}
+                      transform={`translate(${w.x}, ${w.y}) rotate(${w.rotate})`}
+                    >
+                      {w.text}
+                    </text>
+                  </Tooltip>
+                ))
+              }
+            </Wordcloud>
+          </Box>
         </ChartWrapper>
       </Box>
     </Box>
