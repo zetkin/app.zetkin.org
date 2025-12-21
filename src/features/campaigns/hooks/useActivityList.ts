@@ -5,6 +5,7 @@ import useEmailActivities from './useEmailActivities';
 import useEventActivities from './useEventActivities';
 import useSurveyActivities from './useSurveyActivities';
 import useTaskActivities from './useTaskActivities';
+import useVisitAssignmentActivities from 'features/visitassignments/hooks/useVisitAssignmentActivities';
 import {
   ErrorFuture,
   IFuture,
@@ -25,6 +26,10 @@ export default function useActivityList(
     orgId,
     campId
   );
+  const visitAssignmentActivitiesFuture = useVisitAssignmentActivities(
+    orgId,
+    campId
+  );
   const taskActivitiesFuture = useTaskActivities(orgId, campId);
   const eventActivitiesFuture = useEventActivities(orgId, campId);
   const emailActivitiesFuture = useEmailActivities(orgId, campId);
@@ -32,6 +37,7 @@ export default function useActivityList(
   if (
     callAssignmentActivitiesFuture.isLoading ||
     areaAssignmentActivitiesFuture.isLoading ||
+    visitAssignmentActivitiesFuture.isLoading ||
     surveyActivitiesFuture.isLoading ||
     taskActivitiesFuture.isLoading ||
     eventActivitiesFuture.isLoading ||
@@ -41,12 +47,13 @@ export default function useActivityList(
   } else if (
     callAssignmentActivitiesFuture.error ||
     areaAssignmentActivitiesFuture.error ||
+    visitAssignmentActivitiesFuture.error ||
     surveyActivitiesFuture.error ||
     taskActivitiesFuture.error ||
     eventActivitiesFuture.error ||
     emailActivitiesFuture.error
   ) {
-    return new ErrorFuture('Error loading acitvities');
+    return new ErrorFuture('Error loading activities');
   }
 
   const activities: CampaignActivity[] = [];
@@ -54,6 +61,7 @@ export default function useActivityList(
     ...(surveyActivitiesFuture.data || []),
     ...(callAssignmentActivitiesFuture.data || []),
     ...(areaAssignmentActivitiesFuture.data || []),
+    ...(visitAssignmentActivitiesFuture.data || []),
     ...(taskActivitiesFuture.data || []),
     ...(eventActivitiesFuture.data || []),
     ...(emailActivitiesFuture.data || [])

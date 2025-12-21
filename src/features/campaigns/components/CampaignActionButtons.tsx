@@ -9,6 +9,7 @@ import {
   Event,
   HeadsetMic,
   Map,
+  MeetingRoom,
   OpenInNew,
   Settings,
   Unarchive,
@@ -31,9 +32,11 @@ import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import { Msg, useMessages } from 'core/i18n';
 import useCreateAreaAssignment from 'features/areaAssignments/hooks/useCreateAreaAssignment';
+import useCreateVisitAssignment from 'features/visitassignments/hooks/useCreateVisitAssignment';
 import useFeature from 'utils/featureFlags/useFeature';
-import { AREAS, TASKS } from 'utils/featureFlags';
+import { AREAS, VISITS, TASKS } from 'utils/featureFlags';
 import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
+import visitAssignmentMessageIds from 'features/visitassignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 enum CAMPAIGN_MENU_ITEMS {
@@ -52,9 +55,11 @@ const CampaignActionButtons: React.FunctionComponent<
 > = ({ campaign }) => {
   const campaginMessages = useMessages(campaignMessageIds);
   const areaAssignmentMessages = useMessages(areaAssignmentMessageIds);
+  const visitAssignmentMessages = useMessages(visitAssignmentMessageIds);
   const { orgId, campId } = useNumericRouteParams();
   const hasAreaAssignments = useFeature(AREAS);
   const hasTasks = useFeature(TASKS);
+  const hasVisitAssignments = useFeature(VISITS);
 
   // Dialogs
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
@@ -62,6 +67,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
 
   const createAreaAssignment = useCreateAreaAssignment(orgId, campId);
+  const createVisitAssignment = useCreateVisitAssignment(orgId);
   const createEvent = useCreateEvent(orgId);
   const { createCallAssignment, createSurvey } = useCreateCampaignActivity(
     orgId,
@@ -162,6 +168,18 @@ const CampaignActionButtons: React.FunctionComponent<
           config_id: configs[0].id,
           theme_id: themes[0].id,
           title: campaginMessages.form.createEmail.newEmail(),
+        }),
+    });
+  }
+
+  if (hasVisitAssignments) {
+    menuItems.push({
+      icon: <MeetingRoom />,
+      label: campaginMessages.createButton.createVisitAssignment(),
+      onClick: () =>
+        createVisitAssignment({
+          campaign_id: campId,
+          title: visitAssignmentMessages.default.title(),
         }),
     });
   }

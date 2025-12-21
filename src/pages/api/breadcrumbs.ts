@@ -32,6 +32,7 @@ const breadcrumbs = async (
     }
 
     const apiFetch = createApiFetch(req.headers);
+    const betaApiFetch = createApiFetch(req.headers, '/beta');
     const pathFields = pathname.split('/').slice(1);
     const breadcrumbs: BreadcrumbElement[] = [];
     const curPath = [];
@@ -46,12 +47,17 @@ const breadcrumbs = async (
           fieldName,
           fieldValue,
           orgId,
-          apiFetch
+          apiFetch,
+          betaApiFetch
         );
         elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
       } else {
-        if (field == 'callassignments' || field == 'surveys') {
+        if (
+          field == 'callassignments' ||
+          field == 'surveys' ||
+          field == 'visitassignments'
+        ) {
           curPath.push(field);
           continue;
         } else if (field == 'folders' || field == 'lists') {
@@ -78,7 +84,8 @@ async function fetchElements(
   fieldName: string,
   fieldValue: string,
   orgId: string,
-  apiFetch: ApiFetch
+  apiFetch: ApiFetch,
+  betaApiFetch: ApiFetch
 ): Promise<BreadcrumbElement[]> {
   if (fieldName === 'orgId') {
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
@@ -216,6 +223,16 @@ async function fetchElements(
       {
         href: basePath + '/' + fieldValue,
         label: email.data.title,
+      },
+    ];
+  } else if (fieldName == 'visitAssId') {
+    const assignment = await betaApiFetch(
+      `/orgs/${orgId}/visitassignments/${fieldValue}`
+    ).then((res) => res.json());
+    return [
+      {
+        href: basePath + '/' + fieldValue,
+        label: assignment.data.title,
       },
     ];
   }
