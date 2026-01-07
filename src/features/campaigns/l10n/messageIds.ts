@@ -3,6 +3,9 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.campaigns', {
+  activeCampaigns: {
+    header: m('Active projects'),
+  },
   activitiesOverview: {
     button: m('Browse all activities'),
     empty: m('Nothing on this day'),
@@ -52,11 +55,6 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
-    filterCampaigns: {
-      hideArchived: m('Hide archived projects'),
-      showArchived: m('Show archived projects'),
-    },
-    heading: m('All projects'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
@@ -66,6 +64,9 @@ export default makeMessages('feat.campaigns', {
       'If your organization has activities that do not belong to a project they will show up here.'
     ),
     viewArchive: m('View archive'),
+  },
+  archivedCampaigns: {
+    header: m('Archived projects'),
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
