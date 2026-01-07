@@ -269,6 +269,43 @@ export default makeMessages('feat.events', {
     submitButton: m('Execute'),
     title: m('Manage participants'),
   },
+  publicEventSignup: {
+    alert: {
+      error: m('Error'),
+      signupSuccessful: m('Signup successful'),
+      thankYou: m('Thank you for signing up!'),
+    },
+    errors: {
+      emailOrPhoneRequired: m('Either email or phone is required'),
+      gdprConsentRequired: m('You need to accept the terms'),
+      invalidEmail: m('Please provide a valid email'),
+      nameRequired: m('First name and last name are required'),
+      phoneFormat: m(
+        'Phone number must be in international format, e.g. +46701234567'
+      ),
+      signupError: m('An error occurred while signing up'),
+      signupFailed: m('Failed to sign up'),
+    },
+    fields: {
+      email: m('Email'),
+      firstName: m('First name'),
+      lastName: m('Last name'),
+      phone: m('Phone'),
+    },
+    info: {
+      description: m(
+        'Enter your name at least one way for organizers to contact you.'
+      ),
+      title: m('Time to sign up'),
+    },
+    privacyPolicy: m<{ organization: string }>(
+      'When you sign up to an event, the information you provide will be stored and processed in Zetkin by My Organization in order to organize activism and in accordance with the Zetkin privacy policy.'
+    ),
+    submit: {
+      button: m('Sign up'),
+      submitting: m('Submitting...'),
+    },
+  },
   search: m('Search'),
   state: {
     cancelled: m('Cancelled'),
