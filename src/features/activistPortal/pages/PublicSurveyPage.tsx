@@ -33,8 +33,8 @@ import ZUILink from 'zui/components/ZUILink';
 import ZUIPublicSurveyOption from 'zui/components/ZUIPublicSurveyOption';
 import ZUIText from 'zui/components/ZUIText';
 import ZUITextField from 'zui/components/ZUITextField';
-import { submit } from '../actions/submit';
-import messageIds from '../l10n/messageIds';
+import { submit } from 'features/surveys/actions/submit';
+import messageIds from 'features/surveys/l10n/messageIds';
 
 type PublicSurveyPageProps = {
   survey: ZetkinSurveyExtended;

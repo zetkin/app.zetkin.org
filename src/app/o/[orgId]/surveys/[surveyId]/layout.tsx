@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import PublicSurveyLayout from 'features/surveys/layouts/PublicSurveyLayout';
+import PublicSurveyLayout from 'features/activistPortal/layouts/PublicSurveyLayout';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import { ApiClientError } from 'core/api/errors';
 import { getSeoTags } from 'utils/seoTags';

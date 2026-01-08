@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/emails/l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { Msg, useMessages } from 'core/i18n';
 

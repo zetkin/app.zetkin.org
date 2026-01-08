@@ -1,13 +1,13 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useMemo } from 'react';
 
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
 import useUpcomingOrgEvents from './useUpcomingOrgEvents';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { getGeoJSONFeaturesAtLocations } from '../../map/utils/locationFiltering';
+import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
-import { filtersUpdated } from '../store';
+import { filtersUpdated } from 'features/organizations/store';
 
 export default function useFilteredOrgEvents(orgId: number) {
   const orgEvents = useUpcomingOrgEvents(orgId);

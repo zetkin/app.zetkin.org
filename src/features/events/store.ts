@@ -15,7 +15,7 @@ import {
   ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
 
 export enum ACTION_FILTER_OPTIONS {
   CONTACT_MISSING = 'missing',

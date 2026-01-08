@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/organizations/l10n/messageIds';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIButton from 'zui/components/ZUIButton';
 
