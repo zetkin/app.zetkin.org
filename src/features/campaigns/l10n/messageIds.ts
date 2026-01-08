@@ -45,6 +45,7 @@ export default makeMessages('feat.campaigns', {
     },
   },
   all: {
+    campaignFilterPlaceholder: m('Type to filter projects'),
     cardCTA: m('Go to project'),
     create: m('Create new project'),
     filter: {

@@ -1,7 +1,9 @@
+import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Suspense } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Suspense, useMemo, useState } from 'react';
+import { Box, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Close, Search } from '@mui/icons-material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -49,21 +51,39 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const { orgId } = useNumericRouteParams();
   const campaigns = useCampaigns(orgId).data || [];
   campaigns.reverse();
+  const [searchString, setSearchString] = useState('');
 
   const onServer = useServerSide();
   const surveys = useSurveys(orgId).data ?? [];
 
+  const search = () => {
+    const fuse = new Fuse(campaigns, {
+      keys: ['title', 'info_text'],
+      threshold: 0.4,
+    });
+
+    return fuse.search(searchString).map((fuseResult) => fuseResult.item);
+  };
+
+  const campaignsThatMatchSearch = useMemo(() => search(), [searchString]);
+
   if (onServer) {
     return null;
   }
+
   //The shared card is currently only visible when there are shared surveys, but there will be more shared activities in the future.
   const sharedSurveys = surveys.filter(
     (survey) =>
       survey.org_access === 'suborgs' && survey.organization.id != orgId
   );
 
-  const archivedCampaigns = campaigns.filter((campaign) => campaign.archived);
-  const activeCampaigns = campaigns.filter((campaign) => !campaign.archived);
+  const archivedCampaigns = searchString
+    ? campaignsThatMatchSearch.filter((campaign) => campaign.archived)
+    : campaigns.filter((campaign) => campaign.archived);
+
+  const activeCampaigns = searchString
+    ? campaignsThatMatchSearch.filter((campaign) => !campaign.archived)
+    : campaigns.filter((campaign) => !campaign.archived);
 
   return (
     <>
@@ -73,6 +93,26 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
       <Suspense>
         <ActivitiesOverview orgId={orgId} />
       </Suspense>
+      <TextField
+        onChange={(evt) => {
+          setSearchString(evt.target.value);
+        }}
+        placeholder={messages.all.campaignFilterPlaceholder()}
+        slotProps={{
+          input: {
+            endAdornment: searchString ? (
+              <IconButton onClick={() => setSearchString('')}>
+                <Close color="secondary" />
+              </IconButton>
+            ) : undefined,
+            startAdornment: (
+              <Search color="secondary" sx={{ marginRight: 1 }} />
+            ),
+          },
+        }}
+        value={searchString}
+        variant="outlined"
+      />
       <Box component="section" mt={4}>
         <Box
           component="header"
