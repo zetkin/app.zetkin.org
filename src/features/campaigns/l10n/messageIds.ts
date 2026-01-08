@@ -69,6 +69,10 @@ export default makeMessages('feat.campaigns', {
   },
   archivedCampaigns: {
     header: m('Archived'),
+    hideShowButton: {
+      hide: m('Hide archived projects'),
+      show: m('Show archived projects'),
+    },
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),

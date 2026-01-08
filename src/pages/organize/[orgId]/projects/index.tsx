@@ -2,7 +2,14 @@ import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Suspense, useMemo, useState } from 'react';
-import { Box, Grid, IconButton, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
@@ -52,6 +59,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   const campaigns = useCampaigns(orgId).data || [];
   campaigns.reverse();
   const [searchString, setSearchString] = useState('');
+  const [showArchived, setShowArchived] = useState(false);
 
   const onServer = useServerSide();
   const surveys = useSurveys(orgId).data ?? [];
@@ -132,6 +140,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'space-between',
+            paddingBottom: 1,
           }}
         >
           <Typography mb={2} variant="h5">
@@ -158,19 +167,35 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'space-between',
+            paddingBottom: 1,
           }}
         >
           <Typography mb={2} variant="h5">
             <Msg id={messageIds.archivedCampaigns.header} />
           </Typography>
+          <Button
+            onClick={() => {
+              setShowArchived(!showArchived);
+            }}
+          >
+            <Msg
+              id={
+                showArchived
+                  ? messageIds.archivedCampaigns.hideShowButton.hide
+                  : messageIds.archivedCampaigns.hideShowButton.show
+              }
+            />
+          </Button>
         </Box>
-        <Grid container spacing={2}>
-          {archivedCampaigns.map((campaign) => (
-            <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
-              <CampaignCard campaign={campaign} />
-            </Grid>
-          ))}
-        </Grid>
+        {showArchived && (
+          <Grid container spacing={2}>
+            {archivedCampaigns.map((campaign) => (
+              <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
+                <CampaignCard campaign={campaign} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
     </>
   );
