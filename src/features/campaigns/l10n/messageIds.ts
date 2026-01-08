@@ -4,7 +4,7 @@ import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.campaigns', {
   activeCampaigns: {
-    header: m('Active projects'),
+    header: m('Active'),
   },
   activitiesOverview: {
     button: m('Browse all activities'),
@@ -56,6 +56,7 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
+    header: m('Projects'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
@@ -67,7 +68,7 @@ export default makeMessages('feat.campaigns', {
     viewArchive: m('View archive'),
   },
   archivedCampaigns: {
-    header: m('Archived projects'),
+    header: m('Archived'),
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),

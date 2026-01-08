@@ -93,26 +93,38 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
       <Suspense>
         <ActivitiesOverview orgId={orgId} />
       </Suspense>
-      <TextField
-        onChange={(evt) => {
-          setSearchString(evt.target.value);
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingTop: 8,
         }}
-        placeholder={messages.all.campaignFilterPlaceholder()}
-        slotProps={{
-          input: {
-            endAdornment: searchString ? (
-              <IconButton onClick={() => setSearchString('')}>
-                <Close color="secondary" />
-              </IconButton>
-            ) : undefined,
-            startAdornment: (
-              <Search color="secondary" sx={{ marginRight: 1 }} />
-            ),
-          },
-        }}
-        value={searchString}
-        variant="outlined"
-      />
+      >
+        <Typography variant="h4">
+          <Msg id={messageIds.all.header} />
+        </Typography>
+        <TextField
+          onChange={(evt) => {
+            setSearchString(evt.target.value);
+          }}
+          placeholder={messages.all.campaignFilterPlaceholder()}
+          slotProps={{
+            input: {
+              endAdornment: searchString ? (
+                <IconButton onClick={() => setSearchString('')}>
+                  <Close color="secondary" />
+                </IconButton>
+              ) : undefined,
+              startAdornment: (
+                <Search color="secondary" sx={{ marginRight: 1 }} />
+              ),
+            },
+          }}
+          value={searchString}
+          variant="outlined"
+        />
+      </Box>
       <Box component="section" mt={4}>
         <Box
           component="header"
@@ -122,7 +134,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             justifyContent: 'space-between',
           }}
         >
-          <Typography mb={2} variant="h4">
+          <Typography mb={2} variant="h5">
             <Msg id={messageIds.activeCampaigns.header} />
           </Typography>
         </Box>
@@ -148,7 +160,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             justifyContent: 'space-between',
           }}
         >
-          <Typography mb={2} variant="h4">
+          <Typography mb={2} variant="h5">
             <Msg id={messageIds.archivedCampaigns.header} />
           </Typography>
         </Box>
