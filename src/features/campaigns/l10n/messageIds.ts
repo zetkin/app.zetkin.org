@@ -236,6 +236,12 @@ export default makeMessages('feat.campaigns', {
     noActivities: m('There are no activities in this project yet.'),
     noSearchResults: m('Your filtering yielded no results.'),
     showPublicPage: m('Show public sign-up page'),
+    status: {
+      archived: m('Archived'),
+      draft: m('Draft'),
+      private: m('Private'),
+      public: m('Public'),
+    },
     viewArchive: m('View archive'),
   },
   taskLayout: {
