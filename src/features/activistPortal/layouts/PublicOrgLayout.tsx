@@ -7,10 +7,10 @@ import { CalendarMonth, NorthWest } from '@mui/icons-material';
 import NextLink from 'next/link';
 
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/organizations/l10n/messageIds';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
-import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
+import ActivistPortalHeader from 'features/activistPortal/components/ActivistPortalHeader';
 import ZUIButton from 'zui/components/ZUIButton';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
@@ -18,7 +18,7 @@ import FollowUnfollowLoginButton from '../components/ActivistPortalHeader/Follow
 import EventMapLayout from './EventMapLayout';
 import usePublicSubOrgs from '../hooks/usePublicSubOrgs';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from '../store';
+import { filtersUpdated } from 'features/organizations/store';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 

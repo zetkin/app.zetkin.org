@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { headers } from 'next/headers';
 
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
-import PublicOrgLayout from 'features/organizations/layouts/PublicOrgLayout';
+import PublicOrgLayout from 'features/activistPortal/layouts/PublicOrgLayout';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';

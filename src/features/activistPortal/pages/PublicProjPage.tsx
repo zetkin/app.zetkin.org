@@ -7,9 +7,9 @@ import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
 
-import EventListItem from 'features/home/components/EventListItem';
-import { ZetkinEventWithStatus } from 'features/home/types';
-import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
+import EventListItem from 'features/activistPortal/components/EventListItem';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
+import useIncrementalDelay from 'features/activistPortal/hooks/useIncrementalDelay';
 import ZUIDate from 'zui/ZUIDate';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
@@ -17,15 +17,15 @@ import { Msg, useMessages } from 'core/i18n';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
-import ZUIButton from '../../../zui/components/ZUIButton';
-import ZUIDrawerModal from '../../../zui/components/ZUIDrawerModal';
-import { getContrastColor } from '../../../utils/colorUtils';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
+import { getContrastColor } from 'utils/colorUtils';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import useFilteredCampaignEvents from '../hooks/useFilteredCampaignEvents';
-import NoEventsBlurb from 'features/organizations/components/NoEventsBlurb';
-import { filtersUpdated } from '../store';
-import messageIds from '../l10n/messageIds';
-import useCampaign from '../hooks/useCampaign';
+import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
+import NoEventsBlurb from 'features/activistPortal/components/NoEventsBlurb';
+import { filtersUpdated } from 'features/campaigns/store';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import useCampaign from 'features/campaigns/hooks/useCampaign';
 import orgMessageIds from 'features/organizations/l10n/messageIds';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { useApiClient, useAppSelector } from 'core/hooks';
 import useRemoteList from 'core/hooks/useRemoteList';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { orgEventsLoad, orgEventsLoaded } from '../store';
+import { orgEventsLoad, orgEventsLoaded } from 'features/organizations/store';
 
 export default function useUpcomingOrgEvents(orgId: number): ZetkinEvent[] {
   const apiClient = useApiClient();

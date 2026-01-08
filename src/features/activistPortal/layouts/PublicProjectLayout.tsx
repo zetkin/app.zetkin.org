@@ -9,12 +9,12 @@ import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import useFilteredCampaignEvents from 'features/campaigns/hooks/useFilteredCampaignEvents';
-import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
-import EventMapLayout from 'features/organizations/layouts/EventMapLayout';
+import ActivistPortalHeader from 'features/activistPortal/components/ActivistPortalHeader';
+import EventMapLayout from 'features/activistPortal/layouts/EventMapLayout';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from '../store';
+import { filtersUpdated } from 'features/campaigns/store';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 

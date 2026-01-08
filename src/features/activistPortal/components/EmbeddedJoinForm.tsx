@@ -9,11 +9,14 @@ import { FC, useEffect } from 'react';
 // @ts-ignore
 import { useFormState } from 'react-dom';
 
-import { EmbeddedJoinFormData, EmbeddedJoinFormStatus } from '../types';
+import {
+  EmbeddedJoinFormData,
+  EmbeddedJoinFormStatus,
+} from 'features/joinForms/types';
 import { Msg, useMessages } from 'core/i18n';
 import globalMessageIds from 'core/i18n/messageIds';
-import submitJoinForm from '../actions/submitEmbeddedJoinForm';
-import messageIds from '../l10n/messageIds';
+import submitJoinForm from 'features/joinForms/actions/submitEmbeddedJoinForm';
+import messageIds from 'features/joinForms/l10n/messageIds';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 
 type Props = {

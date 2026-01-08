@@ -3,7 +3,7 @@ import useRemoteList from 'core/hooks/useRemoteList';
 import { allEventsLoad, allEventsLoaded } from '../store';
 import getAllEvents from '../rpc/getAllEvents';
 import sortEventsByStartTime from '../utils/sortEventsByStartTime';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
 import useMyEvents from './useMyEvents';
 
 export default function useAllEvents() {

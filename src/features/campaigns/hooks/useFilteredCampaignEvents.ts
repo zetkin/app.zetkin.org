@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
 import useMyEvents from 'features/events/hooks/useMyEvents';
 import useUpcomingCampaignEvents from './useUpcomingCampaignEvents';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
 import { getGeoJSONFeaturesAtLocations } from 'features/map/utils/locationFiltering';
 import { useEventTypeFilter } from 'features/events/hooks/useEventTypeFilter';
 import { filtersUpdated } from '../store';
