@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -60,6 +60,14 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
   campaigns.reverse();
   const [searchString, setSearchString] = useState('');
   const [showArchived, setShowArchived] = useState(false);
+
+  const archivedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (archivedRef.current) {
+      archivedRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showArchived]);
 
   const onServer = useServerSide();
   const surveys = useSurveys(orgId).data ?? [];
@@ -188,7 +196,7 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
           </Button>
         </Box>
         {showArchived && (
-          <Grid container spacing={2}>
+          <Grid ref={archivedRef} container spacing={2}>
             {archivedCampaigns.map((campaign) => (
               <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
                 <CampaignCard campaign={campaign} />
