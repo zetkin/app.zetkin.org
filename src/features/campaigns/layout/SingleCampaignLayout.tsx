@@ -11,32 +11,7 @@ import useCampaign from '../hooks/useCampaign';
 import useCampaignEvents from '../hooks/useCampaignEvents';
 import { useNumericRouteParams } from 'core/hooks';
 import { Msg, useMessages } from 'core/i18n';
-import { ZetkinCampaign } from 'utils/types/zetkin';
-import oldTheme from 'theme';
-
-enum CampaignStatus {
-  ARCHIVED = 'archived',
-  DRAFT = 'draft',
-  PRIVATE = 'private',
-  PUBLIC = 'public',
-}
-
-const getCampaignStatus = (campaign: ZetkinCampaign): CampaignStatus => {
-  if (campaign.archived) {
-    return CampaignStatus.ARCHIVED;
-  }
-
-  if (!campaign.published) {
-    return CampaignStatus.DRAFT;
-  }
-
-  if (campaign.visibility == 'open') {
-    return CampaignStatus.PUBLIC;
-  }
-
-  //Campaign visibility must be "hidden"
-  return CampaignStatus.PRIVATE;
-};
+import CampaignStatusChip from '../components/CampaignStatusChip';
 
 interface SingleCampaignLayoutProps {
   children: React.ReactNode;
@@ -54,18 +29,9 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
 
   const campaign = campaignFuture.data;
 
-  const colors: Record<CampaignStatus, string> = {
-    archived: oldTheme.palette.grey[500],
-    draft: oldTheme.palette.grey[500],
-    private: oldTheme.palette.statusColors.blue,
-    public: oldTheme.palette.success.main,
-  };
-
   if (!campaign) {
     return null;
   }
-
-  const status = getCampaignStatus(campaign);
 
   return (
     <TabbedLayout
@@ -75,20 +41,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
       fixedHeight={fixedHeight}
       subtitle={
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-          <Box
-            sx={{
-              alignItems: 'center',
-              backgroundColor: colors[status],
-              borderRadius: '2em',
-              color: 'white',
-              display: 'inline-flex',
-              fontSize: 14,
-              fontWeight: 'bold',
-              padding: '0.5em 0.7em',
-            }}
-          >
-            <Msg id={messageIds.singleProject.status[status]} />
-          </Box>
+          <CampaignStatusChip campaign={campaign} />
           <Box>
             {firstEvent && lastEvent ? (
               <>

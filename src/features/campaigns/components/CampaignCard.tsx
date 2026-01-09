@@ -11,6 +11,7 @@ import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinCampaign } from 'utils/types/zetkin';
+import CampaignStatusChip from './CampaignStatusChip';
 
 interface CampaignCardProps {
   campaign: ZetkinCampaign;
@@ -27,6 +28,7 @@ const CampaignCard = ({ campaign }: CampaignCardProps): JSX.Element => {
           {title}
         </Typography>
         {/*TODO: labels for calls and surveys*/}
+        <CampaignStatusChip campaign={campaign} />
       </CardContent>
       <CardActions sx={{ paddingBottom: 2, paddingLeft: 2 }}>
         <NextLink
