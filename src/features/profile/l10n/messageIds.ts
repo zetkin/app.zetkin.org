@@ -33,9 +33,7 @@ export default makeMessages('feat.profile', {
     addNoteButton: m('Add note'),
     cancelButton: m('Cancel'),
     note: {
-      author: m<{ authorName: JSX.Element; howLongAgo: JSX.Element }>(
-        '{authorName} added a note {howLongAgo}'
-      ),
+      author: m<{ authorName: JSX.Element }>('{authorName} added a note'),
       delete: m('Delete'),
       deleteWarningDescription: m<{ name: string }>(
         'Are you sure you want to delete this note about {name}? Deleting a note cannot be undone.'

@@ -111,7 +111,7 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2,
+                gap: 1,
                 padding: 1,
               }}
             >
@@ -122,30 +122,43 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
                   justifyContent: 'space-between',
                 }}
               >
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    gap: 2,
+                  }}
+                >
                   <Avatar
                     src={`/api/orgs/${orgId}/people/${note.author.id}/avatar`}
+                    sx={{ height: 32, width: 32 }}
                   />
-                  <Typography noWrap>
-                    <Msg
-                      id={messageIds.notes.note.author}
-                      values={{
-                        authorName: (
-                          <Typography component="span" variant="h6">
-                            {note.author.name}
-                          </Typography>
-                        ),
-                        howLongAgo: (
-                          <Typography color="secondary" component="span">
-                            <ZUIRelativeTime
-                              //Adding a "Z" here because timestamp from server is in GMT
-                              datetime={note.created + 'Z'}
-                            />
-                          </Typography>
-                        ),
-                      }}
-                    />
-                  </Typography>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <Typography noWrap sx={{ marginRight: 1 }}>
+                      <Msg
+                        id={messageIds.notes.note.author}
+                        values={{
+                          authorName: (
+                            <Typography component="span" variant="h6">
+                              {note.author.name}
+                            </Typography>
+                          ),
+                        }}
+                      />
+                    </Typography>
+                    <Typography color="secondary" component="span">
+                      <ZUIRelativeTime
+                        //Adding a "Z" here because timestamp from server is in GMT
+                        datetime={note.created + 'Z'}
+                      />
+                    </Typography>
+                  </Box>
                 </Box>
                 <ZUIEllipsisMenu
                   items={[
@@ -166,7 +179,7 @@ const PersonNotes: FC<Props> = ({ orgId, person }) => {
                   ]}
                 />
               </Box>
-              <Box sx={{ paddingLeft: 7 }}>
+              <Box sx={{ paddingLeft: 6 }}>
                 <Typography>{note.text}</Typography>
               </Box>
             </Box>
