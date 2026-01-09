@@ -25,7 +25,7 @@ export interface ZetkinCampaign {
     id: number;
     name: string;
   };
-  visibility: string;
+  visibility: 'hidden' | 'open';
   published: boolean;
 }
 

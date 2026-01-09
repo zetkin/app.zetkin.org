@@ -17,7 +17,7 @@ const ReferendumSignatureCollection: ZetkinCampaign = {
   organization: KPD,
   published: true,
   title: 'Deutsche Wohnen Enteignen Signatures Collection',
-  visibility: 'private',
+  visibility: 'hidden',
 };
 
 export default ReferendumSignatureCollection;

@@ -22,7 +22,7 @@ const WelcomeNewMembers: ZetkinCampaign = {
   organization: KPD,
   published: true,
   title: 'Welcome new members',
-  visibility: 'public',
+  visibility: 'open',
 };
 
 export default WelcomeNewMembers;

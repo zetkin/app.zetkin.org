@@ -1,7 +1,16 @@
+import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Suspense, useState } from 'react';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { Close, Search } from '@mui/icons-material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -47,21 +56,50 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 const AllCampaignsSummaryPage: PageWithLayout = () => {
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
-  const { data: campaigns } = useCampaigns(orgId);
+  const campaigns = useCampaigns(orgId).data || [];
+  campaigns.reverse();
+  const [searchString, setSearchString] = useState('');
   const [showArchived, setShowArchived] = useState(false);
-  campaigns?.reverse();
+
+  const archivedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (archivedRef.current) {
+      archivedRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showArchived]);
 
   const onServer = useServerSide();
   const surveys = useSurveys(orgId).data ?? [];
 
+  const search = () => {
+    const fuse = new Fuse(campaigns, {
+      keys: ['title', 'info_text'],
+      threshold: 0.4,
+    });
+
+    return fuse.search(searchString).map((fuseResult) => fuseResult.item);
+  };
+
+  const campaignsThatMatchSearch = useMemo(() => search(), [searchString]);
+
   if (onServer) {
     return null;
   }
+
   //The shared card is currently only visible when there are shared surveys, but there will be more shared activities in the future.
   const sharedSurveys = surveys.filter(
     (survey) =>
       survey.org_access === 'suborgs' && survey.organization.id != orgId
   );
+
+  const archivedCampaigns = searchString
+    ? campaignsThatMatchSearch.filter((campaign) => campaign.archived)
+    : campaigns.filter((campaign) => campaign.archived);
+
+  const activeCampaigns = searchString
+    ? campaignsThatMatchSearch.filter((campaign) => !campaign.archived)
+    : campaigns.filter((campaign) => !campaign.archived);
 
   return (
     <>
@@ -71,6 +109,38 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
       <Suspense>
         <ActivitiesOverview orgId={orgId} />
       </Suspense>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingTop: 8,
+        }}
+      >
+        <Typography variant="h4">
+          <Msg id={messageIds.all.header} />
+        </Typography>
+        <TextField
+          onChange={(evt) => {
+            setSearchString(evt.target.value);
+          }}
+          placeholder={messages.all.campaignFilterPlaceholder()}
+          slotProps={{
+            input: {
+              endAdornment: searchString ? (
+                <IconButton onClick={() => setSearchString('')}>
+                  <Close color="secondary" />
+                </IconButton>
+              ) : undefined,
+              startAdornment: (
+                <Search color="secondary" sx={{ marginRight: 1 }} />
+              ),
+            },
+          }}
+          value={searchString}
+          variant="outlined"
+        />
+      </Box>
       <Box component="section" mt={4}>
         <Box
           component="header"
@@ -78,37 +148,62 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'space-between',
+            paddingBottom: 1,
           }}
         >
-          <Typography mb={2} variant="h4">
-            <Msg id={messageIds.all.heading} />
+          <Typography mb={2} variant="h5">
+            <Msg id={messageIds.activeCampaigns.header} />
           </Typography>
-          <Button onClick={() => setShowArchived(!showArchived)} variant="text">
-            <Msg
-              id={
-                showArchived
-                  ? messageIds.all.filterCampaigns.hideArchived
-                  : messageIds.all.filterCampaigns.showArchived
-              }
-            />
-            {}
-          </Button>
         </Box>
-
         <Grid container spacing={2}>
           {sharedSurveys.length > 0 && (
             <Grid size={{ lg: 3, md: 4, xs: 12 }}>
               <SharedCard />
             </Grid>
           )}
-          {campaigns?.map((campaign) =>
-            campaign.archived && !showArchived ? null : (
+          {activeCampaigns.map((campaign) => (
+            <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
+              <CampaignCard campaign={campaign} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      <Box component="section" mt={4}>
+        <Box
+          component="header"
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingBottom: 1,
+          }}
+        >
+          <Typography mb={2} variant="h5">
+            <Msg id={messageIds.archivedCampaigns.header} />
+          </Typography>
+          <Button
+            onClick={() => {
+              setShowArchived(!showArchived);
+            }}
+          >
+            <Msg
+              id={
+                showArchived
+                  ? messageIds.archivedCampaigns.hideShowButton.hide
+                  : messageIds.archivedCampaigns.hideShowButton.show
+              }
+            />
+          </Button>
+        </Box>
+        {showArchived && (
+          <Grid ref={archivedRef} container spacing={2}>
+            {archivedCampaigns.map((campaign) => (
               <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
                 <CampaignCard campaign={campaign} />
               </Grid>
-            )
-          )}
-        </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
     </>
   );

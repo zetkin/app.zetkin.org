@@ -3,6 +3,9 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n/messages';
 
 export default makeMessages('feat.campaigns', {
+  activeCampaigns: {
+    header: m('Active'),
+  },
   activitiesOverview: {
     button: m('Browse all activities'),
     empty: m('Nothing on this day'),
@@ -42,6 +45,7 @@ export default makeMessages('feat.campaigns', {
     },
   },
   all: {
+    campaignFilterPlaceholder: m('Type to filter projects'),
     cardCTA: m('Go to project'),
     create: m('Create new project'),
     filter: {
@@ -52,11 +56,7 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
-    filterCampaigns: {
-      hideArchived: m('Hide archived projects'),
-      showArchived: m('Show archived projects'),
-    },
-    heading: m('All projects'),
+    header: m('Projects'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
@@ -66,6 +66,13 @@ export default makeMessages('feat.campaigns', {
       'If your organization has activities that do not belong to a project they will show up here.'
     ),
     viewArchive: m('View archive'),
+  },
+  archivedCampaigns: {
+    header: m('Archived'),
+    hideShowButton: {
+      hide: m('Hide archived projects'),
+      show: m('Show archived projects'),
+    },
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
@@ -229,6 +236,12 @@ export default makeMessages('feat.campaigns', {
     noActivities: m('There are no activities in this project yet.'),
     noSearchResults: m('Your filtering yielded no results.'),
     showPublicPage: m('Show public sign-up page'),
+    status: {
+      archived: m('Archived'),
+      draft: m('Draft'),
+      private: m('Private'),
+      public: m('Public'),
+    },
     viewArchive: m('View archive'),
   },
   taskLayout: {
