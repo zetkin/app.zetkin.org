@@ -130,6 +130,7 @@ export default function mockState(overrides?: RootState) {
     },
     profiles: {
       fieldsList: remoteList(),
+      notesByPersonId: {},
       orgsByPersonId: {},
       personById: {},
     },
