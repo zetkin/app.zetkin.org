@@ -80,6 +80,12 @@ feat:
           add: Beauftragte:n hinzufügen
           none: Keine Beauftragten
           title: Beauftragte
+        stats:
+          households: '{numHouseholds, plural, one {Household visited} nicht {Households
+            visited}}'
+          locations: '{numLocations, plural, one {Location} nicht {Locations}}'
+          successful: '{numSuccessfulVisits, plural, one {Successful visit} nicht
+            {Successful visits}}'
       filter:
         assignees:
           assigned: Nur zugewiesene Gebiete
@@ -112,8 +118,14 @@ feat:
           label: Ortsmarkierungen
           options:
             altDescriptions:
+              areaMarkerAssignee: Zentriere Gebietsbeauftragte
+              areaMarkerAssignmentProgreess: Zentriere Gebietsfortschritt
+              areaMarkerHidden: Zentriere versteckte Gebiete
+              areaMarkerHouseholds: Zentriere Haushalte des Gebiets
+              locationDot: Punkt Option
               locationHidden: Verstecke Option
               locationHouseholds: Haushalte-Optionen
+              locationProgress: Fortschritt Option
             dot: Punkt
             hidden: Versteckt
             households: Haushalte
@@ -151,11 +163,34 @@ feat:
       delete:
         cancel: Abbrechen
         confirm: Bestätigen
+        deleteWarningText: Wenn Du {title} löschen möchtest, musst Du eine andere
+          Auswahlmöglichkeit festlegen, die definiert, ob der Besuch erfolgreich
+          war.
+        dialog: Bist du wirklich sicher, dass die diese Frage löschen möchtest? Diese
+          Aktion ist dauerhaft und kann rückgängig gemacht werden.
+        select: Auswählen
       lockCard:
+        add: Fragen hinzufügen
+        change: Fragen verändern, die einen erfolgreichen Besuch definiert
+        description: Die Aufgabe hat begonnen. Die Aufgabe jetzt zu verändern, kann
+          Probleme mit den Daten verursachen. Vorsicht beim Weitermachen.
+        descriptionUnlock: Bitte achte darauf, keine Änderungen vorzunehmen, die zum
+          Verlust oder Beschädigung von Daten führen könnten.
+        fix: Rechtsschreibung verbessern
+        header: Bericht gesperrt
+        headerUnlock: Bericht entsperrt
+        rename: Fragen so neu formulieren, damit sie eine andere Bedeutung bekommen
         safe: Sicher
         unsafe: Unsicher
       metricCard:
+        choice: Auswahlfrage
+        ratingDescription: Die*der Beauftragte antwortet mit einer Bewertung von 1 bis 5
         save: Speichern
+        scale: Frage skalieren
+      successCard:
+        header: Erfolgreicher Besuch
+      toolBar:
+        title: Füge Fragen für deinen Haustüreinsatz hinzu
   areas:
     areas:
       areaSettings:
@@ -164,8 +199,11 @@ feat:
           cancelButton: Rückgängig
           editButton: Bearbeiten
           saveButton: Speichern
+        tags:
+          title: Schlagworte für das Gebiet
       controlLabels:
         filters: Filter
+        layers: Datenvisualisierung
         select: Auswählen
       default:
         description: Leere Beschreibung
@@ -177,6 +215,9 @@ feat:
       filter:
         addFilterButton: Filter hinzufügen
         openFiltersButton: Filter
+        ungroupedTagsLabel: Ungruppierte Schlagworte
+    page:
+      title: Geografie
   breadcrumbs:
     elements:
       activities: Aktivitäten
@@ -210,6 +251,7 @@ feat:
       settings: Einstellungen
       shared: Geteilt mit uns
       submissions: Teilnahmen
+      suborgOverview: Übersicht über Unterorganisation
       surveys: Umfragen
       tags: Tags
       tasks: Aufgaben
@@ -294,9 +336,54 @@ feat:
     showMore: Mehr
     today: Heute
   call:
+    about:
+      events: '{numEvents} Veranstaltungen'
+      noParticipation: '{name} hat bislang an keinen Veranstaltungen teilgenommen.'
+      participation: '{name} hat an {events} teilgenommen, zuletzt an {titleAndTime}'
+      previousActivityHeader: Frühere Aktivitäten
+      tagsHeader: Schlagworte
+      title: Über {name}
+    activities:
+      description: Du handelst für {name}
+      filters:
+        basic:
+          alreadyIn: Bereits in
+          events: Veranstaltungen
+          surveys: Umfragen
+          thisCall: Dieser Anruf
+        events:
+          thisWeek: Diese Woche
+          today: Heute
+          tomorrow: Morgen
+        organizations:
+          noSelected: Verbandsebenen
+          selected: '{numOrgs} Organisationen'
+        projects:
+          noSelected: Kontext
+          selected: Projekte
+      projects:
+        wihoutProjectLabel: Kein Projekt
+      title: Aktivitäten
+    callLog:
+      openCallLogButton: Anrufliste
+      previousCall:
+        logNew: Anderen Anruf erfassen
+      searchLabel: Tippe, um zu suchen
+      title: Anrufliste
+      unfinishedCall:
+        abandon: Auflegen
+        switch: Wechseln zu
     callingInfo:
+      title: Wie ich mit Zetkin anrufe
       tutorial:
+        call:
+          description: Du kannst über ein eigenes Telefon oder über den Browser anrufen.
+          title: Mache den Anruf
         oldCalls:
+          description: Wenn du auf die Schaltfläche „Anrufprotokoll“ klickst, kannst du
+            einen neuen Anruf mit einer Person melden, die du zuvor angerufen
+            hast. Dies ist besonders nützlich, wenn dich diese Person
+            zurückruft.
           title: Bisherige Anrufe
         personInfo:
           description: Du siehst die bisherigen Aktivitäten der Person und Details auf der
@@ -317,7 +404,7 @@ feat:
       title: Ein unerwarteter Fehler ist aufgetreten.
     header:
       primaryButton:
-        undefined: Anrufen
+        undefined: Nächster Anruf
       secondaryButton:
         undefined: Beenden
     instructions:
@@ -464,7 +551,7 @@ feat:
   callAssignments:
     actions:
       delete: Löschen
-      end: Aufgabe beenden
+      end: Telefonaktion deaktivieren
       move: Bewegen
       start: Aufgabe starten
       warning: '"{title}" wird gelöscht.'
@@ -486,12 +573,11 @@ feat:
       title: Bewege Zuweisung
     callers:
       actions:
-        customize: Warteschlange anpassen
+        customize: Zielpersonen filtern
         remove: Von Aufgabe entfernen
       add:
         alreadyAdded: Bereits hinzugefügt
-        placeholder: Beginne zu tippen, um zu suchen oder eine_n neue_n Anrufer_in
-          hinzuzufügen.
+        placeholder: Hier tippen, um zu suchen oder eine_n neue_n Anrufer_in hinzuzufügen.
       customize:
         exclude:
           h: Ausgeschlossene Schlagworte
@@ -499,8 +585,8 @@ feat:
         prioritize:
           h: Priorisierte Schlagworte
           intro: Als Erstes Zielpersonen mit diesen Schlagworten anrufen.
-        title: Warteschlange anpassen für {name}
-      customizeButton: Anpassen
+        title: Zielpersonen filtern für {name}
+      customizeButton: Zielpersonen filtern
       excludedTagsColumn: Ausgeschlossene Schlagworte
       nameColumn: Name
       prioritizedTagsColumn: Priorisierte Schlagworte
@@ -563,7 +649,7 @@ feat:
     targets:
       defineButton: Definiere Zielgruppe
       editButton: Bearbeite Zielgruppe
-      subtitle: Benutze Intelligente Suche um Zielgruppe zu definieren.
+      subtitle: Definiere die Zielgruppe mit Intelligenter Suche.
       title: Zielpersonen
   campaigns:
     activitiesOverview:
@@ -573,6 +659,9 @@ feat:
       extraActivities: + {numExtra} mehr
       goToActivities: Zeige alle anstehenden Aktivitäten.
       noActivities: Keine Aktivitäten diese Woche.
+      noDescription:
+        addOneNow: Beschreibung hinzufügen
+        text: Das Projekt hat noch keine Beschreibung.
       nothingTomorrow: Morgen ist frei!
       startsTomorrow: startet morgen
       subtitles:
@@ -738,6 +827,13 @@ feat:
         insights: Statistiken
         summary: Überblick
     tasks: Aufgaben
+    urlCard:
+      nowAccepting: Jetzt offen für Anmeldungen unter diesem Link
+      open: Offen für Anmeldungen
+      preview: Projektvorschau
+      previewPortal: Projektvorschau im Aktiven-Portal
+      visitPortal: Anmeldeseite des Projekts anzeigen
+      willAccept: Anmeldung über diesen Link
   canvass:
     default:
       description: Leere Beschreibung
@@ -1162,7 +1258,7 @@ feat:
       error: 'Fehler: Konnte die Aktivität nicht in das ausgewählte Projekt
         verschieben.'
       success: Aktivität wurde zu "{campaignTitle}" verschoben.
-      title: Veranstalltung verschieben
+      title: Veranstaltung verschieben
     eventContactCard:
       header: Kontakt
       noContact: Kein Kontakt hinzugefügt!
@@ -1292,8 +1388,8 @@ feat:
       scheduled: Geplant
       unknown: Unbekannt
     filterButtonLabels:
-      eventTypes: '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}}
-        andere {# event types}}'
+      eventTypes: '{numEventTypes, plural,=0 {Veranstaltungsart} =1
+        {{singleEventType}} andere {# Veranstaltungsart}}'
     list:
       events: Aktionen
       noEvents: Keine Aktionen
@@ -1320,22 +1416,22 @@ feat:
       cancelled: Abgesagt
       confirmed: Bestätigte Teilnahme
       header: Teilnehmer*innen
-      noshow: ({noshows, plural, =1 {1 Nichterscheinen} other {# Nichterscheinen}})
+      noshow: ({noshows, plural, =1 {1 nicht erschienen} other {# nicht erschienen}})
       pending: Ausstehende Anmeldungen
       recordButton: Teilnahme erfassen
       remindButton: Alle erinnern
       remindButtondisabledTooltip: Du musst eine verantwortliche Person angeben bevor
-        du Erinnerungen versendest
+        du Erinnerungen versenden kannst
       reqParticipantsHelperText: Mindestteilnehmendenzahl
       reqParticipantsLabel: Mindestteilnehmendenzahl
     participantsModal:
       affected:
-        empty: Du hast noch keine Veränderungen vorgenommen. Wählen eine Veranstaltung,
-          um die Teilnehmer_innen zu verschieben.
+        empty: Du hast noch keine Veränderungen vorgenommen. Wähle eine Veranstaltung,
+          um die Teilnehmer*innen zu verschieben.
         header: Betroffene Personen
       discardButton: Änderungen verwerfen
       emptyStates:
-        booked: Niemand wurde in diese Veranstaltung bisher eingebucht. Du kannst
+        booked: Niemand wurde in diese Veranstaltung eingebucht. Du kannst
           Teilnehmer_innen aus deiner Datenbasis hinzufügen.
         pending: Es gibt keine weiteren Teilnehmer_innen in der Datenbasis. Du kannst
           Teilnehmer_innen einer Veranstaltung in diese Datenbasis hinzufügen.
@@ -1351,7 +1447,7 @@ feat:
         states:
           added: werden zu dieser Veranstaltung hinzugefügt
           pending: In der Datenbasis
-          removed: Weggehen von dieser Veranstaltung
+          removed: Ausgetragen von dieser Veranstaltung
       statusText: '{personCount, plural, =1 {Eine Person} other {# Personen}} werden
         umsortiert'
       submitButton: ausführen
@@ -1378,12 +1474,12 @@ feat:
       tooltip: Klicke, um Typ zu ändern
       uncategorized: Nicht kategorisiert
     urlCard:
-      nowAccepting: Anmeldungen über diesen Link möglich
+      nowAccepting: Anmeldung über diesen Link
       open: Anmeldungen noch möglich
       preview: Event-Vorschau
       previewPortal: Veranstaltungsvorschau im Aktiven-Portal
-      visitPortal: Anmeldungen werden unter diesem Link akzeptiert.
-      willAccept: Wir werden Anmeldungen unter diesem Link akzeptieren.
+      visitPortal: zetkin Anmeldeseite aufrufen.
+      willAccept: Anmeldung über diesen Link
   files:
     fileUpload:
       dropToUpload: Hier die Datei hineinziehen, um sie hochzuladen.
@@ -1445,6 +1541,10 @@ feat:
       noLocation: Kein Ort.
     footer:
       privacyPolicy: Datenschutzhinweise
+    newLandingPageAlert:
+      description: Den Organizing Bereich findest du über das Feld 'Organize' unter
+        diesem Banner.
+      title: Das ist deine neue Startseite
     settings:
       accountSettings:
         email:
@@ -1958,7 +2058,6 @@ feat:
       cancelledHeader: Diese Veranstaltung wurde abgesagt
       cancelledParagraph: Du kannst dich nicht mehr anmelden, und wenn du bereits
         angemeldet warst, wird nicht mehr mit deiner Anwesenheit gerechnet.
-      contactPerson: '{name} ist die Kontaktperson'
       defaultTitle: Unbenannte Veranstaltung
       loading: Laden...
       noLocation: Kein physischer Standort
@@ -1982,13 +2081,17 @@ feat:
         copyIcsUrl: Kopiere Kalendar-Abo-URL
         follow: Folgen
         login: Anmelden & Verbinden
+        organize: Organising
         unfollow: Entfolgen
       map:
         viewInList: In Liste anzeigen
         viewInMap: Auf Karte anzeigen
       menu:
+        allEvents: Alle Events
         logout: Ausloggen
+        myActivities: Meine Aktivitäten
         myZetkin: Mein Zetkin
+        settings: Einstellungen
       tabs:
         calendar: Kalender
         suborgs: Erkunden
@@ -2158,8 +2261,8 @@ feat:
             sind.
           title: Jede Person in einer Unterorganisation
         area:
-          description: Suche auf Basis von Ortsfeldern innerhalb oder ausserhalb eines
-            geografischen Gebietes
+          description: Suche in Bereichen innerhalb oder ausserhalb eines geografischen
+            Gebietes
           title: Ort (Gebiet)
         call_history:
           description: Finde Personen, die angerufen wurden - erreicht oder nur versucht
@@ -2174,7 +2277,7 @@ feat:
           description: Haben sie geklickt? oder nicht?
           title: Auf Grundlage ihrer Interaktion mit Links in E-Mails.
         email_history:
-          description: Wem wurde was gesendet, wann?
+          description: Wem wurde was gesendet, und wann?
           title: Auf Grundlage ihres E-Mail-Verlaufs
         joinform:
           description: Finde Personen, die über ein Zetkin-Beitrittsformular hinzugekommen
@@ -2223,16 +2326,16 @@ feat:
         user:
           description: Finde Personen die mit einem Zetkin-Konto verbunden sind oder die
             das nicht sind.
-          title: Zetkin Benutzer
+          title: Zetkin Nutzer*in
     filters:
       all:
         inputString: Starte mit {startWithSelect}.
         startWithSelect:
           'false': leerer Liste
-          'true': Liste aller Personen in der Organisation
+          'true': Liste aller Personen in der Kreisverbandsebene
       allInSuborg:
         examples:
-          one: Füge jede Person hinzu, die in der bestimmen Unterorganisation "DIE LINKE
+          one: Füge jede Person hinzu, die in der bestimmen Unterorganisation "Die Linke
             Kreisverband" ist.
           two: Entferne jede Person, die irgendeiner Unterorganisation ist.
         inputString:
@@ -2267,7 +2370,7 @@ feat:
           notreached: nicht erreicht wurden
           reached: erfolgreich erreicht wurden
         examples:
-          one: Füge Personen hinzu, die mindestens 2mal erfolgreich erreicht wurden für
+          one: Füge Personen hinzu, die mindestens 2 mal erfolgreich erreicht wurden für
             irgendeine Aufgabe zu irgendeinem Zeitpunkt.
           two: Entferne Personen, die in den letzten 30 Tagen mindestens 1mal angerufen
             wurden für die Aufgabe "langjährige Mitglieder aktivieren".
@@ -2749,9 +2852,37 @@ feat:
         subheader: Achtung! An dieser Umfrage wurde bereits teilgenommen. Wenn du die
           Umfrage jetzt bearbeitest, kann das Probleme mit den Ergebnissen
           verursachen.
+    insights:
+      export:
+        errorUnknown: Ein unbekannter Fehler passierte beim Expotieren.
+        toPdf: Als PDF exportieren
+        toPng: Als PNG exportieren
+      optionsFields:
+        subheader: Insgesamt gab es {answerCount, plural, =1 {1 Antwort} other {#
+          Antworten}} und {totalSelectedOptionsCount, plural, =1 {1 ausgewählte
+          Option} other {# ausgewählte Optionen}}.
+        tabs:
+          barPlot: Balkendiagramm
+          piePlot: Kreisdiagramm
+        warningMultipleSelectedOptionsPie: Beachte, dass es diese Frage erlaubte
+          Umfrageteilnehmenden mehr als eine Antwort auszuwählen und
+          {respondentCount, plural, =1 {1 respondent} machten und {#
+          respondents}} machten das nicht. Dies kann dazu führen, dass das
+          Kreisdiagramm irreführend ist.
+      textFields:
+        subheader: Insgesamt gab es {answerCount, plural, =1 {1 answer} other {#
+          answers}}, {totalWordCount, plural, =1 {1 word} other {# words}} and
+          {totalUniqueWordCount, plural, =1 {1 unique word} andere {# unique
+          words}}.
+        tabs:
+          responses: Antwort
+          wordCloud: Wortwolke
+          wordFrequencies: Balken
     layout:
       actions:
+        createList: Liste aus Teilnahmen erstellen
         delete: Mitgliederumfrage löschen
+        duplicate: Duplizieren
         move: Verschieben
         publish: Umfrage veröffentlichen
         unpublish: Umfrage deaktivieren
@@ -2813,6 +2944,10 @@ feat:
         E-Mail-Adresse. Aber die Antwort auf die Umfrage beinhaltet eine. Willst
         du diese Adresse der Person hinzufügen?
       title: E-Mail-Adresse hinzufügen
+    surveyDuplicated:
+      error: 'Fehler: Umfrage konnte nicht dupliziert werden'
+      success: Deine Umfrage wurde dupliziert.
+      title: Umfrage dupliziert
     surveyForm:
       accept: Ich akzeptiere die unten aufgeführten Bedingungen.
       error: Beim Absenden Ihrer Antworten ist ein Fehler aufgetreten. Bitte versuche
@@ -2831,6 +2966,7 @@ feat:
           Aktivitäten der {organization} zu organisieren.
         title: Datenschutzhinweise
     surveyFormSubmitted:
+      retakeSurvey: Umfrage wiederholen
       text: Deine Antworten zu „{Titel}“ wurden übermittelt.
       title: Antworten übermittelt
     surveySignature:
@@ -2843,7 +2979,12 @@ feat:
         anonymous: anonym einreichen
         email: Mit Name und E-Mail-Adresse bestätigen.
         user: Bestätige als {person} mit E-Mail-Adresse {email}
+    surveyToList:
+      error: Aus den Umfrageteilnahmen konnte keine Liste erstellt werden. Fehler
+        unbekannt.
+      title: Umfrageteilnahmen aus
     tabs:
+      insights: Einblicke
       overview: Überblick
       questions: Fragen
       submissions: Teilnahmen
@@ -3412,14 +3553,14 @@ feat:
       empty: Du hast noch keine Listen erstellt.
 zui:
   timeline:
-    addNotePlaceholder: Tippe, um eine Notiz zu erstellen
+    addNotePlaceholder: Notiz erstellen
     email:
       headers:
         cc: CC
         from: Von
         to: An
     expand: gesamte Zeitleiste einblenden
-    fileUploadErrorMessage: Es ist nicht möglich, die Notiz hinzuzufügen. Vielleicht zu lang?
+    fileUploadErrorMessage: Notiz kann nicht hinzugefügt werden. Ist sie zu lang?
     filter:
       byType:
         all: Alle
@@ -3458,7 +3599,7 @@ zui:
           complete: '{actor} hat einen Meilenstein abgeschlossen'
           deadline: '{actor} hat eine Meilensteinfrist aktualisiert'
           deadlineRemove: Frist gelöscht
-          deadlineUpdate: jetzt fällig {datetime}
+          deadlineUpdate: jetzt fällig am {datetime}
           incomplete: '{actor} hat Meilenstein als unvollständig markiert'
   accessList:
     added: Hinzugefügt durch {sharer} {updated}
@@ -3578,6 +3719,9 @@ zui:
     geography: Geographie
     home: Startseite
     journeys: Anfragenvermittlung
+    myPagesInfoText: Gehe zu Meine Seite
+    myPagesMenuItemLabel: Meine Seite
+    mySettingsMenuItemLabel: Meine Einstellungen
     overview: Überblick
     people: Personen
     projects: Projekte & Aktivitäten
