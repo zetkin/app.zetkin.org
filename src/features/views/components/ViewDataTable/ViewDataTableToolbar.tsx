@@ -76,6 +76,15 @@ const ViewDataTableToolbar: React.FunctionComponent<
     });
   };
 
+  const bulkActionsForStaticLists = [
+    {
+      disabled: disabled,
+      icon: <RemoveCircleOutline />,
+      label: messages.toolbar.bulk.removeFromList(),
+      onClick: onClickRemoveRows,
+    },
+  ];
+
   return (
     <Box role="toolbar">
       <Box
@@ -100,12 +109,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     label: messages.toolbar.bulk.createList(),
                     onClick: onViewCreate,
                   },
-                  {
-                    disabled: isSmartSearch || disabled,
-                    icon: <RemoveCircleOutline />,
-                    label: messages.toolbar.bulk.removeFromList(),
-                    onClick: onClickRemoveRows,
-                  },
+                  ...(isSmartSearch ? [] : bulkActionsForStaticLists),
                   {
                     disabled: disabled,
                     icon: <DeleteOutline />,
