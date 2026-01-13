@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
@@ -24,11 +25,20 @@ const CampaignCard = ({ campaign }: CampaignCardProps): JSX.Element => {
   return (
     <Card data-testid="campaign-card">
       <CardContent>
-        <Typography gutterBottom noWrap variant="h6">
-          {title}
-        </Typography>
-        {/*TODO: labels for calls and surveys*/}
-        <CampaignStatusChip campaign={campaign} />
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography gutterBottom noWrap variant="h6">
+            {title}
+          </Typography>
+          {/*TODO: labels for calls and surveys*/}
+          <CampaignStatusChip campaign={campaign} />
+        </Box>
       </CardContent>
       <CardActions sx={{ paddingBottom: 2, paddingLeft: 2 }}>
         <NextLink

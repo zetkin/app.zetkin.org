@@ -9,6 +9,7 @@ import {
   IconButton,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
 
@@ -25,6 +26,7 @@ import { useNumericRouteParams } from 'core/hooks';
 import useServerSide from 'core/useServerSide';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import { Msg, useMessages } from 'core/i18n';
+import ZUINumberChip from 'zui/ZUINumberChip';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -54,6 +56,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 const AllCampaignsSummaryPage: PageWithLayout = () => {
+  const theme = useTheme();
   const messages = useMessages(messageIds);
   const { orgId } = useNumericRouteParams();
   const campaigns = useCampaigns(orgId).data || [];
@@ -168,43 +171,52 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
           ))}
         </Grid>
       </Box>
-      <Box component="section" mt={4}>
-        <Box
-          component="header"
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'space-between',
-            paddingBottom: 1,
-          }}
-        >
-          <Typography mb={2} variant="h5">
-            <Msg id={messageIds.archivedCampaigns.header} />
-          </Typography>
-          <Button
-            onClick={() => {
-              setShowArchived(!showArchived);
+      {archivedCampaigns.length > 0 && (
+        <Box component="section" sx={{ marginBottom: 16, marginTop: 4 }}>
+          <Box
+            component="header"
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'space-between',
+              paddingBottom: 1,
             }}
           >
-            <Msg
-              id={
-                showArchived
-                  ? messageIds.archivedCampaigns.hideShowButton.hide
-                  : messageIds.archivedCampaigns.hideShowButton.show
-              }
-            />
-          </Button>
+            <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+              <Typography variant="h5">
+                <Msg id={messageIds.archivedCampaigns.header} />
+              </Typography>
+              <ZUINumberChip
+                color={theme.palette.grey[200]}
+                size="sm"
+                value={archivedCampaigns.length}
+              />
+            </Box>
+            <Button
+              onClick={() => {
+                setShowArchived(!showArchived);
+              }}
+            >
+              <Msg
+                id={
+                  showArchived
+                    ? messageIds.archivedCampaigns.hideShowButton.hide
+                    : messageIds.archivedCampaigns.hideShowButton.show
+                }
+              />
+            </Button>
+          </Box>
+          {showArchived && (
+            <Grid ref={archivedRef} container spacing={2}>
+              {archivedCampaigns.map((campaign) => (
+                <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
+                  <CampaignCard campaign={campaign} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
-        {showArchived && (
-          <Grid ref={archivedRef} container spacing={2}>
-            {archivedCampaigns.map((campaign) => (
-              <Grid key={campaign.id} size={{ lg: 3, md: 4, xs: 12 }}>
-                <CampaignCard campaign={campaign} />
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Box>
+      )}
     </>
   );
 };
