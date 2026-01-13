@@ -1,5 +1,10 @@
 import { useContext } from 'react';
-import { Add, Launch, RemoveCircleOutline } from '@mui/icons-material';
+import {
+  Add,
+  DeleteOutline,
+  Launch,
+  RemoveCircleOutline,
+} from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 import {
   DataGridProProps,
@@ -23,6 +28,7 @@ export interface ViewDataTableToolbarProps {
   isLoading: boolean;
   isSmartSearch: boolean;
   onColumnCreate: () => void;
+  onRowsDelete: () => void;
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
@@ -41,6 +47,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   isLoading,
   isSmartSearch,
   onColumnCreate,
+  onRowsDelete,
   onRowsRemove,
   onViewCreate,
   selection,
@@ -60,6 +67,15 @@ const ViewDataTableToolbar: React.FunctionComponent<
       warningText: messages.removeDialog.action(),
     });
   };
+
+  const onClickDelete = () => {
+    showConfirmDialog({
+      onSubmit: onRowsDelete,
+      title: messages.deleteRowsDialog.title({ numPeople: selection.length }),
+      warningText: messages.deleteRowsDialog.warning(),
+    });
+  };
+
   return (
     <Box role="toolbar">
       <Box
@@ -89,6 +105,12 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     icon: <RemoveCircleOutline />,
                     label: messages.toolbar.bulk.removeFromList(),
                     onClick: onClickRemoveRows,
+                  },
+                  {
+                    disabled: disabled,
+                    icon: <DeleteOutline />,
+                    label: messages.toolbar.bulk.delete(),
+                    onClick: onClickDelete,
                   },
                 ]}
                 label="Handle selection"
