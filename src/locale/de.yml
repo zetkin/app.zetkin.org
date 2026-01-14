@@ -358,9 +358,6 @@ feat:
         organizations:
           noSelected: Verbandsebenen
           selected: '{numOrgs} Organisationen'
-        projects:
-          noSelected: Kontext
-          selected: Projekte
       projects:
         wihoutProjectLabel: Kein Projekt
       title: Aktivitäten
