@@ -46,7 +46,7 @@ feat:
         areas: Områder
         name: Navn
     default:
-      title: Dør til dør-oppdrag uten navn
+      title: Dørbankingsoppdrag uten navn
     instructions:
       editor:
         confirm: Vil du slette alle ulagrede endringer og gå tilbake til lagret?
@@ -180,7 +180,7 @@ feat:
         subheader: Velg hvilket spørsmål som skal avgjøre når et besøk er vellykket. Når
           spørsmålet besvares med ja kommer besøket til å regnes som vellykket.
       toolBar:
-        title: Legg til spørsmål for dør til dør-oppdrag
+        title: Legg til spørsmål for dørbankingsoppdrag
   areas:
     areas:
       areaSettings:
@@ -193,7 +193,7 @@ feat:
           title: Områdeetiketter
       controlLabels:
         filters: Filtre
-        layers: Datavisualisering
+        layers: Visning
         select: Velg
       default:
         description: Ingen beskrivelse
@@ -212,7 +212,7 @@ feat:
     elements:
       activities: Aktiviteter
       archive: Arkiv
-      areaassignments: Dør til dør-oppdrag
+      areaassignments: Dørbankingsoppdrag
       assignees: Kontaktpersoner
       calendar: Kalender
       callassignments: Ringeoppdrag
@@ -348,8 +348,6 @@ feat:
         organizations:
           noSelected: Organisasjoner
           selected: '{numOrgs} organisasjoner'
-        projects:
-          selected: '{numOrgs} prosjekter'
       projects:
         wihoutProjectLabel: Inget prosjekt
       title: Aktiviteter
@@ -665,7 +663,7 @@ feat:
       cardCTA: Gå til prosjekt
       create: Nytt prosjekt
       filter:
-        areaAssignments: Dør til dør-aksjoner
+        areaAssignments: Dørbankingsoppdrag
         calls: Ringeoppdrag
         emails: E-poster
         filter: Filtrer resultater
@@ -685,7 +683,7 @@ feat:
       moveButtonLabel: Flytt
     createButton:
       createActivity: Opprett
-      createAreaAssignment: Dør til dør-oppdrag
+      createAreaAssignment: Dørbankingsoppdrag
       createCallAssignment: Ringeoppdrag
       createEmail: E-post
       createEvent: Arrangement
@@ -745,7 +743,7 @@ feat:
       overview: Oversikt
     linkGroup:
       createActivity: Ny aktivitet
-      createAreaAssignment: Dør til dør-oppdrag
+      createAreaAssignment: Dørbankingsoppdrag
       createCallAssignment: Nytt ringeoppdrag
       createEmail: Ny e-post
       createEvent: Nytt arrangement
