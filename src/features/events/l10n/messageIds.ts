@@ -81,12 +81,16 @@ export default makeMessages('feat.events', {
     buttonDelete: m('Delete'),
     buttonNoshow: m('No-show'),
     cancelledParticipants: m('Cancelled Participants'),
+    columnAction: m('Action'),
     columnEmail: m('Email'),
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
     columnSignedUp: m('Signed up'),
     contactTooltip: m('Contact Person'),
+    createUnverifiedPerson: m(
+      'No existing person found in Zetkin. Please create a new one.'
+    ),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
     ),
@@ -96,10 +100,14 @@ export default makeMessages('feat.events', {
     descriptionSignups: m(
       'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
     ),
+    descriptionUnverifiedSignups: m(
+      'These people have signed up themselves without a user account. You must confirm them.'
+    ),
     dropDownAttended: m('Confirmed attendance'),
     dropDownNoshow: m('Did not show up'),
     participantTooltip: m('Make contact person'),
     signUps: m('Sign-ups'),
+    unverifiedSignups: m('Unverified Sign-ups'),
   },
   eventPopper: {
     backToEvents: m('Back to event list'),
@@ -187,6 +195,20 @@ export default makeMessages('feat.events', {
     eventTypes: m<{ numEventTypes: number; singleEventType: string }>(
       '{numEventTypes, plural,=0 {Event types} =1 {{singleEventType}} other {# event types}}'
     ),
+  },
+  linkSignupDialog: {
+    bookButton: m('Book'),
+    cancelButton: m('Cancel'),
+    createPersonButton: m('Create new person'),
+    helperText: m(
+      'Book this sign-up by selecting a person, or create one if no match is found.'
+    ),
+    keepTyping: m('Keep typing to start searching'),
+    noResults: m('No matching people found'),
+    searchLabel: m('Search for person'),
+    searchPlaceholder: m('Search by name, email, or phone'),
+    signupDetails: m('Sign-up details'),
+    title: m('No exact match found. Please link a person.'),
   },
   list: {
     events: m('Events'),
@@ -334,6 +356,13 @@ export default makeMessages('feat.events', {
     ),
     tooltip: m('Click to change type'),
     uncategorized: m('Uncategorized'),
+  },
+  unverifiedSignups: {
+    actionFailed: m('Something went wrong. Please try again.'),
+    booked: m<{ name: string }>('{name} has been successfully booked.'),
+    exactMatchBooked: m<{ name: string }>(
+      'Exact person match found. This sign-up is now booked as {name}.'
+    ),
   },
   urlCard: {
     nowAccepting: m('Now accepting sign-ups at this link'),
