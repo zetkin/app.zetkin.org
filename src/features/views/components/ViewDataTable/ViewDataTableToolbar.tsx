@@ -119,7 +119,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
                     onClick: onClickDelete,
                   },
                 ]}
-                label="Handle selection"
+                label={messages.toolbar.bulk.handleSelection()}
                 loading={isLoading}
                 variant="outlined"
               />
