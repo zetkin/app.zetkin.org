@@ -21,7 +21,6 @@ const eventSignupSchema = new mongoose.Schema<EventSignupModelType>({
   gdpr_consent: { required: true, type: Boolean },
   last_name: { required: true, type: String },
   orgId: { required: true, type: Number },
-  person_id: { type: Number },
   phone: String,
 });
 
