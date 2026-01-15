@@ -30,6 +30,7 @@ interface ZUICreatePersonProps {
   open: boolean;
   title?: string;
   submitLabel?: string;
+  subHeader?: React.ReactElement;
 }
 
 const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
@@ -39,6 +40,7 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
   onSubmit,
   title,
   submitLabel,
+  subHeader,
 }) => {
   const theme = useTheme();
   const { orgId } = useNumericRouteParams();
@@ -71,6 +73,8 @@ const ZUICreatePerson: FC<ZUICreatePersonProps> = ({
             {title ?? messages.createPerson.title.default()}
           </Typography>
         </Box>
+
+        {subHeader && <Box sx={{ mb: 2, mt: 1 }}>{subHeader}</Box>}
         {!customFields ? (
           <Box
             sx={{ display: 'flex', justifyContent: 'center', m: 8, pr: '40px' }}
