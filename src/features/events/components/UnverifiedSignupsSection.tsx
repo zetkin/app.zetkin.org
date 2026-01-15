@@ -1,14 +1,6 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Link,
-  Slide,
-  Snackbar,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, Link, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-import { FC, PointerEventHandler, useState } from 'react';
+import { FC, PointerEventHandler, useContext, useState } from 'react';
 
 import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/events/l10n/messageIds';
@@ -16,7 +8,7 @@ import noPropagate from 'utils/noPropagate';
 import ZUICreatePerson from 'zui/ZUICreatePerson';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import ZUIText from 'zui/components/ZUIText';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import useUnverifiedSignupMutations from '../hooks/useUnverifiedSignupMutations';
 import { EventSignupModelType } from '../models';
 import filterParticipants from '../utils/filterParticipants';
@@ -39,11 +31,6 @@ type SignupState =
   | { mode: 'linking'; signup: EventSignupModelType }
   | { mode: 'creating'; signup: EventSignupModelType };
 
-type ToastState =
-  | { kind: 'success'; message: string }
-  | { kind: 'error'; message: string }
-  | null;
-
 const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
   chipColor,
   chipNumber,
@@ -55,6 +42,7 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
   title,
 }) => {
   const messages = useMessages(messageIds);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const { bookSignup, linkSignup } = useUnverifiedSignupMutations(
     orgId,
@@ -62,7 +50,6 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
   );
 
   const [signUpState, setSignUpState] = useState<SignupState>({ mode: 'idle' });
-  const [notice, setNotice] = useState<ToastState>(null);
 
   const linkingSignup =
     signUpState.mode === 'linking' ? signUpState.signup : null;
@@ -86,22 +73,19 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
         const result = await bookSignup(row.id);
 
         if (result.matched) {
-          setNotice({
-            kind: 'success',
-            message: messages.unverifiedSignups.exactMatchBooked({
+          showSnackbar(
+            'success',
+            messages.unverifiedSignups.exactMatchBooked({
               name: `${row.first_name} ${row.last_name}`,
-            }),
-          });
+            })
+          );
           setSignUpState({ mode: 'idle' });
         } else {
           setSignUpState({ mode: 'linking', signup: row });
         }
       } catch {
         setSignUpState({ mode: 'idle' });
-        setNotice({
-          kind: 'error',
-          message: messages.unverifiedSignups.actionFailed(),
-        });
+        showSnackbar('error', messages.unverifiedSignups.actionFailed());
       }
     });
 
@@ -114,17 +98,14 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
 
     try {
       await linkSignup(linkingSignup.id, personId);
-      setNotice({
-        kind: 'success',
-        message: messages.unverifiedSignups.booked({
+      showSnackbar(
+        'success',
+        messages.unverifiedSignups.booked({
           name: `${linkingSignup.first_name} ${linkingSignup.last_name}`,
-        }),
-      });
+        })
+      );
     } catch {
-      setNotice({
-        kind: 'error',
-        message: messages.unverifiedSignups.actionFailed(),
-      });
+      showSnackbar('error', messages.unverifiedSignups.actionFailed());
     } finally {
       setSignUpState({ mode: 'idle' });
     }
@@ -278,17 +259,14 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
             setSignUpState({ mode: 'booking', signup: creatingSignup });
             try {
               await linkSignup(creatingSignup.id, person.id);
-              setNotice({
-                kind: 'success',
-                message: messages.unverifiedSignups.booked({
+              showSnackbar(
+                'success',
+                messages.unverifiedSignups.booked({
                   name: `${person.first_name} ${person.last_name}`,
-                }),
-              });
+                })
+              );
             } catch {
-              setNotice({
-                kind: 'error',
-                message: messages.unverifiedSignups.actionFailed(),
-              });
+              showSnackbar('error', messages.unverifiedSignups.actionFailed());
             } finally {
               setSignUpState({ mode: 'idle' });
             }
@@ -315,55 +293,6 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
           signup={linkingSignup}
         />
       )}
-      <Snackbar
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        autoHideDuration={5000}
-        onClose={(ev, reason) => {
-          if (reason == 'clickaway') {
-            return;
-          } else {
-            setNotice(null);
-          }
-        }}
-        open={!!notice}
-        slots={{
-          transition: (props) => {
-            return (
-              <Slide
-                {...props}
-                direction="left"
-                timeout={{
-                  enter: 500,
-                  exit: 300,
-                }}
-              />
-            );
-          },
-        }}
-        sx={{
-          '@media (min-width: 600px)': {
-            bottom: 68,
-            left: 16,
-          },
-        }}
-      >
-        <Alert
-          icon={false}
-          onClose={() => setNotice(null)}
-          severity={notice?.kind === 'error' ? 'error' : 'success'}
-          sx={(theme) => ({
-            backgroundColor: theme.palette.common.white,
-            borderLeft: `4px solid ${
-              notice?.kind === 'error'
-                ? theme.palette.error.main
-                : theme.palette.success.main
-            }`,
-            boxShadow: theme.shadows[3],
-          })}
-        >
-          {notice && <ZUIText>{notice.message}</ZUIText>}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
