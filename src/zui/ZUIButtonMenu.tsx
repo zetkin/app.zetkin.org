@@ -8,6 +8,8 @@ import { FC, MouseEvent, ReactNode, useState } from 'react';
 import oldTheme from 'theme';
 
 type ZUIButtonMenuProps = {
+  alignHorizontal?: 'right' | 'left';
+  alignVertical?: 'bottom' | 'top';
   items: {
     disabled?: boolean;
     icon?: JSX.Element;
@@ -21,6 +23,8 @@ type ZUIButtonMenuProps = {
 };
 
 const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
+  alignHorizontal = 'right',
+  alignVertical = 'bottom',
   items,
   label,
   loading,
@@ -50,8 +54,8 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
+          horizontal: alignHorizontal,
+          vertical: alignVertical,
         }}
         onClose={handleClose}
         open={open}
@@ -72,8 +76,8 @@ const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({
           },
         }}
         transformOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
+          horizontal: alignHorizontal,
+          vertical: alignVertical == 'bottom' ? 'top' : 'bottom',
         }}
       >
         {items.map((item, idx) => {
