@@ -16,6 +16,10 @@ type PersonAddtoorgBulkOp = {
   org_id: number;
 };
 
+type PersonDeleteBulkOp = {
+  op: 'person.delete';
+};
+
 type PersonCreateBulkOp = {
   op: 'person.create';
   ops: BulkSubOp[];
@@ -29,6 +33,7 @@ type PersonGetBulkOp = {
 };
 
 export type BulkSubOp =
+  | PersonDeleteBulkOp
   | PersonSetfieldsBulkOp
   | PersonTagBulkOp
   | PersonAddtoorgBulkOp;

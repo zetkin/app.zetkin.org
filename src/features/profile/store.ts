@@ -151,6 +151,15 @@ const profilesSlice = createSlice({
         item.mutating = [];
       }
     },
+    personsDeleted: (state, action: PayloadAction<number[]>) => {
+      const ids = action.payload;
+
+      ids.forEach((id) => {
+        if (state.personById[id]) {
+          state.personById[id].deleted = true;
+        }
+      });
+    },
     personsMerged: (state, action: PayloadAction<number[]>) => {
       const ids = action.payload;
 
@@ -186,5 +195,6 @@ export const {
   personOrgRemoved,
   personUpdate,
   personUpdated,
+  personsDeleted,
   personsMerged,
 } = profilesSlice.actions;
