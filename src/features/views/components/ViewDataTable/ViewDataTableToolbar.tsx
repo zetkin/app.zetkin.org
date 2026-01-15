@@ -98,10 +98,12 @@ const ViewDataTableToolbar: React.FunctionComponent<
           <Box
             sx={{
               flexShrink: 0,
+              px: 1,
             }}
           >
             {hasSelection && (
               <ZUIButtonMenu
+                alignHorizontal="left"
                 items={[
                   {
                     disabled: disabled,
