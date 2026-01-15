@@ -101,6 +101,7 @@ interface ParticipantListSectionListProps {
   description: string;
   filterString: string;
   eventId: number;
+  headerActions?: React.ReactNode;
   orgId: number;
   rows: ZetkinEventResponse[] | ZetkinEventParticipant[];
   title: string;
@@ -113,6 +114,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
   description,
   filterString,
   eventId,
+  headerActions,
   orgId,
   rows,
   title,
@@ -406,6 +408,7 @@ const ParticipantListSection: FC<ParticipantListSectionListProps> = ({
           {title}
         </Typography>
         <ZUINumberChip color={chipColor} outlined={true} value={chipNumber} />
+        {headerActions}
       </Box>
       <Typography mb={2} variant="body1">
         {description}
