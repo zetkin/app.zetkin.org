@@ -72,8 +72,7 @@ import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
 import oldTheme from 'theme';
-import { ZetkinPersonImportPostBody } from 'features/import/utils/types';
-import { personsDeleted } from 'features/profile/store';
+import useViewBulkActions from 'features/views/hooks/useViewBulkActions';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -203,6 +202,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
+  const { bulkDeletePersons } = useViewBulkActions(orgId);
 
   const showError = useCallback(
     (error: VIEW_DATA_TABLE_ERROR) => {
@@ -334,25 +334,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
 
   const onRowsDelete = useCallback(async () => {
-    await apiClient.post<ZetkinPersonImportPostBody>(
-      `/api/orgs/${orgId}/bulk/execute`,
-      {
-        ops: selection.map((id) => ({
-          key: {
-            id: id,
-          },
-          op: 'person.get',
-          ops: [
-            {
-              op: 'person.delete',
-            },
-          ],
-        })),
-      }
-    );
-
-    dispatch(personsDeleted(selection));
-  }, [apiClient, selection]);
+    bulkDeletePersons(selection);
+  }, [selection]);
 
   const onRowsRemove = useCallback(async () => {
     setWaiting(true);
