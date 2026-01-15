@@ -86,6 +86,7 @@ export const GROUPED_FILTERS: {
     filters: [
       FILTER_TYPE.ALL,
       FILTER_TYPE.JOINFORM,
+      FILTER_TYPE.OFFICIAL,
       FILTER_TYPE.RANDOM,
       FILTER_TYPE.USER,
     ],
