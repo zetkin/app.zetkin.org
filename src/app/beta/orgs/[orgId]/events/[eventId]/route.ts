@@ -28,13 +28,14 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
       request,
       roles: ['organizer', 'admin'],
     },
-    async () => {
+    async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
       const headers: IncomingHttpHeaders = {};
       request.headers.forEach((value, key) => (headers[key] = value));
 
       const eventSignups = await EventSignupModel.find({
         eventId: parseInt(params.eventId),
+        orgId,
       });
 
       return NextResponse.json({ data: eventSignups }, { status: 200 });
