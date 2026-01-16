@@ -173,10 +173,10 @@ type ActivitiesSectionProps = {
   target: ZetkinCallTarget | null;
 };
 
-const ActivitiesSection: FC<ActivitiesSectionProps> = ({
-  assignment,
-  target,
-}) => {
+const ActivitiesSectionContent: FC<{
+  assignment: ZetkinCallAssignment;
+  target: ZetkinCallTarget;
+}> = ({ assignment, target }) => {
   const messages = useMessages(messageIds);
   const intl = useIntl();
   const dispatch = useAppDispatch();
@@ -543,7 +543,7 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
               />
             )}
             subtitle={messages.activities.description({
-              name: target?.first_name || '',
+              name: target.first_name || '',
             })}
             title={messages.activities.title()}
           />
@@ -700,6 +700,22 @@ const ActivitiesSection: FC<ActivitiesSectionProps> = ({
       </ZUIDrawerModal>
     </>
   );
+};
+
+const ActivitiesSection: FC<ActivitiesSectionProps> = ({
+  assignment,
+  target,
+}) => {
+  if (!target) {
+    return (
+      <Box
+        id="accctivitiesSecitonOuter"
+        sx={{ height: '100%', width: '100%' }}
+      />
+    );
+  }
+
+  return <ActivitiesSectionContent assignment={assignment} target={target} />;
 };
 
 export default ActivitiesSection;
