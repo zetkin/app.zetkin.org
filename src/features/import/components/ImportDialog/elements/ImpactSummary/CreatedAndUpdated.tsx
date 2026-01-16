@@ -3,7 +3,7 @@ import { Box, Stack, Typography, useTheme } from '@mui/material';
 
 import messageIds from '../../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
-import { PersonImportSummary } from '../../../../utils/types';
+import { PersonImportSummary } from '../../../../types';
 
 interface CreatedAndUpdatedProps {
   summary: PersonImportSummary;

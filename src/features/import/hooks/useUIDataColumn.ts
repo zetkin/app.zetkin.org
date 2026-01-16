@@ -2,7 +2,8 @@ import hasUnfinishedMapping from '../utils/hasUnfinishedMapping';
 import messageIds from '../l10n/messageIds';
 import { useAppSelector } from 'core/hooks';
 import { useMessages } from 'core/i18n';
-import { Column, ColumnKind } from '../utils/types';
+import { Column, ColumnKind } from '../types';
+import useColumnValuesMessage from './useColumnValuesMessage';
 
 export type UIDataColumn<CType extends Column> = {
   columnIndex: number;
@@ -18,6 +19,7 @@ export type UIDataColumn<CType extends Column> = {
 export default function useUIDataColumn(
   columnIndex: number
 ): UIDataColumn<Column> {
+  const makeColumnValuesMessage = useColumnValuesMessage();
   const messages = useMessages(messageIds);
   const pendingFile = useAppSelector((state) => state.import.pendingFile);
 
@@ -56,6 +58,8 @@ export default function useUIDataColumn(
     }
   });
 
+  const uniqueValues = Array.from(numRowsByUniqueValue.keys());
+
   const valueInFirstRow = cellValues[0];
   const title =
     firstRowIsHeaders && valueInFirstRow != null
@@ -83,10 +87,10 @@ export default function useUIDataColumn(
       numRows,
     });
   } else if (column.kind == ColumnKind.ID_FIELD && column.idField) {
-    mappingResultsMessage = messages.configuration.mapping.finishedMappingIds({
-      idField: column.idField,
-      numValues: firstRowIsHeaders ? cellValues.length - 1 : cellValues.length,
-    });
+    mappingResultsMessage = makeColumnValuesMessage(
+      numberOfEmptyRows,
+      uniqueValues
+    );
   } else if (column.kind == ColumnKind.ORGANIZATION) {
     let orgs: number[] = [];
     let numPeople = 0;
@@ -128,6 +132,6 @@ export default function useUIDataColumn(
     originalColumn: column,
     title,
     unfinishedMapping,
-    uniqueValues: Array.from(numRowsByUniqueValue.keys()),
+    uniqueValues,
   };
 }

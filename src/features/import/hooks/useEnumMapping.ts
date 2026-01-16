@@ -1,6 +1,6 @@
 import { columnUpdate } from '../store';
 import { useAppDispatch } from 'core/hooks';
-import { CellData, Column, ColumnKind } from '../utils/types';
+import { CellData, Column, ColumnKind } from '../types';
 
 export default function useEnumMapping(column: Column, columnIndex: number) {
   const dispatch = useAppDispatch();
