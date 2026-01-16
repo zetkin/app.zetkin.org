@@ -205,7 +205,7 @@ export default makeMessages('feat.events', {
     searchLabel: m('Search for person'),
     searchPlaceholder: m('Search by name, email, or phone'),
     signupDetails: m('Sign-up details'),
-    title: m('No exact match found. Please link a person.'),
+    title: m('No exact match found. Please choose a person.'),
   },
   list: {
     events: m('Events'),
