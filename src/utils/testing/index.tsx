@@ -5,11 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Provider as ReduxProvider } from 'react-redux';
 import { FC, ReactElement, ReactNode } from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import {
-  StyledEngineProvider,
-  Theme,
-  ThemeProvider,
-} from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 
 import { AnyMessage } from 'core/i18n/messages';
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
@@ -21,11 +17,6 @@ import oldTheme from 'theme';
 import { Store } from 'core/store';
 import { UserProvider } from 'core/env/UserContext';
 import mockApiClient from './mocks/mockApiClient';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface DefaultTheme extends Theme {}
-}
 
 interface ZetkinAppProvidersProps {
   children: React.ReactNode;

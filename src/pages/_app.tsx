@@ -6,7 +6,6 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { NoSsr } from '@mui/base';
 import NProgress from 'nprogress';
 import Router from 'next/router';
-import { Theme } from '@mui/material/styles';
 import { useEffect } from 'react';
 
 import { store } from 'core/store';
@@ -14,11 +13,6 @@ import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
 import { PageWithLayout } from '../utils/types';
 import Providers from 'core/Providers';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface DefaultTheme extends Theme {}
-}
 
 // Progress bar
 NProgress.configure({ showSpinner: false });
