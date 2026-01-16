@@ -88,9 +88,6 @@ export default makeMessages('feat.events', {
     columnPhone: m('Phone'),
     columnSignedUp: m('Signed up'),
     contactTooltip: m('Contact Person'),
-    createUnverifiedPerson: m(
-      'No existing person found in Zetkin. Please create a new one.'
-    ),
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
     ),

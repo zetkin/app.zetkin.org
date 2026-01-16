@@ -1,8 +1,8 @@
-import { Alert, Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Link, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { FC, PointerEventHandler, useContext, useState } from 'react';
 
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
 import ZUICreatePerson from 'zui/ZUICreatePerson';
@@ -272,13 +272,6 @@ const UnverifiedSignupsSection: FC<UnverifiedSignupsSectionProps> = ({
             }
           }}
           open={!!creatingSignup}
-          subHeader={
-            <Alert severity="info">
-              <Msg
-                id={messageIds.eventParticipantsList.createUnverifiedPerson}
-              />
-            </Alert>
-          }
         />
       )}
       {linkingSignup && (
