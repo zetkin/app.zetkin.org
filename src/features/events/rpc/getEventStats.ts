@@ -28,7 +28,7 @@ async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
     num_pending: number;
     num_reminded: number;
     num_signups: number;
-  }>(`/api/orgs/${orgId}/actions/${eventId}/stats`);
+  }>(`/beta/orgs/${orgId}/actions/${eventId}/stats`);
 
   return {
     id: eventId,

@@ -4,14 +4,59 @@ import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from 'utils/types/zetkin';
+import { EventSignupModelType } from '../models';
 
-type ListType = ZetkinEventParticipant | ZetkinEventResponse;
+type ListType =
+  | ZetkinEventParticipant
+  | ZetkinEventResponse
+  | EventSignupModelType;
 
 export default function filterParticipants(
-  list: ZetkinEventResponse[] | ZetkinEventParticipant[],
+  list:
+    | ZetkinEventResponse[]
+    | ZetkinEventParticipant[]
+    | EventSignupModelType[],
   filterString: string
 ) {
   const tokens = filterString.trim().split(/\s+/);
+
+  //when list is an unverified sign ups list
+  if (
+    list.length > 0 &&
+    'first_name' in list[0] &&
+    'last_name' in list[0] &&
+    'eventId' in list[0] &&
+    !('person' in list[0]) &&
+    !('response_date' in list[0])
+  ) {
+    const unverifiedFuseList = new Fuse(list as EventSignupModelType[], {
+      includeScore: true,
+      keys: [
+        { name: 'first_name', weight: 1.0 },
+        { name: 'last_name', weight: 0.8 },
+        { name: 'phone', weight: 0.8 },
+        { name: 'email', weight: 0.8 },
+      ],
+      threshold: 0.4,
+    });
+
+    return unverifiedFuseList
+      .search({
+        $and: tokens.map((searchToken: string) => {
+          const orFields: Fuse.Expression[] = [
+            { first_name: searchToken },
+            { last_name: searchToken },
+            { phone: searchToken },
+            { email: searchToken },
+          ];
+
+          return {
+            $or: orFields,
+          };
+        }),
+      })
+      .map((fuseResult) => fuseResult.item);
+  }
 
   //when list is a sign up list
   if (list.some((obj) => Object.keys(obj).includes('person'))) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useApiClient } from 'core/hooks';
 import useDebounce from 'utils/hooks/useDebounce';
@@ -26,11 +26,14 @@ export default function usePersonSearch(orgId: number): UsePersonSearchReturn {
     setIsTyping(false);
   }, 600);
 
-  const setQuery = (q: string) => {
-    setQueryString(q);
-    setIsTyping(true);
-    debouncedFinishedTyping();
-  };
+  const setQuery = useCallback(
+    (q: string) => {
+      setQueryString(q);
+      setIsTyping(true);
+      debouncedFinishedTyping();
+    },
+    [debouncedFinishedTyping]
+  );
 
   useEffect(() => {
     if (!isTyping && queryString.length > 2) {
