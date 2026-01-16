@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/joinForms/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
@@ -11,7 +11,7 @@ type Props = {
   org: ZetkinOrganization;
 };
 
-const UnsubscribedPage: FC<Props> = ({ org }) => {
+const JoinFormVerifiedPage: FC<Props> = ({ org }) => {
   return (
     <Box
       sx={{
@@ -24,11 +24,11 @@ const UnsubscribedPage: FC<Props> = ({ org }) => {
     >
       <Box maxWidth={500}>
         <Typography mb={1} variant="h4">
-          <Msg id={messageIds.unsubscribedPage.h} />
+          <Msg id={messageIds.submissionVerifiedPage.h} />
         </Typography>
         <Typography>
           <Msg
-            id={messageIds.unsubscribedPage.info}
+            id={messageIds.submissionVerifiedPage.info}
             values={{ org: org.title }}
           />
         </Typography>
@@ -37,4 +37,4 @@ const UnsubscribedPage: FC<Props> = ({ org }) => {
   );
 };
 
-export default UnsubscribedPage;
+export default JoinFormVerifiedPage;

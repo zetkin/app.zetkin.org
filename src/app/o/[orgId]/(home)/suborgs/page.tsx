@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import SubOrgsPage from 'features/organizations/pages/SubOrgsPage';
+import SubOrgsPage from 'features/activistPortal/pages/SubOrgsPage';
 
 type Props = {
   params: {

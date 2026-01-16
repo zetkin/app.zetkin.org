@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import HomeThemeProvider from 'features/home/components/HomeThemeProvider';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { ZetkinCampaign } from 'utils/types/zetkin';
-import PublicProjectLayout from 'features/campaigns/layout/PublicProjectLayout';
+import PublicProjectLayout from 'features/activistPortal/layouts/PublicProjectLayout';
 import { getOrganizationOpenGraphTags, getSeoTags } from 'utils/seoTags';
 
 type Props = {

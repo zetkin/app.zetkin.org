@@ -1,7 +1,7 @@
 import Iron from '@hapi/iron';
 import { notFound } from 'next/navigation';
 
-import EmbeddedJoinForm from 'features/joinForms/components/EmbeddedJoinForm';
+import EmbeddedJoinForm from 'features/activistPortal/components/EmbeddedJoinForm';
 import { EmbeddedJoinFormData } from 'features/joinForms/types';
 
 type PageProps = {

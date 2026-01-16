@@ -6,11 +6,11 @@ import { useMediaQuery, useTheme } from '@mui/system';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { Msg } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/organizations/l10n/messageIds';
 import ZUILogoLoadingIndicator from 'zui/ZUILogoLoadingIndicator';
 import { ActivistPortalEventMap } from '../components/ActivistPortalEventMap';
 import ZUIPublicFooter from 'zui/components/ZUIPublicFooter';
-import { ZetkinEventWithStatus } from 'features/home/types';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
 
 const useDelayOnTrue = (durationMs: number, value: boolean) => {
   const [delayedValue, setDelayedValue] = useState(false);

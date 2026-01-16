@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import UnsubscribePage from 'features/emails/pages/UnsubscribePage';
+import UnsubscribePage from 'features/activistPortal/pages/UnsubscribePage';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
 type PageProps = {

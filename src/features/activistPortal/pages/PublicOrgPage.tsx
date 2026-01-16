@@ -15,27 +15,27 @@ import { DateRangeCalendar, DateRangePickerDay } from '@mui/x-date-pickers-pro';
 import { useIntl } from 'react-intl';
 import { Clear, CalendarMonthOutlined, Search } from '@mui/icons-material';
 
-import EventListItem from 'features/home/components/EventListItem';
-import { ZetkinEventWithStatus } from 'features/home/types';
-import useIncrementalDelay from 'features/home/hooks/useIncrementalDelay';
+import EventListItem from 'features/activistPortal/components/EventListItem';
+import { ZetkinEventWithStatus } from 'features/activistPortal/types';
+import useIncrementalDelay from 'features/activistPortal/hooks/useIncrementalDelay';
 import ZUIDate from 'zui/ZUIDate';
 import SubOrgEventBlurb from '../components/SubOrgEventBlurb';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import useUser from 'core/hooks/useUser';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/organizations/l10n/messageIds';
 import NoEventsBlurb from '../components/NoEventsBlurb';
 import ZUIText from 'zui/components/ZUIText';
 import ZUIModal from 'zui/components/ZUIModal';
 import ZUIDivider from 'zui/components/ZUIDivider';
 import ZUIFilterButton from 'zui/components/ZUIFilterButton';
-import ZUIButton from '../../../zui/components/ZUIButton';
-import ZUIDrawerModal from '../../../zui/components/ZUIDrawerModal';
-import { getContrastColor } from '../../../utils/colorUtils';
+import ZUIButton from 'zui/components/ZUIButton';
+import ZUIDrawerModal from 'zui/components/ZUIDrawerModal';
+import { getContrastColor } from 'utils/colorUtils';
 import useFilteredOrgEvents from '../hooks/useFilteredOrgEvents';
 import { useAppDispatch, useAppSelector } from 'core/hooks';
-import { filtersUpdated } from '../store';
-import useOrganization from '../hooks/useOrganization';
+import { filtersUpdated } from 'features/organizations/store';
+import useOrganization from 'features/organizations/hooks/useOrganization';
 import useIsMobile from 'utils/hooks/useIsMobile';
 
 type Props = {

@@ -4,11 +4,11 @@ import { Box } from '@mui/system';
 import { FC, PropsWithChildren } from 'react';
 import NextLink from 'next/link';
 
-import ActivistPortalHeader from 'features/organizations/components/ActivistPortalHeader';
+import ActivistPortalHeader from 'features/activistPortal/components/ActivistPortalHeader';
 import ZUIOrgLogoAvatar from 'zui/components/ZUIOrgLogoAvatar';
 import ZUIText from 'zui/components/ZUIText';
 import { Msg, useMessages } from 'core/i18n';
-import messageIds from '../l10n/messageIds';
+import messageIds from 'features/organizations/l10n/messageIds';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import useEvent from 'features/events/hooks/useEvent';
