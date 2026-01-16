@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import { Link } from '@mui/material';
 import {
   AssignmentOutlined,
+  Archive,
   CheckBoxOutlined,
   Delete,
   EmailOutlined,
@@ -10,6 +11,7 @@ import {
   Map,
   OpenInNew,
   Settings,
+  Unarchive,
 } from '@mui/icons-material';
 import React, { useContext, useState } from 'react';
 
@@ -35,6 +37,7 @@ import areaAssignmentMessageIds from 'features/areaAssignments/l10n/messageIds';
 import useEmailConfigs from 'features/emails/hooks/useEmailConfigs';
 
 enum CAMPAIGN_MENU_ITEMS {
+  ARCHIVE_CAMPAIGN = 'archiveCampaign',
   EDIT_CAMPAIGN = 'editCampaign',
   DELETE_CAMPAIGN = 'deleteCampaign',
   SHOW_PUBLIC_PAGE = 'showPublicPage',
@@ -86,6 +89,10 @@ const CampaignActionButtons: React.FunctionComponent<
       start_time: defaultStart.toISOString(),
       title: null,
     });
+  };
+
+  const handleArchiveCampaign = () => {
+    updateCampaign({ archived: !campaign.archived });
   };
 
   const menuItems = [
@@ -179,6 +186,21 @@ const CampaignActionButtons: React.FunctionComponent<
                 </>
               ),
               onSelect: () => setEditCampaignDialogOpen(true),
+            },
+            {
+              id: CAMPAIGN_MENU_ITEMS.ARCHIVE_CAMPAIGN,
+              label: campaign.archived ? (
+                <>
+                  <Unarchive />
+                  <Msg id={campaignMessageIds.form.archiveCampaign.unarchive} />
+                </>
+              ) : (
+                <>
+                  <Archive />
+                  <Msg id={campaignMessageIds.form.archiveCampaign.archive} />
+                </>
+              ),
+              onSelect: handleArchiveCampaign,
             },
             {
               id: CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN,
