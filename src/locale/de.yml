@@ -3658,8 +3658,6 @@ zui:
     button: Sortieren
     hint: 'Hinweis: Drücke {shiftKeyIcon} während du mehrere Spalten anklickst'
     title: Sortieren
-    ascending: Aufsteigend
-    descending: Absteigend
   dateRange:
     draft: Kein Startdatum
     end: Ende

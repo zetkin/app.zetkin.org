@@ -2721,8 +2721,6 @@ zui:
     button: Sorteer
     hint: 'Hint: hou de {shiftKeyIcon} vast terwijl je op meerdere kolommen klikt'
     title: Sorteren
-    ascending: Oplopend
-    descending: Aflopend
   dateRange:
     draft: Niet een startdatum
     end: Einde
