@@ -176,6 +176,8 @@ export default makeMessages('zui', {
     },
   },
   organizeSidebar: {
+    collapse: m('Collapse sidebar'),
+    expand: m('Expand sidebar'),
     filter: m('Type to filter'),
     geography: m('Geography'),
     home: m('Home'),
@@ -183,6 +185,7 @@ export default makeMessages('zui', {
     myPagesInfoText: m('Go to my pages'),
     myPagesMenuItemLabel: m('My pages'),
     mySettingsMenuItemLabel: m('My settings'),
+    organizationAvatarAltText: m('Organization icon'),
     overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
