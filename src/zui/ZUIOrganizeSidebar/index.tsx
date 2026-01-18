@@ -409,6 +409,7 @@ const ZUIOrganizeSidebar = ({
 
                         {showOrgSwitcher && (
                           <TextField
+                            aria-label={messages.organizeSidebar.filterLabel()}
                             fullWidth
                             InputProps={{
                               endAdornment:
@@ -437,7 +438,14 @@ const ZUIOrganizeSidebar = ({
                       </Box>
 
                       <Box sx={{ display: open ? 'flex' : 'none' }}>
-                        <IconButton onClick={handleExpansion}>
+                        <IconButton
+                          aria-label={
+                            checked
+                              ? messages.organizeSidebar.organizationSwitcher.hide()
+                              : messages.organizeSidebar.organizationSwitcher.show()
+                          }
+                          onClick={handleExpansion}
+                        >
                           {checked ? <ExpandLess /> : <ExpandMore />}
                         </IconButton>
                       </Box>

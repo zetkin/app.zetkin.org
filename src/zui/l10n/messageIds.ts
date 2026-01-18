@@ -135,6 +135,9 @@ export default makeMessages('zui', {
   editableImage: {
     add: m('Click to add image'),
   },
+  ellipsisMenu: {
+    ariaLabel: m('More options'),
+  },
   eventWarningIcons: {
     contact: m('No contact person has been assigned'),
     reminders: m<{ numMissing: number }>(
@@ -179,6 +182,7 @@ export default makeMessages('zui', {
     collapse: m('Collapse sidebar'),
     expand: m('Expand sidebar'),
     filter: m('Type to filter'),
+    filterLabel: m('Filter organizations'),
     geography: m('Geography'),
     home: m('Home'),
     journeys: m('Journeys'),
@@ -186,6 +190,10 @@ export default makeMessages('zui', {
     myPagesMenuItemLabel: m('My pages'),
     mySettingsMenuItemLabel: m('My settings'),
     organizationAvatarAltText: m('Organization icon'),
+    organizationSwitcher: {
+      hide: m('Hide organization switcher'),
+      show: m('Show organization switcher'),
+    },
     overview: m('Overview'),
     people: m('People'),
     projects: m('Projects & Activities'),
