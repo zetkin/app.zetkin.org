@@ -91,6 +91,8 @@ export default makeMessages('zui', {
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
     title: m('Sort'),
+    ascending: m('Ascending'),
+    descending: m('Descending'),
   },
   dateRange: {
     draft: m('No start date'),

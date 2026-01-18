@@ -3437,6 +3437,8 @@ zui:
     button: Sortera
     hint: 'Tips: håll ner {shiftKeyIcon} när du klickar på flera kolumner'
     title: Sortera
+    ascending: Stigande
+    descending: Fallande
   dateRange:
     draft: Inget startdatum
     end: Slut
