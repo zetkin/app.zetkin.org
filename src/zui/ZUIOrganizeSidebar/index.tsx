@@ -336,13 +336,15 @@ const ZUIOrganizeSidebar = ({
                 <>
                   <IconButton
                     ref={expandButton}
+                    aria-label={messages.organizeSidebar.expand()}
                     className="show-on-hover"
                     onClick={handleClick}
                   >
                     <KeyboardDoubleArrowRightOutlined />
                   </IconButton>
                   <Avatar
-                    alt="icon"
+                    alt={messages.organizeSidebar.organizationAvatarAltText()}
+                    aria-hidden="true"
                     className="hide-on-hover"
                     src={`/api/orgs/${orgId}/avatar`}
                   />
@@ -373,20 +375,22 @@ const ZUIOrganizeSidebar = ({
                                 <>
                                   <IconButton
                                     ref={collapseButton}
+                                    aria-label={messages.organizeSidebar.collapse()}
                                     className="show-on-hover"
                                     onClick={handleClick}
                                   >
                                     <KeyboardDoubleArrowLeftOutlined />
                                   </IconButton>
                                   <Avatar
-                                    alt="icon"
+                                    alt={messages.organizeSidebar.organizationAvatarAltText()}
+                                    aria-hidden="true"
                                     className="hide-on-hover"
                                     src={`/api/orgs/${orgId}/avatar`}
                                   />
                                 </>
                               ) : (
                                 <Avatar
-                                  alt="icon"
+                                  alt={messages.organizeSidebar.organizationAvatarAltText()}
                                   src={`/api/orgs/${orgId}/avatar`}
                                 />
                               )}
