@@ -1,9 +1,7 @@
-import dynamic from 'next/dynamic';
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Dialog, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
-import 'leaflet/dist/leaflet.css';
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
@@ -12,6 +10,7 @@ import MoveLocationCard from './MoveLocationCard';
 import useEventLocationMutations from 'features/events/hooks/useEventLocationMutations';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+import LocationModalMap from 'features/events/components/LocationModal/LocationModalMap';
 
 export type PendingLocation = {
   lat: number;
@@ -30,7 +29,6 @@ interface LocationModalProps {
   locationId?: number | null;
 }
 
-const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
   currentEvent,
   events,
@@ -43,7 +41,7 @@ const LocationModal: FC<LocationModalProps> = ({
   locationId = null,
 }) => {
   const messages = useMessages(messageIds);
-  const [searchString, setSearchString] = useState('');
+  const [, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
   const { setLocationLatLng } = useEventLocationMutations(orgId);
   const [pendingLocation, setPendingLocation] = useState<Pick<
@@ -68,9 +66,8 @@ const LocationModal: FC<LocationModalProps> = ({
 
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
-      <Box border={1} padding={2}>
-        <Map
-          currentEventId={currentEvent?.id || null}
+      <Box padding={2}>
+        <LocationModalMap
           inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
@@ -91,9 +88,9 @@ const LocationModal: FC<LocationModalProps> = ({
             setNewLatLng({ lat, lng })
           }
           pendingLocation={pendingLocation}
-          relatedEvents={events}
-          searchString={searchString}
           selectedLocation={selectedLocation}
+          setPendingLocation={setPendingLocation}
+          setSelectedLocationId={setSelectedLocationId}
         />
         <Box
           sx={{
