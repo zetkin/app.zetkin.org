@@ -1878,10 +1878,8 @@ feat:
       showButton: Vis alle arrangementer
   profile:
     delete:
-      button: Fjern person
       confirm: Er du sikker på at du vil slette {name} fra {org}, og alle relaterte
         organisasjoner? Denne handlingen kan ikke angres.
-      title: Slett konto
       warning: Dette kan ikke angres!
     details:
       title: Detaljer

@@ -1339,10 +1339,8 @@ feat:
         title: Recent organizations
   profile:
     delete:
-      button: Remove person
       confirm: Are you sure you want to delete {name} from {org}, and all related
         organizations? This is a permanent action.
-      title: Delete account
       warning: This cannot be undone!
     details:
       title: Details
