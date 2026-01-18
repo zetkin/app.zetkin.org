@@ -31,37 +31,37 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_version: ["18"]
-        os: ["ubuntu-latest"]
+        node_version: ['22']
+        os: ['ubuntu-latest']
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Validate
-      run: ${{ inputs.validation-script }}
-      if: inputs.validation-script
+      - name: Validate
+        run: ${{ inputs.validation-script }}
+        if: inputs.validation-script
 
-    - name: Use Node.js ${{ matrix.node_version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node_version }}
-        cache: 'yarn'
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+          cache: 'yarn'
 
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
-      env:
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
-    - name: Build
-      run: ${{ inputs.build-script }}
-      if: inputs.build-script
+      - name: Build
+        run: ${{ inputs.build-script }}
+        if: inputs.build-script
 
-    - name: Test
-      run: yarn ${{ inputs.yarn-test-script }}
+      - name: Test
+        run: yarn ${{ inputs.yarn-test-script }}
 
-    - uses: actions/upload-artifact@v4
-      if: always() && inputs.upload-path
-      with:
-        path: ${{ inputs.upload-path }}
-        retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.upload-path
+        with:
+          path: ${{ inputs.upload-path }}
+          retention-days: 30

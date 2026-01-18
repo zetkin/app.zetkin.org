@@ -29,8 +29,10 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
       renderInput={(params) => (
         <TextField
           {...params}
-          inputProps={{
-            ...params.inputProps,
+          slotProps={{
+            htmlInput: {
+              ...params.inputProps,
+            },
           }}
         />
       )}

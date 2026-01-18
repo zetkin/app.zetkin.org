@@ -88,7 +88,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
           startAdornment: <Search color="secondary" sx={{ mr: 1 }} />,
         },
       }}
-      sx={{ minWidth: '400px' }}
+      sx={{ maxWidth: '400px', width: '33%' }}
       value={searchString}
       variant="outlined"
     />

@@ -1,39 +1,18 @@
-import createStyles from '@mui/styles/createStyles';
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { Theme } from '@mui/material/styles';
-import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Breadcrumbs,
+  Link,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 
 import { Breadcrumb } from 'utils/types';
 import { Msg } from 'core/i18n';
 import messageIds from '../l10n/messageIds';
 import useBreadcrumbElements from '../hooks/useBreadcrumbs';
 import oldTheme from 'theme';
-
-const useStyles = makeStyles<Theme, { highlight?: boolean }>(() =>
-  createStyles({
-    breadcrumb: {
-      display: 'block',
-      maxWidth: '200px',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      transition: 'font-size 0.2s ease',
-      whiteSpace: 'nowrap',
-    },
-    root: {
-      '& > * + *': {
-        marginTop: oldTheme.spacing(2),
-      },
-      [oldTheme.breakpoints.down('sm')]: {
-        width: '100%',
-      },
-    },
-    viewTitle: {
-      fontWeight: ({ highlight }) => (highlight ? 'bolder' : 'inherit'),
-    },
-  })
-);
 
 function validMessageId(
   idStr: string
@@ -50,9 +29,9 @@ const BreadcrumbTrail = ({
 }: {
   highlight?: boolean;
 }): JSX.Element | null => {
-  const classes = useStyles({ highlight });
   const breadcrumbs = useBreadcrumbElements();
   const smallScreen = useMediaQuery('(max-width:700px)');
+
   const mediumScreen = useMediaQuery('(max-width:960px)');
   const largeScreen = useMediaQuery('(max-width:1200px)');
 
@@ -68,13 +47,22 @@ const BreadcrumbTrail = ({
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        [oldTheme.breakpoints.down('sm')]: {
+          width: '100%',
+        },
+      }}
+    >
       <Breadcrumbs
         aria-label="breadcrumb"
         itemsAfterCollapse={smallScreen ? 1 : mediumScreen ? 2 : 3}
         itemsBeforeCollapse={smallScreen ? 1 : mediumScreen ? 2 : 3}
         maxItems={smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10}
         separator={<NavigateNextIcon fontSize="small" />}
+        sx={{
+          minHeight: '24px',
+        }}
       >
         {breadcrumbs.map((crumb: Breadcrumb, index: number) => {
           if (index < breadcrumbs.length - 1) {
@@ -86,8 +74,15 @@ const BreadcrumbTrail = ({
                 passHref
               >
                 <Link
-                  className={classes.breadcrumb}
                   color="inherit"
+                  sx={{
+                    display: 'block',
+                    maxWidth: '200px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    transition: 'font-size 0.2s ease',
+                    whiteSpace: 'nowrap',
+                  }}
                   underline="hover"
                 >
                   {getLabel(crumb)}
@@ -98,7 +93,11 @@ const BreadcrumbTrail = ({
             return (
               <Typography
                 key={crumb.href}
-                classes={{ root: classes.viewTitle }}
+                sx={{
+                  p: {
+                    fontWeight: highlight ? 'bolder' : 'inherit',
+                  },
+                }}
               >
                 {getLabel(crumb)}
               </Typography>
@@ -106,7 +105,7 @@ const BreadcrumbTrail = ({
           }
         })}
       </Breadcrumbs>
-    </div>
+    </Box>
   );
 };
 

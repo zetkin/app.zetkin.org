@@ -1,57 +1,9 @@
-import { lighten, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { FormControl, InputBase, Theme, Tooltip } from '@mui/material';
+import { Box, lighten, useTheme } from '@mui/material';
+import { FormControl, InputBase, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages } from 'core/i18n';
-
-interface StyleProps {
-  showBorder: boolean | undefined;
-  readonly: boolean | undefined;
-}
-
-const useStyles = makeStyles<Theme, StyleProps>(() => {
-  const theme = useTheme();
-  return {
-    input: {
-      '&:focus, &:hover': {
-        borderColor: ({ readonly }) =>
-          !readonly ? lighten(theme.palette.primary.main, 0.65) : '',
-        paddingLeft: ({ readonly }) => (!readonly ? 10 : 0),
-        paddingRight: 0,
-      },
-      border: '2px dotted transparent',
-      borderColor: ({ showBorder }) =>
-        showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
-      borderRadius: 10,
-      paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
-      paddingRight: ({ showBorder }) => (showBorder ? 0 : 10),
-      transition: 'all 0.2s ease',
-    },
-    inputRoot: {
-      cursor: 'pointer',
-      fontFamily: 'inherit',
-      fontSize: 'inherit !important',
-      fontWeight: 'inherit',
-    },
-    span: {
-      // Same styles as input
-      '&:focus, &:hover': {
-        borderColor: lighten(theme.palette.primary.main, 0.65),
-        paddingLeft: 10,
-        paddingRight: 0,
-      },
-      border: '2px dotted transparent',
-      borderRadius: 10,
-      paddingRight: 10,
-
-      // But invisible and positioned absolutely to not affect flow
-      position: 'absolute',
-      visibility: 'hidden',
-    },
-  };
-});
 
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
@@ -81,10 +33,10 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>(value);
 
-  const classes = useStyles({ readonly, showBorder });
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const messages = useMessages(messageIds);
+  const theme = useTheme();
 
   useEffect(() => {
     // If the value prop changes, set the text
@@ -190,14 +142,28 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       title={tooltipText()}
     >
       <FormControl style={{ overflow: 'hidden' }} variant="standard">
-        <span ref={spanRef} className={classes.span}>
-          {text || placeholder}
-        </span>
-        <InputBase
-          classes={{
-            input: classes.input,
-            root: classes.inputRoot,
+        <Box
+          ref={spanRef}
+          component="span"
+          sx={{
+            // Same styles as input
+            '&:focus, &:hover': {
+              borderColor: lighten(theme.palette.primary.main, 0.65),
+              paddingLeft: '10px',
+              paddingRight: 0,
+            },
+            border: '2px dotted transparent',
+            borderRadius: '10px',
+            paddingRight: '10px',
+
+            // But invisible and positioned absolutely to not affect flow
+            position: 'absolute',
+            visibility: 'hidden',
           }}
+        >
+          {text || placeholder}
+        </Box>
+        <InputBase
           disabled={disabled}
           inputRef={inputRef}
           onBlur={handleBlur}
@@ -206,6 +172,33 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           readOnly={!editing}
+          sx={[
+            {
+              '.MuiInputBase-input': {
+                '&:focus, &:hover': {
+                  borderColor: `${
+                    !readonly ? lighten(theme.palette.primary.main, 0.65) : ''
+                  } !important`,
+                  paddingLeft: `${!readonly ? 10 : 0}px`,
+                  paddingRight: 0,
+                },
+                border: '2px dotted transparent',
+                borderColor: showBorder
+                  ? lighten(theme.palette.primary.main, 0.65)
+                  : '',
+                borderRadius: '10px',
+                paddingLeft: `${showBorder ? 10 : 0}px`,
+                paddingRight: `${showBorder ? 0 : 10}px`,
+                transition: 'all 0.2s ease',
+              },
+            },
+            {
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              fontSize: 'inherit !important',
+              fontWeight: 'inherit',
+            },
+          ]}
           value={editing ? text : text || placeholder || ''}
         />
       </FormControl>

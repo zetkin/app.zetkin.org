@@ -1,5 +1,4 @@
-import { Box, Button, ButtonGroup } from '@mui/material';
-import { Close, Create, Save } from '@mui/icons-material';
+import { Box, Button } from '@mui/material';
 import Map from '@vis.gl/react-maplibre';
 import { FC, useMemo, useState } from 'react';
 import { Map as MapType } from 'maplibre-gl';
@@ -60,42 +59,40 @@ const GLGeographyMap: FC<Props> = ({ areas, orgId }) => {
           width: '100%',
         }}
       >
-        <Box display="flex" justifyContent="space-between" px={2} py={1}>
+        <Box display="flex" justifyContent="flex-end" px={2} py={1}>
           <Box alignItems="center" display="flex" gap={1}>
-            <ButtonGroup variant="contained">
-              {!drawing && (
-                <Button
-                  onClick={() => {
-                    startDrawing();
-                  }}
-                  startIcon={<Create />}
-                >
-                  <Msg id={messageIds.areas.draw.startButton} />
-                </Button>
-              )}
-              {drawing && (
-                <Button
-                  disabled={creating}
-                  onClick={() => {
-                    cancelDrawing();
-                  }}
-                  startIcon={<Close />}
-                >
-                  <Msg id={messageIds.areas.draw.cancelButton} />
-                </Button>
-              )}
-              {drawing && canFinishDrawing && (
-                <Button
-                  loading={creating}
-                  onClick={() => {
-                    finishDrawing();
-                  }}
-                  startIcon={<Save />}
-                >
-                  <Msg id={messageIds.areas.draw.saveButton} />
-                </Button>
-              )}
-            </ButtonGroup>
+            {!drawing && (
+              <Button
+                onClick={() => {
+                  startDrawing();
+                }}
+                variant="contained"
+              >
+                <Msg id={messageIds.areas.draw.startButton} />
+              </Button>
+            )}
+            {drawing && (
+              <Button
+                disabled={creating}
+                onClick={() => {
+                  cancelDrawing();
+                }}
+                variant="outlined"
+              >
+                <Msg id={messageIds.areas.draw.cancelButton} />
+              </Button>
+            )}
+            {drawing && canFinishDrawing && (
+              <Button
+                loading={creating}
+                onClick={() => {
+                  finishDrawing();
+                }}
+                variant="contained"
+              >
+                <Msg id={messageIds.areas.draw.saveButton} />
+              </Button>
+            )}
           </Box>
         </Box>
         <Box sx={{ flexGrow: 1, position: 'relative' }}>

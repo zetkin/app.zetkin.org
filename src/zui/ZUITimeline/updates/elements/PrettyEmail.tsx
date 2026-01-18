@@ -1,12 +1,10 @@
 import Link from 'next/link';
-import makeStyles from '@mui/styles/makeStyles';
 import {
   Box,
   Chip,
   CircularProgress,
   Grid,
   Stack,
-  Theme,
   Typography,
 } from '@mui/material';
 import { LetterparserNode, parse } from 'letterparser';
@@ -53,28 +51,11 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   }
 };
 
-const useBodyStyles = makeStyles<Theme, { plain: boolean }>(() => ({
-  body: {
-    '& blockquote': {
-      borderColor: oldTheme.palette.text.disabled,
-      borderLeftWidth: 4,
-      borderStyle: 'solid',
-      borderWidth: 0,
-      marginLeft: 2,
-      opacity: 0.8,
-      paddingLeft: 10,
-    },
-    fontFamily: 'sans-serif',
-    whiteSpace: ({ plain }) => (plain ? 'pre' : 'normal'),
-  },
-}));
-
 const EmailBody: React.FC<{
   body: LetterparserNode['body'];
   forcePlain?: boolean;
 }> = ({ body, forcePlain = false }) => {
   const plain = forcePlain || typeof body == 'string';
-  const classes = useBodyStyles({ plain });
 
   if (Array.isArray(body)) {
     let bodyToRender = body.find(
@@ -92,11 +73,23 @@ const EmailBody: React.FC<{
     return (
       <ZUICleanHtml
         BoxProps={{
-          className: classes.body,
           component: 'div',
           style: {
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
+          },
+          sx: {
+            '& blockquote': {
+              borderColor: oldTheme.palette.text.disabled,
+              borderLeftWidth: 4,
+              borderStyle: 'solid',
+              borderWidth: 0,
+              marginLeft: 2,
+              opacity: 0.8,
+              paddingLeft: 10,
+            },
+            fontFamily: 'sans-serif',
+            whiteSpace: plain ? 'pre' : 'normal',
           },
         }}
         dirtyHtml={content}

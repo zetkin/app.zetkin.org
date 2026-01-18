@@ -29,6 +29,20 @@ export default makeMessages('feat.profile', {
     addButton: m('Start new journey'),
     title: m('Journeys'),
   },
+  notes: {
+    addNoteButton: m('Add note'),
+    cancelButton: m('Cancel'),
+    note: {
+      author: m<{ authorName: JSX.Element }>('{authorName} added a note'),
+      delete: m('Delete'),
+      deleteWarningDescription: m<{ name: string }>(
+        'Are you sure you want to delete this note about {name}? Deleting a note cannot be undone.'
+      ),
+      deleteWarningTitle: m('Delete note'),
+    },
+    placeHolder: m('Write a note'),
+    title: m('Notes'),
+  },
   numberOfChangesMessage: m<{ number: number }>(
     'Will update {number, plural, =1 {1 field} other {# fields}}'
   ),

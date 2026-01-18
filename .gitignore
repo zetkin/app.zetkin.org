@@ -8,6 +8,7 @@
 # testing
 .nyc_output
 playwright-report
+test-results
 
 # next.js
 /.next/
