@@ -2735,8 +2735,6 @@ zui:
     button: Sort
     hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     title: Sort
-    ascending: Ascending
-    descending: Descending
   dateRange:
     draft: No start date
     end: End
