@@ -3,6 +3,7 @@ import {
   FC,
   SetStateAction,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -129,6 +130,16 @@ const LocationModalMap: FC<MapProps> = ({
   );
 
   useMapMarkerClick(map, onMarkerClickGeoJson);
+
+  useEffect(() => {
+    if (!selectedLocation) {
+      return;
+    }
+    map?.panTo(selectedLocation, {
+      animate: true,
+      zoom: Math.max(map?.getZoom(), 12),
+    });
+  }, [map, selectedLocation]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
     const features =
