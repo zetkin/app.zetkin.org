@@ -28,6 +28,7 @@ import {
   List,
   Menu,
   MenuItem,
+  SxProps,
   TextField,
   Tooltip,
   Typography,
@@ -55,6 +56,24 @@ import { AREAS, OFFICIALS } from 'utils/featureFlags';
 import oldTheme from 'theme';
 import useIsMobile from 'utils/hooks/useIsMobile';
 import { ZetkinUser } from 'utils/types/zetkin';
+
+/** Use to visually hide elements while keeping them focusable, allowing a11y tools and keyboard navigation to access the button */
+const hiddenYetFocusableStyle: SxProps = {
+  clip: 'rect(0, 0, 0, 0)',
+  height: '1px',
+  margin: '-1px',
+  overflow: 'hidden',
+  position: 'absolute',
+  width: '1px',
+};
+const unsetHidden: SxProps = {
+  clip: 'auto',
+  height: 'auto',
+  margin: '0',
+  overflow: 'visible',
+  position: 'relative',
+  width: 'auto',
+};
 
 const drawerWidth = 300;
 
@@ -184,7 +203,6 @@ const ZUIOrganizeSidebar = ({
 }: {
   title?: string | ReactElement;
 }): JSX.Element => {
-  const [hover, setHover] = useState(false);
   const messages = useMessages(messageIds);
   const user = useCurrentUser();
   const router = useRouter();
@@ -280,14 +298,14 @@ const ZUIOrganizeSidebar = ({
           e.stopPropagation();
         }}
         onClose={() => setMobileDrawerOpen(false)}
-        onMouseLeave={() => {
-          setHover(false);
-        }}
-        onMouseOver={() => {
-          setHover(true);
-        }}
         open={mobileDrawerOpen}
         sx={{
+          '& .show-on-hover': hiddenYetFocusableStyle,
+          // activate when hovered or when a child has focus (e.g. during keyboard navigation)
+          '&:hover, &:has(:focus)': {
+            '.hide-on-hover': hiddenYetFocusableStyle,
+            '.show-on-hover': unsetHidden,
+          },
           '.MuiDrawer-paper': {
             display: 'block',
             overflowX: 'hidden',
@@ -314,13 +332,21 @@ const ZUIOrganizeSidebar = ({
                 my: 1.5,
               }}
             >
-              {!open && hover && (
-                <IconButton ref={expandButton} onClick={handleClick}>
-                  <KeyboardDoubleArrowRightOutlined />
-                </IconButton>
-              )}
-              {!open && !hover && (
-                <Avatar alt="icon" src={`/api/orgs/${orgId}/avatar`} />
+              {!open && (
+                <>
+                  <IconButton
+                    ref={expandButton}
+                    className="show-on-hover"
+                    onClick={handleClick}
+                  >
+                    <KeyboardDoubleArrowRightOutlined />
+                  </IconButton>
+                  <Avatar
+                    alt="icon"
+                    className="hide-on-hover"
+                    src={`/api/orgs/${orgId}/avatar`}
+                  />
+                </>
               )}
               <ZUIFuture future={organizationFuture}>
                 {(data) =>
@@ -343,13 +369,21 @@ const ZUIOrganizeSidebar = ({
                                 width: '48px',
                               }}
                             >
-                              {hover && !isMobile ? (
-                                <IconButton
-                                  ref={collapseButton}
-                                  onClick={handleClick}
-                                >
-                                  <KeyboardDoubleArrowLeftOutlined />
-                                </IconButton>
+                              {!isMobile ? (
+                                <>
+                                  <IconButton
+                                    ref={collapseButton}
+                                    className="show-on-hover"
+                                    onClick={handleClick}
+                                  >
+                                    <KeyboardDoubleArrowLeftOutlined />
+                                  </IconButton>
+                                  <Avatar
+                                    alt="icon"
+                                    className="hide-on-hover"
+                                    src={`/api/orgs/${orgId}/avatar`}
+                                  />
+                                </>
                               ) : (
                                 <Avatar
                                   alt="icon"
