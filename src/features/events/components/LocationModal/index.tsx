@@ -96,46 +96,45 @@ const LocationModal: FC<LocationModalProps> = ({
           sx={{
             bottom: cardIsFullHeight ? '64px' : '',
             display: 'flex',
+            gap: '10px',
             justifyContent: 'flex-end',
             justifySelf: 'flex-end',
             margin: '2px',
+            pointerEvents: 'none',
             position: 'absolute',
             right: '32px',
             top: '32px',
-            width: '30%',
             zIndex: 1000,
           }}
         >
-          {!selectedLocation && !pendingLocation && (
-            <LocationSearch
-              onChange={(value: ZetkinLocation) => {
-                const location = locations.find(
-                  (location) => location.id === value.id
+          <LocationSearch
+            onChange={(value: ZetkinLocation) => {
+              const location = locations.find(
+                (location) => location.id === value.id
+              );
+              if (!location?.lat || !location?.lng) {
+                return;
+              }
+              setSelectedLocationId(location.id);
+              setSearchString('');
+            }}
+            onClickGeolocate={() => {
+              if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                  // Success getting location
+                  (position) => {
+                    setPendingLocation({
+                      lat: position.coords.latitude,
+                      lng: position.coords.longitude,
+                    });
+                  }
                 );
-                if (!location?.lat || !location?.lng) {
-                  return;
-                }
-                setSelectedLocationId(location.id);
-                setSearchString('');
-              }}
-              onClickGeolocate={() => {
-                if ('geolocation' in navigator) {
-                  navigator.geolocation.getCurrentPosition(
-                    // Success getting location
-                    (position) => {
-                      setPendingLocation({
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                      });
-                    }
-                  );
-                }
-              }}
-              onInputChange={(value) => setSearchString(value || '')}
-              onTextFieldChange={(value) => setSearchString(value)}
-              options={locations}
-            />
-          )}
+              }
+            }}
+            onInputChange={(value) => setSearchString(value || '')}
+            onTextFieldChange={(value) => setSearchString(value)}
+            options={locations}
+          />
           {selectedLocation && !inMoveState && (
             <LocationDetailsCard
               location={selectedLocation}

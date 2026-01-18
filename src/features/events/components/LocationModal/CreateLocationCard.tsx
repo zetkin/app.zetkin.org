@@ -31,7 +31,9 @@ const CreateLocationCard: FC<CreateLocationCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width: '100%',
+        maxWidth: '40vw',
+        pointerEvents: 'auto',
+        width: '300px',
       }}
     >
       <Box display="flex" justifyContent="space-between">

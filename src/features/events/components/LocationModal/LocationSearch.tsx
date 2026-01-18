@@ -52,7 +52,11 @@ const LocationSearch: FC<LocationSearchProps> = ({
       sx={{
         '& .MuiOutlinedInput-root': {
           paddingRight: '10px!important',
+          pointerEvents: 'auto',
         },
+        maxWidth: '40vw',
+        pointerEvents: 'none',
+        width: '300px',
       }}
     />
   );
