@@ -21,6 +21,7 @@ import {
   Collapse,
   Divider,
   IconButton,
+  Tooltip,
   Link,
   Menu,
   MenuItem,
@@ -46,6 +47,7 @@ import {
 } from '@mui/x-charts-pro';
 import { ChartPluginOptions } from '@mui/x-charts/internals';
 import { ChartPublicAPI } from '@mui/x-charts/internals/plugins/models';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
 import CloseIcon from '@mui/icons-material/Close';
 import { BoxOwnProps } from '@mui/system/Box/Box';
@@ -625,6 +627,14 @@ const TextResponseCard = ({
     submission.submissionId
   );
   const { openPane } = usePanes();
+  const messages = useMessages(messageIds);
+
+  // Copy-Functionality fpr Button
+  const handleCopy = (e: React.MouseEvent, text: string) => {
+    //e.preventDefault();
+    e.stopPropagation(); // Stop higher level Click event (otherwise Survey would be opened)
+    navigator.clipboard.writeText(text); // write text to clipboard
+  };
 
   return (
     <ZUIFuture
@@ -674,18 +684,34 @@ const TextResponseCard = ({
                 width: '100%',
               }}
             >
-              <CardContent>
+              <CardContent
+                sx={{
+                  alignItems: 'flex-start',
+                  display: 'flex',
+                  height: '100%',
+                  width: '100%',
+                }}
+              >
                 <Typography
                   sx={{
                     WebkitBoxOrient: 'vertical',
                     WebkitLineClamp: '4',
                     display: '-webkit-box',
+                    flex: 1,
                     overflow: 'hidden',
                     wordBreak: 'break-word',
                   }}
                 >
                   {questionResponse.response}
                 </Typography>
+                <Tooltip title={messages.insights.textFields.tooltip()}>
+                  <IconButton
+                    onClick={(e) => handleCopy(e, questionResponse.response)}
+                    size="small"
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               </CardContent>
             </Card>
           </Link>

@@ -140,6 +140,7 @@ export default makeMessages('feat.surveys', {
         wordCloud: m('Cloud'),
         wordFrequencies: m('Bar'),
       },
+      tooltip: m('Copy Text'),
     },
   },
   layout: {
