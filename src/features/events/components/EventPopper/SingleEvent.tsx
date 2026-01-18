@@ -14,6 +14,8 @@ import {
 import { Box, Button, Link, Typography } from '@mui/material';
 import React, { FC, useContext, useState } from 'react';
 import router from 'next/router';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { useMessages } from 'core/i18n';
 import { eventsDeselected } from 'features/events/store';
@@ -40,6 +42,7 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import useEventState, { EventState } from 'features/events/hooks/useEventState';
 import ChangeCampaignDialog from '../../../campaigns/components/ChangeCampaignDialog';
+import AddPersonButton from '../AddPersonButton';
 
 interface SingleEventProps {
   event: ZetkinEvent | MultiDayEvent;
@@ -260,6 +263,9 @@ const SingleEvent: FC<SingleEventProps> = ({ event, onClickAway }) => {
             participants={availableParticipants}
           />
         )}
+        <DndProvider backend={HTML5Backend}>
+          <AddPersonButton eventId={event.id} orgId={event.organization.id} />
+        </DndProvider>
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Box alignItems="center" display="flex">
             <ZUIIconLabel
