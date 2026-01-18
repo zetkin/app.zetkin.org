@@ -19,10 +19,12 @@ import {
   CardContent,
   Collapse,
   Divider,
+  Fade,
   IconButton,
   Link,
   Menu,
   MenuItem,
+  Popper,
   Skeleton,
   ToggleButton,
   ToggleButtonGroup,
@@ -68,6 +70,7 @@ import range from 'utils/range';
 import useSurveyResponseStats from 'features/surveys/hooks/useSurveyResponseStats';
 import { useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
+import zuiMessageIds from 'zui/l10n/messageIds';
 import useSurveySubmission from 'features/surveys/hooks/useSurveySubmission';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { useNumericRouteParams } from 'core/hooks';
@@ -75,6 +78,7 @@ import { getEllipsedString, sanitizeFileName } from 'utils/stringUtils';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import useResizeObserver from 'zui/hooks/useResizeObserver';
+import { CopyIcon } from 'zui/ZUIInlineCopyToClipBoard';
 
 const TEXT_RESPONSE_CARD_HEIGHT = 150;
 const CHART_HEIGHT = 400;
@@ -706,12 +710,17 @@ const TextResponseCard = ({
   questionId: number;
   submission: SubmissionStats;
 }) => {
+  const zuiMessages = useMessages(zuiMessageIds);
   const { orgId } = useNumericRouteParams();
   const extendedSubmissionFuture = useSurveySubmission(
     orgId,
     submission.submissionId
   );
   const { openPane } = usePanes();
+
+  const [anchorEl, setAnchorEl] = useState<
+    null | (EventTarget & HTMLButtonElement)
+  >(null);
 
   return (
     <ZUIFuture
@@ -731,9 +740,23 @@ const TextResponseCard = ({
           return null;
         }
 
+        let clickedCopy = false;
+        const copy = async (
+          e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+        ) => {
+          clickedCopy = true;
+          await navigator.clipboard.writeText(questionResponse.response);
+          setAnchorEl(e.target as HTMLButtonElement);
+          setTimeout(() => setAnchorEl(null), 1000);
+        };
+
         return (
           <Link
             onClick={() => {
+              if (clickedCopy) {
+                clickedCopy = false;
+                return;
+              }
               openPane({
                 render() {
                   return (
@@ -761,7 +784,7 @@ const TextResponseCard = ({
                 width: '100%',
               }}
             >
-              <CardContent>
+              <CardContent sx={{ width: '100%' }}>
                 <Typography
                   sx={{
                     WebkitBoxOrient: 'vertical',
@@ -771,6 +794,38 @@ const TextResponseCard = ({
                     wordBreak: 'break-word',
                   }}
                 >
+                  <Box
+                    justifyContent="flex-end"
+                    sx={{
+                      alignItems: 'center',
+                      display: 'float',
+                      float: 'right',
+                    }}
+                  >
+                    <IconButton aria-label="previous" onClick={copy}>
+                      <CopyIcon />
+                    </IconButton>
+                    <Popper
+                      anchorEl={anchorEl}
+                      open={!!anchorEl}
+                      placement="top"
+                      transition
+                    >
+                      {({ TransitionProps }) => (
+                        <Fade {...TransitionProps}>
+                          <Box
+                            sx={{
+                              bgcolor: 'background.paper',
+                              border: 1,
+                              p: 1,
+                            }}
+                          >
+                            {zuiMessages.copyToClipboard.copied()}
+                          </Box>
+                        </Fade>
+                      )}
+                    </Popper>
+                  </Box>
                   {questionResponse.response}
                 </Typography>
               </CardContent>
