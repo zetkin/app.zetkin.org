@@ -9,7 +9,7 @@ import { GeoJSON } from 'geojson';
 
 export default function useMapMarkerClick(
   map: MapType | null,
-  onMarkerClick?: (features: GeoJSON.Feature[]) => void
+  onMarkerClick?: (features: GeoJSON.Feature[], event: MapMouseEvent) => void
 ) {
   useEffect(() => {
     if (!map) {
@@ -37,7 +37,7 @@ export default function useMapMarkerClick(
         );
 
         if (onMarkerClick) {
-          onMarkerClick(geojsonFeatures);
+          onMarkerClick(geojsonFeatures, event);
         }
       }
     };
