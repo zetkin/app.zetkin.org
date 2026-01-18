@@ -1,4 +1,3 @@
-import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import {
@@ -73,6 +72,7 @@ import messageIds from 'features/views/l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
 import useViewMutations from 'features/views/hooks/useViewMutations';
 import oldTheme from 'theme';
+import useViewBulkActions from 'features/views/hooks/useViewBulkActions';
 
 declare module '@mui/x-data-grid-pro' {
   interface ColumnMenuPropsOverrides {
@@ -100,20 +100,6 @@ declare module '@mui/x-data-grid-pro' {
     sortModel: GridSortModel;
   }
 }
-
-const useStyles = makeStyles(() => ({
-  '@keyframes addedRowAnimation': {
-    '0%': {
-      backgroundColor: oldTheme.palette.success.main,
-    },
-    '100%': {
-      backgroundColor: 'transparent',
-    },
-  },
-  addedRow: {
-    animation: '$addedRowAnimation 2s',
-  },
-}));
 
 const getFilterOperators = (col: Omit<GridColDef, 'field'>) => {
   const stringOperators = getGridStringOperators().filter(
@@ -176,7 +162,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const theme = useTheme();
   const messages = useMessages(messageIds);
-  const classes = useStyles();
+  const dispatch = useAppDispatch();
+  const apiClient = useApiClient();
+  const tagListState = useAppSelector((state) => state.tags.tagList);
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
   const [columnToCreate, setColumnToCreate] =
@@ -214,6 +202,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { createView, isLoading } = useCreateView(orgId);
   const viewGrid = useViewGrid(orgId, view.id);
   const { updateColumnOrder } = useViewMutations(orgId);
+  const { bulkDeletePersons } = useViewBulkActions(orgId);
 
   const showError = useCallback(
     (error: VIEW_DATA_TABLE_ERROR) => {
@@ -344,6 +333,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     [setColumnToRename, updateColumn]
   );
 
+  const onRowsDelete = useCallback(async () => {
+    bulkDeletePersons(selection);
+  }, [selection]);
+
   const onRowsRemove = useCallback(async () => {
     setWaiting(true);
     try {
@@ -422,10 +415,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     },
     [colIdFromFieldName, columns, debouncedUpdateColumnOrder]
   );
-
-  const dispatch = useAppDispatch();
-  const apiClient = useApiClient();
-  const tagListState = useAppSelector((state) => state.tags.tagList);
 
   const unConfiguredGridColumns = useMemo(
     () => [
@@ -541,6 +530,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         isLoading,
         isSmartSearch: !!view.content_query,
         onColumnCreate,
+        onRowsDelete,
         onRowsRemove,
         onSortModelChange: modelGridProps.onSortModelChange,
         onViewCreate,
@@ -584,8 +574,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const getRowClassName = useCallback(
     (params: GridRowClassNameParams): string =>
-      params.id == addedId ? classes.addedRow : '',
-    [addedId, classes.addedRow]
+      params.id == addedId ? 'addedRow' : '',
+    [addedId]
   );
 
   const localeText = useMemo(
@@ -732,7 +722,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         slotProps={componentsProps}
         slots={slots}
         style={style}
-        sx={mainSx}
+        sx={[
+          mainSx,
+          {
+            '.addedRow': {
+              '@keyframes addedRowAnimation': {
+                from: {
+                  backgroundColor: oldTheme.palette.success.main,
+                },
+                to: {
+                  backgroundColor: 'transparent',
+                },
+              },
+              animation: 'addedRowAnimation 2s',
+            },
+          },
+        ]}
         {...modelGridProps}
       />
 

@@ -8,13 +8,13 @@ import {
 } from '@mui/material';
 import { FC, useState } from 'react';
 
-import globalMessageIds from 'core/i18n/messageIds';
 import messageIds from 'features/duplicates/l10n/messageIds';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import { Msg, useMessages } from 'core/i18n';
+import { useMessages } from 'core/i18n';
 import { useNumericRouteParams } from 'core/hooks';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import useFieldTitle from 'utils/hooks/useFieldTitle';
 
 interface FieldSettingsRowProps {
   duplicates: ZetkinPerson[];
@@ -33,6 +33,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
   const messages = useMessages(messageIds);
   const [selectedValue, setSelectedValue] = useState(values[0]);
   const { orgId } = useNumericRouteParams();
+  const getFieldTitle = useFieldTitle(orgId);
 
   const getLabel = (value: string) => {
     if (field === NATIVE_PERSON_FIELDS.GENDER) {
@@ -94,9 +95,7 @@ const FieldSettingsRow: FC<FieldSettingsRowProps> = ({
           padding={1}
           sx={{ borderRadius: 2 }}
         >
-          <Typography>
-            <Msg id={globalMessageIds.personFields[field]} />
-          </Typography>
+          <Typography>{getFieldTitle(field)}</Typography>
         </Box>
       </Box>
       <Box

@@ -239,7 +239,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                       // eslint-disable-next-line jsx-a11y/no-autofocus
                       autoFocus={addedOptionId == option.id}
                       fullWidth
-                      inputProps={props}
                       onBlur={(ev) => {
                         updateElementOption(
                           element.id,
@@ -256,6 +255,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                           )
                         );
                       }}
+                      slotProps={{ htmlInput: props }}
                       value={option.text}
                     />
                   </Box>

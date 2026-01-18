@@ -454,9 +454,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
                 renderInput={(props) => (
                   <TextField
                     fullWidth
-                    inputProps={props}
                     label={messages.eventOverviewCard.url()}
                     onChange={(ev) => setLink(ev.target.value)}
+                    slotProps={{ htmlInput: { props } }}
                     value={link}
                   />
                 )}
@@ -501,11 +501,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ data, orgId }) => {
               renderInput={(props) => (
                 <TextField
                   fullWidth
-                  inputProps={props}
                   label={messages.eventOverviewCard.description()}
                   multiline
                   onChange={(ev) => setInfoText(ev.target.value)}
                   rows={4}
+                  slotProps={{ htmlInput: props }}
                   value={infoText}
                 />
               )}

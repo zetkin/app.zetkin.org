@@ -18,6 +18,9 @@ import PotentialDuplicatesLists from './PotentialDuplicatesLists';
 import useFieldSettings from '../hooks/useFieldSettings';
 import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { useNumericRouteParams } from 'core/hooks';
+import useDetailedPersons from '../hooks/useDetailedPerson';
+import ZUIFuture from 'zui/ZUIFuture';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -42,17 +45,24 @@ const MergeModal: FC<Props> = ({
     persons.map((person) => person.id) ?? []
   );
 
+  const { orgId } = useNumericRouteParams();
+
   const peopleToMerge = [
     ...persons.filter((person) => selectedIds.includes(person.id)),
     ...additionalPeople,
   ];
+
+  const detailedPersons = useDetailedPersons(
+    orgId,
+    peopleToMerge.map((person) => person.id)
+  );
 
   const peopleNotToMerge = persons.filter(
     (person) => !selectedIds.includes(person.id)
   );
 
   const { hasConflictingValues, fieldValues, initialOverrides } =
-    useFieldSettings(peopleToMerge);
+    useFieldSettings(detailedPersons.data ?? []);
   const [overrides, setOverrides] = useState(initialOverrides);
 
   useEffect(() => {
@@ -107,13 +117,18 @@ const MergeModal: FC<Props> = ({
           sx={{ overflowY: 'auto' }}
           width="50%"
         >
-          <FieldSettings
-            duplicates={peopleToMerge}
-            fieldValues={fieldValues}
-            onChange={(field, value) => {
-              setOverrides({ ...overrides, [`${field}`]: value });
-            }}
-          />
+          <ZUIFuture future={detailedPersons}>
+            {(detailedPersons) => (
+              <FieldSettings
+                duplicates={detailedPersons}
+                fieldValues={fieldValues}
+                onChange={(field, value) => {
+                  setOverrides({ ...overrides, [`${field}`]: value });
+                }}
+              />
+            )}
+          </ZUIFuture>
+
           <Box marginBottom={2} />
           {hasConflictingValues && (
             <Alert severity="warning">

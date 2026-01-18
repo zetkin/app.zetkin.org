@@ -45,7 +45,12 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
           label={label}
           multiline={variant === 'content'}
           onChange={(ev) => onChange(ev.target.value)}
-          slotProps={{ htmlInput: { ...props, sx: VARIANTS[variant] } }}
+          slotProps={{
+            htmlInput: {
+              ...props,
+              sx: VARIANTS[variant],
+            },
+          }}
           sx={{ marginBottom: 2 }}
           value={value}
         />

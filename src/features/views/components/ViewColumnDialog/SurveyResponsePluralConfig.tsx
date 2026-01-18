@@ -85,10 +85,12 @@ const SurveyResponsesConfig = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    inputProps={{
-                      ...params.inputProps,
-                    }}
                     label={messages.columnDialog.choices.surveyResponses.questionField()}
+                    slotProps={{
+                      htmlInput: {
+                        ...params.inputProps,
+                      },
+                    }}
                     variant="standard"
                   />
                 )}

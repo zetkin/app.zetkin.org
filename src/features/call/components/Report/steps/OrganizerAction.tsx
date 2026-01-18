@@ -1,12 +1,10 @@
-import { FC, useEffect } from 'react';
-import { LooksOneOutlined, LooksTwoOutlined } from '@mui/icons-material';
+import { FC } from 'react';
 
-import ZUIButtonGroup from 'zui/components/ZUIButtonGroup';
 import messageIds from 'features/call/l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import StepBase from './StepBase';
-import useIsMobile from 'utils/hooks/useIsMobile';
 import { Report } from 'features/call/types';
+import { QuickResponseButtons } from './QuickResponseButtons';
 
 type Props = {
   disableCallerNotes: boolean;
@@ -21,38 +19,7 @@ const OrganizerAction: FC<Props> = ({
   onReportUpdate,
   report,
 }) => {
-  const isMobile = useIsMobile();
   const messages = useMessages(messageIds);
-
-  useEffect(() => {
-    const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key == '1') {
-        onReportUpdate({
-          ...report,
-          organizerActionNeeded: true,
-          step: 'organizerLog',
-        });
-      } else if (ev.key == '2') {
-        if (onReportUpdate) {
-          onReportUpdate({
-            ...report,
-            organizerActionNeeded: false,
-            step: 'callerLog',
-          });
-
-          if (onReportFinished) {
-            onReportFinished();
-          }
-        }
-      }
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, []);
 
   return (
     <StepBase
@@ -61,12 +28,11 @@ const OrganizerAction: FC<Props> = ({
         <Msg id={messageIds.report.steps.organizerAction.question.title} />
       }
     >
-      <ZUIButtonGroup
-        buttons={[
+      <QuickResponseButtons
+        options={[
           {
-            endIcon: !isMobile ? LooksOneOutlined : undefined,
             label: messages.report.steps.organizerAction.question.yesButton(),
-            onClick: () =>
+            onSelect: () =>
               onReportUpdate({
                 ...report,
                 organizerActionNeeded: true,
@@ -74,9 +40,8 @@ const OrganizerAction: FC<Props> = ({
               }),
           },
           {
-            endIcon: !isMobile ? LooksTwoOutlined : undefined,
             label: messages.report.steps.organizerAction.question.noButton(),
-            onClick: () => {
+            onSelect: () => {
               onReportUpdate({
                 ...report,
                 completed: disableCallerNotes ? true : false,
@@ -89,8 +54,6 @@ const OrganizerAction: FC<Props> = ({
             },
           },
         ]}
-        fullWidth
-        variant="secondary"
       />
     </StepBase>
   );
