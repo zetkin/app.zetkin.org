@@ -16,7 +16,17 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import {
+  createRef,
+  FC,
+  RefObject,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import DeleteHideButtons from '../DeleteHideButtons';
 import DropdownIcon from 'zui/icons/DropDown';
@@ -119,8 +129,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       onEditModeEnter,
       onEditModeExit,
       readOnly,
-      save: () => {
-        updateElement(element.id, {
+      save: async () => {
+        await Promise.all(
+          options.map((option) =>
+            updateElementOption(element.id, option.id, option.text)
+          )
+        );
+
+        await updateElement(element.id, {
           question: {
             description: description,
             question: title,
