@@ -63,7 +63,7 @@ const LocationSearch: FC<LocationSearchProps> = ({ onChange }) => {
       }));
       setOptions(options);
       setLoading(false);
-    }, 300);
+    }, 1000);
     return () => {
       clearTimeout(debounceTimeout);
     };
