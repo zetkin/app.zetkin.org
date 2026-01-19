@@ -22,7 +22,7 @@ import { SurveyResponseStats } from 'features/surveys/rpc/getSurveyResponseStats
 
 export interface SurveysStoreSlice {
   elementsBySurveyId: Record<number, RemoteList<ZetkinSurveyElement>>;
-  extendedSurveysBySurveyId: Record<number, RemoteItem<ZetkinSurveyExtended>>;
+  extendedSurveyBySurveyId: Record<number, RemoteItem<ZetkinSurveyExtended>>;
   responseStatsBySurveyId: Record<number, RemoteItem<SurveyResponseStats>>;
   submissionList: RemoteList<ZetkinSurveySubmission>;
   submissionsBySurveyId: Record<number, RemoteList<ZetkinSurveySubmission>>;
@@ -34,7 +34,7 @@ export interface SurveysStoreSlice {
 
 const initialState: SurveysStoreSlice = {
   elementsBySurveyId: {},
-  extendedSurveysBySurveyId: {},
+  extendedSurveyBySurveyId: {},
   responseStatsBySurveyId: {},
   statsBySurveyId: {},
   submissionList: remoteList(),
@@ -232,21 +232,21 @@ const surveysSlice = createSlice({
     },
     extendedSurveyLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
-      if (!state.extendedSurveysBySurveyId[surveyId]) {
-        state.extendedSurveysBySurveyId[surveyId] = remoteItem(surveyId);
+      if (!state.extendedSurveyBySurveyId[surveyId]) {
+        state.extendedSurveyBySurveyId[surveyId] = remoteItem(surveyId);
       }
-      state.extendedSurveysBySurveyId[surveyId].isLoading = true;
+      state.extendedSurveyBySurveyId[surveyId].isLoading = true;
     },
     extendedSurveyLoaded: (
       state,
       action: PayloadAction<[number, ZetkinSurveyExtended]>
     ) => {
       const [surveyId, survey] = action.payload;
-      state.extendedSurveysBySurveyId[surveyId].data = survey;
-      state.extendedSurveysBySurveyId[surveyId].isLoading = false;
-      state.extendedSurveysBySurveyId[surveyId].loaded =
+      state.extendedSurveyBySurveyId[surveyId].data = survey;
+      state.extendedSurveyBySurveyId[surveyId].isLoading = false;
+      state.extendedSurveyBySurveyId[surveyId].loaded =
         new Date().toISOString();
-      state.extendedSurveysBySurveyId[surveyId].isStale = false;
+      state.extendedSurveyBySurveyId[surveyId].isStale = false;
     },
     responseStatsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;

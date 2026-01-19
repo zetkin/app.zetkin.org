@@ -74,7 +74,7 @@ export default function useHydratedSurveySubmission(
 
   const submission = submissionFuture.data;
   const surveyId = submission.survey.id;
-  const survey = surveysSlice.extendedSurveysBySurveyId[surveyId];
+  const survey = surveysSlice.extendedSurveyBySurveyId[surveyId];
 
   const surveyElementsFuture = loadItemIfNecessary<
     ZetkinSurveyExtended,
