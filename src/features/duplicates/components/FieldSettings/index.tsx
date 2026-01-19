@@ -53,6 +53,12 @@ const FieldSettings: FC<FieldSettingsProps> = ({
       <Typography variant="h6">
         {messages.modal.fieldSettings.title()}
       </Typography>
+      {hasConflictingValues && (
+        <Alert severity="warning">
+          <AlertTitle>{messages.modal.warningTitle()}</AlertTitle>
+          {messages.modal.warningMessage()}
+        </Alert>
+      )}
       <Box
         alignItems="center"
         display="flex"
@@ -96,12 +102,6 @@ const FieldSettings: FC<FieldSettingsProps> = ({
           );
         })}
       </Box>
-      {hasConflictingValues && (
-        <Alert severity="warning">
-          <AlertTitle>{messages.modal.warningTitle()}</AlertTitle>
-          {messages.modal.warningMessage()}
-        </Alert>
-      )}
     </Box>
   );
 };
