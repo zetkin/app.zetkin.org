@@ -1,6 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -9,7 +9,8 @@ import { ZetkinLocation } from 'utils/types/zetkin';
 interface CreateLocationCardProps {
   onClose: () => void;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
-  pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'>;
+  pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'> &
+    Partial<Pick<ZetkinLocation, 'title' | 'info_text'>>;
 }
 
 const CreateLocationCard: FC<CreateLocationCardProps> = ({
@@ -19,8 +20,22 @@ const CreateLocationCard: FC<CreateLocationCardProps> = ({
 }) => {
   const messages = useMessages(messageIds);
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState(pendingLocation.title || '');
+  const [description, setDescription] = useState(
+    pendingLocation.info_text || ''
+  );
+
+  useEffect(() => {
+    if (pendingLocation.title) {
+      setTitle(pendingLocation.title);
+    }
+  }, [pendingLocation.title]);
+
+  useEffect(() => {
+    if (pendingLocation.info_text) {
+      setDescription(pendingLocation.info_text);
+    }
+  }, [pendingLocation.info_text]);
 
   return (
     <Box

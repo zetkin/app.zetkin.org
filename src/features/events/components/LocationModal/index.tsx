@@ -44,10 +44,11 @@ const LocationModal: FC<LocationModalProps> = ({
   const [, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
   const { setLocationLatLng } = useEventLocationMutations(orgId);
-  const [pendingLocation, setPendingLocation] = useState<Pick<
-    ZetkinLocation,
-    'lat' | 'lng'
-  > | null>(null);
+  const [pendingLocation, setPendingLocation] = useState<
+    | (Pick<ZetkinLocation, 'lat' | 'lng'> &
+        Partial<Pick<ZetkinLocation, 'title' | 'info_text'>>)
+    | null
+  >(null);
   const [inMoveState, setInMoveState] = useState(false);
   const [newLatLng, setNewLatLng] =
     useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
@@ -109,6 +110,17 @@ const LocationModal: FC<LocationModalProps> = ({
         >
           <LocationSearch
             onChange={(value: ZetkinLocation) => {
+              if (value.id === -1) {
+                setSelectedLocationId(null);
+                setPendingLocation({
+                  info_text: value.info_text,
+                  lat: value.lat,
+                  lng: value.lng,
+                  title: value.title,
+                });
+                return;
+              }
+
               const location = locations.find(
                 (location) => location.id === value.id
               );

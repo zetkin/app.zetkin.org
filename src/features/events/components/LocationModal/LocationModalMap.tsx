@@ -132,14 +132,13 @@ const LocationModalMap: FC<MapProps> = ({
   useMapMarkerClick(map, onMarkerClickGeoJson);
 
   useEffect(() => {
-    if (!selectedLocation) {
+    if (!selectedLocation && !pendingLocation) {
       return;
     }
-    map?.panTo(selectedLocation, {
+    map?.panTo(selectedLocation || pendingLocation!, {
       animate: true,
-      zoom: Math.max(map?.getZoom(), 12),
     });
-  }, [map, selectedLocation]);
+  }, [map, selectedLocation, pendingLocation]);
 
   const locationsGeoJson: GeoJSON.FeatureCollection = useMemo(() => {
     const features =
