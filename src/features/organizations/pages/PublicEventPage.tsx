@@ -375,7 +375,7 @@ const DateAndLocation: FC<{
       {event.url && (
         <Box alignItems="center" display="flex" gap={1}>
           <ZUIIcon icon={LinkIcon} />
-          <Box sx={{ overflowWrap: 'anywhere', minWidth: 0 }}>
+          <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
             <ZUILink href={event.url} openInNewTab text={event.url} />
           </Box>
         </Box>
