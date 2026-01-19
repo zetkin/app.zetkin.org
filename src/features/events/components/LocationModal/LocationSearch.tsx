@@ -8,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { AddLocation, LocationOn, Search } from '@mui/icons-material';
 import Fuse from 'fuse.js';
 
 import messageIds from 'features/events/l10n/messageIds';
@@ -194,13 +194,24 @@ const LocationSearch: FC<LocationSearchProps> = ({
                 lastGeocodeQueryString.current = option.label;
                 onChange(option.location);
               }}
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '5px',
+              }}
             >
-              <Typography sx={{ fontSize: '16px' }}>{option.label}</Typography>
-              <Typography
-                sx={{ color: theme.palette.grey['800'], fontSize: '12px' }}
-              >
-                {option.location.info_text}
-              </Typography>
+              {option.location.id === -1 ? <AddLocation /> : <LocationOn />}
+              <Box>
+                <Typography sx={{ fontSize: '16px' }}>
+                  {option.label}
+                </Typography>
+                <Typography
+                  sx={{ color: theme.palette.grey['800'], fontSize: '12px' }}
+                >
+                  {option.location.info_text}
+                </Typography>
+              </Box>
             </Box>
           </li>
         );
