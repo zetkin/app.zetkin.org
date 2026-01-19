@@ -66,7 +66,12 @@ async function searchAddress(query: string) {
 }
 
 async function handle(params: Params): Promise<Result> {
-  const addresses = await searchAddress(params);
+  let addresses: NominatimResult[] = [];
+  try {
+    addresses = await searchAddress(params);
+  } catch (e) {
+    // ignored
+  }
   return addresses.map((address) => {
     const { house_number, road, city, town, village, postcode } =
       address.address;
