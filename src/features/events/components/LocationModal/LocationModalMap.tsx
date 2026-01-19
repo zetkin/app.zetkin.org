@@ -126,7 +126,7 @@ const LocationModalMap: FC<MapProps> = ({
         padding: 80,
       });
     },
-    [map]
+    [map, onMarkerClick]
   );
 
   useMapMarkerClick(map, onMarkerClickGeoJson);
