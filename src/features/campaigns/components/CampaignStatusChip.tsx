@@ -26,7 +26,6 @@ const getCampaignStatus = (campaign: ZetkinCampaign): CampaignStatus => {
     return CampaignStatus.PUBLIC;
   }
 
-  //Campaign visibility must be "hidden"
   return CampaignStatus.PRIVATE;
 };
 

@@ -36,7 +36,6 @@ const CampaignCard = ({ campaign }: CampaignCardProps): JSX.Element => {
           <Typography gutterBottom noWrap variant="h6">
             {title}
           </Typography>
-          {/*TODO: labels for calls and surveys*/}
           <CampaignStatusChip campaign={campaign} />
         </Box>
       </CardContent>
