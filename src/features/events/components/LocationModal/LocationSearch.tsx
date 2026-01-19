@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Autocomplete,
   Box,
@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import Fuse from 'fuse.js';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -28,41 +29,48 @@ type Option = {
   location: ZetkinLocation;
 };
 
-const LocationSearch: FC<LocationSearchProps> = ({ onChange }) => {
+const LocationSearch: FC<LocationSearchProps> = ({
+  onChange,
+  options: existingLocations,
+}) => {
   const messages = useMessages(messageIds);
 
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState<Option[]>([]);
+  const [geocodedOptions, setGeocodedOptions] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(true);
 
   const apiClient = useApiClient();
-  const lastQueryString = useRef<string>('');
+  const lastGeocodeQueryString = useRef<string>('');
+  const lastFuseQueryString = useRef<string>('');
 
   useEffect(() => {
     if (inputValue === '') {
-      setOptions([]);
+      setGeocodedOptions([]);
       return;
     }
 
-    if (!open || lastQueryString.current === inputValue) {
+    if (!open || lastGeocodeQueryString.current === inputValue) {
       return;
     }
 
+    setHasLoaded(false);
     const debounceTimeout = window.setTimeout(async () => {
       setLoading(true);
       const res: ZetkinLocation[] = await apiClient.rpc(
         searchLocation,
         inputValue
       );
-      lastQueryString.current = inputValue;
+      lastGeocodeQueryString.current = inputValue;
       const options: Option[] = res.map((r) => ({
         id: `${Math.random()}`,
         label: r.title,
         location: r,
       }));
-      setOptions(options);
+      setGeocodedOptions(options);
       setLoading(false);
+      setHasLoaded(true);
     }, 1000);
     return () => {
       clearTimeout(debounceTimeout);
@@ -77,10 +85,60 @@ const LocationSearch: FC<LocationSearchProps> = ({ onChange }) => {
     inputRef.current?.focus();
   }, []);
 
+  const existingLocationsFuse = new Fuse(existingLocations, {
+    keys: ['title'],
+  });
+  const [matchingExistingLocations, setMatchingExistingLocations] = useState<
+    ZetkinLocation[]
+  >([]);
+
+  useEffect(() => {
+    if (!open || lastFuseQueryString.current === inputValue) {
+      return;
+    }
+    const matchingLocations = inputValue
+      ? existingLocationsFuse.search(inputValue).map((r) => r.item)
+      : existingLocations;
+    setMatchingExistingLocations(matchingLocations);
+    lastFuseQueryString.current = inputValue;
+  }, [inputValue, open]);
+
+  const options: Option[] = useMemo(() => {
+    if (!hasLoaded) {
+      return [];
+    }
+    const existingOptionsByTitle = matchingExistingLocations.reduce(
+      (prev, cur) => {
+        prev[cur.title.toLowerCase()] = cur;
+        return prev;
+      },
+      {} as Record<string, ZetkinLocation>
+    );
+    return [
+      ...matchingExistingLocations.map((loc) => ({
+        id: loc.id + '',
+        label: loc.title,
+        location: loc,
+      })),
+      ...geocodedOptions.filter((loc) => {
+        const existingOption =
+          existingOptionsByTitle[loc.location.title.toLowerCase()];
+        if (!existingOption) {
+          return true;
+        }
+        return !(
+          Math.abs(loc.location.lng - existingOption.lng) <= 1e-5 &&
+          Math.abs(loc.location.lat - existingOption.lat) <= 1e-5
+        );
+      }),
+    ];
+  }, [matchingExistingLocations, geocodedOptions, hasLoaded]);
+
   return (
     <Autocomplete<Option, false, false, false>
       blurOnSelect={true}
       clearOnBlur={false}
+      filterOptions={(options) => options}
       fullWidth
       getOptionLabel={(o) => o.label}
       inputValue={inputValue}
@@ -91,7 +149,8 @@ const LocationSearch: FC<LocationSearchProps> = ({ onChange }) => {
           return;
         }
 
-        lastQueryString.current = value.label;
+        lastGeocodeQueryString.current = value.label;
+        lastFuseQueryString.current = value.label;
         onChange(value.location);
       }}
       onClose={() => setOpen(false)}
@@ -132,7 +191,7 @@ const LocationSearch: FC<LocationSearchProps> = ({ onChange }) => {
           <li {...props} key={option.id}>
             <Box
               onClick={() => {
-                lastQueryString.current = option.label;
+                lastGeocodeQueryString.current = option.label;
                 onChange(option.location);
               }}
             >
