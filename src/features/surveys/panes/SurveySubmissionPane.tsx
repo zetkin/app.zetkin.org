@@ -1,6 +1,4 @@
-import { makeStyles } from '@mui/styles';
 import { Box, Link, Typography } from '@mui/material';
-import { Box, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
 import NextLink from 'next/link';
