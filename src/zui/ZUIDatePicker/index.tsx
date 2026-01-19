@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { StaticDatePicker } from '@mui/x-date-pickers-pro';
 import {
   Box,
@@ -70,23 +69,10 @@ interface ZUIDatePickerProps {
   date: string | null;
 }
 
-const useStyles = makeStyles(() => ({
-  label: {
-    '&:hover': {
-      borderBottomColor: lighten(oldTheme.palette.primary.main, 0.65),
-    },
-    borderBottomColor: 'transparent',
-    borderBottomStyle: 'dotted',
-    borderBottomWidth: 2,
-    cursor: 'pointer',
-  },
-}));
-
 const ZUIDatePicker: FC<ZUIDatePickerProps> = ({ onChange, date }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const [value, setValue] = useState<Dayjs | null>(null);
 
-  const classes = useStyles();
   const messages = useMessages(messageIds);
   const intl = useIntl();
 
@@ -100,7 +86,6 @@ const ZUIDatePicker: FC<ZUIDatePickerProps> = ({ onChange, date }) => {
     <>
       <Box alignItems="center" display="flex">
         <Box
-          className={classes.label}
           component="span"
           display="flex"
           justifyContent="center"
@@ -108,6 +93,15 @@ const ZUIDatePicker: FC<ZUIDatePickerProps> = ({ onChange, date }) => {
           onClick={(ev: MouseEvent<HTMLSpanElement>) => {
             ev.stopPropagation();
             setAnchorEl(ev.currentTarget);
+          }}
+          sx={{
+            '&:hover': {
+              borderBottomColor: lighten(oldTheme.palette.primary.main, 0.65),
+            },
+            borderBottomColor: 'transparent',
+            borderBottomStyle: 'dotted',
+            borderBottomWidth: '2px',
+            cursor: 'pointer',
           }}
         >
           {icon}
