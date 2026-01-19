@@ -73,18 +73,16 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 />
               }
               title={
-                sub.campaign ? (
-                  <Link
-                    color={'inherit'}
-                    component={NextLink}
-                    href={`/organize/${sub.organization.id}/projects/${sub.campaign.id}/surveys/${sub.survey.id}`}
-                    underline={'hover'}
-                  >
-                    {sub.survey.title}
-                  </Link>
-                ) : (
-                  sub.survey.title
-                )
+                <Link
+                  color={'inherit'}
+                  component={NextLink}
+                  href={`/organize/${sub.organization.id}/projects/${
+                    sub.campaign ? sub.campaign.id : 'standalone'
+                  }/surveys/${sub.survey.id}`}
+                  underline={'hover'}
+                >
+                  {sub.survey.title}
+                </Link>
               }
             />
             {sub.elements.map((elem) => {
