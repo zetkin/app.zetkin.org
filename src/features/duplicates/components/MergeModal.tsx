@@ -6,7 +6,8 @@ import {
   DialogTitle,
   useMediaQuery,
 } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import oldTheme from 'theme';
 import FieldSettings from './FieldSettings';
@@ -65,108 +66,105 @@ const MergeModal: FC<Props> = ({
 
   useEffect(() => {
     setSelectedIds(persons.map((person) => person.id) ?? []);
-  }, [open, persons]);
+  }, [open]);
 
   return (
     <Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={open}>
       <DialogTitle sx={{ paddingLeft: 2 }} variant="h5">
         {messages.modal.title()}
       </DialogTitle>
-      <ZUIFutures futures={{ customFields, detailedPersons }}>
-        {({ data: { customFields, detailedPersons } }) => (
-          <>
-            <Box display="flex" flexGrow={1} overflow="hidden">
-              <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
-                <PotentialDuplicatesLists
-                  initiallyShowManualSearch={initiallyShowManualSearch}
-                  onDeselect={(person: ZetkinPerson) => {
-                    const isPredefined = persons.some(
-                      (predefinedPerson) => predefinedPerson.id == person.id
-                    );
+      <Box display="flex" flexGrow={1} overflow="hidden">
+        <Box paddingX={2} sx={{ overflowY: 'auto' }} width="50%">
+          <PotentialDuplicatesLists
+            initiallyShowManualSearch={initiallyShowManualSearch}
+            onDeselect={(person: ZetkinPerson) => {
+              const isPredefined = persons.some(
+                (predefinedPerson) => predefinedPerson.id == person.id
+              );
 
-                    if (isPredefined) {
-                      const filteredIds = selectedIds.filter(
-                        (item) => item !== person.id
-                      );
-                      setSelectedIds(filteredIds);
-                    } else {
-                      const filteredAdditionals = additionalPeople.filter(
-                        (item) => item.id != person.id
-                      );
-                      setAdditionalPeople(filteredAdditionals);
-                    }
-                  }}
-                  onSelect={(person: ZetkinPerson) => {
-                    const isPredefined = persons.some(
-                      (predefinedPerson) => predefinedPerson.id == person.id
-                    );
-                    if (isPredefined) {
-                      const selectedIdsUpdated = [...selectedIds, person.id];
-                      setSelectedIds(selectedIdsUpdated);
-                    } else {
-                      setAdditionalPeople([...additionalPeople, person]);
-                    }
-                  }}
-                  peopleNotToMerge={peopleNotToMerge}
-                  peopleToMerge={peopleToMerge}
-                />
-              </Box>
-              <Box
-                display="flex"
-                flexDirection="column"
-                marginRight={2}
-                sx={{ overflowY: 'auto' }}
-                width="50%"
-              >
-                <FieldSettings
-                  customFields={customFields}
-                  duplicates={detailedPersons}
-                  onChange={(field, value) => {
-                    if (overrides) {
-                      setOverrides({ ...overrides, [`${field}`]: value });
-                    }
-                  }}
-                  setOverrides={setOverrides}
-                />
-              </Box>
-            </Box>
-            <DialogActions sx={{ p: 2 }}>
-              <Button
-                onClick={() => {
-                  setAdditionalPeople([]);
-                  onClose();
-                }}
-                variant="text"
-              >
-                {messages.modal.cancelButton()}
-              </Button>
-              <Button
-                disabled={
-                  !overrides ||
-                  additionalPeople.length + selectedIds.length <= 1
-                }
-                onClick={() => {
-                  if (!overrides) {
-                    // This should never happen, because we disable the button above when `overrides` is falsy
-                    throw new Error(
-                      'Operation not allowed. Merge data not available'
-                    );
+              if (isPredefined) {
+                const filteredIds = selectedIds.filter(
+                  (item) => item !== person.id
+                );
+                setSelectedIds(filteredIds);
+              } else {
+                const filteredAdditionals = additionalPeople.filter(
+                  (item) => item.id != person.id
+                );
+                setAdditionalPeople(filteredAdditionals);
+              }
+            }}
+            onSelect={(person: ZetkinPerson) => {
+              const isPredefined = persons.some(
+                (predefinedPerson) => predefinedPerson.id == person.id
+              );
+              if (isPredefined) {
+                const selectedIdsUpdated = [...selectedIds, person.id];
+                setSelectedIds(selectedIdsUpdated);
+              } else {
+                setAdditionalPeople([...additionalPeople, person]);
+              }
+            }}
+            peopleNotToMerge={peopleNotToMerge}
+            peopleToMerge={peopleToMerge}
+          />
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          marginRight={2}
+          sx={{ overflowY: 'auto' }}
+          width="50%"
+        >
+          <ZUIFutures futures={{ customFields, detailedPersons }}>
+            {({ data: { customFields, detailedPersons } }) => (
+              <FieldSettings
+                customFields={customFields}
+                duplicates={detailedPersons}
+                onChange={(field, value) => {
+                  if (overrides) {
+                    setOverrides({ ...overrides, [`${field}`]: value });
                   }
-                  const idSet = new Set([
-                    ...selectedIds,
-                    ...additionalPeople.map((person) => person.id),
-                  ]);
-                  onMerge(Array.from(idSet), overrides);
-                  setAdditionalPeople([]);
                 }}
-                variant="contained"
-              >
-                {messages.modal.mergeButton()}
-              </Button>
-            </DialogActions>
-          </>
-        )}
-      </ZUIFutures>
+                setOverrides={setOverrides}
+              />
+            )}
+          </ZUIFutures>
+        </Box>
+      </Box>
+      <DialogActions sx={{ p: 2 }}>
+        <Button
+          onClick={() => {
+            setAdditionalPeople([]);
+            onClose();
+          }}
+          variant="text"
+        >
+          {messages.modal.cancelButton()}
+        </Button>
+        <Button
+          disabled={
+            !overrides || additionalPeople.length + selectedIds.length <= 1
+          }
+          onClick={() => {
+            if (!overrides) {
+              // This should never happen, because we disable the button above when `overrides` is falsy
+              throw new Error(
+                'Operation not allowed. Merge data not available'
+              );
+            }
+            const idSet = new Set([
+              ...selectedIds,
+              ...additionalPeople.map((person) => person.id),
+            ]);
+            onMerge(Array.from(idSet), overrides);
+            setAdditionalPeople([]);
+          }}
+          variant="contained"
+        >
+          {messages.modal.mergeButton()}
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
