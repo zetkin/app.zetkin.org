@@ -86,13 +86,13 @@ export default makeMessages('zui', {
   },
   dataTableSorting: {
     addButton: m('Add sorting column'),
+    ascending: m('Ascending'),
     button: m('Sort'),
+    descending: m('Descending'),
     hint: m<{ shiftKeyIcon: ReactElement }>(
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
     title: m('Sort'),
-    ascending: m('Ascending'),
-    descending: m('Descending'),
   },
   dateRange: {
     draft: m('No start date'),
