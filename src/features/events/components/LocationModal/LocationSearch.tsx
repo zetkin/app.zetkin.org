@@ -87,6 +87,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
 
   const existingLocationsFuse = new Fuse(existingLocations, {
     keys: ['title'],
+    threshold: 0.5,
   });
   const [matchingExistingLocations, setMatchingExistingLocations] = useState<
     ZetkinLocation[]
