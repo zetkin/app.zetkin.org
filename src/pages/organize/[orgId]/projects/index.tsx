@@ -27,6 +27,7 @@ import useServerSide from 'core/useServerSide';
 import useSurveys from 'features/surveys/hooks/useSurveys';
 import { Msg, useMessages } from 'core/i18n';
 import ZUINumberChip from 'zui/ZUINumberChip';
+import { ZetkinCampaign } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -86,6 +87,25 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
 
   const campaignsThatMatchSearch = useMemo(() => search(), [searchString]);
 
+  const [activeCampaigns, archivedCampaigns] = useMemo(() => {
+    let archived: ZetkinCampaign[] = [];
+    let active: ZetkinCampaign[] = [];
+
+    if (searchString) {
+      active = campaignsThatMatchSearch.filter(
+        (campaign) => !campaign.archived
+      );
+      archived = campaignsThatMatchSearch.filter(
+        (campaign) => campaign.archived
+      );
+    } else {
+      active = campaigns.filter((campaign) => !campaign.archived);
+      archived = campaigns.filter((campaign) => campaign.archived);
+    }
+
+    return [active, archived];
+  }, [campaigns, searchString]);
+
   if (onServer) {
     return null;
   }
@@ -95,14 +115,6 @@ const AllCampaignsSummaryPage: PageWithLayout = () => {
     (survey) =>
       survey.org_access === 'suborgs' && survey.organization.id != orgId
   );
-
-  const archivedCampaigns = searchString
-    ? campaignsThatMatchSearch.filter((campaign) => campaign.archived)
-    : campaigns.filter((campaign) => campaign.archived);
-
-  const activeCampaigns = searchString
-    ? campaignsThatMatchSearch.filter((campaign) => !campaign.archived)
-    : campaigns.filter((campaign) => !campaign.archived);
 
   return (
     <>
