@@ -1,6 +1,6 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Dialog, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
@@ -21,7 +21,9 @@ interface LocationModalProps {
   currentEvent?: ZetkinEvent;
   events: ZetkinEvent[];
   locations: ZetkinLocation[];
-  onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
+  onCreateLocation: (
+    newLocation: Partial<ZetkinLocation>
+  ) => Promise<ZetkinLocation>;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
   open: boolean;
@@ -65,6 +67,18 @@ const LocationModal: FC<LocationModalProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  const onMarkerClick = useCallback(
+    (locationId: number) => {
+      const location = locations.find((location) => location.id === locationId);
+      if (!location?.lat || !location?.lng) {
+        return;
+      }
+      setPendingLocation(null);
+      setSelectedLocationId(location.id);
+    },
+    [locations]
+  );
+
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
@@ -75,16 +89,7 @@ const LocationModal: FC<LocationModalProps> = ({
             setSelectedLocationId(null);
             setPendingLocation(latlng);
           }}
-          onMarkerClick={(locationId: number) => {
-            const location = locations.find(
-              (location) => location.id === locationId
-            );
-            if (!location?.lat || !location?.lng) {
-              return;
-            }
-            setPendingLocation(null);
-            setSelectedLocationId(location.id);
-          }}
+          onMarkerClick={onMarkerClick}
           onMarkerDragEnd={(lat: number, lng: number) =>
             setNewLatLng({ lat, lng })
           }
@@ -170,7 +175,9 @@ const LocationModal: FC<LocationModalProps> = ({
                 setPendingLocation(null);
               }}
               onCreateLocation={(newLocation: Partial<ZetkinLocation>) => {
-                onCreateLocation(newLocation);
+                onCreateLocation(newLocation).then((location) =>
+                  setSelectedLocationId(location.id)
+                );
                 setPendingLocation(null);
               }}
               pendingLocation={pendingLocation}
