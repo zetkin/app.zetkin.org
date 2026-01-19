@@ -18,8 +18,6 @@ import searchLocation from 'features/events/rpc/searchLocation';
 
 interface LocationSearchProps {
   onChange: (value: ZetkinLocation) => void;
-  onInputChange: (value: string) => void;
-  onTextFieldChange: (value: string) => void;
   onClickGeolocate: () => void;
   options: ZetkinLocation[];
 }
@@ -30,10 +28,7 @@ type Option = {
   location: ZetkinLocation;
 };
 
-const LocationSearch: FC<LocationSearchProps> = ({
-  onChange,
-  onTextFieldChange,
-}) => {
+const LocationSearch: FC<LocationSearchProps> = ({ onChange }) => {
   const messages = useMessages(messageIds);
 
   const [open, setOpen] = useState(false);
@@ -104,7 +99,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
         setInputValue(value);
       }}
       onOpen={() => setOpen(true)}
-      open={open}
+      open={open && inputValue !== ''}
       options={options}
       renderInput={(params) => (
         <TextField
@@ -124,7 +119,6 @@ const LocationSearch: FC<LocationSearchProps> = ({
             ),
           }}
           inputRef={inputRef}
-          onChange={(ev) => onTextFieldChange(ev.target.value)}
           placeholder={messages.locationModal.searchBox()}
           sx={{
             backgroundColor: 'white',
@@ -136,7 +130,12 @@ const LocationSearch: FC<LocationSearchProps> = ({
       renderOption={(props, option) => {
         return (
           <li {...props} key={option.id}>
-            <Box>
+            <Box
+              onClick={() => {
+                lastQueryString.current = option.label;
+                onChange(option.location);
+              }}
+            >
               <Typography sx={{ fontSize: '16px' }}>{option.label}</Typography>
               <Typography
                 sx={{ color: theme.palette.grey['800'], fontSize: '12px' }}

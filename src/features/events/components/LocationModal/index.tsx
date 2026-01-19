@@ -41,7 +41,6 @@ const LocationModal: FC<LocationModalProps> = ({
   locationId = null,
 }) => {
   const messages = useMessages(messageIds);
-  const [, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
   const { setLocationLatLng } = useEventLocationMutations(orgId);
   const [pendingLocation, setPendingLocation] = useState<
@@ -128,7 +127,6 @@ const LocationModal: FC<LocationModalProps> = ({
                 return;
               }
               setSelectedLocationId(location.id);
-              setSearchString('');
             }}
             onClickGeolocate={() => {
               if ('geolocation' in navigator) {
@@ -143,15 +141,12 @@ const LocationModal: FC<LocationModalProps> = ({
                 );
               }
             }}
-            onInputChange={(value) => setSearchString(value || '')}
-            onTextFieldChange={(value) => setSearchString(value)}
             options={locations}
           />
           {selectedLocation && !inMoveState && (
             <LocationDetailsCard
               location={selectedLocation}
               onClose={() => {
-                setSearchString('');
                 setSelectedLocationId(null);
               }}
               onMove={() => setInMoveState(true)}
