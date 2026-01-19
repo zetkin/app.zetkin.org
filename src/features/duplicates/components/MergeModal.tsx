@@ -17,8 +17,8 @@ import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { useNumericRouteParams } from 'core/hooks';
 import useDetailedPersons from '../hooks/useDetailedPerson';
-import ZUIFuture from 'zui/ZUIFuture';
 import useCustomFields from 'features/profile/hooks/useCustomFields';
+import ZUIFutures from 'zui/ZUIFutures';
 
 type Props = {
   initiallyShowManualSearch?: boolean;
@@ -116,24 +116,20 @@ const MergeModal: FC<Props> = ({
           sx={{ overflowY: 'auto' }}
           width="50%"
         >
-          <ZUIFuture future={customFields}>
-            {(customFields) => (
-              <ZUIFuture future={detailedPersons}>
-                {(duplicates) => (
-                  <FieldSettings
-                    customFields={customFields}
-                    duplicates={duplicates}
-                    onChange={(field, value) => {
-                      if (overrides) {
-                        setOverrides({ ...overrides, [`${field}`]: value });
-                      }
-                    }}
-                    setOverrides={setOverrides}
-                  />
-                )}
-              </ZUIFuture>
+          <ZUIFutures futures={{ customFields, detailedPersons }}>
+            {({ data: { customFields, detailedPersons } }) => (
+              <FieldSettings
+                customFields={customFields}
+                duplicates={detailedPersons}
+                onChange={(field, value) => {
+                  if (overrides) {
+                    setOverrides({ ...overrides, [`${field}`]: value });
+                  }
+                }}
+                setOverrides={setOverrides}
+              />
             )}
-          </ZUIFuture>
+          </ZUIFutures>
         </Box>
       </Box>
       <DialogActions sx={{ p: 2 }}>
