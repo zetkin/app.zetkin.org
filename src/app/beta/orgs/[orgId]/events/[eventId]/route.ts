@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { IncomingHttpHeaders } from 'http';
 import { NextRequest, NextResponse } from 'next/server';
 import isEmail from 'validator/lib/isEmail';
 
@@ -30,8 +29,6 @@ export async function GET(request: NextRequest, { params }: RouteMeta) {
     },
     async ({ orgId }) => {
       await mongoose.connect(process.env.MONGODB_URL || '');
-      const headers: IncomingHttpHeaders = {};
-      request.headers.forEach((value, key) => (headers[key] = value));
 
       const eventSignups = await EventSignupModel.find({
         eventId: parseInt(params.eventId),
@@ -47,8 +44,6 @@ export async function POST(request: NextRequest, { params }: RouteMeta) {
   await mongoose.connect(process.env.MONGODB_URL || '');
 
   const body: EventSignupBody = await request.json();
-  const headers: IncomingHttpHeaders = {};
-  request.headers.forEach((value, key) => (headers[key] = value));
 
   if (!body.first_name || !body.last_name) {
     return NextResponse.json(
