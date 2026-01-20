@@ -328,8 +328,6 @@ feat:
         copyMenuHeader: Kopiere {numberOfEvents} Aktionen nach
         createShift: Nach jeder Aktion (create shift)
         duplicate: Zeit und Datum schicken (duplicate)
-        move: Verschieben
-        moveMenuHeader: Verschiebe {numberOfEvents} Aktionen nach
         nextDay: Nächster Tag {dates}
         nextWeek: Nächste Woche
     shortWeek: W {weekNumber}
@@ -689,7 +687,6 @@ feat:
         filter: Filterergebnisse
         standalones: Einzelne Aktionen
         surveys: Umfragen
-      heading: Alle Projekte
       indefinite: Undefiniert
       unsorted: Unsortierte Projekte
       upcoming: '{numEvents, number} anstehende Aktionen'
@@ -3514,11 +3511,6 @@ feat:
         openButton: Einblenden
     toolbar:
       createColumn: Neue Spalte
-      createFromSelection: Erstelle Liste aus Auswahl
-      removeFromSelection: Entferne {numSelected, plural, one {1 Person} other
-        {{numSelected} Personen} } von der Liste
-      removeTooltip: In Listen erstellt aus intelligenter Suche können momentan keine
-        Zeilen gelöscht werden
     viewLayout:
       actions:
         share: Teilen
