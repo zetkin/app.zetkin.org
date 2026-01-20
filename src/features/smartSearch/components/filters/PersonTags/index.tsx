@@ -155,10 +155,6 @@ const PersonTags = ({
                     conditionSelect,
                     minMatchingInput: (
                       <StyledNumberInput
-                        inputProps={{
-                          max: selectedTags.length,
-                          min: '1',
-                        }}
                         onChange={(e) =>
                           setConfig({
                             ...filter.config,
@@ -166,6 +162,12 @@ const PersonTags = ({
                             min_matching: +e.target.value || undefined,
                           })
                         }
+                        slotProps={{
+                          htmlInput: {
+                            max: selectedTags.length,
+                            min: '1',
+                          },
+                        }}
                         value={filter.config.min_matching}
                       />
                     ),

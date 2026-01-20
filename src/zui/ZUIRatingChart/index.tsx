@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { FC } from 'react';
 import { lighten, Box } from '@mui/system';
 
@@ -13,84 +12,12 @@ export interface ZUIRatingChartProps {
   visualizationHeight?: number;
 }
 
-const useStyles = makeStyles(() => {
-  return {
-    root: {
-      '& .average .averageRating': {
-        fill: 'var(--dataMain)',
-        fontSize: 13,
-        transition: 'opacity 0.25s',
-      },
-      '& .average .averageRatingBg': {
-        fill: '#FFFFFF',
-        filter: 'blur(5px)',
-        height: 32,
-        width: 50,
-      },
-      '& .chart': {
-        fill: 'var(--dataFaded)',
-      },
-      '& .data .dot': {
-        opacity: 0,
-      },
-      '& .dot': {
-        fill: 'var(--dataMain)',
-        transitionAttribute: 'fill, opacity',
-        transitionDuration: '.25s',
-      },
-      '& .indexNumber': {
-        fill: theme.palette.secondary.light,
-        fontSize: 13,
-        textAnchor: 'middle',
-      },
-      '& .ratingCount': {
-        fill: 'var(--dataMain)',
-        fontSize: 13,
-        opacity: 0,
-        textAnchor: 'middle',
-        transition: 'opacity .25s',
-      },
-      '& .track': {
-        fill: 'var(--dataFocus)',
-        transition: 'fill .25s',
-      },
-      '& svg': {
-        '--dataFaded': lighten(theme.palette.primary.main, 0.83),
-        '--dataFocus': lighten(theme.palette.primary.main, 0.63),
-        '--dataMain': theme.palette.primary.main,
-        cursor: 'pointer',
-        overflow: 'visible',
-      },
-      '&:hover .average .averageRating': {
-        opacity: 0,
-      },
-      '&:hover .average .dot': {
-        fill: 'var(--dataFocus)',
-      },
-      '&:hover .chart': {
-        fill: 'var(--dataFocus)',
-      },
-      '&:hover .data .dot': {
-        opacity: 1,
-      },
-      '&:hover .ratingCount': {
-        opacity: 1,
-      },
-      '&:hover .track': {
-        fill: 'var(--dataFaded)',
-      },
-    },
-  };
-});
-
 const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
   description,
   title,
   visualizationHeight = 50,
   data,
 }) => {
-  const classes = useStyles();
-
   let ratingTotals = 0;
   let numRatings = 0;
   if (data.every((val) => val >= 0)) {
@@ -107,7 +34,74 @@ const ZUIRatingChart: FC<ZUIRatingChartProps> = ({
   const avgPos = (avg - 1) / (maxRating - 1);
 
   return (
-    <Box className={classes.root} p={2}>
+    <Box
+      p={2}
+      sx={{
+        '& .average .averageRating': {
+          fill: 'var(--dataMain)',
+          fontSize: 13,
+          transition: 'opacity 0.25s',
+        },
+        '& .average .averageRatingBg': {
+          fill: '#FFFFFF',
+          filter: 'blur(5px)',
+          height: '32px',
+          width: '50px',
+        },
+        '& .chart': {
+          fill: 'var(--dataFaded)',
+        },
+        '& .data .dot': {
+          opacity: 0,
+        },
+        '& .dot': {
+          fill: 'var(--dataMain)',
+          transitionAttribute: 'fill, opacity',
+          transitionDuration: '.25s',
+        },
+        '& .indexNumber': {
+          fill: theme.palette.secondary.light,
+          fontSize: 13,
+          textAnchor: 'middle',
+        },
+        '& .ratingCount': {
+          fill: 'var(--dataMain)',
+          fontSize: 13,
+          opacity: 0,
+          textAnchor: 'middle',
+          transition: 'opacity .25s',
+        },
+        '& .track': {
+          fill: 'var(--dataFocus)',
+          transition: 'fill .25s',
+        },
+        '& svg': {
+          '--dataFaded': lighten(theme.palette.primary.main, 0.83),
+          '--dataFocus': lighten(theme.palette.primary.main, 0.63),
+          '--dataMain': theme.palette.primary.main,
+          cursor: 'pointer',
+          overflow: 'visible',
+        },
+        '&:hover .average .averageRating': {
+          opacity: 0,
+        },
+        '&:hover .average .dot': {
+          fill: 'var(--dataFocus)',
+        },
+        '&:hover .chart': {
+          fill: 'var(--dataFocus)',
+        },
+        '&:hover .data .dot': {
+          opacity: 1,
+        },
+        '&:hover .ratingCount': {
+          opacity: 1,
+        },
+        '&:hover .track': {
+          fill: 'var(--dataFaded)',
+        },
+      }}
+    >
       {title && <Typography pb={1}>{title}</Typography>}
       {description && (
         <Typography color="secondary" pb={2}>

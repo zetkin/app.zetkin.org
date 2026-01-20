@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Box, Paper, Slide } from '@mui/material';
 import {
@@ -38,26 +37,12 @@ type PaneProviderProps = {
   fixedHeight: boolean;
 };
 
-const useStyles = makeStyles({
-  container: {
-    bottom: 16,
-    position: 'absolute',
-    right: 16,
-    top: 16,
-    zIndex: 999,
-  },
-  paper: {
-    height: '100%',
-  },
-});
-
 export const PaneProvider: FC<PaneProviderProps> = ({
   children,
   fixedHeight,
 }) => {
   const paneRef = useRef<PaneDef | null>(null);
   const [open, setOpen] = useState(false);
-  const styles = useStyles();
   const [key, setKey] = useState(0);
   const { pathname } = useRouter();
 
@@ -89,7 +74,6 @@ export const PaneProvider: FC<PaneProviderProps> = ({
         <Slide
           key={key}
           ref={slideRef}
-          className={styles.container}
           direction="left"
           in={!!paneRef.current && open}
           onEnter={() => {
@@ -99,11 +83,19 @@ export const PaneProvider: FC<PaneProviderProps> = ({
             updatePaneHeight();
           }}
         >
-          <Box>
+          <Box
+            sx={{
+              bottom: '16px',
+              position: 'absolute',
+              right: '16px',
+              top: '16px',
+              zIndex: 999,
+            }}
+          >
             <Paper
-              className={styles.paper}
               elevation={2}
               sx={{
+                height: '100%',
                 width: paneRef.current?.width ?? 200,
               }}
             >

@@ -318,8 +318,6 @@ feat:
         copyMenuHeader: Kopier {numberOfEvents} arrangementer til
         createShift: Etter hvert arrangement (legg til et skift)
         duplicate: Samme tid og dato (dupliser)
-        move: Flytt
-        moveMenuHeader: Flytt {numberOfEvents} arrangementer til
         nextDay: Neste dag {dates}
         nextWeek: Neste uke {dates}
     shortWeek: uke {weekNumber}
@@ -669,7 +667,6 @@ feat:
         filter: Filtrer resultater
         standalones: Frittstående arrangementer
         surveys: Spørreundersøkelser
-      heading: Pågående prosjekter
       indefinite: Uten sluttdato
       unsorted: Usorterte prosjekter
       upcoming: '{numEvents, number} kommende arrangementer.'
@@ -3393,10 +3390,6 @@ feat:
         openButton: Vis
     toolbar:
       createColumn: Ny kolonne
-      createFromSelection: Opprett liste av valgte
-      removeFromSelection: Fjern {numSelected, plural, one {1 person} other
-        {{numSelected} folk} } from view
-      removeTooltip: Smartsøk støtter ikke fjerning av rader
     viewLayout:
       actions:
         share: Del

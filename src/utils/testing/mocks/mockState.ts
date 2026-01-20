@@ -146,6 +146,7 @@ export default function mockState(overrides?: RootState) {
     },
     surveys: {
       elementsBySurveyId: {},
+      extendedSurveyBySurveyId: {},
       responseStatsBySurveyId: {},
       statsBySurveyId: {},
       submissionList: remoteList(),

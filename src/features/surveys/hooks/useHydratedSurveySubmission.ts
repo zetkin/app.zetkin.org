@@ -1,13 +1,12 @@
-import { loadListIfNecessary } from 'core/caching/cacheUtils';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import useSurveySubmission from './useSurveySubmission';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
-  ZetkinSurveyElement,
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
-import { elementsLoad, elementsLoaded } from '../store';
+import { extendedSurveyLoad, extendedSurveyLoaded } from '../store';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { useApiClient, useAppDispatch, useAppSelector } from 'core/hooks';
 
@@ -52,6 +51,7 @@ type HydratedElement =
 
 export interface HydratedSurveySubmission {
   id: number;
+  campaign: ZetkinSurveyExtended['campaign'];
   respondent: ZetkinSurveySubmission['respondent'];
   organization: ZetkinSurveySubmission['organization'];
   elements: HydratedElement[];
@@ -74,20 +74,20 @@ export default function useHydratedSurveySubmission(
 
   const submission = submissionFuture.data;
   const surveyId = submission.survey.id;
-  const elementsList = surveysSlice.elementsBySurveyId[surveyId];
+  const survey = surveysSlice.extendedSurveyBySurveyId[surveyId];
 
-  const surveyElementsFuture = loadListIfNecessary<
-    ZetkinSurveyElement,
+  const surveyElementsFuture = loadItemIfNecessary<
+    ZetkinSurveyExtended,
     number,
-    [number, ZetkinSurveyElement[]]
-  >(elementsList, dispatch, {
-    actionOnLoad: () => elementsLoad(surveyId),
-    actionOnSuccess: (elements) => elementsLoaded([surveyId, elements]),
+    [number, ZetkinSurveyExtended]
+  >(survey, dispatch, {
+    actionOnLoad: () => extendedSurveyLoad(surveyId),
+    actionOnSuccess: (survey) => extendedSurveyLoaded([surveyId, survey]),
     loader: async () => {
       const survey = await apiClient.get<ZetkinSurveyExtended>(
         `/api/orgs/${orgId}/surveys/${surveyId}`
       );
-      return survey.elements;
+      return survey;
     },
   });
 
@@ -95,7 +95,7 @@ export default function useHydratedSurveySubmission(
     return new LoadingFuture();
   }
 
-  const surveyElements = surveyElementsFuture.data;
+  const surveyElements = surveyElementsFuture.data.elements;
   const elements: HydratedElement[] = [];
 
   surveyElements.forEach((elem) => {
@@ -158,6 +158,7 @@ export default function useHydratedSurveySubmission(
   });
 
   return new ResolvedFuture({
+    campaign: surveyElementsFuture.data.campaign,
     elements,
     id: submission.id,
     organization: submission.organization,
