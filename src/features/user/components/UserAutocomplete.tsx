@@ -8,6 +8,7 @@ import {
   ListItemText,
   TextField,
 } from '@mui/material';
+import Fuse from 'fuse.js';
 
 import useOrgUsers from '../hooks/useOrgUsers';
 import { ZetkinOrgUser } from '../types';
@@ -24,25 +25,18 @@ const UserAutocomplete: FC<Props> = ({ onSelect, orgId }) => {
     options: ZetkinOrgUser[],
     state: FilterOptionsState<ZetkinOrgUser>
   ): ZetkinOrgUser[] => {
-    const inputValue = state.inputValue.trim().toLowerCase();
+    const inputValue = state.inputValue.trim();
 
     if (inputValue.length === 0) {
       return options;
     }
 
-    return options.filter((user) => {
-      const firstName = user.first_name.toLowerCase();
-      const lastName = user.last_name.toLowerCase();
-      const email = user.email?.toLowerCase() || '';
-      const fullName = `${firstName} ${lastName}`;
-
-      return (
-        firstName.includes(inputValue) ||
-        lastName.includes(inputValue) ||
-        fullName.includes(inputValue) ||
-        email.includes(inputValue)
-      );
+    const fuse = new Fuse(options, {
+      keys: ['first_name', 'last_name', 'email'],
+      threshold: 0.4,
     });
+
+    return fuse.search(inputValue).map((result) => result.item);
   };
 
   return (
