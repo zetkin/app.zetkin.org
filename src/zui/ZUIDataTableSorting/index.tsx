@@ -169,8 +169,12 @@ const ZUIDataTableSorting: React.FunctionComponent<
                       value={item.sort}
                       variant="standard"
                     >
-                      <MenuItem value="asc"><Msg id={messageIds.dataTableSorting.ascending} /></MenuItem>
-                      <MenuItem value="desc"><Msg id={messageIds.dataTableSorting.descending} /></MenuItem>
+                      <MenuItem value="asc">
+                        <Msg id={messageIds.dataTableSorting.ascending} />
+                      </MenuItem>
+                      <MenuItem value="desc">
+                        <Msg id={messageIds.dataTableSorting.descending} />
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
