@@ -1,6 +1,6 @@
 import { Clear } from '@mui/icons-material';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import { lighten } from '@mui/system';
+import { lighten, rgbToHex } from '@mui/system';
 
 import { DEFAULT_TAG_COLOR } from '../utils';
 import { getContrastColor } from 'utils/colorUtils';
@@ -26,35 +26,17 @@ const TagChip: React.FunctionComponent<{
   const deletable = !!onDelete;
   const isAppliedTag = isValueTag(tag);
 
-  const labelStyle = {
-    '& > div': {
-      maxWidth: '100%',
-      overflow: 'hidden',
-      transform: deletable ? 'translate(.5rem, 0)' : 'translate(0,0)',
-      transition: 'transform 0.1s',
-    },
-    '&:hover': {
-      '& > div': {
-        transform: 'translate(0,0)',
-        transition: 'transform 0.1s 0.1s',
-      },
-      '.deleteButton': {
-        transform: 'translate(0,0)',
-        transition: 'transform 0.1s 0.1s',
-      },
-    },
-    backgroundColor: tag.color || DEFAULT_TAG_COLOR,
-    color: getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-    display: 'flex',
+  const commonTextStyle = {
     maxWidth: '100%',
     overflow: 'hidden',
-    padding: isAppliedTag ? '.2em .2em .2em .6em' : '0.2em .6em',
+    padding: '0.125rem 0.75rem ',
+    textOverflow: 'ellipsis',
+    transition: 'translate 0.1s',
     whiteSpace: 'nowrap',
   };
 
   const deleteButton = onDelete ? (
     <IconButton
-      className="deleteButton"
       data-testid="TagChip-deleteButton"
       onClick={(ev) => {
         // Stop propagation to prevent regular onClick() from being invoked
@@ -63,18 +45,24 @@ const TagChip: React.FunctionComponent<{
       }}
       size="large"
       sx={{
+        bottom: 0,
         fontSize: '1.1rem',
+        left: '100%',
         padding: 0,
-        transform: 'translate(2rem, 0)',
-        transition: 'transform 0.1s',
+        position: 'absolute',
+        top: 0,
+        transition: 'translate 0.1s',
+        translate: '0',
       }}
       tabIndex={-1}
     >
       <Clear
         fontSize="inherit"
         sx={{
-          color: tag.value_type
-            ? 'black'
+          color: isAppliedTag
+            ? getContrastColor(
+                rgbToHex(lighten(tag.color || DEFAULT_TAG_COLOR, 0.7))
+              )
             : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
         }}
       />
@@ -85,9 +73,26 @@ const TagChip: React.FunctionComponent<{
     <Box
       onClick={() => !disabled && onClick && onClick(tag)}
       sx={{
-        borderRadius: '1em',
+        '& > span': { maxWidth: '100%' },
+        '&:hover': {
+          button: {
+            transition: 'translate 0.1s 0.1s',
+            translate: '-1.25rem  0',
+          },
+          'div:last-of-type': {
+            translate: deletable ? '-0.5rem 0' : '0',
+          },
+        },
+
+        alignContent: 'center',
+        backgroundColor: isAppliedTag
+          ? lighten(tag.color || DEFAULT_TAG_COLOR, 0.7)
+          : 'currentColor',
+        border: '0.0625rem solid currentColor',
+        borderRadius: '1rem',
+        color: tag.color || DEFAULT_TAG_COLOR,
         cursor: clickable && !disabled ? 'pointer' : 'default',
-        display: 'flex',
+        display: 'inline-flex',
         fontSize: {
           large: '1.2em',
           medium: '1.0em',
@@ -96,6 +101,7 @@ const TagChip: React.FunctionComponent<{
         lineHeight: 'normal',
         opacity: disabled ? 0.5 : 1.0,
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
       <Tooltip
@@ -106,35 +112,40 @@ const TagChip: React.FunctionComponent<{
           </>
         }
       >
-        <Box sx={[labelStyle]}>
-          <Box sx={{ display: 'flex', gap: '4px' }}>
+        <Box
+          component="span"
+          sx={{
+            display: 'flex',
+          }}
+        >
             <Box
               className="title"
               data-testid="TagChip-value"
               sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+              backgroundColor: tag.color || DEFAULT_TAG_COLOR,
+              ...commonTextStyle,
+              color: getContrastColor(tag.color || DEFAULT_TAG_COLOR),
               }}
             >
-              {tag.title}
+            {tag.title}
             </Box>
             {isAppliedTag && (
               <Box
                 className="valueArea"
                 sx={{
-                  backgroundColor: lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
-                  borderRadius: '0 1em 1em 0',
+                ...commonTextStyle,
+                color: getContrastColor(
+                  rgbToHex(lighten(tag.color || DEFAULT_TAG_COLOR, 0.7))
+                ),
                   minWidth: '3ch',
-                  paddingInline: '3px',
                 }}
               >
-                {tag.value}
+              {tag.value}
               </Box>
             )}
-          </Box>
-          {deleteButton}
         </Box>
       </Tooltip>
+      {deleteButton}
     </Box>
   );
 };
