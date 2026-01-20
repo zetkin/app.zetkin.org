@@ -1337,10 +1337,8 @@ feat:
         title: Recente organisaties
   profile:
     delete:
-      button: Verwijder persoon
       confirm: Weet u zeker dat u {name} uit {org} en alle gerelateerde organisaties
         wilt verwijderen? Dit is een permanente actie.
-      title: Verwijder account
       warning: Dit kan niet ongedaan worden gemaakt!
     details:
       title: Details

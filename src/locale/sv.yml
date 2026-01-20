@@ -1960,10 +1960,8 @@ feat:
       showButton: Visa alla events
   profile:
     delete:
-      button: Ta bort person
       confirm: Är du säker på att du vill ta bort {name} från {org} och alla
         relaterade organisationer? Det är permanent och går inte att ångra.
-      title: Radera konto
       warning: Detta kan inte ångras!
     details:
       title: Detaljer

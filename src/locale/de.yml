@@ -2122,10 +2122,8 @@ feat:
       showButton: Alle Veranstaltungen anzeigen
   profile:
     delete:
-      button: Person entfernen
       confirm: Bist du sicher, dass du {name} von {org} und allen damit verbundenen
         Organisationen löschen willst? Das kann nicht rückgängig gemacht werden.
-      title: Profil löschen
       warning: Diese Aktion kann nicht rückgängig gemacht werden!
     details:
       title: Details
