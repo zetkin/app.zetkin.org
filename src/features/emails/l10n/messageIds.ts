@@ -247,12 +247,22 @@ export default makeMessages('feat.emails', {
     info: m(
       'After you unsubscribe you will no longer receive mass email from this organization. You may still receive reminders and other email sent specifically to you as part of work you do in the organization.'
     ),
+    senderDetails: m<{ senderEmail: string; senderName: string }>(
+      '{senderName} <{senderEmail}>'
+    ),
+    senderH: m('Unsubscribe from:'),
+    senderInfo: m(
+      'After you unsubscribe you will no longer receive emails from this sender. You may still receive emails from other senders in this organization and other email sent specifically to you as part of work you do in the organization.'
+    ),
     unsubButton: m('Unsubscribe me'),
   },
   unsubscribedPage: {
     h: m('Unsubscribed!'),
     info: m<{ org: string }>(
       'You have been unsubscribed from mass email from {org}.'
+    ),
+    senderInfo: m<{ senderEmail: string; senderName: string }>(
+      'You have been unsubscribed from emails from {senderName} <{senderEmail}>.'
     ),
   },
   varDefaults: {
