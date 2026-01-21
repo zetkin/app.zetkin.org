@@ -71,4 +71,4 @@ export default function useColumnValuesMessage() {
 
     return columnValuesMessage;
   };
-} //TODO: Replace/refactor this using useCommaPlural when that is merged.
+}
