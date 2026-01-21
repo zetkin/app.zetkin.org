@@ -56,7 +56,6 @@ export const EventSignupButton = ({
   }
 
   if (!user) {
-    // return <>test</>;
     if (onClickSignUp) {
       return (
         <ZUIButton
