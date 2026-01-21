@@ -82,6 +82,10 @@ const ZUICheckbox: FC<ZUICheckboxProps> = ({
           '-webkit-user-select': 'none',
           userSelect: 'none',
         },
+        alignItems:
+          labelPlacement == 'start' || labelPlacement == 'end'
+            ? 'flex-start'
+            : 'center',
         marginBottom:
           labelPlacement == 'top' || labelPlacement == 'bottom' ? '0.5rem' : '',
         marginLeft: labelPlacement != 'end' ? 0 : '',
