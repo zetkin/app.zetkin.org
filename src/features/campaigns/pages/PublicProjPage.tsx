@@ -411,7 +411,6 @@ const PublicProjectPage: FC<Props> = ({ campId, orgId }) => {
         <SignupChoiceModal
           eventId={postAuthEvent.id}
           onClose={() => setPostAuthEvent(null)}
-          open={!!postAuthEvent}
           orgId={postAuthEvent.organization.id}
         />
       )}
